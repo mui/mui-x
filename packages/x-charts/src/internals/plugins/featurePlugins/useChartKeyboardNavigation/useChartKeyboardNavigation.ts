@@ -47,12 +47,6 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   const focusVisibleIntentRef = React.useRef(true);
 
   /**
-   * Whether an item took the focus during the current pointer interaction, so the axis fallback
-   * does not overwrite it. Reset on `pointerdown`.
-   */
-  const itemFocusedByPointerRef = React.useRef(false);
-
-  /**
    * Writes the focus state, only switching the highlight and tooltip to keyboard when visible.
    * An `undefined` item leaves the focused item untouched, `null` clears it.
    *
@@ -143,21 +137,26 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         return false;
       }
 
-      itemFocusedByPointerRef.current = true;
-
       return applyFocus(cleanedItem, options);
     },
   );
 
   /**
-   * Fallback for a click that hit no item: resolve the axis under the pointer and focus the item
-   * it points at.
+   * Focuses the item a click landed on, read from the item the pointer is over. Falls back to the
+   * axis under the pointer, which covers the line and area paths, whose hovered item only knows
+   * its series.
    *
    * A click that resolves nothing is left alone rather than focusing the chart. The drawing area
    * is a rectangle, but the data rarely fills it: taking the focus from a click next to a pie,
    * outside its circle, reads as the chart grabbing clicks that were not meant for it.
    */
-  const focusItemAtAxisPosition = useEventCallback((event: MouseEvent) => {
+  const focusItemAtPointer = useEventCallback((event: MouseEvent | PointerEvent) => {
+    // Every series reports the item under the pointer, so the click itself needs no wiring.
+    const hoveredItem = store.state.interaction?.hoveredItem;
+    if (hoveredItem != null && focusItem(hoveredItem as FocusedItemIdentifier<ChartSeriesType>)) {
+      return;
+    }
+
     const element = chartsLayerContainerRef.current;
     const point = element === null ? null : getChartPoint(element, event);
 
@@ -216,24 +215,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       // A click keeps the focus visible only if it already was, or if the chart opts in.
       focusVisibleIntentRef.current =
         params.focusItemOnClick === true || store.state.keyboardNavigation.isFocusVisible;
-      itemFocusedByPointerRef.current = false;
     }
 
     // Any key press means the user switched to the keyboard, wherever the focus currently is.
     // Listening on the document also covers tabbing in from outside the chart.
     function trackKeyboardIntent() {
       focusVisibleIntentRef.current = true;
-    }
-
-    // Listens on the document so it runs after the React handlers, which are attached to the
-    // React root above this container. A listener here would run before them.
-    function focusChartOnClick(event: MouseEvent) {
-      if (itemFocusedByPointerRef.current || !element!.contains(event.target as Node)) {
-        // A series already resolved the click to one of its items, or the click is not ours.
-        return;
-      }
-
-      focusItemAtAxisPosition(event);
     }
 
     function keyboardHandler(event: KeyboardEvent) {
@@ -277,15 +264,17 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     element.addEventListener('focusout', removeFocus);
     element.addEventListener('focusin', restoreFocus);
     element.addEventListener('pointerdown', trackPointerIntent, true);
-    document.addEventListener('click', focusChartOnClick);
     document.addEventListener('keydown', trackKeyboardIntent, true);
+    const tapHandler = instance.addInteractionListener?.('tap', (event) => {
+      focusItemAtPointer(event.detail.srcEvent as PointerEvent);
+    });
     return () => {
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('focusout', removeFocus);
       element.removeEventListener('focusin', restoreFocus);
       element.removeEventListener('pointerdown', trackPointerIntent, true);
-      document.removeEventListener('click', focusChartOnClick);
       document.removeEventListener('keydown', trackKeyboardIntent, true);
+      tapHandler?.cleanup();
     };
   }, [
     chartsLayerContainerRef,
@@ -293,7 +282,8 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     store,
     updateFocus,
     applyFocus,
-    focusItemAtAxisPosition,
+    focusItemAtPointer,
+    instance,
     params.focusItemOnClick,
   ]);
 

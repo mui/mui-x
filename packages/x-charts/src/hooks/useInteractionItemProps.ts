@@ -5,32 +5,9 @@ import { useChartsContext } from '../context/ChartsProvider';
 import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { ChartSeriesType } from '../models/seriesType/config';
-import type { FocusedItemIdentifier, SeriesItemIdentifierWithType } from '../models/seriesType';
+import type { SeriesItemIdentifierWithType } from '../models/seriesType';
 import type { ChartInstance } from '../internals/plugins/models';
 import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
-import type { UseChartKeyboardNavigationSignature } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
-
-type InteractionItemSignatures<SeriesType extends ChartSeriesType> = [
-  UseChartInteractionSignature,
-  UseChartHighlightSignature<SeriesType>,
-  UseChartTooltipSignature,
-  UseChartKeyboardNavigationSignature,
-];
-
-export interface InteractionItemOptions {
-  /**
-   * Click handler of the consumer, called after the item took the keyboard focus.
-   * @param {React.MouseEvent} event The click event.
-   */
-  onClick?: (event: React.MouseEvent<any>) => void;
-}
-
-export interface InteractionItemProps {
-  onPointerEnter?: () => void;
-  onPointerLeave?: () => void;
-  onPointerDown?: (event: React.PointerEvent) => void;
-  onClick?: (event: React.MouseEvent<any>) => void;
-}
 
 function onPointerDown(event: React.PointerEvent) {
   if (
@@ -41,36 +18,35 @@ function onPointerDown(event: React.PointerEvent) {
   }
 }
 
-/**
- * Props to make a series item interactive: pointer handlers driving the highlight and the
- * tooltip, and a click that makes the item the one keyboard navigation resumes from.
- *
- * The returned `onClick` merges `options.onClick`, so pass the consumer callback through the
- * options rather than setting `onClick` on the element. Spreading these props next to a separate
- * `onClick` makes the two clobber each other depending on the spread order.
- */
 export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
   data: SeriesItemIdentifierWithType<SeriesType>,
-  options?: InteractionItemOptions,
-): InteractionItemProps => {
-  const { instance } = useChartsContext<InteractionItemSignatures<SeriesType>>();
+): {
+  onPointerEnter?: () => void;
+  onPointerLeave?: () => void;
+  onPointerDown?: (event: React.PointerEvent) => void;
+} => {
+  const { instance } =
+    useChartsContext<
+      [
+        UseChartInteractionSignature,
+        UseChartHighlightSignature<SeriesType>,
+        UseChartTooltipSignature,
+      ]
+    >();
   const interactionActive = React.useRef(false);
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
     instance.setLastUpdateSource('pointer');
+    instance.setHoveredItem(data);
     instance.setTooltipItem(data);
     instance.setHighlight(data);
   });
 
   const onPointerLeave = useEventCallback(() => {
     interactionActive.current = false;
+    instance.clearHoveredItem(data);
     instance.removeTooltipItem(data);
     instance.clearHighlight();
-  });
-
-  const onClick = useEventCallback((event: React.MouseEvent<any>) => {
-    instance.focusItem?.(data as unknown as FocusedItemIdentifier<SeriesType>);
-    options?.onClick?.(event);
   });
 
   React.useEffect(() => {
@@ -87,26 +63,27 @@ export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
       onPointerEnter,
       onPointerLeave,
       onPointerDown,
-      onClick,
     }),
-    [onPointerEnter, onPointerLeave, onClick],
+    [onPointerEnter, onPointerLeave],
   );
 };
 
-/**
- * Loop friendly variant of `useInteractionItemProps`, for series rendering many items.
- * The same merge rule applies to `options.onClick`.
- */
 export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
-  instance: ChartInstance<InteractionItemSignatures<SeriesType>>,
+  instance: ChartInstance<
+    [UseChartInteractionSignature, UseChartHighlightSignature<SeriesType>, UseChartTooltipSignature]
+  >,
   item: SeriesItemIdentifierWithType<SeriesType>,
-  options?: InteractionItemOptions,
-): InteractionItemProps {
+): {
+  onPointerEnter?: () => void;
+  onPointerLeave?: () => void;
+  onPointerDown?: (event: React.PointerEvent) => void;
+} {
   function onPointerEnter() {
     if (!item) {
       return;
     }
     instance.setLastUpdateSource('pointer');
+    instance.setHoveredItem(item);
     instance.setTooltipItem(item);
     instance.setHighlight(item);
   }
@@ -115,21 +92,14 @@ export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
     if (!item) {
       return;
     }
+    instance.clearHoveredItem(item);
     instance.removeTooltipItem(item);
     instance.clearHighlight();
-  }
-
-  function onClick(event: React.MouseEvent<any>) {
-    if (item) {
-      instance.focusItem?.(item as unknown as FocusedItemIdentifier<SeriesType>);
-    }
-    options?.onClick?.(event);
   }
 
   return {
     onPointerEnter,
     onPointerLeave,
     onPointerDown,
-    onClick,
   };
 }

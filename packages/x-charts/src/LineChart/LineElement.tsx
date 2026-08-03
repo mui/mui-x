@@ -77,7 +77,6 @@ function LineElement(props: LineElementProps) {
     slotProps,
     onClick,
     hidden,
-    cursor,
     ...other
   } = props;
 
@@ -111,7 +110,7 @@ function LineElement(props: LineElementProps) {
     additionalProps: {
       ...(enablePositionBasedPointerInteraction ? {} : interactionProps),
       onClick,
-      cursor: cursor ?? (onClick ? 'pointer' : 'unset'),
+      cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
       'data-series-id': seriesId,

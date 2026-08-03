@@ -7,7 +7,6 @@ import type { UseChartHighlightSignature } from '../useChartHighlight';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { UseChartTooltipSignature } from '../useChartTooltip';
 import type { UseChartZAxisSignature } from '../useChartZAxis';
-import type { UseChartKeyboardNavigationSignature } from '../useChartKeyboardNavigation';
 
 export interface UseChartVoronoiInstance {
   /**
@@ -67,6 +66,5 @@ export type UseChartClosestPointSignature<SeriesType extends ChartSeriesType = C
       UseChartHighlightSignature<SeriesType>,
       UseChartTooltipSignature,
       UseChartZAxisSignature,
-      UseChartKeyboardNavigationSignature,
     ];
   }>;

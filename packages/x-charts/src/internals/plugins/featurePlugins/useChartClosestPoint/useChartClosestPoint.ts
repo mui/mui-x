@@ -175,6 +175,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
       if (!event.detail.activeGestures.pan) {
         instance.cleanInteraction?.();
+        instance.clearHoveredItem?.();
         instance.clearHighlight?.();
         instance.removeTooltipItem?.();
       }
@@ -182,6 +183,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
       if (!event.detail.activeGestures.move) {
         instance.cleanInteraction?.();
+        instance.clearHoveredItem?.();
         instance.clearHighlight?.();
         instance.removeTooltipItem?.();
       }
@@ -189,6 +191,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
       if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
         instance.cleanInteraction?.();
+        instance.clearHoveredItem?.();
         instance.clearHighlight?.();
         instance.removeTooltipItem?.();
       }
@@ -199,6 +202,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
       if (closestPoint === 'outside-chart') {
         instance.cleanInteraction?.();
+        instance.clearHoveredItem?.();
         instance.clearHighlight?.();
         instance.removeTooltipItem?.();
         return;
@@ -206,12 +210,14 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
       if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
         instance.removeTooltipItem?.();
+        instance.clearHoveredItem?.();
         instance.clearHighlight?.();
         instance.removeTooltipItem?.();
         return;
       }
 
       const { seriesId, dataIndex } = closestPoint;
+      instance.setHoveredItem?.({ type: 'scatter', seriesId, dataIndex });
       instance.setTooltipItem?.({ type: 'scatter', seriesId, dataIndex });
       instance.setLastUpdateSource?.('pointer');
       instance.setHighlight?.({
@@ -221,16 +227,19 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       });
     };
 
+    // A tap resolves nothing without a preceding move, and touch has no hover phase, so the
+    // pointer item is also resolved on `pointerdown`.
+    const onPointerDown = function onPointerDown(event: PointerEvent) {
+      gestureHandler({ detail: { srcEvent: event } } as any);
+    };
+    element.addEventListener('pointerdown', onPointerDown);
+
     const tapHandler = instance.addInteractionListener('tap', (event) => {
       const closestPoint = getClosestPoint(event.detail.srcEvent);
 
-      if (typeof closestPoint !== 'string') {
+      if (typeof closestPoint !== 'string' && onItemClick) {
         const { seriesId, dataIndex } = closestPoint;
-        const identifier = { type: 'scatter', seriesId, dataIndex } as const;
-
-        // Clicking the empty space next to a point focuses that point.
-        instance.focusItem?.(identifier);
-        onItemClick?.(event.detail.srcEvent, identifier);
+        onItemClick(event.detail.srcEvent, { type: 'scatter', seriesId, dataIndex });
       }
     });
 
@@ -239,6 +248,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
+      element.removeEventListener('pointerdown', onPointerDown);
       tapHandler.cleanup();
       moveHandler.cleanup();
       moveEndHandler.cleanup();

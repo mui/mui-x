@@ -29,7 +29,7 @@ function MapShape(props: MapShapeProps) {
     () => ({ type: 'mapShape' as const, seriesId, name: featureName }),
     [seriesId, featureName],
   );
-  const interactionProps = useInteractionItemProps(identifier, { onClick });
+  const interactionProps = useInteractionItemProps(identifier);
   const highlightState = useItemHighlightState(identifier);
   const isHighlighted = highlightState === 'highlighted';
   const isFaded = highlightState === 'faded';
@@ -38,6 +38,7 @@ function MapShape(props: MapShapeProps) {
     <MapShapeRoot
       d={d}
       fill={color}
+      onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       data-name={featureName}
       data-highlighted={isHighlighted || undefined}

@@ -9,7 +9,8 @@ import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
-import type { UseChartKeyboardNavigationSignature } from '../../internals/plugins/featurePlugins/useChartKeyboardNavigation';
+import type { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
+import type { SeriesId } from '../../models/seriesType';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const { seriesId: inSeriesId, className, classes: inClasses, onAreaClick, onMarkClick } = props;
@@ -17,8 +18,20 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
+  const { instance } = useChartsContext<[UseChartInteractionSignature]>();
   const getHighlightState = useItemHighlightStateGetter();
-  const { instance } = useChartsContext<[UseChartKeyboardNavigationSignature]>();
+
+  /**
+   * The radar area only knows its series, so the pointer item is resolved from the angle. Also
+   * bound to `pointerdown`, because a touch tap may never produce a `pointermove`.
+   */
+  const handlePointerItem = (seriesId: SeriesId) => (event: React.PointerEvent<SVGPathElement>) => {
+    instance.setHoveredItem?.({
+      type: 'radar',
+      seriesId,
+      dataIndex: getRotationIndex(event),
+    });
+  };
 
   const classes = useUtilityClasses(inClasses);
 
@@ -43,18 +56,17 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                     getHighlightState,
                     classes,
                   })}
-                  {...interactionProps[seriesIndex]}
-                  // The area only knows its series, the data index comes from the click angle.
-                  onClick={(event) => {
-                    const identifier = {
+                  onClick={(event) =>
+                    onAreaClick?.(event, {
                       type: 'radar',
                       seriesId,
                       dataIndex: getRotationIndex(event),
-                    } as const;
-                    instance.focusItem?.(identifier);
-                    onAreaClick?.(event, identifier);
-                  }}
+                    })
+                  }
                   cursor={onAreaClick ? 'pointer' : 'unset'}
+                  {...interactionProps[seriesIndex]}
+                  onPointerMove={handlePointerItem(seriesId)}
+                  onPointerDown={handlePointerItem(seriesId)}
                 />
               }
               {!hideMark &&
@@ -69,12 +81,16 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                       getHighlightState,
                       classes,
                     })}
-                    onClick={(event) => {
-                      const identifier = { type: 'radar', seriesId, dataIndex: index } as const;
-                      instance.focusItem?.(identifier);
-                      onMarkClick?.(event, identifier);
-                    }}
+                    onClick={(event) =>
+                      onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
+                    }
                     cursor={onMarkClick ? 'pointer' : 'unset'}
+                    onPointerMove={() =>
+                      instance.setHoveredItem?.({ type: 'radar', seriesId, dataIndex: index })
+                    }
+                    onPointerDown={() =>
+                      instance.setHoveredItem?.({ type: 'radar', seriesId, dataIndex: index })
+                    }
                   />
                 ))}
             </g>

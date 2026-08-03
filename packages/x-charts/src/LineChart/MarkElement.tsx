@@ -97,11 +97,7 @@ function MarkElement(props: MarkElementProps) {
     selectorChartExperimentalFeaturesState,
     'enablePositionBasedPointerInteraction',
   );
-  // The click keeps focusing the item even when the pointer interactions are position based.
-  const { onClick: handleClick, ...pointerProps } = useInteractionItemProps(
-    { type: 'line', seriesId, dataIndex },
-    { onClick },
-  );
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
 
   const ownerState = {
     seriesId,
@@ -115,7 +111,7 @@ function MarkElement(props: MarkElementProps) {
   return (
     <MarkElementPath
       {...other}
-      {...(enablePositionBasedPointerInteraction ? {} : pointerProps)}
+      {...(enablePositionBasedPointerInteraction ? {} : interactionProps)}
       style={{
         ...style,
         transform: `translate(${x}px, ${y}px)`,
@@ -124,7 +120,7 @@ function MarkElement(props: MarkElementProps) {
       ownerState={ownerState}
       className={classes.mark}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
-      onClick={handleClick}
+      onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       pointerEvents={hidden ? 'none' : undefined}
       data-highlighted={isHighlighted || undefined}

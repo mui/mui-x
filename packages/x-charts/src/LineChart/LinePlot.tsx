@@ -91,8 +91,7 @@ function LinePlot(props: LinePlotProps) {
             skipAnimation={skipAnimation || isSampled}
             slots={slots}
             slotProps={slotProps}
-            onClick={(event) => onLineItemClick(event, seriesId)}
-            cursor={onItemClick ? 'pointer' : 'unset'}
+            onClick={onLineItemClick && ((event) => onLineItemClick(event, seriesId))}
           />
         );
       })}

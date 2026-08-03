@@ -54,14 +54,14 @@ export const SankeyNodeElement = React.forwardRef<SVGRectElement, SankeyNodeElem
     const isFaded = highlightState === 'faded';
     const isHighlighted = highlightState === 'highlighted';
 
+    // Add interaction props for tooltips
+    const interactionProps = useInteractionItemProps(identifier);
+
     const classes = useUtilityClasses();
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGRectElement>) => {
       onClick?.(event, identifier);
     });
-
-    // Add interaction props for tooltips and keyboard focus
-    const interactionProps = useInteractionItemProps(identifier, { onClick: handleClick });
 
     let opacity = 1;
     if (isFaded) {
@@ -78,6 +78,7 @@ export const SankeyNodeElement = React.forwardRef<SVGRectElement, SankeyNodeElem
         height={nodeHeight}
         fill={node.color}
         opacity={opacity}
+        onClick={onClick ? handleClick : undefined}
         cursor={onClick ? 'pointer' : 'default'}
         stroke="none"
         data-highlighted={isHighlighted || undefined}

@@ -53,7 +53,7 @@ const FunnelSection = consumeSlots<FunnelSectionProps, SVGPathElement>(
       [seriesId, dataIndex],
     );
 
-    const interactionProps = useInteractionItemProps(identifier, { onClick });
+    const interactionProps = useInteractionItemProps(identifier);
     const highlightState = useItemHighlightState(identifier);
     const isHighlighted = highlightState === 'highlighted';
     const isFaded = highlightState === 'faded';
@@ -71,6 +71,7 @@ const FunnelSection = consumeSlots<FunnelSectionProps, SVGPathElement>(
         strokeOpacity={1}
         strokeWidth={isOutlined ? 1.5 : 0}
         cursor={onClick ? 'pointer' : 'unset'}
+        onClick={onClick}
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
         className={clsx(classes?.section, className)}

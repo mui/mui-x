@@ -137,44 +137,33 @@ import { FocusedSankeyLink, FocusedSankeyNode } from '@mui/x-charts-pro/SankeyCh
 
 ### Custom components
 
-Custom components rendered through a slot receive an `onClick` handler that makes their item the one keyboard navigation resumes from.
-Forward it to the rendered element, along with the rest of the props, for click-to-focus to work:
+Click-to-focus reads the item the pointer is over, which every series already reports for the tooltip and the highlight.
+A custom component rendered through a slot inherits that for free, as long as it forwards the interaction props to the rendered element:
 
 ```jsx
 function CustomMarker({
   x,
   y,
   color,
-  size,
   seriesId,
   dataIndex,
   isHighlighted,
   isFaded,
   ...other
 }) {
-  // `other` carries the click handler and the interaction handlers.
+  // `other` carries the pointer handlers that report the item.
   return (
     <path d={shape} transform={`translate(${x}, ${y})`} fill={color} {...other} />
   );
 }
 ```
 
-The handler is attached whether or not you pass a click callback, so it can't tell you whether the chart is interactive.
-Read the `cursor` prop instead of checking for `onClick`.
-
-When building a plot from scratch rather than through a slot, `useInteractionItemProps` returns the handlers for an item, including the click:
+When building a plot from scratch rather than through a slot, `useInteractionItemProps` returns those handlers for an item:
 
 ```jsx
 import { useInteractionItemProps } from '@mui/x-charts/internals';
 
-function CustomPlotItem({ seriesId, dataIndex, onClick }) {
-  // Pass your own callback through the options: the returned `onClick` merges the two.
-  // Setting `onClick` on the element next to the spread makes them clobber each other.
-  const interactionProps = useInteractionItemProps(
-    { type: 'bar', seriesId, dataIndex },
-    { onClick },
-  );
-
-  return <rect {...interactionProps} />;
+function CustomPlotItem({ seriesId, dataIndex }) {
+  return <rect {...useInteractionItemProps({ type: 'bar', seriesId, dataIndex })} />;
 }
 ```

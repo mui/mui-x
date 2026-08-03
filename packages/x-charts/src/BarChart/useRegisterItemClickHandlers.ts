@@ -6,7 +6,6 @@ import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugi
 import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import type { UseChartKeyboardNavigationSignature } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useChartsContext } from '../context/ChartsProvider';
 import { getChartPoint } from '../internals/getChartPoint';
 import { useStore } from '../internals/store/useStore';
@@ -21,12 +20,7 @@ export function useRegisterItemClickHandlers(
 ) {
   const { instance } =
     useChartsContext<
-      [
-        UseChartInteractionSignature,
-        UseChartHighlightSignature<'bar'>,
-        UseChartTooltipSignature,
-        UseChartKeyboardNavigationSignature,
-      ]
+      [UseChartInteractionSignature, UseChartHighlightSignature<'bar'>, UseChartTooltipSignature]
     >();
   const chartsLayerContainerRef = useChartsLayerContainerRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature<'bar'>]>();
@@ -34,8 +28,7 @@ export function useRegisterItemClickHandlers(
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
 
-    // The handlers also feed the keyboard navigation, so they are registered without `onItemClick`.
-    if (!element) {
+    if (!element || !onItemClick) {
       return undefined;
     }
 
@@ -73,14 +66,11 @@ export function useRegisterItemClickHandlers(
       const item = selectorBarItemAtPosition(store.state, svgPoint);
 
       if (item) {
-        const identifier = {
+        onItemClick(event, {
           type: 'bar',
           seriesId: item.seriesId,
           dataIndex: item.dataIndex,
-        } as const;
-
-        instance.focusItem?.(identifier);
-        onItemClick?.(event, identifier);
+        });
       }
     };
 
