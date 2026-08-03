@@ -92,8 +92,13 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
     gestureManager.registerElement(['pan', 'move', 'tap', 'quickPress', 'brush'], svg);
 
     return () => {
-      // Cleanup gesture manager
-      gestureManager.unregisterAllGestures(svg);
+      // Cleanup gesture manager. `destroy()` unregisters every element's gestures like
+      // `unregisterAllGestures()` does, and is additionally the only path that removes the
+      // document/window listeners owned by the internal PointerManager and KeyboardManager.
+      gestureManager.destroy();
+      // The manager is unusable once destroyed, so drop it and let the next mount build a
+      // fresh one. Reusing a destroyed manager loses its gesture templates.
+      gestureManagerRef.current = null;
     };
   }, [chartsLayerContainerRef, gestureManagerRef]);
 
