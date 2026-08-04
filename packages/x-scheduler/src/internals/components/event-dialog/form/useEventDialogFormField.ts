@@ -7,7 +7,10 @@ import { isBuiltInEventProperty } from '@mui/x-scheduler-internals/internals';
 import type { EventDialogBuiltInFormValues, EventDialogFormValues } from '../utils';
 import { BUILT_IN_FORM_KEYS } from '../utils';
 import { eventDialogFormSelectors } from './EventDialogFormStore';
-import type { EventDialogFormValidator } from './EventDialogFormStore';
+import type {
+  EventDialogFormValidator,
+  EventDialogFormValidatorResult,
+} from './EventDialogFormStore';
 import { useEventDialogFormContext } from './EventDialogFormContext';
 
 /**
@@ -18,10 +21,19 @@ export type EventDialogFormFieldKey = keyof EventDialogBuiltInFormValues | (stri
 export interface UseEventDialogFormFieldParameters<T> {
   /**
    * Runs during submit while the calling component is mounted.
-   * Returns the error(s) for the field, or `null` when the value is valid
-   * (an empty string or array also counts as valid).
+   * Returns the error message(s) for the field, or `null` when the value is valid
+   * (an empty string or array also counts as valid). Can be async.
    */
-  validate?: (value: T, allValues: EventDialogFormValues) => string | string[] | null;
+  validate?: (
+    value: T,
+    allValues: EventDialogFormValues,
+  ) => EventDialogFormValidatorResult | Promise<EventDialogFormValidatorResult>;
+  /**
+   * Seeds the field when the key is not present in the form values
+   * (e.g. a custom field absent from the event model). Seeding does not
+   * mark the field dirty, so an untouched default is not submitted.
+   */
+  defaultValue?: T;
 }
 
 export interface UseEventDialogFormFieldReturnValue<T> {
@@ -34,10 +46,16 @@ export interface UseEventDialogFormFieldReturnValue<T> {
    */
   setValue: (value: T) => void;
   /**
-   * Error(s) of the field, or `undefined` when it has none.
+   * First error message of the field, or `undefined` when it has none.
    */
-  error: string | string[] | undefined;
+  error: React.ReactNode | undefined;
+  /**
+   * All the error messages of the field, empty when it has none.
+   */
+  errors: React.ReactNode[];
 }
+
+const NO_ERRORS: React.ReactNode[] = [];
 
 /**
  * Binds a component to one field of the event dialog form.
@@ -58,8 +76,12 @@ export function useEventDialogFormField<T = unknown>(
   }
 
   const store = useEventDialogFormContext();
-  const value = useStore(store, eventDialogFormSelectors.value, key) as T;
-  const error = useStore(store, eventDialogFormSelectors.error, key);
+  const { defaultValue } = parameters;
+
+  const storedValue = useStore(store, eventDialogFormSelectors.value, key) as T | undefined;
+  // The store is only seeded in an effect, so fall back for the first render.
+  const value = (storedValue === undefined ? defaultValue : storedValue) as T;
+  const errorList = useStore(store, eventDialogFormSelectors.error, key);
 
   const setValue = useStableCallback((newValue: T) => store.setValue(key, newValue));
 
@@ -69,6 +91,12 @@ export function useEventDialogFormField<T = unknown>(
   );
 
   React.useEffect(() => {
+    if (defaultValue !== undefined) {
+      store.seedDefault(key, defaultValue);
+    }
+  }, [store, key, defaultValue]);
+
+  React.useEffect(() => {
     if (!hasValidator) {
       return undefined;
     }
@@ -76,5 +104,5 @@ export function useEventDialogFormField<T = unknown>(
     return () => store.unregisterValidator(key, validate);
   }, [store, key, hasValidator, validate]);
 
-  return { value, setValue, error };
+  return { value, setValue, error: errorList?.[0], errors: errorList ?? NO_ERRORS };
 }

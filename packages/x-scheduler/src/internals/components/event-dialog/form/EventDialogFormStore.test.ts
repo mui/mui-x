@@ -32,24 +32,24 @@ describe('EventDialogFormStore', () => {
       expect(store.state.values).to.deep.equal({ title: 'Meeting', priority: 'low' });
     });
 
-    it('should clear the error of the written key', () => {
+    it('should clear the error of the written key', async () => {
       const store = new EventDialogFormStore({ title: '' });
       store.registerValidator('title', (value) => (value ? null : 'Required'));
-      store.validateAll();
-      expect(store.state.errors).to.deep.equal({ title: 'Required' });
+      await store.validateAll();
+      expect(store.state.errors).to.deep.equal({ title: ['Required'] });
 
       store.setValue('title', 'Meeting');
       expect(store.state.errors).to.deep.equal({});
     });
 
-    it('should keep the errors of the other keys', () => {
+    it('should keep the errors of the other keys', async () => {
       const store = new EventDialogFormStore({ title: '', priority: null });
       store.registerValidator('title', (value) => (value ? null : 'Required'));
       store.registerValidator('priority', (value) => (value ? null : 'Required'));
-      store.validateAll();
+      await store.validateAll();
 
       store.setValue('title', 'Meeting');
-      expect(store.state.errors).to.deep.equal({ priority: 'Required' });
+      expect(store.state.errors).to.deep.equal({ priority: ['Required'] });
     });
 
     it('should call onValuesChange with the new values and the changed keys', () => {
@@ -72,7 +72,13 @@ describe('EventDialogFormStore', () => {
       expect(listener.callCount).to.equal(1);
     });
 
-    it('should clear the errors of all the written keys', () => {
+    it('should accept a functional updater receiving the current values', () => {
+      const store = new EventDialogFormStore({ count: 1, other: 'x' });
+      store.setValues((prev) => ({ count: (prev.count as number) + 1 }));
+      expect(store.state.values).to.deep.equal({ count: 2, other: 'x' });
+    });
+
+    it('should clear the errors of all the written keys', async () => {
       const store = new EventDialogFormStore<Record<string, unknown>>({
         a: null,
         b: null,
@@ -81,100 +87,144 @@ describe('EventDialogFormStore', () => {
       store.registerValidator('a', (value) => (value ? null : 'Required'));
       store.registerValidator('b', (value) => (value ? null : 'Required'));
       store.registerValidator('c', (value) => (value ? null : 'Required'));
-      store.validateAll();
+      await store.validateAll();
 
       store.setValues({ a: 1, b: 2 });
-      expect(store.state.errors).to.deep.equal({ c: 'Required' });
+      expect(store.state.errors).to.deep.equal({ c: ['Required'] });
+    });
+  });
+
+  describe('seedDefault', () => {
+    it('should seed a missing key without marking it dirty or notifying onValuesChange', () => {
+      const onValuesChange = spy();
+      const store = new EventDialogFormStore({ title: '' }, { onValuesChange });
+      store.seedDefault('notes', 'default');
+
+      expect(store.state.values).to.deep.equal({ title: '', notes: 'default' });
+      expect(store.getDirtyValues()).to.deep.equal({});
+      expect(onValuesChange.called).to.equal(false);
+    });
+
+    it('should not overwrite a key already present in the values', () => {
+      const store = new EventDialogFormStore({ notes: 'from-model' });
+      store.seedDefault('notes', 'default');
+      expect(store.state.values).to.deep.equal({ notes: 'from-model' });
+    });
+
+    it('should report a seeded key as dirty once edited, including a reset to undefined', () => {
+      const store = new EventDialogFormStore({ title: '' });
+      store.seedDefault('notes', 'default');
+
+      store.setValue('notes', undefined);
+      expect(store.getDirtyValues()).to.deep.equal({ notes: undefined });
     });
   });
 
   describe('clearErrors', () => {
-    it('should remove all the errors', () => {
+    it('should remove all the errors', async () => {
       const store = new EventDialogFormStore({ title: '' });
       store.registerValidator('title', () => 'Required');
-      store.validateAll();
+      await store.validateAll();
       store.clearErrors();
       expect(store.state.errors).to.deep.equal({});
     });
 
-    it('should only remove the errors of the provided keys', () => {
+    it('should only remove the errors of the provided keys', async () => {
       const store = new EventDialogFormStore({ title: '', priority: null });
       store.registerValidator('title', () => 'Title required');
       store.registerValidator('priority', () => 'Priority required');
-      store.validateAll();
+      await store.validateAll();
 
       store.clearErrors(['title']);
-      expect(store.state.errors).to.deep.equal({ priority: 'Priority required' });
+      expect(store.state.errors).to.deep.equal({ priority: ['Priority required'] });
     });
 
-    it('should not notify subscribers when none of the provided keys has an error', () => {
+    it('should not notify subscribers when none of the provided keys has an error', async () => {
       const store = new EventDialogFormStore({ title: '', priority: null });
       store.registerValidator('priority', () => 'Priority required');
-      store.validateAll();
+      await store.validateAll();
 
       const listener = spy();
       store.subscribe(listener);
       store.clearErrors(['title']);
       expect(listener.callCount).to.equal(0);
-      expect(store.state.errors).to.deep.equal({ priority: 'Priority required' });
+      expect(store.state.errors).to.deep.equal({ priority: ['Priority required'] });
     });
   });
 
   describe('validateAll', () => {
-    it('should return true and clear the errors when every validator passes', () => {
+    it('should resolve with true and clear the errors when every validator passes', async () => {
       const store = new EventDialogFormStore({ title: 'Meeting' });
       store.registerValidator('title', (value) => (value ? null : 'Required'));
-      expect(store.validateAll()).to.equal(true);
+      expect(await store.validateAll()).to.equal(true);
       expect(store.state.errors).to.deep.equal({});
     });
 
-    it('should collect the errors of all the failing fields at once', () => {
+    it('should collect the errors of all the failing fields at once', async () => {
       const store = new EventDialogFormStore({ title: '', priority: null });
       store.registerValidator('title', (value) => (value ? null : 'Title required'));
       store.registerValidator('priority', (value) => (value ? null : 'Priority required'));
-      expect(store.validateAll()).to.equal(false);
+      expect(await store.validateAll()).to.equal(false);
       expect(store.state.errors).to.deep.equal({
-        title: 'Title required',
-        priority: 'Priority required',
+        title: ['Title required'],
+        priority: ['Priority required'],
       });
     });
 
-    it('should keep the first error when a field has several validators', () => {
+    it('should keep the first error when a field has several validators', async () => {
       const store = new EventDialogFormStore({ title: '' });
       store.registerValidator('title', () => 'First');
       store.registerValidator('title', () => 'Second');
-      store.validateAll();
-      expect(store.state.errors).to.deep.equal({ title: 'First' });
+      await store.validateAll();
+      expect(store.state.errors).to.deep.equal({ title: ['First'] });
     });
 
-    it('should pass all the values to the validator', () => {
+    it('should pass all the values to the validator', async () => {
       const store = new EventDialogFormStore({ startDate: '2025-01-02', endDate: '2025-01-01' });
       store.registerValidator('startDate', (value, allValues) =>
         String(value) > String(allValues.endDate) ? 'Start after end' : null,
       );
-      expect(store.validateAll()).to.equal(false);
-      expect(store.state.errors).to.deep.equal({ startDate: 'Start after end' });
+      expect(await store.validateAll()).to.equal(false);
+      expect(store.state.errors).to.deep.equal({ startDate: ['Start after end'] });
     });
 
-    it('should ignore a validator once unregistered', () => {
+    it('should ignore a validator once unregistered', async () => {
       const store = new EventDialogFormStore({ title: '' });
       const validator = () => 'Required';
       store.registerValidator('title', validator);
       store.unregisterValidator('title', validator);
-      expect(store.validateAll()).to.equal(true);
+      expect(await store.validateAll()).to.equal(true);
     });
 
-    it('should treat an empty error array as valid', () => {
+    it('should support an async validator', async () => {
+      const store = new EventDialogFormStore({ title: '' });
+      store.registerValidator('title', async (value) => (value ? null : 'Required'));
+
+      expect(await store.validateAll()).to.equal(false);
+      expect(store.state.errors).to.deep.equal({ title: ['Required'] });
+
+      store.setValue('title', 'Meeting');
+      expect(await store.validateAll()).to.equal(true);
+    });
+
+    it('should keep several error messages returned as an array', async () => {
+      const store = new EventDialogFormStore({ title: '' });
+      store.registerValidator('title', () => ['Too long', 'Invalid characters']);
+      expect(await store.validateAll()).to.equal(false);
+      expect(store.state.errors).to.deep.equal({ title: ['Too long', 'Invalid characters'] });
+    });
+
+    it('should treat an empty error array as valid', async () => {
       const store = new EventDialogFormStore({ title: '' });
       store.registerValidator('title', () => []);
-      expect(store.validateAll()).to.equal(true);
+      expect(await store.validateAll()).to.equal(true);
       expect(store.state.errors).to.deep.equal({});
     });
 
-    it('should treat an empty error string as valid', () => {
+    it('should treat an empty error string as valid', async () => {
       const store = new EventDialogFormStore({ title: '' });
       store.registerValidator('title', () => '');
-      expect(store.validateAll()).to.equal(true);
+      expect(await store.validateAll()).to.equal(true);
       expect(store.state.errors).to.deep.equal({});
     });
   });

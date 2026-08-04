@@ -17,3 +17,4 @@ export type {
   UseEventDialogFormFieldParameters,
   UseEventDialogFormFieldReturnValue,
 } from './form/useEventDialogFormField';
+export type { EventDialogFormValidatorResult } from './form/EventDialogFormStore';

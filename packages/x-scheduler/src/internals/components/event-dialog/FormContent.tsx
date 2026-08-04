@@ -186,7 +186,7 @@ function FormContentInner(props: FormContentProps) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!formStore.validateAll()) {
+    if (!(await formStore.validateAll())) {
       return;
     }
 

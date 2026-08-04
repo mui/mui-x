@@ -158,10 +158,7 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
   const readOnly = isPropertyReadOnly('resource');
   const { value: resourceId } = resourceField;
   const { value: color } = colorField;
-  const error =
-    shouldEventRequireResource && typeof resourceField.error === 'string'
-      ? resourceField.error
-      : undefined;
+  const error = shouldEventRequireResource ? resourceField.error : undefined;
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     const hasNesting = resources.some(

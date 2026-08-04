@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import { createSelector, Store } from '@base-ui/utils/store';
 import type { EventDialogFormValues } from '../utils';
 
@@ -9,14 +10,37 @@ export interface EventDialogFormState<
    */
   values: TValues;
   /**
-   * Validation errors, keyed by field name.
+   * Validation errors, keyed by field name. Always non-empty arrays.
    */
-  errors: Record<string, string | string[]>;
+  errors: Record<string, React.ReactNode[]>;
 }
+
+/**
+ * Error message(s) for a field, or `null` when the value is valid
+ * (an empty string or array also counts as valid). An array is a list
+ * of messages, not a single node.
+ */
+export type EventDialogFormValidatorResult = React.ReactNode | React.ReactNode[] | null;
 
 export type EventDialogFormValidator<
   TValues extends Record<string, unknown> = EventDialogFormValues,
-> = (value: unknown, allValues: TValues) => string | string[] | null;
+> = (
+  value: unknown,
+  allValues: TValues,
+) => EventDialogFormValidatorResult | Promise<EventDialogFormValidatorResult>;
+
+function normalizeValidatorResult(
+  result: EventDialogFormValidatorResult,
+): React.ReactNode[] | null {
+  if (result == null || result === '') {
+    return null;
+  }
+  if (Array.isArray(result)) {
+    const messages = result.filter((message) => message != null && message !== '');
+    return messages.length > 0 ? messages : null;
+  }
+  return [result];
+}
 
 export interface EventDialogFormStoreOptions<
   TValues extends Record<string, unknown> = EventDialogFormValues,
@@ -129,21 +153,38 @@ export class EventDialogFormStore<
   };
 
   /**
-   * Runs every registered validator and stores the failures (first error per field wins).
-   * Returns whether the form is valid.
+   * Seeds a key that is not present in the values yet, without marking it dirty
+   * or notifying `onValuesChange`. No-op when the key is already present.
    */
-  public validateAll = (): boolean => {
-    const { values } = this.state;
-    const errors: Record<string, string | string[]> = {};
-    for (const [key, validators] of this.validators) {
-      for (const validator of validators) {
-        const result = validator(values[key], values);
-        if (result != null && result !== '' && !(Array.isArray(result) && result.length === 0)) {
-          errors[key] = result;
-          break;
-        }
-      }
+  public seedDefault = (key: string, value: unknown) => {
+    if (key in this.state.values) {
+      return;
     }
+    (this.initialValues as Record<string, unknown>)[key] = value;
+    this.set('values', { ...this.state.values, [key]: value });
+  };
+
+  /**
+   * Runs every registered validator and stores the failures (first error per field wins).
+   * Resolves with whether the form is valid.
+   */
+  public validateAll = async (): Promise<boolean> => {
+    const { values } = this.state;
+    const errors: Record<string, React.ReactNode[]> = {};
+    await Promise.all(
+      Array.from(this.validators, async ([key, validators]) => {
+        const results = await Promise.all(
+          Array.from(validators, (validator) => validator(values[key], values)),
+        );
+        for (const result of results) {
+          const messages = normalizeValidatorResult(result);
+          if (messages !== null) {
+            errors[key] = messages;
+            break;
+          }
+        }
+      }),
+    );
     this.set('errors', errors);
     return Object.keys(errors).length === 0;
   };

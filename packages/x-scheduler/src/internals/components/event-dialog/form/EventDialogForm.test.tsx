@@ -13,12 +13,16 @@ describe('EventDialogForm', () => {
   interface FieldProbeProps {
     fieldKey: string;
     validate?: (value: unknown) => string | string[] | null;
+    defaultValue?: string;
     onRender?: () => void;
   }
 
   function FieldProbe(props: FieldProbeProps) {
-    const { fieldKey, validate, onRender } = props;
-    const { value, setValue, error } = useEventDialogFormField<string>(fieldKey, { validate });
+    const { fieldKey, validate, defaultValue, onRender } = props;
+    const { value, setValue, error } = useEventDialogFormField<string>(fieldKey, {
+      validate,
+      defaultValue,
+    });
     onRender?.();
     return (
       <React.Fragment>
@@ -74,8 +78,8 @@ describe('EventDialogForm', () => {
         </EventDialogFormProvider>,
       );
 
-      React.act(() => {
-        expect(formStore!.validateAll()).to.equal(false);
+      await React.act(async () => {
+        expect(await formStore!.validateAll()).to.equal(false);
       });
       expect(screen.getByRole('alert')).to.have.text('Required');
     });
@@ -93,13 +97,62 @@ describe('EventDialogForm', () => {
         </EventDialogFormProvider>,
       );
 
-      React.act(() => {
-        formStore!.validateAll();
+      await React.act(async () => {
+        await formStore!.validateAll();
       });
       expect(screen.getByRole('alert')).to.have.text('Required');
 
       await user.type(screen.getByLabelText('title'), 'S');
       expect(screen.queryByRole('alert')).to.equal(null);
+    });
+
+    it('should render the first message when the validator returns several', async () => {
+      let formStore: EventDialogFormStore | null = null;
+      render(
+        <EventDialogFormProvider initialValues={{ title: '' }}>
+          <FieldProbe fieldKey="title" validate={() => ['Too long', 'Invalid characters']} />
+          <StoreGrabber
+            onMount={(store) => {
+              formStore = store;
+            }}
+          />
+        </EventDialogFormProvider>,
+      );
+
+      await React.act(async () => {
+        expect(await formStore!.validateAll()).to.equal(false);
+      });
+      expect(screen.getByRole('alert')).to.have.text('Too long');
+    });
+
+    it('should seed an absent key with the provided default value', async () => {
+      let formStore: EventDialogFormStore | null = null;
+      const { user } = render(
+        <EventDialogFormProvider initialValues={{ title: '' }}>
+          <FieldProbe fieldKey="notes" defaultValue="default" />
+          <StoreGrabber
+            onMount={(store) => {
+              formStore = store;
+            }}
+          />
+        </EventDialogFormProvider>,
+      );
+
+      expect(screen.getByLabelText('notes')).to.have.value('default');
+      // An untouched default is not part of the dirty values.
+      expect(formStore!.getDirtyValues()).to.deep.equal({});
+
+      await user.type(screen.getByLabelText('notes'), '!');
+      expect(formStore!.getDirtyValues()).to.deep.equal({ notes: 'default!' });
+    });
+
+    it('should keep the value from the seed over the default value', () => {
+      render(
+        <EventDialogFormProvider initialValues={{ notes: 'from-model' }}>
+          <FieldProbe fieldKey="notes" defaultValue="default" />
+        </EventDialogFormProvider>,
+      );
+      expect(screen.getByLabelText('notes')).to.have.value('from-model');
     });
 
     it('should not re-render a field bound to another key when a field is written', async () => {
@@ -140,7 +193,7 @@ describe('EventDialogForm', () => {
       );
     });
 
-    it('should unregister the validator when the section unmounts', () => {
+    it('should unregister the validator when the section unmounts', async () => {
       let formStore: EventDialogFormStore | null = null;
       const grabber = (
         <StoreGrabber
@@ -156,14 +209,14 @@ describe('EventDialogForm', () => {
         </EventDialogFormProvider>,
       );
 
-      React.act(() => {
-        expect(formStore!.validateAll()).to.equal(false);
+      await React.act(async () => {
+        expect(await formStore!.validateAll()).to.equal(false);
       });
 
       setProps({ children: grabber });
 
-      React.act(() => {
-        expect(formStore!.validateAll()).to.equal(true);
+      await React.act(async () => {
+        expect(await formStore!.validateAll()).to.equal(true);
       });
     });
   });
