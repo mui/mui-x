@@ -17,7 +17,7 @@ import { computeRange, validateRange } from './utils';
 import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
 import { useEventDialogFormContext } from './form/EventDialogFormContext';
-import { useField } from './form/useField';
+import { useEventDialogFormField } from './form/useEventDialogFormField';
 
 const DateTimeFieldsContainer = styled('div', {
   name: 'MuiEventDialog',
@@ -41,6 +41,9 @@ const DateTimeFieldsRow = styled('div', {
     flex: '1 1 0%',
   },
 }));
+
+// The only keys with range validators, so clearing them covers edits to any of the four date/time fields.
+const RANGE_ERROR_KEYS = ['startDate', 'startTime'];
 
 const AllDayFormControlLabel = styled(FormControlLabel, {
   name: 'MuiEventDialog',
@@ -72,25 +75,28 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
 
   const createRangeValidator =
     (field: 'startDate' | 'startTime') =>
-    (value: string, allValues: Record<string, unknown>): string | null => {
-      const values = allValues as EventDialogFormValues;
-      const { start, end } = computeRange(adapter, values, displayTimezone);
-      return validateRange(adapter, start, end, values.allDay)?.field === field
+    (value: string, allValues: EventDialogFormValues): string | null => {
+      const { start, end } = computeRange(adapter, allValues, displayTimezone);
+      return validateRange(adapter, start, end, allValues.allDay)?.field === field
         ? localeText.startDateAfterEndDateError
         : null;
     };
 
-  const startDate = useField<string>('startDate', { validate: createRangeValidator('startDate') });
-  const startTime = useField<string>('startTime', { validate: createRangeValidator('startTime') });
-  const endDate = useField<string>('endDate');
-  const endTime = useField<string>('endTime');
-  const allDay = useField<boolean>('allDay');
+  const startDate = useEventDialogFormField<string>('startDate', {
+    validate: createRangeValidator('startDate'),
+  });
+  const startTime = useEventDialogFormField<string>('startTime', {
+    validate: createRangeValidator('startTime'),
+  });
+  const endDate = useEventDialogFormField<string>('endDate');
+  const endTime = useEventDialogFormField<string>('endTime');
+  const allDay = useEventDialogFormField<boolean>('allDay');
 
   const createHandleChangeDateOrTimeField =
     (field: { setValue: (value: string) => void }) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       // Editing any date or time field invalidates the range errors as a whole.
-      formStore.clearErrors();
+      formStore.clearErrors(RANGE_ERROR_KEYS);
       field.setValue(event.currentTarget.value);
     };
 
@@ -168,7 +174,10 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
             <Switch
               id={`${schedulerId}-enable-all-day-switch`}
               checked={allDay.value}
-              onChange={(event) => allDay.setValue(event.target.checked)}
+              onChange={(event) => {
+                formStore.clearErrors(RANGE_ERROR_KEYS);
+                allDay.setValue(event.target.checked);
+              }}
               disabled={isPropertyReadOnly('allDay')}
             />
           }

@@ -1,54 +1,79 @@
-import { Store } from '@base-ui/utils/store';
+import { createSelector, Store } from '@base-ui/utils/store';
+import type { EventDialogFormValues } from '../utils';
 
-export interface EventDialogFormState {
+export interface EventDialogFormState<
+  TValues extends Record<string, unknown> = EventDialogFormValues,
+> {
   /**
    * Current form values, keyed by field name (built-in and custom keys alike).
    */
-  values: Record<string, unknown>;
-  /**
-   * Values the form was seeded with, used to detect edited fields.
-   */
-  initialValues: Record<string, unknown>;
+  values: TValues;
   /**
    * Validation errors, keyed by field name.
    */
   errors: Record<string, string | string[]>;
 }
 
-export type EventDialogFormValidator = (
-  value: unknown,
-  allValues: Record<string, unknown>,
-) => string | string[] | null;
+export type EventDialogFormValidator<
+  TValues extends Record<string, unknown> = EventDialogFormValues,
+> = (value: unknown, allValues: TValues) => string | string[] | null;
 
-export interface EventDialogFormStoreOptions {
+export interface EventDialogFormStoreOptions<
+  TValues extends Record<string, unknown> = EventDialogFormValues,
+> {
   /**
    * Called synchronously after each write with the new values and the written keys.
    */
-  onValuesChange?: (values: Record<string, unknown>, changedKeys: string[]) => void;
+  onValuesChange?: (values: TValues, changedKeys: string[]) => void;
 }
+
+export const eventDialogFormSelectors = {
+  value: createSelector((state: EventDialogFormState, key: string) => state.values[key]),
+  error: createSelector((state: EventDialogFormState, key: string) => state.errors[key]),
+};
 
 /**
  * Ephemeral draft store backing the event dialog form.
  * Seeded from the event when the dialog opens and discarded when it closes,
  * it holds the edited values until they are committed to the scheduler store on save.
+ *
+ * Deliberately not built on Base UI's `Form`/`Field`: every input in the dialog is
+ * MUI Material, and the store holds non-DOM values (`rruleDraft`, `recurrenceSelection`)
+ * that `Field` cannot represent.
  */
-export class EventDialogFormStore extends Store<EventDialogFormState> {
-  private validators = new Map<string, Set<EventDialogFormValidator>>();
+export class EventDialogFormStore<
+  TValues extends Record<string, unknown> = EventDialogFormValues,
+> extends Store<EventDialogFormState<TValues>> {
+  private validators = new Map<string, Set<EventDialogFormValidator<TValues>>>();
 
-  private options: EventDialogFormStoreOptions;
+  private options: EventDialogFormStoreOptions<TValues>;
 
-  constructor(initialValues: Record<string, unknown>, options: EventDialogFormStoreOptions = {}) {
-    super({ values: initialValues, initialValues, errors: {} });
+  /**
+   * Values the form was seeded with, used to detect edited fields.
+   */
+  private readonly initialValues: TValues;
+
+  constructor(initialValues: TValues, options: EventDialogFormStoreOptions<TValues> = {}) {
+    super({ values: { ...initialValues }, errors: {} });
+    this.initialValues = { ...initialValues };
     this.options = options;
   }
 
+  /**
+   * Writes a single field and clears its error.
+   */
   public setValue = (key: string, value: unknown) => {
-    this.setValues({ [key]: value });
+    this.setValues({ [key]: value } as Partial<TValues>);
   };
 
-  public setValues = (changes: Record<string, unknown>) => {
-    const changedKeys = Object.keys(changes);
-    const values = { ...this.state.values, ...changes };
+  /**
+   * Merges the changes into the values and clears the errors of the written keys only.
+   * Accepts a functional updater to compute the changes from the current values.
+   */
+  public setValues = (changes: Partial<TValues> | ((prev: TValues) => Partial<TValues>)) => {
+    const resolvedChanges = typeof changes === 'function' ? changes(this.state.values) : changes;
+    const changedKeys = Object.keys(resolvedChanges);
+    const values = { ...this.state.values, ...resolvedChanges };
 
     let errors = this.state.errors;
     for (const key of changedKeys) {
@@ -64,13 +89,29 @@ export class EventDialogFormStore extends Store<EventDialogFormState> {
     this.options.onValuesChange?.(values, changedKeys);
   };
 
-  public clearErrors = () => {
-    if (Object.keys(this.state.errors).length > 0) {
-      this.set('errors', {});
+  /**
+   * Removes the errors of the provided keys, or every error when no keys are provided.
+   */
+  public clearErrors = (keys?: readonly string[]) => {
+    const { errors } = this.state;
+    if (keys === undefined) {
+      if (Object.keys(errors).length > 0) {
+        this.set('errors', {});
+      }
+      return;
+    }
+    if (keys.some((key) => key in errors)) {
+      const nextErrors = { ...errors };
+      for (const key of keys) {
+        delete nextErrors[key];
+      }
+      this.set('errors', nextErrors);
     }
   };
 
-  public registerValidator = (key: string, validator: EventDialogFormValidator) => {
+  // The validator registry lives on the instance rather than in the state on purpose:
+  // registering a validator must not notify subscribers.
+  public registerValidator = (key: string, validator: EventDialogFormValidator<TValues>) => {
     let validators = this.validators.get(key);
     if (!validators) {
       validators = new Set();
@@ -79,7 +120,7 @@ export class EventDialogFormStore extends Store<EventDialogFormState> {
     validators.add(validator);
   };
 
-  public unregisterValidator = (key: string, validator: EventDialogFormValidator) => {
+  public unregisterValidator = (key: string, validator: EventDialogFormValidator<TValues>) => {
     const validators = this.validators.get(key);
     validators?.delete(validator);
     if (validators?.size === 0) {
@@ -97,7 +138,7 @@ export class EventDialogFormStore extends Store<EventDialogFormState> {
     for (const [key, validators] of this.validators) {
       for (const validator of validators) {
         const result = validator(values[key], values);
-        if (result != null && !(Array.isArray(result) && result.length === 0)) {
+        if (result != null && result !== '' && !(Array.isArray(result) && result.length === 0)) {
           errors[key] = result;
           break;
         }
@@ -111,10 +152,10 @@ export class EventDialogFormStore extends Store<EventDialogFormState> {
    * Returns the values that changed since seeding, minus `excludeKeys`.
    */
   public getDirtyValues = (excludeKeys?: ReadonlySet<string>): Record<string, unknown> => {
-    const { values, initialValues } = this.state;
+    const { values } = this.state;
     const dirty: Record<string, unknown> = {};
     for (const key of Object.keys(values)) {
-      if (!excludeKeys?.has(key) && !Object.is(values[key], initialValues[key])) {
+      if (!excludeKeys?.has(key) && !Object.is(values[key], this.initialValues[key])) {
         dirty[key] = values[key];
       }
     }

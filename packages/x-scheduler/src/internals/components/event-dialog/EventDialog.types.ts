@@ -33,7 +33,7 @@ export interface EventDialogTriggerProps extends React.HTMLAttributes<HTMLElemen
 
 /**
  * Props shared by the General tab section components.
- * Sections read and write their fields through the form context (`useField`).
+ * Sections read and write their fields through the form context (`useEventDialogFormField`).
  */
 export interface EventDialogSectionProps {
   occurrence: SchedulerRenderableEventOccurrence;

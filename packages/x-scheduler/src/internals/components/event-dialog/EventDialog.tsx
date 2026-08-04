@@ -158,7 +158,14 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
           dragHandlerRef={dragHandlerRef}
         />
       ) : (
-        <FormContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
+        <FormContent
+          // Force a remount when the dialog is retargeted to another occurrence while
+          // open, so the form store is re-seeded instead of keeping the previous draft.
+          key={occurrence.id}
+          occurrence={occurrence}
+          onClose={onClose}
+          dragHandlerRef={dragHandlerRef}
+        />
       )}
     </EventDialogRoot>
   );

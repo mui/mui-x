@@ -6,10 +6,12 @@ import {
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import type { EventDialogFormValues } from './utils';
+import type { EventDialogBuiltInFormValues, EventDialogFormValues } from './utils';
 import { computeRange } from './utils';
 
-const PLACEHOLDER_KEYS = new Set([
+// Gate on the whole hook: only writes to these keys reach the placeholder.
+// Must stay in sync with what `computeRange` reads, plus `resourceId`.
+const PLACEHOLDER_KEYS: ReadonlySet<string> = new Set<keyof EventDialogBuiltInFormValues>([
   'startDate',
   'startTime',
   'endDate',
@@ -29,7 +31,7 @@ export function usePushPlaceholder() {
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
 
-  return function pushPlaceholder(values: Record<string, unknown>, changedKeys: string[]) {
+  return function pushPlaceholder(values: EventDialogFormValues, changedKeys: string[]) {
     if (rawPlaceholder?.type !== 'creation') {
       return;
     }
@@ -37,8 +39,7 @@ export function usePushPlaceholder() {
       return;
     }
 
-    const next = values as EventDialogFormValues;
-    const { start, end, surfaceType } = computeRange(adapter, next, displayTimezone);
+    const { start, end, surfaceType } = computeRange(adapter, values, displayTimezone);
     const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
       ? rawPlaceholder.surfaceType
       : surfaceType;
@@ -46,7 +47,7 @@ export function usePushPlaceholder() {
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: surfaceTypeToUse,
-      resourceId: next.resourceId,
+      resourceId: values.resourceId,
       start,
       end,
       lockSurfaceType: rawPlaceholder.lockSurfaceType,

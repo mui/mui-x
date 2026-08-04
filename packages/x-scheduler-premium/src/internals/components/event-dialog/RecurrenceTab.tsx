@@ -34,7 +34,7 @@ import type { EndsSelection } from '@mui/x-scheduler/internals';
 import {
   useEventDialogStyledContext,
   useEventDialogFormContext,
-  useField,
+  useEventDialogFormField,
   getEndsSelectionFromRRule,
   formatDayOfMonthAndMonthFullLetter,
   EventDialogTabPanel,
@@ -196,13 +196,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const endsUntilLabelId = `${schedulerId}-recurrence-ends-until-label`;
 
   // Form fields
-  const { value: recurrenceSelection } = useField<RecurringEventPresetKey | null | 'custom'>(
-    'recurrenceSelection',
-  );
-  const { value: rruleDraft } = useField<SchedulerProcessedEventRecurrenceRule>('rruleDraft');
-  // Handlers read the draft from the store so consecutive updates never work on a stale copy.
-  const getRruleDraft = () =>
-    formStore.state.values.rruleDraft as SchedulerProcessedEventRecurrenceRule;
+  const { value: recurrenceSelection } = useEventDialogFormField<
+    RecurringEventPresetKey | null | 'custom'
+  >('recurrenceSelection');
+  const { value: rruleDraft } =
+    useEventDialogFormField<SchedulerProcessedEventRecurrenceRule>('rruleDraft');
 
   // Selector hooks
   const isPropertyReadOnly = useStore(
@@ -223,7 +221,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   );
 
   // Form-state drafts: every preset carries both `byDay` and `byMonthDay` (empty when
-  // not used) so the controlled form keeps a consistent shape as the user switches presets.
+  // not used) so the `rruleDraft` value keeps a consistent shape as the user switches presets.
   // Differs from `computePresets`, which only includes the fields each preset actually serializes.
   const presetDraftMap = React.useMemo(
     () => ({
@@ -255,10 +253,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const handleChangeInterval = (event: React.ChangeEvent<HTMLInputElement>) => {
     const intervalValue = Number(event.currentTarget.value || 1);
-    formStore.setValues({
+    formStore.setValues((prev) => ({
       recurrenceSelection: 'custom',
-      rruleDraft: { ...getRruleDraft(), interval: intervalValue },
-    });
+      rruleDraft: { ...prev.rruleDraft, interval: intervalValue },
+    }));
   };
 
   const handleChangeFrequency = (newFrequency: RecurringEventFrequency | null) => {
@@ -267,45 +265,47 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     }
     // When switching frequency, clear byDay/byMonthDay to avoid stale values
     // from a different frequency leaking (e.g. monthly ordinal "2TU" into weekly)
-    formStore.setValues({
+    formStore.setValues((prev) => ({
       recurrenceSelection: 'custom',
       rruleDraft: {
-        ...getRruleDraft(),
+        ...prev.rruleDraft,
         freq: newFrequency,
         byDay: newFrequency === 'WEEKLY' ? [monthlyRef.code] : [],
         byMonthDay: newFrequency === 'MONTHLY' ? [monthlyRef.dayOfMonth] : [],
       },
-    });
+    }));
   };
 
   const handleEndsChange = (endsSelection: EndsSelection) => {
     switch (endsSelection) {
       case 'until': {
-        formStore.setValues({
+        formStore.setValues((prev) => ({
           recurrenceSelection: 'custom',
           rruleDraft: {
-            ...getRruleDraft(),
-            until: adapter.date(formStore.state.values.endDate as string, 'default'),
+            ...prev.rruleDraft,
+            until: adapter.date(prev.endDate, 'default'),
             count: undefined,
           },
-        });
+        }));
         break;
       }
       case 'after': {
-        formStore.setValues({
+        formStore.setValues((prev) => ({
           recurrenceSelection: 'custom',
           rruleDraft: {
-            ...getRruleDraft(),
+            ...prev.rruleDraft,
             count: 1,
             until: undefined,
           },
-        });
+        }));
         break;
       }
       case 'never':
       default: {
-        const { count, until, ...rest } = getRruleDraft();
-        formStore.setValues({ recurrenceSelection: 'custom', rruleDraft: rest });
+        formStore.setValues((prev) => {
+          const { count, until, ...rest } = prev.rruleDraft;
+          return { recurrenceSelection: 'custom', rruleDraft: rest };
+        });
         break;
       }
     }
@@ -313,31 +313,32 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const handleChangeCount = (event: React.ChangeEvent<HTMLInputElement>) => {
     const countValue = Number(event.currentTarget.value || 1);
-    formStore.setValues({
+    formStore.setValues((prev) => ({
       recurrenceSelection: 'custom',
-      rruleDraft: { ...getRruleDraft(), count: countValue },
-    });
+      rruleDraft: { ...prev.rruleDraft, count: countValue },
+    }));
   };
 
   const handleChangeUntil = (event: React.ChangeEvent<HTMLInputElement>) => {
     const untilValue = event.currentTarget.value;
-    formStore.setValues({
+    formStore.setValues((prev) => ({
       recurrenceSelection: 'custom',
-      rruleDraft: { ...getRruleDraft(), until: adapter.date(untilValue, 'default') },
-    });
+      rruleDraft: { ...prev.rruleDraft, until: adapter.date(untilValue, 'default') },
+    }));
   };
 
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
-    const draft = getRruleDraft();
-    const byDay = draft.byDay ?? [];
-    const isRemoving = byDay.includes(dayCode);
-    if (isRemoving && byDay.length === 1) {
-      return;
-    }
-    const next = isRemoving ? byDay.filter((d) => d !== dayCode) : [...byDay, dayCode];
-    formStore.setValues({
-      recurrenceSelection: 'custom',
-      rruleDraft: { ...draft, byDay: next },
+    formStore.setValues((prev) => {
+      const byDay = prev.rruleDraft.byDay ?? [];
+      const isRemoving = byDay.includes(dayCode);
+      if (isRemoving && byDay.length === 1) {
+        return {};
+      }
+      const next = isRemoving ? byDay.filter((d) => d !== dayCode) : [...byDay, dayCode];
+      return {
+        recurrenceSelection: 'custom',
+        rruleDraft: { ...prev.rruleDraft, byDay: next },
+      };
     });
   };
 
@@ -346,17 +347,21 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
     if (nextKey === 'byDay') {
       const byDayValue = `${monthlyRef.ord}${monthlyRef.code}` as RecurringEventByDayValue;
-      const { byMonthDay, ...rest } = getRruleDraft();
-      formStore.setValues({
-        recurrenceSelection: 'custom',
-        rruleDraft: { ...rest, byDay: [byDayValue] },
+      formStore.setValues((prev) => {
+        const { byMonthDay, ...rest } = prev.rruleDraft;
+        return {
+          recurrenceSelection: 'custom',
+          rruleDraft: { ...rest, byDay: [byDayValue] },
+        };
       });
       return;
     }
-    const { byDay, ...rest } = getRruleDraft();
-    formStore.setValues({
-      recurrenceSelection: 'custom',
-      rruleDraft: { ...rest, byMonthDay: [monthlyRef.dayOfMonth] },
+    formStore.setValues((prev) => {
+      const { byDay, ...rest } = prev.rruleDraft;
+      return {
+        recurrenceSelection: 'custom',
+        rruleDraft: { ...rest, byMonthDay: [monthlyRef.dayOfMonth] },
+      };
     });
   };
 

@@ -156,6 +156,23 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     ]);
   });
 
+  it('should warn when a custom event property collides with a built-in form key', () => {
+    const eventWithCollidingProperty = {
+      ...DEFAULT_EVENT,
+      startDate: 'project-kickoff',
+    } as SchedulerEvent;
+
+    expect(() => {
+      render(
+        <EventCalendarProvider events={[eventWithCollidingProperty]} resources={resources}>
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+    }).toWarnDev([
+      'MUI X Scheduler: The event model contains a custom property "startDate" that collides with a built-in form key.',
+    ]);
+  });
+
   it('should warn when updateRecurringEvent is called without a plugin', () => {
     expect(() => {
       render(

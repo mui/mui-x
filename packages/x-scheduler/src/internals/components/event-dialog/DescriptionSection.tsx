@@ -6,7 +6,7 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-schedul
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import type { EventDialogSectionProps } from './EventDialog.types';
-import { useField } from './form/useField';
+import { useEventDialogFormField } from './form/useEventDialogFormField';
 
 export default function DescriptionSection(props: EventDialogSectionProps) {
   const { occurrence } = props;
@@ -22,7 +22,7 @@ export default function DescriptionSection(props: EventDialogSectionProps) {
     occurrence.id,
   );
 
-  const description = useField<string>('description');
+  const description = useEventDialogFormField<string>('description');
 
   return (
     <TextField

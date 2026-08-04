@@ -12,10 +12,9 @@ import type { EventDialogLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 /**
- * Typed view of the form values bag. Custom fields from the user's event model
- * live alongside these built-in keys.
+ * Form values handled by the built-in submit logic.
  */
-export interface EventDialogFormValues extends Record<string, unknown> {
+export interface EventDialogBuiltInFormValues {
   title: string;
   description: string;
   startDate: string;
@@ -30,22 +29,33 @@ export interface EventDialogFormValues extends Record<string, unknown> {
 }
 
 /**
- * Form keys handled by the built-in submit logic. Every other key in the values
- * bag is a custom field and is spread onto the event as-is.
+ * Typed view of the form values bag. Custom fields from the user's event model
+ * live alongside the built-in keys.
  */
-export const BUILT_IN_FORM_KEYS: ReadonlySet<string> = new Set([
-  'title',
-  'description',
-  'startDate',
-  'startTime',
-  'endDate',
-  'endTime',
-  'resourceId',
-  'allDay',
-  'color',
-  'recurrenceSelection',
-  'rruleDraft',
-]);
+export type EventDialogFormValues = EventDialogBuiltInFormValues & Record<string, unknown>;
+
+// The `-?` mapped type makes a key added to the interface but missing here a compile error.
+const BUILT_IN_FORM_KEYS_LOOKUP: { [P in keyof EventDialogBuiltInFormValues]-?: true } = {
+  title: true,
+  description: true,
+  startDate: true,
+  startTime: true,
+  endDate: true,
+  endTime: true,
+  resourceId: true,
+  allDay: true,
+  color: true,
+  recurrenceSelection: true,
+  rruleDraft: true,
+};
+
+/**
+ * Form keys handled by the built-in submit logic. Every other key in the values
+ * bag is a custom field; the ones the user edited are spread onto the event as-is.
+ */
+export const BUILT_IN_FORM_KEYS: ReadonlySet<string> = new Set(
+  Object.keys(BUILT_IN_FORM_KEYS_LOOKUP),
+);
 
 const WEEKDAYS: SchedulerWeekday[] = [
   'sunday',

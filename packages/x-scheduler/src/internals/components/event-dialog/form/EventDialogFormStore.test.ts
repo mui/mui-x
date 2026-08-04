@@ -3,11 +3,19 @@ import { EventDialogFormStore } from './EventDialogFormStore';
 
 describe('EventDialogFormStore', () => {
   describe('constructor', () => {
-    it('should seed values and initialValues from the provided object', () => {
+    it('should seed the values from the provided object', () => {
       const store = new EventDialogFormStore({ title: 'Meeting', priority: 'high' });
       expect(store.state.values).to.deep.equal({ title: 'Meeting', priority: 'high' });
-      expect(store.state.initialValues).to.deep.equal({ title: 'Meeting', priority: 'high' });
       expect(store.state.errors).to.deep.equal({});
+    });
+
+    it('should not share the seed object with the caller', () => {
+      const seed: Record<string, unknown> = { title: 'Meeting' };
+      const store = new EventDialogFormStore(seed);
+      seed.title = 'Mutated';
+      expect(store.state.values).to.deep.equal({ title: 'Meeting' });
+      // The dirty baseline is also detached from the caller's object.
+      expect(store.getDirtyValues()).to.deep.equal({});
     });
   });
 
@@ -65,7 +73,11 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should clear the errors of all the written keys', () => {
-      const store = new EventDialogFormStore({ a: null, b: null, c: null });
+      const store = new EventDialogFormStore<Record<string, unknown>>({
+        a: null,
+        b: null,
+        c: null,
+      });
       store.registerValidator('a', (value) => (value ? null : 'Required'));
       store.registerValidator('b', (value) => (value ? null : 'Required'));
       store.registerValidator('c', (value) => (value ? null : 'Required'));
@@ -83,6 +95,28 @@ describe('EventDialogFormStore', () => {
       store.validateAll();
       store.clearErrors();
       expect(store.state.errors).to.deep.equal({});
+    });
+
+    it('should only remove the errors of the provided keys', () => {
+      const store = new EventDialogFormStore({ title: '', priority: null });
+      store.registerValidator('title', () => 'Title required');
+      store.registerValidator('priority', () => 'Priority required');
+      store.validateAll();
+
+      store.clearErrors(['title']);
+      expect(store.state.errors).to.deep.equal({ priority: 'Priority required' });
+    });
+
+    it('should not notify subscribers when none of the provided keys has an error', () => {
+      const store = new EventDialogFormStore({ title: '', priority: null });
+      store.registerValidator('priority', () => 'Priority required');
+      store.validateAll();
+
+      const listener = spy();
+      store.subscribe(listener);
+      store.clearErrors(['title']);
+      expect(listener.callCount).to.equal(0);
+      expect(store.state.errors).to.deep.equal({ priority: 'Priority required' });
     });
   });
 
@@ -133,6 +167,13 @@ describe('EventDialogFormStore', () => {
     it('should treat an empty error array as valid', () => {
       const store = new EventDialogFormStore({ title: '' });
       store.registerValidator('title', () => []);
+      expect(store.validateAll()).to.equal(true);
+      expect(store.state.errors).to.deep.equal({});
+    });
+
+    it('should treat an empty error string as valid', () => {
+      const store = new EventDialogFormStore({ title: '' });
+      store.registerValidator('title', () => '');
       expect(store.validateAll()).to.equal(true);
       expect(store.state.errors).to.deep.equal({});
     });

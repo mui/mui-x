@@ -30,7 +30,7 @@ import { getPaletteVariants } from '../../utils/tokens';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
-import { useField } from './form/useField';
+import { useEventDialogFormField } from './form/useEventDialogFormField';
 
 const NO_RESOURCE_VALUE = '';
 
@@ -149,11 +149,11 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
     occurrence.id,
   );
 
-  const resourceField = useField<SchedulerResourceId | null>('resourceId', {
+  const resourceField = useEventDialogFormField<SchedulerResourceId | null>('resourceId', {
     validate: (value) =>
       shouldEventRequireResource && value === null ? localeText.requiredResourceError : null,
   });
-  const colorField = useField<SchedulerEventColor | null>('color');
+  const colorField = useEventDialogFormField<SchedulerEventColor | null>('color');
 
   const readOnly = isPropertyReadOnly('resource');
   const { value: resourceId } = resourceField;

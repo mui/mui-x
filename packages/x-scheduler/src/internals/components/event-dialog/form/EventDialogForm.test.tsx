@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import { ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventDialogFormProvider, useEventDialogFormContext } from './EventDialogFormContext';
-import { useField } from './useField';
+import { useEventDialogFormField } from './useEventDialogFormField';
 import type { EventDialogFormStore } from './EventDialogFormStore';
 
 describe('EventDialogForm', () => {
@@ -11,11 +13,13 @@ describe('EventDialogForm', () => {
   interface FieldProbeProps {
     fieldKey: string;
     validate?: (value: unknown) => string | string[] | null;
+    onRender?: () => void;
   }
 
   function FieldProbe(props: FieldProbeProps) {
-    const { fieldKey, validate } = props;
-    const { value, setValue, error } = useField<string>(fieldKey, { validate });
+    const { fieldKey, validate, onRender } = props;
+    const { value, setValue, error } = useEventDialogFormField<string>(fieldKey, { validate });
+    onRender?.();
     return (
       <React.Fragment>
         <input
@@ -37,7 +41,7 @@ describe('EventDialogForm', () => {
     return null;
   }
 
-  describe('useField', () => {
+  describe('useEventDialogFormField', () => {
     it('should read the seeded value', () => {
       render(
         <EventDialogFormProvider initialValues={{ title: 'Meeting' }}>
@@ -96,6 +100,44 @@ describe('EventDialogForm', () => {
 
       await user.type(screen.getByLabelText('title'), 'S');
       expect(screen.queryByRole('alert')).to.equal(null);
+    });
+
+    it('should not re-render a field bound to another key when a field is written', async () => {
+      const onTitleRender = spy();
+      const onPriorityRender = spy();
+      const { user } = render(
+        <EventDialogFormProvider initialValues={{ title: '', priority: '' }}>
+          <FieldProbe fieldKey="title" onRender={onTitleRender} />
+          <FieldProbe fieldKey="priority" onRender={onPriorityRender} />
+        </EventDialogFormProvider>,
+      );
+
+      const priorityRendersAfterMount = onPriorityRender.callCount;
+      await user.type(screen.getByLabelText('title'), 'S');
+
+      expect(onTitleRender.callCount).to.be.greaterThan(1);
+      expect(onPriorityRender.callCount).to.equal(priorityRendersAfterMount);
+    });
+
+    it('should warn when the key is a built-in event property not handled by the form', () => {
+      clearWarningsCache();
+      expect(() => {
+        render(
+          <EventDialogFormProvider initialValues={{}}>
+            <FieldProbe fieldKey="timezone" />
+          </EventDialogFormProvider>,
+        );
+      }).toWarnDev(['MUI X Scheduler: useEventDialogFormField() received the key "timezone"']);
+    });
+
+    it('should not warn for a built-in form key or a custom key', () => {
+      clearWarningsCache();
+      render(
+        <EventDialogFormProvider initialValues={{ title: '', priority: 'high' }}>
+          <FieldProbe fieldKey="title" />
+          <FieldProbe fieldKey="priority" />
+        </EventDialogFormProvider>,
+      );
     });
 
     it('should unregister the validator when the section unmounts', () => {
