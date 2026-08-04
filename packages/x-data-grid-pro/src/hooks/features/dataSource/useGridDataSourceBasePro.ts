@@ -447,6 +447,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   const dataSourcePrivateApi: GridDataSourcePrivateApiPro = {
     fetchRowChildren,
     resetDataSourceState,
+    clearDataSourceState,
     removeChildrenRows,
   };
 

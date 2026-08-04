@@ -1009,6 +1009,10 @@ export const useGridDataSourceNestedLazyLoader = (
       renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
+      // Root fetches don't clear the data source state under this strategy — abort the
+      // in-flight child requests explicitly, their responses were computed for the
+      // previous sort model and must not be applied to the rebuilt tree.
+      privateApiRef.current.clearDataSourceState();
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
 
@@ -1031,6 +1035,10 @@ export const useGridDataSourceNestedLazyLoader = (
       renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
+      // Root fetches don't clear the data source state under this strategy — abort the
+      // in-flight child requests explicitly, their responses were computed for the
+      // previous filter model and must not be applied to the rebuilt tree.
+      privateApiRef.current.clearDataSourceState();
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const sortModel = gridSortModelSelector(privateApiRef);
