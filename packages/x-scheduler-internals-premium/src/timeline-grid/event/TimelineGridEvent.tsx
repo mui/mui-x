@@ -8,6 +8,7 @@ import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
+  SchedulerResourceId,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import {
@@ -59,7 +60,11 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
-  const { hasFocus: rowHasFocus, getCursorPositionInElementMs } = useTimelineGridEventRowContext();
+  const {
+    resourceId: rowResourceId,
+    hasFocus: rowHasFocus,
+    getCursorPositionInElementMs,
+  } = useTimelineGridEventRowContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
@@ -92,6 +97,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         start: start.value,
         end: end.value,
         initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
+        sourceResourceId: rowResourceId,
       };
     },
   );
@@ -183,6 +189,10 @@ export namespace TimelineGridEvent {
     start: TemporalSupportedObject;
     end: TemporalSupportedObject;
     initialCursorPositionInEventMs: number;
+    /**
+     * The id of the resource row the occurrence was dragged from.
+     */
+    sourceResourceId: SchedulerResourceId;
   }
 
   export interface DragData extends SharedDragData {
