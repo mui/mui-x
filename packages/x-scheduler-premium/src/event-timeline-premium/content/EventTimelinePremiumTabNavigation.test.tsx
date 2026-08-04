@@ -228,7 +228,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
       return eventRoot;
     }
 
-    it('scopes focus restoration by row when the target occurrence key is duplicated in another row', async () => {
+    it('should scope focus restoration by row when the target occurrence key is duplicated in another row', async () => {
       const soloInA = EventBuilder.new()
         .title('Solo A')
         .singleDay('2025-07-03T09:00:00Z', 30)

@@ -48,7 +48,7 @@ function buildPlaceholder(
 
 describe('timelineOccurrencePlaceholderSelectors', () => {
   describe('placeholderInResource', () => {
-    it('previews in every row a multi-resource event will occupy after a cross-row drag, not just the destination', () => {
+    it('should preview in every row a multi-resource event will occupy after a cross-row drag, not just the destination', () => {
       // Event is currently on [A, C]. Dragged from A onto B: target set is [B, C].
       const placeholder = buildPlaceholder();
       const state = getState(placeholder);
@@ -67,7 +67,7 @@ describe('timelineOccurrencePlaceholderSelectors', () => {
       ).to.equal(null);
     });
 
-    it('previews in every current row for a resize/time-only change (source === destination)', () => {
+    it('should preview in every current row for a resize/time-only change (source === destination)', () => {
       // Event is currently on [A, C]; resized in place on A, so source === destination.
       const placeholder = buildPlaceholder({
         type: 'internal-resize',
@@ -87,7 +87,7 @@ describe('timelineOccurrencePlaceholderSelectors', () => {
       ).to.equal(null);
     });
 
-    it('dedupes when dropping onto a row the event already occupies', () => {
+    it('should dedupe when dropping onto a row the event already occupies', () => {
       // Event is currently on [A, C]; dragged from A onto C, which is already in the set.
       const placeholder = buildPlaceholder({ resourceId: resourceC.id });
       const state = getState(placeholder);
@@ -100,7 +100,7 @@ describe('timelineOccurrencePlaceholderSelectors', () => {
       ).to.equal(null);
     });
 
-    it('keeps the single-row behavior for single-resource events', () => {
+    it('should keep the single-row behavior for single-resource events', () => {
       const placeholder = buildPlaceholder({
         originalOccurrence: EventBuilder.new()
           .id('event-1')
@@ -121,7 +121,7 @@ describe('timelineOccurrencePlaceholderSelectors', () => {
       ).to.equal(null);
     });
 
-    it('returns null when the row is not in the target set', () => {
+    it('should return null when the row is not in the target set', () => {
       const placeholder = buildPlaceholder();
       const state = getState(placeholder);
 
@@ -130,7 +130,7 @@ describe('timelineOccurrencePlaceholderSelectors', () => {
       ).to.equal(null);
     });
 
-    it('returns null outside the timeline surface, when hidden, or outside the visible range', () => {
+    it('should return null outside the timeline surface, when hidden, or outside the visible range', () => {
       const placeholder = buildPlaceholder();
 
       expect(
