@@ -67,6 +67,36 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     );
   });
 
+  it('should not render the resource select when there are no resources, but should keep the color picker', () => {
+    const noResourceEvent: SchedulerEvent = EventBuilder.new()
+      .title('Running')
+      .description('Morning run')
+      .singleDay('2025-05-26T07:30:00Z', 45)
+      .build();
+
+    render(
+      <EventCalendarProvider events={[noResourceEvent]}>
+        <EventDialogContent
+          open
+          {...defaultProps}
+          occurrence={EventBuilder.new()
+            .id(noResourceEvent.id)
+            .title(noResourceEvent.title)
+            .span(noResourceEvent.start, noResourceEvent.end)
+            .toOccurrence()}
+        />
+      </EventCalendarProvider>,
+    );
+
+    // The "Resource & color" section still renders, and so does the color picker...
+    expect(screen.getByText('Resource & color')).not.to.equal(null);
+    expect(screen.getByRole('group', { name: 'Event color' })).not.to.equal(null);
+
+    // ...but the resource select itself is gone since there are no resources to pick from.
+    expect(screen.queryByRole('combobox', { name: 'Resource' })).to.equal(null);
+    expect(screen.queryByText('No resource')).to.equal(null);
+  });
+
   it('should not render the recurrence tab when no slot is provided', () => {
     render(
       <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>

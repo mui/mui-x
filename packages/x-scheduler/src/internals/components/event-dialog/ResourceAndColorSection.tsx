@@ -241,85 +241,88 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
       <SectionHeaderTitle className={classes.eventDialogSectionHeaderTitle}>
         {localeText.resourceColorSectionLabel}
       </SectionHeaderTitle>
-      <FormControl size="small" fullWidth error={!!error}>
-        <InputLabel id={`${schedulerId}-resource-select-label`}>
-          {localeText.resourceLabel}
-        </InputLabel>
-        <Select
-          labelId={`${schedulerId}-resource-select-label`}
-          label={localeText.resourceLabel}
-          value={resourceId ?? NO_RESOURCE_VALUE}
-          displayEmpty
-          onChange={handleChange}
-          readOnly={readOnly}
-          aria-describedby={error ? errorId : undefined}
-          startAdornment={
-            <InputAdornment position="start">
-              <ResourceSelectAdornment resource={resource} />
-            </InputAdornment>
-          }
-          renderValue={() => {
-            if (resource) {
-              return resource.label;
+      {/* Resources are optional; skip the picker entirely when none are configured. */}
+      {resources.length > 0 && (
+        <FormControl size="small" fullWidth error={!!error}>
+          <InputLabel id={`${schedulerId}-resource-select-label`}>
+            {localeText.resourceLabel}
+          </InputLabel>
+          <Select
+            labelId={`${schedulerId}-resource-select-label`}
+            label={localeText.resourceLabel}
+            value={resourceId ?? NO_RESOURCE_VALUE}
+            displayEmpty
+            onChange={handleChange}
+            readOnly={readOnly}
+            aria-describedby={error ? errorId : undefined}
+            startAdornment={
+              <InputAdornment position="start">
+                <ResourceSelectAdornment resource={resource} />
+              </InputAdornment>
             }
-            // `resourceId == null` means the resource is unset, not invalid.
-            if (resourceId == null) {
-              return localeText.labelNoResource;
-            }
-            return localeText.labelInvalidResource;
-          }}
-        >
-          {resourcesOptions.flatMap((resourceOption) => {
-            const items: React.ReactNode[] = [];
+            renderValue={() => {
+              if (resource) {
+                return resource.label;
+              }
+              // `resourceId == null` means the resource is unset, not invalid.
+              if (resourceId == null) {
+                return localeText.labelNoResource;
+              }
+              return localeText.labelInvalidResource;
+            }}
+          >
+            {resourcesOptions.flatMap((resourceOption) => {
+              const items: React.ReactNode[] = [];
 
-            if (resourceOption.showDivider) {
-              items.push(<Divider key={`divider-${resourceOption.value}`} />);
-            }
+              if (resourceOption.showDivider) {
+                items.push(<Divider key={`divider-${resourceOption.value}`} />);
+              }
 
-            if (resourceOption.isGroupRoot) {
+              if (resourceOption.isGroupRoot) {
+                items.push(
+                  <ResourceMenuListSubheader
+                    key={`header-${resourceOption.value}`}
+                    className={classes.eventDialogResourceMenuListSubheader}
+                  >
+                    {resourceOption.label.toUpperCase()}
+                  </ResourceMenuListSubheader>,
+                );
+              }
+
               items.push(
-                <ResourceMenuListSubheader
-                  key={`header-${resourceOption.value}`}
-                  className={classes.eventDialogResourceMenuListSubheader}
+                <ResourceMenuItem
+                  key={resourceOption.value ?? NO_RESOURCE_VALUE}
+                  value={resourceOption.value ?? NO_RESOURCE_VALUE}
+                  aria-label={resourceOption.label}
+                  className={classes.eventDialogResourceMenuItem}
+                  style={
+                    {
+                      '--resource-indent': resourceOption.indentLevel,
+                      ...(resourceOption.hidden && { display: 'none' }),
+                    } as React.CSSProperties
+                  }
                 >
-                  {resourceOption.label.toUpperCase()}
-                </ResourceMenuListSubheader>,
+                  <ListItemIcon>
+                    <ResourceMenuColorDot
+                      className={classes.eventDialogResourceMenuColorDot}
+                      data-palette={resourceOption.eventColor}
+                      data-no-resource={Boolean(resourceOption.value === null)}
+                    />
+                  </ListItemIcon>
+                  <ListItemText>{resourceOption.label}</ListItemText>
+                </ResourceMenuItem>,
               );
-            }
 
-            items.push(
-              <ResourceMenuItem
-                key={resourceOption.value ?? NO_RESOURCE_VALUE}
-                value={resourceOption.value ?? NO_RESOURCE_VALUE}
-                aria-label={resourceOption.label}
-                className={classes.eventDialogResourceMenuItem}
-                style={
-                  {
-                    '--resource-indent': resourceOption.indentLevel,
-                    ...(resourceOption.hidden && { display: 'none' }),
-                  } as React.CSSProperties
-                }
-              >
-                <ListItemIcon>
-                  <ResourceMenuColorDot
-                    className={classes.eventDialogResourceMenuColorDot}
-                    data-palette={resourceOption.eventColor}
-                    data-no-resource={Boolean(resourceOption.value === null)}
-                  />
-                </ListItemIcon>
-                <ListItemText>{resourceOption.label}</ListItemText>
-              </ResourceMenuItem>,
-            );
-
-            return items;
-          })}
-        </Select>
-        {error && (
-          <FormHelperText id={errorId} role="alert">
-            {error}
-          </FormHelperText>
-        )}
-      </FormControl>
+              return items;
+            })}
+          </Select>
+          {error && (
+            <FormHelperText id={errorId} role="alert">
+              {error}
+            </FormHelperText>
+          )}
+        </FormControl>
+      )}
       <ResourceMenuColorToggleGroup
         value={color ? [color] : []}
         onValueChange={(values) => {
