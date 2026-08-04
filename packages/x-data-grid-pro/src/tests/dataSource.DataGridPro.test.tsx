@@ -112,8 +112,7 @@ describe('<DataGridPro /> - Data source', () => {
       });
     });
   });
-  // The rows of a data source grid live in the state, not in props, but a new `getRowId` still
-  // has to re-key them.
+  // Data source rows live in the state, but a new `getRowId` must still re-key them.
   it('should re-key the rows when `getRowId` changes', async () => {
     const rows = [
       { id: 'a', alt: 'alt-a', name: 'Row A' },

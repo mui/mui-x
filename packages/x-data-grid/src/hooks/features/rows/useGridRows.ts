@@ -645,12 +645,9 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock this f
     }
 
     const currentRows = props.dataSource ? gridDataRowsSelector(apiRef) : props.rows;
-    // With a data source the rows never come from props, so there is never a new set of rows to
-    // apply here: they are already in the state by definition. The identity comparison below is
-    // meaningless in that case, as `gridDataRowsSelector` builds a new array on every recompute,
-    // which would make this effect rebuild the whole row tree every time it re-runs — dropping
-    // skeleton rows and resetting the expansion state. Only a new `getRowId` requires a rebuild,
-    // to re-key the rows already in the state.
+    // Data source rows live in the state, not in props: there is never a new set to apply, and
+    // `gridDataRowsSelector` returns a new array each time so the identity check never holds.
+    // Only a new `getRowId` needs a rebuild, to re-key them.
     const areNewRowsAlreadyInState = props.dataSource
       ? !isGetRowIdPropUpdated
       : apiRef.current.caches.rows.rowsBeforePartialUpdates === currentRows;

@@ -880,7 +880,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
           expect(apiRef.current!.state.rows.tree.g1).not.to.equal(undefined);
         });
 
-        // Expand the first group and let its children load.
         await user.click(getCell(0, 0).querySelector('button')!);
 
         await waitFor(() => {
