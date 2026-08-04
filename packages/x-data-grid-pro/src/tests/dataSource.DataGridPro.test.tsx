@@ -112,4 +112,48 @@ describe('<DataGridPro /> - Data source', () => {
       });
     });
   });
+  // The rows of a data source grid live in the state, not in props, but a new `getRowId` still
+  // has to re-key them.
+  it('should re-key the rows when `getRowId` changes', async () => {
+    const rows = [
+      { id: 'a', alt: 'alt-a', name: 'Row A' },
+      { id: 'b', alt: 'alt-b', name: 'Row B' },
+    ];
+
+    function TestGetRowId(props: { useAltId?: boolean }) {
+      const { useAltId = false } = props;
+      apiRef = useGridApiRef();
+
+      const dataSource: GridDataSource = React.useMemo(
+        () => ({ getRows: async () => ({ rows, rowCount: rows.length }) }),
+        [],
+      );
+
+      const getRowId = React.useCallback((row: any) => (useAltId ? row.alt : row.id), [useAltId]);
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }]}
+            dataSource={dataSource}
+            getRowId={getRowId}
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestGetRowId />);
+
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.dataRowIds).to.deep.equal(['a', 'b']);
+    });
+
+    setProps({ useAltId: true });
+
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.dataRowIds).to.deep.equal(['alt-a', 'alt-b']);
+    });
+  });
 });

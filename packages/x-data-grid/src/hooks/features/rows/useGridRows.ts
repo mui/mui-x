@@ -106,6 +106,7 @@ export const useGridRows = (
 
   const lastUpdateMs = React.useRef(Date.now());
   const lastRowCount = React.useRef(props.rowCount);
+  const lastGetRowId = React.useRef(props.getRowId);
   const timeout = useTimeout();
 
   // Get overridable methods from configuration
@@ -637,9 +638,22 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock this f
       lastRowCount.current = props.rowCount;
     }
 
+    let isGetRowIdPropUpdated = false;
+    if (props.getRowId !== lastGetRowId.current) {
+      isGetRowIdPropUpdated = true;
+      lastGetRowId.current = props.getRowId;
+    }
+
     const currentRows = props.dataSource ? gridDataRowsSelector(apiRef) : props.rows;
-    const areNewRowsAlreadyInState =
-      apiRef.current.caches.rows.rowsBeforePartialUpdates === currentRows;
+    // With a data source the rows never come from props, so there is never a new set of rows to
+    // apply here: they are already in the state by definition. The identity comparison below is
+    // meaningless in that case, as `gridDataRowsSelector` builds a new array on every recompute,
+    // which would make this effect rebuild the whole row tree every time it re-runs — dropping
+    // skeleton rows and resetting the expansion state. Only a new `getRowId` requires a rebuild,
+    // to re-key the rows already in the state.
+    const areNewRowsAlreadyInState = props.dataSource
+      ? !isGetRowIdPropUpdated
+      : apiRef.current.caches.rows.rowsBeforePartialUpdates === currentRows;
     const isNewLoadingAlreadyInState =
       apiRef.current.caches.rows.loadingPropBeforePartialUpdates === props.loading;
     const isNewRowCountAlreadyInState =
