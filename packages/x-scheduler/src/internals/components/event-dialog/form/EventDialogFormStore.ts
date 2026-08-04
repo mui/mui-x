@@ -53,6 +53,7 @@ export interface EventDialogFormStoreOptions<
 
 export const eventDialogFormSelectors = {
   value: createSelector((state: EventDialogFormState, key: string) => state.values[key]),
+  hasValue: createSelector((state: EventDialogFormState, key: string) => key in state.values),
   error: createSelector((state: EventDialogFormState, key: string) => state.errors[key]),
 };
 

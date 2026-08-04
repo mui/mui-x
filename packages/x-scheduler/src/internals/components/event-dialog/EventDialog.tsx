@@ -161,7 +161,8 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
         <FormContent
           // Force a remount when the dialog is retargeted to another occurrence while
           // open, so the form store is re-seeded instead of keeping the previous draft.
-          key={occurrence.id}
+          // Keyed by `key`, not `id`: occurrences of the same recurring event share the id.
+          key={occurrence.key}
           occurrence={occurrence}
           onClose={onClose}
           dragHandlerRef={dragHandlerRef}

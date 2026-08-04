@@ -79,8 +79,10 @@ export function useEventDialogFormField<T = unknown>(
   const { defaultValue } = parameters;
 
   const storedValue = useStore(store, eventDialogFormSelectors.value, key) as T | undefined;
-  // The store is only seeded in an effect, so fall back for the first render.
-  const value = (storedValue === undefined ? defaultValue : storedValue) as T;
+  const isSeeded = useStore(store, eventDialogFormSelectors.hasValue, key);
+  // The store is only seeded in an effect, so fall back until the key exists.
+  // Once seeded, an explicit `undefined` write must not resurrect the default.
+  const value = (storedValue === undefined && !isSeeded ? defaultValue : storedValue) as T;
   const errorList = useStore(store, eventDialogFormSelectors.error, key);
 
   const setValue = useStableCallback((newValue: T) => store.setValue(key, newValue));

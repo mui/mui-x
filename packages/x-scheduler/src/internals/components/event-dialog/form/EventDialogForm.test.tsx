@@ -155,6 +155,28 @@ describe('EventDialogForm', () => {
       expect(screen.getByLabelText('notes')).to.have.value('from-model');
     });
 
+    it('should not fall back to the default value when the field is reset to undefined', async () => {
+      let formStore: EventDialogFormStore | null = null;
+      render(
+        <EventDialogFormProvider initialValues={{ title: '' }}>
+          <FieldProbe fieldKey="notes" defaultValue="default" />
+          <StoreGrabber
+            onMount={(store) => {
+              formStore = store;
+            }}
+          />
+        </EventDialogFormProvider>,
+      );
+      expect(screen.getByLabelText('notes')).to.have.value('default');
+
+      await React.act(async () => {
+        formStore!.setValue('notes', undefined);
+      });
+      // The rendered value must match what would be submitted, not the default.
+      expect(screen.getByLabelText('notes')).to.have.value('');
+      expect(formStore!.getDirtyValues()).to.deep.equal({ notes: undefined });
+    });
+
     it('should not re-render a field bound to another key when a field is written', async () => {
       const onTitleRender = spy();
       const onPriorityRender = spy();

@@ -13,6 +13,7 @@ import {
 import { screen, within } from '@mui/internal-test-utils';
 import type {
   SchedulerResource,
+  SchedulerEventOccurrence,
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -108,6 +109,39 @@ describe('<EventDialogContent open />', () => {
     // Verify recurrence tab is clickable (recurrence value tested in other tests)
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     expect(screen.getByRole('combobox', { name: /recurrence/i })).to.not.equal(null);
+  });
+
+  it('should re-seed the form when the dialog is retargeted to another occurrence of the same event', async () => {
+    const weeklyEventBuilder = EventBuilder.new(adapter)
+      .title('Weekly sync')
+      .singleDay('2025-05-26T09:00:00Z', 30)
+      .recurrent('WEEKLY');
+
+    const firstOccurrence = weeklyEventBuilder.toOccurrence();
+    const secondOccurrence = weeklyEventBuilder.toOccurrence('2025-06-02T09:00:00Z');
+
+    function Wrapper(props: { occurrence: SchedulerEventOccurrence }) {
+      return (
+        <EventCalendarProvider
+          events={[weeklyEventBuilder.build()]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent open {...defaultProps} occurrence={props.occurrence} />
+        </EventCalendarProvider>
+      );
+    }
+
+    const { user, setProps } = render(<Wrapper occurrence={firstOccurrence} />);
+
+    await user.type(screen.getByLabelText(/event title/i), ' edited');
+
+    setProps({ occurrence: secondOccurrence });
+
+    // Both occurrences share the event id, so the remount is keyed by the
+    // occurrence key: the form is re-seeded and the previous draft discarded.
+    expect(screen.getByLabelText(/event title/i)).to.have.value('Weekly sync');
+    expect(screen.getByLabelText(/start date/i)).to.have.value('2025-06-02');
   });
 
   it('should call "onEventsChange" with updated values on submit', async () => {
