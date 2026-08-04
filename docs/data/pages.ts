@@ -258,6 +258,23 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
           {
+            pathname: '/x/react-data-grid/formulas-group',
+            title: 'Formulas',
+            plan: 'premium',
+            newFeature: true,
+            children: [
+              { pathname: '/x/react-data-grid/formulas', title: 'Overview' },
+              {
+                pathname: '/x/react-data-grid/formula-syntax',
+                title: 'Syntax reference',
+              },
+              {
+                pathname: '/x/react-data-grid/formula-engine',
+                title: 'Formula engine',
+              },
+            ],
+          },
+          {
             pathname: '/x/react-data-grid/pivoting-group',
             title: 'Pivoting',
             plan: 'premium',
@@ -354,6 +371,12 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/components/prompt-field',
             title: 'Prompt Field',
             plan: 'premium',
+          },
+          {
+            pathname: '/x/react-data-grid/components/formula-bar',
+            title: 'Formula Bar',
+            plan: 'premium',
+            newFeature: true,
           },
           {
             pathname: '/x/react-data-grid/components/pivot-panel',

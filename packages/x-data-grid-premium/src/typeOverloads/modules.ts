@@ -1,4 +1,5 @@
 import type {
+  GridCellCoordinates,
   GridEventLookup,
   GridExportDisplayOptions,
   GridRowId,
@@ -25,6 +26,7 @@ import type {
 } from '../hooks';
 import type { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
 import type { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import type { GridFormulaInternalCache } from '../hooks/features/formula/gridFormulaInterfaces';
 import type { GridExcelExportOptions } from '../hooks/features/export/gridExcelExportInterface';
 import type {
   GridPivotingInternalCache,
@@ -106,6 +108,10 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    * Fired when a redo operation is executed.
    */
   redo: { params: { eventName: keyof GridEventLookup; data: any } };
+  /**
+   * Fired when a formula evaluation pass completes.
+   */
+  formulaEvaluated: { params: { changedCells: GridCellCoordinates[] } };
 }
 
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {
@@ -146,6 +152,13 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * @default true
    */
   chartable?: boolean;
+  /**
+   * If `true`, cell values that are strings starting with `=` are parsed and evaluated as formulas.
+   * The evaluated value flows through rendering, sorting, filtering and export, while the formula
+   * source remains the stored row-data value.
+   * @default false
+   */
+  allowFormulas?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -162,6 +175,7 @@ export interface GridApiCachesPremium extends GridApiCachesPro {
   pivoting: GridPivotingInternalCache;
   rowGrouping: GridRowGroupingInternalCache;
   aggregation: GridAggregationInternalCache;
+  formula: GridFormulaInternalCache;
 }
 
 export interface GridPipeProcessingLookupPremium {

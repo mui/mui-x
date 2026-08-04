@@ -6,6 +6,7 @@ import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { PivotPanelTrigger } from './pivotPanel/PivotPanelTrigger';
+import { FormulaBar } from './formulaBar';
 import { AiAssistantPanelTrigger } from './aiAssistantPanel';
 import { ChartsPanelTrigger } from './chartsPanel/ChartsPanelTrigger';
 import {
@@ -17,7 +18,7 @@ import {
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const { excelOptions, ...other } = props;
+  const { excelOptions, formulaBar, ...other } = props;
 
   const historyEnabled = useGridSelector(apiRef, gridHistoryEnabledSelector);
   const showHistoryControls =
@@ -122,10 +123,16 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
     : undefined;
 
   return (
-    <GridToolbar
-      {...other}
-      mainControls={mainControls}
-      additionalExportMenuItems={additionalExportMenuItems}
-    />
+    <React.Fragment>
+      <GridToolbar
+        {...other}
+        mainControls={mainControls}
+        additionalExportMenuItems={additionalExportMenuItems}
+      />
+      {/* The v8 toolbar is a single-row flex strip, so the formula bar renders
+          as a sibling full-width row below it. The bar hides itself when the
+          formulas feature is unavailable. */}
+      {formulaBar && <FormulaBar />}
+    </React.Fragment>
   );
 }

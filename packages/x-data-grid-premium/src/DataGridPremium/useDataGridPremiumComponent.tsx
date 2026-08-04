@@ -91,6 +91,8 @@ import {
   aggregationStateInitializer,
 } from '../hooks/features/aggregation/useGridAggregation';
 import { useGridAggregationPreProcessors } from '../hooks/features/aggregation/useGridAggregationPreProcessors';
+import { useGridFormula, formulaStateInitializer } from '../hooks/features/formula/useGridFormula';
+import { useGridFormulaPreProcessors } from '../hooks/features/formula/useGridFormulaPreProcessors';
 import {
   useGridRowGrouping,
   rowGroupingStateInitializer,
@@ -165,6 +167,7 @@ export const useDataGridPremiumComponent = (
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridAggregationPreProcessors(apiRef, props);
+  useGridFormulaPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridColumnPinningPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
@@ -186,6 +189,9 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(pivotingStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
+  // After `rowsStateInitializer`: the initial formula evaluation reads the
+  // rows lookup, populated synchronously during rows state initialization.
+  useGridInitializeState(formulaStateInitializer, apiRef, props);
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
@@ -213,6 +219,9 @@ export const useDataGridPremiumComponent = (
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridAggregation(apiRef, props);
+  // Before `useGridFilter`/`useGridSorting`: the formula `rowsSet` handler must
+  // run before filtering and sorting read cell values in the same cascade.
+  useGridFormula(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridCellSelection(apiRef, props);

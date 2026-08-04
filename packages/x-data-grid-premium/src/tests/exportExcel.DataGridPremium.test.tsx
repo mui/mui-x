@@ -449,6 +449,211 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
   });
 
+  describe('formula export', () => {
+    function FormulaTest(props: Partial<DataGridPremiumProps>) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium
+            apiRef={apiRef}
+            columns={[
+              { field: 'price', type: 'number' },
+              { field: 'qty', type: 'number' },
+              { field: 'total', type: 'number', allowFormulas: true },
+            ]}
+            rows={[
+              { id: 0, price: 10, qty: 2, total: '=price*qty' },
+              { id: 1, price: 20, qty: 3, total: '=price*qty' },
+              { id: 2, price: 30, qty: 4, total: '=price*qty' },
+            ]}
+            autoHeight={isJSDOM}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    it('exports live formulas as real Excel formulas when escapeFormulas is false', async () => {
+      render(<FormulaTest />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('C2').type).to.equal(Excel.ValueType.Formula);
+      expect((worksheet.getCell('C2').value as any).formula).to.equal('A2*B2');
+      expect((worksheet.getCell('C2').value as any).result).to.equal(20);
+      expect((worksheet.getCell('C3').value as any).formula).to.equal('A3*B3');
+      expect((worksheet.getCell('C4').value as any).formula).to.equal('A4*B4');
+      expect((worksheet.getCell('C4').value as any).result).to.equal(120);
+    });
+
+    it('exports evaluated values (no formulas) by default', async () => {
+      render(<FormulaTest />);
+      const workbook = await apiRef.current?.getDataAsExcel();
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('C2').type).to.equal(Excel.ValueType.Number);
+      expect(worksheet.getCell('C2').value).to.equal(20);
+      expect(worksheet.getCell('C4').value).to.equal(120);
+    });
+
+    it('honors the export row order (sorting) for references', async () => {
+      render(
+        <FormulaTest
+          initialState={{ sorting: { sortModel: [{ field: 'price', sort: 'desc' }] } }}
+        />,
+      );
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      // Sorted desc: id 2 (price 30) is the first exported row → Excel row 2.
+      expect((worksheet.getCell('C2').value as any).formula).to.equal('A2*B2');
+      expect((worksheet.getCell('C2').value as any).result).to.equal(120);
+    });
+
+    it('preserves absolute refs and re-anchors stable cross-row refs', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[
+                { field: 'a', type: 'number' },
+                { field: 'b', type: 'number', allowFormulas: true },
+              ]}
+              rows={[
+                { id: 0, a: 10, b: '=REF(COLUMN_POSITION(1), ROW_POSITION(1))' },
+                { id: 1, a: 20, b: '=REF(COLUMN("a"), ROW(0))' },
+              ]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      // Positional ref → absolute A1; stable ref to row id 0 → relative A1 at row 2.
+      expect((worksheet.getCell('B2').value as any).formula).to.equal('$A$2');
+      expect((worksheet.getCell('B2').value as any).result).to.equal(10);
+      expect((worksheet.getCell('B3').value as any).formula).to.equal('A2');
+      expect((worksheet.getCell('B3').value as any).result).to.equal(10);
+    });
+
+    it('shifts references for column-group header rows', async () => {
+      render(
+        <FormulaTest
+          columnGroupingModel={[
+            {
+              groupId: 'group',
+              children: [{ field: 'price' }, { field: 'qty' }, { field: 'total' }],
+            },
+          ]}
+        />,
+      );
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      // 1 group-header row + 1 column-header row → first data row is Excel row 3.
+      expect((worksheet.getCell('C3').value as any).formula).to.equal('A3*B3');
+      expect((worksheet.getCell('C3').value as any).result).to.equal(20);
+    });
+
+    it('bakes #REF! for references to columns outside the export', async () => {
+      render(<FormulaTest />);
+      // Export only the formula column: price/qty are not in the sheet.
+      const workbook = await apiRef.current?.getDataAsExcel({
+        escapeFormulas: false,
+        fields: ['total'],
+      });
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('A2').type).to.equal(Excel.ValueType.Formula);
+      expect((worksheet.getCell('A2').value as any).formula).to.contain('#REF!');
+      expect((worksheet.getCell('A2').value as any).result).to.deep.equal({ error: '#REF!' });
+    });
+
+    it('exports an evaluation error as a formula with an error result', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[
+                { field: 'price', type: 'number' },
+                { field: 'ratio', type: 'number', allowFormulas: true },
+              ]}
+              rows={[{ id: 0, price: 10, ratio: '=price / 0' }]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('B2').type).to.equal(Excel.ValueType.Formula);
+      expect((worksheet.getCell('B2').value as any).formula).to.equal('A2/0');
+      expect((worksheet.getCell('B2').value as any).result).to.deep.equal({ error: '#DIV/0!' });
+    });
+
+    it('does not promote a literal = string in a non-formula column to a formula', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[{ field: 'note' }, { field: 'total', type: 'number', allowFormulas: true }]}
+              rows={[{ id: 0, note: '=1+1', total: 5 }]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      // `note` is not an allowFormulas column, so its `=1+1` is never written as a formula.
+      expect(worksheet.getCell('A2').type).not.to.equal(Excel.ValueType.Formula);
+      expect(worksheet.getCell('A2').value).to.equal('=1+1');
+    });
+
+    it('exports a date-valued formula consistently with a plain date column', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[
+                { field: 'start', type: 'date' },
+                { field: 'copy', type: 'date', allowFormulas: true },
+              ]}
+              rows={[{ id: 0, start: new Date(2022, 0, 15), copy: '=start' }]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      // The formula's cached date result gets the same UTC reconstruction as the
+      // plain date column, so both cells hold the same serial.
+      const start = worksheet.getCell('A2').value as Date;
+      const copy = (worksheet.getCell('B2').value as any).result as Date;
+      expect(worksheet.getCell('B2').type).to.equal(Excel.ValueType.Formula);
+      expect(copy).to.be.instanceOf(Date);
+      expect(copy.getTime()).to.equal(start.getTime());
+    });
+  });
+
   describe('web worker', () => {
     let workerMock: { postMessage: SinonSpy };
 
@@ -497,6 +702,37 @@ describe('<DataGridPremium /> - Export Excel', () => {
           row: baselineProps.rows[2],
         },
       ]);
+    });
+
+    it('includes formula descriptors in the serialized rows when escapeFormulas is false', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[
+                { field: 'price', type: 'number' },
+                { field: 'qty', type: 'number' },
+                { field: 'total', type: 'number', allowFormulas: true },
+              ]}
+              rows={[{ id: 0, price: 10, qty: 2, total: '=price*qty' }]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      await act(() =>
+        apiRef.current?.exportDataAsExcel({
+          worker: () => workerMock as any,
+          escapeFormulas: false,
+        }),
+      );
+      const { serializedRows } = workerMock.postMessage.lastCall.args[0];
+      expect(serializedRows[0].formulas).to.deep.equal({
+        total: { formula: 'A2*B2', result: 20 },
+      });
     });
   });
 });

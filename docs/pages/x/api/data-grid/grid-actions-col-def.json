@@ -21,6 +21,11 @@
       "isPremiumPlan": true
     },
     "align": { "type": { "description": "GridAlignment" } },
+    "allowFormulas": {
+      "type": { "description": "boolean" },
+      "default": "false",
+      "isPremiumPlan": true
+    },
     "availableAggregationFunctions": {
       "type": { "description": "string[]" },
       "isPremiumPlan": true

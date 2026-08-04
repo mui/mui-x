@@ -8,3 +8,4 @@ export * from './GridEmptyPivotOverlay';
 export * from './pivotPanel';
 export * from './aiAssistantPanel';
 export * from './chartsPanel';
+export * from './formulaBar';

@@ -19,6 +19,11 @@ import {
   createValueOptionsSheetIfNeeded,
   getExcelJs,
 } from './utils';
+import {
+  createFormulaExcelExportLayout,
+  getCellExcelFormula,
+} from '../../formula/gridFormulaExcelExport';
+import type { FormulaExcelExportLayout } from '../../formula/gridFormulaExcelExport';
 import type { SerializedColumns, SerializedRow, ValueOptionsData } from './utils';
 
 export type { ExcelExportInitEvent } from './utils';
@@ -66,10 +71,12 @@ export const serializeRowUnsafe = (
   apiRef: RefObject<GridPrivateApiPremium>,
   defaultValueOptionsFormulae: { [field: string]: { address: string } },
   options: Pick<BuildExcelOptions, 'escapeFormulas'>,
+  formulaExport: FormulaExcelExportLayout | null = null,
 ): SerializedRow => {
   const serializedRow: SerializedRow['row'] = {};
   const dataValidation: SerializedRow['dataValidation'] = {};
   const mergedCells: SerializedRow['mergedCells'] = [];
+  const formulas: NonNullable<SerializedRow['formulas']> = {};
 
   const row = apiRef.current.getRow(id);
   const rowNode = apiRef.current.getRowNode(id);
@@ -212,6 +219,16 @@ export const serializeRowUnsafe = (
     if (typeof cellValue !== 'undefined') {
       serializedRow[column.field] = cellValue;
     }
+
+    // A live formula cell overlays its plain value with a real Excel formula.
+    // The value above stays as the fallback (used when the cell is not a formula
+    // or its formula cannot be expressed against the export layout).
+    if (formulaExport) {
+      const cellFormula = getCellExcelFormula(apiRef, formulaExport, id, column.field);
+      if (cellFormula) {
+        formulas[column.field] = cellFormula;
+      }
+    }
   });
 
   return {
@@ -219,6 +236,7 @@ export const serializeRowUnsafe = (
     dataValidation,
     outlineLevel,
     mergedCells,
+    ...(Object.keys(formulas).length > 0 ? { formulas } : {}),
   };
 };
 
@@ -357,9 +375,26 @@ export async function buildExcel(
   );
   createValueOptionsSheetIfNeeded(valueOptionsData, valueOptionsSheetName, workbook);
 
+  // Formulas are exported as real Excel formulas only when injection-escaping is
+  // off (`escapeFormulas: false`) — that flag already governs whether `=`-content
+  // may be live in the export. Layout maps identities to this sheet's coordinates.
+  const formulaExport = options.escapeFormulas
+    ? null
+    : createFormulaExcelExportLayout(apiRef, columns, rowIds, {
+        includeHeaders,
+        includeColumnGroupsHeaders,
+      });
+
   apiRef.current.resetColSpan();
   rowIds.forEach((id) => {
-    const serializedRow = serializeRowUnsafe(id, columns, apiRef, valueOptionsData, options);
+    const serializedRow = serializeRowUnsafe(
+      id,
+      columns,
+      apiRef,
+      valueOptionsData,
+      options,
+      formulaExport,
+    );
     addSerializedRowToWorksheet(serializedRow, worksheet);
   });
   apiRef.current.resetColSpan();

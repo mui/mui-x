@@ -356,6 +356,18 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     const doc = ownerDocument(apiRef.current.rootElementRef!.current)!;
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
+      // An external editor can legitimately hold DOM focus for the focused cell
+      // (e.g. the Premium formula bar) — the same pipe the document click
+      // handler consults decides whether pulling focus back is allowed. The
+      // pseudo-event only carries the element that owns the focus.
+      const canUpdateFocus = apiRef.current.unstable_applyPipeProcessors('canUpdateFocus', true, {
+        event: { target: doc.activeElement } as unknown as MouseEvent,
+        cell: null,
+      });
+      if (!canUpdateFocus) {
+        return;
+      }
+
       const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || cellRef.current;
 
