@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useTimelineGridRowKeyboard } from '../../internals/utils/useTimelineGridRowKeyboard';
 
 export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleRow(

@@ -13,7 +13,7 @@ import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import legendGetter from './legend';
 import keyboardFocusHandler from './keyboardFocusHandler';
-import tooltipItemPositionGetter from './tooltipPosition';
+import { selectorTooltipItemPosition } from './tooltipPosition';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 import descriptionGetter from './descriptionGetter';
 import { RangeBarPreviewPlot } from '../../../ChartsZoomSlider/internals/previews/RangeBarPreviewPlot';
@@ -23,7 +23,7 @@ export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
   colorProcessor: getColor,
   legendGetter,
   tooltipGetter,
-  tooltipItemPositionGetter,
+  selectorTooltipItemPosition,
   axisTooltipGetter,
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,

@@ -1,45 +1,13 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
-import type { ChartSeriesDefaultized, ChartSeriesType } from '../../../../models/seriesType/config';
-import {
-  selectorChartSeriesProcessed,
-  selectorChartSeriesLayout,
-} from '../../corePlugins/useChartSeries';
-import type { ProcessedSeries, SeriesLayout } from '../../corePlugins/useChartSeries';
-import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
-import type {
-  TooltipPositionGetterAxesConfig,
-  ChartSeriesConfig,
-  GeoTooltipPosition,
-} from '../../corePlugins/useChartSeriesConfig';
-import {
-  selectorChartXAxis,
-  selectorChartYAxis,
-} from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import { createSelector } from '@mui/x-internals/store';
 import {
   selectorChartsKeyboardItem,
   selectorChartsHasFocusedItem,
 } from '../useChartKeyboardNavigation';
 import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
-import type {
-  AxisId,
-  ChartsRadiusAxisProps,
-  ChartsRotationAxisProps,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
-} from '../../../../models/axis';
-import type { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
-import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
-import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
-import { isCartesianSeries } from '../../../isCartesian';
-import {
-  selectorChartRadiusAxis,
-  selectorChartRotationAxis,
-} from '../useChartPolarAxis/useChartPolarAxis.selectors';
-import type { ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
-import { selectorGeoTooltipPosition } from '../useGeoProjection/useGeoProjection.selectors';
+import type { SeriesItemIdentifierWithType } from '../../../../models';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 const selectTooltip: ChartOptionalRootSelector<UseChartTooltipSignature> = (state) => state.tooltip;
 
@@ -57,7 +25,11 @@ export const selectorChartsTooltipItem = createSelector(
   selectorChartsLastInteraction,
   selectorChartsTooltipPointerItem,
   selectorChartsKeyboardItem,
-  (lastInteraction, pointerItem, keyboardItem) =>
+  (
+    lastInteraction,
+    pointerItem,
+    keyboardItem,
+  ): SeriesItemIdentifierWithType<ChartSeriesType> | null =>
     lastInteraction === 'keyboard' ? keyboardItem : (pointerItem ?? null),
 );
 
@@ -67,99 +39,4 @@ export const selectorChartsTooltipItemIsDefined = createSelector(
   selectorChartsHasFocusedItem,
   (lastInteraction, pointerItemIsDefined, keyboardItemIsDefined) =>
     lastInteraction === 'keyboard' ? keyboardItemIsDefined : pointerItemIsDefined,
-);
-
-const selectorChartsTooltipAxisConfig = createSelectorMemoized(
-  selectorChartsTooltipItem,
-  selectorChartXAxis,
-  selectorChartYAxis,
-  selectorChartRotationAxis,
-  selectorChartRadiusAxis,
-  selectorChartSeriesProcessed,
-  selectorGeoTooltipPosition,
-  function selectorChartsTooltipAxisConfig<SeriesType extends ChartSeriesType>(
-    identifier: SeriesItemIdentifierWithType<SeriesType> | null,
-    { axis: xAxis, axisIds: xAxisIds }: ComputeResult<ChartsXAxisProps>,
-    { axis: yAxis, axisIds: yAxisIds }: ComputeResult<ChartsYAxisProps>,
-    rotationAxes: ComputePolarResult<ChartsRotationAxisProps>,
-    radiusAxes: ComputePolarResult<ChartsRadiusAxisProps>,
-    series: ProcessedSeries<SeriesType>,
-    geo: GeoTooltipPosition,
-  ) {
-    if (!identifier) {
-      return {};
-    }
-
-    const itemSeries = series[identifier.type as SeriesType]?.series[identifier.seriesId] as
-      | ChartSeriesDefaultized<SeriesType>
-      | undefined;
-
-    if (!itemSeries) {
-      return {};
-    }
-    const axesConfig: TooltipPositionGetterAxesConfig = {
-      rotationAxes,
-      radiusAxes,
-    };
-
-    const xAxisId: AxisId | undefined = isCartesianSeries(itemSeries)
-      ? (itemSeries.xAxisId ?? xAxisIds[0])
-      : undefined;
-    const yAxisId: AxisId | undefined = isCartesianSeries(itemSeries)
-      ? (itemSeries.yAxisId ?? yAxisIds[0])
-      : undefined;
-
-    if (xAxisId !== undefined) {
-      axesConfig.x = xAxis[xAxisId];
-    }
-    if (yAxisId !== undefined) {
-      axesConfig.y = yAxis[yAxisId];
-    }
-    if (geo) {
-      axesConfig.geo = geo;
-    }
-
-    return axesConfig;
-  },
-);
-
-export const selectorChartsTooltipItemPosition = createSelectorMemoized(
-  selectorChartsTooltipItem,
-  selectorChartDrawingArea,
-  selectorChartSeriesConfig,
-  selectorChartSeriesProcessed,
-  selectorChartSeriesLayout,
-  selectorChartsTooltipAxisConfig,
-
-  function selectorChartsTooltipItemPosition<SeriesType extends ChartSeriesType>(
-    identifier: SeriesItemIdentifierWithType<SeriesType> | null,
-    drawingArea: ChartDrawingArea,
-    seriesConfig: ChartSeriesConfig<SeriesType>,
-    series: ProcessedSeries<SeriesType>,
-    seriesLayout: SeriesLayout<SeriesType>,
-    axesConfig: TooltipPositionGetterAxesConfig,
-    placement: 'top' | 'bottom' | 'left' | 'right',
-  ) {
-    if (!identifier) {
-      return null;
-    }
-
-    const itemSeries = series[identifier.type as SeriesType]?.series[identifier.seriesId] as
-      | ChartSeriesDefaultized<SeriesType>
-      | undefined;
-
-    if (!itemSeries) {
-      return null;
-    }
-    return (
-      seriesConfig[itemSeries.type as SeriesType].tooltipItemPositionGetter?.({
-        series,
-        seriesLayout,
-        drawingArea,
-        axesConfig,
-        identifier,
-        placement,
-      }) ?? null
-    );
-  },
 );

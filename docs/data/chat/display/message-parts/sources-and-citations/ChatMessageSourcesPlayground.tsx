@@ -17,7 +17,7 @@ const POOL = [
     href: 'https://mui.com/material-ui/customization/theming/',
     title: 'Material UI theming',
   },
-  { href: 'https://mui.com/x/api/x-chat/chat-box/', title: 'ChatBox API' },
+  { href: 'https://mui.com/x/api/chat/chat-box/', title: 'ChatBox API' },
   { href: 'https://mui.com/x/react-chat/material/', title: 'Material adapter' },
   { href: 'https://mui.com/system/styled/', title: 'styled() utility' },
 ];
@@ -67,7 +67,7 @@ export default function ChatMessageSourcesPlayground() {
         </React.Fragment>
       }
       preview={
-        <ChatMessageSources label={label} sx={rootSx as any}>
+        <ChatMessageSources label={label} sx={rootSx}>
           {POOL.slice(0, count).map((source, i) => (
             <ChatMessageSource
               key={source.href}

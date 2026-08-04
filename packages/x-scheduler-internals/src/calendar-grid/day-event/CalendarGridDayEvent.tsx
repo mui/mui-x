@@ -5,9 +5,13 @@ import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
+import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
-import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
+import type {
+  SchedulerEventId,
+  SchedulerEventOccurrence,
+  TemporalSupportedObject,
+} from '../../models';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {

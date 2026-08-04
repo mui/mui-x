@@ -1,5 +1,5 @@
 import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
-import {
+import type {
   EventTimelinePremiumState,
   EventTimelinePremiumParameters,
 } from '../EventTimelinePremiumStore.types';

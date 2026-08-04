@@ -1,0 +1,7 @@
+<EventCalendar
+  events={events}
+  onEventsChange={setEvents}
+  defaultVisibleDate={defaultVisibleDate}
+  resources={resources}
+  defaultCollapsedResources={{ academics: true }}
+/>

@@ -18,8 +18,7 @@ export const getAxisTriggerTooltip = <SeriesType extends CartesianChartSeriesTyp
     const series = formattedSeries[chartType]?.series ?? {};
     const tooltipAxes = (
       seriesConfig[chartType].axisTooltipGetter as
-        | AxisTooltipGetter<SeriesType, 'x' | 'y'>
-        | undefined
+        AxisTooltipGetter<SeriesType, 'x' | 'y'> | undefined
     )?.(series);
 
     if (tooltipAxes === undefined) {

@@ -1,5 +1,5 @@
-import { TemporalAdapter } from '@base-ui/react/internals/temporal';
-import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
+import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
 import { isWeekend } from '../use-adapter/useAdapter';
 import { processDate } from '../process-date';
 

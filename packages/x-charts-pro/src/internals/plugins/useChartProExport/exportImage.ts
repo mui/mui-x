@@ -48,10 +48,6 @@ export async function exportImage(
 
   const ratio = pixelRatio ?? Math.max(window.devicePixelRatio || 1, 1);
   const iframe = createExportIframe(fileName);
-  /* We apply the min/max width and height to ensure the SVG doesn't resize in the export.
-   * We apply to the original SVG so that the cloned tree will contain the styles and revert these
-   * styles changes after the chart is cloned. */
-  const previousStyles = applyStyles(svg, { width: `${svg.getBoundingClientRect().width}px` });
 
   let resolve: (value: void) => void;
   const iframeLoadPromise = new Promise((res) => {
@@ -60,18 +56,32 @@ export async function exportImage(
 
   iframe.onload = async () => {
     const exportDoc = iframe.contentDocument!;
-    const elementClone = element.cloneNode(true) as Element;
-    elementClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
+    /* The layer container has no intrinsic size, so it collapses in the export document when sized by
+     * the parent element instead of the `width`/`height` props. Freeze its rendered size.
+     * We apply to the original element so that the cloned tree contains the styles, and revert these
+     * styles changes right after the chart is cloned. */
+    const svgRect = svg.getBoundingClientRect();
+    const previousStyles = applyStyles(svg, {
+      width: `${svgRect.width}px`,
+      height: `${svgRect.height}px`,
+    });
+    const elementClone = element.cloneNode(true) as HTMLElement;
     applyStyles(svg, previousStyles);
+    elementClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
+    /* Charts without a `height` prop set `height: 100%` on the root, which resolves to 0 in the export document as the
+     * body has no definite height. Size the root from its content, which is frozen to the rendered size above, so that
+     * elements added by `onBeforeExport` can still grow it. */
+    elementClone.style.height = 'fit-content';
     exportDoc.body.replaceChildren(elementClone);
     exportDoc.body.style.margin = '0px';
     /* Set display block through styles to ensure that CSS rules that target `body` don't accidentally target this
      * iframe's body, which might cause the body to have no intrinsic width or height, leading to the canvas having a
      * size of 0px, which causes the `toBlob` call to return null. */
     exportDoc.body.style.display = 'block';
-    /* The body's parent has a width of 0, so we use fit-content to ensure that the body adjusts its width to the width
-     * of its children. */
+    /* The body's parent has a size of 0, so we use fit-content to ensure that the body adjusts to the size of its
+     * children. Without it, charts sized by their parent element (no `width`/`height` props) collapse to 0. */
     exportDoc.body.style.width = 'fit-content';
+    exportDoc.body.style.height = 'fit-content';
 
     const rootCandidate = element.getRootNode();
     const root =

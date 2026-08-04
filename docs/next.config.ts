@@ -100,6 +100,14 @@ export default withDeploymentConfig({
   reactStrictMode: true,
   experimental: {
     esmExternals: undefined,
+    // Run each webpack compilation in a separate, disposable worker process so
+    // its memory is released before static generation instead of accumulating
+    // in the long-lived build process. This is off by default whenever a custom
+    // `webpack` config is present (Next resolves the `undefined` default to
+    // `false` when `config.webpack` is set), so it must be enabled explicitly.
+    // Cuts peak docs-build RSS from ~10 GB to ~4 GB, keeping it well under the
+    // Netlify build container limit that the static export was hitting.
+    webpackBuildWorker: true,
   },
   typescript: {
     tsconfigPath: './tsconfig.json',

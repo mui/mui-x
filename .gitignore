@@ -1,7 +1,9 @@
 # The best pattern to follow is ignoring editor files in a global .gitignore configuration file.
 # However, in order to prevent issues, editor files are ignored here.
 .idea
-.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 .cursor
 .claude/settings.local.json
 .claude/worktrees/

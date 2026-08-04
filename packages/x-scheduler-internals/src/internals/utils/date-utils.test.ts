@@ -1,5 +1,5 @@
 import { adapter } from 'test/utils/scheduler';
-import { TemporalAdapter } from '@base-ui/react/internals/temporal';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import {
   mergeDateAndTime,
   normalizeAllDayBounds,

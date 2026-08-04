@@ -5,8 +5,8 @@ import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/elem
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
-import { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
+import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
+import type { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
 import { useDragPreview } from '../internals/utils/useDragPreview';
 
 export const StandaloneEvent = React.forwardRef(function StandaloneEvent(

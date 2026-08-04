@@ -50,7 +50,10 @@ export default function LicenseCard({ plan, title, description }: LicenseCardPro
         }),
       })}
     >
-      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
+      <Stack
+        direction="row"
+        sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 2, flexWrap: 'wrap' }}
+      >
         <Stack direction="row" sx={{ alignItems: 'center', gap: 1.5 }}>
           <Box component="img" src={iconSrc} width={16} height={16} alt="" />
           <Typography
@@ -69,6 +72,8 @@ export default function LicenseCard({ plan, title, description }: LicenseCardPro
           sx={(theme) => ({
             px: 1.25,
             py: 0.25,
+            flexShrink: 0,
+            whiteSpace: 'nowrap',
             borderRadius: 999,
             border: '1px solid',
             borderColor: palette[200],

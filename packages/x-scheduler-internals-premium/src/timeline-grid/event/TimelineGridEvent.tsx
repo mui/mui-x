@@ -2,10 +2,10 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import { useButton } from '@base-ui/react/internals/use-button';
-import { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
-import {
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   TemporalSupportedObject,

@@ -28,6 +28,7 @@ export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartsDataProvider/useChartsDataProviderProps';
 export * from '../ChartsRadialDataProvider/useChartsRadialDataProviderProps';
 export * from './seriesSelectorOfType';
+export * from './createGetBarDimensions';
 export { useSkipAnimation } from '../hooks/useSkipAnimation';
 export { useRegisterPointerInteractions } from './plugins/featurePlugins/shared/useRegisterPointerInteractions';
 
@@ -47,8 +48,6 @@ export * from './plugins/featurePlugins/useChartVisibilityManager';
 export * from './plugins/featurePlugins/useChartKeyboardNavigation';
 export * from './plugins/featurePlugins/useChartClosestPoint';
 export * from './plugins/featurePlugins/useChartBrush';
-export * as useGeoProjectionSelectors from './plugins/featurePlugins/useGeoProjection/useGeoProjection.selectors';
-export * as useGeoProjectionTypes from './plugins/featurePlugins/useGeoProjection/useGeoProjection.types';
 export * from './plugins/featurePlugins/useChartItemClick';
 export * from './plugins/featurePlugins/useProgressiveRendering';
 export * from './plugins/utils/selectors';

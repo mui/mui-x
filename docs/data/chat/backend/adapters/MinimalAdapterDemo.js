@@ -5,8 +5,8 @@ import {
   minimalConversation,
   minimalMessages,
   demoUsers,
-} from 'docs/data/chat/material/examples/shared/demoData';
-import { randomId } from 'docs/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoData';
+import { randomId } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 function splitIntoDeltas(text, size = 15) {
   const pieces = [];

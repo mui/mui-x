@@ -17,11 +17,7 @@ export interface ChartsLabelCustomMarkProps {
 }
 
 export type ChartsLabelMarkType =
-  | 'square'
-  | 'circle'
-  | 'line'
-  | 'line+mark'
-  | React.ComponentType<ChartsLabelCustomMarkProps>;
+  'square' | 'circle' | 'line' | 'line+mark' | React.ComponentType<ChartsLabelCustomMarkProps>;
 
 export interface ChartsLabelMarkProps {
   /**

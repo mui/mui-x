@@ -2,7 +2,7 @@ import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { spy } from 'sinon';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { RichTreeViewProStore } from '../../RichTreeViewProStore';
+import type { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 interface ItemType {
   id: string;
@@ -97,6 +97,90 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         await awaitMockFetch();
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
+      });
+
+      it('should not update the selection when expanding a selected item in single selection', async () => {
+        const onSelectedItemsChange = spy();
+        const onItemSelectionToggle = spy();
+
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          defaultSelectedItems: '1',
+          onSelectedItemsChange,
+          onItemSelectionToggle,
+        });
+
+        act(() => {
+          view.apiRef.current.setItemExpansion({
+            event: {} as any,
+            itemId: '1',
+            shouldBeExpanded: true,
+          });
+        });
+        await awaitMockFetch();
+
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.isItemSelected('1')).to.equal(true);
+        expect(onSelectedItemsChange.callCount).to.equal(0);
+        expect(onItemSelectionToggle.callCount).to.equal(0);
+      });
+
+      it('should not update the selection when expanding a selected item without descendants propagation', async () => {
+        const onSelectedItemsChange = spy();
+
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          multiSelect: true,
+          defaultSelectedItems: ['1'],
+          onSelectedItemsChange,
+        });
+
+        act(() => {
+          view.apiRef.current.setItemExpansion({
+            event: {} as any,
+            itemId: '1',
+            shouldBeExpanded: true,
+          });
+        });
+        await awaitMockFetch();
+
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
+        expect(onSelectedItemsChange.callCount).to.equal(0);
+      });
+
+      it('should propagate the selection to the lazy loaded children when expanding a selected item', async () => {
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          multiSelect: true,
+          defaultSelectedItems: ['1'],
+          selectionPropagation: { descendants: true, parents: false },
+        });
+
+        act(() => {
+          view.apiRef.current.setItemExpansion({
+            event: {} as any,
+            itemId: '1',
+            shouldBeExpanded: true,
+          });
+        });
+        await awaitMockFetch();
+
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.isItemSelected('1')).to.equal(true);
+        expect(view.isItemSelected('1-1')).to.equal(true);
       });
 
       it('should not load children if item has no children', async () => {
@@ -334,6 +418,56 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.isItemExpanded('2')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '2', '2-1']);
       });
+
+      it('should not refetch children from props.items when re-expanding a preloaded item', async () => {
+        const getTreeItems = spy(mockFetchData);
+        const view = render({
+          items: [{ id: '1', childrenCount: 1, children: [{ id: '1-1' }] }],
+          defaultExpandedItems: ['1'],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems,
+          },
+        });
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
+
+        fireEvent.click(view.getItemContent('1'));
+        expect(view.isItemExpanded('1')).to.equal(false);
+
+        // Seeded cache means re-expanding refetches nothing.
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+
+        expect(getTreeItems.callCount).to.equal(0);
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
+      });
+
+      it('should still fetch a genuinely lazy sibling that ships no inline children', async () => {
+        const getTreeItems = spy(mockFetchData);
+        const view = render({
+          items: [
+            { id: '1', childrenCount: 1, children: [{ id: '1-1' }] },
+            { id: '2', childrenCount: 1 },
+          ],
+          defaultExpandedItems: ['1'],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems,
+          },
+        });
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '2']);
+
+        // Item 2 declares children but ships none inline, so expanding must fetch.
+        fireEvent.click(view.getItemContent('2'));
+        await awaitMockFetch();
+
+        expect(getTreeItems.callCount).to.equal(1);
+        expect(getTreeItems.lastCall.firstArg).to.equal('2');
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '2', '2-1']);
+      });
     });
     describe('onItemsLazyLoaded', () => {
       it('should call onItemsLazyLoaded with (items, null) when root items are fetched', async () => {
@@ -401,6 +535,31 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
         expect(onItemsLazyLoaded.callCount).to.equal(2);
+        expect(onItemsLazyLoaded.lastCall.args[0].parentId).to.equal('1');
+        expect(onItemsLazyLoaded.lastCall.args[0].isCacheHit).to.equal(true);
+      });
+
+      it('should call onItemsLazyLoaded with isCacheHit=true when re-expanding a preloaded item', async () => {
+        const onItemsLazyLoaded = spy();
+        const view = render({
+          items: [{ id: '1', childrenCount: 1, children: [{ id: '1-1' }] }],
+          defaultExpandedItems: ['1'],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          onItemsLazyLoaded,
+        });
+
+        // Children come from props.items, so nothing loads on mount.
+        expect(onItemsLazyLoaded.callCount).to.equal(0);
+
+        // Seeded cache makes re-expanding a cache hit, not a fetch.
+        fireEvent.click(view.getItemContent('1'));
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+
+        expect(onItemsLazyLoaded.callCount).to.equal(1);
         expect(onItemsLazyLoaded.lastCall.args[0].parentId).to.equal('1');
         expect(onItemsLazyLoaded.lastCall.args[0].isCacheHit).to.equal(true);
       });
@@ -563,6 +722,40 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         await awaitMockFetch();
 
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
+      });
+    });
+
+    describe('addItems', () => {
+      it('should mark an added item as expandable when the data source reports children', () => {
+        const view = render({
+          items: [{ id: '1', childrenCount: 0 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+        });
+
+        act(() => {
+          view.apiRef.current.addItems({ items: [{ id: '2', childrenCount: 1 }] });
+        });
+
+        expect(view.getItemRoot('2')).to.have.attribute('aria-expanded', 'false');
+      });
+
+      it('should not mark an added item as expandable when the data source reports no children', () => {
+        const view = render({
+          items: [{ id: '1', childrenCount: 0 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+        });
+
+        act(() => {
+          view.apiRef.current.addItems({ items: [{ id: '2', childrenCount: 0 }] });
+        });
+
+        expect(view.getItemRoot('2')).not.to.have.attribute('aria-expanded');
       });
     });
   },

@@ -2,10 +2,8 @@
 import * as React from 'react';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
-import {
-  SchedulerStoreContext,
-  SchedulerStoreInContext,
-} from '../use-scheduler-store-context/useSchedulerStoreContext';
+import type { SchedulerStoreInContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
+import { SchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
 import type { Adapter } from '../use-adapter/useAdapter.types';
 
 const DEFAULT_ADAPTER = new TemporalAdapterDateFns();

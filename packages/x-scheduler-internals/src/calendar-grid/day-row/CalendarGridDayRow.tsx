@@ -1,10 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { CompositeList } from '@base-ui/react/internals/composite';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { CalendarGridDayRowContext } from './CalendarGridDayRowContext';
-import { TemporalSupportedObject } from '../../models';
+import { CalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
+import type { TemporalSupportedObject } from '../../models';
 
 export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
   componentProps: CalendarGridDayRow.Props,
@@ -41,9 +42,11 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
 
   return (
     <CompositeList elementsRef={cellsRefs}>
-      <CalendarGridDayRowContext.Provider value={contextValue}>
-        {element}
-      </CalendarGridDayRowContext.Provider>
+      <CalendarGridCellsRefsContext.Provider value={cellsRefs}>
+        <CalendarGridDayRowContext.Provider value={contextValue}>
+          {element}
+        </CalendarGridDayRowContext.Provider>
+      </CalendarGridCellsRefsContext.Provider>
     </CompositeList>
   );
 });

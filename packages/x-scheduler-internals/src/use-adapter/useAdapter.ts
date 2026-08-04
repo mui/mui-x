@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
-import { TemporalSupportedObject } from '../models';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject } from '../models';
 import type { DateLocale } from './useAdapter.types';
 
 const DEFAULT_ADAPTER = new TemporalAdapterDateFns();

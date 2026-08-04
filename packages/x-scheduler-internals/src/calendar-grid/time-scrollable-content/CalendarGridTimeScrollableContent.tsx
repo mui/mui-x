@@ -2,8 +2,9 @@
 import * as React from 'react';
 import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { CompositeList } from '@base-ui/react/internals/composite';
+import { CalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
 
 export const CalendarGridTimeScrollableContent = React.forwardRef(
   function CalendarGridScrollableContent(
@@ -40,7 +41,13 @@ export const CalendarGridTimeScrollableContent = React.forwardRef(
       props: [elementProps],
     });
 
-    return <CompositeList elementsRef={columnsRefs}>{element}</CompositeList>;
+    return (
+      <CompositeList elementsRef={columnsRefs}>
+        <CalendarGridCellsRefsContext.Provider value={columnsRefs}>
+          {element}
+        </CalendarGridCellsRefsContext.Provider>
+      </CompositeList>
+    );
   },
 );
 

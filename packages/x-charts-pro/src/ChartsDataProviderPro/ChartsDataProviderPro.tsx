@@ -16,6 +16,8 @@ import { DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { useChartsDataProviderProProps } from './useChartsDataProviderProProps';
 import { ChartsWatermark } from '../internals/ChartsWatermark';
+import { barSampler } from '../internals/plugins/useChartProSampling/barSampler';
+import { lineSampler } from '../internals/plugins/useChartProSampling/lineSampler';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -42,8 +44,13 @@ export type ChartsDataProviderProProps<
     slotProps?: Partial<ChartsDataProviderProSlotProps>;
   };
 
-export const defaultSeriesConfigPro: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> =
-  defaultSeriesConfig;
+// Attach the pro sampling strategies (kept at module scope for a stable identity, so the
+// sampling-aware axis selectors don't recompute on every render).
+export const defaultSeriesConfigPro: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> = {
+  ...defaultSeriesConfig,
+  bar: { ...defaultSeriesConfig.bar, sampler: barSampler },
+  line: { ...defaultSeriesConfig.line, sampler: lineSampler },
+};
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
