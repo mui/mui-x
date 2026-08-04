@@ -364,6 +364,12 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends Sche
    * The data of the event to use when dropping the event outside of the Event Calendar or the Event Timeline Premium.
    */
   originalOccurrence: SchedulerEventOccurrence;
+  /**
+   * The id of the resource row the occurrence was dragged from, if the drag source exposes it.
+   * Used to replace only that entry in a multi-resource event's `resource` array on drop,
+   * instead of overwriting the whole array with the destination resource.
+   */
+  sourceResourceId: SchedulerResourceId | null;
 }
 
 export interface SchedulerOccurrencePlaceholderExternalDrag extends SchedulerOccurrencePlaceholderBase {
