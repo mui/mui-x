@@ -1,10 +1,9 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
-import { useCompositeListContext } from '../../base-ui-copy/composite/list/CompositeListContext';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useAdapterContext } from '../../use-adapter-context';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
@@ -12,6 +11,7 @@ import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
+import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useTimeDropTarget } from './useTimeDropTarget';
@@ -40,7 +40,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   const { focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
   const isCurrentDay = useStore(store, schedulerNowSelectors.isCurrentDay, start);
   const { ref: listItemRef, index } = useCompositeListItem();
-  const { elementsRef } = useCompositeListContext();
+  const cellsRefs = useCalendarGridCellsRefsContext();
 
   const cellRef = React.useRef<HTMLDivElement>(null);
   const hasFocus =
@@ -93,7 +93,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const target = getNavigationTarget(event.key, 'time-grid', 0, index, {
-      columnCount: elementsRef.current.length,
+      columnCount: cellsRefs.current.length,
       rowTypes,
       rowsPerType,
     });
