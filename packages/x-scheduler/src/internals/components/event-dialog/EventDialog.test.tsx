@@ -8,6 +8,7 @@ import {
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
+import { spy } from 'sinon';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
@@ -67,6 +68,84 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     expect(legends[1].compareDocumentPosition(description)).to.equal(
       Node.DOCUMENT_POSITION_FOLLOWING,
     );
+
+    // Pin the other side of the "hide the resource select when there are no resources"
+    // condition: with resources configured, the select must still render.
+    expect(screen.getByRole('combobox', { name: 'Resource' })).not.to.equal(null);
+  });
+
+  it('should not render the resource select when there are no resources, but should keep the color picker', () => {
+    const noResourceEvent: SchedulerEvent = EventBuilder.new()
+      .title('Running')
+      .description('Morning run')
+      .singleDay('2025-05-26T07:30:00Z', 45)
+      .build();
+
+    render(
+      <EventCalendarProvider events={[noResourceEvent]}>
+        <EventDialogContent
+          open
+          {...defaultProps}
+          occurrence={EventBuilder.new()
+            .id(noResourceEvent.id)
+            .title(noResourceEvent.title)
+            .span(noResourceEvent.start, noResourceEvent.end)
+            .toOccurrence()}
+        />
+      </EventCalendarProvider>,
+    );
+
+    // The section still renders with a header matching its actual contents, and the color
+    // picker is still there...
+    expect(screen.queryByText('Resource & color')).to.equal(null);
+    expect(screen.getByText('Color')).not.to.equal(null);
+    expect(screen.getByRole('group', { name: 'Event color' })).not.to.equal(null);
+
+    // ...but the resource select itself is gone since there are no resources to pick from.
+    expect(screen.queryByRole('combobox', { name: 'Resource' })).to.equal(null);
+    expect(screen.queryByText('No resource')).to.equal(null);
+  });
+
+  it('should allow saving when shouldEventRequireResource is true but no resources are configured', async () => {
+    const onClose = spy();
+    const onEventsChange = spy();
+    const noResourceEvent: SchedulerEvent = EventBuilder.new()
+      .title('Running')
+      .description('Morning run')
+      .singleDay('2025-05-26T07:30:00Z', 45)
+      .build();
+
+    // The store itself warns in dev about this contradictory configuration; what this test
+    // guards against is that warning turning into a silent, unrecoverable submit failure now
+    // that the resource picker (and its error message) no longer renders.
+    await expect(async () => {
+      const { user } = render(
+        <EventCalendarProvider
+          events={[noResourceEvent]}
+          shouldEventRequireResource
+          onEventsChange={onEventsChange}
+        >
+          <EventDialogContent
+            open
+            {...defaultProps}
+            onClose={onClose}
+            occurrence={EventBuilder.new()
+              .id(noResourceEvent.id)
+              .title(noResourceEvent.title)
+              .span(noResourceEvent.start, noResourceEvent.end)
+              .toOccurrence()}
+          />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+    }).toWarnDev([
+      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+    ]);
+
+    expect(onClose.callCount).to.equal(1);
+    expect(onEventsChange.callCount).to.equal(1);
+    expect(screen.queryByRole('alert')).to.equal(null);
   });
 
   it('should discard the draft when the dialog is closed and reopened', async () => {
