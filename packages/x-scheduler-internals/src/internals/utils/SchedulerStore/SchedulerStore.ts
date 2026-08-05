@@ -148,6 +148,15 @@ export class SchedulerStore<
     this.instanceName = instanceName;
     this.mapper = mapper;
 
+    // The edited occurrence is a snapshot, so a date change can leave its toolbar acting on an event
+    // that is no longer on screen. Timestamp, not the object: a re-passed equal date is not a change.
+    this.disposables.defer(
+      this.registerStoreEffect(
+        (state) => state.adapter.getTime(state.visibleDate),
+        this.stopEditing,
+      ),
+    );
+
     const currentDate = new Date();
     const timeUntilNextMinuteMs =
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());

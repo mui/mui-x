@@ -29,7 +29,7 @@ describe('useDisarmOnOutsidePointer', () => {
     });
   }
 
-  it('swallows an outside click and calls onDisarm while active', () => {
+  it('should swallow an outside click and call onDisarm while active', () => {
     const onDisarm = spy();
     renderUseDisarm({
       ref: { current: container },
@@ -46,7 +46,7 @@ describe('useDisarmOnOutsidePointer', () => {
     expect(event.defaultPrevented).to.equal(true);
   });
 
-  it('ignores a click on an element matching ignoreSelector (the resize handle)', () => {
+  it('should ignore a click on an element matching ignoreSelector (the resize handle)', () => {
     const onDisarm = spy();
     renderUseDisarm({
       ref: { current: container },
@@ -74,7 +74,7 @@ describe('useDisarmOnOutsidePointer', () => {
       document.body.removeChild(outside);
     });
 
-    it('disarms on a tap anywhere outside the surface, even out of its subtree', () => {
+    it('should disarm on a tap anywhere outside the surface, even out of its subtree', () => {
       const onDisarm = spy();
       renderUseDisarm({
         ref: { current: container },
@@ -91,7 +91,7 @@ describe('useDisarmOnOutsidePointer', () => {
       expect(event.defaultPrevented).to.equal(true);
     });
 
-    it('never disarms on a click inside the surface itself', () => {
+    it('should never disarm on a click inside the surface itself', () => {
       const onDisarm = spy();
       renderUseDisarm({
         ref: { current: container },
@@ -108,7 +108,7 @@ describe('useDisarmOnOutsidePointer', () => {
       expect(event.defaultPrevented).to.equal(false);
     });
 
-    it('still ignores clicks on the resize handle so a resize gesture keeps the surface armed', () => {
+    it('should still ignore clicks on the resize handle so a resize gesture keeps the surface armed', () => {
       const onDisarm = spy();
       renderUseDisarm({
         ref: { current: container },
@@ -133,7 +133,7 @@ describe('useDisarmOnOutsidePointer', () => {
     });
   });
 
-  it('does not disarm when the composed target is not an Element (e.g. a scrollbar/native-UI click)', () => {
+  it('should not disarm when the composed target is not an Element (e.g. a scrollbar/native-UI click)', () => {
     const onDisarm = spy();
     renderUseDisarm({
       ref: { current: container },
@@ -151,7 +151,7 @@ describe('useDisarmOnOutsidePointer', () => {
     expect(event.defaultPrevented).to.equal(false);
   });
 
-  it('removes the listener when active becomes false', () => {
+  it('should remove the listener when active becomes false', () => {
     const onDisarm = spy();
     const { rerender } = renderUseDisarm({
       ref: { current: container },

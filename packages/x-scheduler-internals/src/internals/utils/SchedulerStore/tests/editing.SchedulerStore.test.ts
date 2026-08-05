@@ -6,6 +6,8 @@ import {
   storeClasses,
 } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
+import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { schedulerOtherSelectors } from '../../../../scheduler-selectors';
 import { processDate } from '../../../../process-date';
 import { getOccurrenceKey, getRecurringOccurrenceKey } from '../../event-utils';
@@ -133,6 +135,54 @@ storeClasses.forEach((storeClass) => {
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
       });
     });
+
+    // The edited occurrence is a snapshot; nothing re-checks that it is still rendered. Left behind
+    // by a navigation, its action toolbar would edit or delete an event that is off screen.
+    describe('navigation', () => {
+      const uiEvent = {} as any;
+
+      it('should stop editing when the visible date changes', () => {
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
+        armRecurringOccurrence(store);
+
+        store.goToDate(adapter.date('2025-07-14T00:00:00Z', 'default'), uiEvent);
+
+        expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+      });
+
+      it('should stop editing when a controlled visible date changes', () => {
+        const parameters = {
+          ...DEFAULT_PARAMS,
+          visibleDate: adapter.date('2025-07-07T00:00:00Z', 'default'),
+        };
+        const store = new storeClass.Value(parameters, adapter);
+        armRecurringOccurrence(store);
+
+        store.updateStateFromParameters(
+          { ...parameters, visibleDate: adapter.date('2025-07-14T00:00:00Z', 'default') },
+          adapter,
+        );
+
+        expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+      });
+
+      it('should keep editing when the parameters update without navigating', () => {
+        const parameters = {
+          ...DEFAULT_PARAMS,
+          visibleDate: adapter.date('2025-07-07T00:00:00Z', 'default'),
+        };
+        const store = new storeClass.Value(parameters, adapter);
+        armRecurringOccurrence(store);
+
+        // A fresh date object holding the same instant is not a navigation.
+        store.updateStateFromParameters(
+          { ...parameters, visibleDate: adapter.date('2025-07-07T00:00:00Z', 'default') },
+          adapter,
+        );
+
+        expect(schedulerOtherSelectors.editingOccurrence(store.state)).not.to.equal(null);
+      });
+    });
   });
 });
 
@@ -212,6 +262,32 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.key).to.not.equal(armedKey);
       expect(occurrence.displayTimezone.start.value).toEqualDateTime(resizedStart);
       expect(occurrence.displayTimezone.end.value).toEqualDateTime(resizedEnd);
+    });
+  });
+});
+
+[
+  { name: 'EventCalendarStore', Value: EventCalendarStore },
+  { name: 'EventCalendarPremiumStore', Value: EventCalendarPremiumStore },
+].forEach((storeClass) => {
+  describe(`Editing view navigation - ${storeClass.name}`, () => {
+    it('should stop editing when the view changes', () => {
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
+      armRecurringOccurrence(store);
+
+      store.setView('month', {} as any);
+
+      expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+    });
+
+    it('should stop editing when a controlled view changes', () => {
+      const parameters = { ...DEFAULT_PARAMS, view: 'week' as const };
+      const store = new storeClass.Value(parameters, adapter);
+      armRecurringOccurrence(store);
+
+      store.updateStateFromParameters({ ...parameters, view: 'month' as const }, adapter);
+
+      expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
     });
   });
 });

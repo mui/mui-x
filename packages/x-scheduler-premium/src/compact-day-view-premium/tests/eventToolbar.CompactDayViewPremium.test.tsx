@@ -26,7 +26,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);
   });
 
-  it('opens the recurring scope dialog when deleting a recurring event from the toolbar', () => {
+  it('should open the recurring scope dialog when deleting a recurring event from the toolbar', () => {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Daily Standup')
@@ -48,7 +48,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     expect(screen.getByText(/All events/i)).not.to.equal(null);
   });
 
-  it('deletes only the chosen occurrence, keeping the rest of the series', async () => {
+  it('should delete only the chosen occurrence, keeping the rest of the series', async () => {
     const onEventsChange = spy();
     const event = EventBuilder.new()
       .id('event-1')

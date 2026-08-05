@@ -38,7 +38,7 @@ describe('MonthView - event toolbar', () => {
     return screen.getAllByRole('button', { name: /Morning Meeting/i })[0];
   }
 
-  it('arms with a toolbar on a coarse pointer', () => {
+  it('should arm with a toolbar on a coarse pointer', () => {
     window.matchMedia = createMatchMedia(true);
     renderEvent();
 
@@ -48,7 +48,7 @@ describe('MonthView - event toolbar', () => {
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
   });
 
-  it('disarms the toolbar when tapping outside of it', () => {
+  it('should disarm the toolbar when tapping outside of it', () => {
     window.matchMedia = createMatchMedia(true);
     renderEvent();
 

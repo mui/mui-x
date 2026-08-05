@@ -13,7 +13,7 @@ describe('useDisarmOnEscape', () => {
     return event;
   }
 
-  it('disarms when Escape is pressed while active', () => {
+  it('should disarm when Escape is pressed while active', () => {
     const onDisarm = spy();
     renderUseDisarm({ active: true, onDisarm });
 
@@ -22,7 +22,7 @@ describe('useDisarmOnEscape', () => {
     expect(onDisarm.callCount).to.equal(1);
   });
 
-  it('ignores keys other than Escape', () => {
+  it('should ignore keys other than Escape', () => {
     const onDisarm = spy();
     renderUseDisarm({ active: true, onDisarm });
 
@@ -31,7 +31,7 @@ describe('useDisarmOnEscape', () => {
     expect(onDisarm.callCount).to.equal(0);
   });
 
-  it('does nothing while inactive', () => {
+  it('should do nothing while inactive', () => {
     const onDisarm = spy();
     renderUseDisarm({ active: false, onDisarm });
 
@@ -40,7 +40,7 @@ describe('useDisarmOnEscape', () => {
     expect(onDisarm.callCount).to.equal(0);
   });
 
-  it('skips an Escape already consumed by an inner handler (e.g. an open dialog closing)', () => {
+  it('should skip an Escape already consumed by an inner handler (e.g. an open dialog closing)', () => {
     const onDisarm = spy();
     renderUseDisarm({ active: true, onDisarm });
 
@@ -52,7 +52,7 @@ describe('useDisarmOnEscape', () => {
     expect(onDisarm.callCount).to.equal(0);
   });
 
-  it('removes the listener when active becomes false', () => {
+  it('should remove the listener when active becomes false', () => {
     const onDisarm = spy();
     const { rerender } = renderUseDisarm({ active: true, onDisarm });
 

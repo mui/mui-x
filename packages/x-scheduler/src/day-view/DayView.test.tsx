@@ -41,7 +41,7 @@ describe('<DayView />', () => {
   }
 
   // The event component always renders the time element (only hidden by CSS on touch), so it is in the DOM.
-  it('renders the event with a time element', () => {
+  it('should render the event with a time element', () => {
     const event = EventBuilder.new()
       .title('Desktop Event')
       .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')

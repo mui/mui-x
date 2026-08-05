@@ -48,7 +48,7 @@ describe('CompactDayView - touch resize', () => {
     return eventElement;
   }
 
-  it('arms the event only once it is tapped', () => {
+  it('should arm the event only once it is tapped', () => {
     renderResizableEvent();
     const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
     // Handles are always in the DOM; coarse-pointer CSS reveals them when armed. In JSDOM, assert via `data-armed`.
@@ -57,7 +57,7 @@ describe('CompactDayView - touch resize', () => {
     expect(eventElement).to.have.attribute('data-armed');
   });
 
-  it('resizes the end of an armed event to a later time', async () => {
+  it('should resize the end of an armed event to a later time', async () => {
     const { onEventsChange } = renderResizableEvent();
     const eventElement = armEvent();
 
@@ -74,7 +74,7 @@ describe('CompactDayView - touch resize', () => {
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
   });
 
-  it('resizes the start of an armed event to an earlier time', async () => {
+  it('should resize the start of an armed event to an earlier time', async () => {
     const { onEventsChange } = renderResizableEvent();
     const eventElement = armEvent();
 
@@ -91,7 +91,7 @@ describe('CompactDayView - touch resize', () => {
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(11);
   });
 
-  it('keeps a prior armed resize when an unrelated field is then edited from the form', async () => {
+  it('should keep a prior armed resize when an unrelated field is then edited from the form', async () => {
     const { onEventsChange, user } = renderResizableEvent();
     const eventElement = armEvent();
 
@@ -115,7 +115,7 @@ describe('CompactDayView - touch resize', () => {
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
   });
 
-  it('removes the resize handles once the armed event is opened in the editing form', () => {
+  it('should remove the resize handles once the armed event is opened in the editing form', () => {
     renderResizableEvent();
     const eventElement = armEvent();
     // Armed: the pointer-resize handles are present.
@@ -132,7 +132,7 @@ describe('CompactDayView - touch resize', () => {
     expect(eventElement.querySelector('[data-end]')).to.equal(null);
   });
 
-  it('does not commit a resize that is cancelled', async () => {
+  it('should not commit a resize that is cancelled', async () => {
     const { onEventsChange } = renderResizableEvent();
     const eventElement = armEvent();
 

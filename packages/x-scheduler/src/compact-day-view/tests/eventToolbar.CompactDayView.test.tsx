@@ -18,18 +18,23 @@ describe('CompactDayView - event toolbar', () => {
       .readOnly(readOnly)
       .build();
 
-    render(
-      <StandaloneCompactDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />,
+    const { setProps } = render(
+      <StandaloneCompactDayView
+        events={[event]}
+        resources={[]}
+        onEventsChange={onEventsChange}
+        visibleDate={new Date('2025-07-03T00:00:00Z')}
+      />,
     );
 
-    return { onEventsChange };
+    return { onEventsChange, setProps };
   }
 
   function getEvent(): HTMLElement {
     return screen.getByRole('button', { name: /Morning Meeting/i });
   }
 
-  it('docks the edit/delete toolbar once an event is armed', () => {
+  it('should dock the edit/delete toolbar once an event is armed', () => {
     renderEvent();
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
 
@@ -39,7 +44,7 @@ describe('CompactDayView - event toolbar', () => {
     expect(screen.getByRole('button', { name: 'Delete event' })).not.to.equal(null);
   });
 
-  it('opens the editing form when the toolbar Edit is tapped', () => {
+  it('should open the editing form when the toolbar Edit is tapped', () => {
     renderEvent();
     fireEvent.click(getEvent());
     fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
@@ -50,7 +55,7 @@ describe('CompactDayView - event toolbar', () => {
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
   });
 
-  it('keeps the event in the editing state once the editing surface opens', () => {
+  it('should keep the event in the editing state once the editing surface opens', () => {
     renderEvent();
     // Hold the reference: the open drawer makes the background inert, so role queries no longer find it.
     const eventElement = getEvent();
@@ -65,7 +70,7 @@ describe('CompactDayView - event toolbar', () => {
     expect(eventElement).to.have.attribute('data-editing');
   });
 
-  it('deletes the event when the toolbar Delete is tapped without opening the drawer', () => {
+  it('should delete the event when the toolbar Delete is tapped without opening the drawer', () => {
     const { onEventsChange } = renderEvent();
     fireEvent.click(getEvent());
     fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
@@ -77,7 +82,22 @@ describe('CompactDayView - event toolbar', () => {
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
   });
 
-  it('does not arm a read-only event: it opens the read-only summary directly', () => {
+  // The dock is not anchored to the event, so nothing hides it when its occurrence leaves the
+  // visible range. It would keep offering Edit / Delete for an event the user can no longer see.
+  it('should disarm when navigating to another day', () => {
+    const { onEventsChange, setProps } = renderEvent();
+    fireEvent.click(getEvent());
+    expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
+
+    setProps({ visibleDate: new Date('2025-07-04T00:00:00Z') });
+
+    expect(screen.queryByRole('button', { name: /Morning Meeting/i })).to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Delete event' })).to.equal(null);
+    expect(onEventsChange.called).to.equal(false);
+  });
+
+  it('should not arm a read-only event: it opens the read-only summary directly', () => {
     renderEvent(spy(), { readOnly: true });
     fireEvent.click(getEvent());
 

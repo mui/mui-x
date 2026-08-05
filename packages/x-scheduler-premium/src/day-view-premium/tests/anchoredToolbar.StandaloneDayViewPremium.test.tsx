@@ -91,7 +91,7 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
     return document.querySelector<HTMLElement>('[role="toolbar"]')!.parentElement!;
   }
 
-  it('re-anchors the toolbar to the resized occurrence after the scope dialog commits', async () => {
+  it('should re-anchor the toolbar to the resized occurrence after the scope dialog commits', async () => {
     const { user } = renderResizableRecurringEvent();
 
     const originalEvent = getEventElement();
@@ -134,7 +134,7 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
       await screen.findByText(/Apply this change to:/i);
     }
 
-    it('closes on a click outside the dialog paper', async () => {
+    it('should close on a click outside the dialog paper', async () => {
       await armAndOpenScopeDialog();
 
       // MUI detects a "backdrop click" on the dialog container (the transparent area around the
@@ -148,7 +148,7 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
       });
     });
 
-    it('does not block scrolling inside the dialog', async () => {
+    it('should not block scrolling inside the dialog', async () => {
       await armAndOpenScopeDialog();
 
       const wheelEvent = new Event('wheel', { bubbles: true, cancelable: true });

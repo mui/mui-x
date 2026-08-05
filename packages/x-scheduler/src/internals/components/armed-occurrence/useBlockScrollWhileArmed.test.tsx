@@ -31,7 +31,7 @@ describe('useBlockScrollWhileArmed', () => {
   }
 
   ['wheel', 'touchmove'].forEach((type) => {
-    it(`cancels ${type} scrolling while active`, () => {
+    it(`should cancel ${type} scrolling while active`, () => {
       renderUseBlock({ active: true, ignoreSelector: IGNORE_SELECTOR });
       const event = dispatchCancelable(type, content);
       // Non-passive listener actually cancels the scroll.
@@ -39,19 +39,19 @@ describe('useBlockScrollWhileArmed', () => {
     });
   });
 
-  it('lets a gesture on the ignoreSelector through, so the armed event still resizes', () => {
+  it('should let a gesture on the ignoreSelector through, so the armed event still resizes', () => {
     renderUseBlock({ active: true, ignoreSelector: IGNORE_SELECTOR });
     const event = dispatchCancelable('touchmove', handle);
     expect(event.defaultPrevented).to.equal(false);
   });
 
-  it('does not block scrolling when inactive', () => {
+  it('should not block scrolling when inactive', () => {
     renderUseBlock({ active: false, ignoreSelector: IGNORE_SELECTOR });
     const event = dispatchCancelable('wheel', content);
     expect(event.defaultPrevented).to.equal(false);
   });
 
-  it('stops blocking once active becomes false', () => {
+  it('should stop blocking once active becomes false', () => {
     const { rerender } = renderUseBlock({ active: true, ignoreSelector: IGNORE_SELECTOR });
     rerender({ active: false, ignoreSelector: IGNORE_SELECTOR });
 

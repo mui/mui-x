@@ -43,7 +43,7 @@ describe('CompactThreeDayView - touch resize & arming', () => {
     return { onEventsChange };
   }
 
-  it('arms only the tapped event', () => {
+  it('should arm only the tapped event', () => {
     renderEvents();
     const morning = screen.getByRole('button', { name: /Morning Meeting/i });
     const lunch = screen.getByRole('button', { name: /Lunch/i });
@@ -55,7 +55,7 @@ describe('CompactThreeDayView - touch resize & arming', () => {
     expect(lunch).not.to.have.attribute('data-armed');
   });
 
-  it('resizes an armed event within its own day column', async () => {
+  it('should resize an armed event within its own day column', async () => {
     const { onEventsChange } = renderEvents();
     const morning = screen.getByRole('button', { name: /Morning Meeting/i });
     fireEvent.click(morning);
@@ -76,7 +76,7 @@ describe('CompactThreeDayView - touch resize & arming', () => {
     expect(new Date(updated[0].end).getUTCHours()).to.equal(16);
   });
 
-  it('disarms the current event when another event in a different column is tapped', () => {
+  it('should disarm the current event when another event in a different column is tapped', () => {
     renderEvents();
     const morning = screen.getByRole('button', { name: /Morning Meeting/i });
     const lunch = screen.getByRole('button', { name: /Lunch/i });

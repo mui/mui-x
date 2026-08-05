@@ -59,7 +59,7 @@ describe('DayView - touch resize', () => {
     return screen.getByRole('button', { name: /Morning Meeting/i });
   }
 
-  it('arms the event when it is opened for editing', () => {
+  it('should arm the event when it is opened for editing', () => {
     renderResizableEvent();
     const eventElement = getEvent();
     expect(eventElement).not.to.have.attribute('data-armed');
@@ -67,7 +67,7 @@ describe('DayView - touch resize', () => {
     expect(eventElement).to.have.attribute('data-armed');
   });
 
-  it('pointer-resizes the end of an event to a later time', async () => {
+  it('should pointer-resize the end of an event to a later time', async () => {
     const { onEventsChange } = renderResizableEvent();
     const eventElement = getEvent();
     fireEvent.click(eventElement);
@@ -87,7 +87,7 @@ describe('DayView - touch resize', () => {
 
   // The preview hosts the resize handles but must never be a focusable button, nor use
   // `aria-hidden` to hide one (an `aria-hidden-focus` violation).
-  it('renders the resize preview as a non-focusable, non-hidden element', async () => {
+  it('should render the resize preview as a non-focusable, non-hidden element', async () => {
     renderResizableEvent();
     const eventElement = getEvent();
     fireEvent.click(eventElement);
@@ -111,7 +111,7 @@ describe('DayView - touch resize', () => {
 
   // The system can take the gesture over mid-resize (a scroll winning, a phone call). The preview must
   // then be discarded rather than committed or left stranded on screen.
-  it('discards the resize preview when the gesture is cancelled', async () => {
+  it('should discard the resize preview when the gesture is cancelled', async () => {
     const { onEventsChange } = renderResizableEvent();
     const eventElement = getEvent();
     fireEvent.click(eventElement);

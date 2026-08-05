@@ -26,7 +26,7 @@ describe('isResizeHandlerEnabled', () => {
 
   cases.forEach(
     ({ side, doesEventStartBeforeCollectionStart, doesEventEndAfterCollectionEnd, expected }) => {
-      it(`returns ${expected} for side="${side}" (startClipped=${doesEventStartBeforeCollectionStart}, endClipped=${doesEventEndAfterCollectionEnd})`, () => {
+      it(`should return ${expected} for side="${side}" (startClipped=${doesEventStartBeforeCollectionStart}, endClipped=${doesEventEndAfterCollectionEnd})`, () => {
         expect(
           isResizeHandlerEnabled({
             side,
@@ -45,7 +45,7 @@ describe('clampResizedEventEdge', () => {
   const precisionMinute = 15;
 
   describe('side: start', () => {
-    it('moves the start to the cursor when it keeps the minimum duration', () => {
+    it('should move the start to the cursor when it keeps the minimum duration', () => {
       const cursorDate = adapter.date('2024-01-15T10:30:00', 'default');
       const result = clampResizedEventEdge({
         adapter,
@@ -59,7 +59,7 @@ describe('clampResizedEventEdge', () => {
       expect(result.end).toEqualDateTime(end);
     });
 
-    it('clamps the start so the event keeps at least one precision step', () => {
+    it('should clamp the start so the event keeps at least one precision step', () => {
       // Stop one precision step before `end` so the event can't invert.
       const cursorDate = adapter.date('2024-01-15T11:30:00', 'default');
       const result = clampResizedEventEdge({
@@ -76,7 +76,7 @@ describe('clampResizedEventEdge', () => {
   });
 
   describe('side: end', () => {
-    it('moves the end to the cursor when it keeps the minimum duration', () => {
+    it('should move the end to the cursor when it keeps the minimum duration', () => {
       const cursorDate = adapter.date('2024-01-15T10:45:00', 'default');
       const result = clampResizedEventEdge({
         adapter,
@@ -90,7 +90,7 @@ describe('clampResizedEventEdge', () => {
       expect(result.end).toEqualDateTime(cursorDate);
     });
 
-    it('clamps the end so the event keeps at least one precision step', () => {
+    it('should clamp the end so the event keeps at least one precision step', () => {
       // Stop one precision step after `start` so the event can't invert.
       const cursorDate = adapter.date('2024-01-15T09:30:00', 'default');
       const result = clampResizedEventEdge({

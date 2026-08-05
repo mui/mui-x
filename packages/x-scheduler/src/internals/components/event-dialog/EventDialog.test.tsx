@@ -311,7 +311,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       window.matchMedia = originalMatchMedia;
     });
 
-    it('marks the dialog draggable on a fine pointer', () => {
+    it('should mark the dialog draggable on a fine pointer', () => {
       window.matchMedia = createMatchMedia(false);
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
@@ -322,7 +322,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(document.querySelector('[draggable="true"]')).not.to.equal(null);
     });
 
-    it('does not mark the dialog draggable on a coarse pointer, so its form fields stay typeable on touch', () => {
+    it('should not mark the dialog draggable on a coarse pointer, so its form fields stay typeable on touch', () => {
       window.matchMedia = createMatchMedia(true);
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>

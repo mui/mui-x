@@ -101,7 +101,7 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     return document.querySelector<HTMLElement>('.MuiEventCalendar-timeGridEvent')!;
   }
 
-  it('keeps the resized occurrence armed after confirming the scope dialog', async () => {
+  it('should keep the resized occurrence armed after confirming the scope dialog', async () => {
     const { user, onEventsChange } = renderResizableRecurringEvent();
     const eventElement = armEvent();
 
@@ -122,7 +122,7 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     expectResizedEndCommitted(onEventsChange);
   });
 
-  it('keeps the resized occurrence armed when applying the change to all events', async () => {
+  it('should keep the resized occurrence armed when applying the change to all events', async () => {
     const { user, onEventsChange } = renderResizableRecurringEvent();
     const eventElement = armEvent();
 
@@ -139,7 +139,7 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     expectResizedEndCommitted(onEventsChange);
   });
 
-  it('keeps the resized occurrence armed when splitting the series (this and following)', async () => {
+  it('should keep the resized occurrence armed when splitting the series (this and following)', async () => {
     const { user, onEventsChange } = renderResizableRecurringEvent();
     const eventElement = armEvent();
 

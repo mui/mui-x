@@ -34,6 +34,32 @@ describe('DayView - event toolbar', () => {
     return { onEventsChange };
   }
 
+  function renderEventOnEachDay() {
+    const events = [
+      EventBuilder.new()
+        .id('event-1')
+        .title('Morning Meeting')
+        .singleDay('2025-07-03T10:00:00Z', 60)
+        .build(),
+      EventBuilder.new()
+        .id('event-2')
+        .title('Next Day Sync')
+        .singleDay('2025-07-04T10:00:00Z', 60)
+        .build(),
+    ];
+
+    const { setProps } = render(
+      <StandaloneDayView
+        events={events}
+        resources={[]}
+        onEventsChange={spy()}
+        visibleDate={new Date('2025-07-03T00:00:00Z')}
+      />,
+    );
+
+    return { setProps };
+  }
+
   function renderTwoEvents() {
     const events = [
       EventBuilder.new()
@@ -55,7 +81,7 @@ describe('DayView - event toolbar', () => {
     return screen.getByRole('button', { name });
   }
 
-  it('arms with a toolbar on a coarse pointer; Edit opens the dialog', () => {
+  it('should arm with a toolbar on a coarse pointer; Edit opens the dialog', () => {
     window.matchMedia = createMatchMedia(true);
     renderEvent();
 
@@ -70,7 +96,7 @@ describe('DayView - event toolbar', () => {
     expect(screen.getByRole('textbox', { name: /Event title/i })).not.to.equal(null);
   });
 
-  it('opens the editing dialog directly on a fine pointer (no toolbar)', () => {
+  it('should open the editing dialog directly on a fine pointer (no toolbar)', () => {
     window.matchMedia = createMatchMedia(false);
     renderEvent();
 
@@ -80,7 +106,7 @@ describe('DayView - event toolbar', () => {
     expect(screen.getByRole('textbox', { name: /Event title/i })).not.to.equal(null);
   });
 
-  it('deletes the event from the toolbar without opening the editing dialog', () => {
+  it('should delete the event from the toolbar without opening the editing dialog', () => {
     window.matchMedia = createMatchMedia(true);
     const { onEventsChange } = renderEvent();
 
@@ -94,9 +120,27 @@ describe('DayView - event toolbar', () => {
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
   });
 
+  // Navigating drops the toolbar's anchor, so it stops rendering — but the store stayed armed, which
+  // left the grid's outside-pointer handler swallowing the first tap on the new day.
+  it('should disarm when navigating to another day, so the next tap arms right away', () => {
+    window.matchMedia = createMatchMedia(true);
+    const { setProps } = renderEventOnEachDay();
+
+    fireEvent.click(getEvent());
+    expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
+
+    setProps({ visibleDate: new Date('2025-07-04T00:00:00Z') });
+    expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+
+    fireEvent.click(getEvent(/Next Day Sync/i));
+
+    expect(getEvent(/Next Day Sync/i)).to.have.attribute('data-armed');
+    expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
+  });
+
   // The two-tap contract: while an occurrence is armed, the next tap anywhere outside the toolbar only
   // disarms. It must not fall through and arm (or open) whatever it landed on.
-  it('disarms on a tap on another event without arming that event', () => {
+  it('should disarm on a tap on another event without arming that event', () => {
     window.matchMedia = createMatchMedia(true);
     renderTwoEvents();
 
