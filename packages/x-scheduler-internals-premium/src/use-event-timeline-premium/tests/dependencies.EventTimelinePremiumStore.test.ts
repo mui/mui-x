@@ -303,7 +303,9 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         adapter,
       );
 
-      store.deleteDependency('nope');
+      // `false` — nothing was deleted: `true` would let the callers pairing the
+      // deletion with a side effect (clearing the selection) act on a no-op.
+      expect(store.deleteDependency('nope')).to.equal(false);
 
       expect(onDependenciesChange.called).to.equal(false);
     });

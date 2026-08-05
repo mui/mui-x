@@ -143,13 +143,15 @@ export class SchedulerSchedulingPlugin<
   };
 
   /**
-   * Deletes a dependency. Refused (returning `false`) when either endpoint event is
-   * read-only, so the store stays safe regardless of which affordance calls it.
+   * Deletes a dependency, returning whether it was deleted. Refused (`false`) for an
+   * unknown id and when either endpoint event is read-only, so the store stays safe
+   * regardless of which affordance calls it and the callers pairing the deletion with
+   * a side effect (clearing the selection) never act on a no-op.
    * Implementation of the store's `deleteDependency()` — call it through the store.
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId): boolean => {
     const dependency = this.store.state.dependencyModelLookup.get(dependencyId);
-    if (dependency && isDependencyReadOnly(this.store.state, dependency)) {
+    if (dependency === undefined || isDependencyReadOnly(this.store.state, dependency)) {
       return false;
     }
     const current = this.store.state.dependencyModelList;
