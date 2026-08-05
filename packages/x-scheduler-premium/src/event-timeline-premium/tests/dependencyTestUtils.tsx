@@ -162,6 +162,12 @@ export function getArrowPaths() {
 }
 
 export function getEventElement(title: string) {
+  // Strict single match: an event unexpectedly rendering twice (several occurrences
+  // or several resources) must fail loudly, not silently resolve to the first one.
+  return screen.getByText(title).closest('[data-occurrence-key]')!;
+}
+
+export function getRecurringEventElement(title: string) {
   // A recurring event renders one occurrence per day: target the first one.
   return screen.getAllByText(title)[0].closest('[data-occurrence-key]')!;
 }

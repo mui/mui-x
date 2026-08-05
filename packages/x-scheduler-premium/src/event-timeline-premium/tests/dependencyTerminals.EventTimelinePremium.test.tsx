@@ -14,6 +14,7 @@ import {
   createDependencyTimelineRenderer,
   getArrowPaths,
   getEventElement,
+  getRecurringEventElement,
   resource1,
   resource2,
   TestTimeline,
@@ -43,8 +44,12 @@ const recurringEvent = EventBuilder.new()
 function getTerminal(title: string, resourceId?: string) {
   // The terminals render in an overlay outside the event elements, tied to their
   // event by the occurrence key — qualified by the resource for events appearing on
-  // several rows.
-  const occurrenceKey = getEventElement(title).getAttribute('data-occurrence-key');
+  // several rows. The key is appearance-invariant, so any rendered appearance serves
+  // to read it.
+  const occurrenceKey = screen
+    .getAllByText(title)[0]
+    .closest('[data-occurrence-key]')!
+    .getAttribute('data-occurrence-key');
   const resourceSelector = resourceId === undefined ? '' : `[data-resource-id="${resourceId}"]`;
   return document.querySelector<HTMLElement>(
     `[data-dependency-handle="${occurrenceKey}"]${resourceSelector}`,
@@ -63,11 +68,11 @@ function getAppearanceElement(title: string, resourceId: string) {
     )!;
 }
 
-function simulateTerminalDrag(sourceTitle: string, targetTitle: string) {
+function simulateTerminalDrag(sourceTitle: string, targetElement: Element) {
   act(() => {
     simulateDragAndDrop({
       source: getTerminal(sourceTitle)!,
-      target: getEventElement(targetTitle),
+      target: targetElement,
     });
   });
 }
@@ -246,7 +251,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         onDependenciesChange: handleDependenciesChange,
       });
 
-      simulateTerminalDrag('Event A', 'Event B');
+      simulateTerminalDrag('Event A', getEventElement('Event B'));
 
       expect(handleDependenciesChange.callCount).to.equal(1);
       const dependencies = handleDependenciesChange.firstCall.firstArg;
@@ -357,7 +362,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
       const validTarget = getEventElement('Event B');
-      const recurringTarget = getEventElement('Recurring event');
+      const recurringTarget = getRecurringEventElement('Recurring event');
 
       fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
       fireEvent.dragEnter(validTarget, { dataTransfer: new DataTransfer() });
@@ -390,7 +395,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         onDependenciesChange: handleDependenciesChange,
       });
 
-      simulateTerminalDrag('Event A', 'Recurring event');
+      simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
 
       expect(handleDependenciesChange.callCount).to.equal(0);
       expect(store.state.errors).to.have.length(1);
@@ -400,8 +405,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     it('should replace an identical rejection toast instead of stacking it', () => {
       const { store } = renderTimeline({ events: [eventA, recurringEvent], dependencies: [] });
 
-      simulateTerminalDrag('Event A', 'Recurring event');
-      simulateTerminalDrag('Event A', 'Recurring event');
+      simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
+      simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
 
       expect(store.state.errors).to.have.length(1);
       expect(store.state.errors[0].error.message).to.contain('recurring');
@@ -412,7 +417,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       try {
         const { store } = renderTimeline({ events: [eventA, recurringEvent], dependencies: [] });
 
-        simulateTerminalDrag('Event A', 'Recurring event');
+        simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
         expect(store.state.errors).to.have.length(1);
 
         act(() => {
@@ -511,6 +516,28 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         );
       });
 
+      // The free end tracks the cursor 1:1: a further move shifts the line's tail by
+      // exactly the cursor delta, pinning the client → viewBox mapping.
+      const parseLineEnd = (d: string) => {
+        const match = d.match(/L ([\d.-]+) ([\d.-]+)$/)!;
+        return { x: Number(match[1]), y: Number(match[2]) };
+      };
+      const firstEnd = parseLineEnd(
+        document.querySelector('[data-dependency-drag-line]')!.getAttribute('d')!,
+      );
+      fireEvent.dragOver(document.body, {
+        dataTransfer: new DataTransfer(),
+        clientX: 170,
+        clientY: 85,
+      });
+      await waitFor(() => {
+        const nextEnd = parseLineEnd(
+          document.querySelector('[data-dependency-drag-line]')!.getAttribute('d')!,
+        );
+        expect(nextEnd.x - firstEnd.x).to.equal(30);
+        expect(nextEnd.y - firstEnd.y).to.equal(25);
+      });
+
       fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
       fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
     });
@@ -523,7 +550,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         onDependenciesChange: handleDependenciesChange,
       });
 
-      simulateTerminalDrag('Event A', 'Event B');
+      simulateTerminalDrag('Event A', getEventElement('Event B'));
 
       expect(handleDependenciesChange.callCount).to.equal(0);
       expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
@@ -617,6 +644,42 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       fireEvent.keyDown(document.body, { key: 'Escape' });
 
+      expect(store.state.selection).to.equal(null);
+    });
+
+    it('should keep the selection when Escape cancels an in-flight creation drag', async () => {
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
+
+      const source = getTerminal('Event B')!.closest('[draggable="true"]')!;
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(document.body, {
+        dataTransfer: new DataTransfer(),
+        clientX: 120,
+        clientY: 40,
+      });
+      await waitFor(() => {
+        expect(store.state.dependencyCreation).not.to.equal(null);
+      });
+
+      // Escape cancels the drag (pragmatic handles it); the same keystroke must not
+      // also drop the selection.
+      fireEvent.keyDown(document.body, { key: 'Escape' });
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+      await waitFor(() => {
+        expect(store.state.dependencyCreation).to.equal(null);
+      });
+
+      // With no gesture in flight, Escape deselects again.
+      fireEvent.keyDown(document.body, { key: 'Escape' });
       expect(store.state.selection).to.equal(null);
     });
 
@@ -993,7 +1056,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         onDependenciesChange: handleDependenciesChange,
       });
 
-      simulateTerminalDrag('Event A', 'Read-only event');
+      simulateTerminalDrag('Event A', getEventElement('Read-only event'));
 
       expect(handleDependenciesChange.callCount).to.equal(0);
       expect(store.state.errors).to.have.length(1);

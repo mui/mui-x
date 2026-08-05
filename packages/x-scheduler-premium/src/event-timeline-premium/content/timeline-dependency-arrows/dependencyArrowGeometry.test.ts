@@ -437,6 +437,11 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].d).to.equal(
         'M 720 31 L 724 31 Q 728 31 728 35 L 728 89 Q 728 93 732 93 L 780 93',
       );
+      // The 12px start trim caps at half of the 8px stub (4px, keeping the terminal
+      // reachable), the 8px end trim applies in full on the long last segment.
+      expect(arrows[0].hitD).to.equal(
+        'M 724 31 L 726 31 Q 728 31 728 33 L 728 89 Q 728 93 732 93 L 772 93',
+      );
       expect(arrows[0].minRowIndex).to.equal(0);
       expect(arrows[0].maxRowIndex).to.equal(1);
     });
@@ -461,6 +466,11 @@ describe('dependencyArrowGeometry', () => {
       // hugging the source at y = 31 + 21.
       expect(arrows[0].d).to.equal(
         'M 720 31 L 724 31 Q 728 31 728 35 L 728 48 Q 728 52 724 52 L 652 52 Q 648 52 648 56 L 648 61 Q 648 65 652 65 L 660 65',
+      );
+      // Both trims cap at half of their short end segments (the 8px stub and the
+      // 12px entry), so the hit path never starts behind the terminal.
+      expect(arrows[0].hitD).to.equal(
+        'M 724 31 L 726 31 Q 728 31 728 33 L 728 48 Q 728 52 724 52 L 652 52 Q 648 52 648 56 L 648 62 Q 648 65 651 65 L 654 65',
       );
       // The bounding box includes the stub and entry-clearance overhangs.
       expect(arrows[0].minXFraction).to.equal(648 / EVENTS_WIDTH);
