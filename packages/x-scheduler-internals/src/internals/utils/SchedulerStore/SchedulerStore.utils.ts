@@ -80,6 +80,13 @@ const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
 const EVENT_PROPERTIES = Object.keys(EVENT_PROPERTIES_LOOKUP) as (keyof SchedulerEvent)[];
 
 /**
+ * Whether the key is one of the built-in `SchedulerEvent` properties.
+ */
+export function isBuiltInEventProperty(key: string): boolean {
+  return EVENT_PROPERTIES_LOOKUP.hasOwnProperty(key);
+}
+
+/**
  * Returns the properties of an event model that are not part of the built-in `SchedulerEvent` shape.
  */
 export function getCustomEventProperties<TEvent extends object>(model: TEvent): Partial<TEvent> {
