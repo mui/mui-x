@@ -19,6 +19,7 @@ const renderSingleSelectOptions = ({
   getOptionValue,
   isSelectNative,
   baseSelectOptionProps,
+  blankOptionLabel,
 }: {
   column: GridSingleSelectColDef;
   OptionComponent: React.ElementType;
@@ -26,10 +27,11 @@ const renderSingleSelectOptions = ({
   getOptionValue: NonNullable<GridSingleSelectColDef['getOptionValue']>;
   isSelectNative: boolean;
   baseSelectOptionProps: GridSlotsComponentsProps['baseSelectOption'];
+  blankOptionLabel: string;
 }) => {
-  const iterableColumnValues = ['', ...(getValueOptions(column) || [])];
+  const valueOptions = getValueOptions(column) || [];
 
-  return iterableColumnValues.map((option) => {
+  const options = valueOptions.map((option) => {
     const value = getOptionValue(option);
     let label = getOptionLabel(option);
     if (label === '') {
@@ -42,6 +44,24 @@ const renderSingleSelectOptions = ({
       </OptionComponent>
     );
   });
+
+  // A column that declares its own blank entry already offers a way to reset the filter.
+  // Prepending another one would render two options sharing the same `''` key.
+  const declaresBlankOption = valueOptions.some((option) => {
+    const value = getOptionValue(option);
+    return value === '' || value === null || value === undefined;
+  });
+
+  if (declaresBlankOption) {
+    return options;
+  }
+
+  return [
+    <OptionComponent {...baseSelectOptionProps} native={isSelectNative} key="" value="">
+      {blankOptionLabel}
+    </OptionComponent>,
+    ...options,
+  ];
 };
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps<TextFieldProps> & {
@@ -130,6 +150,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           getOptionValue,
           isSelectNative,
           baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
+          blankOptionLabel: apiRef.current.getLocaleText('filterValueAny'),
         })}
       </rootProps.slots.baseSelect>
       {headerFilterMenu}
