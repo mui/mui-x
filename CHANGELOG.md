@@ -1,5 +1,117 @@
 # Changelog
 
+## 9.11.0
+
+_Aug 5, 2026_
+
+We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Add `addItems()` and `getItemSelection()` API methods to Tree View
+
+Special thanks go out to these community members for their valuable contributions:
+@12joan, @Anexus5919, @kevincorizi-sbt, @mixelburg, @mustafajw07, @strazto
+
+The following team members contributed to this release:
+@flaviendelangle, @hasdfa, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.11.0`
+
+- [DataGrid] Fix `updateRows` stripping class prototypes from rows in datasource mode (#22288) @mixelburg
+- [DataGrid] Do not re-fetch data when an `Activity` becomes visible (#22603) @12joan
+- [DataGrid] Fix toolbar button stealing focus when a sibling's disabled state changes (#23204) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.11.0`.
+
+#### `@mui/x-data-grid-premium@9.11.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.11.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.11.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.11.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.11.0`
+
+- [charts] Extract the axis click payload builders (#23215) @JCQuintas
+- [charts] Fix `GestureManager` event listener leak on chart unmount (#23283) @kevincorizi-sbt
+- [charts] Fix `slotProps.legend.position` and `direction` in `RadarChart` (#23254) @JCQuintas
+- [charts] Fix axis clicks being discarded on slight pointer movement (#23244) @noraleonte
+- [charts] Fix image export of charts sized by their parent element (#23255) @JCQuintas
+- [charts] Forward `experimentalFeatures` on `RadarChart` and `Heatmap` (#23216) @JCQuintas
+- [charts] Hide focus indicator when the chart loses focus (#23213) @JCQuintas
+
+#### `@mui/x-charts-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.11.0`.
+
+#### `@mui/x-charts-premium@9.11.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.11.0`, plus:
+
+- [charts-premium] Fix `RangeBar` type override (#23217) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@9.11.0`
+
+- [tree view] Add `addItems()` API method (#23159) @JCQuintas
+- [tree view] Add `getItemSelection` API method (#23257) @noraleonte
+- [tree view] Ignore `keepExistingSelection` when `multiSelect` is `false` (#23242) @JCQuintas
+- [tree view] Prevent duplicate ids in multi-select arrow navigation (#23006) @Anexus5919
+
+#### `@mui/x-tree-view-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.11.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.8`
+
+- [scheduler] Add `localeText` prop to standalone views (#23210) @rita-codes
+- [scheduler] Introduce the edit dialog form context & lifecycle contract (#23284) @rita-codes
+- [scheduler] Refactor edit dialog General tab into section components (#23206) @rita-codes
+- [scheduler] Replace copied Base UI internals with `@base-ui/react/internals` imports (#21972) @flaviendelangle
+- [scheduler] Hide resource picker when no resources are provided (#23290) @mustafajw07
+- [scheduler] Support multi-resource occurrences in EventTimeline (#23240) @mustafajw07
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.8` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.8`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.11.0`
+
+- [codemod] Remove unused `@babel/core` and `@babel/traverse` dependencies (#23245) @LukasTy
+
+### Docs
+
+- [docs] Add recipe for adding new rows from clipboard copy (#22913) @michelengelen
+- [docs] Clarify the package versions in v8 upgrade guides (#22376) @strazto
+- [docs] Replace README peer dependency lists with an npm install command (#23256) @LukasTy
+
+### Core
+
+- [code-infra] Align action pin version comments (#23238) @LukasTy
+
+### Miscellaneous
+
+- [chat] Drop the undeclared `@mui/icons-material` dependency (#23252) @LukasTy
+- [chat] Sanitize image part URLs and share the URL allow-list with markdown (#23058) @hasdfa
+- [test] Type the `PickersTextField` test stub instead of `as any` (#23194) @LukasTy
+
 ## 9.10.1
 
 _Jul 23, 2026_
