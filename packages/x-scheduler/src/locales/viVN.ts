@@ -9,6 +9,7 @@ import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 const viVNDialog: Partial<EventDialogLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
+  // colorSectionLabel: 'Color',
   // dateTimeSectionLabel: 'Date & time',
   // resourceColorSectionLabel: 'Resource & color',
   // allDayLabel: 'All Day',
