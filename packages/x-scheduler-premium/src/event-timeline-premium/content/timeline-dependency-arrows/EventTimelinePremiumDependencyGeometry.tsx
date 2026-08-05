@@ -25,11 +25,11 @@ import { computeDependencyArrows, createDependencyAnchorResolver } from './depen
 export interface EventTimelinePremiumDependencyGeometryValue {
   resolver: DependencyAnchorResolver;
   /**
-   * The arrows intersecting the visible range, the selected one last so its highlight
-   * is never covered by a sibling.
+   * The arrows intersecting the visible range. Selection-agnostic (the provider does
+   * not subscribe to the selection): the layers highlighting the selected arrow order
+   * it last themselves, through `orderArrowsWithSelectedLast`.
    */
   visibleArrows: DependencyArrow[];
-  selectedId: SchedulerDependencyId | null;
   eventsWidth: number;
   /**
    * The y of the first rendered row: the overlays' y = 0 in absolute row-space.
@@ -45,6 +45,20 @@ export interface EventTimelinePremiumDependencyGeometryValue {
 
 const EventTimelinePremiumDependencyGeometryContext =
   React.createContext<EventTimelinePremiumDependencyGeometryValue | null>(null);
+
+/**
+ * The visible arrows with the selected one last, so its highlight (and its hit area)
+ * is never covered by a sibling. Returns the input array when nothing is selected.
+ */
+export function orderArrowsWithSelectedLast(
+  arrows: DependencyArrow[],
+  selectedId: SchedulerDependencyId | null,
+): DependencyArrow[] {
+  if (selectedId === null || !arrows.some((arrow) => arrow.id === selectedId)) {
+    return arrows;
+  }
+  return arrows.toSorted((a, b) => Number(a.id === selectedId) - Number(b.id === selectedId));
+}
 
 export function useDependencyGeometry(): EventTimelinePremiumDependencyGeometryValue {
   const value = React.useContext(EventTimelinePremiumDependencyGeometryContext);
@@ -74,7 +88,6 @@ export function EventTimelinePremiumDependencyGeometryProvider({
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
 
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
   const dependencies = useStore(store, eventTimelinePremiumDependencySelectors.activeModelList);
   const resources = useStore(
     store,
@@ -140,10 +153,6 @@ export function EventTimelinePremiumDependencyGeometryProvider({
         arrow.maxRowIndex >= renderContext.firstRowIndex &&
         arrow.minRowIndex <= renderContext.lastRowIndex,
     );
-    // The selected arrow paints last so its highlight is never covered by a sibling.
-    if (selectedId !== null) {
-      visibleArrows.sort((a, b) => Number(a.id === selectedId) - Number(b.id === selectedId));
-    }
 
     const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
     const height = rowsMeta.currentPageTotalHeight - offsetTop;
@@ -151,7 +160,6 @@ export function EventTimelinePremiumDependencyGeometryProvider({
     return {
       resolver,
       visibleArrows,
-      selectedId,
       eventsWidth,
       offsetTop,
       height,
@@ -161,16 +169,7 @@ export function EventTimelinePremiumDependencyGeometryProvider({
       lastRowIndex: renderContext.lastRowIndex,
       resources,
     };
-  }, [
-    arrows,
-    resolver,
-    selectedId,
-    eventsWidth,
-    renderContext,
-    rowsMeta,
-    presetConfig.tickCount,
-    resources,
-  ]);
+  }, [arrows, resolver, eventsWidth, renderContext, rowsMeta, presetConfig.tickCount, resources]);
 
   return (
     <EventTimelinePremiumDependencyGeometryContext.Provider value={value}>

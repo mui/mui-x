@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
@@ -97,23 +98,29 @@ function DependencyTerminalsLayerImpl() {
     lastRowIndex: lastGeometryRowIndex,
   } = useDependencyGeometry();
 
-  // The occurrence key alone does not identify a row appearance (an event assigned to
-  // several resources repeats the same key on each row): the hover is qualified by
-  // the resource, read from the DOM as a string.
-  const [hoveredAppearance, setHoveredAppearance] = React.useState<{
-    occurrenceKey: string;
-    resourceId: string;
-  } | null>(null);
   const layerRef = React.useRef<HTMLDivElement>(null);
+
+  // The hover never enters React: it toggles `data-visible` on the two affected
+  // terminals directly (the same DOM-driven technique as the rubber band), so
+  // pointer-rate transitions do not rebuild the layer.
+  const revealedTerminalRef = React.useRef<Element | null>(null);
+  const revealTerminal = useStableCallback((terminal: Element | null) => {
+    if (revealedTerminalRef.current === terminal) {
+      return;
+    }
+    revealedTerminalRef.current?.removeAttribute('data-visible');
+    terminal?.setAttribute('data-visible', '');
+    revealedTerminalRef.current = terminal;
+  });
 
   // A native drag suppresses pointer events, so the hover tracked before the gesture
   // goes stale by its end (the pointer may have dropped far away): reset it when the
   // gesture ends and let the next pointerover rebuild it.
   React.useEffect(() => {
     if (creation === null) {
-      setHoveredAppearance(null);
+      revealTerminal(null);
     }
-  }, [creation]);
+  }, [creation, revealTerminal]);
 
   const mounted = eventsWidth > 0 && height > 0;
 
@@ -124,27 +131,32 @@ function DependencyTerminalsLayerImpl() {
     if (!container) {
       return undefined;
     }
-    const getAppearance = (
-      target: EventTarget | null,
-    ): { occurrenceKey: string; resourceId: string } | null => {
+    // Escaped for use inside a quoted attribute selector.
+    const escapeAttributeValue = (value: string) => value.replace(/["\\]/g, '\\$&');
+    const getTerminalFor = (target: EventTarget | null): Element | null => {
       if (!(target instanceof Element)) {
         return null;
       }
-      // A terminal keeps itself revealed while hovered: it carries its occurrence key
-      // and its resource.
+      // A terminal keeps itself revealed while hovered.
       const handle = target.closest('[data-dependency-handle]');
       if (handle !== null) {
-        return {
-          occurrenceKey: handle.getAttribute('data-dependency-handle')!,
-          resourceId: handle.getAttribute('data-resource-id')!,
-        };
+        return handle;
       }
       const occurrenceKey =
         target.closest('[data-occurrence-key]')?.getAttribute('data-occurrence-key') ?? null;
-      // The row element carries the resource, qualifying the appearance.
+      // The row element carries the resource: the occurrence key alone does not
+      // identify a row appearance (an event assigned to several resources repeats the
+      // same key on each row).
       const resourceId =
         target.closest('[data-resource-id]')?.getAttribute('data-resource-id') ?? null;
-      return occurrenceKey !== null && resourceId !== null ? { occurrenceKey, resourceId } : null;
+      if (occurrenceKey === null || resourceId === null) {
+        return null;
+      }
+      return (
+        layerRef.current?.querySelector(
+          `[data-dependency-handle="${escapeAttributeValue(occurrenceKey)}"][data-resource-id="${escapeAttributeValue(resourceId)}"]`,
+        ) ?? null
+      );
     };
     const handlePointerOver = (event: PointerEvent) => {
       // The arrows' invisible hit bands ride over the events: crossing one must not
@@ -156,25 +168,19 @@ function DependencyTerminalsLayerImpl() {
       ) {
         return;
       }
-      const next = getAppearance(event.target);
-      // Object identity changes on every pointerover: bail out on equal content so
-      // crossing elements of the same appearance does not re-render the layer.
-      setHoveredAppearance((previous) =>
-        previous?.occurrenceKey === next?.occurrenceKey && previous?.resourceId === next?.resourceId
-          ? previous
-          : next,
-      );
+      revealTerminal(getTerminalFor(event.target));
     };
     const handlePointerLeave = () => {
-      setHoveredAppearance(null);
+      revealTerminal(null);
     };
     container.addEventListener('pointerover', handlePointerOver);
     container.addEventListener('pointerleave', handlePointerLeave);
     return () => {
       container.removeEventListener('pointerover', handlePointerOver);
       container.removeEventListener('pointerleave', handlePointerLeave);
+      revealTerminal(null);
     };
-  }, [mounted]);
+  }, [mounted, revealTerminal]);
 
   if (!mounted) {
     return null;
@@ -189,12 +195,8 @@ function DependencyTerminalsLayerImpl() {
     }
     const rowResourceId = resources[rowIndex].resource.id;
     for (const occurrence of resources[rowIndex].occurrences) {
-      if (
-        schedulerEventSelectors.isRecurring(store.state, occurrence.id) ||
-        schedulerEventSelectors.isReadOnly(store.state, occurrence.id)
-      ) {
-        continue;
-      }
+      // Geometry culls before the per-event selectors: the row holds every occurrence
+      // of the collection range, most of which are outside the viewport.
       const position = resolver.getPosition(occurrence);
       // The gesture starts from the end edge (the `FinishToStart` origin), which must
       // be inside the collection to anchor the provisional arrow — same rule as the
@@ -206,15 +208,21 @@ function DependencyTerminalsLayerImpl() {
       if (endFraction < visibleStartFraction || endFraction > visibleEndFraction) {
         continue;
       }
+      if (
+        schedulerEventSelectors.isRecurring(store.state, occurrence.id) ||
+        schedulerEventSelectors.isReadOnly(store.state, occurrence.id)
+      ) {
+        continue;
+      }
       const point = resolver.getEdgePoint(
         { rowIndex, resourceId: rowResourceId, occurrence },
         'end',
       );
+      // The hover reveal is DOM-driven; only the gesture's source appearance is
+      // render-driven, so it survives the hover reset at drag start.
       const visible =
-        (hoveredAppearance?.occurrenceKey === occurrence.key &&
-          hoveredAppearance.resourceId === String(rowResourceId)) ||
-        (creation?.sourceOccurrenceKey === occurrence.key &&
-          creation.sourceResourceId === rowResourceId);
+        creation?.sourceOccurrenceKey === occurrence.key &&
+        creation.sourceResourceId === rowResourceId;
       terminals.push(
         <EventTimelinePremiumDependencyTerminal
           // The occurrence key repeats on every row of a multi-resource event: only

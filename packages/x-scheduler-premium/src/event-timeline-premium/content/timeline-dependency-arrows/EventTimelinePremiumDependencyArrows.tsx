@@ -10,7 +10,10 @@ import type { SchedulerDependencyCreation } from '@mui/x-scheduler-internals-pre
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import type { DependencyAnchorResolver, DependencyArrowPoint } from './dependencyArrowGeometry';
 import { getEventEdgeAnchor, DEPENDENCY_ARROWHEAD_SIZE } from './dependencyArrowGeometry';
-import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
+import {
+  orderArrowsWithSelectedLast,
+  useDependencyGeometry,
+} from './EventTimelinePremiumDependencyGeometry';
 
 const DEPENDENCY_ARROW_STROKE_WIDTH = 1;
 const DEPENDENCY_ARROW_SELECTED_STROKE_WIDTH = 2;
@@ -67,8 +70,12 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   // The overlays' y = 0 is the top of the first rendered row (the positioner offsets
   // the row container), while the paths are in absolute row-space. The viewBox maps
   // one to the other and clips the arrows reaching off-screen anchors.
-  const { visibleArrows, selectedId, resolver, eventsWidth, offsetTop, height } =
-    useDependencyGeometry();
+  const { visibleArrows, resolver, eventsWidth, offsetTop, height } = useDependencyGeometry();
+  const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
+  const orderedArrows = React.useMemo(
+    () => orderArrowsWithSelectedLast(visibleArrows, selectedId),
+    [visibleArrows, selectedId],
+  );
   // A selected read-only arrow keeps its arrowhead: the delete button that normally
   // replaces it is not rendered by the interactions layer.
   const isSelectedReadOnly = useStore(
@@ -150,7 +157,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
             arrowhead needs its own def. */}
         <DependencyArrowheadMarker id={creationArrowheadId} fill={creationColor} />
       </defs>
-      {visibleArrows.map((arrow) => {
+      {orderedArrows.map((arrow) => {
         const selected = arrow.id === selectedId;
         const replacedByDeleteButton = selected && !isSelectedReadOnly;
         return (

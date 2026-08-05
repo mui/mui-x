@@ -5,7 +5,10 @@ import { useStore } from '@base-ui/utils/store';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyId } from '@mui/x-scheduler-internals-premium/models';
-import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
+import {
+  orderArrowsWithSelectedLast,
+  useDependencyGeometry,
+} from './EventTimelinePremiumDependencyGeometry';
 import { useDependencySelectionInteraction } from './useDependencySelectionInteraction';
 
 /**
@@ -70,7 +73,12 @@ function DependencyInteractionsLayer() {
   const theme = useTheme();
   const store = useEventTimelinePremiumStoreContext();
   const svgRef = React.useRef<SVGSVGElement>(null);
-  const { visibleArrows, selectedId, eventsWidth, offsetTop, height } = useDependencyGeometry();
+  const { visibleArrows, eventsWidth, offsetTop, height } = useDependencyGeometry();
+  const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
+  const orderedArrows = React.useMemo(
+    () => orderArrowsWithSelectedLast(visibleArrows, selectedId),
+    [visibleArrows, selectedId],
+  );
   // `deleteDependency` ignores read-only dependencies: hide the button instead of
   // rendering one that does nothing.
   const isSelectedReadOnly = useStore(
@@ -94,7 +102,7 @@ function DependencyInteractionsLayer() {
   const buttonArrow =
     selectedId === null || isSelectedReadOnly
       ? null
-      : (visibleArrows.find((arrow) => arrow.id === selectedId) ?? null);
+      : (orderedArrows.find((arrow) => arrow.id === selectedId) ?? null);
 
   return (
     <DependencyInteractionsSvg
@@ -105,7 +113,7 @@ function DependencyInteractionsLayer() {
       height={height}
       viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}
     >
-      {visibleArrows.map((arrow) => {
+      {orderedArrows.map((arrow) => {
         // Clamped inside the viewBox on both axes: at the timeline's left edge the
         // anchor sits at x = 0, and an arrow into a scrolled-out row has its tip above
         // or below the rendered range — an unclamped button would be unreachable there
