@@ -78,13 +78,25 @@ function sortPresetsByZoomOrder(
 /**
  * Validates every entry of `presetConfig`, not just the active preset's: the selector
  * only resolves the rendered preset, so a typo in another preset's range would stay
- * silent until an end user switches to it.
+ * silent until an end user switches to it. A key with no matching entry in `presets`
+ * warns instead of throwing like unknown `presets` entries do: `presets` can
+ * legitimately change at runtime while `presetConfig` stays static.
  */
-function validatePresetConfig(presetConfig: EventTimelinePremiumPresetConfig) {
+function validatePresetConfig(
+  presetConfig: EventTimelinePremiumPresetConfig,
+  presets: readonly EventTimelinePremiumPreset[],
+) {
   if (process.env.NODE_ENV !== 'production') {
     for (const preset of Object.keys(presetConfig) as (keyof EventTimelinePremiumPresetConfig)[]) {
       const hourConfig = presetConfig[preset];
       if (hourConfig) {
+        if (!presets.includes(preset)) {
+          warnOnce([
+            `MUI X Scheduler: \`presetConfig.${preset}\` has no matching entry in the \`presets\` prop.`,
+            'The configuration is ignored because the preset can never become active.',
+            `Add "${preset}" to \`presets\`, or remove the entry from \`presetConfig\`.`,
+          ]);
+        }
         getDisplayedHourRange(hourConfig.startTime, hourConfig.endTime, `presetConfig.${preset}`);
       }
     }
@@ -94,11 +106,12 @@ function validatePresetConfig(presetConfig: EventTimelinePremiumPresetConfig) {
 const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
   parameters: EventTimelinePremiumParameters<TEvent, TResource>,
 ) => {
+  const presets = sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS);
   if (parameters.presetConfig) {
-    validatePresetConfig(parameters.presetConfig);
+    validatePresetConfig(parameters.presetConfig, presets);
   }
   return {
-    presets: sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS),
+    presets,
     presetConfig: parameters.presetConfig ?? EMPTY_OBJECT,
   };
 };

@@ -53,7 +53,10 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
       // A cursor on (or past) either edge must not map beyond the axis: the offset
       // would resolve into the day before or after the collection.
-      return Math.min(Math.max(Math.round(collectionDurationMs * positionX), 0), collectionDurationMs);
+      return Math.min(
+        Math.max(Math.round(collectionDurationMs * positionX), 0),
+        collectionDurationMs,
+      );
     });
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(

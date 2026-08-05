@@ -31,6 +31,23 @@ describe('Preset - EventTimelinePremiumStore', () => {
         );
       }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` received an invalid hour range']);
     });
+
+    it('should warn when a presetConfig key has no matching entry in presets', () => {
+      // `presets` can legitimately change at runtime while `presetConfig` stays
+      // static, so a dead key warns instead of throwing like unknown `presets` do.
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore(
+          {
+            ...DEFAULT_PARAMS,
+            defaultPreset: 'dayAndMonth',
+            presets: ['dayAndMonth', 'year'] as EventTimelinePremiumPreset[],
+            presetConfig: { dayAndHour: { startTime: 8, endTime: 20 } },
+          },
+          adapter,
+        );
+      }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` has no matching entry']);
+    });
   });
 
   describe('Method: setPreset', () => {
