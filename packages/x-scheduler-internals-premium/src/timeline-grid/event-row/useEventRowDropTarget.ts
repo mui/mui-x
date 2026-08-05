@@ -51,9 +51,9 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       const elementPosition = elementRef.current.getBoundingClientRect();
       const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
 
-      // A cursor exactly on (or past) the right edge must not map beyond the axis:
-      // the offset would resolve into the day after the collection.
-      return Math.min(Math.round(collectionDurationMs * positionX), collectionDurationMs);
+      // A cursor on (or past) either edge must not map beyond the axis: the offset
+      // would resolve into the day before or after the collection.
+      return Math.min(Math.max(Math.round(collectionDurationMs * positionX), 0), collectionDurationMs);
     });
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(

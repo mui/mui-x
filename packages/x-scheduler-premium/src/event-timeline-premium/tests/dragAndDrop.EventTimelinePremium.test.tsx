@@ -627,5 +627,50 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       expect(newStart.getUTCHours()).to.equal(19);
       expect(newStart.getUTCMinutes()).to.equal(45);
     });
+
+    it('should keep a drop past the left edge of the axis inside the collection', async () => {
+      const handleEventsChange = spy();
+      render(
+        <div>
+          <StandaloneEvent
+            data={{ id: 'external-1', title: 'External Job', duration: 60 }}
+            renderDragPreview={() => null}
+          >
+            External Job
+          </StandaloneEvent>
+          <EventTimelinePremium
+            resources={resources}
+            events={[]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            preset="dayAndHour"
+            presets={['dayAndHour']}
+            presetConfig={{ dayAndHour: { startTime: 8, endTime: 20 } }}
+            canDragEventsFromTheOutside
+            onEventsChange={handleEventsChange}
+          />
+        </div>,
+      );
+      mockAllEventRowBounds(AXIS_WIDTH);
+
+      const standaloneElement = screen.getByText('External Job');
+      const row = getEventRow(engineering.id);
+
+      // A negative axis offset would resolve into the day before the collection,
+      // where the created event would not be rendered at all.
+      await act(async () => {
+        simulateDragAndDrop({
+          source: standaloneElement,
+          target: row,
+          targetClientX: -10,
+        });
+      });
+
+      expect(handleEventsChange.callCount).to.equal(1);
+      const updatedEvents = handleEventsChange.firstCall.args[0];
+      const newStart = new Date(updatedEvents[0].start);
+      expect(newStart.getUTCDate()).to.equal(3);
+      expect(newStart.getUTCHours()).to.equal(8);
+      expect(newStart.getUTCMinutes()).to.equal(0);
+    });
   });
 });
