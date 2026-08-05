@@ -7,8 +7,8 @@ import type {
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
 import { useDragHandle } from '@mui/x-scheduler-internals/internals';
-import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
-import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { TimelineGridEventDependencyTerminalDataAttributes } from './TimelineGridEventDependencyTerminalDataAttributes';
 

@@ -81,6 +81,11 @@ const TEST_RULES: RouteRule[] = [
     // Same async reprojection sentinel as MapImageProjections.
     waitForSelector: '[data-testid="map-images-ready"]',
   },
+  {
+    test: '/test-regressions-charts/ImageExportAutoSize',
+    // The exported image is screenshotted by a dedicated `test` block below.
+    enabled: false,
+  },
 
   // Overview composites embed desktop-breakpoint media queries that don't
   // match at the default 1000x700 viewport, leaving panes hidden in
@@ -586,6 +591,35 @@ async function main() {
         await download.saveAs(screenshotPath);
       } finally {
         await page.close();
+      }
+    });
+
+    it('should export a chart sized by its parent element as PNG', async () => {
+      const route = '/test-regressions-charts/ImageExportAutoSize';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
+
+      const page = await pool.acquire();
+      // The export catches its own errors and logs them, which would leave the download
+      // promise hanging until the test times out. Surface the error instead.
+      const { promise: exportError, reject } = Promise.withResolvers<never>();
+      const handler = (msg: ConsoleMessage) => {
+        if (msg.type() === 'error') {
+          reject(new Error(msg.text()));
+        }
+      };
+      page.on('console', handler);
+      try {
+        await navigateToTest(page, route);
+
+        const downloadPromise = page.waitForEvent('download');
+        await page.getByRole('button', { name: 'Export Image' }).click();
+
+        const download = await Promise.race([downloadPromise, exportError]);
+
+        await download.saveAs(screenshotPath);
+      } finally {
+        page.off('console', handler);
+        pool.release(page);
       }
     });
 

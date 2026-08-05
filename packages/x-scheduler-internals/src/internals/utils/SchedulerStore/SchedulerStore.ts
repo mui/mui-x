@@ -9,6 +9,7 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { EventManager } from '@mui/x-internals/EventManager';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
@@ -51,7 +52,6 @@ import {
 import { dateToEventString } from '../date-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
-import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
