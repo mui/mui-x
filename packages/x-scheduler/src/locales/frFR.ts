@@ -55,7 +55,7 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   saveChanges: 'Enregistrer',
   startDateAfterEndDateError: 'La date/heure de début doit être antérieure à la date/heure de fin.',
   startDateLabel: 'Date de début',
-  // startTimeAfterEndTimeError: 'Start time must be before end time.',
+  // startTimeAfterEndTimeError: 'End time must be after start time.',
   startTimeLabel: 'Heure de début',
 
   // RecurringScopeDialog

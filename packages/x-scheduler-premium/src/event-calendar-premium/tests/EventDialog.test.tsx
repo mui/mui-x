@@ -238,7 +238,7 @@ describe('<EventDialogContent open />', () => {
     expect(onEventsChange.firstCall.firstArg[0].color).to.not.equal('pink');
   });
 
-  it('should show error if start date is after end date', async () => {
+  it('should show error on the End date field if end date is before start date', async () => {
     const { user } = render(
       <EventCalendarProvider
         events={[DEFAULT_EVENT]}
@@ -254,12 +254,12 @@ describe('<EventDialogContent open />', () => {
     await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
     await user.click(screen.getByRole('button', { name: /save/i }));
 
-    expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
-      /start.*before.*end/i,
+    expect(screen.getDescriptionOf(screen.getByLabelText(/end date/i)).textContent).to.match(
+      /end date.*before.*start date/i,
     );
   });
 
-  it('should show error and block submit if start time is after end time on the same day', async () => {
+  it('should show error on the End time field and block submit if end time is not after start time on the same day', async () => {
     const onEventsChange = spy();
     const { user } = render(
       <EventCalendarProvider
@@ -278,8 +278,8 @@ describe('<EventDialogContent open />', () => {
     await user.click(screen.getByRole('button', { name: /save/i }));
 
     expect(onEventsChange.called).to.equal(false);
-    expect(screen.getDescriptionOf(screen.getByLabelText(/start time/i)).textContent).to.match(
-      /start time.*before.*end time/i,
+    expect(screen.getDescriptionOf(screen.getByLabelText(/end time/i)).textContent).to.match(
+      /end time.*after.*start time/i,
     );
   });
 
@@ -717,8 +717,8 @@ describe('<EventDialogContent open />', () => {
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(onEventsChange.called).to.equal(false);
-      expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
-        /start.*before.*end/i,
+      expect(screen.getDescriptionOf(screen.getByLabelText(/end date/i)).textContent).to.match(
+        /end date.*before.*start date/i,
       );
       expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
 
@@ -726,7 +726,7 @@ describe('<EventDialogContent open />', () => {
       await user.clear(screen.getByLabelText(/end date/i));
       await user.type(screen.getByLabelText(/end date/i), '2025-05-28');
 
-      expect(screen.queryByText(/start.*before.*end/i)).to.equal(null);
+      expect(screen.queryByText(/end date.*before.*start date/i)).to.equal(null);
       expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
     });
 

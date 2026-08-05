@@ -55,7 +55,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   saveChanges: 'Lagre',
   startDateAfterEndDateError: 'Startdato/-tid må være før sluttdato/-tid.',
   startDateLabel: 'Startdato',
-  // startTimeAfterEndTimeError: 'Start time must be before end time.',
+  // startTimeAfterEndTimeError: 'End time must be after start time.',
   startTimeLabel: 'Starttidspunkt',
 
   // RecurringScopeDialog

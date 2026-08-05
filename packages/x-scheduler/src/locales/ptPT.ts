@@ -55,7 +55,7 @@ const ptPTDialog: Partial<EventDialogLocaleText> = {
   saveChanges: 'Guardar',
   startDateAfterEndDateError: 'A data/hora de início deve ser anterior à data/hora de fim.',
   startDateLabel: 'Data de início',
-  // startTimeAfterEndTimeError: 'Start time must be before end time.',
+  // startTimeAfterEndTimeError: 'End time must be after start time.',
   startTimeLabel: 'Hora de início',
 
   // RecurringScopeDialog

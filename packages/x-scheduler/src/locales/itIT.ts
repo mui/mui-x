@@ -55,7 +55,7 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   saveChanges: 'Salva',
   startDateAfterEndDateError: 'La data/ora di inizio deve essere precedente alla data/ora di fine.',
   startDateLabel: 'Data di inizio',
-  // startTimeAfterEndTimeError: 'Start time must be before end time.',
+  // startTimeAfterEndTimeError: 'End time must be after start time.',
   startTimeLabel: 'Ora di inizio',
 
   // RecurringScopeDialog
