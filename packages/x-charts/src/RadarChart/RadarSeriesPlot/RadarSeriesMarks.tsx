@@ -67,7 +67,6 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                   getHighlightState,
                   classes,
                 })}
-                pointerEvents={onItemClick ? undefined : 'none'}
                 onClick={(event) => {
                   const item: Required<RadarItemIdentifier> = {
                     type: 'radar',
