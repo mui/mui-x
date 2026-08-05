@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { styled, useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { useDependencyDragCursor } from '@mui/x-scheduler-internals-premium/internals';
@@ -116,7 +117,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   // Redraw from the last tracked cursor when the line just un-snapped (or the
   // geometry shifted): the drag frame of the same dragover was already canceled by
   // pragmatic's drop-target update, so waiting for the next one leaves a blink.
-  React.useLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     if (followCursor && lastCursorRef.current !== null) {
       followCursorMove(lastCursorRef.current.clientX, lastCursorRef.current.clientY);
     }

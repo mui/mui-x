@@ -181,8 +181,9 @@ function DependencyTerminalsLayerImpl() {
   }
 
   const terminals: React.ReactElement[] = [];
-  const lastRowIndex = Math.min(lastGeometryRowIndex, resources.length - 1);
-  for (let rowIndex = firstRowIndex; rowIndex <= lastRowIndex; rowIndex += 1) {
+  // `lastRowIndex` is exclusive, like the virtualizer's render range it comes from.
+  const endRowIndex = Math.min(lastGeometryRowIndex, resources.length);
+  for (let rowIndex = firstRowIndex; rowIndex < endRowIndex; rowIndex += 1) {
     if (!resolver.hasRowPosition(rowIndex)) {
       continue;
     }

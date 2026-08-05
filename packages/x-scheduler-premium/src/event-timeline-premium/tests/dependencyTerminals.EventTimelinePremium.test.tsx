@@ -1129,6 +1129,21 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
     });
 
+    it('should render a single delete button for a selected dependency with several appearances', () => {
+      renderTimeline({
+        events: [eventA, sharedEvent],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-shared')],
+      });
+
+      // One arrow per pair of row appearances: the multi-resource target draws two.
+      const hits = document.querySelectorAll('[data-dependency-hit="dep-1"]');
+      expect(hits.length).to.equal(2);
+
+      fireEvent.click(hits[0]);
+
+      expect(document.querySelectorAll('[data-dependency-delete-button]').length).to.equal(1);
+    });
+
     it('should highlight only the hovered row appearance of a multi-resource drop target', async () => {
       renderTimeline({ events: [eventA, sharedEvent], dependencies: [] });
 

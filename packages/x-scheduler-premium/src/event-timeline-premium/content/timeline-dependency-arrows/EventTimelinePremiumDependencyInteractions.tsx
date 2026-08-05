@@ -89,6 +89,13 @@ function DependencyInteractionsLayer() {
     store.setSelectedDependencyId(dependencyId);
   };
 
+  // A dependency with an endpoint on several resources draws one arrow per pair of
+  // row appearances, all sharing the dependency id: only one delete button renders.
+  const buttonArrow =
+    selectedId === null || isSelectedReadOnly
+      ? null
+      : (visibleArrows.find((arrow) => arrow.id === selectedId) ?? null);
+
   return (
     <DependencyInteractionsSvg
       ref={svgRef}
@@ -121,7 +128,7 @@ function DependencyInteractionsLayer() {
               strokeWidth={DEPENDENCY_ARROW_HIT_STROKE_WIDTH}
               onClick={() => handleSelect(arrow.id)}
             />
-            {arrow.id === selectedId && !isSelectedReadOnly && (
+            {arrow === buttonArrow && (
               <g data-dependency-delete-button="" onClick={() => store.deleteSelectedDependency()}>
                 <circle
                   cx={buttonX}
