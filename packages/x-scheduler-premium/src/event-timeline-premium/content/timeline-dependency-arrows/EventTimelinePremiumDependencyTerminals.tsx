@@ -22,6 +22,12 @@ const DEPENDENCY_TERMINAL_SIZE = 10;
  * zones of the usual Gantt tools.
  */
 const DEPENDENCY_TERMINAL_HALO = 7;
+/**
+ * How long a revealed terminal survives the pointer resting on nothing. A diagonal
+ * exit through the event's corner crosses the empty cell before reaching the halo:
+ * hiding on the same frame would pull the terminal out from under the pointer.
+ */
+const DEPENDENCY_TERMINAL_HIDE_DELAY_MS = 250;
 
 const DependencyTerminalsLayer = styled('div', {
   name: 'MuiEventTimeline',
@@ -130,7 +136,15 @@ function DependencyTerminalsLayerImpl() {
   // terminals directly (the same DOM-driven technique as the rubber band), so
   // pointer-rate transitions do not rebuild the layer.
   const revealedTerminalRef = React.useRef<Element | null>(null);
+  const hideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelPendingHide = useStableCallback(() => {
+    if (hideTimeoutRef.current !== null) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+  });
   const revealTerminal = useStableCallback((terminal: Element | null) => {
+    cancelPendingHide();
     if (revealedTerminalRef.current === terminal) {
       return;
     }
@@ -138,6 +152,20 @@ function DependencyTerminalsLayerImpl() {
     terminal?.setAttribute('data-visible', '');
     revealedTerminalRef.current = terminal;
   });
+  // Hiding waits out a grace period so a diagonal exit through the event's corner —
+  // which crosses the empty cell before reaching the halo — does not pull the
+  // terminal out from under the pointer. Anything the pointer reaches in time
+  // (`revealTerminal`, including with another terminal) cancels the pending hide.
+  const scheduleHideTerminal = useStableCallback(() => {
+    if (revealedTerminalRef.current === null || hideTimeoutRef.current !== null) {
+      return;
+    }
+    hideTimeoutRef.current = setTimeout(() => {
+      hideTimeoutRef.current = null;
+      revealTerminal(null);
+    }, DEPENDENCY_TERMINAL_HIDE_DELAY_MS);
+  });
+  React.useEffect(() => cancelPendingHide, [cancelPendingHide]);
 
   // A native drag suppresses pointer events, so the hover tracked before the gesture
   // goes stale by its end (the pointer may have dropped far away): reset it when the
@@ -194,8 +222,14 @@ function DependencyTerminalsLayerImpl() {
       ) {
         return;
       }
-      revealTerminal(getTerminalFor(event.target));
+      const next = getTerminalFor(event.target);
+      if (next === null) {
+        scheduleHideTerminal();
+      } else {
+        revealTerminal(next);
+      }
     };
+    // Leaving the whole grid is unambiguous: no rescue is coming, hide right away.
     const handlePointerLeave = () => {
       revealTerminal(null);
     };
@@ -206,7 +240,7 @@ function DependencyTerminalsLayerImpl() {
       container.removeEventListener('pointerleave', handlePointerLeave);
       revealTerminal(null);
     };
-  }, [mounted, revealTerminal]);
+  }, [mounted, revealTerminal, scheduleHideTerminal]);
 
   if (!mounted) {
     return null;
