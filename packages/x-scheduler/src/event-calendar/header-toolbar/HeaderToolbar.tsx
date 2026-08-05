@@ -7,6 +7,7 @@ import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import MenuOpen from '@mui/icons-material/MenuOpen';
 import Menu from '@mui/icons-material/Menu';
+import Today from '@mui/icons-material/Today';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -22,6 +23,8 @@ import { ViewSwitcher } from './view-switcher';
 import { PreferencesMenu } from './preferences-menu';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 
+// Both toolbar layouts render for SSR safety; the root container query toggles them
+// via `data-expanded-only` / `data-compact-only` (see `EventCalendarRootStyled`).
 const HeaderToolbarRoot = styled('header', {
   name: 'MuiEventCalendar',
   slot: 'HeaderToolbar',
@@ -106,6 +109,8 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
+  const { onCompactMenuClick, className, ...other } = props;
+
   const weekNumber = getWeekNumber(adapter, visibleDate, weekStartsOn);
   const showViewSwitcher = views.length > 1;
   const showWeekLabel = showWeekNumber && (view === 'week' || view === 'day');
@@ -114,11 +119,22 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
     <HeaderToolbarRoot
       ref={forwardedRef}
       data-single-primary-action={!showViewSwitcher}
-      {...props}
-      className={clsx(props.className, classes.headerToolbar)}
+      {...other}
+      className={clsx(className, classes.headerToolbar)}
     >
       <HeaderToolbarLeftElement className={classes.headerToolbarLeftElement}>
+        {/* Compact: opens the side panel drawer. */}
         <IconButton
+          data-compact-only
+          className={classes.headerToolbarCompactMenuButton}
+          aria-label={localeText.openMenu}
+          onClick={onCompactMenuClick}
+        >
+          <Menu />
+        </IconButton>
+        {/* Expanded: toggles the inline side panel. */}
+        <IconButton
+          data-expanded-only
           className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
           onClick={(event) =>
@@ -127,7 +143,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
         >
           {isSidePanelOpen ? <MenuOpen /> : <Menu />}
         </IconButton>
-        <HeaderToolbarLabel aria-live="polite">
+        <HeaderToolbarLabel data-expanded-only aria-live="polite">
           {adapter.format(visibleDate, 'monthFullLetter')}{' '}
           {adapter.format(visibleDate, 'yearPadded')}
           {showWeekLabel && (
@@ -157,11 +173,26 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             <ChevronRight />
           </IconButton>
         </HeaderToolbarDateNavigator>
-        <Button onClick={store.goToToday}>{localeText.today}</Button>
+        {/* Compact: today as an icon button replacing the expanded text button. */}
+        <IconButton
+          data-compact-only
+          className={classes.headerToolbarCompactTodayButton}
+          onClick={store.goToToday}
+          aria-label={localeText.today}
+        >
+          <Today />
+        </IconButton>
+        <Button
+          data-expanded-only
+          className={classes.headerToolbarTodayButton}
+          onClick={store.goToToday}
+        >
+          {localeText.today}
+        </Button>
         {showViewSwitcher && (
-          <ViewSwitcher views={views} view={view} onViewChange={store.setView} />
+          <ViewSwitcher data-expanded-only views={views} view={view} onViewChange={store.setView} />
         )}
-        <PreferencesMenu />
+        <PreferencesMenu data-expanded-only />
       </HeaderToolbarActions>
     </HeaderToolbarRoot>
   );

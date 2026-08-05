@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps, WithDataAttributes } from '@mui/utils/types';
 import {
   type ChatRootProps,
   type ChatFeatures,
@@ -105,13 +105,13 @@ interface ChatBoxConversationSlots {
 }
 
 interface ChatBoxConversationSlotProps {
-  conversationRoot?: Partial<ChatConversationProps>;
-  conversationList?: Partial<ChatConversationListProps>;
-  conversationHeader?: Partial<ChatConversationHeaderProps>;
-  conversationHeaderInfo?: Partial<ChatConversationHeaderInfoProps>;
-  conversationTitle?: Partial<ChatConversationTitleProps>;
-  conversationSubtitle?: Partial<ChatConversationSubtitleProps>;
-  conversationHeaderActions?: Partial<ChatConversationHeaderActionsProps>;
+  conversationRoot?: WithDataAttributes<Partial<ChatConversationProps>>;
+  conversationList?: WithDataAttributes<Partial<ChatConversationListProps>>;
+  conversationHeader?: WithDataAttributes<Partial<ChatConversationHeaderProps>>;
+  conversationHeaderInfo?: WithDataAttributes<Partial<ChatConversationHeaderInfoProps>>;
+  conversationTitle?: WithDataAttributes<Partial<ChatConversationTitleProps>>;
+  conversationSubtitle?: WithDataAttributes<Partial<ChatConversationSubtitleProps>>;
+  conversationHeaderActions?: WithDataAttributes<Partial<ChatConversationHeaderActionsProps>>;
 }
 
 /**
@@ -148,11 +148,11 @@ interface ChatBoxMessageListSlots {
 }
 
 interface ChatBoxMessageListSlotProps {
-  messageList?: Partial<ChatMessageListProps>;
-  messageGroup?: Partial<ChatMessageGroupProps>;
-  dateDivider?: Partial<ChatDateDividerProps>;
-  unreadMarker?: Partial<ChatUnreadMarkerProps>;
-  streamingIndicator?: Partial<ChatStreamingIndicatorProps>;
+  messageList?: WithDataAttributes<Partial<ChatMessageListProps>>;
+  messageGroup?: WithDataAttributes<Partial<ChatMessageGroupProps>>;
+  dateDivider?: WithDataAttributes<Partial<ChatDateDividerProps>>;
+  unreadMarker?: WithDataAttributes<Partial<ChatUnreadMarkerProps>>;
+  streamingIndicator?: WithDataAttributes<Partial<ChatStreamingIndicatorProps>>;
 }
 
 /**
@@ -196,20 +196,26 @@ interface ChatBoxMessageSlots {
 }
 
 interface ChatBoxMessageSlotProps {
-  messageRoot?: Partial<ChatMessageProps>;
-  messageAvatar?: Partial<ChatMessageAvatarProps>;
-  messageContent?: Partial<ChatMessageContentProps>;
-  messageMeta?: Partial<ChatMessageMetaProps>;
-  messageInlineMeta?: Partial<ChatMessageInlineMetaProps>;
-  messageError?: Partial<ChatMessageErrorProps>;
+  messageRoot?: WithDataAttributes<Partial<ChatMessageProps>>;
+  messageAvatar?: WithDataAttributes<Partial<ChatMessageAvatarProps>>;
+  messageContent?: WithDataAttributes<Partial<ChatMessageContentProps>>;
+  messageMeta?: WithDataAttributes<Partial<ChatMessageMetaProps>>;
+  messageInlineMeta?: WithDataAttributes<Partial<ChatMessageInlineMetaProps>>;
+  messageError?: WithDataAttributes<Partial<ChatMessageErrorProps>>;
   /**
    * Props for the message actions row. Pass a function of the message context
-   * to vary props per message — most commonly returning `extraActions`
+   * to vary props per message -- most commonly returning `extraActions`
    * (declarative action buttons) only for assistant rows.
+   *
+   * Each branch is widened independently so the callback return is checked the
+   * same way as the object form; wrapping the whole union would leave the
+   * callback return unwidened.
    */
   messageActions?:
-    | Partial<ChatMessageActionsProps>
-    | ((context: ChatMessageActionsResolveContext) => Partial<ChatMessageActionsProps>);
+    | WithDataAttributes<Partial<ChatMessageActionsProps>>
+    | ((
+        context: ChatMessageActionsResolveContext,
+      ) => WithDataAttributes<Partial<ChatMessageActionsProps>>);
   messageAuthorName?: MessageGroupSlotProps['authorName'];
 }
 
@@ -242,13 +248,13 @@ interface ChatBoxComposerSlots {
 }
 
 interface ChatBoxComposerSlotProps {
-  composerRoot?: Partial<ChatComposerProps>;
-  composerInput?: Partial<ChatComposerTextAreaProps>;
-  composerSendButton?: Partial<ChatComposerSendButtonProps>;
-  composerAttachButton?: Partial<ChatComposerAttachButtonProps>;
-  composerAttachmentList?: Partial<ChatComposerAttachmentListProps>;
-  composerToolbar?: Partial<ChatComposerToolbarProps>;
-  composerHelperText?: Partial<ChatComposerHelperTextProps>;
+  composerRoot?: WithDataAttributes<Partial<ChatComposerProps>>;
+  composerInput?: WithDataAttributes<Partial<ChatComposerTextAreaProps>>;
+  composerSendButton?: WithDataAttributes<Partial<ChatComposerSendButtonProps>>;
+  composerAttachButton?: WithDataAttributes<Partial<ChatComposerAttachButtonProps>>;
+  composerAttachmentList?: WithDataAttributes<Partial<ChatComposerAttachmentListProps>>;
+  composerToolbar?: WithDataAttributes<Partial<ChatComposerToolbarProps>>;
+  composerHelperText?: WithDataAttributes<Partial<ChatComposerHelperTextProps>>;
 }
 
 /** Standalone widgets. */
@@ -264,9 +270,9 @@ interface ChatBoxWidgetSlots {
 }
 
 interface ChatBoxWidgetSlotProps {
-  typingIndicator?: Partial<ChatTypingIndicatorProps>;
-  scrollToBottom?: Partial<ChatScrollToBottomAffordanceProps>;
-  suggestions?: Partial<ChatSuggestionsProps>;
+  typingIndicator?: WithDataAttributes<Partial<ChatTypingIndicatorProps>>;
+  scrollToBottom?: WithDataAttributes<Partial<ChatScrollToBottomAffordanceProps>>;
+  suggestions?: WithDataAttributes<Partial<ChatSuggestionsProps>>;
   emptyState?: SlotComponentProps<React.ElementType, { sx?: SxProps<Theme> }, {}>;
 }
 

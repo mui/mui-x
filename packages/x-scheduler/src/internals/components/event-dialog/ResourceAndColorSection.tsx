@@ -19,6 +19,7 @@ import { ToggleGroup } from '@base-ui/react/toggle-group';
 import { EVENT_COLORS } from '@mui/x-scheduler-internals/constants';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
+  schedulerEventSelectors,
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -27,6 +28,9 @@ import { useStore } from '@base-ui/utils/store';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
+import type { EventDialogSectionProps } from './EventDialog.types';
+import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
+import { useEventDialogFormField } from './form/useEventDialogFormField';
 
 const NO_RESOURCE_VALUE = '';
 
@@ -89,15 +93,6 @@ const ResourceMenuColorToggle = styled(Toggle, {
   variants: getPaletteVariants(theme),
 }));
 
-interface ResourceSelectProps {
-  readOnly?: boolean;
-  resourceId: string | null;
-  onResourceChange: (value: SchedulerResourceId) => void;
-  onColorChange: (value: SchedulerEventColor | null) => void;
-  color: SchedulerEventColor | null;
-  error?: string;
-}
-
 interface ResourceSelectAdornmentProps {
   resource: ResourceOptionType | null;
 }
@@ -132,8 +127,8 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
   );
 }
 
-export default function ResourceAndColorSection(props: ResourceSelectProps) {
-  const { readOnly, resourceId, onResourceChange, onColorChange, color, error } = props;
+export default function ResourceAndColorSection(props: EventDialogSectionProps) {
+  const { occurrence } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventDialogStyledContext();
@@ -148,6 +143,22 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
     store,
     schedulerOtherSelectors.shouldEventRequireResource,
   );
+  const isPropertyReadOnly = useStore(
+    store,
+    schedulerEventSelectors.isPropertyReadOnly,
+    occurrence.id,
+  );
+
+  const resourceField = useEventDialogFormField<SchedulerResourceId | null>('resourceId', {
+    validate: (value) =>
+      shouldEventRequireResource && value === null ? localeText.requiredResourceError : null,
+  });
+  const colorField = useEventDialogFormField<SchedulerEventColor | null>('color');
+
+  const readOnly = isPropertyReadOnly('resource');
+  const { value: resourceId } = resourceField;
+  const { value: color } = colorField;
+  const error = shouldEventRequireResource ? resourceField.error : undefined;
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     const hasNesting = resources.some(
@@ -209,13 +220,16 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     const value = event.target.value;
-    onResourceChange((value === NO_RESOURCE_VALUE ? null : value) as SchedulerResourceId);
+    resourceField.setValue(value === NO_RESOURCE_VALUE ? null : (value as SchedulerResourceId));
   };
 
   const errorId = `${schedulerId}-resource-error`;
 
   return (
-    <React.Fragment>
+    <SectionFieldset className={classes.eventDialogSectionFieldset}>
+      <SectionHeaderTitle className={classes.eventDialogSectionHeaderTitle}>
+        {localeText.resourceColorSectionLabel}
+      </SectionHeaderTitle>
       <FormControl size="small" fullWidth error={!!error}>
         <InputLabel id={`${schedulerId}-resource-select-label`}>
           {localeText.resourceLabel}
@@ -299,7 +313,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
         value={color ? [color] : []}
         onValueChange={(values) => {
           const next = values[values.length - 1] as SchedulerEventColor | undefined;
-          onColorChange(next ?? null);
+          colorField.setValue(next ?? null);
         }}
         aria-label={localeText.colorPickerLabel}
         disabled={readOnly}
@@ -317,6 +331,6 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           </ResourceMenuColorToggle>
         ))}
       </ResourceMenuColorToggleGroup>
-    </React.Fragment>
+    </SectionFieldset>
   );
 }

@@ -22,6 +22,8 @@ describe('Core - EventTimelinePremiumStore', () => {
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         copiedEvent: null,
+        dependencyModelList: [],
+        dependencyModelLookup: new Map(),
         eventColor: 'teal',
         eventCreation: true,
         eventIdList: [],
