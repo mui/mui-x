@@ -53,6 +53,7 @@ Same changes as in `@mui/x-date-pickers@9.11.0`, plus:
 - [charts] Fix image export of charts sized by their parent element (#23255) @JCQuintas
 - [charts] Forward `experimentalFeatures` on `RadarChart` and `Heatmap` (#23216) @JCQuintas
 - [charts] Hide focus indicator when the chart loses focus (#23213) @JCQuintas
+- [charts] Activate the focused item with `Enter`/`Space` (#23218) @JCQuintas
 
 #### `@mui/x-charts-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
