@@ -53,6 +53,11 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
   const store = useEventTimelinePremiumStoreContext();
   const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
 
+  // The armed one-shot swallow deliberately outlives the effect below (deselecting
+  // tears the effect down before the click arrives), so only unmounting may disarm it.
+  const armedDisarmRef = React.useRef<(() => void) | null>(null);
+  React.useEffect(() => () => armedDisarmRef.current?.(), []);
+
   React.useEffect(() => {
     if (selectedId === null) {
       return undefined;
@@ -84,14 +89,22 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
       if (event.button !== 0) {
         return;
       }
-      const target = event.target;
-      if (
-        target instanceof Element &&
-        target.closest(
-          `[data-dependency-hit], [data-dependency-delete-button], ${GUARDED_PRESS_TARGETS}`,
-        )
-      ) {
-        return;
+      // Same retargeting caveat as the keyboard guard: at the document level a press
+      // inside a shadow root reports the host, the composed path has the real target.
+      const target = event.composedPath()[0] ?? event.target;
+      if (target instanceof Element) {
+        // A press on one of this timeline's own interaction surfaces belongs to that
+        // surface — another timeline's arrows are ordinary click-aways, or one Delete
+        // would delete a link in each timeline holding a selection.
+        const interactionHit = target.closest(
+          '[data-dependency-hit], [data-dependency-delete-button]',
+        );
+        if (
+          (interactionHit !== null && elementRef.current?.contains(interactionHit)) ||
+          target.closest(GUARDED_PRESS_TARGETS) !== null
+        ) {
+          return;
+        }
       }
       store.setSelectedDependencyId(null);
       // Inside the timeline, dismissing the selection is this press's whole meaning:
@@ -112,12 +125,14 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
         disarm();
       }
       function disarm() {
+        armedDisarmRef.current = null;
         doc.removeEventListener('click', swallowClick, { capture: true });
         doc.removeEventListener('pointerdown', disarm, { capture: true });
         doc.removeEventListener('dragstart', disarm, { capture: true });
         doc.removeEventListener('pointercancel', disarm, { capture: true });
         doc.removeEventListener('keydown', disarm, { capture: true });
       }
+      armedDisarmRef.current = disarm;
       doc.addEventListener('click', swallowClick, { capture: true });
       doc.addEventListener('pointerdown', disarm, { capture: true });
       doc.addEventListener('dragstart', disarm, { capture: true });

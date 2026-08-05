@@ -735,6 +735,59 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.occurrencePlaceholder).not.to.equal(null);
     });
 
+    it('should not deselect the arrow when pressing inside a shadow-rooted dialog', () => {
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      // At the document level the press is retargeted to the shadow host, which does
+      // not match the dialog guard: the guard must look at the composed path, like
+      // its keyboard sibling.
+      const host = document.createElement('div');
+      const dialog = document.createElement('div');
+      dialog.setAttribute('role', 'dialog');
+      const button = document.createElement('button');
+      dialog.appendChild(button);
+      host.attachShadow({ mode: 'open' }).appendChild(dialog);
+      document.body.appendChild(host);
+      fireEvent.pointerDown(button, { composed: true });
+      host.remove();
+
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
+    });
+
+    it('should disarm the pending click swallow when the timeline unmounts', () => {
+      const { store, unmount } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      // A press inside the timeline arms the one-shot swallow; unmounting before the
+      // click arrives (a view switch triggered by the press) must disarm it, or it
+      // eats the next unrelated click on the page.
+      const cell = document.querySelector<HTMLElement>(
+        `.${eventTimelinePremiumClasses.eventsCell}`,
+      )!;
+      fireEvent.pointerDown(cell);
+      expect(store.state.selection).to.equal(null);
+      act(() => {
+        unmount();
+      });
+
+      const appButton = document.createElement('button');
+      document.body.appendChild(appButton);
+      const handleClick = spy();
+      appButton.addEventListener('click', handleClick);
+      fireEvent.click(appButton);
+      appButton.remove();
+
+      expect(handleClick.callCount).to.equal(1);
+    });
+
     it('should not swallow the click of a press outside the timeline', () => {
       const { store } = renderTimeline({
         events: [eventA, eventB],
@@ -1104,8 +1157,22 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       .singleDay('2025-07-03T09:00:00Z')
       .resource(resource1)
       .build();
+    const eventD = EventBuilder.new()
+      .id('event-d')
+      .title('Event D')
+      .singleDay('2025-07-03T11:00:00Z')
+      .resource(resource1)
+      .build();
 
-    function renderTwoTimelines(handleDependenciesChangeB: () => void) {
+    function renderTwoTimelines({
+      dependenciesA = [],
+      dependenciesB = [],
+      onDependenciesChangeB,
+    }: {
+      dependenciesA?: ReturnType<typeof buildDependency>[];
+      dependenciesB?: ReturnType<typeof buildDependency>[];
+      onDependenciesChangeB?: () => void;
+    } = {}) {
       let storeA!: any;
       let storeB!: any;
       render(
@@ -1114,16 +1181,16 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
           <TestTimeline
             events={[eventA, eventB]}
             resources={[resource1, resource2]}
-            dependencies={[]}
+            dependencies={dependenciesA}
             onStoreReady={(mountedStore) => {
               storeA = mountedStore;
             }}
           />
           <TestTimeline
-            events={[eventC]}
+            events={[eventC, eventD]}
             resources={[resource1, resource2]}
-            dependencies={[]}
-            onDependenciesChange={handleDependenciesChangeB}
+            dependencies={dependenciesB}
+            onDependenciesChange={onDependenciesChangeB}
             onStoreReady={(mountedStore) => {
               storeB = mountedStore;
             }}
@@ -1133,9 +1200,30 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       return { storeA, storeB };
     }
 
+    it('should move the selection when clicking an arrow of another timeline', () => {
+      const { storeA, storeB } = renderTwoTimelines({
+        dependenciesA: [buildDependency('dep-a1', 'event-a', 'event-b')],
+        dependenciesB: [buildDependency('dep-b1', 'event-c', 'event-d')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-a1"]')!);
+      expect(storeA.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-a1' });
+
+      // A real click on the other timeline's arrow presses first: timeline A must
+      // treat it as a click-away, or one Delete would delete a link in each timeline.
+      const otherHit = document.querySelector('[data-dependency-hit="dep-b1"]')!;
+      fireEvent.pointerDown(otherHit);
+      fireEvent.click(otherHit);
+
+      expect(storeB.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-b1' });
+      expect(storeA.state.selection).to.equal(null);
+    });
+
     it('should not react to a creation gesture started in another timeline', async () => {
       const handleDependenciesChangeB = spy();
-      const { storeA, storeB } = renderTwoTimelines(handleDependenciesChangeB);
+      const { storeA, storeB } = renderTwoTimelines({
+        onDependenciesChangeB: handleDependenciesChangeB,
+      });
 
       const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
       const target = getEventElement('Event B');
@@ -1160,7 +1248,9 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
     it('should not accept a terminal dropped from another timeline', async () => {
       const handleDependenciesChangeB = spy();
-      const { storeA, storeB } = renderTwoTimelines(handleDependenciesChangeB);
+      const { storeA, storeB } = renderTwoTimelines({
+        onDependenciesChangeB: handleDependenciesChangeB,
+      });
 
       const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
       const sameTimelineTarget = getEventElement('Event B');
