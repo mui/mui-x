@@ -17,7 +17,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   deleteEvent: 'Slett hendelse',
   descriptionLabel: 'Beskrivelse',
   endDateLabel: 'Sluttdato',
-  endTimeLabel: 'Slutttidspunkt',
+  endTimeLabel: 'Sluttidspunkt',
   eventTitleAriaLabel: 'Hendelsestittel',
   generalTabLabel: 'Generelt',
   labelNoResource: 'Ingen ressurs',
