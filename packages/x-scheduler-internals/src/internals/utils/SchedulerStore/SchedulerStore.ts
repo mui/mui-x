@@ -7,6 +7,7 @@ import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { EventManager } from '@mui/x-internals/EventManager';
 import type {
   SchedulerEventId,
@@ -300,14 +301,7 @@ export class SchedulerStore<
    * every selectable type keeps the selection mutually exclusive across features.
    */
   public setSelection = (selection: SchedulerSelection | null) => {
-    // Widened through a cast: in this package no selectable type is registered yet,
-    // so the union is empty and the members of `never` cannot be accessed.
-    const previous = this.state.selection as { type: string; id: unknown } | null;
-    const next = selection as { type: string; id: unknown } | null;
-    if (
-      previous === next ||
-      (previous !== null && next !== null && previous.type === next.type && previous.id === next.id)
-    ) {
+    if (isDeepEqual(this.state.selection, selection)) {
       return;
     }
     this.set('selection', selection);

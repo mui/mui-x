@@ -1,6 +1,7 @@
 import type * as React from 'react';
 import { warn } from '@base-ui/utils/warn';
 import { warnOnce } from '@mui/x-internals/warning';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
@@ -329,19 +330,9 @@ export class EventTimelinePremiumStore<
    * DOM — so it changes a handful of times per gesture, not per frame.
    */
   public setDependencyCreation = (creation: SchedulerDependencyCreation | null) => {
-    const previous = this.state.dependencyCreation;
-    if (
-      previous === creation ||
-      (previous !== null &&
-        creation !== null &&
-        previous.sourceEventId === creation.sourceEventId &&
-        previous.sourceOccurrenceKey === creation.sourceOccurrenceKey &&
-        previous.sourceResourceId === creation.sourceResourceId &&
-        previous.sourceSide === creation.sourceSide &&
-        previous.targetEventId === creation.targetEventId &&
-        previous.targetOccurrenceKey === creation.targetOccurrenceKey &&
-        previous.targetResourceId === creation.targetResourceId)
-    ) {
+    // Value comparison: drag frames rebuild an identical gesture object, and only
+    // real transitions (start, snap, un-snap, end) may write.
+    if (isDeepEqual(this.state.dependencyCreation, creation)) {
       return;
     }
     this.set('dependencyCreation', creation);

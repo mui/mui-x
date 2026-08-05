@@ -438,7 +438,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       await waitFor(() => {
         expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
-      expect(getEventElement('Event A').hasAttribute('data-dependency-drag-source')).to.equal(true);
+      // The source feedback is the terminal staying revealed for the whole gesture.
+      expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
       expect(store.state.dependencyCreation?.sourceSide).to.equal('end');
 
       // End the gesture: a drag left in flight leaks into the next test's timeline.

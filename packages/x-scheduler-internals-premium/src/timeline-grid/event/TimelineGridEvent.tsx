@@ -35,8 +35,6 @@ const extraStateAttributesMapping = {
     value ? { [TimelineGridEventDataAttributes.startingBeforeEdge]: '' } : null,
   endingAfterEdge: (value: boolean) =>
     value ? { [TimelineGridEventDataAttributes.endingAfterEdge]: '' } : null,
-  dependencyDragSource: (value: boolean) =>
-    value ? { [TimelineGridEventDataAttributes.dependencyDragSource]: '' } : null,
   dependencyDropTarget: (value: boolean) =>
     value ? { [TimelineGridEventDataAttributes.dependencyDropTarget]: '' } : null,
 };
@@ -80,12 +78,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   // Selector hooks
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const dependencyDragSource = useStore(
-    store,
-    eventTimelinePremiumDependencySelectors.isCreationSource,
-    occurrenceKey,
-    resourceId,
-  );
   const dependencyDropTarget = useStore(
     store,
     eventTimelinePremiumDependencySelectors.isCreationTarget,
@@ -164,7 +156,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     ...state,
     startingBeforeEdge,
     endingAfterEdge,
-    dependencyDragSource,
     dependencyDropTarget,
   };
 
@@ -202,7 +193,6 @@ export namespace TimelineGridEvent {
   export interface State extends useDraggableEvent.State {
     startingBeforeEdge: boolean;
     endingAfterEdge: boolean;
-    dependencyDragSource: boolean;
     dependencyDropTarget: boolean;
   }
 

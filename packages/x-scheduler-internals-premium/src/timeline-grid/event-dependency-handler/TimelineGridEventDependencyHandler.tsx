@@ -66,7 +66,7 @@ export const TimelineGridEventDependencyHandler = React.forwardRef(
       source: 'TimelineGridEventDependencyHandler' as const,
       // Identity discriminator: pragmatic monitors are page-global, so the monitor
       // and the drop targets only react to gestures born in their own timeline.
-      storeContext: store as unknown,
+      storeContext: store,
     }));
 
     useDragHandle({ ref, enabled: true, getDragData });

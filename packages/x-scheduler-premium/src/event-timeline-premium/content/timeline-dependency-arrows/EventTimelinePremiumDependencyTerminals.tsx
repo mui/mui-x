@@ -220,9 +220,11 @@ function DependencyTerminalsLayerImpl() {
       );
       // The hover reveal is DOM-driven; only the gesture's source appearance is
       // render-driven, so it survives the hover reset at drag start.
-      const visible =
-        creation?.sourceOccurrenceKey === occurrence.key &&
-        creation.sourceResourceId === rowResourceId;
+      const visible = eventTimelinePremiumDependencySelectors.isCreationSource(
+        store.state,
+        occurrence.key,
+        rowResourceId,
+      );
       terminals.push(
         <EventTimelinePremiumDependencyTerminal
           // The occurrence key repeats on every row of a multi-resource event: only
@@ -247,11 +249,7 @@ function DependencyTerminalsLayerImpl() {
   }
 
   return (
-    <DependencyTerminalsLayer
-      ref={layerRef}
-      data-dependency-terminals=""
-      style={{ width: eventsWidth, height }}
-    >
+    <DependencyTerminalsLayer ref={layerRef} style={{ width: eventsWidth, height }}>
       {terminals}
     </DependencyTerminalsLayer>
   );
