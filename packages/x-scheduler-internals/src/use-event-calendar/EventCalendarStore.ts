@@ -128,6 +128,9 @@ export class ExtendableEventCalendarStore<
   ) {
     super(parameters, adapter, instanceName, mapper, recurringEventsPlugin);
 
+    // A view change swaps the grid, so the edited occurrence goes stale like it does on a date change.
+    this.disposables.defer(this.registerStoreEffect((state) => state.view, this.stopEditing));
+
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
       this.assertViewValidity(this.state.view);
