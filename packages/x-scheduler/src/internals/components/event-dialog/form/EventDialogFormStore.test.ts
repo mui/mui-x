@@ -78,6 +78,19 @@ describe('EventDialogFormStore', () => {
       expect(store.state.values).to.deep.equal({ count: 2, other: 'x' });
     });
 
+    it('should notify nobody when the changes object is empty', () => {
+      const onValuesChange = spy();
+      const store = new EventDialogFormStore({ title: 'Meeting' }, { onValuesChange });
+      const listener = spy();
+      store.subscribe(listener);
+
+      store.setValues({});
+      store.setValues(() => ({}));
+
+      expect(listener.callCount).to.equal(0);
+      expect(onValuesChange.called).to.equal(false);
+    });
+
     it('should clear the errors of all the written keys', async () => {
       const store = new EventDialogFormStore<Record<string, unknown>>({
         a: null,

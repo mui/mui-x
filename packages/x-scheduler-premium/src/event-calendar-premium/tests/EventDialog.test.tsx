@@ -11,7 +11,7 @@ import {
   StateWatcher,
   StoreSpy,
 } from 'test/utils/scheduler';
-import { screen, within } from '@mui/internal-test-utils';
+import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import type {
   SchedulerResource,
   SchedulerEventOccurrence,
@@ -112,43 +112,67 @@ describe('<EventDialogContent open />', () => {
     expect(screen.getByRole('combobox', { name: /recurrence/i })).to.not.equal(null);
   });
 
-  // In a real browser, the remount moves the focus to the new title input through a
-  // natively dispatched focus event that lands outside `act()` and trips fail-on-console.
-  it.skipIf(!isJSDOM)(
-    'should re-seed the form when the dialog is retargeted to another occurrence of the same event',
-    async () => {
-      const weeklyEventBuilder = EventBuilder.new(adapter)
-        .title('Weekly sync')
-        .singleDay('2025-05-26T09:00:00Z', 30)
-        .recurrent('WEEKLY');
+  describe('retargeting the dialog to another occurrence', () => {
+    const weeklyEventBuilder = EventBuilder.new(adapter)
+      .title('Weekly sync')
+      .singleDay('2025-05-26T09:00:00Z', 30)
+      .recurrent('WEEKLY');
 
-      const firstOccurrence = weeklyEventBuilder.toOccurrence();
-      const secondOccurrence = weeklyEventBuilder.toOccurrence('2025-06-02T09:00:00Z');
+    const firstOccurrence = weeklyEventBuilder.toOccurrence();
+    const secondOccurrence = weeklyEventBuilder.toOccurrence('2025-06-02T09:00:00Z');
 
-      function Wrapper(props: { occurrence: SchedulerEventOccurrence }) {
-        return (
-          <EventCalendarProvider
-            events={[weeklyEventBuilder.build()]}
-            resources={resources}
-            storeClass={PremiumTestStore}
-          >
-            <TestEventDialogContent open {...defaultProps} occurrence={props.occurrence} />
-          </EventCalendarProvider>
-        );
-      }
+    function Wrapper(props: { occurrence: SchedulerEventOccurrence }) {
+      return (
+        <EventCalendarProvider
+          events={[weeklyEventBuilder.build()]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent open {...defaultProps} occurrence={props.occurrence} />
+        </EventCalendarProvider>
+      );
+    }
 
-      const { user, setProps } = render(<Wrapper occurrence={firstOccurrence} />);
+    // In a real browser, the remount moves the focus to the new title input through a
+    // natively dispatched focus event that lands outside `act()` and trips fail-on-console.
+    it.skipIf(!isJSDOM)(
+      'should re-seed the form when the dialog is retargeted to another occurrence of the same event',
+      async () => {
+        const { user, setProps } = render(<Wrapper occurrence={firstOccurrence} />);
 
-      await user.type(screen.getByLabelText(/event title/i), ' edited');
+        await user.type(screen.getByLabelText(/event title/i), ' edited');
 
-      setProps({ occurrence: secondOccurrence });
+        setProps({ occurrence: secondOccurrence });
 
-      // Both occurrences share the event id, so the remount is keyed by the
-      // occurrence key: the form is re-seeded and the previous draft discarded.
-      expect(screen.getByLabelText(/event title/i)).to.have.value('Weekly sync');
-      expect(screen.getByLabelText(/start date/i)).to.have.value('2025-06-02');
-    },
-  );
+        // Both occurrences share the event id, so the remount is keyed by the
+        // occurrence key: the form is re-seeded and the previous draft discarded.
+        expect(screen.getByLabelText(/event title/i)).to.have.value('Weekly sync');
+        expect(screen.getByLabelText(/start date/i)).to.have.value('2025-06-02');
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'should move focus to the title input of the remounted form when the dialog is retargeted',
+      async () => {
+        const { setProps } = render(<Wrapper occurrence={firstOccurrence} />);
+
+        const firstInput = screen.getByLabelText(/event title/i);
+        await waitFor(() => expect(document.activeElement).to.equal(firstInput));
+
+        await act(async () => {
+          setProps({ occurrence: secondOccurrence });
+        });
+
+        // The remount must not strand focus on the detached input: the new
+        // title input takes it over so keyboard users keep their place.
+        await waitFor(() => {
+          const input = screen.getByLabelText(/event title/i);
+          expect(input).to.have.value('Weekly sync');
+          expect(document.activeElement).to.equal(input);
+        });
+      },
+    );
+  });
 
   it('should call "onEventsChange" with updated values on submit', async () => {
     const onEventsChange = spy();
@@ -253,6 +277,8 @@ describe('<EventDialogContent open />', () => {
     await user.type(screen.getByLabelText(/end time/i), '09:00');
     await user.click(screen.getByRole('button', { name: /save/i }));
 
+    // TODO(#23285): the Start time field does not surface this error yet,
+    // so the submit is blocked with no visible message.
     expect(onEventsChange.called).to.equal(false);
   });
 

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
+import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -104,50 +105,53 @@ export function FormContent(props: FormContentProps) {
     occurrence.displayTimezone.start,
   );
 
-  // No memoization needed: the provider captures the seed on mount only,
-  // and rebuilding it on the rare outer re-render is cheap.
-  const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
-  const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
+  // Built once: the provider ignores later values anyway, and this component
+  // re-renders on every placeholder push during creation (`usePushPlaceholder`
+  // subscribes it to the placeholder).
+  const initialValues = useRefWithInit((): EventDialogFormValues => {
+    const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
+    const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
-  const base = occurrence.displayTimezone.rrule;
-  // The occurrence only carries the built-in event properties — custom fields
-  // come from the raw model. When creating an event there is no model yet.
-  const model = schedulerEventSelectors.modelLookup(store.state).get(occurrence.id);
-  const customProperties = model ? getCustomEventProperties(model) : {};
+    const base = occurrence.displayTimezone.rrule;
+    // The occurrence only carries the built-in event properties — custom fields
+    // come from the raw model. When creating an event there is no model yet.
+    const model = schedulerEventSelectors.modelLookup(store.state).get(occurrence.id);
+    const customProperties = model ? getCustomEventProperties(model) : {};
 
-  if (process.env.NODE_ENV !== 'production') {
-    for (const key of Object.keys(customProperties)) {
-      if (BUILT_IN_FORM_KEYS.has(key)) {
-        warnOnce([
-          `MUI X Scheduler: The event model contains a custom property "${key}" that collides with a built-in form key.`,
-          'The form seeds that key from the event dates and resource, so the custom property cannot be read or written through the form.',
-          'Rename the property in the event model to avoid the collision.',
-        ]);
+    if (process.env.NODE_ENV !== 'production') {
+      for (const key of Object.keys(customProperties)) {
+        if (BUILT_IN_FORM_KEYS.has(key)) {
+          warnOnce([
+            `MUI X Scheduler: The event model contains a custom property "${key}" that collides with a built-in form key.`,
+            'The form seeds that key from the event dates and resource, so the custom property cannot be read or written through the form.',
+            'Rename the property in the event model to avoid the collision.',
+          ]);
+        }
       }
     }
-  }
 
-  const initialValues: EventDialogFormValues = {
-    ...customProperties,
-    title: occurrence.title,
-    description: hasProp(occurrence, 'description') ? (occurrence.description ?? '') : '',
-    startDate: fmtDate(occurrence.displayTimezone.start),
-    endDate: fmtDate(occurrence.displayTimezone.end),
-    startTime: fmtTime(occurrence.displayTimezone.start),
-    endTime: fmtTime(occurrence.displayTimezone.end),
-    resourceId: getPrimaryResourceId(occurrence.resource),
-    allDay: !!occurrence.allDay,
-    color: hasProp(occurrence, 'color') ? occurrence.color : null,
-    recurrenceSelection: defaultRecurrencePresetKey,
-    rruleDraft: {
-      freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
-      interval: base?.interval ?? 1,
-      byDay: base?.byDay ?? [],
-      byMonthDay: base?.byMonthDay ?? [],
-      ...(base?.count ? { count: base.count } : {}),
-      ...(base?.until ? { until: base.until } : {}),
-    },
-  };
+    return {
+      ...customProperties,
+      title: occurrence.title,
+      description: hasProp(occurrence, 'description') ? (occurrence.description ?? '') : '',
+      startDate: fmtDate(occurrence.displayTimezone.start),
+      endDate: fmtDate(occurrence.displayTimezone.end),
+      startTime: fmtTime(occurrence.displayTimezone.start),
+      endTime: fmtTime(occurrence.displayTimezone.end),
+      resourceId: getPrimaryResourceId(occurrence.resource),
+      allDay: !!occurrence.allDay,
+      color: hasProp(occurrence, 'color') ? occurrence.color : null,
+      recurrenceSelection: defaultRecurrencePresetKey,
+      rruleDraft: {
+        freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
+        interval: base?.interval ?? 1,
+        byDay: base?.byDay ?? [],
+        byMonthDay: base?.byMonthDay ?? [],
+        ...(base?.count ? { count: base.count } : {}),
+        ...(base?.until ? { until: base.until } : {}),
+      },
+    };
+  }).current;
 
   return (
     <EventDialogFormProvider initialValues={initialValues} onValuesChange={pushPlaceholder}>

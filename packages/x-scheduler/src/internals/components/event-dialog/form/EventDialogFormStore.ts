@@ -98,6 +98,9 @@ export class EventDialogFormStore<
   public setValues = (changes: Partial<TValues> | ((prev: TValues) => Partial<TValues>)) => {
     const resolvedChanges = typeof changes === 'function' ? changes(this.state.values) : changes;
     const changedKeys = Object.keys(resolvedChanges);
+    if (changedKeys.length === 0) {
+      return;
+    }
     const values = { ...this.state.values, ...resolvedChanges };
 
     let errors = this.state.errors;
