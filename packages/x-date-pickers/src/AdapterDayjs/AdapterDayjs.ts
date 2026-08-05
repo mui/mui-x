@@ -298,6 +298,12 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
     const wallClock = dayjs.utc(value.format('YYYY-MM-DDTHH:mm:ss.SSS'));
 
+    // Years above 9999 don't round-trip through the ISO format, and an invalid value formats to
+    // `Invalid Date`. Both would make the comparison below `NaN`.
+    if (!wallClock.isValid()) {
+      return value;
+    }
+
     // A shorter target month legitimately clamps the day (`Jan 31` + 1 month is `Feb 28`).
     const expectedDayOfMonth = Math.min(Number(reference.format('D')), wallClock.daysInMonth());
     if (wallClock.date() === expectedDayOfMonth) {

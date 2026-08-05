@@ -120,6 +120,19 @@ describe('<AdapterDayjs />', () => {
           '0202-02-28',
         );
       });
+
+      it('setYear: should support years that do not round-trip through the ISO format', () => {
+        const result = adapter.setYear(getDate(), 10000);
+
+        expect(adapter.isValid(result)).to.equal(true);
+        expect(adapter.formatByString(result, 'MM-DD HH:mm')).to.equal('08-06 01:41');
+      });
+
+      it('setYear: should keep an invalid date invalid', () => {
+        expect(adapter.isValid(adapter.setYear(adapter.getInvalidDate() as Dayjs, 2020))).to.equal(
+          false,
+        );
+      });
     });
   });
 
