@@ -10,7 +10,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 
-describe('<TimelineGrid.EventDependencyHandler />', () => {
+describe('<TimelineGrid.EventDependencyTerminal />', () => {
   const { render } = createSchedulerRenderer();
 
   // The terminal reads the store context to stamp the drag data with its timeline.
@@ -23,7 +23,7 @@ describe('<TimelineGrid.EventDependencyHandler />', () => {
   }
 
   describeConformance(
-    <TimelineGrid.EventDependencyHandler
+    <TimelineGrid.EventDependencyTerminal
       eventId="fake-id"
       occurrenceKey="fake-key"
       resourceId="fake-resource"
@@ -41,7 +41,7 @@ describe('<TimelineGrid.EventDependencyHandler />', () => {
     const cleanup = monitorForElements({ onDragStart });
     render(
       <Wrapper>
-        <TimelineGrid.EventDependencyHandler
+        <TimelineGrid.EventDependencyTerminal
           eventId="fake-id"
           occurrenceKey="fake-key"
           resourceId="fake-resource"
@@ -50,7 +50,7 @@ describe('<TimelineGrid.EventDependencyHandler />', () => {
       </Wrapper>,
     );
 
-    fireEvent.dragStart(document.querySelector('[data-dependency-handle]')!, {
+    fireEvent.dragStart(document.querySelector('[data-dependency-terminal]')!, {
       dataTransfer: new DataTransfer(),
     });
     await waitFor(() => {
@@ -66,7 +66,7 @@ describe('<TimelineGrid.EventDependencyHandler />', () => {
   it('should expose its occurrence key and resource through its data attributes', () => {
     render(
       <Wrapper>
-        <TimelineGrid.EventDependencyHandler
+        <TimelineGrid.EventDependencyTerminal
           eventId="fake-id"
           occurrenceKey="fake-key"
           resourceId="fake-resource"
@@ -76,7 +76,7 @@ describe('<TimelineGrid.EventDependencyHandler />', () => {
 
     expect(
       document.querySelector(
-        '[data-dependency-handle="fake-key"][data-resource-id="fake-resource"]',
+        '[data-dependency-terminal="fake-key"][data-resource-id="fake-resource"]',
       ),
     ).not.to.equal(null);
   });

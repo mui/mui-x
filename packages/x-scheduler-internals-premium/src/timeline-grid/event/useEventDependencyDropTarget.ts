@@ -6,7 +6,7 @@ import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-int
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
-import { isDependencyHandleDrag } from '../event-dependency-handler/TimelineGridEventDependencyHandler';
+import { isDependencyTerminalDrag } from '../event-dependency-terminal/TimelineGridEventDependencyTerminal';
 
 /**
  * Registers the event element as a drop target for the create-dependency gesture.
@@ -42,7 +42,7 @@ export function useEventDependencyDropTarget(parameters: useEventDependencyDropT
       // another timeline on the page carry a different store), and an event cannot
       // depend on itself.
       canDrop: ({ source }) =>
-        isDependencyHandleDrag(source.data) &&
+        isDependencyTerminalDrag(source.data) &&
         source.data.storeContext === store &&
         source.data.eventId !== eventId,
     });

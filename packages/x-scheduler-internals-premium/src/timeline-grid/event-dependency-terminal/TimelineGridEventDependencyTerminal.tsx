@@ -10,7 +10,7 @@ import { useDragHandle } from '@mui/x-scheduler-internals/internals';
 import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { TimelineGridEventDependencyHandlerDataAttributes } from './TimelineGridEventDependencyHandlerDataAttributes';
+import { TimelineGridEventDependencyTerminalDataAttributes } from './TimelineGridEventDependencyTerminalDataAttributes';
 
 /**
  * Narrows a drag payload to this handle's drag data — the one definition shared by
@@ -18,10 +18,10 @@ import { TimelineGridEventDependencyHandlerDataAttributes } from './TimelineGrid
  * `buildIsValidDropTarget` guard: the terminal drag never produces an occurrence
  * placeholder, so it does not register in `EventDropDataLookup`.
  */
-export function isDependencyHandleDrag(
+export function isDependencyTerminalDrag(
   data: any,
-): data is TimelineGridEventDependencyHandler.DragData {
-  return data.source === 'TimelineGridEventDependencyHandler';
+): data is TimelineGridEventDependencyTerminal.DragData {
+  return data.source === 'TimelineGridEventDependencyTerminal';
 }
 
 /**
@@ -32,9 +32,9 @@ export function isDependencyHandleDrag(
  * monitor mounted by the grid root (not here) so the gesture survives this element
  * being unmounted by virtualization mid-drag.
  */
-export const TimelineGridEventDependencyHandler = React.forwardRef(
-  function TimelineGridEventDependencyHandler(
-    componentProps: TimelineGridEventDependencyHandler.Props,
+export const TimelineGridEventDependencyTerminal = React.forwardRef(
+  function TimelineGridEventDependencyTerminal(
+    componentProps: TimelineGridEventDependencyTerminal.Props,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     const {
@@ -63,7 +63,7 @@ export const TimelineGridEventDependencyHandler = React.forwardRef(
       occurrenceKey,
       resourceId,
       sourceSide: side,
-      source: 'TimelineGridEventDependencyHandler' as const,
+      source: 'TimelineGridEventDependencyTerminal' as const,
       // Identity discriminator: pragmatic monitors are page-global, so the monitor
       // and the drop targets only react to gestures born in their own timeline.
       storeContext: store,
@@ -76,15 +76,15 @@ export const TimelineGridEventDependencyHandler = React.forwardRef(
       props: [
         elementProps,
         {
-          [TimelineGridEventDependencyHandlerDataAttributes.dependencyHandle]: occurrenceKey,
-          [TimelineGridEventDependencyHandlerDataAttributes.resourceId]: String(resourceId),
+          [TimelineGridEventDependencyTerminalDataAttributes.dependencyTerminal]: occurrenceKey,
+          [TimelineGridEventDependencyTerminalDataAttributes.resourceId]: String(resourceId),
         } as Record<string, string>,
       ],
     });
   },
 );
 
-export namespace TimelineGridEventDependencyHandler {
+export namespace TimelineGridEventDependencyTerminal {
   export interface State {}
 
   export interface Props extends BaseUIComponentProps<'div', State> {
@@ -122,7 +122,7 @@ export namespace TimelineGridEventDependencyHandler {
      * edge, it determines the created dependency's type.
      */
     sourceSide: SchedulerEventSide;
-    source: 'TimelineGridEventDependencyHandler';
+    source: 'TimelineGridEventDependencyTerminal';
     /**
      * The store of the timeline the gesture started in, compared by identity so
      * several timelines on one page don't react to each other's gestures.

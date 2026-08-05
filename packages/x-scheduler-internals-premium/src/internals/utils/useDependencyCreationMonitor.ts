@@ -5,7 +5,7 @@ import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/ad
 import type { DragLocationHistory, ElementDragType } from '@atlaskit/pragmatic-drag-and-drop/types';
 import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { isDependencyHandleDrag } from '../../timeline-grid/event-dependency-handler/TimelineGridEventDependencyHandler';
+import { isDependencyTerminalDrag } from '../../timeline-grid/event-dependency-terminal/TimelineGridEventDependencyTerminal';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
 import type { SchedulerDependencyRejectionReason } from '../../models';
 
@@ -73,7 +73,7 @@ export function useDependencyCreationMonitor() {
       source: ElementDragType['payload'];
       location: DragLocationHistory;
     }) => {
-      if (!isDependencyHandleDrag(source.data)) {
+      if (!isDependencyTerminalDrag(source.data)) {
         return;
       }
       // Invalid targets (recurring or read-only events) never highlight or snap the
@@ -93,7 +93,7 @@ export function useDependencyCreationMonitor() {
 
     const cleanupMonitor = monitorForElements({
       canMonitor: ({ source }) =>
-        isDependencyHandleDrag(source.data) && source.data.storeContext === store,
+        isDependencyTerminalDrag(source.data) && source.data.storeContext === store,
       onDragStart: updateCreation,
       // Only target changes touch the state: the cursor never enters it, the arrows
       // layer follows the pointer through the DOM.
@@ -103,7 +103,7 @@ export function useDependencyCreationMonitor() {
         // so the gesture is discarded on the same path.
         store.setDependencyCreation(null);
 
-        if (!isDependencyHandleDrag(source.data)) {
+        if (!isDependencyTerminalDrag(source.data)) {
           return;
         }
         const target = getDependencyDropTarget(location.current.dropTargets);

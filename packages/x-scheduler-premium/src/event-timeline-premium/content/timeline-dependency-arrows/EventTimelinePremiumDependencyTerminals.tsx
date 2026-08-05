@@ -30,13 +30,13 @@ const DependencyTerminalsLayer = styled('div', {
   zIndex: 2,
 });
 
-// TODO(dependencies public flip): add an `eventDependencyHandler` utility class (the
-// key paired with the `EventDependencyHandler` slot, like `eventResizeHandler`) and a
+// TODO(dependencies public flip): add an `eventDependencyTerminal` utility class (the
+// key paired with the `EventDependencyTerminal` slot, like `eventResizeHandler`) and a
 // `dependencyTerminals` one for the layer; both only carry data attributes while the
 // feature has no public API.
-const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependencyHandler, {
+const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependencyTerminal, {
   name: 'MuiEventTimeline',
-  slot: 'EventDependencyHandler',
+  slot: 'EventDependencyTerminal',
 })(({ theme }) => ({
   position: 'absolute',
   width: DEPENDENCY_TERMINAL_SIZE,
@@ -140,7 +140,7 @@ function DependencyTerminalsLayerImpl() {
         return null;
       }
       // A terminal keeps itself revealed while hovered.
-      const handle = target.closest('[data-dependency-handle]');
+      const handle = target.closest('[data-dependency-terminal]');
       if (handle !== null) {
         return handle;
       }
@@ -156,7 +156,7 @@ function DependencyTerminalsLayerImpl() {
       }
       return (
         layerRef.current?.querySelector(
-          `[data-dependency-handle="${escapeAttributeValue(occurrenceKey)}"][data-resource-id="${escapeAttributeValue(resourceId)}"]`,
+          `[data-dependency-terminal="${escapeAttributeValue(occurrenceKey)}"][data-resource-id="${escapeAttributeValue(resourceId)}"]`,
         ) ?? null
       );
     };

@@ -1,9 +1,9 @@
-export enum TimelineGridEventDependencyHandlerDataAttributes {
+export enum TimelineGridEventDependencyTerminalDataAttributes {
   /**
    * Always present; its value is the occurrence key of the row appearance the
    * terminal is anchored on, so hover tracking can tie the terminal to its event.
    */
-  dependencyHandle = 'data-dependency-handle',
+  dependencyTerminal = 'data-dependency-terminal',
   /**
    * Always present; the resource of the row appearance, qualifying the occurrence key
    * — an event assigned to several resources repeats the same key on each row.

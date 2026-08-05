@@ -2,7 +2,7 @@
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { isDependencyHandleDrag } from '../../timeline-grid/event-dependency-handler/TimelineGridEventDependencyHandler';
+import { isDependencyTerminalDrag } from '../../timeline-grid/event-dependency-terminal/TimelineGridEventDependencyTerminal';
 
 /**
  * Calls `onCursorMove` with the client coordinates on every frame of this timeline's
@@ -22,7 +22,7 @@ export function useDependencyDragCursor(
     }
     return monitorForElements({
       canMonitor: ({ source }) =>
-        isDependencyHandleDrag(source.data) && source.data.storeContext === store,
+        isDependencyTerminalDrag(source.data) && source.data.storeContext === store,
       onDrag: ({ location }) => {
         onCursorMove(location.current.input.clientX, location.current.input.clientY);
       },

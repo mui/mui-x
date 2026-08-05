@@ -52,7 +52,7 @@ function getTerminal(title: string, resourceId?: string) {
     .getAttribute('data-occurrence-key');
   const resourceSelector = resourceId === undefined ? '' : `[data-resource-id="${resourceId}"]`;
   return document.querySelector<HTMLElement>(
-    `[data-dependency-handle="${occurrenceKey}"]${resourceSelector}`,
+    `[data-dependency-terminal="${occurrenceKey}"]${resourceSelector}`,
   );
 }
 
@@ -201,13 +201,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       // Just inside the hovered event's tail: its own surface, so the end resize
       // strip stays a resize grab — not a dependency drag.
       const onTail = document.elementFromPoint(adjacentRect.left - 3, centerY)!;
-      expect(onTail.closest('[data-dependency-handle]')).to.equal(null);
+      expect(onTail.closest('[data-dependency-terminal]')).to.equal(null);
 
       // Just outside the end edge: the terminal. Accepted trade-off: while revealed
       // it covers the first pixels of the back-to-back neighbor, whose start-resize
       // grab must aim above or below the circle.
       const outside = document.elementFromPoint(adjacentRect.left + 2, centerY)!;
-      expect(outside.closest('[data-dependency-handle]')).not.to.equal(null);
+      expect(outside.closest('[data-dependency-terminal]')).not.to.equal(null);
     });
 
     it('should keep the revealed terminal reachable under a crossing arrow', async () => {
@@ -238,7 +238,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       const middleRect = getEventElement('Middle event').getBoundingClientRect();
       const centerY = middleRect.top + middleRect.height / 2;
       const atTerminal = document.elementFromPoint(middleRect.right + 4, centerY)!;
-      expect(atTerminal.closest('[data-dependency-handle]')).not.to.equal(null);
+      expect(atTerminal.closest('[data-dependency-terminal]')).not.to.equal(null);
     });
   });
 
