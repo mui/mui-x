@@ -86,11 +86,12 @@ It is opt-in on every chart, so existing callbacks keep receiving pointer events
 <BarChart
   experimentalFeatures={{ keyboardActivation: true }}
   onItemClick={(event, item) => {}}
+  onAxisClick={(event, data) => {}}
   {...otherProps}
 />
 ```
 
-Pressing <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd> on the focused item then calls `onItemClick` with the same payload a click provides.
+Pressing <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd> on the focused item then calls `onItemClick` and `onAxisClick` with the same payload a click provides.
 
 The `event` argument is the `KeyboardEvent` that triggered the activation.
 The callback types keep describing the pointer event to avoid a breaking change, so opt into the wider type with a module augmentation:

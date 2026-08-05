@@ -54,7 +54,7 @@
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element."
+          "description": "The event recorded on the <code>&lt;svg/&gt;</code> element."
         },
         "data": {
           "name": "data",
