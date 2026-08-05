@@ -466,9 +466,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       const creation = {
         sourceEventId: 'event-a',
         sourceOccurrenceKey: 'key-a',
+        sourceResourceId: 'r1',
         sourceSide: 'end' as const,
         targetEventId: null,
         targetOccurrenceKey: null,
+        targetResourceId: null,
       };
       store.setDependencyCreation(creation);
       const stateBefore = store.state;
@@ -508,9 +510,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       store.setDependencyCreation({
         sourceEventId: 'event-a',
         sourceOccurrenceKey: 'key-a',
+        sourceResourceId: 'r1',
         sourceSide: 'end',
         targetEventId: null,
         targetOccurrenceKey: null,
+        targetResourceId: null,
       });
       store.setSelectedDependencyId('dep-1');
 

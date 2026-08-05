@@ -3,6 +3,7 @@ import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerResource,
+  SchedulerResourceId,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
@@ -96,6 +97,11 @@ export interface DependencyArrow {
 
 export interface DependencyArrowAnchor {
   rowIndex: number;
+  /**
+   * The resource of the row: the appearance identity, since the occurrence (and its
+   * key) repeats on every row of a multi-resource event.
+   */
+  resourceId: SchedulerResourceId;
   occurrence: SchedulerEventOccurrence;
 }
 
@@ -198,11 +204,12 @@ export function createDependencyAnchorResolver(
           if (endpointIds !== undefined && !endpointIds.has(occurrence.id)) {
             continue;
           }
+          const anchor = { rowIndex, resourceId: resources[rowIndex].resource.id, occurrence };
           const appearances = appearancesLookup.get(occurrence.id);
           if (appearances) {
-            appearances.push({ rowIndex, occurrence });
+            appearances.push(anchor);
           } else {
-            appearancesLookup.set(occurrence.id, [{ rowIndex, occurrence }]);
+            appearancesLookup.set(occurrence.id, [anchor]);
           }
         }
       }
@@ -215,7 +222,7 @@ export function createDependencyAnchorResolver(
       for (let rowIndex = 0; rowIndex < resources.length; rowIndex += 1) {
         for (const occurrence of resources[rowIndex].occurrences) {
           if (occurrence.id === eventId) {
-            appearances.push({ rowIndex, occurrence });
+            appearances.push({ rowIndex, resourceId: resources[rowIndex].resource.id, occurrence });
           }
         }
       }
@@ -306,19 +313,25 @@ export function createDependencyAnchorResolver(
 
 /**
  * The pixel point of an event edge, used to anchor the provisional (rubber-band)
- * arrow. Anchors on the appearance matching the occurrence key, silently falling back
- * to the event's first appearance when the key is `null` or unknown. `null` when the
- * anchoring appearance's row is not laid out.
+ * arrow. Anchors on the appearance matching the occurrence key and the resource (the
+ * key alone repeats on every row of a multi-resource event), falling back to the
+ * event's first appearance when they are `null` or unknown. `null` when the anchoring
+ * appearance's row is not laid out.
  */
 export function getEventEdgeAnchor(
   resolver: DependencyAnchorResolver,
   eventId: SchedulerEventId,
   edge: 'start' | 'end',
   occurrenceKey: string | null = null,
+  resourceId: SchedulerResourceId | null = null,
 ): DependencyArrowPoint | null {
   const appearances = resolver.getAppearances(eventId);
   const anchor =
-    appearances.find((appearance) => appearance.occurrence.key === occurrenceKey) ?? appearances[0];
+    appearances.find(
+      (appearance) =>
+        appearance.occurrence.key === occurrenceKey &&
+        (resourceId === null || appearance.resourceId === resourceId),
+    ) ?? appearances[0];
   if (anchor == null || !resolver.hasRowPosition(anchor.rowIndex)) {
     return null;
   }

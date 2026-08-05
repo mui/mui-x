@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
@@ -17,7 +17,7 @@ import { isDependencyHandleDrag } from '../event-dependency-handler/TimelineGrid
  * root, which reads the hovered target from the drop target data.
  */
 export function useEventDependencyDropTarget(parameters: useEventDependencyDropTarget.Parameters) {
-  const { ref, eventId, occurrenceKey } = parameters;
+  const { ref, eventId, occurrenceKey, resourceId } = parameters;
 
   const store = useEventTimelinePremiumStoreContext();
   const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
@@ -34,6 +34,7 @@ export function useEventDependencyDropTarget(parameters: useEventDependencyDropT
       getData: () => ({
         dependencyTargetEventId: eventId,
         dependencyTargetOccurrenceKey: occurrenceKey,
+        dependencyTargetResourceId: resourceId,
         dependencyTargetIsValid: !isRecurring && !isReadOnly,
       }),
       // Only the dependency gesture of this timeline lands here (rows keep handling
@@ -45,7 +46,7 @@ export function useEventDependencyDropTarget(parameters: useEventDependencyDropT
         source.data.storeContext === store &&
         source.data.eventId !== eventId,
     });
-  }, [ref, store, enabled, isRecurring, isReadOnly, eventId, occurrenceKey]);
+  }, [ref, store, enabled, isRecurring, isReadOnly, eventId, occurrenceKey, resourceId]);
 }
 
 export namespace useEventDependencyDropTarget {
@@ -56,5 +57,10 @@ export namespace useEventDependencyDropTarget {
     ref: React.RefObject<HTMLDivElement | null>;
     eventId: SchedulerEventId;
     occurrenceKey: string;
+    /**
+     * The resource of this row appearance, qualifying the occurrence key — an event
+     * assigned to several resources repeats the same key on each of its rows.
+     */
+    resourceId: SchedulerResourceId;
   }
 }

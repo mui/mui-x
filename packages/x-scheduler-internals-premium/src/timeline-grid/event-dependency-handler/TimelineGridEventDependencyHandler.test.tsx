@@ -23,7 +23,11 @@ describe('<TimelineGrid.EventDependencyHandler />', () => {
   }
 
   describeConformance(
-    <TimelineGrid.EventDependencyHandler eventId="fake-id" occurrenceKey="fake-key" />,
+    <TimelineGrid.EventDependencyHandler
+      eventId="fake-id"
+      occurrenceKey="fake-key"
+      resourceId="fake-resource"
+    />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {
@@ -40,6 +44,7 @@ describe('<TimelineGrid.EventDependencyHandler />', () => {
         <TimelineGrid.EventDependencyHandler
           eventId="fake-id"
           occurrenceKey="fake-key"
+          resourceId="fake-resource"
           side="start"
         />
       </Wrapper>,
@@ -58,13 +63,21 @@ describe('<TimelineGrid.EventDependencyHandler />', () => {
     cleanup();
   });
 
-  it('should expose its occurrence key through the data-dependency-handle attribute', () => {
+  it('should expose its occurrence key and resource through its data attributes', () => {
     render(
       <Wrapper>
-        <TimelineGrid.EventDependencyHandler eventId="fake-id" occurrenceKey="fake-key" />
+        <TimelineGrid.EventDependencyHandler
+          eventId="fake-id"
+          occurrenceKey="fake-key"
+          resourceId="fake-resource"
+        />
       </Wrapper>,
     );
 
-    expect(document.querySelector('[data-dependency-handle="fake-key"]')).not.to.equal(null);
+    expect(
+      document.querySelector(
+        '[data-dependency-handle="fake-key"][data-resource-id="fake-resource"]',
+      ),
+    ).not.to.equal(null);
   });
 });

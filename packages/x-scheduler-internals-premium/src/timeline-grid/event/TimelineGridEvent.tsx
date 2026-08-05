@@ -69,7 +69,11 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
-  const { hasFocus: rowHasFocus, getCursorPositionInElementMs } = useTimelineGridEventRowContext();
+  const {
+    resourceId,
+    hasFocus: rowHasFocus,
+    getCursorPositionInElementMs,
+  } = useTimelineGridEventRowContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
@@ -80,11 +84,13 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     store,
     eventTimelinePremiumDependencySelectors.isCreationSource,
     occurrenceKey,
+    resourceId,
   );
   const dependencyDropTarget = useStore(
     store,
     eventTimelinePremiumDependencySelectors.isCreationTarget,
     occurrenceKey,
+    resourceId,
   );
 
   // Feature hooks
@@ -152,7 +158,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       collectionEnd: presetConfig.end,
     });
 
-  useEventDependencyDropTarget({ ref, eventId, occurrenceKey });
+  useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId });
 
   const mergedState = {
     ...state,

@@ -1,6 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
-import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerDependency, SchedulerDependencyId } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
@@ -103,16 +103,22 @@ export const eventTimelinePremiumDependencySelectors = {
    * The pending create-dependency drag gesture, or `null`.
    */
   creation: creationSelector,
-  // Keyed by occurrence (not event id): an event appearing on several resources must
-  // only highlight the row appearance the gesture actually involves.
+  // Keyed by occurrence *and* resource: an event appearing on several resources
+  // repeats the same occurrence key on each row, and only the row appearance the
+  // gesture actually involves must highlight.
   isCreationSource: createSelector(
     creationSelector,
-    (creation, occurrenceKey: string) => creation?.sourceOccurrenceKey === occurrenceKey,
+    (creation, occurrenceKey: string, resourceId: SchedulerResourceId) =>
+      creation !== null &&
+      creation.sourceOccurrenceKey === occurrenceKey &&
+      creation.sourceResourceId === resourceId,
   ),
   isCreationTarget: createSelector(
     creationSelector,
-    (creation, occurrenceKey: string) =>
-      creation !== null && creation.targetOccurrenceKey === occurrenceKey,
+    (creation, occurrenceKey: string, resourceId: SchedulerResourceId) =>
+      creation !== null &&
+      creation.targetOccurrenceKey === occurrenceKey &&
+      creation.targetResourceId === resourceId,
   ),
   /**
    * The id of the selected dependency, or `null`.

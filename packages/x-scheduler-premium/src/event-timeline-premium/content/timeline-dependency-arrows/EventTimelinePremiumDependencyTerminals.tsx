@@ -97,7 +97,13 @@ function DependencyTerminalsLayerImpl() {
     lastRowIndex: lastGeometryRowIndex,
   } = useDependencyGeometry();
 
-  const [hoveredOccurrenceKey, setHoveredOccurrenceKey] = React.useState<string | null>(null);
+  // The occurrence key alone does not identify a row appearance (an event assigned to
+  // several resources repeats the same key on each row): the hover is qualified by
+  // the resource, read from the DOM as a string.
+  const [hoveredAppearance, setHoveredAppearance] = React.useState<{
+    occurrenceKey: string;
+    resourceId: string;
+  } | null>(null);
   const layerRef = React.useRef<HTMLDivElement>(null);
 
   // A native drag suppresses pointer events, so the hover tracked before the gesture
@@ -105,7 +111,7 @@ function DependencyTerminalsLayerImpl() {
   // gesture ends and let the next pointerover rebuild it.
   React.useEffect(() => {
     if (creation === null) {
-      setHoveredOccurrenceKey(null);
+      setHoveredAppearance(null);
     }
   }, [creation]);
 
@@ -118,16 +124,27 @@ function DependencyTerminalsLayerImpl() {
     if (!container) {
       return undefined;
     }
-    const getOccurrenceKey = (target: EventTarget | null): string | null => {
+    const getAppearance = (
+      target: EventTarget | null,
+    ): { occurrenceKey: string; resourceId: string } | null => {
       if (!(target instanceof Element)) {
         return null;
       }
-      // A terminal keeps itself revealed while hovered: it carries its occurrence key.
+      // A terminal keeps itself revealed while hovered: it carries its occurrence key
+      // and its resource.
       const handle = target.closest('[data-dependency-handle]');
       if (handle !== null) {
-        return handle.getAttribute('data-dependency-handle');
+        return {
+          occurrenceKey: handle.getAttribute('data-dependency-handle')!,
+          resourceId: handle.getAttribute('data-resource-id')!,
+        };
       }
-      return target.closest('[data-occurrence-key]')?.getAttribute('data-occurrence-key') ?? null;
+      const occurrenceKey =
+        target.closest('[data-occurrence-key]')?.getAttribute('data-occurrence-key') ?? null;
+      // The row element carries the resource, qualifying the appearance.
+      const resourceId =
+        target.closest('[data-resource-id]')?.getAttribute('data-resource-id') ?? null;
+      return occurrenceKey !== null && resourceId !== null ? { occurrenceKey, resourceId } : null;
     };
     const handlePointerOver = (event: PointerEvent) => {
       // The arrows' invisible hit bands ride over the events: crossing one must not
@@ -139,10 +156,17 @@ function DependencyTerminalsLayerImpl() {
       ) {
         return;
       }
-      setHoveredOccurrenceKey(getOccurrenceKey(event.target));
+      const next = getAppearance(event.target);
+      // Object identity changes on every pointerover: bail out on equal content so
+      // crossing elements of the same appearance does not re-render the layer.
+      setHoveredAppearance((previous) =>
+        previous?.occurrenceKey === next?.occurrenceKey && previous?.resourceId === next?.resourceId
+          ? previous
+          : next,
+      );
     };
     const handlePointerLeave = () => {
-      setHoveredOccurrenceKey(null);
+      setHoveredAppearance(null);
     };
     container.addEventListener('pointerover', handlePointerOver);
     container.addEventListener('pointerleave', handlePointerLeave);
@@ -162,6 +186,7 @@ function DependencyTerminalsLayerImpl() {
     if (!resolver.hasRowPosition(rowIndex)) {
       continue;
     }
+    const rowResourceId = resources[rowIndex].resource.id;
     for (const occurrence of resources[rowIndex].occurrences) {
       if (
         schedulerEventSelectors.isRecurring(store.state, occurrence.id) ||
@@ -180,14 +205,23 @@ function DependencyTerminalsLayerImpl() {
       if (endFraction < visibleStartFraction || endFraction > visibleEndFraction) {
         continue;
       }
-      const point = resolver.getEdgePoint({ rowIndex, occurrence }, 'end');
+      const point = resolver.getEdgePoint(
+        { rowIndex, resourceId: rowResourceId, occurrence },
+        'end',
+      );
       const visible =
-        hoveredOccurrenceKey === occurrence.key || creation?.sourceOccurrenceKey === occurrence.key;
+        (hoveredAppearance?.occurrenceKey === occurrence.key &&
+          hoveredAppearance.resourceId === String(rowResourceId)) ||
+        (creation?.sourceOccurrenceKey === occurrence.key &&
+          creation.sourceResourceId === rowResourceId);
       terminals.push(
         <EventTimelinePremiumDependencyTerminal
-          key={occurrence.key}
+          // The occurrence key repeats on every row of a multi-resource event: only
+          // the row disambiguates the appearance.
+          key={`${rowIndex}:${occurrence.key}`}
           eventId={occurrence.id}
           occurrenceKey={occurrence.key}
+          resourceId={rowResourceId}
           side="end"
           data-palette={schedulerEventSelectors.color(store.state, occurrence.id)}
           data-visible={visible ? '' : undefined}

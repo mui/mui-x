@@ -336,9 +336,11 @@ export class EventTimelinePremiumStore<
         creation !== null &&
         previous.sourceEventId === creation.sourceEventId &&
         previous.sourceOccurrenceKey === creation.sourceOccurrenceKey &&
+        previous.sourceResourceId === creation.sourceResourceId &&
         previous.sourceSide === creation.sourceSide &&
         previous.targetEventId === creation.targetEventId &&
-        previous.targetOccurrenceKey === creation.targetOccurrenceKey)
+        previous.targetOccurrenceKey === creation.targetOccurrenceKey &&
+        previous.targetResourceId === creation.targetResourceId)
     ) {
       return;
     }

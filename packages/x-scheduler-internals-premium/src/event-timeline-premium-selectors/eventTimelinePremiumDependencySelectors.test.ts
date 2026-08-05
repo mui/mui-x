@@ -197,42 +197,45 @@ describe('eventTimelinePremiumDependencySelectors', () => {
       dependencyCreation: {
         sourceEventId: 'event-a',
         sourceOccurrenceKey: 'event-a-0',
+        sourceResourceId: 'r1',
         sourceSide: 'end' as const,
         targetEventId: 'event-b',
         targetOccurrenceKey: 'event-b-0',
+        targetResourceId: 'r1',
       },
     };
 
-    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0')).to.equal(
-      true,
-    );
-    // Another row appearance of the same event is not the gesture's appearance.
-    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-1')).to.equal(
-      false,
-    );
-    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-b-0')).to.equal(
-      false,
-    );
-    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0')).to.equal(
-      true,
-    );
-    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-1')).to.equal(
-      false,
-    );
-    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-a-0')).to.equal(
-      false,
-    );
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r1'),
+    ).to.equal(true);
+    // A multi-resource event repeats the same occurrence key on another row: that
+    // appearance is not the gesture's appearance.
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r2'),
+    ).to.equal(false);
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-b-0', 'r1'),
+    ).to.equal(false);
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r1'),
+    ).to.equal(true);
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r2'),
+    ).to.equal(false);
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-a-0', 'r1'),
+    ).to.equal(false);
   });
 
   it('should not flag any occurrence when no creation gesture is in progress', () => {
     const state = getState();
 
-    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0')).to.equal(
-      false,
-    );
-    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0')).to.equal(
-      false,
-    );
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r1'),
+    ).to.equal(false);
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r1'),
+    ).to.equal(false);
   });
 
   it('should resolve the selected id to null when the dependency no longer exists', () => {

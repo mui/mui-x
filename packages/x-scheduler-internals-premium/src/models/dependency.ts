@@ -1,4 +1,8 @@
-import type { SchedulerEventId, SchedulerEventSide } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventId,
+  SchedulerEventSide,
+  SchedulerResourceId,
+} from '@mui/x-scheduler-internals/models';
 import type { SchedulerChangeEventDetails } from '@mui/x-scheduler-internals/internals';
 
 export type SchedulerDependencyId = string | number;
@@ -60,6 +64,12 @@ export interface SchedulerDependencyCreation {
    */
   sourceOccurrenceKey: string;
   /**
+   * The resource of the row appearance the gesture started from. The occurrence key
+   * alone does not identify an appearance: an event assigned to several resources
+   * repeats the same occurrence (and key) on each of its rows.
+   */
+  sourceResourceId: SchedulerResourceId;
+  /**
    * The edge of the source event the gesture started from.
    */
   sourceSide: SchedulerEventSide;
@@ -72,6 +82,11 @@ export interface SchedulerDependencyCreation {
    * appearance under the pointer.
    */
   targetOccurrenceKey: string | null;
+  /**
+   * The resource of the hovered row appearance, qualifying `targetOccurrenceKey` the
+   * same way `sourceResourceId` qualifies the source.
+   */
+  targetResourceId: SchedulerResourceId | null;
 }
 
 export type SchedulerDependencyEventRejectionReason =

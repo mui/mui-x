@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import type { DragLocationHistory, ElementDragType } from '@atlaskit/pragmatic-drag-and-drop/types';
-import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { isDependencyHandleDrag } from '../../timeline-grid/event-dependency-handler/TimelineGridEventDependencyHandler';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
@@ -12,6 +12,7 @@ import type { SchedulerDependencyRejectionReason } from '../../models';
 interface DependencyDropTargetData {
   targetEventId: SchedulerEventId;
   targetOccurrenceKey: string | null;
+  targetResourceId: SchedulerResourceId | null;
   /**
    * `false` for a recurring or read-only event: hovering it gives no highlight or
    * snap, but a drop still goes through `addDependency` so its rejection reaches the
@@ -27,9 +28,11 @@ function getDependencyDropTarget(
     const eventId = dropTarget.data.dependencyTargetEventId;
     if (typeof eventId === 'string' || typeof eventId === 'number') {
       const occurrenceKey = dropTarget.data.dependencyTargetOccurrenceKey;
+      const resourceId = dropTarget.data.dependencyTargetResourceId;
       return {
         targetEventId: eventId,
         targetOccurrenceKey: typeof occurrenceKey === 'string' ? occurrenceKey : null,
+        targetResourceId: typeof resourceId === 'string' ? resourceId : null,
         isValid: dropTarget.data.dependencyTargetIsValid === true,
       };
     }
@@ -80,9 +83,11 @@ export function useDependencyCreationMonitor() {
       store.setDependencyCreation({
         sourceEventId: source.data.eventId,
         sourceOccurrenceKey: source.data.occurrenceKey,
+        sourceResourceId: source.data.resourceId,
         sourceSide: source.data.sourceSide,
         targetEventId: validTarget?.targetEventId ?? null,
         targetOccurrenceKey: validTarget?.targetOccurrenceKey ?? null,
+        targetResourceId: validTarget?.targetResourceId ?? null,
       });
     };
 

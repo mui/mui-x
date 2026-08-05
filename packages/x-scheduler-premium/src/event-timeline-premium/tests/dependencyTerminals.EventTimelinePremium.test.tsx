@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   createSchedulerRenderer,
@@ -40,11 +40,27 @@ const recurringEvent = EventBuilder.new()
   .resource(resource1)
   .build();
 
-function getTerminal(title: string) {
+function getTerminal(title: string, resourceId?: string) {
   // The terminals render in an overlay outside the event elements, tied to their
-  // event by the occurrence key.
+  // event by the occurrence key — qualified by the resource for events appearing on
+  // several rows.
   const occurrenceKey = getEventElement(title).getAttribute('data-occurrence-key');
-  return document.querySelector<HTMLElement>(`[data-dependency-handle="${occurrenceKey}"]`);
+  const resourceSelector = resourceId === undefined ? '' : `[data-resource-id="${resourceId}"]`;
+  return document.querySelector<HTMLElement>(
+    `[data-dependency-handle="${occurrenceKey}"]${resourceSelector}`,
+  );
+}
+
+function getAppearanceElement(title: string, resourceId: string) {
+  // An event assigned to several resources renders one appearance per row: pick the
+  // one inside the requested resource's row.
+  return screen
+    .getAllByText(title)
+    .map((element) => element.closest('[data-occurrence-key]')!)
+    .find(
+      (element) =>
+        element.closest('[data-resource-id]')?.getAttribute('data-resource-id') === resourceId,
+    )!;
 }
 
 function simulateTerminalDrag(sourceTitle: string, targetTitle: string) {
@@ -1010,6 +1026,74 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.callCount).to.equal(0);
       expect(getArrowPaths()).to.have.length(1);
+    });
+  });
+
+  describe('multi-resource events', () => {
+    // Both appearances share the occurrence key (it derives from the event id): only
+    // the resource distinguishes them.
+    const sharedEvent = EventBuilder.new()
+      .id('event-shared')
+      .title('Shared event')
+      .singleDay('2025-07-03T09:00:00Z')
+      .resources([resource1, resource2])
+      .build();
+
+    it('should render one terminal per row appearance', () => {
+      renderTimeline({ events: [sharedEvent], dependencies: [] });
+
+      expect(getTerminal('Shared event', 'r1')).not.to.equal(null);
+      expect(getTerminal('Shared event', 'r2')).not.to.equal(null);
+    });
+
+    it('should reveal only the terminal of the hovered row appearance', () => {
+      renderTimeline({ events: [sharedEvent], dependencies: [] });
+
+      fireEvent.pointerOver(getAppearanceElement('Shared event', 'r1'));
+
+      expect(getTerminal('Shared event', 'r1')!.hasAttribute('data-visible')).to.equal(true);
+      expect(getTerminal('Shared event', 'r2')!.hasAttribute('data-visible')).to.equal(false);
+    });
+
+    it('should keep only the dragged appearance terminal revealed during the gesture', async () => {
+      const { store } = renderTimeline({ events: [sharedEvent, eventB], dependencies: [] });
+
+      const source = getTerminal('Shared event', 'r2')!.closest('[draggable="true"]')!;
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(document.body, {
+        dataTransfer: new DataTransfer(),
+        clientX: 120,
+        clientY: 40,
+      });
+
+      await waitFor(() => {
+        expect(store.state.dependencyCreation).not.to.equal(null);
+      });
+      expect(getTerminal('Shared event', 'r2')!.hasAttribute('data-visible')).to.equal(true);
+      expect(getTerminal('Shared event', 'r1')!.hasAttribute('data-visible')).to.equal(false);
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+    });
+
+    it('should highlight only the hovered row appearance of a multi-resource drop target', async () => {
+      renderTimeline({ events: [eventA, sharedEvent], dependencies: [] });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const r1Appearance = getAppearanceElement('Shared event', 'r1');
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(r1Appearance, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(r1Appearance, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(r1Appearance.hasAttribute('data-dependency-drop-target')).to.equal(true);
+      });
+      expect(
+        getAppearanceElement('Shared event', 'r2').hasAttribute('data-dependency-drop-target'),
+      ).to.equal(false);
+
+      fireEvent.drop(r1Appearance, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
     });
   });
 

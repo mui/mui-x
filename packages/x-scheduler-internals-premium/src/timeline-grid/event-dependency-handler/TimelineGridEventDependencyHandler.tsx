@@ -1,7 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import type { SchedulerEventId, SchedulerEventSide } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventId,
+  SchedulerEventSide,
+  SchedulerResourceId,
+} from '@mui/x-scheduler-internals/models';
 import { useDragHandle } from '@mui/x-scheduler-internals/internals';
 import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
@@ -38,6 +42,7 @@ export const TimelineGridEventDependencyHandler = React.forwardRef(
       // Parameters
       eventId,
       occurrenceKey,
+      resourceId,
       side = 'end',
       // Props forwarded to the DOM element
       ...elementProps
@@ -53,6 +58,7 @@ export const TimelineGridEventDependencyHandler = React.forwardRef(
     const getDragData = useStableCallback(() => ({
       eventId,
       occurrenceKey,
+      resourceId,
       sourceSide: side,
       source: 'TimelineGridEventDependencyHandler' as const,
       // Identity discriminator: pragmatic monitors are page-global, so the monitor
@@ -68,6 +74,7 @@ export const TimelineGridEventDependencyHandler = React.forwardRef(
         elementProps,
         {
           [TimelineGridEventDependencyHandlerDataAttributes.dependencyHandle]: occurrenceKey,
+          [TimelineGridEventDependencyHandlerDataAttributes.resourceId]: String(resourceId),
         } as Record<string, string>,
       ],
     });
@@ -87,6 +94,11 @@ export namespace TimelineGridEventDependencyHandler {
      */
     occurrenceKey: string;
     /**
+     * The resource of the row appearance. Qualifies the occurrence key, which an
+     * event assigned to several resources repeats on each of its rows.
+     */
+    resourceId: SchedulerResourceId;
+    /**
      * The event edge the terminal sits on — the edge of the predecessor the created
      * dependency starts from. Only `'end'` is exercised while `FinishToStart` is the
      * only dependency type; the start-edge terminals arrive with the other types.
@@ -98,6 +110,10 @@ export namespace TimelineGridEventDependencyHandler {
   export interface DragData {
     eventId: SchedulerEventId;
     occurrenceKey: string;
+    /**
+     * The resource of the row appearance the gesture started from.
+     */
+    resourceId: SchedulerResourceId;
     /**
      * The edge of the source event the gesture started from. Combined with the drop
      * edge, it determines the created dependency's type.

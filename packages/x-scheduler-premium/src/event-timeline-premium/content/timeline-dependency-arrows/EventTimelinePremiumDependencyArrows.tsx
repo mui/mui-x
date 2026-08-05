@@ -206,6 +206,7 @@ function getCreationPath(
     creation.sourceEventId,
     creation.sourceSide,
     creation.sourceOccurrenceKey,
+    creation.sourceResourceId,
   );
   if (source === null) {
     return null;
@@ -217,6 +218,7 @@ function getCreationPath(
       creation.targetEventId,
       'start',
       creation.targetOccurrenceKey,
+      creation.targetResourceId,
     );
     if (target !== null) {
       return {
