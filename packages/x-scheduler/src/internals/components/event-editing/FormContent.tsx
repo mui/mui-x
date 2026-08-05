@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
+import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
+import { warnOnce } from '@mui/x-internals/warning';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import MuiDialogContent from '@mui/material/DialogContent';
 import Divider from '@mui/material/Divider';
-import { inputBaseClasses } from '@mui/material/InputBase';
-import TextField from '@mui/material/TextField';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import type {
@@ -25,13 +25,22 @@ import {
   schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
+import {
+  getCustomEventProperties,
+  getPrimaryResourceId,
+} from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
-import type { ControlledValue } from '../event-dialog/utils';
-import { computeRange, hasProp, validateRange } from '../event-dialog/utils';
+import type { EventDialogFormValues } from '../event-dialog/utils';
+import { computeRange, hasProp, BUILT_IN_FORM_KEYS } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
+import TitleSection from '../event-dialog/TitleSection';
 import { GeneralTab } from '../event-dialog/GeneralTab';
+import {
+  EventDialogFormProvider,
+  useEventDialogFormContext,
+} from '../event-dialog/form/EventDialogFormContext';
+import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 
 const FormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
@@ -57,18 +66,6 @@ const DialogContent = styled(MuiDialogContent, {
   overflow: 'hidden',
   maxHeight: '100%',
 });
-
-const EventDialogTitleTextField = styled(TextField, {
-  name: 'MuiEventDialog',
-  slot: 'TitleTextField',
-})(({ theme }) => ({
-  flex: 1,
-  [`& .${inputBaseClasses.root}`]: {
-    fontSize: theme.typography.h6.fontSize,
-    lineHeight: theme.typography.h6.lineHeight,
-    fontWeight: theme.typography.h6.fontWeight,
-  },
-}));
 
 const EventDialogForm = styled('form', {
   name: 'MuiEventDialog',
@@ -106,36 +103,12 @@ interface FormContentProps {
 }
 
 export function FormContent(props: FormContentProps) {
-  const { occurrence, onClose, dragHandlerRef, isDraggable } = props;
+  const { occurrence } = props;
 
-  // Context hooks
   const adapter = useAdapterContext();
-  const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
+  const pushPlaceholder = usePushPlaceholder();
 
-  // Selector hooks
-  const isPropertyReadOnly = useStore(
-    store,
-    schedulerEventSelectors.isPropertyReadOnly,
-    occurrence.id,
-  );
-  const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
-  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
-  const shouldEventRequireResource = useStore(
-    store,
-    schedulerOtherSelectors.shouldEventRequireResource,
-  );
-
-  // Optional renderer hooks
-  const { recurrenceTab: RecurrenceTabRenderer } = useEventEditingOptionalRenderers();
-
-  const recurrencePresets = useStore(
-    store,
-    schedulerRecurringEventSelectors.presets,
-    occurrence.displayTimezone.start,
-  );
   const defaultRecurrencePresetKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
@@ -143,23 +116,35 @@ export function FormContent(props: FormContentProps) {
     occurrence.displayTimezone.start,
   );
 
-  // `preventScroll` so focusing the title doesn't scroll a still-off-screen drawer into view
-  // (the compact drawer slides up from the bottom, which would otherwise shove the grid).
-  const titleInputRef = React.useCallback(
-    (input: HTMLInputElement | null) => input?.focus({ preventScroll: true }),
-    [],
-  );
-
-  // State hooks
-  const [tabValue, setTabValue] = React.useState('general');
-  const [errors, setErrors] = React.useState<Record<string, string | string[]>>({});
-  const [controlled, setControlled] = React.useState<ControlledValue>(() => {
+  // Built once: the provider ignores later values anyway, and this component
+  // re-renders on every placeholder push during creation (`usePushPlaceholder`
+  // subscribes it to the placeholder).
+  const initialValues = useRefWithInit((): EventDialogFormValues => {
     const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
     const base = occurrence.displayTimezone.rrule;
+    // The occurrence only carries the built-in event properties — custom fields
+    // come from the raw model. When creating an event there is no model yet.
+    const model = schedulerEventSelectors.modelLookup(store.state).get(occurrence.id);
+    const customProperties = model ? getCustomEventProperties(model) : {};
+
+    if (process.env.NODE_ENV !== 'production') {
+      for (const key of Object.keys(customProperties)) {
+        if (BUILT_IN_FORM_KEYS.has(key)) {
+          warnOnce([
+            `MUI X Scheduler: The event model contains a custom property "${key}" that collides with a built-in form key.`,
+            'The form seeds that key from the event dates and resource, so the custom property cannot be read or written through the form.',
+            'Rename the property in the event model to avoid the collision.',
+          ]);
+        }
+      }
+    }
 
     return {
+      ...customProperties,
+      title: occurrence.title,
+      description: hasProp(occurrence, 'description') ? (occurrence.description ?? '') : '',
       startDate: fmtDate(occurrence.displayTimezone.start),
       endDate: fmtDate(occurrence.displayTimezone.end),
       startTime: fmtTime(occurrence.displayTimezone.start),
@@ -177,43 +162,74 @@ export function FormContent(props: FormContentProps) {
         ...(base?.until ? { until: base.until } : {}),
       },
     };
-  });
+  }).current;
+
+  return (
+    <EventDialogFormProvider initialValues={initialValues} onValuesChange={pushPlaceholder}>
+      <FormContentInner {...props} />
+    </EventDialogFormProvider>
+  );
+}
+
+function FormContentInner(props: FormContentProps) {
+  const { occurrence, onClose, dragHandlerRef, isDraggable } = props;
+
+  // Context hooks
+  const adapter = useAdapterContext();
+  const { schedulerId, classes, localeText } = useEventEditingStyledContext();
+  const store = useSchedulerStoreContext();
+  const formStore = useEventDialogFormContext();
+
+  // Selector hooks
+  const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
+  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+
+  // Optional renderer hooks
+  const { recurrenceTab: RecurrenceTabRenderer } = useEventEditingOptionalRenderers();
+
+  const recurrencePresets = useStore(
+    store,
+    schedulerRecurringEventSelectors.presets,
+    occurrence.displayTimezone.start,
+  );
+
+  // State hooks
+  const [tabValue, setTabValue] = React.useState('general');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { start, end } = computeRange(adapter, controlled, displayTimezone);
 
-    const form = new FormData(event.currentTarget);
-
-    setErrors({});
-    const err = validateRange(adapter, start, end, controlled.allDay);
-    if (err) {
-      setErrors({ [err.field]: localeText.startDateAfterEndDateError });
+    if (!(await formStore.validateAll())) {
       return;
     }
 
-    if (shouldEventRequireResource && controlled.resourceId === null) {
-      setErrors({ resource: localeText.requiredResourceError });
-      return;
-    }
+    const values = formStore.state.values;
+    const { start, end } = computeRange(adapter, values, displayTimezone);
+
+    // Only the custom fields the user actually edited enter the changes payload,
+    // so untouched fields keep resolving against the live model on the recurring paths.
+    const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
 
     const metaChanges = {
-      title: (form.get('title') as string).trim(),
-      description: (form.get('description') as string).trim(),
-      allDay: controlled.allDay,
-      resource: controlled.resourceId === null ? undefined : controlled.resourceId,
-      color: controlled.color === null ? undefined : controlled.color,
+      ...editedCustomValues,
+      title: values.title.trim(),
+      description: values.description.trim(),
+      allDay: values.allDay,
+      resource: values.resourceId === null ? undefined : values.resourceId,
+      color: values.color === null ? undefined : values.color,
     };
 
     let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
     if (!showRecurrence || !recurrencePresets) {
       rruleToSubmit = undefined;
-    } else if (controlled.recurrenceSelection === null) {
+    } else if (values.recurrenceSelection === null) {
       rruleToSubmit = undefined;
-    } else if (controlled.recurrenceSelection === 'custom') {
-      rruleToSubmit = controlled.rruleDraft;
+    } else if (values.recurrenceSelection === 'custom') {
+      rruleToSubmit = values.rruleDraft;
     } else {
-      rruleToSubmit = recurrencePresets[controlled.recurrenceSelection];
+      rruleToSubmit = recurrencePresets[values.recurrenceSelection];
     }
 
     if (rawPlaceholder?.type === 'creation') {
@@ -247,7 +263,7 @@ export function FormContent(props: FormContentProps) {
       // don't close the dialog
       return;
     } else {
-      store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule: rruleToSubmit });
+      store.updateEvent({ ...metaChanges, id: occurrence.id, start, end, rrule: rruleToSubmit });
     }
 
     onClose();
@@ -281,29 +297,7 @@ export function FormContent(props: FormContentProps) {
           dragHandlerRef={dragHandlerRef}
           isDraggable={isDraggable}
         >
-          <span
-            id={`${schedulerId}-event-dialog-title`}
-            style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
-          >
-            {occurrence.title}
-          </span>
-          <EventDialogTitleTextField
-            name="title"
-            defaultValue={occurrence.title}
-            required
-            inputRef={titleInputRef}
-            slotProps={{
-              input: {
-                readOnly: isPropertyReadOnly('title'),
-                'aria-label': localeText.eventTitleAriaLabel,
-              },
-              formHelperText: { role: 'alert' },
-            }}
-            error={!!errors.title}
-            helperText={errors.title}
-            fullWidth
-            size="small"
-          />
+          <TitleSection occurrence={occurrence} />
         </EventDialogHeader>
         {showRecurrence && RecurrenceTabRenderer && (
           <EventDialogTabsContainer className={classes.eventDialogTabsContainer}>
@@ -325,19 +319,10 @@ export function FormContent(props: FormContentProps) {
         )}
         <GeneralTab
           occurrence={occurrence}
-          errors={errors}
-          setErrors={setErrors}
-          controlled={controlled}
-          setControlled={setControlled}
           value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'}
         />
         {showRecurrence && RecurrenceTabRenderer && (
-          <RecurrenceTabRenderer
-            occurrence={occurrence}
-            controlled={controlled}
-            setControlled={setControlled}
-            tabValue={tabValue}
-          />
+          <RecurrenceTabRenderer occurrence={occurrence} tabValue={tabValue} />
         )}
         <Divider className={classes.eventDialogFormDivider} />
         <FormActions className={classes.eventDialogFormActions}>

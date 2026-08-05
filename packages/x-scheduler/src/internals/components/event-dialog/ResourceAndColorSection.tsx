@@ -30,7 +30,7 @@ import { getPaletteVariants } from '../../utils/tokens';
 import { useEventEditingStyledContext } from '../event-editing';
 import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
-import { usePushPlaceholder } from './usePushPlaceholder';
+import { useEventDialogFormField } from './form/useEventDialogFormField';
 
 const NO_RESOURCE_VALUE = '';
 
@@ -128,7 +128,7 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
 }
 
 export default function ResourceAndColorSection(props: EventDialogSectionProps) {
-  const { occurrence, controlled, setControlled, errors, setErrors } = props;
+  const { occurrence } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -149,27 +149,16 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
     occurrence.id,
   );
 
-  const pushPlaceholder = usePushPlaceholder();
+  const resourceField = useEventDialogFormField<SchedulerResourceId | null>('resourceId', {
+    validate: (value) =>
+      shouldEventRequireResource && value === null ? localeText.requiredResourceError : null,
+  });
+  const colorField = useEventDialogFormField<SchedulerEventColor | null>('color');
 
   const readOnly = isPropertyReadOnly('resource');
-  const { resourceId, color } = controlled;
-  const error =
-    shouldEventRequireResource && typeof errors.resource === 'string' ? errors.resource : undefined;
-
-  const handleResourceChange = (newResource: SchedulerResourceId | null) => {
-    const nextErrors = { ...errors };
-    delete nextErrors.resource;
-    setErrors(nextErrors);
-    const newState = { ...controlled, resourceId: newResource };
-    pushPlaceholder(newState);
-    setControlled(newState);
-  };
-
-  const handleColorChange = (newColor: SchedulerEventColor | null) => {
-    const newState = { ...controlled, color: newColor };
-    pushPlaceholder(newState);
-    setControlled(newState);
-  };
+  const { value: resourceId } = resourceField;
+  const { value: color } = colorField;
+  const error = shouldEventRequireResource ? resourceField.error : undefined;
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     const hasNesting = resources.some(
@@ -231,7 +220,7 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     const value = event.target.value;
-    handleResourceChange(value === NO_RESOURCE_VALUE ? null : (value as SchedulerResourceId));
+    resourceField.setValue(value === NO_RESOURCE_VALUE ? null : (value as SchedulerResourceId));
   };
 
   const errorId = `${schedulerId}-resource-error`;
@@ -324,7 +313,7 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
         value={color ? [color] : []}
         onValueChange={(values) => {
           const next = values[values.length - 1] as SchedulerEventColor | undefined;
-          handleColorChange(next ?? null);
+          colorField.setValue(next ?? null);
         }}
         aria-label={localeText.colorPickerLabel}
         disabled={readOnly}

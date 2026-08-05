@@ -31,14 +31,14 @@ describe('CompactDayView - touch resize', () => {
       .resizable(true)
       .build();
 
-    render(
+    const { user } = render(
       <StandaloneCompactDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />,
     );
 
     // Geometry resolver maps pointer Y to a time via the column's bounds.
     mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
 
-    return { onEventsChange };
+    return { onEventsChange, user };
   }
 
   /** Taps the event to arm it, revealing its resize handles. */
@@ -92,7 +92,7 @@ describe('CompactDayView - touch resize', () => {
   });
 
   it('keeps a prior armed resize when an unrelated field is then edited from the form', async () => {
-    const { onEventsChange } = renderResizableEvent();
+    const { onEventsChange, user } = renderResizableEvent();
     const eventElement = armEvent();
 
     const endHandle = getResizeHandle(eventElement, 'end');
@@ -105,7 +105,8 @@ describe('CompactDayView - touch resize', () => {
     fireEvent.change(screen.getByRole('textbox', { name: /Event title/i }), {
       target: { value: 'Renamed Meeting' },
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+    // The form validates asynchronously before submitting, so let the submit settle.
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     const updatedEvents = onEventsChange.lastCall.args[0];
     // Saving the form must preserve the resized end time, not revert it to the pre-resize value.

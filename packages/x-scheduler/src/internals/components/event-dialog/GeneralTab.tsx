@@ -13,7 +13,7 @@ interface GeneralTabProps extends EventDialogSectionProps {
 }
 
 export function GeneralTab(props: GeneralTabProps) {
-  const { occurrence, errors, setErrors, controlled, setControlled, value } = props;
+  const { occurrence, value } = props;
 
   const { schedulerId, classes } = useEventEditingStyledContext();
 
@@ -26,21 +26,9 @@ export function GeneralTab(props: GeneralTabProps) {
       hidden={value !== 'general'}
     >
       <EventDialogTabContent className={classes.eventDialogTabContent}>
-        <DateTimeSection
-          occurrence={occurrence}
-          controlled={controlled}
-          setControlled={setControlled}
-          errors={errors}
-          setErrors={setErrors}
-        />
+        <DateTimeSection occurrence={occurrence} />
         <Divider />
-        <ResourceAndColorSection
-          occurrence={occurrence}
-          controlled={controlled}
-          setControlled={setControlled}
-          errors={errors}
-          setErrors={setErrors}
-        />
+        <ResourceAndColorSection occurrence={occurrence} />
         <Divider />
         <DescriptionSection occurrence={occurrence} />
       </EventDialogTabContent>

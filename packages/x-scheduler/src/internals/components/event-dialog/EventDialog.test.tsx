@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
+  adapter,
   createSchedulerRenderer,
   EventBuilder,
   ResourceBuilder,
@@ -10,7 +11,8 @@ import { screen } from '@mui/internal-test-utils';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
-import { EventDialogContent } from './EventDialog';
+import { MonthView } from '../../../month-view';
+import { EventDialogContent, EventDialogProvider } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
@@ -73,6 +75,32 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     expect(legends[1].compareDocumentPosition(description)).to.equal(
       Node.DOCUMENT_POSITION_FOLLOWING,
     );
+  });
+
+  it('should discard the draft when the dialog is closed and reopened', async () => {
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        resources={resources}
+        visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+      >
+        <EventDialogProvider>
+          <MonthView />
+        </EventDialogProvider>
+      </EventCalendarProvider>,
+    );
+
+    await user.click(screen.getByText(DEFAULT_EVENT.title));
+    const titleInput = await screen.findByLabelText(/event title/i);
+    await user.type(titleInput, ' edited');
+    expect(titleInput).to.have.value('Running edited');
+
+    // Closing unmounts the dialog content, which is what discards the draft store.
+    await user.keyboard('{Escape}');
+    expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+
+    await user.click(screen.getByText(DEFAULT_EVENT.title));
+    expect(await screen.findByLabelText(/event title/i)).to.have.value(DEFAULT_EVENT.title);
   });
 
   it('should not render the recurrence tab when no slot is provided', () => {
@@ -161,6 +189,23 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
     }).toWarnDev([
       'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+    ]);
+  });
+
+  it('should warn when a custom event property collides with a built-in form key', () => {
+    const eventWithCollidingProperty = {
+      ...DEFAULT_EVENT,
+      startDate: 'project-kickoff',
+    } as SchedulerEvent;
+
+    expect(() => {
+      render(
+        <EventCalendarProvider events={[eventWithCollidingProperty]} resources={resources}>
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+    }).toWarnDev([
+      'MUI X Scheduler: The event model contains a custom property "startDate" that collides with a built-in form key.',
     ]);
   });
 

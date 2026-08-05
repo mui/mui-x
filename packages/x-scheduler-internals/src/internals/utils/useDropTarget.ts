@@ -27,6 +27,16 @@ import type { StandaloneEvent } from '../../standalone-event';
 import { useAdapterContext } from '../../use-adapter-context';
 import { getPrimaryResourceId } from './event-utils';
 
+// Not every drag source exposes `sourceResourceId` (only rows that know which
+// resource they represent, e.g. the Event Timeline Premium, can report it) —
+// it's declared as optional on each drag data contract, so this normalizes
+// `undefined` to `null` rather than narrowing anything.
+function getSourceResourceId(
+  data: Exclude<EventDropData, StandaloneEvent.DragData>,
+): SchedulerResourceId | null {
+  return data.sourceResourceId ?? null;
+}
+
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
 ) {
@@ -61,6 +71,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
         originalOccurrence: data.originalOccurrence,
+        sourceResourceId: getSourceResourceId(data),
         resourceId:
           resourceId === undefined
             ? (getPrimaryResourceId(data.originalOccurrence.resource) ?? null)
@@ -220,9 +231,30 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const changes: SchedulerEventUpdatedProperties = { id: eventId, start, end };
 
-  // Drag-only: a resize would collapse a multi-resource event to the placeholder's single primary id.
-  if (placeholder.type === 'internal-drag' && placeholder.resourceId !== null) {
-    changes.resource = placeholder.resourceId;
+  // If `undefined`, we want to set the event resource to `undefined` (no resource).
+  // If `null`, we want to keep the original event resource.
+  if (placeholder.resourceId !== null) {
+    const destinationResourceId = placeholder.resourceId;
+    const originalResource = originalOccurrence.resource;
+
+    if (!Array.isArray(originalResource)) {
+      changes.resource = destinationResourceId;
+    } else if (
+      placeholder.sourceResourceId != null &&
+      placeholder.sourceResourceId !== destinationResourceId
+    ) {
+      // Multi-resource event: replace only the row it was dragged from, keep the rest
+      // (never collapse the array down to the single destination resource). Deduped
+      // in case the destination row already held the event (e.g. [A, B] dragged from
+      // A onto B must become [B], not [B, B]).
+      changes.resource = Array.from(
+        new Set(
+          originalResource.map((id) =>
+            id === placeholder.sourceResourceId ? destinationResourceId : id,
+          ),
+        ),
+      );
+    }
   }
 
   const additionalChanges = addPropertiesToDroppedEvent?.() ?? {};

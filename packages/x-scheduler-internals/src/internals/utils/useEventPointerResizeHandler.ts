@@ -98,6 +98,9 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
         eventId: session.eventId,
         occurrenceKey: session.occurrenceKey,
         originalOccurrence: session.originalOccurrence,
+        // A resize never leaves the row it started in, so source and destination match — this keeps
+        // a multi-resource event from collapsing to the single resource carried by the placeholder.
+        sourceResourceId: session.resourceId,
         resourceId: session.resourceId,
       });
     };

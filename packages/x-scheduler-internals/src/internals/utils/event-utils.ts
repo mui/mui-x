@@ -1,4 +1,4 @@
-import type { TemporalTimezone } from '../../base-ui-copy/types/temporal';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   TemporalSupportedObject,
   SchedulerProcessedEvent,
