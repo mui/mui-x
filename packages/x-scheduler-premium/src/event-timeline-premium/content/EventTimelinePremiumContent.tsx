@@ -25,9 +25,9 @@ import {
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
-  EventDialogTrigger,
+  EventEditingTrigger,
   EventSkeleton,
-  useEventDialogContext,
+  useEventEditingContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
 import {
@@ -524,13 +524,13 @@ function EventList({
         ({ occurrence, fractionStart, fractionEnd }) =>
           fractionEnd > visibleStart &&
           fractionStart < visibleEnd && (
-            <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+            <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
               <EventTimelinePremiumEvent
                 occurrence={occurrence}
                 ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
                 variant="regular"
               />
-            </EventDialogTrigger>
+            </EventEditingTrigger>
           ),
       )}
     </React.Fragment>
@@ -548,7 +548,7 @@ function EventRowContent({
 }) {
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
-  const { onOpen: startEditing } = useEventDialogContext();
+  const { startEditing } = useEventEditingContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 

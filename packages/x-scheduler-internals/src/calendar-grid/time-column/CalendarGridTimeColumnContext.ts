@@ -45,6 +45,12 @@ export interface CalendarGridTimeColumnContext {
     input: { clientY: number };
     elementRef: React.RefObject<HTMLElement | null>;
   }) => number;
+  /**
+   * Maps a pointer position to a precision-rounded date within this column (vertical axis), used by the pointer-based resize.
+   * @param {{ clientX: number, clientY: number }} input The pointer coordinates.
+   * @returns {TemporalSupportedObject | null} The date under the pointer, or `null` when the column isn't measurable yet.
+   */
+  getDateAtPointer: (input: { clientX: number; clientY: number }) => TemporalSupportedObject | null;
 }
 
 export const CalendarGridTimeColumnContext = React.createContext<
