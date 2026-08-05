@@ -228,7 +228,7 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
   return (
     <SectionFieldset className={classes.eventDialogSectionFieldset}>
       <SectionHeaderTitle className={classes.eventDialogSectionHeaderTitle}>
-        {localeText.resourceColorSectionLabel}
+        {resources.length > 0 ? localeText.resourceColorSectionLabel : localeText.colorSectionLabel}
       </SectionHeaderTitle>
       {/* Resources are optional; skip the picker entirely when none are configured. */}
       {resources.length > 0 && (
