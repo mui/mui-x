@@ -73,7 +73,9 @@ Same changes as in `@mui/x-charts-pro@9.11.0`, plus:
 
 #### `@mui/x-tree-view-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@9.11.0`.
+Same changes as in `@mui/x-tree-view@9.11.0`, plus:
+
+- [tree view] Discard superseded lazy-loading responses (#23005) @Anexus5919
 
 ### Scheduler
 
