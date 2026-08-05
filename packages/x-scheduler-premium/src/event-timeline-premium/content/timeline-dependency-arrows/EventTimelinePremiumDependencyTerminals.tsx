@@ -30,8 +30,10 @@ const DependencyTerminalsLayer = styled('div', {
   zIndex: 2,
 });
 
-// TODO(dependencies public flip): add an `eventDependencyHandle` utility class; the
-// terminal only carries data attributes while the feature has no public API.
+// TODO(dependencies public flip): add an `eventDependencyHandler` utility class (the
+// key paired with the `EventDependencyHandler` slot, like `eventResizeHandler`) and a
+// `dependencyTerminals` one for the layer; both only carry data attributes while the
+// feature has no public API.
 const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependencyHandler, {
   name: 'MuiEventTimeline',
   slot: 'EventDependencyHandler',

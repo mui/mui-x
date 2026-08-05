@@ -121,8 +121,10 @@ export const eventTimelinePremiumDependencySelectors = {
   ),
   /**
    * The id of the selected dependency, or `null`.
-   * Ids without an active dependency (removed, or with a recurring/unknown endpoint)
-   * mask to `null` for the same render; the store effect then clears the raw value.
+   * The masking is membership-only: an id absent from the dependency lookup resolves
+   * to `null` for the same render (the store effect then clears the raw value), but a
+   * dependency deactivated by a recurring or unknown endpoint is still in the lookup
+   * and resolves normally.
    */
   selectedId: selectedIdSelector,
   /**

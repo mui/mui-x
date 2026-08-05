@@ -47,10 +47,6 @@ export function buildDependenciesState(
 }
 
 /**
- * Classifies an event id for use as a dependency endpoint: known and non-recurring
- * (`'ok'`), missing from the lookup (`'unknownEvent'`), or recurring (`'recurringEvent'`).
- */
-/**
  * Whether the dependency cannot be created or deleted because one of its endpoint
  * events is read-only. The single definition shared by the store guard and the
  * `isModelReadOnly` selector.
@@ -65,6 +61,10 @@ export function isDependencyReadOnly(
   );
 }
 
+/**
+ * Classifies an event id for use as a dependency endpoint: known and non-recurring
+ * (`'ok'`), missing from the lookup (`'unknownEvent'`), or recurring (`'recurringEvent'`).
+ */
 export function classifyDependencyEvent(
   processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>,
   eventId: SchedulerEventId,

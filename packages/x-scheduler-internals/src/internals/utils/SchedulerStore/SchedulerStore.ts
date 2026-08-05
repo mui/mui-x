@@ -297,8 +297,9 @@ export class SchedulerStore<
   }
 
   /**
-   * Selects an entity, or clears the selection when called with `null`. One slice for
-   * every selectable type keeps the selection mutually exclusive across features.
+   * Selects an entity, or clears the selection when called with `null`. A single
+   * slice shared by every selectable type keeps the selection mutually exclusive
+   * across features.
    */
   public setSelection = (selection: SchedulerSelection | null) => {
     if (isDeepEqual(this.state.selection, selection)) {

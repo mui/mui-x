@@ -123,8 +123,9 @@ export interface SchedulerDependenciesState {
  */
 export interface SchedulerDependenciesParameters {
   /**
-   * The dependencies between events.
-   * @default []
+   * The dependencies between events. Providing a value — even an empty array —
+   * enables the dependencies feature (terminals, arrows, selection); omitting it
+   * disables the feature entirely.
    */
   dependencies?: readonly SchedulerDependency[];
   /**
