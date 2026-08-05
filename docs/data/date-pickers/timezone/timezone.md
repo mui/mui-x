@@ -364,7 +364,7 @@ function App() {
 
 ## Usage with Temporal
 
-`Temporal` supports UTC and timezones natively—no plugin or extra date library is required.
+`Temporal` supports UTC and timezones natively, with no plugin or extra date library required.
 You only need to make sure the global `Temporal` object is available (see [Temporal setup](/x/react-date-pickers/adapters-locale/#with-temporal)).
 
 Pass the adapter to `LocalizationProvider`, then pass a `Temporal.ZonedDateTime` as the value:
@@ -401,6 +401,46 @@ import { setDefaultTimezone } from '@mui/x-date-pickers/AdapterTemporal';
 setDefaultTimezone('America/New_York');
 ```
 
+:::
+
+### Working with plain types
+
+Every picker under a `LocalizationProvider` shares one value type.
+With `AdapterTemporal` that type is always `Temporal.ZonedDateTime`, so a `DatePicker` cannot return a `Temporal.PlainDate` and a `TimePicker` cannot return a `Temporal.PlainTime`.
+
+If your application stores plain types, convert them at the picker boundary using the methods `Temporal` already provides:
+
+|               Plain type | From the picker value     | Back to a picker value                                          |
+| -----------------------: | :------------------------ | :-------------------------------------------------------------- |
+|     `Temporal.PlainDate` | `value.toPlainDate()`     | `date.toZonedDateTime(timezone)`                                |
+| `Temporal.PlainDateTime` | `value.toPlainDateTime()` | `date.toZonedDateTime(timezone)`                                |
+|     `Temporal.PlainTime` | `value.toPlainTime()`     | `date.toZonedDateTime({ timeZone: timezone, plainTime: time })` |
+
+A `Temporal.PlainTime` carries no date, so it needs a reference day to become a `Temporal.ZonedDateTime`:
+
+```tsx
+const timezone = 'America/New_York';
+
+function ClockOut() {
+  const [clockOut, setClockOut] = React.useState<Temporal.PlainTime | null>(null);
+  const today = Temporal.Now.plainDateISO(timezone);
+
+  return (
+    <TimePicker
+      value={
+        clockOut
+          ? today.toZonedDateTime({ timeZone: timezone, plainTime: clockOut })
+          : null
+      }
+      onChange={(newValue) => setClockOut(newValue?.toPlainTime() ?? null)}
+    />
+  );
+}
+```
+
+:::info
+Keep the timezone used for the conversion in sync with the `timezone` prop of your pickers.
+The picker preserves the timezone of the value it receives.
 :::
 
 ## More advanced examples
