@@ -104,8 +104,8 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   };
 
   const contextValue: TimelineGridEventRowContext = React.useMemo(
-    () => ({ hasFocus, getCursorPositionInElementMs }),
-    [hasFocus, getCursorPositionInElementMs],
+    () => ({ resourceId, hasFocus, getCursorPositionInElementMs }),
+    [resourceId, hasFocus, getCursorPositionInElementMs],
   );
 
   const occurrencesWithPosition = useEventOccurrencesWithTimelinePosition({

@@ -10,6 +10,7 @@ import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
+  SchedulerResourceId,
   TemporalSupportedObject,
 } from '../../models';
 import { useAdapterContext } from '../../use-adapter-context';
@@ -194,6 +195,7 @@ export namespace CalendarGridDayEvent {
     originalOccurrence: SchedulerEventOccurrence;
     start: TemporalSupportedObject;
     end: TemporalSupportedObject;
+    sourceResourceId?: SchedulerResourceId;
   }
 
   export interface DragData extends SharedDragData {

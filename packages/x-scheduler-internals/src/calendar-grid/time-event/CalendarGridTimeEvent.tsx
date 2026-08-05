@@ -17,6 +17,7 @@ import { schedulerEventSelectors } from '../../scheduler-selectors';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
+  SchedulerResourceId,
   TemporalSupportedObject,
 } from '../../models';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
@@ -179,6 +180,7 @@ export namespace CalendarGridTimeEvent {
     start: TemporalSupportedObject;
     end: TemporalSupportedObject;
     initialCursorPositionInEventMs: number;
+    sourceResourceId?: SchedulerResourceId;
   }
 
   export interface DragData extends SharedDragData {
