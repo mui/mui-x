@@ -9,6 +9,7 @@ import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 const huHUDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
+  // colorSectionLabel: 'Color',
   // dateTimeSectionLabel: 'Date & time',
   // resourceColorSectionLabel: 'Resource & color',
   // allDayLabel: 'All Day',

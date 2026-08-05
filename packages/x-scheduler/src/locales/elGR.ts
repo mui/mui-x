@@ -9,6 +9,7 @@ import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 const elGRDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
+  // colorSectionLabel: 'Color',
   // dateTimeSectionLabel: 'Date & time',
   // resourceColorSectionLabel: 'Resource & color',
   // allDayLabel: 'All Day',

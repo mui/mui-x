@@ -9,6 +9,7 @@ import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 const roRODialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Culoarea evenimentului',
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Dată și oră',
   resourceColorSectionLabel: 'Resursă și culoare',
   allDayLabel: 'Toată ziua',

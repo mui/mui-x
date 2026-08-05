@@ -138,6 +138,32 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('shouldEventRequireResource', () => {
+      it('should return true when set and resources are configured', () => {
+        const store = new storeClass.Value(
+          { ...BASE_PARAMS, shouldEventRequireResource: true },
+          adapter,
+        );
+        expect(schedulerOtherSelectors.shouldEventRequireResource(store.state)).to.equal(true);
+      });
+
+      it('should return false when set but no resources are configured, despite the contradictory configuration', () => {
+        // The store already warns in dev about this misconfiguration; the selector just needs
+        // to not compound it by blocking submission with no resource picker to fix it from.
+        let result: boolean | undefined;
+        expect(() => {
+          const store = new storeClass.Value(
+            { events: [], resources: [], shouldEventRequireResource: true },
+            adapter,
+          );
+          result = schedulerOtherSelectors.shouldEventRequireResource(store.state);
+        }).toWarnDev([
+          'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+        ]);
+        expect(result).to.equal(false);
+      });
+    });
+
     describe('visibleDate', () => {
       it('should return the visibleDate with the default display timezone applied', () => {
         const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');

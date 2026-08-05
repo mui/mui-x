@@ -9,6 +9,7 @@ import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 const deDEDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Ereignisfarbe',
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Datum und Uhrzeit',
   resourceColorSectionLabel: 'Ressource und Farbe',
   allDayLabel: 'Ganztägig',

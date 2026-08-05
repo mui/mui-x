@@ -9,6 +9,7 @@ import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 const nbNODialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Hendelsesfarge',
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Dato og tid',
   resourceColorSectionLabel: 'Ressurs og farge',
   allDayLabel: 'Hele dagen',
