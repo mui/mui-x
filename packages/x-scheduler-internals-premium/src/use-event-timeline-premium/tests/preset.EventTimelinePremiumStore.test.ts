@@ -11,11 +11,11 @@ const DEFAULT_PARAMS = {
 };
 
 describe('Preset - EventTimelinePremiumStore', () => {
-  describe('presetConfig validation', () => {
-    beforeEach(() => {
-      clearWarningsCache();
-    });
+  beforeEach(() => {
+    clearWarningsCache();
+  });
 
+  describe('presetConfig validation', () => {
     it('should warn about an invalid hour range even when the preset is not active', () => {
       // The selector only resolves the rendered preset, so without eager validation
       // the typo would stay silent until an end user switches to dayAndHour.

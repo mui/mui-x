@@ -92,6 +92,45 @@ describe('iterate()', () => {
 
       expect(cells).to.deep.equal(untrimmed);
     });
+
+    describe('across DST transitions inside the window', () => {
+      const HOUR_RANGE = { startTime: 0, endTime: 6 };
+
+      it('should keep the hour-row total equal to the day span on a fall-back day', () => {
+        // Nov 2 2025 in America/New_York repeats the 01:00 wall-clock hour: the walk
+        // emits two 01:00 cells, but the duplicate spans 0 ticks so the hour row
+        // still lines up with the pinned day span.
+        const dstStart = adapter.date('2025-11-02T00:00:00', 'America/New_York');
+        const dstEnd = adapter.endOfDay(adapter.addDays(dstStart, 1));
+
+        const hourCells = iterate(adapter, 'hour', 'hour', dstStart, dstEnd, undefined, HOUR_RANGE);
+        const dayCells = iterate(adapter, 'day', 'hour', dstStart, dstEnd, undefined, HOUR_RANGE);
+
+        expect(hourCells.length).to.equal(13);
+        expect(dayCells.map((cell) => cell.spanInTicks)).to.deep.equal([6, 6]);
+        const firstDayTotal = hourCells
+          .slice(0, 7)
+          .reduce((sum, cell) => sum + cell.spanInTicks, 0);
+        expect(firstDayTotal).to.equal(6);
+      });
+
+      it('should keep the hour-row total equal to the day span on a spring-forward day', () => {
+        // Mar 8 2026 skips the 02:00 wall-clock hour: the 01:00 cell spans 2 ticks
+        // to absorb the gap, so the hour row still lines up with the pinned day span.
+        const dstStart = adapter.date('2026-03-08T00:00:00', 'America/New_York');
+        const dstEnd = adapter.endOfDay(adapter.addDays(dstStart, 1));
+
+        const hourCells = iterate(adapter, 'hour', 'hour', dstStart, dstEnd, undefined, HOUR_RANGE);
+        const dayCells = iterate(adapter, 'day', 'hour', dstStart, dstEnd, undefined, HOUR_RANGE);
+
+        expect(hourCells.length).to.equal(11);
+        expect(dayCells.map((cell) => cell.spanInTicks)).to.deep.equal([6, 6]);
+        const firstDayTotal = hourCells
+          .slice(0, 5)
+          .reduce((sum, cell) => sum + cell.spanInTicks, 0);
+        expect(firstDayTotal).to.equal(6);
+      });
+    });
   });
 
   describe('boundary clamping', () => {

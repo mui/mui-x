@@ -79,6 +79,8 @@ describe('getDisplayedHourRange', () => {
     expect(() => {
       getDisplayedHourRange(20, 8, 'viewConfig.week');
       getDisplayedHourRange(20, 8, 'presetConfig.dayAndHour');
+      // The repeated source must not warn a second time.
+      getDisplayedHourRange(20, 8, 'viewConfig.week');
     }).toWarnDev([
       'MUI X Scheduler: `viewConfig.week` received an invalid hour range',
       'MUI X Scheduler: `presetConfig.dayAndHour` received an invalid hour range',

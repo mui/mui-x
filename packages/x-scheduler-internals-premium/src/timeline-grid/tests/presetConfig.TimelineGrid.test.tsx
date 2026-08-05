@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, act } from '@mui/internal-test-utils';
+import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -10,6 +10,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  mockElementBounds,
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
@@ -259,6 +260,35 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
 
       setPlaceholder(10, 12);
       expect(screen.getByTestId('placeholder')).not.to.equal(null);
+    });
+
+    it('should cap a pointer creation on the exact right edge to the last visible slot', () => {
+      let store: AnyEventCalendarStore | null = null;
+      render(
+        <Grid
+          events={[]}
+          presetConfig={PRESET_CONFIG}
+          onStoreMount={(s) => {
+            store = s;
+          }}
+        />,
+      );
+
+      const row = screen.getByTestId('events-row');
+      // 1px per axis minute.
+      mockElementBounds(row, { left: 0, width: AXIS_MINUTES, height: 40 });
+
+      // Axis minute 2880 is the seam after the last visible day: uncapped it would
+      // resolve to July 7, outside the collection, where the event would not render.
+      fireEvent.click(row, { clientX: AXIS_MINUTES });
+
+      expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
+      expect(store!.state.occurrencePlaceholder?.start).toEqualDateTime(
+        adapter.addMinutes(
+          adapter.addHours(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 3), 19),
+          30,
+        ),
+      );
     });
 
     it('should start the keyboard event creation at the first visible hour', async () => {
