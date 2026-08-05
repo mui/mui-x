@@ -1,5 +1,5 @@
 export type {
   EventTimelinePremiumPreset,
   EventTimelinePremiumPresetConfig,
-  EventTimelinePremiumHourRangePresetConfig,
+  EventTimelinePremiumHourPresetConfig,
 } from '@mui/x-scheduler-internals-premium/models';

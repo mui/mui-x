@@ -140,19 +140,21 @@ export interface PresetDefinition {
 /**
  * Per-preset user configuration for the hour-resolution presets.
  */
-export interface EventTimelinePremiumHourRangePresetConfig {
+export interface EventTimelinePremiumHourPresetConfig {
   /**
    * Inclusive start of the displayed hour range.
-   * Must be a whole number between 0 and 23 and lower than `endTime`; otherwise the
+   * Must be a whole hour between 0 and 24, lower than `endTime`; otherwise the
    * full day is displayed and a warning is logged in development.
    * @default 0
    */
   startTime?: number;
   /**
    * Exclusive end of the displayed hour range: the last rendered hour cell is
-   * `endTime - 1`, so `{ startTime: 8, endTime: 20 }` displays 08:00 → 19:59.
-   * Must be a whole number between 1 and 24 and greater than `startTime`; otherwise
-   * the full day is displayed and a warning is logged in development.
+   * `endTime - 1`, so `{ startTime: 8, endTime: 20 }` renders the cells 8 AM through
+   * 7 PM and displays the 08:00–20:00 window (an event ending exactly at 20:00 is
+   * still fully visible).
+   * Must be a whole hour between 0 and 24, greater than `startTime`; otherwise the
+   * full day is displayed and a warning is logged in development.
    * @default 24
    */
   endTime?: number;
@@ -165,5 +167,5 @@ export interface EventTimelinePremiumPresetConfig {
   /**
    * Configuration applied to the `dayAndHour` preset.
    */
-  dayAndHour?: EventTimelinePremiumHourRangePresetConfig;
+  dayAndHour?: EventTimelinePremiumHourPresetConfig;
 }

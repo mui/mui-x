@@ -115,6 +115,21 @@ describe('timeline-axis', () => {
       expect(offset).to.equal(120 * MINUTE);
       expect(timelineAxisOffsetToDate(adapter, axis, offset)).toEqualDateTime(date);
     });
+
+    it('should resolve an offset inside the spring-forward gap to the next existing hour', () => {
+      // 02:00 does not exist on Mar 8 2026: the offset resolves to 03:00 and does not
+      // round-trip (known limitation, documented on `timelineAxisOffsetToDate`).
+      const springStart = adapter.date('2026-03-08T00:00:00', 'America/New_York');
+      const axis = {
+        start: springStart,
+        end: adapter.endOfDay(springStart),
+        dayStartMinute: 0,
+        dayEndMinute: 1440,
+      };
+      const date = timelineAxisOffsetToDate(adapter, axis, 120 * MINUTE);
+      expect(adapter.getHours(date)).to.equal(3);
+      expect(dateToTimelineAxisOffsetMs(adapter, axis, date)).to.equal(180 * MINUTE);
+    });
   });
 
   describe('isStartMinuteOutsideAxisWindow', () => {

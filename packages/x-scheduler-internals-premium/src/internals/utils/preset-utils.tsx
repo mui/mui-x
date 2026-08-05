@@ -60,7 +60,11 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     // the CSS tick count to `days × 24` so the grid width stays stable across DST
     // and matches the hour cells `iterate()` emits per day — except when a DST
     // transition falls inside the visible window, where `iterate()` emits one cell
-    // more or fewer for that day (known limitation).
+    // more or fewer for that day (known limitation). With a trimmed hour window the
+    // transition cell's span absorbs the shift and the rows stay aligned, unless
+    // `startTime` equals the spring-forward gap hour itself (e.g. `startTime: 2` in
+    // US/EU timezones), where the absorbing cell is skipped and the hour row comes
+    // up one tick short (same class of limitation).
     getCssUnitCount: () => DAY_AND_HOUR_DAYS * 24,
     navigate: (adapter, date, amount) => adapter.addDays(date, amount),
   },

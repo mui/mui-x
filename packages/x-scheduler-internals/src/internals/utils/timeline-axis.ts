@@ -87,7 +87,9 @@ export function getTimelineAxisDurationMs(adapter: TemporalAdapter, axis: Timeli
  * Offsets are not clamped: values outside the axis extend it day by day, following the
  * same piecewise scale.
  * The date is built from wall-clock components so it round-trips with
- * `dateToTimelineAxisOffsetMs` across DST transitions.
+ * `dateToTimelineAxisOffsetMs` for every wall-clock time that exists on that day.
+ * Offsets landing in the hour skipped by a spring-forward transition resolve to the
+ * next existing hour and do not round-trip (known limitation).
  */
 export function timelineAxisOffsetToDate(
   adapter: TemporalAdapter,
