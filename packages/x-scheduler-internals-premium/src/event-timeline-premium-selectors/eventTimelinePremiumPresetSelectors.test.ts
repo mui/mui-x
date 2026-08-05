@@ -169,6 +169,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
       expect(config.dayStartMinute).to.equal(0);
       expect(config.dayEndMinute).to.equal(24 * 60);
+      expect(config.durationMs).to.equal(4 * 24 * 60 * 60_000);
     });
 
     it('should trim the tickCount and expose the hour window when the dayAndHour preset has a startTime / endTime', () => {
@@ -185,6 +186,8 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       expect(config.tickCount).to.equal(4 * 12);
       expect(config.dayStartMinute).to.equal(8 * 60);
       expect(config.dayEndMinute).to.equal(20 * 60);
+      // Precomputed once here so per-row hooks do not re-derive it on every render.
+      expect(config.durationMs).to.equal(4 * 12 * 60 * 60_000);
       // The range itself stays midnight-based: only the rendered hours are trimmed.
       expect(config.start).toEqualDateTime('2025-07-03T00:00:00Z');
       expect(config.end).toEqualDateTime('2025-07-06T23:59:59.999Z');

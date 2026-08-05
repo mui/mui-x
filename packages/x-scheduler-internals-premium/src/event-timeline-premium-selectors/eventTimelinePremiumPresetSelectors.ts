@@ -1,6 +1,9 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getDisplayedHourRange } from '@mui/x-scheduler-internals/internals';
+import {
+  getDisplayedHourRange,
+  getTimelineAxisDurationMs,
+} from '@mui/x-scheduler-internals/internals';
 import type { EventTimelinePremiumPresetConfig } from '../models/preset';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../internals/utils/preset-utils';
@@ -55,6 +58,9 @@ export const eventTimelinePremiumPresetSelectors = {
           ? (fullDayTickCount * (hourRange.endTime - hourRange.startTime)) / 24
           : fullDayTickCount;
 
+      const dayStartMinute = hourRange.startTime * 60;
+      const dayEndMinute = hourRange.endTime * 60;
+
       return {
         tickCount,
         start,
@@ -63,8 +69,15 @@ export const eventTimelinePremiumPresetSelectors = {
         headers,
         timeResolution,
         hourRange,
-        dayStartMinute: hourRange.startTime * 60,
-        dayEndMinute: hourRange.endTime * 60,
+        dayStartMinute,
+        dayEndMinute,
+        // Precomputed once per config change: per-row hooks read it on every render.
+        durationMs: getTimelineAxisDurationMs(adapter, {
+          start,
+          end,
+          dayStartMinute,
+          dayEndMinute,
+        }),
       };
     },
   ),

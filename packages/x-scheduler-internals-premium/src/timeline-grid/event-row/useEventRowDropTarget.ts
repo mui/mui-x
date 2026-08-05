@@ -7,7 +7,6 @@ import type { SchedulerResourceId, SchedulerEvent } from '@mui/x-scheduler-inter
 import {
   useDropTarget,
   dateToTimelineAxisOffsetMs,
-  getTimelineAxisDurationMs,
   timelineAxisOffsetToDate,
 } from '@mui/x-scheduler-internals/internals';
 import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
@@ -40,7 +39,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
   // Cursor offsets are measured in axis milliseconds: with a trimmed hour window the
   // hidden hours take no space, so px↔date conversions go through the axis helpers.
-  const collectionDurationMs = getTimelineAxisDurationMs(adapter, presetConfig);
+  const collectionDurationMs = presetConfig.durationMs;
 
   const getCursorPositionInElementMs: TimelineGridEventRowContext['getCursorPositionInElementMs'] =
     useStableCallback(({ input, elementRef }) => {
