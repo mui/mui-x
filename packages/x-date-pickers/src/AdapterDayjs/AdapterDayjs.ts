@@ -286,13 +286,15 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   /**
    * On dates predating the timezone standardization, IANA falls back on the Local Mean Time of the
    * location, whose offset is not a round number of minutes (`Asia/Kolkata` is `GMT+05:53:28`).
-   * `dayjs` then moves the day of the month when only the year or the month was meant to change,
-   * and the accessors of the result (`date()`, `daysInMonth()`) disagree with its formatted value,
-   * hence the round-trip through `format`.
+   * `dayjs` then moves the day of the month when only the year or the month was meant to change.
+   * `daysInMonth()` is unusable on such a value because it derives from the equally broken
+   * `endOf('month')`, hence computing it on a plain UTC value instead.
    * See https://github.com/mui/mui-x/issues/23163
    */
   private restoreDayOfMonth = (value: Dayjs, reference: Dayjs) => {
-    if (!this.hasUTCPlugin() || this.getTimezone(value) === 'system') {
+    const timezone = this.getTimezone(value);
+    // `system` and `UTC` values keep an offset that matches their instant, so they are never affected.
+    if (!this.hasUTCPlugin() || timezone === 'system' || timezone === 'UTC') {
       return value;
     }
 
@@ -305,8 +307,8 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     }
 
     // A shorter target month legitimately clamps the day (`Jan 31` + 1 month is `Feb 28`).
-    const expectedDayOfMonth = Math.min(Number(reference.format('D')), wallClock.daysInMonth());
-    if (wallClock.date() === expectedDayOfMonth) {
+    const expectedDayOfMonth = Math.min(reference.date(), wallClock.daysInMonth());
+    if (value.date() === expectedDayOfMonth) {
       return value;
     }
 

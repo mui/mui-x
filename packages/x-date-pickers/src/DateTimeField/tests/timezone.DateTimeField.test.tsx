@@ -4,7 +4,7 @@ import type { DateTime } from 'luxon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
-import type { PickerValue } from '../../internals/models';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
