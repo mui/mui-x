@@ -23,11 +23,13 @@ const DEPENDENCY_TERMINAL_SIZE = 10;
  */
 const DEPENDENCY_TERMINAL_HALO = 7;
 /**
- * How long a revealed terminal survives the pointer resting on nothing. A diagonal
- * exit through the event's corner crosses the empty cell before reaching the halo:
- * hiding on the same frame would pull the terminal out from under the pointer.
+ * The invisible proximity surface keeping a revealed terminal alive: while the
+ * pointer stays within this distance of the event or its terminal, the reveal
+ * survives crossing empty cells (a diagonal exit through the event's corner would
+ * otherwise pull the terminal out from under the pointer). Beyond it the terminal
+ * hides immediately — proximity, not time, defines the hover.
  */
-const DEPENDENCY_TERMINAL_HIDE_DELAY_MS = 250;
+const DEPENDENCY_TERMINAL_GRACE_MARGIN = 12;
 
 const DependencyTerminalsLayer = styled('div', {
   name: 'MuiEventTimeline',
@@ -136,36 +138,23 @@ function DependencyTerminalsLayerImpl() {
   // terminals directly (the same DOM-driven technique as the rubber band), so
   // pointer-rate transitions do not rebuild the layer.
   const revealedTerminalRef = React.useRef<Element | null>(null);
-  const hideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const cancelPendingHide = useStableCallback(() => {
-    if (hideTimeoutRef.current !== null) {
-      clearTimeout(hideTimeoutRef.current);
-      hideTimeoutRef.current = null;
-    }
-  });
-  const revealTerminal = useStableCallback((terminal: Element | null) => {
-    cancelPendingHide();
-    if (revealedTerminalRef.current === terminal) {
-      return;
-    }
-    revealedTerminalRef.current?.removeAttribute('data-visible');
-    terminal?.setAttribute('data-visible', '');
-    revealedTerminalRef.current = terminal;
-  });
-  // Hiding waits out a grace period so a diagonal exit through the event's corner —
-  // which crosses the empty cell before reaching the halo — does not pull the
-  // terminal out from under the pointer. Anything the pointer reaches in time
-  // (`revealTerminal`, including with another terminal) cancels the pending hide.
-  const scheduleHideTerminal = useStableCallback(() => {
-    if (revealedTerminalRef.current === null || hideTimeoutRef.current !== null) {
-      return;
-    }
-    hideTimeoutRef.current = setTimeout(() => {
-      hideTimeoutRef.current = null;
-      revealTerminal(null);
-    }, DEPENDENCY_TERMINAL_HIDE_DELAY_MS);
-  });
-  React.useEffect(() => cancelPendingHide, [cancelPendingHide]);
+  // The event appearance anchoring the revealed terminal: together they define the
+  // proximity surface the pointer may roam without dropping the reveal.
+  const revealedEventRef = React.useRef<Element | null>(null);
+  const revealTerminal = useStableCallback(
+    (terminal: Element | null, eventElement: Element | null = null) => {
+      if (revealedTerminalRef.current === terminal) {
+        if (eventElement !== null) {
+          revealedEventRef.current = eventElement;
+        }
+        return;
+      }
+      revealedTerminalRef.current?.removeAttribute('data-visible');
+      terminal?.setAttribute('data-visible', '');
+      revealedTerminalRef.current = terminal;
+      revealedEventRef.current = terminal === null ? null : eventElement;
+    },
+  );
 
   // A native drag suppresses pointer events, so the hover tracked before the gesture
   // goes stale by its end (the pointer may have dropped far away): reset it when the
@@ -187,60 +176,79 @@ function DependencyTerminalsLayerImpl() {
     }
     // Escaped for use inside a quoted attribute selector.
     const escapeAttributeValue = (value: string) => value.replace(/["\\]/g, '\\$&');
-    const getTerminalFor = (target: EventTarget | null): Element | null => {
+    const handlePointerOver = (event: PointerEvent) => {
+      const target = event.target;
       if (!(target instanceof Element)) {
-        return null;
+        return;
       }
-      // A terminal keeps itself revealed while hovered.
-      const handle = target.closest('[data-dependency-terminal]');
-      if (handle !== null) {
-        return handle;
+      // A terminal keeps itself revealed while hovered — it is only hit-testable
+      // while revealed, so this is always the terminal already tracked.
+      const terminal = target.closest('[data-dependency-terminal]');
+      if (terminal !== null) {
+        revealTerminal(terminal);
+        return;
       }
-      const occurrenceKey =
-        target.closest('[data-occurrence-key]')?.getAttribute('data-occurrence-key') ?? null;
+      const eventElement = target.closest('[data-occurrence-key]');
+      if (eventElement === null) {
+        // Resting on anything else (empty cells, hit bands) neither reveals nor
+        // hides: the proximity surface on pointermove decides when the reveal ends.
+        return;
+      }
+      const occurrenceKey = eventElement.getAttribute('data-occurrence-key')!;
       // The row element carries the resource: the occurrence key alone does not
       // identify a row appearance (an event assigned to several resources repeats the
       // same key on each row).
       const resourceId =
         target.closest('[data-resource-id]')?.getAttribute('data-resource-id') ?? null;
-      if (occurrenceKey === null || resourceId === null) {
-        return null;
-      }
-      return (
-        layerRef.current?.querySelector(
-          `[data-dependency-terminal="${escapeAttributeValue(occurrenceKey)}"][data-resource-id="${escapeAttributeValue(resourceId)}"]`,
-        ) ?? null
-      );
-    };
-    const handlePointerOver = (event: PointerEvent) => {
-      // The arrows' invisible hit bands ride over the events: crossing one must not
-      // hide the terminal the hover already revealed, or the pointer can never reach
-      // a terminal a band covers.
-      if (
-        event.target instanceof Element &&
-        event.target.closest('[data-dependency-interactions]')
-      ) {
+      if (resourceId === null) {
         return;
       }
-      const next = getTerminalFor(event.target);
-      if (next === null) {
-        scheduleHideTerminal();
-      } else {
-        revealTerminal(next);
+      const next =
+        layerRef.current?.querySelector(
+          `[data-dependency-terminal="${escapeAttributeValue(occurrenceKey)}"][data-resource-id="${escapeAttributeValue(resourceId)}"]`,
+        ) ?? null;
+      if (next !== null) {
+        revealTerminal(next, eventElement);
       }
     };
-    // Leaving the whole grid is unambiguous: no rescue is coming, hide right away.
+    // The reveal ends when the pointer leaves the proximity surface around the event
+    // and its terminal — not when it merely steps onto an empty cell, which a
+    // diagonal exit through the event's corner does on its way to the halo.
+    const handlePointerMove = (event: PointerEvent) => {
+      const terminal = revealedTerminalRef.current;
+      if (terminal === null) {
+        return;
+      }
+      const nearAnchor = [revealedEventRef.current, terminal].some((anchor) => {
+        if (anchor === null) {
+          return false;
+        }
+        const rect = anchor.getBoundingClientRect();
+        return (
+          event.clientX >= rect.left - DEPENDENCY_TERMINAL_GRACE_MARGIN &&
+          event.clientX <= rect.right + DEPENDENCY_TERMINAL_GRACE_MARGIN &&
+          event.clientY >= rect.top - DEPENDENCY_TERMINAL_GRACE_MARGIN &&
+          event.clientY <= rect.bottom + DEPENDENCY_TERMINAL_GRACE_MARGIN
+        );
+      });
+      if (!nearAnchor) {
+        revealTerminal(null);
+      }
+    };
+    // Leaving the whole grid is unambiguous: hide right away.
     const handlePointerLeave = () => {
       revealTerminal(null);
     };
     container.addEventListener('pointerover', handlePointerOver);
+    container.addEventListener('pointermove', handlePointerMove);
     container.addEventListener('pointerleave', handlePointerLeave);
     return () => {
       container.removeEventListener('pointerover', handlePointerOver);
+      container.removeEventListener('pointermove', handlePointerMove);
       container.removeEventListener('pointerleave', handlePointerLeave);
       revealTerminal(null);
     };
-  }, [mounted, revealTerminal, scheduleHideTerminal]);
+  }, [mounted, revealTerminal]);
 
   if (!mounted) {
     return null;

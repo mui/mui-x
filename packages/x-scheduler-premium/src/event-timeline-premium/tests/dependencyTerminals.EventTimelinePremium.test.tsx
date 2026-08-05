@@ -142,40 +142,27 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(getTerminal('Event B')!.hasAttribute('data-visible')).to.equal(true);
     });
 
-    it('should keep the terminal revealed for a grace period when the pointer exits through a gap', () => {
-      vi.useFakeTimers();
-      try {
-        renderTimeline({ events: [eventA, eventB], dependencies: [] });
+    it('should keep the terminal revealed while the pointer stays near the event', () => {
+      renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
-        fireEvent.pointerOver(getEventElement('Event A'));
-        expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
+      fireEvent.pointerOver(getEventElement('Event A'));
+      expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
 
-        // A diagonal exit through the event's corner lands on the empty cell before
-        // reaching the halo: the reveal survives the crossing instead of vanishing
-        // under the pointer.
-        const cell = document.querySelector<HTMLElement>(
-          `.${eventTimelinePremiumClasses.eventsCell}`,
-        )!;
-        fireEvent.pointerOver(cell);
-        expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
+      mockElementBounds(getEventElement('Event A'), { left: 0, top: 0, width: 100, height: 20 });
+      const cell = document.querySelector<HTMLElement>(
+        `.${eventTimelinePremiumClasses.eventsCell}`,
+      )!;
 
-        // Reaching the terminal within the grace period cancels the hide for good.
-        fireEvent.pointerOver(getTerminal('Event A')!);
-        act(() => {
-          vi.advanceTimersByTime(1000);
-        });
-        expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
+      // A diagonal exit through the event's corner rests on the empty cell, still
+      // within the proximity surface around the event: the reveal survives.
+      fireEvent.pointerOver(cell);
+      fireEvent.pointerMove(cell, { clientX: 108, clientY: 28 });
+      expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
 
-        // Without a rescue, the pending hide lands after the grace period.
-        fireEvent.pointerOver(cell);
-        expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
-        act(() => {
-          vi.advanceTimersByTime(1000);
-        });
-        expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(false);
-      } finally {
-        vi.useRealTimers();
-      }
+      // Straying beyond the surface hides immediately — proximity, not a timer,
+      // defines the hover.
+      fireEvent.pointerMove(cell, { clientX: 160, clientY: 28 });
+      expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(false);
     });
 
     it('should keep the terminal revealed when the pointer crosses an arrow hit-area', () => {
