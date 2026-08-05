@@ -163,6 +163,70 @@ describe('<DataGrid /> - Data source', () => {
     });
   });
 
+  describe('incomplete filter items', () => {
+    const getSentFilterItems = () => {
+      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      return JSON.parse(url.searchParams.get('filterModel')!).items;
+    };
+
+    // See https://github.com/mui/mui-x/issues/23243
+    it('should not send a filter item without a value to the data source', async () => {
+      const { setProps } = render(
+        <TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />,
+      );
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      setProps({
+        filterModel: { items: [{ id: 1, field: 'id', operator: 'contains' }] },
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      expect(getSentFilterItems()).to.deep.equal([]);
+    });
+
+    it('should not send a filter item whose array value is empty', async () => {
+      const { setProps } = render(
+        <TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />,
+      );
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      setProps({
+        filterModel: { items: [{ id: 1, field: 'id', operator: 'isAnyOf', value: [] }] },
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      expect(getSentFilterItems()).to.deep.equal([]);
+    });
+
+    // Operators like `isEmpty` are complete without a value.
+    // See https://github.com/mui/mui-x/issues/5402
+    it('should send a valueless filter item whose operator requires no value', async () => {
+      const { setProps } = render(
+        <TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />,
+      );
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      setProps({
+        filterModel: { items: [{ id: 1, field: 'id', operator: 'isEmpty' }] },
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      expect(getSentFilterItems()).to.deep.equal([{ id: 1, field: 'id', operator: 'isEmpty' }]);
+    });
+  });
+
   it('should re-fetch the data on sort change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
