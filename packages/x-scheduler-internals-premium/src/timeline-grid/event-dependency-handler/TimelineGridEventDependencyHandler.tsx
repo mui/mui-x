@@ -7,7 +7,6 @@ import type {
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
 import { useDragHandle } from '@mui/x-scheduler-internals/internals';
-import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -15,11 +14,15 @@ import { TimelineGridEventDependencyHandlerDataAttributes } from './TimelineGrid
 
 /**
  * Narrows a drag payload to this handle's drag data — the one definition shared by
- * the creation monitor and the event drop targets.
+ * the creation monitor and the event drop targets. A local narrow rather than a
+ * `buildIsValidDropTarget` guard: the terminal drag never produces an occurrence
+ * placeholder, so it does not register in `EventDropDataLookup`.
  */
-export const isDependencyHandleDrag = buildIsValidDropTarget([
-  'TimelineGridEventDependencyHandler',
-]);
+export function isDependencyHandleDrag(
+  data: any,
+): data is TimelineGridEventDependencyHandler.DragData {
+  return data.source === 'TimelineGridEventDependencyHandler';
+}
 
 /**
  * The terminal on the end edge of an event: dragging it onto another event creates a

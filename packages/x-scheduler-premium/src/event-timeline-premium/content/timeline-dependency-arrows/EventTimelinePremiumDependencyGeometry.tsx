@@ -76,8 +76,30 @@ export function useDependencyGeometry(): EventTimelinePremiumDependencyGeometryV
  * the routing on every render of their own. Renders no DOM. Deliberately not
  * subscribed to the creation gesture: only the layers drawing it pay for its
  * start/snap/end updates.
+ * Pass-through when the dependencies feature is disabled: the overlays return null
+ * before reading the context, and the timeline must not pay the provider's scroll and
+ * rows-meta subscriptions for a feature it does not use.
  */
 export function EventTimelinePremiumDependencyGeometryProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const store = useEventTimelinePremiumStoreContext();
+  const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
+
+  if (!enabled) {
+    return children;
+  }
+
+  return (
+    <EventTimelinePremiumDependencyGeometryProviderImpl>
+      {children}
+    </EventTimelinePremiumDependencyGeometryProviderImpl>
+  );
+}
+
+function EventTimelinePremiumDependencyGeometryProviderImpl({
   children,
 }: {
   children: React.ReactNode;

@@ -1,10 +1,9 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerDependency, SchedulerDependencyId } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
-import { classifyDependencyEvent } from '../internals/utils/dependency-utils';
+import { classifyDependencyEvent, isDependencyReadOnly } from '../internals/utils/dependency-utils';
 
 function groupByEventId(
   dependencies: readonly SchedulerDependency[],
@@ -136,9 +135,6 @@ export const eventTimelinePremiumDependencySelectors = {
     if (!dependency) {
       return false;
     }
-    return (
-      schedulerEventSelectors.isReadOnly(state, dependency.source) ||
-      schedulerEventSelectors.isReadOnly(state, dependency.target)
-    );
+    return isDependencyReadOnly(state, dependency);
   }),
 };

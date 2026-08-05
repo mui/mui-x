@@ -256,6 +256,38 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(eventTimelinePremiumDependencySelectors.selectedId(state)).to.equal(null);
   });
 
+  it('should report a dependency as read-only when either of its events is read-only', () => {
+    const readOnlyEvent = EventBuilder.new().id('event-ro').readOnly().build();
+    const DEP_SOURCE_RO: SchedulerDependency = {
+      id: 'dep-source-ro',
+      source: 'event-ro',
+      target: 'event-b',
+      type: 'FinishToStart',
+    };
+    const DEP_TARGET_RO: SchedulerDependency = {
+      id: 'dep-target-ro',
+      source: 'event-a',
+      target: 'event-ro',
+      type: 'FinishToStart',
+    };
+    const state = getEventTimelinePremiumStateFromParameters({
+      resources: TEST_RESOURCES,
+      events: [eventA, eventB, readOnlyEvent],
+      dependencies: [DEP_1, DEP_SOURCE_RO, DEP_TARGET_RO],
+    });
+
+    expect(eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'dep-1')).to.equal(false);
+    expect(
+      eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'dep-source-ro'),
+    ).to.equal(true);
+    expect(
+      eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'dep-target-ro'),
+    ).to.equal(true);
+    // A null or unknown id resolves to false: there is no dependency to protect.
+    expect(eventTimelinePremiumDependencySelectors.isModelReadOnly(state, null)).to.equal(false);
+    expect(eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'nope')).to.equal(false);
+  });
+
   it('should keep only the last dependency when two of them share the same id', () => {
     const firstDependency: SchedulerDependency = {
       id: 'dup-1',
