@@ -34,7 +34,7 @@ Same changes as in `@mui/x-data-grid-pro@9.11.0`.
 
 #### `@mui/x-date-pickers@9.11.0`
 
-Internal changes.
+- [pickers] Fix day shift when editing dates predating timezone standardization (#23296) @JCQuintas
 
 #### `@mui/x-date-pickers-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
