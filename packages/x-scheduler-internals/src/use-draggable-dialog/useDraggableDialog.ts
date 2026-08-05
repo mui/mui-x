@@ -4,6 +4,7 @@ import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { preventUnhandled } from '@atlaskit/pragmatic-drag-and-drop/prevent-unhandled';
 import type { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/types';
+import { isCoarsePointer } from '../internals/utils/pointer-utils';
 
 const getDeltas = (location: DragLocationHistory) => {
   const deltaX = location.current.input.clientX - location.initial.input.clientX;
@@ -34,11 +35,7 @@ export function useDraggableDialog(
 
     // Skip draggable wiring on a coarse pointer: `draggable="true"` blocks typing into the dialog's
     // form fields on touch, and native drag-and-drop never starts from touch anyway.
-    if (
-      typeof window !== 'undefined' &&
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(pointer: coarse)').matches
-    ) {
+    if (isCoarsePointer()) {
       return undefined;
     }
 

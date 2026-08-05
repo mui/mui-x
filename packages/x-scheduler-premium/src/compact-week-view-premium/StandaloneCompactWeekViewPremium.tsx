@@ -38,13 +38,19 @@ const StandaloneCompactWeekViewPremium = React.forwardRef(function StandaloneCom
     typeof props
   >(props);
 
+  const { localeText, ...other } = forwardedProps;
+
   return (
     <ResponsiveTypographyContainer>
-      <EventCalendarProvider {...parameters} storeClass={EventCalendarPremiumStore}>
+      <EventCalendarProvider
+        {...parameters}
+        storeClass={EventCalendarPremiumStore}
+        localeText={localeText}
+      >
         <EventEditingOptionalRenderersContext.Provider
           value={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}
         >
-          <CompactWeekView ref={forwardedRef} {...forwardedProps} />
+          <CompactWeekView ref={forwardedRef} {...other} />
         </EventEditingOptionalRenderersContext.Provider>
         {watermark}
       </EventCalendarProvider>

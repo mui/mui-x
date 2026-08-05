@@ -147,9 +147,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
       elementProps,
       {
         id,
-        // Only an interactive event is announced as a button labelled by its column header. A
-        // non-interactive one stays a plain `div`: no role and no `tabIndex`, so it is neither
-        // focusable nor semantic, and its text content is still readable by assistive tech.
+        // A non-interactive event stays a plain div: no role, no tabIndex, no header label.
         ...(interactive ? { 'aria-labelledby': `${columnHeaderId} ${id}` } : undefined),
         style: {
           [CalendarGridTimeEventCssVars.yPosition]: `${position * 100}%`,

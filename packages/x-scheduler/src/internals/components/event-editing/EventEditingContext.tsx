@@ -39,23 +39,15 @@ export function useEventEditingContext(): EventEditingContextValue {
 export function EventEditingProvider(props: EventEditingProviderProps) {
   const { children, surface } = props;
   const store = useSchedulerStoreContext();
-  // `anchorRef` for same-tick reads; `anchor` is the reactive mirror that re-positions the surfaces.
-  const anchorRef = React.useRef<HTMLElement | null>(null);
-  const [anchor, setAnchorState] = React.useState<HTMLElement | null>(null);
-
-  const setAnchor = useStableCallback((node: HTMLElement | null) => {
-    anchorRef.current = node;
-    setAnchorState(node);
-  });
+  const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
 
   const startEditing = useStableCallback(
     (
       forwardedAnchorRef: React.RefObject<HTMLElement | null>,
       occurrence: SchedulerRenderableEventOccurrence,
     ) => {
-      // Set the anchor synchronously before the store write so the surface, which re-renders from the
-      // store update, reads a populated anchor on the same tick.
-      setAnchor(forwardedAnchorRef?.current ?? null);
+      // Batched with the store write below, so the surface never renders anchored to `null`.
+      setAnchor(forwardedAnchorRef.current);
       const isCreating = schedulerOccurrencePlaceholderSelectors.isCreating(store.state);
       const isReadOnly = schedulerEventSelectors.isReadOnly(store.state, occurrence.id);
       store.startEditing(occurrence, getInitialEditingMode(surface, { isCreating, isReadOnly }));
@@ -67,8 +59,8 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
   });
 
   const contextValue = React.useMemo<EventEditingContextValue>(
-    () => ({ startEditing, stopEditing, anchorRef, anchor, setAnchor }),
-    [startEditing, stopEditing, anchor, setAnchor],
+    () => ({ startEditing, stopEditing, anchor, setAnchor }),
+    [startEditing, stopEditing, anchor],
   );
 
   return (
@@ -88,9 +80,8 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
 
   const isEdited = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
-  // Re-anchor while edited, so the surface follows a recurring scope change that swaps the node: the
-  // repointed occurrence's trigger mounts and re-anchors as the old node unmounts. Relies on the grid
-  // mounting every occurrence of a rendered day (no time virtualization); revisit if that changes.
+  // Re-anchor while edited so the surface follows a scope change that swaps the node.
+  // Assumes every occurrence of a rendered day is mounted (no time virtualization).
   useIsoLayoutEffect(() => {
     if (!isEdited) {
       return undefined;

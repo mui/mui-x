@@ -13,6 +13,19 @@ export function useBlockScrollWhileArmed(parameters: { active: boolean; ignoreSe
       return undefined;
     }
     const preventScroll = (event: Event) => {
+      // Multi-touch is a pinch-zoom, not a scroll. Blocking it would break magnification (WCAG 1.4.4).
+      // Duck-typed because `TouchEvent` is undefined in JSDOM and on non-touch browsers.
+      const touches = (event as TouchEvent).touches;
+      if (touches != null && touches.length > 1) {
+        return;
+      }
+      // Ctrl/meta + wheel is a zoom too, so let it through for the same reason.
+      if (
+        event.type === 'wheel' &&
+        ((event as WheelEvent).ctrlKey || (event as WheelEvent).metaKey)
+      ) {
+        return;
+      }
       const target = event.composedPath()[0];
       if (ignoreSelector && target instanceof Element && target.closest(ignoreSelector)) {
         return;

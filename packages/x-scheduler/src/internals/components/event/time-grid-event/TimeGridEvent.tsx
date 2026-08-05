@@ -345,9 +345,8 @@ const TimeGridEventResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
   position: 'absolute',
   zIndex: 3,
   cursor: 'ns-resize',
-  // Base layout: a thin, full-width bar. Kept outside the media queries so it stays the fallback on
-  // devices matching neither of them (`hover: none` + `pointer: fine`, e.g. stylus-primary browsers),
-  // where the handle would otherwise collapse to a 0×0 box. `TOUCH_MEDIA` overrides it below.
+  // Outside the media queries, so devices matching neither (`hover: none` + `pointer: fine`) still
+  // get a sized handle instead of a 0x0 box.
   height: 4,
   left: 0,
   right: 0,
@@ -374,9 +373,8 @@ const TimeGridEventResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
   },
 });
 
-// A `CalendarGrid.TimeEvent` rendered non-interactively, so it can host pointer resize handles for
-// sizing on touch without becoming a focusable button. No JS device flag, so the desktop-vs-touch
-// look is split in CSS.
+// Non-interactive, so it can host the touch resize handles without becoming a focusable button.
+// The desktop-vs-touch look is split in CSS, with no JS device flag.
 const TimeGridEventPlaceholderRoot = styled(CalendarGrid.TimeEvent, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventPlaceholder',
@@ -494,9 +492,8 @@ const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlacehol
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={placeholderHasResizeHandles || undefined}
-      // Inert preview: it only hosts the pointer resize handles, so it must not be a focusable
-      // button. Rendering it non-interactive keeps it out of the tab order without `aria-hidden`,
-      // which would otherwise hide a focusable node from assistive tech.
+      // Non-interactive keeps the preview out of the tab order without `aria-hidden`, which would
+      // hide a focusable node from assistive tech.
       interactive={false}
       {...rootDataAttributes}
       {...rootPositionProps}

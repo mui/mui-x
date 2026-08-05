@@ -38,13 +38,19 @@ const StandaloneCompactDayViewPremium = React.forwardRef(function StandaloneComp
     typeof props
   >(props);
 
+  const { localeText, ...other } = forwardedProps;
+
   return (
     <ResponsiveTypographyContainer>
-      <EventCalendarProvider {...parameters} storeClass={EventCalendarPremiumStore}>
+      <EventCalendarProvider
+        {...parameters}
+        storeClass={EventCalendarPremiumStore}
+        localeText={localeText}
+      >
         <EventEditingOptionalRenderersContext.Provider
           value={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}
         >
-          <CompactDayView ref={forwardedRef} {...forwardedProps} />
+          <CompactDayView ref={forwardedRef} {...other} />
         </EventEditingOptionalRenderersContext.Provider>
         {watermark}
       </EventCalendarProvider>

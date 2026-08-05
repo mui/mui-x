@@ -1,6 +1,7 @@
 export * from './SchedulerStore';
 export * from './event-utils';
 export * from './drag-utils';
+export * from './pointer-utils';
 export * from './useDropTarget';
 export * from './useEventResizeHandler';
 export * from './resize-utils';

@@ -9,9 +9,9 @@ export interface EventDialogProps extends DialogProps {
    */
   occurrence: SchedulerRenderableEventOccurrence;
   /**
-   * The anchor element for the popover positioning.
+   * The element the dialog is positioned against.
    */
-  anchorRef: React.RefObject<HTMLElement | null>;
+  anchor: HTMLElement | null;
   /**
    * Handles the close action of the popover.
    */

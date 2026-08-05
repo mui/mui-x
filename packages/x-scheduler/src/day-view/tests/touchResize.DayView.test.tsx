@@ -85,9 +85,8 @@ describe('DayView - touch resize', () => {
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
   });
 
-  // The preview hosts the pointer resize handles, so it is a `CalendarGrid.TimeEvent` — but a
-  // non-interactive one. It must never be a focusable `role="button"`, and must not rely on
-  // `aria-hidden` (which on a focusable node is an `aria-hidden-focus` violation).
+  // The preview hosts the resize handles but must never be a focusable button, nor use
+  // `aria-hidden` to hide one (an `aria-hidden-focus` violation).
   it('renders the resize preview as a non-focusable, non-hidden element', async () => {
     renderResizableEvent();
     const eventElement = getEvent();

@@ -85,8 +85,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   const store = useSchedulerStoreContext();
   const { schedulerId, classes } = useEventCalendarStyledContext();
 
-  // The popover stays open while an editing surface is open on top of it; close it once that surface
-  // closes (editing cleared on the store). The subscription only lives while the popover is mounted.
+  // The popover stays open behind the editing surface, so close it when that surface closes.
   React.useEffect(() => {
     return store.registerStoreEffect(
       (state) => state.editingOccurrence != null,
@@ -143,8 +142,9 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
     setState({ open: true, anchorEl, data });
   });
 
+  // Keep the anchor and data, else the popover unmounts before its exit transition can play.
   const closePopover = useStableCallback(() => {
-    setState((prev) => (prev.open ? { open: false, anchorEl: null, data: null } : prev));
+    setState((prev) => (prev.open ? { ...prev, open: false } : prev));
   });
 
   const contextValue = React.useMemo<MoreEventsPopoverContextValue>(
@@ -169,10 +169,12 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
   );
 }
 
-interface MoreEventsPopoverTriggerProps extends React.HTMLAttributes<HTMLElement> {
+interface MoreEventsPopoverTriggerProps {
   occurrences: SchedulerEventOccurrence[];
   day: useEventOccurrencesWithDayGridPosition.DayData;
+  /** A single element. The trigger clones it to attach its own `onClick`. */
   children: React.ReactNode;
+  onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
 export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {

@@ -6,10 +6,7 @@ import { calculatePosition } from '../utils/dialog-utils';
 
 /** Positions a popup next to an anchor and keeps it in sync on resize/anchor changes. */
 export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) {
-  const { anchorRef, popupRef, side = 'left', onReposition } = parameters;
-
-  // Re-run the effects below when the anchored node changes identity (e.g. a recurring scope swap).
-  const anchor = anchorRef.current;
+  const { anchor, popupRef, side = 'left', onReposition } = parameters;
 
   const updatePosition = React.useCallback(
     // `resetDrag` gates `onReposition`: skip it for content-size repositions so a dragged dialog stays put.
@@ -42,7 +39,14 @@ export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) 
   React.useEffect(() => {
     const popup = popupRef.current;
     // Follow the anchor / popup as it moves or resizes, keeping any user drag offset intact.
-    const followKeepingDrag = () => updatePosition(false);
+    // Deferred to the next frame so the observers never read and write layout inside their own
+    // delivery pass, which the browser reports as "ResizeObserver loop completed with undelivered
+    // notifications". Coalesced: repositioning once per frame is enough to track the anchor.
+    let followFrame = 0;
+    const followKeepingDrag = () => {
+      cancelAnimationFrame(followFrame);
+      followFrame = requestAnimationFrame(() => updatePosition(false));
+    };
     // A viewport resize recomputes the base position from scratch, so the drag offset is reset.
     const repositionResettingDrag = () => updatePosition(true);
 
@@ -63,6 +67,7 @@ export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) 
     window.addEventListener('resize', repositionResettingDrag);
 
     return () => {
+      cancelAnimationFrame(followFrame);
       resizeObserver?.disconnect();
       mutationObserver?.disconnect();
       window.removeEventListener('resize', repositionResettingDrag);
@@ -72,8 +77,11 @@ export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) 
 
 export namespace useAnchoredPosition {
   export interface Parameters {
-    /** Element to position against. */
-    anchorRef: React.RefObject<HTMLElement | null>;
+    /**
+     * Element to position against. An element and not a ref, so swapping the anchor re-runs the
+     * positioning effects.
+     */
+    anchor: HTMLElement | null;
     /** Popup element to position. */
     popupRef: React.RefObject<HTMLElement | null>;
     /**
@@ -81,7 +89,10 @@ export namespace useAnchoredPosition {
      * @default 'left'
      */
     side?: Position;
-    /** Runs after each reposition (e.g. to reset a drag transform). */
+    /**
+     * Runs when the base position is recomputed from scratch (mount, anchor change, viewport resize),
+     * to reset a drag transform. Not called when the popup only follows its anchor.
+     */
     onReposition?: () => void;
   }
 }

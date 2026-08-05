@@ -60,7 +60,7 @@ const EventDialogPaper = styled(Paper, {
 }));
 
 interface PaperComponentProps extends PaperProps {
-  anchorRef: React.RefObject<HTMLElement>;
+  anchor: HTMLElement | null;
   dragHandlerRef: React.RefObject<HTMLElement | null>;
 }
 
@@ -77,10 +77,10 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     [nodeRef],
   );
 
-  const { anchorRef, dragHandlerRef, className, ...other } = props;
+  const { anchor, dragHandlerRef, className, ...other } = props;
   const resetDrag = useDraggableDialog(nodeRef, dragHandlerRef, mutateStyle);
 
-  useAnchoredPosition({ anchorRef, popupRef: nodeRef, onReposition: resetDrag });
+  useAnchoredPosition({ anchor, popupRef: nodeRef, onReposition: resetDrag });
 
   return <EventDialogPaper {...other} ref={nodeRef} className={className} />;
 } as any as DialogProps['PaperComponent'];
@@ -91,15 +91,12 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 ) {
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventDialog' });
-  const { style, anchorRef, occurrence: occurrenceProp, onClose, open, ...other } = props;
+  const { style, anchor, occurrence, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
   const { schedulerId, classes } = useEventEditingStyledContext();
 
   // Selector hooks
-  // Fall back to the prop while closing, when the editing occurrence has already been cleared.
-  const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
-  const occurrence = editingOccurrence ?? occurrenceProp;
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
   // Ref hooks
@@ -111,9 +108,8 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
     <ReadonlyContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
   ) : (
     <FormContent
-      // Force a remount when the dialog is retargeted to another occurrence while open, so the
-      // form store is re-seeded instead of keeping the previous draft.
-      // Keyed by `key`, not `id`: occurrences of the same recurring event share the id.
+      // Remount on a retarget so the form re-seeds instead of keeping the old draft.
+      // Keyed by `key`, not `id`: occurrences of one recurring event share the id.
       key={occurrence.key}
       occurrence={occurrence}
       onClose={onClose}
@@ -133,7 +129,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       slotProps={{
         paper: {
           className: classes.eventDialogPaper,
-          anchorRef,
+          anchor,
           dragHandlerRef,
         } as PaperProps,
       }}
@@ -150,7 +146,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
  */
 function AnchoredEventToolbarSurface() {
   const store = useSchedulerStoreContext();
-  const { anchorRef, anchor } = useEventEditingContext();
+  const { anchor } = useEventEditingContext();
   const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
   const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
 
@@ -159,7 +155,7 @@ function AnchoredEventToolbarSurface() {
     return null;
   }
 
-  return <AnchoredEventToolbar anchorRef={anchorRef} occurrence={editingOccurrence} />;
+  return <AnchoredEventToolbar anchor={anchor} occurrence={editingOccurrence} />;
 }
 
 /**
@@ -168,22 +164,16 @@ function AnchoredEventToolbarSurface() {
  */
 function EventDialogSurface() {
   const store = useSchedulerStoreContext();
-  const { anchorRef, stopEditing } = useEventEditingContext();
+  const { anchor, stopEditing } = useEventEditingContext();
   const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
   const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
 
-  // Resizing is disabled while editing, so the anchor can't be swapped here — the sync ref is enough.
-  if (editingMode !== 'edit' || editingOccurrence == null || anchorRef.current == null) {
+  if (editingMode !== 'edit' || editingOccurrence == null || anchor == null) {
     return null;
   }
 
   return (
-    <EventDialogContent
-      open
-      anchorRef={anchorRef}
-      occurrence={editingOccurrence}
-      onClose={stopEditing}
-    />
+    <EventDialogContent open anchor={anchor} occurrence={editingOccurrence} onClose={stopEditing} />
   );
 }
 

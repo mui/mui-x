@@ -51,9 +51,8 @@ describe('<CompactDayView />', () => {
 
     expect(screen.getAllByText('Compact Event').length).to.be.greaterThan(0);
 
-    // The unified time-grid event always renders the time element; the touch variant hides it via CSS
-    // (`@media (pointer: coarse)`) rather than removing it. Assert the element (and its class, which the
-    // CSS targets) is present — the visual hiding itself is a CSS concern, not unit-testable here.
+    // Touch hides the time with CSS instead of removing it, so assert the element and the class the
+    // CSS targets are present.
     const timeElements = getDayTimeGrid().querySelectorAll(
       `.${eventCalendarClasses.timeGridEventTime}`,
     );
@@ -69,9 +68,7 @@ describe('<CompactDayView />', () => {
 
     renderWithProviders(<CompactDayView />, [event]);
 
-    // Both handles are rendered (device-agnostic); the touch variant reveals them once the event is
-    // armed and the desktop variant on hover — that reveal is CSS, but their presence guards against a
-    // regression that stops rendering them entirely.
+    // Both handles always render and CSS decides when to reveal them, so only assert their presence.
     const handlers = getDayTimeGrid().querySelectorAll(
       `.${eventCalendarClasses.timeGridEventResizeHandler}`,
     );

@@ -39,10 +39,8 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
   const store = useSchedulerStoreContext();
   const adapter = useAdapterContext();
 
-  // Gesture state lives in refs, not effect-local variables, so a mid-gesture effect re-run (a
-  // dependency flipping while the finger is down) re-attaches the listeners without dropping the
-  // active pointer or silently discarding the resize. Pointer capture stays on the DOM element across
-  // the listener churn, so the gesture continues seamlessly.
+  // Refs, not effect-local state: a mid-gesture effect re-run must re-attach the listeners without
+  // dropping the active pointer or discarding the resize.
   const activePointerIdRef = React.useRef<number | null>(null);
   const sessionRef = React.useRef<useEventPointerResizeHandler.ResizeSession | null>(null);
 
@@ -186,9 +184,8 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
       handle.removeEventListener('pointermove', onPointerMove);
       handle.removeEventListener('pointerup', onPointerUp);
       handle.removeEventListener('pointercancel', onPointerCancel);
-      // Intentionally leave `activePointerIdRef`/`sessionRef` and the pointer capture untouched: if this
-      // cleanup runs mid-gesture because a dependency changed, the re-run re-attaches the listeners and
-      // the gesture continues. A true unmount detaches the element, which releases the capture anyway.
+      // Leave the gesture refs and the pointer capture alone, since a dependency change re-runs this
+      // effect mid-gesture. A real unmount detaches the element, which releases the capture anyway.
     };
   }, [
     ref,

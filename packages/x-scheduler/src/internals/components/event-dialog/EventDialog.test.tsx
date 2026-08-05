@@ -42,7 +42,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   const defaultProps = {
     anchor,
     container: document.body,
-    anchorRef: { current: anchor },
     occurrence: EventBuilder.new()
       .id(DEFAULT_EVENT.id)
       .title(DEFAULT_EVENT.title)

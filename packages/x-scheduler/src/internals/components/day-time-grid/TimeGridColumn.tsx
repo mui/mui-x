@@ -170,7 +170,7 @@ function ColumnInteractiveLayer({
   const isEditingPlaceholder = useStore(
     store,
     schedulerOtherSelectors.isEditedOccurrence,
-    placeholder?.key ?? '',
+    placeholder?.key,
   );
 
   React.useEffect(() => {

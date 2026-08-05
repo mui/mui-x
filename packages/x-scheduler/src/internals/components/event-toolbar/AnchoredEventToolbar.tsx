@@ -24,7 +24,7 @@ const AnchoredEventToolbarRoot = styled('div', {
 }));
 
 interface AnchoredEventToolbarProps {
-  anchorRef: React.RefObject<HTMLElement | null>;
+  anchor: HTMLElement | null;
   occurrence: SchedulerRenderableEventOccurrence;
 }
 
@@ -33,22 +33,20 @@ interface AnchoredEventToolbarProps {
  * modal (outside tap disarms, scroll blocked) but keeps the event's resize handles interactive.
  */
 export function AnchoredEventToolbar(props: AnchoredEventToolbarProps) {
-  const { anchorRef, occurrence } = props;
+  const { anchor, occurrence } = props;
   const { classes } = useEventEditingStyledContext();
   const { stopEditing } = useEventEditingContext();
   const store = useSchedulerStoreContext();
   const nodeRef = React.useRef<HTMLDivElement>(null);
 
-  // The toolbar's Delete on a recurring event opens the scope dialog without leaving the armed mode.
-  // That dialog is stacked above the toolbar and owns its own dismissal and scrolling, so both
-  // document-global handlers stand down while it is open.
+  // The scope dialog stacks above the still-armed toolbar and owns its own dismissal and scrolling,
+  // so both global handlers stand down.
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isRecurringScopeDialogOpen);
 
-  useAnchoredPosition({ anchorRef, popupRef: nodeRef });
+  useAnchoredPosition({ anchor, popupRef: nodeRef });
 
-  // Modal behavior: an outside tap disarms, except on the resize handle (so a resize gesture doesn't
-  // close the toolbar) or inside a modal — matched on the whole modal root rather than `[role="dialog"]`,
-  // which MUI puts on the paper only, leaving the backdrop and container siblings looking "outside".
+  // Skip the resize handle so finishing a resize can't disarm. Match the whole modal root, since MUI
+  // puts `role="dialog"` on the paper only and its backdrop would look "outside".
   useDisarmOnOutsidePointer({
     ref: nodeRef,
     active: !isScopeDialogOpen,

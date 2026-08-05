@@ -346,8 +346,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const { stopEditing } = useEventEditingContext();
-  // An occurrence in the store means an editing surface is open (armed or edit).
-  const isEditing = useStore(store, schedulerOtherSelectors.editingOccurrence) != null;
+  const isArmed = useStore(store, schedulerOtherSelectors.editingMode) === 'armed';
 
   // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
@@ -356,10 +355,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const scrollRootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
-  // While editing, the first grid tap exits editing instead of creating/arming; resize handle is ignored so finishing a resize doesn't disarm.
+  // The resize handle is skipped so finishing a resize doesn't disarm.
+  // Armed only: closing the open form on a stray grid click would discard the draft.
   useDisarmOnOutsidePointer({
     ref: containerRef,
-    active: isEditing,
+    active: isArmed,
     onDisarm: stopEditing,
     ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}`,
   });

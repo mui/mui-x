@@ -108,9 +108,8 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
     // differs from the original — the node the toolbar was anchored to is now gone.
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-    // Give the freshly-created occurrence a distinct position, then trigger a reposition. Before the
-    // fix the toolbar stayed pinned to the detached original node (`updatePosition` bails on the
-    // disconnected anchor), so it never picked up the new geometry.
+    // Give the new occurrence a distinct position: the toolbar must follow it, not stay pinned to
+    // the detached original node.
     const resizedEvent = getEventElement();
     expect(resizedEvent).not.to.equal(originalEvent);
     mockElementBounds(resizedEvent, { top: 500, left: 120, width: 180, height: 360 });
@@ -123,9 +122,8 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
     expect(getAnchoredToolbar().style.top).to.equal('500px');
   });
 
-  // Deleting a recurring occurrence opens the scope dialog while the event stays armed, so the
-  // toolbar's document-global handlers are still mounted underneath it. They must stand down: the
-  // dialog owns its own dismissal and its own scrolling while it is on top.
+  // The event stays armed under the scope dialog, so the toolbar's global handlers must stand down.
+  // The dialog owns its own dismissal and scrolling.
   describe('scope dialog stacked on the armed toolbar', () => {
     async function armAndOpenScopeDialog() {
       renderResizableRecurringEvent();
