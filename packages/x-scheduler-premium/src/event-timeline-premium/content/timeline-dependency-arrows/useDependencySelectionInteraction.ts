@@ -94,12 +94,19 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
         return;
       }
       store.setSelectedDependencyId(null);
-      // Dismissing the selection is this press's whole meaning: the click it produces
-      // must not also create an event or open a dialog — the same first-click-dismisses
-      // behavior the event dialog gets from its backdrop. The one-shot listeners
-      // outlive this effect on purpose (deselecting tears it down before the click
-      // arrives) and disarm themselves on the click, or on any signal that the press
-      // will not produce one (a drag, a canceled pointer, a keystroke).
+      // Inside the timeline, dismissing the selection is this press's whole meaning:
+      // the click it produces must not also create an event or open a dialog — the
+      // same first-click-dismisses behavior the event dialog gets from its backdrop.
+      // A press outside the timeline only deselects: its click belongs to whatever
+      // the user pressed (the backdrop analogy stops at the timeline's edge).
+      const timelineGrid = elementRef.current?.closest('[role="grid"]');
+      if (!(target instanceof Node) || !timelineGrid?.contains(target)) {
+        return;
+      }
+      // The one-shot listeners outlive this effect on purpose (deselecting tears it
+      // down before the click arrives) and disarm themselves on the click, or on any
+      // signal that the press will not produce one (a drag, a canceled pointer, a
+      // keystroke).
       function swallowClick(clickEvent: MouseEvent) {
         clickEvent.stopPropagation();
         disarm();

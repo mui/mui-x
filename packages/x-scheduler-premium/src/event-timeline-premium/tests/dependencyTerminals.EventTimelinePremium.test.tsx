@@ -719,6 +719,29 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.occurrencePlaceholder).not.to.equal(null);
     });
 
+    it('should not swallow the click of a press outside the timeline', () => {
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      expect(store.state.selection).not.to.equal(null);
+
+      // A press on the host app outside the scheduler deselects, but its click
+      // belongs to the app: a button elsewhere on the page must not need two clicks.
+      const appButton = document.createElement('button');
+      document.body.appendChild(appButton);
+      const handleClick = spy();
+      appButton.addEventListener('click', handleClick);
+      fireEvent.pointerDown(appButton);
+      fireEvent.click(appButton);
+      appButton.remove();
+
+      expect(store.state.selection).to.equal(null);
+      expect(handleClick.callCount).to.equal(1);
+    });
+
     it('should not delete the arrow when typing Backspace in an editable element', () => {
       const handleDependenciesChange = setupSelectedArrow();
 
