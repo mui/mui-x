@@ -34,11 +34,13 @@ Same changes as in `@mui/x-data-grid-pro@9.11.0`.
 
 #### `@mui/x-date-pickers@9.11.0`
 
-[pickers] Fix disabled filler cells showing the range highlight (#23293) @JCQuintas
+Internal changes.
 
 #### `@mui/x-date-pickers-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@9.11.0`.
+Same changes as in `@mui/x-date-pickers@9.11.0`, plus:
+
+- [DateRangePicker] Fix disabled filler cells showing the range highlight (#23293) @JCQuintas
 
 ### Charts
 
@@ -86,7 +88,7 @@ Same changes as in `@mui/x-tree-view@9.11.0`, plus:
 - [scheduler] Refactor edit dialog General tab into section components (#23206) @rita-codes
 - [scheduler] Replace copied Base UI internals with `@base-ui/react/internals` imports (#21972) @flaviendelangle
 - [scheduler] Hide resource picker when no resources are provided (#23290) @mustafajw07
-- [scheduler] Support multi-resource occurrences in EventTimeline (#23240) @mustafajw07
+- [scheduler] Support multi-resource occurrences in `EventTimeline` (#23240) @mustafajw07
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.8` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
