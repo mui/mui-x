@@ -63,7 +63,7 @@ export function computeElementPositionInCollection(
     endOffsetMs += dayMs;
   }
 
-  const totalMs = getTimelineAxisDurationMs(adapter, collection);
+  const totalMs = parameters.durationMs ?? getTimelineAxisDurationMs(adapter, collection);
 
   const clampToTimeline = (value: number) => Math.min(Math.max(value, 0), totalMs);
 
@@ -93,6 +93,11 @@ namespace useElementPositionInCollection {
      * time-grid column (`viewConfig`) or the timeline's axis (`presetConfig`).
      */
     collection: TimelineAxis;
+    /**
+     * Precomputed `getTimelineAxisDurationMs(adapter, collection)`, skipping the
+     * per-call derivation when the caller already holds it.
+     */
+    durationMs?: number;
   }
 
   export interface ReturnValue {

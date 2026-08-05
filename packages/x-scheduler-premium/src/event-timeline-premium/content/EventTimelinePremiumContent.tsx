@@ -489,17 +489,25 @@ function EventList({
   const { schedulerId } = useEventTimelinePremiumStyledContext();
 
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const visiblePositions = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
+  );
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
 
   // Precompute position fractions for all occurrences (recomputed only when occurrences or preset changes)
   const occurrencesWithFraction = React.useMemo(
     () =>
       occurrences.map((occurrence) => {
-        const { position, duration } = computeElementPositionInCollection(adapter, {
-          start: occurrence.displayTimezone.start,
-          end: occurrence.displayTimezone.end,
-          collection: presetConfig,
-        });
+        // On a trimmed hour window the axis filter already positioned the occurrence.
+        const { position, duration } =
+          visiblePositions?.get(occurrence.key) ??
+          computeElementPositionInCollection(adapter, {
+            start: occurrence.displayTimezone.start,
+            end: occurrence.displayTimezone.end,
+            collection: presetConfig,
+            durationMs: presetConfig.durationMs,
+          });
 
         return {
           occurrence,
@@ -508,7 +516,7 @@ function EventList({
         };
       }),
     // The config selector is memoized, so the object identity only changes with its content.
-    [adapter, occurrences, presetConfig],
+    [adapter, occurrences, presetConfig, visiblePositions],
   );
 
   // Convert virtualizer column range to fraction range

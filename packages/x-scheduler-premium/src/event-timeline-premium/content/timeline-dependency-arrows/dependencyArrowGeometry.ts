@@ -86,6 +86,13 @@ export interface ComputeDependencyArrowsParameters {
    */
   axis: TimelineAxis;
   /**
+   * Positions already computed by the axis filter, when the hour window is trimmed.
+   */
+  positionByOccurrenceKey?: ReadonlyMap<
+    string,
+    ReturnType<typeof computeElementPositionInCollection>
+  > | null;
+  /**
    * The width of the events area in pixels (tick count × tick width).
    */
   eventsWidth: number;
@@ -106,8 +113,16 @@ interface DependencyArrowAnchor {
 export function computeDependencyArrows(
   parameters: ComputeDependencyArrowsParameters,
 ): DependencyArrow[] {
-  const { adapter, dependencies, resources, rowPositions, axis, eventsWidth, laneMetrics } =
-    parameters;
+  const {
+    adapter,
+    dependencies,
+    resources,
+    rowPositions,
+    axis,
+    positionByOccurrenceKey,
+    eventsWidth,
+    laneMetrics,
+  } = parameters;
 
   if (dependencies.length === 0 || eventsWidth <= 0) {
     return [];
@@ -146,19 +161,20 @@ export function computeDependencyArrows(
     return laneLookup;
   };
 
-  const positionByOccurrenceKey = new Map<
-    string,
-    ReturnType<typeof computeElementPositionInCollection>
-  >();
+  const positionCache = new Map<string, ReturnType<typeof computeElementPositionInCollection>>();
   const getPosition = (occurrence: SchedulerEventOccurrence) => {
-    let position = positionByOccurrenceKey.get(occurrence.key);
+    const precomputed = positionByOccurrenceKey?.get(occurrence.key);
+    if (precomputed != null) {
+      return precomputed;
+    }
+    let position = positionCache.get(occurrence.key);
     if (position == null) {
       position = computeElementPositionInCollection(adapter, {
         start: occurrence.displayTimezone.start,
         end: occurrence.displayTimezone.end,
         collection: axis,
       });
-      positionByOccurrenceKey.set(occurrence.key, position);
+      positionCache.set(occurrence.key, position);
     }
     return position;
   };

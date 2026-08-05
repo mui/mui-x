@@ -74,6 +74,10 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
     store,
     eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
   );
+  const visiblePositions = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
+  );
   const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
 
@@ -87,11 +91,21 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
         resources: visibleResources,
         rowPositions: rowsMeta.positions,
         axis: presetConfig,
+        positionByOccurrenceKey: visiblePositions,
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),
       }),
     // The config selector is memoized, so the object identity only changes with its content.
-    [adapter, dependencies, visibleResources, rowsMeta.positions, presetConfig, eventsWidth, theme],
+    [
+      adapter,
+      dependencies,
+      visibleResources,
+      visiblePositions,
+      rowsMeta.positions,
+      presetConfig,
+      eventsWidth,
+      theme,
+    ],
   );
 
   // Only render the arrows intersecting the visible range. Row-range overlap (rather

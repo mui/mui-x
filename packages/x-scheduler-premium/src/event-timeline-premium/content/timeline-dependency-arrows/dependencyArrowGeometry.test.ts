@@ -1,9 +1,13 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
-import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerProcessedEvent,
+  SchedulerEventOccurrence,
+} from '@mui/x-scheduler-internals/models';
 import {
   getOccurrencesFromEvents,
-  filterOccurrencesVisibleOnTimelineAxis,
+  computeElementPositionInCollection,
 } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import {
   buildDependencyArrowRoutes,
@@ -19,6 +23,17 @@ const FULL_DAY_AXIS = {
   dayStartMinute: 0,
   dayEndMinute: 1440,
 };
+
+// Mirrors the axis filter of the occurrence selector: visible ≡ non-zero width.
+const filterVisibleOccurrences = (axis: TimelineAxis, occurrences: SchedulerEventOccurrence[]) =>
+  occurrences.filter(
+    (occurrence) =>
+      computeElementPositionInCollection(adapter, {
+        start: occurrence.displayTimezone.start,
+        end: occurrence.displayTimezone.end,
+        collection: axis,
+      }).duration > 0,
+  );
 
 // 1440 minutes in the collection and eventsWidth = 1440 → 1px per minute.
 const EVENTS_WIDTH = 1440;
@@ -612,8 +627,7 @@ describe('dependencyArrowGeometry', () => {
           .id('event-hidden')
           .singleDay('2024-01-15T21:00:00Z', 120)
           .toProcessed();
-        const occurrences = filterOccurrencesVisibleOnTimelineAxis(
-          adapter,
+        const occurrences = filterVisibleOccurrences(
           TRIMMED_AXIS,
           getOccurrences([hiddenSource, eventB]),
         );
@@ -663,8 +677,7 @@ describe('dependencyArrowGeometry', () => {
           .singleDay('2024-01-16T11:00:00Z', 60)
           .toProcessed();
 
-        const sourceRowOccurrences = filterOccurrencesVisibleOnTimelineAxis(
-          adapter,
+        const sourceRowOccurrences = filterVisibleOccurrences(
           twoDayAxis,
           getTwoDayOccurrences([hidden, visibleSource]),
         );

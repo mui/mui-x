@@ -1,7 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
-  filterOccurrencesVisibleOnTimelineAxis,
+  computeElementPositionInCollection,
   isFullDayAxisWindow,
 } from '@mui/x-scheduler-internals/internals';
 import type {
@@ -13,13 +13,15 @@ import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPrese
 
 const EMPTY_ARRAY: readonly SchedulerEventOccurrence[] = [];
 
+type OccurrencePosition = ReturnType<typeof computeElementPositionInCollection>;
+
 /**
  * The visible resources with the occurrences that occupy space on the timeline axis,
- * in row render order. Every consumer deriving per-row geometry (rendered lanes, lane
- * counts, dependency arrows, tab navigation) must read this list so their lane
- * assignments stay consistent with the rendered rows.
+ * in row render order, plus the axis position of each visible occurrence. Filtering and
+ * positioning share one pass so "visible" and "has a non-zero width" are the same
+ * predicate, and downstream consumers reuse the positions instead of recomputing them.
  */
-const visibleGroupedByResourceListSelector = createSelectorMemoized(
+const visibleAxisDataSelector = createSelectorMemoized(
   (state: State) => state.adapter,
   eventTimelinePremiumPresetSelectors.config,
   (state: State) => {
@@ -28,13 +30,40 @@ const visibleGroupedByResourceListSelector = createSelectorMemoized(
   },
   (adapter, config, resources) => {
     if (isFullDayAxisWindow(config)) {
-      return resources;
+      return { resources, positionByOccurrenceKey: null };
     }
-    return resources.map((entry) => ({
-      ...entry,
-      occurrences: filterOccurrencesVisibleOnTimelineAxis(adapter, config, entry.occurrences),
-    }));
+
+    const positionByOccurrenceKey = new Map<string, OccurrencePosition>();
+    return {
+      resources: resources.map((entry) => ({
+        ...entry,
+        occurrences: entry.occurrences.filter((occurrence) => {
+          const position = computeElementPositionInCollection(adapter, {
+            start: occurrence.displayTimezone.start,
+            end: occurrence.displayTimezone.end,
+            collection: config,
+            durationMs: config.durationMs,
+          });
+          if (position.duration === 0) {
+            return false;
+          }
+          positionByOccurrenceKey.set(occurrence.key, position);
+          return true;
+        }),
+      })),
+      positionByOccurrenceKey,
+    };
   },
+);
+
+/**
+ * Every consumer deriving per-row geometry (rendered lanes, lane counts, dependency
+ * arrows, tab navigation) must read this list so their lane assignments stay
+ * consistent with the rendered rows.
+ */
+const visibleGroupedByResourceListSelector = createSelector(
+  visibleAxisDataSelector,
+  (data) => data.resources,
 );
 
 const visibleOccurrencesByResourceMapSelector = createSelectorMemoized(
@@ -50,6 +79,14 @@ const visibleOccurrencesByResourceMapSelector = createSelectorMemoized(
 
 export const eventTimelinePremiumOccurrenceSelectors = {
   visibleGroupedByResourceList: visibleGroupedByResourceListSelector,
+  /**
+   * The axis position of every visible occurrence, or `null` on the full-day window
+   * (where consumers derive positions on demand and the filter is an identity).
+   */
+  visiblePositionByOccurrenceKey: createSelector(
+    visibleAxisDataSelector,
+    (data): ReadonlyMap<string, OccurrencePosition> | null => data.positionByOccurrenceKey,
+  ),
   visibleResourceOccurrences: createSelector(
     visibleOccurrencesByResourceMapSelector,
     (map, resourceId: SchedulerResourceId): readonly SchedulerEventOccurrence[] =>
