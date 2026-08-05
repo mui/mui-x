@@ -8,8 +8,9 @@
     },
     "desc": { "type": { "name": "string" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
-    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {
       "type": {

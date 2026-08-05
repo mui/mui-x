@@ -29,6 +29,15 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
 
   private initStarted = false;
 
+  // For each item, `issued` is the id of the most recent fetch started and `applied` is the
+  // id of the most recent response written to the store and the cache.
+  // A response is only discarded when a newer one was already applied (`<` on `applied` in
+  // `claimResponse`), unlike the Data Grid data source where the latest started request wins.
+  // Aligning this with `===` on `issued` would make an expand fetch that resolves before a
+  // racing refresh settle the expansion flow before any children are inserted, breaking
+  // descendant selection propagation (see the lazy loading race tests).
+  private requestsByItem = new Map<TreeViewItemId, { issued: number; applied: number }>();
+
   constructor(store: RichTreeViewProStore<R, any>) {
     this.store = store;
     this.cache = store.parameters.dataSourceCache ?? new DataSourceCacheDefault<R>({});
@@ -257,6 +266,17 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
     });
   };
 
+  // Records this response as the latest applied for the item, or returns false when a newer
+  // response was already applied and this one must be discarded (see `requestsByItem`).
+  private claimResponse = (cacheKey: TreeViewItemId, requestId: number): boolean => {
+    const requests = this.requestsByItem.get(cacheKey)!;
+    if (requestId < requests.applied) {
+      return false;
+    }
+    requests.applied = requestId;
+    return true;
+  };
+
   public fetchItemChildren = async ({
     itemId,
     forceRefresh,
@@ -307,6 +327,12 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       this.setItemError(itemId, null);
     }
 
+    // tag this request with an increasing id so out-of-order responses can be detected
+    const requests = this.requestsByItem.get(cacheKey) ?? { issued: 0, applied: 0 };
+    requests.issued += 1;
+    this.requestsByItem.set(cacheKey, requests);
+    const requestId = requests.issued;
+
     try {
       let response: R[];
       if (itemId == null) {
@@ -314,6 +340,14 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       } else {
         response = await getTreeItems(itemId);
         this.nestedDataManager.setRequestSettled(itemId);
+      }
+      // a newer response was already applied for this item, so discard this older one
+      if (!this.claimResponse(cacheKey, requestId)) {
+        return;
+      }
+      // clear any error left by an out-of-order older request
+      if (lazyLoadingSelectors.itemError(this.store.state, itemId)) {
+        this.setItemError(itemId, null);
       }
       // save the response in the cache
       this.cache.set(cacheKey, response);
@@ -324,6 +358,10 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       // notify the user that new items have been loaded
       this.callOnItemsLazyLoaded(response, itemId, false);
     } catch (error) {
+      // a newer response was already applied for this item, so ignore this older error
+      if (!this.claimResponse(cacheKey, requestId)) {
+        return;
+      }
       const childrenFetchError = error as Error;
       // set the item error in the state
       this.setItemError(itemId, childrenFetchError);

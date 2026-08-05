@@ -16,8 +16,9 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "any" } },
-    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
@@ -83,7 +84,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
+        "type": "function(event: ChartsActivationEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },

@@ -6,6 +6,7 @@ import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import type { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
+import { clampResizedEventEdge } from '../../internals/utils/resize-utils';
 import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
@@ -44,6 +45,19 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 
       return Math.round(collectionDurationMs * clampedPositionY);
     });
+
+  const getDateAtPointer: CalendarGridTimeColumnContext['getDateAtPointer'] = useStableCallback(
+    (input) => {
+      // Bail when the column isn't measurable yet — zero height makes `getCursorPositionInElementMs` return NaN.
+      if (!ref.current || ref.current.offsetHeight === 0) {
+        return null;
+      }
+      const offsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
+      const roundedOffsetMs =
+        Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
+      return adapter.addMilliseconds(start, roundedOffsetMs);
+    },
+  );
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
     ({ data, getDataFromInside, getDataFromOutside, input }) => {
@@ -97,10 +111,14 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
           }
 
           // Ensure the new start date is not after or too close to the end date.
-          const maxStartDate = adapter.addMinutes(data.end, -EVENT_DRAG_PRECISION_MINUTE);
-          const newStartDate = adapter.isBefore(cursorDate, maxStartDate)
-            ? cursorDate
-            : maxStartDate;
+          const { start: newStartDate } = clampResizedEventEdge({
+            adapter,
+            side: 'start',
+            start: data.start,
+            end: data.end,
+            cursorDate,
+            precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
+          });
 
           return getDataFromInside(data, newStartDate, data.end);
         }
@@ -119,8 +137,14 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
           }
 
           // Ensure the new end date is not before or too close to the start date.
-          const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
-          const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
+          const { end: newEndDate } = clampResizedEventEdge({
+            adapter,
+            side: 'end',
+            start: data.start,
+            end: data.end,
+            cursorDate,
+            precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
+          });
 
           return getDataFromInside(data, data.start, newEndDate);
         }
@@ -154,7 +178,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
     addPropertiesToDroppedEvent,
   });
 
-  return { getCursorPositionInElementMs, ref };
+  return { getCursorPositionInElementMs, getDateAtPointer, ref };
 }
 
 export namespace useTimeDropTarget {
@@ -175,6 +199,6 @@ export namespace useTimeDropTarget {
 
   export interface ReturnValue extends Pick<
     CalendarGridTimeColumnContext,
-    'getCursorPositionInElementMs'
+    'getCursorPositionInElementMs' | 'getDateAtPointer'
   > {}
 }

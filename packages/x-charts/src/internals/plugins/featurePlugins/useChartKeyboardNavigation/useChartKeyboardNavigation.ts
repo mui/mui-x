@@ -17,11 +17,19 @@ import { getItemAtAxisPosition } from './utils/getItemAtAxisPosition';
 import type { ChartPlugin } from '../../models';
 import type {
   FocusItemOptions,
+  ItemActivationHandler,
+  ItemActivationScope,
   UseChartKeyboardNavigationSignature,
 } from './useChartKeyboardNavigation.types';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { FocusedItemIdentifier } from '../../../../models/seriesType';
 import type { FocusedItemUpdater } from './keyboardFocusHandler.types';
+import { findItemActivationHandler, isItemActivationKey } from './itemActivation';
+import type { ItemActivationRegistration } from './itemActivation';
+import {
+  selectorChartsIsFocusVisible,
+  selectorChartsIsKeyboardActivationEnabled,
+} from './useChartKeyboardNavigation.selectors';
 
 /**
  * Identifier cleaners always emit every key their series type uses, leaving the missing ones
@@ -192,6 +200,24 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     return item;
   });
 
+  const activationRegistrationsRef = React.useRef(new Map<number, ItemActivationRegistration>());
+  const nextRegistrationIdRef = React.useRef(0);
+
+  const registerItemActivationHandler = React.useCallback(
+    (scope: ItemActivationScope, handler: ItemActivationHandler) => {
+      const registrationId = nextRegistrationIdRef.current;
+      nextRegistrationIdRef.current += 1;
+
+      const registrations = activationRegistrationsRef.current;
+      registrations.set(registrationId, { scope, handler });
+
+      return () => {
+        registrations.delete(registrationId);
+      };
+    },
+    [],
+  );
+
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
 
@@ -242,6 +268,36 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       isKeyboardModalityRef.current = true;
     }
 
+    function activationHandler(event: KeyboardEvent) {
+      // Ignore the auto-repeat while the key is held: a pointer click does not repeat either.
+      if (
+        event.repeat ||
+        !isItemActivationKey(event) ||
+        !selectorChartsIsKeyboardActivationEnabled(store.state)
+      ) {
+        return;
+      }
+
+      // The focus has to be visible, not merely held: a click sets the item without revealing it,
+      // and activating an item the user cannot see would be a surprise.
+      const focusedItem = store.state.keyboardNavigation.item;
+      if (focusedItem === null || !selectorChartsIsFocusVisible(store.state)) {
+        return;
+      }
+
+      const handler = findItemActivationHandler(
+        activationRegistrationsRef.current.values(),
+        focusedItem,
+      );
+
+      if (handler === null) {
+        return;
+      }
+
+      event.preventDefault();
+      handler(event, focusedItem);
+    }
+
     function keyboardHandler(event: KeyboardEvent) {
       let newFocusedItem = store.state.keyboardNavigation.item;
 
@@ -279,12 +335,14 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       updateFocus(newFocusedItem, true);
     }
 
+    element.addEventListener('keydown', activationHandler);
     element.addEventListener('keydown', keyboardHandler);
     element.addEventListener('focusout', removeFocus);
     element.addEventListener('focusin', restoreFocus);
     element.addEventListener('pointerdown', trackPointerIntent, true);
     document.addEventListener('keydown', trackKeyboardIntent, true);
     return () => {
+      element.removeEventListener('keydown', activationHandler);
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('focusout', removeFocus);
       element.removeEventListener('focusin', restoreFocus);
@@ -335,7 +393,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     });
   }, [store, params.disableKeyboardNavigation]);
 
-  return { instance: { focusItem } };
+  return { instance: { focusItem, registerItemActivationHandler } };
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({

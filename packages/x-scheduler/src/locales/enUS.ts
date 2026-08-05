@@ -1,19 +1,23 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const enUSDialog: EventDialogLocaleText = {
+const enUSDialog: EventEditingLocaleText = {
   // EventDialog
   colorPickerLabel: 'Event color',
+  colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Date & time',
   resourceColorSectionLabel: 'Resource & color',
   allDayLabel: 'All Day',
   closeButtonAriaLabel: 'Close',
   closeButtonLabel: 'Close',
+  editEventButtonAriaLabel: 'Edit event',
+  deleteEventButtonAriaLabel: 'Delete event',
+  eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Delete event',
   descriptionLabel: 'Description',
   endDateLabel: 'End date',
@@ -67,7 +71,7 @@ const enUSDialog: EventDialogLocaleText = {
   title: 'Apply this change to:',
 };
 
-const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> = {
+const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> = {
   // ResourcesTree
   resourcesLabel: 'Resources',
 
@@ -130,7 +134,7 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> =
   timelineResourceTitleHeader: 'Resource title',
 };
 
-const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventDialogLocaleText> = {
+const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventEditingLocaleText> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Resource title',
 };
