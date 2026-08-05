@@ -4,7 +4,10 @@ import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
+import {
+  useElementPositionInCollection,
+  isStartMinuteOutsideAxisWindow,
+} from '@mui/x-scheduler-internals/internals';
 import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -44,13 +47,10 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
       collection: presetConfig,
     });
 
-    // `dayEndMinute` is exclusive: at the end minute itself the indicator would
-    // render pinned to the day seam, i.e. on the left edge of the next day.
     const isOutOfRange =
       adapter.isBefore(now, presetConfig.start) ||
       adapter.isAfter(now, presetConfig.end) ||
-      processedNow.minutesInDay < presetConfig.dayStartMinute ||
-      processedNow.minutesInDay >= presetConfig.dayEndMinute;
+      isStartMinuteOutsideAxisWindow(presetConfig, processedNow.minutesInDay);
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

@@ -9,7 +9,7 @@ import {
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
 import type { SchedulerEventId } from '../../models';
-import { isMinuteOutsideAxisWindow } from './timeline-axis';
+import { isStartMinuteOutsideAxisWindow, isEndMinuteOutsideAxisWindow } from './timeline-axis';
 import type { TimelineAxis } from './timeline-axis';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
@@ -93,10 +93,10 @@ export function useDraggableEvent(
     return {
       isEventStartClipped:
         adapter.isBefore(start.value, collectionStart) ||
-        isMinuteOutsideAxisWindow(axis, start.minutesInDay),
+        isStartMinuteOutsideAxisWindow(axis, start.minutesInDay),
       isEventEndClipped:
         adapter.isAfter(end.value, collectionEnd) ||
-        isMinuteOutsideAxisWindow(axis, end.minutesInDay),
+        isEndMinuteOutsideAxisWindow(axis, end.minutesInDay),
     };
   }, [adapter, start, end, collectionStart, collectionEnd, dayStartMinute, dayEndMinute]);
 

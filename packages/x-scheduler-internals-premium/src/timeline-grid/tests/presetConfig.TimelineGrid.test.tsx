@@ -52,7 +52,16 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
                       end={occurrence.displayTimezone.end}
                       renderDragPreview={() => null}
                       data-testid={`event-${occurrence.id}`}
-                    />
+                    >
+                      <TimelineGrid.EventResizeHandler
+                        side="start"
+                        data-testid={`resize-start-${occurrence.id}`}
+                      />
+                      <TimelineGrid.EventResizeHandler
+                        side="end"
+                        data-testid={`resize-end-${occurrence.id}`}
+                      />
+                    </TimelineGrid.Event>
                   ))}
                   {placeholder != null && (
                     <TimelineGrid.EventPlaceholder
@@ -118,6 +127,23 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
         0.001,
       );
       expect(element).to.have.attribute('data-ending-after-edge');
+    });
+
+    it('should flag an event starting exactly at the window end and hide its start resize handle', () => {
+      // A night shift starting at 20:00 renders from the day seam (= next day 08:00):
+      // the start does not sit at its real position, so exposing a resize handle there
+      // would let a zero-movement click rewrite the event dates.
+      const event = EventBuilder.new()
+        .id('night-shift')
+        .resource(resource)
+        .span(at(20), at(34))
+        .build();
+      render(<Grid events={[event]} presetConfig={PRESET_CONFIG} />);
+
+      const element = screen.getByTestId('event-night-shift');
+      expect(element).to.have.attribute('data-starting-before-edge');
+      expect(screen.queryByTestId('resize-start-night-shift')).to.equal(null);
+      expect(screen.getByTestId('resize-end-night-shift')).not.to.equal(null);
     });
 
     it('should not render the occurrences fully inside the hidden hours', () => {

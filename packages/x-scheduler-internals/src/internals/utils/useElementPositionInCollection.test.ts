@@ -124,6 +124,21 @@ describe('computeElementPositionInCollection', () => {
       expect(result.startingBeforeEdge).to.equal(true);
     });
 
+    it('should flag an event starting exactly on the exclusive window end as starting before the day edge', () => {
+      // A night shift starting at 20:00: the start renders on the day seam (= next day
+      // 08:00), so it must be flagged and must not expose its real position.
+      const result = computeElementPositionInCollection(adapter, {
+        start: processed('2025-01-05T20:00:00.000Z'),
+        end: processed('2025-01-06T10:00:00.000Z'),
+        collection: trimmedCollection,
+      });
+
+      expect(result.position).to.equal(720 / 2880);
+      expect(result.duration).to.equal(120 / 2880);
+      expect(result.startingBeforeEdge).to.equal(true);
+      expect(result.endingAfterEdge).to.equal(false);
+    });
+
     it('should return a zero duration for an event fully inside the hidden hours', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-05T21:00:00.000Z'),
@@ -144,6 +159,44 @@ describe('computeElementPositionInCollection', () => {
       });
 
       expect(result.duration).to.equal(0);
+    });
+
+    it('should not flag an event ending at midnight when the window ends at midnight', () => {
+      // Window 8:00 → 24:00: an 18:00 → 00:00 event fills the window exactly, nothing
+      // is hidden. Its end is minute 0 of the next day but closes this one.
+      const result = computeElementPositionInCollection(adapter, {
+        start: processed('2025-01-05T18:00:00.000Z'),
+        end: processed('2025-01-06T00:00:00.000Z'),
+        collection: {
+          start: collectionStart,
+          end: collectionEnd,
+          dayStartMinute: 480,
+          dayEndMinute: 1440,
+        },
+      });
+
+      expect(result.position).to.equal(600 / 3840);
+      expect(result.duration).to.equal(360 / 3840);
+      expect(result.startingBeforeEdge).to.equal(false);
+      expect(result.endingAfterEdge).to.equal(false);
+    });
+
+    it('should flag an event ending at midnight as clipped by a morning window', () => {
+      // Window 0:00 → 12:00: the 12:00 → 24:00 tail of the event is hidden.
+      const result = computeElementPositionInCollection(adapter, {
+        start: processed('2025-01-05T10:00:00.000Z'),
+        end: processed('2025-01-06T00:00:00.000Z'),
+        collection: {
+          start: collectionStart,
+          end: collectionEnd,
+          dayStartMinute: 0,
+          dayEndMinute: 720,
+        },
+      });
+
+      expect(result.position).to.equal(600 / 2880);
+      expect(result.duration).to.equal(120 / 2880);
+      expect(result.endingAfterEdge).to.equal(true);
     });
 
     it('should keep the calendar single-day column behavior', () => {

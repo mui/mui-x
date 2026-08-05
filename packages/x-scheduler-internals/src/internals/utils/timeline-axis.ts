@@ -29,11 +29,23 @@ export function isFullDayAxisWindow(axis: TimelineAxis) {
 }
 
 /**
- * Whether a wall-clock minute of the day falls outside the displayed window (the
- * exclusive end minute itself is the window edge, not outside).
+ * Whether a start bound's wall-clock minute falls outside the displayed window.
+ * The day seam is ambiguous (day d at `dayEndMinute` and day d+1 at `dayStartMinute`
+ * render at the same offset): a start on the exclusive end minute belongs to the
+ * hidden hours, its rendered position is the next day's window start.
  */
-export function isMinuteOutsideAxisWindow(axis: TimelineAxis, minutesInDay: number): boolean {
-  return minutesInDay < axis.dayStartMinute || minutesInDay > axis.dayEndMinute;
+export function isStartMinuteOutsideAxisWindow(axis: TimelineAxis, minutesInDay: number): boolean {
+  return minutesInDay < axis.dayStartMinute || minutesInDay >= axis.dayEndMinute;
+}
+
+/**
+ * Whether an end bound's wall-clock minute falls outside the displayed window.
+ * An end at midnight is minute 0 of the next day but closes the previous one, so it
+ * is measured as minute 1440 against that day's window.
+ */
+export function isEndMinuteOutsideAxisWindow(axis: TimelineAxis, minutesInDay: number): boolean {
+  const minute = minutesInDay === 0 ? FULL_DAY_MINUTES : minutesInDay;
+  return minute <= axis.dayStartMinute || minute > axis.dayEndMinute;
 }
 
 /**

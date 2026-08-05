@@ -6,7 +6,8 @@ import {
   dateToTimelineAxisOffsetMs,
   getTimelineAxisDayMs,
   getTimelineAxisDurationMs,
-  isMinuteOutsideAxisWindow,
+  isStartMinuteOutsideAxisWindow,
+  isEndMinuteOutsideAxisWindow,
 } from './timeline-axis';
 import type { TimelineAxis } from './timeline-axis';
 
@@ -71,9 +72,9 @@ export function computeElementPositionInCollection(
 
   // A bound clamped in either direction means part of the element is hidden.
   const startingBeforeEdge =
-    startOffsetMs < 0 || isMinuteOutsideAxisWindow(collection, start.minutesInDay);
+    startOffsetMs < 0 || isStartMinuteOutsideAxisWindow(collection, start.minutesInDay);
   const endingAfterEdge =
-    endOffsetMs > totalMs || isMinuteOutsideAxisWindow(collection, end.minutesInDay);
+    endOffsetMs > totalMs || isEndMinuteOutsideAxisWindow(collection, end.minutesInDay);
 
   return {
     position: clampedStartMs / totalMs,

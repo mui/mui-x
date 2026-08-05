@@ -4,6 +4,8 @@ import {
   timelineAxisOffsetToDate,
   dateToTimelineAxisOffsetMs,
   isRangeVisibleOnTimelineAxis,
+  isStartMinuteOutsideAxisWindow,
+  isEndMinuteOutsideAxisWindow,
 } from './timeline-axis';
 
 const MINUTE = 60_000;
@@ -112,6 +114,61 @@ describe('timeline-axis', () => {
       const offset = dateToTimelineAxisOffsetMs(adapter, axis, date);
       expect(offset).to.equal(120 * MINUTE);
       expect(timelineAxisOffsetToDate(adapter, axis, offset)).toEqualDateTime(date);
+    });
+  });
+
+  describe('isStartMinuteOutsideAxisWindow', () => {
+    // The day seam is ambiguous: day d at `dayEndMinute` and day d+1 at `dayStartMinute`
+    // render at the same axis offset. A start bound on the seam belongs to the next day,
+    // so the exclusive end minute itself is outside the window.
+    it('should classify the minutes around a trimmed window', () => {
+      const axis = { start, end, dayStartMinute: 480, dayEndMinute: 1200 };
+      expect(isStartMinuteOutsideAxisWindow(axis, 479)).to.equal(true);
+      expect(isStartMinuteOutsideAxisWindow(axis, 480)).to.equal(false);
+      expect(isStartMinuteOutsideAxisWindow(axis, 1199)).to.equal(false);
+      expect(isStartMinuteOutsideAxisWindow(axis, 1200)).to.equal(true);
+      expect(isStartMinuteOutsideAxisWindow(axis, 1201)).to.equal(true);
+    });
+
+    it('should treat midnight as outside a window starting after midnight', () => {
+      const axis = { start, end, dayStartMinute: 480, dayEndMinute: 1440 };
+      expect(isStartMinuteOutsideAxisWindow(axis, 0)).to.equal(true);
+      expect(isStartMinuteOutsideAxisWindow(axis, 1439)).to.equal(false);
+    });
+
+    it('should never clip a start on the full-day window', () => {
+      expect(isStartMinuteOutsideAxisWindow(fullAxis, 0)).to.equal(false);
+      expect(isStartMinuteOutsideAxisWindow(fullAxis, 1439)).to.equal(false);
+    });
+  });
+
+  describe('isEndMinuteOutsideAxisWindow', () => {
+    // An end bound at midnight is minute 0 of the next day, but it closes the previous
+    // day: it must be measured as minute 1440 against that day's window.
+    it('should classify the minutes around a trimmed window', () => {
+      const axis = { start, end, dayStartMinute: 480, dayEndMinute: 1200 };
+      expect(isEndMinuteOutsideAxisWindow(axis, 480)).to.equal(true);
+      expect(isEndMinuteOutsideAxisWindow(axis, 481)).to.equal(false);
+      expect(isEndMinuteOutsideAxisWindow(axis, 1200)).to.equal(false);
+      expect(isEndMinuteOutsideAxisWindow(axis, 1201)).to.equal(true);
+      expect(isEndMinuteOutsideAxisWindow(axis, 0)).to.equal(true);
+    });
+
+    it('should keep an end at midnight inside a window ending at midnight', () => {
+      const axis = { start, end, dayStartMinute: 480, dayEndMinute: 1440 };
+      expect(isEndMinuteOutsideAxisWindow(axis, 0)).to.equal(false);
+      expect(isEndMinuteOutsideAxisWindow(axis, 480)).to.equal(true);
+    });
+
+    it('should treat an end at midnight as outside a morning window', () => {
+      const axis = { start, end, dayStartMinute: 0, dayEndMinute: 720 };
+      expect(isEndMinuteOutsideAxisWindow(axis, 0)).to.equal(true);
+      expect(isEndMinuteOutsideAxisWindow(axis, 720)).to.equal(false);
+    });
+
+    it('should never clip an end on the full-day window', () => {
+      expect(isEndMinuteOutsideAxisWindow(fullAxis, 0)).to.equal(false);
+      expect(isEndMinuteOutsideAxisWindow(fullAxis, 1439)).to.equal(false);
     });
   });
 
