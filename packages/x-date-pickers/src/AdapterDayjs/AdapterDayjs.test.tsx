@@ -69,6 +69,58 @@ describe('<AdapterDayjs />', () => {
       expect(adapter.getTimezone(resolvedDate)).to.equal('system');
       expect(adapter.isSameDay(resolvedDate, dayjs(TEST_DATE_ISO_STRING))).to.equal(true);
     });
+
+    // `Asia/Kolkata` is used because the affected zones depend on the system timezone, and the tests
+    // run with `TZ=UTC`. See https://github.com/mui/mui-x/issues/23163
+    describe('Dates predating the timezone standardization', () => {
+      const adapter = new AdapterDayjs();
+      // The wall clock of this date in `Asia/Kolkata` is `2026-08-06 01:41`.
+      const getDate = () => adapter.date('2026-08-05T20:11:00Z', 'Asia/Kolkata') as Dayjs;
+
+      it('setYear: should only change the year', () => {
+        expect(
+          adapter.formatByString(adapter.setYear(getDate(), 202), 'YYYY-MM-DD HH:mm'),
+        ).to.equal('0202-08-06 01:41');
+      });
+
+      it('setMonth: should only change the month', () => {
+        expect(
+          adapter.formatByString(
+            adapter.setMonth(adapter.setYear(getDate(), 202), 2),
+            'YYYY-MM-DD HH:mm',
+          ),
+        ).to.equal('0202-03-06 01:41');
+      });
+
+      it('addYears: should keep the day of the month', () => {
+        expect(
+          adapter.formatByString(
+            adapter.addYears(adapter.setYear(getDate(), 202), 1),
+            'YYYY-MM-DD HH:mm',
+          ),
+        ).to.equal('0203-08-06 01:41');
+      });
+
+      it('addMonths: should keep the day of the month', () => {
+        expect(
+          adapter.formatByString(
+            adapter.addMonths(adapter.setYear(getDate(), 202), 1),
+            'YYYY-MM-DD HH:mm',
+          ),
+        ).to.equal('0202-09-06 01:41');
+      });
+
+      it('setMonth: should still clamp the day of the month on a shorter month', () => {
+        const endOfJanuary = adapter.setDate(
+          adapter.setMonth(adapter.setYear(getDate(), 202), 0),
+          31,
+        );
+
+        expect(adapter.formatByString(adapter.setMonth(endOfJanuary, 1), 'YYYY-MM-DD')).to.equal(
+          '0202-02-28',
+        );
+      });
+    });
   });
 
   describe('Adapter localization', () => {
