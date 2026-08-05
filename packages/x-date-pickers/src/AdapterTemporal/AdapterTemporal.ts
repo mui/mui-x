@@ -72,50 +72,23 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime24h: 'MM/dd/yyyy HH:mm',
 };
 
-/**
- * The value handled by the Temporal adapter.
- * Wraps a `Temporal.ZonedDateTime` and keeps track of the logical timezone requested by the user
- * (`system`, `UTC`, or a named IANA zone) since `Temporal` cannot represent the difference between
- * `system` and a named zone that happens to resolve to the same offset.
- */
-export class AdapterTemporalDate {
-  /**
-   * The underlying `Temporal.ZonedDateTime`, or `null` when the date is invalid.
-   */
-  public readonly value: Temporal.ZonedDateTime | null;
-
-  /**
-   * The logical timezone: `system`, `UTC`, or a named IANA zone.
-   */
-  public readonly timezone: PickersTimezone;
-
-  constructor(value: Temporal.ZonedDateTime | null, timezone: PickersTimezone) {
-    this.value = value;
-    this.timezone = timezone;
-  }
-
-  get isValid(): boolean {
-    return this.value !== null;
-  }
-
-  toJSDate(): Date {
-    return this.value === null ? new Date(NaN) : new Date(this.value.epochMilliseconds);
-  }
-
-  valueOf(): number {
-    return this.value === null ? NaN : this.value.epochMilliseconds;
-  }
-
-  toString(): string {
-    return this.value === null ? 'Invalid Date' : this.value.toString();
-  }
-}
-
 declare module '@mui/x-date-pickers/models' {
   interface PickerValidDateLookup {
-    temporal: AdapterTemporalDate;
+    temporal: Temporal.ZonedDateTime;
   }
 }
+
+/**
+ * Logical timezone per value: `Temporal` cannot distinguish `system` from a named zone resolving to
+ * the same offset. Values built outside the adapter fall back to their own `timeZoneId`.
+ */
+const logicalTimezones = new WeakMap<Temporal.ZonedDateTime, PickersTimezone>();
+
+/**
+ * Invalid values, tracked by identity: `Temporal` has no invalid instance, and the Pickers need a
+ * non-null value to report `invalidDate` (`null` means empty).
+ */
+const invalidDates = new WeakSet<Temporal.ZonedDateTime>();
 
 /**
  * The timezone used when the `default` timezone is requested and no explicit default has been set.
@@ -224,10 +197,18 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
   };
 
   private createDate = (
-    zonedDateTime: Temporal.ZonedDateTime | null,
+    zonedDateTime: Temporal.ZonedDateTime,
     timezone: PickersTimezone,
-  ): AdapterTemporalDate => {
-    return new AdapterTemporalDate(zonedDateTime, timezone);
+  ): Temporal.ZonedDateTime => {
+    logicalTimezones.set(zonedDateTime, timezone);
+    return zonedDateTime;
+  };
+
+  /** Fresh instance each call so invalid values keep their own logical timezone. */
+  private createInvalidDate = (timezone: PickersTimezone): Temporal.ZonedDateTime => {
+    const value = Temporal.Instant.fromEpochMilliseconds(0).toZonedDateTimeISO('UTC');
+    invalidDates.add(value);
+    return this.createDate(value, timezone);
   };
 
   /**
@@ -235,28 +216,26 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
    * untouched so operations propagate invalidity instead of throwing.
    */
   private mapValue = (
-    value: AdapterTemporalDate,
+    value: Temporal.ZonedDateTime,
     fn: (zonedDateTime: Temporal.ZonedDateTime) => Temporal.ZonedDateTime,
-  ): AdapterTemporalDate => {
-    if (value.value === null) {
+  ): Temporal.ZonedDateTime => {
+    if (!this.isValid(value)) {
       return value;
     }
-    return new AdapterTemporalDate(fn(value.value), value.timezone);
+    return this.createDate(fn(value), this.getTimezone(value));
   };
 
   private intlFormat = (
-    value: AdapterTemporalDate,
+    zdt: Temporal.ZonedDateTime,
     options: Intl.DateTimeFormatOptions,
   ): string => {
-    const zdt = value.value!;
     return new Intl.DateTimeFormat(this.locale, {
       timeZone: zdt.timeZoneId,
       ...options,
     }).format(new Date(zdt.epochMilliseconds));
   };
 
-  private getMeridiemString = (value: AdapterTemporalDate): string => {
-    const zdt = value.value!;
+  private getMeridiemString = (zdt: Temporal.ZonedDateTime): string => {
     const parts = new Intl.DateTimeFormat(this.locale, {
       timeZone: zdt.timeZoneId,
       hour: 'numeric',
@@ -308,30 +287,30 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
         const plainDateTime = Temporal.PlainDateTime.from(value);
         return this.createDate(plainDateTime.toZonedDateTime(zone), logical) as unknown as R;
       } catch (innerError) {
-        return this.createDate(null, logical) as unknown as R;
+        return this.createInvalidDate(logical) as unknown as R;
       }
     }
   };
 
-  public getInvalidDate = () => this.createDate(null, 'system');
+  public getInvalidDate = () => this.createInvalidDate('system');
 
-  public getTimezone = (value: AdapterTemporalDate): string => {
-    return value.timezone;
+  public getTimezone = (value: Temporal.ZonedDateTime): string => {
+    return logicalTimezones.get(value) ?? value.timeZoneId;
   };
 
-  public setTimezone = (value: AdapterTemporalDate, timezone: PickersTimezone) => {
-    if (value.value === null) {
-      return this.createDate(null, timezone);
-    }
+  public setTimezone = (value: Temporal.ZonedDateTime, timezone: PickersTimezone) => {
     const { zone, logical } = this.resolveTimezone(timezone);
-    return this.createDate(value.value.withTimeZone(zone), logical);
+    if (!this.isValid(value)) {
+      return this.createInvalidDate(logical);
+    }
+    return this.createDate(value.withTimeZone(zone), logical);
   };
 
-  public toJsDate = (value: AdapterTemporalDate) => {
-    return value.toJSDate();
+  public toJsDate = (value: Temporal.ZonedDateTime) => {
+    return this.isValid(value) ? new Date(value.epochMilliseconds) : new Date(NaN);
   };
 
-  public parse = (value: string, format: string): AdapterTemporalDate | null => {
+  public parse = (value: string, format: string): Temporal.ZonedDateTime | null => {
     if (value === '') {
       return null;
     }
@@ -367,7 +346,7 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
 
     const match = value.match(new RegExp(regexString, 'u'));
     if (!match) {
-      return this.createDate(null, logical);
+      return this.createInvalidDate(logical);
     }
 
     const parsed: Record<string, string> = {};
@@ -381,7 +360,7 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
     } else if (parsed.monthName !== undefined) {
       month = this.resolveMonthName(parsed.monthName);
       if (month === undefined) {
-        return this.createDate(null, logical);
+        return this.createInvalidDate(logical);
       }
     }
 
@@ -395,7 +374,7 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
     // A day without a month is an incomplete date. Other libraries (for example Luxon) treat it as
     // invalid, so the field keeps the typed value instead of merging it into the reference date.
     if (parsed.day !== undefined && month === undefined) {
-      return this.createDate(null, logical);
+      return this.createInvalidDate(logical);
     }
 
     const isPM = parsed.meridiem?.toUpperCase() === 'PM';
@@ -422,7 +401,7 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
       );
       return this.createDate(plainDateTime.toZonedDateTime(zone), logical);
     } catch (error) {
-      return this.createDate(null, logical);
+      return this.createInvalidDate(logical);
     }
   };
 
@@ -461,19 +440,19 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
     return format;
   };
 
-  public isValid = (value: AdapterTemporalDate | null): value is AdapterTemporalDate => {
-    return value != null && value.isValid;
+  public isValid = (value: Temporal.ZonedDateTime | null): value is Temporal.ZonedDateTime => {
+    return value != null && !invalidDates.has(value);
   };
 
-  public format = (value: AdapterTemporalDate, formatKey: keyof AdapterFormats) => {
+  public format = (value: Temporal.ZonedDateTime, formatKey: keyof AdapterFormats) => {
     return this.formatByString(value, this.formats[formatKey]);
   };
 
-  public formatByString = (value: AdapterTemporalDate, format: string) => {
-    if (value.value === null) {
+  public formatByString = (value: Temporal.ZonedDateTime, format: string) => {
+    if (!this.isValid(value)) {
       return 'Invalid Date';
     }
-    const zdt = value.value;
+    const zdt = value;
     return format.replace(FORMAT_TOKEN_REGEXP, (token) => {
       if (token[0] === "'") {
         return token.slice(1, -1);
@@ -484,9 +463,9 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
         case 'yy':
           return pad(zdt.year % 100, 2);
         case 'MMMM':
-          return this.intlFormat(value, { month: 'long' });
+          return this.intlFormat(zdt, { month: 'long' });
         case 'MMM':
-          return this.intlFormat(value, { month: 'short' });
+          return this.intlFormat(zdt, { month: 'short' });
         case 'MM':
           return pad(zdt.month, 2);
         case 'M':
@@ -496,11 +475,11 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
         case 'd':
           return String(zdt.day);
         case 'EEEE':
-          return this.intlFormat(value, { weekday: 'long' });
+          return this.intlFormat(zdt, { weekday: 'long' });
         case 'EEE':
-          return this.intlFormat(value, { weekday: 'short' });
+          return this.intlFormat(zdt, { weekday: 'short' });
         case 'EE':
-          return this.intlFormat(value, { weekday: 'short' }).slice(0, 2);
+          return this.intlFormat(zdt, { weekday: 'short' }).slice(0, 2);
         case 'HH':
           return pad(zdt.hour, 2);
         case 'H':
@@ -520,7 +499,7 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
         case 'SSS':
           return pad(zdt.millisecond, 3);
         case 'a':
-          return this.getMeridiemString(value);
+          return this.getMeridiemString(zdt);
         /* v8 ignore next 2 */
         default:
           return token;
@@ -532,166 +511,174 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
     return numberToFormat;
   };
 
-  public isEqual = (value: AdapterTemporalDate | null, comparing: AdapterTemporalDate | null) => {
+  public isEqual = (
+    value: Temporal.ZonedDateTime | null,
+    comparing: Temporal.ZonedDateTime | null,
+  ) => {
     if (value === null && comparing === null) {
       return true;
     }
     if (value === null || comparing === null) {
       return false;
     }
-    if (value.value === null || comparing.value === null) {
-      return value.value === comparing.value;
+    const isValueValid = this.isValid(value);
+    const isComparingValid = this.isValid(comparing);
+    if (!isValueValid || !isComparingValid) {
+      return !isValueValid && !isComparingValid;
     }
-    return value.value.epochNanoseconds === comparing.value.epochNanoseconds;
+    return value.epochNanoseconds === comparing.epochNanoseconds;
   };
 
   /**
    * Represent `comparing` in the timezone of `value` so that field comparisons are done in the same zone.
    */
   private toValueTimezone = (
-    value: AdapterTemporalDate,
-    comparing: AdapterTemporalDate,
+    value: Temporal.ZonedDateTime,
+    comparing: Temporal.ZonedDateTime,
   ): Temporal.ZonedDateTime => {
-    return comparing.value!.withTimeZone(value.value!.timeZoneId);
+    return comparing.withTimeZone(value.timeZoneId);
   };
 
-  private bothValid = (value: AdapterTemporalDate, comparing: AdapterTemporalDate): boolean => {
-    return value.value !== null && comparing.value !== null;
+  private bothValid = (
+    value: Temporal.ZonedDateTime,
+    comparing: Temporal.ZonedDateTime,
+  ): boolean => {
+    return this.isValid(value) && this.isValid(comparing);
   };
 
-  public isSameYear = (value: AdapterTemporalDate, comparing: AdapterTemporalDate) => {
+  public isSameYear = (value: Temporal.ZonedDateTime, comparing: Temporal.ZonedDateTime) => {
     if (!this.bothValid(value, comparing)) {
       return false;
     }
-    return value.value!.year === this.toValueTimezone(value, comparing).year;
+    return value.year === this.toValueTimezone(value, comparing).year;
   };
 
-  public isSameMonth = (value: AdapterTemporalDate, comparing: AdapterTemporalDate) => {
+  public isSameMonth = (value: Temporal.ZonedDateTime, comparing: Temporal.ZonedDateTime) => {
     if (!this.bothValid(value, comparing)) {
       return false;
     }
     const other = this.toValueTimezone(value, comparing);
-    return value.value!.year === other.year && value.value!.month === other.month;
+    return value.year === other.year && value.month === other.month;
   };
 
-  public isSameDay = (value: AdapterTemporalDate, comparing: AdapterTemporalDate) => {
+  public isSameDay = (value: Temporal.ZonedDateTime, comparing: Temporal.ZonedDateTime) => {
     if (!this.bothValid(value, comparing)) {
       return false;
     }
     return (
       Temporal.PlainDate.compare(
-        value.value!.toPlainDate(),
+        value.toPlainDate(),
         this.toValueTimezone(value, comparing).toPlainDate(),
       ) === 0
     );
   };
 
-  public isSameHour = (value: AdapterTemporalDate, comparing: AdapterTemporalDate) => {
+  public isSameHour = (value: Temporal.ZonedDateTime, comparing: Temporal.ZonedDateTime) => {
     if (!this.bothValid(value, comparing)) {
       return false;
     }
     const other = this.toValueTimezone(value, comparing);
     return (
-      Temporal.PlainDate.compare(value.value!.toPlainDate(), other.toPlainDate()) === 0 &&
-      value.value!.hour === other.hour
+      Temporal.PlainDate.compare(value.toPlainDate(), other.toPlainDate()) === 0 &&
+      value.hour === other.hour
     );
   };
 
-  public isAfter = (value: AdapterTemporalDate, comparing: AdapterTemporalDate) => {
+  public isAfter = (value: Temporal.ZonedDateTime, comparing: Temporal.ZonedDateTime) => {
     if (!this.bothValid(value, comparing)) {
       return false;
     }
-    return value.value!.epochNanoseconds > comparing.value!.epochNanoseconds;
+    return value.epochNanoseconds > comparing.epochNanoseconds;
   };
 
-  public isAfterYear = (value: AdapterTemporalDate, comparing: AdapterTemporalDate) => {
+  public isAfterYear = (value: Temporal.ZonedDateTime, comparing: Temporal.ZonedDateTime) => {
     if (!this.bothValid(value, comparing)) {
       return false;
     }
-    return value.value!.year > this.toValueTimezone(value, comparing).year;
+    return value.year > this.toValueTimezone(value, comparing).year;
   };
 
-  public isAfterDay = (value: AdapterTemporalDate, comparing: AdapterTemporalDate) => {
+  public isAfterDay = (value: Temporal.ZonedDateTime, comparing: Temporal.ZonedDateTime) => {
     if (!this.bothValid(value, comparing)) {
       return false;
     }
     return (
       Temporal.PlainDate.compare(
-        value.value!.toPlainDate(),
+        value.toPlainDate(),
         this.toValueTimezone(value, comparing).toPlainDate(),
       ) > 0
     );
   };
 
-  public isBefore = (value: AdapterTemporalDate, comparing: AdapterTemporalDate) => {
+  public isBefore = (value: Temporal.ZonedDateTime, comparing: Temporal.ZonedDateTime) => {
     if (!this.bothValid(value, comparing)) {
       return false;
     }
-    return value.value!.epochNanoseconds < comparing.value!.epochNanoseconds;
+    return value.epochNanoseconds < comparing.epochNanoseconds;
   };
 
-  public isBeforeYear = (value: AdapterTemporalDate, comparing: AdapterTemporalDate) => {
+  public isBeforeYear = (value: Temporal.ZonedDateTime, comparing: Temporal.ZonedDateTime) => {
     if (!this.bothValid(value, comparing)) {
       return false;
     }
-    return value.value!.year < this.toValueTimezone(value, comparing).year;
+    return value.year < this.toValueTimezone(value, comparing).year;
   };
 
-  public isBeforeDay = (value: AdapterTemporalDate, comparing: AdapterTemporalDate) => {
+  public isBeforeDay = (value: Temporal.ZonedDateTime, comparing: Temporal.ZonedDateTime) => {
     if (!this.bothValid(value, comparing)) {
       return false;
     }
     return (
       Temporal.PlainDate.compare(
-        value.value!.toPlainDate(),
+        value.toPlainDate(),
         this.toValueTimezone(value, comparing).toPlainDate(),
       ) < 0
     );
   };
 
   public isWithinRange = (
-    value: AdapterTemporalDate,
-    [start, end]: [AdapterTemporalDate, AdapterTemporalDate],
+    value: Temporal.ZonedDateTime,
+    [start, end]: [Temporal.ZonedDateTime, Temporal.ZonedDateTime],
   ) => {
-    if (value.value === null || start.value === null || end.value === null) {
+    if (!this.isValid(value) || !this.isValid(start) || !this.isValid(end)) {
       return false;
     }
-    const epoch = value.value.epochNanoseconds;
-    return epoch >= start.value.epochNanoseconds && epoch <= end.value.epochNanoseconds;
+    const epoch = value.epochNanoseconds;
+    return epoch >= start.epochNanoseconds && epoch <= end.epochNanoseconds;
   };
 
-  public startOfYear = (value: AdapterTemporalDate) => {
+  public startOfYear = (value: Temporal.ZonedDateTime) => {
     return this.mapValue(value, (zdt) => zdt.with({ month: 1, day: 1 }).startOfDay());
   };
 
-  public startOfMonth = (value: AdapterTemporalDate) => {
+  public startOfMonth = (value: Temporal.ZonedDateTime) => {
     return this.mapValue(value, (zdt) => zdt.with({ day: 1 }).startOfDay());
   };
 
-  public startOfWeek = (value: AdapterTemporalDate) => {
+  public startOfWeek = (value: Temporal.ZonedDateTime) => {
     const firstDay = this.getFirstDayOfWeek();
     return this.mapValue(value, (zdt) =>
       zdt.subtract({ days: (zdt.dayOfWeek - firstDay + 7) % 7 }).startOfDay(),
     );
   };
 
-  public startOfDay = (value: AdapterTemporalDate) => {
+  public startOfDay = (value: Temporal.ZonedDateTime) => {
     return this.mapValue(value, (zdt) => zdt.startOfDay());
   };
 
-  public endOfYear = (value: AdapterTemporalDate) => {
+  public endOfYear = (value: Temporal.ZonedDateTime) => {
     return this.endOfDay(this.mapValue(value, (zdt) => zdt.with({ month: 12, day: 31 })));
   };
 
-  public endOfMonth = (value: AdapterTemporalDate) => {
+  public endOfMonth = (value: Temporal.ZonedDateTime) => {
     return this.endOfDay(this.mapValue(value, (zdt) => zdt.with({ day: zdt.daysInMonth })));
   };
 
-  public endOfWeek = (value: AdapterTemporalDate) => {
+  public endOfWeek = (value: Temporal.ZonedDateTime) => {
     return this.endOfDay(this.mapValue(this.startOfWeek(value), (zdt) => zdt.add({ days: 6 })));
   };
 
-  public endOfDay = (value: AdapterTemporalDate) => {
+  public endOfDay = (value: Temporal.ZonedDateTime) => {
     return this.mapValue(value, (zdt) =>
       zdt.with({
         hour: 23,
@@ -704,70 +691,70 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
     );
   };
 
-  public addYears = (value: AdapterTemporalDate, amount: number) => {
+  public addYears = (value: Temporal.ZonedDateTime, amount: number) => {
     return this.mapValue(value, (zdt) => zdt.add({ years: amount }));
   };
 
-  public addMonths = (value: AdapterTemporalDate, amount: number) => {
+  public addMonths = (value: Temporal.ZonedDateTime, amount: number) => {
     return this.mapValue(value, (zdt) => zdt.add({ months: amount }));
   };
 
-  public addWeeks = (value: AdapterTemporalDate, amount: number) => {
+  public addWeeks = (value: Temporal.ZonedDateTime, amount: number) => {
     return this.mapValue(value, (zdt) => zdt.add({ weeks: amount }));
   };
 
-  public addDays = (value: AdapterTemporalDate, amount: number) => {
+  public addDays = (value: Temporal.ZonedDateTime, amount: number) => {
     return this.mapValue(value, (zdt) => zdt.add({ days: amount }));
   };
 
-  public addHours = (value: AdapterTemporalDate, amount: number) => {
+  public addHours = (value: Temporal.ZonedDateTime, amount: number) => {
     return this.mapValue(value, (zdt) => zdt.add({ hours: amount }));
   };
 
-  public addMinutes = (value: AdapterTemporalDate, amount: number) => {
+  public addMinutes = (value: Temporal.ZonedDateTime, amount: number) => {
     return this.mapValue(value, (zdt) => zdt.add({ minutes: amount }));
   };
 
-  public addSeconds = (value: AdapterTemporalDate, amount: number) => {
+  public addSeconds = (value: Temporal.ZonedDateTime, amount: number) => {
     return this.mapValue(value, (zdt) => zdt.add({ seconds: amount }));
   };
 
-  public getYear = (value: AdapterTemporalDate) => {
-    return value.value === null ? NaN : value.value.year;
+  public getYear = (value: Temporal.ZonedDateTime) => {
+    return this.isValid(value) ? value.year : NaN;
   };
 
-  public getMonth = (value: AdapterTemporalDate) => {
-    return value.value === null ? NaN : value.value.month - 1;
+  public getMonth = (value: Temporal.ZonedDateTime) => {
+    return this.isValid(value) ? value.month - 1 : NaN;
   };
 
-  public getDate = (value: AdapterTemporalDate) => {
-    return value.value === null ? NaN : value.value.day;
+  public getDate = (value: Temporal.ZonedDateTime) => {
+    return this.isValid(value) ? value.day : NaN;
   };
 
-  public getHours = (value: AdapterTemporalDate) => {
-    return value.value === null ? NaN : value.value.hour;
+  public getHours = (value: Temporal.ZonedDateTime) => {
+    return this.isValid(value) ? value.hour : NaN;
   };
 
-  public getMinutes = (value: AdapterTemporalDate) => {
-    return value.value === null ? NaN : value.value.minute;
+  public getMinutes = (value: Temporal.ZonedDateTime) => {
+    return this.isValid(value) ? value.minute : NaN;
   };
 
-  public getSeconds = (value: AdapterTemporalDate) => {
-    return value.value === null ? NaN : value.value.second;
+  public getSeconds = (value: Temporal.ZonedDateTime) => {
+    return this.isValid(value) ? value.second : NaN;
   };
 
-  public getMilliseconds = (value: AdapterTemporalDate) => {
-    return value.value === null ? NaN : value.value.millisecond;
+  public getMilliseconds = (value: Temporal.ZonedDateTime) => {
+    return this.isValid(value) ? value.millisecond : NaN;
   };
 
   /**
    * Like {@link mapValue} but for setters: `with` uses the default `overflow: 'constrain'` so that
    * out-of-range fields (for example the 31st of a 30-day month) clamp to the closest valid date,
-   * and an out-of-range or `NaN` input returns an invalid value instead of throwing — matching the
+   * and an out-of-range or `NaN` input returns an invalid value instead of throwing, matching the
    * other adapters.
    */
   private setValue = (
-    value: AdapterTemporalDate,
+    value: Temporal.ZonedDateTime,
     fields: {
       year?: number;
       month?: number;
@@ -777,62 +764,64 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
       second?: number;
       millisecond?: number;
     },
-  ): AdapterTemporalDate => {
-    if (value.value === null) {
+  ): Temporal.ZonedDateTime => {
+    if (!this.isValid(value)) {
       return value;
     }
+    const timezone = this.getTimezone(value);
     try {
-      return new AdapterTemporalDate(value.value.with(fields), value.timezone);
+      return this.createDate(value.with(fields), timezone);
     } catch (error) {
-      return new AdapterTemporalDate(null, value.timezone);
+      return this.createInvalidDate(timezone);
     }
   };
 
-  public setYear = (value: AdapterTemporalDate, year: number) => {
+  public setYear = (value: Temporal.ZonedDateTime, year: number) => {
     return this.setValue(value, { year });
   };
 
-  public setMonth = (value: AdapterTemporalDate, month: number) => {
+  public setMonth = (value: Temporal.ZonedDateTime, month: number) => {
     return this.setValue(value, { month: month + 1 });
   };
 
-  public setDate = (value: AdapterTemporalDate, date: number) => {
+  public setDate = (value: Temporal.ZonedDateTime, date: number) => {
     return this.setValue(value, { day: date });
   };
 
-  public setHours = (value: AdapterTemporalDate, hours: number) => {
+  public setHours = (value: Temporal.ZonedDateTime, hours: number) => {
     return this.setValue(value, { hour: hours });
   };
 
-  public setMinutes = (value: AdapterTemporalDate, minutes: number) => {
+  public setMinutes = (value: Temporal.ZonedDateTime, minutes: number) => {
     return this.setValue(value, { minute: minutes });
   };
 
-  public setSeconds = (value: AdapterTemporalDate, seconds: number) => {
+  public setSeconds = (value: Temporal.ZonedDateTime, seconds: number) => {
     return this.setValue(value, { second: seconds });
   };
 
-  public setMilliseconds = (value: AdapterTemporalDate, milliseconds: number) => {
+  public setMilliseconds = (value: Temporal.ZonedDateTime, milliseconds: number) => {
     return this.setValue(value, { millisecond: milliseconds });
   };
 
-  public getDaysInMonth = (value: AdapterTemporalDate) => {
-    return value.value === null ? NaN : value.value.daysInMonth;
+  public getDaysInMonth = (value: Temporal.ZonedDateTime) => {
+    return this.isValid(value) ? value.daysInMonth : NaN;
   };
 
-  public getWeekArray = (value: AdapterTemporalDate) => {
-    if (value.value === null) {
+  public getWeekArray = (value: Temporal.ZonedDateTime) => {
+    if (!this.isValid(value)) {
       return [];
     }
-    const start = this.startOfWeek(this.startOfMonth(value)).value!;
-    const end = this.endOfWeek(this.endOfMonth(value)).value!;
+    const timezone = this.getTimezone(value);
+    const start = this.startOfWeek(this.startOfMonth(value));
+    const end = this.endOfWeek(this.endOfMonth(value));
 
-    const weeks: AdapterTemporalDate[][] = [];
+    const weeks: Temporal.ZonedDateTime[][] = [];
     let current = start;
-    let week: AdapterTemporalDate[] = [];
+    let week: Temporal.ZonedDateTime[] = [];
 
     while (Temporal.ZonedDateTime.compare(current, end) <= 0) {
-      week.push(new AdapterTemporalDate(current, value.timezone));
+      week.push(this.createDate(current, timezone));
       if (week.length === 7) {
         weeks.push(week);
         week = [];
@@ -843,27 +832,27 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
     return weeks;
   };
 
-  public getWeekNumber = (value: AdapterTemporalDate) => {
-    if (value.value === null) {
+  public getWeekNumber = (value: Temporal.ZonedDateTime) => {
+    if (!this.isValid(value)) {
       return NaN;
     }
-    const date = value.value.toPlainDate();
+    const date = value.toPlainDate();
     // ISO 8601 week number: the week is the one containing its Thursday.
     const thursday = date.add({ days: 4 - date.dayOfWeek });
     return Math.ceil(thursday.dayOfYear / 7);
   };
 
-  public getDayOfWeek = (value: AdapterTemporalDate) => {
-    if (value.value === null) {
+  public getDayOfWeek = (value: Temporal.ZonedDateTime) => {
+    if (!this.isValid(value)) {
       return NaN;
     }
     const firstDay = this.getFirstDayOfWeek();
-    return ((value.value.dayOfWeek - firstDay + 7) % 7) + 1;
+    return ((value.dayOfWeek - firstDay + 7) % 7) + 1;
   };
 
-  public getYearRange = ([start, end]: [AdapterTemporalDate, AdapterTemporalDate]) => {
+  public getYearRange = ([start, end]: [Temporal.ZonedDateTime, Temporal.ZonedDateTime]) => {
     const endDate = this.endOfYear(end);
-    const years: AdapterTemporalDate[] = [];
+    const years: Temporal.ZonedDateTime[] = [];
 
     let current = this.startOfYear(start);
     while (this.isBefore(current, endDate)) {

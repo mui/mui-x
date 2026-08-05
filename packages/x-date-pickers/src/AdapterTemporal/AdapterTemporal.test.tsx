@@ -2,7 +2,6 @@ import { onTestFinished } from 'vitest';
 // The Temporal API is not yet available in every runtime, so the tests install the polyfill globally.
 import 'temporal-polyfill/global';
 import { AdapterTemporal, setDefaultTimezone } from '@mui/x-date-pickers/AdapterTemporal';
-import type { AdapterTemporalDate } from '@mui/x-date-pickers/AdapterTemporal';
 import type { AdapterFormats } from '@mui/x-date-pickers/models';
 import { describeGregorianAdapter, TEST_DATE_ISO_STRING } from 'test/utils/pickers';
 
@@ -39,7 +38,7 @@ describe('<AdapterTemporal />', () => {
       const adapter = new AdapterTemporal({ locale: 'ru-RU' });
 
       it('getWeekArray: should start on Monday', () => {
-        const date = adapter.date(TEST_DATE_ISO_STRING) as AdapterTemporalDate;
+        const date = adapter.date(TEST_DATE_ISO_STRING) as Temporal.ZonedDateTime;
         const result = adapter.getWeekArray(date);
         expect(adapter.formatByString(result[0][0], 'EEE')).to.match(/пн/i);
       });
@@ -57,7 +56,7 @@ describe('<AdapterTemporal />', () => {
       const adapter = new AdapterTemporal({ locale: 'en-US' });
 
       const expectDate = (format: keyof AdapterFormats, expectedWithEn: string) => {
-        const date = adapter.date('2020-01-01T23:44:00.000Z', 'UTC') as AdapterTemporalDate;
+        const date = adapter.date('2020-01-01T23:44:00.000Z', 'UTC') as Temporal.ZonedDateTime;
         expect(adapter.format(date, format)).to.equal(expectedWithEn);
       };
 

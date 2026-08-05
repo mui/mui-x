@@ -1,1 +1,1 @@
-export { AdapterTemporal, AdapterTemporalDate, setDefaultTimezone } from './AdapterTemporal';
+export { AdapterTemporal, setDefaultTimezone } from './AdapterTemporal';

@@ -364,7 +364,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
           const tabIndex = isFocused ? 0 : -1;
           return (
             <ClockItem
-              key={`${option.valueOf()}-${formattedValue}`}
+              key={`${adapter.toJsDate(option).valueOf()}-${formattedValue}`}
               onClick={() => !readOnly && handleItemSelect(option)}
               selected={isSelected}
               disabled={disabled || optionDisabled}
