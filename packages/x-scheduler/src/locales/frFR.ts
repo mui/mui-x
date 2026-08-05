@@ -53,9 +53,9 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   resourceLabel: 'Ressource',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Enregistrer',
-  startDateAfterEndDateError: 'La date/heure de début doit être antérieure à la date/heure de fin.',
+  startDateAfterEndDateError: 'La date de fin ne peut pas être antérieure à la date de début.',
   startDateLabel: 'Date de début',
-  // startTimeAfterEndTimeError: 'End time must be after start time.',
+  startTimeAfterEndTimeError: "L'heure de fin doit être postérieure à l'heure de début.",
   startTimeLabel: 'Heure de début',
 
   // RecurringScopeDialog

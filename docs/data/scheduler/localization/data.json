@@ -115,7 +115,7 @@
     "languageTag": "fr-FR",
     "importName": "frFR",
     "localeName": "French",
-    "missingKeysCount": 9,
+    "missingKeysCount": 8,
     "totalKeysCount": 96,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/frFR.ts"
   },
@@ -123,7 +123,7 @@
     "languageTag": "de-DE",
     "importName": "deDE",
     "localeName": "German",
-    "missingKeysCount": 9,
+    "missingKeysCount": 8,
     "totalKeysCount": 96,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/deDE.ts"
   },
@@ -171,7 +171,7 @@
     "languageTag": "it-IT",
     "importName": "itIT",
     "localeName": "Italian",
-    "missingKeysCount": 9,
+    "missingKeysCount": 8,
     "totalKeysCount": 96,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/itIT.ts"
   },
@@ -195,7 +195,7 @@
     "languageTag": "nb-NO",
     "importName": "nbNO",
     "localeName": "Norwegian (Bokmål)",
-    "missingKeysCount": 9,
+    "missingKeysCount": 8,
     "totalKeysCount": 96,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/nbNO.ts"
   },
@@ -219,7 +219,7 @@
     "languageTag": "pl-PL",
     "importName": "plPL",
     "localeName": "Polish",
-    "missingKeysCount": 2,
+    "missingKeysCount": 1,
     "totalKeysCount": 96,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/plPL.ts"
   },
@@ -227,7 +227,7 @@
     "languageTag": "pt-PT",
     "importName": "ptPT",
     "localeName": "Portuguese",
-    "missingKeysCount": 9,
+    "missingKeysCount": 8,
     "totalKeysCount": 96,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/ptPT.ts"
   },
@@ -235,7 +235,7 @@
     "languageTag": "pt-BR",
     "importName": "ptBR",
     "localeName": "Portuguese (Brazil)",
-    "missingKeysCount": 9,
+    "missingKeysCount": 8,
     "totalKeysCount": 96,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/ptBR.ts"
   },
@@ -243,7 +243,7 @@
     "languageTag": "ro-RO",
     "importName": "roRO",
     "localeName": "Romanian",
-    "missingKeysCount": 9,
+    "missingKeysCount": 8,
     "totalKeysCount": 96,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/roRO.ts"
   },
@@ -267,7 +267,7 @@
     "languageTag": "es-ES",
     "importName": "esES",
     "localeName": "Spanish",
-    "missingKeysCount": 8,
+    "missingKeysCount": 7,
     "totalKeysCount": 96,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/esES.ts"
   },

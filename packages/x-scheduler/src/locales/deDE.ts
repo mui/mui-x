@@ -53,9 +53,9 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   resourceLabel: 'Ressource',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Speichern',
-  startDateAfterEndDateError: 'Startdatum/-zeit muss vor dem Enddatum/-zeit liegen.',
+  startDateAfterEndDateError: 'Das Enddatum darf nicht vor dem Startdatum liegen.',
   startDateLabel: 'Startdatum',
-  // startTimeAfterEndTimeError: 'End time must be after start time.',
+  startTimeAfterEndTimeError: 'Die Endzeit muss nach der Startzeit liegen.',
   startTimeLabel: 'Startzeit',
 
   // RecurringScopeDialog

@@ -53,9 +53,9 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   resourceLabel: 'Resursă',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salvează',
-  startDateAfterEndDateError: 'Data/ora de început trebuie să fie înainte de data/ora de sfârșit.',
+  startDateAfterEndDateError: 'Data de sfârșit nu poate fi înainte de data de început.',
   startDateLabel: 'Data de început',
-  // startTimeAfterEndTimeError: 'End time must be after start time.',
+  startTimeAfterEndTimeError: 'Ora de sfârșit trebuie să fie după ora de început.',
   startTimeLabel: 'Ora de început',
 
   // RecurringScopeDialog
