@@ -15,6 +15,13 @@ import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry'
  * collection end.
  */
 const DEPENDENCY_TERMINAL_SIZE = 10;
+/**
+ * How far the terminal's interactive surface extends past the visible circle. The
+ * circle is deliberately small; without a bigger target it is too hard to grab
+ * (Fitts): the halo roughly doubles the effective size, like the amplified terminal
+ * zones of the usual Gantt tools.
+ */
+const DEPENDENCY_TERMINAL_HALO = 7;
 
 const DependencyTerminalsLayer = styled('div', {
   name: 'MuiEventTimeline',
@@ -49,6 +56,7 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
   // revealed it covers the first pixels of a back-to-back neighbor, whose
   // start-resize grab must aim above or below the circle.
   transform: 'translate(0, -50%)',
+  transition: 'transform 120ms ease-out',
   cursor: 'crosshair',
   opacity: 0,
   // Only hit-testable while shown: an invisible terminal must not steal clicks from
@@ -56,9 +64,25 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
   pointerEvents: 'none',
   backgroundColor: 'var(--event-surface-accent)',
   border: `1px solid ${(theme.vars || theme).palette.background.paper}`,
+  // Invisible halo amplifying the interactive surface: the circle alone is too small
+  // a target. Outward and vertically only — extending inward would cover the event's
+  // own end-resize strip, which the terminal deliberately leaves free.
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: -DEPENDENCY_TERMINAL_HALO,
+    bottom: -DEPENDENCY_TERMINAL_HALO,
+    left: 0,
+    right: -DEPENDENCY_TERMINAL_HALO,
+  },
   '&[data-visible]': {
     opacity: 1,
     pointerEvents: 'auto',
+  },
+  // The grab feedback: growing under the pointer tells the user the target is
+  // acquired before they press.
+  '&[data-visible]:hover': {
+    transform: 'translate(0, -50%) scale(1.3)',
   },
   variants: getPaletteVariants(theme),
 }));

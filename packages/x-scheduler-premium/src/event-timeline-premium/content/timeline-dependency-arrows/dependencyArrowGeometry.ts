@@ -54,6 +54,16 @@ const DEPENDENCY_ARROW_HIT_TRIM_END = 8;
  * Minimum clickable stretch a trimmed single-segment route keeps in its middle.
  */
 const DEPENDENCY_ARROW_HIT_MIN_LENGTH = 6;
+/**
+ * Stroke width of the invisible path capturing the pointer around each arrow, defined
+ * here because the geometry derives the obstacle clearance from it.
+ */
+export const DEPENDENCY_ARROW_HIT_STROKE_WIDTH = 10;
+/**
+ * How far the hit-area stops before an event box the route crosses: half the stroke,
+ * so the band never covers any part of the event.
+ */
+const DEPENDENCY_ARROW_HIT_CLEARANCE = DEPENDENCY_ARROW_HIT_STROKE_WIDTH / 2;
 
 export interface DependencyArrowPoint {
   x: number;
@@ -371,22 +381,25 @@ export function computeDependencyArrows(
 
     const routes = buildDependencyArrowRoutes(source, target, resolver.detourOffset, eventsWidth);
 
+    // The event boxes the route may cross, used to pick the route and to cut the
+    // hit-area around them. The endpoint events stay out: the end trims already
+    // handle their edges.
+    const obstacles: DependencyArrowObstacle[] = [];
+    for (let rowIndex = minRowIndex; rowIndex <= maxRowIndex; rowIndex += 1) {
+      for (const obstacle of resolver.getRowObstacles(rowIndex)) {
+        if (
+          obstacle.occurrenceKey !== sourceAnchor.occurrence.key &&
+          obstacle.occurrenceKey !== targetAnchor.occurrence.key
+        ) {
+          obstacles.push(obstacle);
+        }
+      }
+    }
+
     // With several candidates, keep the one crossing the fewest events (first wins on
     // a tie). Best-effort avoidance, not full pathfinding.
     let points = routes[0];
     if (routes.length > 1) {
-      const obstacles: DependencyArrowObstacle[] = [];
-      for (let rowIndex = minRowIndex; rowIndex <= maxRowIndex; rowIndex += 1) {
-        for (const obstacle of resolver.getRowObstacles(rowIndex)) {
-          if (
-            obstacle.occurrenceKey !== sourceAnchor.occurrence.key &&
-            obstacle.occurrenceKey !== targetAnchor.occurrence.key
-          ) {
-            obstacles.push(obstacle);
-          }
-        }
-      }
-
       let bestCollisions = countRouteCollisions(points, obstacles);
       for (let index = 1; index < routes.length && bestCollisions > 0; index += 1) {
         const collisions = countRouteCollisions(routes[index], obstacles);
@@ -408,10 +421,13 @@ export function computeDependencyArrows(
       key: `${String(dependency.id)}:${sourceAnchor.rowIndex}:${targetAnchor.rowIndex}`,
       id: dependency.id,
       d: buildRoundedOrthogonalPath(points, DEPENDENCY_ARROW_CORNER_RADIUS),
-      hitD: buildRoundedOrthogonalPath(
+      hitD: clipRouteAroundObstacles(
         trimRouteEnds(points, DEPENDENCY_ARROW_HIT_TRIM_START, DEPENDENCY_ARROW_HIT_TRIM_END),
-        DEPENDENCY_ARROW_CORNER_RADIUS,
-      ),
+        obstacles,
+      )
+        .map((polyline) => buildRoundedOrthogonalPath(polyline, DEPENDENCY_ARROW_CORNER_RADIUS))
+        .filter((subpath) => subpath !== '')
+        .join(' '),
       endPoint: points[points.length - 1],
       minXFraction: minX / eventsWidth,
       maxXFraction: maxX / eventsWidth,
@@ -462,6 +478,105 @@ function movePointAlongSegment(
     x: from.x + ((toward.x - from.x) / length) * cappedDistance,
     y: from.y + ((toward.y - from.y) / length) * cappedDistance,
   };
+}
+
+/**
+ * Splits an orthogonal route into the stretches that do not ride over an event box,
+ * so the events a route crosses keep their clicks and drags (the hit band would
+ * otherwise capture the pointerdown and the event's draggable could never start).
+ * Boxes are expanded by half the hit stroke, stopping the band right before it would
+ * visually reach an event. When the boxes cover the whole route, the uncut route is
+ * returned instead: an overlapped band beats an unselectable arrow.
+ */
+function clipRouteAroundObstacles(
+  points: readonly DependencyArrowPoint[],
+  obstacles: readonly DependencyArrowObstacle[],
+): DependencyArrowPoint[][] {
+  if (obstacles.length === 0 || points.length < 2) {
+    return [[...points]];
+  }
+
+  const EPSILON = 1e-6;
+  const polylines: DependencyArrowPoint[][] = [];
+  // The polyline being accumulated across segments, or `null` right after a covered
+  // stretch cut the route.
+  let current: DependencyArrowPoint[] | null = [points[0]];
+  const closeCurrent = () => {
+    if (current !== null && current.length >= 2) {
+      polylines.push(current);
+    }
+    current = null;
+  };
+
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const from = points[index];
+    const to = points[index + 1];
+    const horizontal = from.y === to.y;
+    const delta = horizontal ? to.x - from.x : to.y - from.y;
+    if (Math.abs(delta) <= EPSILON) {
+      continue;
+    }
+
+    // Covered sub-intervals of the segment, as fractions of its length.
+    const covered: Array<[number, number]> = [];
+    for (const obstacle of obstacles) {
+      const x1 = obstacle.x1 - DEPENDENCY_ARROW_HIT_CLEARANCE;
+      const x2 = obstacle.x2 + DEPENDENCY_ARROW_HIT_CLEARANCE;
+      const y1 = obstacle.y1 - DEPENDENCY_ARROW_HIT_CLEARANCE;
+      const y2 = obstacle.y2 + DEPENDENCY_ARROW_HIT_CLEARANCE;
+      if (horizontal ? from.y <= y1 || from.y >= y2 : from.x <= x1 || from.x >= x2) {
+        continue;
+      }
+      const enter = horizontal ? (x1 - from.x) / delta : (y1 - from.y) / delta;
+      const exit = horizontal ? (x2 - from.x) / delta : (y2 - from.y) / delta;
+      const start = Math.max(0, Math.min(enter, exit));
+      const end = Math.min(1, Math.max(enter, exit));
+      if (end > start) {
+        covered.push([start, end]);
+      }
+    }
+    covered.sort((a, b) => a[0] - b[0]);
+
+    // Invert into the visible pieces.
+    const visible: Array<[number, number]> = [];
+    let cursor = 0;
+    for (const [start, end] of covered) {
+      if (start > cursor + EPSILON) {
+        visible.push([cursor, start]);
+      }
+      cursor = Math.max(cursor, end);
+    }
+    if (cursor < 1 - EPSILON) {
+      visible.push([cursor, 1]);
+    }
+
+    if (visible.length === 0) {
+      closeCurrent();
+      continue;
+    }
+    const pointAt = (t: number): DependencyArrowPoint =>
+      horizontal ? { x: from.x + delta * t, y: from.y } : { x: from.x, y: from.y + delta * t };
+    for (const [start, end] of visible) {
+      // Exact corner coordinates at the piece's ends, so consecutive segments keep
+      // sharing their corners and the rounding stays intact.
+      const endPoint = end >= 1 - EPSILON ? to : pointAt(end);
+      if (start <= EPSILON && current !== null) {
+        current.push(endPoint);
+      } else {
+        closeCurrent();
+        current = [pointAt(start), endPoint];
+      }
+      if (end < 1 - EPSILON) {
+        closeCurrent();
+      }
+    }
+  }
+  closeCurrent();
+
+  if (polylines.length === 0) {
+    return [[...points]];
+  }
+  return polylines;
 }
 
 /**

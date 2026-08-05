@@ -208,6 +208,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       // grab must aim above or below the circle.
       const outside = document.elementFromPoint(adjacentRect.left + 2, centerY)!;
       expect(outside.closest('[data-dependency-terminal]')).not.to.equal(null);
+
+      // The invisible halo amplifies the target beyond the visible 10px circle, both
+      // outward and vertically.
+      const beyondCircle = document.elementFromPoint(adjacentRect.left + 14, centerY)!;
+      expect(beyondCircle.closest('[data-dependency-terminal]')).not.to.equal(null);
+      const aboveCircle = document.elementFromPoint(adjacentRect.left + 4, centerY - 10)!;
+      expect(aboveCircle.closest('[data-dependency-terminal]')).not.to.equal(null);
     });
 
     it('should keep the revealed terminal reachable under a crossing arrow', async () => {
@@ -239,6 +246,36 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       const centerY = middleRect.top + middleRect.height / 2;
       const atTerminal = document.elementFromPoint(middleRect.right + 4, centerY)!;
       expect(atTerminal.closest('[data-dependency-terminal]')).not.to.equal(null);
+    });
+
+    it('should leave the pointer to an event the arrow crosses', async () => {
+      // The straight A → C arrow rides over the middle event, but its hit band is cut
+      // around the box: grabbing the middle event at its natural center must start
+      // its own drag, not select the arrow.
+      const middleEvent = EventBuilder.new()
+        .id('event-m')
+        .title('Middle event')
+        .singleDay('2025-07-03T10:30:00Z')
+        .resource(resource1)
+        .build();
+      const eventC = EventBuilder.new()
+        .id('event-c')
+        .title('Event C')
+        .singleDay('2025-07-03T13:00:00Z')
+        .resource(resource1)
+        .build();
+      renderTimeline({
+        events: [eventA, middleEvent, eventC],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-c')],
+      });
+
+      const middleElement = getEventElement('Middle event');
+      const middleRect = middleElement.getBoundingClientRect();
+      const centerX = middleRect.left + middleRect.width / 2;
+      const centerY = middleRect.top + middleRect.height / 2;
+      const atCenter = document.elementFromPoint(centerX, centerY)!;
+      expect(atCenter.closest('[data-dependency-hit]')).to.equal(null);
+      expect(atCenter.closest('[data-occurrence-key]')).to.equal(middleElement);
     });
   });
 

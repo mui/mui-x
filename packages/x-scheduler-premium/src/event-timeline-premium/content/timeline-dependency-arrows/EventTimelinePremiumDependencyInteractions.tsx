@@ -9,17 +9,13 @@ import {
   orderArrowsWithSelectedLast,
   useDependencyGeometry,
 } from './EventTimelinePremiumDependencyGeometry';
+import { DEPENDENCY_ARROW_HIT_STROKE_WIDTH } from './dependencyArrowGeometry';
 import { useDependencySelectionInteraction } from './useDependencySelectionInteraction';
 
-/**
- * Stroke width of the invisible path capturing the pointer around each arrow.
- * Accepted trade-off: mid-route the band rides over the events it crosses, so a click
- * within its half-width of the line selects the arrow instead of the event. The end
- * trims protect the resize handles at the route's extremities, and the revealed
- * terminals paint above the band (their overlay is later in the DOM), so a click on
- * a terminal never leaks to an arrow crossing it.
- */
-const DEPENDENCY_ARROW_HIT_STROKE_WIDTH = 10;
+// The hit paths never ride over an event the route crosses (the geometry cuts them
+// around the boxes), the end trims protect the resize handles at the route's
+// extremities, and the revealed terminals paint above the band (their overlay is
+// later in the DOM) — so events, handles and terminals all win over a crossing arrow.
 /**
  * Radius of the round delete button replacing the arrowhead of the selected arrow.
  */

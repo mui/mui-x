@@ -397,6 +397,55 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].hitD).to.equal(`M 732 ${LANE_1_CENTER} L 772 ${LANE_1_CENTER}`);
     });
 
+    it('should cut the hit-area around an event the route crosses', () => {
+      // 12:20–12:40 in the same lane as the endpoints: the straight route rides over
+      // it, but its hit band must not — the event stays clickable and draggable, the
+      // arrow is selected from the open stretches on both sides (box [740, 760]
+      // expanded by the 5px half-stroke → [735, 765]).
+      const crossedEvent = EventBuilder.new()
+        .id('event-crossed')
+        .singleDay('2024-01-15T12:20:00Z', 20)
+        .toProcessed();
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA, crossedEvent, eventB]) },
+          ],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
+
+      expect(arrows).to.have.length(1);
+      expect(arrows[0].d).to.equal(`M 720 ${LANE_1_CENTER} L 780 ${LANE_1_CENTER}`);
+      expect(arrows[0].hitD).to.equal(
+        `M 732 ${LANE_1_CENTER} L 735 ${LANE_1_CENTER} M 765 ${LANE_1_CENTER} L 772 ${LANE_1_CENTER}`,
+      );
+    });
+
+    it('should keep the whole trimmed hit-area when the crossed events cover all of it', () => {
+      // 12:05–12:55 spans the entire trimmed stretch once expanded: with no open
+      // stretch left, an uncovered band beats an unselectable arrow.
+      const coveringEvent = EventBuilder.new()
+        .id('event-covering')
+        .singleDay('2024-01-15T12:05:00Z', 50)
+        .toProcessed();
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA, coveringEvent, eventB]) },
+          ],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
+
+      expect(arrows).to.have.length(1);
+      expect(arrows[0].hitD).to.equal(`M 732 ${LANE_1_CENTER} L 772 ${LANE_1_CENTER}`);
+    });
+
     it('should place the arrowhead endpoint on the drawn tip when the route clamps at the left edge', () => {
       // The target starts at x = 0: the S route's entry vertical clamps at the
       // timeline edge and the tip lands at the entry clearance, not on the anchor.
