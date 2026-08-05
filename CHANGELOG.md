@@ -82,7 +82,7 @@ Same changes as in `@mui/x-tree-view@9.11.0`.
 - [scheduler] Add `localeText` prop to standalone views (#23210) @rita-codes
 - [scheduler] Introduce the edit dialog form context & lifecycle contract (#23284) @rita-codes
 - [scheduler] Refactor edit dialog General tab into section components (#23206) @rita-codes
-- [scheduler] Replace copied Base UI internals with `@base-ui/react/internals` imports (#21972) @flaviendelangle
+- [scheduler] Replace copied Base UI internals with `@base-ui/react/internals` imports (#21972) @flaviendelangle
 - [scheduler] Hide resource picker when no resources are provided (#23290) @mustafajw07
 - [scheduler] Support multi-resource occurrences in EventTimeline (#23240) @mustafajw07
 
