@@ -27,8 +27,16 @@ export const schedulerOtherSelectors = {
   displayTimezone: createSelector((state: State) => state.displayTimezone),
   /**
    * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * Resolves to `false` when no resources are configured, even if `shouldEventRequireResource` was set to `true`,
+   * since that combination is contradictory (the store already warns about it) and would otherwise block
+   * submission with no resource picker to fix it from.
    */
-  shouldEventRequireResource: createSelector((state: State) => state.shouldEventRequireResource),
+  shouldEventRequireResource: createSelector(
+    (state: State) => state.shouldEventRequireResource,
+    (state: State) => state.resourceIdList,
+    (shouldEventRequireResource, resourceIdList) =>
+      shouldEventRequireResource && resourceIdList.length > 0,
+  ),
   recurringEventsPlugin: createSelector((state: State) => state.recurringEventsPlugin),
   areRecurringEventsAvailable: createSelector(
     (state: State) => state.recurringEventsPlugin != null,

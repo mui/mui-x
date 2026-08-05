@@ -16,3 +16,5 @@ export interface TreeViewSelectionPropagation {
   descendants?: boolean;
   parents?: boolean;
 }
+
+export type TreeViewItemSelectionStatus = 'selected' | 'indeterminate' | 'unselected';
