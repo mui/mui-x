@@ -55,6 +55,7 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   saveChanges: 'Salvează',
   startDateAfterEndDateError: 'Data/ora de început trebuie să fie înainte de data/ora de sfârșit.',
   startDateLabel: 'Data de început',
+  // startTimeAfterEndTimeError: 'Start time must be before end time.',
   startTimeLabel: 'Ora de început',
 
   // RecurringScopeDialog

@@ -67,6 +67,7 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   startDateAfterEndDateError:
     'Data/godzina rozpoczęcia musi być wcześniejsza niż data/godzina zakończenia.',
   startDateLabel: 'Data rozpoczęcia',
+  // startTimeAfterEndTimeError: 'Start time must be before end time.',
   startTimeLabel: 'Godzina rozpoczęcia',
 
   // RecurringScopeDialog

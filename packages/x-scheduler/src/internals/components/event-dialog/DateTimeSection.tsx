@@ -77,9 +77,12 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
     (field: 'startDate' | 'startTime') =>
     (value: string, allValues: EventDialogFormValues): string | null => {
       const { start, end } = computeRange(adapter, allValues, displayTimezone);
-      return validateRange(adapter, start, end, allValues.allDay)?.field === field
+      if (validateRange(adapter, start, end, allValues.allDay)?.field !== field) {
+        return null;
+      }
+      return field === 'startDate'
         ? localeText.startDateAfterEndDateError
-        : null;
+        : localeText.startTimeAfterEndTimeError;
     };
 
   const startDate = useEventDialogFormField<string>('startDate', {
@@ -134,7 +137,10 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
               slotProps={{
                 inputLabel: { shrink: true },
                 input: { readOnly: isPropertyReadOnly('start') },
+                formHelperText: { role: 'alert' },
               }}
+              error={!!startTime.error}
+              helperText={startTime.error}
               size="small"
             />
           )}

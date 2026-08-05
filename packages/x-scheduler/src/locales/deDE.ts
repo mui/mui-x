@@ -55,6 +55,7 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   saveChanges: 'Speichern',
   startDateAfterEndDateError: 'Startdatum/-zeit muss vor dem Enddatum/-zeit liegen.',
   startDateLabel: 'Startdatum',
+  // startTimeAfterEndTimeError: 'Start time must be before end time.',
   startTimeLabel: 'Startzeit',
 
   // RecurringScopeDialog

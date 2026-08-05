@@ -57,6 +57,7 @@ const trTRDialog: Partial<EventDialogLocaleText> = {
   // saveChanges: 'Save',
   // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   // startDateLabel: 'Start date',
+  // startTimeAfterEndTimeError: 'Start time must be before end time.',
   // startTimeLabel: 'Start time',
   // RecurringScopeDialog
   // all: 'All events',

@@ -259,7 +259,7 @@ describe('<EventDialogContent open />', () => {
     );
   });
 
-  it('should block submit if start time is after end time on the same day', async () => {
+  it('should show error and block submit if start time is after end time on the same day', async () => {
     const onEventsChange = spy();
     const { user } = render(
       <EventCalendarProvider
@@ -277,9 +277,10 @@ describe('<EventDialogContent open />', () => {
     await user.type(screen.getByLabelText(/end time/i), '09:00');
     await user.click(screen.getByRole('button', { name: /save/i }));
 
-    // TODO(#23285): the Start time field does not surface this error yet,
-    // so the submit is blocked with no visible message.
     expect(onEventsChange.called).to.equal(false);
+    expect(screen.getDescriptionOf(screen.getByLabelText(/start time/i)).textContent).to.match(
+      /start time.*before.*end time/i,
+    );
   });
 
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
