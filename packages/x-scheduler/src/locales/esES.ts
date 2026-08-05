@@ -22,7 +22,6 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   endDateLabel: 'Fecha de fin',
   endTimeLabel: 'Hora de fin',
   eventTitleAriaLabel: 'Título del evento',
-  // eventTitlePlaceholder: 'Add title',
   generalTabLabel: 'General',
   labelNoResource: 'Sin recurso',
   labelInvalidResource: 'Recurso no válido',

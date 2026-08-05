@@ -22,7 +22,6 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   endDateLabel: 'Sluttdato',
   endTimeLabel: 'Slutttidspunkt',
   eventTitleAriaLabel: 'Hendelsestittel',
-  // eventTitlePlaceholder: 'Add title',
   generalTabLabel: 'Generelt',
   labelNoResource: 'Ingen ressurs',
   labelInvalidResource: 'Ugyldig ressurs',

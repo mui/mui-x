@@ -22,7 +22,6 @@ const roRODialog: Partial<EventEditingLocaleText> = {
   endDateLabel: 'Data de sfârșit',
   endTimeLabel: 'Ora de sfârșit',
   eventTitleAriaLabel: 'Titlul evenimentului',
-  // eventTitlePlaceholder: 'Add title',
   generalTabLabel: 'General',
   labelNoResource: 'Fără resursă',
   labelInvalidResource: 'Resursă invalidă',

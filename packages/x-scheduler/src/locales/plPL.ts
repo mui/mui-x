@@ -22,7 +22,6 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   endDateLabel: 'Data zakończenia',
   endTimeLabel: 'Godzina zakończenia',
   eventTitleAriaLabel: 'Tytuł wydarzenia',
-  // eventTitlePlaceholder: 'Add title',
   generalTabLabel: 'Ogólne',
   labelNoResource: 'Brak zasobu',
   labelInvalidResource: 'Nieprawidłowy zasób',

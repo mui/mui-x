@@ -5,8 +5,10 @@ import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/elem
 import type { SchedulerEventSide } from '../../models';
 
 /**
- * Native drag-and-drop resize for calendar events. The host picks this or the pointer-based resize
- * ({@link useEventPointerResizeHandler}) via `enabled`.
+ * Native drag-and-drop resize for calendar events. This hook and the pointer-based resize
+ * ({@link useEventPointerResizeHandler}) run together on the same handle and share one `enabled`
+ * (the edge is inside the collection). The mouse is served here; touch and pen are served by the
+ * pointer hook, which bails on `pointerType === 'mouse'`.
  */
 export function useEventResizeHandler(
   parameters: useEventResizeHandler.Parameters,
@@ -60,8 +62,9 @@ export namespace useEventResizeHandler {
      */
     ref: React.RefObject<HTMLDivElement | null>;
     /**
-     * Whether to attach the native drag-and-drop listeners (false when the side is clipped or the
-     * pointer interaction is active).
+     * Whether to attach the native drag-and-drop listeners (false when the side is clipped by the
+     * collection boundary). Shared with {@link useEventPointerResizeHandler} — it is never turned
+     * off "because the pointer interaction is active".
      */
     enabled: boolean;
     /**

@@ -23,7 +23,6 @@ export interface EventEditingLocaleText {
   endDateLabel: string;
   endTimeLabel: string;
   eventTitleAriaLabel: string;
-  eventTitlePlaceholder: string;
   generalTabLabel: string;
   labelNoResource: string;
   labelInvalidResource: string;

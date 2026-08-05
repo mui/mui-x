@@ -34,8 +34,25 @@ describe('DayView - event toolbar', () => {
     return { onEventsChange };
   }
 
-  function getEvent(): HTMLElement {
-    return screen.getByRole('button', { name: /Morning Meeting/i });
+  function renderTwoEvents() {
+    const events = [
+      EventBuilder.new()
+        .id('event-1')
+        .title('Morning Meeting')
+        .singleDay('2025-07-03T10:00:00Z', 60)
+        .build(),
+      EventBuilder.new()
+        .id('event-2')
+        .title('Afternoon Sync')
+        .singleDay('2025-07-03T14:00:00Z', 60)
+        .build(),
+    ];
+
+    render(<StandaloneDayView events={events} resources={[]} onEventsChange={spy()} />);
+  }
+
+  function getEvent(name: RegExp | string = /Morning Meeting/i): HTMLElement {
+    return screen.getByRole('button', { name });
   }
 
   it('arms with a toolbar on a coarse pointer; Edit opens the dialog', () => {
@@ -75,5 +92,22 @@ describe('DayView - event toolbar', () => {
     // The delete and edit flows are independent: deleting must not open the editing dialog.
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+  });
+
+  // The two-tap contract: while an occurrence is armed, the next tap anywhere outside the toolbar only
+  // disarms. It must not fall through and arm (or open) whatever it landed on.
+  it('disarms on a tap on another event without arming that event', () => {
+    window.matchMedia = createMatchMedia(true);
+    renderTwoEvents();
+
+    fireEvent.click(getEvent());
+    expect(getEvent()).to.have.attribute('data-armed');
+
+    fireEvent.click(getEvent(/Afternoon Sync/i));
+
+    expect(getEvent()).not.to.have.attribute('data-armed');
+    expect(getEvent(/Afternoon Sync/i)).not.to.have.attribute('data-armed');
+    expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+    expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
   });
 });

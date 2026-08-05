@@ -35,7 +35,8 @@ export interface StoredError {
 /**
  * Which face the edited occurrence is in:
  * - `'armed'`: no surface is shown; the event displays its resize handles and an action toolbar
- *   (Edit / Delete). A resize commits immediately. Touch-only.
+ *   (Edit / Delete). A resize commits immediately. The drawer surface always arms; the dialog
+ *   surface arms only on a coarse pointer.
  * - `'edit'`: the editing surface (dialog or drawer) is shown; the event is not resizable while open.
  */
 export type SchedulerEditingMode = 'armed' | 'edit';
@@ -45,7 +46,8 @@ export interface SchedulerEditingState {
   occurrence: SchedulerRenderableEventOccurrence;
   /**
    * Whether the occurrence is armed (toolbar + resize handles, no surface) or being edited (surface open).
-   * Touch arms in `'armed'` (the toolbar's Edit switches to `'edit'`); non-touch opens directly in `'edit'`.
+   * The toolbar's Edit switches `'armed'` to `'edit'`. The drawer surface always opens in `'armed'`;
+   * the dialog surface opens in `'armed'` on a coarse pointer and directly in `'edit'` otherwise.
    */
   mode: SchedulerEditingMode;
 }

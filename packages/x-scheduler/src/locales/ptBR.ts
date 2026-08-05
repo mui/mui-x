@@ -22,7 +22,6 @@ const ptBRDialog: Partial<EventEditingLocaleText> = {
   endDateLabel: 'Data de término',
   endTimeLabel: 'Hora de término',
   eventTitleAriaLabel: 'Título do evento',
-  // eventTitlePlaceholder: 'Add title',
   generalTabLabel: 'Geral',
   labelNoResource: 'Sem recurso',
   labelInvalidResource: 'Recurso inválido',

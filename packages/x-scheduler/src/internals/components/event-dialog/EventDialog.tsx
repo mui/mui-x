@@ -126,8 +126,6 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       PaperComponent={PaperComponent}
       aria-labelledby={`${schedulerId}-event-dialog-title`}
       aria-modal="false"
-      // Non-modal: keep the grid behind usable (focus + scroll) while the dialog is open.
-      disableEnforceFocus
       className={classes.eventDialog}
       slotProps={{
         paper: {

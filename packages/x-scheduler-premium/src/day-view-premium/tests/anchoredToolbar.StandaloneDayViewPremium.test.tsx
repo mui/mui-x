@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, act, fireEvent } from '@mui/internal-test-utils';
+import { screen, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
@@ -121,5 +121,42 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
 
     // `left` preferred anchoring, in jsdom the popup measures 0×0: top follows the anchor's top.
     expect(getAnchoredToolbar().style.top).to.equal('500px');
+  });
+
+  // Deleting a recurring occurrence opens the scope dialog while the event stays armed, so the
+  // toolbar's document-global handlers are still mounted underneath it. They must stand down: the
+  // dialog owns its own dismissal and its own scrolling while it is on top.
+  describe('scope dialog stacked on the armed toolbar', () => {
+    async function armAndOpenScopeDialog() {
+      renderResizableRecurringEvent();
+
+      fireEvent.click(getEventElement());
+      fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+
+      await screen.findByText(/Apply this change to:/i);
+    }
+
+    it('closes on a click outside the dialog paper', async () => {
+      await armAndOpenScopeDialog();
+
+      // MUI detects a "backdrop click" on the dialog container (the transparent area around the
+      // paper), which is a sibling of the `role="dialog"` paper — not the paper itself.
+      const container = document.querySelector<HTMLElement>('.MuiDialog-container')!;
+      fireEvent.mouseDown(container);
+      fireEvent.click(container);
+
+      await waitFor(() => {
+        expect(screen.queryByText(/Apply this change to:/i)).to.equal(null);
+      });
+    });
+
+    it('does not block scrolling inside the dialog', async () => {
+      await armAndOpenScopeDialog();
+
+      const wheelEvent = new Event('wheel', { bubbles: true, cancelable: true });
+      screen.getByText(/Apply this change to:/i).dispatchEvent(wheelEvent);
+
+      expect(wheelEvent.defaultPrevented).to.equal(false);
+    });
   });
 });

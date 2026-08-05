@@ -62,7 +62,7 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
         const abortedSession = sessionRef.current;
         activePointerIdRef.current = null;
         sessionRef.current = null;
-        if (abortedSession && abortedSession.kind !== 'creation') {
+        if (abortedSession) {
           store.setOccurrencePlaceholder(null);
         }
       }
@@ -89,18 +89,6 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
         cursorDate,
         precisionMinute,
       });
-
-      if (session.kind === 'creation') {
-        // Creation placeholder has no underlying event: keep its `creation` type so it stays editable.
-        store.setOccurrencePlaceholder({
-          type: 'creation',
-          surfaceType,
-          start,
-          end,
-          resourceId: session.resourceId,
-        });
-        return;
-      }
 
       store.setOccurrencePlaceholder({
         type: 'internal-resize',
@@ -134,9 +122,7 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
         return;
       }
       const endedSession = finishGesture(event);
-
-      // Creation placeholder stays as-is — no existing event to commit to.
-      if (!endedSession || endedSession.kind === 'creation') {
+      if (!endedSession) {
         return;
       }
 
@@ -158,8 +144,8 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
         return;
       }
       const endedSession = finishGesture(event);
-      // Keep a creation placeholder for further editing; drop a resize preview to revert the event.
-      if (endedSession && endedSession.kind !== 'creation') {
+      // Drop the resize preview so the event reverts to its committed times.
+      if (endedSession) {
         store.setOccurrencePlaceholder(null);
       }
     };
@@ -218,7 +204,7 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
   React.useEffect(() => {
     return () => {
       const session = sessionRef.current;
-      if (session == null || session.kind === 'creation') {
+      if (session == null) {
         return;
       }
       const placeholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
@@ -233,8 +219,7 @@ export namespace useEventPointerResizeHandler {
   /**
    * A resize gesture targeting an existing event. The resize is committed on pointer-up.
    */
-  export interface EventResizeSession {
-    kind: 'event';
+  export interface ResizeSession {
     start: TemporalSupportedObject;
     end: TemporalSupportedObject;
     eventId: SchedulerEventId;
@@ -242,19 +227,6 @@ export namespace useEventPointerResizeHandler {
     originalOccurrence: SchedulerEventOccurrence;
     resourceId: SchedulerResourceId | null;
   }
-
-  /**
-   * A resize gesture targeting a not-yet-saved creation placeholder. Nothing is committed; the
-   * placeholder is updated in place so the surface keeps editing the new event.
-   */
-  export interface CreationResizeSession {
-    kind: 'creation';
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
-    resourceId: SchedulerResourceId | null;
-  }
-
-  export type ResizeSession = EventResizeSession | CreationResizeSession;
 
   export interface Parameters {
     /**

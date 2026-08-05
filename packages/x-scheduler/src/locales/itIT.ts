@@ -22,7 +22,6 @@ const itITDialog: Partial<EventEditingLocaleText> = {
   endDateLabel: 'Data di fine',
   endTimeLabel: 'Ora di fine',
   eventTitleAriaLabel: 'Titolo evento',
-  // eventTitlePlaceholder: 'Add title',
   generalTabLabel: 'Generale',
   labelNoResource: 'Nessuna risorsa',
   labelInvalidResource: 'Risorsa non valida',

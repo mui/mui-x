@@ -57,6 +57,10 @@ const getTouchResizeHandleStyles = (): CSSObject => ({
   position: 'absolute',
   width: TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX,
   height: TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX,
+  // Reset the full-width base geometry: the dot is anchored by a single side (`left` for start,
+  // `right` for end), and keeping both set would over-constrain it and pin both dots to the left.
+  left: 'auto',
+  right: 'auto',
   borderRadius: '50%',
   backgroundColor: 'var(--event-main)',
   border: '2px solid var(--event-on-surface-subtle-primary)',
@@ -341,20 +345,23 @@ const TimeGridEventResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
   position: 'absolute',
   zIndex: 3,
   cursor: 'ns-resize',
-  // Mouse: a thin, full-width bar revealed when the event is hovered.
+  // Base layout: a thin, full-width bar. Kept outside the media queries so it stays the fallback on
+  // devices matching neither of them (`hover: none` + `pointer: fine`, e.g. stylus-primary browsers),
+  // where the handle would otherwise collapse to a 0×0 box. `TOUCH_MEDIA` overrides it below.
+  height: 4,
+  left: 0,
+  right: 0,
+  '&[data-start]': {
+    top: 0,
+  },
+  '&[data-end]': {
+    bottom: 0,
+  },
+  // Mouse: the bar is revealed only when the event is hovered.
   [HOVER_MEDIA]: {
-    height: 4,
-    left: 0,
-    right: 0,
     opacity: 0,
     '*:hover > &': {
       opacity: 1,
-    },
-    '&[data-start]': {
-      top: 0,
-    },
-    '&[data-end]': {
-      bottom: 0,
     },
   },
   // Touch: a circular dot with a large hit area, shown only once the event is armed.
@@ -367,8 +374,9 @@ const TimeGridEventResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
   },
 });
 
-// A real `CalendarGrid.TimeEvent` (not the inert `TimeEventPlaceholder`) so it can host pointer
-// resize handles for sizing on touch. No JS device flag, so the desktop-vs-touch look is split in CSS.
+// A `CalendarGrid.TimeEvent` rendered non-interactively, so it can host pointer resize handles for
+// sizing on touch without becoming a focusable button. No JS device flag, so the desktop-vs-touch
+// look is split in CSS.
 const TimeGridEventPlaceholderRoot = styled(CalendarGrid.TimeEvent, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventPlaceholder',
@@ -486,9 +494,10 @@ const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlacehol
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={placeholderHasResizeHandles || undefined}
-      // Inert preview — hide its button role/empty name from assistive tech (handles are
-      // pointer-only, so this doesn't trap focus).
-      aria-hidden="true"
+      // Inert preview: it only hosts the pointer resize handles, so it must not be a focusable
+      // button. Rendering it non-interactive keeps it out of the tab order without `aria-hidden`,
+      // which would otherwise hide a focusable node from assistive tech.
+      interactive={false}
       {...rootDataAttributes}
       {...rootPositionProps}
       ref={forwardedRef}

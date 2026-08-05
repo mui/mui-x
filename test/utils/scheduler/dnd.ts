@@ -300,6 +300,12 @@ interface SimulatePointerResizeParameters {
    * @default false
    */
   cancel?: boolean;
+  /**
+   * Stop after the `pointermove`, leaving the gesture in progress so the resize placeholder stays on
+   * screen and can be asserted on.
+   * @default false
+   */
+  hold?: boolean;
 }
 
 /**
@@ -314,7 +320,7 @@ interface SimulatePointerResizeParameters {
  * ```
  */
 export function simulatePointerResize(parameters: SimulatePointerResizeParameters): void {
-  const { handle, to, from = {}, pointerId = 1, cancel = false } = parameters;
+  const { handle, to, from = {}, pointerId = 1, cancel = false, hold = false } = parameters;
   ensurePointerCaptureMethods(handle);
 
   const down = { clientX: from.clientX ?? 0, clientY: from.clientY ?? 0 };
@@ -322,6 +328,9 @@ export function simulatePointerResize(parameters: SimulatePointerResizeParameter
 
   handle.dispatchEvent(createPointerEvent('pointerdown', { ...down, pointerId, button: 0 }));
   handle.dispatchEvent(createPointerEvent('pointermove', { ...move, pointerId }));
+  if (hold) {
+    return;
+  }
   handle.dispatchEvent(
     createPointerEvent(cancel ? 'pointercancel' : 'pointerup', { ...move, pointerId }),
   );

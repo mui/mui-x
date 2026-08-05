@@ -22,7 +22,6 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
   endDateLabel: 'Enddatum',
   endTimeLabel: 'Endzeit',
   eventTitleAriaLabel: 'Ereignistitel',
-  // eventTitlePlaceholder: 'Add title',
   generalTabLabel: 'Allgemein',
   labelNoResource: 'Keine Ressource',
   labelInvalidResource: 'Ungültige Ressource',

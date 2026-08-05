@@ -2,7 +2,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { styled } from '@mui/material/styles';
+import { modalClasses } from '@mui/material/Modal';
+import { useStore } from '@base-ui/utils/store';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { EventToolbar } from './EventToolbar';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
@@ -32,24 +36,31 @@ export function AnchoredEventToolbar(props: AnchoredEventToolbarProps) {
   const { anchorRef, occurrence } = props;
   const { classes } = useEventEditingStyledContext();
   const { stopEditing } = useEventEditingContext();
+  const store = useSchedulerStoreContext();
   const nodeRef = React.useRef<HTMLDivElement>(null);
+
+  // The toolbar's Delete on a recurring event opens the scope dialog without leaving the armed mode.
+  // That dialog is stacked above the toolbar and owns its own dismissal and scrolling, so both
+  // document-global handlers stand down while it is open.
+  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isRecurringScopeDialogOpen);
 
   useAnchoredPosition({ anchorRef, popupRef: nodeRef });
 
   // Modal behavior: an outside tap disarms, except on the resize handle (so a resize gesture doesn't
-  // close the toolbar) or inside a dialog (swallowing it would break the dialog's own controls).
+  // close the toolbar) or inside a modal — matched on the whole modal root rather than `[role="dialog"]`,
+  // which MUI puts on the paper only, leaving the backdrop and container siblings looking "outside".
   useDisarmOnOutsidePointer({
     ref: nodeRef,
-    active: true,
+    active: !isScopeDialogOpen,
     onDisarm: stopEditing,
-    ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}, [role="dialog"]`,
+    ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}, .${modalClasses.root}`,
     global: true,
   });
 
   // Block scrolling everywhere while armed, so nothing scrolls out from under the toolbar. Only the
   // resize handle is spared, so the armed event can still be resized.
   useBlockScrollWhileArmed({
-    active: true,
+    active: !isScopeDialogOpen,
     ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}`,
   });
 

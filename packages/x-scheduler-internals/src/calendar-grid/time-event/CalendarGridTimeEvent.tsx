@@ -40,13 +40,10 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     id: idProp,
     isDraggable = false,
     nativeButton = false,
+    interactive = true,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
-
-  // TODO: Expose a real `interactive` prop
-  // to control whether the event should behave like a button
-  const isInteractive = true;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -121,7 +118,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   });
 
   const { getButtonProps, buttonRef } = useButton({
-    disabled: !isInteractive,
+    disabled: false,
     native: nativeButton,
     tabIndex: columnHasFocus ? 0 : -1,
   });
@@ -149,13 +146,16 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
       elementProps,
       {
         id,
-        'aria-labelledby': `${columnHeaderId} ${id}`,
+        // Only an interactive event is announced as a button labelled by its column header. A
+        // non-interactive one stays a plain `div`: no role and no `tabIndex`, so it is neither
+        // focusable nor semantic, and its text content is still readable by assistive tech.
+        ...(interactive ? { 'aria-labelledby': `${columnHeaderId} ${id}` } : undefined),
         style: {
           [CalendarGridTimeEventCssVars.yPosition]: `${position * 100}%`,
           [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
         } as React.CSSProperties,
       },
-      getButtonProps,
+      ...(interactive ? [getButtonProps] : []),
     ],
   });
 
@@ -174,7 +174,15 @@ export namespace CalendarGridTimeEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {}
+      useDraggableEvent.PublicParameters {
+    /**
+     * Whether the event behaves like a button: `role="button"`, roving `tabIndex` and the column
+     * header labelling. Set it to `false` for an inert preview (creation / resize placeholder) that
+     * only hosts pointer interactions — it then renders a plain `div`, so it is never focusable.
+     * @default true
+     */
+    interactive?: boolean;
+  }
 
   export interface SharedDragData {
     eventId: SchedulerEventId;

@@ -7,8 +7,6 @@ import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandl
 import { useEventPointerResizeHandler } from '../../internals/utils/useEventPointerResizeHandler';
 import { isResizeHandlerEnabled } from '../../internals/utils/resize-utils';
 import { getPrimaryResourceId } from '../../internals/utils/event-utils';
-import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
-import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selectors';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useCalendarGridTimeEventContext } from '../time-event/CalendarGridTimeEventContext';
 import type { CalendarGridTimeEvent } from '../time-event/CalendarGridTimeEvent';
@@ -38,7 +36,6 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
     // Context hooks
     const contextValue = useCalendarGridTimeEventContext();
     const { getDateAtPointer } = useCalendarGridTimeColumnContext();
-    const store = useSchedulerStoreContext();
 
     // Ref hooks
     const ref = React.useRef<HTMLDivElement>(null);
@@ -50,22 +47,11 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       side,
     }));
 
-    // Pointer-resize session: from the placeholder when sizing a new event, else the event's drag data.
+    // Pointer-resize session, built from the event's drag data. The pointer maps directly to a date,
+    // so no grab offset is needed.
     const getResizeSession = useStableCallback((): useEventPointerResizeHandler.ResizeSession => {
-      const placeholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
-      if (placeholder?.type === 'creation') {
-        return {
-          kind: 'creation',
-          start: placeholder.start,
-          end: placeholder.end,
-          resourceId: placeholder.resourceId,
-        };
-      }
-
-      // Pointer maps directly to a date — no grab offset needed.
       const data = contextValue.getSharedDragData();
       return {
-        kind: 'event',
         start: data.start,
         end: data.end,
         eventId: data.eventId,

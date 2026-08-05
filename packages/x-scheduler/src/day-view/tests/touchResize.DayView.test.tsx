@@ -84,4 +84,50 @@ describe('DayView - touch resize', () => {
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
   });
+
+  // The preview hosts the pointer resize handles, so it is a `CalendarGrid.TimeEvent` — but a
+  // non-interactive one. It must never be a focusable `role="button"`, and must not rely on
+  // `aria-hidden` (which on a focusable node is an `aria-hidden-focus` violation).
+  it('renders the resize preview as a non-focusable, non-hidden element', async () => {
+    renderResizableEvent();
+    const eventElement = getEvent();
+    fireEvent.click(eventElement);
+
+    const endHandle = getResizeHandle(eventElement, 'end');
+
+    await act(async () => {
+      simulatePointerResize({
+        handle: endHandle,
+        to: { clientY: clientYForTime(0, 24, 16) },
+        hold: true,
+      });
+    });
+
+    const placeholder = document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')!;
+    expect(placeholder).not.to.equal(null);
+    expect(placeholder).not.to.have.attribute('role');
+    expect(placeholder).not.to.have.attribute('tabindex');
+    expect(placeholder).not.to.have.attribute('aria-hidden');
+  });
+
+  // The system can take the gesture over mid-resize (a scroll winning, a phone call). The preview must
+  // then be discarded rather than committed or left stranded on screen.
+  it('discards the resize preview when the gesture is cancelled', async () => {
+    const { onEventsChange } = renderResizableEvent();
+    const eventElement = getEvent();
+    fireEvent.click(eventElement);
+
+    const endHandle = getResizeHandle(eventElement, 'end');
+
+    await act(async () => {
+      simulatePointerResize({
+        handle: endHandle,
+        to: { clientY: clientYForTime(0, 24, 16) },
+        cancel: true,
+      });
+    });
+
+    expect(onEventsChange.callCount).to.equal(0);
+    expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).to.equal(null);
+  });
 });

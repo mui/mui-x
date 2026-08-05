@@ -22,7 +22,6 @@ const urPKDialog: Partial<EventEditingLocaleText> = {
   // endDateLabel: 'End date',
   // endTimeLabel: 'End time',
   // eventTitleAriaLabel: 'Event title',
-  // eventTitlePlaceholder: 'Add title',
   // generalTabLabel: 'General',
   // labelNoResource: 'No resource',
   // labelInvalidResource: 'Invalid resource',
