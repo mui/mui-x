@@ -32,7 +32,10 @@
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "disableLineItemHighlight": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ enablePositionBasedPointerInteraction?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ enablePositionBasedPointerInteraction?: bool, keyboardActivation?: bool }"
+      }
     },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
