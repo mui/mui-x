@@ -78,7 +78,7 @@ export function computeElementPositionInCollection(
   };
 }
 
-namespace useElementPositionInCollection {
+export namespace useElementPositionInCollection {
   export interface Parameters {
     start: SchedulerProcessedDate;
     end: SchedulerProcessedDate;
