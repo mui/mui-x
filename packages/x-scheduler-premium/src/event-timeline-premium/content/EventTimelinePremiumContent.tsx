@@ -487,7 +487,7 @@ function EventList({
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
 
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const visiblePositions = useStore(
     store,
     eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
@@ -504,8 +504,8 @@ function EventList({
           computeElementPositionInCollection(adapter, {
             start: occurrence.displayTimezone.start,
             end: occurrence.displayTimezone.end,
-            collection: presetConfig,
-            durationMs: presetConfig.durationMs,
+            collection: config,
+            durationMs: config.durationMs,
           });
 
         return {
@@ -515,13 +515,13 @@ function EventList({
         };
       }),
     // The config selector is memoized, so the object identity only changes with its content.
-    [adapter, occurrences, presetConfig, visiblePositions],
+    [adapter, occurrences, config, visiblePositions],
   );
 
   // Convert virtualizer column range to fraction range
   const { start: visibleStart, end: visibleEnd } = getVisibleFractionRange(
     renderContext,
-    presetConfig.tickCount,
+    config.tickCount,
   );
 
   return (
@@ -648,11 +648,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     store,
     schedulerNowSelectors.showCurrentTimeIndicator,
   );
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const hasNestedResources = useStore(store, schedulerResourceSelectors.hasNestedResources);
   const isNowInView = React.useMemo(
-    () => adapter.isWithinRange(now, [presetConfig.start, presetConfig.end]),
-    [adapter, now, presetConfig.start, presetConfig.end],
+    () => adapter.isWithinRange(now, [config.start, config.end]),
+    [adapter, now, config.start, config.end],
   );
   const showCurrentTimeIndicator = showCurrentTimeIndicatorSetting && isNowInView;
 
@@ -720,7 +720,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
 
   // Build virtualizer column model: one pinned title column + one column per tick.
-  const { tickCount, tickWidth } = presetConfig;
+  const { tickCount, tickWidth } = config;
   const columnsTotalWidth = titleColumnWidth + tickCount * tickWidth;
 
   // Row heights mirror the CSS. The cell stretches to fit overlapping events
@@ -805,7 +805,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     if (scrollbarHorizontalRef.current) {
       scrollbarHorizontalRef.current.scrollLeft = 0;
     }
-  }, [presetConfig.start]);
+  }, [config.start]);
 
   useTitleScrollSync({
     enabled: hasTitleOverflow,
@@ -826,13 +826,13 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     // would swallow Tab in an unfocusable retry loop.
     resources: visibleResources,
     scrollerRef: gridRef,
-    axis: presetConfig,
-    tickCount: presetConfig.tickCount,
-    tickWidth: presetConfig.tickWidth,
+    axis: config,
+    tickCount: config.tickCount,
+    tickWidth: config.tickWidth,
     titleColumnWidth,
   });
 
-  const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
+  const eventsWidth = config.tickCount * config.tickWidth;
   const hasScrollX = dimensions.hasScrollX;
   const hasScrollY = dimensions.hasScrollY;
   const hasBottomScrollbar = hasScrollX || hasTitleOverflow;
@@ -852,7 +852,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
         {
           '--row-width': `${dimensions.rowWidth}px`,
           '--title-column-width': `${titleColumnWidth}px`,
-          '--unit-width': `${presetConfig.tickWidth}px`,
+          '--unit-width': `${config.tickWidth}px`,
           '--scrollbar-size': `${dimensions.scrollbarSize}px`,
           '--header-height': `${headerHeight}px`,
           '--filler-height': `${fillerHeight}px`,

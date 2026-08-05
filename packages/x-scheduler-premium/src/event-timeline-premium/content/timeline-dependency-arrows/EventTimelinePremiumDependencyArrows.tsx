@@ -67,7 +67,7 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
 
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   // Keep the lane assignment consistent with the rendered rows, which exclude the
   // occurrences hidden by the preset's hour window.
   const visibleResources = useStore(
@@ -81,7 +81,7 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
   const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
 
-  const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
+  const eventsWidth = config.tickCount * config.tickWidth;
 
   const arrows = React.useMemo(
     () =>
@@ -90,7 +90,7 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
         dependencies,
         resources: visibleResources,
         rowPositions: rowsMeta.positions,
-        axis: presetConfig,
+        axis: config,
         positionByOccurrenceKey: visiblePositions,
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),
@@ -102,7 +102,7 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
       visibleResources,
       visiblePositions,
       rowsMeta.positions,
-      presetConfig,
+      config,
       eventsWidth,
       theme,
     ],
@@ -113,7 +113,7 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
   // viewport even when both of its endpoints are scrolled out.
   const { start: visibleStartFraction, end: visibleEndFraction } = getVisibleFractionRange(
     renderContext,
-    presetConfig.tickCount,
+    config.tickCount,
   );
   const visibleArrows = arrows.filter(
     (arrow) =>

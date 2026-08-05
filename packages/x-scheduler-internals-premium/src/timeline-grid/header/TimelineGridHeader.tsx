@@ -28,7 +28,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const { start, end, headers, timeResolution, hourRange } = useStore(
+  const { start, end, headers, timeResolution, dayStartMinute, dayEndMinute } = useStore(
     store,
     eventTimelinePremiumPresetSelectors.config,
   );
@@ -41,9 +41,12 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const cellsPerLevel = React.useMemo(
     () =>
       headers.map((level) =>
-        iterate(adapter, level.unit, timeResolution, start, end, weekStartsOn, hourRange),
+        iterate(adapter, level.unit, timeResolution, start, end, weekStartsOn, {
+          dayStartMinute,
+          dayEndMinute,
+        }),
       ),
-    [adapter, headers, timeResolution, start, end, weekStartsOn, hourRange],
+    [adapter, headers, timeResolution, start, end, weekStartsOn, dayStartMinute, dayEndMinute],
   );
 
   const children = headers.map((level, levelIndex) => {

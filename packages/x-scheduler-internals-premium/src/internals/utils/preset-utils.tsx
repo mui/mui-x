@@ -36,7 +36,7 @@ function formatHourLabel(adapter: TemporalAdapter, date: TemporalSupportedObject
   return adapter.formatByString(date, pattern);
 }
 
-export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Readonly<
+export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
   Record<EventTimelinePremiumPreset, PresetDefinition>
 > = {
   dayAndHour: {
@@ -145,6 +145,6 @@ const TICKS_PER_DAY: Record<PresetHeaderUnit, number> = {
  * Higher = more zoomed in. Used to derive the canonical zoom ordering of presets.
  */
 export function getPresetPxPerDay(preset: EventTimelinePremiumPreset): number {
-  const { timeResolution, tickWidth } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
+  const { timeResolution, tickWidth } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
   return tickWidth * TICKS_PER_DAY[timeResolution];
 }

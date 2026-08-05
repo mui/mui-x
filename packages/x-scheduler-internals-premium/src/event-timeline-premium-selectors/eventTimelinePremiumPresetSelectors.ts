@@ -3,10 +3,11 @@ import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/schedul
 import {
   getDisplayedHourRange,
   getTimelineAxisDurationMs,
+  FULL_DAY_MINUTES,
 } from '@mui/x-scheduler-internals/internals';
 import type { EventTimelinePremiumPresetConfig } from '../models/preset';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
-import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../internals/utils/preset-utils';
+import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS } from '../internals/utils/preset-utils';
 
 export const eventTimelinePremiumPresetSelectors = {
   preset: createSelector((state: State) => state.preset),
@@ -23,7 +24,7 @@ export const eventTimelinePremiumPresetSelectors = {
       state.presetConfig[state.preset as keyof EventTimelinePremiumPresetConfig]?.endTime,
     schedulerPreferenceSelectors.weekStartsOn,
     (adapter, visibleDate, preset, presetStartTime, presetEndTime, weekStartsOn) => {
-      const config = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
+      const config = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
       if (!config) {
         throw new Error(
           `MUI X Scheduler: No configuration registered for preset "${preset}". ` +
@@ -49,17 +50,16 @@ export const eventTimelinePremiumPresetSelectors = {
         timeResolution === 'hour'
           ? getDisplayedHourRange(presetStartTime, presetEndTime, `presetConfig.${preset}`)
           : { startTime: 0, endTime: 24 };
+      const dayStartMinute = hourRange.startTime * 60;
+      const dayEndMinute = hourRange.endTime * 60;
 
       // Preset callbacks size the grid for the full day; the hour window scales the
       // tick count once here instead of threading it through every preset.
       const fullDayTickCount = getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount;
       const tickCount =
         timeResolution === 'hour'
-          ? (fullDayTickCount * (hourRange.endTime - hourRange.startTime)) / 24
+          ? (fullDayTickCount * (dayEndMinute - dayStartMinute)) / FULL_DAY_MINUTES
           : fullDayTickCount;
-
-      const dayStartMinute = hourRange.startTime * 60;
-      const dayEndMinute = hourRange.endTime * 60;
 
       return {
         tickCount,
@@ -68,7 +68,6 @@ export const eventTimelinePremiumPresetSelectors = {
         tickWidth,
         headers,
         timeResolution,
-        hourRange,
         dayStartMinute,
         dayEndMinute,
         // Precomputed once per config change: per-row hooks read it on every render.

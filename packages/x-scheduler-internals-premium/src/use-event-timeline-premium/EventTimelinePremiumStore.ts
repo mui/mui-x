@@ -27,7 +27,7 @@ import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePr
 import { schedulerRecurringEventsPlugin } from '../internals/plugins/schedulerRecurringEventsPlugin';
 import { SchedulerSchedulingPlugin } from '../internals/plugins/SchedulerSchedulingPlugin';
 import {
-  EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
+  EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS,
   getPresetPxPerDay,
 } from '../internals/utils/preset-utils';
 import { buildDependenciesState } from '../internals/utils/dependency-utils';
@@ -36,7 +36,7 @@ import { buildDependenciesState } from '../internals/utils/dependency-utils';
 // tickWidth)` must produce a unique px/day — otherwise the order is decided by
 // `Object.keys` insertion order, which is not a stable contract.
 const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = (
-  Object.keys(EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS) as EventTimelinePremiumPreset[]
+  Object.keys(EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS) as EventTimelinePremiumPreset[]
 ).sort((a, b) => getPresetPxPerDay(b) - getPresetPxPerDay(a));
 
 export const DEFAULT_PRESETS: EventTimelinePremiumPreset[] = PRESET_ZOOM_ORDER;
@@ -232,7 +232,7 @@ export class EventTimelinePremiumStore<
    */
   public goToNextVisibleDate = (event: React.UIEvent) => {
     const { adapter, visibleDate, preset } = this.state;
-    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
+    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, unitCount),
       event,
@@ -244,7 +244,7 @@ export class EventTimelinePremiumStore<
    */
   public goToPreviousVisibleDate = (event: React.UIEvent) => {
     const { adapter, visibleDate, preset } = this.state;
-    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
+    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, -unitCount),
       event,

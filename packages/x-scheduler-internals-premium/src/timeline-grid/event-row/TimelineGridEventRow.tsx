@@ -57,7 +57,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   });
 
   // Selector hooks
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   // Occurrences fully inside the hidden hours would render as zero-width slivers and
   // inflate the lane count, so the selector excludes them before positioning.
   const occurrences = useStore(
@@ -80,12 +80,8 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     // The new event starts at the cursor: cap the offset to the last slot of the axis
     // so a click on the exact right edge does not create the event on the day after
     // the collection, where it would not be rendered at all.
-    const lastStartOffsetMs = presetConfig.durationMs - EVENT_CREATION_PRECISION_MINUTE * 60_000;
-    const anchor = timelineAxisOffsetToDate(
-      adapter,
-      presetConfig,
-      Math.min(offsetMs, lastStartOffsetMs),
-    );
+    const lastStartOffsetMs = config.durationMs - EVENT_CREATION_PRECISION_MINUTE * 60_000;
+    const anchor = timelineAxisOffsetToDate(adapter, config, Math.min(offsetMs, lastStartOffsetMs));
     const startDate = adapter.addMinutes(
       anchor,
       -(adapter.getMinutes(anchor) % EVENT_CREATION_PRECISION_MINUTE),
@@ -103,7 +99,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     // Start at the first visible hour: with a trimmed window an event created at
     // midnight would be hidden. Offset 0 resolves it as a wall-clock hour, which
     // `addMinutes` from midnight would miss on a DST day.
-    const creationStart = timelineAxisOffsetToDate(adapter, presetConfig, 0);
+    const creationStart = timelineAxisOffsetToDate(adapter, config, 0);
     return {
       surfaceType: 'timeline' as const,
       start: creationStart,

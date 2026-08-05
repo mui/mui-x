@@ -43,8 +43,8 @@ describe('iterate()', () => {
 
     it('should emit only the visible hour cells per day for a trimmed hour range', () => {
       const hourCells = iterate(adapter, 'hour', 'hour', start, end, undefined, {
-        startTime: 8,
-        endTime: 20,
+        dayStartMinute: 480,
+        dayEndMinute: 1200,
       });
 
       expect(hourCells.length).to.equal(4 * 12);
@@ -56,8 +56,8 @@ describe('iterate()', () => {
 
     it('should index the emitted hour cells contiguously', () => {
       const hourCells = iterate(adapter, 'hour', 'hour', start, end, undefined, {
-        startTime: 8,
-        endTime: 20,
+        dayStartMinute: 480,
+        dayEndMinute: 1200,
       });
 
       hourCells.forEach((cell, i) => expect(cell.index).to.equal(i));
@@ -65,8 +65,8 @@ describe('iterate()', () => {
 
     it('should span the day cells by the visible hours only', () => {
       const dayCells = iterate(adapter, 'day', 'hour', start, end, undefined, {
-        startTime: 8,
-        endTime: 20,
+        dayStartMinute: 480,
+        dayEndMinute: 1200,
       });
 
       expect(dayCells.length).to.equal(4);
@@ -75,8 +75,8 @@ describe('iterate()', () => {
 
     it('should behave like the untrimmed iteration when the hour range covers the full day', () => {
       const trimmed = iterate(adapter, 'hour', 'hour', start, end, undefined, {
-        startTime: 0,
-        endTime: 24,
+        dayStartMinute: 0,
+        dayEndMinute: 1440,
       });
       const untrimmed = iterate(adapter, 'hour', 'hour', start, end);
 
@@ -85,8 +85,8 @@ describe('iterate()', () => {
 
     it('should ignore the hour range when the tick unit is not hour', () => {
       const cells = iterate(adapter, 'week', 'day', start, end, undefined, {
-        startTime: 8,
-        endTime: 20,
+        dayStartMinute: 480,
+        dayEndMinute: 1200,
       });
       const untrimmed = iterate(adapter, 'week', 'day', start, end);
 
@@ -94,7 +94,7 @@ describe('iterate()', () => {
     });
 
     describe('across DST transitions inside the window', () => {
-      const HOUR_RANGE = { startTime: 0, endTime: 6 };
+      const HOUR_WINDOW = { dayStartMinute: 0, dayEndMinute: 360 };
 
       it('should keep the hour-row total equal to the day span on a fall-back day', () => {
         // Nov 2 2025 in America/New_York repeats the 01:00 wall-clock hour: the walk
@@ -103,8 +103,16 @@ describe('iterate()', () => {
         const dstStart = adapter.date('2025-11-02T00:00:00', 'America/New_York');
         const dstEnd = adapter.endOfDay(adapter.addDays(dstStart, 1));
 
-        const hourCells = iterate(adapter, 'hour', 'hour', dstStart, dstEnd, undefined, HOUR_RANGE);
-        const dayCells = iterate(adapter, 'day', 'hour', dstStart, dstEnd, undefined, HOUR_RANGE);
+        const hourCells = iterate(
+          adapter,
+          'hour',
+          'hour',
+          dstStart,
+          dstEnd,
+          undefined,
+          HOUR_WINDOW,
+        );
+        const dayCells = iterate(adapter, 'day', 'hour', dstStart, dstEnd, undefined, HOUR_WINDOW);
 
         expect(hourCells.length).to.equal(13);
         expect(dayCells.map((cell) => cell.spanInTicks)).to.deep.equal([6, 6]);
@@ -120,8 +128,16 @@ describe('iterate()', () => {
         const dstStart = adapter.date('2026-03-08T00:00:00', 'America/New_York');
         const dstEnd = adapter.endOfDay(adapter.addDays(dstStart, 1));
 
-        const hourCells = iterate(adapter, 'hour', 'hour', dstStart, dstEnd, undefined, HOUR_RANGE);
-        const dayCells = iterate(adapter, 'day', 'hour', dstStart, dstEnd, undefined, HOUR_RANGE);
+        const hourCells = iterate(
+          adapter,
+          'hour',
+          'hour',
+          dstStart,
+          dstEnd,
+          undefined,
+          HOUR_WINDOW,
+        );
+        const dayCells = iterate(adapter, 'day', 'hour', dstStart, dstEnd, undefined, HOUR_WINDOW);
 
         expect(hourCells.length).to.equal(11);
         expect(dayCells.map((cell) => cell.spanInTicks)).to.deep.equal([6, 6]);

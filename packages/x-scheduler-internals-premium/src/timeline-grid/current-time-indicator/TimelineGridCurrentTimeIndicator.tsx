@@ -32,7 +32,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
 
     const store = useEventTimelinePremiumStoreContext();
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
-    const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+    const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
     const processedNow = React.useMemo(() => processDate(now, adapter), [adapter, now]);
 
@@ -44,13 +44,13 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const { position } = useElementPositionInCollection({
       start: processedNow,
       end: endForCalc,
-      collection: presetConfig,
+      collection: config,
     });
 
     const isOutOfRange =
-      adapter.isBefore(now, presetConfig.start) ||
-      adapter.isAfter(now, presetConfig.end) ||
-      isStartMinuteOutsideAxisWindow(presetConfig, processedNow.minutesInDay);
+      adapter.isBefore(now, config.start) ||
+      adapter.isAfter(now, config.end) ||
+      isStartMinuteOutsideAxisWindow(config, processedNow.minutesInDay);
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

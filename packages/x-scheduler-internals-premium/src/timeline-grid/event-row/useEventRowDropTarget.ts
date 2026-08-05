@@ -35,11 +35,11 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Cursor offsets are measured in axis milliseconds: with a trimmed hour window the
   // hidden hours take no space, so px↔date conversions go through the axis helpers.
-  const collectionDurationMs = presetConfig.durationMs;
+  const collectionDurationMs = config.durationMs;
 
   const getCursorPositionInElementMs: TimelineGridEventRowContext['getCursorPositionInElementMs'] =
     useStableCallback(({ input, elementRef }) => {
@@ -71,7 +71,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         const roundedOffset =
           Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
 
-        return timelineAxisOffsetToDate(adapter, presetConfig, roundedOffset);
+        return timelineAxisOffsetToDate(adapter, config, roundedOffset);
       };
 
       // Move a Timeline Event within the Timeline
@@ -85,8 +85,8 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         // original dates instead of silently snapping the start to the window edge.
         const startAnchor = timelineAxisOffsetToDate(
           adapter,
-          presetConfig,
-          dateToTimelineAxisOffsetMs(adapter, presetConfig, data.start),
+          config,
+          dateToTimelineAxisOffsetMs(adapter, config, data.start),
         );
         const hiddenRemainderMs = adapter.getTime(data.start) - adapter.getTime(startAnchor);
 
@@ -120,8 +120,8 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
           // The offset from the grab point to the event end must be measured on the axis:
           // the real duration would overshoot when the event spans hidden hours.
           const eventAxisDurationMs =
-            dateToTimelineAxisOffsetMs(adapter, presetConfig, data.end) -
-            dateToTimelineAxisOffsetMs(adapter, presetConfig, data.start);
+            dateToTimelineAxisOffsetMs(adapter, config, data.end) -
+            dateToTimelineAxisOffsetMs(adapter, config, data.start);
 
           const cursorDate = axisOffsetToDate(
             cursorOffsetMs - data.initialCursorPositionInEventMs + eventAxisDurationMs,

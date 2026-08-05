@@ -68,7 +68,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Feature hooks
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
@@ -76,7 +76,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       // Measured on the axis so it stays consistent with the cursor offsets when a
       // trimmed hour window compresses the days.
       const offsetBeforeRowStart = Math.max(
-        -dateToTimelineAxisOffsetMs(adapter, presetConfig, start.value),
+        -dateToTimelineAxisOffsetMs(adapter, config, start.value),
         0,
       );
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
@@ -119,7 +119,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     isDraggable,
     renderDragPreview,
     getDragData,
-    collection: presetConfig,
+    collection: config,
   });
 
   const { getButtonProps, buttonRef } = useButton({
@@ -132,7 +132,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     useElementPositionInCollection({
       start,
       end,
-      collection: presetConfig,
+      collection: config,
     });
 
   const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };

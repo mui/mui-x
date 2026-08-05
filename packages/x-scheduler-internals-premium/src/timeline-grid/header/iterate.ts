@@ -3,11 +3,17 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/base-ui-copy';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import { getStartOfWeek, dateToTimelineAxisOffsetMs } from '@mui/x-scheduler-internals/internals';
-import type { DisplayedHourRange } from '@mui/x-scheduler-internals/internals';
+import {
+  getStartOfWeek,
+  dateToTimelineAxisOffsetMs,
+  FULL_DAY_MINUTES,
+} from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { IteratedCell, PresetHeaderUnit } from '../../models';
 
 const HOUR_MS = 3_600_000;
+
+type HourWindow = Pick<TimelineAxis, 'dayStartMinute' | 'dayEndMinute'>;
 
 export function iterate(
   adapter: TemporalAdapter,
@@ -16,7 +22,7 @@ export function iterate(
   rangeStart: TemporalSupportedObject,
   rangeEnd: TemporalSupportedObject,
   weekStartsOn?: WeekStartsOn,
-  hourRange?: DisplayedHourRange,
+  hourWindow?: HourWindow,
 ): IteratedCell[] {
   if (adapter.isBefore(rangeEnd, rangeStart)) {
     throw new Error(
@@ -36,11 +42,13 @@ export function iterate(
     1,
   );
 
-  // The hour range only trims hour ticks: hidden hour cells are skipped and the
+  // The hour window only trims hour ticks: hidden hour cells are skipped and the
   // spans of coarser cells count visible hours only.
-  const appliedHourRange =
-    tickUnit === 'hour' && hourRange && !(hourRange.startTime === 0 && hourRange.endTime === 24)
-      ? hourRange
+  const appliedHourWindow =
+    tickUnit === 'hour' &&
+    hourWindow &&
+    !(hourWindow.dayStartMinute === 0 && hourWindow.dayEndMinute === FULL_DAY_MINUTES)
+      ? hourWindow
       : undefined;
 
   const cells: IteratedCell[] = [];
@@ -60,9 +68,12 @@ export function iterate(
     }
     const nextCursor = addUnit(adapter, cursor, unit, 1);
 
-    if (appliedHourRange && unit === 'hour') {
-      const hour = adapter.getHours(cursor);
-      if (hour < appliedHourRange.startTime || hour >= appliedHourRange.endTime) {
+    if (appliedHourWindow && unit === 'hour') {
+      const minuteInDay = adapter.getHours(cursor) * 60;
+      if (
+        minuteInDay < appliedHourWindow.dayStartMinute ||
+        minuteInDay >= appliedHourWindow.dayEndMinute
+      ) {
         cursor = nextCursor;
         continue;
       }
@@ -79,8 +90,8 @@ export function iterate(
       date: cursor,
       start: clampedStart,
       end: clampedEnd,
-      spanInTicks: appliedHourRange
-        ? countVisibleHours(adapter, clampedEnd, clampedStart, rangeStart, appliedHourRange)
+      spanInTicks: appliedHourWindow
+        ? countVisibleHours(adapter, clampedEnd, clampedStart, rangeStart, appliedHourWindow)
         : differenceInUnits(adapter, clampedEnd, clampedStart, tickUnit),
       key: String(adapter.getTime(cursor)),
       index,
@@ -146,7 +157,7 @@ function addUnit(
 
 /**
  * Counts the hour ticks within `[earlier, later)` that fall inside the visible hour
- * range: the axis distance between the two bounds, in hours. Closed form (no
+ * window: the axis distance between the two bounds, in hours. Closed form (no
  * hour-by-hour walk), consistent with the pinned tick count of the grid.
  */
 function countVisibleHours(
@@ -154,14 +165,9 @@ function countVisibleHours(
   later: TemporalSupportedObject,
   earlier: TemporalSupportedObject,
   rangeStart: TemporalSupportedObject,
-  hourRange: DisplayedHourRange,
+  hourWindow: HourWindow,
 ): number {
-  const axis = {
-    start: rangeStart,
-    end: later,
-    dayStartMinute: hourRange.startTime * 60,
-    dayEndMinute: hourRange.endTime * 60,
-  };
+  const axis = { start: rangeStart, end: later, ...hourWindow };
   return Math.round(
     (dateToTimelineAxisOffsetMs(adapter, axis, later) -
       dateToTimelineAxisOffsetMs(adapter, axis, earlier)) /

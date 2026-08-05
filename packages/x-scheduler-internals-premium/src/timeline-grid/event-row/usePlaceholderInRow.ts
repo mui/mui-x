@@ -34,7 +34,7 @@ export function usePlaceholderInRow(
     ? rawPlaceholder.eventId
     : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
@@ -43,9 +43,7 @@ export function usePlaceholderInRow(
 
     // A placeholder fully inside the hidden hours (e.g. while editing the dates in the
     // event dialog) would render as a zero-width sliver pinned to the day seam.
-    if (
-      !isRangeVisibleOnTimelineAxis(adapter, presetConfig, rawPlaceholder.start, rawPlaceholder.end)
-    ) {
+    if (!isRangeVisibleOnTimelineAxis(adapter, config, rawPlaceholder.start, rawPlaceholder.end)) {
       return null;
     }
     const startProcessed = processDate(rawPlaceholder.start, adapter);
@@ -95,15 +93,7 @@ export function usePlaceholderInRow(
       ...sharedProperties,
       position,
     };
-  }, [
-    rawPlaceholder,
-    adapter,
-    presetConfig,
-    originalEvent,
-    originalEventId,
-    occurrences,
-    maxIndex,
-  ]);
+  }, [rawPlaceholder, adapter, config, originalEvent, originalEventId, occurrences, maxIndex]);
 }
 
 export namespace usePlaceholderInRow {

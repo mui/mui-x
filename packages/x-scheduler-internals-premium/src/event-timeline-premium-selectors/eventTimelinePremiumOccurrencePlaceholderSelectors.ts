@@ -14,10 +14,10 @@ export const timelineOccurrencePlaceholderSelectors = {
       return null;
     }
 
-    const presetConfig = eventTimelinePremiumPresetSelectors.config(state);
+    const config = eventTimelinePremiumPresetSelectors.config(state);
     if (
-      state.adapter.isBefore(state.occurrencePlaceholder.end, presetConfig.start) ||
-      state.adapter.isAfter(state.occurrencePlaceholder.start, presetConfig.end)
+      state.adapter.isBefore(state.occurrencePlaceholder.end, config.start) ||
+      state.adapter.isAfter(state.occurrencePlaceholder.start, config.end)
     ) {
       return null;
     }
