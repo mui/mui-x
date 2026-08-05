@@ -20,7 +20,9 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ enableKeyboardClickEvents?: bool }" }
+    },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {

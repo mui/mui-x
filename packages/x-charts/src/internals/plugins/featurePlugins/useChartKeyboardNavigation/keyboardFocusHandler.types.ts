@@ -24,14 +24,18 @@ export type FocusedItemUpdater<
     : Pick<ChartState<[UseChartKeyboardNavigationSignature], [], SeriesType>, 'series'>,
 ) => FocusedItemIdentifier<OutputSeriesType> | null;
 
+export type KeyboardActivation = 'activate';
+
 /**
  * Get the next focusable item in the chart.
  * @param {SeriesItemIdentifierWithType<SeriesType> | null} currentItem The current focused item.
  * @param {KeyboardEvent} event The keyboard event that triggered the navigation.
  * @param {ChartState<[UseChartKeyboardNavigationSignature], []>} state The current chart state.
- * @returns {SeriesItemIdentifierWithType<ChartSeriesType> | null} The next focusable item or null if none found.
+ * @returns {FocusedItemUpdater<ChartSeriesType> | KeyboardActivation | null} The next focusable item updater, an activation request, or null if none found.
  */
 export type KeyboardFocusHandler<
   SeriesType extends ChartSeriesType,
   OutputSeriesType extends ChartSeriesType = ChartSeriesType,
-> = (event: KeyboardEvent) => FocusedItemUpdater<SeriesType, OutputSeriesType> | null;
+> = (
+  event: KeyboardEvent,
+) => FocusedItemUpdater<SeriesType, OutputSeriesType> | KeyboardActivation | null;

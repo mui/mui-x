@@ -128,8 +128,9 @@ export interface ScatterChartProps
    */
   slotProps?: ScatterChartSlotProps;
   /**
-   * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using hit area interaction. Or the Mouse event from the scatter element, when `disableHitArea=true`.
+   * Callback fired when a scatter item is activated.
+   * Activation with the Enter and Space keys requires the `enableKeyboardClickEvents` experimental feature.
+   * @param {MouseEvent} event The event that activated the item. It is a `KeyboardEvent` on Enter or Space activation. Import `@mui/x-charts/moduleAugmentation/keyboardItemActivation` for correct typing.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?:
@@ -268,6 +269,7 @@ ScatterChart.propTypes /* remove-proptypes */ = {
    * Options to enable features planned for the next major.
    */
   experimentalFeatures: PropTypes.shape({
+    enableKeyboardClickEvents: PropTypes.bool,
     progressiveRendering: PropTypes.bool,
   }),
   /**
@@ -423,8 +425,9 @@ ScatterChart.propTypes /* remove-proptypes */ = {
    */
   onHighlightChange: PropTypes.func,
   /**
-   * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using hit area interaction. Or the Mouse event from the scatter element, when `disableHitArea=true`.
+   * Callback fired when a scatter item is activated.
+   * Activation with the Enter and Space keys requires the `enableKeyboardClickEvents` experimental feature.
+   * @param {MouseEvent} event The event that activated the item. It is a `KeyboardEvent` on Enter or Space activation. Import `@mui/x-charts/moduleAugmentation/keyboardItemActivation` for correct typing.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,

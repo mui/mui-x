@@ -80,7 +80,11 @@ function test(
   initialFocus: FocusedItemIdentifier<'sankey'> | null,
   align: 'left' | 'justify' = 'left',
 ) {
-  return keyboardFocusHandler({ key: direction } as KeyboardEvent)?.(initialFocus, state(align));
+  const keyboardHandlerResult = keyboardFocusHandler({ key: direction } as KeyboardEvent);
+
+  return typeof keyboardHandlerResult === 'function'
+    ? keyboardHandlerResult(initialFocus, state(align))
+    : keyboardHandlerResult;
 }
 
 describe('<Sankey /> - keyboard navigation', () => {

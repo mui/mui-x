@@ -73,9 +73,9 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     onHighlightChange,
     disableHitArea,
     hitAreaRadius,
-    onItemClick: useVoronoiOnItemClick
-      ? (onItemClick as UseChartClosestPointSignature['params']['onItemClick'])
-      : undefined,
+    // Keep this callback available to keyboard navigation even when pointer clicks are handled
+    // directly by the marker because `disableHitArea` is enabled.
+    onItemClick: onItemClick as UseChartClosestPointSignature['params']['onItemClick'],
     plugins: SCATTER_CHART_PLUGINS,
     slots,
     slotProps,

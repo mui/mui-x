@@ -66,6 +66,21 @@ When `hitAreaRadius` is `"item"`, the user must click directly on the point, and
 
 Otherwise, click behavior matches the [interaction section](#interaction), and the mouse event comes from the SVG container.
 
+A focused point can also be activated with the keyboard.
+To enable keyboard click interaction with <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd>, provide `experimentalFeatures: { enableKeyboardClickEvents: true }`.
+`onItemClick` is then called with a `KeyboardEvent`.
+
+To get the proper event type, add the following import:
+
+```ts
+import type {} from '@mui/x-charts/moduleAugmentation/keyboardItemActivation';
+```
+
+:::info
+Both opt-ins exist to avoid a breaking change.
+Keyboard activation and the wider `event` type become the default in the next major version.
+:::
+
 {{"demo": "ScatterClick.js"}}
 
 ## Bubble chart

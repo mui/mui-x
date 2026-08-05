@@ -418,6 +418,7 @@
   { "name": "HighlightOptions", "kind": "TypeAlias" },
   { "name": "HighlightScope", "kind": "TypeAlias" },
   { "name": "HighlightState", "kind": "TypeAlias" },
+  { "name": "ItemActivationEvent", "kind": "TypeAlias" },
   { "name": "ItemTooltip", "kind": "Interface" },
   { "name": "labelClasses", "kind": "Variable" },
   { "name": "labelGradientClasses", "kind": "Variable" },

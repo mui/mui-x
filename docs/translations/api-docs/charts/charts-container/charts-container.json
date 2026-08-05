@@ -87,9 +87,12 @@
       }
     },
     "onItemClick": {
-      "description": "Callback fired when clicking close to an item. This is only available for scatter plot for now.",
+      "description": "Callback fired when clicking close to an item, or when it is activated with the Enter or Space keys. This is only available for scatter plot for now. Activation with the Enter and Space keys requires the <code>enableKeyboardClickEvents</code> experimental feature.",
       "typeDescriptions": {
-        "event": { "name": "event", "description": "Mouse event caught at the svg level" },
+        "event": {
+          "name": "event",
+          "description": "The event that activated the item. It is a <code>KeyboardEvent</code> on Enter or Space activation. Import <code>@mui/x-charts/moduleAugmentation/keyboardItemActivation</code> for correct typing."
+        },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",
           "description": "Identify which item got clicked"

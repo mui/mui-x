@@ -38,7 +38,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ enablePositionBasedPointerInteraction?: bool, progressiveRendering?: bool }"
+        "description": "{ enableKeyboardClickEvents?: bool, enablePositionBasedPointerInteraction?: bool, progressiveRendering?: bool }"
       }
     },
     "height": { "type": { "name": "number" } },
