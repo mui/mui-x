@@ -19,7 +19,6 @@ import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-i
 import { computeOccurrencesMaxIndex } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import {
   schedulerNowSelectors,
-  schedulerOccurrenceSelectors,
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -657,11 +656,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
   const showCurrentTimeIndicator = showCurrentTimeIndicatorSetting && isNowInView;
 
-  const resources = useStore(
+  // The visible list preserves the resource entries (only their occurrence lists are
+  // filtered), so it also drives the row models and the virtualized row heights.
+  const visibleResources = useStore(
     store,
-    schedulerOccurrenceSelectors.groupedByResourceList,
-    presetConfig.start,
-    presetConfig.end,
+    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
   );
 
   // Measure header height for the virtualizer's topPinnedHeight
@@ -685,8 +684,8 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const layout = useLazyRef(() => new LayoutDataGrid(virtualizerRefs)).current;
 
   const rows = React.useMemo(
-    () => resources.map(({ resource }) => ({ id: resource.id, model: resource })),
-    [resources],
+    () => visibleResources.map(({ resource }) => ({ id: resource.id, model: resource })),
+    [visibleResources],
   );
 
   const {
@@ -727,12 +726,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   // Row heights mirror the CSS. The cell stretches to fit overlapping events
   // (`--lane-count` lanes), so we need the per-resource lane count.
   const theme = useTheme();
-  // Occurrences hidden by the preset's hour window are excluded from the lane count so
-  // the virtualized row heights match the rendered lanes.
-  const visibleResources = useStore(
-    store,
-    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
-  );
   const laneCountByResource = React.useMemo(() => {
     const map = new Map<SchedulerResourceId, number>();
     for (const { resource, occurrences } of visibleResources) {

@@ -1,4 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   computeElementPositionInCollection,
@@ -10,8 +11,6 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
-
-const EMPTY_ARRAY: readonly SchedulerEventOccurrence[] = [];
 
 type OccurrencePosition = ReturnType<typeof computeElementPositionInCollection>;
 
