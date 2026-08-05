@@ -1,4 +1,4 @@
-import type { TemporalAdapter, TemporalSupportedObject } from '../../base-ui-copy';
+import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;

@@ -8,6 +8,7 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
@@ -49,7 +50,6 @@ import {
 import { dateToEventString } from '../date-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
-import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 

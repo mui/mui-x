@@ -478,8 +478,10 @@ function FillerRow() {
  * only re-renders this subtree, not the surrounding row logic.
  */
 function EventList({
+  resourceId,
   occurrences,
 }: {
+  resourceId: SchedulerResourceId;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
 }) {
   const adapter = useAdapterContext();
@@ -533,7 +535,7 @@ function EventList({
             <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
               <EventTimelinePremiumEvent
                 occurrence={occurrence}
-                ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
+                ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
                 variant="regular"
               />
             </EventDialogTrigger>
@@ -577,12 +579,12 @@ function EventRowContent({
 
   return (
     <React.Fragment>
-      <EventList occurrences={occurrences} />
+      <EventList resourceId={resourceId} occurrences={occurrences} />
       {placeholder != null && (
         <EventTimelinePremiumEvent
           ref={placeholderRef}
           occurrence={placeholder}
-          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${placeholder.resource}`}
+          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
           variant="placeholder"
         />
       )}

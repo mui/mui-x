@@ -9,7 +9,7 @@ import {
   getDisplayedHourRange,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
-import { createChangeEventDetails } from '@mui/x-scheduler-internals/base-ui-copy';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
   EventTimelinePremiumPreferences,
   EventTimelinePremiumPreset,

@@ -1,4 +1,4 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
+import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
@@ -6,7 +6,7 @@ import type {
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
 
-export type { TemporalTimezone } from '../base-ui-copy/types';
+export type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 
 /**
  * Base shape for processed scheduler events.
@@ -364,6 +364,12 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends Sche
    * The data of the event to use when dropping the event outside of the Event Calendar or the Event Timeline Premium.
    */
   originalOccurrence: SchedulerEventOccurrence;
+  /**
+   * The id of the resource row the occurrence was dragged from, if the drag source exposes it.
+   * Used to replace only that entry in a multi-resource event's `resource` array on drop,
+   * instead of overwriting the whole array with the destination resource.
+   */
+  sourceResourceId: SchedulerResourceId | null;
 }
 
 export interface SchedulerOccurrencePlaceholderExternalDrag extends SchedulerOccurrencePlaceholderBase {

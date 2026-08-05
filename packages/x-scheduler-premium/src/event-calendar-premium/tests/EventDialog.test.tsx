@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
+import { isJSDOM } from 'test/utils/skipIf';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
@@ -10,9 +11,10 @@ import {
   StateWatcher,
   StoreSpy,
 } from 'test/utils/scheduler';
-import { screen, within } from '@mui/internal-test-utils';
+import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import type {
   SchedulerResource,
+  SchedulerEventOccurrence,
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -24,6 +26,7 @@ import {
   EventCalendarProvider,
   EventDialogContent,
   EventDialogOptionalRenderersContext,
+  useEventDialogFormField,
 } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
@@ -109,6 +112,68 @@ describe('<EventDialogContent open />', () => {
     expect(screen.getByRole('combobox', { name: /recurrence/i })).to.not.equal(null);
   });
 
+  describe('retargeting the dialog to another occurrence', () => {
+    const weeklyEventBuilder = EventBuilder.new(adapter)
+      .title('Weekly sync')
+      .singleDay('2025-05-26T09:00:00Z', 30)
+      .recurrent('WEEKLY');
+
+    const firstOccurrence = weeklyEventBuilder.toOccurrence();
+    const secondOccurrence = weeklyEventBuilder.toOccurrence('2025-06-02T09:00:00Z');
+
+    function Wrapper(props: { occurrence: SchedulerEventOccurrence }) {
+      return (
+        <EventCalendarProvider
+          events={[weeklyEventBuilder.build()]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent open {...defaultProps} occurrence={props.occurrence} />
+        </EventCalendarProvider>
+      );
+    }
+
+    // In a real browser, the remount moves the focus to the new title input through a
+    // natively dispatched focus event that lands outside `act()` and trips fail-on-console.
+    it.skipIf(!isJSDOM)(
+      'should re-seed the form when the dialog is retargeted to another occurrence of the same event',
+      async () => {
+        const { user, setProps } = render(<Wrapper occurrence={firstOccurrence} />);
+
+        await user.type(screen.getByLabelText(/event title/i), ' edited');
+
+        setProps({ occurrence: secondOccurrence });
+
+        // Both occurrences share the event id, so the remount is keyed by the
+        // occurrence key: the form is re-seeded and the previous draft discarded.
+        expect(screen.getByLabelText(/event title/i)).to.have.value('Weekly sync');
+        expect(screen.getByLabelText(/start date/i)).to.have.value('2025-06-02');
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'should move focus to the title input of the remounted form when the dialog is retargeted',
+      async () => {
+        const { setProps } = render(<Wrapper occurrence={firstOccurrence} />);
+
+        const firstInput = screen.getByLabelText(/event title/i);
+        await waitFor(() => expect(document.activeElement).to.equal(firstInput));
+
+        await act(async () => {
+          setProps({ occurrence: secondOccurrence });
+        });
+
+        // The remount must not strand focus on the detached input: the new
+        // title input takes it over so keyboard users keep their place.
+        await waitFor(() => {
+          const input = screen.getByLabelText(/event title/i);
+          expect(input).to.have.value('Weekly sync');
+          expect(document.activeElement).to.equal(input);
+        });
+      },
+    );
+  });
+
   it('should call "onEventsChange" with updated values on submit', async () => {
     const onEventsChange = spy();
     const { user } = render(
@@ -192,6 +257,29 @@ describe('<EventDialogContent open />', () => {
     expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
       /start.*before.*end/i,
     );
+  });
+
+  it('should block submit if start time is after end time on the same day', async () => {
+    const onEventsChange = spy();
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
+        <TestEventDialogContent open {...defaultProps} />
+      </EventCalendarProvider>,
+    );
+    await user.clear(screen.getByLabelText(/start time/i));
+    await user.type(screen.getByLabelText(/start time/i), '10:00');
+    await user.clear(screen.getByLabelText(/end time/i));
+    await user.type(screen.getByLabelText(/end time/i), '09:00');
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    // TODO(#23285): the Start time field does not surface this error yet,
+    // so the submit is blocked with no visible message.
+    expect(onEventsChange.called).to.equal(false);
   });
 
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
@@ -602,6 +690,72 @@ describe('<EventDialogContent open />', () => {
       expect(onEventsChange.firstCall.firstArg[0].resource).to.equal(workResource.id);
     });
 
+    it('should show the range error and the resource error at the same time', async () => {
+      const onEventsChange = spy();
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[eventWithoutResource]}
+          onEventsChange={onEventsChange}
+          resources={resources}
+          shouldEventRequireResource
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent
+            open
+            {...defaultProps}
+            occurrence={eventWithoutResourceOccurrence}
+          />
+        </EventCalendarProvider>,
+      );
+
+      await user.clear(screen.getByLabelText(/start date/i));
+      await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
+      await user.clear(screen.getByLabelText(/end date/i));
+      await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(onEventsChange.called).to.equal(false);
+      expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
+        /start.*before.*end/i,
+      );
+      expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+
+      // Editing a date field only invalidates the range error, not the other sections' errors.
+      await user.clear(screen.getByLabelText(/end date/i));
+      await user.type(screen.getByLabelText(/end date/i), '2025-05-28');
+
+      expect(screen.queryByText(/start.*before.*end/i)).to.equal(null);
+      expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+    });
+
+    it('should keep validating the general tab fields when submitting from the recurrence tab', async () => {
+      const onEventsChange = spy();
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[eventWithoutResource]}
+          onEventsChange={onEventsChange}
+          resources={resources}
+          shouldEventRequireResource
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent
+            open
+            {...defaultProps}
+            occurrence={eventWithoutResourceOccurrence}
+          />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      // The general tab is hidden, not unmounted, so its validators still run and block the submit.
+      expect(onEventsChange.called).to.equal(false);
+      expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+    });
+
     it('should block submit on a Calendar creation placeholder when `shouldEventRequireResource={true}` and no resource is selected', async () => {
       const onEventsChange = spy();
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
@@ -645,6 +799,53 @@ describe('<EventDialogContent open />', () => {
   });
 
   describe('Event creation', () => {
+    it('should not push the placeholder when a field that does not affect it is edited', async () => {
+      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
+      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
+      let pushSpy;
+
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('tmp')
+        .span(start.toISOString(), end.toISOString())
+        .title('')
+        .description('')
+        .toOccurrence();
+
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={resources} storeClass={PremiumTestStore}>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'time-grid',
+                start,
+                end,
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="setOccurrencePlaceholder"
+            onSpyReady={(sp) => {
+              pushSpy = sp;
+            }}
+          />
+
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      const callCountAfterMount = pushSpy!.callCount;
+
+      await user.type(screen.getByLabelText(/event title/i), 'My event');
+      await user.type(screen.getByLabelText(/description/i), 'Some details');
+
+      expect(pushSpy!.callCount).to.equal(callCountAfterMount);
+    });
+
     it('should change surface of the placeholder to day-grid when all-day is changed to true', async () => {
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
@@ -772,6 +973,50 @@ describe('<EventDialogContent open />', () => {
       await user.click(screen.getByRole('switch', { name: /all day/i }));
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
+    });
+
+    it('should write the selected resource into the creation placeholder', async () => {
+      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
+      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
+      const handleResourceIdChange = spy();
+
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('tmp')
+        .span(start.toISOString(), end.toISOString())
+        .toOccurrence();
+
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={resources} storeClass={PremiumTestStore}>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'time-grid',
+                start,
+                end,
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+
+          <StateWatcher
+            Context={SchedulerStoreContext}
+            selector={(s) => s.occurrencePlaceholder?.resourceId}
+            onValueChange={handleResourceIdChange}
+          />
+        </EventCalendarProvider>,
+      );
+
+      expect(handleResourceIdChange.lastCall?.firstArg).to.equal(null);
+
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+
+      expect(handleResourceIdChange.lastCall?.firstArg).to.equal(workResource.id);
     });
 
     it('should call createEvent with metaChanges + computed start/end on Submit', async () => {
@@ -2059,6 +2304,7 @@ describe('<EventDialogContent open />', () => {
           .singleDay('2025-06-12T14:00:00Z')
           .build(),
         customField: 'preserve-me',
+        untouchedField: 'keep-me',
       } as SchedulerEvent;
       const nonRecurringEventWithCustomDataOccurrence = EventBuilder.new(adapter)
         .id(nonRecurringEventWithCustomData.id)
@@ -2186,6 +2432,86 @@ describe('<EventDialogContent open />', () => {
         );
         expect(created).to.not.equal(undefined);
         expect(created.customField).to.equal('preserve-me');
+      });
+
+      it('should save a custom field edited through useEventDialogFormField', async () => {
+        function CustomFieldSection() {
+          const { value, setValue } = useEventDialogFormField<string>('customField');
+          return (
+            <input
+              aria-label="custom field"
+              value={value ?? ''}
+              onChange={(event) => setValue(event.target.value)}
+            />
+          );
+        }
+        // The recurrence-tab renderer is only used here as a seam to mount the probe
+        // inside the form until the General-tab slot (#22871) lands — it renders the
+        // real tab untouched and is not a customization surface.
+        function FormProbeInjector(
+          props: React.ComponentProps<
+            NonNullable<typeof PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS.recurrenceTab>
+          >,
+        ) {
+          const RecurrenceTabRenderer = PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS.recurrenceTab!;
+          return (
+            <React.Fragment>
+              <RecurrenceTabRenderer {...props} />
+              <CustomFieldSection />
+            </React.Fragment>
+          );
+        }
+
+        const onEventsChange = spy();
+        let updateEventSpy;
+        const { user } = render(
+          <EventCalendarProvider
+            events={[nonRecurringEventWithCustomData]}
+            onEventsChange={onEventsChange}
+            resources={resources}
+            storeClass={PremiumTestStore}
+          >
+            <StoreSpy
+              Context={SchedulerStoreContext}
+              method="updateEvent"
+              onSpyReady={(sp) => {
+                updateEventSpy = sp;
+              }}
+            />
+            <EventDialogOptionalRenderersContext.Provider
+              value={{
+                ...PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS,
+                recurrenceTab: FormProbeInjector,
+              }}
+            >
+              <EventDialogContent
+                open
+                {...defaultProps}
+                occurrence={nonRecurringEventWithCustomDataOccurrence}
+              />
+            </EventDialogOptionalRenderersContext.Provider>
+          </EventCalendarProvider>,
+        );
+
+        // The custom field is seeded from the event model.
+        expect(screen.getByLabelText('custom field')).to.have.value('preserve-me');
+
+        await user.clear(screen.getByLabelText('custom field'));
+        await user.type(screen.getByLabelText('custom field'), 'edited');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        expect(onEventsChange.calledOnce).to.equal(true);
+        const updated = onEventsChange.lastCall.firstArg.find(
+          (event) => event.id === nonRecurringEventWithCustomData.id,
+        );
+        expect(updated.customField).to.equal('edited');
+
+        // Only the edited custom field enters the changes payload — an untouched
+        // seeded field keeps resolving against the live model instead.
+        const changes = updateEventSpy!.lastCall.firstArg;
+        expect(changes.customField).to.equal('edited');
+        expect(changes).not.to.have.property('untouchedField');
+        expect(updated.untouchedField).to.equal('keep-me');
       });
 
       it('should use the latest custom data when it changes while the scope dialog is open', async () => {
