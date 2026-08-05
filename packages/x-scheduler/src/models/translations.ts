@@ -6,6 +6,7 @@ export type SchedulerWeekday =
 export interface EventDialogLocaleText {
   // EventDialog
   colorPickerLabel: string;
+  colorSectionLabel: string;
   dateTimeSectionLabel: string;
   resourceColorSectionLabel: string;
   allDayLabel: string;

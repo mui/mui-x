@@ -9,6 +9,7 @@ import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 const ptBRDialog: Partial<EventDialogLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Cor do evento',
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Data e hora',
   resourceColorSectionLabel: 'Recurso e cor',
   allDayLabel: 'O dia todo',

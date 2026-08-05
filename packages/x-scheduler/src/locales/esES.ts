@@ -9,6 +9,7 @@ import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 const esESDialog: Partial<EventDialogLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Color del evento',
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Fecha y hora',
   resourceColorSectionLabel: 'Recurso y color',
   allDayLabel: 'Todo el día',
