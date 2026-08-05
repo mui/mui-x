@@ -1,12 +1,9 @@
 'use client';
 import * as React from 'react';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import type { ControlledValue } from './utils';
 
 export interface RecurrenceTabRendererProps {
   occurrence: SchedulerRenderableEventOccurrence;
-  controlled: ControlledValue;
-  setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
   tabValue: string;
 }
 
