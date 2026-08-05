@@ -151,7 +151,7 @@ describe('computeElementPositionInCollection', () => {
 
     it('should return a zero duration for an overnight event fully inside the hidden hours', () => {
       // Ends the next day but never enters the visible window: clamping makes both
-      // indices land on the day seam, which must not trigger the midnight-wrap heuristic.
+      // offsets land on the day seam, collapsing the element instead of stretching it.
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-05T21:00:00.000Z'),
         end: processed('2025-01-06T07:00:00.000Z'),

@@ -4,7 +4,6 @@ import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { SchedulerProcessedDate } from '../../models';
 import {
   dateToTimelineAxisOffsetMs,
-  getTimelineAxisDayMs,
   getTimelineAxisDurationMs,
   isStartMinuteOutsideAxisWindow,
   isEndMinuteOutsideAxisWindow,
@@ -42,26 +41,21 @@ export function computeElementPositionInCollection(
 ): useElementPositionInCollection.ReturnValue {
   const { start, end, collection } = parameters;
 
-  const dayMs = getTimelineAxisDayMs(collection);
-
-  // The processed bounds already carry their wall-clock time of day.
+  // The processed bounds already carry their wall-clock time of day. The offsets are
+  // monotonic in the date (day index × day size + a clamped in-day term), so no
+  // midnight-wrap correction is needed for `end >= start` inputs.
   const startOffsetMs = dateToTimelineAxisOffsetMs(
     adapter,
     collection,
     start.value,
     start.minutesInDay * MINUTE_MS,
   );
-  let endOffsetMs = dateToTimelineAxisOffsetMs(
+  const endOffsetMs = dateToTimelineAxisOffsetMs(
     adapter,
     collection,
     end.value,
     end.minutesInDay * MINUTE_MS,
   );
-
-  // If the event ends before it starts, it means it spans over midnight(s)
-  if (endOffsetMs < startOffsetMs) {
-    endOffsetMs += dayMs;
-  }
 
   const totalMs = parameters.durationMs ?? getTimelineAxisDurationMs(adapter, collection);
 
