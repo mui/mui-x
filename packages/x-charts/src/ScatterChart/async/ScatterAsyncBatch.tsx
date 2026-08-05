@@ -93,9 +93,8 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
 
     if (!isVoronoiEnabled) {
       activateItem(item);
+      onItemClick?.(event, item);
     }
-
-    onItemClick?.(event, item);
   };
 
   const Marker = slots?.marker ?? ScatterMarker;
