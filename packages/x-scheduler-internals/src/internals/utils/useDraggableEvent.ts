@@ -9,8 +9,8 @@ import {
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
 import type { SchedulerEventId } from '../../models';
-import { isStartMinuteOutsideAxisWindow, isEndMinuteOutsideAxisWindow } from './timeline-axis';
 import type { TimelineAxis } from './timeline-axis';
+import { computeElementPositionInCollection } from './useElementPositionInCollection';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
 import { useAdapterContext } from '../../use-adapter-context';
@@ -87,16 +87,18 @@ export function useDraggableEvent(
 
   // A bound clipped by the collection range or hidden by the daily hour window does not
   // render at its real position, so it must not expose a resize handle: the drop math
-  // reconstructs positions from the rendered edges.
+  // reconstructs positions from the rendered edges. The flags share the positioning
+  // arithmetic so "clipped" and "rendered somewhere else" cannot drift apart — notably
+  // an end at the exact midnight closing the collection renders at its real position.
   const contextValue: useDraggableEvent.ContextValue = React.useMemo(() => {
-    const axis = { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute };
+    const { startingBeforeEdge, endingAfterEdge } = computeElementPositionInCollection(adapter, {
+      start,
+      end,
+      collection: { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute },
+    });
     return {
-      isEventStartClipped:
-        adapter.isBefore(start.value, collectionStart) ||
-        isStartMinuteOutsideAxisWindow(axis, start.minutesInDay),
-      isEventEndClipped:
-        adapter.isAfter(end.value, collectionEnd) ||
-        isEndMinuteOutsideAxisWindow(axis, end.minutesInDay),
+      isEventStartClipped: startingBeforeEdge,
+      isEventEndClipped: endingAfterEdge,
     };
   }, [adapter, start, end, collectionStart, collectionEnd, dayStartMinute, dayEndMinute]);
 

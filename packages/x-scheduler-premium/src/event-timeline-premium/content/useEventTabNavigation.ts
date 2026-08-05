@@ -7,7 +7,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
-  dateToTimelineAxisOffsetMs,
+  computeElementPositionInCollection,
   getTimelineAxisDurationMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
@@ -51,15 +51,13 @@ export function useEventTabNavigation(params: {
   const eventsTotalWidth = tickCount * tickWidth;
 
   const computeFractionRange = useStableCallback((occurrence: SchedulerEventOccurrence) => {
-    const clamp = (ms: number) => Math.min(Math.max(ms, 0), totalMs);
-    return {
-      fractionStart:
-        clamp(dateToTimelineAxisOffsetMs(adapter, axis, occurrence.displayTimezone.start.value)) /
-        totalMs,
-      fractionEnd:
-        clamp(dateToTimelineAxisOffsetMs(adapter, axis, occurrence.displayTimezone.end.value)) /
-        totalMs,
-    };
+    const { position, duration } = computeElementPositionInCollection(adapter, {
+      start: occurrence.displayTimezone.start,
+      end: occurrence.displayTimezone.end,
+      collection: axis,
+      durationMs: totalMs,
+    });
+    return { fractionStart: position, fractionEnd: position + duration };
   });
 
   const focusEventInDom = (key: string): boolean => {
