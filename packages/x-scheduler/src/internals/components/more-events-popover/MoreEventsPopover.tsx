@@ -107,7 +107,8 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   const restoreFocusOnExit = useStableCallback(() => {
     const active = document.activeElement;
     if (!active || active === document.body || paperRef.current?.contains(active)) {
-      anchor?.focus();
+      // `preventScroll` so handing focus back never scrolls the grid, as elsewhere in the codebase.
+      anchor?.focus({ preventScroll: true });
     }
   });
 
