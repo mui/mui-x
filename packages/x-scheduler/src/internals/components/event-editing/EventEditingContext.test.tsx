@@ -73,4 +73,53 @@ describe('<EventEditingProvider />', () => {
 
     expect(currentAnchor).to.equal(screen.getByTestId('popover-trigger'));
   });
+
+  it('should hand the anchor to a surviving trigger when the one owning it unmounts', async () => {
+    let currentAnchor: HTMLElement | null = null;
+    const handleAnchor = (anchor: HTMLElement | null) => {
+      currentAnchor = anchor;
+    };
+
+    function Harness() {
+      const [popoverMounted, setPopoverMounted] = React.useState(true);
+
+      return (
+        <EventCalendarProvider events={[EVENT]} resources={[]}>
+          <EventEditingProvider surface="dialog">
+            <AnchorProbe onAnchor={handleAnchor} />
+            <EventEditingTrigger occurrence={occurrence}>
+              <button type="button" data-testid="cell-trigger">
+                cell
+              </button>
+            </EventEditingTrigger>
+            {popoverMounted && (
+              <EventEditingTrigger occurrence={occurrence}>
+                <button type="button" data-testid="popover-trigger">
+                  popover
+                </button>
+              </EventEditingTrigger>
+            )}
+            <button
+              type="button"
+              data-testid="unmount-popover"
+              onClick={() => setPopoverMounted(false)}
+            >
+              unmount popover
+            </button>
+          </EventEditingProvider>
+        </EventCalendarProvider>
+      );
+    }
+
+    const { user } = render(<Harness />);
+
+    await user.click(screen.getByTestId('cell-trigger'));
+    const popoverTrigger = screen.getByTestId('popover-trigger');
+    expect(currentAnchor).to.equal(popoverTrigger);
+
+    // The owner goes away, so the surface would otherwise be left with no anchor at all.
+    await user.click(screen.getByTestId('unmount-popover'));
+
+    expect(currentAnchor).to.equal(screen.getByTestId('cell-trigger'));
+  });
 });

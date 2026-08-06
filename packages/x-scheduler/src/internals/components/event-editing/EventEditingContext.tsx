@@ -76,7 +76,7 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
   const { occurrence, onClick, children } = props;
   const ref = React.useRef<HTMLElement | null>(null);
   const store = useSchedulerStoreContext();
-  const { startEditing, setAnchor } = useEventEditingContext();
+  const { anchor, startEditing, setAnchor } = useEventEditingContext();
 
   const isEdited = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
@@ -93,6 +93,15 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
     const node = ref.current;
     return () => setAnchor((current) => (current === node ? null : current));
   }, [isEdited, setAnchor]);
+
+  // Take over a vacant anchor: the trigger that owned it may have unmounted (the "+N more" popover
+  // closing, say) while this one stayed mounted, and without an owner the surface stops rendering.
+  // Settles in one pass, since claiming it makes the condition false for every other trigger.
+  useIsoLayoutEffect(() => {
+    if (isEdited && anchor === null && ref.current !== null) {
+      setAnchor(ref.current);
+    }
+  }, [isEdited, anchor, setAnchor]);
 
   return React.cloneElement(children as React.ReactElement<any>, {
     ref,

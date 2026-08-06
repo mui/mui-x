@@ -97,8 +97,28 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     );
   }, [store, onClose]);
 
+  const paperRef = React.useRef<HTMLDivElement>(null);
+
+  // The editing surface hands focus back to the event it was opened from, which lives in this
+  // popover and is about to unmount with it — leaving focus on the document, so the next Tab lands
+  // in the browser chrome. Hand it to the button that opened the popover instead. Scoped to a focus
+  // that is inside the popover (or already lost), so dismissing it by clicking or focusing
+  // elsewhere does not yank focus back.
+  const restoreFocusOnExit = useStableCallback(() => {
+    const active = document.activeElement;
+    if (!active || active === document.body || paperRef.current?.contains(active)) {
+      anchor?.focus();
+    }
+  });
+
   return (
-    <Popover className={classes.moreEventsPopover} open={open} anchorEl={anchor} onClose={onClose}>
+    <Popover
+      className={classes.moreEventsPopover}
+      open={open}
+      anchorEl={anchor}
+      onClose={onClose}
+      slotProps={{ paper: { ref: paperRef }, transition: { onExited: restoreFocusOnExit } }}
+    >
       <MoreEventsPopoverHeader
         className={classes.moreEventsPopoverHeader}
         id={`${schedulerId}-PopoverHeader-${day.key}`}

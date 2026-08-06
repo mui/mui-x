@@ -68,6 +68,15 @@ const EventItemCard = styled('div', {
     '&[data-starting-before-edge][data-ending-after-edge]': {
       clipPath: BOTH_ARROWS_CLIP,
     },
+    // `clip-path` clips the outline away along with everything else outside the chevron, so an
+    // event continuing past the day edge would take focus without showing a ring. Paint it inside
+    // the shape instead, in the text color so it stays legible on the bold surface.
+    '&[data-starting-before-edge], &[data-ending-after-edge]': {
+      '&:focus-visible': {
+        outline: 'none',
+        boxShadow: 'inset 0 0 0 2px currentColor',
+      },
+    },
   },
   '&[data-variant="regular"]': {
     cursor: 'pointer',

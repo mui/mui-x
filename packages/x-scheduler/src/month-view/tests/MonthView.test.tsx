@@ -117,9 +117,11 @@ describe('<MonthView />', () => {
   });
 
   describe('Event keyboard accessibility in "more events" popover', () => {
-    async function renderAndOpenPopover() {
+    async function renderAndOpenPopover(
+      providerProps?: Partial<React.ComponentProps<typeof EventCalendarProvider>>,
+    ) {
       const { user } = render(
-        <EventCalendarProvider events={manyEvents} resources={[]}>
+        <EventCalendarProvider events={manyEvents} resources={[]} {...providerProps}>
           <EventDialogProvider>
             <MonthView />
           </EventDialogProvider>
@@ -210,6 +212,28 @@ describe('<MonthView />', () => {
       await waitFor(() => {
         expect(document.body.contains(popover)).to.equal(false);
       });
+    });
+
+    it('should return focus to the trigger when the editing dialog is submitted', async () => {
+      const { user, popover } = await renderAndOpenPopover({ onEventsChange: () => {} });
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+      await screen.findByRole('dialog');
+
+      // Enter from the title field submits the form, which closes the editing surface.
+      await user.keyboard('{Enter}');
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).to.equal(null);
+      });
+
+      // The popover closes with the editing surface, taking the focused event with it.
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      // Focus has to land back on the calendar, or the next Tab goes to the browser chrome.
+      expect(document.activeElement).to.equal(screen.getByRole('button', { name: /more/i }));
     });
   });
 
