@@ -2,12 +2,6 @@
 
 ## Release
 
-> Tip: For people who are doing the release for the first time, make sure you sign in to npm from the command line using security-key flow as well as have two-factor authentication enabled.
-> You can follow [this guide](https://docs.npmjs.com/accessing-npm-using-2fa) for more information on how to set it up.
-
-> Tip: You can use `release:publish:dry-run` to test the release process without actually publishing the packages.
-> Be sure install [verdaccio](https://verdaccio.org/) (local npm registry) before doing it.
-
 > Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
 
 A typical release goes like this:
@@ -89,6 +83,19 @@ In case of a problem, another method to generate the changelog is available at t
 >
 > and click _Set up connection_
 
+1. Run `pnpm release:publish`. You may be asked to authenticate with GitHub when running the command for the first time or after a very long time.
+2. It'll automatically fetch the latest merged release PR and ask for confirmation before publishing.
+3. If you already know the sha of the commit, you can pass it directly like `pnpm release:publish --sha <your-sha>`.
+4. Other flags for the command:
+
+   > - **--dry-run** Used for debugging. Or directly run `pnpm release:publish:dry-run`.
+   > - **--tag** Use to publish legacy or canary versions.
+
+5. This command invokes the [Publish](https://github.com/mui/mui-x/actions/workflows/publish.yml) GitHub action. It'll log the URL which can be opened to see the latest workflow run.
+6. The next screen shows "@username requested your review to deploy to npm-publish", click "Review deployments" and authorize your workflow run. **Never approve workflow runs you didn't initiate.**
+
+Alternatively, you can run the workflow from the GitHub UI:
+
 1. Go to the [publish action](https://github.com/mui/mui-x/actions/workflows/publish.yml).
 2. Choose "Run workflow" dropdown
 
@@ -99,8 +106,7 @@ In case of a problem, another method to generate the changelog is available at t
    > - **npm dist tag to publish to** Use to publish legacy or canary versions.
 
 3. Click "Run workflow"
-4. Refresh the page to see the newly created workflow, and click it.
-5. The next screen shows "@username requested your review to deploy to npm-publish", click "Review deployments" and authorize your workflow run. **Never approve workflow runs you didn't initiate.**
+4. Refresh the page to see the newly created workflow, and click it, then approve the deployment as above.
 
 The action publishes packages, and prepares the GitHub release. The release tag is created during GitHub release. The GitHub release is created in draft mode.
 
@@ -152,7 +158,3 @@ You can use the following script in your browser console on any GitHub page to a
   window.location.href = diffPage;
 })();
 ```
-
-### release:publish failed
-
-If you receive an error message like `There are no new packages that should be published`. Ensure you are publishing to the correct registry, not `verdaccio` or anything else. If you need to reset your configuration, you can run `npm config delete registry`.
