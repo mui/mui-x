@@ -1,9 +1,11 @@
 'use client';
+import * as React from 'react';
 import type { ChartPlugin } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { UseChartItemClickSignature } from './useChartItemClick.types';
 import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import { getChartPoint } from '../../../getChartPoint';
+import type { ChartsActivationEvent } from '../../../../models/events';
 
 export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = ({
   params,
@@ -11,6 +13,24 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = (
   instance,
 }) => {
   const { onItemClick } = params;
+
+  React.useEffect(() => {
+    if (!onItemClick || !instance.registerItemActivationHandler) {
+      return undefined;
+    }
+
+    return instance.registerItemActivationHandler({}, (event, item) => {
+      const seriesTypeConfig = store.state.seriesConfig.config[item.type];
+      // @ts-ignore The type inference for store.state does not support generic yet
+      const itemWithData = seriesTypeConfig?.getItemWithData?.(store.state, item);
+
+      // The callback only describes the pointer event unless the user augments the types.
+      onItemClick(
+        event as unknown as ChartsActivationEvent<HTMLDivElement>,
+        (itemWithData ?? item) as SeriesItemIdentifierWithType<ChartSeriesType>,
+      );
+    });
+  }, [instance, onItemClick, store]);
 
   if (!onItemClick) {
     return { instance: {} };
