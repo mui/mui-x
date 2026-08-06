@@ -12,7 +12,12 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { DAY_MARGIN_VAR, DAY_SIZE_VAR } from '../internals/constants/dimensions';
+import {
+  CALENDAR_DAY_SIZE_VAR,
+  DAY_MARGIN,
+  DAY_MARGIN_VAR,
+  DAY_SIZE_VAR,
+} from '../internals/constants/dimensions';
 import type {
   DateRangePickerDayOwnerState,
   DateRangePickerDayProps,
@@ -153,6 +158,8 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
     ];
   },
 })<{ ownerState: DateRangePickerDayOwnerState }>(({ theme }) => ({
+  '--PickerDay-horizontalMargin': `${DAY_MARGIN}px`,
+  '--PickerDay-size': CALENDAR_DAY_SIZE_VAR,
   ...theme.typography.caption,
   lineHeight: 1,
   display: 'flex',

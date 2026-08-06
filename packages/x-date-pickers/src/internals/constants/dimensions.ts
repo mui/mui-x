@@ -11,16 +11,40 @@ export const MAX_WEEKS_IN_MONTH = 6;
 export const WEEK_DAY_LABELS_ROW_COUNT = 1;
 export const CALENDAR_ROW_COUNT = MAX_WEEKS_IN_MONTH + WEEK_DAY_LABELS_ROW_COUNT;
 
+/**
+ * The space a single day takes in the grid, margins included.
+ */
 export const DAY_TRACK_SIZE = DAY_SIZE + DAY_MARGIN * 2;
 
+/**
+ * The space the calendar takes around the day grid, derived from the default dimensions so that
+ * the default rendering is left untouched.
+ */
 export const CALENDAR_HORIZONTAL_PADDING = DIALOG_WIDTH - DAY_TRACK_SIZE * DAYS_IN_WEEK;
 export const CALENDAR_HEADER_HEIGHT = VIEW_HEIGHT - DAY_TRACK_SIZE * CALENDAR_ROW_COUNT;
 
-export const DAY_SIZE_VAR = `var(--PickerDay-size, ${DAY_SIZE}px)`;
+/**
+ * The calendar-level size token.
+ * Set `--PickerCalendar-daySize` on the calendar or on any of its ancestors to resize the day cells
+ * and every dimension derived from them.
+ */
+export const CALENDAR_DAY_SIZE_VAR = `var(--PickerCalendar-daySize, ${DAY_SIZE}px)`;
 
-export const DAY_MARGIN_VAR = `var(--PickerDay-horizontalMargin, ${DAY_MARGIN}px)`;
+/**
+ * The `--PickerDay-*` variables are declared by the day slots, so they can only be read on the day
+ * itself and on its descendants.
+ * Anything outside the day has to read `CALENDAR_DAY_SIZE_VAR` instead.
+ */
+export const DAY_SIZE_VAR = 'var(--PickerDay-size)';
+export const DAY_MARGIN_VAR = 'var(--PickerDay-horizontalMargin)';
 
-export const DAY_TRACK_SIZE_VAR = `calc(${DAY_SIZE_VAR} + ${DAY_MARGIN_VAR} * 2)`;
+/**
+ * The margins are added as a constant instead of being read from `--PickerDay-horizontalMargin`,
+ * so that the unitless values this variable has always accepted (`0`) keep working.
+ * The week rows are centered, so a day margin override still renders like it does today, it only
+ * doesn't resize the calendar around the grid.
+ */
+export const DAY_TRACK_SIZE_VAR = `calc(${CALENDAR_DAY_SIZE_VAR} + ${DAY_MARGIN * 2}px)`;
 
 export const WEEKS_CONTAINER_HEIGHT_VAR = `calc(${DAY_TRACK_SIZE_VAR} * ${MAX_WEEKS_IN_MONTH})`;
 

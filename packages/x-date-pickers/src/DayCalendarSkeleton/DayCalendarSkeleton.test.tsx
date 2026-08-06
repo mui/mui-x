@@ -33,8 +33,10 @@ describe('<DayCalendarSkeleton />', () => {
       expect(getDaySize(container)).to.deep.equal({ width: 36, height: 36 });
     });
 
-    it('follows `--PickerDay-size` so the skeleton matches the calendar it replaces', () => {
-      const { container } = render(<DayCalendarSkeleton sx={{ '--PickerDay-size': '24px' }} />);
+    it('follows `--PickerCalendar-daySize` so the skeleton matches the calendar it replaces', () => {
+      const { container } = render(
+        <DayCalendarSkeleton sx={{ '--PickerCalendar-daySize': '24px' }} />,
+      );
 
       expect(getDaySize(container)).to.deep.equal({ width: 24, height: 24 });
     });

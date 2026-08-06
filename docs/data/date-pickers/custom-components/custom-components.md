@@ -233,15 +233,13 @@ For more details on how to adapt your custom styles, check the [Day slot migrati
 
 Use the `--PickerDay-horizontalMargin` and `--PickerDay-size` CSS variables to easily customize the dimensions and spacing of the day slot.
 
-These variables are read, never declared, by the components.
-You can set them on any ancestor of the calendar—the picker itself, a wrapper element, or the theme—and every dimension derived from them follows: the week day labels, the week numbers, and the width and height of the day, month, and year views.
-
 {{"demo": "PickerDayDemoCSSVars.js"}}
 
-:::warning
-Always set these variables to a length with a unit, for example `0px` instead of `0`.
-The calendar dimensions are computed with `calc()`, which rejects unitless values other than plain numbers.
-:::
+These variables only resize the day itself, the calendar around it keeps its default dimensions.
+To resize the whole calendar, set the `--PickerCalendar-daySize` variable on the calendar or on any of its ancestors.
+Every dimension derived from the day size follows: the day cells, the week day labels, the week numbers, the loading skeleton, and the width and height of the day, month, and year views.
+
+{{"demo": "CalendarDaySizeDemo.js"}}
 
 Customize the look and feel by creating a custom theme with `styleOverrides`.
 

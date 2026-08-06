@@ -8,9 +8,13 @@ export default function PickerDayDemoCSSVars() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['StaticDatePicker']}>
         <StaticDatePicker
-          sx={{
-            '--PickerDay-size': '24px',
-            '--PickerDay-horizontalMargin': '4px',
+          slotProps={{
+            day: {
+              sx: {
+                '--PickerDay-horizontalMargin': '8px',
+                '--PickerDay-size': '24px',
+              },
+            },
           }}
         />
       </DemoContainer>

@@ -15,8 +15,8 @@ import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
 import type { PickerOnChangeFn } from '../internals/hooks/useViews';
 import {
-  DAY_SIZE_VAR,
-  DAY_MARGIN_VAR,
+  CALENDAR_DAY_SIZE_VAR,
+  DAY_MARGIN,
   WEEKS_CONTAINER_HEIGHT_VAR,
 } from '../internals/constants/dimensions';
 import type { SlideDirection, SlideTransitionProps } from './PickersSlideTransition';
@@ -153,9 +153,9 @@ const PickerCalendarWeekDayLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekDayLabel',
 })(({ theme }) => ({
-  width: DAY_SIZE_VAR,
-  height: DAY_SIZE_VAR,
-  margin: DAY_MARGIN_VAR,
+  width: CALENDAR_DAY_SIZE_VAR,
+  height: CALENDAR_DAY_SIZE_VAR,
+  margin: `${DAY_MARGIN}px`,
   textAlign: 'center',
   display: 'flex',
   justifyContent: 'center',
@@ -167,9 +167,9 @@ const PickerCalendarWeekNumberLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumberLabel',
 })(({ theme }) => ({
-  width: DAY_SIZE_VAR,
-  height: DAY_SIZE_VAR,
-  margin: DAY_MARGIN_VAR,
+  width: CALENDAR_DAY_SIZE_VAR,
+  height: CALENDAR_DAY_SIZE_VAR,
+  margin: `${DAY_MARGIN}px`,
   textAlign: 'center',
   display: 'flex',
   justifyContent: 'center',
@@ -182,10 +182,10 @@ const PickerCalendarWeekNumber = styled(Typography, {
   slot: 'WeekNumber',
 })(({ theme }) => ({
   ...theme.typography.caption,
-  width: DAY_SIZE_VAR,
-  height: DAY_SIZE_VAR,
+  width: CALENDAR_DAY_SIZE_VAR,
+  height: CALENDAR_DAY_SIZE_VAR,
   padding: 0,
-  margin: `0 ${DAY_MARGIN_VAR}`,
+  margin: `0 ${DAY_MARGIN}px`,
   color: (theme.vars || theme).palette.text.disabled,
   fontSize: '0.75rem',
   alignItems: 'center',
@@ -219,7 +219,7 @@ const PickerCalendarWeek = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'WeekContainer',
 })({
-  margin: `${DAY_MARGIN_VAR} 0`,
+  margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
   justifyContent: 'center',
 });

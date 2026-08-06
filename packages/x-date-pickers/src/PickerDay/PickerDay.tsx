@@ -9,7 +9,12 @@ import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
-import { DAY_MARGIN_VAR, DAY_SIZE_VAR } from '../internals/constants/dimensions';
+import {
+  CALENDAR_DAY_SIZE_VAR,
+  DAY_MARGIN,
+  DAY_MARGIN_VAR,
+  DAY_SIZE_VAR,
+} from '../internals/constants/dimensions';
 import type { PickerDayClassKey, PickerDayClasses } from './pickerDayClasses';
 import { pickerDayClasses, getPickerDayUtilityClass } from './pickerDayClasses';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
@@ -59,6 +64,8 @@ const PickerDayRoot = styled(ButtonBase, {
     ];
   },
 })<{ ownerState: PickerDayOwnerState }>(({ theme }) => ({
+  '--PickerDay-horizontalMargin': `${DAY_MARGIN}px`,
+  '--PickerDay-size': CALENDAR_DAY_SIZE_VAR,
   ...theme.typography.caption,
   lineHeight: 1,
   display: 'flex',
