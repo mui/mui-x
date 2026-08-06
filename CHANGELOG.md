@@ -6,7 +6,7 @@ _Aug 6, 2026_
 
 We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🐛 Fix the empty `@mui/x-charts-vendor` package published in v9.11.0
 
 The following team members contributed to this release:
 @JCQuintas, @rita-codes
