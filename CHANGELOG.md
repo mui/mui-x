@@ -1,6 +1,7 @@
 # Changelog
 
 ## 9.11.1
+
 _Aug 6, 2026_
 
 We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
