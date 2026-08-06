@@ -1,20 +1,21 @@
 'use client';
 import * as React from 'react';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { styled } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type {
   MoreEventsPopoverProps,
   MoreEventsPopoverProviderProps,
 } from './MoreEventsPopover.types';
 import { EventItem } from '../event/event-item/EventItem';
-import { createModal } from '../create-modal';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
-import { EventDialogTrigger, useEventDialogContext } from '../event-dialog';
+import { EventEditingTrigger } from '../event-editing';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 const MoreEventsPopoverHeader = styled('div', {
@@ -57,26 +58,44 @@ interface MoreEventsData {
   day: useEventOccurrencesWithDayGridPosition.DayData;
 }
 
-const MoreEventsPopover = createModal<MoreEventsData>({
-  contextName: 'MoreEventsPopoverContext',
-});
+interface MoreEventsPopoverContextValue {
+  openPopover: (anchorEl: HTMLElement, data: MoreEventsData) => void;
+  closePopover: () => void;
+}
 
-export const MoreEventsPopoverContext = MoreEventsPopover.Context;
-export const useMoreEventsPopoverContext = MoreEventsPopover.useContext;
+export const MoreEventsPopoverContext = React.createContext<
+  MoreEventsPopoverContextValue | undefined
+>(undefined);
+
+export function useMoreEventsPopoverContext(): MoreEventsPopoverContextValue {
+  const context = React.useContext(MoreEventsPopoverContext);
+  if (!context) {
+    throw new Error(
+      'MUI X Scheduler: `MoreEventsPopoverContext` is missing. Hook must be placed within its Provider.',
+    );
+  }
+  return context;
+}
 
 export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) {
   const { open, anchor, occurrences, day, onClose } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
+  const store = useSchedulerStoreContext();
   const { schedulerId, classes } = useEventCalendarStyledContext();
-  const { subscribeCloseHandler } = useEventDialogContext();
 
+  // The popover stays open behind the editing surface, so close it when that surface closes.
   React.useEffect(() => {
-    return subscribeCloseHandler(() => {
-      onClose();
-    });
-  }, [subscribeCloseHandler, onClose]);
+    return store.registerStoreEffect(
+      (state) => state.editingOccurrence != null,
+      (wasEditing, isEditing) => {
+        if (wasEditing && !isEditing) {
+          onClose();
+        }
+      },
+    );
+  }, [store, onClose]);
 
   return (
     <Popover className={classes.moreEventsPopover} open={open} anchorEl={anchor} onClose={onClose}>
@@ -91,56 +110,81 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       </MoreEventsPopoverHeader>
       <MoreEventsPopoverBody className={classes.moreEventsPopoverBody}>
         {occurrences.map((occurrence) => (
-          <EventDialogTrigger occurrence={occurrence} key={occurrence.key}>
+          <EventEditingTrigger occurrence={occurrence} key={occurrence.key}>
             <EventItem
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
               occurrence={occurrence}
               date={day}
               ariaLabelledBy={`${schedulerId}-PopoverHeader-${day.key}`}
             />
-          </EventDialogTrigger>
+          </EventEditingTrigger>
         ))}
       </MoreEventsPopoverBody>
     </Popover>
   );
 }
 
+interface MoreEventsPopoverState {
+  open: boolean;
+  anchorEl: HTMLElement | null;
+  data: MoreEventsData | null;
+}
+
 export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps) {
   const { children } = props;
+  const [state, setState] = React.useState<MoreEventsPopoverState>({
+    open: false,
+    anchorEl: null,
+    data: null,
+  });
+
+  const openPopover = useStableCallback((anchorEl: HTMLElement, data: MoreEventsData) => {
+    setState({ open: true, anchorEl, data });
+  });
+
+  // Keep the anchor and data, else the popover unmounts before its exit transition can play.
+  const closePopover = useStableCallback(() => {
+    setState((prev) => (prev.open ? { ...prev, open: false } : prev));
+  });
+
+  const contextValue = React.useMemo<MoreEventsPopoverContextValue>(
+    () => ({ openPopover, closePopover }),
+    [openPopover, closePopover],
+  );
 
   return (
-    <MoreEventsPopover.Provider
-      render={({ isOpen, anchorRef, data, onClose }) => (
+    <MoreEventsPopoverContext.Provider value={contextValue}>
+      {children}
+      {state.data && state.anchorEl && (
         <MoreEventsPopoverContent
-          open={isOpen}
-          anchor={anchorRef.current!}
-          occurrences={data.occurrences}
-          count={data.count}
-          day={data.day}
-          onClose={onClose}
+          open={state.open}
+          anchor={state.anchorEl}
+          occurrences={state.data.occurrences}
+          count={state.data.count}
+          day={state.data.day}
+          onClose={closePopover}
         />
       )}
-    >
-      {children}
-    </MoreEventsPopover.Provider>
+    </MoreEventsPopoverContext.Provider>
   );
 }
 
-interface MoreEventsPopoverTriggerProps extends React.HTMLAttributes<HTMLElement> {
+interface MoreEventsPopoverTriggerProps {
   occurrences: SchedulerEventOccurrence[];
   day: useEventOccurrencesWithDayGridPosition.DayData;
+  /** A single element. The trigger clones it to attach its own `onClick`. */
   children: React.ReactNode;
+  onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
 export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
-  const { occurrences, day, ...other } = props;
-  const ref = React.useRef<HTMLElement | null>(null);
+  const { occurrences, day, onClick, children } = props;
+  const { openPopover } = useMoreEventsPopoverContext();
 
-  return (
-    <MoreEventsPopover.Trigger
-      ref={ref}
-      data={{ occurrences, count: occurrences.length, day }}
-      {...other}
-    />
-  );
+  return React.cloneElement(children as React.ReactElement<any>, {
+    onClick: (event: React.MouseEvent<HTMLElement>) => {
+      onClick?.(event);
+      openPopover(event.currentTarget, { occurrences, count: occurrences.length, day });
+    },
+  });
 }

@@ -8,7 +8,7 @@ import type {
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import type { EventDialogLocaleText, SchedulerWeekday } from '../../../models';
+import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 /**
@@ -131,7 +131,7 @@ export function getRecurrenceLabel(
   adapter: Adapter,
   start: SchedulerProcessedDate,
   recurrenceKey: RecurringEventPresetKey | 'custom' | null,
-  localeText: EventDialogLocaleText,
+  localeText: EventEditingLocaleText,
 ): string {
   if (!recurrenceKey) {
     return localeText.recurrenceNoRepeat;

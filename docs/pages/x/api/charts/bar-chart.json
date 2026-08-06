@@ -30,7 +30,9 @@
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
@@ -104,7 +106,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent | React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: BarItemIdentifier) => void",
+        "type": "function(event: ChartsActivationEvent | ChartsActivationEvent<SVGElement>, barItemIdentifier: BarItemIdentifier) => void",
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },

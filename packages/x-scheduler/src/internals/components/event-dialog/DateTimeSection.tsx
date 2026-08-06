@@ -11,7 +11,7 @@ import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
+import { useEventEditingStyledContext } from '../event-editing';
 import type { EventDialogFormValues } from './utils';
 import { computeRange, validateRange } from './utils';
 import type { EventDialogSectionProps } from './EventDialog.types';
@@ -61,7 +61,7 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
 

@@ -191,6 +191,54 @@
       "isGlobal": false
     },
     {
+      "key": "anchoredEventToolbar",
+      "className": "MuiEventCalendarPremium-anchoredEventToolbar",
+      "description": "Styles applied to the anchored (desktop) armed-event toolbar wrapper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactDayTimeGrid",
+      "className": "MuiEventCalendarPremium-compactDayTimeGrid",
+      "description": "Styles applied to the compact (touch) day time grid root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactDayTimeGridContent",
+      "className": "MuiEventCalendarPremium-compactDayTimeGridContent",
+      "description": "Styles applied to the compact (touch) day time grid content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawer",
+      "className": "MuiEventCalendarPremium-compactEventDrawer",
+      "description": "Styles applied to the compact editing drawer root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerContent",
+      "className": "MuiEventCalendarPremium-compactEventDrawerContent",
+      "description": "Styles applied to the compact editing drawer content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerReadonlyHeader",
+      "className": "MuiEventCalendarPremium-compactEventDrawerReadonlyHeader",
+      "description": "Styles applied to the compact editing drawer read-only header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerReadonlyTitle",
+      "className": "MuiEventCalendarPremium-compactEventDrawerReadonlyTitle",
+      "description": "Styles applied to the compact editing drawer read-only title element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventToolbarDock",
+      "className": "MuiEventCalendarPremium-compactEventToolbarDock",
+      "description": "Styles applied to the compact (touch) armed-event toolbar dock element.",
+      "isGlobal": false
+    },
+    {
       "key": "content",
       "className": "MuiEventCalendarPremium-content",
       "description": "Styles applied to the content section element.",
@@ -539,6 +587,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventDialogHeaderActions",
+      "className": "MuiEventCalendarPremium-eventDialogHeaderActions",
+      "description": "Styles applied to the event dialog header actions container element.",
+      "isGlobal": false
+    },
+    {
       "key": "eventDialogInlineRow",
       "className": "MuiEventCalendarPremium-eventDialogInlineRow",
       "description": "Styles applied to the event dialog inline row element.",
@@ -776,6 +830,24 @@
       "key": "eventSkeleton",
       "className": "MuiEventCalendarPremium-eventSkeleton",
       "description": "Styles applied to the event skeleton element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbar",
+      "className": "MuiEventCalendarPremium-eventToolbar",
+      "description": "Styles applied to the armed-event toolbar root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbarDeleteButton",
+      "className": "MuiEventCalendarPremium-eventToolbarDeleteButton",
+      "description": "Styles applied to the armed-event toolbar delete button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbarEditButton",
+      "className": "MuiEventCalendarPremium-eventToolbarEditButton",
+      "description": "Styles applied to the armed-event toolbar edit button element.",
       "isGlobal": false
     },
     {

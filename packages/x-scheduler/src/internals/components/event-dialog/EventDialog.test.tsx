@@ -28,6 +28,14 @@ const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
 
 const resources: SchedulerResource[] = [personalResource];
 
+// Minimal `matchMedia` stub to drive the coarse-vs-fine pointer branch of `useDraggableDialog`.
+const createMatchMedia = (matches: boolean) => () =>
+  ({
+    matches,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  }) as any;
+
 describe('<EventDialogContent /> — community (no recurring-events plugin)', () => {
   const anchor = document.createElement('button');
   document.body.appendChild(anchor);
@@ -35,7 +43,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   const defaultProps = {
     anchor,
     container: document.body,
-    anchorRef: { current: anchor },
     occurrence: EventBuilder.new()
       .id(DEFAULT_EVENT.id)
       .title(DEFAULT_EVENT.title)
@@ -296,5 +303,34 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
+  });
+
+  describe('drag affordance', () => {
+    const originalMatchMedia = window.matchMedia;
+    afterEach(() => {
+      window.matchMedia = originalMatchMedia;
+    });
+
+    it('should mark the dialog draggable on a fine pointer', () => {
+      window.matchMedia = createMatchMedia(false);
+      render(
+        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      expect(document.querySelector('[draggable="true"]')).not.to.equal(null);
+    });
+
+    it('should not mark the dialog draggable on a coarse pointer, so its form fields stay typeable on touch', () => {
+      window.matchMedia = createMatchMedia(true);
+      render(
+        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      expect(document.querySelector('[draggable="true"]')).to.equal(null);
+    });
   });
 });

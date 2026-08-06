@@ -32,7 +32,7 @@ import {
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
 import {
-  useEventDialogStyledContext,
+  useEventEditingStyledContext,
   useEventDialogFormContext,
   useEventDialogFormField,
   getEndsSelectionFromRRule,
@@ -58,6 +58,8 @@ const RecurrenceSelectorContainer = styled('div', {
   slot: 'RecurrenceSelectorContainer',
 })(({ theme }) => ({
   display: 'inline-flex',
+  // Wrap day-of-week toggles instead of overflowing in a narrow surface (e.g. mobile drawer).
+  flexWrap: 'wrap',
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderRadius: theme.shape.borderRadius,
   width: 'fit-content',
@@ -118,6 +120,7 @@ const InlineRow = styled('div', {
 })({
   display: 'flex',
   alignItems: 'center',
+  flexWrap: 'wrap',
   gap: 8,
 });
 
@@ -186,7 +189,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
   const repeatEveryLabelId = `${schedulerId}-recurrence-repeat-every-label`;
