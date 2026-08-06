@@ -4,12 +4,18 @@
 <!-- generated comparing v9.11.0..master -->
 _Aug 6, 2026_
 
-We'd like to extend a big thank you to the 1 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
 
 TODO INSERT HIGHLIGHTS
 
 The following team members contributed to this release:
-@rita-codes
+@JCQuintas, @rita-codes
+
+### Charts
+
+#### `@mui/x-charts-vendor@9.11.1`
+
+- [charts] Fix empty `@mui/x-charts-vendor` published package (#23310) @JCQuintas
 
 ### Scheduler
 
