@@ -2,7 +2,7 @@
 
 ## 9.11.0
 
-_Aug 5, 2026_
+_Aug 6, 2026_
 
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
@@ -46,6 +46,7 @@ Same changes as in `@mui/x-date-pickers@9.11.0`, plus:
 
 #### `@mui/x-charts@9.11.0`
 
+- [charts] Activate the focused item with `Enter`/`Space` (#23218) @JCQuintas
 - [charts] Extract the axis click payload builders (#23215) @JCQuintas
 - [charts] Fix `GestureManager` event listener leak on chart unmount (#23283) @kevincorizi-sbt
 - [charts] Fix `slotProps.legend.position` and `direction` in `RadarChart` (#23254) @JCQuintas
@@ -53,7 +54,6 @@ Same changes as in `@mui/x-date-pickers@9.11.0`, plus:
 - [charts] Fix image export of charts sized by their parent element (#23255) @JCQuintas
 - [charts] Forward `experimentalFeatures` on `RadarChart` and `Heatmap` (#23216) @JCQuintas
 - [charts] Hide focus indicator when the chart loses focus (#23213) @JCQuintas
-- [charts] Activate the focused item with `Enter`/`Space` (#23218) @JCQuintas
 
 #### `@mui/x-charts-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -85,6 +85,7 @@ Same changes as in `@mui/x-tree-view@9.11.0`, plus:
 #### `@mui/x-scheduler@9.0.0-beta.8`
 
 - [scheduler] Add `localeText` prop to standalone views (#23210) @rita-codes
+- [scheduler] Finetune touch experience for time grid events and introduce editing drawer (#22624) @noraleonte
 - [scheduler] Introduce the edit dialog form context & lifecycle contract (#23284) @rita-codes
 - [scheduler] Refactor edit dialog General tab into section components (#23206) @rita-codes
 - [scheduler] Replace copied Base UI internals with `@base-ui/react/internals` imports (#21972) @flaviendelangle
