@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { styled } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
@@ -97,19 +98,31 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     );
   }, [store, onClose]);
 
-  const paperRef = React.useRef<HTMLDivElement>(null);
-
-  // The editing surface hands focus back to the event it was opened from, which lives in this
-  // popover and is about to unmount with it — leaving focus on the document, so the next Tab lands
-  // in the browser chrome. Hand it to the button that opened the popover instead. Scoped to a focus
-  // that is inside the popover (or already lost), so dismissing it by clicking or focusing
-  // elsewhere does not yank focus back.
-  const restoreFocusOnExit = useStableCallback(() => {
-    const active = document.activeElement;
-    if (!active || active === document.body || paperRef.current?.contains(active)) {
-      // `preventScroll` so handing focus back never scrolls the grid, as elsewhere in the codebase.
-      anchor?.focus({ preventScroll: true });
+  // Editing an event can empty the day and unmount the "+N more" button with it, so remember the
+  // cell while the button is still in the document.
+  const fallbackFocusRef = React.useRef<HTMLElement | null>(null);
+  useIsoLayoutEffect(() => {
+    if (open && anchor) {
+      fallbackFocusRef.current = anchor.closest<HTMLElement>('[role="gridcell"]');
     }
+  }, [open, anchor]);
+
+  // The editing surface hands focus back to the event it was opened from, and that event unmounts
+  // with this popover, so focus would be left on the document and the next Tab would leave the
+  // page. Restore it unless something else already claimed it while the popover was closing.
+  const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
+    const ownerDocument = paper.ownerDocument;
+    const activeElement = ownerDocument.activeElement;
+    const focusIsLeaving =
+      activeElement === null ||
+      activeElement === ownerDocument.body ||
+      paper.contains(activeElement);
+    if (!focusIsLeaving) {
+      return;
+    }
+    const target = anchor?.isConnected ? anchor : fallbackFocusRef.current;
+    // `preventScroll` matches how focus is moved elsewhere in the scheduler.
+    target?.focus({ preventScroll: true });
   });
 
   return (
@@ -118,7 +131,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       open={open}
       anchorEl={anchor}
       onClose={onClose}
-      slotProps={{ paper: { ref: paperRef }, transition: { onExited: restoreFocusOnExit } }}
+      slotProps={{ transition: { onExited: restoreFocusOnExit } }}
     >
       <MoreEventsPopoverHeader
         className={classes.moreEventsPopoverHeader}

@@ -20,7 +20,13 @@ import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
-import { ARROW_DEPTH, LEFT_ARROW_CLIP, RIGHT_ARROW_CLIP, BOTH_ARROWS_CLIP } from '../arrowClips';
+import {
+  ARROW_DEPTH,
+  LEFT_ARROW_CLIP,
+  RIGHT_ARROW_CLIP,
+  BOTH_ARROWS_CLIP,
+  getArrowFocusVisibleStyles,
+} from '../arrowClips';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -28,8 +34,7 @@ const EventItemCard = styled('div', {
 })<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
-  // Every variant is wrapped in a button, so the pointer belongs on the root rather than on the
-  // interactive-looking ones only. The `filled` variant is the all-day event inside the popover.
+  // Every variant renders inside a button, so the pointer belongs on the root.
   cursor: 'pointer',
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
@@ -70,12 +75,7 @@ const EventItemCard = styled('div', {
     '&[data-starting-before-edge][data-ending-after-edge]': {
       clipPath: BOTH_ARROWS_CLIP,
     },
-    // `clip-path` clips the outline away with the rest of the shape, so the chevron is dropped
-    // while focused and the ring reads like every other event. Same as the day grid event.
-    '&[data-starting-before-edge]:focus-visible, &[data-ending-after-edge]:focus-visible': {
-      clipPath: 'none',
-      borderRadius: theme.shape.borderRadius,
-    },
+    ...getArrowFocusVisibleStyles(theme.shape.borderRadius),
   },
   '&[data-editing]': {
     backgroundColor: 'var(--event-surface-selected)',

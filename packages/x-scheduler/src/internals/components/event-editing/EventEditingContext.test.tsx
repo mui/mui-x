@@ -16,48 +16,50 @@ const occurrence = EventBuilder.new()
   .span(EVENT.start, EVENT.end)
   .toOccurrence();
 
-function AnchorProbe({ onAnchor }: { onAnchor: (anchor: HTMLElement | null) => void }) {
-  const { anchor } = useEventEditingContext();
-  React.useEffect(() => {
-    onAnchor(anchor);
-  }, [anchor, onAnchor]);
-  return null;
-}
-
 describe('<EventEditingProvider />', () => {
   const { render } = createSchedulerRenderer();
 
-  // The same occurrence is rendered by two triggers whenever the "+N more" popover is open: one in
-  // the month cell, one in the popover. Both anchor the editing surface, so the one that unmounts
-  // first must not clear an anchor that the other one now owns.
-  it('should keep the anchor when a trigger unmounts after a sibling re-anchored the same occurrence', async () => {
-    let currentAnchor: HTMLElement | null = null;
-    const handleAnchor = (anchor: HTMLElement | null) => {
-      currentAnchor = anchor;
-    };
+  /**
+   * Renders one trigger per id for the same occurrence, each removable on its own, and records
+   * every anchor the context publishes.
+   */
+  function renderTriggers(triggerIds: string[]) {
+    const anchors: (string | null)[] = [];
+
+    function AnchorRecorder() {
+      const { anchor } = useEventEditingContext();
+      React.useEffect(() => {
+        anchors.push(anchor === null ? null : anchor.dataset.testid!);
+      }, [anchor]);
+      return null;
+    }
 
     function Harness() {
-      const [cellMounted, setCellMounted] = React.useState(true);
+      const [mounted, setMounted] = React.useState(triggerIds);
 
       return (
         <EventCalendarProvider events={[EVENT]} resources={[]}>
           <EventEditingProvider surface="dialog">
-            <AnchorProbe onAnchor={handleAnchor} />
-            {cellMounted && (
-              <EventEditingTrigger occurrence={occurrence}>
-                <button type="button" data-testid="cell-trigger">
-                  cell
-                </button>
-              </EventEditingTrigger>
+            <AnchorRecorder />
+            {triggerIds.map((id) =>
+              mounted.includes(id) ? (
+                <EventEditingTrigger key={id} occurrence={occurrence}>
+                  <button type="button" data-testid={id}>
+                    {id}
+                  </button>
+                </EventEditingTrigger>
+              ) : null,
             )}
-            <EventEditingTrigger occurrence={occurrence}>
-              <button type="button" data-testid="popover-trigger">
-                popover
+            {triggerIds.map((id) => (
+              <button
+                key={`unmount-${id}`}
+                type="button"
+                data-testid={`unmount-${id}`}
+                onClick={() => setMounted((prev) => prev.filter((item) => item !== id))}
+              >
+                unmount {id}
               </button>
-            </EventEditingTrigger>
-            <button type="button" data-testid="unmount-cell" onClick={() => setCellMounted(false)}>
-              unmount cell
-            </button>
+            ))}
           </EventEditingProvider>
         </EventCalendarProvider>
       );
@@ -65,61 +67,48 @@ describe('<EventEditingProvider />', () => {
 
     const { user } = render(<Harness />);
 
-    await user.click(screen.getByTestId('cell-trigger'));
-    // Both triggers anchor on mount, in tree order, so the last one rendered owns the anchor.
-    expect(currentAnchor).to.equal(screen.getByTestId('popover-trigger'));
+    return { user, anchors, currentAnchor: () => anchors[anchors.length - 1] };
+  }
 
-    await user.click(screen.getByTestId('unmount-cell'));
+  it('should keep the anchor on the trigger the user activated', async () => {
+    const { user, currentAnchor } = renderTriggers(['cell', 'popover']);
 
-    expect(currentAnchor).to.equal(screen.getByTestId('popover-trigger'));
+    // `popover` mounts last, so an anchor decided by mount order would land there instead.
+    await user.click(screen.getByTestId('cell'));
+
+    expect(currentAnchor()).to.equal('cell');
   });
 
-  it('should hand the anchor to a surviving trigger when the one owning it unmounts', async () => {
-    let currentAnchor: HTMLElement | null = null;
-    const handleAnchor = (anchor: HTMLElement | null) => {
-      currentAnchor = anchor;
-    };
+  it('should keep the anchor when another trigger for the same occurrence unmounts', async () => {
+    const { user, currentAnchor } = renderTriggers(['cell', 'popover']);
 
-    function Harness() {
-      const [popoverMounted, setPopoverMounted] = React.useState(true);
-
-      return (
-        <EventCalendarProvider events={[EVENT]} resources={[]}>
-          <EventEditingProvider surface="dialog">
-            <AnchorProbe onAnchor={handleAnchor} />
-            <EventEditingTrigger occurrence={occurrence}>
-              <button type="button" data-testid="cell-trigger">
-                cell
-              </button>
-            </EventEditingTrigger>
-            {popoverMounted && (
-              <EventEditingTrigger occurrence={occurrence}>
-                <button type="button" data-testid="popover-trigger">
-                  popover
-                </button>
-              </EventEditingTrigger>
-            )}
-            <button
-              type="button"
-              data-testid="unmount-popover"
-              onClick={() => setPopoverMounted(false)}
-            >
-              unmount popover
-            </button>
-          </EventEditingProvider>
-        </EventCalendarProvider>
-      );
-    }
-
-    const { user } = render(<Harness />);
-
-    await user.click(screen.getByTestId('cell-trigger'));
-    const popoverTrigger = screen.getByTestId('popover-trigger');
-    expect(currentAnchor).to.equal(popoverTrigger);
-
-    // The owner goes away, so the surface would otherwise be left with no anchor at all.
+    await user.click(screen.getByTestId('cell'));
     await user.click(screen.getByTestId('unmount-popover'));
 
-    expect(currentAnchor).to.equal(screen.getByTestId('cell-trigger'));
+    expect(currentAnchor()).to.equal('cell');
+  });
+
+  it('should hand the anchor to a surviving trigger without ever clearing it', async () => {
+    const { user, anchors, currentAnchor } = renderTriggers(['cell', 'popover']);
+
+    await user.click(screen.getByTestId('popover'));
+    expect(currentAnchor()).to.equal('popover');
+
+    const beforeUnmount = anchors.length;
+    await user.click(screen.getByTestId('unmount-popover'));
+
+    expect(currentAnchor()).to.equal('cell');
+    // A `null` in between unmounts the editing surface, which reseeds the form and drops the draft.
+    expect(anchors.slice(beforeUnmount)).to.not.include(null);
+  });
+
+  it('should clear the anchor once no trigger is left to hold it', async () => {
+    const { user, currentAnchor } = renderTriggers(['cell', 'popover']);
+
+    await user.click(screen.getByTestId('popover'));
+    await user.click(screen.getByTestId('unmount-popover'));
+    await user.click(screen.getByTestId('unmount-cell'));
+
+    expect(currentAnchor()).to.equal(null);
   });
 });

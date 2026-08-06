@@ -24,25 +24,30 @@ const CROWDING_EVENTS: SchedulerEvent[] = Array.from({ length: 6 }, (_, index) =
 describe('<EventItem />', () => {
   const { render } = createSchedulerRenderer();
 
-  // `clip-path` clips the outline away with everything else outside the chevron, so the chevron is
-  // dropped while focused or a continuing event takes focus showing no ring at all.
+  async function renderAndOpenPopover() {
+    const { user } = render(
+      <EventCalendarProvider
+        events={[CONTINUING_EVENT, ...CROWDING_EVENTS]}
+        resources={[]}
+        visibleDate={adapter.date('2025-05-06T00:00:00Z', 'default')}
+      >
+        <EventDialogProvider>
+          <MonthView />
+        </EventDialogProvider>
+      </EventCalendarProvider>,
+    );
+
+    await user.click(await screen.findByRole('button', { name: /more/i }));
+    const popover = await screen.findByRole('presentation');
+    return { user, popover };
+  }
+
+  // `clip-path` clips the outline away with everything outside the chevron, so the clip is dropped
+  // while focused. Without that, a continuing event takes focus showing no ring at all.
   it.skipIf(isJSDOM)(
     'should paint a focus ring on an event continuing past the day edge',
     async () => {
-      const { user } = render(
-        <EventCalendarProvider
-          events={[CONTINUING_EVENT, ...CROWDING_EVENTS]}
-          resources={[]}
-          visibleDate={adapter.date('2025-05-06T00:00:00Z', 'default')}
-        >
-          <EventDialogProvider>
-            <MonthView />
-          </EventDialogProvider>
-        </EventCalendarProvider>,
-      );
-
-      await user.click(await screen.findByRole('button', { name: /more/i }));
-      const popover = await screen.findByRole('presentation');
+      const { user, popover } = await renderAndOpenPopover();
 
       const clipped = popover.querySelector<HTMLElement>('[data-starting-before-edge]');
       expect(clipped, 'no continuing event in the popover').not.to.equal(null);
@@ -59,25 +64,14 @@ describe('<EventItem />', () => {
   );
 
   it.skipIf(isJSDOM)('should show a pointer cursor on every event in the popover', async () => {
-    const { user } = render(
-      <EventCalendarProvider
-        events={[CONTINUING_EVENT, ...CROWDING_EVENTS]}
-        resources={[]}
-        visibleDate={adapter.date('2025-05-06T00:00:00Z', 'default')}
-      >
-        <EventDialogProvider>
-          <MonthView />
-        </EventDialogProvider>
-      </EventCalendarProvider>,
-    );
+    const { popover } = await renderAndOpenPopover();
 
-    await user.click(await screen.findByRole('button', { name: /more/i }));
-    const popover = await screen.findByRole('presentation');
+    // The multi-day event renders with the `filled` variant, the one that used to miss the pointer
+    // the other variants and the day grid event all have.
+    const filled = popover.querySelectorAll<HTMLElement>('[data-variant="filled"]');
+    expect(filled.length, 'no filled event in the popover').to.be.greaterThan(0);
 
-    // The all-day event renders with the `filled` variant, which used to miss the pointer the
-    // other variants and the day grid event all have.
-    const cards = Array.from(popover.querySelectorAll<HTMLElement>('[data-variant]'));
-    expect(cards.length).to.be.greaterThan(0);
+    const cards = popover.querySelectorAll<HTMLElement>('[data-variant]');
     cards.forEach((card) => {
       expect(window.getComputedStyle(card).cursor, `variant ${card.dataset.variant}`).to.equal(
         'pointer',

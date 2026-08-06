@@ -215,7 +215,8 @@ describe('<MonthView />', () => {
     });
 
     it('should return focus to the trigger when the editing dialog is submitted', async () => {
-      const { user, popover } = await renderAndOpenPopover({ onEventsChange: () => {} });
+      const onEventsChange = spy();
+      const { user, popover } = await renderAndOpenPopover({ onEventsChange });
 
       const firstEventButton = within(popover).getAllByRole('button')[0];
       await user.click(firstEventButton);
@@ -228,6 +229,11 @@ describe('<MonthView />', () => {
         expect(document.activeElement).to.equal(titleInput);
       });
       await user.keyboard('{Enter}');
+
+      // The dialog closing is only meaningful if the form actually submitted.
+      await waitFor(() => {
+        expect(onEventsChange.callCount).to.equal(1);
+      });
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).to.equal(null);
       });
@@ -238,7 +244,22 @@ describe('<MonthView />', () => {
       });
 
       // Focus has to land back on the calendar, or the next Tab goes to the browser chrome.
-      expect(document.activeElement).to.equal(screen.getByRole('button', { name: /more/i }));
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(screen.getByRole('button', { name: /more/i }));
+      });
+    });
+
+    it('should return focus to the trigger when the popover is dismissed without editing', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      await user.keyboard('{Escape}');
+
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(screen.getByRole('button', { name: /more/i }));
+      });
     });
   });
 
