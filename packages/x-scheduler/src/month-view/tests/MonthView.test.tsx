@@ -221,7 +221,12 @@ describe('<MonthView />', () => {
       await user.click(firstEventButton);
       await screen.findByRole('dialog');
 
-      // Enter from the title field submits the form, which closes the editing surface.
+      // Enter from the title field submits the form, which closes the editing surface. Waiting for
+      // the dialog to hand focus to the title keeps the key press from landing before it does.
+      const titleInput = await screen.findByLabelText(/event title/i);
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(titleInput);
+      });
       await user.keyboard('{Enter}');
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).to.equal(null);
