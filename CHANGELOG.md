@@ -13,6 +13,18 @@ The following team members contributed to this release:
 
 ### Charts
 
+#### `@mui/x-charts@9.11.1`
+
+- [charts] Fix empty `@mui/x-charts-vendor` published package (#23310) @JCQuintas
+
+#### `@mui/x-charts-pro@9.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.11.1`.
+
+#### `@mui/x-charts-premium@9.11.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.11.1`.
+
 #### `@mui/x-charts-vendor@9.11.1`
 
 - [charts] Fix empty `@mui/x-charts-vendor` published package (#23310) @JCQuintas
