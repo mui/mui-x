@@ -88,7 +88,10 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
     }
     setAnchor(ref.current);
     // Drop the anchor if this trigger unmounts while still edited, so the surface won't track a detached node.
-    return () => setAnchor(null);
+    // Only when it still owns it: another trigger for the same occurrence may have re-anchored in between,
+    // and clearing that would close the surface even though editing is still active.
+    const node = ref.current;
+    return () => setAnchor((current) => (current === node ? null : current));
   }, [isEdited, setAnchor]);
 
   return React.cloneElement(children as React.ReactElement<any>, {

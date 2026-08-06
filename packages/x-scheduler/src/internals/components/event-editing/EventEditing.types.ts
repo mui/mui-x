@@ -21,9 +21,10 @@ export interface EventEditingContextValue {
    */
   anchor: HTMLElement | null;
   /**
-   * Re-anchors the editing surface to `node`.
+   * Re-anchors the editing surface to `node`. Accepts an updater so a caller can release the
+   * anchor only when it still owns it.
    */
-  setAnchor: (node: HTMLElement | null) => void;
+  setAnchor: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
 }
 
 export interface EventEditingProviderProps {
