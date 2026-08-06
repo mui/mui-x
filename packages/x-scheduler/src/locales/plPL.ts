@@ -68,9 +68,9 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   resourceLabel: 'Zasób',
   requiredResourceError: 'Należy wybrać zasób.',
   saveChanges: 'Zapisz',
-  startDateAfterEndDateError:
-    'Data/godzina rozpoczęcia musi być wcześniejsza niż data/godzina zakończenia.',
+  startDateAfterEndDateError: 'Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.',
   startDateLabel: 'Data rozpoczęcia',
+  startTimeAfterEndTimeError: 'Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia.',
   startTimeLabel: 'Godzina rozpoczęcia',
 
   // RecurringScopeDialog

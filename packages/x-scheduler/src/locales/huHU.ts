@@ -59,8 +59,9 @@ const huHUDialog: Partial<EventEditingLocaleText> = {
   // resourceLabel: 'Resource',
   // requiredResourceError: 'A resource is required.',
   // saveChanges: 'Save',
-  // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
+  // startDateAfterEndDateError: 'End date cannot be before start date.',
   // startDateLabel: 'Start date',
+  // startTimeAfterEndTimeError: 'End time must be after start time.',
   // startTimeLabel: 'Start time',
   // RecurringScopeDialog
   // all: 'All events',

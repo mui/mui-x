@@ -242,48 +242,75 @@ describe('<EventDialogContent open />', () => {
     expect(onEventsChange.firstCall.firstArg[0].color).to.not.equal('pink');
   });
 
-  it('should show error if start date is after end date', async () => {
-    const { user } = render(
-      <EventCalendarProvider
-        events={[DEFAULT_EVENT]}
-        resources={resources}
-        storeClass={PremiumTestStore}
-      >
-        <TestEventDialogContent open {...defaultProps} />
-      </EventCalendarProvider>,
-    );
-    await user.clear(screen.getByLabelText(/start date/i));
-    await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
-    await user.clear(screen.getByLabelText(/end date/i));
-    await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
-    await user.click(screen.getByRole('button', { name: /save/i }));
+  describe('range validation', () => {
+    function renderDialog() {
+      const onEventsChange = spy();
+      const { user } = render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          onEventsChange={onEventsChange}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
 
-    expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
-      /start.*before.*end/i,
-    );
-  });
+      return { user, onEventsChange };
+    }
 
-  it('should block submit if start time is after end time on the same day', async () => {
-    const onEventsChange = spy();
-    const { user } = render(
-      <EventCalendarProvider
-        events={[DEFAULT_EVENT]}
-        onEventsChange={onEventsChange}
-        resources={resources}
-        storeClass={PremiumTestStore}
-      >
-        <TestEventDialogContent open {...defaultProps} />
-      </EventCalendarProvider>,
-    );
-    await user.clear(screen.getByLabelText(/start time/i));
-    await user.type(screen.getByLabelText(/start time/i), '10:00');
-    await user.clear(screen.getByLabelText(/end time/i));
-    await user.type(screen.getByLabelText(/end time/i), '09:00');
-    await user.click(screen.getByRole('button', { name: /save/i }));
+    it('should show error on the End date field if end date is before start date', async () => {
+      const { user } = renderDialog();
+      await user.clear(screen.getByLabelText(/start date/i));
+      await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
+      await user.clear(screen.getByLabelText(/end date/i));
+      await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
-    // TODO(#23285): the Start time field does not surface this error yet,
-    // so the submit is blocked with no visible message.
-    expect(onEventsChange.called).to.equal(false);
+      expect(screen.getDescriptionOf(screen.getByLabelText(/end date/i)).textContent).to.match(
+        /end date.*before.*start date/i,
+      );
+    });
+
+    it('should not show error on the End date field if end date is equal to start date', async () => {
+      const { user, onEventsChange } = renderDialog();
+      await user.clear(screen.getByLabelText(/start date/i));
+      await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
+      await user.clear(screen.getByLabelText(/end date/i));
+      await user.type(screen.getByLabelText(/end date/i), '2025-05-27');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(screen.queryDescriptionOf(screen.getByLabelText(/end date/i))).to.equal(null);
+      expect(onEventsChange.calledOnce).to.equal(true);
+    });
+
+    it('should show error on the End time field and block submit if end time is before start time on the same day', async () => {
+      const { user, onEventsChange } = renderDialog();
+      await user.clear(screen.getByLabelText(/start time/i));
+      await user.type(screen.getByLabelText(/start time/i), '10:00');
+      await user.clear(screen.getByLabelText(/end time/i));
+      await user.type(screen.getByLabelText(/end time/i), '09:00');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(onEventsChange.called).to.equal(false);
+      expect(screen.getDescriptionOf(screen.getByLabelText(/end time/i)).textContent).to.match(
+        /end time.*after.*start time/i,
+      );
+    });
+
+    it('should show error on the End time field and block submit if end time is equal to start time on the same day', async () => {
+      const { user, onEventsChange } = renderDialog();
+      await user.clear(screen.getByLabelText(/start time/i));
+      await user.type(screen.getByLabelText(/start time/i), '10:00');
+      await user.clear(screen.getByLabelText(/end time/i));
+      await user.type(screen.getByLabelText(/end time/i), '10:00');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(onEventsChange.called).to.equal(false);
+      expect(screen.getDescriptionOf(screen.getByLabelText(/end time/i)).textContent).to.match(
+        /end time.*after.*start time/i,
+      );
+    });
   });
 
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
@@ -729,8 +756,8 @@ describe('<EventDialogContent open />', () => {
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(onEventsChange.called).to.equal(false);
-      expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
-        /start.*before.*end/i,
+      expect(screen.getDescriptionOf(screen.getByLabelText(/end date/i)).textContent).to.match(
+        /end date.*before.*start date/i,
       );
       expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
 
@@ -738,7 +765,7 @@ describe('<EventDialogContent open />', () => {
       await user.clear(screen.getByLabelText(/end date/i));
       await user.type(screen.getByLabelText(/end date/i), '2025-05-28');
 
-      expect(screen.queryByText(/start.*before.*end/i)).to.equal(null);
+      expect(screen.queryByText(/end date.*before.*start date/i)).to.equal(null);
       expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
     });
 
