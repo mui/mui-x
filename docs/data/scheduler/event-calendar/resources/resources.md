@@ -115,6 +115,19 @@ Set `shouldEventRequireResource` to `true` to make the resource mandatory: the "
 <EventCalendar shouldEventRequireResource />
 ```
 
+## Multiple resources per event 🧪
+
+An event can be associated with more than one resource. Select multiple entries in the resource picker of the edit dialog to assign an event to several resources at once.
+
+New events default to an empty resource selection (`resource: []`)—assign one or more resources from the dialog, or programmatically:
+
+```tsx
+const event = {
+  // ...
+  resource: ['team-a', 'team-b'],
+};
+```
+
 ## Resource properties
 
 ### Color

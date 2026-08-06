@@ -120,6 +120,19 @@ Set it to `false` to allow clearing the resource:
 <EventTimelinePremium shouldEventRequireResource={false} />
 ```
 
+## Multiple resources per event 🧪
+
+An event can be associated with more than one resource. Select multiple entries in the resource picker of the edit dialog to assign an event to several resources at once.
+
+New events default to the resource of the row they were created in—assign more resources from the dialog, or programmatically:
+
+```tsx
+const event = {
+  // ...
+  resource: ['team-a', 'team-b'],
+};
+```
+
 ## Resource properties
 
 ### Color

@@ -193,6 +193,9 @@ describe('<EventDialogContent open />', () => {
     await user.click(screen.getByRole('tab', { name: /general/i }));
     await user.click(screen.getByRole('combobox', { name: /resource/i }));
     await user.click(await screen.findByRole('option', { name: /work/i }));
+    // The resource picker is a multi-select: it stays open after picking an option, so it
+    // must be dismissed explicitly before interacting with the rest of the form.
+    await user.keyboard('{Escape}');
     await user.click(screen.getByRole('button', { name: /pink/i }));
     await user.click(screen.getByRole('button', { name: /save/i }));
 
@@ -207,7 +210,9 @@ describe('<EventDialogContent open />', () => {
       end: adapter.endOfDay(adapter.date(DEFAULT_EVENT.end, 'default')).toISOString(),
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
-      resource: workResource.id,
+      // DEFAULT_EVENT starts assigned to Personal; selecting Work in the multi-select adds
+      // it alongside the existing selection instead of replacing it.
+      resource: [personalResource.id, workResource.id],
       color: 'pink',
     };
 
@@ -573,7 +578,8 @@ describe('<EventDialogContent open />', () => {
 
     expect(onEventsChange.calledOnce).to.equal(true);
     const updated = onEventsChange.firstCall.firstArg[0];
-    expect(updated.resource).to.equal(undefined);
+    // A never-assigned event defaults to an empty resource selection, not `undefined`.
+    expect(updated.resource).to.deep.equal([]);
   });
 
   describe('shouldEventRequireResource', () => {
@@ -585,7 +591,7 @@ describe('<EventDialogContent open />', () => {
       .span(eventWithoutResource.start, eventWithoutResource.end)
       .toOccurrence();
 
-    it('should not show the "No resource" option in the dropdown when `shouldEventRequireResource={true}`', async () => {
+    it('should never render a dedicated "No resource" option in the dropdown', async () => {
       const { user } = render(
         <EventCalendarProvider
           events={[DEFAULT_EVENT]}
@@ -599,12 +605,14 @@ describe('<EventDialogContent open />', () => {
 
       await user.click(screen.getByRole('combobox', { name: /resource/i }));
 
+      // The picker is a multi-select: clearing the resource happens by deselecting every
+      // entry, not by picking a dedicated "no resource" option.
       expect(screen.queryByRole('option', { name: /no resource/i })).to.equal(null);
       expect(screen.getByRole('option', { name: /work/i })).not.to.equal(null);
       expect(screen.getByRole('option', { name: /personal/i })).not.to.equal(null);
     });
 
-    it('should show the "No resource" option when `shouldEventRequireResource={false}`', async () => {
+    it('should show "No resource" in the combobox after deselecting the only selected resource', async () => {
       const { user } = render(
         <EventCalendarProvider
           events={[DEFAULT_EVENT]}
@@ -617,8 +625,13 @@ describe('<EventDialogContent open />', () => {
       );
 
       await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      // DEFAULT_EVENT starts assigned to Personal; clicking it again deselects it.
+      await user.click(await screen.findByRole('option', { name: /personal/i }));
+      await user.keyboard('{Escape}');
 
-      expect(screen.getByRole('option', { name: /no resource/i })).not.to.equal(null);
+      expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
+        /no resource/i,
+      );
     });
 
     it('should block submit and not call `onEventsChange` when `shouldEventRequireResource={true}` and the event has no resource', async () => {
@@ -679,6 +692,7 @@ describe('<EventDialogContent open />', () => {
 
       await user.click(screen.getByRole('combobox', { name: /resource/i }));
       await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.keyboard('{Escape}');
 
       // The error should clear as soon as a valid resource is picked, not only after the next save.
       expect(screen.queryByText(/a resource is required/i)).to.equal(null);
@@ -686,7 +700,7 @@ describe('<EventDialogContent open />', () => {
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(onEventsChange.calledOnce).to.equal(true);
-      expect(onEventsChange.firstCall.firstArg[0].resource).to.equal(workResource.id);
+      expect(onEventsChange.firstCall.firstArg[0].resource).to.deep.equal([workResource.id]);
     });
 
     it('should show the range error and the resource error at the same time', async () => {
@@ -1067,6 +1081,7 @@ describe('<EventDialogContent open />', () => {
       await user.type(screen.getByLabelText(/description/i), ' Some details ');
       await user.click(screen.getByRole('combobox', { name: /resource/i }));
       await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.keyboard('{Escape}');
       await user.click(screen.getByRole('tab', { name: /recurrence/i }));
       await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
       await user.click(await screen.findByRole('option', { name: /daily/i }));
@@ -1078,7 +1093,7 @@ describe('<EventDialogContent open />', () => {
       expect(payload.title).to.equal('New title');
       expect(payload.description).to.equal('Some details');
       expect(payload.allDay).to.equal(false);
-      expect(payload.resource).to.equal(workResource.id);
+      expect(payload.resource).to.deep.equal([workResource.id]);
       expect(payload.start).toEqualDateTime(start);
       expect(payload.end).toEqualDateTime(end);
       expect(payload.rrule).to.deep.equal({ freq: 'DAILY', interval: 1 });
@@ -2220,6 +2235,7 @@ describe('<EventDialogContent open />', () => {
         await user.type(screen.getByLabelText(/description/i), '  new description  ');
         await user.click(screen.getByRole('combobox', { name: /resource/i }));
         await user.click(await screen.findByRole('option', { name: /work/i }));
+        await user.keyboard('{Escape}');
         await user.click(screen.getByRole('button', { name: /save/i }));
 
         expect(updateEventSpy?.calledOnce).to.equal(true);
@@ -2228,7 +2244,7 @@ describe('<EventDialogContent open />', () => {
         expect(payload.id).to.equal(nonRecurringEvent.id);
         expect(payload.title).to.equal('Task updated');
         expect(payload.description).to.equal('new description');
-        expect(payload.resource).to.equal(workResource.id);
+        expect(payload.resource).to.deep.equal([workResource.id]);
         expect(payload.allDay).to.equal(false);
         expect(payload.start).toEqualDateTime(adapter.date('2025-06-12T14:00:00', 'default'));
         expect(payload.end).toEqualDateTime(adapter.date('2025-06-12T15:00:00', 'default'));

@@ -32,8 +32,6 @@ import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
 
-const NO_RESOURCE_VALUE = '';
-
 const ResourceMenuItem = styled(MenuItem, {
   name: 'MuiEventDialog',
   slot: 'ResourceMenuItem',
@@ -99,12 +97,11 @@ interface ResourceSelectAdornmentProps {
 
 interface ResourceOptionType {
   label: string;
-  value: string | null;
+  value: string;
   eventColor: SchedulerEventColor;
   isGroupRoot: boolean;
   indentLevel: number;
   showDivider: boolean;
-  hidden?: boolean;
 }
 
 function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
@@ -122,7 +119,7 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
     <ResourceMenuColorDot
       className={classes.eventDialogResourceMenuColorDot}
       data-palette={resourceColor}
-      data-no-resource={Boolean(resource?.value === null)}
+      data-no-resource={resource == null}
     />
   );
 }
@@ -149,14 +146,14 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
     occurrence.id,
   );
 
-  const resourceField = useEventDialogFormField<SchedulerResourceId | null>('resourceId', {
+  const resourceField = useEventDialogFormField<SchedulerResourceId[]>('resourceIds', {
     validate: (value) =>
-      shouldEventRequireResource && value === null ? localeText.requiredResourceError : null,
+      shouldEventRequireResource && value.length === 0 ? localeText.requiredResourceError : null,
   });
   const colorField = useEventDialogFormField<SchedulerEventColor | null>('color');
 
   const readOnly = isPropertyReadOnly('resource');
-  const { value: resourceId } = resourceField;
+  const { value: resourceIds } = resourceField;
   const { value: color } = colorField;
   const error = shouldEventRequireResource ? resourceField.error : undefined;
 
@@ -168,59 +165,31 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
     const firstTopLevelIndex = resources.findIndex(
       (resource) => (resourceDepthLookup.get(resource.id) ?? 0) === 0,
     );
-    return [
-      // The no-resource option must stay in the rendered options list so MUI Select's
-      // `value=""` keeps matching a MenuItem when an event has no resource yet — otherwise
-      // MUI logs an "out-of-range value" warning. It's hidden from the menu when
-      // `shouldEventRequireResource` is `true` so the user can't pick it.
-      {
-        label: localeText.labelNoResource,
-        value: null,
-        eventColor: eventDefaultColor,
-        isGroupRoot: false,
-        indentLevel: 0,
-        showDivider: false,
-        hidden: shouldEventRequireResource,
-      },
-      ...resources.map((resource, index) => {
-        const depth = resourceDepthLookup.get(resource.id) ?? 0;
-        const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
-        const isTopLevel = depth === 0;
-        // Skip the divider above the first top-level group when nothing precedes it visually
-        // (the no-resource option is hidden).
-        const isFirstTopLevel = index === firstTopLevelIndex;
-        const showDivider =
-          hasNesting && isTopLevel && (!isFirstTopLevel || !shouldEventRequireResource);
-        return {
-          label: resource.title,
-          value: resource.id,
-          eventColor: resource.eventColor ?? eventDefaultColor,
-          isGroupRoot: isTopLevel && hasChildren,
-          indentLevel: Math.max(0, depth - 1),
-          showDivider,
-        };
-      }),
-    ];
-  }, [
-    resources,
-    resourceDepthLookup,
-    childrenIdLookup,
-    localeText.labelNoResource,
-    eventDefaultColor,
-    shouldEventRequireResource,
-  ]);
+    return resources.map((resource, index) => {
+      const depth = resourceDepthLookup.get(resource.id) ?? 0;
+      const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
+      const isTopLevel = depth === 0;
+      const isFirstTopLevel = index === firstTopLevelIndex;
+      const showDivider = hasNesting && isTopLevel && !isFirstTopLevel;
+      return {
+        label: resource.title,
+        value: resource.id,
+        eventColor: resource.eventColor ?? eventDefaultColor,
+        isGroupRoot: isTopLevel && hasChildren,
+        indentLevel: Math.max(0, depth - 1),
+        showDivider,
+      };
+    });
+  }, [resources, resourceDepthLookup, childrenIdLookup, eventDefaultColor]);
 
-  const resource = React.useMemo(
-    () =>
-      resourcesOptions.find((option) =>
-        resourceId ? option.value === resourceId : option.value === null,
-      ) || null,
-    [resourcesOptions, resourceId],
-  );
+  const resource = React.useMemo(() => {
+    const resourceId = resourceIds[0];
+    return resourcesOptions.find((option) => option.value === resourceId) || null;
+  }, [resourcesOptions, resourceIds]);
 
-  const handleChange = (event: SelectChangeEvent<string>) => {
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
     const value = event.target.value;
-    resourceField.setValue(value === NO_RESOURCE_VALUE ? null : (value as SchedulerResourceId));
+    resourceField.setValue(value as SchedulerResourceId[]);
   };
 
   const errorId = `${schedulerId}-resource-error`;
@@ -239,7 +208,8 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
           <Select
             labelId={`${schedulerId}-resource-select-label`}
             label={localeText.resourceLabel}
-            value={resourceId ?? NO_RESOURCE_VALUE}
+            value={resourceIds}
+            multiple
             displayEmpty
             onChange={handleChange}
             readOnly={readOnly}
@@ -250,14 +220,15 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
               </InputAdornment>
             }
             renderValue={() => {
-              if (resource) {
-                return resource.label;
+              if (resourceIds.length > 0) {
+                return resourceIds
+                  .map((id) => {
+                    const option = resourcesOptions.find((option) => option.value === id);
+                    return option?.label ?? localeText.labelInvalidResource;
+                  })
+                  .join(', ');
               }
-              // `resourceId == null` means the resource is unset, not invalid.
-              if (resourceId == null) {
-                return localeText.labelNoResource;
-              }
-              return localeText.labelInvalidResource;
+              return localeText.labelNoResource;
             }}
           >
             {resourcesOptions.flatMap((resourceOption) => {
@@ -280,14 +251,13 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
 
               items.push(
                 <ResourceMenuItem
-                  key={resourceOption.value ?? NO_RESOURCE_VALUE}
-                  value={resourceOption.value ?? NO_RESOURCE_VALUE}
+                  key={resourceOption.value}
+                  value={resourceOption.value}
                   aria-label={resourceOption.label}
                   className={classes.eventDialogResourceMenuItem}
                   style={
                     {
                       '--resource-indent': resourceOption.indentLevel,
-                      ...(resourceOption.hidden && { display: 'none' }),
                     } as React.CSSProperties
                   }
                 >
@@ -295,10 +265,12 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
                     <ResourceMenuColorDot
                       className={classes.eventDialogResourceMenuColorDot}
                       data-palette={resourceOption.eventColor}
-                      data-no-resource={Boolean(resourceOption.value === null)}
                     />
                   </ListItemIcon>
                   <ListItemText>{resourceOption.label}</ListItemText>
+                  {resourceIds.includes(resourceOption.value) && (
+                    <CheckIcon fontSize="small" style={{ marginLeft: 'auto' }} />
+                  )}
                 </ResourceMenuItem>,
               );
 
