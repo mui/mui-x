@@ -222,13 +222,11 @@ describe('<MonthView />', () => {
       await user.click(firstEventButton);
       await screen.findByRole('dialog');
 
-      // Enter from the title field submits the form, which closes the editing surface. Waiting for
-      // the dialog to hand focus to the title keeps the key press from landing before it does.
+      // Enter from the title field submits the form, which closes the editing surface. Typed into
+      // the field rather than sent to whatever holds focus, which the dialog and its focus trap
+      // settle on at different moments across React versions.
       const titleInput = await screen.findByLabelText(/event title/i);
-      await waitFor(() => {
-        expect(document.activeElement).to.equal(titleInput);
-      });
-      await user.keyboard('{Enter}');
+      await user.type(titleInput, '{Enter}');
 
       // The dialog closing is only meaningful if the form actually submitted.
       await waitFor(() => {
