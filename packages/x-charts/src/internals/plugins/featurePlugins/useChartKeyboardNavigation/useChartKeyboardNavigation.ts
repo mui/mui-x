@@ -367,11 +367,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       pendingFocusItemRef.current = resolveItemAtPointer(event.detail.srcEvent as PointerEvent);
     });
 
-    function focusPendingItem() {
+    function focusPendingItem(event: MouseEvent) {
       const item = pendingFocusItemRef.current;
       pendingFocusItemRef.current = null;
 
-      if (item !== null) {
+      // A handler stopping the propagation keeps the click from reaching this listener, leaving
+      // the item pending. Checking the target stops it from landing on an unrelated later click.
+      if (item !== null && chartsLayerContainerRef.current?.contains(event.target as Node)) {
         focusItem(item);
       }
     }
@@ -384,7 +386,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       tapHandler?.cleanup();
       document.removeEventListener('click', focusPendingItem);
     };
-  }, [instance, params.disableKeyboardNavigation, resolveItemAtPointer, focusItem]);
+  }, [
+    instance,
+    params.disableKeyboardNavigation,
+    resolveItemAtPointer,
+    focusItem,
+    chartsLayerContainerRef,
+  ]);
 
   useEnhancedEffect(() => {
     store.set('keyboardNavigation', {

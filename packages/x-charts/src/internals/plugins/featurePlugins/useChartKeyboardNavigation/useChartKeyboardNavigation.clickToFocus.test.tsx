@@ -215,6 +215,28 @@ describe('useChartKeyboardNavigation - click to focus', () => {
       expect(getFocusedDataIndex(container)).to.equal(3);
     });
 
+    // A handler stopping the propagation keeps the click from reaching the document listener, so
+    // the resolved item stays pending. It must not land on whatever the user clicks next.
+    it('drops a pending item when the click never reaches the document', async () => {
+      const { container, user } = render(
+        <div>
+          <BarChart {...barProps} />
+          <button type="button" id="outside">
+            outside
+          </button>
+        </div>,
+      );
+
+      getLayerContainer(container).addEventListener('click', (event) => event.stopPropagation());
+
+      await clickAt(user, container, getCenter(getBars(container)[1]));
+      await user.click(container.querySelector('#outside')!);
+      await user.keyboard('[ArrowRight]');
+
+      // The click outside must not have focused the bar the stopped click resolved.
+      expect(getFocusIndicator(container)).to.equal(null);
+    });
+
     it('falls back to the axis when the click hits no item', async () => {
       const { container, user } = render(<BarChart {...barProps} />);
 
