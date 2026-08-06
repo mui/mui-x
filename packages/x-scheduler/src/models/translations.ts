@@ -63,6 +63,7 @@ export interface EventEditingLocaleText {
   saveChanges: string;
   startDateAfterEndDateError: string;
   startDateLabel: string;
+  startTimeAfterEndTimeError: string;
   startTimeLabel: string;
 
   // RecurringScopeDialog

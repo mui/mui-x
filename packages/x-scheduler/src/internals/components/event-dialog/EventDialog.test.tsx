@@ -7,7 +7,7 @@ import {
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
-import { screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -174,7 +174,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     expect(titleInput).to.have.value('Running edited');
 
     // Closing unmounts the dialog content, which is what discards the draft store.
-    await user.keyboard('{Escape}');
+    // Unmounting the focused, edited title makes React 19 suspend, and it logs an un-awaited `act`
+    // warning unless the key press itself happens inside an awaited `act` — which `user.keyboard`
+    // and a bare `fireEvent` both leave outside, so the browser run fails on the console output.
+    // eslint-disable-next-line testing-library/no-unnecessary-act
+    await act(async () => {
+      fireEvent.keyDown(titleInput, { key: 'Escape' });
+    });
     expect(screen.queryByLabelText(/event title/i)).to.equal(null);
 
     await user.click(screen.getByText(DEFAULT_EVENT.title));

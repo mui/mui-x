@@ -197,6 +197,10 @@ const main = async () => {
   // Set explicit exports
   buildPkg.exports = generateExports(vendorPkgNames);
 
+  // Without an allowlist, the packer falls back to inherited ignore files, and the whole build
+  // output matches the repository `.gitignore` (`build/`, `dist/`). See https://github.com/pnpm/pnpm/pull/13231
+  buildPkg.files = ['*.js', '*.mjs', '*.d.ts', 'lib-vendor'];
+
   await fs.writeFile(path.join(BUILD_DIR, 'package.json'), JSON.stringify(buildPkg, null, 2));
 
   // Copy README.md to build directory
