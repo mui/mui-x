@@ -28,6 +28,9 @@ const EventItemCard = styled('div', {
 })<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
+  // Every variant is wrapped in a button, so the pointer belongs on the root rather than on the
+  // interactive-looking ones only. The `filled` variant is the all-day event inside the popover.
+  cursor: 'pointer',
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
@@ -37,7 +40,6 @@ const EventItemCard = styled('div', {
   },
   '&[data-variant="compact"], &[data-variant="regular"]': {
     containerType: 'inline-size',
-    cursor: 'pointer',
     height: 'fit-content',
   },
   '&[data-variant="filled"]': {
@@ -68,18 +70,12 @@ const EventItemCard = styled('div', {
     '&[data-starting-before-edge][data-ending-after-edge]': {
       clipPath: BOTH_ARROWS_CLIP,
     },
-    // `clip-path` clips the outline away along with everything else outside the chevron, so an
-    // event continuing past the day edge would take focus without showing a ring. Paint it inside
-    // the shape instead, in the text color so it stays legible on the bold surface.
-    '&[data-starting-before-edge], &[data-ending-after-edge]': {
-      '&:focus-visible': {
-        outline: 'none',
-        boxShadow: 'inset 0 0 0 2px currentColor',
-      },
+    // `clip-path` clips the outline away with the rest of the shape, so the chevron is dropped
+    // while focused and the ring reads like every other event. Same as the day grid event.
+    '&[data-starting-before-edge]:focus-visible, &[data-ending-after-edge]:focus-visible': {
+      clipPath: 'none',
+      borderRadius: theme.shape.borderRadius,
     },
-  },
-  '&[data-variant="regular"]': {
-    cursor: 'pointer',
   },
   '&[data-editing]': {
     backgroundColor: 'var(--event-surface-selected)',

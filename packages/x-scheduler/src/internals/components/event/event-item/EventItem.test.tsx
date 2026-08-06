@@ -24,8 +24,8 @@ const CROWDING_EVENTS: SchedulerEvent[] = Array.from({ length: 6 }, (_, index) =
 describe('<EventItem />', () => {
   const { render } = createSchedulerRenderer();
 
-  // `clip-path` clips the outline away with everything else outside the chevron, so the focus ring
-  // has to be painted inside the shape or a continuing event takes focus showing nothing at all.
+  // `clip-path` clips the outline away with everything else outside the chevron, so the chevron is
+  // dropped while focused or a continuing event takes focus showing no ring at all.
   it.skipIf(isJSDOM)(
     'should paint a focus ring on an event continuing past the day edge',
     async () => {
@@ -52,7 +52,36 @@ describe('<EventItem />', () => {
       clipped!.focus();
       expect(clipped!.matches(':focus-visible'), 'element is not :focus-visible').to.equal(true);
 
-      expect(window.getComputedStyle(clipped!).boxShadow).not.to.equal('none');
+      const styles = window.getComputedStyle(clipped!);
+      expect(styles.clipPath, 'the chevron still clips the ring away').to.equal('none');
+      expect(styles.outlineStyle).to.equal('solid');
     },
   );
+
+  it.skipIf(isJSDOM)('should show a pointer cursor on every event in the popover', async () => {
+    const { user } = render(
+      <EventCalendarProvider
+        events={[CONTINUING_EVENT, ...CROWDING_EVENTS]}
+        resources={[]}
+        visibleDate={adapter.date('2025-05-06T00:00:00Z', 'default')}
+      >
+        <EventDialogProvider>
+          <MonthView />
+        </EventDialogProvider>
+      </EventCalendarProvider>,
+    );
+
+    await user.click(await screen.findByRole('button', { name: /more/i }));
+    const popover = await screen.findByRole('presentation');
+
+    // The all-day event renders with the `filled` variant, which used to miss the pointer the
+    // other variants and the day grid event all have.
+    const cards = Array.from(popover.querySelectorAll<HTMLElement>('[data-variant]'));
+    expect(cards.length).to.be.greaterThan(0);
+    cards.forEach((card) => {
+      expect(window.getComputedStyle(card).cursor, `variant ${card.dataset.variant}`).to.equal(
+        'pointer',
+      );
+    });
+  });
 });
