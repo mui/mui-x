@@ -9,6 +9,29 @@ import type {
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
+import { getDateKey } from './date-utils';
+
+/**
+ * The render key of a non-recurring occurrence: the event id stringified.
+ * Single source of truth so producers (occurrence expansion) and consumers (the editing highlight)
+ * derive identical keys.
+ */
+export function getOccurrenceKey(eventId: SchedulerEventId): string {
+  return String(eventId);
+}
+
+/**
+ * The render key of a recurring occurrence: the event id plus the occurrence's day key. Shared so the
+ * occurrence expansion and any code re-deriving the key (e.g. re-pointing the edited occurrence after a
+ * recurring scope change) stay in lockstep.
+ */
+export function getRecurringOccurrenceKey(
+  eventId: SchedulerEventId,
+  day: TemporalSupportedObject,
+  adapter: Adapter,
+): string {
+  return `${eventId}::${getDateKey(day, adapter)}`;
+}
 
 export function generateOccurrenceFromEvent({
   event,
@@ -95,7 +118,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
         ) {
           continue;
         }
-        occurrences.push({ ...event, key: String(event.id) });
+        occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
         continue;
       }
 
@@ -120,7 +143,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       continue;
     }
 
-    occurrences.push({ ...event, key: String(event.id) });
+    occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
   }
 
   return occurrences;

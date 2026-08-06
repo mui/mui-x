@@ -6,7 +6,7 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import TextField from '@mui/material/TextField';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
+import { useEventEditingStyledContext } from '../event-editing';
 import type { EventDialogSectionProps } from './EventDialog.types';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
 
@@ -28,7 +28,7 @@ export default function TitleSection(props: EventDialogSectionProps) {
   const { occurrence } = props;
 
   // Context hooks
-  const { schedulerId, localeText } = useEventDialogStyledContext();
+  const { schedulerId, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -39,7 +39,12 @@ export default function TitleSection(props: EventDialogSectionProps) {
   );
 
   const title = useEventDialogFormField<string>('title');
-  const titleInputRef = React.useCallback((input: HTMLInputElement | null) => input?.focus(), []);
+  // `preventScroll` so focusing the title doesn't scroll a still-off-screen drawer into view
+  // (the compact drawer slides up from the bottom, which would otherwise shove the grid).
+  const titleInputRef = React.useCallback(
+    (input: HTMLInputElement | null) => input?.focus({ preventScroll: true }),
+    [],
+  );
 
   return (
     <React.Fragment>

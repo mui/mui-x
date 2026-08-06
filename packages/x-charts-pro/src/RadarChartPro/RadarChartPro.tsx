@@ -155,7 +155,9 @@ RadarChartPro.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

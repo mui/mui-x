@@ -41,7 +41,7 @@ describe('<CompactDayView />', () => {
     expect(headerCells.length).to.equal(1);
   });
 
-  it('should render only the event title (touch variant) without time elements', () => {
+  it('should render the event title and the (CSS-hidden on touch) time element', () => {
     const event = EventBuilder.new()
       .title('Compact Event')
       .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
@@ -51,9 +51,12 @@ describe('<CompactDayView />', () => {
 
     expect(screen.getAllByText('Compact Event').length).to.be.greaterThan(0);
 
-    const root = getDayTimeGrid();
-    const timeElements = root.querySelectorAll(`.${eventCalendarClasses.timeGridEventTime}`);
-    expect(timeElements.length).to.equal(0);
+    // Touch hides the time with CSS instead of removing it, so assert the element and the class the
+    // CSS targets are present.
+    const timeElements = getDayTimeGrid().querySelectorAll(
+      `.${eventCalendarClasses.timeGridEventTime}`,
+    );
+    expect(timeElements.length).to.be.greaterThan(0);
   });
 
   it('should render the resize handlers for a resizable event', () => {
@@ -65,6 +68,7 @@ describe('<CompactDayView />', () => {
 
     renderWithProviders(<CompactDayView />, [event]);
 
+    // Both handles always render and CSS decides when to reveal them, so only assert their presence.
     const handlers = getDayTimeGrid().querySelectorAll(
       `.${eventCalendarClasses.timeGridEventResizeHandler}`,
     );
