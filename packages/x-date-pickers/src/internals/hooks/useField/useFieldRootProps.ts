@@ -240,14 +240,10 @@ export function useFieldRootProps(
       return;
     }
     const target = event.target as Element;
-    // `sectionListRoot` is the sections container, a descendant of the
-    // InputBase root that owns this handler.
     const sectionListRoot = domGetters.getRoot();
     const isInsideSectionList = sectionListRoot.contains(target);
-    // Outside the sections container, only the field root itself is ours: it is
-    // the target when the click lands on the field padding, because everything
-    // else in the field is a child element. The adornments keep their own
-    // behavior, whether or not they render something focusable.
+    // Only the field root is ours outside the sections container: it is the
+    // target of a padding click. The adornments keep their own behavior.
     if (!isInsideSectionList && target !== event.currentTarget) {
       return;
     }
@@ -255,14 +251,10 @@ export function useFieldRootProps(
       ? target.closest<HTMLElement>('[data-sectionindex]')
       : null;
 
-    // Blank space is the field padding, plus the area past the rendered
-    // sections in the container that stretches to fill the field. Mimic the
-    // native date input: select the first section when the click enters the
-    // field, and keep the current section for every later click.
-    // `preventDefault` is what keeps the section. It stops the browser from
-    // blurring the focused section when the click lands on a target that
-    // cannot take the focus, and it stops Chromium from delegating the focus
-    // to the nearest section once the `WebkitUserModify` gate lifts.
+    // Blank space is the field padding and the area past the sections. Mimic
+    // the native date input: first section on entry, keep it afterwards.
+    // `preventDefault` is what keeps it, by stopping both the browser blur and
+    // Chromium's focus delegation.
     const isBlankSpaceClick =
       sectionElement == null &&
       (!isInsideSectionList || isPointOutsideSections(sectionListRoot, event.clientX));
@@ -389,17 +381,15 @@ export function useFieldRootProps(
 }
 
 /**
- * Slop, in pixels, added to each side of the sections. It is under half a digit
- * at the default font size, so a click that just misses the outermost section
- * still selects it instead of counting as a click on the blank space.
+ * Slop on each side of the sections, so a click that just misses the outermost
+ * one still selects it. Under half a digit at the default font size.
  */
 const BLANK_SPACE_TOLERANCE = 4;
 
 /**
- * Returns `true` when `clientX` sits past the rendered sections on either side,
- * in the blank space the sections container fills but no section occupies.
- * Only the horizontal axis is tested: a click in the container's vertical
- * padding still belongs to the section it sits above or below.
+ * Returns `true` when `clientX` sits past the sections on either side.
+ * Horizontal only: a click in the container's vertical padding still belongs to
+ * the section above or below it.
  */
 function isPointOutsideSections(root: HTMLElement, clientX: number): boolean {
   const sections = root.querySelectorAll<HTMLElement>('[data-sectionindex]');

@@ -752,9 +752,8 @@ async function initializeEnvironment(
         });
 
         it('should keep the selected section when clicking the blank space after the last section', async () => {
-          // Needs trusted pointer input: without the `preventDefault` on
-          // mousedown, Chromium delegates the focus to the nearest section and
-          // the click on the blank space steals the selection.
+          // Needs trusted input: Chromium delegates the focus to the nearest
+          // section without the `preventDefault` on mousedown.
           await renderFixture('DatePicker/BasicDesktopDatePicker');
 
           await page.getByRole('spinbutton', { name: 'Day' }).click();
@@ -775,9 +774,8 @@ async function initializeEnvironment(
         });
 
         it('should keep the selected section when clicking the padding of the field', async () => {
-          // The padding sits inside the field root but outside the sections
-          // container. Without the `preventDefault` on mousedown, the browser
-          // blurs the section, and the field visibly blurs and focuses again.
+          // Needs trusted input: the browser blurs the section without the
+          // `preventDefault` on mousedown, so the field flashes.
           await renderFixture('DatePicker/BasicDesktopDatePicker');
 
           await page.getByRole('spinbutton', { name: 'Day' }).click();

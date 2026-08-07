@@ -168,11 +168,8 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should prevent the default mousedown behavior when clicking the field padding', () => {
-      // The padding belongs to the field root, outside the sections container.
-      // Without `preventDefault` the browser blurs the focused section, and the
-      // field visibly blurs and focuses again. The blur itself is a browser
-      // default action, so only real pointer input reproduces it -- the e2e
-      // suite covers that, and this locks the mechanism everywhere.
+      // Without it the browser blurs the focused section. The blur is a default
+      // action, so only the e2e suite reproduces it; this locks the mechanism.
       const view = renderWithProps({});
       const fieldRoot = view.getSectionsContainer().parentElement!;
 
@@ -183,8 +180,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should not prevent the default mousedown behavior when clicking an adornment button', () => {
-      // The adornments own their focus behavior: preventing the default here
-      // would stop the button from taking the focus on click.
+      // Preventing it would stop the button from taking the focus on click.
       renderWithProps({
         clearable: true,
         defaultValue: adapterToUse.date('2022-04-11'),
@@ -200,9 +196,8 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should not prevent the default mousedown behavior when clicking a non-interactive adornment', () => {
-      // The blank space check is the field root itself, not "anything that is
-      // not a section". A consumer adornment stays untouched even when it
-      // renders nothing focusable.
+      // The blank space check is the field root itself, not "not a section", so
+      // an adornment stays untouched even when it renders nothing focusable.
       renderWithProps({
         slotProps: {
           textField: {
@@ -329,13 +324,8 @@ describe('<DateField /> - Selection', () => {
     });
   });
 
-  // The sections container stretches to fill the field, so the area after the
-  // last section is blank space that belongs to no section.
-  // Browser-only, because JSDOM rects are 0x0: no click point can ever fall
-  // outside the sections there. Events are dispatched with `fireEvent` on real
-  // layout, like the closest-section test above. That covers the selection
-  // logic; the `preventDefault` that stops Chromium from delegating focus on a
-  // trusted click needs real pointer input, and is covered in `test/e2e`.
+  // Browser-only: JSDOM rects are 0x0, so no click point falls outside the
+  // sections. `test/e2e` covers what needs trusted input.
   describe.skipIf(isJSDOM)('Click on the blank space after the last section', () => {
     const getLastSectionRight = (sectionsContainer: HTMLElement) => {
       const sections = sectionsContainer.querySelectorAll<HTMLElement>('[data-sectionindex]');
@@ -349,8 +339,7 @@ describe('<DateField /> - Selection', () => {
 
     const clickBlankSpace = (sectionsContainer: HTMLElement) => {
       const containerRight = sectionsContainer.getBoundingClientRect().right;
-      // Without blank space well clear of the tolerance band, every assertion
-      // below would pass vacuously.
+      // Guards against a vacuous pass: clear of the tolerance band.
       expect(containerRight).to.be.greaterThan(getLastSectionRight(sectionsContainer) + 16);
 
       clickAt(sectionsContainer, containerRight - 2);
@@ -377,8 +366,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select the last section when clicking just inside its right edge', () => {
-      // Pins the boundary of the blank space: the last rendered character still
-      // selects the year.
+      // Pins the boundary: the last rendered character still selects the year.
       const view = renderWithProps({});
       const sectionsContainer = view.getSectionsContainer();
 
@@ -388,8 +376,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select the last section when the click misses it by less than the tolerance', async () => {
-      // A sloppy click a couple of pixels past the year still means the year,
-      // rather than a blank space click that would leave the day selected.
+      // A sloppy click 2px past the year means the year, not blank space.
       const view = renderWithProps({});
       await view.selectSection('day');
       const sectionsContainer = view.getSectionsContainer();
