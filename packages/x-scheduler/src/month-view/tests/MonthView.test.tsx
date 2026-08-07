@@ -247,6 +247,21 @@ describe('<MonthView />', () => {
       });
     });
 
+    it('should leave focus alone when it moved out of the popover while it was closing', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      await user.keyboard('{Escape}');
+      // Tabbing out before the exit transition ends: the restore must not undo it.
+      await user.keyboard('{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}');
+      const tabbedTo = document.activeElement;
+      expect(popover.contains(tabbedTo), 'focus never left the popover').to.equal(false);
+
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+      expect(document.activeElement).to.equal(tabbedTo);
+    });
+
     it('should return focus to the trigger when the popover is dismissed without editing', async () => {
       const { user, popover } = await renderAndOpenPopover();
 
