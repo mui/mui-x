@@ -7,6 +7,14 @@ export type {
   RichTreeViewItemsSlotProps,
 } from './components/RichTreeViewItems';
 
+export { RichTreeViewSkeleton, getSkeletonItemsCount } from './components/RichTreeViewSkeleton';
+export type {
+  RichTreeViewSkeletonProps,
+  RichTreeViewSkeletonSlots,
+  RichTreeViewSkeletonSlotProps,
+  RichTreeViewSkeletonClasses,
+} from './components/RichTreeViewSkeleton';
+
 export { useTreeViewRootProps } from './hooks/useTreeViewRootProps';
 export { useTreeViewStore } from './hooks/useTreeViewStore';
 export type { UseTreeViewStoreParameters } from './hooks/useTreeViewStore';

@@ -118,6 +118,25 @@ function getItemChildren(item) {
 
 {{"demo": "GetItemChildren.js", "defaultCodeOpen": false}}
 
+## Loading state
+
+Use the `loading` prop to display a skeleton placeholder instead of the tree items, for example while you fetch the `items` prop yourself.
+The tree renders animated skeleton rows in place of the real items.
+
+```tsx
+<RichTreeView items={[]} loading />
+```
+
+{{"demo": "LoadingRichTreeView.js"}}
+
+Use the `loadingItemsCount` prop to control how many skeleton rows are shown (default is `5`):
+
+```tsx
+<RichTreeView items={[]} loading loadingItemsCount={8} />
+```
+
+On `RichTreeViewPro`, the same skeleton is also shown automatically while the [`dataSource`](/x/react-tree-view/rich-tree-view/lazy-loading/) is fetching the root items, even if `loading` is not set.
+
 ## Disabled items
 
 Use the `isItemDisabled` prop on `RichTreeView` to disable interaction and focus on a `TreeItem`:

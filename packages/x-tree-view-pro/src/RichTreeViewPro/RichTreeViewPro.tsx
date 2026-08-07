@@ -3,14 +3,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
+import Alert from '@mui/material/Alert';
 import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import {
   TreeViewProvider,
   RichTreeViewItems,
+  RichTreeViewSkeleton,
   TreeViewItemDepthContext,
   itemsSelectors,
   useTreeViewStore,
+  lazyLoadingSelectors,
 } from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -40,6 +43,8 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
       itemCheckbox: ['itemCheckbox'],
       itemDragAndDropOverlay: ['itemDragAndDropOverlay'],
       itemErrorIcon: ['itemErrorIcon'],
+      skeletonItem: ['skeletonItem'],
+      skeletonContent: ['skeletonContent'],
     };
 
     return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
@@ -60,6 +65,27 @@ export const RichTreeViewProRoot = styled('ul', {
     width: '100%',
   },
 });
+
+const RichTreeViewProSkeletonItem = styled('li', {
+  name: 'MuiRichTreeViewPro',
+  slot: 'SkeletonItem',
+})({
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+});
+
+const RichTreeViewProSkeletonContent = styled('div', {
+  name: 'MuiRichTreeViewPro',
+  slot: 'SkeletonContent',
+})(({ theme }) => ({
+  padding: theme.spacing(0.5, 1),
+  width: '100%',
+  boxSizing: 'border-box',
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+}));
 
 type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
@@ -105,6 +131,8 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     apiRef,
     parameters,
     forwardedProps,
+    loading,
+    loadingItemsCount,
   } = useExtractRichTreeViewProParameters(props);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -125,10 +153,38 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 
   // Selector hooks
   const isVirtualizationEnabled = useStore(store, virtualizationSelectors.enabled);
+  const lazyLoadingRootIsLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
+  const error = useStore(store, lazyLoadingSelectors.itemError, null);
 
   // Feature hooks
   const classes = useUtilityClasses(props);
   const slots = React.useMemo(() => ({ root: RichTreeViewProRoot, ...inSlots }), [inSlots]);
+
+  const isLoading = loading || lazyLoadingRootIsLoading;
+
+  if (error) {
+    return <Alert severity="error">{error.message}</Alert>;
+  }
+
+  if (isLoading) {
+    return (
+      <React.Fragment>
+        <RichTreeViewSkeleton
+          store={store}
+          slots={slots}
+          slotProps={slotProps}
+          ownerState={props}
+          forwardedProps={forwardedProps}
+          rootRef={handleRef}
+          classes={classes}
+          loadingItemsCount={loadingItemsCount}
+          SkeletonItemComponent={RichTreeViewProSkeletonItem}
+          SkeletonContentComponent={RichTreeViewProSkeletonContent}
+        />
+        <Watermark packageInfo={packageInfo} />
+      </React.Fragment>
+    );
+  }
 
   const Renderer = isVirtualizationEnabled ? RichTreeViewVirtualizedItems : RichTreeViewItems;
 
@@ -340,6 +396,18 @@ RichTreeViewPro.propTypes /* remove-proptypes */ = {
    * @default false
    */
   itemsReordering: PropTypes.bool,
+  /**
+   * If `true`, a skeleton loading UI is displayed instead of the tree items.
+   * The skeleton is also shown automatically while `dataSource` is fetching root items.
+   * Setting `loading={false}` does not suppress the skeleton during an active `dataSource` root fetch.
+   * @default false
+   */
+  loading: PropTypes.bool,
+  /**
+   * The number of skeleton items to display when `loading` is `true` or while `dataSource` fetches root items.
+   * @default 5
+   */
+  loadingItemsCount: PropTypes.number,
   /**
    * Whether multiple items can be selected.
    * @default false

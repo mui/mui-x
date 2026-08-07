@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
-import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
@@ -12,6 +11,7 @@ import type { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
+import { RichTreeViewSkeleton } from '../internals/components/RichTreeViewSkeleton';
 import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
 import type { TreeViewValidItem } from '../models';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
@@ -39,6 +39,8 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
       itemCheckbox: ['itemCheckbox'],
       // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
       // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
+      skeletonItem: ['skeletonItem'],
+      skeletonContent: ['skeletonContent'],
     };
 
     return composeClasses(slots, getRichTreeViewUtilityClass, classes);
@@ -55,6 +57,27 @@ export const RichTreeViewRoot = styled('ul', {
   outline: 0,
   position: 'relative',
 });
+
+const RichTreeViewSkeletonItem = styled('li', {
+  name: 'MuiRichTreeView',
+  slot: 'SkeletonItem',
+})({
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+});
+
+const RichTreeViewSkeletonContent = styled('div', {
+  name: 'MuiRichTreeView',
+  slot: 'SkeletonContent',
+})(({ theme }) => ({
+  padding: theme.spacing(0.5, 1),
+  width: '100%',
+  boxSizing: 'border-box',
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+}));
 
 type RichTreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: RichTreeViewProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
@@ -91,6 +114,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     apiRef,
     parameters,
     forwardedProps,
+    loading,
+    loadingItemsCount,
   } = useExtractRichTreeViewParameters(props);
 
   // Context hooks
@@ -101,19 +126,34 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const handleRef = useMergedRefs(forwardedRef, ref);
 
   // Selector hooks
-  const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
+  const lazyLoadingRootIsLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
   const error = useStore(store, lazyLoadingSelectors.itemError, null);
 
   // Feature hooks
   const classes = useUtilityClasses(props);
   const slots = React.useMemo(() => ({ root: RichTreeViewRoot, ...inSlots }), [inSlots]);
 
-  if (isLoading) {
-    return <Typography>Loading…</Typography>;
-  }
+  const isLoading = loading || lazyLoadingRootIsLoading;
 
   if (error) {
     return <Alert severity="error">{error.message}</Alert>;
+  }
+
+  if (isLoading) {
+    return (
+      <RichTreeViewSkeleton
+        store={store}
+        slots={slots}
+        slotProps={slotProps}
+        ownerState={props}
+        forwardedProps={forwardedProps}
+        rootRef={handleRef}
+        classes={classes}
+        loadingItemsCount={loadingItemsCount}
+        SkeletonItemComponent={RichTreeViewSkeletonItem}
+        SkeletonContentComponent={RichTreeViewSkeletonContent}
+      />
+    );
   }
 
   return (
@@ -280,6 +320,16 @@ RichTreeView.propTypes /* remove-proptypes */ = {
    */
   itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
+  /**
+   * If `true`, a skeleton loading UI is displayed instead of the tree items.
+   * @default false
+   */
+  loading: PropTypes.bool,
+  /**
+   * The number of skeleton items to display when `loading` is `true`.
+   * @default 5
+   */
+  loadingItemsCount: PropTypes.number,
   /**
    * Whether multiple items can be selected.
    * @default false

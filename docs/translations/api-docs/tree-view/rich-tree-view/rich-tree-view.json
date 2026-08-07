@@ -78,6 +78,12 @@
     "itemHeight": {
       "description": "Sets the height in pixel of an item. Set to <code>null</code> to explicitly remove any item height restriction when items have different heights."
     },
+    "loading": {
+      "description": "If <code>true</code>, a skeleton loading UI is displayed instead of the tree items."
+    },
+    "loadingItemsCount": {
+      "description": "The number of skeleton items to display when <code>loading</code> is <code>true</code>."
+    },
     "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {
       "description": "Callback fired when Tree Items are expanded/collapsed.",
@@ -191,6 +197,14 @@
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the item&#39;s label input element (visible only",
       "conditions": "editing is enabled)"
+    },
+    "skeletonContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the skeleton item&#39;s content element"
+    },
+    "skeletonItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each skeleton item element"
     }
   },
   "slotDescriptions": {
