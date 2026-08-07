@@ -122,9 +122,18 @@ function CustomRowCheckbox(props: GridRowCheckboxProps) {
   const row = apiRef.current.getRow(props.rowId);
 
   return (
-    <Tooltip title={`Select row ${row.name}`}>
+    <Tooltip title={`Select row ${row.name}`} describeChild>
       <span>
-        <GridRowCheckbox {...props} />
+        <GridRowCheckbox
+          {...props}
+          slotProps={{
+            ...props.slotProps,
+            htmlInput: {
+              ...props.slotProps?.htmlInput,
+              'aria-label': `Select row ${row.name}`,
+            },
+          }}
+        />
       </span>
     </Tooltip>
   );
