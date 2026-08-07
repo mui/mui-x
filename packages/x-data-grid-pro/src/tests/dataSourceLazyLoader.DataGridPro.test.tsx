@@ -364,8 +364,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
     });
 
-    // REPRO 23305 - flat control case
-    it('REPRO 23305 flat - should remove rows dropped by the server on revalidation', async () => {
+    it('should remove rows dropped by the server on revalidation', async () => {
       let dropRows = false;
       transformGetRowsResponse = (response: GridGetRowsResponse) => {
         if (!dropRows) {
@@ -388,7 +387,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       dropRows = true;
 
       await waitFor(() => {
-        expect(apiRef.current!.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children.length).to.equal(11);
+        expect(
+          apiRef.current!.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children.length,
+        ).to.equal(11);
       });
     });
   });
@@ -937,8 +938,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(parentNode.children).to.include('A-0-updated');
     });
 
-    // REPRO 23305
-    it('REPRO 23305 - should remove the last root row when the server drops it', async () => {
+    it('should remove the last root row dropped by the server on revalidation', async () => {
       const transformRows = (rows: TreeRow[], params: GridGetRowsParams, requestCount: number) => {
         if ((params.groupKeys?.length ?? 0) === 0 && requestCount > 2) {
           return rows.filter((row) => row.id !== 'L');
@@ -957,13 +957,14 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       await waitFor(() => {
-        expect(apiRef.current!.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children.length).to.equal(11);
+        expect(
+          apiRef.current!.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children.length,
+        ).to.equal(11);
       });
       expect(apiRef.current!.getRow('L')).to.equal(null);
     });
 
-    // REPRO 23305
-    it('REPRO 23305 - should remove a middle root row when the server drops it', async () => {
+    it('should remove a middle root row dropped by the server on revalidation', async () => {
       const transformRows = (rows: TreeRow[], params: GridGetRowsParams, requestCount: number) => {
         if ((params.groupKeys?.length ?? 0) === 0 && requestCount > 2) {
           return rows.filter((row) => row.id !== 'C');
@@ -984,16 +985,25 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => {
         expect(apiRef.current!.getRow('C')).to.equal(null);
       });
+      await waitFor(() => {
+        expect(
+          apiRef.current!.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children.length,
+        ).to.equal(11);
+      });
+
+      // The tail skeleton left by the shrink must resolve to the row that moved up into it.
+      await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('L')).not.to.equal(null);
+      });
       const rootChildren = apiRef.current!.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
-      const skeletonChildren = rootChildren.filter(
-        (id) => apiRef.current!.getRowNode(id)?.type === 'skeletonRow',
-      );
-      expect(skeletonChildren.length).to.equal(0);
       expect(rootChildren.length).to.equal(11);
+      expect(
+        rootChildren.filter((id) => apiRef.current!.getRowNode(id)?.type === 'skeletonRow').length,
+      ).to.equal(0);
     });
 
-    // REPRO 23305
-    it('REPRO 23305 - should remove the last child of an expanded group when the server drops it', async () => {
+    it('should remove the last child of an expanded group dropped by the server on revalidation', async () => {
       let dropChild = false;
       const transformRows = (rows: TreeRow[], params: GridGetRowsParams) => {
         if ((params.groupKeys?.length ?? 0) === 1 && dropChild) {
