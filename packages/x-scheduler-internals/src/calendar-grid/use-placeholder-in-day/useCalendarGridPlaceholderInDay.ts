@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { TemporalSupportedObject } from '../../models';
+import type { TemporalSupportedObject } from '../../models';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
@@ -18,6 +18,28 @@ export function useCalendarGridPlaceholderInDay(
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
+
+  const findAvailableIndex = React.useCallback(
+    (excludeKey?: string): number => {
+      let positionIndex = 1;
+      const targetDay = row.days.find((rowDay) => adapter.isSameDay(rowDay.value, day));
+      if (targetDay) {
+        const usedIndexes = new Set(
+          targetDay.withPosition
+            .filter((occ) => occ.key !== excludeKey)
+            .map((occ) => occ.position.index),
+        );
+        while (usedIndexes.has(positionIndex)) {
+          positionIndex += 1;
+        }
+      }
+      if (maxEvents != null && positionIndex > maxEvents) {
+        positionIndex = maxEvents;
+      }
+      return positionIndex;
+    },
+    [adapter, day, maxEvents, row.days],
+  );
 
   const rawPlaceholder = useStore(
     store,
@@ -54,13 +76,9 @@ export function useCalendarGridPlaceholderInDay(
         ...sharedProperties,
         title: '',
         allDay: true,
-        displayTimezone: {
-          start: startProcessed,
-          end: endProcessed,
-          timezone,
-        },
+        displayTimezone: { start: startProcessed, end: endProcessed, timezone },
         position: {
-          index: 1,
+          index: findAvailableIndex(),
           daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
       };
@@ -74,35 +92,12 @@ export function useCalendarGridPlaceholderInDay(
       return {
         ...sharedProperties,
         title: rawPlaceholder.eventData.title ?? '',
-        displayTimezone: {
-          start: startProcessed,
-          end: endProcessed,
-          timezone,
-        },
+        displayTimezone: { start: startProcessed, end: endProcessed, timezone },
         position: {
-          index: 1,
+          index: findAvailableIndex(),
           daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
       };
-    }
-
-    let positionIndex = 1;
-    const targetDay = row.days.find((rowDay) => adapter.isSameDay(rowDay.value, day));
-    if (targetDay) {
-      const usedIndexes = new Set(
-        targetDay.withPosition
-          .filter((occ) => occ.key !== rawPlaceholder.occurrenceKey)
-          .map((occ) => occ.position.index),
-      );
-      while (usedIndexes.has(positionIndex)) {
-        positionIndex += 1;
-      }
-    }
-
-    // If the position exceeds the available event rows, clamp it so the
-    // placeholder renders on top of an existing event instead of overflowing.
-    if (maxEvents != null && positionIndex > maxEvents) {
-      positionIndex = maxEvents;
     }
 
     return {
@@ -111,9 +106,9 @@ export function useCalendarGridPlaceholderInDay(
       end: processDate(rawPlaceholder.end, adapter),
       displayTimezone: { ...originalEvent!.displayTimezone },
       position: {
-        index: positionIndex,
+        index: findAvailableIndex(rawPlaceholder.occurrenceKey),
         daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
       },
     };
-  }, [adapter, day, maxEvents, originalEvent, originalEventId, rawPlaceholder, row.days, rowEnd]);
+  }, [adapter, day, originalEvent, originalEventId, rawPlaceholder, rowEnd, findAvailableIndex]);
 }

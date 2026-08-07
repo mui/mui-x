@@ -26,6 +26,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableMultipleColumnsFiltering: false,
   disableMultipleColumnsSorting: false,
   disableMultipleRowSelection: false,
+  dataSourceKeepPreviousData: false,
   dataSourceRevalidateMs: 0,
   disableRowSelectionOnClick: false,
   disableRowSelectionExcludeModel: false,

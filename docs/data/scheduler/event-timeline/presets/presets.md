@@ -8,7 +8,7 @@ components: EventTimelinePremium
 
 # Event Timeline - Presets
 
-<p class="description">The Event Timeline Premium supports several zoom levels to display events at different time scales.</p>
+<p class="description">Choose a time-scale preset to display events at daily, weekly, monthly, or yearly granularity.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -42,7 +42,7 @@ The `year` preset displays decades with yearly granularity—ideal for high-leve
 
 {{"demo": "YearPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Zoom in/out 🚧
+## Zoom in and out 🚧
 
 :::warning
 This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21596) to help us prioritize it.

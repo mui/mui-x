@@ -2,11 +2,8 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { useGridSelector, useGridApiMethod, gridDimensionsSelector } from '@mui/x-data-grid';
-import {
-  type GridInfiniteLoaderPrivateApi,
-  useTimeout,
-  gridHorizontalScrollbarHeightSelector,
-} from '@mui/x-data-grid/internals';
+import { useTimeout, gridHorizontalScrollbarHeightSelector } from '@mui/x-data-grid/internals';
+import type { GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/material/styles';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';

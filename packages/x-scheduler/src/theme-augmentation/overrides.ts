@@ -1,5 +1,5 @@
-import { EventCalendarClassKey } from '../event-calendar/eventCalendarClasses';
-import { EventDialogClassKey } from '../internals/components/event-dialog/eventDialogClasses';
+import type { EventCalendarClassKey } from '../event-calendar/eventCalendarClasses';
+import type { EventDialogClassKey } from '../internals/components/event-dialog/eventDialogClasses';
 
 // The skeleton and error container expose `styleOverrides` per styled slot
 // (`Root`/`Alert`/`Message`), which MUI resolves to these lower-cased keys.

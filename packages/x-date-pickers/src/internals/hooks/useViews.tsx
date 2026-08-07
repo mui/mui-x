@@ -2,14 +2,12 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
-import { MakeOptional } from '@mui/x-internals/types';
+import type { MakeOptional } from '@mui/x-internals/types';
 import type { PickerSelectionState } from './usePicker';
-import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../models';
-import { PickerValidDate } from '../../models';
-import {
-  CreateStepNavigationReturnValue,
-  DEFAULT_STEP_NAVIGATION,
-} from '../utils/createStepNavigation';
+import type { DateOrTimeViewWithMeridiem, PickerValidValue } from '../models';
+import type { PickerValidDate } from '../../models';
+import type { CreateStepNavigationReturnValue } from '../utils/createStepNavigation';
+import { DEFAULT_STEP_NAVIGATION } from '../utils/createStepNavigation';
 
 export type PickerOnChangeFn = (
   date: PickerValidDate | null,

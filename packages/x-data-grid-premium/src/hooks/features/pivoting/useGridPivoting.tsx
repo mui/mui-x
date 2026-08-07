@@ -1,24 +1,21 @@
 import * as React from 'react';
 import {
-  type GridColDef,
-  type GridRowId,
-  type GridRowModel,
   gridDataRowIdsSelector,
   gridRowIdSelector,
   gridRowsLoadingSelector,
   gridRowsLookupSelector,
 } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridRowId, GridRowModel } from '@mui/x-data-grid-pro';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useOnMount from '@mui/utils/useOnMount';
 import type { RefObject } from '@mui/x-internals/types';
 import {
-  type GridStateInitializer,
   useGridApiMethod,
   useGridRegisterPipeProcessor,
   useGridSelector,
-  type GridPipeProcessor,
   gridPivotInitialColumnsSelector,
 } from '@mui/x-data-grid-pro/internals';
+import type { GridStateInitializer, GridPipeProcessor } from '@mui/x-data-grid-pro/internals';
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 

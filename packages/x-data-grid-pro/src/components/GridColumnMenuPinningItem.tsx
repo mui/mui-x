@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import PropTypes from 'prop-types';
-import { GridPinnedColumnPosition, type GridColumnMenuItemProps } from '@mui/x-data-grid';
+import { GridPinnedColumnPosition } from '@mui/x-data-grid';
+import type { GridColumnMenuItemProps } from '@mui/x-data-grid';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 

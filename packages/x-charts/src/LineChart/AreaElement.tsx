@@ -2,14 +2,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
 import { useStore } from '../internals/store/useStore';
-import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
-import { type SeriesId } from '../models/seriesType/common';
-import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import { AnimatedArea } from './AnimatedArea';
+import type { AnimatedAreaProps } from './AnimatedArea';
+import type { SeriesId } from '../models/seriesType/common';
+import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import type { LineClasses } from './lineClasses';
 import type { AreaPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface AreaElementOwnerState {

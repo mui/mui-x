@@ -2,16 +2,16 @@
 import * as React from 'react';
 import { platform } from '@base-ui/utils/platform';
 import { useStore } from '@mui/x-internals/store';
-import { TreeViewCancellableEvent, TreeViewCancellableEventHandler } from '@mui/x-tree-view/models';
-import {
-  TreeViewItemPlugin,
-  useTreeViewContext,
-  isTargetInDescendants,
-} from '@mui/x-tree-view/internals';
-import { TreeItemDragAndDropOverlayProps } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
-import { TreeViewItemItemReorderingValidActions } from './types';
+import type {
+  TreeViewCancellableEvent,
+  TreeViewCancellableEventHandler,
+} from '@mui/x-tree-view/models';
+import type { TreeViewItemPlugin } from '@mui/x-tree-view/internals';
+import { useTreeViewContext, isTargetInDescendants } from '@mui/x-tree-view/internals';
+import type { TreeItemDragAndDropOverlayProps } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
+import type { TreeViewItemItemReorderingValidActions } from './types';
 import { itemsReorderingSelectors } from './selectors';
-import { RichTreeViewProStore } from '../../RichTreeViewProStore';
+import type { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { store } = useTreeViewContext<RichTreeViewProStore<any, any>>();

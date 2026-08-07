@@ -1,13 +1,13 @@
-import { RichTreeViewStoreParameters, RichTreeViewState } from '@mui/x-tree-view/internals';
-import {
+import type { RichTreeViewStoreParameters, RichTreeViewState } from '@mui/x-tree-view/internals';
+import type {
   TreeViewDOMStructure,
   TreeViewItemId,
   TreeViewItemsReorderingAction,
   TreeViewValidItem,
 } from '@mui/x-tree-view/models';
-import { DataSourceCache } from '@mui/x-tree-view/utils';
-import { TreeViewItemReorderPosition } from '../plugins/itemsReordering';
-import { DataSource } from '../plugins/lazyLoading';
+import type { DataSourceCache } from '@mui/x-tree-view/utils';
+import type { TreeViewItemReorderPosition } from '../plugins/itemsReordering';
+import type { DataSource } from '../plugins/lazyLoading';
 
 export interface RichTreeViewProState<
   R extends TreeViewValidItem<R>,

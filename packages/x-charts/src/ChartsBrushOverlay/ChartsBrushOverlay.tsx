@@ -8,13 +8,13 @@ import { useTheme } from '@mui/material/styles';
 import { brushOverlayClasses } from './ChartsBrushOverlay.classes';
 import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions';
 import {
-  type UseChartBrushSignature,
   selectorBrushStartX,
   selectorBrushStartY,
   selectorBrushCurrentX,
   selectorBrushCurrentY,
   selectorBrushConfig,
 } from '../internals/plugins/featurePlugins/useChartBrush';
+import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import { useStore } from '../internals/store/useStore';
 
 function BrushRect(props: React.SVGProps<SVGRectElement>) {

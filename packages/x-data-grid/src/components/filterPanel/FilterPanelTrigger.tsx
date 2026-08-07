@@ -2,7 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import useForkRef from '@mui/utils/useForkRef';
 import { useGridPanelContext } from '../panel/GridPanelContext';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -63,8 +64,8 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
     const filterCount = activeFilters.length;
     const state = { open, filterCount };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
-    const { filterPanelTriggerRef } = useGridPanelContext();
-    const handleRef = useForkRef(ref, filterPanelTriggerRef);
+    const { triggers } = useGridPanelContext();
+    const handleRef = useForkRef(ref, triggers.filterPanel.setRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open) {

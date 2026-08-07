@@ -1,18 +1,21 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { type SinonSpy, spy } from 'sinon';
+import { spy } from 'sinon';
+import type { SinonSpy } from 'sinon';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
   GRID_AGGREGATION_FUNCTIONS,
-  type GridAggregationFunction,
-  type GridApi,
-  type GridRenderCellParams,
-  type GridGroupNode,
   useGridApiRef,
-  type GridColDef,
+} from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridAggregationFunction,
+  GridApi,
+  GridRenderCellParams,
+  GridGroupNode,
+  GridColDef,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 

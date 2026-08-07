@@ -3,7 +3,7 @@ import {
   EventCalendarStore,
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import {
-  EventTimelinePremiumParameters,
+  EventTimelinePremiumStoreParameters,
   EventTimelinePremiumStore,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import { adapter } from './adapters';
@@ -30,7 +30,7 @@ export const getEventTimelinePremiumStateFromParameters = <
   TEvent extends object,
   TResource extends object,
 >(
-  parameters: EventTimelinePremiumParameters<TEvent, TResource>,
+  parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>,
 ) => {
   const state = new EventTimelinePremiumStore(parameters, adapter).state;
   return state;

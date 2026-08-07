@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatBoxLayoutMode, ChatDensity, ChatVariant } from '@mui/x-chat';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/system';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import {
   ChoiceControl,

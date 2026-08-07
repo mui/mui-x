@@ -81,7 +81,7 @@ export interface GridPrivateOnlyApiCommon<
 >
   extends
     GridCorePrivateApi<Api, PrivateApi, Props>,
-    GridStatePrivateApi<PrivateApi['state']>,
+    GridStatePrivateApi<Api['state']>,
     GridPipeProcessingPrivateApi,
     GridStrategyProcessingApi,
     GridColumnSpanningPrivateApi,

@@ -1,15 +1,14 @@
 'use client';
 import * as React from 'react';
 import {
-  type ChartPlugin,
   getChartPoint,
   selectorChartDrawingArea,
-  type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { type TapAndDragEvent } from '@mui/x-internal-gestures/core';
+import type { ChartPlugin, ZoomData } from '@mui/x-charts/internals';
+import type { TapAndDragEvent } from '@mui/x-internal-gestures/core';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { type UseChartProZoomSignature } from '../useChartProZoom.types';
+import type { UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
   getHorizontalCenterRatio,
   getVerticalCenterRatio,

@@ -1,6 +1,6 @@
 import { createSelector } from '@base-ui/utils/store';
 import type { EventCalendarState as State } from '../use-event-calendar';
-import { TemporalSupportedObject } from '../models';
+import type { TemporalSupportedObject } from '../models';
 
 export const eventCalendarOccurrencePlaceholderSelectors = {
   placeholderInDayCell: createSelector(

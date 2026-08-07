@@ -2,14 +2,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { AnimatedLine, type AnimatedLineProps } from './AnimatedLine';
-import { type SeriesId } from '../models/seriesType/common';
+import { AnimatedLine } from './AnimatedLine';
+import type { AnimatedLineProps } from './AnimatedLine';
+import type { SeriesId } from '../models/seriesType/common';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
 import { useStore } from '../internals/store/useStore';
-import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import type { LineClasses } from './lineClasses';
 import type { LinePropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface LineElementOwnerState {

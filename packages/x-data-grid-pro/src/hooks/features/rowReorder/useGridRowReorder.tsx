@@ -6,28 +6,28 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   useGridLogger,
   useGridEvent,
-  type GridEventListener,
   getDataGridUtilityClass,
   useGridSelector,
   gridSortModelSelector,
   useGridEventPriority,
   gridRowNodeSelector,
-  type GridRowId,
   gridRowMaximumTreeDepthSelector,
-  type GridGroupNode,
   useGridApiMethod,
   gridExpandedSortedRowIdsSelector,
   gridRowTreeSelector,
   gridExpandedSortedRowIndexLookupSelector,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
+import type { GridEventListener, GridRowId, GridGroupNode } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
   useGridRegisterPipeProcessor,
-  type GridPipeProcessor,
-  type GridStateInitializer,
-  type RowReorderDropPosition,
-  type RowReorderDragDirection,
+} from '@mui/x-data-grid/internals';
+import type {
+  GridPipeProcessor,
+  GridStateInitializer,
+  RowReorderDropPosition,
+  RowReorderDragDirection,
 } from '@mui/x-data-grid/internals';
 import type { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';

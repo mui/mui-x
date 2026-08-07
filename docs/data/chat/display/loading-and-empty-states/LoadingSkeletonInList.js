@@ -11,11 +11,11 @@ import {
   ChatMessageSkeleton,
 } from '@mui/x-chat';
 import { ChatProvider } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -46,6 +46,9 @@ export default function LoadingSkeletonInList() {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
+    if (!loading) {
+      return undefined;
+    }
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, [loading]);

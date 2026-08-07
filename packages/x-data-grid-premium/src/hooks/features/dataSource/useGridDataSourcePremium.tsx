@@ -5,18 +5,19 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   useGridEvent as addEventHandler,
   useGridApiMethod,
-  type GridEventLookup,
   GRID_ROOT_GROUP_ID,
-  type GridValidRowModel,
   useGridEvent,
-  type GridUpdateRowParams,
-  type GridRowModel,
   gridRowTreeSelector,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridEventLookup,
+  GridValidRowModel,
+  GridUpdateRowParams,
+  GridRowModel,
 } from '@mui/x-data-grid-pro';
 import {
   useGridDataSourceBasePro,
   useGridRegisterStrategyProcessor,
-  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   gridPivotInitialColumnsSelector,
   runIf,
@@ -25,6 +26,7 @@ import {
   DataSourceRowsUpdateStrategy,
   getGroupKeys,
 } from '@mui/x-data-grid-pro/internals';
+import type { GridPipeProcessor } from '@mui/x-data-grid-pro/internals';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
@@ -224,7 +226,10 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
   const handleRowGroupingModelChange = React.useCallback(() => {
     // Clear the rows on every grouping model change to match the pre-fix behavior on
     // non-standard strategies (e.g. lazy loading) where `setRows([])` is required to
-    // reset the existing grouping state.
+    // reset the existing grouping state. `dataSourceKeepPreviousData` is intentionally
+    // not honored here: changing the grouping model implies the `GroupedData` strategy
+    // is (about to be) active, and skipping the synchronous clear would render rows in
+    // stale sort order (https://github.com/mui/mui-x/pull/21619).
     apiRef.current.setRows([]);
     // The event listener is wired regardless of the active strategy
     // (see `runIf(!pivotActive && !!props.dataSource, ...)` below), so we have to gate the

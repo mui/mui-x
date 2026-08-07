@@ -8,7 +8,7 @@ components: EventCalendar, EventCalendarPremium, StandaloneAgendaView, Standalon
 
 # Event Calendar - Views
 
-<p class="description">Choose which views are available in the Event Calendar.</p>
+<p class="description">Configure available views including week, day, month, and agenda, and control the default view.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -20,11 +20,27 @@ The `week` view lets users manage events for an entire week.
 
 {{"demo": "BasicWeekView.js", "bg": "inline", "defaultCodeOpen": false}}
 
+Use the `viewConfig` prop to limit the hours displayed in the time grid with `startTime` and `endTime`:
+
+{{"demo": "WeekViewStartEndTime.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+`startTime` and `endTime` must be whole hours (integers between `0` and `24`). Minute-level precision isn't supported yet.
+:::
+
 ### Day view
 
 The `day` view lets users manage events for a single day.
 
 {{"demo": "BasicDayView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The `viewConfig` prop also limits the hours displayed in the day view with `startTime` and `endTime`:
+
+{{"demo": "DayViewStartEndTime.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+`startTime` and `endTime` must be whole hours (integers between `0` and `24`). Minute-level precision isn't supported yet.
+:::
 
 ### Month view
 

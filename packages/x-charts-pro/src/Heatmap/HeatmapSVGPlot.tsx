@@ -6,8 +6,8 @@ import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks';
 import { HeatmapItem } from './HeatmapItem';
-import { type HeatmapRendererPlotProps } from './Heatmap.types';
-import { type HighlightItemIdentifierWithType } from '../models';
+import type { HeatmapRendererPlotProps } from './Heatmap.types';
+import type { HighlightItemIdentifierWithType } from '../models';
 import { heatmapClasses } from './heatmapClasses';
 
 const MemoHeatmapItem = React.memo(HeatmapItem);

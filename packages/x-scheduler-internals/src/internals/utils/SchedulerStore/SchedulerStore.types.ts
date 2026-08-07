@@ -1,6 +1,6 @@
-import { BaseUIChangeEventDetails } from '@base-ui/react';
-import { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
-import {
+import type { BaseUIChangeEventDetails } from '@base-ui/react';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
   SchedulerEventCreationProperties,
@@ -10,14 +10,15 @@ import {
   SchedulerOccurrencePlaceholder,
   SchedulerPreferences,
   SchedulerProcessedEvent,
+  SchedulerRenderableEventOccurrence,
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
-import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
-import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
 export interface StoredError {
   /**
@@ -29,6 +30,26 @@ export interface StoredError {
    * argument to `store.dismissError(key)`.
    */
   key: string;
+}
+
+/**
+ * Which face the edited occurrence is in:
+ * - `'armed'`: no surface is shown; the event displays its resize handles and an action toolbar
+ *   (Edit / Delete). A resize commits immediately. The drawer surface always arms; the dialog
+ *   surface arms only on a coarse pointer.
+ * - `'edit'`: the editing surface (dialog or drawer) is shown; the event is not resizable while open.
+ */
+export type SchedulerEditingMode = 'armed' | 'edit';
+
+export interface SchedulerEditingState {
+  /** The occurrence being edited — existing or a creation draft. */
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * Whether the occurrence is armed (toolbar + resize handles, no surface) or being edited (surface open).
+   * The toolbar's Edit switches `'armed'` to `'edit'`. The drawer surface always opens in `'armed'`;
+   * the dialog surface opens in `'armed'` on a coarse pointer and directly in `'edit'` otherwise.
+   */
+  mode: SchedulerEditingMode;
 }
 
 export interface SchedulerState<TEvent extends object = any> {
@@ -86,6 +107,12 @@ export interface SchedulerState<TEvent extends object = any> {
    * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
    */
   visibleResources: Record<SchedulerResourceId, boolean>;
+  /**
+   * Collapse status for each resource.
+   * A resource is expanded unless it is registered here with a `true` value.
+   * Collapsing a resource hides its descendants.
+   */
+  collapsedResources: Record<SchedulerResourceId, boolean>;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    */
@@ -162,10 +189,11 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
-   * The key of the occurrence currently active (e.g. open in the event dialog).
-   * `null` when no occurrence is active.
+   * The occurrence currently being edited (existing or a creation draft), or `null`.
+   * Single source of truth for *what* is edited, decoupled from *which* surface is open; surfaces
+   * and the highlight read from here.
    */
-  editedOccurrenceKey: string | null;
+  editingOccurrence: SchedulerEditingState | null;
   /**
    * The event that has been copied or cut, if any.
    */
@@ -250,6 +278,23 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   onVisibleResourcesChange?: (
     visibleResources: Record<SchedulerResourceId, boolean>,
+    eventDetails: SchedulerChangeEventDetails,
+  ) => void;
+  /**
+   * The collapsed resources. A resource is expanded unless included here with a `true` value.
+   */
+  collapsedResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * The resources initially collapsed.
+   * To render a controlled scheduler, use the `collapsedResources` prop.
+   * @default {} - all resources are expanded
+   */
+  defaultCollapsedResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * Event handler called when the collapsed resources change.
+   */
+  onCollapsedResourcesChange?: (
+    collapsedResources: Record<SchedulerResourceId, boolean>,
     eventDetails: SchedulerChangeEventDetails,
   ) => void;
   /**
@@ -361,7 +406,6 @@ export type UpdateRecurringEventParameters = {
   occurrenceStart: TemporalSupportedObject;
   /**
    * The changes to apply.
-   * Requires `start` and `end`, all other properties are optional.
    */
   changes: SchedulerEventUpdatedProperties;
   /**
@@ -445,6 +489,4 @@ export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
  * Used by context hooks to assert the store type at runtime.
  */
 export type SchedulerInstanceName =
-  | 'EventCalendarStore'
-  | 'EventCalendarPremiumStore'
-  | 'EventTimelinePremiumStore';
+  'EventCalendarStore' | 'EventCalendarPremiumStore' | 'EventTimelinePremiumStore';

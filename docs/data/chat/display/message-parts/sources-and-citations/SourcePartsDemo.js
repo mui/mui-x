@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import { ChatConversation, ChatMessageList } from '@mui/x-chat';
 import { ChatProvider } from '@mui/x-chat/headless';
 
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 const adapter = createEchoAdapter();
 
@@ -63,7 +63,7 @@ export default function SourcePartsDemo() {
     >
       <Box
         sx={{
-          height: 320,
+          height: 360,
           overflow: 'hidden',
         }}
       >

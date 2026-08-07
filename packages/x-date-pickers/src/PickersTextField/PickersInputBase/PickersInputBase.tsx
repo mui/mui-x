@@ -11,25 +11,24 @@ import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
-import { MuiEvent } from '@mui/x-internals/types';
+import type { MuiEvent } from '@mui/x-internals/types';
+import type { PickersInputBaseClasses } from './pickersInputBaseClasses';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
-  PickersInputBaseClasses,
 } from './pickersInputBaseClasses';
-import { PickersInputBaseProps } from './PickersInputBase.types';
+import type { PickersInputBaseProps } from './PickersInputBase.types';
+import type { PickersSectionElement, PickersSectionListSlotProps } from '../../PickersSectionList';
 import {
   Unstable_PickersSectionList as PickersSectionList,
   Unstable_PickersSectionListRoot as PickersSectionListRoot,
   Unstable_PickersSectionListSection as PickersSectionListSection,
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
-  PickersSectionElement,
-  PickersSectionListSlotProps,
 } from '../../PickersSectionList';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../../models/fields';
-import { PickerOwnerState } from '../../models/pickers';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerOwnerState } from '../../models/pickers';
 
 function mergePickersInputBaseSectionContentSlotProps(
   consumerSlotProps: PickersSectionListSlotProps['sectionContent'],
@@ -102,42 +101,29 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
       },
     },
     {
-      props: { hasStartAdornment: false, isFieldFocused: false, isFieldValueEmpty: true },
+      // While the field is empty and blurred, the format is shown as a placeholder.
+      props: { isFieldFocused: false, isFieldValueEmpty: true },
+      style: theme.vars
+        ? {
+            opacity: theme.vars.opacity.inputPlaceholder,
+          }
+        : {
+            opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
+          },
+    },
+    {
+      // ...except when a non-shrunk label sits in the notch, where the format would overlap it.
+      // A start adornment always shrinks the label, so it never triggers this case.
+      props: {
+        isFieldFocused: false,
+        isFieldValueEmpty: true,
+        hasStartAdornment: false,
+        inputHasLabel: true,
+        isLabelShrunk: false,
+      },
       style: {
-        color: 'currentColor',
         opacity: 0,
       },
-    },
-    {
-      props: {
-        hasStartAdornment: false,
-        isFieldFocused: false,
-        isFieldValueEmpty: true,
-        inputHasLabel: false,
-      },
-      style: theme.vars
-        ? {
-            opacity: theme.vars.opacity.inputPlaceholder,
-          }
-        : {
-            opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
-          },
-    },
-    {
-      props: {
-        hasStartAdornment: false,
-        isFieldFocused: false,
-        isFieldValueEmpty: true,
-        inputHasLabel: true,
-        isLabelShrunk: true,
-      },
-      style: theme.vars
-        ? {
-            opacity: theme.vars.opacity.inputPlaceholder,
-          }
-        : {
-            opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
-          },
     },
   ],
 }));
@@ -268,7 +254,8 @@ function resolveSectionElementWidth(
   index: number,
   dateRangePosition: 'start' | 'end',
 ) {
-  if (sectionElement.content.id) {
+  // Only measure sections that belong to a range date.
+  if (sectionElement.content['data-range-position'] !== undefined) {
     const activeSectionElements = rootRef.current?.querySelectorAll<HTMLSpanElement>(
       `[data-sectionindex="${index}"] [data-range-position="${dateRangePosition}"]`,
     );

@@ -5,8 +5,9 @@ import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, chartsAxisHighlightClasses } from '@mui/x-charts/ChartsAxisHighlight';
 import { useChartCartesianAxis } from './useChartCartesianAxis';
-import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
-import { useChartInteraction, type UseChartInteractionSignature } from '../useChartInteraction';
+import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import { useChartInteraction } from '../useChartInteraction';
+import type { UseChartInteractionSignature } from '../useChartInteraction';
 
 // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
 describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {

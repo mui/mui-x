@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
-import { EventHandlers } from '@mui/utils/types';
+import type { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { TreeViewCancellableEvent, TreeViewItemId } from '../models';
-import {
+import type { TreeViewCancellableEvent, TreeViewItemId } from '../models';
+import type {
   UseTreeItemParameters,
   UseTreeItemReturnValue,
   UseTreeItemRootSlotProps,
@@ -22,7 +22,7 @@ import {
   UseTreeItemLoadingContainerSlotProps,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import {
+import type {
   TreeViewItemPluginSlotPropsEnhancerParams,
   TreeViewAnyStore,
   TreeViewPublicAPI,
@@ -35,8 +35,8 @@ import { itemsSelectors } from '../internals/plugins/items';
 import { idSelectors } from '../internals/plugins/id';
 import { expansionSelectors } from '../internals/plugins/expansion';
 import { selectionSelectors } from '../internals/plugins/selection';
-import { RichTreeViewStore } from '../internals/RichTreeViewStore';
-import { MinimalTreeViewState } from '../internals/MinimalTreeViewStore';
+import type { RichTreeViewStore } from '../internals/RichTreeViewStore';
+import type { MinimalTreeViewState } from '../internals/MinimalTreeViewStore';
 
 // TODO v8: Remove the lazy loading plugin from the typing on the community useTreeItem and ask users to pass the TStore generic.
 interface DefaultStore extends RichTreeViewStore<any, any> {
