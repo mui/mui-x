@@ -117,9 +117,11 @@ describe('<MonthView />', () => {
   });
 
   describe('Event keyboard accessibility in "more events" popover', () => {
-    async function renderAndOpenPopover() {
+    async function renderAndOpenPopover(
+      providerProps?: Partial<React.ComponentProps<typeof EventCalendarProvider>>,
+    ) {
       const { user } = render(
-        <EventCalendarProvider events={manyEvents} resources={[]}>
+        <EventCalendarProvider events={manyEvents} resources={[]} {...providerProps}>
           <EventDialogProvider>
             <MonthView />
           </EventDialogProvider>
@@ -209,6 +211,67 @@ describe('<MonthView />', () => {
       });
       await waitFor(() => {
         expect(document.body.contains(popover)).to.equal(false);
+      });
+    });
+
+    it('should return focus to the trigger when the editing dialog is submitted', async () => {
+      const onEventsChange = spy();
+      const { user, popover } = await renderAndOpenPopover({ onEventsChange });
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+      await screen.findByRole('dialog');
+
+      // Enter from the title field submits the form, which closes the editing surface. Typed into
+      // the field rather than sent to whatever holds focus, which the dialog and its focus trap
+      // settle on at different moments across React versions.
+      const titleInput = await screen.findByLabelText(/event title/i);
+      await user.type(titleInput, '{Enter}');
+
+      // The dialog closing is only meaningful if the form actually submitted.
+      await waitFor(() => {
+        expect(onEventsChange.callCount).to.equal(1);
+      });
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).to.equal(null);
+      });
+
+      // The popover closes with the editing surface, taking the focused event with it.
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      // Focus has to land back on the calendar, or the next Tab goes to the browser chrome.
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(screen.getByRole('button', { name: /more/i }));
+      });
+    });
+
+    it('should leave focus alone when it moved out of the popover while it was closing', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      await user.keyboard('{Escape}');
+      // Tabbing out before the exit transition ends: the restore must not undo it.
+      await user.keyboard('{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}');
+      const tabbedTo = document.activeElement;
+      expect(popover.contains(tabbedTo), 'focus never left the popover').to.equal(false);
+
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+      expect(document.activeElement).to.equal(tabbedTo);
+    });
+
+    it('should return focus to the trigger when the popover is dismissed without editing', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      await user.keyboard('{Escape}');
+
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(screen.getByRole('button', { name: /more/i }));
       });
     });
   });

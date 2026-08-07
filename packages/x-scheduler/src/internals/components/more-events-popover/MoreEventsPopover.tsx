@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { styled } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
@@ -97,8 +98,41 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     );
   }, [store, onClose]);
 
+  // Editing an event can empty the day and unmount the "+N more" button with it, so remember the
+  // cell while the button is still in the document.
+  const fallbackFocusRef = React.useRef<HTMLElement | null>(null);
+  useIsoLayoutEffect(() => {
+    if (open && anchor) {
+      fallbackFocusRef.current = anchor.closest<HTMLElement>('[role="gridcell"]');
+    }
+  }, [open, anchor]);
+
+  // The editing surface hands focus back to the event it was opened from, and that event unmounts
+  // with this popover, so focus would be left on the document and the next Tab would leave the
+  // page. Restored only from where it is about to be lost: on the document, or on something inside
+  // the popover that is going away with it.
+  const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
+    const ownerDocument = paper.ownerDocument;
+    const activeElement = ownerDocument.activeElement;
+    const focusIsAboutToBeLost =
+      activeElement === null ||
+      activeElement === ownerDocument.body ||
+      paper.contains(activeElement);
+    if (!focusIsAboutToBeLost) {
+      return;
+    }
+    const target = anchor?.isConnected ? anchor : fallbackFocusRef.current;
+    target?.focus({ preventScroll: true });
+  });
+
   return (
-    <Popover className={classes.moreEventsPopover} open={open} anchorEl={anchor} onClose={onClose}>
+    <Popover
+      className={classes.moreEventsPopover}
+      open={open}
+      anchorEl={anchor}
+      onClose={onClose}
+      slotProps={{ transition: { onExited: restoreFocusOnExit } }}
+    >
       <MoreEventsPopoverHeader
         className={classes.moreEventsPopoverHeader}
         id={`${schedulerId}-PopoverHeader-${day.key}`}
