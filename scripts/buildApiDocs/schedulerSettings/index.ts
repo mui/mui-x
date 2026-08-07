@@ -93,6 +93,9 @@ export default schedulerApiPages;
       'x-scheduler/src/compact-day-view/StandaloneCompactDayView.tsx',
       'x-scheduler/src/compact-three-day-view/StandaloneCompactThreeDayView.tsx',
       'x-scheduler/src/compact-week-view/StandaloneCompactWeekView.tsx',
+      'x-scheduler-premium/src/compact-day-view-premium/StandaloneCompactDayViewPremium.tsx',
+      'x-scheduler-premium/src/compact-three-day-view-premium/StandaloneCompactThreeDayViewPremium.tsx',
+      'x-scheduler-premium/src/compact-week-view-premium/StandaloneCompactWeekViewPremium.tsx',
       // Internal sub-components of EventCalendar
       'x-scheduler/src/event-calendar/EventCalendarRoot.tsx',
       'x-scheduler/src/event-calendar/header-toolbar/HeaderToolbar.tsx',
@@ -111,6 +114,7 @@ export default schedulerApiPages;
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-event/EventTimelinePremiumEvent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-title-cell/EventTimelinePremiumTitleCell.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-header/EventTimelinePremiumHeader.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependency-arrows/EventTimelinePremiumDependencyArrows.tsx',
       'x-scheduler-premium/src/event-timeline-premium/error-container/EventTimelinePremiumErrorContainer.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },

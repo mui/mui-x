@@ -125,6 +125,48 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(first).to.equal(second);
   });
 
+  it('should group the source event titles by target event id', () => {
+    const state = getState();
+
+    const titlesByTarget =
+      eventTimelinePremiumDependencySelectors.activeSourceTitlesByTarget(state);
+
+    expect(titlesByTarget.get('event-b')).to.deep.equal([eventA.title]);
+    expect(titlesByTarget.get('event-a')).to.equal(undefined);
+  });
+
+  it('should return the source titles of all the active dependencies targeting the event', () => {
+    const eventC = EventBuilder.new().id('event-c').title('Event C').build();
+    const state = getEventTimelinePremiumStateFromParameters({
+      resources: TEST_RESOURCES,
+      events: [eventA, eventB, eventC],
+      dependencies: [
+        DEP_1,
+        { id: 'dep-c', source: 'event-c', target: 'event-b', type: 'FinishToStart' },
+      ],
+    });
+
+    expect(
+      eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(state, 'event-b'),
+    ).to.deep.equal([eventA.title, 'Event C']);
+  });
+
+  it('should return the same empty instance for every event without predecessors', () => {
+    const state = getState();
+
+    const first = eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(
+      state,
+      'event-a',
+    );
+    const second = eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(
+      state,
+      'event-r',
+    );
+
+    expect(first).to.deep.equal([]);
+    expect(first).to.equal(second);
+  });
+
   it('should keep only the last dependency when two of them share the same id', () => {
     const firstDependency: SchedulerDependency = {
       id: 'dup-1',

@@ -3,7 +3,7 @@ productId: x-scheduler
 title: Scheduler visual regression tests
 packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
-components: StandaloneCompactDayView, StandaloneCompactThreeDayView, StandaloneCompactWeekView
+components: StandaloneCompactDayViewPremium, StandaloneCompactThreeDayViewPremium, StandaloneCompactWeekViewPremium
 ---
 
 # Experiments
@@ -13,6 +13,12 @@ components: StandaloneCompactDayView, StandaloneCompactThreeDayView, StandaloneC
 ## Recurring event durations
 
 {{"demo": "RecurringEventDurations.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Timeline dependency arrows (#22855)
+
+Finish-to-Start dependencies rendered as arrows on the timeline. The dataset covers every route shape: a straight arrow on the same lane, an elbow across rows that turns right before its target to avoid crossing other events, a short arrow between adjacent events, and S routes for successors starting before their predecessor ends. Drag or resize an event to see its arrows follow. The feature has no public API yet, so the demo feeds the internal store parameters.
+
+{{"demo": "TimelineDependencyArrows.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Month view multi-day overflow
 

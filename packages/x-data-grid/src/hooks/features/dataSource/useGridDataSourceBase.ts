@@ -81,6 +81,11 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
+  // `false` while a request is in flight, and for any request that errors or is discarded as
+  // stale. Lets the mount effect tell "rows are already displayed" from "the fetch never landed".
+  const rowsAreUpToDate = React.useRef(false);
+  // Requests that are still running and will apply their response when they settle.
+  const pendingRequestCount = React.useRef(0);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
   const onDataSourceErrorProp = props.onDataSourceError;
@@ -137,6 +142,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           fetchParams,
           options: { skipCache, keepChildrenExpanded },
         });
+        rowsAreUpToDate.current = true;
         if (standardRowsUpdateStrategyActive) {
           apiRef.current.setLoading(false);
         }
@@ -150,6 +156,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       const requestId = lastRequestId.current + 1;
       lastRequestId.current = requestId;
+      rowsAreUpToDate.current = false;
+      pendingRequestCount.current += 1;
 
       try {
         const getRowsResponse = await getRows(fetchParams);
@@ -163,6 +171,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
             fetchParams,
             options: { skipCache, keepChildrenExpanded },
           });
+          rowsAreUpToDate.current = true;
         }
       } catch (originalError) {
         if (lastRequestId.current === requestId) {
@@ -191,6 +200,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           }
         }
       } finally {
+        pendingRequestCount.current -= 1;
         if (standardRowsUpdateStrategyActive && lastRequestId.current === requestId) {
           apiRef.current.setLoading(false);
         }
@@ -434,7 +444,20 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   React.useEffect(() => stopPolling, [stopPolling]);
 
+  const lastApiRef = React.useRef(apiRef);
+  const lastStrategy = React.useRef(currentStrategy);
+  const lastDataSource = React.useRef(props.dataSource);
+
   React.useEffect(() => {
+    // `<Activity mode="hidden">` leaves the root element in the document, a real unmount does not.
+    // Only discard the in-flight response in the latter case, so hiding lets the request land.
+    const rootElement = apiRef.current?.rootElementRef?.current ?? null;
+    const ignoreInFlightRequest = () => {
+      if (!rootElement?.isConnected) {
+        lastRequestId.current += 1;
+      }
+    };
+
     // Return early if the proper strategy isn't set yet
     // Context: https://github.com/mui/mui-x/issues/19650
     if (
@@ -445,6 +468,22 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     ) {
       return undefined;
     }
+
+    const dependenciesChanged =
+      lastApiRef.current !== apiRef ||
+      lastStrategy.current !== currentStrategy ||
+      lastDataSource.current !== props.dataSource;
+
+    lastApiRef.current = apiRef;
+    lastStrategy.current = currentStrategy;
+    lastDataSource.current = props.dataSource;
+
+    // Re-mounting the effect (`<Activity />` becoming visible again, for instance) must not
+    // re-fetch data that is already displayed.
+    if (!dependenciesChanged && (rowsAreUpToDate.current || pendingRequestCount.current > 0)) {
+      return ignoreInFlightRequest;
+    }
+
     if (props.dataSource) {
       stopPolling();
       // `dataSourceKeepPreviousData` only applies to the flat `Default` strategy (mirroring
@@ -462,10 +501,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       apiRef.current.dataSource.fetchRows();
     }
 
-    return () => {
-      // ignore the current request on unmount
-      lastRequestId.current += 1;
-    };
+    return ignoreInFlightRequest;
   }, [apiRef, props.dataSource, props.dataSourceKeepPreviousData, currentStrategy, stopPolling]);
 
   React.useEffect(() => {

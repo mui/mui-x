@@ -206,7 +206,9 @@ BarChartPro.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -416,7 +418,7 @@ BarChartPro.propTypes /* remove-proptypes */ = {
   onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {MouseEvent} event The event source of the callback.
+   * @param {ChartsActivationEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,

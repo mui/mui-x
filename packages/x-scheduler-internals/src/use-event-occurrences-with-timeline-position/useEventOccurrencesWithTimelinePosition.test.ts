@@ -2,7 +2,10 @@ import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import { getOccurrencesFromEvents } from '@mui/x-scheduler-internals/internals';
-import { useEventOccurrencesWithTimelinePosition } from './useEventOccurrencesWithTimelinePosition';
+import {
+  computeOccurrencesFirstIndexLookup,
+  useEventOccurrencesWithTimelinePosition,
+} from './useEventOccurrencesWithTimelinePosition';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const collectionStart = adapter.date('2024-01-15', 'default');
@@ -213,5 +216,33 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     expect(result.occurrences[1].position).to.deep.equal({ firstIndex: 2, lastIndex: 2 });
     expect(result.occurrences[2].id).to.equal('C');
     expect(result.occurrences[2].position).to.deep.equal({ firstIndex: 1, lastIndex: 1 });
+  });
+
+  describe('computeOccurrencesFirstIndexLookup', () => {
+    it('should return the same firstIndex as the hook for overlapping occurrences', () => {
+      const events = [
+        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z', 120).toProcessed(),
+        EventBuilder.new().id('B').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('C').singleDay('2024-01-15T10:30:00Z', 240).toProcessed(),
+        EventBuilder.new().id('D').singleDay('2024-01-15T13:00:00Z').toProcessed(),
+      ];
+      const result = testHook(events, 1);
+
+      const occurrences = getOccurrencesFromEvents({
+        adapter,
+        start: collectionStart,
+        end: collectionEnd,
+        events,
+        displayTimezone: 'default',
+        visibleResources: {},
+        recurringEventsPlugin: null,
+      });
+      const lookup = computeOccurrencesFirstIndexLookup(adapter, occurrences);
+
+      expect(Object.keys(lookup)).to.have.length(result.occurrences.length);
+      for (const occurrence of result.occurrences) {
+        expect(lookup[occurrence.key]).to.equal(occurrence.position.firstIndex);
+      }
+    });
   });
 });

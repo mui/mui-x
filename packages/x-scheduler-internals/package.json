@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-internals",
-  "version": "9.0.0-beta.6",
+  "version": "9.0.0-beta.8",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Scheduler internals.",
   "license": "MIT",
@@ -13,7 +13,6 @@
     "url": "https://opencollective.com/mui-org"
   },
   "exports": {
-    "./base-ui-copy": "./src/base-ui-copy/index.ts",
     "./build-is-valid-drop-target": "./src/build-is-valid-drop-target/index.ts",
     "./internals": "./src/internals/index.ts",
     "./calendar-grid": "./src/calendar-grid/index.ts",
@@ -29,6 +28,7 @@
     "./standalone-event": "./src/standalone-event/index.ts",
     "./use-adapter": "./src/use-adapter/index.ts",
     "./use-adapter-context": "./src/use-adapter-context/index.ts",
+    "./use-auto-scroll-for-time-grid": "./src/use-auto-scroll-for-time-grid/index.ts",
     "./use-event-calendar": "./src/use-event-calendar/index.ts",
     "./use-event-calendar-store-context": "./src/use-event-calendar-store-context/index.ts",
     "./use-event-calendar-view": "./src/use-event-calendar-view/index.ts",
@@ -72,9 +72,6 @@
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",
     "@date-fns/tz": "catalog:",
-    "@floating-ui/react": "^0.27.20",
-    "@floating-ui/react-dom": "^2.1.9",
-    "@floating-ui/utils": "^0.2.12",
     "@mui/x-internals": "workspace:^",
     "date-fns": "catalog:",
     "prop-types": "catalog:",

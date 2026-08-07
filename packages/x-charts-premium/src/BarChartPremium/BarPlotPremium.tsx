@@ -65,7 +65,7 @@ BarPlotPremium.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {MouseEvent} event The event source of the callback.
+   * @param {ChartsActivationEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,

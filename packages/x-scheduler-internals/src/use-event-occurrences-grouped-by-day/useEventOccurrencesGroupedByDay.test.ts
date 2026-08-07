@@ -95,6 +95,54 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     expect(list[0].id).to.equal(visibleEvent.id);
   });
 
+  it('should include a multi-resource event when at least one assigned resource is visible', () => {
+    const visibilityWithOneHidden: Record<string, boolean> = {
+      ...visible,
+      [resourceB.id]: false,
+    };
+
+    const event = EventBuilder.new(adapter)
+      .resources([resourceA, resourceB])
+      .singleDay(day1Str)
+      .toProcessed();
+
+    const result = innerGetEventOccurrencesGroupedByDay({
+      adapter,
+      days,
+      events: [event],
+      visibleResources: visibilityWithOneHidden,
+      displayTimezone: 'default',
+      recurringEventsPlugin: null,
+    });
+
+    const list = result.get(days[1].key)!;
+    expect(list).to.have.length(1);
+    expect(list[0].id).to.equal(event.id);
+  });
+
+  it('should exclude a multi-resource event when all assigned resources are hidden', () => {
+    const visibilityAllHidden: Record<string, boolean> = {
+      [resourceA.id]: false,
+      [resourceB.id]: false,
+    };
+
+    const event = EventBuilder.new(adapter)
+      .resources([resourceA, resourceB])
+      .singleDay(day1Str)
+      .toProcessed();
+
+    const result = innerGetEventOccurrencesGroupedByDay({
+      adapter,
+      days,
+      events: [event],
+      visibleResources: visibilityAllHidden,
+      displayTimezone: 'default',
+      recurringEventsPlugin: null,
+    });
+
+    expect(result.get(days[1].key)).to.have.length(0);
+  });
+
   it('should handle multi-day all-day events correctly', () => {
     const event = EventBuilder.new(adapter).span(day0Str, day2Str, { allDay: true }).toProcessed();
 
