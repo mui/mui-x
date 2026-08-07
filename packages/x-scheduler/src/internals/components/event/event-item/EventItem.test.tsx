@@ -66,8 +66,8 @@ describe('<EventItem />', () => {
   it.skipIf(isJSDOM)('should show a pointer cursor on every event in the popover', async () => {
     const { popover } = await renderAndOpenPopover();
 
-    // The multi-day event renders with the `filled` variant, the one that used to miss the pointer
-    // the other variants and the day grid event all have.
+    // The multi-day event is what puts a `filled` variant in the popover, so assert it is there
+    // before looping, or the loop only covers the variants that always had a pointer.
     const filled = popover.querySelectorAll<HTMLElement>('[data-variant="filled"]');
     expect(filled.length, 'no filled event in the popover').to.be.greaterThan(0);
 

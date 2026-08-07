@@ -122,7 +122,6 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       return;
     }
     const target = anchor?.isConnected ? anchor : fallbackFocusRef.current;
-    // `preventScroll` matches how focus is moved elsewhere in the scheduler.
     target?.focus({ preventScroll: true });
   });
 
