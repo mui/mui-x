@@ -184,6 +184,14 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
   },
   variants: [
     {
+      props: { isDayOutsideMonth: true },
+      style: {
+        color: (theme.vars || theme).palette.text.secondary,
+      },
+    },
+    // Must come after `isDayOutsideMonth` so that a disabled day outside the current month
+    // uses the disabled text color.
+    {
       props: { isDayDisabled: true },
       style: {
         color: (theme.vars || theme).palette.text.disabled,
@@ -196,12 +204,6 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         // and results in unexpected relationships between week day and day columns.
         opacity: 0,
         pointerEvents: 'none',
-      },
-    },
-    {
-      props: { isDayOutsideMonth: true },
-      style: {
-        color: (theme.vars || theme).palette.text.secondary,
       },
     },
     {

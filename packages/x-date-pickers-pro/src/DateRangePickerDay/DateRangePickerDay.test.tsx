@@ -149,6 +149,27 @@ describe('<DateRangePickerDay />', () => {
       expect(container.firstChild).to.have.style('opacity', '1');
     });
 
+    it('should use the disabled text color outside of the current month', () => {
+      const theme = createTheme({
+        palette: { text: { disabled: 'rgb(1, 2, 3)', secondary: 'rgb(4, 5, 6)' } },
+      });
+
+      const { container } = render(
+        <ThemeProvider theme={theme}>
+          <DateRangePickerDay
+            {...disabledDayProps}
+            day={adapterToUse.date('2018-02-01')}
+            outsideCurrentMonth
+            showDaysOutsideCurrentMonth
+            isStartOfHighlighting={false}
+            isEndOfHighlighting={false}
+          />
+        </ThemeProvider>,
+      );
+
+      expect(container.firstChild).to.have.style('color', 'rgb(1, 2, 3)');
+    });
+
     it('should not dim the day at the edge of the selected range', () => {
       const { container } = render(
         <DateRangePickerDay
