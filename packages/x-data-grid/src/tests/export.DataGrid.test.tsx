@@ -1,6 +1,12 @@
 import { spy } from 'sinon';
 import type { SinonSpy } from 'sinon';
-import { DataGrid, GridToolbarExport } from '@mui/x-data-grid';
+import MenuItem from '@mui/material/MenuItem';
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarExport,
+  GridToolbarExportContainer,
+} from '@mui/x-data-grid';
 import type { DataGridProps } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
@@ -172,6 +178,25 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
+    });
+
+    it('should not forward hideMenu to a custom Material UI MenuItem', () => {
+      function CustomToolbar() {
+        return (
+          <GridToolbarContainer>
+            <GridToolbarExportContainer>
+              <MenuItem onClick={() => {}}>Export JSON</MenuItem>
+            </GridToolbarExportContainer>
+          </GridToolbarContainer>
+        );
+      }
+
+      expect(() => {
+        render(<TestCase slots={{ toolbar: CustomToolbar }} showToolbar />);
+        fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      }).not.toErrorDev();
+
+      expect(screen.queryByRole('menuitem', { name: 'Export JSON' })).not.to.equal(null);
     });
   });
 });
