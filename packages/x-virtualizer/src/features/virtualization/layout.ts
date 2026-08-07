@@ -776,64 +776,15 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
       role: 'presentation',
     })),
 
-    scrollbarVerticalProps: createSelectorMemoized(
-      Virtualization.selectors.context,
-      Dimensions.selectors.dimensions,
-      (context, dimensions) => {
-        // On platforms with overlay scrollbars the measured size is 0: the lanes
-        // collapse but the floating widget still needs a hit area.
-        const size = Math.max(dimensions.scrollbarSize, 14);
-        return {
-          ref: context.scrollbarVerticalRef,
-          style: {
-            position: 'absolute',
-            top: dimensions.topContainerHeight,
-            right: 0,
-            bottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
-            // Collapsed rather than `display: none` when unused: the scrollbar size
-            // measurement probes inside this element, which requires it rendered.
-            width: dimensions.hasScrollY ? size : 0,
-            overflowX: 'hidden',
-            overflowY: 'auto',
-            zIndex: 3,
-          } as React.CSSProperties,
-          // Sized so that the scrollbar's scroll range matches the scroller's exactly,
-          // allowing 1:1 position mirroring.
-          contentStyle: {
-            width: 1,
-            height: dimensions.hasScrollY
-              ? dimensions.contentSize.height + dimensions.bottomContainerHeight
-              : 0,
-          } as React.CSSProperties,
-          'aria-hidden': true,
-        };
-      },
-    ),
+    scrollbarVerticalProps: createSelectorMemoized(Virtualization.selectors.context, (context) => ({
+      ref: context.scrollbarVerticalRef,
+    })),
 
     scrollbarHorizontalProps: createSelectorMemoized(
       Virtualization.selectors.context,
-      Dimensions.selectors.dimensions,
-      (context, dimensions) => {
-        const size = Math.max(dimensions.scrollbarSize, 14);
-        return {
-          ref: context.scrollbarHorizontalRef,
-          style: {
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
-            height: dimensions.hasScrollX ? size : 0,
-            overflowX: 'auto',
-            overflowY: 'hidden',
-            zIndex: 3,
-          } as React.CSSProperties,
-          contentStyle: {
-            height: 1,
-            width: dimensions.hasScrollX ? dimensions.columnsTotalWidth : 0,
-          } as React.CSSProperties,
-          'aria-hidden': true,
-        };
-      },
+      (context) => ({
+        ref: context.scrollbarHorizontalRef,
+      }),
     ),
 
     // Horizontal offset spacer: gives the sticky sibling leftward slack to clamp into

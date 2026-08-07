@@ -213,13 +213,53 @@ const HeaderRow = React.memo(function HeaderRow() {
   );
 });
 
+// The geometry is derived from the dimensions the grid already reads: the widget
+// collapses to 0 on a non-scrolling axis, so the scrollbar-size probe can still measure inside it.
 const Scrollbar = React.memo(function Scrollbar(props: {
-  contentStyle?: React.CSSProperties;
+  position: 'vertical' | 'horizontal';
+  dimensions: any;
   [key: string]: any;
 }) {
-  const { contentStyle, ...other } = props;
+  const { position, dimensions, ...other } = props;
+  // On platforms with overlay scrollbars the measured size is 0: the lane
+  // collapses but the floating widget still needs a hit area.
+  const size = Math.max(dimensions.scrollbarSize, 14);
+  const style: React.CSSProperties =
+    position === 'vertical'
+      ? {
+          position: 'absolute',
+          top: dimensions.topContainerHeight,
+          right: 0,
+          bottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
+          width: dimensions.hasScrollY ? size : 0,
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          zIndex: 3,
+        }
+      : {
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
+          height: dimensions.hasScrollX ? size : 0,
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          zIndex: 3,
+        };
+  const contentStyle: React.CSSProperties =
+    position === 'vertical'
+      ? {
+          width: 1,
+          height: dimensions.hasScrollY
+            ? dimensions.contentSize.height + dimensions.bottomContainerHeight
+            : 0,
+        }
+      : {
+          height: 1,
+          width: dimensions.hasScrollX ? dimensions.columnsTotalWidth : 0,
+        };
   return (
-    <div {...other}>
+    <div {...other} aria-hidden style={style}>
       <div style={contentStyle} />
     </div>
   );
@@ -356,8 +396,18 @@ function Grid() {
             </div>
           </div>
         </Box>
-        <Scrollbar className="Grid--scrollbarVertical" {...scrollbarVerticalProps} />
-        <Scrollbar className="Grid--scrollbarHorizontal" {...scrollbarHorizontalProps} />
+        <Scrollbar
+          position="vertical"
+          className="Grid--scrollbarVertical"
+          dimensions={dimensions}
+          {...scrollbarVerticalProps}
+        />
+        <Scrollbar
+          position="horizontal"
+          className="Grid--scrollbarHorizontal"
+          dimensions={dimensions}
+          {...scrollbarHorizontalProps}
+        />
       </Box>
     </VirtualizerContext.Provider>
   );

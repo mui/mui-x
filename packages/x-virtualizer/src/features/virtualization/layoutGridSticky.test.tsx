@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import { useVirtualizer, Virtualization, LayoutGridSticky } from '@mui/x-virtualizer';
+import { useVirtualizer, Virtualization, LayoutGridSticky, Dimensions } from '@mui/x-virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
 
 const ROW_COUNT = 1000;
@@ -97,11 +97,44 @@ function Row(props: {
 
 const Scrollbar = React.forwardRef<
   HTMLDivElement,
-  { contentStyle?: React.CSSProperties; [key: string]: any }
+  { position: 'vertical' | 'horizontal'; dimensions: any; [key: string]: any }
 >(function Scrollbar(props, ref) {
-  const { contentStyle, ...other } = props;
+  const { position, dimensions, ...other } = props;
+  const size = Math.max(dimensions.scrollbarSize, 14);
+  const style: React.CSSProperties =
+    position === 'vertical'
+      ? {
+          position: 'absolute',
+          top: dimensions.topContainerHeight,
+          right: 0,
+          bottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
+          width: dimensions.hasScrollY ? size : 0,
+          overflowX: 'hidden',
+          overflowY: 'auto',
+        }
+      : {
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
+          height: dimensions.hasScrollX ? size : 0,
+          overflowX: 'auto',
+          overflowY: 'hidden',
+        };
+  const contentStyle: React.CSSProperties =
+    position === 'vertical'
+      ? {
+          width: 1,
+          height: dimensions.hasScrollY
+            ? dimensions.contentSize.height + dimensions.bottomContainerHeight
+            : 0,
+        }
+      : {
+          height: 1,
+          width: dimensions.hasScrollX ? dimensions.columnsTotalWidth : 0,
+        };
   return (
-    <div {...other} ref={ref}>
+    <div {...other} ref={ref} style={style}>
       <div style={contentStyle} />
     </div>
   );
@@ -151,6 +184,7 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number; tall?: bool
 
   const containerProps = virtualizer.store.use(LayoutGridSticky.selectors.containerProps);
   const scrollerProps = virtualizer.store.use(LayoutGridSticky.selectors.scrollerProps);
+  const dimensions = virtualizer.store.use(Dimensions.selectors.dimensions);
   const scrollbarVerticalProps = virtualizer.store.use(
     LayoutGridSticky.selectors.scrollbarVerticalProps,
   );
@@ -247,8 +281,18 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number; tall?: bool
           </div>
         </div>
       </div>
-      <Scrollbar data-testid="scrollbar-vertical" {...scrollbarVerticalProps} />
-      <Scrollbar data-testid="scrollbar-horizontal" {...scrollbarHorizontalProps} />
+      <Scrollbar
+        data-testid="scrollbar-vertical"
+        position="vertical"
+        dimensions={dimensions}
+        {...scrollbarVerticalProps}
+      />
+      <Scrollbar
+        data-testid="scrollbar-horizontal"
+        position="horizontal"
+        dimensions={dimensions}
+        {...scrollbarHorizontalProps}
+      />
     </div>
   );
 }
