@@ -62,7 +62,7 @@ In the example below, only leaf items (items without children) are selectable.
 
 :::info
 `isItemSelectionDisabled` hides the checkbox entirely for the items it targets.
-To show the checkbox in a disabled (grayed out) state instead, for example for a single item, use the [`isItemDisabled`](/x/react-tree-view/items/#disabled-items) prop, which disables the whole item rather than just its selection:
+To show the checkbox in a disabled (grayed out) state instead, for example for a single item, use the [`isItemDisabled`](/x/react-tree-view/rich-tree-view/items/#disabled-items) prop, which disables the whole item rather than just its selection:
 :::
 
 {{"demo": "DisabledCheckboxItem.js"}}
