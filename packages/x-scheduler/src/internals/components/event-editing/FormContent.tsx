@@ -31,6 +31,7 @@ import {
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
+import { EventEditingOccurrenceContext } from './EventEditingOccurrenceContext';
 import type { EventDialogFormValues } from '../event-dialog/utils';
 import { computeRange, hasProp, BUILT_IN_FORM_KEYS } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
@@ -165,9 +166,11 @@ export function FormContent(props: FormContentProps) {
   }).current;
 
   return (
-    <EventDialogFormProvider initialValues={initialValues} onValuesChange={pushPlaceholder}>
-      <FormContentInner {...props} />
-    </EventDialogFormProvider>
+    <EventEditingOccurrenceContext.Provider value={occurrence}>
+      <EventDialogFormProvider initialValues={initialValues} onValuesChange={pushPlaceholder}>
+        <FormContentInner {...props} />
+      </EventDialogFormProvider>
+    </EventEditingOccurrenceContext.Provider>
   );
 }
 
@@ -185,6 +188,10 @@ function FormContentInner(props: FormContentProps) {
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+  const shouldEventRequireResource = useStore(
+    store,
+    schedulerOtherSelectors.shouldEventRequireResource,
+  );
 
   // Optional renderer hooks
   const { recurrenceTab: RecurrenceTabRenderer } = useEventEditingOptionalRenderers();
@@ -200,6 +207,18 @@ function FormContentInner(props: FormContentProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (process.env.NODE_ENV !== 'production') {
+      // Checked on submit rather than on mount: the registry is only complete once
+      // every section has run its effects, whatever the composition.
+      if (shouldEventRequireResource && !formStore.hasValidator('resourceId')) {
+        warnOnce([
+          'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
+          'The built-in resource section is not rendered, so an event can be saved without a resource.',
+          'Render the resource section in the General tab, or register a validator for the "resourceId" field.',
+        ]);
+      }
+    }
 
     if (!(await formStore.validateAll())) {
       return;
@@ -297,7 +316,7 @@ function FormContentInner(props: FormContentProps) {
           dragHandlerRef={dragHandlerRef}
           isDraggable={isDraggable}
         >
-          <TitleSection occurrence={occurrence} />
+          <TitleSection />
         </EventDialogHeader>
         {showRecurrence && RecurrenceTabRenderer && (
           <EventDialogTabsContainer className={classes.eventDialogTabsContainer}>
@@ -317,10 +336,7 @@ function FormContentInner(props: FormContentProps) {
             </EventDialogTabs>
           </EventDialogTabsContainer>
         )}
-        <GeneralTab
-          occurrence={occurrence}
-          value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'}
-        />
+        <GeneralTab value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'} />
         {showRecurrence && RecurrenceTabRenderer && (
           <RecurrenceTabRenderer occurrence={occurrence} tabValue={tabValue} />
         )}

@@ -1,19 +1,15 @@
 'use client';
 import * as React from 'react';
-import Divider from '@mui/material/Divider';
 import { useEventEditingStyledContext } from '../event-editing';
-import type { EventDialogSectionProps } from './EventDialog.types';
-import DateTimeSection from './DateTimeSection';
-import ResourceAndColorSection from './ResourceAndColorSection';
-import DescriptionSection from './DescriptionSection';
+import { EventDialogGeneralTabContent } from './EventDialogGeneralTabContent';
 import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 
-interface GeneralTabProps extends EventDialogSectionProps {
+interface GeneralTabProps {
   value: string;
 }
 
 export function GeneralTab(props: GeneralTabProps) {
-  const { occurrence, value } = props;
+  const { value } = props;
 
   const { schedulerId, classes } = useEventEditingStyledContext();
 
@@ -26,11 +22,7 @@ export function GeneralTab(props: GeneralTabProps) {
       hidden={value !== 'general'}
     >
       <EventDialogTabContent className={classes.eventDialogTabContent}>
-        <DateTimeSection occurrence={occurrence} />
-        <Divider />
-        <ResourceAndColorSection occurrence={occurrence} />
-        <Divider />
-        <DescriptionSection occurrence={occurrence} />
+        <EventDialogGeneralTabContent />
       </EventDialogTabContent>
     </EventDialogTabPanel>
   );

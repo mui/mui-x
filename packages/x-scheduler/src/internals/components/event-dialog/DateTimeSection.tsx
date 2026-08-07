@@ -11,10 +11,9 @@ import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventEditingStyledContext } from '../event-editing';
+import { useEventEditingOccurrence, useEventEditingStyledContext } from '../event-editing';
 import type { EventDialogFormValues } from './utils';
 import { computeRange, validateRange } from './utils';
-import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
 import { useEventDialogFormContext } from './form/EventDialogFormContext';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
@@ -56,10 +55,9 @@ const AllDayFormControlLabel = styled(FormControlLabel, {
   },
 });
 
-export default function DateTimeSection(props: EventDialogSectionProps) {
-  const { occurrence } = props;
-
+export default function DateTimeSection() {
   // Context hooks
+  const occurrence = useEventEditingOccurrence();
   const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();

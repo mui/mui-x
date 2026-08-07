@@ -14,6 +14,10 @@ export {
   useEventEditingOptionalRenderers,
 } from './EventEditingOptionalRenderersContext';
 export type { EventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
+export {
+  EventEditingOccurrenceContext,
+  useEventEditingOccurrence,
+} from './EventEditingOccurrenceContext';
 export { FormContent } from './FormContent';
 export { ReadonlyEventDetails } from './ReadonlyEventDetails';
 export { getInitialEditingMode } from './editingModePolicy';

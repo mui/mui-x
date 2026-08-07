@@ -27,8 +27,7 @@ import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-
 import { useStore } from '@base-ui/utils/store';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
-import { useEventEditingStyledContext } from '../event-editing';
-import type { EventDialogSectionProps } from './EventDialog.types';
+import { useEventEditingOccurrence, useEventEditingStyledContext } from '../event-editing';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
 
@@ -127,10 +126,9 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
   );
 }
 
-export default function ResourceAndColorSection(props: EventDialogSectionProps) {
-  const { occurrence } = props;
-
+export default function ResourceAndColorSection() {
   // Context hooks
+  const occurrence = useEventEditingOccurrence();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 

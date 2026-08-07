@@ -165,6 +165,31 @@ describe('EventDialogFormStore', () => {
     });
   });
 
+  describe('hasValidator', () => {
+    it('should report whether a key has at least one validator registered', () => {
+      const store = new EventDialogFormStore({ title: '' });
+      const validator = () => 'Required';
+
+      expect(store.hasValidator('title')).to.equal(false);
+      store.registerValidator('title', validator);
+      expect(store.hasValidator('title')).to.equal(true);
+      expect(store.hasValidator('priority')).to.equal(false);
+    });
+
+    it('should report false once the last validator of a key is unregistered', () => {
+      const store = new EventDialogFormStore({ title: '' });
+      const first = () => 'Required';
+      const second = () => 'Too short';
+      store.registerValidator('title', first);
+      store.registerValidator('title', second);
+
+      store.unregisterValidator('title', first);
+      expect(store.hasValidator('title')).to.equal(true);
+      store.unregisterValidator('title', second);
+      expect(store.hasValidator('title')).to.equal(false);
+    });
+  });
+
   describe('validateAll', () => {
     it('should resolve with true and clear the errors when every validator passes', async () => {
       const store = new EventDialogFormStore({ title: 'Meeting' });

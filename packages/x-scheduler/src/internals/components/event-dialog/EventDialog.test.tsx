@@ -311,6 +311,73 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
   });
 
+  // The sections read the occurrence from context instead of receiving it as a prop, so they
+  // resolve their own per-property read-only state. A property is read-only when the event model
+  // structure declares a getter without a setter.
+  describe('per-property read-only state', () => {
+    it('should mark the description field read-only when the description property has no setter', () => {
+      render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          eventModelStructure={{ description: { getter: (event) => event.description } }}
+        >
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.getByRole('textbox', { name: 'Description' })).to.have.attribute('readonly');
+    });
+
+    it('should mark the date and time fields read-only when the start and end properties have no setter', () => {
+      render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          eventModelStructure={{
+            start: { getter: (event) => event.start },
+            end: { getter: (event) => event.end },
+          }}
+        >
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.getByLabelText(/start date/i)).to.have.attribute('readonly');
+      expect(screen.getByLabelText(/start time/i)).to.have.attribute('readonly');
+      expect(screen.getByLabelText(/end date/i)).to.have.attribute('readonly');
+      expect(screen.getByLabelText(/end time/i)).to.have.attribute('readonly');
+    });
+
+    it('should disable the all-day switch when the allDay property has no setter', () => {
+      render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          eventModelStructure={{ allDay: { getter: (event) => event.allDay } }}
+        >
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.getByRole('switch', { name: /all day/i })).to.have.attribute('disabled');
+    });
+
+    it('should disable the color picker when the resource property has no setter', () => {
+      render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          eventModelStructure={{ resource: { getter: (event) => event.resource } }}
+        >
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.getByRole('group', { name: 'Event color' })).to.have.attribute('data-disabled');
+    });
+  });
+
   describe('drag affordance', () => {
     const originalMatchMedia = window.matchMedia;
     afterEach(() => {

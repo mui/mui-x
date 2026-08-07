@@ -6,8 +6,7 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import TextField from '@mui/material/TextField';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventEditingStyledContext } from '../event-editing';
-import type { EventDialogSectionProps } from './EventDialog.types';
+import { useEventEditingOccurrence, useEventEditingStyledContext } from '../event-editing';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
 
 const TitleTextField = styled(TextField, {
@@ -24,10 +23,9 @@ const TitleTextField = styled(TextField, {
 
 // Rendering the title in its own section keeps typing from re-rendering the
 // whole dialog content: only this component subscribes to the `title` field.
-export default function TitleSection(props: EventDialogSectionProps) {
-  const { occurrence } = props;
-
+export default function TitleSection() {
   // Context hooks
+  const occurrence = useEventEditingOccurrence();
   const { schedulerId, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 

@@ -157,6 +157,11 @@ export class EventDialogFormStore<
   };
 
   /**
+   * Whether at least one validator is currently registered for `key`.
+   */
+  public hasValidator = (key: string): boolean => this.validators.has(key);
+
+  /**
    * Seeds a key that is not present in the values yet, without marking it dirty
    * or notifying `onValuesChange`. No-op when the key is already present.
    */

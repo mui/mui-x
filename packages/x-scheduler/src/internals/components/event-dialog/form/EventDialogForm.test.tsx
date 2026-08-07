@@ -215,6 +215,28 @@ describe('EventDialogForm', () => {
       );
     });
 
+    it('should warn when a built-in form key receives a defaultValue', () => {
+      clearWarningsCache();
+      expect(() => {
+        render(
+          <EventDialogFormProvider initialValues={{ title: 'Meeting' }}>
+            <FieldProbe fieldKey="title" defaultValue="Untitled" />
+          </EventDialogFormProvider>,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: useEventDialogFormField() received a `defaultValue` for the built-in key "title".',
+      ]);
+    });
+
+    it('should not warn when a custom key receives a defaultValue', () => {
+      clearWarningsCache();
+      render(
+        <EventDialogFormProvider initialValues={{}}>
+          <FieldProbe fieldKey="priority" defaultValue="normal" />
+        </EventDialogFormProvider>,
+      );
+    });
+
     it('should unregister the validator when the section unmounts', async () => {
       let formStore: EventDialogFormStore | null = null;
       const grabber = (
