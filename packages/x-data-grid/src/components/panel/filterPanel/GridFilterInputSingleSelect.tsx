@@ -31,9 +31,20 @@ const renderSingleSelectOptions = ({
 }) => {
   const valueOptions = getValueOptions(column) || [];
 
-  const options = valueOptions.map((option) => {
-    const value = getOptionValue(option);
-    let label = getOptionLabel(option);
+  // A column that declares its own blank entry already offers a way to reset the filter.
+  // Prepending another one would render two options sharing the same `''` key.
+  const declaresBlankOption = valueOptions.some((option) => {
+    const optionValue = getOptionValue(option);
+    return optionValue === '' || optionValue === null || optionValue === undefined;
+  });
+
+  const iterableColumnValues = declaresBlankOption ? valueOptions : ['', ...valueOptions];
+
+  return iterableColumnValues.map((option, index) => {
+    // The prepended entry is ours, not a value option, so it skips the column accessors.
+    const isBlankOption = !declaresBlankOption && index === 0;
+    const value = isBlankOption ? '' : getOptionValue(option);
+    let label = isBlankOption ? blankOptionLabel : getOptionLabel(option);
     if (label === '') {
       label = ' '; // To force the height of the empty option
     }
@@ -44,24 +55,6 @@ const renderSingleSelectOptions = ({
       </OptionComponent>
     );
   });
-
-  // A column that declares its own blank entry already offers a way to reset the filter.
-  // Prepending another one would render two options sharing the same `''` key.
-  const declaresBlankOption = valueOptions.some((option) => {
-    const value = getOptionValue(option);
-    return value === '' || value === null || value === undefined;
-  });
-
-  if (declaresBlankOption) {
-    return options;
-  }
-
-  return [
-    <OptionComponent {...baseSelectOptionProps} native={isSelectNative} key="" value="">
-      {blankOptionLabel}
-    </OptionComponent>,
-    ...options,
-  ];
 };
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps<TextFieldProps> & {
