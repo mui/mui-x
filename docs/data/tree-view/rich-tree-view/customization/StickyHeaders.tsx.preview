@@ -1,0 +1,16 @@
+<StickyRichTreeView
+  items={MUI_X_PRODUCTS}
+  defaultExpandedItems={[
+    'grid',
+    'grid-community',
+    'grid-pro',
+    'grid-premium',
+    'pickers',
+    'pickers-community',
+    'pickers-pro',
+    'charts',
+    'charts-community',
+    'tree-view',
+    'tree-view-community',
+  ]}
+/>

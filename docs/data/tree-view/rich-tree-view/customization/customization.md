@@ -52,6 +52,13 @@ The DOM structure affects which styling patterns are available: nested DOM lets 
 
 {{"demo": "CustomStylingRichTreeViewPro.js", "defaultCodeOpen": false}}
 
+### Sticky headers
+
+Make expanded items stick to the top of the scroll container while their children are visible, using the `--TreeView-itemDepth` CSS variable to stack nested levels below each other.
+Use a solid, theme-aware background color (rather than one with transparency) so the sticky items don't show content scrolling behind them.
+
+{{"demo": "StickyHeaders.js"}}
+
 ### Custom Tree Item
 
 You can use the `TreeItem` customization API to build new layouts and manage behaviors.
