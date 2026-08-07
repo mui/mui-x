@@ -79,7 +79,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 - [docs] Fix docs links and pagination sentence (#2381) @ZeeshanTamboli
 - [docs] Update the icons for the new branding (#2339) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Keep prop-types in the same file (#2345) @oliviertassinari
 - [core] Reduce `options` internal usage (#2318) @flaviendelangle
@@ -142,7 +142,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 - [docs] Fix page size warnings (#2301) @oliviertassinari
 - [docs] Sort events alphabetically (#2278) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Assert that `event.defaultMuiPrevented` is called (#2302) @oliviertassinari
 - [core] Reduce options usage in feature hooks (#2275, #2284) @flaviendelangle
@@ -223,7 +223,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [docs] Improve slot API docs (#2219) @oliviertassinari
 - [docs] Document virtualization APIs in virtualization section (#2247) @ZeeshanTamboli
 
-### Core
+### Internal
 
 - [core] Isolate Data Grid Pro and `XGrid` (#2176) @dtassone
 - [core] Move `GridFilterModel` in the models directory (#2243) @flaviendelangle
@@ -308,7 +308,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [docs] Generate API doc for the GridExportCSVOptions interface (#2102) @flaviendelangle
 - [docs] Handle generics in API doc generation (#2210) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Don't export the internal utils (#2233) @flaviendelangle
 - [core] Receive patch and minor dependency updates (#2221) @flaviendelangle
@@ -471,7 +471,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [docs] Fix small typos in the documentation (#2169) @BrandonOldenhof
 - [docs] Fix typo in README (#2150) @studyhog
 
-### Core
+### Internal
 
 - [core] Add @material-ui/lab and @material-ui/icons as peer dependencies (#2012) @m4theushw
 - [core] Add additional test case for `onSelectionModelChange` (#1966) @DanailH
@@ -576,7 +576,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [docs] Fix changing Dataset not working (#1965) @m4theushw
 - [docs] Fix description of union types (#2003) @m4theushw
 
-### Core
+### Internal
 
 - [core] Polish filtering internals (#1760) @ZeeshanTamboli
 - [core] Upgrade actions-cool/issues-helper (#1962) @oliviertassinari
@@ -687,7 +687,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 - [docs] Make cells editable in demos (#1817) @m4theushw
 - [docs] Polish `disableDensitySelector` description (#1884) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Batch small changes (#1901) @oliviertassinari
 - [core] Remove dead logic (#1900) @oliviertassinari
@@ -740,7 +740,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [docs] Add docs for `disableDensitySelector` option (#1856) @DanailH
 - [docs] Automatically generate API docs (#1529) @m4theushw
 
-### Core
+### Internal
 
 - [core] Batch small changes (#1848) @oliviertassinari
 - [core] Add `yarn docs:api` @oliviertassinari
@@ -856,7 +856,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [docs] Remove redundant customizable pagination section (#1774) @ZeeshanTamboli
 - [docs] Improve `GridApi` descriptions (#1767) @m4theushw
 
-### Core
+### Internal
 
 - [core] Batch updates of storybook (#1751) @oliviertassinari
 - [core] Help support different documents (#1754) @oliviertassinari
@@ -970,7 +970,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [docs] Refine the descriptions to be clearer (#1589) @oliviertassinari
 - [docs] Reshuffle columns and rows styling sections (#1622) @DanailH
 
-### Core
+### Internal
 
 - [core] Fix dependabot config (#1619) @oliviertassinari
 - [core] Remove `makeStyles` dependency on `@material-ui/core/styles` (#1627) @mnajdova
@@ -1026,7 +1026,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [docs] Header convention for controllable prop (#1531) @oliviertassinari
 - [docs] Fix errors in the docs (#1585) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add security policy (#1588) @oliviertassinari
 - [core] Improve `GridApi` type structure (#1566) @oliviertassinari
@@ -1103,7 +1103,7 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 - [docs] Fix typos (#1447) @ZeeshanTamboli
 - [docs] No ads for commercial license (#1489) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Label our packages as side effect free (#1466) @oliviertassinari
 - [core] Reduce work in Data Grid (#1520) @oliviertassinari
@@ -1144,7 +1144,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - [docs] Improve PropType to cover required props (#1419) @ZeeshanTamboli
 - [docs] Remove duplicate rendering page (#1375) @dtassone
 
-### Core
+### Internal
 
 - [core] Setup e2e tests (#1443) @DanailH
 
@@ -1221,7 +1221,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [docs] Move density to accessibility page (#1374) @dtassone
 - [Docs] Fix GitHub references in API docs (#1411) @SaskiaKeil
 
-### Core
+### Internal
 
 - [core] Update to React 17 (#1331) @m4theushw
 - [core] Variable convention (#1397) @oliviertassinari
@@ -1262,7 +1262,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [DataGrid] Fix rendering issues (#1319, #1253) @dtassone
 - [DataGrid] Refactor edit events to allow stop propagation (#1304) @dtassone
 
-### Core
+### Internal
 
 - [core] Batch small changes (#1310) @oliviertassinari
 
@@ -1296,7 +1296,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - [docs] Fix linking to sorting component in data-grid overview page (#1237) @SaskiaKeil
 - [docs] Fix typos (#1198) @cthogg
 
-### Core
+### Internal
 
 - [core] Improve the handling of events (rm capture, add event, add new props) (#1158) @dtassone
 - [core] Reinforce that columns are definitions (#1210) @oliviertassinari
@@ -1331,7 +1331,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [docs] Improve the description of the individual packages (#1139) @oliviertassinari
 - [docs] Fix rendering docs to solve custom pagination issue (#1159) @consDev
 
-### Core
+### Internal
 
 - [core] Add build in eslintignore (#1171) @dtassone
 - [core] Increase timeout for XGrid demo (#1150) @oliviertassinari
@@ -1380,7 +1380,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - [docs] Clarify align is separate from headerAlign (#1074) @alexdanilowicz
 - [docs] Clarify product split (#1080) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Fix storybook pagination stories (#1099) @dtassone
 - [core] Pin playwright image to known working version (#1110) @oliviertassinari
@@ -1475,7 +1475,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [docs] Reduce fears around license upfront @oliviertassinari
 - [docs] Update streaming docs (#1013) @dtassone
 
-### Core
+### Internal
 
 - [core] Batch small changes (#991) @oliviertassinari
 - [core] Save/restore actual yarn cache folder (#1039) @oliviertassinari
@@ -1519,7 +1519,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [docs] Improve docs of DataGrid about filter operators (#973) @SaskiaKeil
 - [docs] Improve the docs for the filtering feature (#945) @dtassone
 
-### core
+### Internal
 
 - [core] Add 'Order id 💳' section in issues (#952) @oliviertassinari
 - [core] Improve prop-types handling (#978) @oliviertassinari
@@ -1605,7 +1605,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [docs] Skip download of playwright for docs @oliviertassinari
 - [changelog] Polish @oliviertassinari
 
-### core
+### Internal
 
 - [core] Automation for duplicate issues (#878) @oliviertassinari
 - [core] Replace commander with yargs (#872) @dependabot-preview
@@ -1637,7 +1637,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [docs] Add docs for Data Grid column selector (#837) @DanailH
 - [docs] Clarify feature split between Pro and Premium (#779) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add tests for Column selector feature (#845) @DanailH
 
@@ -1658,7 +1658,7 @@ Big thanks to the 2 contributors who made this release possible. Here are some h
 
 - [docs] Add documentation for the column menu (#815) @DanailH
 
-### Core
+### Internal
 
 - [core] Update peer dependencies for React 17 (#814) @DanailH
 - [core] Batch small changes (#800) @oliviertassinari
@@ -1693,7 +1693,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [docs] Start documentation for the Data Grid filter features (#754) @dtassone
 - [docs] Sync with docs to fix images (#776) @oliviertassinari
 
-### Core
+### Internal
 
 - [test] We don't need to wait 100ms (#773) @oliviertassinari
 - [core] Remove useless clone (#757) @oliviertassinari
@@ -1719,7 +1719,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [docs] Fix wrong link anchor @oliviertassinari
 - [docs] Proxy production version @oliviertassinari
 
-### Core
+### Internal
 
 - [security] Bump ini from 1.3.5 to 1.3.7 (#719) @dependabot-preview
 - [core] Update monorepository (#725) @oliviertassinari
@@ -1758,7 +1758,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [docs] Enable CodeSandbox preview in PRs (#613) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Batch small changes (#683) @oliviertassinari
 - [test] Add regression test (#705) @oliviertassinari
@@ -1814,7 +1814,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [docs] Fix typo in columns.md @stojy
 - [docs] Reduce confusion on /export page (#646) @SerdarMustafa1
 
-### Core
+### Internal
 
 - [core] Introduce a feature toggle (#637) @oliviertassinari
 - [core] Remove gitHead (#669) @oliviertassinari
@@ -1838,7 +1838,7 @@ _Nov 20, 2020_
 
 - [docs] Update feature comparison table for Column reorder @DanailH
 
-### Core
+### Internal
 
 - [core] Prepare work for a future public state API (#533) @dtassone
 - [core] Fix yarn prettier write @oliviertassinari
@@ -1874,7 +1874,7 @@ _Nov 9, 2020_
 - [docs] Fix the Netlify proxy for localization of X (#536) @oliviertassinari
 - [docs] Add deploy script command @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Batch small changes (#546) @oliviertassinari
 - [core] Improve types (#448) @oliviertassinari
@@ -1894,7 +1894,7 @@ _Oct 23, 2020_
 - [XGrid] Second iteration on resizing logic (#436) @oliviertassinari
   Fix 8 bugs with the resizing.
 
-### Core
+### Internal
 
 - [core] Remove usage of LESS (#467) @dependabot-preview
 - [core] Update to the latest version of the main repo (#456) @oliviertassinari
@@ -1915,7 +1915,7 @@ _Oct 19, 2020_
 - [docs] Remove id columns (#355) @oliviertassinari
 - [docs] Swap words to better match users' query (#354) @oliviertassinari
 
-### Core
+### Internal
 
 - [storybook] Fix warning and improve perf (#407) @dtassone
 - [core] Batch small changes (#403) @oliviertassinari
