@@ -19,6 +19,8 @@ const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
 const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
 
+const SUPPORTS_ACTIVITY = 'Activity' in React;
+
 describe('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();
@@ -34,15 +36,32 @@ describe('<DataGrid /> - Data source', () => {
     return null;
   }
 
+  function ActivityFallback({ children }: React.ActivityProps) {
+    return children;
+  }
+
+  const Activity = SUPPORTS_ACTIVITY ? React.Activity : ActivityFallback;
+
   function TestDataSource(
     props: Partial<DataGridProps> & {
       shouldRequestsFail?: boolean;
       dataSetOptions?: Partial<typeof dataSetOptions>;
       onFetchRows?: typeof fetchRowsSpy;
+      dataSourceKey?: number;
+      activityMode?: 'visible' | 'hidden';
+      stallResponsePromise?: Promise<void>;
     },
   ) {
     apiRef = useGridApiRef();
-    const { dataSetOptions: dataSetOptionsProp, shouldRequestsFail, onFetchRows, ...other } = props;
+    const {
+      dataSetOptions: dataSetOptionsProp,
+      shouldRequestsFail,
+      dataSourceKey = 1,
+      onFetchRows,
+      activityMode = 'visible',
+      stallResponsePromise,
+      ...other
+    } = props;
     const effectiveFetchRowsSpy = onFetchRows ?? fetchRowsSpy;
     mockServer = useMockServer(
       dataSetOptionsProp ?? dataSetOptions,
@@ -52,7 +71,14 @@ describe('<DataGrid /> - Data source', () => {
 
     const { fetchRows, editRow } = mockServer;
 
+    // Read through a ref so that stalling a response does not change the `dataSource` identity
+    const stallResponsePromiseRef = React.useRef(stallResponsePromise);
+    stallResponsePromiseRef.current = stallResponsePromise;
+
     const dataSource: GridDataSource = React.useMemo(() => {
+      // Recreate the data source when this key changes
+      void dataSourceKey;
+
       return {
         getRows: async (params: GridGetRowsParams) => {
           const urlParams = new URLSearchParams({
@@ -66,6 +92,8 @@ describe('<DataGrid /> - Data source', () => {
           effectiveFetchRowsSpy(url);
           const getRowsResponse = await fetchRows(url);
 
+          await stallResponsePromiseRef.current;
+
           return {
             rows: getRowsResponse.rows,
             rowCount: getRowsResponse.rowCount,
@@ -77,7 +105,7 @@ describe('<DataGrid /> - Data source', () => {
           return syncedRow;
         },
       };
-    }, [fetchRows, editRow, effectiveFetchRowsSpy]);
+    }, [dataSourceKey, effectiveFetchRowsSpy, fetchRows, editRow]);
 
     if (!mockServer.isReady) {
       return null;
@@ -86,16 +114,20 @@ describe('<DataGrid /> - Data source', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <Reset />
-        <DataGrid
-          apiRef={apiRef}
-          columns={mockServer.columns}
-          dataSource={dataSource}
-          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
-          pagination
-          pageSizeOptions={pageSizeOptions}
-          disableVirtualization
-          {...other}
-        />
+        <Activity mode={activityMode}>
+          <DataGrid
+            apiRef={apiRef}
+            columns={mockServer.columns}
+            dataSource={dataSource}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+            }}
+            pagination
+            pageSizeOptions={pageSizeOptions}
+            disableVirtualization
+            {...other}
+          />
+        </Activity>
       </div>
     );
   }
@@ -104,6 +136,17 @@ describe('<DataGrid /> - Data source', () => {
     render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+  });
+
+  it('should re-fetch the data on data source change', async () => {
+    const { setProps } = render(<TestDataSource />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+    setProps({ dataSourceKey: 2 });
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
@@ -158,6 +201,110 @@ describe('<DataGrid /> - Data source', () => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
+
+  if (SUPPORTS_ACTIVITY) {
+    describe('Activity', () => {
+      async function toggleActivity(
+        setProps: (props: { activityMode: 'visible' | 'hidden' }) => void,
+      ) {
+        await act(async () => {
+          setProps({ activityMode: 'hidden' });
+        });
+        await act(async () => {
+          setProps({ activityMode: 'visible' });
+        });
+      }
+
+      it('should not re-fetch the data when the Activity becomes visible', async () => {
+        const { setProps } = render(<TestDataSource />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        await toggleActivity(setProps);
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      it('should keep a request in flight when the Activity is hidden', async () => {
+        const { promise, resolve } = Promise.withResolvers<void>();
+        const { setProps } = render(<TestDataSource stallResponsePromise={promise} />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        await toggleActivity(setProps);
+        await act(async () => {
+          resolve();
+        });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowsCount()).to.be.above(0);
+        });
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      it('should apply a response that settles while the Activity is hidden', async () => {
+        const { promise, resolve } = Promise.withResolvers<void>();
+        const { setProps } = render(<TestDataSource stallResponsePromise={promise} />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        await act(async () => {
+          setProps({ activityMode: 'hidden' });
+        });
+        await act(async () => {
+          resolve();
+        });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowsCount()).to.be.above(0);
+        });
+        await act(async () => {
+          setProps({ activityMode: 'visible' });
+        });
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      it('should re-fetch the data when the Activity becomes visible after a failed request', async () => {
+        const onDataSourceError = spy();
+        const { setProps } = render(
+          <TestDataSource shouldRequestsFail onDataSourceError={onDataSourceError} />,
+        );
+        await waitFor(() => {
+          expect(onDataSourceError.callCount).to.equal(1);
+        });
+        const callCountBeforeToggle = fetchRowsSpy.callCount;
+        await toggleActivity(setProps);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.be.above(callCountBeforeToggle);
+        });
+      });
+
+      it('should apply a filter change response that settles while the Activity is hidden', async () => {
+        const { promise, resolve } = Promise.withResolvers<void>();
+        const { setProps } = render(<TestDataSource />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        setProps({
+          stallResponsePromise: promise,
+          filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
+        });
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(2);
+        });
+        await act(async () => {
+          setProps({ activityMode: 'hidden' });
+        });
+        await act(async () => {
+          resolve();
+        });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowsCount()).to.be.above(0);
+        });
+        await act(async () => {
+          setProps({ activityMode: 'visible' });
+        });
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+    });
+  }
 
   describe('Cache', () => {
     it('should cache the data using the default cache', async () => {
