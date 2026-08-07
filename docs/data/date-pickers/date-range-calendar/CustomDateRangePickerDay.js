@@ -8,7 +8,7 @@ import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay as MuiDateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 
 const DateRangePickerDay = styled(MuiDateRangePickerDay)(({ theme }) => ({
-  '--PickerDay-horizontalMargin': 0,
+  '--PickerDay-horizontalMargin': '0px',
   // Ensures the day increases width, accounting for the padding, matching the width of the week number cell
   boxSizing: 'content-box',
   paddingLeft: '2px',
