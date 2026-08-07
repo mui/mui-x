@@ -4,8 +4,10 @@ import {
   DateRangePickerDay,
   dateRangePickerDayClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangePickerDay';
+import type { DateRangePickerDayProps } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DateRangePickerDay />', () => {
   const { render } = createPickerRenderer();
@@ -145,6 +147,53 @@ describe('<DateRangePickerDay />', () => {
       expect(container.firstChild).not.to.have.class(classes.selected);
       expect(container.firstChild).not.to.have.class(classes.insideSelection);
       expect(container.firstChild).to.have.style('opacity', '0');
+    });
+  });
+
+  // jsdom does not compute styles of pseudo-elements.
+  describe.skipIf(isJSDOM)('highlight rounding', () => {
+    const renderInsideSelection = (
+      props: Partial<Pick<DateRangePickerDayProps, 'isFirstVisibleCell' | 'isLastVisibleCell'>>,
+    ) =>
+      render(
+        <DateRangePickerDay
+          day={adapterToUse.date('2018-01-15')}
+          onDaySelect={() => {}}
+          outsideCurrentMonth={false}
+          isHighlighting
+          isPreviewing={false}
+          isStartOfPreviewing={false}
+          isEndOfPreviewing={false}
+          isStartOfHighlighting={false}
+          isEndOfHighlighting={false}
+          isFirstVisibleCell={false}
+          isLastVisibleCell={false}
+          {...props}
+        />,
+      );
+
+    it('should round the end of the highlight on the last visible cell', () => {
+      const { container } = renderInsideSelection({ isLastVisibleCell: true });
+      const highlight = getComputedStyle(container.firstChild as Element, '::before');
+
+      expect(highlight.borderTopRightRadius).not.to.equal('0px');
+      expect(highlight.borderBottomRightRadius).not.to.equal('0px');
+    });
+
+    it('should round the start of the highlight on the first visible cell', () => {
+      const { container } = renderInsideSelection({ isFirstVisibleCell: true });
+      const highlight = getComputedStyle(container.firstChild as Element, '::before');
+
+      expect(highlight.borderTopLeftRadius).not.to.equal('0px');
+      expect(highlight.borderBottomLeftRadius).not.to.equal('0px');
+    });
+
+    it('should not round the highlight in the middle of the grid', () => {
+      const { container } = renderInsideSelection({});
+      const highlight = getComputedStyle(container.firstChild as Element, '::before');
+
+      expect(highlight.borderTopRightRadius).to.equal('0px');
+      expect(highlight.borderTopLeftRadius).to.equal('0px');
     });
   });
 });

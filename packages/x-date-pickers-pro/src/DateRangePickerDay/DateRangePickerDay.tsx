@@ -380,6 +380,40 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         },
       },
     },
+    // The cells that follow the last visible cell are filler cells, they render nothing.
+    // The highlight and the preview have to be closed here instead of bleeding into them.
+    {
+      props: { isDayLastVisibleCell: true },
+      style: {
+        '::after': {
+          borderTopRightRadius: 'inherit',
+          borderBottomRightRadius: 'inherit',
+          borderRightColor: (theme.vars || theme).palette.divider,
+          right: 0,
+        },
+        '::before': {
+          borderTopRightRadius: 'inherit',
+          borderBottomRightRadius: 'inherit',
+          right: 0,
+        },
+      },
+    },
+    {
+      props: { isDayFirstVisibleCell: true },
+      style: {
+        '::after': {
+          borderTopLeftRadius: 'inherit',
+          borderBottomLeftRadius: 'inherit',
+          borderLeftColor: (theme.vars || theme).palette.divider,
+          left: 0,
+        },
+        '::before': {
+          borderTopLeftRadius: 'inherit',
+          borderBottomLeftRadius: 'inherit',
+          left: 0,
+        },
+      },
+    },
   ],
 }));
 
