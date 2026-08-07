@@ -8,19 +8,15 @@ import ChartDemoNavigator from '../ChartDemoNavigator';
 const advancedFeatures = [
   {
     title: 'Scatter Chart',
-    description: '',
   },
   {
     title: 'Bar Chart',
-    description: '',
   },
   {
     title: 'Line Chart',
-    description: '',
   },
   {
     title: 'Donut Chart',
-    description: '',
   },
 ];
 

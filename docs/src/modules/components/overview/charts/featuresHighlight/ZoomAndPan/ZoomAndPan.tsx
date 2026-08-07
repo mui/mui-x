@@ -1,6 +1,8 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import { legendClasses } from '@mui/x-charts/ChartsLegend';
+import { chartsToolbarClasses } from '@mui/x-charts/Toolbar';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { AxisValueFormatterContext, YAxis } from '@mui/x-charts/models';
 import { sxColors } from '../colors';
@@ -27,15 +29,22 @@ export default function ZoomAndPan() {
   return (
     <Stack
       spacing={1}
-      direction={{ xs: 'column-reverse', xl: 'column' }}
+      direction="column"
       sx={[
         {
           height: '100%',
+          minHeight: 0,
         },
         ...(Array.isArray(sxColors) ? sxColors : [sxColors]),
       ]}
     >
-      <Box sx={{ flexGrow: 1, mb: 2, width: '100%', height: '100%' }}>
+      <div>
+        <Typography variant="subtitle2">Zoom, pan and export</Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          Find the right frame for your data analysis
+        </Typography>
+      </div>
+      <Box sx={{ flex: '1 1 0', minHeight: { xs: 250, xl: 0 }, width: '100%' }}>
         <LineChartPro
           colors={['var(--palette-color-0)', 'var(--palette-color-4)']}
           dataset={formattedDataset}
@@ -76,18 +85,59 @@ export default function ZoomAndPan() {
             { axisId: 'x-axis', start: 40, end: 80 },
             { axisId: 'y-axis', start: 20, end: 89 },
           ]}
-          slotProps={{ tooltip: { disablePortal: true } }}
+          slotProps={{
+            legend: {
+              direction: 'horizontal',
+              position: { horizontal: 'start', vertical: 'bottom' },
+            },
+            tooltip: { disablePortal: true },
+          }}
           showToolbar
+          sx={(theme) => ({
+            minHeight: 0,
+            '&:has(.MuiChartsToolbar-root)': {
+              gridTemplateAreas: `"chart chart" "legend toolbar"`,
+              gridTemplateColumns: '1fr auto',
+              gridTemplateRows: 'minmax(0, 1fr) auto',
+              columnGap: theme.spacing(1),
+              rowGap: theme.spacing(0.5),
+            },
+            [`& .${legendClasses.root}`]: {
+              alignSelf: 'end',
+              justifySelf: 'start',
+              m: 0,
+              gap: 1.25,
+              overflow: 'hidden',
+            },
+            [`& .${legendClasses.series}`]: {
+              gap: 0.75,
+            },
+            [`& .${legendClasses.label}`]: {
+              fontWeight: 600,
+            },
+            [`& .${chartsToolbarClasses.root}`]: {
+              alignSelf: 'end',
+              border: 0,
+              borderRadius: 0,
+              gap: 0.25,
+              justifySelf: 'end',
+              m: 0,
+              minHeight: 30,
+              p: 0,
+              transform: 'translateY(4px)',
+            },
+            [`& .${chartsToolbarClasses.root} .MuiButtonBase-root`]: {
+              minHeight: 30,
+              minWidth: 32,
+              p: 0.625,
+            },
+            [`& .${chartsToolbarClasses.root} .MuiSvgIcon-root`]: {
+              fontSize: theme.typography.pxToRem(21),
+              transform: 'translateY(4px)',
+            },
+          })}
         />
       </Box>
-      <div>
-        <Typography variant="subtitle2" sx={{ pt: 2 }}>
-          Zoom and pan
-        </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Explore data with greater detail by zooming in and panning across the chart.
-        </Typography>
-      </div>
     </Stack>
   );
 }

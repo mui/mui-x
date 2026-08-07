@@ -10,6 +10,7 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { BarSeriesType, LineSeriesType } from '@mui/x-charts/models';
 import ChartDemoWrapper from '../ChartDemoWrapper';
+import { overviewChartPalette } from '../theme/colors';
 
 const dataset = [
   { min: -12, max: -4, precip: 79, month: 'January' },
@@ -31,7 +32,6 @@ const series: (BarSeriesType | LineSeriesType)[] = [
     type: 'bar',
     label: 'Precipitation',
     dataKey: 'precip',
-    color: '#bfdbf7',
     yAxisId: 'rightAxis',
     valueFormatter: (value: number | null) => (value === null ? '' : `${value}mm`),
   },
@@ -39,14 +39,12 @@ const series: (BarSeriesType | LineSeriesType)[] = [
     type: 'line',
     label: 'Temperature min',
     dataKey: 'min',
-    color: '#577399',
     valueFormatter: (value: number | null) => (value === null ? '' : `${value}°C`),
   },
   {
     type: 'line',
     label: 'Temperature max',
     dataKey: 'max',
-    color: '#fe5f55',
     valueFormatter: (value: number | null) => (value === null ? '' : `${value}°C`),
   },
 ];
@@ -56,6 +54,7 @@ function MultiAxes() {
     <Stack sx={{ height: '100%' }}>
       <Typography align="center">Weather stats for Quebec city</Typography>
       <ChartsContainer
+        colors={overviewChartPalette}
         series={series}
         xAxis={[
           {

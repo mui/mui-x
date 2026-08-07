@@ -1,21 +1,9 @@
 import * as React from 'react';
-import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
 import { AxisConfig } from '@mui/x-charts/models';
-
-const purples = [
-  '#F0F1FF',
-  '#DBDEFF',
-  '#CDD2FE',
-  '#9BA5FD',
-  '#6978FC',
-  '#5060FB',
-  '#283BF1',
-  '#0A1AAE',
-];
-
-const defaultColorMap = interpolateRgbBasis(purples);
+import { getOverviewHeatmapColor } from '../theme/colors';
 
 const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const hours = ['6am-10am', '10am-12am', '12am-5pm', '5pm-8pm', '8pm-12pm'];
@@ -97,6 +85,12 @@ function CustomCell(props: any) {
 }
 
 export default function HeatmapDemo() {
+  const theme = useTheme();
+  const colorMap = React.useCallback(
+    (value: number) => getOverviewHeatmapColor(theme.palette.mode, value),
+    [theme.palette.mode],
+  );
+
   return (
     <React.Fragment>
       <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, px: 1 }}>
@@ -126,7 +120,7 @@ export default function HeatmapDemo() {
             max: 20,
             colorMap: {
               type: 'continuous',
-              color: defaultColorMap,
+              color: colorMap,
             },
           },
         ]}

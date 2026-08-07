@@ -1,18 +1,28 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { type Theme } from '@mui/material/styles';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import {
   ChartsLegend,
   ContinuousColorLegend,
   PiecewiseColorLegend,
 } from '@mui/x-charts/ChartsLegend';
-import { sxColors } from '../colors';
+import { overviewExpressivePalette } from '../../theme/colors';
+
+const dataLabelingColors = (theme: Theme) =>
+  overviewExpressivePalette(theme.palette.mode).reduce<Record<string, string>>(
+    (acc, color, index) => {
+      acc[`--data-labeling-color-${index}`] = color;
+      return acc;
+    },
+    {},
+  );
 
 export default function Legends() {
   return (
-    <Box sx={{ ...sxColors, p: 1 }}>
+    <Box sx={(theme) => ({ ...dataLabelingColors(theme), p: 1 })}>
       <ChartsDataProvider
-        colors={['var(--palette-color-0)', 'var(--palette-color-3)']}
+        colors={['var(--data-labeling-color-0)', 'var(--data-labeling-color-3)']}
         series={[
           { type: 'bar', label: 'Bar', data: [] },
           { type: 'line', label: 'Line', data: [] },
@@ -25,12 +35,12 @@ export default function Legends() {
               type: 'piecewise',
               thresholds: [0, 1, 2, 3, 4],
               colors: [
-                'var(--palette-color-0)',
-                'var(--palette-color-1)',
-                'var(--palette-color-2)',
-                'var(--palette-color-3)',
-                'var(--palette-color-4)',
-                'var(--palette-color-5)',
+                'var(--data-labeling-color-0)',
+                'var(--data-labeling-color-1)',
+                'var(--data-labeling-color-2)',
+                'var(--data-labeling-color-3)',
+                'var(--data-labeling-color-4)',
+                'var(--data-labeling-color-5)',
               ],
             },
           },
@@ -53,7 +63,7 @@ export default function Legends() {
         </Stack>
       </ChartsDataProvider>
       <ChartsDataProvider
-        colors={['var(--palette-color-0)', 'var(--palette-color-3)']}
+        colors={['var(--data-labeling-color-3)', 'var(--data-labeling-color-0)']}
         series={[
           { type: 'pie', data: [{ value: 0, label: 'Pie' }] },
           {
@@ -82,7 +92,7 @@ export default function Legends() {
               type: 'continuous',
               min: 0,
               max: 100,
-              color: ['var(--palette-color-0)', 'var(--palette-color-2)'],
+              color: ['var(--data-labeling-color-0)', 'var(--data-labeling-color-5)'],
             },
           },
         ]}
@@ -110,8 +120,8 @@ export default function Legends() {
                 y2="0"
                 gradientUnits="objectBoundingBox"
               >
-                <stop offset={0} stopColor="var(--palette-color-0)" stopOpacity={1} />;
-                <stop offset={1} stopColor="var(--palette-color-5)" stopOpacity={1} />;
+                <stop offset={0} stopColor="var(--data-labeling-color-0)" stopOpacity={1} />;
+                <stop offset={1} stopColor="var(--data-labeling-color-5)" stopOpacity={1} />;
               </linearGradient>
             </svg>
           </div>

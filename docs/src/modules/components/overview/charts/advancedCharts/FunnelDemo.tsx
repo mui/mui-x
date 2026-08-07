@@ -2,6 +2,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import ChartDemoWrapper from '../ChartDemoWrapper';
+import { overviewChartPalette } from '../theme/colors';
+import SourceCaption from './SourceCaption';
 
 // Data from https://ourworldindata.org/grapher/gender-gap-education-levels
 
@@ -20,6 +22,7 @@ function Funnel() {
       </Typography>
       <div style={{ flexGrow: 1, minHeight: 0 }}>
         <FunnelChart
+          colors={overviewChartPalette}
           sx={{ '& [data-series="2020"]': { filter: 'brightness(0.7)' } }}
           margin={{ left: 50, right: 50 }}
           series={[
@@ -79,12 +82,12 @@ function Funnel() {
           slotProps={{ tooltip: { disablePortal: true } }}
         />
       </div>
-      <Typography variant="caption" sx={{ textAlign: 'end' }}>
+      <SourceCaption>
         Data from{' '}
         <a href="https://ourworldindata.org/grapher/gender-gap-education-levels/">
           ourworldindata.org
         </a>
-      </Typography>
+      </SourceCaption>
     </Stack>
   );
 }
