@@ -14,6 +14,7 @@ import type {
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
+  SchedulerSelection,
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
@@ -198,6 +199,11 @@ export interface SchedulerState<TEvent extends object = any> {
    * The event that has been copied or cut, if any.
    */
   copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
+  /**
+   * The selected entity (a dependency arrow, later an event...), or `null`.
+   * See `SchedulerSelectionTypeLookup` for how features register their type.
+   */
+  selection: SchedulerSelection | null;
   /**
    * Whether the store is currently loading events from the data source.
    */

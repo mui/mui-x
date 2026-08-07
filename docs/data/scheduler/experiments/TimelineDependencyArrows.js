@@ -9,6 +9,7 @@ import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-
 
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
+  ErrorContainer,
   EventEditingStyledContext,
   SharedComponentsStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
@@ -140,6 +141,8 @@ export default function TimelineDependencyArrows() {
         display: 'flex',
         flexDirection: 'column',
         fontSize: '0.875rem',
+        // Contains the ErrorContainer toasts, absolutely positioned bottom-right.
+        position: 'relative',
       }}
     >
       <style>
@@ -152,6 +155,7 @@ export default function TimelineDependencyArrows() {
           <EventEditingStyledContext.Provider value={styledContextValue}>
             <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
               <EventTimelinePremiumContent />
+              <ErrorContainer />
             </SharedComponentsStyledContext.Provider>
           </EventEditingStyledContext.Provider>
         </EventTimelinePremiumStyledContext.Provider>

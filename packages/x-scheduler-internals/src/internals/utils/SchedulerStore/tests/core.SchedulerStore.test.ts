@@ -181,5 +181,122 @@ storeClasses.forEach((storeClass) => {
         expect(adapter.getTimezone(store.state.nowUpdatedEveryMinute)).to.equal('America/New_York');
       });
     });
+
+    describe('selection', () => {
+      // No selectable type is registered in the base package, so the union is empty:
+      // the cast mirrors how augmenting packages produce selections.
+      const selectionA = { type: 'a', id: 1 } as never;
+      const selectionB = { type: 'b', id: 1 } as never;
+
+      it('should keep one selection across types and skip the write when unchanged', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.setSelection(selectionA);
+        expect(store.state.selection).to.equal(selectionA);
+
+        // Selecting an entity of another type replaces the previous selection.
+        store.setSelection(selectionB);
+        expect(store.state.selection).to.equal(selectionB);
+
+        // A value-equal selection does not write.
+        const stateBefore = store.state;
+        store.setSelection({ type: 'b', id: 1 } as never);
+        expect(store.state).to.equal(stateBefore);
+
+        store.setSelection(null);
+        expect(store.state.selection).to.equal(null);
+      });
+    });
+
+    describe('errors', () => {
+      it('should stack repeated non-transient errors and keep them until dismissed', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.pushError(new Error('boom'));
+        const secondKey = store.pushError(new Error('boom'));
+
+        expect(store.state.errors).to.have.length(2);
+
+        store.dismissError(secondKey);
+        expect(store.state.errors).to.have.length(1);
+      });
+
+      it('should replace a transient error carrying the same message instead of stacking it', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.pushError(new Error('rejected'), { transient: true });
+        store.pushError(new Error('rejected'), { transient: true });
+
+        expect(store.state.errors).to.have.length(1);
+      });
+
+      it('should not replace a non-transient error with a transient one carrying the same message', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.pushError(new Error('boom'));
+        store.pushError(new Error('boom'), { transient: true });
+
+        expect(store.state.errors).to.have.length(2);
+      });
+
+      it('should auto-dismiss a transient error and leave the non-transient ones alone', () => {
+        vi.useFakeTimers();
+        try {
+          const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+          store.pushError(new Error('boom'));
+          store.pushError(new Error('rejected'), { transient: true });
+          expect(store.state.errors).to.have.length(2);
+
+          vi.advanceTimersByTime(5000);
+
+          expect(store.state.errors).to.have.length(1);
+          expect(store.state.errors[0].error.message).to.equal('boom');
+        } finally {
+          vi.useRealTimers();
+        }
+      });
+
+      it('should refresh the auto-dismiss timer when a transient error is replaced', () => {
+        vi.useFakeTimers();
+        try {
+          const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+          store.pushError(new Error('rejected'), { transient: true });
+          vi.advanceTimersByTime(3000);
+          store.pushError(new Error('rejected'), { transient: true });
+
+          // 3s after the replacement the original timer would have fired.
+          vi.advanceTimersByTime(3000);
+          expect(store.state.errors).to.have.length(1);
+
+          vi.advanceTimersByTime(2000);
+          expect(store.state.errors).to.have.length(0);
+        } finally {
+          vi.useRealTimers();
+        }
+      });
+
+      it('should cancel the auto-dismiss timer when a transient error is dismissed manually', () => {
+        vi.useFakeTimers();
+        try {
+          const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+          const transientKey = store.pushError(new Error('rejected'), { transient: true });
+          store.dismissError(transientKey);
+          const laterKey = store.pushError(new Error('kept'));
+
+          const stateBefore = store.state;
+          vi.advanceTimersByTime(5000);
+
+          expect(store.state.errors).to.have.length(1);
+          expect(store.state.errors[0].key).to.equal(laterKey);
+          // The canceled timer must not even produce a state write.
+          expect(store.state).to.equal(stateBefore);
+        } finally {
+          vi.useRealTimers();
+        }
+      });
+    });
   });
 });

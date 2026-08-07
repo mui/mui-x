@@ -17,11 +17,14 @@ describe('Core - EventTimelinePremiumStore', () => {
 
       const expectedState = {
         adapter,
+        areDependenciesEnabled: false,
         areEventsDraggable: true,
         areEventsResizable: true,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         copiedEvent: null,
+        selection: null,
+        dependencyCreation: null,
         dependencyModelList: [],
         dependencyModelLookup: new Map(),
         eventColor: 'teal',

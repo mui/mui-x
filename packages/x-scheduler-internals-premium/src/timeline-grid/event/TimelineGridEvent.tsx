@@ -22,14 +22,20 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
-import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import {
+  eventTimelinePremiumDependencySelectors,
+  eventTimelinePremiumPresetSelectors,
+} from '../../event-timeline-premium-selectors';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
+import { useEventDependencyDropTarget } from './useEventDependencyDropTarget';
 
-const overflowStateAttributesMapping = {
+const extraStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) =>
     value ? { [TimelineGridEventDataAttributes.startingBeforeEdge]: '' } : null,
   endingAfterEdge: (value: boolean) =>
     value ? { [TimelineGridEventDataAttributes.endingAfterEdge]: '' } : null,
+  dependencyDropTarget: (value: boolean) =>
+    value ? { [TimelineGridEventDataAttributes.dependencyDropTarget]: '' } : null,
 };
 
 export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
@@ -71,6 +77,12 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   // Selector hooks
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const dependencyDropTarget = useStore(
+    store,
+    eventTimelinePremiumDependencySelectors.isCreationTarget,
+    occurrenceKey,
+    rowResourceId,
+  );
 
   // Feature hooks
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
@@ -138,7 +150,14 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       collectionEnd: presetConfig.end,
     });
 
-  const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
+  useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId: rowResourceId });
+
+  const mergedState = {
+    ...state,
+    startingBeforeEdge,
+    endingAfterEdge,
+    dependencyDropTarget,
+  };
 
   const contextValue: TimelineGridEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
@@ -159,7 +178,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       { [TimelineGridEventDataAttributes.occurrenceKey]: occurrenceKey } as Record<string, string>,
       getButtonProps,
     ],
-    stateAttributesMapping: overflowStateAttributesMapping,
+    stateAttributesMapping: extraStateAttributesMapping,
   });
 
   return (
@@ -174,6 +193,7 @@ export namespace TimelineGridEvent {
   export interface State extends useDraggableEvent.State {
     startingBeforeEdge: boolean;
     endingAfterEdge: boolean;
+    dependencyDropTarget: boolean;
   }
 
   export interface Props
