@@ -46,6 +46,11 @@ export interface MonthCalendarProps
   className?: string;
   currentMonth?: PickerValidDate;
   /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact?: boolean;
+  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<MonthCalendarClasses>;
