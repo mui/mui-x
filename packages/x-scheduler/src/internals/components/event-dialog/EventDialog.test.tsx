@@ -9,12 +9,19 @@ import {
 } from 'test/utils/scheduler';
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { EventDialogGeneralTabProps, SchedulerSlots } from '../../../models/slots';
 import { MonthView } from '../../../month-view';
 import { EventDialogContent, EventDialogProvider } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
+import { SchedulerSlotsProvider } from '../SchedulerSlotsContext';
+import DateTimeSection from './DateTimeSection';
+import DescriptionSection from './DescriptionSection';
+import ResourceAndColorSection from './ResourceAndColorSection';
+import { useEventDialogFormField } from './form/useEventDialogFormField';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
 const personalResource = ResourceBuilder.new().title('Personal').eventColor('teal').build();
@@ -309,6 +316,231 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
+  });
+
+  describe('eventDialogGeneralTab slot', () => {
+    // `defaultProps.occurrence` has no description, and the seeding assertions below need one.
+    const occurrenceWithDescription = EventBuilder.new()
+      .id(DEFAULT_EVENT.id)
+      .title(DEFAULT_EVENT.title)
+      .description('Morning run')
+      .span(DEFAULT_EVENT.start, DEFAULT_EVENT.end)
+      .resource(personalResource)
+      .toOccurrence();
+
+    function CustomSection() {
+      const priority = useEventDialogFormField<string>('priority', { defaultValue: 'normal' });
+      return (
+        <input
+          aria-label="Priority"
+          value={priority.value}
+          onChange={(event) => priority.setValue(event.target.value)}
+        />
+      );
+    }
+
+    function renderWithSlot(
+      slots: SchedulerSlots,
+      providerProps?: Partial<React.ComponentProps<typeof EventCalendarProvider>>,
+    ) {
+      return render(
+        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources} {...providerProps}>
+          <SchedulerSlotsProvider slots={slots} slotProps={undefined}>
+            <EventDialogContent open {...defaultProps} occurrence={occurrenceWithDescription} />
+          </SchedulerSlotsProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    it('should render the default sections when the slot is not provided', () => {
+      renderWithSlot({});
+
+      expect(screen.getByText('Date & time')).not.to.equal(null);
+      expect(screen.getByText('Resource & color')).not.to.equal(null);
+      expect(screen.getByRole('textbox', { name: 'Description' })).not.to.equal(null);
+    });
+
+    it('should render the slot content instead of the default sections', () => {
+      renderWithSlot({ eventDialogGeneralTab: CustomSection });
+
+      expect(screen.getByRole('textbox', { name: 'Priority' })).not.to.equal(null);
+      expect(screen.queryByText('Date & time')).to.equal(null);
+      expect(screen.queryByRole('textbox', { name: 'Description' })).to.equal(null);
+    });
+
+    it('should keep the tab panel attributes when the slot is provided', () => {
+      renderWithSlot({ eventDialogGeneralTab: CustomSection });
+
+      const panel = document.querySelector(`.${eventCalendarClasses.eventDialogTabPanel}`)!;
+      expect(panel).to.have.attribute('role', 'tabpanel');
+      expect(panel.getAttribute('id')).to.match(/-general-tabpanel$/);
+      expect(panel.getAttribute('aria-labelledby')).to.match(/-general-tab$/);
+      // The slot owns the content, not the panel, so the content wrapper is still there.
+      expect(panel.querySelector(`.${eventCalendarClasses.eventDialogTabContent}`)).not.to.equal(
+        null,
+      );
+    });
+
+    it('should render the built-in sections in the order the slot returns them', () => {
+      function ReorderedSections() {
+        return (
+          <React.Fragment>
+            <DescriptionSection />
+            <DateTimeSection />
+          </React.Fragment>
+        );
+      }
+      renderWithSlot({ eventDialogGeneralTab: ReorderedSections });
+
+      const description = screen.getByRole('textbox', { name: 'Description' });
+      const dateTimeLegend = screen.getByText('Date & time');
+      expect(description.compareDocumentPosition(dateTimeLegend)).to.equal(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+      // Reordering must not affect seeding.
+      expect(description).to.have.value('Morning run');
+      expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-26');
+    });
+
+    it('should render a custom section inserted between two built-in sections', () => {
+      function MixedSections() {
+        return (
+          <React.Fragment>
+            <DateTimeSection />
+            <CustomSection />
+            <DescriptionSection />
+          </React.Fragment>
+        );
+      }
+      renderWithSlot({ eventDialogGeneralTab: MixedSections });
+
+      const priority = screen.getByRole('textbox', { name: 'Priority' });
+      expect(screen.getByText('Date & time').compareDocumentPosition(priority)).to.equal(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+      expect(
+        priority.compareDocumentPosition(screen.getByRole('textbox', { name: 'Description' })),
+      ).to.equal(Node.DOCUMENT_POSITION_FOLLOWING);
+    });
+
+    it('should keep the fields reachable when the sections are wrapped in arbitrary JSX', () => {
+      function WrappedSections() {
+        return (
+          <section aria-label="More options">
+            <DescriptionSection />
+          </section>
+        );
+      }
+      renderWithSlot({ eventDialogGeneralTab: WrappedSections });
+
+      expect(screen.getByRole('region', { name: 'More options' })).not.to.equal(null);
+      expect(screen.getByRole('textbox', { name: 'Description' })).to.have.value('Morning run');
+    });
+
+    it('should keep the form usable when the slot renders no section at all', async () => {
+      const onEventsChange = spy();
+      const { user } = renderWithSlot({ eventDialogGeneralTab: () => null }, { onEventsChange });
+
+      expect(screen.getByLabelText(/event title/i)).not.to.equal(null);
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+      expect(onEventsChange.callCount).to.equal(1);
+    });
+
+    it('should pass the occurrence to the slot', () => {
+      const occurrences: string[] = [];
+      function OccurrenceProbe(props: EventDialogGeneralTabProps) {
+        occurrences.push(props.occurrence.title);
+        return null;
+      }
+      renderWithSlot({ eventDialogGeneralTab: OccurrenceProbe });
+
+      expect(occurrences[0]).to.equal(DEFAULT_EVENT.title);
+    });
+
+    it('should save a custom field edited from a section rendered by the slot', async () => {
+      const onEventsChange = spy();
+      const { user } = renderWithSlot({ eventDialogGeneralTab: CustomSection }, { onEventsChange });
+
+      await user.clear(screen.getByRole('textbox', { name: 'Priority' }));
+      await user.type(screen.getByRole('textbox', { name: 'Priority' }), 'high');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(1);
+      expect(onEventsChange.lastCall.firstArg[0]).to.have.property('priority', 'high');
+    });
+
+    it('should block the submit when a validator of a section rendered by the slot fails', async () => {
+      const onEventsChange = spy();
+      function RequiredCustomSection() {
+        const client = useEventDialogFormField<string>('client', {
+          defaultValue: '',
+          validate: (value) => (value ? null : 'Client is required'),
+        });
+        return (
+          <React.Fragment>
+            <input
+              aria-label="Client"
+              value={client.value}
+              onChange={(event) => client.setValue(event.target.value)}
+            />
+            {client.error && <p role="alert">{client.error}</p>}
+          </React.Fragment>
+        );
+      }
+
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: RequiredCustomSection },
+        { onEventsChange },
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+      expect(onEventsChange.callCount).to.equal(0);
+      expect(screen.getByRole('alert')).to.have.text('Client is required');
+
+      await user.type(screen.getByRole('textbox', { name: 'Client' }), 'Acme');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+      expect(onEventsChange.callCount).to.equal(1);
+    });
+
+    it('should warn when the resource section is omitted while shouldEventRequireResource is enabled', async () => {
+      clearWarningsCache();
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: CustomSection },
+          { shouldEventRequireResource: true, onEventsChange: () => {} },
+        );
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev([
+        'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
+      ]);
+    });
+
+    it('should not warn when the slot keeps the resource section', async () => {
+      clearWarningsCache();
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: () => <ResourceAndColorSection /> },
+        { shouldEventRequireResource: true, onEventsChange: () => {} },
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+    });
+
+    it('should not warn when a section rendered by the slot validates the resource itself', async () => {
+      clearWarningsCache();
+      function CustomResourceSection() {
+        useEventDialogFormField<string>('resourceId', {
+          validate: (value) => (value ? null : 'Required'),
+        });
+        return null;
+      }
+
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: CustomResourceSection },
+        { shouldEventRequireResource: true, onEventsChange: () => {} },
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+    });
   });
 
   // The sections read the occurrence from context instead of receiving it as a prop, so they

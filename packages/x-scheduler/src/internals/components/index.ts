@@ -4,6 +4,7 @@ export * from './event-dialog';
 export * from './error-container';
 export * from './event-skeleton';
 export * from './SharedComponentsStyledContext';
+export * from './SchedulerSlotsContext';
 
 export { EventCalendarProvider } from './EventCalendarProvider';
 export { ResponsiveTypographyContainer } from './ResponsiveTypographyContainer';

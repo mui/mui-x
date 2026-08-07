@@ -336,7 +336,10 @@ function FormContentInner(props: FormContentProps) {
             </EventDialogTabs>
           </EventDialogTabsContainer>
         )}
-        <GeneralTab value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'} />
+        <GeneralTab
+          occurrence={occurrence}
+          value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'}
+        />
         {showRecurrence && RecurrenceTabRenderer && (
           <RecurrenceTabRenderer occurrence={occurrence} tabValue={tabValue} />
         )}

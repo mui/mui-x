@@ -8,6 +8,7 @@ import type {
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarLocaleText } from '../models/translations';
 import type { ExportedDayTimeGridProps } from '../internals/components/day-time-grid/DayTimeGrid.types';
+import type { SchedulerSlots, SchedulerSlotProps } from '../models/slots';
 
 export interface DayViewProps extends ExportedDayTimeGridProps {}
 
@@ -34,6 +35,16 @@ export interface StandaloneDayViewProps<TEvent extends object, TResource extends
    * in the GitHub repository.
    */
   localeText?: Partial<EventCalendarLocaleText>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: SchedulerSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: SchedulerSlotProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

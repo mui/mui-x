@@ -7,6 +7,7 @@ import type {
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarLocaleText } from '../models/translations';
+import type { SchedulerSlots, SchedulerSlotProps } from '../models/slots';
 
 export interface MonthViewProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -31,6 +32,16 @@ export interface StandaloneMonthViewProps<TEvent extends object, TResource exten
    * in the GitHub repository.
    */
   localeText?: Partial<EventCalendarLocaleText>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: SchedulerSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: SchedulerSlotProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

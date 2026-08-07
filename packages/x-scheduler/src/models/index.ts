@@ -1,4 +1,5 @@
 export * from './translations';
+export * from './slots';
 export type {
   EventCalendarPreferences,
   EventCalendarViewConfig,

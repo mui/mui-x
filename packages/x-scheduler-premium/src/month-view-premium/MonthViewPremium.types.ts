@@ -6,7 +6,11 @@ import type {
   CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
-import type { EventCalendarLocaleText } from '@mui/x-scheduler/models';
+import type {
+  EventCalendarLocaleText,
+  SchedulerSlots,
+  SchedulerSlotProps,
+} from '@mui/x-scheduler/models';
 import type { MonthViewProps } from '@mui/x-scheduler/month-view';
 
 export interface StandaloneMonthViewPremiumProps<TEvent extends object, TResource extends object>
@@ -30,6 +34,16 @@ export interface StandaloneMonthViewPremiumProps<TEvent extends object, TResourc
    * in the GitHub repository.
    */
   localeText?: Partial<EventCalendarLocaleText>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: SchedulerSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: SchedulerSlotProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

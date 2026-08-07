@@ -5,7 +5,11 @@ import type {
   EventTimelinePremiumStore,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
-import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import type {
+  EventTimelineLocaleText,
+  SchedulerSlots,
+  SchedulerSlotProps,
+} from '@mui/x-scheduler/models';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 
 export type EventTimelinePremiumApiRef<
@@ -42,6 +46,16 @@ export interface EventTimelinePremiumProps<TEvent extends object, TResource exte
    * When provided, this takes priority over `localeText.timelineResourceTitleHeader`.
    */
   resourceColumnLabel?: string;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: SchedulerSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: SchedulerSlotProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

@@ -38,13 +38,15 @@ const StandaloneDayViewPremium = React.forwardRef(function StandaloneDayViewPrem
     typeof props
   >(props);
 
-  const { localeText, ...other } = forwardedProps;
+  const { localeText, slots, slotProps, ...other } = forwardedProps;
 
   return (
     <EventCalendarProvider
       {...parameters}
       storeClass={EventCalendarPremiumStore}
       localeText={localeText}
+      slots={slots}
+      slotProps={slotProps}
     >
       <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
         <DayView ref={forwardedRef} {...other} />
@@ -266,6 +268,16 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
    * @default true
    */
   showCurrentTimeIndicator: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
