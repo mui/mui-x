@@ -10,7 +10,7 @@ import type {
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
 import {
-  EventDialogStyledContext,
+  EventEditingStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
   SharedComponentsStyledContext,
 } from '@mui/x-scheduler/internals';
@@ -92,11 +92,11 @@ export function TestTimeline({
   return (
     <SchedulerStoreContext.Provider value={storeContextValue}>
       <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-        <EventDialogStyledContext.Provider value={styledContextValue}>
+        <EventEditingStyledContext.Provider value={styledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
             <EventTimelinePremiumContent />
           </SharedComponentsStyledContext.Provider>
-        </EventDialogStyledContext.Provider>
+        </EventEditingStyledContext.Provider>
       </EventTimelinePremiumStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );

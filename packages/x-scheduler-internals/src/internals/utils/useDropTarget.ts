@@ -20,6 +20,7 @@ import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
+  schedulerOtherSelectors,
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import type { StandaloneEvent } from '../../standalone-event';
@@ -216,7 +217,7 @@ export namespace useDropTarget {
 /**
  * Applies the data from the placeholder occurrence to the event it represents.
  */
-function applyInternalDragOrResizeOccurrencePlaceholder(
+export function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
   placeholder: SchedulerOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
@@ -281,10 +282,16 @@ function applyInternalDragOrResizeOccurrencePlaceholder(
       occurrenceStart: originalOccurrence.displayTimezone.start.value,
       changes,
     });
+    // Editing surface is refreshed in `selectRecurringEventScope` once the user confirms a scope.
     return;
   }
 
   store.updateEvent(changes);
+
+  // Sync the editing surface (if this occurrence is being edited) with the committed times.
+  if (schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)) {
+    store.setEditingOccurrenceTimes(start, end);
+  }
 }
 
 function applyExternalDragOccurrencePlaceholder(

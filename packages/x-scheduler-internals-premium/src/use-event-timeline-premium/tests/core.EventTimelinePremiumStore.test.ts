@@ -34,7 +34,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
         displayTimezone: 'default',
-        editedOccurrenceKey: null,
+        editingOccurrence: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingRecurringEventOperation: null,

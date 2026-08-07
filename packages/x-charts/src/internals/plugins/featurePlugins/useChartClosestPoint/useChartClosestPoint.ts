@@ -17,6 +17,7 @@ import {
 } from '../useChartCartesianAxis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { findClosestPoints } from './findClosestPoints';
+import type { ChartsActivationEvent } from '../../../../models/events';
 
 type ClosestPoint = { dataIndex: number; seriesId: SeriesId; edgeDistance: number; radius: number };
 
@@ -258,6 +259,25 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     defaultYAxisId,
     store,
   ]);
+
+  React.useEffect(() => {
+    if (!onItemClick || !instance.registerItemActivationHandler) {
+      return undefined;
+    }
+
+    return instance.registerItemActivationHandler({ type: 'scatter' }, (event, item) => {
+      if (item.type !== 'scatter') {
+        return;
+      }
+
+      // The callback only describes the pointer event unless the user augments the types.
+      onItemClick(event as unknown as ChartsActivationEvent, {
+        type: 'scatter',
+        seriesId: item.seriesId,
+        dataIndex: item.dataIndex,
+      });
+    });
+  }, [instance, onItemClick]);
 
   // Instance implementation
   const enableVoronoiCallback = useEventCallback(() => {

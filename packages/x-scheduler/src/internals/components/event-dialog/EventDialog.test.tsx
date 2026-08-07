@@ -7,7 +7,8 @@ import {
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
-import { screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import { spy } from 'sinon';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
@@ -27,6 +28,14 @@ const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
 
 const resources: SchedulerResource[] = [personalResource];
 
+// Minimal `matchMedia` stub to drive the coarse-vs-fine pointer branch of `useDraggableDialog`.
+const createMatchMedia = (matches: boolean) => () =>
+  ({
+    matches,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  }) as any;
+
 describe('<EventDialogContent /> — community (no recurring-events plugin)', () => {
   const anchor = document.createElement('button');
   document.body.appendChild(anchor);
@@ -34,7 +43,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   const defaultProps = {
     anchor,
     container: document.body,
-    anchorRef: { current: anchor },
     occurrence: EventBuilder.new()
       .id(DEFAULT_EVENT.id)
       .title(DEFAULT_EVENT.title)
@@ -67,6 +75,84 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     expect(legends[1].compareDocumentPosition(description)).to.equal(
       Node.DOCUMENT_POSITION_FOLLOWING,
     );
+
+    // Pin the other side of the "hide the resource select when there are no resources"
+    // condition: with resources configured, the select must still render.
+    expect(screen.getByRole('combobox', { name: 'Resource' })).not.to.equal(null);
+  });
+
+  it('should not render the resource select when there are no resources, but should keep the color picker', () => {
+    const noResourceEvent: SchedulerEvent = EventBuilder.new()
+      .title('Running')
+      .description('Morning run')
+      .singleDay('2025-05-26T07:30:00Z', 45)
+      .build();
+
+    render(
+      <EventCalendarProvider events={[noResourceEvent]}>
+        <EventDialogContent
+          open
+          {...defaultProps}
+          occurrence={EventBuilder.new()
+            .id(noResourceEvent.id)
+            .title(noResourceEvent.title)
+            .span(noResourceEvent.start, noResourceEvent.end)
+            .toOccurrence()}
+        />
+      </EventCalendarProvider>,
+    );
+
+    // The section still renders with a header matching its actual contents, and the color
+    // picker is still there...
+    expect(screen.queryByText('Resource & color')).to.equal(null);
+    expect(screen.getByText('Color')).not.to.equal(null);
+    expect(screen.getByRole('group', { name: 'Event color' })).not.to.equal(null);
+
+    // ...but the resource select itself is gone since there are no resources to pick from.
+    expect(screen.queryByRole('combobox', { name: 'Resource' })).to.equal(null);
+    expect(screen.queryByText('No resource')).to.equal(null);
+  });
+
+  it('should allow saving when shouldEventRequireResource is true but no resources are configured', async () => {
+    const onClose = spy();
+    const onEventsChange = spy();
+    const noResourceEvent: SchedulerEvent = EventBuilder.new()
+      .title('Running')
+      .description('Morning run')
+      .singleDay('2025-05-26T07:30:00Z', 45)
+      .build();
+
+    // The store itself warns in dev about this contradictory configuration; what this test
+    // guards against is that warning turning into a silent, unrecoverable submit failure now
+    // that the resource picker (and its error message) no longer renders.
+    await expect(async () => {
+      const { user } = render(
+        <EventCalendarProvider
+          events={[noResourceEvent]}
+          shouldEventRequireResource
+          onEventsChange={onEventsChange}
+        >
+          <EventDialogContent
+            open
+            {...defaultProps}
+            onClose={onClose}
+            occurrence={EventBuilder.new()
+              .id(noResourceEvent.id)
+              .title(noResourceEvent.title)
+              .span(noResourceEvent.start, noResourceEvent.end)
+              .toOccurrence()}
+          />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+    }).toWarnDev([
+      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+    ]);
+
+    expect(onClose.callCount).to.equal(1);
+    expect(onEventsChange.callCount).to.equal(1);
+    expect(screen.queryByRole('alert')).to.equal(null);
   });
 
   it('should discard the draft when the dialog is closed and reopened', async () => {
@@ -88,7 +174,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     expect(titleInput).to.have.value('Running edited');
 
     // Closing unmounts the dialog content, which is what discards the draft store.
-    await user.keyboard('{Escape}');
+    // Unmounting the focused, edited title makes React 19 suspend, and it logs an un-awaited `act`
+    // warning unless the key press itself happens inside an awaited `act` — which `user.keyboard`
+    // and a bare `fireEvent` both leave outside, so the browser run fails on the console output.
+    // eslint-disable-next-line testing-library/no-unnecessary-act
+    await act(async () => {
+      fireEvent.keyDown(titleInput, { key: 'Escape' });
+    });
     expect(screen.queryByLabelText(/event title/i)).to.equal(null);
 
     await user.click(screen.getByText(DEFAULT_EVENT.title));
@@ -217,5 +309,34 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
+  });
+
+  describe('drag affordance', () => {
+    const originalMatchMedia = window.matchMedia;
+    afterEach(() => {
+      window.matchMedia = originalMatchMedia;
+    });
+
+    it('should mark the dialog draggable on a fine pointer', () => {
+      window.matchMedia = createMatchMedia(false);
+      render(
+        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      expect(document.querySelector('[draggable="true"]')).not.to.equal(null);
+    });
+
+    it('should not mark the dialog draggable on a coarse pointer, so its form fields stay typeable on touch', () => {
+      window.matchMedia = createMatchMedia(true);
+      render(
+        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      expect(document.querySelector('[draggable="true"]')).to.equal(null);
+    });
   });
 });
