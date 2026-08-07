@@ -1,20 +1,13 @@
 import * as React from 'react';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
-import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { EventEditingProvider, EventEditingTrigger, useEventEditingContext } from './index';
 
-const event: SchedulerEvent = EventBuilder.new()
-  .title('Running')
-  .singleDay('2025-05-26T07:30:00Z', 45)
-  .build();
+const eventBuilder = EventBuilder.new().title('Running').singleDay('2025-05-26T07:30:00Z', 45);
 
-const occurrence = EventBuilder.new()
-  .id(event.id)
-  .title(event.title)
-  .span(event.start, event.end)
-  .toOccurrence();
+const event = eventBuilder.build();
+const occurrence = eventBuilder.toOccurrence();
 
 describe('<EventEditingProvider />', () => {
   const { render } = createSchedulerRenderer();
