@@ -20,10 +20,7 @@ import type {
   DateRangePickerDayClasses,
   DateRangePickerDayClassKey,
 } from './dateRangePickerDayClasses';
-import {
-  dateRangePickerDayClasses,
-  getDateRangePickerDayUtilityClass,
-} from './dateRangePickerDayClasses';
+import { getDateRangePickerDayUtilityClass } from './dateRangePickerDayClasses';
 
 const useUtilityClasses = (
   ownerState: DateRangePickerDayOwnerState,
@@ -110,16 +107,9 @@ const selectedDayStyles = (theme: Theme) => ({
     willChange: 'background-color',
     backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
-  [`&.${dateRangePickerDayClasses.disabled}`]: {
-    opacity: 0.6,
-  },
 });
 
-const insideSelectionStyle = () => ({
-  [`&.${dateRangePickerDayClasses.disabled}`]: {
-    opacity: 0.6,
-  },
-});
+const DISABLED_DAY_OPACITY = 0.6;
 
 const DateRangePickerDayRoot = styled(ButtonBase, {
   name: 'MuiDateRangePickerDay',
@@ -302,13 +292,45 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         '::before': {
           ...highlightStyles(theme),
         },
-        ...insideSelectionStyle(),
       },
     },
     {
       props: { isDaySelected: true, isDayInsideSelection: false },
       style: {
         ...selectedDayStyles(theme),
+      },
+    },
+    // A day disabled on its own (`shouldDisableDate`, `minDate`, ...) only dims itself.
+    // Dimming the whole cell would also dim the `::before` range highlight and leave gaps in the range.
+    {
+      props: {
+        isDaySelected: true,
+        isDayInsideSelection: false,
+        isDayDisabled: true,
+        isPickerDisabled: false,
+      },
+      style: {
+        backgroundColor: theme.alpha(
+          (theme.vars || theme).palette.primary.main,
+          DISABLED_DAY_OPACITY,
+        ),
+        color: theme.alpha(
+          (theme.vars || theme).palette.primary.contrastText,
+          DISABLED_DAY_OPACITY,
+        ),
+      },
+    },
+    // When the whole Picker is disabled, the range is dimmed as a whole.
+    {
+      props: { isDaySelected: true, isDayDisabled: true, isPickerDisabled: true },
+      style: {
+        opacity: DISABLED_DAY_OPACITY,
+      },
+    },
+    {
+      props: { isDayInsideSelection: true, isDayDisabled: true, isPickerDisabled: true },
+      style: {
+        opacity: DISABLED_DAY_OPACITY,
       },
     },
     {
