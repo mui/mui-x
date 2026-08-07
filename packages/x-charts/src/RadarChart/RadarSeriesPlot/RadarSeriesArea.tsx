@@ -14,6 +14,8 @@ import {
   RADAR_ACTIVATION_PRIORITY,
   useRegisterRadarItemActivation,
 } from './useRegisterRadarItemActivation';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
+import type { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
@@ -49,7 +51,20 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
+  const { instance } = useChartsContext<[UseChartInteractionSignature]>();
   const getHighlightState = useItemHighlightStateGetter<'radar'>();
+
+  /**
+   * The radar area only knows its series, so the pointer item is resolved from the angle. Also
+   * bound to `pointerdown`, because a touch tap may never produce a `pointermove`.
+   */
+  const handlePointerItem = (seriesId: SeriesId) => (event: React.PointerEvent<SVGPathElement>) => {
+    instance.setHoveredItem?.({
+      type: 'radar',
+      seriesId,
+      dataIndex: getRotationIndex(event),
+    });
+  };
 
   const classes = useUtilityClasses(inClasses);
 
@@ -83,6 +98,8 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
             }
             cursor={onItemClick ? 'pointer' : 'unset'}
             {...interactionProps[seriesIndex]}
+            onPointerMove={handlePointerItem(id)}
+            onPointerDown={handlePointerItem(id)}
             {...other}
           />
         );
