@@ -57,8 +57,9 @@ const itITDialog: Partial<EventEditingLocaleText> = {
   resourceLabel: 'Risorsa',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salva',
-  startDateAfterEndDateError: 'La data/ora di inizio deve essere precedente alla data/ora di fine.',
+  startDateAfterEndDateError: 'La data di fine non può essere precedente alla data di inizio.',
   startDateLabel: 'Data di inizio',
+  startTimeAfterEndTimeError: "L'ora di fine deve essere successiva all'ora di inizio.",
   startTimeLabel: 'Ora di inizio',
 
   // RecurringScopeDialog
