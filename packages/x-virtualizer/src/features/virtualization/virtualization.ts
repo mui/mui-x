@@ -15,6 +15,7 @@ import type { CellColSpanInfo } from '../../models/colspan';
 import { Dimensions, observeRootNode } from '../dimensions';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
 import type { Layout } from './layout';
+import { nextAnchorTop } from './anchor';
 import {
   PinnedRowPosition,
   RenderContext,
@@ -32,6 +33,25 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
+// For fast scrolls with inverse sticky, delay the rendering by certain number of frames
+// to give time for the entering rows to rasterize. Below the lowest threshold, updates commit
+// immediately. Ordered by descending speed - the first match wins.
+const SCROLL_DELAY_LEVELS: ReadonlyArray<{ minVelocityPxPerMs: number; frames: number }> = [
+  { minVelocityPxPerMs: 28, frames: 6 },
+  { minVelocityPxPerMs: 20, frames: 4 },
+  { minVelocityPxPerMs: 16, frames: 2 },
+  { minVelocityPxPerMs: 8, frames: 1 },
+];
+
+function scrollDelayFrames(velocityPxPerMs: number): number {
+  for (const level of SCROLL_DELAY_LEVELS) {
+    if (velocityPxPerMs >= level.minVelocityPxPerMs) {
+      return level.frames;
+    }
+  }
+  return 0;
+}
+
 export type VirtualizationParams = {
   /** @default false */
   isRtl?: boolean;
@@ -45,9 +65,11 @@ export type VirtualizationParams = {
    * Controls how the container and render zones are positioned:
    * - 'uncontrolled': uses CSS sticky positioning (default)
    * - 'controlled': uses CSS absolute positioning with JS-computed offsets
+   * - 'sticky': inverse-sticky positioning on both axes (native scrolling within the
+   *   directional buffers, clamping to stale content instead of blanking beyond them)
    * @default 'uncontrolled'
    */
-  layoutMode?: 'controlled' | 'uncontrolled';
+  layoutMode?: 'controlled' | 'uncontrolled' | 'sticky';
 };
 
 export type VirtualizationState<K extends string = string> = {
@@ -58,7 +80,8 @@ export type VirtualizationState<K extends string = string> = {
   props: Record<K, Record<string, any>>;
   context: Record<string, any>;
   scrollPosition: { current: ScrollPosition };
-  layoutMode: 'controlled' | 'uncontrolled';
+  layoutMode: 'controlled' | 'uncontrolled' | 'sticky';
+  anchorTop: number;
 };
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
@@ -99,6 +122,7 @@ const selectors = (() => {
       },
     ),
     context: createSelector((state: BaseState) => state.virtualization.context),
+    anchorTop: createSelector((state: BaseState) => state.virtualization.anchorTop),
     layoutMode: layoutModeSelector,
     scrollPosition: scrollPositionSelector,
     pinnedLeftOffsetSelector: createSelector(
@@ -166,6 +190,7 @@ function initializeState(params: ParamsWithDefaults) {
       context: {},
       scrollPosition: { current: ScrollPosition.EMPTY },
       layoutMode: params.virtualization.layoutMode ?? 'uncontrolled',
+      anchorTop: 0,
       ...params.initialState?.virtualization,
     },
     // FIXME: refactor once the state shape is settled
@@ -252,23 +277,67 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
   const scrollTimeout = useTimeout();
   const frozenContext = React.useRef<RenderContext | undefined>(undefined);
+  // Frames deferral of sticky render-context advances during fast scroll
+  const deferredStickyFrame = React.useRef(0);
+  const deferredFramesRemaining = React.useRef(0);
+  const forceStickyCommit = React.useRef(false);
+  const lastScrollTimestamp = React.useRef(0);
+  React.useEffect(
+    () => () => {
+      if (deferredStickyFrame.current !== 0) {
+        cancelAnimationFrame(deferredStickyFrame.current);
+      }
+    },
+    [],
+  );
   const scrollCache = useLazyRef(() =>
     createScrollCache(
       isRtl,
       rowBufferPx,
       columnBufferPx,
-      rowHeight * 15,
+      averageRowHeight(store, rowHeight) * 15,
       MINIMUM_COLUMN_WIDTH * 6,
       layoutMode,
     ),
   ).current;
 
+  /**
+   * Re-derives the buffers for `direction`. The buffers depend on the measured row
+   * height, so they are refreshed whenever the render context is recomputed, not
+   * only on a direction change: rows are usually measured after the first buffer is
+   * created, and in sticky mode a buffer that changes size once scrolling has started
+   * resizes the window layer at the worst possible moment.
+   */
+  const updateScrollCacheBuffer = (direction: ScrollDirection) => {
+    scrollCache.direction = direction;
+    scrollCache.buffer = bufferForDirection(
+      isRtl,
+      direction,
+      rowBufferPx,
+      columnBufferPx,
+      averageRowHeight(store, rowHeight) * 15,
+      MINIMUM_COLUMN_WIDTH * 6,
+      layoutMode,
+    );
+  };
+
   const updateRenderContext = React.useCallback(
-    (nextRenderContext: RenderContext) => {
-      if (!areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
+    (nextRenderContext: RenderContext, nextAnchor?: number) => {
+      const state = store.state.virtualization;
+      // Callers that don't pass an anchor (dimension and data changes) can run in the
+      // middle of a scroll, so they hold it: only the pass that observes a settled
+      // scroll re-quantizes, and `anchorTopFor` still re-anchors when it must.
+      const anchorTop =
+        nextAnchor ?? anchorTopFor(store, state.layoutMode, nextRenderContext, false);
+
+      if (
+        !areRenderContextsEqual(nextRenderContext, state.renderContext) ||
+        anchorTop !== state.anchorTop
+      ) {
         store.set('virtualization', {
-          ...store.state.virtualization,
+          ...state,
           renderContext: nextRenderContext,
+          anchorTop,
           scrollPosition: { current: { ...scrollPosition.current } },
         });
       }
@@ -291,7 +360,10 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     [store, onRenderContextChange],
   );
 
-  const triggerUpdateRenderContext = useEventCallback(() => {
+  // `isSettlePass` marks the run scheduled by the scroll timeout below. It is the only
+  // caller that knows the scroll stopped: a scroll event carrying no movement is not a
+  // reliable signal, since writing `scrollTop` also echoes one back.
+  const triggerUpdateRenderContext = useEventCallback((isSettlePass: boolean = false) => {
     const scroller = layout.refs.scroller.current;
     if (!scroller) {
       return undefined;
@@ -316,31 +388,106 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     const dx = newScroll.left - scrollPosition.current.left;
     const dy = newScroll.top - scrollPosition.current.top;
 
+    const now = performance.now();
+    const dtSinceLastScroll = now - lastScrollTimestamp.current;
+    lastScrollTimestamp.current = now;
+    // a long gap (new gesture) or the first event must not read as fast.
+    const rowVelocity =
+      dtSinceLastScroll > 0 && dtSinceLastScroll < 100 ? Math.abs(dy) / dtSinceLastScroll : 0;
+
     const isScrolling = dx !== 0 || dy !== 0;
 
     scrollPosition.current = newScroll;
 
     const direction = isScrolling ? ScrollDirection.forDelta(dx, dy) : ScrollDirection.NONE;
 
-    // Since previous render, we have scrolled...
-    const rowScroll = Math.abs(
-      scrollPosition.current.top - previousContextScrollPosition.current.top,
-    );
-    const columnScroll = Math.abs(
-      scrollPosition.current.left - previousContextScrollPosition.current.left,
-    );
-
-    // PERF: use the computed minimum column width instead of a static one
-    const didCrossThreshold = rowScroll >= rowHeight || columnScroll >= MINIMUM_COLUMN_WIDTH;
     const didChangeDirection = scrollCache.direction !== direction;
-    const shouldUpdate = didCrossThreshold || didChangeDirection;
+
+    // Moving the anchor of the paint-stable window content re-rasterizes the whole
+    // window, so it is held while the scroll is moving and re-quantized here, with
+    // nothing moving to expose the raster. The position is checked alongside the settle
+    // pass: the timeout may well have elapsed while a slow scroll is still going.
+    const isSettled = isSettlePass && direction === ScrollDirection.NONE;
+
+    let shouldUpdate: boolean;
+    if (layoutMode === 'sticky') {
+      // In sticky mode, a render context update re-renders the window's row set and
+      // rasterizes the entering rows. Updating on every crossed
+      // row would spend a main-thread render + commit per row. Defer updates until
+      // half of a buffer is consumed instead. The inverse-sticky clamp covers any
+      // overshoot with stale content in the meantime.
+      shouldUpdate =
+        didChangeDirection ||
+        isLowOnRenderedBuffer(store, params, scrollPosition.current, scrollCache);
+    } else {
+      // Since previous render, we have scrolled...
+      const rowScroll = Math.abs(
+        scrollPosition.current.top - previousContextScrollPosition.current.top,
+      );
+      const columnScroll = Math.abs(
+        scrollPosition.current.left - previousContextScrollPosition.current.left,
+      );
+
+      // PERF: use the computed minimum column width instead of a static one
+      const didCrossThreshold =
+        rowScroll >= averageRowHeight(store, rowHeight) || columnScroll >= MINIMUM_COLUMN_WIDTH;
+      shouldUpdate = didCrossThreshold || didChangeDirection;
+    }
 
     if (!shouldUpdate) {
       store.set('virtualization', {
         ...store.state.virtualization,
+        anchorTop: anchorTopFor(store, layoutMode, renderContext, isSettled),
         scrollPosition: { current: { ...scrollPosition.current } },
       });
       return renderContext;
+    }
+
+    // Fast sticky scroll: show the current (stale) window and defer the advance by a
+    // velocity-dependent number of animation frames, giving the entering rows that
+    // many frames to rasterize before the viewport reveals them. Direction changes
+    // (which reallocate the buffer) and the settle pass always commit immediately; a
+    // deferral in flight re-enters with `forceStickyCommit` set, so at most one commit
+    // runs per deferral window, always for the latest scroll position.
+    const isDeferralPending = deferredStickyFrame.current !== 0;
+    if (
+      layoutMode === 'sticky' &&
+      !forceStickyCommit.current &&
+      !didChangeDirection &&
+      !isSettlePass &&
+      (isDeferralPending || scrollDelayFrames(rowVelocity) > 0)
+    ) {
+      if (!isDeferralPending) {
+        deferredFramesRemaining.current = scrollDelayFrames(rowVelocity);
+        const advanceOneFrame = () => {
+          deferredFramesRemaining.current -= 1;
+          if (deferredFramesRemaining.current > 0) {
+            deferredStickyFrame.current = requestAnimationFrame(advanceOneFrame);
+            return;
+          }
+          deferredStickyFrame.current = 0;
+          forceStickyCommit.current = true;
+          try {
+            triggerUpdateRenderContext(false);
+          } finally {
+            forceStickyCommit.current = false;
+          }
+        };
+        deferredStickyFrame.current = requestAnimationFrame(advanceOneFrame);
+      }
+      store.set('virtualization', {
+        ...store.state.virtualization,
+        anchorTop: anchorTopFor(store, layoutMode, renderContext, isSettled),
+        scrollPosition: { current: { ...scrollPosition.current } },
+      });
+      return renderContext;
+    }
+
+    // Committing now (direction change, settle, or slow scroll): drop any deferral
+    // still counting down so it can't fire a redundant commit afterward.
+    if (deferredStickyFrame.current !== 0) {
+      cancelAnimationFrame(deferredStickyFrame.current);
+      deferredStickyFrame.current = 0;
     }
 
     // Render a new context
@@ -353,21 +500,17 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
           frozenContext.current = undefined;
           break;
         default:
-          frozenContext.current = renderContext;
+          // The frozen context pins carried-over rows to their pre-scroll (wider)
+          // column range so they don't re-render when the buffers narrow for the
+          // scroll duration. In sticky mode all rows share the window's single column
+          // offset (the flex spacer), so a row carrying an independent column range
+          // would be misaligned from the window; freezing is disabled.
+          frozenContext.current = layoutMode === 'sticky' ? undefined : renderContext;
           break;
       }
     }
 
-    scrollCache.direction = direction;
-    scrollCache.buffer = bufferForDirection(
-      isRtl,
-      direction,
-      rowBufferPx,
-      columnBufferPx,
-      rowHeight * 15,
-      MINIMUM_COLUMN_WIDTH * 6,
-      layoutMode,
-    );
+    updateScrollCacheBuffer(direction);
 
     const inputs = inputsSelector(
       store,
@@ -379,18 +522,21 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     );
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
 
+    const nextAnchor = anchorTopFor(store, layoutMode, nextRenderContext, isSettled);
+
     if (!areRenderContextsEqual(nextRenderContext, renderContext)) {
       // Prevents batching render context changes
       ReactDOM.flushSync(() => {
-        updateRenderContext(nextRenderContext);
+        updateRenderContext(nextRenderContext, nextAnchor);
       });
 
-      if (layoutMode === 'uncontrolled') {
-        scrollTimeout.start(1000, triggerUpdateRenderContext);
+      if (layoutMode !== 'controlled') {
+        scrollTimeout.start(1000, () => triggerUpdateRenderContext(true));
       }
     } else {
       store.set('virtualization', {
         ...store.state.virtualization,
+        anchorTop: nextAnchor,
         scrollPosition: { current: { ...scrollPosition.current } },
       });
     }
@@ -406,6 +552,8 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     ) {
       return;
     }
+    // Rows may have been measured or replaced since the buffers were last derived.
+    updateScrollCacheBuffer(scrollCache.direction);
     const inputs = inputsSelector(
       store,
       params,
@@ -910,6 +1058,8 @@ function computeRenderContext(
         atStart: true,
         lastPosition: inputs.columnsTotalWidth,
       });
+      // In controlled mode, the horizontal window is clipped to the viewport and
+      // the pinned-right section overlays it, so it can be excluded from the bounds.
       const rightBound =
         inputs.layoutMode === 'controlled'
           ? realLeft + inputs.viewportInnerWidth - inputs.rightPinnedWidth
@@ -1132,12 +1282,50 @@ export function computeOffsetLeft(
   layoutMode: VirtualizationState['layoutMode'] = 'uncontrolled',
 ) {
   let offset = columnPositions[renderContext.firstColumnIndex] ?? 0;
-  /* CSS sticky leaves elements in the normal flow of the DOM, so we
-   * don't need to add the offset of the pinned columns. */
-  if (layoutMode === 'uncontrolled') {
+  /* In uncontrolled & sticky modes, pinned cells are sticky elements in the normal
+   * flow of the row, so their width is deduced from the offset. */
+  if (layoutMode !== 'controlled') {
     offset -= columnPositions[pinnedLeftLength] ?? 0;
   }
   return Math.abs(offset);
+}
+
+/**
+ * Anchor to apply along with `renderContext`. Only the sticky layout renders the rows
+ * in an anchored box; the other layouts leave the anchor untouched.
+ */
+function anchorTopFor(
+  store: Store<BaseState>,
+  layoutMode: VirtualizationState<string>['layoutMode'],
+  renderContext: RenderContext,
+  isSettled: boolean,
+) {
+  const { anchorTop } = store.state.virtualization;
+  if (layoutMode !== 'sticky') {
+    return anchorTop;
+  }
+  const rowPositions = Dimensions.selectors.rowPositions(store.state);
+  return nextAnchorTop(anchorTop, rowPositions[renderContext.firstRowIndex] ?? 0, isSettled);
+}
+
+/**
+ * Mean height of the rows that are actually laid out, falling back to the `rowHeight`
+ * dimension until the first measurement lands.
+ *
+ * Buffers and the update threshold are expressed in rows, but `rowHeight` is only the
+ * default height: `getRowHeight` may return anything, and the two are then off by the
+ * ratio between them. Sizing from the declared height would give the compositor
+ * proportionally less runway than intended whenever rows are taller than the default,
+ * and rasterize a proportionally larger window than intended whenever they are shorter.
+ */
+function averageRowHeight(store: Store<BaseState>, rowHeight: number) {
+  const rowsMeta = Dimensions.selectors.rowsMeta(store.state);
+  const rowCount = rowsMeta.positions.length;
+  if (rowCount === 0) {
+    return rowHeight;
+  }
+  const average = rowsMeta.currentPageTotalHeight / rowCount;
+  return average > 0 ? average : rowHeight;
 }
 
 const EMPTY_BUFFER = {
@@ -1169,6 +1357,56 @@ function bufferForDirection(
         direction = ScrollDirection.LEFT;
         break;
       default:
+    }
+  }
+
+  if (layoutMode === 'sticky') {
+    // In sticky mode, the window is rasterized as a single layer, and resizing it
+    // discards that raster wholesale at scroll start, exactly when the compositor
+    // needs it. Keep the per-axis buffer total constant across direction changes
+    // (symmetric at rest, fully moved to the leading edge while scrolling), so a
+    // direction change only moves the window, never resizes it. The cross axis keeps
+    // its resting allocation for the same reason.
+    const rowBuffer = Math.max(2 * rowBufferPx, verticalBuffer);
+    const columnBuffer = Math.max(2 * columnBufferPx, horizontalBuffer);
+    switch (direction) {
+      case ScrollDirection.NONE:
+        return {
+          rowAfter: rowBuffer / 2,
+          rowBefore: rowBuffer / 2,
+          columnAfter: columnBuffer / 2,
+          columnBefore: columnBuffer / 2,
+        };
+      case ScrollDirection.LEFT:
+        return {
+          rowAfter: rowBuffer / 2,
+          rowBefore: rowBuffer / 2,
+          columnAfter: 0,
+          columnBefore: columnBuffer,
+        };
+      case ScrollDirection.RIGHT:
+        return {
+          rowAfter: rowBuffer / 2,
+          rowBefore: rowBuffer / 2,
+          columnAfter: columnBuffer,
+          columnBefore: 0,
+        };
+      case ScrollDirection.UP:
+        return {
+          rowAfter: 0,
+          rowBefore: rowBuffer,
+          columnAfter: columnBuffer / 2,
+          columnBefore: columnBuffer / 2,
+        };
+      case ScrollDirection.DOWN:
+        return {
+          rowAfter: rowBuffer,
+          rowBefore: 0,
+          columnAfter: columnBuffer / 2,
+          columnBefore: columnBuffer / 2,
+        };
+      default:
+        throw /* minify-error-disabled */ new Error('unreachable');
     }
   }
 
@@ -1212,6 +1450,66 @@ function bufferForDirection(
       // eslint unable to figure out enum exhaustiveness
       throw /* minify-error-disabled */ new Error('unreachable');
   }
+}
+
+/**
+ * Whether the viewport has consumed more than half of the rendered buffer on a side
+ * that can still be extended.
+ * Triggers the sticky-mode rendering logic for computing a new render context.
+ * Consecutive updates are thereby spaced half a buffer apart instead of one
+ * row apart, leaving the raster pipeline idle time to fill the buffers between them.
+ * The visible bounds mirror the ones `computeRenderContext` searches with.
+ */
+function isLowOnRenderedBuffer(
+  store: Store<BaseState>,
+  params: ParamsWithDefaults,
+  scrollPosition: ScrollPosition,
+  scrollCache: ScrollCache,
+) {
+  const context = store.state.virtualization.renderContext;
+  const { buffer } = scrollCache;
+  const dimensions = Dimensions.selectors.dimensions(store.state);
+  const rowPositions = Dimensions.selectors.rowPositions(store.state);
+  const contentHeight = Dimensions.selectors.contentHeight(store.state);
+
+  const visibleTop = scrollPosition.top;
+  const visibleBottom = visibleTop + dimensions.viewportInnerSize.height;
+  const renderedTop = rowPositions[context.firstRowIndex] ?? 0;
+  const renderedBottom = rowPositions[context.lastRowIndex] ?? contentHeight;
+
+  if (context.firstRowIndex > 0 && visibleTop - renderedTop < buffer.rowBefore / 2) {
+    return true;
+  }
+  if (
+    context.lastRowIndex < params.rows.length &&
+    renderedBottom - visibleBottom < buffer.rowAfter / 2
+  ) {
+    return true;
+  }
+
+  const columnPositions = Dimensions.selectors.columnPositions(store.state, params.columns);
+  const pinnedLeftCount = params.pinnedColumns?.left.length ?? 0;
+  const pinnedRightCount = params.pinnedColumns?.right.length ?? 0;
+
+  const visibleLeft = Math.abs(scrollPosition.left) + dimensions.leftPinnedWidth;
+  const visibleRight = visibleLeft + dimensions.viewportInnerSize.width;
+  const renderedLeft = columnPositions[context.firstColumnIndex] ?? 0;
+  const renderedRight = columnPositions[context.lastColumnIndex] ?? dimensions.columnsTotalWidth;
+
+  if (
+    context.firstColumnIndex > pinnedLeftCount &&
+    visibleLeft - renderedLeft < buffer.columnBefore / 2
+  ) {
+    return true;
+  }
+  if (
+    context.lastColumnIndex < params.columns.length - pinnedRightCount &&
+    renderedRight - visibleRight < buffer.columnAfter / 2
+  ) {
+    return true;
+  }
+
+  return false;
 }
 
 function createScrollCache(
