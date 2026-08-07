@@ -1,21 +1,21 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
-import {
+import type {
   InferFieldSection,
   MuiPickersAdapter,
   PickersTimezone,
   PickerValidDate,
 } from '../../../models';
-import {
+import type {
   FieldSectionsValueBoundaries,
   UseFieldDOMGetters,
   UseFieldInternalProps,
 } from './useField.types';
-import { UseFieldStateReturnValue } from './useFieldState';
+import type { UseFieldStateReturnValue } from './useFieldState';
 import { getActiveElement } from '../../utils/utils';
-import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
+import type { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
-import { PickerAnyManager, PickerValidValue } from '../../models';
+import type { PickerAnyManager, PickerValidValue } from '../../models';
 import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
 import {
   cleanDigitSectionValue,
@@ -169,16 +169,23 @@ export function useFieldRootProps(
   });
 
   const containerClickTimeout = useTimeout();
-  const handleClick = useEventCallback((event: React.MouseEvent) => {
+  const handleClick = useEventCallback(() => {
     if (disabled || !domGetters.isReady()) {
       return;
     }
 
-    setFocused(true);
-
     if (parsedSelectedSections === 'all') {
+      setFocused(true);
       containerClickTimeout.start(0, () => {
-        const cursorPosition = document.getSelection()!.getRangeAt(0).startOffset;
+        // `getSelection`/`getRangeAt` can be unset transiently (e.g. focus
+        // moved before this 0-tick callback ran). Fall back to the first
+        // section in that case.
+        const selection = document.getSelection();
+        if (!selection || selection.rangeCount === 0) {
+          setSelectedSections(sectionOrder.startIndex);
+          return;
+        }
+        const cursorPosition = selection.getRangeAt(0).startOffset;
 
         if (cursorPosition === 0) {
           setSelectedSections(sectionOrder.startIndex);
@@ -198,16 +205,71 @@ export function useFieldRootProps(
 
         setSelectedSections(sectionIndex - 1);
       });
-    } else if (!focused) {
-      setFocused(true);
-      setSelectedSections(sectionOrder.startIndex);
-    } else {
-      const hasClickedOnASection = domGetters.getRoot().contains(event.target as Node);
+      return;
+    }
 
-      if (!hasClickedOnASection) {
+    // For trusted pointer input, `handleMouseDown` already ran and set the
+    // section. This branch only matters for `click` events that arrive
+    // without a preceding `mousedown` (programmatic `element.click()`, some
+    // assistive-technology activations, synthetic event sequences in tests).
+    // Fall back to the first section so the field doesn't enter a "focused
+    // but no active section" state.
+    if (!focused) {
+      setFocused(true);
+      if (parsedSelectedSections == null) {
         setSelectedSections(sectionOrder.startIndex);
       }
     }
+  });
+
+  // Replaces Chromium's focus delegation with an explicit section focus on
+  // every primary mousedown inside the sections container. The CSS gate
+  // (`WebkitUserModify: read-only` while not `:focus-within`) can make the
+  // section's contenteditable span temporarily non-focusable, in which case
+  // Chromium falls back to the sections-container `tabindex=0` and our
+  // `handleFocus` then runs the "no active section" fallback, briefly
+  // selecting the first section before the click bubble corrects it.
+  // Setting the target section here (and letting `syncSelectionToDOM` move
+  // focus via `.focus()`, which works even with the user-modify rule
+  // active) skips that race entirely.
+  const handleMouseDown = useEventCallback((event: React.MouseEvent) => {
+    if (disabled || !domGetters.isReady() || parsedSelectedSections === 'all') {
+      return;
+    }
+    if (event.button !== 0) {
+      return;
+    }
+    const target = event.target as Element;
+    // `sectionListRoot` is the sections container (a descendant of the
+    // InputBase root that owns this handler). The guard rejects clicks on
+    // sibling adornments (open / clear buttons, etc.) which have their own
+    // behavior and must not get intercepted here.
+    const sectionListRoot = domGetters.getRoot();
+    if (!sectionListRoot.contains(target)) {
+      return;
+    }
+    // Prefer the visually-containing section (matches Chromium's
+    // delegation + section container `onClick`), fall back to the
+    // closest-by-distance section for padding / past-last-section clicks.
+    const sectionElement = target.closest<HTMLElement>('[data-sectionindex]');
+    const parsedIndex = sectionElement
+      ? Number(sectionElement.dataset.sectionindex)
+      : findClosestSectionIndexToPoint(sectionListRoot, event.clientX);
+    // `Number(undefined) === NaN` and `NaN == null === false`, so guard
+    // explicitly here even though `data-sectionindex` is set by
+    // `useFieldSectionContainerProps` for every section in practice.
+    if (parsedIndex == null || !Number.isInteger(parsedIndex)) {
+      return;
+    }
+    event.preventDefault();
+    setFocused(true);
+    // `mousedown` is now authoritative for pointer section selection. The
+    // section container's own `onClick` deduplicates against the resulting
+    // `parsedSelectedSections` on the click bubble (see
+    // `useFieldSectionContainerProps`), so we always select here and let that
+    // guard absorb the redundant call -- matching the pre-PR
+    // `onSelectedSectionsChange` invocation count.
+    setSelectedSections(parsedIndex);
   });
 
   const handleInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
@@ -290,6 +352,7 @@ export function useFieldRootProps(
     onBlur: handleBlur,
     onFocus: handleFocus,
     onClick: handleClick,
+    onMouseDown: handleMouseDown,
     onPaste: handlePaste,
     onInput: handleInput,
 
@@ -297,6 +360,30 @@ export function useFieldRootProps(
     contentEditable: parsedSelectedSections === 'all',
     tabIndex: internalPropsWithDefaults.disabled || parsedSelectedSections === 0 ? -1 : 0, // TODO: Try to set to undefined when there is a section selected.
   };
+}
+
+/**
+ * Returns the index of the section whose horizontal center is closest to `clientX`.
+ * Returns `null` if the field renders no `[role="spinbutton"]` descendants
+ * (defensive — every section content span sets `role="spinbutton"` in practice).
+ */
+function findClosestSectionIndexToPoint(root: HTMLElement, clientX: number): number | null {
+  const sections = root.querySelectorAll<HTMLElement>('[role="spinbutton"]');
+  if (sections.length === 0) {
+    return null;
+  }
+  let closestIndex = 0;
+  let closestDistance = Infinity;
+  for (let i = 0; i < sections.length; i += 1) {
+    const rect = sections[i].getBoundingClientRect();
+    const center = (rect.left + rect.right) / 2;
+    const distance = Math.abs(clientX - center);
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestIndex = i;
+    }
+  }
+  return closestIndex;
 }
 
 function getDeltaFromKeyCode(keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End'>) {
@@ -436,6 +523,7 @@ interface UseFieldRootPropsReturnValue {
   onBlur: React.FocusEventHandler<HTMLDivElement>;
   onFocus: React.FocusEventHandler<HTMLDivElement>;
   onClick: React.MouseEventHandler<HTMLDivElement>;
+  onMouseDown: React.MouseEventHandler<HTMLDivElement>;
   onPaste: React.ClipboardEventHandler<HTMLDivElement>;
   onInput: React.FormEventHandler<HTMLDivElement>;
   contentEditable: boolean;

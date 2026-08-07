@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { lineRadial as d3LineRadial } from '@mui/x-charts-vendor/d3-shape';
 import { getCurveFactory } from '@mui/x-charts/internals';
-import { type CurveType, type SeriesId } from '@mui/x-charts/models';
-import { type RadialLinePoint } from './useRadialLinePlotData';
+import type { CurveType, SeriesId } from '@mui/x-charts/models';
+import type { RadialLinePoint } from './useRadialLinePlotData';
 import { useItemHighlightState } from '../hooks';
 
 export interface RadialLineOrAreaProps extends Omit<

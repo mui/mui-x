@@ -39,10 +39,12 @@ import type {
 } from './ChatBox.types';
 import { useChatSlots } from '../internals/ChatSlotsContext';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
-import DefaultSendIcon from '../icons/DefaultSendIcon';
-import DefaultAttachIcon from '../icons/DefaultAttachIcon';
-import DefaultMenuIcon from '../icons/DefaultMenuIcon';
-import DefaultCloseIcon from '../icons/DefaultCloseIcon';
+import {
+  DefaultSendIcon,
+  DefaultAttachIcon,
+  DefaultMenuIcon,
+  DefaultCloseIcon,
+} from '../icons/icons';
 
 const DEFAULT_OVERLAY_BREAKPOINT = 600;
 const DEFAULT_SPLIT_BREAKPOINT = 450;
@@ -206,7 +208,8 @@ const ChatBoxConversationOverlay = styled('div', {
 // conversations pane. Marking it keeps ChatLayout's pane resolution unambiguous —
 // once any sibling (the thread view) is marked, every direct child must be marked
 // or ChatLayout warns about a mixed/undeterminable set.
-markChatLayoutPane(ChatBoxConversationOverlay, 'conversations');
+// `markChatLayoutPane` mutates the component in place and returns it; the return is discarded here.
+void markChatLayoutPane(ChatBoxConversationOverlay, 'conversations');
 
 const ChatBoxConversationOverlayBackdrop = styled('div', {
   name: 'MuiChatBox',
@@ -326,7 +329,7 @@ function DefaultConversationHeader({
             onClick={onMenuClick}
             sx={{ mr: 1 }}
           >
-            <DefaultMenuIcon />
+            <DefaultMenuIcon fontSize="inherit" />
           </IconButton>
         </Tooltip>
       )}
@@ -488,7 +491,7 @@ function DefaultComposer({ features }: { features?: ChatBoxFeatures }) {
             aria-label={localeText.composerAttachButtonLabel}
             {...(slotProps.composerAttachButton ?? {})}
           >
-            <DefaultAttachIcon />
+            <DefaultAttachIcon fontSize="inherit" />
           </ComposerAttachButtonComponent>
         )}
         <ComposerInputComponent
@@ -509,7 +512,7 @@ function DefaultComposer({ features }: { features?: ChatBoxFeatures }) {
               aria-label={localeText.composerSendButtonLabel}
               {...(slotProps.composerSendButton ?? {})}
             >
-              <DefaultSendIcon />
+              <DefaultSendIcon fontSize="inherit" />
             </ComposerSendButtonComponent>
           </ComposerToolbarComponent>
         )}
@@ -533,7 +536,7 @@ function DefaultComposer({ features }: { features?: ChatBoxFeatures }) {
             aria-label={localeText.composerAttachButtonLabel}
             {...(slotProps.composerAttachButton ?? {})}
           >
-            <DefaultAttachIcon />
+            <DefaultAttachIcon fontSize="inherit" />
           </ComposerAttachButtonComponent>
         )}
         {showSendButton && (
@@ -541,7 +544,7 @@ function DefaultComposer({ features }: { features?: ChatBoxFeatures }) {
             aria-label={localeText.composerSendButtonLabel}
             {...(slotProps.composerSendButton ?? {})}
           >
-            <DefaultSendIcon />
+            <DefaultSendIcon fontSize="inherit" />
           </ComposerSendButtonComponent>
         )}
       </ComposerToolbarComponent>
@@ -632,7 +635,7 @@ function createMarkedConversationListComponent(
       return <Component ref={ref} {...props} />;
     },
   );
-  markChatLayoutPane(MarkedConversationList, 'conversations');
+  void markChatLayoutPane(MarkedConversationList, 'conversations');
   return MarkedConversationList as typeof ChatConversationList;
 }
 
@@ -956,7 +959,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
                       onClick={handleDrawerClose}
                       ref={drawerCloseButtonRef}
                     >
-                      <DefaultCloseIcon />
+                      <DefaultCloseIcon fontSize="inherit" />
                     </IconButton>
                   </Tooltip>
                 </ChatBoxDrawerHeader>

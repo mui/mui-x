@@ -208,16 +208,12 @@ After streaming, the message's `parts` array contains `step-start` entries inter
   { type: 'step-start' }, // Step 1 delimiter
   {
     type: 'tool',
-    toolInvocation: {
-      /* ... */
-    },
+    toolInvocation: {/* ... */},
   }, // Step 1 content
   { type: 'step-start' }, // Step 2 delimiter
   {
     type: 'tool',
-    toolInvocation: {
-      /* ... */
-    },
+    toolInvocation: {/* ... */},
   }, // Step 2 content
   { type: 'step-start' }, // Step 3 delimiter
   { type: 'text', text: 'Final answer…' }, // Step 3 content

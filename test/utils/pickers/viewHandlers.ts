@@ -1,5 +1,5 @@
-import { act, fireTouchChangedEvent, screen, MuiRenderResult } from '@mui/internal-test-utils';
-import { getClockTouchEvent, formatFullTimeValue } from 'test/utils/pickers';
+import { act, screen, MuiRenderResult } from '@mui/internal-test-utils';
+import { fireClockPointerEvent, getClockTouchEvent, formatFullTimeValue } from 'test/utils/pickers';
 import { MuiPickersAdapter, PickerValidDate, TimeView } from '@mui/x-date-pickers/models';
 import { formatMeridiem } from '@mui/x-date-pickers/internals';
 
@@ -32,10 +32,10 @@ export const timeClockHandler: ViewHandler<TimeView> = {
     const hourClockEvent = getClockTouchEvent(valueInt, clockView);
 
     await act(async () => {
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+      fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', hourClockEvent);
     });
     await act(async () => {
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+      fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', hourClockEvent);
     });
   },
 };

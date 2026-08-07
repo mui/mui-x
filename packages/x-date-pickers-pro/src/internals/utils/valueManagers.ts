@@ -1,16 +1,18 @@
-import {
+import type {
   PickerValueManager,
-  replaceInvalidDateByNull,
   FieldValueManager,
-  createDateStrForHiddenInputFromSections,
-  areDatesEqual,
-  getTodayDate,
-  getDefaultReferenceDate,
   PickerRangeValue,
   PickerNonNullableRangeValue,
   FieldRangeSection,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import {
+  replaceInvalidDateByNull,
+  createDateStrForHiddenInputFromSections,
+  areDatesEqual,
+  getTodayDate,
+  getDefaultReferenceDate,
+} from '@mui/x-date-pickers/internals';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type {
   DateRangeValidationError,
@@ -21,9 +23,7 @@ import type {
 
 type RangePickerValueManager<
   TError extends
-    | DateRangeValidationError
-    | TimeRangeValidationError
-    | DateTimeRangeValidationError = any,
+    DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError = any,
 > = PickerValueManager<PickerRangeValue, TError>;
 
 export const rangeValueManager: RangePickerValueManager = {

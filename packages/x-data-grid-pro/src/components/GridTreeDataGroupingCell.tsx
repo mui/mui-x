@@ -5,9 +5,8 @@ import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
-  type GridRenderCellParams,
-  type GridGroupNode,
 } from '@mui/x-data-grid';
+import type { GridRenderCellParams, GridGroupNode } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';

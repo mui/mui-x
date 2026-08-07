@@ -1,17 +1,17 @@
-import {
-  type UseChartSeriesSignature,
-  type ChartPluginSignature,
-  type UseChartCartesianAxisSignature,
-  type UseChartCartesianAxisDefaultizedParameters,
-  type ZoomData,
-  type AxisId,
-  type UseChartBrushSignature,
+import type {
+  UseChartSeriesSignature,
+  ChartPluginSignature,
+  UseChartCartesianAxisSignature,
+  UseChartCartesianAxisDefaultizedParameters,
+  ZoomData,
+  AxisId,
+  UseChartBrushSignature,
 } from '@mui/x-charts/internals';
-import {
-  type ZoomInteractionConfig,
-  type DefaultizedZoomInteractionConfig,
+import type {
+  ZoomInteractionConfig,
+  DefaultizedZoomInteractionConfig,
 } from './ZoomInteractionConfig.types';
-import { type RangeButtonValue } from '../../../ChartsToolbarPro/rangeButtonValueToZoom';
+import type { RangeButtonValue } from '../../../ChartsToolbarPro/rangeButtonValueToZoom';
 
 /**
  * Initializes the zoom of an axis with a range value instead of zoom percentages.

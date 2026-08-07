@@ -6,13 +6,10 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
 import { useStore } from '../internals/store/useStore';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
-import {
-  lineClasses,
-  type MarkElementOwnerState,
-  useUtilityClasses as useLineUtilityClasses,
-} from './lineClasses';
+import { lineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import type { MarkElementOwnerState } from './MarkElement';
 
-export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
+type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
     /**
      * If `true`, the marker is hidden.

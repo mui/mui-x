@@ -121,4 +121,30 @@ describe('<DateRangePickerDay />', () => {
       expect(container4.firstChild).to.have.style('opacity', '0.4');
     });
   });
+
+  describe('filler cell', () => {
+    it('should stay hidden when it is disabled and inside the selected range', () => {
+      const { container } = render(
+        <DateRangePickerDay
+          day={adapterToUse.date('2018-02-01')}
+          onDaySelect={() => {}}
+          outsideCurrentMonth
+          disabled
+          isHighlighting
+          isPreviewing={false}
+          isStartOfPreviewing={false}
+          isEndOfPreviewing={false}
+          isStartOfHighlighting={false}
+          isEndOfHighlighting={false}
+          isFirstVisibleCell={false}
+          isLastVisibleCell={false}
+        />,
+      );
+
+      expect(container.firstChild).to.have.class(classes.fillerCell);
+      expect(container.firstChild).not.to.have.class(classes.selected);
+      expect(container.firstChild).not.to.have.class(classes.insideSelection);
+      expect(container.firstChild).to.have.style('opacity', '0');
+    });
+  });
 });

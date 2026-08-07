@@ -1,5 +1,5 @@
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
-import { type ChartState } from '../../models/chart';
+import type { ChartState } from '../../models/chart';
 import type {
   ChartExperimentalFeatures,
   UseChartExperimentalFeaturesSignature,

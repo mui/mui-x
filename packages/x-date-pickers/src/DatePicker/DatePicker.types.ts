@@ -1,15 +1,15 @@
-import {
+import type {
   DesktopDatePickerProps,
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
-import { BaseSingleInputFieldProps } from '../internals/models';
-import {
+import type { BaseSingleInputFieldProps } from '../internals/models';
+import type {
   MobileDatePickerProps,
   MobileDatePickerSlots,
   MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
-import { ValidateDateProps } from '../validation/validateDate';
+import type { ValidateDateProps } from '../validation/validateDate';
 
 export interface DatePickerSlots extends DesktopDatePickerSlots, MobileDatePickerSlots {}
 

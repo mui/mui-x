@@ -1,14 +1,9 @@
 import * as React from 'react';
 import { createRenderer, screen, act, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  type GridApi,
-  type DataGridProProps,
-  useGridApiRef,
-  DataGridPro,
-  gridClasses,
-} from '@mui/x-data-grid-pro';
+import type { RefObject } from '@mui/x-internals/types';
+import { useGridApiRef, DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnValues } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 

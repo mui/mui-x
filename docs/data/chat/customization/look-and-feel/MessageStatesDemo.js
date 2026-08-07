@@ -14,7 +14,7 @@ import { ChatProvider, useChatStore } from '@mui/x-chat/headless';
 import {
   demoUsers,
   createTextMessage,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const noopAdapter = {
   async sendMessage() {

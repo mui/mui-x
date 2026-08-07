@@ -255,6 +255,8 @@ const CSB_CONFIG = {
 
 const DOCS_CONFIG: DocsConfig = {
   ...DEFAULT_DOCS_CONFIG,
+  // Absolute origin for canonical and social-preview URLs (og:url, og:image).
+  hostUrl: 'https://mui.com',
 };
 
 function useThemeWrapper() {

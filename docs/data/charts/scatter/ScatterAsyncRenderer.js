@@ -2,12 +2,13 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import Chance from 'chance';
 
 const NUMBER_OF_SERIES = 3;
 
-const POINT_COUNT = 20000;
+const POINT_COUNT = 40000;
 
 // Gaussian-ish blobs so the progressive, batched paint is easy to see. Points
 // are split into `NUMBER_OF_SERIES` contiguous series, each offset into its
@@ -65,18 +66,25 @@ function MainThreadSpinner() {
   }, []);
 
   return (
-    <div
-      ref={ref}
-      aria-label="main thread activity"
-      style={{
-        width: 16,
-        height: 16,
-        borderRadius: '50%',
-        border: '2px solid currentColor',
-        borderTopColor: 'transparent',
-        opacity: 0.6,
-      }}
-    />
+    <Tooltip
+      title="Animated on the main thread. It keeps spinning smoothly while the main thread is free, and stutters or freezes when the renderer blocks it — watch it while switching modes."
+      arrow
+    >
+      <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
+        <div
+          ref={ref}
+          aria-label="main thread activity"
+          style={{
+            width: 16,
+            height: 16,
+            borderRadius: '50%',
+            border: '2px solid currentColor',
+            borderTopColor: 'transparent',
+            opacity: 0.6,
+          }}
+        />
+      </Stack>
+    </Tooltip>
   );
 }
 
@@ -156,7 +164,9 @@ function RenderTimers(props) {
 }
 
 export default function ScatterAsyncRenderer() {
-  const [mode, setMode] = React.useState('sync');
+  // Default to progressive so first paint on docs load does not block the
+  // main thread while rendering all points at once.
+  const [mode, setMode] = React.useState('async');
   const series = mode === 'sync' ? syncSeries : asyncSeries;
 
   const containerRef = React.useRef(null);
@@ -172,36 +182,54 @@ export default function ScatterAsyncRenderer() {
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{ alignItems: 'center', justifyContent: 'center' }}
-      >
-        <Typography variant="h6" sx={{ textAlign: 'center' }}>
-          {mode === 'sync'
-            ? `${POINT_COUNT.toLocaleString()} points`
-            : `${POINT_COUNT.toLocaleString()} points`}
-        </Typography>
-        <Button
-          variant={mode === 'sync' ? 'contained' : 'outlined'}
-          size="small"
-          onClick={() => select('sync')}
+      <Stack spacing={1} sx={{ alignItems: 'center' }}>
+        <Stack
+          direction="row"
+          spacing={2}
+          useFlexGap
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+          }}
         >
-          Single
-        </Button>
-        <Button
-          variant={mode === 'async' ? 'contained' : 'outlined'}
-          size="small"
-          onClick={() => select('async')}
+          <Typography variant="h6" sx={{ textAlign: 'center' }}>
+            {mode === 'sync'
+              ? `${POINT_COUNT.toLocaleString()} points`
+              : `${POINT_COUNT.toLocaleString()} points`}
+          </Typography>
+          <Button
+            variant={mode === 'sync' ? 'contained' : 'outlined'}
+            size="small"
+            onClick={() => select('sync')}
+          >
+            Single
+          </Button>
+          <Button
+            variant={mode === 'async' ? 'contained' : 'outlined'}
+            size="small"
+            onClick={() => select('async')}
+          >
+            Progressive
+          </Button>
+        </Stack>
+        <Stack
+          direction="row"
+          spacing={2}
+          useFlexGap
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+          }}
         >
-          Progressive
-        </Button>
-        <MainThreadSpinner />
-        <RenderTimers
-          containerRef={containerRef}
-          startRef={startRef}
-          runId={runId}
-        />
+          <MainThreadSpinner />
+          <RenderTimers
+            containerRef={containerRef}
+            startRef={startRef}
+            runId={runId}
+          />
+        </Stack>
       </Stack>
       <div ref={containerRef} style={{ width: '100%' }}>
         <ScatterChartPro

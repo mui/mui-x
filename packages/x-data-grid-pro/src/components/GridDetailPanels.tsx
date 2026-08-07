@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
-import { getDataGridUtilityClass, useGridSelector, type GridRowId } from '@mui/x-data-grid';
+import { getDataGridUtilityClass, useGridSelector } from '@mui/x-data-grid';
+import type { GridRowId } from '@mui/x-data-grid';
 import type { GridDetailPanelsProps } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';

@@ -1,25 +1,20 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ChartsProvider,
-  ChartsSlotsProvider,
-  type ChartsProviderProps,
-  type ChartAnyPluginSignature,
-  type ChartSeriesType,
+import { ChartsProvider, ChartsSlotsProvider } from '@mui/x-charts/internals';
+import type {
+  ChartsProviderProps,
+  ChartAnyPluginSignature,
+  ChartSeriesType,
 } from '@mui/x-charts/internals';
-import {
-  ChartsLocalizationProvider,
-  type ChartsLocalizationProviderProps,
-} from '@mui/x-charts/ChartsLocalizationProvider';
+import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
+import type { ChartsLocalizationProviderProps } from '@mui/x-charts/ChartsLocalizationProvider';
 import { ChartsWatermark, defaultSlotsMaterial } from '@mui/x-charts-pro/internals';
 import { useLicenseVerifier } from '@mui/x-license/internals';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '@mui/x-charts-pro/internals';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '@mui/x-charts-pro/internals';
 import { useChartsGeoDataProviderPremiumProps } from './useChartsGeoDataProviderPremiumProps';
-import {
-  GEO_PREMIUM_PLUGINS,
-  type GeoPremiumPluginSignatures,
-} from './ChartsGeoDataProviderPremium.plugins';
+import { GEO_PREMIUM_PLUGINS } from './ChartsGeoDataProviderPremium.plugins';
+import type { GeoPremiumPluginSignatures } from './ChartsGeoDataProviderPremium.plugins';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -110,7 +105,9 @@ ChartsGeoDataProviderPremium.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.any,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

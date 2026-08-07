@@ -4,6 +4,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  ResourceBuilder,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { screen, within, waitFor } from '@mui/internal-test-utils';
@@ -184,6 +185,30 @@ describe('<MonthView />', () => {
             null,
           );
         });
+      });
+    });
+
+    it('should stay open while editing and close once the editing surface closes', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      // Activating an event opens the editing dialog; the popover stays open behind it.
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(document.body.contains(popover)).to.equal(true);
+
+      // Closing the editing surface clears the store editing state, which closes the popover with it.
+      const dialog = screen.getByRole('dialog');
+      await user.click(within(dialog).getByRole('button', { name: /close/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
       });
     });
   });
@@ -367,6 +392,55 @@ describe('<MonthView />', () => {
       );
 
       expect(visibleInstances).toHaveLength(2);
+    });
+  });
+
+  describe('multi-resource events', () => {
+    const resourceA = ResourceBuilder.new().title('Room A').build();
+    const resourceB = ResourceBuilder.new().title('Room B').build();
+
+    it('should render the event once when at least one of its assigned resources is visible', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .singleDay('2025-05-01T09:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      render(
+        <EventCalendarProvider
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceB.id]: false }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.getAllByText('Team Sync')).toHaveLength(1);
+    });
+
+    it('should not render the event when all of its assigned resources are hidden', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .singleDay('2025-05-01T09:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      render(
+        <EventCalendarProvider
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceA.id]: false, [resourceB.id]: false }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.queryByText('Team Sync')).to.equal(null);
     });
   });
 

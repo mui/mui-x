@@ -1,13 +1,7 @@
 import { createRenderer, screen, reactMajor, waitFor, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import {
-  DataGrid,
-  type DataGridProps,
-  type GetApplyQuickFilterFn,
-  type GridFilterModel,
-  GridLogicOperator,
-  getGridStringQuickFilterFn,
-} from '@mui/x-data-grid';
+import { DataGrid, GridLogicOperator, getGridStringQuickFilterFn } from '@mui/x-data-grid';
+import type { DataGridProps, GetApplyQuickFilterFn, GridFilterModel } from '@mui/x-data-grid';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -202,6 +196,9 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
         'true',
       );
+
+      // Expanding moves focus to the input in a `requestAnimationFrame`
+      await waitFor(() => expect(screen.getByRole('searchbox')).toHaveFocus());
 
       await user.keyboard('[Escape]');
 

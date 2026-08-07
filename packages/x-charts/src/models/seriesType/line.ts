@@ -1,4 +1,4 @@
-import { type DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
 import type {
   CartesianSeriesType,
@@ -7,8 +7,8 @@ import type {
   SeriesId,
   StackableSeriesType,
 } from './common';
-import { type DatasetElementType } from './config';
-import { type CurveType } from '../curve';
+import type { DatasetElementType } from './config';
+import type { CurveType } from '../curve';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**
@@ -130,9 +130,23 @@ export type LineItemIdentifier = {
   type: 'line';
   seriesId: SeriesId;
   /**
-   * `dataIndex` can be `undefined` if the mouse is over the area and not a specific item.
+   * The index of the data point closest to the pointer along the x-axis.
+   * `dataIndex` can be `undefined` if the pointer position cannot be associated with a data point.
    */
   dataIndex?: number;
+};
+
+/**
+ * An object that identifies a single line together with the data point the interaction targets.
+ * Used for item interactions that always resolve a data point, like `onItemClick`.
+ */
+export type LineItemClickIdentifier = {
+  type: 'line';
+  seriesId: SeriesId;
+  /**
+   * The index of the data point closest to the pointer along the x-axis.
+   */
+  dataIndex: number;
 };
 
 export interface DefaultizedLineSeriesType extends DefaultizedProps<

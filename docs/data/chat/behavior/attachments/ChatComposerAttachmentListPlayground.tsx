@@ -120,7 +120,7 @@ export default function ChatComposerAttachmentListPlayground() {
           activeConversationId={emptyConversation.id}
         >
           <AttachmentsEffect files={files} status={status} />
-          <Box sx={{ width: '100%', ...(wrapperSx as object) }}>
+          <Box sx={{ width: '100%', ...wrapperSx }}>
             <ChatComposerAttachmentList />
           </Box>
         </ScopedChat>

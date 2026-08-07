@@ -1,7 +1,8 @@
 import { screen, createRenderer } from '@mui/internal-test-utils';
 import { DateCalendar, dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { createPickerRenderer, AdapterName, availableAdapters } from 'test/utils/pickers';
+import type { AdapterName } from 'test/utils/pickers';
+import { createPickerRenderer, availableAdapters } from 'test/utils/pickers';
 import { he, fr, enUS } from 'date-fns/locale';
 import 'dayjs/locale/he';
 import 'dayjs/locale/fr';

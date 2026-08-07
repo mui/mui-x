@@ -6,23 +6,19 @@ import * as React from 'react';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import {
-  FocusedPieArc,
-  type PieChartProps,
-  type PieChartSlotProps,
-  type PieChartSlots,
-  PiePlot,
-} from '@mui/x-charts/PieChart';
+import { FocusedPieArc, PiePlot } from '@mui/x-charts/PieChart';
+import type { PieChartProps, PieChartSlotProps, PieChartSlots } from '@mui/x-charts/PieChart';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
-import { type ChartsSlotsPro, type ChartsSlotPropsPro } from '../internals/material';
+import type { ChartsSlotsPro, ChartsSlotPropsPro } from '../internals/material';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { type ChartsContainerProProps } from '../ChartsContainerPro';
-import { PIE_CHART_PRO_PLUGINS, type PieChartProPluginSignatures } from './PieChartPro.plugins';
-import {
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
+import { PIE_CHART_PRO_PLUGINS } from './PieChartPro.plugins';
+import type { PieChartProPluginSignatures } from './PieChartPro.plugins';
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface PieChartProSlots
@@ -161,7 +157,16 @@ PieChartPro.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
