@@ -209,7 +209,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onClose.callCount).to.equal(1);
     });
 
-
     it(
       'should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false',
       { timeout: 15_000 },
