@@ -4,7 +4,7 @@ import { renderActionsCell } from '../components/cell/GridActionsCell';
 
 export const GRID_ACTIONS_COLUMN_TYPE = 'actions';
 
-export const GRID_ACTIONS_COL_DEF: GridColTypeDef = {
+export const GRID_ACTIONS_COL_DEF = {
   ...GRID_STRING_COL_DEF,
   sortable: false,
   filterable: false,
@@ -20,4 +20,4 @@ export const GRID_ACTIONS_COL_DEF: GridColTypeDef = {
   disableExport: true,
   renderCell: renderActionsCell,
   getApplyQuickFilterFn: () => null,
-};
+} as const satisfies GridColTypeDef;

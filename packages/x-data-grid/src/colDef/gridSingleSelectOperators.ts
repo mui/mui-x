@@ -10,36 +10,37 @@ const parseObjectValue = (value: unknown) => {
   return value.value;
 };
 
-export const getGridSingleSelectOperators = (): GridFilterOperator[] => [
-  {
-    value: 'is',
-    getApplyFilterFn: (filterItem) => {
-      if (filterItem.value == null || filterItem.value === '') {
-        return null;
-      }
-      return (value): boolean => parseObjectValue(value) === parseObjectValue(filterItem.value);
+export const getGridSingleSelectOperators = () =>
+  [
+    {
+      value: 'is',
+      getApplyFilterFn: (filterItem) => {
+        if (filterItem.value == null || filterItem.value === '') {
+          return null;
+        }
+        return (value): boolean => parseObjectValue(value) === parseObjectValue(filterItem.value);
+      },
+      InputComponent: GridFilterInputSingleSelect,
     },
-    InputComponent: GridFilterInputSingleSelect,
-  },
-  {
-    value: 'not',
-    getApplyFilterFn: (filterItem) => {
-      if (filterItem.value == null || filterItem.value === '') {
-        return null;
-      }
-      return (value): boolean => parseObjectValue(value) !== parseObjectValue(filterItem.value);
+    {
+      value: 'not',
+      getApplyFilterFn: (filterItem) => {
+        if (filterItem.value == null || filterItem.value === '') {
+          return null;
+        }
+        return (value): boolean => parseObjectValue(value) !== parseObjectValue(filterItem.value);
+      },
+      InputComponent: GridFilterInputSingleSelect,
     },
-    InputComponent: GridFilterInputSingleSelect,
-  },
-  {
-    value: 'isAnyOf',
-    getApplyFilterFn: (filterItem) => {
-      if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
-        return null;
-      }
-      const filterItemValues = filterItem.value.map(parseObjectValue);
-      return (value): boolean => filterItemValues.includes(parseObjectValue(value));
+    {
+      value: 'isAnyOf',
+      getApplyFilterFn: (filterItem) => {
+        if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
+          return null;
+        }
+        const filterItemValues = filterItem.value.map(parseObjectValue);
+        return (value): boolean => filterItemValues.includes(parseObjectValue(value));
+      },
+      InputComponent: GridFilterInputMultipleSingleSelect,
     },
-    InputComponent: GridFilterInputMultipleSingleSelect,
-  },
-];
+  ] as const satisfies GridFilterOperator[];

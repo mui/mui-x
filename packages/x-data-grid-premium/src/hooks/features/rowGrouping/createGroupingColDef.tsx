@@ -24,31 +24,28 @@ import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector
 import type { GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
-const GROUPING_COL_DEF_DEFAULT_PROPERTIES: Omit<GridColDef, 'field'> = {
+const GROUPING_COL_DEF_DEFAULT_PROPERTIES = {
   ...GRID_STRING_COL_DEF,
   type: 'custom',
   disableReorder: true,
   chartable: false,
   aggregable: false,
-};
+} as const satisfies Omit<GridColDef, 'field'>;
 
-const GROUPING_COL_DEF_FORCED_PROPERTIES_DEFAULT: Pick<
-  GridColDef,
-  'type' | 'editable' | 'groupable'
-> = {
+const GROUPING_COL_DEF_FORCED_PROPERTIES_DEFAULT = {
   editable: false,
   groupable: false,
-};
+} as const satisfies Pick<GridColDef, 'type' | 'editable' | 'groupable'>;
 
-const GROUPING_COL_DEF_FORCED_PROPERTIES_DATA_SOURCE: Pick<
-  GridColDef,
-  'type' | 'editable' | 'groupable' | 'filterable' | 'sortable' | 'aggregable'
-> = {
+const GROUPING_COL_DEF_FORCED_PROPERTIES_DATA_SOURCE = {
   ...GROUPING_COL_DEF_FORCED_PROPERTIES_DEFAULT,
   // TODO: Support these features on the grouping column(s)
   filterable: false,
   sortable: false,
-};
+} as const satisfies Pick<
+  GridColDef,
+  'type' | 'editable' | 'groupable' | 'filterable' | 'sortable' | 'aggregable'
+>;
 
 /**
  * When sorting two cells with different grouping criteria, we consider that the cell with the grouping criteria coming first in the model should be displayed below.

@@ -44,7 +44,7 @@ export const getGridMultiSelectQuickFilterFn: GetApplyQuickFilterFn<any, any> = 
   };
 };
 
-export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
+export const GRID_MULTI_SELECT_COL_DEF = {
   ...GRID_STRING_COL_DEF,
   type: 'multiSelect',
   display: 'flex',
@@ -144,4 +144,4 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
     const uniqueValues = Array.from(new Set(validValues));
     return uniqueValues.length > 0 ? uniqueValues : undefined;
   },
-};
+} as const satisfies Omit<GridMultiSelectColDef, 'field'>;

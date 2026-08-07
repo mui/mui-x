@@ -30,7 +30,7 @@ const stringToBoolean = (value: string) => {
   }
 };
 
-export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
+export const GRID_BOOLEAN_COL_DEF = {
   ...GRID_STRING_COL_DEF,
   type: 'boolean',
   display: 'flex',
@@ -46,4 +46,4 @@ export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
   chartable: false,
   // @ts-ignore
   pastedValueParser: (value) => stringToBoolean(value),
-};
+} as const satisfies GridColTypeDef<boolean | null, any>;

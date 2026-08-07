@@ -1,7 +1,7 @@
-import type { GridColDef, GridFilterItem } from '@mui/x-data-grid';
+import type { GridColDef, GridFilterItem, GridFilterOperator } from '@mui/x-data-grid';
 import { getGridMultiSelectOperators } from './gridMultiSelectOperators';
 
-const operators = getGridMultiSelectOperators();
+const operators: readonly GridFilterOperator[] = getGridMultiSelectOperators();
 const containsOperator = operators.find((o) => o.value === 'contains')!;
 const doesNotContainOperator = operators.find((o) => o.value === 'doesNotContain')!;
 const isEmptyOperator = operators.find((o) => o.value === 'isEmpty')!;
