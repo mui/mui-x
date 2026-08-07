@@ -10,7 +10,11 @@ import {
   gridExpandedSortedRowIdsSelector,
   gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridEventListener, ReorderValidationContext } from '@mui/x-data-grid-pro';
+import type {
+  GridEventListener,
+  ReorderValidationContext,
+  GridCallbackDetails,
+} from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
   GridStrategyGroup,
@@ -35,7 +39,7 @@ import {
   getGroupingRules,
   areGroupingRulesEqual,
 } from './gridRowGroupingUtils';
-import type { GridRowGroupingApi } from './gridRowGroupingInterfaces';
+import type { GridRowGroupingApi, GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import { rowGroupingReorderValidator } from '../rowReorder/rowGroupingReorderValidator';
 
@@ -80,7 +84,9 @@ export const useGridRowGrouping = (
   apiRef.current.registerControlState({
     stateId: 'rowGrouping',
     propModel: props.rowGroupingModel,
-    propOnChange: props.onRowGroupingModelChange,
+    // The public prop type is narrowed to `GridApiPremium`, but the control state machinery is generic over `GridApiCommon`.
+    propOnChange: props.onRowGroupingModelChange as
+      ((model: GridRowGroupingModel, details: GridCallbackDetails) => void) | undefined,
     stateSelector: gridRowGroupingModelSelector,
     changeEvent: 'rowGroupingModelChange',
   });
