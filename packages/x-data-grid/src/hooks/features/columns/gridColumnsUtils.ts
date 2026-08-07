@@ -489,6 +489,7 @@ export function getTotalHeaderHeight(
     DataGridProcessedProps,
     'columnHeaderHeight' | 'headerFilterHeight' | 'listView' | 'columnGroupHeaderHeight'
   >,
+  isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef),
 ) {
   if (props.listView) {
     return 0;
@@ -496,7 +497,6 @@ export function getTotalHeaderHeight(
 
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
-  const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);
 
   const columnHeadersHeight = Math.floor(props.columnHeaderHeight * densityFactor);
   const columnGroupHeadersHeight = Math.floor(

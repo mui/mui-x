@@ -128,7 +128,11 @@ export function useGridVirtualizer() {
     (rootProps.headerFilterHeight ?? rootProps.columnHeaderHeight) * density,
   );
   const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
-  const headersTotalHeight = getTotalHeaderHeight(apiRef, rootProps);
+  const headersTotalHeight = getTotalHeaderHeight(
+    apiRef,
+    rootProps,
+    rootProps.signature !== 'DataGrid' && rootProps.headerFilters,
+  );
 
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
   const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
