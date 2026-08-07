@@ -222,6 +222,7 @@ LineChartPro.propTypes /* remove-proptypes */ = {
    */
   experimentalFeatures: PropTypes.shape({
     enablePositionBasedPointerInteraction: PropTypes.bool,
+    keyboardActivation: PropTypes.bool,
   }),
   /**
    * If `true`, clicking an item immediately shows the keyboard focus indicator on it.

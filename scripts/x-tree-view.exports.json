@@ -52,6 +52,7 @@
   { "name": "TreeViewDOMStructure", "kind": "TypeAlias" },
   { "name": "TreeViewExpandIcon", "kind": "Variable" },
   { "name": "TreeViewItemId", "kind": "TypeAlias" },
+  { "name": "TreeViewItemSelectionStatus", "kind": "TypeAlias" },
   { "name": "TreeViewItemsReorderingAction", "kind": "TypeAlias" },
   { "name": "TreeViewSelectionPropagation", "kind": "Interface" },
   { "name": "TreeViewValidItem", "kind": "TypeAlias" },

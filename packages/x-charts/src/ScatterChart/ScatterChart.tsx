@@ -268,6 +268,7 @@ ScatterChart.propTypes /* remove-proptypes */ = {
    * Options to enable features planned for the next major.
    */
   experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
     progressiveRendering: PropTypes.bool,
   }),
   /**

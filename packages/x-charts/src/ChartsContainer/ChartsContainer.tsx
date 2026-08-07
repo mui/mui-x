@@ -123,7 +123,9 @@ ChartsContainer.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.any,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
   /**
    * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
    * By default, clicking sets the item that keyboard navigation starts from, but the focus
@@ -288,7 +290,7 @@ ChartsContainer.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when clicking close to an item.
    * This is only available for scatter plot for now.
-   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ChartsActivationEvent} event Event caught at the svg level
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,
