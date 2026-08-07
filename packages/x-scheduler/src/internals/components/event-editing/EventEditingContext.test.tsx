@@ -13,8 +13,10 @@ describe('<EventEditingProvider />', () => {
   const { render } = createSchedulerRenderer();
 
   /**
-   * Renders one trigger per id for the same occurrence, each removable on its own, and records
-   * every anchor the context publishes.
+   * Stands in for the same event being on screen more than once — in a month cell and in the
+   * "+N more" popover, or on each day a multi-day event spans. Every copy can be unmounted on its
+   * own, so a test can pick which one goes away, and every anchor the provider publishes is
+   * recorded, so it can assert what the anchor went through and not only where it ended up.
    */
   function renderTriggers(triggerIds: string[]) {
     const anchors: (string | null)[] = [];
