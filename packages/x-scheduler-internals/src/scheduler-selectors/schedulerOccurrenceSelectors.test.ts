@@ -286,5 +286,121 @@ describe('schedulerOccurrenceSelectors', () => {
 
       expect(response[0].occurrences).to.have.length(0);
     });
+
+    describe('multi-resource events', () => {
+      it('should appear in each assigned resource row', () => {
+        const r1 = ResourceBuilder.new().title('A').build();
+        const r2 = ResourceBuilder.new().title('B').build();
+
+        const event = EventBuilder.new()
+          .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+          .resources([r1, r2])
+          .build();
+
+        const state = getEventTimelinePremiumStateFromParameters({
+          events: [event],
+          resources: [r1, r2],
+        });
+        const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
+
+        const group1 = response.find((g) => g.resource.id === r1.id)!;
+        const group2 = response.find((g) => g.resource.id === r2.id)!;
+        expect(group1.occurrences).to.have.length(1);
+        expect(group1.occurrences[0].id).to.equal(event.id);
+        expect(group2.occurrences).to.have.length(1);
+        expect(group2.occurrences[0].id).to.equal(event.id);
+      });
+
+      it('should be visible and shown in the visible resource row when one resource is hidden', () => {
+        const r1 = ResourceBuilder.new().title('A').build();
+        const r2 = ResourceBuilder.new().title('B').build();
+
+        const event = EventBuilder.new()
+          .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+          .resources([r1, r2])
+          .build();
+
+        const state = getEventTimelinePremiumStateFromParameters({
+          events: [event],
+          resources: [r1, r2],
+        });
+        state.visibleResources = { [r2.id]: false };
+        const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
+
+        const group1 = response.find((g) => g.resource.id === r1.id)!;
+        expect(group1.occurrences).to.have.length(1);
+        expect(group1.occurrences[0].id).to.equal(event.id);
+      });
+
+      // The "all assigned resources hidden" and "no resource" cases are pinned directly
+      // against `getOccurrencesFromEvents` in event-utils.test.ts instead of here: this
+      // selector hides resources as whole rows, so an event's own visibility filtering
+      // can't be observed independently from row visibility at this level.
+    });
+  });
+
+  describe('groupedByResourceList — collapse', () => {
+    const start = DEFAULT_TESTING_VISIBLE_DATE;
+    const end = adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 2);
+
+    const grandchild = ResourceBuilder.new().title('Grandchild').build();
+    const child1 = ResourceBuilder.new().title('Child 1').children([grandchild]).build();
+    const child2 = ResourceBuilder.new().title('Child 2').build();
+    const parent = ResourceBuilder.new().title('Parent').children([child1, child2]).build();
+    const resources = [parent];
+
+    it('should list the parent and all descendants when expanded', () => {
+      const state = getEventTimelinePremiumStateFromParameters({ events: [], resources });
+
+      const result = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
+      expect(result.map((entry) => entry.resource.id)).to.deep.equal([
+        parent.id,
+        child1.id,
+        grandchild.id,
+        child2.id,
+      ]);
+    });
+
+    it('should hide all descendants of a collapsed parent', () => {
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [],
+        resources,
+        defaultCollapsedResources: { [parent.id]: true },
+      });
+
+      const result = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
+      expect(result.map((entry) => entry.resource.id)).to.deep.equal([parent.id]);
+    });
+
+    it('should hide only the collapsed branch when a mid-level resource is collapsed', () => {
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [],
+        resources,
+        defaultCollapsedResources: { [child1.id]: true },
+      });
+
+      const result = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
+      expect(result.map((entry) => entry.resource.id)).to.deep.equal([
+        parent.id,
+        child1.id,
+        child2.id,
+      ]);
+    });
+
+    it('should be a no-op when a leaf resource is collapsed', () => {
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [],
+        resources,
+        defaultCollapsedResources: { [child2.id]: true },
+      });
+
+      const result = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
+      expect(result.map((entry) => entry.resource.id)).to.deep.equal([
+        parent.id,
+        child1.id,
+        grandchild.id,
+        child2.id,
+      ]);
+    });
   });
 });

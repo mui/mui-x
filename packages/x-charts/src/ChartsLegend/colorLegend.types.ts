@@ -1,4 +1,4 @@
-import { type AxisId } from '../models/axis';
+import type { AxisId } from '../models/axis';
 
 export interface ColorLegendSelector {
   /**

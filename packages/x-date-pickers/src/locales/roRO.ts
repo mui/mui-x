@@ -1,6 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import type { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 // maps TimeView to its translation
 const timeViews: Record<TimeViewWithMeridiem, string> = {
@@ -43,7 +43,7 @@ const roROPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Selectați data și ora',
   timePickerToolbarTitle: 'Selectați ora',
   dateRangePickerToolbarTitle: 'Selectați intervalul de date',
-  // timeRangePickerToolbarTitle: 'Select time range',
+  timeRangePickerToolbarTitle: 'Selectați intervalul de timp',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -66,7 +66,10 @@ const roROPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Selectați data, data selectată este ${formattedDate}` : 'Selectați data',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Selectați ora, ora selectată este ${formattedTime}` : 'Selectați ora',
-  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange
+      ? `Selectați intervalul, intervalul selectat este ${formattedRange}`
+      : 'Selectați intervalul',
   fieldClearLabel: 'Golire conținut',
 
   // Table labels

@@ -2,22 +2,22 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { useSkipAnimation } from '@mui/x-charts/internals';
-import {
-  BarElement,
-  type BarElementSlotProps,
-  type BarElementSlots,
-  barClasses,
-  type BarLabelSlots,
-  type BarLabelSlotProps,
+import { useSkipAnimation, useRegisterItemActivation } from '@mui/x-charts/internals';
+import { BarElement, barClasses } from '@mui/x-charts/BarChart';
+import type {
+  BarElementSlotProps,
+  BarElementSlots,
+  BarLabelSlots,
+  BarLabelSlotProps,
 } from '@mui/x-charts/BarChart';
 import { useDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useIsZoomInteracting } from '@mui/x-charts-pro/hooks';
+import type { ChartsActivationEvent } from '@mui/x-charts/models';
 import { useUtilityClasses } from './useUtilityClasses';
 import { useRangeBarPlotData } from './useRangeBarPlotData';
 import { AnimatedRangeBarElement } from './AnimatedRangeBarElement';
 import { RangeBarWebGLPlot } from './RangeBarWebGLPlot';
-import { type RangeBarItemIdentifier } from '../../models';
+import type { RangeBarItemIdentifier } from '../../models';
 
 export type RangeBarPlotRenderer = 'svg-single' | 'webgl';
 
@@ -33,11 +33,11 @@ export interface RangeBarPlotProps {
   skipAnimation?: boolean;
   /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {RangeBarItemIdentifier} barItemIdentifier The range bar item identifier.
    */
   onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: ChartsActivationEvent<SVGElement>,
     barItemIdentifier: RangeBarItemIdentifier,
   ) => void;
   /**
@@ -100,6 +100,18 @@ function RangeBarSvgPlot(props: Omit<RangeBarPlotProps, 'renderer'>): React.JSX.
   const completedData = useRangeBarPlotData(useDrawingArea(), xAxes, yAxes);
 
   const classes = useUtilityClasses();
+
+  useRegisterItemActivation(
+    { type: 'rangeBar' },
+    onItemClick &&
+      ((event, item) =>
+        onItemClick(event, {
+          type: 'rangeBar',
+          seriesId: item.seriesId,
+          dataIndex: item.dataIndex,
+        })),
+  );
+
   const slots: BarElementSlots = {
     ...props.slots,
     bar: props.slots?.bar ?? AnimatedRangeBarElement,
@@ -157,7 +169,7 @@ RangeBarSvgPlot.propTypes /* remove-proptypes */ = {
   borderRadius: PropTypes.number,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {RangeBarItemIdentifier} barItemIdentifier The range bar item identifier.
    */
   onItemClick: PropTypes.func,
@@ -189,7 +201,7 @@ RangeBarPlot.propTypes /* remove-proptypes */ = {
   borderRadius: PropTypes.number,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {RangeBarItemIdentifier} barItemIdentifier The range bar item identifier.
    */
   onItemClick: PropTypes.func,

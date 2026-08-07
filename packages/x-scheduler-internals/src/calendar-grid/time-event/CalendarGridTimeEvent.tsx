@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useId } from '@base-ui/utils/useId';
-import { useButton } from '../../base-ui-copy/utils/useButton';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
+import { useButton } from '@base-ui/react/internals/use-button';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
@@ -14,7 +14,12 @@ import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
-import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
+import type {
+  SchedulerEventId,
+  SchedulerEventOccurrence,
+  SchedulerResourceId,
+  TemporalSupportedObject,
+} from '../../models';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { generateOccurrenceFromEvent } from '../../internals/utils/event-utils';
 
@@ -36,13 +41,10 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     id: idProp,
     isDraggable = false,
     nativeButton = false,
+    interactive = true,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
-
-  // TODO: Expose a real `interactive` prop
-  // to control whether the event should behave like a button
-  const isInteractive = true;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -51,6 +53,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const {
     start: columnStart,
     end: columnEnd,
+    dayStartMinute,
+    dayEndMinute,
     index: columnIndex,
     hasFocus: columnHasFocus,
     getCursorPositionInElementMs,
@@ -65,7 +69,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   // Feature hooks
   const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
-      const offsetBeforeColumnStart = Math.max(adapter.getTime(columnStart) - start.timestamp, 0);
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
       const originalOccurrence = generateOccurrenceFromEvent({
@@ -76,14 +79,19 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         end,
       });
 
-      const offsetInsideColumn = getCursorPositionInElementMs({ input, elementRef: ref });
+      // No `input` (pointer-based resize) — skip the layout-reading cursor measurement.
+      const initialCursorPositionInEventMs = input
+        ? Math.max(adapter.getTime(columnStart) - start.timestamp, 0) +
+          getCursorPositionInElementMs({ input, elementRef: ref })
+        : 0;
+
       return {
         eventId,
         occurrenceKey,
         originalOccurrence,
         start: start.value,
         end: end.value,
-        initialCursorPositionInEventMs: offsetBeforeColumnStart + offsetInsideColumn,
+        initialCursorPositionInEventMs,
       };
     },
   );
@@ -111,7 +119,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   });
 
   const { getButtonProps, buttonRef } = useButton({
-    disabled: !isInteractive,
+    disabled: false,
     native: nativeButton,
     tabIndex: columnHasFocus ? 0 : -1,
   });
@@ -121,6 +129,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     end,
     collectionStart: columnStart,
     collectionEnd: columnEnd,
+    dayStartMinute,
+    dayEndMinute,
   });
 
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
@@ -137,13 +147,14 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
       elementProps,
       {
         id,
-        'aria-labelledby': `${columnHeaderId} ${id}`,
+        // A non-interactive event stays a plain div: no role, no tabIndex, no header label.
+        ...(interactive ? { 'aria-labelledby': `${columnHeaderId} ${id}` } : undefined),
         style: {
           [CalendarGridTimeEventCssVars.yPosition]: `${position * 100}%`,
           [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
         } as React.CSSProperties,
       },
-      getButtonProps,
+      ...(interactive ? [getButtonProps] : []),
     ],
   });
 
@@ -162,7 +173,15 @@ export namespace CalendarGridTimeEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {}
+      useDraggableEvent.PublicParameters {
+    /**
+     * Whether the event behaves like a button: `role="button"`, roving `tabIndex` and the column
+     * header labelling. Set it to `false` for an inert preview (creation / resize placeholder) that
+     * only hosts pointer interactions — it then renders a plain `div`, so it is never focusable.
+     * @default true
+     */
+    interactive?: boolean;
+  }
 
   export interface SharedDragData {
     eventId: SchedulerEventId;
@@ -171,6 +190,7 @@ export namespace CalendarGridTimeEvent {
     start: TemporalSupportedObject;
     end: TemporalSupportedObject;
     initialCursorPositionInEventMs: number;
+    sourceResourceId?: SchedulerResourceId;
   }
 
   export interface DragData extends SharedDragData {

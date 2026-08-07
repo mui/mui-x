@@ -70,6 +70,22 @@ const TEST_RULES: RouteRule[] = [
     // Dedicated tests handle mouse positioning.
     enabled: false,
   },
+  {
+    test: '/test-regressions-charts/MapImageProjections',
+    // `MapImagePlot` reprojects each raster on a canvas asynchronously; the demo
+    // reveals this sentinel once every projection has finished rendering.
+    waitForSelector: '[data-testid="map-images-ready"]',
+  },
+  {
+    test: '/test-regressions-charts/MapImageAntimeridian',
+    // Same async reprojection sentinel as MapImageProjections.
+    waitForSelector: '[data-testid="map-images-ready"]',
+  },
+  {
+    test: '/test-regressions-charts/ImageExportAutoSize',
+    // The exported image is screenshotted by a dedicated `test` block below.
+    enabled: false,
+  },
 
   // Overview composites embed desktop-breakpoint media queries that don't
   // match at the default 1000x700 viewport, leaving panes hidden in
@@ -92,6 +108,15 @@ const TEST_RULES: RouteRule[] = [
     // `aria-busy` font gate doesn't track. Until the data resolves the grid
     // shows the skeleton overlay (skeleton rows carry both `row` and
     // `rowSkeleton`), so wait for a real, non-skeleton row before screenshotting.
+    waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
+  },
+  {
+    test: '/docs-data-grid-server-side-data/ServerSideDataGridKeepPreviousData',
+    // The demo intentionally sets a 500-1500ms mock-server delay so the
+    // keep-previous-data behavior is visible when paginating. An explicit delay
+    // bypasses the regression build's delay-zeroing (`__DISABLE_CHANCE_RANDOM__`),
+    // and the `aria-busy` font gate doesn't track async data, so the initial
+    // skeleton overlay would otherwise be captured. Wait for a real row instead.
     waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
   },
 ];
@@ -569,6 +594,35 @@ async function main() {
       }
     });
 
+    it('should export a chart sized by its parent element as PNG', async () => {
+      const route = '/test-regressions-charts/ImageExportAutoSize';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
+
+      const page = await pool.acquire();
+      // The export catches its own errors and logs them, which would leave the download
+      // promise hanging until the test times out. Surface the error instead.
+      const { promise: exportError, reject } = Promise.withResolvers<never>();
+      const handler = (msg: ConsoleMessage) => {
+        if (msg.type() === 'error') {
+          reject(new Error(msg.text()));
+        }
+      };
+      page.on('console', handler);
+      try {
+        await navigateToTest(page, route);
+
+        const downloadPromise = page.waitForEvent('download');
+        await page.getByRole('button', { name: 'Export Image' }).click();
+
+        const download = await Promise.race([downloadPromise, exportError]);
+
+        await download.saveAs(screenshotPath);
+      } finally {
+        page.off('console', handler);
+        pool.release(page);
+      }
+    });
+
     it('should export a chart as PNG when page is zoomed in', async () => {
       const route = '/docs-charts-export/ExportChartAsImage';
       const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomedInPNG.png`);
@@ -738,10 +792,14 @@ async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}
 
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos
+  const allowedImages = [
+    'https://flagcdn.com',
+    // Map raster base maps are reprojected on a canvas, so they must actually load.
+    '/static/x/charts/mars-viking-mdim21.jpg',
+  ];
   await page.route(/./, async (route, request) => {
     const type = request.resourceType();
-    // Block all images except the flags
-    if (type === 'image' && !request.url().startsWith('https://flagcdn.com')) {
+    if (type === 'image' && !allowedImages.some((allowed) => request.url().includes(allowed))) {
       route.abort();
     } else {
       route.continue();

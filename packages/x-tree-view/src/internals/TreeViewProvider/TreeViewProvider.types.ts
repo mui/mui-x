@@ -1,14 +1,14 @@
-import * as React from 'react';
-import { disposeSymbol } from '@mui/x-internals/disposable';
-import {
+import type * as React from 'react';
+import type { disposeSymbol } from '@mui/x-internals/disposable';
+import type {
   TreeItemWrapper,
   TreeViewItemPluginResponse,
   TreeViewPublicAPI,
   TreeViewAnyStore,
 } from '../models';
 import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
-import { TreeViewClasses, TreeViewSlotProps, TreeViewSlots } from './TreeViewStyleContext';
-import { UseTreeViewBuildContextParameters } from './useTreeViewBuildContext';
+import type { TreeViewClasses, TreeViewSlotProps, TreeViewSlots } from './TreeViewStyleContext';
+import type { UseTreeViewBuildContextParameters } from './useTreeViewBuildContext';
 
 export type TreeViewItemPluginsRunner = (
   props: TreeItemProps,

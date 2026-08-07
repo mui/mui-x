@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { type SeriesId } from '../../models/seriesType/common';
+import type { SeriesId } from '../../models/seriesType/common';
 import { getValueToPositionMapper } from '../../hooks/getValueToPositionMapper';
 import { selectorChartSeriesProcessed } from '../../internals/plugins/corePlugins/useChartSeries';
 import { selectorChartDrawingArea } from '../../internals/plugins/corePlugins/useChartDimensions';

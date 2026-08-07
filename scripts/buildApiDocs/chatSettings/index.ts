@@ -100,14 +100,6 @@ export default chatApiPages;
       'ChatMessageList/DefaultMessageItem.tsx',
       // Default waiting-phase presentation of the streaming indicator, not exported from the package index.
       'ChatIndicators/ChatStreamingIndicatorRow.tsx',
-      // Internal default icon components, not intended as public API.
-      'icons/DefaultAttachIcon.tsx',
-      'icons/DefaultCloseIcon.tsx',
-      'icons/DefaultFileIcon.tsx',
-      'icons/DefaultNewChatIcon.tsx',
-      'icons/DefaultSendIcon.tsx',
-      'icons/DefaultSettingsIcon.tsx',
-      'icons/DefaultMenuIcon.tsx',
     ];
     if (compoundFiles.some((f) => filename.includes(f))) {
       return true;

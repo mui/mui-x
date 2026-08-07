@@ -1,14 +1,16 @@
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
-  type GridApi,
   useGridApiRef,
-  type DataGridProProps,
   gridClasses,
   GridPinnedColumnPosition,
-  type GridColumnGroupingModel,
-  type GridColDef,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridApi,
+  DataGridProProps,
+  GridColumnGroupingModel,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import {

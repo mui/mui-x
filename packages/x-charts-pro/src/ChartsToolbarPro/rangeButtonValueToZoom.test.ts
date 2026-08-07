@@ -1,4 +1,5 @@
-import { rangeButtonValueToZoom, type RangeButtonFunctionParams } from './rangeButtonValueToZoom';
+import { rangeButtonValueToZoom } from './rangeButtonValueToZoom';
+import type { RangeButtonFunctionParams } from './rangeButtonValueToZoom';
 
 // Domain: Jan 1 2023 → Jan 1 2025 (exactly 2 years)
 const domainMin = new Date(2023, 0, 1).getTime();

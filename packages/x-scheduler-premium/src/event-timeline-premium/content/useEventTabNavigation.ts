@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import {
+import type {
   SchedulerEventOccurrence,
   SchedulerResource,
   TemporalSupportedObject,
@@ -43,7 +43,7 @@ export function useEventTabNavigation(params: {
     titleColumnWidth,
   } = params;
 
-  const pendingFocusKeyRef = React.useRef<string | null>(null);
+  const pendingFocusRef = React.useRef<{ key: string; resourceId: string } | null>(null);
 
   // Map (timestamp - collectionStart) into [0, 1]
   const collectionStartTs = React.useMemo(
@@ -65,12 +65,17 @@ export function useEventTabNavigation(params: {
     };
   });
 
-  const focusEventInDom = (key: string): boolean => {
+  // Scoped by `data-resource-id`: occurrence keys are event-scoped, not unique
+  // across rows, so an unscoped lookup could match a same-key copy rendered in
+  // a different row instead of the one being navigated to.
+  const focusEventInDom = (key: string, resourceId: string): boolean => {
     const scroller = scrollerRef.current;
     if (!scroller) {
       return false;
     }
-    const el = scroller.querySelector<HTMLElement>(`[data-occurrence-key="${CSS.escape(key)}"]`);
+    const el = scroller.querySelector<HTMLElement>(
+      `[data-resource-id="${CSS.escape(resourceId)}"] [data-occurrence-key="${CSS.escape(key)}"]`,
+    );
     if (el) {
       el.focus({ preventScroll: true });
       return true;
@@ -116,8 +121,9 @@ export function useEventTabNavigation(params: {
       // Focus isn't on an event; let the default Tab behavior handle row/cell moves.
       return false;
     }
-    const row = active.closest<HTMLElement>('[data-resource-id]');
-    const resourceId = row?.getAttribute('data-resource-id');
+    const resourceId = active
+      .closest<HTMLElement>('[data-resource-id]')
+      ?.getAttribute('data-resource-id');
     if (!resourceId) {
       return false;
     }
@@ -139,11 +145,13 @@ export function useEventTabNavigation(params: {
     // Scroll first so the target is in/near the viewport. If it's already mounted,
     // we focus directly; otherwise we queue the focus and the layout effect picks
     // it up once the virtualizer re-renders with the new column range.
+    // `next` comes from this same row's occurrence list, so it always belongs to
+    // `resourceId`.
     scrollEventIntoView(next);
-    if (focusEventInDom(next.key)) {
-      pendingFocusKeyRef.current = null;
+    if (focusEventInDom(next.key, resourceId)) {
+      pendingFocusRef.current = null;
     } else {
-      pendingFocusKeyRef.current = next.key;
+      pendingFocusRef.current = { key: next.key, resourceId };
     }
     return true;
   };
@@ -152,9 +160,9 @@ export function useEventTabNavigation(params: {
   // how virtualized-out events get focused once the scroll-driven re-render mounts
   // them. Stays a no-op when no focus is queued.
   React.useLayoutEffect(() => {
-    const key = pendingFocusKeyRef.current;
-    if (key && focusEventInDom(key)) {
-      pendingFocusKeyRef.current = null;
+    const pending = pendingFocusRef.current;
+    if (pending && focusEventInDom(pending.key, pending.resourceId)) {
+      pendingFocusRef.current = null;
     }
   });
 

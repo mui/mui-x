@@ -1,6 +1,6 @@
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
+import type { AdapterFormats } from '@mui/x-date-pickers/models';
 import {
   createPickerRenderer,
   expectFieldValue,

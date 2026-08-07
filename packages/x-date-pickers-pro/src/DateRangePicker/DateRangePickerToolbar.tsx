@@ -5,13 +5,15 @@ import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import {
-  PickersToolbar,
-  PickersToolbarButton,
+import type {
   BaseToolbarProps,
   ExportedBaseToolbarProps,
   PickerRangeValue,
   PickerToolbarOwnerState,
+} from '@mui/x-date-pickers/internals';
+import {
+  PickersToolbar,
+  PickersToolbarButton,
   useToolbarOwnerState,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -19,11 +21,9 @@ import {
   usePickerContext,
   usePickerTranslations,
 } from '@mui/x-date-pickers/hooks';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import {
-  DateRangePickerToolbarClasses,
-  getDateRangePickerToolbarUtilityClass,
-} from './dateRangePickerToolbarClasses';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
+import type { DateRangePickerToolbarClasses } from './dateRangePickerToolbarClasses';
+import { getDateRangePickerToolbarUtilityClass } from './dateRangePickerToolbarClasses';
 import { usePickerRangePositionContext } from '../hooks';
 
 const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | undefined) => {

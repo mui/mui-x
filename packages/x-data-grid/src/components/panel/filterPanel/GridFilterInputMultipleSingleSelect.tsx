@@ -14,7 +14,8 @@ export type GridFilterInputMultipleSingleSelectProps = GridFilterInputValueProps
 };
 
 function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingleSelectProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, slotProps, ...other } = props;
+  const { item, applyValue, type, apiRef, focusElementRef, slotProps, disableDebounce, ...other } =
+    props;
 
   const id = useId();
   const rootProps = useGridRootProps();
@@ -101,6 +102,11 @@ GridFilterInputMultipleSingleSelect.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   clearButton: PropTypes.node,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, filter value changes are applied immediately without debouncing.
+   * @default false
+   */
+  disableDebounce: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,

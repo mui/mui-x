@@ -1,7 +1,12 @@
 'use client';
 import * as React from 'react';
+import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 
 export interface TimelineGridEventRowContext {
+  /**
+   * The id of the resource this row represents.
+   */
+  resourceId: SchedulerResourceId;
   /**
    * Whether this row currently owns focus within the grid.
    * When `true`, interactive children (e.g. events) should use `tabIndex={0}`

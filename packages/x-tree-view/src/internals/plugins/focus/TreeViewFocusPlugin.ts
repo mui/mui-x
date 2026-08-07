@@ -1,8 +1,8 @@
-import { TreeViewCancellableEvent, TreeViewItemId } from '../../../models';
+import type { TreeViewCancellableEvent, TreeViewItemId } from '../../../models';
 import { expansionSelectors } from '../expansion';
 import { focusSelectors } from './selectors';
 import { itemsSelectors } from '../items';
-import { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
+import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
 import {
   getFirstNavigableItem,
   getNextNavigableItem,

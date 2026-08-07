@@ -1,5 +1,13 @@
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
+
+interface CommonExperimentalFeatures {
+  /**
+   * Enables activating the keyboard-focused item with <kbd>Enter</kbd> or <kbd>Space</kbd>,
+   * firing `onItemClick` and `onAxisClick` as a pointer click would.
+   */
+  keyboardActivation?: boolean;
+}
 
 interface LineExperimentalFeatures {
   /**
@@ -31,7 +39,8 @@ interface ScatterExperimentalFeatures {
 }
 
 export type ChartExperimentalFeatures<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  ('line' extends SeriesType ? LineExperimentalFeatures : {}) &
+  CommonExperimentalFeatures &
+    ('line' extends SeriesType ? LineExperimentalFeatures : {}) &
     ('scatter' extends SeriesType ? ScatterExperimentalFeatures : {});
 
 export interface UseChartExperimentalFeaturesParameters<
