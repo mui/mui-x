@@ -139,7 +139,9 @@ HeatmapPremium.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
   /**
    * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
    * By default, clicking sets the item that keyboard navigation starts from, but the focus
@@ -248,7 +250,7 @@ HeatmapPremium.propTypes /* remove-proptypes */ = {
   /**
    * The callback fired when an item is clicked.
    *
-   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
+   * @param {ChartsActivationEvent<HTMLDivElement>} event The click event.
    * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,

@@ -17,11 +17,19 @@ import { getItemAtAxisPosition } from './utils/getItemAtAxisPosition';
 import type { ChartPlugin } from '../../models';
 import type {
   FocusItemOptions,
+  ItemActivationHandler,
+  ItemActivationScope,
   UseChartKeyboardNavigationSignature,
 } from './useChartKeyboardNavigation.types';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { FocusedItemIdentifier } from '../../../../models/seriesType';
 import type { FocusedItemUpdater } from './keyboardFocusHandler.types';
+import { findItemActivationHandler, isItemActivationKey } from './itemActivation';
+import type { ItemActivationRegistration } from './itemActivation';
+import {
+  selectorChartsIsFocusVisible,
+  selectorChartsIsKeyboardActivationEnabled,
+} from './useChartKeyboardNavigation.selectors';
 
 /**
  * Identifier cleaners always emit every key their series type uses, leaving the missing ones
@@ -47,6 +55,23 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   const focusVisibleIntentRef = React.useRef(true);
 
   /**
+   * Whether the last interaction came from the keyboard.
+   * Only then do the highlight and the tooltip follow the focused item: after a click the pointer
+   * is still on the chart, and they must keep following it.
+   */
+  const isKeyboardModalityRef = React.useRef(true);
+
+  /**
+   * The item a tap resolved, waiting for the click to focus it.
+   *
+   * The two steps cannot be merged. Touch clears the pointer item on `pointerleave`, right after
+   * the tap, so the item has to be read early. But touch also emits its compatibility `mousedown`
+   * after that, which moves the focus to the body, so the focus has to be taken late, on the click
+   * that closes the sequence.
+   */
+  const pendingFocusItemRef = React.useRef<FocusedItemIdentifier<ChartSeriesType> | null>(null);
+
+  /**
    * Writes the focus state, only switching the highlight and tooltip to keyboard when visible.
    * An `undefined` item leaves the focused item untouched, `null` clears it.
    *
@@ -58,15 +83,16 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     (item: FocusedItemIdentifier<ChartSeriesType> | null | undefined, isFocusVisible: boolean) => {
       const keyboardNavigation = store.state.keyboardNavigation;
       const isFocused = chartsLayerContainerRef.current?.contains(document.activeElement) ?? false;
+      // Only the keyboard hands the highlight and the tooltip over to the focused item. A click
+      // moves the focus, but the pointer is still there and they must keep following it.
+      const followsFocus = isFocused && isFocusVisible && isKeyboardModalityRef.current;
 
       store.update({
-        ...(isFocused &&
-          isFocusVisible &&
+        ...(followsFocus &&
           store.state.highlight && {
             highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
           }),
-        ...(isFocused &&
-          isFocusVisible &&
+        ...(followsFocus &&
           store.state.interaction && {
             interaction: { ...store.state.interaction, lastUpdate: 'keyboard' },
           }),
@@ -142,19 +168,19 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   );
 
   /**
-   * Focuses the item a click landed on, read from the item the pointer is over. Falls back to the
-   * axis under the pointer, which covers the line and area paths, whose hovered item only knows
-   * its series.
+   * The item a click landed on, read from the item the pointer is over. Falls back to the axis
+   * under the pointer, which covers the line and area paths, whose hovered item only knows its
+   * series.
    *
    * A click that resolves nothing is left alone rather than focusing the chart. The drawing area
    * is a rectangle, but the data rarely fills it: taking the focus from a click next to a pie,
    * outside its circle, reads as the chart grabbing clicks that were not meant for it.
    */
-  const focusItemAtPointer = useEventCallback((event: MouseEvent | PointerEvent) => {
+  const resolveItemAtPointer = useEventCallback((event: MouseEvent | PointerEvent) => {
     // Every series reports the item under the pointer, so the click itself needs no wiring.
     const hoveredItem = store.state.interaction?.hoveredItem;
-    if (hoveredItem != null && focusItem(hoveredItem as FocusedItemIdentifier<ChartSeriesType>)) {
-      return;
+    if (hoveredItem != null) {
+      return hoveredItem as FocusedItemIdentifier<ChartSeriesType>;
     }
 
     const element = chartsLayerContainerRef.current;
@@ -171,10 +197,26 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           })
         : null;
 
-    if (item !== null) {
-      focusItem(item);
-    }
+    return item;
   });
+
+  const activationRegistrationsRef = React.useRef(new Map<number, ItemActivationRegistration>());
+  const nextRegistrationIdRef = React.useRef(0);
+
+  const registerItemActivationHandler = React.useCallback(
+    (scope: ItemActivationScope, handler: ItemActivationHandler) => {
+      const registrationId = nextRegistrationIdRef.current;
+      nextRegistrationIdRef.current += 1;
+
+      const registrations = activationRegistrationsRef.current;
+      registrations.set(registrationId, { scope, handler });
+
+      return () => {
+        registrations.delete(registrationId);
+      };
+    },
+    [],
+  );
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
@@ -215,12 +257,45 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       // A click keeps the focus visible only if it already was, or if the chart opts in.
       focusVisibleIntentRef.current =
         params.focusItemOnClick === true || store.state.keyboardNavigation.isFocusVisible;
+      isKeyboardModalityRef.current = false;
+      pendingFocusItemRef.current = null;
     }
 
     // Any key press means the user switched to the keyboard, wherever the focus currently is.
     // Listening on the document also covers tabbing in from outside the chart.
     function trackKeyboardIntent() {
       focusVisibleIntentRef.current = true;
+      isKeyboardModalityRef.current = true;
+    }
+
+    function activationHandler(event: KeyboardEvent) {
+      // Ignore the auto-repeat while the key is held: a pointer click does not repeat either.
+      if (
+        event.repeat ||
+        !isItemActivationKey(event) ||
+        !selectorChartsIsKeyboardActivationEnabled(store.state)
+      ) {
+        return;
+      }
+
+      // The focus has to be visible, not merely held: a click sets the item without revealing it,
+      // and activating an item the user cannot see would be a surprise.
+      const focusedItem = store.state.keyboardNavigation.item;
+      if (focusedItem === null || !selectorChartsIsFocusVisible(store.state)) {
+        return;
+      }
+
+      const handler = findItemActivationHandler(
+        activationRegistrationsRef.current.values(),
+        focusedItem,
+      );
+
+      if (handler === null) {
+        return;
+      }
+
+      event.preventDefault();
+      handler(event, focusedItem);
     }
 
     function keyboardHandler(event: KeyboardEvent) {
@@ -260,12 +335,14 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       updateFocus(newFocusedItem, true);
     }
 
+    element.addEventListener('keydown', activationHandler);
     element.addEventListener('keydown', keyboardHandler);
     element.addEventListener('focusout', removeFocus);
     element.addEventListener('focusin', restoreFocus);
     element.addEventListener('pointerdown', trackPointerIntent, true);
     document.addEventListener('keydown', trackKeyboardIntent, true);
     return () => {
+      element.removeEventListener('keydown', activationHandler);
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('focusout', removeFocus);
       element.removeEventListener('focusin', restoreFocus);
@@ -287,11 +364,35 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     const tapHandler = instance.addInteractionListener?.('tap', (event) => {
-      focusItemAtPointer(event.detail.srcEvent as PointerEvent);
+      pendingFocusItemRef.current = resolveItemAtPointer(event.detail.srcEvent as PointerEvent);
     });
 
-    return () => tapHandler?.cleanup();
-  }, [instance, params.disableKeyboardNavigation, focusItemAtPointer]);
+    function focusPendingItem(event: MouseEvent) {
+      const item = pendingFocusItemRef.current;
+      pendingFocusItemRef.current = null;
+
+      // A handler stopping the propagation keeps the click from reaching this listener, leaving
+      // the item pending. Checking the target stops it from landing on an unrelated later click.
+      if (item !== null && chartsLayerContainerRef.current?.contains(event.target as Node)) {
+        focusItem(item);
+      }
+    }
+
+    // Listens on the document so it runs after the React handlers, which are attached to the
+    // React root above the chart container.
+    document.addEventListener('click', focusPendingItem);
+
+    return () => {
+      tapHandler?.cleanup();
+      document.removeEventListener('click', focusPendingItem);
+    };
+  }, [
+    instance,
+    params.disableKeyboardNavigation,
+    resolveItemAtPointer,
+    focusItem,
+    chartsLayerContainerRef,
+  ]);
 
   useEnhancedEffect(() => {
     store.set('keyboardNavigation', {
@@ -300,7 +401,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     });
   }, [store, params.disableKeyboardNavigation]);
 
-  return { instance: { focusItem } };
+  return { instance: { focusItem, registerItemActivationHandler } };
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({

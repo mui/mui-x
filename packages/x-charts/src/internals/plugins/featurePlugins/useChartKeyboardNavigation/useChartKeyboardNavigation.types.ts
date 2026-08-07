@@ -2,7 +2,7 @@ import type { ChartPluginSignature } from '../../models';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 import type { UseChartHighlightSignature } from '../useChartHighlight';
-import type { FocusedItemIdentifier } from '../../../../models/seriesType';
+import type { FocusedItemIdentifier, SeriesId } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 export interface FocusItemOptions {
@@ -11,6 +11,38 @@ export interface FocusItemOptions {
    * Defaults to `focusItemOnClick || <the focus is already visible>`.
    */
   visible?: boolean;
+}
+
+/**
+ * Called when the focused item is activated with the keyboard.
+ * @param {KeyboardEvent} event The keyboard event that triggered the activation.
+ * @param {FocusedItemIdentifier<ChartSeriesType>} item The activated item.
+ */
+export type ItemActivationHandler = (
+  event: KeyboardEvent,
+  item: FocusedItemIdentifier<ChartSeriesType>,
+) => void;
+
+/**
+ * The items a handler covers. An empty scope covers every item.
+ */
+export interface ItemActivationScope {
+  type?: ChartSeriesType;
+  seriesId?: SeriesId;
+  /**
+   * Breaks ties between handlers covering the same items, highest first.
+   * Mirrors pointer hit-testing, where marks sit above lines, and lines above areas.
+   * @default 0
+   */
+  priority?: number;
+  /**
+   * When set, the handler is a candidate only for items it returns `true` for. Lets a plot decline
+   * an item a pointer could not reach — e.g. a line mark that is not rendered — so activation falls
+   * through to the next handler.
+   * @param {FocusedItemIdentifier<ChartSeriesType>} item The focused item.
+   * @returns {boolean} Whether the handler can activate this item.
+   */
+  canActivate?: (item: FocusedItemIdentifier<ChartSeriesType>) => boolean;
 }
 
 export interface UseChartKeyboardNavigationInstance {
@@ -24,6 +56,18 @@ export interface UseChartKeyboardNavigationInstance {
    * @returns {boolean} `true` when the focus state was updated.
    */
   focusItem: (item: FocusedItemIdentifier<ChartSeriesType>, options?: FocusItemOptions) => boolean;
+  /**
+   * Registers a handler triggered when the focused item is activated with the keyboard.
+   * Only the handler with the most specific matching scope runs, so plots sharing a series
+   * do not fire the callback twice.
+   * @param {ItemActivationScope} scope The items the handler covers.
+   * @param {ItemActivationHandler} handler The handler to call on activation.
+   * @returns {() => void} A cleanup function unregistering the handler.
+   */
+  registerItemActivationHandler: (
+    scope: ItemActivationScope,
+    handler: ItemActivationHandler,
+  ) => () => void;
 }
 
 export interface UseChartKeyboardNavigationState {

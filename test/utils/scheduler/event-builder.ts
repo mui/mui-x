@@ -16,7 +16,7 @@ import {
   getWeekDayCode,
 } from '@mui/x-scheduler-internals-premium/internals';
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy/types';
+import { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { adapter as defaultAdapter } from './adapters';
 

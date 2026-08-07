@@ -10,6 +10,10 @@ import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import type { SeriesId, HighlightItemIdentifierWithType } from '../../models/seriesType';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
+import {
+  RADAR_ACTIVATION_PRIORITY,
+  useRegisterRadarItemActivation,
+} from './useRegisterRadarItemActivation';
 import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 import type { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
 
@@ -63,6 +67,9 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   };
 
   const classes = useUtilityClasses(inClasses);
+
+  useRegisterRadarItemActivation(seriesId, onItemClick, RADAR_ACTIVATION_PRIORITY.area);
+
   return (
     <React.Fragment>
       {seriesCoordinates?.map(({ seriesId: id, points, color, fillArea, hidden }, seriesIndex) => {
@@ -116,7 +123,7 @@ RadarSeriesArea.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when an area is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick: PropTypes.func,

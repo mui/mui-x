@@ -8,6 +8,10 @@ import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGe
 import type { SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
+import {
+  RADAR_ACTIVATION_PRIORITY,
+  useRegisterRadarItemActivation,
+} from './useRegisterRadarItemActivation';
 import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 import type { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
 
@@ -46,6 +50,8 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
   const classes = useUtilityClasses(inClasses);
   const getHighlightState = useItemHighlightStateGetter();
   const { instance } = useChartsContext<[UseChartInteractionSignature]>();
+
+  useRegisterRadarItemActivation(seriesId, onItemClick, RADAR_ACTIVATION_PRIORITY.mark);
 
   return (
     <React.Fragment>
@@ -105,7 +111,7 @@ RadarSeriesMarks.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when a mark is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick: PropTypes.func,

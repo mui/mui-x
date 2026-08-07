@@ -206,7 +206,9 @@ BarChartPro.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
   /**
    * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
    * By default, clicking sets the item that keyboard navigation starts from, but the focus
@@ -423,7 +425,7 @@ BarChartPro.propTypes /* remove-proptypes */ = {
   onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {MouseEvent} event The event source of the callback.
+   * @param {ChartsActivationEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,
