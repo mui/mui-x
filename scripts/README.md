@@ -4,6 +4,8 @@
 
 > Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
 
+> Tip: You can also run or assist any stage of the release with an LLM agent through the `mui-release` skill (installed at `.agents/skills/mui-release`) — for example, type `/mui-release` in Claude Code. The agent treats this README as the source of truth.
+
 A typical release goes like this:
 
 ### Prepare the release of the packages
