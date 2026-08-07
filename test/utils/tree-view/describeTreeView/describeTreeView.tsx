@@ -4,7 +4,6 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 import { TreeViewAnyStore, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import {
@@ -16,6 +15,21 @@ import {
   TreeViewItemIdTreeElement,
 } from './describeTreeView.types';
 
+interface DescribeTreeViewItemTreeModel {
+  id: string;
+  children?: readonly DescribeTreeViewItemTreeModel[];
+}
+
+interface DescribeTreeViewPublicAPIWithItemTree {
+  getItemTree: () => readonly DescribeTreeViewItemTreeModel[];
+}
+
+interface DescribeTreeViewApiRef<TStore extends TreeViewAnyStore> {
+  current:
+    | (Partial<TreeViewPublicAPI<TStore>> & Partial<DescribeTreeViewPublicAPIWithItemTree>)
+    | undefined;
+}
+
 const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
   message: string,
   testRunner: DescribeTreeViewTestRunner<TStore>,
@@ -24,8 +38,8 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
 
   const getUtils = (
     result: MuiRenderResult,
-    apiRef?: { current: TreeViewPublicAPI<TStore> },
-  ): DescribeTreeViewRendererUtils => {
+    apiRef?: DescribeTreeViewApiRef<TStore>,
+  ): Omit<DescribeTreeViewRendererUtils, 'user'> => {
     const getRoot = () => result.getByRole('tree');
 
     const getAllTreeItemIds = () =>
@@ -38,7 +52,13 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
         );
       }
 
-      const cleanItem = (item: TreeViewDefaultItemModelProperties): { id: any; children?: any } => {
+      const getItemTree = apiRef.current?.getItemTree;
+
+      if (!getItemTree) {
+        throw new Error('Cannot use getItemIdTree before the apiRef is initialized');
+      }
+
+      const cleanItem = (item: DescribeTreeViewItemTreeModel): TreeViewItemIdTreeElement => {
         if (item.children) {
           return { id: item.id, children: item.children.map(cleanItem) };
         }
@@ -46,8 +66,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
         return { id: item.id };
       };
 
-      // @ts-ignore
-      return apiRef.current!.getItemTree().map(cleanItem);
+      return getItemTree().map(cleanItem);
     };
 
     const getFocusedItemId = () => {
@@ -109,7 +128,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
 
   const jsxRenderer: DescribeTreeViewJSXRenderer = (element) => {
     const result = render(element);
-    return getUtils(result);
+    return { ...getUtils(result), user: result.user };
   };
 
   const createRendererForComponentWithItemsProp = (
@@ -124,7 +143,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
       ...other
     }) => {
       const items = rawItems as readonly DescribeTreeViewItem[];
-      const apiRef = { current: undefined };
+      const apiRef: DescribeTreeViewApiRef<TStore> = { current: undefined };
 
       const jsx = (
         <TreeViewComponent
@@ -163,7 +182,8 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
         setProps: result.setProps,
         setItems: (newItems) => result.setProps({ items: newItems }),
         apiRef: apiRef as { current: TreeViewPublicAPI<TStore> },
-        ...getUtils(result, apiRef as { current: TreeViewPublicAPI<TStore> }),
+        user: result.user,
+        ...getUtils(result, apiRef),
       };
     };
 
@@ -183,7 +203,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
     }) => {
       const items = rawItems as readonly DescribeTreeViewItem[];
       const Item = slots?.item ?? TreeItem;
-      const apiRef = { current: undefined };
+      const apiRef: DescribeTreeViewApiRef<TStore> = { current: undefined };
 
       const renderItem = (item: DescribeTreeViewItem) => (
         <Item
@@ -211,6 +231,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
         setProps: result.setProps,
         setItems: (newItems) => result.setProps({ children: newItems.map(renderItem) }),
         apiRef: apiRef as { current: TreeViewPublicAPI<TStore> },
+        user: result.user,
         ...getUtils(result),
       };
     };

@@ -788,7 +788,7 @@ export interface ChartsAxisData {
    */
   seriesValues: Record<
     string,
-    HasProperty<ChartsTypeFeatureFlags, 'seriesValueOverride'> extends true
+    HasProperty<ChartsTypeFeatureFlags, 'seriesValuesOverride'> extends true
       ? // @ts-ignore this property is added through module augmentation
         ChartsTypeFeatureFlags['seriesValuesOverride']
       : number | null | undefined

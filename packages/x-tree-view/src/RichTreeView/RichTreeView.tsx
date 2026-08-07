@@ -148,10 +148,12 @@ RichTreeView.propTypes /* remove-proptypes */ = {
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      addItems: PropTypes.func,
       focusItem: PropTypes.func,
       getItem: PropTypes.func,
       getItemDOMElement: PropTypes.func,
       getItemOrderedChildrenIds: PropTypes.func,
+      getItemSelection: PropTypes.func,
       getItemTree: PropTypes.func,
       getParentId: PropTypes.func,
       isItemExpanded: PropTypes.func,
