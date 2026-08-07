@@ -1,6 +1,6 @@
 import type {
   EventCalendarLocaleText,
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 
@@ -20,9 +20,9 @@ export interface SchedulerLocalization {
 }
 
 export const getSchedulerLocalization = (translations: {
-  calendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>>;
-  timeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>>;
-  dialog: Partial<EventDialogLocaleText>;
+  calendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>>;
+  timeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>>;
+  dialog: Partial<EventEditingLocaleText>;
 }): SchedulerLocalization => ({
   components: {
     MuiEventCalendar: {

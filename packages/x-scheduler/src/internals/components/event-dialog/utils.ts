@@ -8,7 +8,7 @@ import type {
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import type { EventDialogLocaleText, SchedulerWeekday } from '../../../models';
+import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 /**
@@ -110,18 +110,18 @@ export function validateRange(
   start: TemporalSupportedObject,
   end: TemporalSupportedObject,
   allDay: boolean,
-): null | { field: 'startDate' | 'startTime' } {
+): null | { field: 'endDate' | 'endTime' } {
   const startDay = adapter.startOfDay(start);
   const endDay = adapter.startOfDay(end);
-  // endDay <= startDay → date error
+  // endDay < startDay → date error
   if (adapter.isAfter(startDay, endDay)) {
-    return { field: 'startDate' };
+    return { field: 'endDate' };
   }
 
   if (adapter.isEqual(startDay, endDay)) {
     if (!allDay && !adapter.isAfter(end, start)) {
       // end <= start → hour error
-      return { field: 'startTime' };
+      return { field: 'endTime' };
     }
   }
   return null;
@@ -131,7 +131,7 @@ export function getRecurrenceLabel(
   adapter: Adapter,
   start: SchedulerProcessedDate,
   recurrenceKey: RecurringEventPresetKey | 'custom' | null,
-  localeText: EventDialogLocaleText,
+  localeText: EventEditingLocaleText,
 ): string {
   if (!recurrenceKey) {
     return localeText.recurrenceNoRepeat;

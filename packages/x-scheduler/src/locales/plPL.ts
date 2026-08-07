@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const plPLDialog: Partial<EventDialogLocaleText> = {
+const plPLDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Kolor wydarzenia',
   // colorSectionLabel: 'Color',
@@ -15,6 +15,9 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   allDayLabel: 'Cały dzień',
   closeButtonAriaLabel: 'Zamknij',
   closeButtonLabel: 'Zamknij',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Usuń wydarzenie',
   descriptionLabel: 'Opis',
   endDateLabel: 'Data zakończenia',
@@ -65,9 +68,9 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   resourceLabel: 'Zasób',
   requiredResourceError: 'Należy wybrać zasób.',
   saveChanges: 'Zapisz',
-  startDateAfterEndDateError:
-    'Data/godzina rozpoczęcia musi być wcześniejsza niż data/godzina zakończenia.',
+  startDateAfterEndDateError: 'Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.',
   startDateLabel: 'Data rozpoczęcia',
+  startTimeAfterEndTimeError: 'Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia.',
   startTimeLabel: 'Godzina rozpoczęcia',
 
   // RecurringScopeDialog
@@ -80,7 +83,7 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   title: 'Zastosuj tę zmianę do:',
 };
 
-const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Zasoby',
 
@@ -142,7 +145,7 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };
 
-const plPLTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const plPLTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };

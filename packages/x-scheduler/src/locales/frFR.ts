@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const frFRDialog: Partial<EventDialogLocaleText> = {
+const frFRDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: "Couleur de l'événement",
   // colorSectionLabel: 'Color',
@@ -15,6 +15,9 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   allDayLabel: 'Toute la journée',
   closeButtonAriaLabel: 'Fermer',
   closeButtonLabel: 'Fermer',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: "Supprimer l'événement",
   descriptionLabel: 'Description',
   endDateLabel: 'Date de fin',
@@ -54,8 +57,9 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   resourceLabel: 'Ressource',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Enregistrer',
-  startDateAfterEndDateError: 'La date/heure de début doit être antérieure à la date/heure de fin.',
+  startDateAfterEndDateError: 'La date de fin ne peut pas être antérieure à la date de début.',
   startDateLabel: 'Date de début',
+  startTimeAfterEndTimeError: "L'heure de fin doit être postérieure à l'heure de début.",
   startTimeLabel: 'Heure de début',
 
   // RecurringScopeDialog
@@ -68,7 +72,7 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   title: 'Appliquer ce changement à :',
 };
 
-const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Ressources',
 
@@ -130,7 +134,7 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   timelineResourceTitleHeader: 'Titre de la ressource',
 };
 
-const frFRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const frFRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titre de la ressource',
 };
