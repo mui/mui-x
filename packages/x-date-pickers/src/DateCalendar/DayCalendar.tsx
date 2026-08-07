@@ -14,7 +14,11 @@ import type { ExportedPickerDayProps } from '../PickerDay/PickerDay.types';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
 import type { PickerOnChangeFn } from '../internals/hooks/useViews';
-import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
+import {
+  CALENDAR_DAY_SIZE_VAR,
+  DAY_MARGIN,
+  WEEKS_CONTAINER_HEIGHT_VAR,
+} from '../internals/constants/dimensions';
 import type { SlideDirection, SlideTransitionProps } from './PickersSlideTransition';
 import { PickersSlideTransition } from './PickersSlideTransition';
 import type {
@@ -131,8 +135,6 @@ const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) =>
   return composeClasses(slots, getDayCalendarUtilityClass, classes);
 };
 
-const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
-
 const PickerCalendarDayRoot = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'Root',
@@ -151,9 +153,9 @@ const PickerCalendarWeekDayLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekDayLabel',
 })(({ theme }) => ({
-  width: 36,
-  height: 40,
-  margin: '0 2px',
+  width: CALENDAR_DAY_SIZE_VAR,
+  height: CALENDAR_DAY_SIZE_VAR,
+  margin: `${DAY_MARGIN}px`,
   textAlign: 'center',
   display: 'flex',
   justifyContent: 'center',
@@ -165,9 +167,9 @@ const PickerCalendarWeekNumberLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumberLabel',
 })(({ theme }) => ({
-  width: 36,
-  height: 40,
-  margin: '0 2px',
+  width: CALENDAR_DAY_SIZE_VAR,
+  height: CALENDAR_DAY_SIZE_VAR,
+  margin: `${DAY_MARGIN}px`,
   textAlign: 'center',
   display: 'flex',
   justifyContent: 'center',
@@ -180,8 +182,8 @@ const PickerCalendarWeekNumber = styled(Typography, {
   slot: 'WeekNumber',
 })(({ theme }) => ({
   ...theme.typography.caption,
-  width: DAY_SIZE,
-  height: DAY_SIZE,
+  width: CALENDAR_DAY_SIZE_VAR,
+  height: CALENDAR_DAY_SIZE_VAR,
   padding: 0,
   margin: `0 ${DAY_MARGIN}px`,
   color: (theme.vars || theme).palette.text.disabled,
@@ -198,14 +200,14 @@ const PickerCalendarLoadingContainer = styled('div', {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  minHeight: weeksContainerHeight,
+  minHeight: WEEKS_CONTAINER_HEIGHT_VAR,
 });
 
 const PickerCalendarSlideTransition = styled(PickersSlideTransition, {
   name: 'MuiDayCalendar',
   slot: 'SlideTransition',
 })({
-  minHeight: weeksContainerHeight,
+  minHeight: WEEKS_CONTAINER_HEIGHT_VAR,
 });
 
 const PickerCalendarWeekContainer = styled('div', {

@@ -57,7 +57,10 @@ import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
 import { useRangePosition } from '../internals/hooks/useRangePosition';
-import { DAY_RANGE_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
+import {
+  DAY_RANGE_CALENDAR_WIDTH_VAR,
+  WEEKS_CONTAINER_HEIGHT_VAR,
+} from '../internals/constants/dimensions';
 import type { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
 import { PickersRangeCalendarHeader } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
@@ -86,13 +89,11 @@ const DateRangeCalendarMonthContainer = styled('div', {
   },
 }));
 
-const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
-
 const InnerDayCalendarForRange = styled(DayCalendar, {
   slot: 'internal',
 })(() => ({
-  minWidth: 312,
-  minHeight: weeksContainerHeight,
+  minWidth: DAY_RANGE_CALENDAR_WIDTH_VAR,
+  minHeight: WEEKS_CONTAINER_HEIGHT_VAR,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
     [`& .${dayClasses.root}`]: {
       cursor: 'grabbing',
