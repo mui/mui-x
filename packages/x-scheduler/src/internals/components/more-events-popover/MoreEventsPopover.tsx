@@ -109,15 +109,16 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
 
   // The editing surface hands focus back to the event it was opened from, and that event unmounts
   // with this popover, so focus would be left on the document and the next Tab would leave the
-  // page. Restore it unless something else already claimed it while the popover was closing.
+  // page. Restored only from where it is about to be lost: on the document, or on something inside
+  // the popover that is going away with it.
   const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
     const ownerDocument = paper.ownerDocument;
     const activeElement = ownerDocument.activeElement;
-    const focusIsLeaving =
+    const focusIsAboutToBeLost =
       activeElement === null ||
       activeElement === ownerDocument.body ||
       paper.contains(activeElement);
-    if (!focusIsLeaving) {
+    if (!focusIsAboutToBeLost) {
       return;
     }
     const target = anchor?.isConnected ? anchor : fallbackFocusRef.current;
