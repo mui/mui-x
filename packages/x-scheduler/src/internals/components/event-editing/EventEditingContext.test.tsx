@@ -10,7 +10,7 @@ const EVENT: SchedulerEvent = EventBuilder.new()
   .singleDay('2025-05-26T07:30:00Z', 45)
   .build();
 
-const occurrence = EventBuilder.new()
+const OCCURRENCE = EventBuilder.new()
   .id(EVENT.id)
   .title(EVENT.title)
   .span(EVENT.start, EVENT.end)
@@ -43,7 +43,7 @@ describe('<EventEditingProvider />', () => {
             <AnchorRecorder />
             {triggerIds.map((id) =>
               mounted.includes(id) ? (
-                <EventEditingTrigger key={id} occurrence={occurrence}>
+                <EventEditingTrigger key={id} occurrence={OCCURRENCE}>
                   <button type="button" data-testid={id}>
                     {id}
                   </button>
