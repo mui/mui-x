@@ -127,8 +127,7 @@ export const useGridDetailPanel = (
     propModel: props.detailPanelExpandedRowIds,
     // The public prop type is narrowed to `GridApiPro`, but the control state machinery is generic over `GridApiCommon`.
     propOnChange: props.onDetailPanelExpandedRowIdsChange as
-      | ((ids: Set<GridRowId>, details: GridCallbackDetails) => void)
-      | undefined,
+      ((ids: Set<GridRowId>, details: GridCallbackDetails) => void) | undefined,
     stateSelector: gridDetailPanelExpandedRowIdsSelector,
     changeEvent: 'detailPanelsExpandedRowIdsChange',
   });

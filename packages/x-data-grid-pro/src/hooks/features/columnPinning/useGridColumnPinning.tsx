@@ -205,8 +205,7 @@ export const useGridColumnPinning = (
     propModel: props.pinnedColumns,
     // The public prop type is narrowed to `GridApiPro`, but the control state machinery is generic over `GridApiCommon`.
     propOnChange: props.onPinnedColumnsChange as
-      | ((pinnedColumns: GridPinnedColumnFields, details: GridCallbackDetails) => void)
-      | undefined,
+      ((pinnedColumns: GridPinnedColumnFields, details: GridCallbackDetails) => void) | undefined,
     stateSelector: gridPinnedColumnsSelector,
     changeEvent: 'pinnedColumnsChange',
   });

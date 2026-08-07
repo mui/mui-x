@@ -86,8 +86,7 @@ export const useGridRowGrouping = (
     propModel: props.rowGroupingModel,
     // The public prop type is narrowed to `GridApiPremium`, but the control state machinery is generic over `GridApiCommon`.
     propOnChange: props.onRowGroupingModelChange as
-      | ((model: GridRowGroupingModel, details: GridCallbackDetails) => void)
-      | undefined,
+      ((model: GridRowGroupingModel, details: GridCallbackDetails) => void) | undefined,
     stateSelector: gridRowGroupingModelSelector,
     changeEvent: 'rowGroupingModelChange',
   });

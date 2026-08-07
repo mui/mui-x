@@ -74,8 +74,7 @@ export const useGridAggregation = (
     propModel: props.aggregationModel,
     // The public prop type is narrowed to `GridApiPremium`, but the control state machinery is generic over `GridApiCommon`.
     propOnChange: props.onAggregationModelChange as
-      | ((model: GridAggregationModel, details: GridCallbackDetails) => void)
-      | undefined,
+      ((model: GridAggregationModel, details: GridCallbackDetails) => void) | undefined,
     stateSelector: gridAggregationModelSelector,
     changeEvent: 'aggregationModelChange',
   });

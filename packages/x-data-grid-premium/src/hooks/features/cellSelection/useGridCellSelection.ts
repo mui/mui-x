@@ -148,8 +148,7 @@ export const useGridCellSelection = (
     propModel: props.cellSelectionModel,
     // The public prop type is narrowed to `GridApiPremium`, but the control state machinery is generic over `GridApiCommon`.
     propOnChange: props.onCellSelectionModelChange as
-      | ((model: GridCellSelectionModel, details: GridCallbackDetails) => void)
-      | undefined,
+      ((model: GridCellSelectionModel, details: GridCallbackDetails) => void) | undefined,
     stateSelector: gridCellSelectionStateSelector,
     changeEvent: 'cellSelectionChange',
   });
