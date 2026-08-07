@@ -7,12 +7,8 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
 import type { GridEventListener } from '../../../models/events/gridEventListener';
-import {
-  GridEditModes,
-  GridCellModes,
-  type GridEditingState,
-  type GridEditCellProps,
-} from '../../../models/gridEditRowModel';
+import { GridEditModes, GridCellModes } from '../../../models/gridEditRowModel';
+import type { GridEditingState, GridEditCellProps } from '../../../models/gridEditRowModel';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type {
@@ -32,10 +28,12 @@ import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
-  type GridCellEditStartParams,
-  type GridCellEditStopParams,
   GridCellEditStartReasons,
   GridCellEditStopReasons,
+} from '../../../models/params/gridEditCellParams';
+import type {
+  GridCellEditStartParams,
+  GridCellEditStopParams,
 } from '../../../models/params/gridEditCellParams';
 import { getDefaultCellValue } from './utils';
 import type { GridUpdateRowParams } from '../../../models/gridDataSource';
@@ -344,15 +342,19 @@ export const useGridCellEditing = (
     async (params) => {
       const { id, field, deleteValue, initialValue } = params;
 
+      const column = apiRef.current.getColumn(field);
+      if (!column) {
+        return;
+      }
+
       const value = apiRef.current.getCellValue(id, field);
       let newValue = value;
       if (deleteValue) {
-        newValue = getDefaultCellValue(apiRef.current.getColumn(field));
+        newValue = getDefaultCellValue(column);
       } else if (initialValue) {
         newValue = initialValue;
       }
 
-      const column = apiRef.current.getColumn(field);
       const shouldProcessEditCellProps = !!column.preProcessEditCellProps && deleteValue;
 
       let newProps: GridEditCellProps = {
@@ -458,9 +460,12 @@ export const useGridCellEditing = (
         }
       } else if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
-          prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
-          // Revert the mode in the cellModesModel prop back to "edit"
-          updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
+          // The row might have been deleted
+          if (prevCellModesModel.current[id]?.[field]) {
+            prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
+            // Revert the mode in the cellModesModel prop back to "edit"
+            updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
+          }
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
@@ -479,7 +484,9 @@ export const useGridCellEditing = (
         try {
           Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
-              apiRef.current.updateRows([finalRowUpdate]);
+              if (apiRef.current.getRow(id)) {
+                apiRef.current.updateRows([finalRowUpdate]);
+              }
               finishCellEditMode();
             })
             .catch(handleError);
@@ -487,7 +494,9 @@ export const useGridCellEditing = (
           handleError(errorThrown);
         }
       } else {
-        apiRef.current.updateRows([rowUpdate]);
+        if (apiRef.current.getRow(id)) {
+          apiRef.current.updateRows([rowUpdate]);
+        }
         finishCellEditMode();
       }
     },
@@ -503,6 +512,9 @@ export const useGridCellEditing = (
       throwIfNotInMode(id, field, GridCellModes.Edit);
 
       const column = apiRef.current.getColumn(field);
+      if (!column) {
+        return false;
+      }
       const row = apiRef.current.getRow(id)!;
 
       let parsedValue = value;
@@ -561,7 +573,7 @@ export const useGridCellEditing = (
       }
 
       const { value } = editingState[id][field];
-      return column.valueSetter
+      return column?.valueSetter
         ? column.valueSetter(value, row, column, apiRef)
         : { ...row, [field]: value };
     },

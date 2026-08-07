@@ -40,7 +40,7 @@ export default function SchedulerCommunityOrPremium() {
             advanced calendar features plus the Event Timeline.{' '}
           </Typography>
         </Stack>
-        <Stack direction="row" spacing={2} sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
+        <Stack direction="row" spacing={2}>
           <Button
             size="small"
             variant="contained"

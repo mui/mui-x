@@ -1,9 +1,9 @@
 import { createSelector } from '@mui/x-internals/store';
-import { TreeViewItemId } from '../../../models';
-import { TreeViewItemMeta } from '../../models';
+import type { TreeViewItemId } from '../../../models';
+import type { TreeViewItemMeta } from '../../models';
 import { isItemDisabled, TREE_VIEW_ROOT_PARENT_ID } from './utils';
-import { MinimalTreeViewState } from '../../MinimalTreeViewStore';
-import { RichTreeViewState } from '../../RichTreeViewStore';
+import type { MinimalTreeViewState } from '../../MinimalTreeViewStore';
+import type { RichTreeViewState } from '../../RichTreeViewStore';
 
 const EMPTY_CHILDREN: TreeViewItemId[] = [];
 

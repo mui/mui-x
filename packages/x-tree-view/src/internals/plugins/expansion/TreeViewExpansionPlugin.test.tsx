@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { act, fireEvent } from '@mui/internal-test-utils';
-import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
+import { act } from '@mui/internal-test-utils';
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import type { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { TreeViewAnyStore } from '../../models';
+import type { TreeViewAnyStore } from '../../models';
 
 /**
  * All tests related to keyboard navigation (e.g.: expanding using "Enter" and "ArrowRight")
@@ -69,7 +70,7 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.isItemExpanded('1')).to.equal(true);
       });
 
-      it('should call the onExpandedItemsChange callback when the model is updated (add expanded item to empty list)', () => {
+      it('should call the onExpandedItemsChange callback when the model is updated (add expanded item to empty list)', async () => {
         const onExpandedItemsChange = spy();
 
         const view = render({
@@ -77,13 +78,13 @@ describeTreeView<TreeViewAnyStore>(
           onExpandedItemsChange,
         });
 
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
 
         expect(onExpandedItemsChange.callCount).to.equal(1);
         expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
       });
 
-      it('should call the onExpandedItemsChange callback when the model is updated (add expanded item to non-empty list)', () => {
+      it('should call the onExpandedItemsChange callback when the model is updated (add expanded item to non-empty list)', async () => {
         const onExpandedItemsChange = spy();
 
         const view = render({
@@ -95,13 +96,13 @@ describeTreeView<TreeViewAnyStore>(
           defaultExpandedItems: ['1'],
         });
 
-        fireEvent.click(view.getItemContent('2'));
+        await view.user.click(view.getItemContent('2'));
 
         expect(onExpandedItemsChange.callCount).to.equal(1);
         expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['2', '1']);
       });
 
-      it('should call the onExpandedItemsChange callback when the model is updated (remove expanded item)', () => {
+      it('should call the onExpandedItemsChange callback when the model is updated (remove expanded item)', async () => {
         const onExpandedItemsChange = spy();
 
         const view = render({
@@ -113,7 +114,7 @@ describeTreeView<TreeViewAnyStore>(
           defaultExpandedItems: ['1'],
         });
 
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
 
         expect(onExpandedItemsChange.callCount).to.equal(1);
         expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal([]);
@@ -149,69 +150,69 @@ describeTreeView<TreeViewAnyStore>(
     });
 
     describe('item click interaction', () => {
-      it('should expand collapsed item when clicking on an item content', () => {
+      it('should expand collapsed item when clicking on an item content', async () => {
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
         });
 
         expect(view.isItemExpanded('1')).to.equal(false);
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
         expect(view.isItemExpanded('1')).to.equal(true);
       });
 
-      it('should collapse expanded item when clicking on an item content', () => {
+      it('should collapse expanded item when clicking on an item content', async () => {
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
           defaultExpandedItems: ['1'],
         });
 
         expect(view.isItemExpanded('1')).to.equal(true);
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
         expect(view.isItemExpanded('1')).to.equal(false);
       });
 
-      it('should not expand collapsed item when clicking on a disabled item content', () => {
+      it('should not expand collapsed item when clicking on a disabled item content', async () => {
         const view = render({
           items: [{ id: '1', disabled: true, children: [{ id: '1.1' }] }, { id: '2' }],
         });
 
         expect(view.isItemExpanded('1')).to.equal(false);
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
         expect(view.isItemExpanded('1')).to.equal(false);
       });
 
-      it('should not collapse expanded item when clicking on a disabled item', () => {
+      it('should not collapse expanded item when clicking on a disabled item', async () => {
         const view = render({
           items: [{ id: '1', disabled: true, children: [{ id: '1.1' }] }, { id: '2' }],
           defaultExpandedItems: ['1'],
         });
 
         expect(view.isItemExpanded('1')).to.equal(true);
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
         expect(view.isItemExpanded('1')).to.equal(true);
       });
 
-      it('should expand collapsed item when clicking on an item label', () => {
+      it('should expand collapsed item when clicking on an item label', async () => {
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
         });
 
         expect(view.isItemExpanded('1')).to.equal(false);
-        fireEvent.click(view.getItemLabel('1'));
+        await view.user.click(view.getItemLabel('1'));
         expect(view.isItemExpanded('1')).to.equal(true);
       });
 
-      it('should expand collapsed item when clicking on an item icon container', () => {
+      it('should expand collapsed item when clicking on an item icon container', async () => {
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
         });
 
         expect(view.isItemExpanded('1')).to.equal(false);
-        fireEvent.click(view.getItemIconContainer('1'));
+        await view.user.click(view.getItemIconContainer('1'));
         expect(view.isItemExpanded('1')).to.equal(true);
       });
 
-      it('should be able to limit the expansion to the icon', () => {
+      it('should be able to limit the expansion to the icon', async () => {
         const CustomTreeItem = React.forwardRef(function MyTreeItem(
           props: TreeItemProps,
           ref: React.Ref<HTMLLIElement>,
@@ -248,9 +249,9 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         expect(view.isItemExpanded('1')).to.equal(false);
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
         expect(view.isItemExpanded('1')).to.equal(false);
-        fireEvent.click(view.getItemIconContainer('1'));
+        await view.user.click(view.getItemIconContainer('1'));
         expect(view.isItemExpanded('1')).to.equal(true);
       });
     });
@@ -285,7 +286,7 @@ describeTreeView<TreeViewAnyStore>(
     });
 
     describe('onItemExpansionToggle prop', () => {
-      it('should call the onItemExpansionToggle callback when expanding an item', () => {
+      it('should call the onItemExpansionToggle callback when expanding an item', async () => {
         const onItemExpansionToggle = spy();
 
         const view = render({
@@ -293,13 +294,13 @@ describeTreeView<TreeViewAnyStore>(
           onItemExpansionToggle,
         });
 
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
         expect(onItemExpansionToggle.callCount).to.equal(1);
         expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
         expect(onItemExpansionToggle.lastCall.args[2]).to.equal(true);
       });
 
-      it('should call the onItemExpansionToggle callback when collapsing an item', () => {
+      it('should call the onItemExpansionToggle callback when collapsing an item', async () => {
         const onItemExpansionToggle = spy();
 
         const view = render({
@@ -308,7 +309,7 @@ describeTreeView<TreeViewAnyStore>(
           onItemExpansionToggle,
         });
 
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
         expect(onItemExpansionToggle.callCount).to.equal(1);
         expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
         expect(onItemExpansionToggle.lastCall.args[2]).to.equal(false);

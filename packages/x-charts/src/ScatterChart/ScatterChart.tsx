@@ -2,34 +2,35 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type MakeOptional } from '@mui/x-internals/types';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
-import { type ChartsSlots, type ChartsSlotProps } from '../internals/material';
-import {
-  ScatterPlot,
-  type ScatterPlotProps,
-  type ScatterPlotSlotProps,
-  type ScatterPlotSlots,
-} from './ScatterPlot';
-import { type ChartsContainerProps } from '../ChartsContainer';
+import type { MakeOptional } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
+import type { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
+import type { ChartsSlots, ChartsSlotProps } from '../internals/material';
+import { ScatterPlot } from './ScatterPlot';
+import type { ScatterPlotProps, ScatterPlotSlotProps, ScatterPlotSlots } from './ScatterPlot';
+import type { ChartsContainerProps } from '../ChartsContainer';
 import { ChartsAxis } from '../ChartsAxis';
-import { type ScatterSeriesType } from '../models/seriesType/scatter';
-import { ChartsTooltip, type ChartsTooltipProps } from '../ChartsTooltip';
-import {
-  type ChartsTooltipSlots,
-  type ChartsTooltipSlotProps,
+import type { ScatterSeriesType } from '../models/seriesType/scatter';
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsTooltipProps } from '../ChartsTooltip';
+import type {
+  ChartsTooltipSlots,
+  ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
 import type { TooltipPropsOverrides } from '../models/chartsSlotsComponentsProps';
-import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { ChartsOverlay } from '../ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
 } from '../ChartsOverlay';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { type ChartsAxisSlots, type ChartsAxisSlotProps } from '../models/axis';
-import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import type { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import { ChartsGrid } from '../ChartsGrid';
+import type { ChartsGridProps } from '../ChartsGrid';
 import { useScatterChartProps } from './useScatterChartProps';
 import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
 import { ChartsDataProvider } from '../ChartsDataProvider';
@@ -61,7 +62,9 @@ export interface ScatterChartSlotProps
    * Slot props for the tooltip component.
    * @default {}
    */
-  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides;
+  tooltip?: WithDataAttributes<
+    Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides
+  >;
 }
 
 export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
@@ -130,8 +133,7 @@ export interface ScatterChartProps
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?:
-    | ScatterPlotProps['onItemClick']
-    | UseChartClosestPointSignature['params']['onItemClick'];
+    ScatterPlotProps['onItemClick'] | UseChartClosestPointSignature['params']['onItemClick'];
 }
 
 /**
@@ -266,8 +268,16 @@ ScatterChart.propTypes /* remove-proptypes */ = {
    * Options to enable features planned for the next major.
    */
   experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
     progressiveRendering: PropTypes.bool,
   }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */

@@ -7,14 +7,15 @@ import CakeIcon from '@mui/icons-material/Cake';
 import { DateField } from '@mui/x-date-pickers/DateField';
 
 export default function Birthday() {
+  // Fixed width (not `maxWidth`) so clearing the field doesn't resize the card and shift the layout.
   return (
-    <Card variant="outlined" sx={{ padding: 1, maxWidth: '265px' }}>
+    <Card variant="outlined" sx={{ padding: 1, width: '265px' }}>
       <Stack sx={{ height: 'fit-content', alignItems: 'center' }} spacing={1}>
         <DateField
           label="Enter your birthday"
           clearable
           fullWidth
-          value={dayjs('2019-07-11T15:30')}
+          defaultValue={dayjs('2019-07-11T15:30')}
           variant="filled"
           slotProps={{
             textField: {

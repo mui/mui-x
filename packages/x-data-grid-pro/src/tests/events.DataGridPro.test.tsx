@@ -1,19 +1,16 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
-import {
-  DataGridPro,
-  type GridColumnHeaderParams,
-  useGridApiRef,
-  type DataGridProProps,
-  type GridRowParams,
-  type GridCellParams,
-  type GridRowsProp,
-  type GridColDef,
-  gridClasses,
-  GridActionsCellItem,
-  type GridApi,
-  type GridEventListener,
+import { DataGridPro, useGridApiRef, gridClasses, GridActionsCellItem } from '@mui/x-data-grid-pro';
+import type {
+  GridColumnHeaderParams,
+  DataGridProProps,
+  GridRowParams,
+  GridCellParams,
+  GridRowsProp,
+  GridColDef,
+  GridApi,
+  GridEventListener,
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';

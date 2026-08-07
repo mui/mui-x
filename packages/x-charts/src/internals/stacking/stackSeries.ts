@@ -9,10 +9,10 @@ import {
   stackOffsetNone as d3StackOffsetNone,
   stackOffsetSilhouette as d3StackOffsetSilhouette,
   stackOffsetWiggle as d3StackOffsetWiggle,
-  type Series,
 } from '@mui/x-charts-vendor/d3-shape';
+import type { Series } from '@mui/x-charts-vendor/d3-shape';
 import type { StackOffsetType, StackOrderType } from '../../models/stacking';
-import { type SeriesId, type StackableSeriesType } from '../../models/seriesType/common';
+import type { SeriesId, StackableSeriesType } from '../../models/seriesType/common';
 import { offsetDiverging } from './offset';
 
 type FormatterParams<T> = {

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { HeatmapSVGPlot } from './HeatmapSVGPlot';
-import { type HeatmapRendererPlotProps } from './Heatmap.types';
+import type { HeatmapRendererPlotProps } from './Heatmap.types';
 
 export interface HeatmapPlotProps extends HeatmapRendererPlotProps {}
 

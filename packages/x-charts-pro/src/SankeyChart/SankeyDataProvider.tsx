@@ -3,7 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import type { SankeySeriesType } from './sankey.types';
-import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
+import { SANKEY_CHART_PLUGINS } from './SankeyChart.plugins';
+import type { SankeyChartPluginSignatures } from './SankeyChart.plugins';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { sankeySeriesConfig } from './seriesConfig';
 
@@ -66,7 +67,16 @@ SankeyDataProvider.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

@@ -1,12 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import {
-  getDataGridUtilityClass,
-  useGridSelector,
-  type GridRenderCellParams,
-  type GridRowId,
-} from '@mui/x-data-grid';
+import { getDataGridUtilityClass, useGridSelector } from '@mui/x-data-grid';
+import type { GridRenderCellParams, GridRowId } from '@mui/x-data-grid';
 import { createSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';

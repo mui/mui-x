@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  gridClasses,
-  type GridColDef,
-  type GridPivotModel,
-  type GridApi,
+import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridColDef,
+  GridPivotModel,
+  GridApi,
 } from '@mui/x-data-grid-premium';
 import {
   $$,

@@ -1,13 +1,13 @@
-import {
-  GRID_ROOT_GROUP_ID,
-  type GridChildrenFromPathLookup,
-  type GridFilterState,
-  type GridGroupNode,
-  type GridLeafNode,
-  type GridRowId,
-  type GridRowTreeConfig,
-  type GridRowsState,
-  type GridTreeNode,
+import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import type {
+  GridChildrenFromPathLookup,
+  GridFilterState,
+  GridGroupNode,
+  GridLeafNode,
+  GridRowId,
+  GridRowTreeConfig,
+  GridRowsState,
+  GridTreeNode,
 } from '@mui/x-data-grid';
 import type { GridTreeDepths } from '@mui/x-data-grid/internals';
 import type { RowTreeBuilderGroupingCriterion } from './models';

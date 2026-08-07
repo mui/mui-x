@@ -1,19 +1,18 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type ScatterProps } from '../Scatter';
+import type { ScatterProps } from '../Scatter';
 import { ScatterAsyncBatch } from './ScatterAsyncBatch';
 import { useStore } from '../../internals/store/useStore';
 import {
   selectorProgressiveBatchSize,
   selectorProgressiveSeriesRevealedBatches,
-  type UseProgressiveRenderingSignature,
 } from '../../internals/plugins/featurePlugins/useProgressiveRendering';
-import {
-  selectorChartZoomIsInteracting,
-  type UseChartCartesianAxisSignature,
-} from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseProgressiveRenderingSignature } from '../../internals/plugins/featurePlugins/useProgressiveRendering';
+import { selectorChartZoomIsInteracting } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseChartCartesianAxisSignature } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
+import { useRegisterItemActivation } from '../../internals/useRegisterItemActivation';
 
 /** Per-series points sampled while interacting; the rest fills in on settle. */
 const INTERACTION_POINT_BUDGET = 2000;
@@ -51,6 +50,17 @@ function ScatterAsync(props: ScatterProps) {
   // `count` (total points) is constant across zoom/pan, so the sampled set is
   // stable while panning.
   const interactionStep = getInteractionStep(count, nBatches, INTERACTION_POINT_BUDGET);
+
+  useRegisterItemActivation(
+    { type: 'scatter', seriesId: series.id },
+    onItemClick &&
+      ((event, item) =>
+        onItemClick(event, {
+          type: 'scatter',
+          seriesId: series.id,
+          dataIndex: item.dataIndex,
+        })),
+  );
 
   const batches: React.ReactNode[] = [];
   for (let b = 0; b < mountedBatches; b += 1) {

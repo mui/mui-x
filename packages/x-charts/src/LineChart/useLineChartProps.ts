@@ -1,21 +1,22 @@
 'use client';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import { type ChartsAxisProps } from '../ChartsAxis';
-import { type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { type ChartsClipPathProps } from '../ChartsClipPath';
-import { type ChartsGridProps } from '../ChartsGrid';
-import { type ChartsLegendSlotExtension } from '../ChartsLegend';
-import { type ChartsOverlayProps } from '../ChartsOverlay';
+import type { ChartsAxisProps } from '../ChartsAxis';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import type { ChartsClipPathProps } from '../ChartsClipPath';
+import type { ChartsGridProps } from '../ChartsGrid';
+import type { ChartsLegendSlotExtension } from '../ChartsLegend';
+import type { ChartsOverlayProps } from '../ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { type ChartsContainerProps } from '../ChartsContainer';
-import { type AreaPlotProps } from './AreaPlot';
+import type { ChartsContainerProps } from '../ChartsContainer';
+import type { AreaPlotProps } from './AreaPlot';
 import type { LineChartProps } from './LineChart';
-import { type LineHighlightPlotProps } from './LineHighlightPlot';
-import { type LinePlotProps } from './LinePlot';
-import { type MarkPlotProps } from './MarkPlot';
+import type { LineHighlightPlotProps } from './LineHighlightPlot';
+import type { LinePlotProps } from './LinePlot';
+import type { MarkPlotProps } from './MarkPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import { LINE_CHART_PLUGINS, type LineChartPluginSignatures } from './LineChart.plugins';
+import { LINE_CHART_PLUGINS } from './LineChart.plugins';
+import type { LineChartPluginSignatures } from './LineChart.plugins';
 
 /**
  * A helper function that extracts LineChartProps from the input props

@@ -3,7 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { warnOnce } from '@mui/x-internals/warning';
-import { styled, useThemeProps, type SxProps, type Theme } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { useUtilityClasses } from '../ChartsSurface/chartsSurfaceClasses';
@@ -12,8 +13,8 @@ import {
   selectorChartPropsWidth,
 } from '../internals/plugins/corePlugins/useChartDimensions';
 import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
-import { type UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
-import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import type { UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartsContext } from '../context/ChartsProvider';
 import { useChartsLayerContainerRef } from '../hooks';
 import { useRegisterPointerInteractions } from '../internals/plugins/featurePlugins/shared/useRegisterPointerInteractions';

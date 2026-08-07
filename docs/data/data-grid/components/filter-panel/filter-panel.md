@@ -45,6 +45,13 @@ import { FilterPanelTrigger } from '@mui/x-data-grid';
 `<FilterPanelTrigger />` is a button that opens and closes the filter panel.
 It renders the `baseButton` slot.
 
+## Describing the active filters
+
+`FilterPanelTrigger` only reports `filterCount` to its `render` callback. It doesn't generate a description of the active filters.
+To show one (for example, in a tooltip), build it yourself from `gridFilterActiveItemsSelector`, which lists the currently active `GridFilterItem` objects:
+
+{{"demo": "FilterPanelTriggerDescription.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Custom elements
 
 Use the `render` prop to replace default elements.

@@ -1,13 +1,13 @@
-import { TimeClock, TimeClockProps } from '../TimeClock';
-import { TimeView } from '../models';
-import { DigitalClock, DigitalClockProps } from '../DigitalClock';
-import { BaseClockProps } from '../internals/models/props/time';
-import {
-  MultiSectionDigitalClock,
-  MultiSectionDigitalClockProps,
-} from '../MultiSectionDigitalClock';
+import type { TimeClockProps } from '../TimeClock';
+import { TimeClock } from '../TimeClock';
+import type { TimeView } from '../models';
+import type { DigitalClockProps } from '../DigitalClock';
+import { DigitalClock } from '../DigitalClock';
+import type { BaseClockProps } from '../internals/models/props/time';
+import type { MultiSectionDigitalClockProps } from '../MultiSectionDigitalClock';
+import { MultiSectionDigitalClock } from '../MultiSectionDigitalClock';
 import { isInternalTimeView, isTimeView } from '../internals/utils/time-utils';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 import type { TimePickerProps } from '../TimePicker/TimePicker.types';
 
 export type TimeViewRendererProps<

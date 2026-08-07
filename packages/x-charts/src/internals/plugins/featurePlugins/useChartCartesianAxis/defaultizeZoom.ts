@@ -3,9 +3,9 @@ import {
   DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP,
   DEFAULT_ZOOM_SLIDER_SIZE,
 } from '../../../constants';
-import { type AxisId, type ScaleName } from '../../../../models/axis';
-import { type DefaultizedZoomOptions } from './useChartCartesianAxis.types';
-import { type ZoomOptions } from './zoom.types';
+import type { AxisId, ScaleName } from '../../../../models/axis';
+import type { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
+import type { ZoomOptions } from './zoom.types';
 
 /**
  * Ordinal Y axes (band/point) render with `domain[0]` at the top of the chart

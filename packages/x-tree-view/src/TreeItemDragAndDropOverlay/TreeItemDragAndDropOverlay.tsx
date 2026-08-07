@@ -1,8 +1,8 @@
 'use client';
 import PropTypes from 'prop-types';
 import { shouldForwardProp } from '@mui/system/createStyled';
-import { TreeItemDragAndDropOverlayProps } from './TreeItemDragAndDropOverlay.types';
-import { TreeViewItemsReorderingAction } from '../models';
+import type { TreeItemDragAndDropOverlayProps } from './TreeItemDragAndDropOverlay.types';
+import type { TreeViewItemsReorderingAction } from '../models';
 import { styled } from '../internals/zero-styled';
 
 const TreeItemDragAndDropOverlayRoot = styled('div', {
