@@ -102,6 +102,35 @@ import 'moment/locale/de';
 
 {{"demo": "LocalizationMoment.js"}}
 
+### With `Temporal`
+
+`AdapterTemporal` uses the standard [Temporal](https://tc39.es/proposal-temporal/docs/) API instead of a third-party date library.
+
+:::warning
+`Temporal` is not yet available in every environment.
+The adapter reads the global `Temporal` object but does not bundle a polyfill, so you must provide one until your runtime supports `Temporal` natively.
+Import a polyfill such as [`temporal-polyfill`](https://www.npmjs.com/package/temporal-polyfill) once, before the adapter is used:
+
+```tsx
+import 'temporal-polyfill/global';
+```
+
+The adapter throws an error at instantiation if the global `Temporal` object is missing.
+:::
+
+Pass the locale name to `LocalizationProvider`:
+
+```tsx
+import 'temporal-polyfill/global';
+import { AdapterTemporal } from '@mui/x-date-pickers/AdapterTemporal';
+
+<LocalizationProvider dateAdapter={AdapterTemporal} adapterLocale="de-DE">
+  {children}
+</LocalizationProvider>;
+```
+
+`AdapterTemporal` uses [BCP 47 language tags](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale) (for example `de-DE`), resolved through the native `Intl` API.
+
 ## Meridiem — 12h/24h format
 
 All the time and datetime components will automatically adjust to the locale's time setting, that is the 12-hour or 24-hour format.
@@ -118,6 +147,8 @@ Please refer to each library's documentation for the full format table:
 - [date-fns](https://date-fns.org/docs/format)
 - [Luxon](https://moment.github.io/luxon/#/formatting?id=table-of-tokens)
 - [Moment.js](https://momentjs.com/docs/#/displaying/format/)
+
+`AdapterTemporal` uses its own set of tokens, since `Temporal` has no format string of its own: `yyyy`/`yy` (year), `MMMM`/`MMM`/`MM`/`M` (month), `dd`/`d` (day), `EEEE`/`EEE`/`EE` (weekday), `HH`/`H` (24-hour), `hh`/`h` (12-hour), `mm`/`m` (minute), `ss`/`s` (second), `SSS` (millisecond), and `a` (meridiem).
 
 ### Custom field format
 
@@ -361,6 +392,16 @@ moment.updateLocale('en', {
   },
 });
 ```
+
+### With `Temporal`
+
+`AdapterTemporal` reads the start of the week from the locale through the [browser API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo).
+To use a different start of the week, pass an `adapterLocale` whose region uses it (for example, `en-GB` starts the week on Monday, `en-US` on Sunday).
+
+:::warning
+The browser API used to determine the start of the week is not yet supported by Firefox.
+Users on this browser will always see Monday as the start of the week.
+:::
 
 ## RTL Support
 
