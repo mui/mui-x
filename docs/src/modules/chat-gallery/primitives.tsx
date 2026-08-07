@@ -556,14 +556,7 @@ export function MessageGroup({
 // === Composer card (for slot focus thumbs) ==================================
 
 type ComposerFocus =
-  | 'all'
-  | 'textarea'
-  | 'toolbar'
-  | 'send'
-  | 'attach'
-  | 'attachments'
-  | 'helper'
-  | 'label';
+  'all' | 'textarea' | 'toolbar' | 'send' | 'attach' | 'attachments' | 'helper' | 'label';
 
 export function ComposerCard({ focus }: { focus?: ComposerFocus }) {
   const t = useTokens();

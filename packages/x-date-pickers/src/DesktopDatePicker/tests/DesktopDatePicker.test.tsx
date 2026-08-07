@@ -1,14 +1,17 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { TransitionProps } from '@mui/material/transitions';
+import type { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { act, screen, waitFor } from '@mui/internal-test-utils';
-import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
+import type { DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
-import { PickersActionBar, PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import InputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
+import type { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
+import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
+import type { InputAdornmentProps } from '@mui/material/InputAdornment';
+import InputAdornment from '@mui/material/InputAdornment';
 import { vi } from 'vitest';
 
 describe('<DesktopDatePicker />', () => {

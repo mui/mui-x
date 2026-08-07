@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
-import { GridColumnSortButton, type GridColumnSortButtonProps } from '../GridColumnSortButton';
+import { GridColumnSortButton } from '../GridColumnSortButton';
+import type { GridColumnSortButtonProps } from '../GridColumnSortButton';
 
 export interface GridColumnHeaderSortIconProps extends GridColumnSortButtonProps {}
 

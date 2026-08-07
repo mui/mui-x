@@ -1,20 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
-import { CompactDayViewProps } from './CompactDayView.types';
-import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
-import {
-  DayTimeGridInternalRenderers,
-  DayTimeGridInternalRenderersContext,
-} from '../internals/components/day-time-grid/DayTimeGridInternalRenderersContext';
-import { createDayTimeGridViewConfig } from '../internals/utils/day-time-grid-view-config';
-import { TimeGridEventTouch } from '../internals/components/event/time-grid-event/TimeGridEventTouch';
+import type { CompactDayViewProps } from './CompactDayView.types';
+import { CompactDayTimeGrid } from '../internals/components/compact-day-time-grid';
+import { createDayTimeGridViewDefinition } from '../internals/utils/day-time-grid-view-definition';
 
-const COMPACT_DAY_VIEW_CONFIG = createDayTimeGridViewConfig(1);
-
-const COMPACT_DAY_VIEW_RENDERERS: DayTimeGridInternalRenderers = {
-  timeGridEvent: TimeGridEventTouch,
-};
+const COMPACT_DAY_VIEW_DEFINITION = createDayTimeGridViewDefinition(1);
 
 /**
  * A touch-optimized Day View (1 day) for narrow widths, to use inside the Event Calendar.
@@ -25,12 +16,8 @@ export const CompactDayView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     // Feature hooks
-    const { days } = useEventCalendarView(COMPACT_DAY_VIEW_CONFIG);
+    const { days } = useEventCalendarView(COMPACT_DAY_VIEW_DEFINITION);
 
-    return (
-      <DayTimeGridInternalRenderersContext.Provider value={COMPACT_DAY_VIEW_RENDERERS}>
-        <DayTimeGrid ref={forwardedRef} days={days} {...props} />
-      </DayTimeGridInternalRenderersContext.Provider>
-    );
+    return <CompactDayTimeGrid ref={forwardedRef} {...props} days={days} />;
   }),
 );

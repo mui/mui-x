@@ -1,6 +1,8 @@
 export * from './translations';
 export type {
   EventCalendarPreferences,
+  EventCalendarViewConfig,
+  EventCalendarTimeGridViewConfig,
   SchedulerEvent,
   SchedulerResource,
   SchedulerEventColor,

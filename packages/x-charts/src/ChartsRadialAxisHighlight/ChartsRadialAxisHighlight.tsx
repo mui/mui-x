@@ -5,7 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { getRadialAxisHighlightUtilityClass } from './chartsRadialAxisHighlightClasses';
 import ChartsRotationAxisHighlight from './ChartsRotationAxisHighlight';
 import ChartsRadiusAxisHighlight from './ChartsRadiusAxisHighlight';
-import { type ChartsRadialAxisHighlightProps } from './ChartsRadialAxisHighlight.types';
+import type { ChartsRadialAxisHighlightProps } from './ChartsRadialAxisHighlight.types';
 
 const useUtilityClasses = () => {
   const slots = {

@@ -2,13 +2,13 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
-import {
+import type {
   PickerRangeValue,
   PickerValue,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
-import { FieldRef, FieldSelectedSections } from '@mui/x-date-pickers/models';
-import { MultiInputFieldRefs } from '../../models';
+import type { FieldRef, FieldSelectedSections } from '@mui/x-date-pickers/models';
+import type { MultiInputFieldRefs } from '../../models';
 
 interface UseMultiInputRangeFieldSelectedSectionsParameters
   extends

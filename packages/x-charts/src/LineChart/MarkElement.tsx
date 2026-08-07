@@ -5,15 +5,12 @@ import { styled } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { type SeriesId } from '../models/seriesType';
+import type { SeriesId } from '../models/seriesType';
 import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
 import { useStore } from '../internals/store/useStore';
 import { getSymbol } from '../internals/getSymbol';
-import {
-  lineClasses,
-  useUtilityClasses as useLineUtilityClasses,
-  type LineClasses,
-} from './lineClasses';
+import { lineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import type { LineClasses } from './lineClasses';
 
 export interface MarkElementOwnerState {
   seriesId: SeriesId;

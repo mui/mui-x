@@ -1,7 +1,7 @@
 'use client';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartSeriesProcessed } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
-import { type UseChartSeriesSignature } from '../internals/plugins/corePlugins/useChartSeries';
+import type { UseChartSeriesSignature } from '../internals/plugins/corePlugins/useChartSeries';
 
 /**
  * Get access to the internal state of series.

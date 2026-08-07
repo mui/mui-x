@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
-import {
-  DataGrid,
-  type DataGridProps,
-  type GridRowsProp,
-  type GridColDef,
-  gridClasses,
-  gridColumnLookupSelector,
-} from '@mui/x-data-grid';
+import { DataGrid, gridClasses, gridColumnLookupSelector } from '@mui/x-data-grid';
+import type { DataGridProps, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { RefObject } from '@mui/x-internals/types';

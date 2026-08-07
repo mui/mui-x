@@ -1,8 +1,7 @@
-import { RadialLineChart, type RadialLineChartSlots } from '@mui/x-charts-premium/RadialLineChart';
-import {
-  ScatterChartPremium,
-  type ScatterChartPremiumSlots,
-} from '@mui/x-charts-premium/ScatterChartPremium';
+import { RadialLineChart } from '@mui/x-charts-premium/RadialLineChart';
+import type { RadialLineChartSlots } from '@mui/x-charts-premium/RadialLineChart';
+import { ScatterChartPremium } from '@mui/x-charts-premium/ScatterChartPremium';
+import type { ScatterChartPremiumSlots } from '@mui/x-charts-premium/ScatterChartPremium';
 import type { PropsFromSlot } from '@mui/x-charts/models';
 // eslint-disable-next-line no-restricted-imports
 import type {} from '@mui/x-charts';

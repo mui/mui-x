@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {
+import type * as React from 'react';
+import type {
   FieldSectionType,
   FieldSection,
   FieldSelectedSections,
@@ -13,9 +13,9 @@ import {
   PickerManager,
   PickerValueType,
 } from '../../../models';
-import { InternalPropNames } from '../../../hooks/useSplitFieldProps';
+import type { InternalPropNames } from '../../../hooks/useSplitFieldProps';
 import type { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
-import {
+import type {
   FormProps,
   InferNonNullablePickerValue,
   PickerRangeValue,

@@ -1,5 +1,5 @@
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { RichTreeViewProStore } from '../../RichTreeViewProStore';
+import type { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 describeTreeView<RichTreeViewProStore<any, any>>(
   'TreeViewVirtualizationPlugin',

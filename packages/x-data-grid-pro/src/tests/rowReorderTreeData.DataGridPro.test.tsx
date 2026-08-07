@@ -1,19 +1,21 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, createEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
   DataGridPro,
-  type DataGridProProps,
-  type GridRowModel,
   gridRowTreeSelector,
-  type GridApi,
   useGridApiRef,
   GRID_ROOT_GROUP_ID,
-  type ReorderValidationContext,
-  type GridGroupNode,
-  type IsRowReorderableParams,
+} from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridRowModel,
+  GridApi,
+  ReorderValidationContext,
+  GridGroupNode,
+  IsRowReorderableParams,
 } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { RowReorderDropPosition } from '@mui/x-data-grid/internals';
@@ -445,11 +447,11 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       const rowDragPlaceholder = targetRow?.lastElementChild;
 
       // Verify drop indicator is NOT rendered (element should not have placeholder styling)
-      if (rowDragPlaceholder) {
-        const computedStyle = window.getComputedStyle(rowDragPlaceholder);
-        // If placeholder exists, it should not have the absolute positioning that indicates a valid drop
-        expect(computedStyle.position).not.to.equal('absolute');
-      }
+      // If placeholder exists, it should not have the absolute positioning that indicates a valid drop
+      const placeholderPosition = rowDragPlaceholder
+        ? window.getComputedStyle(rowDragPlaceholder).position
+        : null;
+      expect(placeholderPosition).not.to.equal('absolute');
 
       // Complete the drag operation
       const dragEndEvent = createDragEndEvent(sourceCell);

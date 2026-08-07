@@ -5,18 +5,19 @@ import { useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
+import type { PickersOutlinedInputClasses } from './pickersOutlinedInputClasses';
 import {
   pickersOutlinedInputClasses,
   getPickersOutlinedInputUtilityClass,
-  PickersOutlinedInputClasses,
 } from './pickersOutlinedInputClasses';
 import Outline from './Outline';
-import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
+import type { PickersInputBaseProps } from '../PickersInputBase';
+import { PickersInputBase } from '../PickersInputBase';
 import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersOutlinedInputProps extends PickersInputBaseProps {
   notched?: boolean;

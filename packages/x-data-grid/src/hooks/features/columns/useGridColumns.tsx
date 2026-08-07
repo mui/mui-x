@@ -21,16 +21,16 @@ import { GridSignature } from '../../../constants/signature';
 import { useGridEvent } from '../../utils/useGridEvent';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
-  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterPipeApplier,
 } from '../../core/pipeProcessing';
-import {
-  type GridColumnDimensions,
-  type GridColumnsInitialState,
-  type GridColumnsState,
-  type GridColumnVisibilityModel,
-  EMPTY_PINNED_COLUMN_FIELDS,
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
+import { EMPTY_PINNED_COLUMN_FIELDS } from './gridColumnsInterfaces';
+import type {
+  GridColumnDimensions,
+  GridColumnsInitialState,
+  GridColumnsState,
+  GridColumnVisibilityModel,
 } from './gridColumnsInterfaces';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
@@ -232,6 +232,10 @@ export function useGridColumns(
 
   const setColumnIndex = React.useCallback<GridColumnReorderApi['setColumnIndex']>(
     (field, targetIndexPosition) => {
+      const column = apiRef.current.getColumn(field);
+      if (!column) {
+        return;
+      }
       const allColumns = gridColumnFieldsSelector(apiRef);
       const oldIndexPosition = getColumnIndexRelativeToVisibleColumns(field);
       if (oldIndexPosition === targetIndexPosition) {
@@ -249,7 +253,7 @@ export function useGridColumns(
       });
 
       const params: GridColumnOrderChangeParams = {
-        column: apiRef.current.getColumn(field),
+        column,
         targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(field),
         oldIndex: oldIndexPosition,
       };

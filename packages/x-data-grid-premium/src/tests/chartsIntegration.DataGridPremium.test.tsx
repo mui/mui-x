@@ -1,22 +1,24 @@
 import { spy } from 'sinon';
-import { type RefObject, type GridChartsConfigurationOptions } from '@mui/x-internals/types';
+import type { RefObject, GridChartsConfigurationOptions } from '@mui/x-internals/types';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
   DataGridPremium,
-  type DataGridPremiumProps,
   useGridApiRef,
   useGridChartsIntegrationContext,
   GridChartsPanel,
-  type GridInitialState,
-  type GridApiPremium,
-  type GridValidRowModel,
   GridChartsIcon,
   GridSidebarValue,
 } from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridInitialState,
+  GridApiPremium,
+  GridValidRowModel,
+} from '@mui/x-data-grid-premium';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../constants/columnGroups';
-import { type GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
+import type { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
 
 const rows: GridValidRowModel[] = [
   { id: 0, category1: 'CatA', category2: 'Cat1', nonChartable: '-', amount: 100 },

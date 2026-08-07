@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
-import { DateTimeFieldProps } from './DateTimeField.types';
+import type { DateTimeFieldProps } from './DateTimeField.types';
 import { useDateTimeField } from './useDateTimeField';
 import {
   PickerFieldUI,

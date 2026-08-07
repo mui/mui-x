@@ -6,11 +6,11 @@ import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
-import { PickerManager, DateValidationError } from '../models';
+import type { PickerManager, DateValidationError } from '../models';
 import { validateDate } from '../validation';
-import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { ExportedValidateDateProps, ValidateDateProps } from '../validation/validateDate';
-import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
+import type { UseFieldInternalProps } from '../internals/hooks/useField';
+import type { ExportedValidateDateProps, ValidateDateProps } from '../validation/validateDate';
+import type { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
 import { useDefaultDates } from '../internals/hooks/useUtils';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 
@@ -56,10 +56,7 @@ function useApplyDefaultValuesToDateFieldInternalProps(
 }
 
 type SharedDateAndDateRangeValidationProps =
-  | 'disablePast'
-  | 'disableFuture'
-  | 'minDate'
-  | 'maxDate';
+  'disablePast' | 'disableFuture' | 'minDate' | 'maxDate';
 
 export function useApplyDefaultValuesToDateValidationProps(
   props: Pick<ExportedValidateDateProps, SharedDateAndDateRangeValidationProps>,

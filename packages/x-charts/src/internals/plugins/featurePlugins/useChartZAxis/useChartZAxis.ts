@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { type MakeOptional } from '@mui/x-internals/types';
-import { type ChartPlugin } from '../../models';
-import { type DatasetType } from '../../../../models/seriesType/config';
-import { type UseChartZAxisSignature } from './useChartZAxis.types';
-import { type ZAxisConfig, type ZAxisDefaultized } from '../../../../models/z-axis';
+import type { MakeOptional } from '@mui/x-internals/types';
+import type { ChartPlugin } from '../../models';
+import type { DatasetType } from '../../../../models/seriesType/config';
+import type { UseChartZAxisSignature } from './useChartZAxis.types';
+import type { ZAxisConfig, ZAxisDefaultized } from '../../../../models/z-axis';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
 import { getSizeScale, getOrdinalSizeScale } from '../../../sizeScale';
 

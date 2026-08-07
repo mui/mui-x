@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  type GridDataSource,
-  type GridGetRowsParams,
-  type GridDataSourceGroupNode,
-  type GridGetRowsResponse,
-  type GridGroupNode,
-  GRID_ROOT_GROUP_ID,
-  useGridApiRef,
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPremium, GRID_ROOT_GROUP_ID, useGridApiRef } from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridApi,
+  GridDataSource,
+  GridGetRowsParams,
+  GridDataSourceGroupNode,
+  GridGetRowsResponse,
+  GridGroupNode,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
@@ -80,6 +78,42 @@ describe('<DataGridPremium /> - Data source row grouping (loading state)', () =>
     await waitFor(() => {
       expect(apiRef.current?.state.rows.loading).to.equal(false);
     });
+  });
+
+  it('should warn when `dataSourceKeepPreviousData` is used with row grouping', async () => {
+    const getRows = spy(() => Promise.resolve({ rows: [{ id: 'A', group: 'A' }], rowCount: 1 }));
+    const dataSource: GridDataSource = {
+      getRows: getRows as unknown as GridDataSource['getRows'],
+      getGroupKey: (row) => row.group,
+      getChildrenCount: () => 0,
+    };
+    function Test() {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium
+            columns={[{ field: 'group' }]}
+            dataSource={dataSource}
+            dataSourceCache={null}
+            dataSourceKeepPreviousData
+            disableVirtualization
+            rowGroupingModel={['group']}
+          />
+        </div>
+      );
+    }
+
+    await expect(async () => {
+      render(<Test />);
+      await waitFor(() => {
+        expect(getRows.callCount).to.be.greaterThan(0);
+      });
+    }).toWarnDev(
+      [
+        'MUI X: The `dataSourceKeepPreviousData` prop only applies to flat data.',
+        'It is ignored when tree data or row grouping is enabled, because the rows are always reset on refetch to keep their order consistent with the response.',
+        'For more details, see https://mui.com/x/react-data-grid/server-side-data/#keep-previous-data-while-fetching.',
+      ].join('\n'),
+    );
   });
 });
 

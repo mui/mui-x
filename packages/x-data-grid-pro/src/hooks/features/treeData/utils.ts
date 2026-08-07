@@ -1,13 +1,11 @@
-import {
-  GRID_ROOT_GROUP_ID,
-  gridRowsLookupSelector,
-  gridRowTreeSelector,
-  type GridRowId,
-  type GridTreeNode,
-  type GridGroupNode,
-  type GridValidRowModel,
-  type GridLeafNode,
-  type GridRowTreeConfig,
+import { GRID_ROOT_GROUP_ID, gridRowsLookupSelector, gridRowTreeSelector } from '@mui/x-data-grid';
+import type {
+  GridRowId,
+  GridTreeNode,
+  GridGroupNode,
+  GridValidRowModel,
+  GridLeafNode,
+  GridRowTreeConfig,
 } from '@mui/x-data-grid';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { ReorderExecutionContext } from '../rowReorder/types';

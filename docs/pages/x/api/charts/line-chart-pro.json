@@ -32,8 +32,12 @@
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "disableLineItemHighlight": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ enablePositionBasedPointerInteraction?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ enablePositionBasedPointerInteraction?: bool, keyboardActivation?: bool }"
+      }
     },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
@@ -129,6 +133,13 @@
         "type": "function(zoomData: Array<ZoomData>) => void",
         "describedArgs": ["zoomData"]
       }
+    },
+    "sampling": {
+      "type": {
+        "name": "enum",
+        "description": "'lttb'<br>&#124;&nbsp;'m4'<br>&#124;&nbsp;'minmax'<br>&#124;&nbsp;'none'"
+      },
+      "default": "'none'"
     },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },

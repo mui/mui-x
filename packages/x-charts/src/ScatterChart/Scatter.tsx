@@ -3,29 +3,29 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { type ScatterMarkerSlotProps, type ScatterMarkerSlots } from './ScatterMarker.types';
-import {
-  type DefaultizedScatterSeriesType,
-  type ScatterItemIdentifier,
+import type { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
+import type {
+  DefaultizedScatterSeriesType,
+  ScatterItemIdentifier,
 } from '../models/seriesType/scatter';
 import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
-import { type D3Scale } from '../models/axis';
+import type { D3Scale } from '../models/axis';
 import { useItemHighlightStateGetter } from '../hooks/useItemHighlightStateGetter';
-import {
-  selectorChartsIsVoronoiEnabled,
-  type UseChartClosestPointSignature,
-} from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import { selectorChartsIsVoronoiEnabled } from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import type { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
-import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import type { ScatterSizeGetter } from './seriesConfig/getMarkerSize';
 import { useUtilityClasses } from './scatterClasses';
 import type { ScatterClasses } from './scatterClasses';
+import { useRegisterItemActivation } from '../internals/useRegisterItemActivation';
+import type { ChartsActivationEvent } from '../models/events';
 import { useScatterPlotData } from './useScatterPlotData';
 import { useChartsContext } from '../context/ChartsProvider';
-import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
-import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 
 /**
  * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
@@ -47,11 +47,11 @@ export interface ScatterProps {
   sizeGetter: ScatterSizeGetter;
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent<SVGElement>} event Event recorded on the `<svg/>` element.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: ChartsActivationEvent<SVGElement>,
     scatterItemIdentifier: ScatterItemIdentifier,
   ) => void;
   classes?: Partial<ScatterClasses>;
@@ -122,6 +122,17 @@ function Scatter(props: ScatterProps) {
 
   const classes = useUtilityClasses({ classes: inClasses });
 
+  useRegisterItemActivation(
+    { type: 'scatter', seriesId: series.id },
+    onItemClick &&
+      ((event, item) =>
+        onItemClick(event, {
+          type: 'scatter',
+          seriesId: series.id,
+          dataIndex: item.dataIndex,
+        })),
+  );
+
   return (
     <g data-series={series.id} className={classes.series}>
       {scatterPlotData.map((dataPoint) => {
@@ -177,7 +188,7 @@ Scatter.propTypes /* remove-proptypes */ = {
   colorGetter: PropTypes.func.isRequired,
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent<SVGElement>} event Event recorded on the `<svg/>` element.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,

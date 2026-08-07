@@ -1,14 +1,8 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act } from '@mui/internal-test-utils';
 
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  type GridRowsProp,
-  useGridApiRef,
-  getGroupRowIdFromPath,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef, getGroupRowIdFromPath } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridPremiumProps {
@@ -203,6 +197,16 @@ describe('<DataGridPremium /> - Row grouping', () => {
       expect(apiRef.current?.getRowGroupChildren({ groupId, applyFiltering: true })).to.deep.equal([
         2,
       ]);
+    });
+
+    it('should return an empty array when the groupId does not exist in the tree', () => {
+      render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
+
+      const groupId = getGroupRowIdFromPath([{ field: 'category1', key: 'Cat Z' }]);
+      expect(apiRef.current?.getRowGroupChildren({ groupId })).to.deep.equal([]);
+      expect(apiRef.current?.getRowGroupChildren({ groupId, applySorting: true })).to.deep.equal(
+        [],
+      );
     });
   });
 });

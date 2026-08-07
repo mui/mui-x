@@ -1,6 +1,9 @@
-import { BarChartPro, type BarChartProSlots } from '@mui/x-charts-pro/BarChartPro';
-import { Heatmap, type HeatmapSlots } from '@mui/x-charts-pro/Heatmap';
-import { FunnelChart, type FunnelChartSlots } from '@mui/x-charts-pro/FunnelChart';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import type { BarChartProSlots } from '@mui/x-charts-pro/BarChartPro';
+import { Heatmap } from '@mui/x-charts-pro/Heatmap';
+import type { HeatmapSlots } from '@mui/x-charts-pro/Heatmap';
+import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import type { FunnelChartSlots } from '@mui/x-charts-pro/FunnelChart';
 // eslint-disable-next-line no-restricted-imports
 import type { PropsFromSlot } from '@mui/x-charts';
 

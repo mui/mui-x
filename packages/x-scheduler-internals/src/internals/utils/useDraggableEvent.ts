@@ -8,7 +8,7 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
-import { SchedulerEventId, TemporalSupportedObject } from '../../models';
+import type { SchedulerEventId, TemporalSupportedObject } from '../../models';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
 import { useAdapterContext } from '../../use-adapter-context';

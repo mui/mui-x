@@ -1,15 +1,13 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
-  type GridApi,
   useGridApiRef,
-  type DataGridProProps,
-  type GridRowParams,
   gridClasses,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';
+import type { GridApi, DataGridProProps, GridRowParams } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, waitFor, act, reactMajor } from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues } from 'test/utils/helperFn';

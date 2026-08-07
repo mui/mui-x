@@ -1,24 +1,26 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   getDefaultGridFilterModel,
-  type GridApi,
-  type DataGridProProps,
-  type GridFilterModel,
   GridLogicOperator,
   GridPreferencePanelsValue,
-  type GridRowModel,
   useGridApiRef,
   DataGridPro,
-  type GetColumnForNewFilterArgs,
-  type FilterColumnsArgs,
   gridExpandedSortedRowEntriesSelector,
   gridClasses,
-  type GridColDef,
   getGridStringOperators,
-  type GridFilterItem,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridApi,
+  DataGridProProps,
+  GridFilterModel,
+  GridRowModel,
+  GetColumnForNewFilterArgs,
+  FilterColumnsArgs,
+  GridColDef,
+  GridFilterItem,
 } from '@mui/x-data-grid-pro';
 import {
   getColumnHeaderCell,

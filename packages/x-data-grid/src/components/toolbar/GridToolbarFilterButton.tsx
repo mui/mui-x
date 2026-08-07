@@ -71,8 +71,8 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     const classes = useUtilityClasses(rootProps);
     const filterButtonId = useId();
     const filterPanelId = useId();
-    const { filterPanelTriggerRef } = useGridPanelContext();
-    const handleRef = useForkRef(ref, filterPanelTriggerRef);
+    const { triggers } = useGridPanelContext();
+    const handleRef = useForkRef(ref, triggers.filterPanel.setRef);
 
     const tooltipContentNode = React.useMemo(() => {
       if (preferencePanel.open) {
