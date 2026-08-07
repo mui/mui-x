@@ -9,7 +9,7 @@ import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarPremium } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import {
-  EventDialogStyledContext,
+  EventEditingStyledContext,
   EventDialogProvider,
   EventCalendarRoot,
   SharedComponentsStyledContext,
@@ -66,7 +66,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
     [schedulerId, classes, mergedLocaleText],
   );
 
-  const dialogStyledContextValue = React.useMemo(
+  const editingStyledContextValue = React.useMemo(
     () => ({ schedulerId, classes, localeText: mergedLocaleText }),
     [schedulerId, classes, mergedLocaleText],
   );
@@ -76,7 +76,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
-        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
+        <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
               <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
@@ -84,7 +84,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
               </EventCalendarRoot>
             </EventDialogProvider>
           </SharedComponentsStyledContext.Provider>
-        </EventDialogStyledContext.Provider>
+        </EventEditingStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
