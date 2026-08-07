@@ -1,7 +1,16 @@
 import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
+import {
+  getStartOfWeek,
+  dateToTimelineAxisOffsetMs,
+  FULL_DAY_MINUTES,
+} from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { IteratedCell, PresetHeaderUnit } from '../../models';
+
+const HOUR_MS = 3_600_000;
+
+type HourWindow = Pick<TimelineAxis, 'dayStartMinute' | 'dayEndMinute'>;
 
 export function iterate(
   adapter: TemporalAdapter,
@@ -10,6 +19,7 @@ export function iterate(
   rangeStart: TemporalSupportedObject,
   rangeEnd: TemporalSupportedObject,
   weekStartsOn?: WeekStartsOn,
+  hourWindow?: HourWindow,
 ): IteratedCell[] {
   if (adapter.isBefore(rangeEnd, rangeStart)) {
     throw new Error(
@@ -29,6 +39,15 @@ export function iterate(
     1,
   );
 
+  // The hour window only trims hour ticks: hidden hour cells are skipped and the
+  // spans of coarser cells count visible hours only.
+  const appliedHourWindow =
+    tickUnit === 'hour' &&
+    hourWindow &&
+    !(hourWindow.dayStartMinute === 0 && hourWindow.dayEndMinute === FULL_DAY_MINUTES)
+      ? hourWindow
+      : undefined;
+
   const cells: IteratedCell[] = [];
   let cursor = startOf(adapter, rangeStart, unit, weekStartsOn);
   let index = 0;
@@ -45,6 +64,18 @@ export function iterate(
       );
     }
     const nextCursor = addUnit(adapter, cursor, unit, 1);
+
+    if (appliedHourWindow && unit === 'hour') {
+      const minuteInDay = adapter.getHours(cursor) * 60;
+      if (
+        minuteInDay < appliedHourWindow.dayStartMinute ||
+        minuteInDay >= appliedHourWindow.dayEndMinute
+      ) {
+        cursor = nextCursor;
+        continue;
+      }
+    }
+
     // First and last cells can extend past the visible range (e.g. a year cell
     // aligned to Jan 1 when the range starts mid-year). Clamp them so
     // `spanInTicks` reflects only the portion within `[rangeStart, rangeEndExclusive)`.
@@ -56,7 +87,9 @@ export function iterate(
       date: cursor,
       start: clampedStart,
       end: clampedEnd,
-      spanInTicks: differenceInUnits(adapter, clampedEnd, clampedStart, tickUnit),
+      spanInTicks: appliedHourWindow
+        ? countVisibleHours(adapter, clampedEnd, clampedStart, rangeStart, appliedHourWindow)
+        : differenceInUnits(adapter, clampedEnd, clampedStart, tickUnit),
       key: String(adapter.getTime(cursor)),
       index,
     });
@@ -117,6 +150,26 @@ function addUnit(
           `Use one of: 'hour', 'day', 'week', 'month', 'year'.`,
       );
   }
+}
+
+/**
+ * Counts the hour ticks within `[earlier, later)` that fall inside the visible hour
+ * window: the axis distance between the two bounds, in hours. Closed form (no
+ * hour-by-hour walk), consistent with the pinned tick count of the grid.
+ */
+function countVisibleHours(
+  adapter: TemporalAdapter,
+  later: TemporalSupportedObject,
+  earlier: TemporalSupportedObject,
+  rangeStart: TemporalSupportedObject,
+  hourWindow: HourWindow,
+): number {
+  const axis = { start: rangeStart, end: later, ...hourWindow };
+  return Math.round(
+    (dateToTimelineAxisOffsetMs(adapter, axis, later) -
+      dateToTimelineAxisOffsetMs(adapter, axis, earlier)) /
+      HOUR_MS,
+  );
 }
 
 function differenceInUnits(

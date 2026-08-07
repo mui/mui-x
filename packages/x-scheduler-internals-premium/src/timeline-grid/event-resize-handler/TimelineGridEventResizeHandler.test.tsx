@@ -1,9 +1,11 @@
+import { screen } from '@mui/internal-test-utils';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
 import {
   adapter,
   createSchedulerRenderer,
   describeConformance,
+  DEFAULT_TESTING_VISIBLE_DATE,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
@@ -40,4 +42,49 @@ describe('<TimelineGrid.EventResizeHandler />', () => {
       );
     },
   }));
+
+  describe('clipped bound gating', () => {
+    // dayAndHour collection: Jul 3 → Jul 6 2025.
+    const at = (hours: number) => adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, hours);
+
+    function renderEvent(eventStart: ReturnType<typeof at>, eventEnd: ReturnType<typeof at>) {
+      return render(
+        <EventTimelinePremiumProvider
+          events={[]}
+          resources={[ResourceBuilder.new().id('r1').build()]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        >
+          <TimelineGrid.Root>
+            <TimelineGrid.BodyRow index={0}>
+              <TimelineGrid.EventRow resourceId="r1">
+                {() => (
+                  <TimelineGrid.Event
+                    eventId="fake-id"
+                    occurrenceKey="fake-key"
+                    start={processDate(eventStart, adapter)}
+                    end={processDate(eventEnd, adapter)}
+                    renderDragPreview={() => null}
+                  >
+                    <TimelineGrid.EventResizeHandler side="end" data-testid="resize-end" />
+                  </TimelineGrid.Event>
+                )}
+              </TimelineGrid.EventRow>
+            </TimelineGrid.BodyRow>
+          </TimelineGrid.Root>
+        </EventTimelinePremiumProvider>,
+      );
+    }
+
+    it('should keep the end resize handle for an event ending exactly at midnight after the collection', () => {
+      // Jul 7 00:00 renders exactly on the collection's right edge: the rendered edge
+      // is the real end, so resizing from it reconstructs the correct dates.
+      renderEvent(at(3 * 24 + 22), at(4 * 24));
+      expect(screen.getByTestId('resize-end')).not.to.equal(null);
+    });
+
+    it('should hide the end resize handle for an event continuing past the collection', () => {
+      renderEvent(at(3 * 24 + 22), at(4 * 24 + 10));
+      expect(screen.queryByTestId('resize-end')).to.equal(null);
+    });
+  });
 });

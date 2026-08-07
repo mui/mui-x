@@ -198,6 +198,40 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     expect(document.activeElement).to.not.equal(getEvent('evt-d6-h20'));
   });
 
+  it('should skip the occurrences hidden by the trimmed hour window instead of trapping focus', async () => {
+    // 21:00 hides inside the trimmed window (8:00 → 20:00): its occurrence never
+    // mounts, so navigating to it would swallow Tab forever.
+    const trimmedEvents = [eventAt(3, 10), eventAt(3, 21), eventAt(4, 10)];
+    const { user } = render(
+      <div style={{ width: 1200, height: 600 }}>
+        <EventTimelinePremium
+          resources={[resource]}
+          events={trimmedEvents}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          preset="dayAndHour"
+          presets={['dayAndHour']}
+          presetConfig={{ dayAndHour: { startTime: 8, endTime: 20 } }}
+        />
+      </div>,
+    );
+
+    await waitFor(() => {
+      expect(getEvent('evt-d3-h10')).not.to.equal(null);
+    });
+    expect(getEvent('evt-d3-h21')).to.equal(null);
+
+    act(() => {
+      getEvent('evt-d3-h10')!.focus();
+    });
+
+    await user.keyboard('{Tab}');
+    await waitFor(() => {
+      const next = getEvent('evt-d4-h10');
+      expect(next).not.to.equal(null);
+      expect(document.activeElement).to.equal(next);
+    });
+  });
+
   describe('multi-resource occurrences', () => {
     // Occurrence keys aren't unique across rows: a multi-resource event renders
     // one copy per assigned resource, all sharing the same `data-occurrence-key`.

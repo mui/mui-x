@@ -215,11 +215,11 @@ interface TimeGridColumnProps {
   index: number;
   colIndex: number;
   /**
-   * The first hour displayed in the column (whole hour between 0 and 24).
+   * Inclusive start of the hour range displayed in the column (whole hour between 0 and 24).
    */
   startTime: number;
   /**
-   * The last hour displayed in the column (whole hour between 0 and 24).
+   * Exclusive end of the hour range displayed in the column (whole hour between 0 and 24).
    */
   endTime: number;
   showCurrentTimeIndicator: boolean;

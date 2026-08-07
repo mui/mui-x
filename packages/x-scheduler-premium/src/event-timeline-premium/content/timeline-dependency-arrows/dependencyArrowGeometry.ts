@@ -3,9 +3,9 @@ import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerResource,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { computeOccurrencesFirstIndexLookup } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import type {
   SchedulerDependency,
@@ -81,8 +81,17 @@ export interface ComputeDependencyArrowsParameters {
    * The y offset of each row in pixels, in the same order as `resources`.
    */
   rowPositions: readonly number[];
-  collectionStart: TemporalSupportedObject;
-  collectionEnd: TemporalSupportedObject;
+  /**
+   * The visible date range and daily hour window the arrows are positioned in.
+   */
+  axis: TimelineAxis;
+  /**
+   * Positions already computed by the axis filter, when the hour window is trimmed.
+   */
+  positionByOccurrenceKey?: ReadonlyMap<
+    string,
+    ReturnType<typeof computeElementPositionInCollection>
+  > | null;
   /**
    * The width of the events area in pixels (tick count × tick width).
    */
@@ -109,8 +118,8 @@ export function computeDependencyArrows(
     dependencies,
     resources,
     rowPositions,
-    collectionStart,
-    collectionEnd,
+    axis,
+    positionByOccurrenceKey,
     eventsWidth,
     laneMetrics,
   } = parameters;
@@ -152,20 +161,20 @@ export function computeDependencyArrows(
     return laneLookup;
   };
 
-  const positionByOccurrenceKey = new Map<
-    string,
-    ReturnType<typeof computeElementPositionInCollection>
-  >();
+  const positionCache = new Map<string, ReturnType<typeof computeElementPositionInCollection>>();
   const getPosition = (occurrence: SchedulerEventOccurrence) => {
-    let position = positionByOccurrenceKey.get(occurrence.key);
+    const precomputed = positionByOccurrenceKey?.get(occurrence.key);
+    if (precomputed != null) {
+      return precomputed;
+    }
+    let position = positionCache.get(occurrence.key);
     if (position == null) {
       position = computeElementPositionInCollection(adapter, {
         start: occurrence.displayTimezone.start,
         end: occurrence.displayTimezone.end,
-        collectionStart,
-        collectionEnd,
+        collection: axis,
       });
-      positionByOccurrenceKey.set(occurrence.key, position);
+      positionCache.set(occurrence.key, position);
     }
     return position;
   };

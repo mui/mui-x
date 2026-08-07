@@ -1,4 +1,5 @@
 import { spy } from 'sinon';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
@@ -10,6 +11,45 @@ const DEFAULT_PARAMS = {
 };
 
 describe('Preset - EventTimelinePremiumStore', () => {
+  beforeEach(() => {
+    clearWarningsCache();
+  });
+
+  describe('presetConfig validation', () => {
+    it('should warn about an invalid hour range even when the preset is not active', () => {
+      // The selector only resolves the rendered preset, so without eager validation
+      // the typo would stay silent until an end user switches to dayAndHour.
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore(
+          {
+            ...DEFAULT_PARAMS,
+            defaultPreset: 'dayAndMonth',
+            presetConfig: { dayAndHour: { startTime: 9, endTime: 9 } },
+          },
+          adapter,
+        );
+      }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` received an invalid hour range']);
+    });
+
+    it('should warn when a presetConfig key has no matching entry in presets', () => {
+      // `presets` can legitimately change at runtime while `presetConfig` stays
+      // static, so a dead key warns instead of throwing like unknown `presets` do.
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore(
+          {
+            ...DEFAULT_PARAMS,
+            defaultPreset: 'dayAndMonth',
+            presets: ['dayAndMonth', 'year'] as EventTimelinePremiumPreset[],
+            presetConfig: { dayAndHour: { startTime: 8, endTime: 20 } },
+          },
+          adapter,
+        );
+      }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` has no matching entry']);
+    });
+  });
+
   describe('Method: setPreset', () => {
     it('should update preset and call onPresetChange when value changes and is uncontrolled', () => {
       const onPresetChange = spy();

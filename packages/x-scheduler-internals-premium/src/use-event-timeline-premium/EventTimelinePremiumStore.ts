@@ -6,12 +6,14 @@ import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
 import {
   DEFAULT_SCHEDULER_PREFERENCES,
+  getDisplayedHourRange,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
   EventTimelinePremiumPreferences,
   EventTimelinePremiumPreset,
+  EventTimelinePremiumPresetConfig,
   SchedulerAddDependencyResult,
   SchedulerDependencyCreationProperties,
   SchedulerDependencyId,
@@ -25,7 +27,7 @@ import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePr
 import { schedulerRecurringEventsPlugin } from '../internals/plugins/schedulerRecurringEventsPlugin';
 import { SchedulerSchedulingPlugin } from '../internals/plugins/SchedulerSchedulingPlugin';
 import {
-  EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
+  EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS,
   getPresetPxPerDay,
 } from '../internals/utils/preset-utils';
 import { buildDependenciesState } from '../internals/utils/dependency-utils';
@@ -34,7 +36,7 @@ import { buildDependenciesState } from '../internals/utils/dependency-utils';
 // tickWidth)` must produce a unique px/day — otherwise the order is decided by
 // `Object.keys` insertion order, which is not a stable contract.
 const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = (
-  Object.keys(EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS) as EventTimelinePremiumPreset[]
+  Object.keys(EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS) as EventTimelinePremiumPreset[]
 ).sort((a, b) => getPresetPxPerDay(b) - getPresetPxPerDay(a));
 
 export const DEFAULT_PRESETS: EventTimelinePremiumPreset[] = PRESET_ZOOM_ORDER;
@@ -73,11 +75,46 @@ function sortPresetsByZoomOrder(
   return PRESET_ZOOM_ORDER.filter((preset) => presets.includes(preset));
 }
 
+/**
+ * Validates every entry of `presetConfig`, not just the active preset's: the selector
+ * only resolves the rendered preset, so a typo in another preset's range would stay
+ * silent until an end user switches to it. A key with no matching entry in `presets`
+ * warns instead of throwing like unknown `presets` entries do: `presets` can
+ * legitimately change at runtime while `presetConfig` stays static.
+ */
+function validatePresetConfig(
+  presetConfig: EventTimelinePremiumPresetConfig,
+  presets: readonly EventTimelinePremiumPreset[],
+) {
+  if (process.env.NODE_ENV !== 'production') {
+    for (const preset of Object.keys(presetConfig) as (keyof EventTimelinePremiumPresetConfig)[]) {
+      const hourConfig = presetConfig[preset];
+      if (hourConfig) {
+        if (!presets.includes(preset)) {
+          warnOnce([
+            `MUI X Scheduler: \`presetConfig.${preset}\` has no matching entry in the \`presets\` prop.`,
+            'The configuration is ignored because the preset can never become active.',
+            `Add "${preset}" to \`presets\`, or remove the entry from \`presetConfig\`.`,
+          ]);
+        }
+        getDisplayedHourRange(hourConfig.startTime, hourConfig.endTime, `presetConfig.${preset}`);
+      }
+    }
+  }
+}
+
 const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
   parameters: EventTimelinePremiumParameters<TEvent, TResource>,
-) => ({
-  presets: sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS),
-});
+) => {
+  const presets = sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS);
+  if (parameters.presetConfig) {
+    validatePresetConfig(parameters.presetConfig, presets);
+  }
+  return {
+    presets,
+    presetConfig: parameters.presetConfig ?? EMPTY_OBJECT,
+  };
+};
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
@@ -195,7 +232,7 @@ export class EventTimelinePremiumStore<
    */
   public goToNextVisibleDate = (event: React.UIEvent) => {
     const { adapter, visibleDate, preset } = this.state;
-    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
+    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, unitCount),
       event,
@@ -207,7 +244,7 @@ export class EventTimelinePremiumStore<
    */
   public goToPreviousVisibleDate = (event: React.UIEvent) => {
     const { adapter, visibleDate, preset } = this.state;
-    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
+    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, -unitCount),
       event,

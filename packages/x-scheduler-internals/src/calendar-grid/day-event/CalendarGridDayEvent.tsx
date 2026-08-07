@@ -130,12 +130,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     isDraggable,
     renderDragPreview,
     getDragData,
-    collectionStart: rowStart,
-    collectionEnd: rowEnd,
+    collection: { start: rowStart, end: rowEnd, dayStartMinute: 0, dayEndMinute: 1440 },
   });
 
-  const startingBeforeEdge = draggableEventContextValue.doesEventStartBeforeCollectionStart;
-  const endingAfterEdge = draggableEventContextValue.doesEventEndAfterCollectionEnd;
+  const startingBeforeEdge = draggableEventContextValue.isEventStartClipped;
+  const endingAfterEdge = draggableEventContextValue.isEventEndClipped;
 
   const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
 

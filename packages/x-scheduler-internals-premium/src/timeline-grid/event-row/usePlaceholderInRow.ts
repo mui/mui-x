@@ -1,12 +1,18 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { isInternalDragOrResizePlaceholder } from '@mui/x-scheduler-internals/internals';
+import {
+  isInternalDragOrResizePlaceholder,
+  isRangeVisibleOnTimelineAxis,
+} from '@mui/x-scheduler-internals/internals';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { timelineOccurrencePlaceholderSelectors } from '../../event-timeline-premium-selectors';
+import {
+  eventTimelinePremiumPresetSelectors,
+  timelineOccurrencePlaceholderSelectors,
+} from '../../event-timeline-premium-selectors';
 
 export function usePlaceholderInRow(
   parameters: usePlaceholderInRow.Parameters,
@@ -28,9 +34,16 @@ export function usePlaceholderInRow(
     ? rawPlaceholder.eventId
     : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
+      return null;
+    }
+
+    // A placeholder fully inside the hidden hours (e.g. while editing the dates in the
+    // event dialog) would render as a zero-width sliver pinned to the day seam.
+    if (!isRangeVisibleOnTimelineAxis(adapter, config, rawPlaceholder.start, rawPlaceholder.end)) {
       return null;
     }
     const startProcessed = processDate(rawPlaceholder.start, adapter);
@@ -80,7 +93,7 @@ export function usePlaceholderInRow(
       ...sharedProperties,
       position,
     };
-  }, [rawPlaceholder, adapter, originalEvent, originalEventId, occurrences, maxIndex]);
+  }, [rawPlaceholder, adapter, config, originalEvent, originalEventId, occurrences, maxIndex]);
 }
 
 export namespace usePlaceholderInRow {

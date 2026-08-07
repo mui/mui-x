@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 
@@ -111,6 +112,38 @@ describe('<DayTimeGrid /> - viewConfig (startTime / endTime)', () => {
       // Switching to the day view honors the day window (06:00 → 22:00 = 16 rows).
       view.setProps({ view: 'day' });
       expect(getTimeAxisCells()).to.have.length(16);
+    });
+  });
+
+  describe('hour range validation wiring', () => {
+    beforeEach(() => {
+      clearWarningsCache();
+    });
+
+    it('should name `viewConfig.week` when the week view receives an invalid range', () => {
+      expect(() => {
+        render(
+          <EventCalendar
+            events={[]}
+            visibleDate={visibleDate}
+            view="week"
+            viewConfig={{ week: { startTime: 20, endTime: 8 } }}
+          />,
+        );
+      }).toWarnDev(['MUI X Scheduler: `viewConfig.week` received an invalid hour range']);
+    });
+
+    it('should name `viewConfig.day` when the day view receives an invalid range', () => {
+      expect(() => {
+        render(
+          <EventCalendar
+            events={[]}
+            visibleDate={visibleDate}
+            view="day"
+            viewConfig={{ day: { startTime: 20, endTime: 8 } }}
+          />,
+        );
+      }).toWarnDev(['MUI X Scheduler: `viewConfig.day` received an invalid hour range']);
     });
   });
 });

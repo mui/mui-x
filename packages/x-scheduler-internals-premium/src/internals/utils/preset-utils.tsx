@@ -4,7 +4,7 @@ import { getEndOfWeek, getStartOfWeek } from '@mui/x-scheduler-internals/interna
 import type {
   TemporalSupportedObject,
   EventTimelinePremiumPreset,
-  PresetConfig,
+  PresetDefinition,
   PresetHeaderUnit,
 } from '../../models';
 
@@ -36,8 +36,8 @@ function formatHourLabel(adapter: TemporalAdapter, date: TemporalSupportedObject
   return adapter.formatByString(date, pattern);
 }
 
-export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Readonly<
-  Record<EventTimelinePremiumPreset, PresetConfig>
+export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
+  Record<EventTimelinePremiumPreset, PresetDefinition>
 > = {
   dayAndHour: {
     timeResolution: 'hour',
@@ -57,8 +57,14 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Readonly<
     getEndDate: (adapter, start, unitCount) =>
       adapter.endOfDay(adapter.addDays(start, unitCount - 1)),
     // `unitCount` is in days (the navigation step), but the grid ticks in hours. Pin
-    // the CSS tick count to `4 × 24` so the grid width stays stable across DST and
-    // matches the 24 hour cells `iterate()` emits per day.
+    // the CSS tick count to `days × 24` so the grid width stays stable across DST
+    // and matches the hour cells `iterate()` emits per day — except when a DST
+    // transition falls inside the visible window, where `iterate()` emits one cell
+    // more or fewer for that day (known limitation). With a trimmed hour window the
+    // transition cell's span absorbs the shift and the rows stay aligned, unless
+    // `startTime` equals the spring-forward gap hour itself (e.g. `startTime: 2` in
+    // US/EU timezones), where the absorbing cell is skipped and the hour row comes
+    // up one tick short (same class of limitation).
     getCssUnitCount: () => DAY_AND_HOUR_DAYS * 24,
     navigate: (adapter, date, amount) => adapter.addDays(date, amount),
   },
@@ -143,6 +149,6 @@ const TICKS_PER_DAY: Record<PresetHeaderUnit, number> = {
  * Higher = more zoomed in. Used to derive the canonical zoom ordering of presets.
  */
 export function getPresetPxPerDay(preset: EventTimelinePremiumPreset): number {
-  const { timeResolution, tickWidth } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
+  const { timeResolution, tickWidth } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
   return tickWidth * TICKS_PER_DAY[timeResolution];
 }
