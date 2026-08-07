@@ -300,8 +300,8 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         ...selectedDayStyles(theme),
       },
     },
-    // A day disabled on its own (`shouldDisableDate`, `minDate`, ...) only dims itself.
-    // Dimming the whole cell would also dim the `::before` range highlight and leave gaps in the range.
+    // A day disabled on its own (`shouldDisableDate`, `minDate`, ...) only dims its text.
+    // Dimming the cell would also dim the `::before` range highlight and leave gaps in the range.
     {
       props: {
         isDaySelected: true,
@@ -310,10 +310,6 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         isPickerDisabled: false,
       },
       style: {
-        backgroundColor: theme.alpha(
-          (theme.vars || theme).palette.primary.main,
-          DISABLED_DAY_OPACITY,
-        ),
         color: theme.alpha(
           (theme.vars || theme).palette.primary.contrastText,
           DISABLED_DAY_OPACITY,
