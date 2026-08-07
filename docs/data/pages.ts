@@ -117,6 +117,7 @@ const pages: MuiPage[] = [
       { pathname: `/x/introduction`, title: 'Overview' },
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
+      { pathname: `/x/introduction/mui-console`, title: 'MUI Console', newFeature: true },
       { pathname: `/x/introduction/support` },
       { pathname: `/x/llms.txt`, title: 'llms.txt', newFeature: true },
       { pathname: `/x/introduction/mcp`, title: 'AI support via MCP', newFeature: true },
