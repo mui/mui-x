@@ -5,15 +5,15 @@ import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { EventEditingProvider, EventEditingTrigger, useEventEditingContext } from './index';
 
-const EVENT: SchedulerEvent = EventBuilder.new()
+const event: SchedulerEvent = EventBuilder.new()
   .title('Running')
   .singleDay('2025-05-26T07:30:00Z', 45)
   .build();
 
-const OCCURRENCE = EventBuilder.new()
-  .id(EVENT.id)
-  .title(EVENT.title)
-  .span(EVENT.start, EVENT.end)
+const occurrence = EventBuilder.new()
+  .id(event.id)
+  .title(event.title)
+  .span(event.start, event.end)
   .toOccurrence();
 
 describe('<EventEditingProvider />', () => {
@@ -38,12 +38,12 @@ describe('<EventEditingProvider />', () => {
       const [mounted, setMounted] = React.useState(triggerIds);
 
       return (
-        <EventCalendarProvider events={[EVENT]} resources={[]}>
+        <EventCalendarProvider events={[event]} resources={[]}>
           <EventEditingProvider surface="dialog">
             <AnchorRecorder />
             {triggerIds.map((id) =>
               mounted.includes(id) ? (
-                <EventEditingTrigger key={id} occurrence={OCCURRENCE}>
+                <EventEditingTrigger key={id} occurrence={occurrence}>
                   <button type="button" data-testid={id}>
                     {id}
                   </button>

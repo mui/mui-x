@@ -8,13 +8,13 @@ import { EventCalendarProvider } from '../../EventCalendarProvider';
 import { EventDialogProvider } from '../../event-dialog';
 
 // Spans three days, so on the middle one it renders with a "continues before" chevron.
-const CONTINUING_EVENT: SchedulerEvent = EventBuilder.new()
+const continuingEvent: SchedulerEvent = EventBuilder.new()
   .title('Conference')
   .span('2025-05-05T09:00:00Z', '2025-05-07T18:00:00Z')
   .build();
 
 // Enough same-day events to push the cell into showing a "+N more" button.
-const CROWDING_EVENTS: SchedulerEvent[] = Array.from({ length: 6 }, (_, index) =>
+const crowdingEvents: SchedulerEvent[] = Array.from({ length: 6 }, (_, index) =>
   EventBuilder.new()
     .title(`Filler ${index + 1}`)
     .singleDay(`2025-05-06T0${index + 1}:00:00Z`)
@@ -27,7 +27,7 @@ describe('<EventItem />', () => {
   async function renderAndOpenPopover() {
     const { user } = render(
       <EventCalendarProvider
-        events={[CONTINUING_EVENT, ...CROWDING_EVENTS]}
+        events={[continuingEvent, ...crowdingEvents]}
         resources={[]}
         visibleDate={adapter.date('2025-05-06T00:00:00Z', 'default')}
       >
