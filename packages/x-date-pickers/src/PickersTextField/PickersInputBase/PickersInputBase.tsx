@@ -188,8 +188,6 @@ const PickersInputBaseActiveBar = styled('div', {
 })<{ ownerState: { sectionOffsets: number[] } }>(({ theme, ownerState }) => ({
   display: 'none',
   position: 'absolute',
-  // Decorative: it must not become the target of a click on the field padding.
-  pointerEvents: 'none',
   height: 2,
   bottom: 2,
   borderTopLeftRadius: 2,
