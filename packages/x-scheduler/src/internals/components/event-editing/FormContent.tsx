@@ -27,7 +27,7 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   getCustomEventProperties,
-  getPrimaryResourceId,
+  getEventResourceIds,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -149,7 +149,7 @@ export function FormContent(props: FormContentProps) {
       endDate: fmtDate(occurrence.displayTimezone.end),
       startTime: fmtTime(occurrence.displayTimezone.start),
       endTime: fmtTime(occurrence.displayTimezone.end),
-      resourceId: getPrimaryResourceId(occurrence.resource),
+      resourceIds: getEventResourceIds(occurrence.resource),
       allDay: !!occurrence.allDay,
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: defaultRecurrencePresetKey,
@@ -217,7 +217,7 @@ function FormContentInner(props: FormContentProps) {
       title: values.title.trim(),
       description: values.description.trim(),
       allDay: values.allDay,
-      resource: values.resourceId === null ? undefined : values.resourceId,
+      resource: values.resourceIds,
       color: values.color === null ? undefined : values.color,
     };
 
