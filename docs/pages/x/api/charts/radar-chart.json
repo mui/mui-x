@@ -23,6 +23,7 @@
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
     },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
