@@ -7,11 +7,12 @@ import type {
   DataGridProps,
   GridApi,
   GridDataSource,
+  GridFilterItem,
   GridGetRowsParams,
   GridGetRowsResponse,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, sleep } from 'test/utils/helperFn';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 import { TestCache } from '../internals/utils';
 
@@ -169,39 +170,48 @@ describe('<DataGrid /> - Data source', () => {
       return JSON.parse(url.searchParams.get('filterModel')!).items;
     };
 
-    // See https://github.com/mui/mui-x/issues/23243
-    it('should not send a filter item without a value to the data source', async () => {
-      const { setProps } = render(
-        <TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />,
-      );
+    const renderAndWaitForInitialFetch = async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(1);
       });
+    };
 
-      setProps({
-        filterModel: { items: [{ id: 1, field: 'id', operator: 'contains' }] },
+    const upsertFilterItem = async (item: GridFilterItem) => {
+      await act(async () => {
+        apiRef.current!.upsertFilterItem(item);
       });
+    };
 
+    // See https://github.com/mui/mui-x/issues/23243
+    it('should not send a filter item without a value to the data source', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
       });
       expect(getSentFilterItems()).to.deep.equal([]);
     });
 
     it('should not send a filter item whose array value is empty', async () => {
-      const { setProps } = render(
-        <TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />,
-      );
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
-      });
+      await renderAndWaitForInitialFetch();
 
-      setProps({
-        filterModel: { items: [{ id: 1, field: 'id', operator: 'isAnyOf', value: [] }] },
-      });
-
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isAnyOf', value: ['1'] });
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isAnyOf', value: [] });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
       });
       expect(getSentFilterItems()).to.deep.equal([]);
     });
@@ -209,21 +219,41 @@ describe('<DataGrid /> - Data source', () => {
     // Operators like `isEmpty` are complete without a value.
     // See https://github.com/mui/mui-x/issues/5402
     it('should send a valueless filter item whose operator requires no value', async () => {
-      const { setProps } = render(
-        <TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />,
-      );
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
-      });
+      await renderAndWaitForInitialFetch();
 
-      setProps({
-        filterModel: { items: [{ id: 1, field: 'id', operator: 'isEmpty' }] },
-      });
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isEmpty' });
 
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(2);
       });
       expect(getSentFilterItems()).to.deep.equal([{ id: 1, field: 'id', operator: 'isEmpty' }]);
+    });
+
+    // Adding a filter row asks the data source for what the previous call already returned.
+    it('should not re-fetch when the change only adds an incomplete item', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+      await sleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    it('should re-fetch when an incomplete item becomes complete', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+      await sleep(50);
+      expect(fetchRowsSpy.callCount).to.equal(1);
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      expect(getSentFilterItems()).to.deep.equal([
+        { id: 1, field: 'id', operator: 'contains', value: '1' },
+      ]);
     });
   });
 

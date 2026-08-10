@@ -37,6 +37,7 @@ import {
   useGridRegisterStrategyProcessor,
   runIf,
   DataSourceRowsUpdateStrategy,
+  useGridDataSourceFilterModelChange,
 } from '@mui/x-data-grid/internals';
 import type { GridStrategyProcessor } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
@@ -155,6 +156,8 @@ export const useGridDataSourceNestedLazyLoader = (
   );
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
+
+  const getChangedFilterModel = useGridDataSourceFilterModelChange(privateApiRef);
 
   // Adjust the render context range to fit the pagination model's page size
   // First row index should be decreased to the start of the page, end row index should be increased to the end of the page
@@ -1025,27 +1028,37 @@ export const useGridDataSourceNestedLazyLoader = (
     [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange, stopPolling],
   );
 
-  const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
-    (newFilterModel) => {
-      rowsStale.current = true;
-      renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
-      throttledHandleRenderedRowsIntervalChange.clear();
-      stopPolling();
+  const handleGridFilterModelChange = React.useCallback<
+    GridEventListener<'filterModelChange'>
+  >(() => {
+    const filterModel = getChangedFilterModel();
+    if (filterModel === null) {
+      return;
+    }
 
-      const paginationModel = gridPaginationModelSelector(privateApiRef);
-      const sortModel = gridSortModelSelector(privateApiRef);
-      const getRowsParams: GridGetRowsParams = {
-        start: 0,
-        end: paginationModel.pageSize - 1,
-        sortModel,
-        filterModel: newFilterModel,
-      };
+    rowsStale.current = true;
+    renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
+    throttledHandleRenderedRowsIntervalChange.clear();
+    stopPolling();
 
-      privateApiRef.current.setLoading(true);
-      debouncedFetchRows(getRowsParams);
-    },
-    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange, stopPolling],
-  );
+    const paginationModel = gridPaginationModelSelector(privateApiRef);
+    const sortModel = gridSortModelSelector(privateApiRef);
+    const getRowsParams: GridGetRowsParams = {
+      start: 0,
+      end: paginationModel.pageSize - 1,
+      sortModel,
+      filterModel,
+    };
+
+    privateApiRef.current.setLoading(true);
+    debouncedFetchRows(getRowsParams);
+  }, [
+    privateApiRef,
+    debouncedFetchRows,
+    throttledHandleRenderedRowsIntervalChange,
+    stopPolling,
+    getChangedFilterModel,
+  ]);
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>((row) => {
     draggedRowId.current = row.id;
