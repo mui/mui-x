@@ -33,9 +33,10 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
-// For fast scrolls with inverse sticky, delay the rendering by certain number of frames
-// to give time for the entering rows to rasterize. Below the lowest threshold, updates commit
-// immediately. Ordered by descending speed - the first match wins.
+// For fast scrolls in sticky mode, defer the render-context advance by a number of
+// frames so the window isn't re-rendered mid-fling (the inverse-sticky clamp shows stale
+// content meanwhile); faster scrolls defer more. Below the lowest threshold, updates
+// commit immediately. Ordered by descending speed - the first match wins.
 const SCROLL_DELAY_LEVELS: ReadonlyArray<{ minVelocityPxPerMs: number; frames: number }> = [
   { minVelocityPxPerMs: 28, frames: 6 },
   { minVelocityPxPerMs: 20, frames: 4 },
@@ -443,12 +444,13 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       return renderContext;
     }
 
-    // Fast sticky scroll: show the current (stale) window and defer the advance by a
-    // velocity-dependent number of animation frames, giving the entering rows that
-    // many frames to rasterize before the viewport reveals them. Direction changes
-    // (which reallocate the buffer) and the settle pass always commit immediately; a
-    // deferral in flight re-enters with `forceStickyCommit` set, so at most one commit
-    // runs per deferral window, always for the latest scroll position.
+    // Fast sticky scroll: advancing the render context mid-fling re-renders the window
+    // and competes with the compositor. Instead keep showing the current (stale) window
+    // — the inverse-sticky clamp covers the viewport — and defer the advance by a
+    // velocity-scaled number of animation frames (faster flings defer more), then commit
+    // the latest scroll position. Direction changes (which reallocate the buffer) and
+    // the settle pass always commit immediately; a deferral in flight re-enters with
+    // `forceStickyCommit` set, so at most one commit runs per deferral window.
     const isDeferralPending = deferredStickyFrame.current !== 0;
     if (
       layoutMode === 'sticky' &&

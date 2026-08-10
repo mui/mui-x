@@ -300,50 +300,28 @@ export class LayoutList extends Layout<ListElements> {
 /**
  * Paint-stable window content.
  *
- * The rendered rows paint into a composited layer, and the compositor re-rasterizes
- * every region whose paint offset within its layer changed. Each render context update
- * moves the window in the flow (the spacers track the new offset), so if the rows
- * painted into the window's own layer, every retained row would shift inside it and the
- * whole window would re-rasterize on every update. Fast scrolling exposes that as blank
- * frames at the leading edge: a whole-window raster cannot complete within a frame
- * interval, and the lower the display refresh rate, the more pixels each frame interval
- * covers.
+ * Rows paint into the sticky window's composited layer, which re-rasterizes any region
+ * whose offset within the layer changes. Each render-context update moves the window in
+ * the flow, so painting rows directly into it would shift every retained row and
+ * re-rasterize the whole window — seen as blank frames at the leading edge on fast
+ * scroll. Instead the rows live in a `windowContent` box with `paddingTop` of
+ * `offsetTop - anchorTop` and a counter `translateY`: the visual position is unchanged,
+ * but retained rows keep fixed layer offsets, so only entering rows rasterize. The
+ * anchor is held while scrolling and re-quantized once it settles, so the unavoidable
+ * whole-window raster lands with nothing moving to expose it (see `anchor.ts`).
  *
- * The rows therefore render inside a dedicated `windowContent` box that keeps its own
- * anchored local space: `paddingTop` places the rows at `offsetTop - anchorTop`, and a
- * `translateY` of the same magnitude cancels the pad visually. The rows already paint
- * into the composited layer of the sticky window, and the pad holds their offsets inside
- * it fixed across updates, so only entering rows rasterize. The anchor itself is held
- * for as long as it can be and moves on the pass that follows the scroll settling, so
- * the whole-window raster costs lands with nothing moving to expose it (see
- * `anchor.ts`).
+ * Vertical only: the counter-translation is an ancestor of the sticky pinned cells, and
+ * sticky offsets resolve before transforms, so a horizontal translate would displace
+ * their clamped position.
  *
- * Promoting the box itself (`will-change: transform`) is deliberately avoided: measured
- * against the layer trees Chromium builds for this layout it changes no invalidation —
- * the sticky window is composited either way — while it does disable subpixel text
- * antialiasing on the platforms that use it, and raises peak tile memory. Painting a
- * background on this box is worse still: the pad region becomes painted content, so
- * every pad change invalidates the whole box and the optimization is lost entirely.
- *
- * The sticky window and the spacers keep tracking the exact offsets: the sticky clamp
- * may only move an element within its containing block, so holding stale content
- * during backward overshoot needs the slack of the element's real flow position — the
- * anchoring must live entirely inside `windowContent`.
- *
- * Vertical only: the counter-translation sits on an ancestor of the sticky pinned
- * cells, and sticky offsets are resolved in layout coordinates before transforms
- * apply, so a horizontal translation would displace the pinned cells' clamped
- * position. Column-direction updates therefore reposition the cells within the layer
- * and rasterize the whole window.
- *
- * `anchor.ts` bounds how far the pad may grow, and with it the `windowContent` box:
- * a box much taller than the rendered window measurably raises peak tile memory.
+ * Avoid `will-change: transform` or a background on this box: neither reduces
+ * invalidation here, and both regress text antialiasing and tile memory (a background
+ * also turns the pad into painted content that invalidates on every change).
  */
 function padTopFor(offsetTop: number, anchorTop: number) {
-  // Clamped, as the row positions can change without a render context update (a row height
-  // update, for one), and the pad is a padding — a negative one would be dropped while
-  // the counter-translation kept applying, displacing the rows. At zero the box is
-  // simply unanchored until the next update re-anchors it.
+  // Clamped: row positions can change without a context update (e.g. a row-height
+  // change), and a negative padding would be dropped while the counter-translation kept
+  // applying, displacing the rows. At zero the box is unanchored until the next update.
   return Math.max(0, offsetTop - anchorTop);
 }
 
