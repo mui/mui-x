@@ -51,7 +51,7 @@ describe('DesktopDatePicker keepOpenDuringFieldFocus - clicking field should not
       expect(monthSection).toHaveFocus();
       expect(onOpen.callCount).to.equal(1);
     });
-    expect(screen.queryByRole('dialog')).to.equal(null);
+    await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
 
     await user.click(screen.getByRole('button', { name: 'Before picker' }));
     await user.tab();
