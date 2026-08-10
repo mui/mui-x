@@ -17,6 +17,7 @@ import { useFieldOwnerState } from '../hooks/useFieldOwnerState';
 import { usePickerTranslations } from '../../hooks';
 import { ClearIcon as MuiClearIcon } from '../../icons';
 import { useNullablePickerContext } from '../hooks/useNullablePickerContext';
+import { usePickerPrivateContext } from '../hooks/usePickerPrivateContext';
 import type { UseFieldReturnValue, UseFieldProps } from '../hooks/useField';
 import type { PickersTextFieldProps } from '../../PickersTextField';
 import { PickersTextField } from '../../PickersTextField';
@@ -414,6 +415,7 @@ export function useFieldTextFieldProps<TProps extends UseFieldOwnerStateParamete
   const { ref, externalForwardedProps, slotProps } = parameters;
   const pickerFieldUIContext = React.useContext(PickerFieldUIContext);
   const pickerContext = useNullablePickerContext();
+  const { isRestoringFocusRef } = usePickerPrivateContext();
   const ownerState = useFieldOwnerState(externalForwardedProps);
 
   // TODO v10: remove
@@ -493,8 +495,8 @@ export function useFieldTextFieldProps<TProps extends UseFieldOwnerStateParamete
 
     (textFieldProps as any).onFocus = (event: React.FocusEvent) => {
       prevOnFocus?.(event);
-      // Avoid opening if event was prevented by user code
-      if (!event.isDefaultPrevented() && !isFromOpenButton(event)) {
+      // Avoid opening if event was prevented by user code or caused by focus restoration
+      if (!event.isDefaultPrevented() && !isFromOpenButton(event) && !isRestoringFocusRef.current) {
         pickerContext.setOpen(true);
       }
     };

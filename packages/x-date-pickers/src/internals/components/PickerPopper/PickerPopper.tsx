@@ -349,7 +349,11 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
 
   const { open, popupRef, reduceAnimations, keepOpenDuringFieldFocus } = usePickerContext();
-  const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
+  const {
+    ownerState: pickerOwnerState,
+    rootRefObject,
+    isRestoringFocusRef,
+  } = usePickerPrivateContext();
   const { dismissViews, getCurrentViewMode, onPopperExited, triggerElement, viewContainerRole } =
     usePickerPrivateContext();
 
@@ -384,11 +388,15 @@ export function PickerPopper(inProps: PickerPopperProps) {
       // avoids issue, where screen reader could fail to announce selected date after selection
       setTimeout(() => {
         if (lastFocusedElementRef.current instanceof HTMLElement) {
+          isRestoringFocusRef.current = true;
           lastFocusedElementRef.current.focus();
+          setTimeout(() => {
+            isRestoringFocusRef.current = false;
+          });
         }
       });
     }
-  }, [open, viewContainerRole, getCurrentViewMode, rootRefObject]);
+  }, [open, viewContainerRole, getCurrentViewMode, rootRefObject, isRestoringFocusRef]);
 
   const classes = useUtilityClasses(classesProp);
 

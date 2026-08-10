@@ -35,6 +35,7 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
     pickerOrientation: 'portrait',
   },
   rootRefObject: { current: null },
+  isRestoringFocusRef: { current: false },
   labelId: undefined,
   dismissViews: () => {},
   hasUIView: true,
@@ -356,6 +357,10 @@ export interface PickerPrivateContextValue {
    * This is the object counterpart of the `usePickerContext().rootRef` property which can be a function.
    */
   rootRefObject: React.RefObject<HTMLDivElement | null>;
+  /**
+   * Whether the Picker is currently restoring focus after closing the Popper.
+   */
+  isRestoringFocusRef: React.RefObject<boolean>;
   /**
    * The id of the label element.
    */
