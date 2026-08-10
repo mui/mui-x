@@ -193,9 +193,6 @@ describe('<EventDialogContent open />', () => {
     await user.click(screen.getByRole('tab', { name: /general/i }));
     await user.click(screen.getByRole('combobox', { name: /resource/i }));
     await user.click(await screen.findByRole('option', { name: /work/i }));
-    // The resource picker is a multi-select: it stays open after picking an option, so it
-    // must be dismissed explicitly before interacting with the rest of the form.
-    await user.keyboard('{Escape}');
     await user.click(screen.getByRole('button', { name: /pink/i }));
     await user.click(screen.getByRole('button', { name: /save/i }));
 
@@ -210,9 +207,9 @@ describe('<EventDialogContent open />', () => {
       end: adapter.endOfDay(adapter.date(DEFAULT_EVENT.end, 'default')).toISOString(),
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
-      // DEFAULT_EVENT starts assigned to Personal; selecting Work in the multi-select adds
-      // it alongside the existing selection instead of replacing it.
-      resource: [personalResource.id, workResource.id],
+      // DEFAULT_EVENT's resource is a plain string (single-resource mode), so picking Work
+      // replaces the selection and is written back as a plain id, not an array.
+      resource: workResource.id,
       color: 'pink',
     };
 
@@ -560,6 +557,61 @@ describe('<EventDialogContent open />', () => {
     ).to.have.attribute('data-palette', 'teal');
   });
 
+  it('should not render the "no resource" dashed dot for an event referencing an unknown resource id', async () => {
+    // A resource that isn't in the `resources` list passed to the provider — simulates an
+    // event still pointing at a resource that has since been deleted.
+    const deletedResource = ResourceBuilder.new().id('deleted-team').build();
+
+    const eventWithUnknownResource: SchedulerEvent = {
+      ...DEFAULT_EVENT,
+      resource: deletedResource.id,
+    };
+
+    const eventWithUnknownResourceOccurrence = EventBuilder.new(adapter)
+      .id(eventWithUnknownResource.id)
+      .title(eventWithUnknownResource.title)
+      .description(eventWithUnknownResource.description)
+      .span(eventWithUnknownResource.start, eventWithUnknownResource.end)
+      .resource(deletedResource)
+      .toOccurrence();
+
+    // MUI's Select itself warns in dev that `deleted-team` doesn't match any rendered option
+    // (single-select mode has no item for an id outside `resources`) — pre-existing behavior,
+    // orthogonal to the dashed-dot bug under test here. Stubbed rather than asserted via
+    // `toWarnDev` because the exact number of times it fires isn't stable.
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      render(
+        <EventCalendarProvider
+          events={[eventWithUnknownResource]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent
+            open
+            {...defaultProps}
+            occurrence={eventWithUnknownResourceOccurrence}
+          />
+        </EventCalendarProvider>,
+      );
+    } finally {
+      consoleWarnSpy.mockRestore();
+    }
+
+    const dialogs = screen.getAllByRole('dialog');
+    const currentDialog = dialogs[dialogs.length - 1];
+
+    // The trigger shows "Invalid resource" (a selection exists, it just doesn't resolve)...
+    expect(within(currentDialog).getByRole('combobox', { name: /resource/i }).textContent).to.match(
+      /invalid resource/i,
+    );
+    // ...so the swatch must not fall back to the dashed "no resource" styling, which would
+    // contradict that label by implying nothing is selected at all.
+    expect(
+      currentDialog.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
+    ).to.have.attribute('data-no-resource', 'false');
+  });
+
   it('should fallback to "No resource" with default color when the event has no resource', async () => {
     const onEventsChange = spy();
 
@@ -618,7 +670,7 @@ describe('<EventDialogContent open />', () => {
       .span(eventWithoutResource.start, eventWithoutResource.end)
       .toOccurrence();
 
-    it('should never render a dedicated "No resource" option in the dropdown', async () => {
+    it('should hide the "No resource" option from the dropdown when `shouldEventRequireResource` is true', async () => {
       const { user } = render(
         <EventCalendarProvider
           events={[DEFAULT_EVENT]}
@@ -632,14 +684,16 @@ describe('<EventDialogContent open />', () => {
 
       await user.click(screen.getByRole('combobox', { name: /resource/i }));
 
-      // The picker is a multi-select: clearing the resource happens by deselecting every
-      // entry, not by picking a dedicated "no resource" option.
+      // DEFAULT_EVENT's resource is a plain string, so the picker is single-select here: the
+      // "No resource" item still renders in the DOM (so the Select doesn't warn about an
+      // out-of-range value), but is hidden via `display: none` — excluded from the
+      // accessibility tree — while the requirement is on.
       expect(screen.queryByRole('option', { name: /no resource/i })).to.equal(null);
       expect(screen.getByRole('option', { name: /work/i })).not.to.equal(null);
       expect(screen.getByRole('option', { name: /personal/i })).not.to.equal(null);
     });
 
-    it('should show "No resource" in the combobox after deselecting the only selected resource', async () => {
+    it('should show "No resource" in the combobox after picking the "No resource" option (single-select mode)', async () => {
       const { user } = render(
         <EventCalendarProvider
           events={[DEFAULT_EVENT]}
@@ -651,10 +705,10 @@ describe('<EventDialogContent open />', () => {
         </EventCalendarProvider>,
       );
 
+      // DEFAULT_EVENT's resource is a plain string, so the picker is single-select here: there
+      // is no toggle-off, clearing it means picking the dedicated "No resource" option.
       await user.click(screen.getByRole('combobox', { name: /resource/i }));
-      // DEFAULT_EVENT starts assigned to Personal; clicking it again deselects it.
-      await user.click(await screen.findByRole('option', { name: /personal/i }));
-      await user.keyboard('{Escape}');
+      await user.click(await screen.findByRole('option', { name: /no resource/i }));
 
       expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
         /no resource/i,
@@ -835,6 +889,408 @@ describe('<EventDialogContent open />', () => {
 
       expect(onEventsChange.called).to.equal(false);
       expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+    });
+  });
+
+  describe('resource selection mode (single vs multiple)', () => {
+    const eventWithArrayResource: SchedulerEvent = EventBuilder.new()
+      .title('Array event')
+      .resources([workResource, personalResource])
+      .build();
+
+    const eventWithEmptyArrayResource: SchedulerEvent = EventBuilder.new()
+      .title('Empty array event')
+      .resources([])
+      .build();
+
+    function creationSetup() {
+      const start = adapter.date('2025-06-10T09:00:00Z', 'default');
+      const end = adapter.date('2025-06-10T09:30:00Z', 'default');
+      const placeholder: SchedulerOccurrencePlaceholderCreation = {
+        type: 'creation',
+        surfaceType: 'time-grid' as const,
+        start,
+        end,
+        lockSurfaceType: false,
+        resourceId: null,
+      };
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('placeholder-id')
+        .span(start.toISOString(), end.toISOString())
+        .title('')
+        .toOccurrence();
+      return { placeholder, creationOccurrence };
+    }
+
+    it('should create with a multi-select picker when `canHaveMultipleResources` is true, even if other events in the data are single-resource', async () => {
+      const { placeholder, creationOccurrence } = creationSetup();
+      let createEventSpy;
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          onEventsChange={() => {}}
+          eventCreation={{ canHaveMultipleResources: true }}
+          storeClass={PremiumTestStore}
+        >
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
+          />
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="createEvent"
+            onSpyReady={(sp) => {
+              createEventSpy = sp;
+            }}
+          />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      await user.type(screen.getByLabelText(/event title/i), 'New title');
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(await screen.findByRole('option', { name: /personal/i }));
+      await user.keyboard('{Escape}');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(createEventSpy?.calledOnce).to.equal(true);
+      expect(createEventSpy.lastCall.firstArg.resource).to.deep.equal([
+        workResource.id,
+        personalResource.id,
+      ]);
+    });
+
+    it('should create with a single-select picker when `canHaveMultipleResources` is false, even if other events in the data are multi-resource', async () => {
+      const { placeholder, creationOccurrence } = creationSetup();
+      let createEventSpy;
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[eventWithArrayResource]}
+          resources={resources}
+          onEventsChange={() => {}}
+          eventCreation={{ canHaveMultipleResources: false }}
+          storeClass={PremiumTestStore}
+        >
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
+          />
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="createEvent"
+            onSpyReady={(sp) => {
+              createEventSpy = sp;
+            }}
+          />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      await user.type(screen.getByLabelText(/event title/i), 'New title');
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(createEventSpy?.calledOnce).to.equal(true);
+      expect(createEventSpy.lastCall.firstArg.resource).to.equal(workResource.id);
+    });
+
+    it('should infer a multi-select picker for creation when the first event with a resource in the data has an array', async () => {
+      const { placeholder, creationOccurrence } = creationSetup();
+      let createEventSpy;
+
+      const { user } = render(
+        <EventCalendarProvider
+          // The array-resource event comes first: inference scans in order and stops there.
+          events={[eventWithArrayResource, DEFAULT_EVENT]}
+          resources={resources}
+          onEventsChange={() => {}}
+          storeClass={PremiumTestStore}
+        >
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
+          />
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="createEvent"
+            onSpyReady={(sp) => {
+              createEventSpy = sp;
+            }}
+          />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      await user.type(screen.getByLabelText(/event title/i), 'New title');
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(await screen.findByRole('option', { name: /personal/i }));
+      await user.keyboard('{Escape}');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(createEventSpy?.calledOnce).to.equal(true);
+      expect(createEventSpy.lastCall.firstArg.resource).to.deep.equal([
+        workResource.id,
+        personalResource.id,
+      ]);
+    });
+
+    it('should infer a single-select picker for creation when the first event with a resource in the data has a string', async () => {
+      const { placeholder, creationOccurrence } = creationSetup();
+      let createEventSpy;
+
+      const { user } = render(
+        <EventCalendarProvider
+          // DEFAULT_EVENT (string resource) comes first: inference stops there.
+          events={[DEFAULT_EVENT, eventWithArrayResource]}
+          resources={resources}
+          onEventsChange={() => {}}
+          storeClass={PremiumTestStore}
+        >
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
+          />
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="createEvent"
+            onSpyReady={(sp) => {
+              createEventSpy = sp;
+            }}
+          />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      await user.type(screen.getByLabelText(/event title/i), 'New title');
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(createEventSpy?.calledOnce).to.equal(true);
+      expect(createEventSpy.lastCall.firstArg.resource).to.equal(workResource.id);
+    });
+
+    it('should edit an event with an array resource as multi-select even when `canHaveMultipleResources` is false', async () => {
+      let updateEventSpy;
+      const occurrence = EventBuilder.new(adapter)
+        .id(eventWithArrayResource.id)
+        .title(eventWithArrayResource.title)
+        .span(eventWithArrayResource.start, eventWithArrayResource.end)
+        .resources([workResource, personalResource])
+        .toOccurrence();
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[eventWithArrayResource]}
+          resources={resources}
+          eventCreation={{ canHaveMultipleResources: false }}
+          storeClass={PremiumTestStore}
+          onEventsChange={() => {}}
+        >
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="updateEvent"
+            onSpyReady={(sp) => {
+              updateEventSpy = sp;
+            }}
+          />
+          <TestEventDialogContent open {...defaultProps} occurrence={occurrence} />
+        </EventCalendarProvider>,
+      );
+
+      // Both resources start selected; multi-select lets us deselect just one of them.
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.keyboard('{Escape}');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(updateEventSpy?.calledOnce).to.equal(true);
+      expect(updateEventSpy.lastCall.firstArg.resource).to.deep.equal([personalResource.id]);
+    });
+
+    it('should keep every resource of a multi-resource event when saving without touching the resource picker', async () => {
+      // Regression test for #23016: a multi-resource event opened in the dialog and saved
+      // through an unrelated field (e.g. the title) used to collapse `resource` down to its
+      // primary entry. It must round-trip unchanged.
+      let updateEventSpy;
+
+      const multiResourceEvent: SchedulerEvent = {
+        ...DEFAULT_EVENT,
+        resource: [personalResource.id, workResource.id],
+      };
+      const multiResourceOccurrence = EventBuilder.new(adapter)
+        .id(multiResourceEvent.id)
+        .title(multiResourceEvent.title)
+        .description(multiResourceEvent.description)
+        .span(multiResourceEvent.start, multiResourceEvent.end)
+        .resources([personalResource, workResource])
+        .toOccurrence();
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[multiResourceEvent]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+          onEventsChange={() => {}}
+        >
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="updateEvent"
+            onSpyReady={(sp) => {
+              updateEventSpy = sp;
+            }}
+          />
+          <TestEventDialogContent open {...defaultProps} occurrence={multiResourceOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      const dialogs = screen.getAllByRole('dialog');
+      const currentDialog = dialogs[dialogs.length - 1];
+      const comboboxText = within(currentDialog).getByRole('combobox', {
+        name: /resource/i,
+      }).textContent;
+      expect(comboboxText).to.match(/personal/i);
+      expect(comboboxText).to.match(/work/i);
+
+      await user.type(screen.getByLabelText(/event title/i), ' updated');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(updateEventSpy?.calledOnce).to.equal(true);
+      expect(updateEventSpy.lastCall.firstArg.resource).to.deep.equal([
+        personalResource.id,
+        workResource.id,
+      ]);
+    });
+
+    it('should edit an event with a string resource as single-select even when `canHaveMultipleResources` is true', async () => {
+      let updateEventSpy;
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          eventCreation={{ canHaveMultipleResources: true }}
+          storeClass={PremiumTestStore}
+          onEventsChange={() => {}}
+        >
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="updateEvent"
+            onSpyReady={(sp) => {
+              updateEventSpy = sp;
+            }}
+          />
+          <TestEventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(updateEventSpy?.calledOnce).to.equal(true);
+      expect(updateEventSpy.lastCall.firstArg.resource).to.equal(workResource.id);
+    });
+
+    it('should edit an event with resource: [] as multi-select with nothing selected', async () => {
+      let updateEventSpy;
+
+      const occurrence = EventBuilder.new(adapter)
+        .id(eventWithEmptyArrayResource.id)
+        .title(eventWithEmptyArrayResource.title)
+        .span(eventWithEmptyArrayResource.start, eventWithEmptyArrayResource.end)
+        .resources([])
+        .toOccurrence();
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[eventWithEmptyArrayResource]}
+          resources={resources}
+          eventCreation={{ canHaveMultipleResources: false }}
+          storeClass={PremiumTestStore}
+          onEventsChange={() => {}}
+        >
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="updateEvent"
+            onSpyReady={(sp) => {
+              updateEventSpy = sp;
+            }}
+          />
+          <TestEventDialogContent open {...defaultProps} occurrence={occurrence} />
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
+        /no resource/i,
+      );
+
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(await screen.findByRole('option', { name: /personal/i }));
+      await user.keyboard('{Escape}');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(updateEventSpy?.calledOnce).to.equal(true);
+      expect(updateEventSpy.lastCall.firstArg.resource).to.deep.equal([
+        workResource.id,
+        personalResource.id,
+      ]);
+    });
+
+    it('should still resolve the fallback for editing a resourceless event when event creation is disabled', async () => {
+      let updateEventSpy;
+
+      const eventWithoutResource: SchedulerEvent = {
+        ...DEFAULT_EVENT,
+        id: 'no-resource-event',
+        resource: undefined,
+      };
+      const occurrence = EventBuilder.new(adapter)
+        .id(eventWithoutResource.id)
+        .title(eventWithoutResource.title)
+        .span(eventWithoutResource.start, eventWithoutResource.end)
+        .toOccurrence();
+
+      const { user } = render(
+        <EventCalendarProvider
+          // `eventCreation={false}` makes `creationConfig` resolve to `false`, but editing
+          // still needs a fallback mode; the array-resource sibling makes inference pick
+          // "multiple" for it.
+          events={[eventWithoutResource, eventWithArrayResource]}
+          resources={resources}
+          eventCreation={false}
+          storeClass={PremiumTestStore}
+          onEventsChange={() => {}}
+        >
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="updateEvent"
+            onSpyReady={(sp) => {
+              updateEventSpy = sp;
+            }}
+          />
+          <TestEventDialogContent open {...defaultProps} occurrence={occurrence} />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(await screen.findByRole('option', { name: /personal/i }));
+      await user.keyboard('{Escape}');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(updateEventSpy?.calledOnce).to.equal(true);
+      expect(updateEventSpy.lastCall.firstArg.resource).to.deep.equal([
+        workResource.id,
+        personalResource.id,
+      ]);
     });
   });
 

@@ -132,7 +132,16 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   props: EventTimelinePremiumEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, ariaLabelledBy, className, variant, id: idProp, style, ...other } = props;
+  const {
+    occurrence,
+    ariaLabelledBy,
+    className,
+    variant,
+    id: idProp,
+    style,
+    resourceId,
+    ...other
+  } = props;
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
@@ -146,7 +155,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     'start',
   );
   const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
-  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id, resourceId);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
   const dependsOnTitles = useStore(
     store,

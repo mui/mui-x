@@ -24,6 +24,7 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import { getResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import { useStore } from '@base-ui/utils/store';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
@@ -31,6 +32,12 @@ import { useEventEditingStyledContext } from '../event-editing';
 import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
+
+// Only meaningful in single-select mode: the sentinel value backing the "no resource"
+// MenuItem, so MUI Select's `value=""` always matches a rendered option — otherwise it logs
+// an "out-of-range value" dev warning. Multi-select has no such item; clearing every entry
+// reaches the empty array directly.
+const NO_RESOURCE_VALUE = '';
 
 const ResourceMenuItem = styled(MenuItem, {
   name: 'MuiEventDialog',
@@ -93,6 +100,13 @@ const ResourceMenuColorToggle = styled(Toggle, {
 
 interface ResourceSelectAdornmentProps {
   resource: ResourceOptionType | null;
+  /**
+   * Whether the field has a selection at all. Kept separate from `resource` because
+   * `resource` is also `null` when the selection references an id that isn't in `resources`
+   * (e.g. a deleted resource) — that's an invalid selection, not an empty one, and shouldn't
+   * render the "no resource" dashed dot.
+   */
+  hasSelection: boolean;
 }
 
 interface ResourceOptionType {
@@ -102,10 +116,11 @@ interface ResourceOptionType {
   isGroupRoot: boolean;
   indentLevel: number;
   showDivider: boolean;
+  hidden?: boolean;
 }
 
 function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
-  const { resource } = props;
+  const { resource, hasSelection } = props;
 
   const store = useSchedulerStoreContext();
   const { classes } = useEventEditingStyledContext();
@@ -119,7 +134,7 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
     <ResourceMenuColorDot
       className={classes.eventDialogResourceMenuColorDot}
       data-palette={resourceColor}
-      data-no-resource={resource == null}
+      data-no-resource={!hasSelection}
     />
   );
 }
@@ -140,11 +155,21 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
     store,
     schedulerOtherSelectors.shouldEventRequireResource,
   );
+  const canHaveMultipleResources = useStore(
+    store,
+    schedulerEventSelectors.canHaveMultipleResources,
+  );
   const isPropertyReadOnly = useStore(
     store,
     schedulerEventSelectors.isPropertyReadOnly,
     occurrence.id,
   );
+
+  // The mode follows the occurrence's own `resource` shape (string vs array) and only falls
+  // back to `canHaveMultipleResources` when that shape is unset (`null`/`undefined`) — see
+  // `getResourceSelectionMode`. It's fixed for the lifetime of this mount: it must not react
+  // to the user's in-progress selection, only to the data the occurrence started with.
+  const mode = getResourceSelectionMode(occurrence.resource, canHaveMultipleResources);
 
   const resourceField = useEventDialogFormField<SchedulerResourceId[]>('resourceIds', {
     validate: (value) =>
@@ -165,12 +190,19 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
     const firstTopLevelIndex = resources.findIndex(
       (resource) => (resourceDepthLookup.get(resource.id) ?? 0) === 0,
     );
-    return resources.map((resource, index) => {
+
+    const realOptions = resources.map((resource, index) => {
       const depth = resourceDepthLookup.get(resource.id) ?? 0;
       const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
       const isTopLevel = depth === 0;
       const isFirstTopLevel = index === firstTopLevelIndex;
-      const showDivider = hasNesting && isTopLevel && !isFirstTopLevel;
+      // In single-select mode, the "no resource" option always precedes the list (even when
+      // hidden), so the first top-level group's divider only collapses when
+      // `shouldEventRequireResource` hides it. Multi-select never has that pseudo-item.
+      const showDivider =
+        hasNesting &&
+        isTopLevel &&
+        (!isFirstTopLevel || (mode === 'single' && !shouldEventRequireResource));
       return {
         label: resource.title,
         value: resource.id,
@@ -180,16 +212,48 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
         showDivider,
       };
     });
-  }, [resources, resourceDepthLookup, childrenIdLookup, eventDefaultColor]);
+
+    if (mode !== 'single') {
+      return realOptions;
+    }
+
+    return [
+      {
+        label: localeText.labelNoResource,
+        value: NO_RESOURCE_VALUE,
+        eventColor: eventDefaultColor,
+        isGroupRoot: false,
+        indentLevel: 0,
+        showDivider: false,
+        hidden: shouldEventRequireResource,
+      },
+      ...realOptions,
+    ];
+  }, [
+    resources,
+    resourceDepthLookup,
+    childrenIdLookup,
+    eventDefaultColor,
+    mode,
+    shouldEventRequireResource,
+    localeText.labelNoResource,
+  ]);
 
   const resource = React.useMemo(() => {
     const resourceId = resourceIds[0];
     return resourcesOptions.find((option) => option.value === resourceId) || null;
   }, [resourcesOptions, resourceIds]);
 
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
-    const value = event.target.value;
-    resourceField.setValue(value as SchedulerResourceId[]);
+  const handleChange = (event: SelectChangeEvent<string | string[]>) => {
+    const { value } = event.target;
+    if (mode === 'single') {
+      const nextId = value as string;
+      resourceField.setValue(nextId === NO_RESOURCE_VALUE ? [] : [nextId as SchedulerResourceId]);
+      return;
+    }
+    resourceField.setValue(
+      (typeof value === 'string' ? value.split(',') : value) as SchedulerResourceId[],
+    );
   };
 
   const errorId = `${schedulerId}-resource-error`;
@@ -208,27 +272,33 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
           <Select
             labelId={`${schedulerId}-resource-select-label`}
             label={localeText.resourceLabel}
-            value={resourceIds}
-            multiple
+            value={mode === 'multiple' ? resourceIds : (resourceIds[0] ?? NO_RESOURCE_VALUE)}
+            multiple={mode === 'multiple'}
             displayEmpty
             onChange={handleChange}
             readOnly={readOnly}
             aria-describedby={error ? errorId : undefined}
             startAdornment={
               <InputAdornment position="start">
-                <ResourceSelectAdornment resource={resource} />
+                <ResourceSelectAdornment
+                  resource={resource}
+                  hasSelection={resourceIds.length > 0}
+                />
               </InputAdornment>
             }
             renderValue={() => {
-              if (resourceIds.length > 0) {
-                return resourceIds
-                  .map((id) => {
-                    const option = resourcesOptions.find((option) => option.value === id);
-                    return option?.label ?? localeText.labelInvalidResource;
-                  })
-                  .join(', ');
+              if (resourceIds.length === 0) {
+                return localeText.labelNoResource;
               }
-              return localeText.labelNoResource;
+              if (mode === 'single') {
+                return resource?.label ?? localeText.labelInvalidResource;
+              }
+              return resourceIds
+                .map((id) => {
+                  const option = resourcesOptions.find((o) => o.value === id);
+                  return option?.label ?? localeText.labelInvalidResource;
+                })
+                .join(', ');
             }}
           >
             {resourcesOptions.flatMap((resourceOption) => {
@@ -258,6 +328,7 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
                   style={
                     {
                       '--resource-indent': resourceOption.indentLevel,
+                      ...(resourceOption.hidden && { display: 'none' }),
                     } as React.CSSProperties
                   }
                 >
@@ -265,12 +336,10 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
                     <ResourceMenuColorDot
                       className={classes.eventDialogResourceMenuColorDot}
                       data-palette={resourceOption.eventColor}
+                      data-no-resource={resourceOption.value === NO_RESOURCE_VALUE}
                     />
                   </ListItemIcon>
                   <ListItemText>{resourceOption.label}</ListItemText>
-                  {resourceIds.includes(resourceOption.value) && (
-                    <CheckIcon fontSize="small" style={{ marginLeft: 'auto' }} />
-                  )}
                 </ResourceMenuItem>,
               );
 

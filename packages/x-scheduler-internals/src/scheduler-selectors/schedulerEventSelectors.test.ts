@@ -525,7 +525,7 @@ describe('schedulerEventSelectors', () => {
         events: [defaultEvent],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, defaultEvent.id)).to.equal('teal');
+      expect(schedulerEventSelectors.color(state, defaultEvent.id, undefined)).to.equal('teal');
     });
 
     it('should return event color when event has a color', () => {
@@ -534,7 +534,7 @@ describe('schedulerEventSelectors', () => {
         events: [event],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('red');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('red');
     });
 
     it('should return resource eventColor when event has no color', () => {
@@ -545,7 +545,7 @@ describe('schedulerEventSelectors', () => {
         resources: [resource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('purple');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('purple');
     });
 
     it('should use event color over resource eventColor when both are defined', () => {
@@ -556,7 +556,7 @@ describe('schedulerEventSelectors', () => {
         resources: [resource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('red');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('red');
     });
 
     it('should fall back to state eventColor when resource has no eventColor', () => {
@@ -567,7 +567,7 @@ describe('schedulerEventSelectors', () => {
         resources: [resource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('teal');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('teal');
     });
 
     it('should inherit eventColor from ancestor resource when child resource does not define it', () => {
@@ -582,7 +582,7 @@ describe('schedulerEventSelectors', () => {
         resources: [parentResource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('purple');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('purple');
     });
 
     it('should use child resource eventColor over parent resource when both are defined', () => {
@@ -597,7 +597,7 @@ describe('schedulerEventSelectors', () => {
         resources: [parentResource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('blue');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('blue');
     });
 
     it('should inherit eventColor from grandparent resource when parent and child do not define it', () => {
@@ -613,7 +613,7 @@ describe('schedulerEventSelectors', () => {
         resources: [grandparentResource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('purple');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('purple');
     });
 
     it('should use nearest ancestor eventColor over more distant ancestor', () => {
@@ -632,7 +632,7 @@ describe('schedulerEventSelectors', () => {
         resources: [grandparentResource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('blue');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('blue');
     });
   });
 

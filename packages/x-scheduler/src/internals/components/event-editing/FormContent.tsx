@@ -28,6 +28,7 @@ import {
 import {
   getCustomEventProperties,
   getEventResourceIds,
+  getResourceSelectionMode,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -185,6 +186,10 @@ function FormContentInner(props: FormContentProps) {
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+  const canHaveMultipleResources = useStore(
+    store,
+    schedulerEventSelectors.canHaveMultipleResources,
+  );
 
   // Optional renderer hooks
   const { recurrenceTab: RecurrenceTabRenderer } = useEventEditingOptionalRenderers();
@@ -212,12 +217,20 @@ function FormContentInner(props: FormContentProps) {
     // so untouched fields keep resolving against the live model on the recurring paths.
     const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
 
+    // Saving never changes the shape of `resource`: single mode writes back the plain id (or
+    // `undefined` once cleared), multiple mode writes back the array (`[]` once cleared). The
+    // mode itself follows the occurrence's own resource shape, only falling back to
+    // `canHaveMultipleResources` when that occurrence never had one to begin with.
+    const resourceSelectionMode = getResourceSelectionMode(
+      occurrence.resource,
+      canHaveMultipleResources,
+    );
     const metaChanges = {
       ...editedCustomValues,
       title: values.title.trim(),
       description: values.description.trim(),
       allDay: values.allDay,
-      resource: values.resourceIds,
+      resource: resourceSelectionMode === 'multiple' ? values.resourceIds : values.resourceIds[0],
       color: values.color === null ? undefined : values.color,
     };
 

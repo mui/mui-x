@@ -488,4 +488,15 @@ export interface SchedulerEventCreationConfig {
    * @default 30
    */
   duration: number;
+  /**
+   * Whether newly created events can be assigned more than one resource.
+   * Only decides the mode for events created with no resource yet (and, when an existing
+   * event's own `resource` is `null` or not set, which picker to show it with) — an event
+   * whose `resource` is already a string or an array always keeps that shape.
+   *
+   * When not set, the mode is inferred from the `events` prop: the first event with a
+   * `resource` value determines it (a string means single, an array means multiple), and
+   * data with no resource at all defaults to multiple.
+   */
+  canHaveMultipleResources?: boolean;
 }
