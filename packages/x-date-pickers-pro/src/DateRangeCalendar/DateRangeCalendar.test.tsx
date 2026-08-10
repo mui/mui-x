@@ -786,6 +786,28 @@ describe('<DateRangeCalendar />', () => {
     expect(screen.getAllByTestId('pickers-calendar')).to.have.length(3);
   });
 
+  describe('prop: showDaysOutsideCurrentMonth', () => {
+    const props = {
+      referenceDate: adapterToUse.date('2018-01-01'),
+      showDaysOutsideCurrentMonth: true,
+    } as const;
+
+    it('should render the days outside the current month with a single calendar', () => {
+      render(<DateRangeCalendar {...props} calendars={1} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      // 31 days of January, plus the days of December and February filling the first and last week.
+      expect(within(grid).getAllByRole('gridcell').length).to.be.greaterThan(31);
+    });
+
+    it('should be ignored with several calendars', () => {
+      render(<DateRangeCalendar {...props} calendars={2} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      expect(within(grid).getAllByRole('gridcell')).to.have.length(31);
+    });
+  });
+
   describe('Performance', () => {
     it('should only render the new start day when selecting a start day without a previously selected start day', () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
