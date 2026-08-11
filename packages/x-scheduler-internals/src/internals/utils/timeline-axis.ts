@@ -88,8 +88,9 @@ export function getTimelineAxisDurationMs(adapter: TemporalAdapter, axis: Timeli
  * same piecewise scale.
  * The date is built from wall-clock components so it round-trips with
  * `dateToTimelineAxisOffsetMs` for every wall-clock time that exists on that day.
- * Offsets landing in the hour skipped by a spring-forward transition resolve to the
- * next existing hour and do not round-trip (known limitation).
+ * The axis keeps a slot for the hour skipped by a spring-forward transition, so offsets
+ * landing in it resolve to the next existing hour and do not round-trip. The Event
+ * Calendar's time grid behaves the same way.
  */
 export function timelineAxisOffsetToDate(
   adapter: TemporalAdapter,

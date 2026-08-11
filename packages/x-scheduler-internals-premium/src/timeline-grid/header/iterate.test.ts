@@ -92,59 +92,135 @@ describe('iterate()', () => {
 
       expect(cells).to.deep.equal(untrimmed);
     });
+  });
 
-    describe('across DST transitions inside the window', () => {
+  // The hour row is a wall-clock grid, like the Event Calendar's time axis: every day
+  // shows the same hour columns whatever the real hours of that day are. Events crossing
+  // a transition stretch or shrink over that fixed grid instead of moving it.
+  describe('across DST transitions', () => {
+    // Mar 8 2026 in America/New_York skips the 02:00 wall-clock hour.
+    const springForward = adapter.date('2026-03-08T00:00:00', 'America/New_York');
+    // Nov 2 2025 in America/New_York repeats the 01:00 wall-clock hour.
+    const fallBack = adapter.date('2025-11-02T00:00:00', 'America/New_York');
+
+    it('should emit 24 hour cells on a spring-forward day', () => {
+      const cells = iterate(
+        adapter,
+        'hour',
+        'hour',
+        springForward,
+        adapter.endOfDay(springForward),
+      );
+
+      expect(cells.length).to.equal(24);
+      cells.forEach((cell) => expect(cell.spanInTicks).to.equal(1));
+    });
+
+    it('should emit 24 hour cells on a fall-back day', () => {
+      const cells = iterate(adapter, 'hour', 'hour', fallBack, adapter.endOfDay(fallBack));
+
+      expect(cells.length).to.equal(24);
+      cells.forEach((cell) => expect(cell.spanInTicks).to.equal(1));
+    });
+
+    it('should keep a cell for the hour skipped by the spring-forward transition', () => {
+      const cells = iterate(
+        adapter,
+        'hour',
+        'hour',
+        springForward,
+        adapter.endOfDay(springForward),
+      );
+
+      expect(cells.map((cell) => cell.wallClockHour).slice(0, 5)).to.deep.equal([0, 1, 2, 3, 4]);
+    });
+
+    it('should emit a single cell for the hour repeated by the fall-back transition', () => {
+      const cells = iterate(adapter, 'hour', 'hour', fallBack, adapter.endOfDay(fallBack));
+
+      expect(cells.filter((cell) => cell.wallClockHour === 1).length).to.equal(1);
+    });
+
+    it('should span the day cell by the displayed hour count on a DST day', () => {
+      const springDays = iterate(
+        adapter,
+        'day',
+        'hour',
+        springForward,
+        adapter.endOfDay(springForward),
+      );
+      const fallBackDays = iterate(adapter, 'day', 'hour', fallBack, adapter.endOfDay(fallBack));
+
+      expect(springDays.map((cell) => cell.spanInTicks)).to.deep.equal([24]);
+      expect(fallBackDays.map((cell) => cell.spanInTicks)).to.deep.equal([24]);
+    });
+
+    describe('with a trimmed hour window', () => {
       const HOUR_WINDOW = { dayStartMinute: 0, dayEndMinute: 360 };
+      // Starts exactly on the hour the spring-forward transition skips.
+      const GAP_HOUR_WINDOW = { dayStartMinute: 120, dayEndMinute: 1200 };
 
-      it('should keep the hour-row total equal to the day span on a fall-back day', () => {
-        // Nov 2 2025 in America/New_York repeats the 01:00 wall-clock hour: the walk
-        // emits two 01:00 cells, but the duplicate spans 0 ticks so the hour row
-        // still lines up with the pinned day span.
-        const dstStart = adapter.date('2025-11-02T00:00:00', 'America/New_York');
-        const dstEnd = adapter.endOfDay(adapter.addDays(dstStart, 1));
+      it('should emit one cell per displayed hour on a fall-back day', () => {
+        const end = adapter.endOfDay(adapter.addDays(fallBack, 1));
 
-        const hourCells = iterate(
-          adapter,
-          'hour',
-          'hour',
-          dstStart,
-          dstEnd,
-          undefined,
-          HOUR_WINDOW,
-        );
-        const dayCells = iterate(adapter, 'day', 'hour', dstStart, dstEnd, undefined, HOUR_WINDOW);
+        const hourCells = iterate(adapter, 'hour', 'hour', fallBack, end, undefined, HOUR_WINDOW);
+        const dayCells = iterate(adapter, 'day', 'hour', fallBack, end, undefined, HOUR_WINDOW);
 
-        expect(hourCells.length).to.equal(13);
+        expect(hourCells.length).to.equal(12);
         expect(dayCells.map((cell) => cell.spanInTicks)).to.deep.equal([6, 6]);
-        const firstDayTotal = hourCells
-          .slice(0, 7)
-          .reduce((sum, cell) => sum + cell.spanInTicks, 0);
-        expect(firstDayTotal).to.equal(6);
       });
 
-      it('should keep the hour-row total equal to the day span on a spring-forward day', () => {
-        // Mar 8 2026 skips the 02:00 wall-clock hour: the 01:00 cell spans 2 ticks
-        // to absorb the gap, so the hour row still lines up with the pinned day span.
-        const dstStart = adapter.date('2026-03-08T00:00:00', 'America/New_York');
-        const dstEnd = adapter.endOfDay(adapter.addDays(dstStart, 1));
+      it('should emit one cell per displayed hour on a spring-forward day', () => {
+        const end = adapter.endOfDay(adapter.addDays(springForward, 1));
 
         const hourCells = iterate(
           adapter,
           'hour',
           'hour',
-          dstStart,
-          dstEnd,
+          springForward,
+          end,
           undefined,
           HOUR_WINDOW,
         );
-        const dayCells = iterate(adapter, 'day', 'hour', dstStart, dstEnd, undefined, HOUR_WINDOW);
+        const dayCells = iterate(
+          adapter,
+          'day',
+          'hour',
+          springForward,
+          end,
+          undefined,
+          HOUR_WINDOW,
+        );
 
-        expect(hourCells.length).to.equal(11);
+        expect(hourCells.length).to.equal(12);
         expect(dayCells.map((cell) => cell.spanInTicks)).to.deep.equal([6, 6]);
-        const firstDayTotal = hourCells
-          .slice(0, 5)
-          .reduce((sum, cell) => sum + cell.spanInTicks, 0);
-        expect(firstDayTotal).to.equal(6);
+      });
+
+      it('should emit the full hour row when the window starts on the skipped hour', () => {
+        const end = adapter.endOfDay(springForward);
+
+        const hourCells = iterate(
+          adapter,
+          'hour',
+          'hour',
+          springForward,
+          end,
+          undefined,
+          GAP_HOUR_WINDOW,
+        );
+        const dayCells = iterate(
+          adapter,
+          'day',
+          'hour',
+          springForward,
+          end,
+          undefined,
+          GAP_HOUR_WINDOW,
+        );
+
+        expect(hourCells.length).to.equal(18);
+        expect(hourCells[0].wallClockHour).to.equal(2);
+        expect(dayCells.map((cell) => cell.spanInTicks)).to.deep.equal([18]);
       });
     });
   });

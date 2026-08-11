@@ -30,6 +30,12 @@ export interface IteratedCell {
   key: string;
   /** Index within the row. */
   index: number;
+  /**
+   * Wall-clock hour the cell stands for, set on `hour` cells only. Labels must be built
+   * from it rather than from `date`: the hour skipped by a spring-forward transition has
+   * no instant, so its `date` normalizes to the next existing hour.
+   */
+  wallClockHour?: number;
 }
 
 /**

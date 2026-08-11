@@ -28,12 +28,18 @@ function formatMonthAndYear(adapter: TemporalAdapter, date: TemporalSupportedObj
   return adapter.formatByString(date, `${f.monthFullLetter} ${f.yearPadded}`);
 }
 
-function formatHourLabel(adapter: TemporalAdapter, date: TemporalSupportedObject, ampm: boolean) {
+/**
+ * Formats a wall-clock hour, not an instant: the hour skipped by a spring-forward
+ * transition has no instant on that day, so the label is built on a DST-free template
+ * day. Same approach as the Event Calendar's time axis.
+ */
+function formatHourLabel(adapter: TemporalAdapter, hour: number, ampm: boolean) {
   const f = adapter.formats;
   const pattern = ampm
     ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
     : `${f.hours24h}:${f.minutesPadded}`;
-  return adapter.formatByString(date, pattern);
+  const template = adapter.date('2020-01-01T00:00:00', 'default');
+  return adapter.formatByString(adapter.setHours(template, hour), pattern);
 }
 
 export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
@@ -49,7 +55,8 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       },
       {
         unit: 'hour',
-        renderCell: ({ adapter, date, ampm }) => formatHourLabel(adapter, date, ampm),
+        renderCell: ({ adapter, date, wallClockHour, ampm }) =>
+          formatHourLabel(adapter, wallClockHour ?? adapter.getHours(date), ampm),
       },
     ],
     unitCount: DAY_AND_HOUR_DAYS,
@@ -57,14 +64,8 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     getEndDate: (adapter, start, unitCount) =>
       adapter.endOfDay(adapter.addDays(start, unitCount - 1)),
     // `unitCount` is in days (the navigation step), but the grid ticks in hours. Pin
-    // the CSS tick count to `days × 24` so the grid width stays stable across DST
-    // and matches the hour cells `iterate()` emits per day — except when a DST
-    // transition falls inside the visible window, where `iterate()` emits one cell
-    // more or fewer for that day (known limitation). With a trimmed hour window the
-    // transition cell's span absorbs the shift and the rows stay aligned, unless
-    // `startTime` equals the spring-forward gap hour itself (e.g. `startTime: 2` in
-    // US/EU timezones), where the absorbing cell is skipped and the hour row comes
-    // up one tick short (same class of limitation).
+    // the CSS tick count to `days × 24`: the hour row is a wall-clock grid, so it emits
+    // the same cell count on every day, DST transitions included.
     getCssUnitCount: () => DAY_AND_HOUR_DAYS * 24,
     navigate: (adapter, date, amount) => adapter.addDays(date, amount),
   },
