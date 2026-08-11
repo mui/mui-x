@@ -33,6 +33,10 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
+// Beyond this gap, the previous scroll event says nothing about the current speed: a jump
+// after an idle period would read as a fling and defer the advance with nothing to cover it.
+const MAX_VELOCITY_SAMPLE_GAP_MS = 100;
+
 // For fast scrolls in sticky mode, defer the render-context advance by a number of
 // frames so the window isn't re-rendered mid-fling (the inverse-sticky clamp shows stale
 // content meanwhile); faster scrolls defer more. Below the lowest threshold, updates
@@ -392,9 +396,13 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     const now = performance.now();
     const dtSinceLastScroll = now - lastScrollTimestamp.current;
     lastScrollTimestamp.current = now;
-    // a long gap (new gesture) or the first event must not read as fast.
+    // Zero on the first event and after a long gap, so neither reads as fast. The delta
+    // can also land in the same tick as the previous one — `performance.now()` is
+    // coarsened to 1ms on some engines — which would divide by zero.
     const rowVelocity =
-      dtSinceLastScroll > 0 && dtSinceLastScroll < 100 ? Math.abs(dy) / dtSinceLastScroll : 0;
+      dtSinceLastScroll > 0 && dtSinceLastScroll < MAX_VELOCITY_SAMPLE_GAP_MS
+        ? Math.abs(dy) / dtSinceLastScroll
+        : 0;
 
     const isScrolling = dx !== 0 || dy !== 0;
 
