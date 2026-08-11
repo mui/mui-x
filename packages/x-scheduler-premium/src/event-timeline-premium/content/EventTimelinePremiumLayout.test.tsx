@@ -1,13 +1,18 @@
 import * as React from 'react';
 import { screen, waitFor } from '@mui/internal-test-utils';
-import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import {
+  EventTimelinePremium,
+  eventTimelinePremiumClasses as classes,
+} from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
+  EventBuilder,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { EventTimelinePremiumPresetConfig } from '@mui/x-scheduler-internals-premium/models';
 import { isJSDOM } from 'test/utils/skipIf';
 
 function getTitleColumnWidth(): number {
@@ -24,15 +29,23 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  function renderTimeline(resources: SchedulerResource[], hostWidth: number = 1200) {
+  function renderTimeline(
+    resources: SchedulerResource[],
+    hostWidth: number = 1200,
+    options: {
+      events?: SchedulerEvent[];
+      presetConfig?: EventTimelinePremiumPresetConfig;
+    } = {},
+  ) {
     return render(
       <div style={{ width: hostWidth, height: 600 }}>
         <EventTimelinePremium
           resources={resources}
-          events={[]}
+          events={options.events ?? []}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           preset="dayAndHour"
           presets={['dayAndHour']}
+          presetConfig={options.presetConfig}
         />
       </div>,
     );
@@ -102,6 +115,40 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
         // collapse below the floor.
         expect(getTitleColumnWidth()).to.be.greaterThanOrEqual(50);
       });
+    });
+  });
+
+  describe('grid narrower than the viewport', () => {
+    // 4 days × 4 visible hours = 16 ticks × 64px = 1024px, so the grid plus the title
+    // column fits inside the 1200px host. The virtualizer stretches its row width to
+    // fill the viewport in that case; the events layer must keep the tick width instead,
+    // or events drift away from the header they are labelled by.
+    const PRESET_CONFIG = { dayAndHour: { startTime: 8, endTime: 12 } };
+
+    it('should align an event with its own day when the ticks do not fill the viewport', async () => {
+      const resource = ResourceBuilder.new().id('r1').title('A').build();
+      // The second visible day (Jul 4), spanning exactly that day's visible window.
+      const fullDay = EventBuilder.new()
+        .title('Full day')
+        .resource(resource)
+        .span('2025-07-04T08:00:00', '2025-07-04T12:00:00')
+        .build();
+
+      renderTimeline([resource], 1200, { events: [fullDay], presetConfig: PRESET_CONFIG });
+
+      await waitFor(() => {
+        expect(getTitleColumnWidth()).to.be.greaterThan(0);
+      });
+
+      const dayCell = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="day"]`,
+      )[1];
+      const event = document.querySelector<HTMLElement>(`.${classes.event}`)!;
+
+      const dayRect = dayCell.getBoundingClientRect();
+      const eventRect = event.getBoundingClientRect();
+      expect(eventRect.left).to.be.closeTo(dayRect.left, 1);
+      expect(eventRect.width).to.be.closeTo(dayRect.width, 1);
     });
   });
 
