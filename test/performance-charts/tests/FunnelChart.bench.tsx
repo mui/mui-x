@@ -10,5 +10,5 @@ const series = [
 ];
 
 benchmark('FunnelChart with big data amount', () => (
-  <FunnelChart series={series} width={500} height={300} />
+  <FunnelChart series={series} width={500} height={300} skipAnimation />
 ));

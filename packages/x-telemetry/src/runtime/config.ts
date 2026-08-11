@@ -102,7 +102,7 @@ function getIsDebugModeEnabled(): boolean {
       }
     }
 
-    // e.g. Webpack EnvironmentPlugin
+    // e.g. webpack EnvironmentPlugin
     if (process.env.MUI_X_TELEMETRY_DEBUG) {
       const result = getBooleanEnv(process.env.MUI_X_TELEMETRY_DEBUG);
       if (typeof result === 'boolean') {

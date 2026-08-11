@@ -1,21 +1,23 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const enUSDialog: EventDialogLocaleText = {
+const enUSDialog: EventEditingLocaleText = {
   // EventDialog
   colorPickerLabel: 'Event color',
+  colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Date & time',
   resourceColorSectionLabel: 'Resource & color',
   allDayLabel: 'All Day',
   closeButtonAriaLabel: 'Close',
   closeButtonLabel: 'Close',
+  editEventButtonAriaLabel: 'Edit event',
+  deleteEventButtonAriaLabel: 'Delete event',
+  eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Delete event',
   descriptionLabel: 'Description',
   endDateLabel: 'End date',
@@ -39,7 +41,7 @@ const enUSDialog: EventDialogLocaleText = {
   recurrenceTabLabel: 'Recurrence',
   recurrenceMainSelectCustomLabel: 'Recurrence',
   recurrenceWeeklyFrequencyLabel: 'weeks',
-  recurrenceWeeklyPresetLabel: (weekday) => `Repeats weekly on ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Repeats weekly on ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'months',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Day ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} of the last week of the month`,
@@ -51,13 +53,16 @@ const enUSDialog: EventDialogLocaleText = {
   recurrenceYearlyFrequencyLabel: 'years',
   recurrenceYearlyPresetLabel: (date) => `Repeats annually on ${date}`,
   noResourceAriaLabel: 'No specific resource',
+  selectColorAriaLabel: (color) => `Select ${color} as event color`,
   resourceLabel: 'Resource',
+  requiredResourceError: 'A resource is required.',
   saveChanges: 'Save',
-  startDateAfterEndDateError: 'Start date/time must be before end date/time.',
+  startDateAfterEndDateError: 'End date cannot be before start date.',
   startDateLabel: 'Start date',
+  startTimeAfterEndTimeError: 'End time must be after start time.',
   startTimeLabel: 'Start time',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'All events',
   cancel: 'Cancel',
   confirm: 'Confirm',
@@ -67,7 +72,7 @@ const enUSDialog: EventDialogLocaleText = {
   title: 'Apply this change to:',
 };
 
-const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> = {
+const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> = {
   // ResourcesTree
   resourcesLabel: 'Resources',
 
@@ -88,20 +93,26 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> =
   closeSidePanel: 'Close side panel',
   openSidePanel: 'Open side panel',
 
+  // SidePanelDrawer (small screens)
+  openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12-hour (1:00PM)',
   hour24h: '24-hour (13:00)',
-  preferencesMenu: 'Settings',
+  preferencesMenu: 'Preferences',
   showWeekends: 'Show weekends',
   showEmptyDaysInAgenda: 'Show empty days',
   showWeekNumber: 'Show week number',
   timeFormat: 'Time format',
   viewSpecificOptions: (view) => `${view} view options`,
+  startWeekOn: 'Start week on',
+  weekdaySunday: 'Sunday',
+  weekdayMonday: 'Monday',
+  weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'All day',
 
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} more..`,
   nextTimeSpan: (timeSpan) => `Next ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Previous ${timeSpan}`,
@@ -117,11 +128,14 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> =
   miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
   miniCalendarGoToNextMonth: 'Show next month in calendar',
 
+  // Main calendar region
+  calendarContentAriaLabel: 'Calendar content',
+
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Resource title',
 };
 
-const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventDialogLocaleText> = {
+const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventEditingLocaleText> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Resource title',
 };

@@ -6,12 +6,16 @@ import {
   EXTENSION_TEST_FILE,
   EXTENSION_TS,
 } from '@mui/internal-code-infra/eslint';
-import eslintPluginConsistentName from 'eslint-plugin-consistent-default-export-name';
+import { fixupPluginRules } from '@eslint/compat';
+import eslintPluginConsistentNameRaw from 'eslint-plugin-consistent-default-export-name';
 import eslintPluginJsdoc from 'eslint-plugin-jsdoc';
 import eslintPluginMuiX from 'eslint-plugin-mui-x';
 import { defineConfig } from 'eslint/config';
 import * as path from 'node:path';
 import * as url from 'node:url';
+import remarkConfig from './.remarkrc.mjs';
+
+const eslintPluginConsistentName = fixupPluginRules(eslintPluginConsistentNameRaw);
 
 const filename = url.fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -112,7 +116,13 @@ export default defineConfig(
     baseDirectory: dirname,
     enableReactCompiler: isAnyReactCompilerPluginEnabled,
     materialUi: true,
+    markdown: true,
   }),
+  // eslint-plugin-mdx loads `.remarkrc.mjs` itself, but ESLint doesn't know
+  // that file is a config dependency, so `--cache` doesn't invalidate when
+  // it changes. Embedding the imported value in a setting puts its content
+  // into the resolved-config hash, forcing cache invalidation on edits.
+  { settings: { remarkConfig } },
   {
     name: 'MUI X Overrides',
     files: [`**/*${EXTENSION_TS}`],
@@ -134,6 +144,17 @@ export default defineConfig(
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
       'react/react-in-jsx-scope': 'off',
+
+      // TODO: re-enable. Temporarily disabled after the eslint-plugin-react-hooks
+      // 7.1 bump (via @mui/internal-code-infra) introduced this rule, which flags
+      // existing code that needs to be addressed separately.
+      'react-hooks/set-state-in-effect': 'off',
+
+      // Modern browsers imply rel="noopener" for target="_blank", so no rel is required.
+      // See https://github.com/mui/material-ui/pull/40447
+      // TODO move to mui/mui-public.
+      'react/jsx-no-target-blank': 'off',
+
       'import/no-relative-packages': 'error',
       'import/no-restricted-paths': [
         'error',
@@ -194,6 +215,8 @@ export default defineConfig(
       'react-hooks/purity': 'off',
       'react-hooks/static-components': 'off',
 
+      'mui/no-presentation-role': 'error',
+
       // TODO(@Janpot) Fix issues and turn back on
       'mui/consistent-production-guard': 'off',
     },
@@ -232,20 +255,26 @@ export default defineConfig(
     files: [`packages/x-charts{,-*}/**/*${EXTENSION_TS}`],
     rules: {
       'import/no-cycle': 'error',
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        {
-          fixStyle: 'inline-type-imports',
-        },
-      ],
       // Charts have no semantics, so we often need to query by container
       'testing-library/no-container': 'off',
     },
   },
   {
-    files: [`packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`],
+    files: [
+      `packages/x-charts{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
+    ],
     rules: {
-      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'separate-type-imports',
+        },
+      ],
+      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
     },
   },
   {
@@ -274,7 +303,7 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         tsconfigRootDir: dirname,
-        project: ['./tsconfig.json'],
+        projectService: true,
       },
     },
   },
@@ -315,6 +344,30 @@ export default defineConfig(
     },
   },
 
+  // Catch leaked subscriptions: call statements whose returned cleanup /
+  // unsubscribe function is discarded. Type-aware, so it needs TypeScript type
+  // information (same `projectService` setup as `mui-x/no-direct-state-access` above).
+  {
+    files: [`packages/*/src/**/*${EXTENSION_TS}`],
+    ignores: [
+      '**/*.d.ts',
+      `**/*.spec${EXTENSION_TS}`,
+      `**/*.test${EXTENSION_TS}`,
+      // Codemods are jscodeshift AST transforms with no runtime subscriptions;
+      // the only hits are chai assertions in a test-style file.
+      'packages/x-codemod/**',
+    ],
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: dirname,
+        projectService: true,
+      },
+    },
+    rules: {
+      'mui/no-floating-cleanup': 'error',
+    },
+  },
+
   // Common config from core start
   {
     files: [`docs/**/*${EXTENSION_TS}`],
@@ -322,12 +375,14 @@ export default defineConfig(
     rules: {
       '@next/next/no-img-element': 'off',
       'react/jsx-filename-extension': 'off',
+      'react-hooks/set-state-in-effect': 'off',
     },
   },
 
   {
     files: [`test/regressions/**/*${EXTENSION_TS}`],
     rules: {
+      'react-hooks/set-state-in-effect': 'off',
       'react/jsx-filename-extension': 'off',
     },
   },
@@ -365,6 +420,10 @@ export default defineConfig(
     },
     rules: {
       'consistent-default-export-name/default-export-match-filename': ['error'],
+      // `role="none"` is an alias for `role="presentation"`, but aria-query treats
+      // them differently and reports `aria-hidden` as unsupported on `none`.
+      // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1090
+      'jsx-a11y/role-supports-aria-props': 'off',
     },
   },
 
@@ -442,6 +501,8 @@ export default defineConfig(
     'x-charts',
     'x-charts-pro',
     'x-charts-premium',
+    'x-chat',
+    'x-chat-headless',
     'x-codemod',
     'x-data-grid',
     'x-data-grid-pro',
@@ -455,6 +516,8 @@ export default defineConfig(
     'x-scheduler-internals-premium',
     'x-tree-view',
     'x-tree-view-pro',
+    'x-internal-gestures',
+    'x-internals',
     'x-license',
     'x-telemetry',
   ].map((pkgName) => ({
@@ -500,14 +563,6 @@ export default defineConfig(
         }
       : {},
   ],
-
-  // We can't use the react-compiler plugin in the base-ui-utils folder because the Base UI team doesn't use it yet.
-  {
-    files: ['packages/x-scheduler-internals/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
-    rules: {
-      'react-compiler/react-compiler': 'off',
-    },
-  },
 
   {
     // TODO: typescript namespaces found to be harmful. Refactor to different patterns. More info: https://github.com/mui/mui-x/pull/19071

@@ -1,0 +1,14 @@
+<Button onClick={() => addItem(selectedItem!)} disabled={!canAddItem}>
+  Add child to selected item
+</Button>
+<Box sx={{ minHeight: 240, minWidth: 300 }}>
+  <RichTreeViewPro
+    items={EMPTY_ITEMS}
+    apiRef={apiRef}
+    expansionTrigger="iconContainer"
+    selectedItems={selectedItem}
+    onSelectedItemsChange={(event, itemId) => setSelectedItem(itemId)}
+    dataSource={dataSource}
+    dataSourceCache={customCache}
+  />
+</Box>

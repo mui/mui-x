@@ -11,11 +11,11 @@ import {
   useMessage,
   useChatComposer,
 } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 function MessageRow({ id }) {
   const message = useMessage(id);
@@ -71,7 +71,7 @@ function SimpleComposer() {
             submit();
           }
         }}
-        placeholder="Type a message..."
+        placeholder="Type a message…"
       />
       <Button variant="contained" onClick={submit} disabled={isSubmitting}>
         Send

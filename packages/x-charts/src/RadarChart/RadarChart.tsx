@@ -2,32 +2,33 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type RadarChartPluginSignatures } from './RadarChart.plugins';
-import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
+import type { RadarChartPluginSignatures } from './RadarChart.plugins';
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { ChartsOverlay } from '../ChartsOverlay/ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
-import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
-import { ChartsWrapper, type ChartsWrapperProps } from '../ChartsWrapper';
-import { RadarGrid, type RadarGridProps } from './RadarGrid';
-import {
-  RadarDataProvider,
-  type RadarDataProviderProps,
-} from './RadarDataProvider/RadarDataProvider';
-import { RadarSeriesArea, RadarSeriesMarks, type RadarSeriesPlotProps } from './RadarSeriesPlot';
-import { RadarAxisHighlight, type RadarAxisHighlightProps } from './RadarAxisHighlight';
+import { ChartsSurface } from '../ChartsSurface';
+import type { ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartsWrapper } from '../ChartsWrapper';
+import type { ChartsWrapperProps } from '../ChartsWrapper';
+import { RadarGrid } from './RadarGrid';
+import type { RadarGridProps } from './RadarGrid';
+import { RadarDataProvider } from './RadarDataProvider/RadarDataProvider';
+import type { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
+import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
+import type { RadarSeriesPlotProps } from './RadarSeriesPlot';
+import { RadarAxisHighlight } from './RadarAxisHighlight';
+import type { RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
-import {
-  ChartsTooltip,
-  type ChartsTooltipSlotProps,
-  type ChartsTooltipSlots,
-} from '../ChartsTooltip';
-import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
+import type { ChartsSlotProps, ChartsSlots } from '../internals/material';
+import type { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
 import { FocusedRadarMark } from './FocusedRadarMark';
 
 export interface RadarChartSlots
@@ -127,7 +128,7 @@ const RadarChart = React.forwardRef(function RadarChart(
   );
 });
 
-RadarChart.propTypes = {
+RadarChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -167,7 +168,16 @@ RadarChart.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -223,11 +233,11 @@ RadarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
     }),
   ]),
   /**
@@ -338,7 +348,6 @@ RadarChart.propTypes = {
     labelGap: PropTypes.number,
     max: PropTypes.number,
     metrics: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
       PropTypes.arrayOf(
         PropTypes.shape({
           max: PropTypes.number,
@@ -346,6 +355,7 @@ RadarChart.propTypes = {
           name: PropTypes.string.isRequired,
         }),
       ),
+      PropTypes.arrayOf(PropTypes.string),
     ]).isRequired,
     startAngle: PropTypes.number,
   }).isRequired,
@@ -405,11 +415,11 @@ RadarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
     }),
   ]),
   /**

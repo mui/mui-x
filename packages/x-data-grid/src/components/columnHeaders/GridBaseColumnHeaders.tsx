@@ -2,7 +2,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled, type SxProps, type Theme } from '@mui/system';
+import { styled } from '@mui/system';
+import type { SxProps, Theme } from '@mui/system';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -46,7 +47,7 @@ export const GridBaseColumnHeaders = forwardRef<HTMLDivElement, GridBaseColumnHe
         className={clsx(classes.root, className)}
         ownerState={rootProps}
         {...other}
-        role="presentation"
+        role="none"
         ref={ref}
       />
     );

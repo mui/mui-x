@@ -6,7 +6,8 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import type { GridSlotProps, RenderProp } from '@mui/x-data-grid-pro';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { type PromptFieldState, usePromptFieldContext } from './PromptFieldContext';
+import { usePromptFieldContext } from './PromptFieldContext';
+import type { PromptFieldState } from './PromptFieldContext';
 import { BrowserSpeechRecognition } from '../../utils/speechRecognition';
 
 export type PromptFieldRecordProps = Omit<GridSlotProps['baseIconButton'], 'className'> & {
@@ -151,7 +152,7 @@ const PromptFieldRecord = forwardRef<HTMLButtonElement, PromptFieldRecordProps>(
   },
 );
 
-PromptFieldRecord.propTypes = {
+PromptFieldRecord.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -18,5 +18,6 @@ benchmark('LineChartPro with big data amount and zoomed in (with marks)', () => 
     series={[{ data: yData, showMark: true }]}
     width={500}
     height={300}
+    skipAnimation
   />
 ));

@@ -16,5 +16,6 @@ benchmark('ScatterChart with big data amount', () => (
     series={[{ data }]}
     width={500}
     height={300}
+    skipAnimation
   />
 ));

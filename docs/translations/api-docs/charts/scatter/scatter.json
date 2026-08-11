@@ -10,13 +10,16 @@
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element."
+          "description": "Event recorded on the <code>&lt;svg/&gt;</code> element."
         },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",
           "description": "The scatter item identifier."
         }
       }
+    },
+    "sizeGetter": {
+      "description": "Function to get the marker size of a scatter item given its data index."
     }
   },
   "classDescriptions": {

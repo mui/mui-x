@@ -1,12 +1,10 @@
+import * as React from 'react';
 import { spy } from 'sinon';
-import { DateTime } from 'luxon';
+import type { DateTime } from 'luxon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import {
-  createPickerRenderer,
-  expectFieldValue,
-  describeAdapters,
-  buildFieldInteractions,
-} from 'test/utils/pickers';
+import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
@@ -132,6 +130,48 @@ describe('<DateTimeField /> - Timezone', () => {
       view.setProps({ value: date.setZone('America/Los_Angeles') });
 
       expectFieldValue(view.getSectionsContainer(), '06/18/2020 07:30 AM');
+    });
+  });
+
+  describe('Editing a year in a timezone using Local Mean Time - Dayjs', () => {
+    const { render, adapter } = createPickerRenderer({
+      adapterName: 'dayjs',
+      clockConfig: new Date('2026-08-05T20:11:00Z'),
+    });
+
+    // Each key press publishes a value, so the year goes through `0002`, `0020` and `0202` before
+    // reaching `2020`. On those years `Asia/Kolkata` falls back on its Local Mean Time, which used to
+    // shift the day of the month. The shifted day was written back into the day section and never
+    // recovered. See https://github.com/mui/mui-x/issues/23163
+    it('should not change the day of the month while the year is being typed', async () => {
+      function ControlledField(props: React.ComponentProps<typeof DateTimeField>) {
+        const [value, setValue] = React.useState<PickerValue>(() =>
+          adapter.date(undefined, 'Asia/Kolkata'),
+        );
+
+        return (
+          <DateTimeField
+            {...props}
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+            format="MM/DD/YYYY HH:mm"
+            timezone="Asia/Kolkata"
+          />
+        );
+      }
+
+      const { renderWithProps } = buildFieldInteractions({
+        render,
+        Component: ControlledField,
+      });
+      const view = renderWithProps({});
+
+      await view.selectSection('month');
+      await view.user.keyboard('03');
+      await view.user.keyboard('03');
+      await view.user.keyboard('2020');
+
+      expectFieldValue(view.getSectionsContainer(), '03/03/2020 01:41');
     });
   });
 });

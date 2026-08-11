@@ -1,15 +1,8 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPro,
-  gridClasses,
-  useGridApiRef,
-  type GridApi,
-  type GridRowsProp,
-  type DataGridProProps,
-  type GridColDef,
-} from '@mui/x-data-grid-pro';
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPro, gridClasses, useGridApiRef } from '@mui/x-data-grid-pro';
+import type { GridApi, GridRowsProp, DataGridProProps, GridColDef } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import {

@@ -46,6 +46,9 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
 ];
 
 export function validateProps<TProps>(props: TProps, validators: PropValidator<TProps>[]) {
+  if (process.env.NODE_ENV === 'production') {
+    return;
+  }
   validators.forEach((validator) => {
     const message = validator(props);
     if (message) {

@@ -72,11 +72,9 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
     },
   }) as React.InputHTMLAttributes<HTMLInputElement> & React.RefAttributes<HTMLInputElement>;
   const externalOnClick = rootProps.onClick as
-    | React.MouseEventHandler<HTMLButtonElement>
-    | undefined;
+    React.MouseEventHandler<HTMLButtonElement> | undefined;
   const externalOnChange = inputProps.onChange as
-    | React.ChangeEventHandler<HTMLInputElement>
-    | undefined;
+    React.ChangeEventHandler<HTMLInputElement> | undefined;
 
   return (
     <React.Fragment>

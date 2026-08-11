@@ -1,12 +1,12 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
-import {
+import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
 
-export type { TemporalTimezone } from '../base-ui-copy/types';
+export type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 
 /**
  * Base shape for processed scheduler events.
@@ -65,9 +65,9 @@ interface SchedulerProcessedEventBase {
   allDay?: boolean;
 
   /**
-   * The id of the resource this event is associated with.
+   * The id(s) of the resource(s) this event is associated with.
    */
-  resource?: SchedulerResourceId | null;
+  resource?: SchedulerResourceId | SchedulerResourceId[] | null;
 
   /**
    * A custom class name to apply to the event element.
@@ -206,10 +206,10 @@ export interface SchedulerEvent {
    */
   timezone?: TemporalTimezone;
   /**
-   * The id of the resource this event is associated with.
+   * The id(s) of the resource(s) this event is associated with.
    * @default null
    */
-  resource?: SchedulerResourceId | null;
+  resource?: SchedulerResourceId | SchedulerResourceId[] | null;
   /**
    * The recurrence rule for the event.
    * It can be provided either as a string (RFC5545 RRULE format)
@@ -290,8 +290,7 @@ export interface SchedulerEventOccurrencePlaceholder extends SchedulerProcessedE
  * Includes both real event occurrences and temporary placeholder occurrences.
  */
 export type SchedulerRenderableEventOccurrence =
-  | SchedulerEventOccurrence
-  | SchedulerEventOccurrencePlaceholder;
+  SchedulerEventOccurrence | SchedulerEventOccurrencePlaceholder;
 
 export type SchedulerEventId = string | number;
 
@@ -365,6 +364,12 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends Sche
    * The data of the event to use when dropping the event outside of the Event Calendar or the Event Timeline Premium.
    */
   originalOccurrence: SchedulerEventOccurrence;
+  /**
+   * The id of the resource row the occurrence was dragged from, if the drag source exposes it.
+   * Used to replace only that entry in a multi-resource event's `resource` array on drop,
+   * instead of overwriting the whole array with the destination resource.
+   */
+  sourceResourceId: SchedulerResourceId | null;
 }
 
 export interface SchedulerOccurrencePlaceholderExternalDrag extends SchedulerOccurrencePlaceholderBase {
@@ -459,15 +464,15 @@ export type SchedulerEventPasteProperties = Partial<
 export type EventSurfaceType = 'day-grid' | 'time-grid' | 'timeline';
 
 export type SchedulerEventModelStructure<TEvent extends object> = {
-  [key in keyof SchedulerEvent]?: {
-    getter: (event: TEvent) => SchedulerEvent[key];
+  [K in keyof SchedulerEvent]?: {
+    getter: (event: TEvent) => SchedulerEvent[K];
     /**
      * Setter for the event property.
      * If not provided, the property won't be editable.
      */
     setter?: (
       event: TEvent | Partial<TEvent>,
-      value: SchedulerEvent[key],
+      value: SchedulerEvent[K],
     ) => TEvent | Partial<TEvent>;
   };
 };

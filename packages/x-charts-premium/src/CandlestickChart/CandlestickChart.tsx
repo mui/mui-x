@@ -1,52 +1,43 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ChartsAxis,
-  type ChartsAxisSlotProps,
-  type ChartsAxisSlots,
-} from '@mui/x-charts/ChartsAxis';
+import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
+import type { ChartsAxisSlotProps, ChartsAxisSlots } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { ChartsGrid, type ChartsGridProps } from '@mui/x-charts/ChartsGrid';
-import {
-  ChartsTooltip,
-  type ChartsTooltipSlotProps,
-  type ChartsTooltipSlots,
-} from '@mui/x-charts/ChartsTooltip';
+import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
+import type { ChartsGridProps } from '@mui/x-charts/ChartsGrid';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import type { ChartsTooltipSlotProps, ChartsTooltipSlots } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
+import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
-import { type ChartsSlotProps, type ChartsSlots } from '@mui/x-charts/internals';
-import {
-  ChartsAxisHighlight,
-  type ChartsAxisHighlightProps,
-} from '@mui/x-charts/ChartsAxisHighlight';
+import type { ChartsSlotProps, ChartsSlots } from '@mui/x-charts/internals';
+import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import {
-  ChartsToolbarPro,
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
-import {
-  ChartsLegend,
-  type ChartsLegendSlotProps,
-  type ChartsLegendSlots,
-} from '@mui/x-charts/ChartsLegend';
+import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
-import { type OHLCSeriesType } from '../models';
-import { type CandlestickChartPluginSignatures } from './CandlestickChart.plugins';
-import { CandlestickPlot, type CandlestickPlotProps } from './CandlestickPlot';
+import type { OHLCSeriesType } from '../models';
+import type { CandlestickChartPluginSignatures } from './CandlestickChart.plugins';
+import { CandlestickPlot } from './CandlestickPlot';
+import type { CandlestickPlotProps } from './CandlestickPlot';
 import { useCandlestickChartProps } from './useCandlestickChartProps';
 import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useChartsContainerPremiumProps';
-import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
+import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 
 export interface CandlestickChartSlots
   extends
@@ -182,7 +173,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
   );
 });
 
-CandlestickChart.propTypes = {
+CandlestickChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -266,12 +257,12 @@ CandlestickChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['ohlc']),
+        type: PropTypes.oneOf(['ohlc']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['ohlc']).isRequired,
+        type: PropTypes.oneOf(['ohlc']),
       }),
     ]).isRequired,
   ),
@@ -297,11 +288,11 @@ CandlestickChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['ohlc']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['ohlc']).isRequired,
     }),
   ]),
   /**
@@ -335,25 +326,52 @@ CandlestickChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['ohlc']),
+        type: PropTypes.oneOf(['ohlc']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['ohlc']).isRequired,
+        type: PropTypes.oneOf(['ohlc']),
       }),
     ]).isRequired,
   ),
   /**
    * The list of zoom data related to each axis.
    * Used to initialize the zoom in a specific configuration without controlling it.
+   *
+   * Each entry is either explicit zoom percentages (`{ axisId, start, end }`) or a
+   * range value (`{ axisId, value }`) resolved against the axis domain.
    */
   initialZoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        end: PropTypes.number.isRequired,
+        start: PropTypes.number.isRequired,
+      }),
+      PropTypes.shape({
+        axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        value: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+          PropTypes.arrayOf(PropTypes.string.isRequired),
+          PropTypes.func,
+          PropTypes.shape({
+            step: PropTypes.number,
+            unit: PropTypes.oneOf([
+              'day',
+              'hour',
+              'microsecond',
+              'millisecond',
+              'minute',
+              'month',
+              'second',
+              'week',
+              'year',
+            ]).isRequired,
+          }),
+        ]),
+      }),
+    ]).isRequired,
   ),
   /**
    * If `true`, a loading overlay is displayed.
@@ -482,11 +500,11 @@ CandlestickChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['ohlc']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['ohlc']).isRequired,
     }),
   ]),
   /**
@@ -523,6 +541,12 @@ CandlestickChart.propTypes = {
       PropTypes.oneOfType([
         PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
         PropTypes.shape({
+          allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
+        }),
+        PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['drag']).isRequired,
@@ -532,31 +556,15 @@ CandlestickChart.propTypes = {
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
         }),
-        PropTypes.shape({
-          allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['wheel']).isRequired,
-        }),
       ]).isRequired,
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
         PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
         PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['wheel']).isRequired,
-        }),
-        PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.array,
-          type: PropTypes.oneOf(['pinch']).isRequired,
-        }),
-        PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+          type: PropTypes.oneOf(['brush']).isRequired,
         }),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
@@ -566,7 +574,17 @@ CandlestickChart.propTypes = {
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['brush']).isRequired,
+          type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['pinch']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
         }),
       ]).isRequired,
     ),

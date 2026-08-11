@@ -1,12 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { StaticDatePickerProps } from './StaticDatePicker.types';
-import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
+import type { StaticDatePickerProps } from './StaticDatePicker.types';
+import type { DatePickerViewRenderers } from '../DatePicker/shared';
+import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { validateDate } from '../validation';
-import { DateView } from '../models';
+import type { DateView } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 type StaticDatePickerComponent = ((
@@ -68,7 +69,7 @@ const StaticDatePicker = React.forwardRef(function StaticDatePicker(
   return renderPicker();
 }) as StaticDatePickerComponent;
 
-StaticDatePicker.propTypes = {
+StaticDatePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -237,7 +238,7 @@ StaticDatePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

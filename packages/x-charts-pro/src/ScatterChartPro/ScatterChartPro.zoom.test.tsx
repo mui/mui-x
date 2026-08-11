@@ -1,6 +1,6 @@
 /* eslint-disable no-promise-executor-return */
 import * as React from 'react';
-import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 import { ScatterChartPro } from './ScatterChartPro';
@@ -112,6 +112,43 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     expect(onZoomChange.mock.calls.length).to.equal(2);
     expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
     expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
+  });
+
+  // Regression test for https://github.com/mui/mui-x/pull/22811
+  const { width, height, ...responsiveProps } = scatterChartProps;
+
+  it('should zoom on wheel anchored at the cursor position (left)', async () => {
+    const { user, container } = render(<ScatterChartPro {...responsiveProps} />, options);
+
+    await waitFor(() => expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']));
+
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
+
+    await user.pointer([{ target: layerContainer, coords: { x: 10, y: 50 } }]);
+
+    fireEvent.wheel(layerContainer, { deltaY: -100, clientX: 10, clientY: 50 });
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(getAxisTickValues('x')).to.deep.equal(['1', '2']);
+  });
+
+  it('should zoom on wheel anchored at the cursor position (right)', async () => {
+    const { user, container } = render(<ScatterChartPro {...responsiveProps} />, options);
+
+    await waitFor(() => expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']));
+
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
+
+    await user.pointer([{ target: layerContainer, coords: { x: 90, y: 50 } }]);
+
+    fireEvent.wheel(layerContainer, { deltaY: -100, clientX: 90, clientY: 50 });
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(getAxisTickValues('x')).to.deep.equal(['2', '3']);
   });
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {

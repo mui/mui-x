@@ -1,5 +1,6 @@
-import defaultMoment, { Moment, LongDateFormatKey } from 'moment';
-import {
+import type { Moment, LongDateFormatKey } from 'moment';
+import defaultMoment from 'moment';
+import type {
   AdapterFormats,
   AdapterOptions,
   DateBuilderReturnType,

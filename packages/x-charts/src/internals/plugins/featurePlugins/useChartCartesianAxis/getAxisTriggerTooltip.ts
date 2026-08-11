@@ -1,11 +1,8 @@
-import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
-import {
-  type ChartSeriesConfig,
-  type AxisTooltipGetter,
-} from '../../corePlugins/useChartSeriesConfig';
-import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import type { CartesianChartSeriesType } from '../../../../models/seriesType/config';
+import type { ChartSeriesConfig, AxisTooltipGetter } from '../../corePlugins/useChartSeriesConfig';
+import type { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { isCartesianSeriesType } from '../../../isCartesian';
-import { type AxisId } from '../../../../models/axis';
+import type { AxisId } from '../../../../models/axis';
 
 export const getAxisTriggerTooltip = <SeriesType extends CartesianChartSeriesType>(
   axisDirection: 'x' | 'y',
@@ -21,8 +18,7 @@ export const getAxisTriggerTooltip = <SeriesType extends CartesianChartSeriesTyp
     const series = formattedSeries[chartType]?.series ?? {};
     const tooltipAxes = (
       seriesConfig[chartType].axisTooltipGetter as
-        | AxisTooltipGetter<SeriesType, 'x' | 'y'>
-        | undefined
+        AxisTooltipGetter<SeriesType, 'x' | 'y'> | undefined
     )?.(series);
 
     if (tooltipAxes === undefined) {

@@ -91,7 +91,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
       {...other}
       ref={handleRef}
     >
-      <div className={gridClasses.mainContent} role="presentation">
+      <div className={gridClasses.mainContent} role="none">
         <GridHeader />
         <GridBody>{children}</GridBody>
         <GridFooterPlaceholder />
@@ -102,7 +102,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
   );
 });
 
-GridRoot.propTypes = {
+GridRoot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

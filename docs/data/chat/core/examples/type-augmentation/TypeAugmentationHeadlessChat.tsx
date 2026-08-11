@@ -26,9 +26,9 @@ declare module '@mui/x-chat-headless/types' {
   }
 
   interface ChatConversationMetadata {
-    channel: 'support' | 'incident';
-    slaMinutes: number;
-    escalated: boolean;
+    channel?: 'support' | 'incident';
+    slaMinutes?: number;
+    escalated?: boolean;
   }
 
   interface ChatMessageMetadata {

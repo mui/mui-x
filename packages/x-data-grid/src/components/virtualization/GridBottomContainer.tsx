@@ -32,7 +32,7 @@ export function GridBottomContainer(props: GridBottomContainerProps) {
     <Element
       {...props}
       className={clsx(classes.root, gridClasses['container--bottom'])}
-      role="presentation"
+      role="none"
     />
   );
 }

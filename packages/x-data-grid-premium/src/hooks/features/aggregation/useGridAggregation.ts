@@ -14,10 +14,9 @@ import {
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
-  type GridStateInitializer,
-  type GridPipeProcessor,
   gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
+import type { GridStateInitializer, GridPipeProcessor } from '@mui/x-data-grid-pro/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {

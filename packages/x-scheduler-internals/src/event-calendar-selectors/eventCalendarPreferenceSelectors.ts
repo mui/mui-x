@@ -27,4 +27,5 @@ export const eventCalendarPreferenceSelectors = {
     allPreferencesSelector,
     (preferences) => preferences.isSidePanelOpen,
   ),
+  weekStartsOn: createSelector(allPreferencesSelector, (preferences) => preferences.weekStartsOn),
 };

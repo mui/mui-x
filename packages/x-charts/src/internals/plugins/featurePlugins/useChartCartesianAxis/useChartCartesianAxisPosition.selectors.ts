@@ -1,11 +1,56 @@
 import { createSelector } from '@mui/x-internals/store';
-import { type ComputedAxis } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { getBandSize } from '../../../../internals/getBandSize';
 import { isBandScale } from '../../../../internals/scaleGuards';
 import { getDataIndexForOrdinalScaleValue } from '../../../../internals/invertScale';
-import { type BarItemIdentifier, type SeriesId } from '../../../../models';
+import type {
+  ChartsRadialAxisProps,
+  ChartsCartesianAxisProps,
+  ComputedAxis,
+} from '../../../../models/axis';
+import type { ScaleName, BarItemIdentifier, SeriesId } from '../../../../models';
+
+export function getBandIndex(
+  bandAxis: ComputedAxis<ScaleName, any, ChartsCartesianAxisProps | ChartsRadialAxisProps>,
+  stackConfig: { groupNumber: number; groupIndex: number },
+  coordinate: number,
+): number {
+  if (!isBandScale(bandAxis.scale)) {
+    return -1;
+  }
+  const dataIndex = getDataIndexForOrdinalScaleValue(bandAxis.scale, coordinate);
+
+  const { barWidth, offset } = getBandSize(
+    bandAxis.scale.bandwidth(),
+    stackConfig.groupNumber,
+    (bandAxis as ComputedAxis<'band', any, ChartsCartesianAxisProps | ChartsRadialAxisProps>)
+      .barGapRatio,
+  );
+
+  const barOffset = stackConfig.groupIndex * (barWidth + offset);
+  const bandValue = bandAxis.data?.[dataIndex];
+
+  if (bandValue == null) {
+    return -1;
+  }
+
+  const bandStart = bandAxis.scale(bandValue);
+
+  if (bandStart == null) {
+    return -1;
+  }
+
+  const bandBarStart = bandStart + barOffset;
+  const bandBarEnd = bandBarStart + barWidth;
+  const bandBarMin = Math.min(bandBarStart, bandBarEnd);
+  const bandBarMax = Math.max(bandBarStart, bandBarEnd);
+
+  if (coordinate >= bandBarMin && coordinate <= bandBarMax) {
+    return dataIndex;
+  }
+  return -1;
+}
 
 export const selectorBarItemAtPosition = createSelector(
   selectorChartXAxis,
@@ -38,63 +83,36 @@ export const selectorBarItemAtPosition = createSelector(
 
         const bandAxis = aSeries.layout === 'horizontal' ? yAxis : xAxis;
         const continuousAxis = aSeries.layout === 'horizontal' ? xAxis : yAxis;
-        const bandScale = bandAxis.scale;
-        const svgPointBandCoordinate = aSeries.layout === 'horizontal' ? svgPoint.y : svgPoint.x;
+        const svgBandCoordinate = aSeries.layout === 'horizontal' ? svgPoint.y : svgPoint.x;
+        const svgValueCoordinate = aSeries.layout === 'horizontal' ? svgPoint.x : svgPoint.y;
 
-        if (!isBandScale(bandScale)) {
-          continue;
-        }
-
-        const dataIndex = getDataIndexForOrdinalScaleValue(bandScale, svgPointBandCoordinate);
-
-        const { barWidth, offset } = getBandSize(
-          bandScale.bandwidth(),
-          stackingGroups.length,
-          (bandAxis as ComputedAxis<'band'>).barGapRatio,
+        const dataIndex = getBandIndex(
+          bandAxis,
+          { groupNumber: stackingGroups.length, groupIndex: stackIndex },
+          svgBandCoordinate,
         );
 
-        const barOffset = stackIndex * (barWidth + offset);
-        const bandValue = bandAxis.data?.[dataIndex];
-
-        if (bandValue == null) {
+        if (dataIndex === -1) {
           continue;
         }
 
-        const bandStart = bandScale(bandValue);
+        // The point is inside the band for this series
+        const bar = aSeries.visibleStackedData[dataIndex];
+        const start = continuousAxis.scale(bar[0]);
+        const end = continuousAxis.scale(bar[1]);
 
-        if (bandStart == null) {
+        if (start == null || end == null) {
           continue;
         }
 
-        const bandBarStart = bandStart + barOffset;
-        const bandBarEnd = bandBarStart + barWidth;
-        const bandBarMin = Math.min(bandBarStart, bandBarEnd);
-        const bandBarMax = Math.max(bandBarStart, bandBarEnd);
+        const continuousMin = Math.min(start, end);
+        const continuousMax = Math.max(start, end);
 
-        if (svgPointBandCoordinate >= bandBarMin && svgPointBandCoordinate <= bandBarMax) {
-          // The point is inside the band for this series
-          const svgPointContinuousCoordinate =
-            aSeries.layout === 'horizontal' ? svgPoint.x : svgPoint.y;
-          const bar = aSeries.visibleStackedData[dataIndex];
-          const start = continuousAxis.scale(bar[0]);
-          const end = continuousAxis.scale(bar[1]);
-
-          if (start == null || end == null) {
-            continue;
-          }
-
-          const continuousMin = Math.min(start, end);
-          const continuousMax = Math.max(start, end);
-
-          if (
-            svgPointContinuousCoordinate >= continuousMin &&
-            svgPointContinuousCoordinate <= continuousMax
-          ) {
-            item = {
-              seriesId,
-              dataIndex,
-            };
-          }
+        if (svgValueCoordinate >= continuousMin && svgValueCoordinate <= continuousMax) {
+          item = {
+            seriesId,
+            dataIndex,
+          };
         }
       }
     }

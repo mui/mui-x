@@ -281,11 +281,10 @@ async function initializeEnvironment(
         await page.mouse.up();
 
         expect(
-          await page.evaluate(
-            () =>
-              document
-                .querySelector('.MuiDataGrid-columnHeader--sorted')!
-                .getAttribute('data-field')!,
+          await page.evaluate(() =>
+            document
+              .querySelector('.MuiDataGrid-columnHeader--sorted')!
+              .getAttribute('data-field')!,
           ),
         ).to.equal('brand');
       });
@@ -356,22 +355,11 @@ async function initializeEnvironment(
           const dateTimeInput = page.locator(
             '[role="gridcell"][data-field="lastConnection"] input',
           );
-          if (browserType.name() === 'firefox') {
-            // firefox seems to break the section jumping if the section is edited without firstly clearing it
-            dateTimeInput.press('Backspace');
-            await dateTimeInput.type('01/31/2025');
-            // only reliable way on firefox to move to time section is via arrow key
-            await dateTimeInput.press('ArrowRight');
-            await dateTimeInput.type('4:5');
-            await dateTimeInput.press('ArrowRight');
-            await dateTimeInput.type('p');
-          } else {
-            await dateTimeInput.type('01/31/2025,4:5:p');
-          }
+          await dateTimeInput.fill('2025-01-31T16:05');
 
           await page.keyboard.press('Enter');
 
-          expect(page.getByText('1/31/2025, 4:05:00 PM')).not.to.equal(null);
+          await page.getByText('1/31/2025, 4:05:00 PM').waitFor();
         },
       );
 
@@ -660,7 +648,6 @@ async function initializeEnvironment(
           await page.getByRole('button', { name: 'Choose date' }).click();
           await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
           await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
           await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
@@ -674,7 +661,6 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox', { includeHidden: true });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
           await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
           await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
@@ -695,7 +681,14 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox', { includeHidden: true });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
+          // The hidden `<input>` is the surface under test here, so we focus
+          // it directly. With the current focus-delegation design, the focus
+          // moves through to the first section on the first focus; the
+          // subsequent `fill()` then sees `focused === true` in React state
+          // and skips the re-entrant section-selection that would otherwise
+          // race with the value setter. Tracked for refactor in
+          // https://github.com/mui/mui-x/issues/22592.
+          await input.focus();
           await input.fill('02/12/2020');
 
           expect(
@@ -723,7 +716,6 @@ async function initializeEnvironment(
           const daySection = page.getByRole(`spinbutton`, { name: 'Day' });
           const yearSection = page.getByRole(`spinbutton`, { name: 'Year' });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await monthSection.fill('04');
           await daySection.fill('11');
           await yearSection.fill('2022');
@@ -757,22 +749,6 @@ async function initializeEnvironment(
 
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
         });
-
-        // TODO: enable when v7 fields form submitting is fixed
-        // it('should submit a form when clicking "Enter" key with v7 field', async () => {
-        //   await renderFixture('DatePicker/DesktopDatePickerFormV7');
-
-        //   const monthSpinbutton = page.getByRole(`spinbutton`, { name: 'Month' });
-        //   await monthSpinbutton.focus();
-        //   await monthSpinbutton.press('Enter');
-
-        //   expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
-        //     '04/17/2022',
-        //   );
-        //   const status = page.getByRole('status');
-        //   expect(await status.isVisible()).to.equal(true);
-        //   expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
-        // });
 
         it('should correctly select a day in a calendar with "AdapterMomentJalaali"', async () => {
           await renderFixture('DatePicker/MomentJalaliDateCalendar');

@@ -1,24 +1,26 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import PropTypes from 'prop-types';
-import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useUtilityClasses } from '../barClasses';
-import { type BarLabelOwnerState, type BarItem, type BarLabelContext } from './BarLabel.types';
+import type { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
-import { BarLabel, type BarLabelProps } from './BarLabel';
+import { BarLabel } from './BarLabel';
+import type { BarLabelProps } from './BarLabel';
 import { useItemHighlightState } from '../../hooks/useItemHighlightState';
-import { type BarValueType } from '../../models';
+import type { BarValueType } from '../../models';
+import type { BarLabelPropsOverrides } from '../../models/chartsSlotsComponentsProps';
 
 export interface BarLabelSlots {
   /**
    * The component that renders the bar label.
    * @default BarLabel
    */
-  barLabel?: React.JSXElementConstructor<BarLabelProps>;
+  barLabel?: React.JSXElementConstructor<BarLabelProps & BarLabelPropsOverrides>;
 }
 
 export interface BarLabelSlotProps {
-  barLabel?: SlotComponentPropsFromProps<BarLabelProps, {}, BarLabelOwnerState>;
+  barLabel?: SlotComponentPropsFromProps<BarLabelProps, BarLabelPropsOverrides, BarLabelOwnerState>;
 }
 
 export type BarLabelItemProps<V extends BarValueType | null> = Omit<

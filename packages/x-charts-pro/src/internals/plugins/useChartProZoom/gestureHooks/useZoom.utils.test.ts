@@ -1,4 +1,4 @@
-import { zoomAtPoint } from './useZoom.utils';
+import { getVerticalCenterRatio, translateZoom, zoomAtPoint } from './useZoom.utils';
 
 describe('zoomAtPoint', () => {
   const defaultOptions = {
@@ -66,5 +66,58 @@ describe('zoomAtPoint', () => {
       // center preserved at 50
       expect((min + max) / 2).to.be.closeTo(50, 0.01);
     });
+  });
+});
+
+describe('translateZoom (Y axis pan)', () => {
+  const yOptions = {
+    axisId: 'y',
+    axisDirection: 'y' as const,
+    minStart: 0,
+    maxEnd: 100,
+    minSpan: 10,
+    maxSpan: 100,
+    step: 5,
+    panning: true,
+    filterMode: 'keep' as const,
+    reverse: false,
+    slider: { enabled: false, preview: false, size: 0, showTooltip: 'hover' as const },
+  };
+  const drawingArea = { width: 200, height: 200 };
+
+  // `usePanOnDrag` flips screen deltaY before calling `translateZoom`.
+  // A user drag *down* therefore arrives here as a NEGATIVE `movement.y`.
+  const dragDown = { x: 0, y: -50 };
+
+  it('with reverse=false (cartesian Y), drag down shifts the view toward higher data values', () => {
+    const [zoom] = translateZoom([{ axisId: 'y', start: 30, end: 60 }], dragDown, drawingArea, {
+      y: yOptions,
+    });
+    expect(zoom.start).to.be.greaterThan(30);
+    expect(zoom.end).to.be.greaterThan(60);
+  });
+
+  it('with reverse=true (ordinal Y compensated: data[0] at top), drag down shifts toward data[0]', () => {
+    const [zoom] = translateZoom([{ axisId: 'y', start: 30, end: 60 }], dragDown, drawingArea, {
+      y: { ...yOptions, reverse: true },
+    });
+    expect(zoom.start).to.be.lessThan(30);
+    expect(zoom.end).to.be.lessThan(60);
+  });
+});
+
+describe('getVerticalCenterRatio', () => {
+  const area = { top: 0, height: 100 };
+
+  it('with reverse=false, returns 1 at the top of the area and 0 at the bottom', () => {
+    expect(getVerticalCenterRatio({ x: 0, y: 0 }, area, false)).to.equal(1);
+    expect(getVerticalCenterRatio({ x: 0, y: 100 }, area, false)).to.equal(0);
+  });
+
+  it('with reverse=true, returns 0 at the top of the area and 1 at the bottom', () => {
+    // Heatmap Y axis renders data[0] at top, so wheel-zooming at the top
+    // must center the zoom around the start of the domain (ratio 0).
+    expect(getVerticalCenterRatio({ x: 0, y: 0 }, area, true)).to.equal(0);
+    expect(getVerticalCenterRatio({ x: 0, y: 100 }, area, true)).to.equal(1);
   });
 });

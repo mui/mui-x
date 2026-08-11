@@ -196,7 +196,7 @@ function MyApp() {
 
 ### Using module augmentation
 
-If you are using one of the Data Grid packages,
+If you are using one of the Data Grid or Charts packages,
 you can also use [module augmentation](/x/react-data-grid/components/#custom-slot-props-with-typescript) to let TypeScript know about your custom props:
 
 ```ts
@@ -231,16 +231,57 @@ function MyApp() {
 }
 ```
 
-See [Data Grid - Custom slots and subcomponents—Custom slot props with TypeScript](/x/react-data-grid/components/#custom-slot-props-with-typescript) for more details.
+For more details, see:
+
+- [Data Grid - Custom slots and subcomponents—Custom slot props with TypeScript](/x/react-data-grid/components/#custom-slot-props-with-typescript)
+- [Charts - Custom slot props with TypeScript](/x/react-charts/components/#custom-slot-props-with-typescript)
 
 :::warning
 The module augmentation feature isn't implemented yet for the other sets of components. It's coming.
 
 - 👍 Upvote [issue 9775](https://github.com/mui/mui-x/issues/9775) if you want to see it land faster on the Date and Time Pickers.
-- 👍 Upvote [issue 14063](https://github.com/mui/mui-x/issues/14063) if you want to see it land faster on the Charts.
 - 👍 Upvote [issue 14062](https://github.com/mui/mui-x/issues/14062) if you want to see it land faster on the Tree View.
 
   :::
+
+### Passing `data-*` attributes to slots
+
+By default, slot prop types don't accept arbitrary `data-*` attributes (such as test locators like `data-testid`).
+To allow them, augment the `DataAttributesOverrides` interface once, anywhere in your project.
+
+Augment `@mui/material/utils` to cover both Material UI and MUI X slots with a single declaration:
+
+```ts
+// In a standalone declaration file (for example `mui.d.ts`), this import is required
+// so TypeScript treats the block as module augmentation rather than an ambient module.
+import type {} from '@mui/material/utils';
+
+declare module '@mui/material/utils' {
+  interface DataAttributesOverrides {
+    // Accept any data-* key. Or list keys explicitly for autocomplete and typo-checking.
+    [key: `data-${string}`]: string | number | boolean | undefined;
+  }
+}
+```
+
+`data-*` attributes then type-check on the slots of every supported package:
+
+- **Charts** — `<BarChart slotProps={{ tooltip: { 'data-testid': 'chart-tooltip' } }} />`
+- **Date and Time Pickers** — `<DateCalendar slotProps={{ day: { 'data-testid': 'day' } }} />`
+- **Tree View** — `<RichTreeView slotProps={{ item: { 'data-testid': 'item' } }} />`
+- **Chat** — `<ChatBox slotProps={{ messageRoot: { 'data-testid': 'message' } }} />`
+
+:::warning
+The `@mui/material/utils` path requires `@mui/material` **v9.2.0 or later**, where the interface is re-exported. On 9.2+, Material UI and MUI X resolve to one shared `@mui/utils`, so the augmentation normally applies — if you pin `@mui/utils` with an override or resolution, confirm the lockfile still resolves a single copy. This is the dependable setup.
+
+Packages with no Material UI dependency (such as Chat Headless) can augment `@mui/utils/types` directly (in a standalone declaration file, add `import type {} from '@mui/utils/types'` too): there is a single `@mui/utils`, so it applies cleanly to the MUI X slots.
+
+With **Material UI 7** the `@mui/material/utils` path above does not work at all: v7 has no `DataAttributesOverrides` to re-export, and augmenting it targets Material UI's own v7 `@mui/utils` copy rather than the v9.2 copy MUI X imports, so `data-*` stays a type error. On v7, augment **`@mui/utils/types`** instead (the same declaration as the previous paragraph, with the module name changed) _and_ add `@mui/utils` (`^9.2.0`) as a direct dependency, so your augmentation and MUI X resolve to the same v9.2 copy (verified with a Material UI 7 repro under pnpm and npm). It reaches MUI X slots only, not Material UI v7 slots; verify your lockfile keeps a single v9.2 copy. Upgrading Material UI to 9.2 or later avoids the split entirely and is the simplest fix.
+:::
+
+The augmentation shares the same interface as Material UI. See the [Material UI TypeScript guide](/material-ui/guides/typescript/#allowing-data-attributes-on-slotprops) for the full explanation and the strict (explicit-key) variant.
+
+Data Grid isn't covered by this augmentation yet; use its per-slot [`*PropsOverrides`](/x/react-data-grid/components/#custom-slot-props-with-typescript) instead.
 
 ## Slots of the X components
 

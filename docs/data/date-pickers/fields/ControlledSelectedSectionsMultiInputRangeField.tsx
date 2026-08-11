@@ -4,24 +4,29 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { FieldSectionType, FieldSelectedSections } from '@mui/x-date-pickers/models';
+import {
+  FieldSectionType,
+  FieldSelectedSections,
+  FieldRef,
+} from '@mui/x-date-pickers/models';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { RangePosition } from '@mui/x-date-pickers-pro/models';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
 export default function ControlledSelectedSectionsMultiInputRangeField() {
   const [selectedSections, setSelectedSections] =
     React.useState<FieldSelectedSections>(null);
-  const startInputRef = React.useRef<HTMLInputElement>(null);
-  const endInputRef = React.useRef<HTMLInputElement>(null);
+  const startFieldRef = React.useRef<FieldRef<PickerValue>>(null);
+  const endFieldRef = React.useRef<FieldRef<PickerValue>>(null);
 
   const setSelectedSectionType = (
     selectedSectionType: FieldSectionType,
     position: RangePosition,
   ) => {
     if (position === 'start') {
-      startInputRef.current?.focus();
+      startFieldRef.current?.focusField();
     } else {
-      endInputRef.current?.focus();
+      endFieldRef.current?.focusField();
     }
     setSelectedSections(selectedSectionType);
   };
@@ -52,12 +57,8 @@ export default function ControlledSelectedSectionsMultiInputRangeField() {
         </Stack>
         <MultiInputDateRangeField
           sx={{ minWidth: 300 }}
-          slotProps={{
-            textField: (ownerState) => ({
-              inputRef:
-                ownerState.position === 'start' ? startInputRef : endInputRef,
-            }),
-          }}
+          startFieldRef={startFieldRef}
+          endFieldRef={endFieldRef}
           selectedSections={selectedSections}
           onSelectedSectionsChange={setSelectedSections}
         />

@@ -3,8 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
 import { styled } from '@mui/material/styles';
-import { type SeriesId } from '@mui/x-charts/internals';
-import { type RadialBarClasses, useUtilityClasses } from './radialBarClasses';
+import type { SeriesId } from '@mui/x-charts/internals';
+import { useItemHighlightState } from '../hooks';
+import { useUtilityClasses } from './radialBarClasses';
+import type { RadialBarClasses } from './radialBarClasses';
 
 type RadialBarElementProps = Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
   seriesId: SeriesId;
@@ -40,6 +42,15 @@ function RadialBarElement(props: RadialBarElementProps) {
 
   const classes = useUtilityClasses({ classes: innerClasses });
 
+  const identifier = React.useMemo(
+    () => ({ type: 'radialBar' as const, seriesId, dataIndex }),
+    [seriesId, dataIndex],
+  );
+  const highlightState = useItemHighlightState(identifier);
+
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
+
   const d = d3Arc()({
     startAngle,
     endAngle,
@@ -56,6 +67,10 @@ function RadialBarElement(props: RadialBarElementProps) {
       onClick={onClick}
       cursor={onClick ? 'pointer' : undefined}
       data-index={dataIndex}
+      data-highlighted={isHighlighted || undefined}
+      data-faded={isFaded || undefined}
+      filter={isHighlighted ? 'brightness(120%)' : undefined}
+      opacity={isFaded ? 0.3 : 1}
       {...other}
     />
   );

@@ -1,4 +1,4 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
@@ -7,7 +7,7 @@ import {
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
-import { CalendarView } from '../../models';
+import type { CalendarView } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -32,30 +32,162 @@ describe('Core - EventCalendarStore', () => {
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
         displayTimezone: 'default',
-        editedEventId: null,
+        editingOccurrence: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        pendingUpdateRecurringEventParameters: null,
-        plan: 'community',
+        pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),
         readOnly: false,
+        recurringEventsPlugin: null,
+        shouldEventRequireResource: false,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         view: DEFAULT_VIEW,
-        viewConfig: null,
+        viewConfig: {},
+        viewDefinition: null,
         views: DEFAULT_VIEWS,
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
+        collapsedResources: {},
         isLoading: false,
         errors: [],
       };
 
       expect(store.state).to.deep.equal(expectedState);
+    });
+
+    it('should default `shouldEventRequireResource` to `false`', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.shouldEventRequireResource).to.equal(false);
+    });
+
+    it('should respect an explicit `shouldEventRequireResource={true}`', () => {
+      const store = new EventCalendarStore(
+        {
+          ...DEFAULT_PARAMS,
+          shouldEventRequireResource: true,
+          resources: [ResourceBuilder.new().build()],
+        },
+        adapter,
+      );
+      expect(store.state.shouldEventRequireResource).to.equal(true);
+    });
+
+    it('should warn in dev when `shouldEventRequireResource` is `true` but no resources are configured', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventCalendarStore(
+          { ...DEFAULT_PARAMS, shouldEventRequireResource: true, resources: [] },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+      ]);
+    });
+  });
+
+  describe('editing state machine', () => {
+    // The editing methods only read `occurrence.key` / `displayTimezone`, so a minimal occurrence suffices.
+    const occurrence = (id: string) => ({ id, key: id }) as any;
+
+    describe('startEditing', () => {
+      it('should record the occurrence in edit mode by default', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const edited = occurrence('event-1');
+
+        store.startEditing(edited);
+
+        expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
+      });
+
+      it('should honor an explicit mode', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+
+        store.startEditing(occurrence('event-1'), 'armed');
+
+        expect(store.state.editingOccurrence?.mode).to.equal('armed');
+      });
+    });
+
+    describe('setEditingMode', () => {
+      it('should swap the mode while keeping the same occurrence', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const edited = occurrence('event-1');
+        store.startEditing(edited, 'armed');
+
+        store.setEditingMode('edit');
+
+        expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
+      });
+
+      it('should be a no-op when nothing is being edited', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+
+        store.setEditingMode('edit');
+
+        expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should keep the same reference when the mode is unchanged', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        store.startEditing(occurrence('event-1'), 'armed');
+        const before = store.state.editingOccurrence;
+
+        store.setEditingMode('armed');
+
+        expect(store.state.editingOccurrence).to.equal(before);
+      });
+    });
+
+    describe('setEditingOccurrenceTimes', () => {
+      it('should refresh the edited occurrence times, keeping the mode', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        store.startEditing(occurrence('event-1'), 'armed');
+        const start = adapter.date('2024-01-15T10:00:00', 'default');
+        const end = adapter.date('2024-01-15T11:30:00', 'default');
+
+        store.setEditingOccurrenceTimes(start, end);
+
+        const editing = store.state.editingOccurrence!;
+        expect(editing.occurrence.displayTimezone.start.value).toEqualDateTime(start);
+        expect(editing.occurrence.displayTimezone.end.value).toEqualDateTime(end);
+        expect(editing.mode).to.equal('armed');
+      });
+
+      it('should be a no-op when nothing is being edited', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+
+        store.setEditingOccurrenceTimes(
+          adapter.date('2024-01-15T10:00:00', 'default'),
+          adapter.date('2024-01-15T11:30:00', 'default'),
+        );
+
+        expect(store.state.editingOccurrence).to.equal(null);
+      });
+    });
+
+    describe('stopEditing', () => {
+      it('should clear the editing state and any in-progress creation placeholder', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        store.startEditing(occurrence('event-1'), 'edit');
+        store.setOccurrencePlaceholder({
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T11:00:00', 'default'),
+          resourceId: null,
+        });
+
+        store.stopEditing();
+
+        expect(store.state.editingOccurrence).to.equal(null);
+        expect(store.state.occurrencePlaceholder).to.equal(null);
+      });
     });
   });
 
@@ -70,6 +202,21 @@ describe('Core - EventCalendarStore', () => {
 
       store.updateStateFromParameters(newParams, adapter);
       expect(store.state.views).to.deep.equal(['day', 'week']);
+    });
+
+    it('should sync `shouldEventRequireResource` when parameters update', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.shouldEventRequireResource).to.equal(false);
+
+      store.updateStateFromParameters(
+        {
+          ...DEFAULT_PARAMS,
+          shouldEventRequireResource: true,
+          resources: [ResourceBuilder.new().build()],
+        },
+        adapter,
+      );
+      expect(store.state.shouldEventRequireResource).to.equal(true);
     });
 
     it('should respect controlled `view` (updates to new value)', () => {
@@ -108,7 +255,7 @@ describe('Core - EventCalendarStore', () => {
           },
           adapter,
         );
-      }).toWarnDev(['MUI: A component is changing the default view state']);
+      }).toWarnDev(['MUI X Scheduler: A component is changing the default view state']);
 
       expect(store.state.view).to.equal(defaultView);
     });
@@ -118,7 +265,7 @@ describe('Core - EventCalendarStore', () => {
 
       expect(() => {
         store.updateStateFromParameters({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
-      }).toWarnDev('MUI: A component is changing the uncontrolled view state');
+      }).toWarnDev('MUI X Scheduler: A component is changing the uncontrolled view state');
 
       expect(store.state.view).to.equal('day');
     });
@@ -134,7 +281,7 @@ describe('Core - EventCalendarStore', () => {
           },
           adapter,
         );
-      }).toWarnDev('MUI: A component is changing the controlled view state');
+      }).toWarnDev('MUI X Scheduler: A component is changing the controlled view state');
 
       expect(store.state.view).to.equal('day');
     });

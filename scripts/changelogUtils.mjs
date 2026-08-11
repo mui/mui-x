@@ -9,6 +9,7 @@
  * - Uses actual versions from package.json files
  * - Can return the changelog as a string when returnEntry is true
  */
+import { execSync } from 'node:child_process';
 import fs from 'fs';
 import path from 'path';
 import {
@@ -18,6 +19,12 @@ import {
 import { $ } from 'execa';
 
 const REPO = 'mui-x';
+
+/**
+ * @type {Set<string>}
+ * Bot logins whose commits are excluded from the changelog and contributor attribution
+ */
+const IGNORED_BOT_LOGINS = new Set(['renovate[bot]', 'code-infra-renovate[bot]']);
 
 /**
  * @type {string[]}
@@ -114,7 +121,7 @@ function parseTags(commitMessage) {
 function resolvePackagesByLabels(labels = []) {
   const resolvedPackages = [];
   for (const label of labels) {
-    switch (label.name) {
+    switch (label) {
       case 'scope: data grid':
         resolvedPackages.push('DataGrid');
         break;
@@ -146,7 +153,7 @@ function getContributors(commits = []) {
   const warnUsers = new Map();
   for (const commitItem of commits) {
     const { author, commit } = commitItem;
-    if (!author || author.login === 'renovate[bot]') {
+    if (!author || IGNORED_BOT_LOGINS.has(author.login)) {
       continue;
     }
     if (author.login === 'github-actions[bot]') {
@@ -216,17 +223,14 @@ async function generateChangelog({
       lastRelease,
       release,
     })
-  )
-    .filter((commit) => commit.author?.login !== 'renovate[bot]')
-    .map((commit) => ({
-      ...commit,
-      commit: {
-        message: commit.message,
-      },
-    }));
+  ).map((commit) => ({
+    ...commit,
+    commit: {
+      message: commit.message,
+    },
+  }));
 
   const changeLogMessages = {};
-  const prsLabelsMap = {};
   const community = getContributors(commitsItems);
 
   // Dispatch commits in different sections
@@ -248,7 +252,7 @@ async function generateChangelog({
   const codemodCommits = [];
 
   commitsItems
-    .filter((item) => !prsLabelsMap[item.sha]?.some((label) => excludeLabels.includes(label.name)))
+    .filter((item) => !item.labels?.some((label) => excludeLabels.includes(label)))
     .filter((item) => !excludeTitleTags.some((tag) => item.commit.message.includes(tag)))
     .forEach((commitItem) => {
       const tag = parseTags(commitItem.commit.message);
@@ -316,8 +320,7 @@ async function generateChangelog({
           break;
         case 'l10n':
         case '118n': {
-          const prLabels = prsLabelsMap[commitItem.sha];
-          const resolvedPackages = resolvePackagesByLabels(prLabels);
+          const resolvedPackages = resolvePackagesByLabels(commitItem.labels);
           if (resolvedPackages.length > 0) {
             resolvedPackages.forEach((resolvedPackage) => {
               switch (resolvedPackage) {
@@ -372,6 +375,21 @@ async function generateChangelog({
   const proIcon = `[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')`;
   const premiumIcon = `[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')`;
 
+  const isPackageBumped = (packageName, currentVersion) => {
+    if (!nextVersion) {
+      return true;
+    }
+    try {
+      const previousPackageJson = execSync(
+        `git show ${lastRelease}:packages/${packageName}/package.json`,
+        { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] },
+      );
+      return JSON.parse(previousPackageJson).version !== currentVersion;
+    } catch {
+      return true;
+    }
+  };
+
   /**
    * Generates a changelog section for a product
    * @param {object} options - The options for generating the product section
@@ -394,6 +412,17 @@ async function generateChangelog({
     const hasProVersion = proCommits !== null;
     const hasPremiumVersion = premiumCommits !== null;
     const packageVersion = nextVersion ? getPackageVersion(packageName) : '__VERSION__';
+
+    const hasNoCommits =
+      baseCommits.length === 0 &&
+      (proCommits?.length ?? 0) === 0 &&
+      (premiumCommits?.length ?? 0) === 0;
+
+    // Keep rendering `Internal changes.` when a package is bumped without
+    // commits (e.g. an `x-internals` update propagating a version bump).
+    if (hasNoCommits && !isPackageBumped(packageName, packageVersion)) {
+      return '';
+    }
 
     const lines = [`### ${productName}`];
 
@@ -598,12 +627,24 @@ ${logOtherSection({
 /**
  * Fetches and returns the latest tagged version for a given major version.
  * @param {string | undefined} majorVersion
+ * @param {string} [upstreamRemote]
  */
-async function findLatestTaggedVersionForMajor(majorVersion) {
+async function findLatestTaggedVersionForMajor(majorVersion, upstreamRemote = 'origin') {
   // Fetch all tags from all remotes to ensure we have the latest tags.
   await $`git fetch --tags --all`;
-  const { stdout } = await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`}`; // only include "version-tags"
-  return stdout.trim();
+  const match = `v${majorVersion || ''}*`; // only include "version-tags"
+  // Tags for an older major are created on its `vN.x` version branch and are not ancestors of
+  // master, so they are invisible to `git describe` from HEAD. Describe from that branch when it
+  // exists. The current major releases from master (its version branch may not exist yet), so fall
+  // back to describing from HEAD, where its tags are reachable.
+  const versionBranch = `${upstreamRemote}/v${majorVersion}.x`;
+  try {
+    const { stdout } = await $`git describe --tags --abbrev=0 --match ${match} ${versionBranch}`;
+    return stdout.trim();
+  } catch {
+    const { stdout } = await $`git describe --tags --abbrev=0 --match ${match}`;
+    return stdout.trim();
+  }
 }
 
 /**

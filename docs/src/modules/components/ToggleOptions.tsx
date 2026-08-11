@@ -17,7 +17,7 @@ export default function ToggleOptions(props: {
   return (
     <div>
       <Typography
-        role="presentation"
+        role="none"
         sx={{
           fontWeight: 600,
           fontSize: '0.75rem',

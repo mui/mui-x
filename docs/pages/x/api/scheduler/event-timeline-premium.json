@@ -17,12 +17,20 @@
     "canDragEventsFromTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "canDropEventsToTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "collapsedResources": { "type": { "name": "object" } },
     "dataSource": {
-      "type": { "name": "shape", "description": "{ getEvents: func, updateEvents: func }" }
+      "type": { "name": "shape", "description": "{ getEvents: func, persistEvents: func }" }
     },
-    "dateLocale": { "type": { "name": "any" }, "default": "enUS (English)" },
+    "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
+    "defaultCollapsedResources": {
+      "type": { "name": "object" },
+      "default": "{} - all resources are expanded"
+    },
     "defaultPreferences": {
-      "type": { "name": "shape", "description": "{ ampm?: bool }" },
+      "type": {
+        "name": "shape",
+        "description": "{ ampm?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+      },
       "default": "{ ampm: true }"
     },
     "defaultPreset": {
@@ -48,18 +56,29 @@
       },
       "default": "\"teal\""
     },
+    "eventCreation": {
+      "type": {
+        "name": "union",
+        "description": "{ duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
+      }
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
     },
     "localeText": { "type": { "name": "object" } },
+    "onCollapsedResourcesChange": { "type": { "name": "func" } },
     "onEventsChange": { "type": { "name": "func" } },
-    "onPreferencesChange": { "type": { "name": "func" } },
     "onPresetChange": { "type": { "name": "func" } },
     "onVisibleDateChange": { "type": { "name": "func" } },
     "onVisibleResourcesChange": { "type": { "name": "func" } },
-    "preferences": { "type": { "name": "shape", "description": "{ ampm?: bool }" } },
+    "preferences": {
+      "type": {
+        "name": "shape",
+        "description": "{ ampm?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+      }
+    },
     "preset": {
       "type": {
         "name": "enum",
@@ -77,6 +96,7 @@
     "resourceColumnLabel": { "type": { "name": "string" } },
     "resourceModelStructure": { "type": { "name": "object" } },
     "resources": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "shouldEventRequireResource": { "type": { "name": "bool" }, "default": "true" },
     "showCurrentTimeIndicator": { "type": { "name": "bool" }, "default": "true" },
     "sx": {
       "type": {
@@ -95,6 +115,54 @@
   ],
   "classes": [
     {
+      "key": "anchoredEventToolbar",
+      "className": "MuiEventTimelinePremium-anchoredEventToolbar",
+      "description": "Styles applied to the anchored (desktop) armed-event toolbar wrapper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactDayTimeGrid",
+      "className": "MuiEventTimelinePremium-compactDayTimeGrid",
+      "description": "Styles applied to the compact (touch) day time grid root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactDayTimeGridContent",
+      "className": "MuiEventTimelinePremium-compactDayTimeGridContent",
+      "description": "Styles applied to the compact (touch) day time grid content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawer",
+      "className": "MuiEventTimelinePremium-compactEventDrawer",
+      "description": "Styles applied to the compact editing drawer root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerContent",
+      "className": "MuiEventTimelinePremium-compactEventDrawerContent",
+      "description": "Styles applied to the compact editing drawer content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerReadonlyHeader",
+      "className": "MuiEventTimelinePremium-compactEventDrawerReadonlyHeader",
+      "description": "Styles applied to the compact editing drawer read-only header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerReadonlyTitle",
+      "className": "MuiEventTimelinePremium-compactEventDrawerReadonlyTitle",
+      "description": "Styles applied to the compact editing drawer read-only title element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventToolbarDock",
+      "className": "MuiEventTimelinePremium-compactEventToolbarDock",
+      "description": "Styles applied to the compact (touch) armed-event toolbar dock element.",
+      "isGlobal": false
+    },
+    {
       "key": "content",
       "className": "MuiEventTimelinePremium-content",
       "description": "Styles applied to the content section element.",
@@ -110,6 +178,24 @@
       "key": "currentTimeIndicatorCircle",
       "className": "MuiEventTimelinePremium-currentTimeIndicatorCircle",
       "description": "Styles applied to the current time indicator circle element.",
+      "isGlobal": false
+    },
+    {
+      "key": "errorAlert",
+      "className": "MuiEventTimelinePremium-errorAlert",
+      "description": "Styles applied to the error alert element.",
+      "isGlobal": false
+    },
+    {
+      "key": "errorContainer",
+      "className": "MuiEventTimelinePremium-errorContainer",
+      "description": "Styles applied to the error container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "errorMessage",
+      "className": "MuiEventTimelinePremium-errorMessage",
+      "description": "Styles applied to the error message element.",
       "isGlobal": false
     },
     {
@@ -224,6 +310,12 @@
       "key": "eventDialogHeader",
       "className": "MuiEventTimelinePremium-eventDialogHeader",
       "description": "Styles applied to the event dialog header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDialogHeaderActions",
+      "className": "MuiEventTimelinePremium-eventDialogHeaderActions",
+      "description": "Styles applied to the event dialog header actions container element.",
       "isGlobal": false
     },
     {
@@ -437,6 +529,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventsCell",
+      "className": "MuiEventTimelinePremium-eventsCell",
+      "description": "Styles applied to the events cell element in a body row.",
+      "isGlobal": false
+    },
+    {
       "key": "eventsHeaderCell",
       "className": "MuiEventTimelinePremium-eventsHeaderCell",
       "description": "Styles applied to the events header cell element.",
@@ -449,21 +547,27 @@
       "isGlobal": false
     },
     {
-      "key": "eventsSubGrid",
-      "className": "MuiEventTimelinePremium-eventsSubGrid",
-      "description": "Styles applied to the events sub-grid element.",
+      "key": "eventSkeleton",
+      "className": "MuiEventTimelinePremium-eventSkeleton",
+      "description": "Styles applied to the event skeleton element.",
       "isGlobal": false
     },
     {
-      "key": "eventsSubGridRow",
-      "className": "MuiEventTimelinePremium-eventsSubGridRow",
-      "description": "Styles applied to the events sub-grid row element.",
+      "key": "eventToolbar",
+      "className": "MuiEventTimelinePremium-eventToolbar",
+      "description": "Styles applied to the armed-event toolbar root element.",
       "isGlobal": false
     },
     {
-      "key": "eventsSubGridWrapper",
-      "className": "MuiEventTimelinePremium-eventsSubGridWrapper",
-      "description": "Styles applied to the events sub-grid wrapper element.",
+      "key": "eventToolbarDeleteButton",
+      "className": "MuiEventTimelinePremium-eventToolbarDeleteButton",
+      "description": "Styles applied to the armed-event toolbar delete button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbarEditButton",
+      "className": "MuiEventTimelinePremium-eventToolbarEditButton",
+      "description": "Styles applied to the armed-event toolbar edit button element.",
       "isGlobal": false
     },
     {
@@ -515,6 +619,12 @@
       "isGlobal": false
     },
     {
+      "key": "titleCellContent",
+      "className": "MuiEventTimelinePremium-titleCellContent",
+      "description": "Styles applied to the title cell content wrapper element.",
+      "isGlobal": false
+    },
+    {
       "key": "titleCellLegendColor",
       "className": "MuiEventTimelinePremium-titleCellLegendColor",
       "description": "Styles applied to the title cell legend color element.",
@@ -531,12 +641,6 @@
       "className": "MuiEventTimelinePremium-titleHeaderCell",
       "description": "Styles applied to the title header cell element.",
       "isGlobal": false
-    },
-    {
-      "key": "titleSubGrid",
-      "className": "MuiEventTimelinePremium-titleSubGrid",
-      "description": "Styles applied to the title sub-grid element.",
-      "isGlobal": false
     }
   ],
   "spread": true,
@@ -545,6 +649,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler-premium/src/event-timeline-premium/EventTimelinePremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interaction</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/presets/\">Event Timeline - Presets</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interactions</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/lazy-loading/\">Event Timeline - Lazy loading events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/presets/\">Event Timeline - Presets</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li></ul>"
 }

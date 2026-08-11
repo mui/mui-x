@@ -34,6 +34,7 @@ export function getOrCreateMessage(
     role: 'assistant',
     parts: [],
     status: 'streaming',
+    createdAt: new Date().toISOString(),
     ...(resolvedAuthor ? { author: resolvedAuthor } : undefined),
   };
 

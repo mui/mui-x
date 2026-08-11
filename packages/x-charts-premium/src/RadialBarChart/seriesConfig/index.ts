@@ -1,19 +1,20 @@
 import {
-  type ChartSeriesTypeConfig,
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
   createIsHighlighted,
   createIsFaded,
   polarSeriesTypes,
 } from '@mui/x-charts/internals';
+import type { ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 import legendGetter from './legend';
-import tooltipItemPositionGetter from './tooltipPosition';
+import { selectorTooltipItemPosition } from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { axisTooltipGetter } from './axisTooltipGetter';
 import colorProcessor from './getColor';
 import seriesProcessor from './seriesProcessor';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import descriptionGetter from './descriptionGetter';
+import getItemAtPosition from './getItemAtPosition';
 import { radiusExtremumGetter, rotationExtremumGetter } from './extremums';
 import tooltipGetter from './tooltip';
 
@@ -24,12 +25,12 @@ export const radialBarSeriesConfig: ChartSeriesTypeConfig<'radialBar'> = {
   seriesProcessor,
   legendGetter,
   tooltipGetter,
-  tooltipItemPositionGetter,
+  selectorTooltipItemPosition,
   axisTooltipGetter,
   rotationExtremumGetter,
   radiusExtremumGetter,
   getSeriesWithDefaultValues,
-  // getItemAtPosition,
+  getItemAtPosition,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,

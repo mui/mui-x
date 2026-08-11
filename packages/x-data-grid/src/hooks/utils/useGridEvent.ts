@@ -9,7 +9,7 @@ import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTra
 import type { GridApiCommon } from '../../models';
 
 // Based on https://github.com/Bnaya/use-dispose-uncommitted/blob/main/src/finalization-registry-based-impl.ts
-// Check https://github.com/facebook/react/issues/15317 to get more information
+// Check https://github.com/react/react/issues/15317 to get more information
 
 // We use class to make it easier to detect in heap snapshots by name
 class ObjectToBeRetainedByReact {

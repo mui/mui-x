@@ -1,4 +1,5 @@
-import { expectFieldValue, describeAdapters } from 'test/utils/pickers';
+import { expectFieldValue } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 import { DateField } from '@mui/x-date-pickers/DateField';
 
 describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
@@ -110,5 +111,19 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     view.setProps({ value: adapter.date('2019-01-01') });
     expectFieldValue(view.getSectionsContainer(), '01 - 01 - 2019');
+  });
+
+  // For a digit day section, `aria-valuetext` exposes a cardinal day number, not a
+  // locale ordinal (e.g. "1"/"21", not "1st"/"21st" or French "1er"/"21ème").
+  // Regression test for https://github.com/mui/mui-x/issues/22915.
+  it('should expose the day as a cardinal number in aria-valuetext', () => {
+    const view = renderWithProps({
+      format: adapter.formats.dayOfMonth,
+      value: adapter.date('2022-01-01'),
+    });
+    expect(view.getSection(0).getAttribute('aria-valuetext')).to.equal('1');
+
+    view.setProps({ value: adapter.date('2022-01-21') });
+    expect(view.getSection(0).getAttribute('aria-valuetext')).to.equal('21');
   });
 });

@@ -7,56 +7,66 @@ githubLabel: 'scope: chat'
 
 # Chat - No conversation history
 
-<p class="description"><code>ChatBox</code> hides the conversation list when neither the adapter nor a prop supplies conversation data.</p>
+<p class="description">Build a single-thread chat surface without a conversation list when your backend has no history API.</p>
 
 {{"demo": "NoConversationHistory.js", "bg": "inline"}}
 
-## How it works
+## Composing the thread directly
 
-`ChatBox` gates the conversation list on a single condition: whether the internal `conversations` array has any items.
+This example does not use `ChatBox`.
+Instead it composes a thread directly from lower-level components, so there is no built-in conversation list, header, or conversation-history model to configure.
 
-There are exactly two ways to populate that array:
+That makes it a good fit when you only need:
 
-1. **Controlled or uncontrolled state** — pass `conversations` / `initialConversations` props to `ChatBox`.
-2. **Adapter** — implement `listConversations?()` on the adapter so `ChatBox` can fetch history from a backend.
-
-When neither is present, the array stays empty and `ChatBox` skips rendering the list panel entirely. The thread fills the full width automatically — no extra configuration needed.
+1. a `ChatRoot` provider for adapter + state
+2. a `ChatConversation` container for the thread
+3. a `ChatMessageList` and `ChatComposer` inside that thread
 
 ```tsx
-// Adapter with no `listConversations` — history cannot be fetched
+// Adapter with no `listConversations`—only send/stream behavior is needed
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {
     return streamResponse(message);
   },
 };
 
-// No `conversations` or `initialConversations` prop — state stays empty
-<ChatBox adapter={adapter} />;
+<ChatRoot
+  adapter={adapter}
+  initialActiveConversationId="main"
+  initialMessages={messages}
+>
+  <ChatConversation>
+    <ChatMessageList />
+    <ChatComposer />
+  </ChatConversation>
+</ChatRoot>;
 ```
 
-## When this is the right choice
+## When to use this pattern
 
 Use this pattern when:
 
-- Your backend has no conversation history API (for example, a stateless AI endpoint).
+- The backend exposes no conversation history API—for example, a stateless AI endpoint.
 - The product intentionally gives users a fresh thread each session.
-- You are building an embedded copilot or assistant that lives inside another page and doesn't need a sidebar.
+- You're building an embedded copilot or assistant inside another page that doesn't need the built-in multi-conversation shell.
 
-## Restoring the conversation list
+## Enabling the built-in conversation list
 
-To show the conversation list, provide at least one of the two sources:
+Switch back to `ChatBox` and set `features={{ conversationList: true }}`.
+Provide conversation data in one of two ways:
 
-**Via props (uncontrolled):**
+### Via props (uncontrolled)
 
 ```tsx
 <ChatBox
   adapter={adapter}
+  features={{ conversationList: true }}
   initialConversations={[{ id: 'main', title: 'My chat' }]}
   initialActiveConversationId="main"
 />
 ```
 
-**Via adapter (fetched from backend):**
+### Via adapter
 
 ```tsx
 const adapter: ChatAdapter = {
@@ -70,10 +80,13 @@ const adapter: ChatAdapter = {
 };
 ```
 
+`listConversations()` loads conversation state on mount even when the sidebar UI is disabled.
+The `conversationList` feature flag controls whether that state renders through the built-in sidebar or drawer.
+
 ## See also
 
-- [Thread-only](/x/react-chat/material/examples/thread-only/) for a layout-focused view of the single-pane pattern
-- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for the full two-pane inbox with a conversation sidebar
+- See [Thread-only](/x/react-chat/material/examples/thread-only/) for a layout-focused view of the single-pane pattern.
+- See [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for the full two-pane inbox with a sidebar.
 
 ## API
 

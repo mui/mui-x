@@ -1,4 +1,4 @@
-import {
+import type {
   SchedulerEventColor,
   SchedulerResourceId,
   RecurringEventPresetKey,
@@ -7,11 +7,16 @@ import {
   SchedulerProcessedDate,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { EventDialogLocaleText } from '../../../models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
-export interface ControlledValue {
+/**
+ * Form values handled by the built-in submit logic.
+ */
+export interface EventDialogBuiltInFormValues {
+  title: string;
+  description: string;
   startDate: string;
   startTime: string;
   endDate: string;
@@ -23,11 +28,54 @@ export interface ControlledValue {
   rruleDraft: SchedulerProcessedEventRecurrenceRule;
 }
 
+/**
+ * Typed view of the form values bag. Custom fields from the user's event model
+ * live alongside the built-in keys.
+ */
+export type EventDialogFormValues = EventDialogBuiltInFormValues & Record<string, unknown>;
+
+// The `-?` mapped type makes a key added to the interface but missing here a compile error.
+const BUILT_IN_FORM_KEYS_LOOKUP: { [P in keyof EventDialogBuiltInFormValues]-?: true } = {
+  title: true,
+  description: true,
+  startDate: true,
+  startTime: true,
+  endDate: true,
+  endTime: true,
+  resourceId: true,
+  allDay: true,
+  color: true,
+  recurrenceSelection: true,
+  rruleDraft: true,
+};
+
+/**
+ * Form keys handled by the built-in submit logic. Every other key in the values
+ * bag is a custom field; the ones the user edited are spread onto the event as-is.
+ */
+export const BUILT_IN_FORM_KEYS: ReadonlySet<string> = new Set(
+  Object.keys(BUILT_IN_FORM_KEYS_LOOKUP),
+);
+
+const WEEKDAYS: SchedulerWeekday[] = [
+  'sunday',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+];
+
+export const getWeekdayToken = (adapter: Adapter, value: TemporalSupportedObject) => {
+  return WEEKDAYS[adapter.toJsDate(value).getDay()];
+};
+
 export type EndsSelection = 'never' | 'after' | 'until';
 
 export function computeRange(
   adapter: Adapter,
-  next: ControlledValue,
+  next: Pick<EventDialogFormValues, 'startDate' | 'startTime' | 'endDate' | 'endTime' | 'allDay'>,
   displayTimezone: TemporalTimezone,
 ) {
   if (next.allDay) {
@@ -62,18 +110,18 @@ export function validateRange(
   start: TemporalSupportedObject,
   end: TemporalSupportedObject,
   allDay: boolean,
-): null | { field: 'startDate' | 'startTime' } {
+): null | { field: 'endDate' | 'endTime' } {
   const startDay = adapter.startOfDay(start);
   const endDay = adapter.startOfDay(end);
-  // endDay <= startDay → date error
+  // endDay < startDay → date error
   if (adapter.isAfter(startDay, endDay)) {
-    return { field: 'startDate' };
+    return { field: 'endDate' };
   }
 
   if (adapter.isEqual(startDay, endDay)) {
     if (!allDay && !adapter.isAfter(end, start)) {
       // end <= start → hour error
-      return { field: 'startTime' };
+      return { field: 'endTime' };
     }
   }
   return null;
@@ -83,7 +131,7 @@ export function getRecurrenceLabel(
   adapter: Adapter,
   start: SchedulerProcessedDate,
   recurrenceKey: RecurringEventPresetKey | 'custom' | null,
-  localeText: EventDialogLocaleText,
+  localeText: EventEditingLocaleText,
 ): string {
   if (!recurrenceKey) {
     return localeText.recurrenceNoRepeat;
@@ -93,8 +141,9 @@ export function getRecurrenceLabel(
     case 'DAILY':
       return localeText.recurrenceDailyPresetLabel;
     case 'WEEKLY': {
-      const weekday = adapter.format(start.value, 'weekday');
-      return localeText.recurrenceWeeklyPresetLabel(weekday);
+      const weekday = getWeekdayToken(adapter, start.value);
+      const weekdayName = adapter.format(start.value, 'weekday');
+      return localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName });
     }
     case 'MONTHLY': {
       const date = adapter.getDate(start.value);

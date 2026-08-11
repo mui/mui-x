@@ -15,19 +15,6 @@ describe('postProcessImport', () => {
     vi.unstubAllEnvs();
   });
 
-  describe('@mui/lab imports', () => {
-    ADAPTERS.forEach((adapter) => {
-      it('should provide correct adapter', () => {
-        const resolvedDep = postProcessImport(`@mui/lab/${adapter}`);
-
-        const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
-        expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: adapterDependencies[expectedLibrary],
-        });
-      });
-    });
-  });
-
   describe('@mui/x-date-pickers imports', () => {
     const ALL_ADAPTERS = [
       ...ADAPTERS,

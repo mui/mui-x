@@ -1,35 +1,33 @@
 ---
 productId: x-chat
 title: Layout
-packageName: '@mui/x-chat'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
-components: ChatBox, ChatLayout
+components: ChatLayout
 ---
 
 # Chat - Layout
 
-<p class="description">Understand the two-pane layout structure, thread-only mode, and how to recompose the chat surface.</p>
+<p class="description">Compose conversation and thread panes in the chat surface, with full control over layout and responsive behavior.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Overview
 
-`ChatBox` renders a two-pane layout by default: a **conversation list** on the left and a **thread pane** on the right.
-The thread pane contains the conversation header, scrollable message list, and composer.
+`ChatLayout` arranges a **conversation pane** and a **thread pane** in the chat surface.
+The surrounding runtime setup is delegated to [`ChatProvider`](/x/react-chat/headless/); you supply the pane contents as children, and `ChatLayout` only assigns each child to a pane and positions it.
 
-{{"demo": "../../material/examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false}}
+## Composition structure
 
-## Component anatomy
-
-The full `ChatBox` layout is composed of the following themed components:
+The most common `ChatLayout` composition looks like this:
 
 ```text
-ChatBox
+ChatLayout
   ChatConversationList              ← sidebar with conversation entries
   ChatConversation                  ← thread shell, derives the active conversation
     ChatConversationHeader          ← header bar with divider styling
       ChatConversationTitle         ← conversation name
-      ChatConversationSubtitle     ← secondary line (participants, presence, etc.)
+      ChatConversationSubtitle      ← secondary line (participants, presence, etc.)
       ChatConversationHeaderActions ← action area (archive, mute, context menu)
     ChatMessageList                 ← scrollable message area
       ChatMessageGroup              ← groups consecutive same-author messages
@@ -45,22 +43,46 @@ ChatBox
         ChatComposerSendButton
 ```
 
-All components are exported from `@mui/x-chat`.
+`ChatLayout` is exported from `@mui/x-chat/headless`; every component below it in the tree is exported from `@mui/x-chat`.
+
+## Two-pane layout
+
+The default composition renders the conversation list and the active thread side by side.
+Select a conversation in the sidebar to switch the thread:
+
+{{"demo": "LayoutTwoPaneStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Sizing the panes
+
+`ChatLayout` wraps each pane in a slot: `conversationsPane` and `threadPane` (plus `root` for the flex container).
+By default the thread pane flexes to fill the remaining width.
+Use `slotProps` to set a fixed sidebar width:
+
+```tsx
+<ChatLayout
+  slotProps={{
+    conversationsPane: { style: { width: '280px', flex: '0 0 280px' } },
+  }}
+>
+```
+
+Each pane slot receives a `pane` owner state (`'conversations'` or `'thread'`), so a custom slot component can style both panes from one implementation.
 
 ## Thread-only mode
 
-When your application manages conversations externally (or only needs a single conversation), you can hide the conversation list and render the thread pane alone.
-Pass a single conversation and set it as the active one:
+When your application manages conversations externally, render only the thread pane inside `ChatLayout`.
+The demo below keeps the provider, message list, and composer but omits the conversation pane:
 
-{{"demo": "../../material/examples/thread-only/ThreadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "LayoutThreadOnlyStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
 
-In thread-only mode `ChatBox` does not render the conversation list sidebar, and the thread pane fills the entire width of the `ChatBox` container.
+In thread-only mode the active conversation fills the entire `ChatLayout` container.
 
 ## Full recomposition
 
-When `ChatBox` slots are not enough — for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header — you can assemble the thread from individual Material UI components directly.
+Because `ChatLayout` only decides where panes go, you can assemble the thread from individual Material UI components directly.
+Use this approach to insert additional UI between the header and the message list, or to move controls within the thread pane.
 
-The following example shows a fully assembled thread pane without relying on `ChatBox` layout defaults:
+The example below shows a fully assembled thread pane that doesn't rely on the layout defaults bundled into [`ChatBox`](/x/react-chat/basics/chatbox/), the all-in-one component:
 
 ```tsx
 import {
@@ -118,25 +140,52 @@ function CustomThread() {
 }
 ```
 
-Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter.
+{{"demo": "LayoutRecomposedStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
 
-The layout supports split configurations where the conversation list and thread are rendered side by side.
+Wrap `CustomThread` with a [`ChatProvider`](/x/react-chat/headless/) from `@mui/x-chat/headless` to wire runtime state to your adapter.
+
+### Pane assignment
+
+`ChatLayout` inspects its direct children to decide which pane each one belongs to.
+`ChatConversationList` is assigned to the conversations pane and `ChatConversation` to the thread pane automatically.
+
+If you wrap a pane child in another component (`styled()`, `React.memo()`, or a custom wrapper), `ChatLayout` can no longer identify it.
+Unidentified children fall back to positional assignment: a single child fills the thread pane, and with several children the unidentified ones fill the conversations pane first, then the thread pane.
+Instead of relying on this fallback, set the `pane` prop on the direct child explicitly:
+
+```tsx
+<ChatLayout>
+  <MySidebar pane="conversations" />
+  <MyThread pane="thread" />
+</ChatLayout>
+```
+
+In development, `ChatLayout` warns in the console when it can identify some children but not others.
 
 ## Responsive layout
 
-`ChatBox` uses a CSS container query to adapt its layout based on its own width — not the viewport.
-When the container is narrower than `600px`, the conversation list collapses automatically and a menu button appears in the conversation header.
-Tapping the menu button opens the conversation list in a drawer overlay.
+`ChatLayout` does not impose breakpoint behavior.
+You decide when to show both panes, when to show only the conversation list, and when to show only the active thread.
 
-Drag the slider below to resize the container and see the transition in action:
+Drag the slider below to switch the same composition between:
 
-{{"demo": "../../material/examples/responsive-drawer/ResponsiveDrawer.js", "bg": "inline", "defaultCodeOpen": false}}
+- a two-pane layout above `600px`
+- a single-pane conversation list or thread below `600px`
 
-This behavior is built in — no extra configuration is needed.
-It works identically whether the `ChatBox` fills the full viewport on a mobile device or is embedded in a narrow sidebar on desktop.
+The demo below keeps the logic explicit so you can swap it for route-based navigation, a drawer, or any other responsive pattern:
 
-Set explicit dimensions on the parent element or use the `sx` prop:
+{{"demo": "LayoutResponsiveStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
+
+When collapsing to a single pane, keep the navigation accessible: label the conversation list (for example `aria-label="Conversations"`) and give the narrow-mode back control an explicit label such as `aria-label="Back to conversations"`, as the demo above does.
+
+Explicit responsive logic keeps narrow-mode transitions straightforward to customize.
+
+Set explicit dimensions on the parent element that wraps `ChatLayout`:
 
 ```tsx
-<ChatBox adapter={adapter} sx={{ height: 500 }} />
+<Box sx={{ height: 500 }}>
+  <ChatLayout>{/* conversation pane + thread pane */}</ChatLayout>
+</Box>
 ```
+
+For the unstyled primitives behind this page, see the [headless layout documentation](/x/react-chat/headless/layout/).

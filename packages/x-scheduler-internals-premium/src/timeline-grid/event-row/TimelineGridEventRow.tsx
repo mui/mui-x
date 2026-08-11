@@ -1,13 +1,14 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCreation, useKeyboardEventCreation } from '@mui/x-scheduler-internals/internals';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-internals/constants';
-import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventRowDropTarget } from './useEventRowDropTarget';
 import { usePlaceholderInRow } from './usePlaceholderInRow';
@@ -45,8 +46,9 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const { rowRef, listItemRef, index, hasFocus, handleKeyDown, handleFocus } =
-    useTimelineGridRowKeyboard({ columnType: 'events' });
+  const { rowRef, hasFocus, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
+    columnType: 'events',
+  });
 
   // Selector hooks
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
@@ -102,8 +104,8 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   };
 
   const contextValue: TimelineGridEventRowContext = React.useMemo(
-    () => ({ hasFocus, getCursorPositionInElementMs }),
-    [hasFocus, getCursorPositionInElementMs],
+    () => ({ resourceId, hasFocus, getCursorPositionInElementMs }),
+    [resourceId, hasFocus, getCursorPositionInElementMs],
   );
 
   const occurrencesWithPosition = useEventOccurrencesWithTimelinePosition({
@@ -134,13 +136,17 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   };
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, dropTargetRef, listItemRef, rowRef],
+    ref: [forwardedRef, dropTargetRef, rowRef],
     state,
     stateAttributesMapping,
     props: [
       elementProps,
-      // Reserve aria-rowindex=1 for the grid header row.
-      { role: 'row', 'aria-rowindex': index + 2, children },
+      {
+        children,
+        style: {
+          '--lane-count': occurrencesWithPosition.maxIndex,
+        } as React.CSSProperties,
+      },
       keyboardProps,
       eventCreationProps,
     ],

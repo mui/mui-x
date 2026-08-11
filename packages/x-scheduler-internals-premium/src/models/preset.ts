@@ -1,12 +1,9 @@
-import * as React from 'react';
-import { TemporalAdapter, TemporalSupportedObject } from '@mui/x-scheduler-internals/base-ui-copy';
+import type * as React from 'react';
+import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 
 export type EventTimelinePremiumPreset =
-  | 'dayAndHour'
-  | 'dayAndMonth'
-  | 'dayAndWeek'
-  | 'monthAndYear'
-  | 'year';
+  'dayAndHour' | 'dayAndMonth' | 'dayAndWeek' | 'monthAndYear' | 'year';
 
 /**
  * Time unit a header row (or the tick grid) operates on.
@@ -104,11 +101,13 @@ export interface PresetConfig {
   getStartDate: (
     adapter: TemporalAdapter,
     visibleDate: TemporalSupportedObject,
+    weekStartsOn: WeekStartsOn | undefined,
   ) => TemporalSupportedObject;
   getEndDate: (
     adapter: TemporalAdapter,
     start: TemporalSupportedObject,
     unitCount: number,
+    weekStartsOn: WeekStartsOn | undefined,
   ) => TemporalSupportedObject;
   /**
    * Returns the exact number of CSS ticks for the visible range. Override

@@ -3,19 +3,25 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license/internals';
-import { styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
+import type { CSSInterpolation, Theme } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { MuiEvent } from '@mui/x-internals/types';
+import type { MuiEvent } from '@mui/x-internals/types';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { DateRangePickerDayOwnerState, DateRangePickerDayProps } from './DateRangePickerDay.types';
-import {
+import type {
+  DateRangePickerDayOwnerState,
+  DateRangePickerDayProps,
+} from './DateRangePickerDay.types';
+import type {
   DateRangePickerDayClasses,
-  dateRangePickerDayClasses,
   DateRangePickerDayClassKey,
+} from './dateRangePickerDayClasses';
+import {
+  dateRangePickerDayClasses,
   getDateRangePickerDayUtilityClass,
 } from './dateRangePickerDayClasses';
 
@@ -222,7 +228,13 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       props: { isDayDraggable: true },
       style: {
         cursor: 'grab',
+        // Stop the browser from scrolling the page when the user drags a finger
+        // across the cell — the drag is driven by our own Pointer Events handler.
         touchAction: 'none',
+        // Prevent the iOS text-selection callout from racing the drag gesture.
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        userSelect: 'none',
       },
     },
     {
@@ -438,23 +450,30 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     showDaysOutsideCurrentMonth,
   });
 
+  const isDayFillerCell =
+    isDayFillerCellProp ?? (outsideCurrentMonth && !showDaysOutsideCurrentMonth);
+
   const ownerState: DateRangePickerDayOwnerState = {
     ...pickerDayOwnerState,
     // Properties that the Base UI implementation will have
-    isDaySelectionStart: isStartOfHighlighting,
-    isDaySelectionEnd: isEndOfHighlighting,
-    isDayInsideSelection: isHighlighting && !isStartOfHighlighting && !isEndOfHighlighting,
-    isDaySelected: isVisuallySelected ?? (isHighlighting || Boolean(selected)),
-    isDayPreviewed: isPreviewing,
-    isDayPreviewStart: isStartOfPreviewing,
-    isDayPreviewEnd: isEndOfPreviewing,
-    isDayInsidePreview: isPreviewing && !isStartOfPreviewing && !isEndOfPreviewing,
+    // A filler cell is visually hidden, it must never pick up any selection or preview styling.
+    isDaySelectionStart: !isDayFillerCell && isStartOfHighlighting,
+    isDaySelectionEnd: !isDayFillerCell && isEndOfHighlighting,
+    isDayInsideSelection:
+      !isDayFillerCell && isHighlighting && !isStartOfHighlighting && !isEndOfHighlighting,
+    isDaySelected:
+      !isDayFillerCell && (isVisuallySelected ?? (isHighlighting || Boolean(selected))),
+    isDayPreviewed: !isDayFillerCell && isPreviewing,
+    isDayPreviewStart: !isDayFillerCell && isStartOfPreviewing,
+    isDayPreviewEnd: !isDayFillerCell && isEndOfPreviewing,
+    isDayInsidePreview:
+      !isDayFillerCell && isPreviewing && !isStartOfPreviewing && !isEndOfPreviewing,
     // Properties specific to the MUI implementation (some might be removed in the next major)
     isDayStartOfMonth: adapter.isSameDay(day, adapter.startOfMonth(day)),
     isDayEndOfMonth: adapter.isSameDay(day, adapter.endOfMonth(day)),
     isDayFirstVisibleCell: isFirstVisibleCell,
     isDayLastVisibleCell: isLastVisibleCell,
-    isDayFillerCell: isDayFillerCellProp ?? (outsideCurrentMonth && !showDaysOutsideCurrentMonth),
+    isDayFillerCell,
     isDayDraggable: Boolean(draggable),
   };
 
@@ -524,7 +543,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
       onMouseEnter={(event) => onMouseEnter(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
-      draggable={draggable}
       {...other}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
@@ -534,7 +552,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
   );
 });
 
-DateRangePickerDayRaw.propTypes = {
+DateRangePickerDayRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
