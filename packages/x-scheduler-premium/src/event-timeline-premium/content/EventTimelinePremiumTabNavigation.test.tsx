@@ -9,6 +9,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { EventTimelinePremiumPresetConfig } from '@mui/x-scheduler-internals-premium/models';
 import { isJSDOM } from 'test/utils/skipIf';
 
 // Tab between events only works on top of real layout (the handler reads
@@ -44,15 +45,22 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     eventAt(6, 20),
   ];
 
-  function renderTimeline() {
+  function renderTimeline(
+    options: {
+      events?: SchedulerEvent[];
+      presetConfig?: EventTimelinePremiumPresetConfig;
+      hostWidth?: number;
+    } = {},
+  ) {
     return render(
-      <div style={{ width: 1200, height: 600 }}>
+      <div style={{ width: options.hostWidth ?? 1200, height: 600 }}>
         <EventTimelinePremium
           resources={[resource]}
-          events={events}
+          events={options.events ?? events}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           preset="dayAndHour"
           presets={['dayAndHour']}
+          presetConfig={options.presetConfig}
         />
       </div>,
     );
@@ -198,37 +206,73 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     expect(document.activeElement).to.not.equal(getEvent('evt-d6-h20'));
   });
 
-  it('should skip the occurrences hidden by the trimmed hour window instead of trapping focus', async () => {
-    // 21:00 hides inside the trimmed window (8:00 → 20:00): its occurrence never
-    // mounts, so navigating to it would swallow Tab forever.
-    const trimmedEvents = [eventAt(3, 10), eventAt(3, 21), eventAt(4, 10)];
-    const { user } = render(
-      <div style={{ width: 1200, height: 600 }}>
-        <EventTimelinePremium
-          resources={[resource]}
-          events={trimmedEvents}
-          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          preset="dayAndHour"
-          presets={['dayAndHour']}
-          presetConfig={{ dayAndHour: { startTime: 8, endTime: 20 } }}
-        />
-      </div>,
-    );
+  describe('with a trimmed hour window', () => {
+    // 8:00 → 20:00 leaves 12 ticks per day (768px), so the 4-day axis is 3072px wide.
+    const TRIMMED = { dayAndHour: { startTime: 8, endTime: 20 } };
 
-    await waitFor(() => {
-      expect(getEvent('evt-d3-h10')).not.to.equal(null);
+    it('should skip the occurrences hidden by the trimmed hour window instead of trapping focus', async () => {
+      // 21:00 hides inside the window: its occurrence never mounts, so navigating to it
+      // would swallow Tab forever.
+      const { user } = renderTimeline({
+        events: [eventAt(3, 10), eventAt(3, 21), eventAt(4, 10)],
+        presetConfig: TRIMMED,
+      });
+
+      await waitFor(() => {
+        expect(getEvent('evt-d3-h10')).not.to.equal(null);
+      });
+      expect(getEvent('evt-d3-h21')).to.equal(null);
+
+      act(() => {
+        getEvent('evt-d3-h10')!.focus();
+      });
+
+      await user.keyboard('{Tab}');
+      await waitFor(() => {
+        const next = getEvent('evt-d4-h10');
+        expect(next).not.to.equal(null);
+        expect(document.activeElement).to.equal(next);
+      });
     });
-    expect(getEvent('evt-d3-h21')).to.equal(null);
 
-    act(() => {
-      getEvent('evt-d3-h10')!.focus();
-    });
+    it('should scroll a virtualized-out target into view at its compressed-axis position', async () => {
+      // The target sits on the last day at 19:00 — tick 47 of 48, around x=3008 — while
+      // the 600px host shows roughly the first 540px. It cannot be reached without the
+      // interceptor scrolling to the position the trimmed axis puts it at.
+      const { user } = renderTimeline({
+        events: [eventAt(3, 10), eventAt(3, 21), eventAt(6, 19)],
+        presetConfig: TRIMMED,
+        hostWidth: 600,
+      });
 
-    await user.keyboard('{Tab}');
-    await waitFor(() => {
-      const next = getEvent('evt-d4-h10');
-      expect(next).not.to.equal(null);
-      expect(document.activeElement).to.equal(next);
+      await waitFor(() => {
+        expect(getEvent('evt-d3-h10')).not.to.equal(null);
+      });
+      // The premise of the test: the target starts virtualized out.
+      expect(getEvent('evt-d6-h19')).to.equal(null);
+      expect(getScroller().scrollLeft).to.equal(0);
+
+      act(() => {
+        getEvent('evt-d3-h10')!.focus();
+      });
+
+      await user.keyboard('{Tab}');
+
+      await waitFor(() => {
+        const target = getEvent('evt-d6-h19');
+        expect(target).not.to.equal(null);
+        expect(document.activeElement).to.equal(target);
+      });
+
+      // Scrolled to where the compressed axis puts the target, not merely far enough to
+      // mount it: an offset derived from the untrimmed geometry lands elsewhere. The box
+      // is checked by its start edge, since a short event renders wider than its slot to
+      // fit the label.
+      expect(getScroller().scrollLeft).to.be.greaterThan(0);
+      const scrollerRect = getScroller().getBoundingClientRect();
+      const targetRect = getEvent('evt-d6-h19')!.getBoundingClientRect();
+      expect(targetRect.left).to.be.greaterThanOrEqual(scrollerRect.left);
+      expect(targetRect.left).to.be.lessThan(scrollerRect.right);
     });
   });
 
