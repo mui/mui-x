@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
-import Portal from '@mui/material/Portal';
-import { DataGrid, GridPortalWrapper, Toolbar, ToolbarButton, ToolbarRoot } from '@mui/x-data-grid';
+import { DataGrid, Toolbar, ToolbarButton, ToolbarRoot } from '@mui/x-data-grid';
 import type { GridColumnsManagementProps } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -416,9 +415,9 @@ describe('<DataGrid /> - Toolbar', () => {
 
   describe('ToolbarRoot', () => {
     it('should render a div with the toolbar styles outside of the Data Grid', () => {
-      render(<ToolbarRoot data-testid="drawer-header">Header</ToolbarRoot>);
+      render(<ToolbarRoot data-testid="custom-header">Header</ToolbarRoot>);
 
-      const element = screen.getByTestId('drawer-header');
+      const element = screen.getByTestId('custom-header');
       expect(element.tagName).to.equal('DIV');
       expect(element).toHaveComputedStyle({
         display: 'flex',
@@ -430,43 +429,49 @@ describe('<DataGrid /> - Toolbar', () => {
     it('should apply the same styles as the element rendered by Toolbar', () => {
       render(
         <React.Fragment>
-          <ToolbarRoot data-testid="drawer-header" />
+          <ToolbarRoot data-testid="custom-header" />
           <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />
         </React.Fragment>,
       );
 
       const toolbarClasses = new Set(screen.getByRole('toolbar').classList);
-      const rootClasses = Array.from(screen.getByTestId('drawer-header').classList);
+      const rootClasses = Array.from(screen.getByTestId('custom-header').classList);
       // The styled component class is shared between both elements.
       expect(rootClasses.some((className) => toolbarClasses.has(className))).to.equal(true);
     });
 
-    // The CSS variables are resolved by the browser, jsdom keeps them unresolved.
+    // The CSS variable fallbacks are resolved by the browser, jsdom keeps them unresolved.
     it.skipIf(isJSDOM)(
-      'should resolve the Data Grid CSS variables when rendered in a portal wrapped in GridPortalWrapper',
+      'should fall back to the theme values for the variables the Data Grid defines',
       () => {
-        function PortaledHeader() {
-          return (
-            <Toolbar>
-              <Portal>
-                <GridPortalWrapper>
-                  <ToolbarRoot data-testid="drawer-header" />
-                </GridPortalWrapper>
-              </Portal>
-            </Toolbar>
-          );
-        }
-
-        render(<DataGrid {...baselineProps} slots={{ toolbar: PortaledHeader }} showToolbar />);
+        render(
+          <React.Fragment>
+            <ToolbarRoot data-testid="custom-header" />
+            <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />
+          </React.Fragment>,
+        );
 
         const toolbarStyle = getComputedStyle(screen.getByRole('toolbar'));
-        const rootStyle = getComputedStyle(screen.getByTestId('drawer-header'));
+        const rootStyle = getComputedStyle(screen.getByTestId('custom-header'));
 
+        expect(rootStyle.padding).not.to.equal('0px');
         expect(rootStyle.padding).to.equal(toolbarStyle.padding);
         expect(rootStyle.borderBottomColor).to.equal(toolbarStyle.borderBottomColor);
         expect(rootStyle.borderBottomWidth).to.equal(toolbarStyle.borderBottomWidth);
       },
     );
+
+    // The CSS variable fallbacks are resolved by the browser, jsdom keeps them unresolved.
+    it.skipIf(isJSDOM)('should prefer the Data Grid variables over the fallbacks', () => {
+      render(
+        <div style={{ '--DataGrid-t-spacing-unit': '20px' } as React.CSSProperties}>
+          <ToolbarRoot data-testid="custom-header" />
+        </div>,
+      );
+
+      // 20 * 0.75 = 15px, coming from the inherited variable rather than from the fallback.
+      expect(getComputedStyle(screen.getByTestId('custom-header')).padding).to.equal('15px');
+    });
   });
 
   describe('column selector', () => {

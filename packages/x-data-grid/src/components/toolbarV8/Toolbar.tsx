@@ -9,6 +9,7 @@ import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { ToolbarContextProvider } from '@mui/x-internals/ToolbarContext';
 import { vars } from '../../constants/cssVariables';
+import { getBorderColor, getSpacingUnit } from '../../material/variables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -34,23 +35,28 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 /**
  * The styled `<div />` element rendered by the `<Toolbar />` component.
- * Use it to apply the toolbar styles to other elements.
- * It relies on the Data Grid CSS variables, so it must be rendered inside a Data Grid,
- * or inside a `<GridPortalWrapper />` when rendered in a portal.
+ * Use it to apply the toolbar styles to other elements, inside or outside of a Data Grid.
  */
 const ToolbarRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Toolbar',
-})({
-  flex: '0 1 1px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'end',
-  gap: vars.spacing(0.25),
-  padding: vars.spacing(0.75),
-  minHeight: 52,
-  boxSizing: 'border-box',
-  borderBottom: `1px solid ${vars.colors.border.base}`,
+})(({ theme }) => {
+  // The Data Grid CSS variables are only defined on the Data Grid root element, so they are
+  // declared with a fallback to keep the styles working when rendered outside of a Data Grid.
+  const spacingUnit = `var(${vars.keys.spacingUnit}, ${getSpacingUnit(theme)})`;
+  const borderColor = `var(${vars.keys.colors.border.base}, ${getBorderColor(theme)})`;
+
+  return {
+    flex: '0 1 1px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'end',
+    gap: `calc(${spacingUnit} * 0.25)`,
+    padding: `calc(${spacingUnit} * 0.75)`,
+    minHeight: 52,
+    boxSizing: 'border-box',
+    borderBottom: `1px solid ${borderColor}`,
+  };
 });
 
 /**

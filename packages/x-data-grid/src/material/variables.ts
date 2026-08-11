@@ -47,7 +47,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
   const k = vars.keys;
 
   return {
-    [k.spacingUnit]: t.vars ? ((t.vars as any).spacing ?? t.spacing(1)) : t.spacing(1),
+    [k.spacingUnit]: getSpacingUnit(t),
 
     [k.colors.border.base]: borderColor,
     [k.colors.background.base]: backgroundBase,
@@ -111,7 +111,11 @@ function getRadius(theme: Theme) {
     : theme.shape.borderRadius;
 }
 
-function getBorderColor(theme: Theme) {
+export function getSpacingUnit(theme: Theme) {
+  return theme.vars ? ((theme.vars as any).spacing ?? theme.spacing(1)) : theme.spacing(1);
+}
+
+export function getBorderColor(theme: Theme) {
   if (theme.vars) {
     return theme.vars.palette.TableCell.border;
   }
