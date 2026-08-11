@@ -8,12 +8,12 @@ import Skeleton from '@mui/material/Skeleton';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
-import { RichTreeViewProps } from './RichTreeView.types';
+import type { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
 import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
-import { TreeViewValidItem } from '../models';
+import type { TreeViewValidItem } from '../models';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
 import { itemsSelectors } from '../internals/plugins/items';
@@ -187,10 +187,12 @@ RichTreeView.propTypes /* remove-proptypes */ = {
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      addItems: PropTypes.func,
       focusItem: PropTypes.func,
       getItem: PropTypes.func,
       getItemDOMElement: PropTypes.func,
       getItemOrderedChildrenIds: PropTypes.func,
+      getItemSelection: PropTypes.func,
       getItemTree: PropTypes.func,
       getParentId: PropTypes.func,
       isItemExpanded: PropTypes.func,

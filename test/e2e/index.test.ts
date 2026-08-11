@@ -281,11 +281,10 @@ async function initializeEnvironment(
         await page.mouse.up();
 
         expect(
-          await page.evaluate(
-            () =>
-              document
-                .querySelector('.MuiDataGrid-columnHeader--sorted')!
-                .getAttribute('data-field')!,
+          await page.evaluate(() =>
+            document
+              .querySelector('.MuiDataGrid-columnHeader--sorted')!
+              .getAttribute('data-field')!,
           ),
         ).to.equal('brand');
       });

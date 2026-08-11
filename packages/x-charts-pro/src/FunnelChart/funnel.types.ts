@@ -163,13 +163,7 @@ export type FunnelLabelOptions = {
    * Default value depends on the position.
    */
   dominantBaseline?:
-    | 'auto'
-    | 'baseline'
-    | 'hanging'
-    | 'middle'
-    | 'central'
-    | 'text-after-edge'
-    | 'text-before-edge';
+    'auto' | 'baseline' | 'hanging' | 'middle' | 'central' | 'text-after-edge' | 'text-before-edge';
   /**
    * The offset of the label from the anchor point.
    * If a single number is provided, the offset will be applied in both directions.

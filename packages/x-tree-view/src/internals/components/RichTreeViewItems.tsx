@@ -3,15 +3,16 @@ import * as React from 'react';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { TreeItem, TreeItemProps } from '../../TreeItem';
-import { TreeViewItemId } from '../../models';
+import type { TreeItemProps } from '../../TreeItem';
+import { TreeItem } from '../../TreeItem';
+import type { TreeViewItemId } from '../../models';
 import { itemsSelectors } from '../plugins/items';
 import { useTreeViewContext, useTreeViewStyleContext } from '../TreeViewProvider';
 import { expansionSelectors } from '../plugins/expansion';
-import { RichTreeViewStore } from '../RichTreeViewStore';
-import { MinimalTreeViewState } from '../MinimalTreeViewStore';
+import type { RichTreeViewStore } from '../RichTreeViewStore';
+import type { MinimalTreeViewState } from '../MinimalTreeViewStore';
 import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
 
 const RichTreeViewItemsContext = React.createContext<

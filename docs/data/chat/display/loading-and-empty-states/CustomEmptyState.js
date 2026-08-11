@@ -11,7 +11,7 @@ import {
   ChatComposer,
 } from '@mui/x-chat';
 import { ChatProvider, useChat } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 const emptyConversation = {
   id: 'custom-empty-conv',

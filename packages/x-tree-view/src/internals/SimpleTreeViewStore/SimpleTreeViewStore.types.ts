@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { MinimalTreeViewParameters, MinimalTreeViewState } from '../MinimalTreeViewStore';
+import type * as React from 'react';
+import type { MinimalTreeViewParameters, MinimalTreeViewState } from '../MinimalTreeViewStore';
 
 export interface SimpleTreeViewState<
   Multiple extends boolean | undefined,

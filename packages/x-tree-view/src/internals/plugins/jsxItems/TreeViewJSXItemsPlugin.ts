@@ -1,5 +1,5 @@
-import { TreeViewItemId } from '../../../models';
-import { TreeViewItemMeta } from '../../models';
+import type { TreeViewItemId } from '../../../models';
+import type { TreeViewItemMeta } from '../../models';
 import type { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
 import { buildSiblingIndexes, itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from '../items';
 import { selectionSelectors } from '../selection/selectors';

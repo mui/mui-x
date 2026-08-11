@@ -22,11 +22,7 @@ type AutoPlacement = 'auto' | 'auto-start' | 'auto-end';
 export type Placement = AutoPlacement | BasePlacement | VariationPlacement;
 
 type ClickAwayMouseEventHandler =
-  | 'onClick'
-  | 'onMouseDown'
-  | 'onMouseUp'
-  | 'onPointerDown'
-  | 'onPointerUp';
+  'onClick' | 'onMouseDown' | 'onMouseUp' | 'onPointerDown' | 'onPointerUp';
 type ClickAwayTouchEventHandler = 'onTouchStart' | 'onTouchEnd';
 
 export type ChartBasePopperProps = ChartBaseCommonProps & {

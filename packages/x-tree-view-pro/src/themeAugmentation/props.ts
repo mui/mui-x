@@ -1,4 +1,4 @@
-import { RichTreeViewProProps } from '../RichTreeViewPro';
+import type { RichTreeViewProProps } from '../RichTreeViewPro';
 
 export interface TreeViewProComponentsPropsList {
   MuiRichTreeViewPro: RichTreeViewProProps<any, any>;

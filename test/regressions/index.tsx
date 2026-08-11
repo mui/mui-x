@@ -111,7 +111,8 @@ function App() {
         const chartTestNeedsToAdvanceTime = (test: Test) =>
           test.path.includes('Interaction') ||
           test.path.includes('PrintChart') ||
-          test.path.includes('ExportChartAsImage');
+          test.path.includes('ExportChartAsImage') ||
+          test.path.includes('ImageExportAutoSize');
 
         return {
           path: suite,

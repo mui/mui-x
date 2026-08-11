@@ -16,9 +16,8 @@ import {
 } from 'docs/src/modules/components/chat-playground/controls';
 import { users } from 'docs/src/modules/components/chat-playground/data';
 
-// The docs compile every demo in one TS project, so the `ChatToolDefinitionMap`
-// augmentation from the type-augmentation example is global. Register the `write`
-// tool here so its typed input/output line up with that registry.
+// Docs-build-specific: every demo compiles in one TS project, so this augmentation
+// registers the `write` tool's typed input/output on the shared `ChatToolDefinitionMap`.
 
 const conversation = {
   id: 'tool-expansion-playground',
@@ -61,54 +60,42 @@ const SEED_MESSAGE = {
   parts: [{ type: 'tool', toolInvocation: buildInvocation('input-streaming') }],
 };
 
+// Each preset is a single `defaultExpanded` value for the `write` tool — the value
+// passed to the component below. The displayed snippet is derived from it (see
+// `formatDefaultExpanded`), so there is no separate code string to keep in sync.
 const PRESETS = {
-  builtin: {
-    label: 'Built-in default',
-    code: '// no defaultExpanded — the package default is used',
-    defaultExpanded: undefined,
+  'Built-in default': undefined,
+  'Expand while running, collapse when done': {
+    write: (ownerState) =>
+      ownerState.section
+        ? undefined
+        : ownerState.state === 'input-streaming' ||
+          ownerState.state === 'input-available',
   },
-  collapseWhenDone: {
-    label: 'Expand while running, collapse when done',
-    code: `defaultExpanded={{
-  write: (ownerState) =>
-    ownerState.section
-      ? undefined
-      : ownerState.state === 'input-streaming' ||
-        ownerState.state === 'input-available',
-}}`,
-    defaultExpanded: {
-      write: (ownerState) =>
-        ownerState.section
-          ? undefined
-          : ownerState.state === 'input-streaming' ||
-            ownerState.state === 'input-available',
-    },
+  'Open while the message streams': {
+    write: (ownerState) =>
+      ownerState.section ? undefined : ownerState.isMessageStreaming,
   },
-  openWhileStreaming: {
-    label: 'Open while the message streams',
-    code: `defaultExpanded={{
-  write: (ownerState) =>
-    ownerState.section ? undefined : ownerState.isMessageStreaming,
-}}`,
-    defaultExpanded: {
-      write: (ownerState) =>
-        ownerState.section ? undefined : ownerState.isMessageStreaming,
-    },
-  },
-  alwaysOpen: {
-    label: 'Always expanded',
-    code: `defaultExpanded={{ write: true }}`,
-    defaultExpanded: { write: true },
-  },
-  collapsed: {
-    label: 'Collapsed',
-    code: `defaultExpanded={{ write: false }}`,
-    defaultExpanded: { write: false },
-  },
+  'Always expanded': { write: true },
+  Collapsed: { write: false },
 };
 
+// Renders the selected preset as the JSX a consumer would write, derived from the
+// live `defaultExpanded` value (resolvers via `Function.prototype.toString`).
+function formatDefaultExpanded(value) {
+  if (!value) {
+    return '// no defaultExpanded — the package default is used';
+  }
+  const entries = Object.entries(value).map(([tool, expand]) => {
+    const rendered =
+      typeof expand === 'function' ? expand.toString() : String(expand);
+    return `  ${tool}: ${rendered},`;
+  });
+  return `defaultExpanded={{\n${entries.join('\n')}\n}}`;
+}
+
 const DEFAULTS = {
-  preset: 'collapseWhenDone',
+  preset: 'Expand while running, collapse when done',
   state: 'input-available',
   streaming: true,
 };
@@ -137,7 +124,7 @@ export default function ToolCardExpansionPlayground() {
     setStreaming(DEFAULTS.streaming);
   }, []);
 
-  const { defaultExpanded, code } = PRESETS[preset];
+  const defaultExpanded = PRESETS[preset];
 
   return (
     <PlaygroundCard
@@ -152,9 +139,8 @@ export default function ToolCardExpansionPlayground() {
           <SelectControl
             label="policy preset"
             value={preset}
-            options={Object.keys(PRESETS).map((key) => ({
-              value: key,
-              label: PRESETS[key].label,
+            options={Object.keys(PRESETS).map((value) => ({
+              value,
             }))}
             onChange={setPreset}
             helperText="Each preset maps to a defaultExpanded entry for the write tool."
@@ -172,7 +158,7 @@ export default function ToolCardExpansionPlayground() {
                 theme.typography.fontFamilyCode ?? 'Menlo, monospace',
             }}
           >
-            {code}
+            {formatDefaultExpanded(defaultExpanded)}
           </Box>
           <DividerLabel>fixture (tool lifecycle)</DividerLabel>
           <SelectControl

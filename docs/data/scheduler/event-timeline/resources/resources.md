@@ -8,13 +8,13 @@ components: EventTimelinePremium
 
 # Event Timeline - Resources
 
-<p class="description">Organize events by assigning them to resources in the Event Timeline.</p>
+<p class="description">Define resources to group events, with support for nested hierarchies, custom colors, and visibility controls.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Define resources
 
-Use the `resources` prop to define the list of resources the events can be associated to and the `resource` property on the event model to link an event to its resource:
+Use the `resources` prop to define available resources, and the `resource` property on the event model to link an event to its resource:
 
 ```tsx
 const event = [
@@ -57,12 +57,41 @@ const resources = [
 
 {{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Default collapsed resources
+
+Parent resources can be collapsed to hide their descendants.
+Use the `defaultCollapsedResources` prop to initialize the collapsed resources.
+A resource is expanded unless it is present in the object with a `true` value.
+
+{{"demo": "DefaultCollapsedResources.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Controlled collapsed resources
+
+You can also control the collapsed resources using `collapsedResources` and `onCollapsedResourcesChange` props:
+
+```tsx
+const [collapsedResources, setCollapsedResources] = React.useState<
+  Record<string, boolean>
+>({});
+
+return (
+  <EventTimelinePremium
+    collapsedResources={collapsedResources}
+    onCollapsedResourcesChange={setCollapsedResources}
+  />
+);
+```
+
 ## Visible resources
 
+### Default visible resources
+
 Use the `defaultVisibleResources` prop to initialize the visible resources.
-A resource is visible if not in the object or if set to `true`.
+A resource is visible if it's absent from the object or set to `true`.
 
 {{"demo": "DefaultVisibleResources.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Controlled visible resources
 
 You can also control the visible resources using `visibleResources` and `onVisibleResourcesChange` props:
 
@@ -101,7 +130,7 @@ The available color palettes are shown below:
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-Event colors can also be defined on the event or at the component levels.
+Event colors can also be defined on the event or at the component level.
 The effective color resolves in the following order:
 
 1. The `color` property assigned to the event
@@ -130,7 +159,7 @@ The effective color resolves in the following order:
 
 ### Drag interactions
 
-Use the `areEventsDraggable` property to prevent dragging a resource's events to another point in time:
+Use the `areEventsDraggable` property to prevent dragging a resource's events to a different time slot:
 
 ```ts
 const resource = {
@@ -175,7 +204,7 @@ When both are provided, `resourceColumnLabel` takes priority over `localeText.ti
 
 ## Store data in custom properties
 
-Use the `resourceModelStructure` prop to define how to read properties of the resource model when they don't match the model expected by the components:
+Use the `resourceModelStructure` prop to define how to read resource properties when your data doesn't match the expected model:
 
 ```tsx
 const resourceModelStructure = {

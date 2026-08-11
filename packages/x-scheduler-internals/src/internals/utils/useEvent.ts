@@ -1,6 +1,6 @@
 'use client';
 import { useStore } from '@base-ui/utils/store';
-import { SchedulerProcessedDate } from '../../models';
+import type { SchedulerProcessedDate } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context/useSchedulerStoreContext';
 import { schedulerOccurrenceSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 

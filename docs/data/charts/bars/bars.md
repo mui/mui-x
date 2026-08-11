@@ -316,6 +316,12 @@ The WebGL renderer has the same trade-offs as the batch renderer, plus a few add
 
 {{"demo": "WebGLBars.js"}}
 
+### Sampling [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+Set the `sampling` prop on `BarChartPro` to draw only as many bars as the view can resolve when
+zoomed out. See [Charts—Performance](/x/react-charts/performance/#sampling) for details and a live
+demo.
+
 ## Composition
 
 Use `ChartDataProvider` to provide `series`, `xAxis`, and `yAxis` props for composition.

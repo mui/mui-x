@@ -1,5 +1,5 @@
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import {
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type {
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
   RecurringEventScope,

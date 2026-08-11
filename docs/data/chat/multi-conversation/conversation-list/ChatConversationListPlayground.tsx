@@ -133,7 +133,7 @@ export default function ChatConversationListPlayground() {
     <PlaygroundCard
       title="ChatConversationList"
       description="Inbox sidebar — avatar, title, preview, timestamp and unread badge."
-      previewMinHeight={340}
+      previewMinHeight={360}
       onReset={handleReset}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}
@@ -174,11 +174,11 @@ export default function ChatConversationListPlayground() {
           <Box
             sx={{
               width: '100%',
-              height: 340,
+              height: 360,
               overflow: 'hidden',
             }}
           >
-            <ChatConversationList variant={variant} sx={listSx as any} />
+            <ChatConversationList variant={variant} sx={listSx} />
           </Box>
         </ScopedChat>
       }

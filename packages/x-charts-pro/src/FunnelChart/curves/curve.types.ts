@@ -43,12 +43,7 @@ export type CurveOptions = {
 };
 
 export type FunnelCurveType =
-  | 'linear'
-  | 'linear-sharp'
-  | 'step'
-  | 'bump'
-  | 'pyramid'
-  | 'step-pyramid';
+  'linear' | 'linear-sharp' | 'step' | 'bump' | 'pyramid' | 'step-pyramid';
 
 export type FunnelPointShape = 'square' | 'sharp';
 

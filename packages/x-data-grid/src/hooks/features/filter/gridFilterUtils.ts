@@ -23,6 +23,65 @@ import {
   gridColumnVisibilityModelSelector,
 } from '../columns';
 
+/**
+ * Pure helpers computing a new filter model from an existing one.
+ * Shared by the imperative `apiRef` methods (`useGridFilter`) and the controlled
+ * filter panel (`GridFilterPanelBase`) so both paths produce identical models.
+ * Each helper returns the same model reference when nothing changes, so callers
+ * relying on referential equality can skip no-op updates.
+ */
+
+export const upsertFilterItemInModel = (
+  model: GridFilterModel,
+  item: GridFilterItem,
+): GridFilterModel => {
+  const items = [...model.items];
+  const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
+  if (itemIndex === -1) {
+    items.push(item);
+  } else {
+    items[itemIndex] = item;
+  }
+  return { ...model, items };
+};
+
+export const upsertFilterItemsInModel = (
+  model: GridFilterModel,
+  itemsToUpsert: GridFilterItem[],
+): GridFilterModel => {
+  const items = [...model.items];
+  itemsToUpsert.forEach((item) => {
+    const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
+    if (itemIndex === -1) {
+      items.push(item);
+    } else {
+      items[itemIndex] = item;
+    }
+  });
+  return { ...model, items };
+};
+
+export const deleteFilterItemFromModel = (
+  model: GridFilterModel,
+  itemToDelete: GridFilterItem,
+): GridFilterModel => {
+  const items = model.items.filter((item) => item.id !== itemToDelete.id);
+  if (items.length === model.items.length) {
+    return model;
+  }
+  return { ...model, items };
+};
+
+export const setFilterLogicOperatorInModel = (
+  model: GridFilterModel,
+  logicOperator: GridLogicOperator,
+): GridFilterModel => {
+  if (model.logicOperator === logicOperator) {
+    return model;
+  }
+  return { ...model, logicOperator };
+};
+
 let hasEval: boolean;
 
 function getHasEval() {
