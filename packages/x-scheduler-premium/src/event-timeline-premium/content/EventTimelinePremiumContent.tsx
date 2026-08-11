@@ -193,15 +193,12 @@ const EventTimelinePremiumViewport = styled('div', {
 const EventTimelinePremiumBodyRow = styled(TimelineGrid.BodyRow, {
   name: 'MuiEventTimeline',
   slot: 'BodyRow',
-})(({ theme }) => ({
+})({
   display: 'flex',
   width: 'var(--row-width)',
   position: 'relative',
   breakInside: 'avoid',
-  // The events cell stops at the tick width, so the divider lives on the row to keep
-  // crossing the empty area left over when the ticks do not fill the viewport.
-  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-}));
+});
 
 const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   name: 'MuiEventTimeline',
@@ -221,6 +218,9 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   padding: theme.spacing(2, 0),
   alignContent: 'start',
   zIndex: 1,
+  // Counted by `getRowHeightForLaneCount`, so it has to stay on this element: moving it
+  // to the row would shrink the cell's content box and shift every event by a pixel.
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   '&:focus-visible': {
     outline: 'none',
     backgroundColor: getCellFocusBackground(theme),
