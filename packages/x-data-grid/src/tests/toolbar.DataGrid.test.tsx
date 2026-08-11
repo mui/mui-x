@@ -1,6 +1,8 @@
+import * as React from 'react';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
-import { DataGrid, Toolbar, ToolbarButton } from '@mui/x-data-grid';
+import Portal from '@mui/material/Portal';
+import { DataGrid, GridPortalWrapper, Toolbar, ToolbarButton, ToolbarRoot } from '@mui/x-data-grid';
 import type { GridColumnsManagementProps } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -410,6 +412,61 @@ describe('<DataGrid /> - Toolbar', () => {
       // another item without moving focus
       expect(screen.getByRole('button', { name: 'Item 3' })).to.have.attribute('tabindex', '0');
     });
+  });
+
+  describe('ToolbarRoot', () => {
+    it('should render a div with the toolbar styles outside of the Data Grid', () => {
+      render(<ToolbarRoot data-testid="drawer-header">Header</ToolbarRoot>);
+
+      const element = screen.getByTestId('drawer-header');
+      expect(element.tagName).to.equal('DIV');
+      expect(element).toHaveComputedStyle({
+        display: 'flex',
+        alignItems: 'center',
+        minHeight: '52px',
+      });
+    });
+
+    it('should apply the same styles as the element rendered by Toolbar', () => {
+      render(
+        <React.Fragment>
+          <ToolbarRoot data-testid="drawer-header" />
+          <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />
+        </React.Fragment>,
+      );
+
+      const toolbarClasses = new Set(screen.getByRole('toolbar').classList);
+      const rootClasses = Array.from(screen.getByTestId('drawer-header').classList);
+      // The styled component class is shared between both elements.
+      expect(rootClasses.some((className) => toolbarClasses.has(className))).to.equal(true);
+    });
+
+    // The CSS variables are resolved by the browser, jsdom keeps them unresolved.
+    it.skipIf(isJSDOM)(
+      'should resolve the Data Grid CSS variables when rendered in a portal wrapped in GridPortalWrapper',
+      () => {
+        function PortaledHeader() {
+          return (
+            <Toolbar>
+              <Portal>
+                <GridPortalWrapper>
+                  <ToolbarRoot data-testid="drawer-header" />
+                </GridPortalWrapper>
+              </Portal>
+            </Toolbar>
+          );
+        }
+
+        render(<DataGrid {...baselineProps} slots={{ toolbar: PortaledHeader }} showToolbar />);
+
+        const toolbarStyle = getComputedStyle(screen.getByRole('toolbar'));
+        const rootStyle = getComputedStyle(screen.getByTestId('drawer-header'));
+
+        expect(rootStyle.padding).to.equal(toolbarStyle.padding);
+        expect(rootStyle.borderBottomColor).to.equal(toolbarStyle.borderBottomColor);
+        expect(rootStyle.borderBottomWidth).to.equal(toolbarStyle.borderBottomWidth);
+      },
+    );
   });
 
   describe('column selector', () => {

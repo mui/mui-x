@@ -32,6 +32,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+/**
+ * The styled `<div />` element rendered by the `<Toolbar />` component.
+ * Use it to apply the toolbar styles to other elements.
+ * It relies on the Data Grid CSS variables, so it must be rendered inside a Data Grid,
+ * or inside a `<GridPortalWrapper />` when rendered in a portal.
+ */
 const ToolbarRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Toolbar',
@@ -87,4 +93,4 @@ Toolbar.propTypes /* remove-proptypes */ = {
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 
-export { Toolbar };
+export { Toolbar, ToolbarRoot };
