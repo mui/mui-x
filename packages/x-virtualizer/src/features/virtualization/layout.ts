@@ -310,9 +310,10 @@ export class LayoutList extends Layout<ListElements> {
  * anchor is held while scrolling and re-quantized once it settles, so the unavoidable
  * whole-window raster lands with nothing moving to expose it (see `anchor.ts`).
  *
- * Vertical only: the counter-translation is an ancestor of the sticky pinned cells, and
- * sticky offsets resolve before transforms, so a horizontal translate would displace
- * their clamped position.
+ * Vertical axis only: column-direction updates still move every cell within the layer,
+ * so they re-rasterize the whole window. A horizontal counter-translation would fix
+ * that, but it sits above the sticky pinned cells, and sticky resolves in layout
+ * coordinates before transforms apply — it would drag them off their clamped position.
  *
  * Avoid `will-change: transform` or a background on this box: neither reduces
  * invalidation here, and both regress text antialiasing and tile memory (a background
