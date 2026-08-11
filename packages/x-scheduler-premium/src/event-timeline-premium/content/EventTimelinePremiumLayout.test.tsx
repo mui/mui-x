@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, waitFor } from '@mui/internal-test-utils';
+import { act, screen, waitFor } from '@mui/internal-test-utils';
 import {
   EventTimelinePremium,
   eventTimelinePremiumClasses as classes,
@@ -149,6 +149,60 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
       const eventRect = event.getBoundingClientRect();
       expect(eventRect.left).to.be.closeTo(dayRect.left, 1);
       expect(eventRect.width).to.be.closeTo(dayRect.width, 1);
+    });
+  });
+
+  describe('grid with a vertical scrollbar', () => {
+    // `--row-width` reserves the scrollbar width on top of the columns. The events layer
+    // must still measure exactly the ticks, or every event drifts right by a fraction of
+    // the scrollbar, growing along the axis.
+    it('should align an event with its own day when the rows reserve a scrollbar', async () => {
+      const resources = Array.from({ length: 20 }, (_, i) =>
+        ResourceBuilder.new().id(`r${i}`).title(`R${i}`).build(),
+      );
+      // Last visible day (Jul 6), filling the second half of that day's window.
+      const lateEvent = EventBuilder.new()
+        .title('Late')
+        .resource(resources[0])
+        .span('2025-07-06T14:00:00', '2025-07-06T20:00:00')
+        .build();
+
+      render(
+        <div style={{ width: 1200, height: 300 }}>
+          <EventTimelinePremium
+            resources={resources}
+            events={[lateEvent]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            preset="dayAndHour"
+            presets={['dayAndHour']}
+            presetConfig={{ dayAndHour: { startTime: 8, endTime: 20 } }}
+          />
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(getTitleColumnWidth()).to.be.greaterThan(0);
+      });
+
+      // Scroll to the end so both the event and its day header are mounted.
+      const scroller = screen.getByRole('grid');
+      act(() => {
+        scroller.scrollLeft = scroller.scrollWidth;
+      });
+
+      let event: HTMLElement | null = null;
+      await waitFor(() => {
+        event = document.querySelector<HTMLElement>(`.${classes.event}`);
+        expect(event).not.to.equal(null);
+      });
+
+      const dayCells = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="day"]`,
+      );
+      const lastDay = dayCells[dayCells.length - 1].getBoundingClientRect();
+      const eventRect = event!.getBoundingClientRect();
+      // The event ends on the window edge, so it ends where its day cell does.
+      expect(eventRect.right).to.be.closeTo(lastDay.right, 1);
     });
   });
 
