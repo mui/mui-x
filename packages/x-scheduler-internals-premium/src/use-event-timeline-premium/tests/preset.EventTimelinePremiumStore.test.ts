@@ -32,9 +32,9 @@ describe('Preset - EventTimelinePremiumStore', () => {
       }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` received an invalid hour range']);
     });
 
-    it('should warn when a presetConfig key has no matching entry in presets', () => {
-      // `presets` can legitimately change at runtime while `presetConfig` stays
-      // static, so a dead key warns instead of throwing like unknown `presets` do.
+    it('should not warn when a known preset is configured but currently not in presets', () => {
+      // A wrapper can configure `dayAndHour` once while a screen or a responsive mode
+      // narrows `presets`. The Event Calendar accepts `viewConfig` for absent views too.
       expect(() => {
         // eslint-disable-next-line no-new
         new EventTimelinePremiumStore(
@@ -46,7 +46,36 @@ describe('Preset - EventTimelinePremiumStore', () => {
           },
           adapter,
         );
-      }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` has no matching entry']);
+      }).not.toWarnDev();
+    });
+
+    it('should still validate the hour range of a preset that is not in presets', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore(
+          {
+            ...DEFAULT_PARAMS,
+            defaultPreset: 'dayAndMonth',
+            presets: ['dayAndMonth', 'year'] as EventTimelinePremiumPreset[],
+            presetConfig: { dayAndHour: { startTime: 20, endTime: 8 } },
+          },
+          adapter,
+        );
+      }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` received an invalid hour range']);
+    });
+
+    it('should warn when a presetConfig key is not a known preset', () => {
+      // Only reachable from JavaScript: the type has `dayAndHour` as its single key.
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore(
+          {
+            ...DEFAULT_PARAMS,
+            presetConfig: { dayAndHours: { startTime: 8, endTime: 20 } } as any,
+          },
+          adapter,
+        );
+      }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHours` is not a known preset']);
     });
   });
 

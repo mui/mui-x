@@ -78,23 +78,21 @@ function sortPresetsByZoomOrder(
 /**
  * Validates every entry of `presetConfig`, not just the active preset's: the selector
  * only resolves the rendered preset, so a typo in another preset's range would stay
- * silent until an end user switches to it. A key with no matching entry in `presets`
- * warns instead of throwing like unknown `presets` entries do: `presets` can
- * legitimately change at runtime while `presetConfig` stays static.
+ * silent until an end user switches to it. Configuring a known preset that `presets`
+ * currently leaves out is not reported: a wrapper can configure it once while a screen
+ * or a responsive mode narrows `presets`, the same way the Event Calendar accepts
+ * `viewConfig` entries for views it does not render.
  */
-function validatePresetConfig(
-  presetConfig: EventTimelinePremiumPresetConfig,
-  presets: readonly EventTimelinePremiumPreset[],
-) {
+function validatePresetConfig(presetConfig: EventTimelinePremiumPresetConfig) {
   if (process.env.NODE_ENV !== 'production') {
     for (const preset of Object.keys(presetConfig) as (keyof EventTimelinePremiumPresetConfig)[]) {
       const hourConfig = presetConfig[preset];
       if (hourConfig) {
-        if (!presets.includes(preset)) {
+        if (!PRESET_ZOOM_ORDER.includes(preset)) {
           warnOnce([
-            `MUI X Scheduler: \`presetConfig.${preset}\` has no matching entry in the \`presets\` prop.`,
-            'The configuration is ignored because the preset can never become active.',
-            `Add "${preset}" to \`presets\`, or remove the entry from \`presetConfig\`.`,
+            `MUI X Scheduler: \`presetConfig.${preset}\` is not a known preset, so the configuration is ignored.`,
+            `Use one of the built-in presets (${PRESET_ZOOM_ORDER.join(', ')}), or remove the entry from \`presetConfig\`.`,
+            'See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.',
           ]);
         }
         getDisplayedHourRange(hourConfig.startTime, hourConfig.endTime, `presetConfig.${preset}`);
@@ -108,7 +106,7 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 ) => {
   const presets = sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS);
   if (parameters.presetConfig) {
-    validatePresetConfig(parameters.presetConfig, presets);
+    validatePresetConfig(parameters.presetConfig);
   }
   return {
     presets,
