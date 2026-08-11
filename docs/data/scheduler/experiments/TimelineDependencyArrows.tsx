@@ -12,7 +12,7 @@ import {
 import { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
-  EventDialogStyledContext,
+  EventEditingStyledContext,
   SharedComponentsStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
@@ -157,11 +157,11 @@ export default function TimelineDependencyArrows() {
       </style>
       <SchedulerStoreContext.Provider value={storeContextValue}>
         <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-          <EventDialogStyledContext.Provider value={styledContextValue}>
+          <EventEditingStyledContext.Provider value={styledContextValue}>
             <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
               <EventTimelinePremiumContent />
             </SharedComponentsStyledContext.Provider>
-          </EventDialogStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
         </EventTimelinePremiumStyledContext.Provider>
       </SchedulerStoreContext.Provider>
     </div>

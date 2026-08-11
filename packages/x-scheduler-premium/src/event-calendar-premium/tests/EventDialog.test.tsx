@@ -25,7 +25,7 @@ import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import {
   EventCalendarProvider,
   EventDialogContent,
-  EventDialogOptionalRenderersContext,
+  EventEditingOptionalRenderersContext,
   useEventDialogFormField,
 } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
@@ -38,9 +38,9 @@ import { RecurringScopeDialog } from '../../internals/components/recurring-scope
  */
 function TestEventDialogContent(props: React.ComponentProps<typeof EventDialogContent>) {
   return (
-    <EventDialogOptionalRenderersContext.Provider value={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+    <EventEditingOptionalRenderersContext.Provider value={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
       <EventDialogContent {...props} />
-    </EventDialogOptionalRenderersContext.Provider>
+    </EventEditingOptionalRenderersContext.Provider>
   );
 }
 
@@ -72,7 +72,6 @@ describe('<EventDialogContent open />', () => {
   const defaultProps = {
     anchor,
     container: document.body,
-    anchorRef: { current: anchor },
     occurrence: EventBuilder.new()
       .id(DEFAULT_EVENT.id)
       .title(DEFAULT_EVENT.title)
@@ -238,48 +237,75 @@ describe('<EventDialogContent open />', () => {
     expect(onEventsChange.firstCall.firstArg[0].color).to.not.equal('pink');
   });
 
-  it('should show error if start date is after end date', async () => {
-    const { user } = render(
-      <EventCalendarProvider
-        events={[DEFAULT_EVENT]}
-        resources={resources}
-        storeClass={PremiumTestStore}
-      >
-        <TestEventDialogContent open {...defaultProps} />
-      </EventCalendarProvider>,
-    );
-    await user.clear(screen.getByLabelText(/start date/i));
-    await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
-    await user.clear(screen.getByLabelText(/end date/i));
-    await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
-    await user.click(screen.getByRole('button', { name: /save/i }));
+  describe('range validation', () => {
+    function renderDialog() {
+      const onEventsChange = spy();
+      const { user } = render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          onEventsChange={onEventsChange}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
 
-    expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
-      /start.*before.*end/i,
-    );
-  });
+      return { user, onEventsChange };
+    }
 
-  it('should block submit if start time is after end time on the same day', async () => {
-    const onEventsChange = spy();
-    const { user } = render(
-      <EventCalendarProvider
-        events={[DEFAULT_EVENT]}
-        onEventsChange={onEventsChange}
-        resources={resources}
-        storeClass={PremiumTestStore}
-      >
-        <TestEventDialogContent open {...defaultProps} />
-      </EventCalendarProvider>,
-    );
-    await user.clear(screen.getByLabelText(/start time/i));
-    await user.type(screen.getByLabelText(/start time/i), '10:00');
-    await user.clear(screen.getByLabelText(/end time/i));
-    await user.type(screen.getByLabelText(/end time/i), '09:00');
-    await user.click(screen.getByRole('button', { name: /save/i }));
+    it('should show error on the End date field if end date is before start date', async () => {
+      const { user } = renderDialog();
+      await user.clear(screen.getByLabelText(/start date/i));
+      await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
+      await user.clear(screen.getByLabelText(/end date/i));
+      await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
-    // TODO(#23285): the Start time field does not surface this error yet,
-    // so the submit is blocked with no visible message.
-    expect(onEventsChange.called).to.equal(false);
+      expect(screen.getDescriptionOf(screen.getByLabelText(/end date/i)).textContent).to.match(
+        /end date.*before.*start date/i,
+      );
+    });
+
+    it('should not show error on the End date field if end date is equal to start date', async () => {
+      const { user, onEventsChange } = renderDialog();
+      await user.clear(screen.getByLabelText(/start date/i));
+      await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
+      await user.clear(screen.getByLabelText(/end date/i));
+      await user.type(screen.getByLabelText(/end date/i), '2025-05-27');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(screen.queryDescriptionOf(screen.getByLabelText(/end date/i))).to.equal(null);
+      expect(onEventsChange.calledOnce).to.equal(true);
+    });
+
+    it('should show error on the End time field and block submit if end time is before start time on the same day', async () => {
+      const { user, onEventsChange } = renderDialog();
+      await user.clear(screen.getByLabelText(/start time/i));
+      await user.type(screen.getByLabelText(/start time/i), '10:00');
+      await user.clear(screen.getByLabelText(/end time/i));
+      await user.type(screen.getByLabelText(/end time/i), '09:00');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(onEventsChange.called).to.equal(false);
+      expect(screen.getDescriptionOf(screen.getByLabelText(/end time/i)).textContent).to.match(
+        /end time.*after.*start time/i,
+      );
+    });
+
+    it('should show error on the End time field and block submit if end time is equal to start time on the same day', async () => {
+      const { user, onEventsChange } = renderDialog();
+      await user.clear(screen.getByLabelText(/start time/i));
+      await user.type(screen.getByLabelText(/start time/i), '10:00');
+      await user.clear(screen.getByLabelText(/end time/i));
+      await user.type(screen.getByLabelText(/end time/i), '10:00');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(onEventsChange.called).to.equal(false);
+      expect(screen.getDescriptionOf(screen.getByLabelText(/end time/i)).textContent).to.match(
+        /end time.*after.*start time/i,
+      );
+    });
   });
 
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
@@ -716,8 +742,8 @@ describe('<EventDialogContent open />', () => {
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(onEventsChange.called).to.equal(false);
-      expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
-        /start.*before.*end/i,
+      expect(screen.getDescriptionOf(screen.getByLabelText(/end date/i)).textContent).to.match(
+        /end date.*before.*start date/i,
       );
       expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
 
@@ -725,7 +751,7 @@ describe('<EventDialogContent open />', () => {
       await user.clear(screen.getByLabelText(/end date/i));
       await user.type(screen.getByLabelText(/end date/i), '2025-05-28');
 
-      expect(screen.queryByText(/start.*before.*end/i)).to.equal(null);
+      expect(screen.queryByText(/end date.*before.*start date/i)).to.equal(null);
       expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
     });
 
@@ -2478,7 +2504,7 @@ describe('<EventDialogContent open />', () => {
                 updateEventSpy = sp;
               }}
             />
-            <EventDialogOptionalRenderersContext.Provider
+            <EventEditingOptionalRenderersContext.Provider
               value={{
                 ...PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS,
                 recurrenceTab: FormProbeInjector,
@@ -2489,7 +2515,7 @@ describe('<EventDialogContent open />', () => {
                 {...defaultProps}
                 occurrence={nonRecurringEventWithCustomDataOccurrence}
               />
-            </EventDialogOptionalRenderersContext.Provider>
+            </EventEditingOptionalRenderersContext.Provider>
           </EventCalendarProvider>,
         );
 
@@ -2668,59 +2694,57 @@ describe('<EventDialogContent open />', () => {
     });
   });
 
-  describe('editedOccurrenceKey state', () => {
-    it('should set editedOccurrenceKey on the store when the dialog opens', () => {
-      const handleEditedOccurrenceKeyChange = spy();
+  describe('editingOccurrence state', () => {
+    it('should leave editingOccurrence null when the content is rendered directly', () => {
+      const handleEditingChange = spy();
 
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
           <StateWatcher
             Context={SchedulerStoreContext}
-            selector={(s) => s.editedOccurrenceKey}
-            onValueChange={handleEditedOccurrenceKeyChange}
+            selector={(s) => s.editingOccurrence?.occurrence.id ?? null}
+            onValueChange={handleEditingChange}
           />
           <TestEventDialogContent open {...defaultProps} />
         </EventCalendarProvider>,
       );
 
-      // The EventDialogProvider's onOpen sets editedOccurrenceKey.
-      // Here we render EventDialogContent directly (without the trigger flow),
-      // so we verify the initial state is null.
-      expect(handleEditedOccurrenceKeyChange.lastCall?.firstArg).to.equal(null);
+      // `onOpen` sets editingOccurrence; rendering content directly (no trigger flow) leaves it null.
+      expect(handleEditingChange.lastCall?.firstArg).to.equal(null);
     });
 
-    it('should expose the active occurrence key on the store', async () => {
-      const handleEditedOccurrenceKeyChange = spy();
-      const occurrenceKey = String(DEFAULT_EVENT.id);
+    it('should reflect the edited occurrence id while an event is being edited', async () => {
+      const handleEditingChange = spy();
 
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
-            onMount={(store) => store.setEditedOccurrenceKey(occurrenceKey)}
+            onMount={(store) => store.startEditing(defaultProps.occurrence)}
           />
           <StateWatcher
             Context={SchedulerStoreContext}
-            selector={(s) => s.editedOccurrenceKey}
-            onValueChange={handleEditedOccurrenceKeyChange}
+            selector={(s) => s.editingOccurrence?.occurrence.id ?? null}
+            onValueChange={handleEditingChange}
           />
           <TestEventDialogContent open {...defaultProps} onClose={() => {}} />
         </EventCalendarProvider>,
       );
 
-      expect(handleEditedOccurrenceKeyChange.lastCall?.firstArg).to.equal(occurrenceKey);
+      // After `startEditing`, it should be the event ID.
+      expect(handleEditingChange.lastCall?.firstArg).to.equal(DEFAULT_EVENT.id);
     });
 
-    it('should call setEditedOccurrenceKey via EventDialogProvider onOpen callback', () => {
-      let setEditedOccurrenceKeySpy;
+    it('should expose startEditing on the store', () => {
+      let startEditingSpy;
 
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
           <StoreSpy
             Context={SchedulerStoreContext}
-            method="setEditedOccurrenceKey"
+            method="startEditing"
             onSpyReady={(sp) => {
-              setEditedOccurrenceKeySpy = sp;
+              startEditingSpy = sp;
             }}
           />
           <TestEventDialogContent open {...defaultProps} />
@@ -2728,7 +2752,7 @@ describe('<EventDialogContent open />', () => {
       );
 
       // Verify the method exists on the store (basic sanity check)
-      expect(setEditedOccurrenceKeySpy).not.to.equal(undefined);
+      expect(startEditingSpy).not.to.equal(undefined);
     });
   });
 });

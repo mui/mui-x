@@ -15,12 +15,14 @@ describe('<CompactWeekView />', () => {
   function renderWithProviders(
     ui: React.ReactElement,
     events: any[] = [],
+    providerProps: Partial<React.ComponentProps<typeof EventCalendarProvider>> = {},
   ): ReturnType<typeof render> {
     return render(
       <EventCalendarProvider
         events={events}
         resources={[]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        {...providerProps}
       >
         <EventDialogProvider>{ui}</EventDialogProvider>
       </EventCalendarProvider>,
@@ -29,6 +31,10 @@ describe('<CompactWeekView />', () => {
 
   function getDayTimeGrid() {
     return document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridContainer}`)!;
+  }
+
+  function getTimeAxisCells() {
+    return document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridTimeAxisCell}`);
   }
 
   it('should render 7 day columns', () => {
@@ -52,5 +58,29 @@ describe('<CompactWeekView />', () => {
     expect(headerCells[0].getAttribute('aria-label')).to.match(
       new RegExp(`${expectedFirstDayOfMonth}$`),
     );
+  });
+
+  describe('viewConfig (startTime / endTime)', () => {
+    it('should render the 24 hour rows by default', () => {
+      renderWithProviders(<CompactWeekView />);
+
+      expect(getTimeAxisCells()).to.have.length(24);
+    });
+
+    it('should render only the hour rows configured under the `week` key', () => {
+      renderWithProviders(<CompactWeekView />, [], {
+        viewConfig: { week: { startTime: 8, endTime: 20 } },
+      });
+
+      expect(getTimeAxisCells()).to.have.length(12);
+    });
+
+    it('should ignore the `day` key', () => {
+      renderWithProviders(<CompactWeekView />, [], {
+        viewConfig: { day: { startTime: 8, endTime: 20 } },
+      });
+
+      expect(getTimeAxisCells()).to.have.length(24);
+    });
   });
 });
