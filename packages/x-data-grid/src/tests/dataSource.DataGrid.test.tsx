@@ -1042,5 +1042,82 @@ describe('<DataGrid /> - Data source', () => {
       expect(editRowSpy.callCount).to.equal(1);
       expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('-edited');
     });
+
+    it('should store the row verbatim when `updateRow()` returns a replace update', async () => {
+      class CommodityRow {
+        id: number;
+
+        commodity: string;
+
+        #revision: number;
+
+        constructor(id: number, commodity: string, revision = 0) {
+          this.id = id;
+          this.commodity = commodity;
+          this.#revision = revision;
+        }
+
+        withCommodity(commodity: string) {
+          return new CommodityRow(this.id, commodity, this.#revision + 1);
+        }
+
+        get revision() {
+          return this.#revision;
+        }
+      }
+
+      const initialRows = [new CommodityRow(0, 'Nickel'), new CommodityRow(1, 'Cobalt')];
+      let replacement: CommodityRow | undefined;
+      const dataSource: GridDataSource = {
+        getRows: async () => ({ rows: initialRows, rowCount: initialRows.length }),
+        updateRow: async (params) => {
+          replacement = (params.previousRow as CommodityRow).withCommodity(
+            params.updatedRow.commodity,
+          );
+          return { _action: 'replace', row: replacement };
+        },
+      };
+
+      function ReplaceTestCase() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              apiRef={apiRef}
+              columns={[{ field: 'commodity', editable: true }]}
+              dataSource={dataSource}
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+              }}
+              pagination
+              pageSizeOptions={pageSizeOptions}
+              disableVirtualization
+            />
+          </div>
+        );
+      }
+
+      render(<ReplaceTestCase />);
+
+      await waitFor(() => {
+        // The rows returned by `getRows()` are stored verbatim.
+        expect(apiRef.current?.getRow(1)).to.equal(initialRows[1]);
+      });
+
+      await act(async () => apiRef.current?.startCellEditMode({ id: 1, field: 'commodity' }));
+      await act(async () =>
+        apiRef.current?.setEditCellValue({ id: 1, field: 'commodity', value: 'Silver' }),
+      );
+      await act(async () => apiRef.current?.stopCellEditMode({ id: 1, field: 'commodity' }));
+
+      await waitFor(() => {
+        // The instance returned in the envelope is stored verbatim.
+        expect(apiRef.current?.getRow(1)).to.equal(replacement);
+      });
+      const updatedRow = apiRef.current?.getRow(1) as CommodityRow;
+      expect(updatedRow.commodity).to.equal('Silver');
+      // #private state survives the edit because the stored row is the instance itself.
+      expect(updatedRow.revision).to.equal(1);
+    });
   });
 });

@@ -45,6 +45,25 @@ It is a more performant way to delete a row as compared to updating the [`rows` 
 In the example above, `shouldDeleteRow` is a function that determines whether a row should be deleted based on the updated row data.
 If `shouldDeleteRow` returns `true`, the row will be deleted from the Data Grid's internal state.
 
+### Replacing the row instead of merging it
+
+You can also return a [`{ _action: 'replace', row }` update](/x/react-data-grid/row-updates/#replacing-a-row-instead-of-merging-it) from `processRowUpdate()` to store `row` as the new row instead of merging it into the existing one.
+Use it when rows are class instances whose prototype chain, `#private` fields, or object identity must survive the edit.
+The updated row that `processRowUpdate()` receives is always a plain object—a draft with the edited values applied—so build a proper instance from it, typically from the server response after persisting the change:
+
+```tsx
+<DataGrid
+  {...otherProps}
+  processRowUpdate={async (updatedRow, originalRow) => {
+    const response = await mySaveOnServerFunction(updatedRow);
+    return { _action: 'replace', row: MyRowClass.fromJSON(response) };
+  }}
+/>
+```
+
+With this pattern, `apiRef.current.getRow(id)` returns the very instance provided in `row` after the edit is saved.
+The instance must be a different object from the one currently stored, as the Data Grid relies on reference changes to re-render.
+
 ## Server-side validation
 
 If you need to cancel the save process on `processRowUpdate()`—for instance, when a database validation fails, or the user wants to reject the changes—there are two options:

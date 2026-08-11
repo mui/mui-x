@@ -37,6 +37,34 @@ The community version of the Data Grid is limited to a single row update per `ap
 Multiple row updates at a time are supported in [Pro](/x/introduction/licensing/#pro-plan) and [Premium](/x/introduction/licensing/#premium-plan) plans.
 :::
 
+### Replacing a row instead of merging it
+
+By default, `updateRows()` merges each update into the existing row, which produces a new object.
+Pass a `{ _action: 'replace', row }` update to store the given object as the row instead of merging it.
+
+```ts
+apiRef.current.updateRows([{ _action: 'replace', row }]);
+```
+
+The Data Grid stores `row` by reference, so `apiRef.current.getRow(id)` returns the very object you passed in, with its prototype chain and its `#private` fields intact.
+The `row` object itself is never modified: the `_action` marker lives on the update object, which is discarded after the call.
+Use this when the row is a class instance whose identity or private state must survive the update.
+Any field missing from the replacement is removed from the row, because a replace is never a merge.
+
+:::warning
+Pass the object itself, as shown above.
+Spreading it, as in `{ _action: 'replace', row: { ...row } }`, creates a plain object and drops the prototype chain and the private fields that `_action: 'replace'` exists to preserve.
+:::
+
+Provide a replacement that is a different object from the one currently stored.
+The Data Grid and its memoized rows rely on reference changes to re-render, so replacing a row with the same, mutated instance may not repaint that row.
+
+When a single `updateRows()` call contains several updates for the same row, make the replace the last one for that row.
+The updates that follow it are merged onto the replacement, which keeps its prototype but is no longer the same object.
+
+The same update can be returned from `processRowUpdate()` so that row and cell editing also store the row without merging.
+See [Editing persistence—Replacing the row instead of merging it](/x/react-data-grid/editing/persistence/#replacing-the-row-instead-of-merging-it) for details.
+
 ## Infinite loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 :::warning

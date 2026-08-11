@@ -1,4 +1,4 @@
-import type { GridRowModelUpdate } from '@mui/x-data-grid';
+import type { GridRowModelUpdate, GridRowReplaceUpdate } from '@mui/x-data-grid';
 import type { GridColDef } from '../../../models/colDef';
 
 export interface GridPivotingStatePartial {
@@ -7,6 +7,9 @@ export interface GridPivotingStatePartial {
 }
 
 export interface GridPivotingPrivateApiCommunity {
-  updateNonPivotRows: (rows: readonly GridRowModelUpdate[], keepPreviousRows?: boolean) => void;
+  updateNonPivotRows: (
+    rows: ReadonlyArray<GridRowModelUpdate | GridRowReplaceUpdate>,
+    keepPreviousRows?: boolean,
+  ) => void;
   updateNonPivotColumns: (columns: readonly GridColDef[], keepPreviousColumns?: boolean) => void;
 }

@@ -596,7 +596,9 @@
       "required": true
     },
     "updateRows": {
-      "type": { "description": "(updates: GridRowModelUpdate[]) =&gt; void" },
+      "type": {
+        "description": "(updates: Array&lt;GridRowModelUpdate | GridRowReplaceUpdate&gt;) =&gt; void"
+      },
       "required": true
     },
     "upsertFilterItem": {

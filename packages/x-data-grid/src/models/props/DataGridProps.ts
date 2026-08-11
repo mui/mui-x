@@ -8,7 +8,13 @@ import type { GridFeatureMode } from '../gridFeatureMode';
 import type { Logger } from '../logger';
 import type { GridSortDirection, GridSortModel } from '../gridSortModel';
 import type { GridSlotsComponent } from '../gridSlotsComponent';
-import type { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
+import type {
+  GridRowId,
+  GridRowIdGetter,
+  GridRowReplaceUpdate,
+  GridRowsProp,
+  GridValidRowModel,
+} from '../gridRows';
 import type { GridEventListener } from '../events';
 import type { GridCallbackDetails, GridLocaleText } from '../api';
 import type { GridApiCommunity } from '../api/gridApiCommunity';
@@ -866,9 +872,13 @@ export interface DataGridPropsWithoutDefaultValue<
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
    * @param {{ rowId: GridRowId }} params Additional parameters.
-   * @returns {Promise<R> | R} The final values to update the row.
+   * @returns {Promise<R | GridRowReplaceUpdate<R>> | R | GridRowReplaceUpdate<R>} The final values to update the row, or a `{ _action: 'replace', row }` update to store `row` as the new row without merging.
    */
-  processRowUpdate?: (newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R> | R;
+  processRowUpdate?: (
+    newRow: R,
+    oldRow: R,
+    params: { rowId: GridRowId },
+  ) => Promise<R | GridRowReplaceUpdate<R>> | R | GridRowReplaceUpdate<R>;
   /**
    * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.

@@ -1047,6 +1047,39 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
     });
 
+    it('should keep the row provided in a replace update when more rows are loaded', async () => {
+      render(<TestDataSourceLazyLoader />);
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      const firstRowId = apiRef.current!.getAllRowIds()[0];
+      const original = apiRef.current!.getRow(firstRowId);
+      const replacement = { ...original };
+      await act(async () => apiRef.current?.updateRows([{ _action: 'replace', row: replacement }]));
+
+      // The object provided in the envelope is stored verbatim.
+      expect(apiRef.current?.getRow(firstRowId)).to.equal(replacement);
+
+      // reset the spy call count
+      fetchRowsSpy.resetHistory();
+
+      // make one small and one big scroll that makes sure that the bottom of the grid window is reached
+      await act(async () => {
+        apiRef.current?.scrollToIndexes({ rowIndex: 1 });
+      });
+      await act(async () => {
+        apiRef.current?.scrollToIndexes({ rowIndex: 9 });
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+      await waitFor(() => expect(getRow(10)).not.to.be.undefined);
+
+      // Loading the next rows through infinite scroll does not touch the replaced row.
+      expect(apiRef.current?.getRow(firstRowId)).to.equal(replacement);
+    });
+
     it('should make a new data source request when there is not enough rows to cover the viewport height', async () => {
       render(
         <TestDataSourceLazyLoader
