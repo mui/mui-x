@@ -91,6 +91,7 @@ export * from './scaleGuards';
 export * from './findMinMax';
 export * from './commonNextFocusItem';
 export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
+export { useRegisterItemActivation } from './useRegisterItemActivation';
 export { getSeriesColorFn } from './getSeriesColorFn';
 export { resolveColorProcessor } from './resolveColorProcessor';
 export { processLineLikeSeries } from './processLineLikeSeries';

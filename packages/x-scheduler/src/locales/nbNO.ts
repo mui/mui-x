@@ -21,7 +21,7 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   deleteEvent: 'Slett hendelse',
   descriptionLabel: 'Beskrivelse',
   endDateLabel: 'Sluttdato',
-  endTimeLabel: 'Slutttidspunkt',
+  endTimeLabel: 'Sluttidspunkt',
   eventTitleAriaLabel: 'Hendelsestittel',
   generalTabLabel: 'Generelt',
   labelNoResource: 'Ingen ressurs',
@@ -57,8 +57,9 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   resourceLabel: 'Ressurs',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Lagre',
-  startDateAfterEndDateError: 'Startdato/-tid må være før sluttdato/-tid.',
+  startDateAfterEndDateError: 'Sluttdato kan ikke være før startdato.',
   startDateLabel: 'Startdato',
+  startTimeAfterEndTimeError: 'Sluttidspunkt må være etter starttidspunkt.',
   startTimeLabel: 'Starttidspunkt',
 
   // RecurringScopeDialog
