@@ -110,6 +110,14 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     source: 'TimelineGridEvent',
   }));
 
+  const elementPosition = useElementPositionInCollection({
+    start,
+    end,
+    collection: config,
+    durationMs: config.durationMs,
+  });
+  const { position, duration, startingBeforeEdge, endingAfterEdge } = elementPosition;
+
   const {
     state,
     preview,
@@ -123,7 +131,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     isDraggable,
     renderDragPreview,
     getDragData,
-    collection: config,
+    position: elementPosition,
   });
 
   const { getButtonProps, buttonRef } = useButton({
@@ -131,13 +139,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     native: nativeButton,
     tabIndex: rowHasFocus ? 0 : -1,
   });
-
-  const { position, duration, startingBeforeEdge, endingAfterEdge } =
-    useElementPositionInCollection({
-      start,
-      end,
-      collection: config,
-    });
 
   const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
 

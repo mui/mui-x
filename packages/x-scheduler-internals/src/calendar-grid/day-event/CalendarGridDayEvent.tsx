@@ -7,6 +7,8 @@ import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
+import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
+import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -117,6 +119,13 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     draggedDay: getDraggedDay(input),
   }));
 
+  // The all-day row spans whole days, so its window is never trimmed.
+  const elementPosition = useElementPositionInCollection({
+    start,
+    end,
+    collection: { start: rowStart, end: rowEnd, dayStartMinute: 0, dayEndMinute: FULL_DAY_MINUTES },
+  });
+
   const {
     state,
     preview,
@@ -130,7 +139,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     isDraggable,
     renderDragPreview,
     getDragData,
-    collection: { start: rowStart, end: rowEnd, dayStartMinute: 0, dayEndMinute: 1440 },
+    position: elementPosition,
   });
 
   const startingBeforeEdge = draggableEventContextValue.isEventStartClipped;

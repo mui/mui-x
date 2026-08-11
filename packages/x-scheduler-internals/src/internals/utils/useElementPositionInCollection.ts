@@ -15,7 +15,7 @@ const MINUTE_MS = 60_000;
 export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
 ): useElementPositionInCollection.ReturnValue {
-  const { start, end, collection } = parameters;
+  const { start, end, collection, durationMs } = parameters;
   // Deconstructed so an inline collection object stays memoization-friendly.
   const { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute } = collection;
 
@@ -27,8 +27,9 @@ export function useElementPositionInCollection(
         start,
         end,
         collection: { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute },
+        durationMs,
       }),
-    [adapter, start, end, collectionStart, collectionEnd, dayStartMinute, dayEndMinute],
+    [adapter, start, end, collectionStart, collectionEnd, dayStartMinute, dayEndMinute, durationMs],
   );
 }
 

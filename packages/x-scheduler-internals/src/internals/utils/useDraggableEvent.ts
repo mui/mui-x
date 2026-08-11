@@ -9,11 +9,9 @@ import {
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
 import type { SchedulerEventId } from '../../models';
-import type { TimelineAxis } from './timeline-axis';
-import { computeElementPositionInCollection } from './useElementPositionInCollection';
+import type { useElementPositionInCollection } from './useElementPositionInCollection';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
-import { useAdapterContext } from '../../use-adapter-context';
 
 export function useDraggableEvent(
   parameters: useDraggableEvent.Parameters,
@@ -26,14 +24,11 @@ export function useDraggableEvent(
     eventId,
     renderDragPreview,
     getDragData,
-    collection,
+    position,
     isDraggable = false,
   } = parameters;
-  // Deconstructed so an inline collection object stays memoization-friendly.
-  const { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute } = collection;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -87,20 +82,17 @@ export function useDraggableEvent(
 
   // A bound clipped by the collection range or hidden by the daily hour window does not
   // render at its real position, so it must not expose a resize handle: the drop math
-  // reconstructs positions from the rendered edges. The flags share the positioning
-  // arithmetic so "clipped" and "rendered somewhere else" cannot drift apart — notably
-  // an end at the exact midnight closing the collection renders at its real position.
-  const contextValue: useDraggableEvent.ContextValue = React.useMemo(() => {
-    const { startingBeforeEdge, endingAfterEdge } = computeElementPositionInCollection(adapter, {
-      start,
-      end,
-      collection: { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute },
-    });
-    return {
-      isEventStartClipped: startingBeforeEdge,
-      isEventEndClipped: endingAfterEdge,
-    };
-  }, [adapter, start, end, collectionStart, collectionEnd, dayStartMinute, dayEndMinute]);
+  // reconstructs positions from the rendered edges. Taken from the position the caller
+  // already rendered with, so "clipped" and "rendered somewhere else" cannot drift apart
+  // — notably an end at the exact midnight closing the collection renders at its real
+  // position.
+  const contextValue: useDraggableEvent.ContextValue = React.useMemo(
+    () => ({
+      isEventStartClipped: position.startingBeforeEdge,
+      isEventEndClipped: position.endingAfterEdge,
+    }),
+    [position.startingBeforeEdge, position.endingAfterEdge],
+  );
 
   return { state, preview, contextValue };
 }
@@ -146,9 +138,10 @@ export namespace useDraggableEvent {
      */
     ref: React.RefObject<HTMLDivElement | null>;
     /**
-     * The displayed range and daily hour window of the collection the event belongs to.
+     * The position the caller renders the event at. The clipping flags come from it, so a
+     * single pass of the positioning arithmetic serves both rendering and resizing.
      */
-    collection: TimelineAxis;
+    position: useElementPositionInCollection.ReturnValue;
   }
 
   export interface ReturnValue {
