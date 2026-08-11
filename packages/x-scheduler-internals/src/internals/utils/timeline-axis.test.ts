@@ -3,7 +3,6 @@ import {
   getTimelineAxisDurationMs,
   timelineAxisOffsetToDate,
   dateToTimelineAxisOffsetMs,
-  isRangeVisibleOnTimelineAxis,
   isStartMinuteOutsideAxisWindow,
   isEndMinuteOutsideAxisWindow,
 } from './timeline-axis';
@@ -184,46 +183,6 @@ describe('timeline-axis', () => {
     it('should never clip an end on the full-day window', () => {
       expect(isEndMinuteOutsideAxisWindow(fullAxis, 0)).to.equal(false);
       expect(isEndMinuteOutsideAxisWindow(fullAxis, 1439)).to.equal(false);
-    });
-  });
-
-  describe('isRangeVisibleOnTimelineAxis', () => {
-    it('should always be visible on the full-day window', () => {
-      const rangeStart = adapter.date('2025-01-05T21:00:00.000Z', 'UTC');
-      const rangeEnd = adapter.date('2025-01-05T23:00:00.000Z', 'UTC');
-      expect(isRangeVisibleOnTimelineAxis(adapter, fullAxis, rangeStart, rangeEnd)).to.equal(true);
-    });
-
-    it('should be visible when the range overlaps the window', () => {
-      const rangeStart = adapter.date('2025-01-05T19:00:00.000Z', 'UTC');
-      const rangeEnd = adapter.date('2025-01-05T22:00:00.000Z', 'UTC');
-      expect(isRangeVisibleOnTimelineAxis(adapter, trimmedAxis, rangeStart, rangeEnd)).to.equal(
-        true,
-      );
-    });
-
-    it('should be hidden when the range is fully inside the hidden hours', () => {
-      const rangeStart = adapter.date('2025-01-05T21:00:00.000Z', 'UTC');
-      const rangeEnd = adapter.date('2025-01-05T23:00:00.000Z', 'UTC');
-      expect(isRangeVisibleOnTimelineAxis(adapter, trimmedAxis, rangeStart, rangeEnd)).to.equal(
-        false,
-      );
-    });
-
-    it('should be hidden when an overnight range never enters the window', () => {
-      const rangeStart = adapter.date('2025-01-05T21:00:00.000Z', 'UTC');
-      const rangeEnd = adapter.date('2025-01-06T07:00:00.000Z', 'UTC');
-      expect(isRangeVisibleOnTimelineAxis(adapter, trimmedAxis, rangeStart, rangeEnd)).to.equal(
-        false,
-      );
-    });
-
-    it('should keep a sub-minute range inside the window visible', () => {
-      const rangeStart = adapter.date('2025-01-05T10:00:00.000Z', 'UTC');
-      const rangeEnd = adapter.date('2025-01-05T10:00:30.000Z', 'UTC');
-      expect(isRangeVisibleOnTimelineAxis(adapter, trimmedAxis, rangeStart, rangeEnd)).to.equal(
-        true,
-      );
     });
   });
 });

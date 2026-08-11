@@ -139,24 +139,3 @@ export function dateToTimelineAxisOffsetMs(
 
   return dayIndex * dayMs + (clampedMsInDay - axis.dayStartMinute * MINUTE_MS);
 }
-
-/**
- * Whether a date range occupies any space on the axis: with a full-day window every
- * non-empty range does; with a trimmed window a range fully contained in the hidden
- * hours collapses to a zero-width sliver and should not be rendered.
- */
-export function isRangeVisibleOnTimelineAxis(
-  adapter: TemporalAdapter,
-  axis: TimelineAxis,
-  rangeStart: TemporalSupportedObject,
-  rangeEnd: TemporalSupportedObject,
-): boolean {
-  if (isFullDayAxisWindow(axis)) {
-    return true;
-  }
-
-  return (
-    dateToTimelineAxisOffsetMs(adapter, axis, rangeEnd) >
-    dateToTimelineAxisOffsetMs(adapter, axis, rangeStart)
-  );
-}

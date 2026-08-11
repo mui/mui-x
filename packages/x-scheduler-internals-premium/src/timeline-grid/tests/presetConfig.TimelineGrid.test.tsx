@@ -262,6 +262,35 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       expect(screen.getByTestId('placeholder')).not.to.equal(null);
     });
 
+    it('should not render the placeholder when it crosses the window edge by less than a minute', () => {
+      let store: AnyEventCalendarStore | null = null;
+      render(
+        <Grid
+          events={[]}
+          presetConfig={PRESET_CONFIG}
+          onStoreMount={(s) => {
+            store = s;
+          }}
+        />,
+      );
+
+      // 07:59:30 → 08:00:30 against an 08:00 window start. Both bounds render at minute
+      // 480, so the placeholder occupies no space at the precision it is drawn with.
+      const windowStart = adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 8);
+      act(() => {
+        store!.set('occurrencePlaceholder', {
+          type: 'creation',
+          surfaceType: 'timeline',
+          start: adapter.addMilliseconds(windowStart, -30_000),
+          end: adapter.addMilliseconds(windowStart, 30_000),
+          resourceId: resource.id,
+          lockSurfaceType: true,
+        });
+      });
+
+      expect(screen.queryByTestId('placeholder')).to.equal(null);
+    });
+
     it('should cap a pointer creation on the exact right edge to the last visible slot', () => {
       let store: AnyEventCalendarStore | null = null;
       render(
