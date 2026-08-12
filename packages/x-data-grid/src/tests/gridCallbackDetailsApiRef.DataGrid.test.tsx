@@ -1,12 +1,18 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { createRenderer, fireEvent } from '@mui/internal-test-utils';
-import { DataGrid, useGridApiRef, gridSortModelSelector } from '@mui/x-data-grid';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import {
+  DataGrid,
+  useGridApiRef,
+  gridSortModelSelector,
+  gridFilterModelSelector,
+} from '@mui/x-data-grid';
 import type {
   DataGridProps,
   GridApi,
   GridApiCommon,
   GridColumnHeaderParams,
+  GridFilterModel,
 } from '@mui/x-data-grid';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
 
@@ -68,22 +74,51 @@ describe('<DataGrid /> - GridCallbackDetails apiRef', () => {
     expect(receivedParams!.field).to.equal('brand');
   });
 
-  it('should not expose the live internal apiRef, protecting the grid from corruption', () => {
-    let receivedApiRef: RefObject<GridApiCommon> | null = null;
+  it('should expose a stable read-only apiRef that cannot re-point the internal ref', () => {
+    const receivedApiRefs: RefObject<GridApiCommon>[] = [];
     render(
       <TestCase
         onSortModelChange={(model, details) => {
-          receivedApiRef = details.apiRef;
+          receivedApiRefs.push(details.apiRef);
         }}
       />,
     );
 
     fireEvent.click(getColumnHeaderCell(0));
+    fireEvent.click(getColumnHeaderCell(0));
 
-    expect(receivedApiRef).not.to.equal(apiRef);
+    expect(receivedApiRefs).to.have.length(2);
+    expect(receivedApiRefs[1]).to.equal(receivedApiRefs[0]);
+    expect(receivedApiRefs[0]).not.to.equal(apiRef);
 
-    // Reassigning `.current` on the details' apiRef must not affect the grid's own apiRef.
-    (receivedApiRef as any).current = null;
+    // The details' apiRef is getter-based: it cannot be used to re-point the grid's internal ref.
+    expect(() => {
+      (receivedApiRefs[0] as any).current = null;
+    }).to.throw(TypeError);
     expect(apiRef.current).not.to.equal(null);
+  });
+
+  it('should return the previous state from selectors when the model is controlled', () => {
+    let callbackModel: GridFilterModel | null = null;
+    let selectedModel: GridFilterModel | null = null;
+    render(
+      <TestCase
+        filterModel={{ items: [] }}
+        onFilterModelChange={(model, details) => {
+          callbackModel = model;
+          selectedModel = gridFilterModelSelector(details.apiRef);
+        }}
+      />,
+    );
+
+    act(() =>
+      apiRef.current?.setFilterModel({
+        items: [{ field: 'brand', operator: 'contains', value: 'Nike' }],
+      }),
+    );
+
+    expect(callbackModel!.items).to.have.length(1);
+    // The controlled model was not applied to the state yet, so selectors return the previous value.
+    expect(selectedModel!.items).to.have.length(0);
   });
 });

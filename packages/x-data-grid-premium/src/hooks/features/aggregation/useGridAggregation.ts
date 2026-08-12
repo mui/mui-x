@@ -12,7 +12,6 @@ import {
   gridSortModelSelector,
   gridRowMaximumTreeDepthSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridCallbackDetails } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
   gridPivotActiveSelector,
@@ -27,7 +26,6 @@ import {
 import type {
   GridAggregationApi,
   GridAggregationLookup,
-  GridAggregationModel,
   GridAggregationPrivateApi,
 } from './gridAggregationInterfaces';
 import {
@@ -72,9 +70,7 @@ export const useGridAggregation = (
   apiRef.current.registerControlState({
     stateId: 'aggregation',
     propModel: props.aggregationModel,
-    // The public prop type is narrowed to `GridApiPremium`, but the control state machinery is generic over `GridApiCommon`.
-    propOnChange: props.onAggregationModelChange as
-      ((model: GridAggregationModel, details: GridCallbackDetails) => void) | undefined,
+    propOnChange: props.onAggregationModelChange,
     stateSelector: gridAggregationModelSelector,
     changeEvent: 'aggregationModelChange',
   });

@@ -1,6 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
 import type {
-  GridCallbackDetails,
   GridValidRowModel,
   GridGroupNode,
   GridEventListener,
@@ -28,7 +27,7 @@ import type {
 import type { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import type { GridPremiumSlotProps } from './gridPremiumSlotProps';
 import type { GridInitialStatePremium } from './gridStatePremium';
-import type { GridApiPremium } from './gridApiPremium';
+import type { GridApiPremium, GridCallbackDetailsPremium } from './gridApiPremium';
 import type { GridCellSelectionModel } from '../hooks/features/cellSelection';
 import type {
   GridPivotingColDefOverrides,
@@ -213,7 +212,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    */
   onRowGroupingModelChange?: (
     model: GridRowGroupingModel,
-    details: GridCallbackDetails<any, GridApiPremium>,
+    details: GridCallbackDetailsPremium,
   ) => void;
   /**
    * Set the aggregation model of the grid.
@@ -226,7 +225,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    */
   onAggregationModelChange?: (
     model: GridAggregationModel,
-    details: GridCallbackDetails<any, GridApiPremium>,
+    details: GridCallbackDetailsPremium,
   ) => void;
   /**
    * Set the cell selection model of the grid.
@@ -239,7 +238,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    */
   onCellSelectionModelChange?: (
     cellSelectionModel: GridCellSelectionModel,
-    details: GridCallbackDetails<any, GridApiPremium>,
+    details: GridCallbackDetailsPremium,
   ) => void;
   /**
    * Callback fired when the state of the Excel export changes.

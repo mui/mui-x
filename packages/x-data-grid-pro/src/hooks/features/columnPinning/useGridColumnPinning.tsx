@@ -11,7 +11,7 @@ import {
   GridPinnedColumnPosition,
   gridColumnFieldsSelector,
 } from '@mui/x-data-grid';
-import type { GridEventListener, GridCallbackDetails } from '@mui/x-data-grid';
+import type { GridEventListener } from '@mui/x-data-grid';
 import {
   useGridRegisterPipeProcessor,
   gridPinnedColumnsSelector,
@@ -203,9 +203,7 @@ export const useGridColumnPinning = (
   apiRef.current.registerControlState({
     stateId: 'pinnedColumns',
     propModel: props.pinnedColumns,
-    // The public prop type is narrowed to `GridApiPro`, but the control state machinery is generic over `GridApiCommon`.
-    propOnChange: props.onPinnedColumnsChange as
-      ((pinnedColumns: GridPinnedColumnFields, details: GridCallbackDetails) => void) | undefined,
+    propOnChange: props.onPinnedColumnsChange,
     stateSelector: gridPinnedColumnsSelector,
     changeEvent: 'pinnedColumnsChange',
   });

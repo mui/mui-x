@@ -2,7 +2,6 @@ import type * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import type {
   GridEventListener,
-  GridCallbackDetails,
   GridRowParams,
   GridRowId,
   GridValidRowModel,
@@ -23,7 +22,7 @@ import type {
   DataGridProSharedPropsWithoutDefaultValue,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
-import type { GridApiPro } from './gridApiPro';
+import type { GridApiPro, GridCallbackDetailsPro } from './gridApiPro';
 import type {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
@@ -231,7 +230,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   onPinnedColumnsChange?: (
     pinnedColumns: GridPinnedColumnFields,
-    details: GridCallbackDetails<any, GridApiPro>,
+    details: GridCallbackDetailsPro,
   ) => void;
   /**
    * The grouping column used by the tree data.
@@ -252,7 +251,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   onDetailPanelExpandedRowIdsChange?: (
     ids: Set<GridRowId>,
-    details: GridCallbackDetails<any, GridApiPro>,
+    details: GridCallbackDetailsPro,
   ) => void;
   /**
    * Function that returns the element to render in row detail.

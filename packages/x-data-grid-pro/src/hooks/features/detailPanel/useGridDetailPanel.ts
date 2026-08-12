@@ -2,12 +2,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { useGridEvent, useGridApiMethod, gridDataRowIdsSelector } from '@mui/x-data-grid';
-import type {
-  GridEventListener,
-  GridRowId,
-  GridCellParams,
-  GridCallbackDetails,
-} from '@mui/x-data-grid';
+import type { GridEventListener, GridRowId, GridCellParams } from '@mui/x-data-grid';
 import { useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
 import type { GridPipeProcessor, GridStateInitializer } from '@mui/x-data-grid/internals';
 import type { GridApiPro, GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -125,9 +120,7 @@ export const useGridDetailPanel = (
   apiRef.current.registerControlState({
     stateId: 'detailPanels',
     propModel: props.detailPanelExpandedRowIds,
-    // The public prop type is narrowed to `GridApiPro`, but the control state machinery is generic over `GridApiCommon`.
-    propOnChange: props.onDetailPanelExpandedRowIdsChange as
-      ((ids: Set<GridRowId>, details: GridCallbackDetails) => void) | undefined,
+    propOnChange: props.onDetailPanelExpandedRowIdsChange,
     stateSelector: gridDetailPanelExpandedRowIdsSelector,
     changeEvent: 'detailPanelsExpandedRowIdsChange',
   });
