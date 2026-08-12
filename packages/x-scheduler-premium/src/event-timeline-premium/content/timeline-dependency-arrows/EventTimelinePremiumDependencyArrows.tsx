@@ -4,11 +4,11 @@ import { styled, useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { Dimensions, Virtualization } from '@mui/x-virtualizer';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumDependencySelectors,
   eventTimelinePremiumPresetSelectors,
+  eventTimelinePremiumOccurrenceSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
@@ -67,37 +67,42 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
 
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const resources = useStore(
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  // Keep the lane assignment consistent with the rendered rows, which exclude the
+  // occurrences hidden by the preset's hour window.
+  const visibleResources = useStore(
     store,
-    schedulerOccurrenceSelectors.groupedByResourceList,
-    presetConfig.start,
-    presetConfig.end,
+    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
+  );
+  const visiblePositions = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
   );
   const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
 
-  const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
+  const eventsWidth = config.tickCount * config.tickWidth;
 
   const arrows = React.useMemo(
     () =>
       computeDependencyArrows({
         adapter,
         dependencies,
-        resources,
+        resources: visibleResources,
         rowPositions: rowsMeta.positions,
-        collectionStart: presetConfig.start,
-        collectionEnd: presetConfig.end,
+        axis: config,
+        positionByOccurrenceKey: visiblePositions,
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),
       }),
+    // The config selector is memoized, so the object identity only changes with its content.
     [
       adapter,
       dependencies,
-      resources,
+      visibleResources,
+      visiblePositions,
       rowsMeta.positions,
-      presetConfig.start,
-      presetConfig.end,
+      config,
       eventsWidth,
       theme,
     ],
@@ -108,7 +113,7 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
   // viewport even when both of its endpoints are scrolled out.
   const { start: visibleStartFraction, end: visibleEndFraction } = getVisibleFractionRange(
     renderContext,
-    presetConfig.tickCount,
+    config.tickCount,
   );
   const visibleArrows = arrows.filter(
     (arrow) =>

@@ -1,7 +1,13 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  getDisplayedHourRange,
+  getTimelineAxisDurationMs,
+  FULL_DAY_MINUTES,
+} from '@mui/x-scheduler-internals/internals';
+import type { EventTimelinePremiumPresetConfig } from '../models/preset';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
-import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../internals/utils/preset-utils';
+import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS } from '../internals/utils/preset-utils';
 
 export const eventTimelinePremiumPresetSelectors = {
   preset: createSelector((state: State) => state.preset),
@@ -10,9 +16,15 @@ export const eventTimelinePremiumPresetSelectors = {
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,
     (state: State) => state.preset,
+    // Primitive inputs so an inline `presetConfig` literal cannot defeat the
+    // memoization (the object identity changes on every parent render).
+    (state: State) =>
+      state.presetConfig[state.preset as keyof EventTimelinePremiumPresetConfig]?.startTime,
+    (state: State) =>
+      state.presetConfig[state.preset as keyof EventTimelinePremiumPresetConfig]?.endTime,
     schedulerPreferenceSelectors.weekStartsOn,
-    (adapter, visibleDate, preset, weekStartsOn) => {
-      const config = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
+    (adapter, visibleDate, preset, presetStartTime, presetEndTime, weekStartsOn) => {
+      const config = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
       if (!config) {
         throw new Error(
           `MUI X Scheduler: No configuration registered for preset "${preset}". ` +
@@ -32,13 +44,39 @@ export const eventTimelinePremiumPresetSelectors = {
       const start = getStartDate(adapter, visibleDate, weekStartsOn);
       const end = getEndDate(adapter, start, unitCount, weekStartsOn);
 
+      // Only hour-resolution presets can trim their visible hours. The range itself stays
+      // midnight-based: the hour window is applied through `dayStartMinute` / `dayEndMinute`.
+      const hourRange =
+        timeResolution === 'hour'
+          ? getDisplayedHourRange(presetStartTime, presetEndTime, `presetConfig.${preset}`)
+          : { startTime: 0, endTime: 24 };
+      const dayStartMinute = hourRange.startTime * 60;
+      const dayEndMinute = hourRange.endTime * 60;
+
+      // Preset callbacks size the grid for the full day; the hour window scales the
+      // tick count once here instead of threading it through every preset.
+      const fullDayTickCount = getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount;
+      const tickCount =
+        timeResolution === 'hour'
+          ? (fullDayTickCount * (dayEndMinute - dayStartMinute)) / FULL_DAY_MINUTES
+          : fullDayTickCount;
+
       return {
-        tickCount: getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount,
+        tickCount,
         start,
         end,
         tickWidth,
         headers,
         timeResolution,
+        dayStartMinute,
+        dayEndMinute,
+        // Precomputed once per config change: per-row hooks read it on every render.
+        durationMs: getTimelineAxisDurationMs(adapter, {
+          start,
+          end,
+          dayStartMinute,
+          dayEndMinute,
+        }),
       };
     },
   ),

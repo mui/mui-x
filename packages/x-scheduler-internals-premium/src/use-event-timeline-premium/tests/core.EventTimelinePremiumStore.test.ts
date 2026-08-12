@@ -58,6 +58,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         preset: 'dayAndHour',
+        presetConfig: EMPTY_OBJECT,
         presets: ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year'],
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
@@ -101,6 +102,22 @@ describe('Core - EventTimelinePremiumStore', () => {
         adapter,
       );
       expect(store.state.shouldEventRequireResource).to.equal(false);
+    });
+
+    it('should store the `presetConfig` parameter in the state', () => {
+      const presetConfig = { dayAndHour: { startTime: 8, endTime: 20 } };
+      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, presetConfig }, adapter);
+
+      expect(store.state.presetConfig).to.equal(presetConfig);
+    });
+
+    it('should sync `presetConfig` when parameters update', () => {
+      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.presetConfig).to.equal(EMPTY_OBJECT);
+
+      const presetConfig = { dayAndHour: { startTime: 8, endTime: 20 } };
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, presetConfig }, adapter);
+      expect(store.state.presetConfig).to.equal(presetConfig);
     });
 
     it('should sort the presets array into the canonical zoom order regardless of input order', () => {
