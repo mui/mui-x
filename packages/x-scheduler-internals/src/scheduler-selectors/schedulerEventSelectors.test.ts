@@ -62,6 +62,114 @@ describe('schedulerEventSelectors', () => {
     });
   });
 
+  describe('canHaveMultipleResources', () => {
+    it('should return the configured value when eventCreation.canHaveMultipleResources is true', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        eventCreation: { canHaveMultipleResources: true },
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should return the configured value when eventCreation.canHaveMultipleResources is false', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        eventCreation: { canHaveMultipleResources: false },
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(false);
+    });
+
+    it('should infer from the data when eventCreation is the boolean `true` instead of an object', () => {
+      const resource = ResourceBuilder.new().build();
+      const eventWithArrayResource = EventBuilder.new().resources([resource]).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [eventWithArrayResource],
+        eventCreation: true,
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should infer from the data when eventCreation is not set', () => {
+      const resource = ResourceBuilder.new().build();
+      const eventWithStringResource = EventBuilder.new().resource(resource).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [eventWithStringResource],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(false);
+    });
+
+    it('should infer "multiple" from the first event with an array resource', () => {
+      const resource = ResourceBuilder.new().build();
+      const eventWithArrayResource = EventBuilder.new().resources([resource]).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [eventWithArrayResource],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should infer "single" from the first event with a string resource', () => {
+      const resource = ResourceBuilder.new().build();
+      const eventWithStringResource = EventBuilder.new().resource(resource).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [eventWithStringResource],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(false);
+    });
+
+    it('should scan events in order and stop at the first one with a resource (string first)', () => {
+      const resource = ResourceBuilder.new().build();
+      const stringFirst = EventBuilder.new().resource(resource).build();
+      const arraySecond = EventBuilder.new().resources([resource]).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [stringFirst, arraySecond],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(false);
+    });
+
+    it('should scan events in order and stop at the first one with a resource (array first)', () => {
+      const resource = ResourceBuilder.new().build();
+      const arrayFirst = EventBuilder.new().resources([resource]).build();
+      const stringSecond = EventBuilder.new().resource(resource).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [arrayFirst, stringSecond],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should skip events without a resource while scanning for the first shape', () => {
+      const resource = ResourceBuilder.new().build();
+      const noResource = EventBuilder.new().build();
+      const stringResource = EventBuilder.new().resource(resource).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [noResource, stringResource],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(false);
+    });
+
+    it('should default to "multiple" when no event in the data has a resource at all', () => {
+      const noResource = EventBuilder.new().build();
+      const state = getEventCalendarStateFromParameters({
+        events: [noResource],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should default to "multiple" when there are no events at all', () => {
+      const state = getEventCalendarStateFromParameters({ events: [] });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should still resolve via inference when the scheduler is read-only (creationConfig would be false)', () => {
+      const resource = ResourceBuilder.new().build();
+      const eventWithArrayResource = EventBuilder.new().resources([resource]).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [eventWithArrayResource],
+        readOnly: true,
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+  });
+
   describe('isDraggable', () => {
     it('should return true when areEventsDraggable is not defined', () => {
       const state = getEventCalendarStateFromParameters({

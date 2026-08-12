@@ -115,9 +115,20 @@ Set `shouldEventRequireResource` to `true` to make a resource mandatory: the for
 <EventCalendar shouldEventRequireResource />
 ```
 
-## Multiple resources per event 🧪
+## Multiple resources per event
 
-An event can be associated with more than one resource. The resource picker in the edit dialog switches between a single-select and a multi-select depending on the event:
+An event can be associated with more than one resource by passing an array to `resource`:
+
+```tsx
+const event = {
+  // ...
+  resource: ['team-a', 'team-b'],
+};
+```
+
+{{"demo": "MultipleResourcesPerEvent.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The resource picker in the edit dialog switches between a single-select and a multi-select depending on the event:
 
 - An event whose `resource` is a string is edited as single-resource — the picker shows one entry at a time.
 - An event whose `resource` is an array (including `[]`, meaning multi-resource with nothing selected yet) is edited as multi-resource.
@@ -131,13 +142,6 @@ For an event whose `resource` is `null` or not set, and for newly created events
 ```
 
 When `canHaveMultipleResources` isn't set, it's inferred from the `events` prop: the first event with a `resource` value determines the mode for new events (a string means single, an array means multiple), and data with no resource at all defaults to multiple.
-
-```tsx
-const event = {
-  // ...
-  resource: ['team-a', 'team-b'],
-};
-```
 
 ## Resource properties
 

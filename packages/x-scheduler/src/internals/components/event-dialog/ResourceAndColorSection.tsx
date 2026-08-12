@@ -20,11 +20,13 @@ import { EVENT_COLORS } from '@mui/x-scheduler-internals/constants';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
+  schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { getResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
+import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import { useStore } from '@base-ui/utils/store';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
@@ -159,17 +161,24 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
     store,
     schedulerEventSelectors.canHaveMultipleResources,
   );
+  const isCreating = useStore(store, schedulerOccurrencePlaceholderSelectors.isCreating);
   const isPropertyReadOnly = useStore(
     store,
     schedulerEventSelectors.isPropertyReadOnly,
     occurrence.id,
   );
 
-  // The mode follows the occurrence's own `resource` shape (string vs array) and only falls
-  // back to `canHaveMultipleResources` when that shape is unset (`null`/`undefined`) — see
-  // `getResourceSelectionMode`. It's fixed for the lifetime of this mount: it must not react
-  // to the user's in-progress selection, only to the data the occurrence started with.
-  const mode = getResourceSelectionMode(occurrence.resource, canHaveMultipleResources);
+  // Decided once, at mount, and never reacts afterwards — not to the user's in-progress
+  // selection, and not to `canHaveMultipleResources`/the store's events changing while the
+  // dialog stays open (e.g. a second batch of events loading in). A lazy `useState` initializer
+  // freezes it for real: `canHaveMultipleResources` and `isCreating` are live subscriptions, so
+  // reading them directly on every render would let the Select's mode — and its `value`'s
+  // shape — flip out from under the user mid-interaction. The dialog remounts on
+  // `key={occurrence.key}`, so this initial render is exactly "the data this occurrence started
+  // with". See `getResourceSelectionMode` for the creating-vs-editing rule itself.
+  const [mode] = React.useState<ResourceSelectionMode>(() =>
+    getResourceSelectionMode(occurrence.resource, canHaveMultipleResources, isCreating),
+  );
 
   const resourceField = useEventDialogFormField<SchedulerResourceId[]>('resourceIds', {
     validate: (value) =>

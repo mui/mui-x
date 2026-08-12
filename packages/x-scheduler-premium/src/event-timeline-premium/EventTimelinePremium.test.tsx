@@ -118,7 +118,7 @@ describe('<EventTimelinePremium />', () => {
         .closest(`.${eventTimelinePremiumClasses.event}`) as HTMLElement;
     };
 
-    it('resolves a colorless multi-resource event against each row resource, not just the primary one', () => {
+    it('should resolve a colorless multi-resource event against each row resource, not just the primary one', () => {
       const multiResourceEvent = EventBuilder.new()
         .title('Shared event')
         .singleDay('2025-07-03T09:00:00Z')
@@ -131,7 +131,7 @@ describe('<EventTimelinePremium />', () => {
       expect(getEventInRow(blue.id, 'Shared event')).to.have.attribute('data-palette', 'blue');
     });
 
-    it('keeps the event own color in every row of a multi-resource event', () => {
+    it("should keep the event's own color in every row of a multi-resource event", () => {
       const multiResourceEvent = EventBuilder.new()
         .title('Shared event')
         .singleDay('2025-07-03T09:00:00Z')

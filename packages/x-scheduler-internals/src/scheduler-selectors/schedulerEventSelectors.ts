@@ -100,9 +100,7 @@ export const schedulerEventSelectors = {
     (state: State) => state.processedEventLookup,
     (eventCreation, eventIdList, processedEventLookup) => {
       const configured =
-        typeof eventCreation === 'object' && eventCreation != null
-          ? eventCreation.canHaveMultipleResources
-          : undefined;
+        typeof eventCreation === 'boolean' ? undefined : eventCreation?.canHaveMultipleResources;
       if (configured != null) {
         return configured;
       }

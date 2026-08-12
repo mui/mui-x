@@ -30,6 +30,7 @@ import {
   getEventResourceIds,
   getResourceSelectionMode,
 } from '@mui/x-scheduler-internals/internals';
+import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
 import type { EventDialogFormValues } from '../event-dialog/utils';
@@ -203,6 +204,20 @@ function FormContentInner(props: FormContentProps) {
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
 
+  // Saving never changes the shape of `resource`: single mode writes back the plain id (or
+  // `undefined` once cleared), multiple mode writes back the array (`[]` once cleared). Frozen
+  // at mount, same as (and for the same reason as) `ResourceAndColorSection`'s own `mode`: it
+  // must match whatever that component rendered and let the user interact with, not a value
+  // recomputed from `canHaveMultipleResources` at submit time, which could have drifted if the
+  // store's events changed while the dialog was open.
+  const [resourceSelectionMode] = React.useState<ResourceSelectionMode>(() =>
+    getResourceSelectionMode(
+      occurrence.resource,
+      canHaveMultipleResources,
+      rawPlaceholder?.type === 'creation',
+    ),
+  );
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -217,14 +232,6 @@ function FormContentInner(props: FormContentProps) {
     // so untouched fields keep resolving against the live model on the recurring paths.
     const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
 
-    // Saving never changes the shape of `resource`: single mode writes back the plain id (or
-    // `undefined` once cleared), multiple mode writes back the array (`[]` once cleared). The
-    // mode itself follows the occurrence's own resource shape, only falling back to
-    // `canHaveMultipleResources` when that occurrence never had one to begin with.
-    const resourceSelectionMode = getResourceSelectionMode(
-      occurrence.resource,
-      canHaveMultipleResources,
-    );
     const metaChanges = {
       ...editedCustomValues,
       title: values.title.trim(),
