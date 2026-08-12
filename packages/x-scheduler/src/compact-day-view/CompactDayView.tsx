@@ -33,6 +33,7 @@ export const CompactDayView = React.memo(
         days={days}
         startTime={config?.startTime}
         endTime={config?.endTime}
+        hourRangeSource="viewConfig.day"
         {...props}
       />
     );

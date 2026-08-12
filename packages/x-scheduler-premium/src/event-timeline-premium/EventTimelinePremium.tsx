@@ -348,6 +348,23 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    */
   preset: PropTypes.oneOf(['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']),
   /**
+   * Configuration applied to each preset, keyed by the preset name.
+   * For the `dayAndHour` preset, `startTime` and `endTime` limit the hours displayed on
+   * each day: `startTime` is inclusive and `endTime` exclusive, so `{ startTime: 8,
+   * endTime: 20 }` renders the cells 8 AM through 7 PM and an event ending at 20:00 is
+   * still fully visible. Both must be whole hours between 0 and 24 with
+   * `startTime` lower than `endTime`; they default to 0 and 24, the full day, and an
+   * invalid range falls back to the full day with a warning in development.
+   * Presets that do not tick in hours ignore the configuration.
+   * @example { dayAndHour: { startTime: 8, endTime: 20 } }
+   */
+  presetConfig: PropTypes.shape({
+    dayAndHour: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+  }),
+  /**
    * The presets available in the timeline.
    * The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally,
    * so a future zoom API (`zoomIn()` / `zoomOut()`) behaves consistently regardless of the order
