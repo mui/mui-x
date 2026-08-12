@@ -45,6 +45,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
       start: processedNow,
       end: endForCalc,
       collection: config,
+      durationMs: config.durationMs,
     });
 
     const isOutOfRange =

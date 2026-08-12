@@ -4,7 +4,10 @@ import type {
   SchedulerEventOccurrence,
   SchedulerResource,
 } from '@mui/x-scheduler-internals/models';
-import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
+import {
+  computeElementPositionInCollection,
+  getTimelineAxisDurationMs,
+} from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { computeOccurrencesFirstIndexLookup } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import type {
@@ -161,6 +164,8 @@ export function computeDependencyArrows(
     return laneLookup;
   };
 
+  // Derived once for the whole walk instead of per positioned occurrence.
+  const axisDurationMs = getTimelineAxisDurationMs(adapter, axis);
   const positionCache = new Map<string, ReturnType<typeof computeElementPositionInCollection>>();
   const getPosition = (occurrence: SchedulerEventOccurrence) => {
     const precomputed = positionByOccurrenceKey?.get(occurrence.key);
@@ -173,6 +178,7 @@ export function computeDependencyArrows(
         start: occurrence.displayTimezone.start,
         end: occurrence.displayTimezone.end,
         collection: axis,
+        durationMs: axisDurationMs,
       });
       positionCache.set(occurrence.key, position);
     }

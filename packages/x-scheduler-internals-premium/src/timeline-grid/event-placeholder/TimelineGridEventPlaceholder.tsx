@@ -44,6 +44,7 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
       start,
       end,
       collection: config,
+      durationMs: config.durationMs,
     });
 
   const { state: eventState } = useEvent({ start, end });
