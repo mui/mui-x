@@ -34,10 +34,16 @@ const styledContextValue = {
 
 const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
 
+type PresetConfig = EventTimelinePremiumStoreParameters<
+  SchedulerEvent,
+  SchedulerResource
+>['presetConfig'];
+
 interface TestTimelineProps {
   events: SchedulerEvent[];
   resources: SchedulerResource[];
   dependencies?: SchedulerDependency[];
+  presetConfig?: PresetConfig;
   readOnly?: boolean;
   /**
    * Observes the dependency changes on top of the controlled loop.
@@ -54,6 +60,7 @@ export function TestTimeline({
   events: initialEvents,
   resources,
   dependencies: initialDependencies,
+  presetConfig,
   readOnly,
   onDependenciesChange,
   onStoreReady,
@@ -80,6 +87,7 @@ export function TestTimeline({
     visibleDate: DEFAULT_TESTING_VISIBLE_DATE,
     preset: 'dayAndHour',
     presets: ['dayAndHour'],
+    presetConfig,
   };
   const store = useEventTimelinePremium(parameters);
   React.useEffect(() => {
@@ -106,6 +114,7 @@ interface RenderTimelineParameters {
   events: SchedulerEvent[];
   resources?: SchedulerResource[];
   dependencies?: SchedulerDependency[];
+  presetConfig?: PresetConfig;
   readOnly?: boolean;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
 }
@@ -119,6 +128,7 @@ export function createDependencyTimelineRenderer(render: (element: React.ReactEl
     events,
     resources = [resource1, resource2],
     dependencies,
+    presetConfig,
     readOnly,
     onDependenciesChange,
   }: RenderTimelineParameters) {
@@ -142,6 +152,7 @@ export function createDependencyTimelineRenderer(render: (element: React.ReactEl
           events={events}
           resources={resources}
           dependencies={dependencies}
+          presetConfig={presetConfig}
           readOnly={readOnly}
           onDependenciesChange={onDependenciesChange}
           onStoreReady={(mountedStore) => {

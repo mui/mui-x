@@ -55,10 +55,10 @@ export const timelineOccurrencePlaceholderSelectors = {
       return null;
     }
 
-    const presetConfig = eventTimelinePremiumPresetSelectors.config(state);
+    const config = eventTimelinePremiumPresetSelectors.config(state);
     if (
-      state.adapter.isBefore(placeholder.end, presetConfig.start) ||
-      state.adapter.isAfter(placeholder.start, presetConfig.end)
+      state.adapter.isBefore(placeholder.end, config.start) ||
+      state.adapter.isAfter(placeholder.start, config.end)
     ) {
       return null;
     }

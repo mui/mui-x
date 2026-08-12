@@ -66,6 +66,7 @@ export function useRegisterPointerInteractions() {
 
       if (lastItem) {
         lastItemRef.current = undefined;
+        instance.clearHoveredItem(lastItem);
         instance.removeTooltipItem(lastItem);
         instance.clearHighlight();
       }
@@ -101,6 +102,7 @@ export function useRegisterPointerInteractions() {
 
       if (item) {
         instance.setLastUpdateSource('pointer');
+        instance.setHoveredItem(item);
         instance.setTooltipItem(item);
         instance.setHighlight(item);
         lastItemRef.current = item;
@@ -109,11 +111,19 @@ export function useRegisterPointerInteractions() {
       }
     };
 
+    // Touch has no hover phase, so a tap may never produce a `pointermove`. Resolving on
+    // `pointerdown` too is what makes the pointer item known for a stationary tap.
+    const onPointerDown = function onPointerDown(event: PointerEvent) {
+      onPointerMove(event);
+    };
+
+    element.addEventListener('pointerdown', onPointerDown);
     element.addEventListener('pointerleave', onPointerLeave);
     element.addEventListener('pointermove', onPointerMove);
     element.addEventListener('pointerenter', onPointerEnter);
 
     return () => {
+      element.removeEventListener('pointerdown', onPointerDown);
       element.removeEventListener('pointerenter', onPointerEnter);
       element.removeEventListener('pointermove', onPointerMove);
       element.removeEventListener('pointerleave', onPointerLeave);

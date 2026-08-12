@@ -4,7 +4,6 @@ import { useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { Dimensions, Virtualization } from '@mui/x-virtualizer';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -13,6 +12,7 @@ import type {
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumDependencySelectors,
+  eventTimelinePremiumOccurrenceSelectors,
   eventTimelinePremiumPresetSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyId } from '@mui/x-scheduler-internals-premium/models';
@@ -109,18 +109,22 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
   const store = useEventTimelinePremiumStoreContext();
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
 
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const dependencies = useStore(store, eventTimelinePremiumDependencySelectors.activeModelList);
+  // Keep the lane assignment consistent with the rendered rows, which exclude the
+  // occurrences hidden by the preset's hour window.
   const resources = useStore(
     store,
-    schedulerOccurrenceSelectors.groupedByResourceList,
-    presetConfig.start,
-    presetConfig.end,
+    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
+  );
+  const positionByOccurrenceKey = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
   );
   const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
 
-  const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
+  const eventsWidth = config.tickCount * config.tickWidth;
 
   const endpointIds = React.useMemo(() => {
     const ids = new Set<SchedulerEventId>();
@@ -137,18 +141,19 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
         adapter,
         resources,
         rowPositions: rowsMeta.positions,
-        collectionStart: presetConfig.start,
-        collectionEnd: presetConfig.end,
+        axis: config,
+        positionByOccurrenceKey,
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),
         endpointIds,
       }),
+    // The config selector is memoized, so the object identity only changes with its content.
     [
       adapter,
       resources,
+      positionByOccurrenceKey,
       rowsMeta.positions,
-      presetConfig.start,
-      presetConfig.end,
+      config,
       eventsWidth,
       theme,
       endpointIds,
@@ -166,7 +171,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
     // the viewport even when both of its endpoints are scrolled out.
     const { start: visibleStartFraction, end: visibleEndFraction } = getVisibleFractionRange(
       renderContext,
-      presetConfig.tickCount,
+      config.tickCount,
     );
     const visibleArrows = arrows.filter(
       (arrow) =>
@@ -191,7 +196,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
       lastRowIndex: renderContext.lastRowIndex,
       resources,
     };
-  }, [arrows, resolver, eventsWidth, renderContext, rowsMeta, presetConfig.tickCount, resources]);
+  }, [arrows, resolver, eventsWidth, renderContext, rowsMeta, config.tickCount, resources]);
 
   return (
     <EventTimelinePremiumDependencyGeometryContext.Provider value={value}>

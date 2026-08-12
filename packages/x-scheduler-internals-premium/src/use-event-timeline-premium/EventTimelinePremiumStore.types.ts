@@ -3,7 +3,10 @@ import type {
   SchedulerParameters,
   SchedulerChangeEventDetails,
 } from '@mui/x-scheduler-internals/internals';
-import type { EventTimelinePremiumPreset } from '../models/preset';
+import type {
+  EventTimelinePremiumPreset,
+  EventTimelinePremiumPresetConfig,
+} from '../models/preset';
 import type { EventTimelinePremiumPreferences } from '../models/preferences';
 import type {
   SchedulerDependenciesParameters,
@@ -24,6 +27,10 @@ export interface EventTimelinePremiumState extends SchedulerState, SchedulerDepe
    * Preferences for the timeline.
    */
   preferences: Partial<EventTimelinePremiumPreferences>;
+  /**
+   * Configuration applied to each preset, keyed by the preset name.
+   */
+  presetConfig: EventTimelinePremiumPresetConfig;
   /**
    * Whether the dependencies feature is enabled, i.e. the internal `dependencies`
    * parameter is provided.
@@ -81,6 +88,18 @@ export interface EventTimelinePremiumParameters<
    * Preferences currently displayed in the timeline.
    */
   preferences?: Partial<EventTimelinePremiumPreferences>;
+  /**
+   * Configuration applied to each preset, keyed by the preset name.
+   * For the `dayAndHour` preset, `startTime` and `endTime` limit the hours displayed on
+   * each day: `startTime` is inclusive and `endTime` exclusive, so `{ startTime: 8,
+   * endTime: 20 }` renders the cells 8 AM through 7 PM and an event ending at 20:00 is
+   * still fully visible. Both must be whole hours between 0 and 24 with
+   * `startTime` lower than `endTime`; they default to 0 and 24, the full day, and an
+   * invalid range falls back to the full day with a warning in development.
+   * Presets that do not tick in hours ignore the configuration.
+   * @example { dayAndHour: { startTime: 8, endTime: 20 } }
+   */
+  presetConfig?: EventTimelinePremiumPresetConfig;
 }
 
 /**

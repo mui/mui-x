@@ -7,6 +7,8 @@ import {
   EventBuilder,
   ResourceBuilder,
 } from 'test/utils/scheduler';
+import { createTheme } from '@mui/material/styles';
+import { getEventsCellLaneMetrics, getRowHeightForLaneCount } from '../content/rowGeometry';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 import {
   buildDependency,
@@ -105,6 +107,82 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
 
     // S route: four softened corners.
     expect(d.match(/Q /g)).to.have.length(4);
+  });
+
+  describe('virtualized row heights with a trimmed hour window', () => {
+    const PRESET_CONFIG = { dayAndHour: { startTime: 8, endTime: 20 } };
+    const theme = createTheme();
+
+    const sourceEvent = EventBuilder.new()
+      .id('event-source')
+      .title('Source')
+      .span('2025-07-03T18:00:00Z', '2025-07-03T22:00:00Z')
+      .resource(resource1)
+      .build();
+    const targetEvent = EventBuilder.new()
+      .id('event-target')
+      .title('Target')
+      .singleDay('2025-07-04T10:00:00Z')
+      .resource(resource2)
+      .build();
+    const dependency = buildDependency('dep-1', 'event-source', 'event-target');
+
+    function getArrowEndY() {
+      const coordinates = getArrowPaths()[0]
+        .getAttribute('d')!
+        .match(/-?[\d.]+/g)!
+        .map(parseFloat);
+      return coordinates[coordinates.length - 1];
+    }
+
+    // The arrow enters the target at lane 1 of the second row, so its end Y measures
+    // the virtualized height the first row got from `getRowHeight`.
+    function getTargetAnchorY(firstRowLaneCount: number) {
+      const metrics = getEventsCellLaneMetrics(theme);
+      return (
+        getRowHeightForLaneCount(theme, firstRowLaneCount) +
+        metrics.topPadding +
+        metrics.laneMinHeight / 2
+      );
+    }
+
+    it('should not reserve a lane for an occurrence hidden by the hour window', () => {
+      // 21:00 → 22:00 overlaps the source in real time but is fully hidden: the
+      // virtualized first row must keep its one-lane height.
+      const hiddenOverlap = EventBuilder.new()
+        .id('event-hidden')
+        .title('Hidden')
+        .span('2025-07-03T21:00:00Z', '2025-07-03T22:00:00Z')
+        .resource(resource1)
+        .build();
+
+      renderTimeline({
+        events: [sourceEvent, hiddenOverlap, targetEvent],
+        dependencies: [dependency],
+        presetConfig: PRESET_CONFIG,
+      });
+
+      expect(getArrowEndY()).to.be.closeTo(getTargetAnchorY(1), 0.01);
+    });
+
+    it('should reserve a second lane for a visible overlapping occurrence', () => {
+      // Sensitivity control for the previous test: a visible overlap must grow the
+      // first row, proving the anchor really tracks its virtualized height.
+      const visibleOverlap = EventBuilder.new()
+        .id('event-overlap')
+        .title('Overlap')
+        .span('2025-07-03T19:00:00Z', '2025-07-03T21:00:00Z')
+        .resource(resource1)
+        .build();
+
+      renderTimeline({
+        events: [sourceEvent, visibleOverlap, targetEvent],
+        dependencies: [dependency],
+        presetConfig: PRESET_CONFIG,
+      });
+
+      expect(getArrowEndY()).to.be.closeTo(getTargetAnchorY(2), 0.01);
+    });
   });
 
   // TODO(multi-resource rendering): add an integration test rendering one arrow per

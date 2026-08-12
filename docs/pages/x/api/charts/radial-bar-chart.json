@@ -25,6 +25,7 @@
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
     },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "grid": { "type": { "name": "shape", "description": "{ radius?: bool, rotation?: bool }" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {

@@ -15,6 +15,7 @@ import {
   useDraggableEvent,
   generateOccurrenceFromEvent,
   useElementPositionInCollection,
+  dateToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -76,7 +77,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const dependencyDropTarget = useStore(
     store,
     eventTimelinePremiumDependencySelectors.isCreationTarget,
@@ -87,8 +88,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   // Feature hooks
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
+      // Measured on the axis so it stays consistent with the cursor offsets when a
+      // trimmed hour window compresses the days.
       const offsetBeforeRowStart = Math.max(
-        adapter.getTime(presetConfig.start) - start.timestamp,
+        -dateToTimelineAxisOffsetMs(adapter, config, start.value),
         0,
       );
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
@@ -119,6 +122,14 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     source: 'TimelineGridEvent',
   }));
 
+  const elementPosition = useElementPositionInCollection({
+    start,
+    end,
+    collection: config,
+    durationMs: config.durationMs,
+  });
+  const { position, duration, startingBeforeEdge, endingAfterEdge } = elementPosition;
+
   const {
     state,
     preview,
@@ -132,8 +143,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     isDraggable,
     renderDragPreview,
     getDragData,
-    collectionStart: presetConfig.start,
-    collectionEnd: presetConfig.end,
+    position: elementPosition,
   });
 
   const { getButtonProps, buttonRef } = useButton({
@@ -141,14 +151,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     native: nativeButton,
     tabIndex: rowHasFocus ? 0 : -1,
   });
-
-  const { position, duration, startingBeforeEdge, endingAfterEdge } =
-    useElementPositionInCollection({
-      start,
-      end,
-      collectionStart: presetConfig.start,
-      collectionEnd: presetConfig.end,
-    });
 
   useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId: rowResourceId });
 
@@ -208,6 +210,9 @@ export namespace TimelineGridEvent {
     originalOccurrence: SchedulerEventOccurrence;
     start: TemporalSupportedObject;
     end: TemporalSupportedObject;
+    /**
+     * Cursor offset from the event start, in axis milliseconds.
+     */
     initialCursorPositionInEventMs: number;
     /**
      * The id of the resource row the occurrence was dragged from.
