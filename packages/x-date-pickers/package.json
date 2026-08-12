@@ -109,7 +109,8 @@
     "moment-timezone": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rimraf": "catalog:"
+    "rimraf": "catalog:",
+    "temporal-polyfill": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"
