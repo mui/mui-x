@@ -853,6 +853,16 @@ describe('<DateRangeCalendar />', () => {
     });
   });
 
+  it('should expose the filler cells as grid cells', () => {
+    render(<DateRangeCalendar calendars={1} referenceDate={adapterToUse.date('2018-01-01')} />);
+
+    const grid = screen.getByRole('grid', { name: 'January 2018' });
+
+    // Every week of the grid must expose as many cells as the grid has column headers.
+    expect(within(grid).getAllByRole('gridcell')).to.have.length(35);
+    expect(grid.querySelectorAll(`.${dayClasses.fillerCell}`)).to.have.length(4);
+  });
+
   describe('Performance', () => {
     it('should only render the new start day when selecting a start day without a previously selected start day', () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);

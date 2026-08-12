@@ -553,6 +553,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     return (
       <DateRangePickerDayRoot
         ref={handleRef}
+        role={other.role}
         ownerState={ownerState}
         className={clsx(classes.root, className)}
         as="div"
