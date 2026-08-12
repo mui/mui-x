@@ -426,13 +426,18 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     debouncedFetchRows();
   }, [apiRef, props.dataSourceKeepPreviousData, stopPolling, debouncedFetchRows]);
 
-  const getChangedFilterModel = useGridDataSourceFilterModelChange(apiRef);
-  const handleFetchRowsOnFilterModelChange = React.useCallback(() => {
-    if (getChangedFilterModel() === null) {
-      return;
-    }
-    handleFetchRowsOnParamsChange();
-  }, [getChangedFilterModel, handleFetchRowsOnParamsChange]);
+  const hasFilterModelChanged = useGridDataSourceFilterModelChange(apiRef);
+  const handleFetchRowsOnFilterModelChange = React.useCallback<
+    GridEventListener<'filterModelChange'>
+  >(
+    (newFilterModel) => {
+      if (!hasFilterModelChanged(newFilterModel)) {
+        return;
+      }
+      handleFetchRowsOnParamsChange();
+    },
+    [hasFilterModelChanged, handleFetchRowsOnParamsChange],
+  );
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
