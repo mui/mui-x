@@ -18,6 +18,7 @@ import type {
 import type { GridRowReorderPrivateApi } from './gridRowReorderApi';
 import type {
   GridDataSourceApiPro,
+  GridDataSourceNestedLazyLoaderPrivateApi,
   GridDataSourcePrivateApiPro,
 } from '../hooks/features/dataSource/models';
 import type { DataGridProProcessedProps } from './dataGridProProps';
@@ -44,4 +45,5 @@ export interface GridPrivateApiPro
     GridDetailPanelPrivateApi,
     GridInfiniteLoaderPrivateApi,
     GridRowReorderPrivateApi,
-    GridDataSourcePrivateApiPro {}
+    GridDataSourcePrivateApiPro,
+    GridDataSourceNestedLazyLoaderPrivateApi {}

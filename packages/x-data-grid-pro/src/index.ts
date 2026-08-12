@@ -41,4 +41,5 @@ export type {
   GridDataSourceApiBasePro as GridDataSourceApiBase,
   GridDataSourceApiPro as GridDataSourceApi,
   GridDataSourcePrivateApiPro as GridDataSourcePrivateApi,
+  GridDataSourceNestedLazyLoaderPrivateApi,
 } from './hooks/features/dataSource/models';
