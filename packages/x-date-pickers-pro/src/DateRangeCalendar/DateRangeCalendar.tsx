@@ -472,6 +472,10 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     disabled,
   };
 
+  // Days outside the current month are only rendered when a single calendar is displayed,
+  // otherwise the same day would be rendered in two calendars.
+  const shouldShowDaysOutsideCurrentMonth = calendars === 1 && showDaysOutsideCurrentMonth;
+
   const [rangePreviewDay, setRangePreviewDay] = React.useState<PickerValidDate | null>(null);
 
   const CalendarTransitionProps = React.useMemo(
@@ -550,7 +554,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         'data-position': datePosition,
         ...dragEventHandlers,
         draggable: isElementDraggable ? true : undefined,
-        isDayFillerCell: isDayOutsideMonth && !showDaysOutsideCurrentMonth,
+        isDayFillerCell: isDayOutsideMonth && !shouldShowDaysOutsideCurrentMonth,
         ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
       };
     },
@@ -635,7 +639,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
                 shouldDisableDate={wrappedShouldDisableDate}
                 hasFocus={hasFocus}
                 onFocusedViewChange={(isViewFocused) => setFocusedView('day', isViewFocused)}
-                showDaysOutsideCurrentMonth={calendars === 1 && showDaysOutsideCurrentMonth}
+                showDaysOutsideCurrentMonth={shouldShowDaysOutsideCurrentMonth}
                 dayOfWeekFormatter={dayOfWeekFormatter}
                 loading={loading}
                 renderLoading={renderLoading}
