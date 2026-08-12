@@ -853,14 +853,35 @@ describe('<DateRangeCalendar />', () => {
     });
   });
 
-  it('should expose the filler cells as grid cells', () => {
-    render(<DateRangeCalendar calendars={1} referenceDate={adapterToUse.date('2018-01-01')} />);
+  describe('filler cells', () => {
+    const referenceDate = adapterToUse.date('2018-01-01');
 
-    const grid = screen.getByRole('grid', { name: 'January 2018' });
+    it('should be exposed as grid cells', () => {
+      render(<DateRangeCalendar calendars={1} referenceDate={referenceDate} />);
 
-    // Every week of the grid must expose as many cells as the grid has column headers.
-    expect(within(grid).getAllByRole('gridcell')).to.have.length(35);
-    expect(grid.querySelectorAll(`.${dayClasses.fillerCell}`)).to.have.length(4);
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+
+      expect(within(grid).getAllByRole('gridcell')).to.have.length(35);
+      expect(grid.querySelectorAll(`.${dayClasses.fillerCell}`)).to.have.length(4);
+    });
+
+    // The week number is a `rowheader` taking the first position of the row, so a cell without
+    // an explicit column index would be off by one.
+    it('should keep the column index of the day they replace', () => {
+      render(<DateRangeCalendar calendars={1} displayWeekNumber referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const weeks = within(within(grid).getByRole('rowgroup')).getAllByRole('row');
+
+      expect(weeks).to.have.length(5);
+      weeks.forEach((week) => {
+        const columnIndexes = within(week)
+          .getAllByRole('gridcell')
+          .map((cell) => cell.getAttribute('aria-colindex'));
+
+        expect(columnIndexes).to.deep.equal(['1', '2', '3', '4', '5', '6', '7']);
+      });
+    });
   });
 
   describe('Performance', () => {

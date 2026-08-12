@@ -246,6 +246,7 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
       <PickerDayRoot
         ref={handleRef}
         role={other.role}
+        aria-colindex={other['aria-colindex']}
         ownerState={ownerState}
         className={clsx(classes.root, className)}
         as="div"
