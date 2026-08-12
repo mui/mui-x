@@ -1305,6 +1305,72 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       // only the initial page was fetched; initialState suppressed the wasted request
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
+
+    it('should re-evaluate hasNextPage when the dataSource reference changes', async () => {
+      // A new `dataSource` reference is a full restart: the rows and the cache are cleared
+      // and the first page is refetched. The previous source reporting no next page says
+      // nothing about the new one, which here never sends `pageInfo` at all.
+      const createStaticDataSource = (
+        onFetch: (params: GridGetRowsParams) => void,
+        pageInfo?: { hasNextPage: boolean },
+      ): GridDataSource => ({
+        getRows: async (params) => {
+          onFetch(params);
+          const start = Number(params.start ?? 0);
+          const end = Number(params.end ?? 9);
+          return {
+            rows: Array.from({ length: end - start + 1 }, (__, index) => ({ id: start + index })),
+            rowCount: -1,
+            ...(pageInfo === undefined ? {} : { pageInfo }),
+          };
+        },
+      });
+
+      const exhaustedFetchSpy = spy();
+      const silentFetchSpy = spy();
+      const exhaustedDataSource = createStaticDataSource(exhaustedFetchSpy, {
+        hasNextPage: false,
+      });
+      const silentDataSource = createStaticDataSource(silentFetchSpy);
+
+      const { setProps } = render(<TestDataSourceLazyLoader dataSource={exhaustedDataSource} />);
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      setProps({ dataSource: silentDataSource });
+      await waitFor(() => expect(silentFetchSpy.callCount).to.be.at.least(1));
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      silentFetchSpy.resetHistory();
+
+      // scrolling to the bottom must fetch again: the stale `false` from the previous
+      // data source must not survive the restart
+      await act(async () => {
+        apiRef.current?.scrollToIndexes({ rowIndex: 9 });
+      });
+      await waitFor(() => expect(silentFetchSpy.callCount).to.be.at.least(1));
+    });
+
+    it('should honor a pagination meta update made through the API', async () => {
+      // The response reports no next page, then `setPaginationMeta` says otherwise. An
+      // explicit update of the pagination meta overrides the response.
+      transformGetRowsResponse = (response) => ({
+        ...response,
+        rowCount: -1,
+        pageInfo: { hasNextPage: false },
+      });
+
+      render(<TestDataSourceLazyLoader mockServerRowCount={100} />);
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      await act(async () => {
+        apiRef.current?.setPaginationMeta({ hasNextPage: true });
+      });
+      fetchRowsSpy.resetHistory();
+
+      await act(async () => {
+        apiRef.current?.scrollToIndexes({ rowIndex: 9 });
+      });
+      await waitFor(() => expect(fetchRowsSpy.callCount).to.be.at.least(1));
+    });
   });
 
   describe('Row count updates', () => {
