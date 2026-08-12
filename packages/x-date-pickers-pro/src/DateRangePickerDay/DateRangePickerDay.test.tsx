@@ -122,6 +122,69 @@ describe('<DateRangePickerDay />', () => {
     });
   });
 
+  describe('disabled day', () => {
+    const disabledDayProps = {
+      onDaySelect: () => {},
+      outsideCurrentMonth: false,
+      disabled: true,
+      isHighlighting: true,
+      isPreviewing: false,
+      isStartOfPreviewing: false,
+      isEndOfPreviewing: false,
+      isFirstVisibleCell: false,
+      isLastVisibleCell: false,
+    };
+
+    it('should not dim the day inside the selected range', () => {
+      const { container } = render(
+        <DateRangePickerDay
+          {...disabledDayProps}
+          day={adapterToUse.date('2018-01-15')}
+          isStartOfHighlighting={false}
+          isEndOfHighlighting={false}
+        />,
+      );
+
+      expect(container.firstChild).to.have.class(classes.insideSelection);
+      expect(container.firstChild).to.have.style('opacity', '1');
+    });
+
+    it('should use the disabled text color outside of the current month', () => {
+      const theme = createTheme({
+        palette: { text: { disabled: 'rgb(1, 2, 3)', secondary: 'rgb(4, 5, 6)' } },
+      });
+
+      const { container } = render(
+        <ThemeProvider theme={theme}>
+          <DateRangePickerDay
+            {...disabledDayProps}
+            day={adapterToUse.date('2018-02-01')}
+            outsideCurrentMonth
+            showDaysOutsideCurrentMonth
+            isStartOfHighlighting={false}
+            isEndOfHighlighting={false}
+          />
+        </ThemeProvider>,
+      );
+
+      expect(container.firstChild).to.have.style('color', 'rgb(1, 2, 3)');
+    });
+
+    it('should not dim the day at the edge of the selected range', () => {
+      const { container } = render(
+        <DateRangePickerDay
+          {...disabledDayProps}
+          day={adapterToUse.date('2018-01-15')}
+          isStartOfHighlighting
+          isEndOfHighlighting={false}
+        />,
+      );
+
+      expect(container.firstChild).to.have.class(classes.selectionStart);
+      expect(container.firstChild).to.have.style('opacity', '1');
+    });
+  });
+
   describe('filler cell', () => {
     it('should stay hidden when it is disabled and inside the selected range', () => {
       const { container } = render(
