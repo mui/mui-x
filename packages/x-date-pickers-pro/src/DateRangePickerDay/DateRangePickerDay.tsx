@@ -99,6 +99,34 @@ const previewStyles = (theme: Theme) => ({
   right: 'calc(-1 * var(--PickerDay-horizontalMargin))',
 });
 
+// Closes the highlight and the preview on the left, respectively on the right.
+const startEdgeStyles = (theme: Theme) => ({
+  '::after': {
+    borderTopLeftRadius: 'inherit',
+    borderBottomLeftRadius: 'inherit',
+    borderLeftColor: (theme.vars || theme).palette.divider,
+    left: 0,
+  },
+  '::before': {
+    borderTopLeftRadius: 'inherit',
+    borderBottomLeftRadius: 'inherit',
+    left: 0,
+  },
+});
+const endEdgeStyles = (theme: Theme) => ({
+  '::after': {
+    borderTopRightRadius: 'inherit',
+    borderBottomRightRadius: 'inherit',
+    borderRightColor: (theme.vars || theme).palette.divider,
+    right: 0,
+  },
+  '::before': {
+    borderTopRightRadius: 'inherit',
+    borderBottomRightRadius: 'inherit',
+    right: 0,
+  },
+});
+
 const selectedDayStyles = (theme: Theme) => ({
   color: (theme.vars || theme).palette.primary.contrastText,
   backgroundColor: (theme.vars || theme).palette.primary.main,
@@ -368,71 +396,23 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
     },
     {
       props: { isDayEndOfWeek: true },
-      style: {
-        '::after': {
-          borderTopRightRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-          borderRightColor: (theme.vars || theme).palette.divider,
-          right: 0,
-        },
-        '::before': {
-          borderTopRightRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-          right: 0,
-        },
-      },
+      style: endEdgeStyles(theme),
     },
     {
       props: {
         isDayStartOfWeek: true,
       },
-      style: {
-        '::after': {
-          borderTopLeftRadius: 'inherit',
-          borderBottomLeftRadius: 'inherit',
-          borderLeftColor: (theme.vars || theme).palette.divider,
-          left: 0,
-        },
-        '::before': {
-          borderTopLeftRadius: 'inherit',
-          borderBottomLeftRadius: 'inherit',
-          left: 0,
-        },
-      },
+      style: startEdgeStyles(theme),
     },
     // The cells that follow the last visible cell are filler cells, they render nothing.
     // The highlight and the preview have to be closed here instead of bleeding into them.
     {
       props: { isDayLastVisibleCell: true },
-      style: {
-        '::after': {
-          borderTopRightRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-          borderRightColor: (theme.vars || theme).palette.divider,
-          right: 0,
-        },
-        '::before': {
-          borderTopRightRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-          right: 0,
-        },
-      },
+      style: endEdgeStyles(theme),
     },
     {
       props: { isDayFirstVisibleCell: true },
-      style: {
-        '::after': {
-          borderTopLeftRadius: 'inherit',
-          borderBottomLeftRadius: 'inherit',
-          borderLeftColor: (theme.vars || theme).palette.divider,
-          left: 0,
-        },
-        '::before': {
-          borderTopLeftRadius: 'inherit',
-          borderBottomLeftRadius: 'inherit',
-          left: 0,
-        },
-      },
+      style: startEdgeStyles(theme),
     },
   ],
 }));

@@ -11,7 +11,10 @@ import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
-import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
+import {
+  DateRangePickerDay,
+  dateRangePickerDayClasses as dayClasses,
+} from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import type { RangePosition } from '../models';
@@ -822,19 +825,31 @@ describe('<DateRangeCalendar />', () => {
       showDaysOutsideCurrentMonth: true,
     } as const;
 
+    // January 2018 starts on a Monday and ends on a Wednesday, its grid is 5 weeks long:
+    // 31 days of January, one day of December and three days of February.
+    const getJanuaryCells = () => {
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const cells = grid.querySelectorAll(`.${dayClasses.root}`);
+      return {
+        cells,
+        fillerCells: grid.querySelectorAll(`.${dayClasses.fillerCell}`),
+      };
+    };
+
     it('should render the days outside the current month with a single calendar', () => {
       render(<DateRangeCalendar {...props} calendars={1} />);
 
-      const grid = screen.getByRole('grid', { name: 'January 2018' });
-      // 31 days of January, plus the days of December and February filling the first and last week.
-      expect(within(grid).getAllByRole('gridcell').length).to.be.greaterThan(31);
+      const { cells, fillerCells } = getJanuaryCells();
+      expect(cells).to.have.length(35);
+      expect(fillerCells).to.have.length(0);
     });
 
     it('should be ignored with several calendars', () => {
       render(<DateRangeCalendar {...props} calendars={2} />);
 
-      const grid = screen.getByRole('grid', { name: 'January 2018' });
-      expect(within(grid).getAllByRole('gridcell')).to.have.length(31);
+      const { cells, fillerCells } = getJanuaryCells();
+      expect(cells).to.have.length(35);
+      expect(fillerCells).to.have.length(4);
     });
   });
 
