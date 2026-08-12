@@ -1172,7 +1172,7 @@ importers:
         version: 7.29.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@2.30.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.3.0(@types/react@19.2.18)(react@19.2.8)
@@ -1183,6 +1183,9 @@ importers:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.18-canary.31(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@playwright/test@1.61.1)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(@vitest/utils@4.1.10)(chai@6.2.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.1.5(@types/node@22.20.1)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.1)(yaml@2.9.0))(vitest@4.1.10)
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.4.0
       react:
         specifier: 'catalog:'
         version: 19.2.8
@@ -1718,7 +1721,7 @@ importers:
         version: 7.29.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@2.30.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1765,6 +1768,9 @@ importers:
       '@types/use-sync-external-store':
         specifier: 'catalog:'
         version: 1.5.0
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.4.0
       react:
         specifier: 'catalog:'
         version: 19.2.8

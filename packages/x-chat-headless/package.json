@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
+    "date-fns": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
