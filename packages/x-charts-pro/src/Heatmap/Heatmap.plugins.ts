@@ -37,7 +37,7 @@ export type HeatmapPluginSignatures = [
   UseChartKeyboardNavigationSignature,
 ];
 
-export const HEATMAP_PLUGINS = [
+export const HEATMAP_PLUGINS: ConvertSignaturesIntoPlugins<HeatmapPluginSignatures> = [
   useChartZAxis,
   useChartTooltip,
   useChartInteraction,
@@ -48,4 +48,4 @@ export const HEATMAP_PLUGINS = [
   useChartProZoom,
   useChartItemClick,
   useChartKeyboardNavigation,
-] as ConvertSignaturesIntoPlugins<HeatmapPluginSignatures>;
+];

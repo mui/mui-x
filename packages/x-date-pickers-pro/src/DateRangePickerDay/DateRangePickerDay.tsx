@@ -20,10 +20,7 @@ import type {
   DateRangePickerDayClasses,
   DateRangePickerDayClassKey,
 } from './dateRangePickerDayClasses';
-import {
-  dateRangePickerDayClasses,
-  getDateRangePickerDayUtilityClass,
-} from './dateRangePickerDayClasses';
+import { getDateRangePickerDayUtilityClass } from './dateRangePickerDayClasses';
 
 const useUtilityClasses = (
   ownerState: DateRangePickerDayOwnerState,
@@ -102,6 +99,34 @@ const previewStyles = (theme: Theme) => ({
   right: 'calc(-1 * var(--PickerDay-horizontalMargin))',
 });
 
+// Closes the highlight and the preview on the left, respectively on the right.
+const startEdgeStyles = (theme: Theme) => ({
+  '::after': {
+    borderTopLeftRadius: 'inherit',
+    borderBottomLeftRadius: 'inherit',
+    borderLeftColor: (theme.vars || theme).palette.divider,
+    left: 0,
+  },
+  '::before': {
+    borderTopLeftRadius: 'inherit',
+    borderBottomLeftRadius: 'inherit',
+    left: 0,
+  },
+});
+const endEdgeStyles = (theme: Theme) => ({
+  '::after': {
+    borderTopRightRadius: 'inherit',
+    borderBottomRightRadius: 'inherit',
+    borderRightColor: (theme.vars || theme).palette.divider,
+    right: 0,
+  },
+  '::before': {
+    borderTopRightRadius: 'inherit',
+    borderBottomRightRadius: 'inherit',
+    right: 0,
+  },
+});
+
 const selectedDayStyles = (theme: Theme) => ({
   color: (theme.vars || theme).palette.primary.contrastText,
   backgroundColor: (theme.vars || theme).palette.primary.main,
@@ -110,16 +135,9 @@ const selectedDayStyles = (theme: Theme) => ({
     willChange: 'background-color',
     backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
-  [`&.${dateRangePickerDayClasses.disabled}`]: {
-    opacity: 0.6,
-  },
 });
 
-const insideSelectionStyle = () => ({
-  [`&.${dateRangePickerDayClasses.disabled}`]: {
-    opacity: 0.6,
-  },
-});
+const DISABLED_DAY_OPACITY = 0.6;
 
 const DateRangePickerDayRoot = styled(ButtonBase, {
   name: 'MuiDateRangePickerDay',
@@ -194,6 +212,14 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
   },
   variants: [
     {
+      props: { isDayOutsideMonth: true },
+      style: {
+        color: (theme.vars || theme).palette.text.secondary,
+      },
+    },
+    // Must come after `isDayOutsideMonth` so that a disabled day outside the current month
+    // uses the disabled text color.
+    {
       props: { isDayDisabled: true },
       style: {
         color: (theme.vars || theme).palette.text.disabled,
@@ -206,12 +232,6 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         // and results in unexpected relationships between week day and day columns.
         opacity: 0,
         pointerEvents: 'none',
-      },
-    },
-    {
-      props: { isDayOutsideMonth: true },
-      style: {
-        color: (theme.vars || theme).palette.text.secondary,
       },
     },
     {
@@ -302,13 +322,41 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         '::before': {
           ...highlightStyles(theme),
         },
-        ...insideSelectionStyle(),
       },
     },
     {
       props: { isDaySelected: true, isDayInsideSelection: false },
       style: {
         ...selectedDayStyles(theme),
+      },
+    },
+    // A day disabled on its own (`shouldDisableDate`, `minDate`, ...) only dims its text.
+    // Dimming the cell would also dim the `::before` range highlight and leave gaps in the range.
+    {
+      props: {
+        isDaySelected: true,
+        isDayInsideSelection: false,
+        isDayDisabled: true,
+        isPickerDisabled: false,
+      },
+      style: {
+        color: theme.alpha(
+          (theme.vars || theme).palette.primary.contrastText,
+          DISABLED_DAY_OPACITY,
+        ),
+      },
+    },
+    // When the whole Picker is disabled, the range is dimmed as a whole.
+    {
+      props: { isDaySelected: true, isDayDisabled: true, isPickerDisabled: true },
+      style: {
+        opacity: DISABLED_DAY_OPACITY,
+      },
+    },
+    {
+      props: { isDayInsideSelection: true, isDayDisabled: true, isPickerDisabled: true },
+      style: {
+        opacity: DISABLED_DAY_OPACITY,
       },
     },
     {
@@ -348,37 +396,23 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
     },
     {
       props: { isDayEndOfWeek: true },
-      style: {
-        '::after': {
-          borderTopRightRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-          borderRightColor: (theme.vars || theme).palette.divider,
-          right: 0,
-        },
-        '::before': {
-          borderTopRightRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-          right: 0,
-        },
-      },
+      style: endEdgeStyles(theme),
     },
     {
       props: {
         isDayStartOfWeek: true,
       },
-      style: {
-        '::after': {
-          borderTopLeftRadius: 'inherit',
-          borderBottomLeftRadius: 'inherit',
-          borderLeftColor: (theme.vars || theme).palette.divider,
-          left: 0,
-        },
-        '::before': {
-          borderTopLeftRadius: 'inherit',
-          borderBottomLeftRadius: 'inherit',
-          left: 0,
-        },
-      },
+      style: startEdgeStyles(theme),
+    },
+    // The cells that follow the last visible cell are filler cells, they render nothing.
+    // The highlight and the preview have to be closed here instead of bleeding into them.
+    {
+      props: { isDayLastVisibleCell: true },
+      style: endEdgeStyles(theme),
+    },
+    {
+      props: { isDayFirstVisibleCell: true },
+      style: startEdgeStyles(theme),
     },
   ],
 }));
@@ -450,23 +484,30 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     showDaysOutsideCurrentMonth,
   });
 
+  const isDayFillerCell =
+    isDayFillerCellProp ?? (outsideCurrentMonth && !showDaysOutsideCurrentMonth);
+
   const ownerState: DateRangePickerDayOwnerState = {
     ...pickerDayOwnerState,
     // Properties that the Base UI implementation will have
-    isDaySelectionStart: isStartOfHighlighting,
-    isDaySelectionEnd: isEndOfHighlighting,
-    isDayInsideSelection: isHighlighting && !isStartOfHighlighting && !isEndOfHighlighting,
-    isDaySelected: isVisuallySelected ?? (isHighlighting || Boolean(selected)),
-    isDayPreviewed: isPreviewing,
-    isDayPreviewStart: isStartOfPreviewing,
-    isDayPreviewEnd: isEndOfPreviewing,
-    isDayInsidePreview: isPreviewing && !isStartOfPreviewing && !isEndOfPreviewing,
+    // A filler cell is visually hidden, it must never pick up any selection or preview styling.
+    isDaySelectionStart: !isDayFillerCell && isStartOfHighlighting,
+    isDaySelectionEnd: !isDayFillerCell && isEndOfHighlighting,
+    isDayInsideSelection:
+      !isDayFillerCell && isHighlighting && !isStartOfHighlighting && !isEndOfHighlighting,
+    isDaySelected:
+      !isDayFillerCell && (isVisuallySelected ?? (isHighlighting || Boolean(selected))),
+    isDayPreviewed: !isDayFillerCell && isPreviewing,
+    isDayPreviewStart: !isDayFillerCell && isStartOfPreviewing,
+    isDayPreviewEnd: !isDayFillerCell && isEndOfPreviewing,
+    isDayInsidePreview:
+      !isDayFillerCell && isPreviewing && !isStartOfPreviewing && !isEndOfPreviewing,
     // Properties specific to the MUI implementation (some might be removed in the next major)
     isDayStartOfMonth: adapter.isSameDay(day, adapter.startOfMonth(day)),
     isDayEndOfMonth: adapter.isSameDay(day, adapter.endOfMonth(day)),
     isDayFirstVisibleCell: isFirstVisibleCell,
     isDayLastVisibleCell: isLastVisibleCell,
-    isDayFillerCell: isDayFillerCellProp ?? (outsideCurrentMonth && !showDaysOutsideCurrentMonth),
+    isDayFillerCell,
     isDayDraggable: Boolean(draggable),
   };
 

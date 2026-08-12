@@ -191,6 +191,54 @@
       "isGlobal": false
     },
     {
+      "key": "anchoredEventToolbar",
+      "className": "MuiEventCalendarPremium-anchoredEventToolbar",
+      "description": "Styles applied to the anchored (desktop) armed-event toolbar wrapper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactDayTimeGrid",
+      "className": "MuiEventCalendarPremium-compactDayTimeGrid",
+      "description": "Styles applied to the compact (touch) day time grid root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactDayTimeGridContent",
+      "className": "MuiEventCalendarPremium-compactDayTimeGridContent",
+      "description": "Styles applied to the compact (touch) day time grid content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawer",
+      "className": "MuiEventCalendarPremium-compactEventDrawer",
+      "description": "Styles applied to the compact editing drawer root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerContent",
+      "className": "MuiEventCalendarPremium-compactEventDrawerContent",
+      "description": "Styles applied to the compact editing drawer content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerReadonlyHeader",
+      "className": "MuiEventCalendarPremium-compactEventDrawerReadonlyHeader",
+      "description": "Styles applied to the compact editing drawer read-only header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerReadonlyTitle",
+      "className": "MuiEventCalendarPremium-compactEventDrawerReadonlyTitle",
+      "description": "Styles applied to the compact editing drawer read-only title element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventToolbarDock",
+      "className": "MuiEventCalendarPremium-compactEventToolbarDock",
+      "description": "Styles applied to the compact (touch) armed-event toolbar dock element.",
+      "isGlobal": false
+    },
+    {
       "key": "content",
       "className": "MuiEventCalendarPremium-content",
       "description": "Styles applied to the content section element.",
@@ -539,6 +587,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventDialogHeaderActions",
+      "className": "MuiEventCalendarPremium-eventDialogHeaderActions",
+      "description": "Styles applied to the event dialog header actions container element.",
+      "isGlobal": false
+    },
+    {
       "key": "eventDialogInlineRow",
       "className": "MuiEventCalendarPremium-eventDialogInlineRow",
       "description": "Styles applied to the event dialog inline row element.",
@@ -779,6 +833,24 @@
       "isGlobal": false
     },
     {
+      "key": "eventToolbar",
+      "className": "MuiEventCalendarPremium-eventToolbar",
+      "description": "Styles applied to the armed-event toolbar root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbarDeleteButton",
+      "className": "MuiEventCalendarPremium-eventToolbarDeleteButton",
+      "description": "Styles applied to the armed-event toolbar delete button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbarEditButton",
+      "className": "MuiEventCalendarPremium-eventToolbarEditButton",
+      "description": "Styles applied to the armed-event toolbar edit button element.",
+      "isGlobal": false
+    },
+    {
       "key": "headerToolbar",
       "className": "MuiEventCalendarPremium-headerToolbar",
       "description": "Styles applied to the header toolbar element.",
@@ -788,6 +860,18 @@
       "key": "headerToolbarActions",
       "className": "MuiEventCalendarPremium-headerToolbarActions",
       "description": "Styles applied to the header toolbar actions element.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarCompactMenuButton",
+      "className": "MuiEventCalendarPremium-headerToolbarCompactMenuButton",
+      "description": "Styles applied to the header toolbar compact menu button element (compact layout).",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarCompactTodayButton",
+      "className": "MuiEventCalendarPremium-headerToolbarCompactTodayButton",
+      "description": "Styles applied to the header toolbar compact today button element (compact layout).",
       "isGlobal": false
     },
     {
@@ -1130,6 +1214,72 @@
       "key": "sidePanelDivider",
       "className": "MuiEventCalendarPremium-sidePanelDivider",
       "description": "Styles applied to the side panel divider element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawer",
+      "className": "MuiEventCalendarPremium-sidePanelDrawer",
+      "description": "Styles applied to the side panel drawer paper (popup) element (compact layout).",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerBackdrop",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerBackdrop",
+      "description": "Styles applied to the side panel drawer backdrop element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerCloseButton",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerCloseButton",
+      "description": "Styles applied to the side panel drawer close button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerHeader",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerHeader",
+      "description": "Styles applied to the side panel drawer header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerPreferences",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerPreferences",
+      "description": "Styles applied to the side panel drawer preferences entry list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerPreferencesButton",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerPreferencesButton",
+      "description": "Styles applied to the side panel drawer preferences button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerPreferencesList",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerPreferencesList",
+      "description": "Styles applied to the side panel drawer collapsible preferences options list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerTitle",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerTitle",
+      "description": "Styles applied to the side panel drawer title element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerViewItem",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerViewItem",
+      "description": "Styles applied to side panel drawer view list item elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerViewList",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerViewList",
+      "description": "Styles applied to the side panel drawer view list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerViewport",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerViewport",
+      "description": "Styles applied to the side panel drawer root (modal) element.",
       "isGlobal": false
     },
     {

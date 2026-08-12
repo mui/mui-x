@@ -1,9 +1,12 @@
 export * from './SchedulerStore';
 export * from './event-utils';
 export * from './drag-utils';
+export * from './pointer-utils';
 export * from './useDropTarget';
 export * from './useEventResizeHandler';
+export * from './resize-utils';
 export * from './useElementPositionInCollection';
+export * from './timeline-axis';
 export * from './useEvent';
 export * from './useDraggableEvent';
 export * from './useTimelineDragAutoScroll';
@@ -14,3 +17,4 @@ export * from './useInitializeApiRef';
 export * from './useEventCreation';
 export * from './useKeyboardEventCreation';
 export * from './getNavigationTarget';
+export * from './getDisplayedHourRange';

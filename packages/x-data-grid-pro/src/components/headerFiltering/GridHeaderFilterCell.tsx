@@ -469,6 +469,7 @@ GridHeaderFilterCell.propTypes /* remove-proptypes */ = {
     className: PropTypes.string,
     clearButton: PropTypes.node,
     disabled: PropTypes.bool,
+    disableDebounce: PropTypes.bool,
     focusElementRef: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.shape({

@@ -6,26 +6,37 @@ import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
 import {
   DEFAULT_SCHEDULER_PREFERENCES,
+  getDisplayedHourRange,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
-import { createChangeEventDetails } from '@mui/x-scheduler-internals/base-ui-copy';
-import type { EventTimelinePremiumPreferences, EventTimelinePremiumPreset } from '../models';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import type {
+  EventTimelinePremiumPreferences,
+  EventTimelinePremiumPreset,
+  EventTimelinePremiumPresetConfig,
+  SchedulerAddDependencyResult,
+  SchedulerDependencyCreationProperties,
+  SchedulerDependencyId,
+} from '../models';
 import type {
   EventTimelinePremiumState,
   EventTimelinePremiumParameters,
+  EventTimelinePremiumStoreParameters,
 } from './EventTimelinePremiumStore.types';
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
 import { schedulerRecurringEventsPlugin } from '../internals/plugins/schedulerRecurringEventsPlugin';
+import { SchedulerSchedulingPlugin } from '../internals/plugins/SchedulerSchedulingPlugin';
 import {
-  EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
+  EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS,
   getPresetPxPerDay,
 } from '../internals/utils/preset-utils';
+import { buildDependenciesState } from '../internals/utils/dependency-utils';
 
 // Sorted by descending px/day (most zoomed-in first). Each preset's `(timeResolution,
 // tickWidth)` must produce a unique px/day — otherwise the order is decided by
 // `Object.keys` insertion order, which is not a stable contract.
 const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = (
-  Object.keys(EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS) as EventTimelinePremiumPreset[]
+  Object.keys(EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS) as EventTimelinePremiumPreset[]
 ).sort((a, b) => getPresetPxPerDay(b) - getPresetPxPerDay(a));
 
 export const DEFAULT_PRESETS: EventTimelinePremiumPreset[] = PRESET_ZOOM_ORDER;
@@ -64,11 +75,44 @@ function sortPresetsByZoomOrder(
   return PRESET_ZOOM_ORDER.filter((preset) => presets.includes(preset));
 }
 
+/**
+ * Validates every entry of `presetConfig`, not just the active preset's: the selector
+ * only resolves the rendered preset, so a typo in another preset's range would stay
+ * silent until an end user switches to it. Configuring a known preset that `presets`
+ * currently leaves out is not reported: a wrapper can configure it once while a screen
+ * or a responsive mode narrows `presets`, the same way the Event Calendar accepts
+ * `viewConfig` entries for views it does not render.
+ */
+function validatePresetConfig(presetConfig: EventTimelinePremiumPresetConfig) {
+  if (process.env.NODE_ENV !== 'production') {
+    for (const preset of Object.keys(presetConfig) as (keyof EventTimelinePremiumPresetConfig)[]) {
+      const hourConfig = presetConfig[preset];
+      if (hourConfig) {
+        if (!PRESET_ZOOM_ORDER.includes(preset)) {
+          warnOnce([
+            `MUI X Scheduler: \`presetConfig.${preset}\` is not a known preset, so the configuration is ignored.`,
+            `Use one of the built-in presets (${PRESET_ZOOM_ORDER.join(', ')}), or remove the entry from \`presetConfig\`.`,
+            'See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.',
+          ]);
+        }
+        getDisplayedHourRange(hourConfig.startTime, hourConfig.endTime, `presetConfig.${preset}`);
+      }
+    }
+  }
+}
+
 const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
   parameters: EventTimelinePremiumParameters<TEvent, TResource>,
-) => ({
-  presets: sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS),
-});
+) => {
+  const presets = sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS);
+  if (parameters.presetConfig) {
+    validatePresetConfig(parameters.presetConfig);
+  }
+  return {
+    presets,
+    presetConfig: parameters.presetConfig ?? EMPTY_OBJECT,
+  };
+};
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
@@ -87,7 +131,7 @@ function warnIfShouldEventRequireResourceMisconfigured(
 
 const mapper: SchedulerParametersToStateMapper<
   EventTimelinePremiumState,
-  EventTimelinePremiumParameters<any, any>
+  EventTimelinePremiumStoreParameters<any, any>
 > = {
   getInitialState: (schedulerInitialState, parameters) => {
     const shouldEventRequireResource =
@@ -96,6 +140,7 @@ const mapper: SchedulerParametersToStateMapper<
     return {
       ...schedulerInitialState,
       ...deriveStateFromParameters(parameters),
+      ...buildDependenciesState(parameters.dependencies),
       preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
       preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
       shouldEventRequireResource,
@@ -109,6 +154,7 @@ const mapper: SchedulerParametersToStateMapper<
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
+      ...buildDependenciesState(parameters.dependencies),
       shouldEventRequireResource,
       hasInitialized: true,
     };
@@ -127,12 +173,18 @@ export class EventTimelinePremiumStore<
   TEvent,
   TResource,
   EventTimelinePremiumState,
-  EventTimelinePremiumParameters<TEvent, TResource>
+  EventTimelinePremiumStoreParameters<TEvent, TResource>
 > {
   public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
 
+  public scheduling: SchedulerSchedulingPlugin<
+    TEvent,
+    EventTimelinePremiumState,
+    EventTimelinePremiumStoreParameters<TEvent, TResource>
+  >;
+
   public constructor(
-    parameters: EventTimelinePremiumParameters<TEvent, TResource>,
+    parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
     super(parameters, adapter, 'EventTimelinePremiumStore', mapper, schedulerRecurringEventsPlugin);
@@ -148,6 +200,8 @@ export class EventTimelinePremiumStore<
       );
     }
 
+    this.scheduling = this.disposables.use(new SchedulerSchedulingPlugin(this));
+    this.schedulingPlugin = this.scheduling;
     this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
   }
 
@@ -176,7 +230,7 @@ export class EventTimelinePremiumStore<
    */
   public goToNextVisibleDate = (event: React.UIEvent) => {
     const { adapter, visibleDate, preset } = this.state;
-    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
+    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, unitCount),
       event,
@@ -188,7 +242,7 @@ export class EventTimelinePremiumStore<
    */
   public goToPreviousVisibleDate = (event: React.UIEvent) => {
     const { adapter, visibleDate, preset } = this.state;
-    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
+    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, -unitCount),
       event,
@@ -215,4 +269,19 @@ export class EventTimelinePremiumStore<
       }
     }
   };
+
+  /**
+   * Adds a dependency between two events.
+   * Rejects dependencies referencing an unknown or recurring event — see the returned
+   * `SchedulerAddDependencyResult`.
+   */
+  public addDependency = (
+    properties: SchedulerDependencyCreationProperties,
+  ): SchedulerAddDependencyResult => this.scheduling.addDependency(properties);
+
+  /**
+   * Deletes a dependency.
+   */
+  public deleteDependency = (dependencyId: SchedulerDependencyId) =>
+    this.scheduling.deleteDependency(dependencyId);
 }

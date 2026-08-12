@@ -1,7 +1,7 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { generateId } from '@base-ui/utils/generateId';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalTimezone, TemporalSupportedObject } from '../../../base-ui-copy/types';
+import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerProcessedEvent,
   SchedulerEventId,
@@ -78,6 +78,26 @@ const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
 };
 
 const EVENT_PROPERTIES = Object.keys(EVENT_PROPERTIES_LOOKUP) as (keyof SchedulerEvent)[];
+
+/**
+ * Whether the key is one of the built-in `SchedulerEvent` properties.
+ */
+export function isBuiltInEventProperty(key: string): boolean {
+  return EVENT_PROPERTIES_LOOKUP.hasOwnProperty(key);
+}
+
+/**
+ * Returns the properties of an event model that are not part of the built-in `SchedulerEvent` shape.
+ */
+export function getCustomEventProperties<TEvent extends object>(model: TEvent): Partial<TEvent> {
+  const customProperties: Record<string, unknown> = {};
+  for (const key in model) {
+    if (model.hasOwnProperty(key) && !EVENT_PROPERTIES_LOOKUP.hasOwnProperty(key)) {
+      customProperties[key] = model[key as keyof TEvent];
+    }
+  }
+  return customProperties as Partial<TEvent>;
+}
 
 const RESOURCE_PROPERTIES_LOOKUP: { [P in keyof SchedulerResource]-?: true } = {
   id: true,

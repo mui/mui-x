@@ -3,14 +3,22 @@ import type { CalendarView } from '@mui/x-scheduler-internals/models';
 export type SchedulerWeekday =
   'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
-export interface EventDialogLocaleText {
+// Strings shared by every event-editing surface: the dialog, the drawer, and the armed-event toolbar.
+export interface EventEditingLocaleText {
   // EventDialog
   colorPickerLabel: string;
+  colorSectionLabel: string;
   dateTimeSectionLabel: string;
   resourceColorSectionLabel: string;
   allDayLabel: string;
   closeButtonAriaLabel: string;
   closeButtonLabel: string;
+  // EventToolbar (armed-event actions), not the dialog.
+  editEventButtonAriaLabel: string;
+  // Duplicates `deleteEvent` today but stays separate so the toolbar's aria-label can diverge from the
+  // dialog's button text without a translation regression.
+  deleteEventButtonAriaLabel: string;
+  eventActionsToolbarAriaLabel: string;
   deleteEvent: string;
   descriptionLabel: string;
   endDateLabel: string;
@@ -55,6 +63,7 @@ export interface EventDialogLocaleText {
   saveChanges: string;
   startDateAfterEndDateError: string;
   startDateLabel: string;
+  startTimeAfterEndTimeError: string;
   startTimeLabel: string;
 
   // RecurringScopeDialog
@@ -67,7 +76,7 @@ export interface EventDialogLocaleText {
   title: string;
 }
 
-export interface EventCalendarLocaleText extends EventDialogLocaleText {
+export interface EventCalendarLocaleText extends EventEditingLocaleText {
   // ResourcesTree
   resourcesLabel: string;
 
@@ -87,6 +96,9 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   // DateNavigator
   closeSidePanel: string;
   openSidePanel: string;
+
+  // SidePanelDrawer (small screens)
+  openMenu: string;
 
   // PreferencesMenu
   amPm12h: string;
@@ -128,7 +140,7 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   timelineResourceTitleHeader: string;
 }
 
-export interface EventTimelineLocaleText extends EventDialogLocaleText {
+export interface EventTimelineLocaleText extends EventEditingLocaleText {
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
 }

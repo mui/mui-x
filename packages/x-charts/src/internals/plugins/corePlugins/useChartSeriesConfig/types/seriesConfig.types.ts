@@ -12,15 +12,13 @@ import type { LegendGetter } from './legendGetter.types';
 import type { AxisTooltipGetter, TooltipGetter } from './tooltipGetter.types';
 import type { PolarExtremumGetter } from './polarExtremumGetter.types';
 import type { GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
-import type {
-  TooltipItemPositionGetter,
-  TooltipItemPositionSelector,
-} from './tooltipItemPositionGetter.types';
+import type { TooltipItemPositionSelector } from './tooltipItemPositionSelector.types';
 import type { SeriesLayoutGetter } from './seriesLayout.types';
 import type { KeyboardFocusHandler } from '../../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import type { IdentifierSerializer } from './identifierSerializer.types';
 import type { IdentifierCleaner } from './identifierCleaner.types';
 import type { GetItemAtPosition } from './getItemAtPosition.types';
+import type { GetItemWithData } from './getItemWithData.types';
 import type { DescriptionGetter } from './descriptionGetter.types';
 import type { UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
 import type { UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
@@ -45,13 +43,12 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
   legendGetter: LegendGetter<SeriesType>;
   tooltipGetter: TooltipGetter<SeriesType>;
   ItemTooltipContent?: React.ComponentType<ItemTooltipContentProps<SeriesType>>;
-  tooltipItemPositionGetter?: TooltipItemPositionGetter<SeriesType>;
   /**
-   * Computes the item tooltip position from the chart state, for series types
-   * whose position depends on state the core tooltip plugin doesn't track.
-   * Takes precedence over `tooltipItemPositionGetter`.
+   * Computes the item tooltip anchor position from the chart state. Provided by
+   * the series type so it reads only the state it needs (axes, layout, geo
+   * projection, …). When omitted, the item tooltip follows the pointer.
    */
-  selectorTooltipItemPosition?: TooltipItemPositionSelector;
+  selectorTooltipItemPosition?: TooltipItemPositionSelector<SeriesType>;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<SeriesType>;
   keyboardFocusHandler?: KeyboardFocusHandler<SeriesType>;
   /**
@@ -68,6 +65,11 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
    */
   identifierCleaner: IdentifierCleaner<SeriesType>;
   getItemAtPosition?: GetItemAtPosition<SeriesType>;
+  /**
+   * Completes a focused item identifier with the data a pointer click provides.
+   * Used by keyboard activation to emit the same payload as a click.
+   */
+  getItemWithData?: GetItemWithData<SeriesType>;
   /**
    * Optional sampling strategy used to render large datasets. When set and sampling is enabled,
    * the series is reduced to a zoom-appropriate level of detail before rendering.

@@ -677,6 +677,9 @@ export const useGridColumnResize = (
     ) as HTMLDivElement;
     const field = getFieldFromHeaderElem(columnHeaderElement);
     const colDef = apiRef.current.getColumn(field);
+    if (!colDef) {
+      return;
+    }
 
     logger.debug(`Start Resize on col ${colDef.field}`);
     apiRef.current.publishEvent('columnResizeStart', { field }, event);
@@ -809,6 +812,11 @@ export const useGridColumnResize = (
         if (!props.disableVirtualization && options.disableColumnVirtualization) {
           apiRef.current.unstable_setColumnVirtualization(false);
           await columnVirtualizationDisabled();
+
+          // The grid may have unmounted while awaiting, which nulls the root element ref.
+          if (!apiRef.current.rootElementRef?.current) {
+            return;
+          }
         }
 
         const widthByField = extractColumnWidths(apiRef, options, columns);

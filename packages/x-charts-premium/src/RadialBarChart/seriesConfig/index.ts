@@ -7,7 +7,7 @@ import {
 } from '@mui/x-charts/internals';
 import type { ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 import legendGetter from './legend';
-import tooltipItemPositionGetter from './tooltipPosition';
+import { selectorTooltipItemPosition } from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { axisTooltipGetter } from './axisTooltipGetter';
 import colorProcessor from './getColor';
@@ -25,7 +25,7 @@ export const radialBarSeriesConfig: ChartSeriesTypeConfig<'radialBar'> = {
   seriesProcessor,
   legendGetter,
   tooltipGetter,
-  tooltipItemPositionGetter,
+  selectorTooltipItemPosition,
   axisTooltipGetter,
   rotationExtremumGetter,
   radiusExtremumGetter,

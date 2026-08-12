@@ -1,19 +1,23 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const itITDialog: Partial<EventDialogLocaleText> = {
+const itITDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Colore evento',
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Data e ora',
   resourceColorSectionLabel: 'Risorsa e colore',
   allDayLabel: 'Tutto il giorno',
   closeButtonAriaLabel: 'Chiudi',
   closeButtonLabel: 'Chiudi',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Elimina evento',
   descriptionLabel: 'Descrizione',
   endDateLabel: 'Data di fine',
@@ -53,8 +57,9 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   resourceLabel: 'Risorsa',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salva',
-  startDateAfterEndDateError: 'La data/ora di inizio deve essere precedente alla data/ora di fine.',
+  startDateAfterEndDateError: 'La data di fine non può essere precedente alla data di inizio.',
   startDateLabel: 'Data di inizio',
+  startTimeAfterEndTimeError: "L'ora di fine deve essere successiva all'ora di inizio.",
   startTimeLabel: 'Ora di inizio',
 
   // RecurringScopeDialog
@@ -67,7 +72,7 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   title: 'Applica questa modifica a:',
 };
 
-const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Risorse',
 
@@ -87,6 +92,9 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // DateNavigator
   closeSidePanel: 'Chiudi pannello laterale',
   openSidePanel: 'Apri pannello laterale',
+
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
 
   // Preferences menu
   amPm12h: '12 ore (1:00 PM)',
@@ -126,7 +134,7 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   timelineResourceTitleHeader: 'Titolo risorsa',
 };
 
-const itITTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const itITTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titolo risorsa',
 };
