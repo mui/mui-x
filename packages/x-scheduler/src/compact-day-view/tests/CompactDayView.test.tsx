@@ -4,6 +4,7 @@ import {
   EventBuilder,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { CompactDayView } from '@mui/x-scheduler/compact-day-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
@@ -15,12 +16,14 @@ describe('<CompactDayView />', () => {
   function renderWithProviders(
     ui: React.ReactElement,
     events: any[] = [],
+    providerProps: Partial<React.ComponentProps<typeof EventCalendarProvider>> = {},
   ): ReturnType<typeof render> {
     return render(
       <EventCalendarProvider
         events={events}
         resources={[]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        {...providerProps}
       >
         <EventDialogProvider>{ui}</EventDialogProvider>
       </EventCalendarProvider>,
@@ -29,6 +32,10 @@ describe('<CompactDayView />', () => {
 
   function getDayTimeGrid() {
     return document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridContainer}`)!;
+  }
+
+  function getTimeAxisCells() {
+    return document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridTimeAxisCell}`);
   }
 
   it('should render 1 day column', () => {
@@ -73,5 +80,57 @@ describe('<CompactDayView />', () => {
       `.${eventCalendarClasses.timeGridEventResizeHandler}`,
     );
     expect(handlers.length).to.equal(2);
+  });
+
+  describe('viewConfig (startTime / endTime)', () => {
+    it('should render the 24 hour rows by default', () => {
+      renderWithProviders(<CompactDayView />);
+
+      expect(getTimeAxisCells()).to.have.length(24);
+    });
+
+    it('should render only the hour rows configured under the `day` key', () => {
+      renderWithProviders(<CompactDayView />, [], {
+        viewConfig: { day: { startTime: 8, endTime: 20 } },
+      });
+
+      expect(getTimeAxisCells()).to.have.length(12);
+    });
+
+    it('should position events relative to the configured window', () => {
+      const event = EventBuilder.new()
+        .title('Compact Event')
+        .span('2025-07-03T14:00:00Z', '2025-07-03T20:00:00Z')
+        .build();
+
+      renderWithProviders(<CompactDayView />, [event], {
+        viewConfig: { day: { startTime: 8, endTime: 20 } },
+      });
+
+      // 14:00 → 20:00 inside the 08:00 → 20:00 window: starts halfway, fills the bottom half.
+      const element = screen.getByRole('button', { name: /Compact Event/ });
+      expect(element.style.getPropertyValue('--y-position')).to.equal('50%');
+      expect(element.style.getPropertyValue('--height')).to.equal('50%');
+    });
+
+    it('should ignore the `week` key', () => {
+      renderWithProviders(<CompactDayView />, [], {
+        viewConfig: { week: { startTime: 8, endTime: 20 } },
+      });
+
+      expect(getTimeAxisCells()).to.have.length(24);
+    });
+
+    it('should name `viewConfig.day` when it receives an invalid range', () => {
+      // Same key, and therefore the same warning, as the regular day view: naming the
+      // surface instead of the key would warn twice for one mistake when the layout
+      // crosses the compact breakpoint.
+      clearWarningsCache();
+      expect(() => {
+        renderWithProviders(<CompactDayView />, [], {
+          viewConfig: { day: { startTime: 20, endTime: 8 } },
+        });
+      }).toWarnDev(['MUI X Scheduler: `viewConfig.day` received an invalid hour range']);
+    });
   });
 });

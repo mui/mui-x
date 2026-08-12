@@ -1,6 +1,9 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui/utils/store';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import type { CompactDayViewProps } from './CompactDayView.types';
 import { CompactDayTimeGrid } from '../internals/components/compact-day-time-grid';
 import { createDayTimeGridViewDefinition } from '../internals/utils/day-time-grid-view-definition';
@@ -15,9 +18,24 @@ export const CompactDayView = React.memo(
     props: CompactDayViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
+    // Context hooks
+    const store = useEventCalendarStoreContext();
+
     // Feature hooks
     const { days } = useEventCalendarView(COMPACT_DAY_VIEW_DEFINITION);
 
-    return <CompactDayTimeGrid ref={forwardedRef} {...props} days={days} />;
+    // Selector hooks
+    const config = useStore(store, eventCalendarViewSelectors.timeGridConfig, 'day');
+
+    return (
+      <CompactDayTimeGrid
+        ref={forwardedRef}
+        days={days}
+        startTime={config?.startTime}
+        endTime={config?.endTime}
+        hourRangeSource="viewConfig.day"
+        {...props}
+      />
+    );
   }),
 );
