@@ -18,7 +18,12 @@ import type { YearCalendarProps } from './YearCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
-import { DIALOG_WIDTH, MAX_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
+import {
+  DIALOG_WIDTH,
+  DIALOG_WIDTH_COMPACT,
+  MAX_CALENDAR_HEIGHT,
+  MAX_CALENDAR_HEIGHT_COMPACT,
+} from '../internals/constants/dimensions';
 import type { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
@@ -76,15 +81,25 @@ const YearCalendarRoot = styled('div', {
       props: { yearsPerRow: 4 },
       style: { columnGap: 0, padding: '0 2px' },
     },
+    {
+      props: { isPickerCompact: true },
+      style: { width: DIALOG_WIDTH_COMPACT, maxHeight: MAX_CALENDAR_HEIGHT_COMPACT },
+    },
   ],
 });
 
 const YearCalendarButtonFiller = styled('div', {
   name: 'MuiYearCalendar',
   slot: 'ButtonFiller',
-})({
+})<{ ownerState: PickerOwnerState }>({
   height: 36,
   width: 72,
+  variants: [
+    {
+      props: { isPickerCompact: true },
+      style: { height: 32, width: 60 },
+    },
+  ],
 });
 
 type YearCalendarComponent = ((props: YearCalendarProps) => React.JSX.Element) & {
@@ -130,6 +145,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     gridLabelId,
     slots,
     slotProps,
+    compact,
     ...other
   } = props;
 
@@ -146,7 +162,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
   const now = useNow(timezone);
   const isRtl = useRtl();
   const adapter = usePickerAdapter();
-  const { ownerState } = usePickerPrivateContext();
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const ownerState: PickerOwnerState = {
+    ...pickerOwnerState,
+    isPickerCompact: compact ?? pickerOwnerState.isPickerCompact,
+  };
 
   const referenceDate = React.useMemo(
     () =>
@@ -349,13 +369,14 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
             slots={slots}
             slotProps={slotProps}
             classes={classesProp}
+            compact={compact}
           >
             {adapter.format(year, 'year')}
           </YearCalendarButton>
         );
       })}
       {Array.from({ length: fillerAmount }, (_, index) => (
-        <YearCalendarButtonFiller key={index} />
+        <YearCalendarButtonFiller key={index} ownerState={ownerState} />
       ))}
     </YearCalendarRoot>
   );
@@ -372,6 +393,11 @@ YearCalendar.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   /**
    * The default selected value.
    * Used when the component is not controlled.

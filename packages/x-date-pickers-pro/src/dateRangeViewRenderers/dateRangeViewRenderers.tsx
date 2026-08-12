@@ -52,6 +52,7 @@ export const renderDateRangeViewCalendar = ({
   displayWeekNumber,
   timezone,
   availableRangePositions,
+  compact,
 }: DateRangeViewRendererProps<'day'>) => (
   <DateRangeCalendar
     view={view}
@@ -91,5 +92,6 @@ export const renderDateRangeViewCalendar = ({
     displayWeekNumber={displayWeekNumber}
     timezone={timezone}
     availableRangePositions={availableRangePositions}
+    compact={compact}
   />
 );

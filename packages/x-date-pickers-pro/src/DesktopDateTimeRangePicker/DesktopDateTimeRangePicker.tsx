@@ -37,7 +37,7 @@ import type { DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
-import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { RANGE_VIEW_HEIGHT, RANGE_VIEW_HEIGHT_COMPACT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
 import type { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 import { resolveReferenceDate } from '../internals/utils/date-range-manager';
@@ -63,7 +63,7 @@ const rendererInterceptor = function RendererInterceptor(
         },
         [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}, &.${digitalClockClasses.root}`]:
           {
-            maxHeight: RANGE_VIEW_HEIGHT,
+            maxHeight: rendererProps.compact ? RANGE_VIEW_HEIGHT_COMPACT : RANGE_VIEW_HEIGHT,
           },
       },
     ],
@@ -220,6 +220,11 @@ DesktopDateTimeRangePicker.propTypes /* remove-proptypes */ = {
    * @default false
    */
   closeOnSelect: PropTypes.bool,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   /**
    * Position the current month is rendered in.
    * @default 1
