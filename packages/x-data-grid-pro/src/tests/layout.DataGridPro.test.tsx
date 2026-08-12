@@ -207,6 +207,67 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
     expect(getRow(0).getBoundingClientRect().top).to.equal(
       grid('columnHeaders')!.getBoundingClientRect().bottom,
     );
+
+    setProps({ headerFilters: true });
+
+    expect(gridVar('--DataGrid-headersTotalHeight')).to.equal('80px');
+    expect(grid('headerFilterRow')).not.to.equal(null);
+    expect(getRow(0).getBoundingClientRect().top).to.equal(
+      grid('headerFilterRow')!.getBoundingClientRect().bottom,
+    );
+  });
+
+  it('should update the virtual scroller layout when enabling `headerFilters` prop', () => {
+    function TestCase(props: Pick<DataGridProProps, 'headerFilters'>) {
+      return (
+        <div style={{ width: 300, height: 160 }}>
+          <DataGridPro
+            {...baselineProps}
+            columnHeaderHeight={20}
+            headerFilterHeight={60}
+            rowHeight={20}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestCase headerFilters={false} />);
+
+    expect(gridVar('--DataGrid-headersTotalHeight')).to.equal('20px');
+
+    setProps({ headerFilters: true });
+
+    expect(gridVar('--DataGrid-headersTotalHeight')).to.equal('80px');
+    expect(getRow(0).getBoundingClientRect().top).to.equal(
+      grid('headerFilterRow')!.getBoundingClientRect().bottom,
+    );
+  });
+
+  it('should account for column groups when toggling `headerFilters` prop', () => {
+    function TestCase(props: Pick<DataGridProProps, 'headerFilters'>) {
+      return (
+        <div style={{ width: 300, height: 200 }}>
+          <DataGridPro
+            {...baselineProps}
+            columnGroupingModel={[{ groupId: 'group', children: [{ field: 'brand' }] }]}
+            columnHeaderHeight={20}
+            columnGroupHeaderHeight={30}
+            headerFilterHeight={60}
+            rowHeight={20}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestCase headerFilters />);
+
+    expect(gridVar('--DataGrid-headersTotalHeight')).to.equal('110px');
+
+    setProps({ headerFilters: false });
+
+    expect(gridVar('--DataGrid-headersTotalHeight')).to.equal('50px');
   });
 
   it('should support translations in the theme', () => {
