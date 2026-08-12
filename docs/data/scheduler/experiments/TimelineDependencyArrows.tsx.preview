@@ -5,10 +5,10 @@
 </style>
 <SchedulerStoreContext.Provider value={storeContextValue}>
   <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-    <EventDialogStyledContext.Provider value={styledContextValue}>
+    <EventEditingStyledContext.Provider value={styledContextValue}>
       <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
         <EventTimelinePremiumContent />
       </SharedComponentsStyledContext.Provider>
-    </EventDialogStyledContext.Provider>
+    </EventEditingStyledContext.Provider>
   </EventTimelinePremiumStyledContext.Provider>
 </SchedulerStoreContext.Provider>

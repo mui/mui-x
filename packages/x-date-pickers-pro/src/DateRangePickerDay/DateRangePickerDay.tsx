@@ -20,10 +20,7 @@ import type {
   DateRangePickerDayClasses,
   DateRangePickerDayClassKey,
 } from './dateRangePickerDayClasses';
-import {
-  dateRangePickerDayClasses,
-  getDateRangePickerDayUtilityClass,
-} from './dateRangePickerDayClasses';
+import { getDateRangePickerDayUtilityClass } from './dateRangePickerDayClasses';
 
 const useUtilityClasses = (
   ownerState: DateRangePickerDayOwnerState,
@@ -110,16 +107,9 @@ const selectedDayStyles = (theme: Theme) => ({
     willChange: 'background-color',
     backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
-  [`&.${dateRangePickerDayClasses.disabled}`]: {
-    opacity: 0.6,
-  },
 });
 
-const insideSelectionStyle = () => ({
-  [`&.${dateRangePickerDayClasses.disabled}`]: {
-    opacity: 0.6,
-  },
-});
+const DISABLED_DAY_OPACITY = 0.6;
 
 const DateRangePickerDayRoot = styled(ButtonBase, {
   name: 'MuiDateRangePickerDay',
@@ -194,6 +184,14 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
   },
   variants: [
     {
+      props: { isDayOutsideMonth: true },
+      style: {
+        color: (theme.vars || theme).palette.text.secondary,
+      },
+    },
+    // Must come after `isDayOutsideMonth` so that a disabled day outside the current month
+    // uses the disabled text color.
+    {
       props: { isDayDisabled: true },
       style: {
         color: (theme.vars || theme).palette.text.disabled,
@@ -206,12 +204,6 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         // and results in unexpected relationships between week day and day columns.
         opacity: 0,
         pointerEvents: 'none',
-      },
-    },
-    {
-      props: { isDayOutsideMonth: true },
-      style: {
-        color: (theme.vars || theme).palette.text.secondary,
       },
     },
     {
@@ -302,13 +294,41 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         '::before': {
           ...highlightStyles(theme),
         },
-        ...insideSelectionStyle(),
       },
     },
     {
       props: { isDaySelected: true, isDayInsideSelection: false },
       style: {
         ...selectedDayStyles(theme),
+      },
+    },
+    // A day disabled on its own (`shouldDisableDate`, `minDate`, ...) only dims its text.
+    // Dimming the cell would also dim the `::before` range highlight and leave gaps in the range.
+    {
+      props: {
+        isDaySelected: true,
+        isDayInsideSelection: false,
+        isDayDisabled: true,
+        isPickerDisabled: false,
+      },
+      style: {
+        color: theme.alpha(
+          (theme.vars || theme).palette.primary.contrastText,
+          DISABLED_DAY_OPACITY,
+        ),
+      },
+    },
+    // When the whole Picker is disabled, the range is dimmed as a whole.
+    {
+      props: { isDaySelected: true, isDayDisabled: true, isPickerDisabled: true },
+      style: {
+        opacity: DISABLED_DAY_OPACITY,
+      },
+    },
+    {
+      props: { isDayInsideSelection: true, isDayDisabled: true, isPickerDisabled: true },
+      style: {
+        opacity: DISABLED_DAY_OPACITY,
       },
     },
     {

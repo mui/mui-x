@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const deDEDialog: Partial<EventDialogLocaleText> = {
+const deDEDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Ereignisfarbe',
   // colorSectionLabel: 'Color',
@@ -15,6 +15,9 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   allDayLabel: 'Ganztägig',
   closeButtonAriaLabel: 'Schließen',
   closeButtonLabel: 'Schließen',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Ereignis löschen',
   descriptionLabel: 'Beschreibung',
   endDateLabel: 'Enddatum',
@@ -54,8 +57,9 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   resourceLabel: 'Ressource',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Speichern',
-  startDateAfterEndDateError: 'Startdatum/-zeit muss vor dem Enddatum/-zeit liegen.',
+  startDateAfterEndDateError: 'Das Enddatum darf nicht vor dem Startdatum liegen.',
   startDateLabel: 'Startdatum',
+  startTimeAfterEndTimeError: 'Die Endzeit muss nach der Startzeit liegen.',
   startTimeLabel: 'Startzeit',
 
   // RecurringScopeDialog
@@ -68,7 +72,7 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   title: 'Diese Änderung anwenden auf:',
 };
 
-const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Ressourcen',
 
@@ -130,7 +134,7 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   timelineResourceTitleHeader: 'Ressourcentitel',
 };
 
-const deDETimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const deDETimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressourcentitel',
 };

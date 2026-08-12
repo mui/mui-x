@@ -780,6 +780,36 @@ describe('<DateRangeCalendar />', () => {
     });
   });
 
+  describe('disabled days styling', () => {
+    const value: [PickerValidDate, PickerValidDate] = [
+      adapterToUse.date('2018-01-01'),
+      adapterToUse.date('2018-01-10'),
+    ];
+
+    it('should not dim the days when only some dates of the range are disabled', () => {
+      render(
+        <DateRangeCalendar
+          value={value}
+          shouldDisableDate={(date) => [5, 10].includes(adapterToUse.getDate(date))}
+        />,
+      );
+
+      // Inside the range.
+      const disabledDay = getPickerDay('5');
+      expect(disabledDay).to.have.attribute('disabled');
+      expect(disabledDay).to.have.style('opacity', '1');
+      // End of the range.
+      expect(getPickerDay('10')).to.have.style('opacity', '1');
+    });
+
+    it('should dim the days when the whole calendar is disabled', () => {
+      render(<DateRangeCalendar value={value} disabled />);
+
+      expect(getPickerDay('5')).to.have.style('opacity', '0.6');
+      expect(getPickerDay('10')).to.have.style('opacity', '0.6');
+    });
+  });
+
   it('prop: calendars - should render the provided amount of calendars', () => {
     render(<DateRangeCalendar calendars={3} />);
 

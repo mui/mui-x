@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { PaletteName } from '../../../utils/tokens';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
@@ -42,13 +45,16 @@ export function useTimeGridEvent(
 
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
-  const isStartResizable = useStore(
+  // While the form is open, the form owns the times, so resizing is disabled (still resizable when armed/read-only).
+  const isEditedInForm = useStore(
     store,
-    schedulerEventSelectors.isResizable,
-    occurrence.id,
-    'start',
+    schedulerOtherSelectors.isEditedOccurrenceInEditMode,
+    occurrence.key,
   );
-  const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
+  const isStartResizable =
+    useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'start') && !isEditedInForm;
+  const isEndResizable =
+    useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end') && !isEditedInForm;
   const palette = useStore(store, schedulerEventSelectors.color, occurrence.id);
 
   const durationMs =
@@ -56,6 +62,8 @@ export function useTimeGridEvent(
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
+  // Inclusive on purpose: an exactly-15-minute event gets the tightest (zero-padding) tier. See the
+  // `duration thresholds` boundary tests in `DayView.test.tsx`.
   const isLessThan15Minutes = durationMinutes <= 15;
 
   const rootDataAttributes = React.useMemo(

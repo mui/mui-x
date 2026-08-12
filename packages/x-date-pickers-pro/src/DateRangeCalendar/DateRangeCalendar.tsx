@@ -25,6 +25,7 @@ import {
   useControlledValue,
   useViews,
   usePickerPrivateContext,
+  PickerPrivateContext,
   areDatesEqual,
   useApplyDefaultValuesToDateValidationProps,
 } from '@mui/x-date-pickers/internals';
@@ -304,7 +305,21 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     timezone,
   });
 
-  const { ownerState: pickersOwnerState } = usePickerPrivateContext();
+  const pickerPrivateContext = usePickerPrivateContext();
+
+  // The calendar can be rendered on its own, in which case the Picker context knows nothing about its `disabled` prop.
+  const privateContextValue = React.useMemo(
+    () =>
+      disabled && !pickerPrivateContext.ownerState.isPickerDisabled
+        ? {
+            ...pickerPrivateContext,
+            ownerState: { ...pickerPrivateContext.ownerState, isPickerDisabled: true },
+          }
+        : pickerPrivateContext,
+    [pickerPrivateContext, disabled],
+  );
+
+  const pickersOwnerState = privateContextValue.ownerState;
   const ownerState: DateRangeCalendarOwnerState = {
     ...pickersOwnerState,
     isDraggingDay: isDragging,
@@ -587,57 +602,59 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   }, [focusedView, setFocusedView, view]);
 
   return (
-    <DateRangeCalendarRoot
-      ref={ref}
-      className={clsx(classes.root, className)}
-      ownerState={ownerState}
-      {...other}
-    >
-      <Watermark packageInfo={packageInfo} />
-      {calendarMonths.map((monthIndex) => {
-        const month = visibleMonths[monthIndex];
-        const labelId = `${id}-grid-${monthIndex}-label`;
+    <PickerPrivateContext.Provider value={privateContextValue}>
+      <DateRangeCalendarRoot
+        ref={ref}
+        className={clsx(classes.root, className)}
+        ownerState={ownerState}
+        {...other}
+      >
+        <Watermark packageInfo={packageInfo} />
+        {calendarMonths.map((monthIndex) => {
+          const month = visibleMonths[monthIndex];
+          const labelId = `${id}-grid-${monthIndex}-label`;
 
-        return (
-          <DateRangeCalendarMonthContainer key={monthIndex} className={classes.monthContainer}>
-            <CalendarHeader
-              {...calendarHeaderProps}
-              month={month}
-              monthIndex={monthIndex}
-              labelId={labelId}
-            />
-            <DayCalendarForRange
-              className={classes.dayCalendar}
-              {...calendarState}
-              {...baseDateValidationProps}
-              {...commonViewProps}
-              onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
-              onFocusedDayChange={(focusedDate) =>
-                setVisibleDate({ target: focusedDate, reason: 'cell-interaction' })
-              }
-              reduceAnimations={reduceAnimations}
-              selectedDays={value}
-              onSelectedDaysChange={handleSelectedDayChange}
-              currentMonth={month}
-              TransitionProps={CalendarTransitionProps}
-              shouldDisableDate={wrappedShouldDisableDate}
-              hasFocus={hasFocus}
-              onFocusedViewChange={(isViewFocused) => setFocusedView('day', isViewFocused)}
-              showDaysOutsideCurrentMonth={shouldShowDaysOutsideCurrentMonth}
-              dayOfWeekFormatter={dayOfWeekFormatter}
-              loading={loading}
-              renderLoading={renderLoading}
-              slots={slotsForDayCalendar}
-              slotProps={slotPropsForDayCalendar}
-              fixedWeekNumber={fixedWeekNumber}
-              displayWeekNumber={displayWeekNumber}
-              timezone={timezone}
-              gridLabelId={labelId}
-            />
-          </DateRangeCalendarMonthContainer>
-        );
-      })}
-    </DateRangeCalendarRoot>
+          return (
+            <DateRangeCalendarMonthContainer key={monthIndex} className={classes.monthContainer}>
+              <CalendarHeader
+                {...calendarHeaderProps}
+                month={month}
+                monthIndex={monthIndex}
+                labelId={labelId}
+              />
+              <DayCalendarForRange
+                className={classes.dayCalendar}
+                {...calendarState}
+                {...baseDateValidationProps}
+                {...commonViewProps}
+                onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
+                onFocusedDayChange={(focusedDate) =>
+                  setVisibleDate({ target: focusedDate, reason: 'cell-interaction' })
+                }
+                reduceAnimations={reduceAnimations}
+                selectedDays={value}
+                onSelectedDaysChange={handleSelectedDayChange}
+                currentMonth={month}
+                TransitionProps={CalendarTransitionProps}
+                shouldDisableDate={wrappedShouldDisableDate}
+                hasFocus={hasFocus}
+                onFocusedViewChange={(isViewFocused) => setFocusedView('day', isViewFocused)}
+                showDaysOutsideCurrentMonth={shouldShowDaysOutsideCurrentMonth}
+                dayOfWeekFormatter={dayOfWeekFormatter}
+                loading={loading}
+                renderLoading={renderLoading}
+                slots={slotsForDayCalendar}
+                slotProps={slotPropsForDayCalendar}
+                fixedWeekNumber={fixedWeekNumber}
+                displayWeekNumber={displayWeekNumber}
+                timezone={timezone}
+                gridLabelId={labelId}
+              />
+            </DateRangeCalendarMonthContainer>
+          );
+        })}
+      </DateRangeCalendarRoot>
+    </PickerPrivateContext.Provider>
   );
 }) as DateRangeCalendarComponent;
 

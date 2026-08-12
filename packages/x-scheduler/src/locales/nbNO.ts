@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const nbNODialog: Partial<EventDialogLocaleText> = {
+const nbNODialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Hendelsesfarge',
   // colorSectionLabel: 'Color',
@@ -15,10 +15,13 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   allDayLabel: 'Hele dagen',
   closeButtonAriaLabel: 'Lukk',
   closeButtonLabel: 'Lukk',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Slett hendelse',
   descriptionLabel: 'Beskrivelse',
   endDateLabel: 'Sluttdato',
-  endTimeLabel: 'Slutttidspunkt',
+  endTimeLabel: 'Sluttidspunkt',
   eventTitleAriaLabel: 'Hendelsestittel',
   generalTabLabel: 'Generelt',
   labelNoResource: 'Ingen ressurs',
@@ -54,8 +57,9 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   resourceLabel: 'Ressurs',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Lagre',
-  startDateAfterEndDateError: 'Startdato/-tid må være før sluttdato/-tid.',
+  startDateAfterEndDateError: 'Sluttdato kan ikke være før startdato.',
   startDateLabel: 'Startdato',
+  startTimeAfterEndTimeError: 'Sluttidspunkt må være etter starttidspunkt.',
   startTimeLabel: 'Starttidspunkt',
 
   // RecurringScopeDialog
@@ -68,7 +72,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   title: 'Bruk denne endringen på:',
 };
 
-const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Ressurser',
 
@@ -130,7 +134,7 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   timelineResourceTitleHeader: 'Ressurstittel',
 };
 
-const nbNOTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const nbNOTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressurstittel',
 };

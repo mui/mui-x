@@ -1,18 +1,14 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui/utils/store';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import type { CompactDayViewProps } from './CompactDayView.types';
-import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
-import type { DayTimeGridInternalRenderers } from '../internals/components/day-time-grid/DayTimeGridInternalRenderersContext';
-import { DayTimeGridInternalRenderersContext } from '../internals/components/day-time-grid/DayTimeGridInternalRenderersContext';
+import { CompactDayTimeGrid } from '../internals/components/compact-day-time-grid';
 import { createDayTimeGridViewDefinition } from '../internals/utils/day-time-grid-view-definition';
-import { TimeGridEventTouch } from '../internals/components/event/time-grid-event/TimeGridEventTouch';
 
 const COMPACT_DAY_VIEW_DEFINITION = createDayTimeGridViewDefinition(1);
-
-const COMPACT_DAY_VIEW_RENDERERS: DayTimeGridInternalRenderers = {
-  timeGridEvent: TimeGridEventTouch,
-};
 
 /**
  * A touch-optimized Day View (1 day) for narrow widths, to use inside the Event Calendar.
@@ -22,13 +18,23 @@ export const CompactDayView = React.memo(
     props: CompactDayViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
+    // Context hooks
+    const store = useEventCalendarStoreContext();
+
     // Feature hooks
     const { days } = useEventCalendarView(COMPACT_DAY_VIEW_DEFINITION);
 
+    // Selector hooks
+    const config = useStore(store, eventCalendarViewSelectors.timeGridConfig, 'day');
+
     return (
-      <DayTimeGridInternalRenderersContext.Provider value={COMPACT_DAY_VIEW_RENDERERS}>
-        <DayTimeGrid ref={forwardedRef} days={days} {...props} />
-      </DayTimeGridInternalRenderersContext.Provider>
+      <CompactDayTimeGrid
+        ref={forwardedRef}
+        days={days}
+        startTime={config?.startTime}
+        endTime={config?.endTime}
+        {...props}
+      />
     );
   }),
 );

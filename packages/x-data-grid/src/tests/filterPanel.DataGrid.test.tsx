@@ -12,7 +12,7 @@ import type {
   GridFilterInputValueProps,
   GridFilterOperator,
 } from '@mui/x-data-grid';
-import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, within } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getSelectByName } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
@@ -558,5 +558,88 @@ describe('<DataGrid /> - Filter panel', () => {
     // check that the filter is changed to default one (`is`)
     expect(getSelectByName('Column').value).to.equal('country');
     expect(getSelectByName('Operator').value).to.equal('is');
+  });
+
+  describe('singleSelect blank option', () => {
+    const openValueOptions = async (user: ReturnType<typeof render>['user']) => {
+      await user.click(screen.getByRole('combobox', { name: 'Value' }));
+      return screen.findByRole('listbox');
+    };
+
+    it('should label the blank option instead of rendering it as an empty row', async () => {
+      const { user } = render(
+        <TestCase
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+          filterModel={{ items: [{ field: 'country', operator: 'is' }] }}
+        />,
+      );
+
+      const listbox = await openValueOptions(user);
+      expect(
+        within(listbox)
+          .getAllByRole('option')
+          .map((option) => option.textContent),
+      ).to.deep.equal(['any', 'United States', 'Germany', 'France']);
+    });
+
+    // See https://github.com/mui/mui-x/issues/5996
+    it('should not prepend a blank option when `valueOptions` already declares one', async () => {
+      const { user } = render(
+        <TestCase
+          columns={[
+            {
+              field: 'country',
+              type: 'singleSelect',
+              valueOptions: [
+                { value: '', label: 'None' },
+                { value: 'US', label: 'United States' },
+              ],
+            },
+          ]}
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+          filterModel={{ items: [{ field: 'country', operator: 'is' }] }}
+        />,
+      );
+
+      const listbox = await openValueOptions(user);
+      expect(
+        within(listbox)
+          .getAllByRole('option')
+          .map((option) => option.textContent),
+      ).to.deep.equal(['None', 'United States']);
+    });
+
+    it('should reset the filter value when picking the blank option', async () => {
+      const onFilterModelChange = spy();
+      const { user } = render(
+        <TestCase
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+          filterModel={{ items: [{ id: 1, field: 'country', operator: 'is', value: 'Germany' }] }}
+          onFilterModelChange={onFilterModelChange}
+        />,
+      );
+
+      const listbox = await openValueOptions(user);
+      await user.click(within(listbox).getByRole('option', { name: 'any' }));
+
+      expect(onFilterModelChange.lastCall.firstArg.items).to.deep.equal([
+        { id: 1, field: 'country', operator: 'is', value: undefined },
+      ]);
+    });
   });
 });
