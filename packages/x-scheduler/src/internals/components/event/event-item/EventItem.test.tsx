@@ -7,10 +7,15 @@ import { MonthView } from '../../../../month-view';
 import { EventCalendarProvider } from '../../EventCalendarProvider';
 import { EventDialogProvider } from '../../event-dialog';
 
-// Spans three days, so on the middle one it renders with a "continues before" chevron.
-const continuingEvent: SchedulerEvent = EventBuilder.new()
+// One chevron each on the displayed day, so a test can pick an occurrence clipped on a single side.
+const startsBeforeEvent: SchedulerEvent = EventBuilder.new()
   .title('Conference')
-  .span('2025-05-05T09:00:00Z', '2025-05-07T18:00:00Z')
+  .span('2025-05-05T09:00:00Z', '2025-05-06T18:00:00Z')
+  .build();
+
+const endsAfterEvent: SchedulerEvent = EventBuilder.new()
+  .title('Workshop')
+  .span('2025-05-06T09:00:00Z', '2025-05-07T18:00:00Z')
   .build();
 
 // Enough same-day events to push the cell into showing a "+N more" button.
@@ -27,7 +32,7 @@ describe('<EventItem />', () => {
   async function renderAndOpenPopover() {
     const { user } = render(
       <EventCalendarProvider
-        events={[continuingEvent, ...crowdingEvents]}
+        events={[startsBeforeEvent, endsAfterEvent, ...crowdingEvents]}
         resources={[]}
         visibleDate={adapter.date('2025-05-06T00:00:00Z', 'default')}
       >
@@ -43,14 +48,22 @@ describe('<EventItem />', () => {
   }
 
   // `clip-path` clips the outline away with everything outside the chevron, so the clip is dropped
-  // while focused. Without that, a continuing event takes focus showing no ring at all.
-  it.skipIf(isJSDOM)(
-    'should paint a focus ring on an event continuing past the day edge',
-    async () => {
+  // while focused. Without that, a continuing event takes focus showing no ring at all. One case
+  // per edge, since each edge has its own selector.
+  const clippedEdges = [
+    { edge: 'starting before the day', selector: '[data-starting-before-edge]' },
+    { edge: 'ending after the day', selector: '[data-ending-after-edge]' },
+  ] as const;
+
+  clippedEdges.forEach(({ edge, selector }, index) => {
+    const otherSelector = clippedEdges[1 - index].selector;
+
+    it.skipIf(isJSDOM)(`should paint a focus ring on an event ${edge}`, async () => {
       const { user, popover } = await renderAndOpenPopover();
 
-      const clipped = popover.querySelector<HTMLElement>('[data-starting-before-edge]');
-      expect(clipped, 'no continuing event in the popover').not.to.equal(null);
+      // Only the one chevron, or the other edge's rule could be what drops the clip.
+      const clipped = popover.querySelector<HTMLElement>(`${selector}:not(${otherSelector})`);
+      expect(clipped, `no event ${edge} in the popover`).not.to.equal(null);
 
       // A keyboard interaction first, so the programmatic focus below matches `:focus-visible`.
       await user.keyboard('{Tab}');
@@ -60,8 +73,8 @@ describe('<EventItem />', () => {
       const styles = window.getComputedStyle(clipped!);
       expect(styles.clipPath, 'the chevron still clips the ring away').to.equal('none');
       expect(styles.outlineStyle).to.equal('solid');
-    },
-  );
+    });
+  });
 
   it.skipIf(isJSDOM)('should show a pointer cursor on every event in the popover', async () => {
     const { popover } = await renderAndOpenPopover();

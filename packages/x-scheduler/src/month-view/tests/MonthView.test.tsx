@@ -1,4 +1,7 @@
 import { spy } from 'sinon';
+import { config } from 'react-transition-group';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 import {
   adapter,
   createSchedulerRenderer,
@@ -7,7 +10,7 @@ import {
   ResourceBuilder,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
-import { screen, within, waitFor } from '@mui/internal-test-utils';
+import { act, screen, within, waitFor } from '@mui/internal-test-utils';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
@@ -117,20 +120,28 @@ describe('<MonthView />', () => {
   });
 
   describe('Event keyboard accessibility in "more events" popover', () => {
-    async function renderAndOpenPopover(
-      providerProps?: Partial<React.ComponentProps<typeof EventCalendarProvider>>,
-    ) {
-      const { user } = render(
+    async function renderAndOpenPopover({
+      theme,
+      ...providerProps
+    }: Partial<React.ComponentProps<typeof EventCalendarProvider>> & { theme?: Theme } = {}) {
+      const calendar = (
         <EventCalendarProvider events={manyEvents} resources={[]} {...providerProps}>
           <EventDialogProvider>
             <MonthView />
           </EventDialogProvider>
-        </EventCalendarProvider>,
+        </EventCalendarProvider>
       );
+      // The theme goes in a wrapper rather than around the element, so `setProps` still reaches the
+      // calendar provider.
+      const { user, setProps } = render(calendar, {
+        wrapper: theme
+          ? ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          : undefined,
+      });
       const moreButton = await screen.findByRole('button', { name: /more/i });
       await user.click(moreButton);
       const popover = await screen.findByRole('presentation');
-      return { user, popover };
+      return { user, setProps, popover };
     }
 
     it('should have tabindex and role="button" on events in the popover', async () => {
@@ -247,19 +258,63 @@ describe('<MonthView />', () => {
       });
     });
 
+    it('should return focus to the day cell when the trigger is gone by the time the dialog is submitted', async () => {
+      // Editing can empty the day and take the "+N more" button with it. Assigned right after the
+      // render, which is where `setProps` comes from, and only called on submit.
+      let emptyTheDay = () => {};
+      const { user, setProps, popover } = await renderAndOpenPopover({
+        onEventsChange: () => emptyTheDay(),
+      });
+      emptyTheDay = () => setProps({ events: manyEvents.slice(0, 1) });
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+      await screen.findByRole('dialog');
+
+      const titleInput = await screen.findByLabelText(/event title/i);
+      await user.type(titleInput, '{Enter}');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /more/i })).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      const may1Cell = screen
+        .getAllByRole('gridcell')
+        .find((cell) => within(cell).queryByText(/may 1/i));
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(may1Cell);
+      });
+    });
+
     it('should leave focus alone when it moved out of the popover while it was closing', async () => {
-      const { user, popover } = await renderAndOpenPopover();
+      // The restore runs when the exit transition ends, so the transition has to last long enough
+      // to move focus while it plays: `setupVitest` disables transitions, and the popover's `auto`
+      // duration measures a paper of height 0 in jsdom, which rounds to no transition at all.
+      config.disabled = false;
+      const { user, popover } = await renderAndOpenPopover({
+        theme: createTheme({
+          components: { MuiPopover: { defaultProps: { transitionDuration: 300 } } },
+        }),
+      });
 
       await user.keyboard('{Escape}');
-      // Tabbing out before the exit transition ends: the restore must not undo it.
-      await user.keyboard('{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}{Tab}');
-      const tabbedTo = document.activeElement;
-      expect(popover.contains(tabbedTo), 'focus never left the popover').to.equal(false);
+
+      // The popover is on its way out but still mounted, and its focus trap is already released.
+      expect(document.body.contains(popover), 'the popover exited too fast to move focus').to.equal(
+        true,
+      );
+      const movedTo = screen.getByRole('button', { name: '15' });
+      await act(async () => {
+        movedTo.focus();
+      });
 
       await waitFor(() => {
         expect(document.body.contains(popover)).to.equal(false);
       });
-      expect(document.activeElement).to.equal(tabbedTo);
+      expect(document.activeElement).to.equal(movedTo);
     });
 
     it('should return focus to the trigger when the popover is dismissed without editing', async () => {

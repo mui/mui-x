@@ -158,7 +158,7 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 - The popover header element carries an `aria-label` with the full formatted date (for example, `"Monday, May 26"`).
 - Each event inside the popover uses `aria-labelledby` that composes the popover header ID and the event title element ID, so screen readers announce the day context alongside the event title.
 - Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd>.
-- When the popover closes, focus returns to the **"X more"** button that opened it, including when it closes behind the editing dialog.
+- When the popover closes, focus returns to the **"X more"** button that opened it, including when it closes behind the editing dialog. If editing leaves the day with too few events for that button to be displayed, focus moves to the day cell instead.
 
 ## Preferences menu
 

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { styled } from '@mui/material/styles';
+import getActiveElement from '@mui/utils/getActiveElement';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -113,7 +114,9 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   // the popover that is going away with it.
   const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
     const ownerDocument = paper.ownerDocument;
-    const activeElement = ownerDocument.activeElement;
+    // `document.activeElement` stops at the shadow host, which contains the popover rather than
+    // being contained by it, so the checks below would read a focused event as focus moved away.
+    const activeElement = getActiveElement(ownerDocument);
     const focusIsAboutToBeLost =
       activeElement === null ||
       activeElement === ownerDocument.body ||
