@@ -270,6 +270,41 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
     expect(gridVar('--DataGrid-headersTotalHeight')).to.equal('50px');
   });
 
+  it('should update the layout when toggling `columnGroupingModel` prop', () => {
+    function TestCase(props: Pick<DataGridProProps, 'columnGroupingModel'>) {
+      return (
+        <div style={{ width: 300, height: 200 }}>
+          <DataGridPro
+            {...baselineProps}
+            headerFilters
+            columnHeaderHeight={20}
+            columnGroupHeaderHeight={30}
+            headerFilterHeight={60}
+            rowHeight={20}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestCase columnGroupingModel={undefined} />);
+
+    expect(gridVar('--DataGrid-headersTotalHeight')).to.equal('80px');
+
+    setProps({
+      columnGroupingModel: [{ groupId: 'group', children: [{ field: 'brand' }] }],
+    });
+
+    expect(gridVar('--DataGrid-headersTotalHeight')).to.equal('110px');
+    expect(getRow(0).getBoundingClientRect().top).to.equal(
+      grid('headerFilterRow')!.getBoundingClientRect().bottom,
+    );
+
+    setProps({ columnGroupingModel: undefined });
+
+    expect(gridVar('--DataGrid-headersTotalHeight')).to.equal('80px');
+  });
+
   it('should support translations in the theme', () => {
     render(
       <ThemeProvider theme={createTheme({}, ptBR)}>
