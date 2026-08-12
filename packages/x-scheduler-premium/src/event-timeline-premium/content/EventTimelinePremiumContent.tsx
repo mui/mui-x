@@ -227,6 +227,23 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   },
 }));
 
+/**
+ * Carries the row divider across the space left over when the ticks are narrower than
+ * `--row-width`. The divider can't live on the events cell alone (it is pinned to the
+ * tick width so the events stay aligned with the header) nor on the row (its height is
+ * measured by `getRowHeightForLaneCount` from the cell's border box). Purely decorative:
+ * it holds no content and is never measured.
+ */
+const EventTimelinePremiumBodyRowFiller = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'BodyRowFiller',
+})(({ theme }) => ({
+  flex: '1 1 auto',
+  minWidth: 0,
+  pointerEvents: 'none',
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+}));
+
 const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTimeIndicator, {
   name: 'MuiEventTimeline',
   slot: 'CurrentTimeIndicator',
@@ -721,6 +738,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             <EventRowContent resourceId={id} occurrences={occurrences} placeholder={placeholder} />
           )}
         </EventTimelinePremiumEventsCell>
+        <EventTimelinePremiumBodyRowFiller role="none" />
       </EventTimelinePremiumBodyRow>
     ),
     [classes.eventsCell, titleColumnWidth],
