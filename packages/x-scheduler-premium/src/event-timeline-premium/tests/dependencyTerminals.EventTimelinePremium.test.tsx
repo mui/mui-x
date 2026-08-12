@@ -360,6 +360,83 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.errors).to.have.length(0);
     });
 
+    it.skipIf(isJSDOM)(
+      'should complete the drop after virtualization unmounts the source terminal',
+      async () => {
+        // The reason the gesture is monitored from the grid root rather than from the
+        // terminal: a long drag scrolls the source out of the rendered window, and the
+        // terminal that started it goes with it.
+        const manyResources = Array.from({ length: 30 }, (_, index) =>
+          ResourceBuilder.new()
+            .id(`resource-${String(index).padStart(2, '0')}`)
+            .title(`Resource ${String(index).padStart(2, '0')}`)
+            .build(),
+        );
+        const firstRowEvent = EventBuilder.new()
+          .id('event-first-row')
+          .title('Event first row')
+          .singleDay('2025-07-03T09:00:00Z')
+          .resource(manyResources[0])
+          .build();
+        const lastRowEvent = EventBuilder.new()
+          .id('event-last-row')
+          .title('Event last row')
+          .singleDay('2025-07-03T11:00:00Z')
+          .resource(manyResources[29])
+          .build();
+
+        const handleDependenciesChange = spy();
+        const { store } = renderTimeline({
+          events: [firstRowEvent, lastRowEvent],
+          resources: manyResources,
+          dependencies: [],
+          onDependenciesChange: handleDependenciesChange,
+        });
+
+        const grid = document.querySelector<HTMLElement>(`.${eventTimelinePremiumClasses.grid}`)!;
+        await waitFor(() => {
+          expect(grid.scrollHeight).to.be.greaterThan(grid.clientHeight);
+        });
+
+        const source = getTerminal('Event first row')!.closest('[draggable="true"]')!;
+        fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+        fireEvent.dragOver(document.body, {
+          dataTransfer: new DataTransfer(),
+          clientX: 120,
+          clientY: 40,
+        });
+        await waitFor(() => {
+          expect(store.state.dependencyCreation).not.to.equal(null);
+        });
+
+        act(() => {
+          grid.scrollTop = grid.scrollHeight;
+        });
+        await waitFor(() => {
+          expect(screen.queryByText('Event first row')).to.equal(null);
+        });
+        expect(store.state.dependencyCreation).not.to.equal(null);
+
+        const target = getEventElement('Event last row');
+        fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
+        fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+        await waitFor(() => {
+          expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
+        });
+
+        fireEvent.drop(target, { dataTransfer: new DataTransfer() });
+        fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+
+        expect(handleDependenciesChange.callCount).to.equal(1);
+        const [dependency] = handleDependenciesChange.firstCall.firstArg;
+        expect(dependency.source).to.equal('event-first-row');
+        expect(dependency.target).to.equal('event-last-row');
+        await waitFor(() => {
+          expect(store.state.dependencyCreation).to.equal(null);
+        });
+      },
+    );
+
     it('should dissolve the gesture when dropping on empty space', async () => {
       const handleDependenciesChange = spy();
       const { store } = renderTimeline({
@@ -1253,7 +1330,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
     });
 
-    it('should render a single delete button for a selected dependency with several appearances', () => {
+    it('should render a delete button on every appearance of a selected dependency', () => {
       renderTimeline({
         events: [eventA, sharedEvent],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-shared')],
@@ -1265,7 +1342,25 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       fireEvent.click(hits[0]);
 
-      expect(document.querySelectorAll('[data-dependency-delete-button]').length).to.equal(1);
+      // Each appearance carries its own button, so the affordance is always on the
+      // arrow the user selected — the one they clicked may not be the first rendered.
+      expect(document.querySelectorAll('[data-dependency-delete-button]').length).to.equal(2);
+    });
+
+    it('should delete the dependency from any appearance button', () => {
+      const handleDependenciesChange = spy();
+      const { store } = renderTimeline({
+        events: [eventA, sharedEvent],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-shared')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      fireEvent.click(document.querySelectorAll('[data-dependency-hit="dep-1"]')[0]);
+      // The second appearance's button deletes the same selected dependency.
+      fireEvent.click(document.querySelectorAll('[data-dependency-delete-button]')[1]);
+
+      expect(handleDependenciesChange.lastCall.firstArg).to.deep.equal([]);
+      expect(store.state.selection).to.equal(null);
     });
 
     it('should highlight only the hovered row appearance of a multi-resource drop target', async () => {

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
+import { getTarget } from '@mui/x-internals/domUtils';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 
@@ -28,14 +29,32 @@ const GUARDED_KEY_TARGETS = [
  */
 const GUARDED_PRESS_TARGETS = 'dialog, [role="dialog"]';
 
+/**
+ * Node checks by `nodeType` rather than `instanceof`: the listeners follow the
+ * element's `ownerDocument`, so a timeline rendered into another document (an iframe
+ * portal) receives targets whose constructors are not the ambient realm's. An
+ * `instanceof` guard rejects them all, turning Backspace in one of that document's
+ * inputs into a dependency deletion.
+ */
+const ELEMENT_NODE = 1;
+
+function isElement(target: EventTarget | null): target is Element {
+  return (target as Node | null)?.nodeType === ELEMENT_NODE;
+}
+
+function isNode(target: EventTarget | null): target is Node {
+  return typeof (target as Node | null)?.nodeType === 'number';
+}
+
 function isGuardedKeyTarget(event: KeyboardEvent): boolean {
   // At the document level `event.target` is retargeted to the shadow host, which
   // would mask an editable living inside it: the composed path has the real target.
-  const target = event.composedPath()[0] ?? event.target;
-  if (!(target instanceof Element)) {
+  const target = getTarget(event);
+  if (!isElement(target)) {
     return false;
   }
-  if (target instanceof HTMLElement && target.isContentEditable) {
+  // Only defined on HTML elements: an SVG target reads `undefined` and falls through.
+  if ((target as Partial<HTMLElement>).isContentEditable) {
     return true;
   }
   return target.closest(GUARDED_KEY_TARGETS) !== null;
@@ -91,8 +110,8 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
       }
       // Same retargeting caveat as the keyboard guard: at the document level a press
       // inside a shadow root reports the host, the composed path has the real target.
-      const target = event.composedPath()[0] ?? event.target;
-      if (target instanceof Element) {
+      const target = getTarget(event);
+      if (isElement(target)) {
         // A press on one of this timeline's own interaction surfaces belongs to that
         // surface — another timeline's arrows are ordinary click-aways, or one Delete
         // would delete a link in each timeline holding a selection.
@@ -113,7 +132,7 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
       // A press outside the timeline only deselects: its click belongs to whatever
       // the user pressed (the backdrop analogy stops at the timeline's edge).
       const timelineGrid = elementRef.current?.closest('[role="grid"]');
-      if (!(target instanceof Node) || !timelineGrid?.contains(target)) {
+      if (!isNode(target) || !timelineGrid?.contains(target)) {
         return;
       }
       // The one-shot listeners outlive this effect on purpose (deselecting tears it

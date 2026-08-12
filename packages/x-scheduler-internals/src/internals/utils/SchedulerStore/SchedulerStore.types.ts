@@ -209,7 +209,8 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   isLoading: boolean;
   /**
-   * The errors that occurred during data fetching.
+   * The scheduler errors surfaced through the error container: persistent data-source
+   * failures, and transient interaction feedback that dismisses itself.
    * Each entry carries a stable `key` assigned at push time so the UI can use it
    * directly as a React key and as the argument to `store.dismissError(key)`.
    */

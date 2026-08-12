@@ -433,7 +433,9 @@ export function computeDependencyArrows(
     }
 
     return {
-      key: `${String(dependency.id)}:${sourceAnchor.rowIndex}:${targetAnchor.rowIndex}`,
+      // The id type is part of the key: `SchedulerDependencyId` accepts both strings
+      // and numbers, so `1` and `"1"` would otherwise share a key on the same row pair.
+      key: `${typeof dependency.id}:${String(dependency.id)}:${sourceAnchor.rowIndex}:${targetAnchor.rowIndex}`,
       id: dependency.id,
       d: buildRoundedOrthogonalPath(points, DEPENDENCY_ARROW_CORNER_RADIUS),
       hitD: clipRouteAroundObstacles(

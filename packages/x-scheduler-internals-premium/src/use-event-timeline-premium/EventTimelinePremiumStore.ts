@@ -345,16 +345,16 @@ export class EventTimelinePremiumStore<
 
   /**
    * Adds a dependency between two events.
-   * Rejects dependencies referencing an unknown or recurring event — see the returned
-   * `SchedulerAddDependencyResult`.
+   * Rejects dependencies referencing an unknown, recurring or read-only event, and
+   * duplicates of an existing pair — see the returned `SchedulerAddDependencyResult`.
    */
   public addDependency = (
     properties: SchedulerDependencyCreationProperties,
   ): SchedulerAddDependencyResult => this.scheduling.addDependency(properties);
 
   /**
-   * Deletes a dependency. Returns `false` when the deletion was refused because an
-   * endpoint event is read-only.
+   * Deletes a dependency. Returns `false` when the deletion was refused: the id is
+   * unknown, or an endpoint event is read-only.
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId): boolean =>
     this.scheduling.deleteDependency(dependencyId);

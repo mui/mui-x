@@ -449,6 +449,39 @@ describe('dependencyArrowGeometry', () => {
       );
     });
 
+    it('should cut the hit-area around an event the vertical segment crosses', () => {
+      // Three rows: the route drops from row 0 to row 2 through row 1, whose event
+      // (9:00–15:00, x 540–900) covers both candidate verticals — the default turn at
+      // x = 728 is kept and its descent rides over that event. The hit band must break
+      // around the box expanded by the 5px half-stroke (y 73–113).
+      const crossedEvent = EventBuilder.new()
+        .id('event-crossed')
+        .singleDay('2024-01-15T09:00:00Z', 360)
+        .toProcessed();
+      const eventT = EventBuilder.new()
+        .id('event-t')
+        .singleDay('2024-01-15T14:00:00Z')
+        .toProcessed();
+      const resource3 = ResourceBuilder.new().id('r3').title('Resource 3').build();
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
+            { resource: RESOURCE_2, occurrences: getOccurrences([crossedEvent]) },
+            { resource: resource3, occurrences: getOccurrences([eventT]) },
+          ],
+          rowPositions: [0, 62, 124],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-t')],
+      );
+
+      expect(arrows).to.have.length(1);
+      expect(arrows[0].hitD).to.equal(
+        'M 724 31 L 726 31 Q 728 31 728 33 L 728 73 M 728 113 L 728 151 Q 728 155 732 155 L 832 155',
+      );
+    });
+
     it('should keep the whole trimmed hit-area when the crossed events cover all of it', () => {
       // 12:05–12:55 spans the entire trimmed stretch once expanded: with no open
       // stretch left, an uncovered band beats an unselectable arrow.
@@ -640,7 +673,10 @@ describe('dependencyArrowGeometry', () => {
       );
 
       expect(arrows.map((arrow) => arrow.id)).to.deep.equal(['dep-1', 'dep-1']);
-      expect(arrows.map((arrow) => arrow.key)).to.deep.equal(['dep-1:0:0', 'dep-1:0:1']);
+      expect(arrows.map((arrow) => arrow.key)).to.deep.equal([
+        'string:dep-1:0:0',
+        'string:dep-1:0:1',
+      ]);
       expect(arrows.map((arrow) => arrow.maxRowIndex)).to.deep.equal([0, 1]);
     });
 
@@ -660,11 +696,28 @@ describe('dependencyArrowGeometry', () => {
       );
 
       expect(arrows.map((arrow) => arrow.key)).to.deep.equal([
-        'dep-1:0:0',
-        'dep-1:0:1',
-        'dep-1:1:0',
-        'dep-1:1:1',
+        'string:dep-1:0:0',
+        'string:dep-1:0:1',
+        'string:dep-1:1:0',
+        'string:dep-1:1:1',
       ]);
+    });
+
+    it('should give distinct keys to dependencies whose ids differ only in type', () => {
+      // `SchedulerDependencyId` accepts both strings and numbers: `1` and `"1"` are
+      // two dependencies, and on the same row pair only the id type separates them.
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          rowPositions: [0],
+        }),
+        [
+          { id: 1, source: 'event-a', target: 'event-b', type: 'FinishToStart' },
+          { id: '1', source: 'event-a', target: 'event-b', type: 'FinishToStart' },
+        ],
+      );
+
+      expect(arrows.map((arrow) => arrow.key)).to.deep.equal(['number:1:0:0', 'string:1:0:0']);
     });
 
     it('should keep the route inside the events area when an anchor sits at a timeline edge', () => {
@@ -747,20 +800,23 @@ describe('dependencyArrowGeometry', () => {
       expect(resolver.getAppearances('nope')).to.have.length(0);
     });
 
-    it('should anchor the rubber band on the appearance matching the occurrence key', () => {
-      // The same event appearing in two rows, with distinct keys per appearance.
-      const [firstAppearance] = getOccurrences([eventA]);
-      const secondAppearance = { ...firstAppearance, key: `${firstAppearance.key}-row-2` };
+    it('should anchor the rubber band on the appearance matching the resource', () => {
+      // A multi-resource event repeats the very same occurrence — key included — on
+      // each of its rows, so only the resource tells its appearances apart.
+      const [occurrence] = getOccurrences([eventA]);
       const resolver = buildResolver({
         resources: [
-          { resource: RESOURCE_1, occurrences: [firstAppearance] },
-          { resource: RESOURCE_2, occurrences: [secondAppearance] },
+          { resource: RESOURCE_1, occurrences: [occurrence] },
+          { resource: RESOURCE_2, occurrences: [occurrence] },
         ],
         rowPositions: [0, 62],
       });
 
-      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', secondAppearance.key)!.y).to.equal(
+      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', occurrence.key, 'r2')!.y).to.equal(
         62 + LANE_1_CENTER,
+      );
+      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', occurrence.key, 'r1')!.y).to.equal(
+        LANE_1_CENTER,
       );
       // An unknown (or absent) key silently falls back to the first appearance.
       expect(getEventEdgeAnchor(resolver, 'event-a', 'end', 'unknown-key')!.y).to.equal(

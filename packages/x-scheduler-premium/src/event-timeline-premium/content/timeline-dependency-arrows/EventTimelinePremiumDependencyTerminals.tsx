@@ -174,8 +174,6 @@ function DependencyTerminalsLayerImpl() {
     if (!container) {
       return undefined;
     }
-    // Escaped for use inside a quoted attribute selector.
-    const escapeAttributeValue = (value: string) => value.replace(/["\\]/g, '\\$&');
     const handlePointerOver = (event: PointerEvent) => {
       const target = event.target;
       if (!(target instanceof Element)) {
@@ -205,7 +203,7 @@ function DependencyTerminalsLayerImpl() {
       }
       const next =
         layerRef.current?.querySelector(
-          `[data-dependency-terminal="${escapeAttributeValue(occurrenceKey)}"][data-resource-id="${escapeAttributeValue(resourceId)}"]`,
+          `[data-dependency-terminal="${CSS.escape(occurrenceKey)}"][data-resource-id="${CSS.escape(resourceId)}"]`,
         ) ?? null;
       if (next !== null) {
         revealTerminal(next, eventElement);
