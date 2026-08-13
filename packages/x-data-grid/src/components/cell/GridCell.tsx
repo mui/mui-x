@@ -434,6 +434,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   if (children != null && typeof children !== 'string' && typeof children !== 'number') {
     classNames.push(gridClasses['cell--element']);
+    classNames.push(rootClasses?.['cell--element']);
   }
 
   const draggableEventHandlers = disableDragEvents

@@ -148,6 +148,20 @@ describe('<DataGrid /> - Cells', () => {
       expect(getCell(0, 0)).to.have.class(gridClasses['cell--element']);
     });
 
+    it('should append the custom class passed through the classes prop', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={[{ field: 'brand', renderCell: () => <button type="button">Edit</button> }]}
+            rows={[{ id: 1, brand: 'Nike' }]}
+            classes={{ 'cell--element': 'foobar' }}
+          />
+        </div>,
+      );
+      expect(getCell(0, 0)).to.have.class('foobar');
+    });
+
     it('should not flag the cell when renderCell returns text', () => {
       renderCellColumn({ field: 'brand', renderCell: ({ value }) => value });
       expect(getCell(0, 0)).not.to.have.class(gridClasses['cell--element']);
