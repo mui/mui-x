@@ -12,19 +12,19 @@ const defaultVisibleDate = new Date('2025-07-07T00:00:00');
 const initialEvents: SchedulerEvent[] = [
   {
     id: '1',
+    title: 'Team A standup',
+    start: '2025-07-07T09:00:00',
+    end: '2025-07-07T09:30:00',
+    // Renders once, in the Team A row.
+    resource: 'team-a',
+  },
+  {
+    id: '2',
     title: 'Cross-team sync',
     start: '2025-07-07T10:00:00',
     end: '2025-07-07T11:00:00',
     // Renders in both rows: blue in the Team A row, pink in the Team B row.
     resource: ['team-a', 'team-b'],
-  },
-  {
-    id: '2',
-    title: 'Team A standup',
-    start: '2025-07-08T09:00:00',
-    end: '2025-07-08T09:30:00',
-    // Renders once, in the Team A row.
-    resource: 'team-a',
   },
 ];
 
@@ -38,7 +38,7 @@ export default function MultipleResourcesPerEvent() {
         onEventsChange={setEvents}
         defaultVisibleDate={defaultVisibleDate}
         resources={resources}
-        defaultPreset="dayAndWeek"
+        defaultPreset="dayAndHour"
         // A newly created event also gets the multi-select picker.
         eventCreation={{ canHaveMultipleResources: true }}
       />

@@ -3,7 +3,7 @@
   onEventsChange={setEvents}
   defaultVisibleDate={defaultVisibleDate}
   resources={resources}
-  defaultPreset="dayAndWeek"
+  defaultPreset="dayAndHour"
   // A newly created event also gets the multi-select picker.
   eventCreation={{ canHaveMultipleResources: true }}
 />

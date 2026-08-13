@@ -111,12 +111,29 @@ export function FormContent(props: FormContentProps) {
   const store = useSchedulerStoreContext();
   const pushPlaceholder = usePushPlaceholder();
 
+  const canHaveMultipleResources = useStore(
+    store,
+    schedulerEventSelectors.canHaveMultipleResources,
+  );
+  const isCreating = useStore(store, schedulerOccurrencePlaceholderSelectors.isCreating);
+
   const defaultRecurrencePresetKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
     occurrence.displayTimezone.rrule,
     occurrence.displayTimezone.start,
   );
+
+  // Derived once, right alongside `initialValues` below, for the same reason: the dialog
+  // remounts on `key={occurrence.key}`, so this is exactly "the data this occurrence started
+  // with", and it must stay that way for the lifetime of the editing session. Two components
+  // read it — `ResourceAndColorSection` (what the Select renders as) and `FormContentInner`
+  // (what gets written on submit) — and they have to agree, so it's derived once, here, and
+  // passed to both instead of each freezing its own copy against a live subscription that
+  // could drift between them. See `getResourceSelectionMode` for the creating-vs-editing rule.
+  const resourceSelectionMode = useRefWithInit(() =>
+    getResourceSelectionMode(occurrence.resource, canHaveMultipleResources, isCreating),
+  ).current;
 
   // Built once: the provider ignores later values anyway, and this component
   // re-renders on every placeholder push during creation (`usePushPlaceholder`
@@ -168,13 +185,17 @@ export function FormContent(props: FormContentProps) {
 
   return (
     <EventDialogFormProvider initialValues={initialValues} onValuesChange={pushPlaceholder}>
-      <FormContentInner {...props} />
+      <FormContentInner {...props} resourceSelectionMode={resourceSelectionMode} />
     </EventDialogFormProvider>
   );
 }
 
-function FormContentInner(props: FormContentProps) {
-  const { occurrence, onClose, dragHandlerRef, isDraggable } = props;
+interface FormContentInnerProps extends FormContentProps {
+  resourceSelectionMode: ResourceSelectionMode;
+}
+
+function FormContentInner(props: FormContentInnerProps) {
+  const { occurrence, onClose, dragHandlerRef, isDraggable, resourceSelectionMode } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -187,10 +208,6 @@ function FormContentInner(props: FormContentProps) {
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
-  const canHaveMultipleResources = useStore(
-    store,
-    schedulerEventSelectors.canHaveMultipleResources,
-  );
 
   // Optional renderer hooks
   const { recurrenceTab: RecurrenceTabRenderer } = useEventEditingOptionalRenderers();
@@ -203,20 +220,6 @@ function FormContentInner(props: FormContentProps) {
 
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
-
-  // Saving never changes the shape of `resource`: single mode writes back the plain id (or
-  // `undefined` once cleared), multiple mode writes back the array (`[]` once cleared). Frozen
-  // at mount, same as (and for the same reason as) `ResourceAndColorSection`'s own `mode`: it
-  // must match whatever that component rendered and let the user interact with, not a value
-  // recomputed from `canHaveMultipleResources` at submit time, which could have drifted if the
-  // store's events changed while the dialog was open.
-  const [resourceSelectionMode] = React.useState<ResourceSelectionMode>(() =>
-    getResourceSelectionMode(
-      occurrence.resource,
-      canHaveMultipleResources,
-      rawPlaceholder?.type === 'creation',
-    ),
-  );
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -340,6 +343,7 @@ function FormContentInner(props: FormContentProps) {
         <GeneralTab
           occurrence={occurrence}
           value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'}
+          resourceSelectionMode={resourceSelectionMode}
         />
         {showRecurrence && RecurrenceTabRenderer && (
           <RecurrenceTabRenderer occurrence={occurrence} tabValue={tabValue} />

@@ -140,9 +140,9 @@ The resource picker in the edit dialog switches between a single-select and a mu
 - An event whose `resource` is a string is edited as single-resource — the picker shows one entry at a time.
 - An event whose `resource` is an array (including `[]`, meaning multi-resource with nothing selected yet) is edited as multi-resource.
 
-Saving never changes that shape: an event that arrives as a string is always saved back as a string (or `undefined` once cleared), and an event that arrives as an array is always saved back as an array (`[]` once cleared).
+Saving an existing event never changes that shape: one that arrives as a string is always saved back as a string (or `undefined` once cleared), and one that arrives as an array is always saved back as an array (`[]` once cleared).
 
-A new event created by clicking inside a resource's row starts assigned to that row's resource (a string), so it's edited as single-resource until you turn it into an array yourself. For an event whose `resource` is `null` or not set otherwise (and for any other newly created event), use `canHaveMultipleResources` on `eventCreation` to choose the mode:
+For a new event, or an existing one whose `resource` is `null` or not set, there's no shape to preserve — `canHaveMultipleResources` on `eventCreation` decides the picker instead. When creating, the resource of the row you clicked in only pre-selects an entry: in multiple mode, a new event created in the "Team A" row starts as `['team-a']`, not `'team-a'`.
 
 ```tsx
 <EventTimelinePremium eventCreation={{ canHaveMultipleResources: true }} />

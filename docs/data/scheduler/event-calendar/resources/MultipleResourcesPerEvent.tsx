@@ -3,8 +3,8 @@ import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 
 const resources: SchedulerResource[] = [
-  { id: 'team-a', title: 'Team A' },
-  { id: 'team-b', title: 'Team B' },
+  { id: 'team-a', title: 'Team A', eventColor: 'blue' },
+  { id: 'team-b', title: 'Team B', eventColor: 'pink' },
 ];
 
 const defaultVisibleDate = new Date('2025-07-07T00:00:00');

@@ -694,13 +694,23 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should show "No resource" in the combobox after picking the "No resource" option (single-select mode)', async () => {
+      let updateEventSpy: sinon.SinonSpy | undefined;
+
       const { user } = render(
         <EventCalendarProvider
           events={[DEFAULT_EVENT]}
           resources={resources}
           shouldEventRequireResource={false}
           storeClass={PremiumTestStore}
+          onEventsChange={() => {}}
         >
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="updateEvent"
+            onSpyReady={(sp) => {
+              updateEventSpy = sp;
+            }}
+          />
           <TestEventDialogContent open {...defaultProps} />
         </EventCalendarProvider>,
       );
@@ -713,6 +723,13 @@ describe('<EventDialogContent open />', () => {
       expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
         /no resource/i,
       );
+
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      // Single mode writes the plain id, or `undefined` once cleared — never `[]` or `null`,
+      // which would silently widen the shape for an app that never opted into arrays.
+      expect(updateEventSpy?.calledOnce).to.equal(true);
+      expect(updateEventSpy?.firstCall.args[0].resource).to.equal(undefined);
     });
 
     it('should block submit and not call `onEventsChange` when `shouldEventRequireResource={true}` and the event has no resource', async () => {

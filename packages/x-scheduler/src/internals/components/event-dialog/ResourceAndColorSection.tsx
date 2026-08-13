@@ -20,12 +20,10 @@ import { EVENT_COLORS } from '@mui/x-scheduler-internals/constants';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
-  schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
-import { getResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import { useStore } from '@base-ui/utils/store';
 import type { PaletteName } from '../../utils/tokens';
@@ -141,8 +139,17 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
   );
 }
 
-export default function ResourceAndColorSection(props: EventDialogSectionProps) {
-  const { occurrence } = props;
+interface ResourceAndColorSectionProps extends EventDialogSectionProps {
+  /**
+   * Whether the picker is single- or multi-select. Derived once by `FormContent`, alongside
+   * the form's `initialValues` — the same value also decides what `handleSubmit` writes, so
+   * both must read the exact same "captured at mount" answer. See `getResourceSelectionMode`.
+   */
+  resourceSelectionMode: ResourceSelectionMode;
+}
+
+export default function ResourceAndColorSection(props: ResourceAndColorSectionProps) {
+  const { occurrence, resourceSelectionMode: mode } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -157,27 +164,10 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
     store,
     schedulerOtherSelectors.shouldEventRequireResource,
   );
-  const canHaveMultipleResources = useStore(
-    store,
-    schedulerEventSelectors.canHaveMultipleResources,
-  );
-  const isCreating = useStore(store, schedulerOccurrencePlaceholderSelectors.isCreating);
   const isPropertyReadOnly = useStore(
     store,
     schedulerEventSelectors.isPropertyReadOnly,
     occurrence.id,
-  );
-
-  // Decided once, at mount, and never reacts afterwards — not to the user's in-progress
-  // selection, and not to `canHaveMultipleResources`/the store's events changing while the
-  // dialog stays open (e.g. a second batch of events loading in). A lazy `useState` initializer
-  // freezes it for real: `canHaveMultipleResources` and `isCreating` are live subscriptions, so
-  // reading them directly on every render would let the Select's mode — and its `value`'s
-  // shape — flip out from under the user mid-interaction. The dialog remounts on
-  // `key={occurrence.key}`, so this initial render is exactly "the data this occurrence started
-  // with". See `getResourceSelectionMode` for the creating-vs-editing rule itself.
-  const [mode] = React.useState<ResourceSelectionMode>(() =>
-    getResourceSelectionMode(occurrence.resource, canHaveMultipleResources, isCreating),
   );
 
   const resourceField = useEventDialogFormField<SchedulerResourceId[]>('resourceIds', {
