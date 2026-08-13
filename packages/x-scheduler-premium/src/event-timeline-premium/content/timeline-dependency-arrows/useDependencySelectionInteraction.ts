@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { getTarget } from '@mui/x-internals/domUtils';
+import { isElement, isNode } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import { isElement, isNode } from './nodeGuards';
 
 /**
  * Targets whose keystrokes must never reach the arrows: form controls (native or
