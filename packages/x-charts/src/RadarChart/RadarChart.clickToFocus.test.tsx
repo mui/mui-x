@@ -43,32 +43,94 @@ describe.skipIf(isJSDOM)('<RadarChart /> - click to focus', () => {
     expect(getFocusedMarkIndex(container)).to.equal(3);
   });
 
-  it('focuses the item at the click angle when the click lands outside the area', async () => {
-    // The area path only covers the polygon the data draws, so a click between it and the outer
-    // edge hits no element. The rotation axis still has an index for that angle.
-    const { container, user } = render(<RadarChart {...radarProps} />);
+  describe('click outside the area', () => {
+    // A small polygon inside a fixed scale leaves a wide band that is on no element, so a click
+    // at any angle reaches the rotation axis fallback.
+    const gapProps = {
+      height: 300,
+      width: 300,
+      radar: { metrics: ['A', 'B', 'C', 'D'], max: 100 },
+      series: [{ id: 'radar', data: [10, 10, 10, 10] }],
+    };
 
-    const marks = Array.from(container.querySelectorAll<SVGElement>('circle')).map(getCenter);
-    // The metrics sit at the top, right, bottom and left. The two horizontal ones give the centre,
-    // and each metric is scaled on its own, so the radius is read off the marks rather than values.
-    const center = { x: (marks[1].clientX + marks[3].clientX) / 2, y: marks[1].clientY };
-    const radiusOf = (mark: { clientX: number; clientY: number }) =>
-      Math.hypot(mark.clientX - center.x, mark.clientY - center.y);
-    const outerRadius = Math.max(...marks.map(radiusOf));
+    /** A point in the band outside the polygon, `degrees` clockwise from the top. */
+    function pointAtAngle(container: HTMLElement, degrees: number) {
+      const marks = Array.from(container.querySelectorAll<SVGElement>('circle')).map(getCenter);
+      // The first metric and the one half way round face each other, so they straddle the centre.
+      const opposite = marks[marks.length / 2];
+      const center = {
+        x: (marks[0].clientX + opposite.clientX) / 2,
+        y: (marks[0].clientY + opposite.clientY) / 2,
+      };
+      // Every metric holds the same value, so one mark gives the radius the polygon sits at, and
+      // the outer edge is ten times further out. Half way between the two is on no element.
+      const markRadius = Math.hypot(marks[0].clientX - center.x, marks[0].clientY - center.y);
+      const radius = (markRadius + markRadius * 10) / 2;
+      const radians = (degrees * Math.PI) / 180;
 
-    // Straight down is the `C` angle. Its point is the closest to the centre, so the band between
-    // it and the outer edge is on no element.
-    const clickRadius = (radiusOf(marks[2]) + outerRadius) / 2;
-    await user.pointer([
-      {
-        keys: '[MouseLeft]',
-        target: container.querySelector<SVGElement>('svg')!,
-        coords: { clientX: center.x, clientY: center.y + clickRadius },
-      },
-    ]);
-    await user.keyboard('[ArrowRight]');
+      return {
+        clientX: center.x + radius * Math.sin(radians),
+        clientY: center.y - radius * Math.cos(radians),
+      };
+    }
 
-    expect(getFocusedMarkIndex(container)).to.equal(3);
+    // The metrics sit at 0, 90, 180 and 270 degrees. Each wedge between two of them splits in
+    // half, so the click takes the metric whose axis it is closest to.
+    [
+      { degrees: 0, focused: 0 },
+      { degrees: 30, focused: 0 },
+      { degrees: 60, focused: 1 },
+      { degrees: 90, focused: 1 },
+      { degrees: 200, focused: 2 },
+      { degrees: 250, focused: 3 },
+    ].forEach(({ degrees, focused }) => {
+      it(`focuses the metric closest to a click at ${degrees} degrees`, async () => {
+        const { container, user } = render(<RadarChart {...gapProps} />);
+
+        await user.pointer([
+          {
+            keys: '[MouseLeft]',
+            target: container.querySelector<SVGElement>('svg')!,
+            coords: pointAtAngle(container, degrees),
+          },
+        ]);
+        await user.keyboard('[ArrowRight]');
+
+        // The click stores the item without revealing it, so the arrow lands on the next one.
+        expect(getFocusedMarkIndex(container)).to.equal((focused + 1) % 4);
+      });
+    });
+
+    // Six metrics put the axes 60 degrees apart, so each wedge splits at 30.
+    [
+      { degrees: 25, focused: 0 },
+      { degrees: 35, focused: 1 },
+      { degrees: 85, focused: 1 },
+      { degrees: 95, focused: 2 },
+      { degrees: 355, focused: 0 },
+    ].forEach(({ degrees, focused }) => {
+      it(`focuses the metric closest to a click at ${degrees} degrees with six metrics`, async () => {
+        const { container, user } = render(
+          <RadarChart
+            height={300}
+            width={300}
+            radar={{ metrics: ['A', 'B', 'C', 'D', 'E', 'F'], max: 100 }}
+            series={[{ id: 'radar', data: [10, 10, 10, 10, 10, 10] }]}
+          />,
+        );
+
+        await user.pointer([
+          {
+            keys: '[MouseLeft]',
+            target: container.querySelector<SVGElement>('svg')!,
+            coords: pointAtAngle(container, degrees),
+          },
+        ]);
+        await user.keyboard('[ArrowRight]');
+
+        expect(getFocusedMarkIndex(container)).to.equal((focused + 1) % 6);
+      });
+    });
   });
 
   it('focuses the mark through the area when no click callback is set', async () => {
