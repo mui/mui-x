@@ -6,12 +6,11 @@ import type { UseChartInteractionSignature } from '../../internals/plugins/featu
 import type { SeriesId, SeriesItemIdentifierWithType } from '../../models/seriesType';
 
 /**
- * Reports the radar item under the pointer.
+ * Reports the radar item under the pointer, and clears it with the identifier it was set with.
  *
- * The item has to be cleared with the same identifier it was set with. `useInteractionAllItemProps`
- * only knows the series, since `dataIndex` sits on the points rather than on the series entry, so
- * its `onPointerLeave` clears an index-less identifier that never matches the one reported here.
- * The hovered item would then survive the pointer leaving, and be resolved by the next click.
+ * `clearHoveredItem` ignores an identifier that does not match the stored one, and
+ * `useInteractionAllItemProps` only knows the series, so its `onPointerLeave` can not clear the
+ * per-point item reported here.
  */
 export function useRadarHoveredItem() {
   const { instance } = useChartsContext<[UseChartInteractionSignature]>();

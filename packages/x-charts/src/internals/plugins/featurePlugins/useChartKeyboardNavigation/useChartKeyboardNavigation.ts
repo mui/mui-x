@@ -208,10 +208,8 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       return item;
     }
 
-    // A radar has no cartesian axis, and its area path only covers the polygon the data draws, so
-    // a click inside the chart but outside that polygon reaches here with nothing resolved. The
-    // rotation axis index is the one the axis highlight already resolved from this pointer, so the
-    // focus lands on the spoke the highlight is showing.
+    // A radar area only covers the polygon the data draws, so a click inside the chart but outside
+    // it resolves nothing above. Fall back to the rotation axis, the same one the highlight uses.
     if (selectorChartRotationAxis(store.state).axisIds.length === 0) {
       return null;
     }

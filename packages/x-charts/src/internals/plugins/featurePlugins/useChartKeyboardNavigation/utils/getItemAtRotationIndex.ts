@@ -9,14 +9,10 @@ import { findVisibleDataIndex } from './findVisibleDataIndex';
 const rotationSeriesTypes = new Set(['radar'] as const);
 
 /**
- * Resolves the item a click falls on from the rotation axis index, for charts that have no
- * cartesian axis to fall back to.
+ * Resolves the item a click falls on from the rotation axis index, for charts with no cartesian
+ * axis to fall back to. Keeps the focused series when there is one.
  *
- * The index is the one the axis highlight already resolved from the pointer, so a click between
- * two spokes picks the same one the highlight shows: the nearest, changing at the midline.
- *
- * Keeps the focused series when there is one, so the click moves along the series the user was
- * already navigating.
+ * The index comes from the axis highlight, so a click between two spokes picks the one it shows.
  */
 export function getItemAtRotationIndex({
   dataIndex,
@@ -67,7 +63,7 @@ export function getItemAtRotationIndex({
   } as FocusedItemIdentifier<ChartSeriesType>;
 }
 
-/** The focused series when it is drawn against a rotation axis, the first series with data otherwise. */
+/** The focused series when it is drawn against a rotation axis, the first one with data otherwise. */
 function getTargetSeries(
   processedSeries: ProcessedSeries<ChartSeriesType>,
   focusedItem: FocusedItemIdentifier<ChartSeriesType> | null,

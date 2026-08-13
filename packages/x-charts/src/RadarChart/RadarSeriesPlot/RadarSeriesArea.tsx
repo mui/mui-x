@@ -53,10 +53,8 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const { reportHoveredItem, clearHoveredItem } = useRadarHoveredItem();
   const getHighlightState = useItemHighlightStateGetter<'radar'>();
 
-  /**
-   * The radar area only knows its series, so the pointer item is resolved from the angle. Also
-   * bound to `pointerdown`, because a touch tap may never produce a `pointermove`.
-   */
+  // The area only knows its series, so the index comes from the angle. Bound to `pointerdown` too,
+  // since a touch tap may never produce a `pointermove`.
   const handlePointerItem = (seriesId: SeriesId) => (event: React.PointerEvent<SVGPathElement>) => {
     reportHoveredItem(seriesId, getRotationIndex(event));
   };

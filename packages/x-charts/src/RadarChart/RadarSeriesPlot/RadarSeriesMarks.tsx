@@ -73,8 +73,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                   classes,
                 })}
                 pointerEvents={onItemClick ? undefined : 'none'}
-                // Marks only take pointer events when clickable, and then they hide the area
-                // underneath, so they have to report the pointer item themselves.
+                // Clickable marks hide the area underneath, so they report their own index.
                 onPointerMove={() => reportHoveredItem(id, index)}
                 onPointerDown={() => reportHoveredItem(id, index)}
                 onPointerLeave={() => clearHoveredItem(id)}

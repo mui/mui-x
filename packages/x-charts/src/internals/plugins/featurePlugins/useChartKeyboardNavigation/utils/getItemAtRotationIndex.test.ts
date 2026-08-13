@@ -40,7 +40,7 @@ describe('getItemAtRotationIndex', () => {
 
   it('resolves nothing when the axis reports no index', () => {
     expect(resolve(null)).to.equal(null);
-    // `getRotationAxisIndex` returns -1 outside the rotation range.
+    // -1 is what `getRotationAxisIndex` returns outside the rotation range.
     expect(resolve(-1)).to.equal(null);
   });
 
