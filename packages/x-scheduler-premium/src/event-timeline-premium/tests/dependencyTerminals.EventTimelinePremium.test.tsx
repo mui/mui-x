@@ -50,9 +50,10 @@ function getTerminal(title: string, resourceId?: string) {
     .getAllByText(title)[0]
     .closest('[data-occurrence-key]')!
     .getAttribute('data-occurrence-key');
-  const resourceSelector = resourceId === undefined ? '' : `[data-resource-id="${resourceId}"]`;
+  const resourceSelector =
+    resourceId === undefined ? '' : `[data-resource-id="${CSS.escape(resourceId)}"]`;
   return document.querySelector<HTMLElement>(
-    `[data-dependency-terminal="${occurrenceKey}"]${resourceSelector}`,
+    `[data-dependency-terminal="${CSS.escape(occurrenceKey!)}"]${resourceSelector}`,
   );
 }
 
@@ -163,6 +164,25 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       // defines the hover.
       fireEvent.pointerMove(cell, { clientX: 160, clientY: 28 });
       expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(false);
+    });
+
+    it('should reveal the terminal of an event whose id needs escaping in a selector', () => {
+      // The occurrence key is the event id, and the reveal looks its terminal up
+      // through an attribute selector. A raw control character cannot appear in a
+      // quoted CSS string, so an id carrying one makes the lookup throw unless it is
+      // escaped — mid-`pointerover`, taking the whole hover handler down with it.
+      const trickyEvent = EventBuilder.new()
+        .id('event\na"quoted"')
+        .title('Tricky event')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(resource1)
+        .build();
+
+      renderTimeline({ events: [trickyEvent, eventB], dependencies: [] });
+
+      fireEvent.pointerOver(getEventElement('Tricky event'));
+
+      expect(getTerminal('Tricky event')!.hasAttribute('data-visible')).to.equal(true);
     });
 
     it('should keep the terminal revealed when the pointer crosses an arrow hit-area', () => {
@@ -1028,6 +1048,21 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       const handleDependenciesChange = setupSelectedArrow();
 
       pressBackspaceIn(document.createElement('input'));
+
+      expect(handleDependenciesChange.callCount).to.equal(0);
+    });
+
+    it('should not delete the arrow when typing Backspace in another document', () => {
+      const handleDependenciesChange = setupSelectedArrow();
+
+      // A form control the timeline reaches through its `ownerDocument` — an iframe
+      // portal. Its constructors belong to that realm, so it fails an `instanceof`
+      // guard while behaving like any other element; standing one in avoids mounting
+      // a second document just to prove the guard does not depend on the realm.
+      const foreignInput = { nodeType: 1, closest: () => foreignInput };
+      const event = new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true });
+      Object.defineProperty(event, 'composedPath', { value: () => [foreignInput] });
+      document.dispatchEvent(event);
 
       expect(handleDependenciesChange.callCount).to.equal(0);
     });

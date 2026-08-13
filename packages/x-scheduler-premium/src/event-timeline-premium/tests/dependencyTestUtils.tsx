@@ -22,6 +22,11 @@ import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 export const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
 export const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
 
+// Module scope so the identity survives re-renders: the store compares the resources
+// parameter by reference, and a fresh array on every render would rebuild the whole
+// resource state a real consumer keeps.
+const defaultResources = [resource1, resource2];
+
 export function buildDependency(id: string, source: string, target: string): SchedulerDependency {
   return { id, source, target, type: 'FinishToStart' };
 }
@@ -131,7 +136,7 @@ interface RenderTimelineParameters {
  */
 function TimelineHost({
   events,
-  resources = [resource1, resource2],
+  resources = defaultResources,
   dependencies,
   presetConfig,
   readOnly,
