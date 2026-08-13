@@ -188,7 +188,7 @@ Setting it to `false` exports grid formulas as live formulas, but also lets such
 
 - Formulas are not supported with the [server-side data source](/x/react-data-grid/server-side-data/) or while [pivoting](/x/react-data-grid/pivoting/) is active.
 - The formula syntax is en-US only, and the built-in function metadata is not localized.
-- Pinned rows are excluded from the position context, so they cannot be referenced positionally or included in ranges.
+- Ranges and `COLUMN_VALUES` never cover pinned rows—reference their cells individually instead.
 - The formula editor does not support in-editor undo—the grid-level undo and redo of committed values work as usual.
 - A formula column's own `valueGetter` is ignored for its formula cells (a development-mode warning points this out); it applies normally to plain cells in the column.
 - Clipboard copy places evaluated values on the clipboard—use the [fill handle](#fill-handle) to replicate formulas inside the grid.
