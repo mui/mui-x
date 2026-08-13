@@ -50,14 +50,8 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const { reportHoveredItem, clearHoveredItem } = useRadarHoveredItem();
+  const { getAreaPointerProps } = useRadarHoveredItem();
   const getHighlightState = useItemHighlightStateGetter<'radar'>();
-
-  // The area only knows its series, so the index comes from the angle. Bound to `pointerdown` too,
-  // since a touch tap may never produce a `pointermove`.
-  const handlePointerItem = (seriesId: SeriesId) => (event: React.PointerEvent<SVGPathElement>) => {
-    reportHoveredItem(seriesId, getRotationIndex(event));
-  };
 
   const classes = useUtilityClasses(inClasses);
 
@@ -69,6 +63,9 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
         if (hidden) {
           return null;
         }
+
+        // Spread last so the reporting survives whatever handlers the caller passes.
+        const pointerBase = { ...interactionProps[seriesIndex], ...other };
 
         return (
           <path
@@ -90,17 +87,8 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
               })
             }
             cursor={onItemClick ? 'pointer' : 'unset'}
-            {...interactionProps[seriesIndex]}
-            onPointerMove={handlePointerItem(id)}
-            onPointerDown={(event) => {
-              interactionProps[seriesIndex].onPointerDown?.(event);
-              handlePointerItem(id)(event);
-            }}
-            onPointerLeave={() => {
-              interactionProps[seriesIndex].onPointerLeave?.();
-              clearHoveredItem(id);
-            }}
-            {...other}
+            {...pointerBase}
+            {...getAreaPointerProps(id, getRotationIndex, pointerBase)}
           />
         );
       })}

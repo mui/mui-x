@@ -48,7 +48,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   const classes = useUtilityClasses(inClasses);
   const getHighlightState = useItemHighlightStateGetter();
-  const { reportHoveredItem, clearHoveredItem } = useRadarHoveredItem();
+  const { getMarkPointerProps } = useRadarHoveredItem();
 
   useRegisterRadarItemActivation(seriesId, onItemClick, RADAR_ACTIVATION_PRIORITY.mark);
 
@@ -73,15 +73,12 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                   classes,
                 })}
                 pointerEvents={onItemClick ? undefined : 'none'}
-                // Clickable marks hide the area underneath, so they report their own index.
-                onPointerMove={() => reportHoveredItem(id, index)}
-                onPointerDown={() => reportHoveredItem(id, index)}
-                onPointerLeave={() => clearHoveredItem(id)}
                 onClick={(event) =>
                   onItemClick?.(event, { type: 'radar', seriesId: id, dataIndex: index })
                 }
                 cursor={onItemClick ? 'pointer' : 'unset'}
                 {...other}
+                {...getMarkPointerProps(id, index, other)}
               />
             ))}
           </g>
