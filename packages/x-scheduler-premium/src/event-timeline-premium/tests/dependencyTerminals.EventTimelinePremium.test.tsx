@@ -185,6 +185,25 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(getTerminal('Tricky event')!.hasAttribute('data-visible')).to.equal(true);
     });
 
+    it('should reveal the terminal when the pointer comes from another document', () => {
+      renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      // A pointer target of an iframe portal: its constructors belong to that realm,
+      // so it fails an `instanceof` guard while behaving like any other element.
+      // Standing one in front of the real event avoids mounting a second document
+      // just to prove the reveal does not depend on the realm.
+      const eventElement = getEventElement('Event A');
+      const foreignTarget = {
+        nodeType: 1,
+        closest: (selector: string) => eventElement.closest(selector),
+      };
+      const event = new MouseEvent('pointerover', { bubbles: true });
+      Object.defineProperty(event, 'target', { value: foreignTarget });
+      eventElement.dispatchEvent(event);
+
+      expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
+    });
+
     it('should keep the terminal revealed when the pointer crosses an arrow hit-area', () => {
       renderTimeline({
         events: [eventA, eventB],

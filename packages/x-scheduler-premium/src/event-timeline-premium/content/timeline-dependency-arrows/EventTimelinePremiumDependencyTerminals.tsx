@@ -9,6 +9,7 @@ import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
+import { isElement } from './nodeGuards';
 
 /**
  * Diameter of the terminal circle, also used to keep it inside the events area at the
@@ -176,7 +177,7 @@ function DependencyTerminalsLayerImpl() {
     }
     const handlePointerOver = (event: PointerEvent) => {
       const target = event.target;
-      if (!(target instanceof Element)) {
+      if (!isElement(target)) {
         return;
       }
       // A terminal keeps itself revealed while hovered — it is only hit-testable

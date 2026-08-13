@@ -4,6 +4,7 @@ import { useStore } from '@base-ui/utils/store';
 import { getTarget } from '@mui/x-internals/domUtils';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import { isElement, isNode } from './nodeGuards';
 
 /**
  * Targets whose keystrokes must never reach the arrows: form controls (native or
@@ -28,23 +29,6 @@ const GUARDED_KEY_TARGETS = [
  * nor swallow the control's click.
  */
 const GUARDED_PRESS_TARGETS = 'dialog, [role="dialog"]';
-
-/**
- * Node checks by `nodeType` rather than `instanceof`: the listeners follow the
- * element's `ownerDocument`, so a timeline rendered into another document (an iframe
- * portal) receives targets whose constructors are not the ambient realm's. An
- * `instanceof` guard rejects them all, turning Backspace in one of that document's
- * inputs into a dependency deletion.
- */
-const ELEMENT_NODE = 1;
-
-function isElement(target: EventTarget | null): target is Element {
-  return (target as Node | null)?.nodeType === ELEMENT_NODE;
-}
-
-function isNode(target: EventTarget | null): target is Node {
-  return typeof (target as Node | null)?.nodeType === 'number';
-}
 
 function isGuardedKeyTarget(event: KeyboardEvent): boolean {
   // At the document level `event.target` is retargeted to the shadow host, which
