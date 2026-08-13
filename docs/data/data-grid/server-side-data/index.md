@@ -314,7 +314,7 @@ If there's an error, `onDataSourceError()` is triggered with the error object co
 ### Replacing the row instead of merging it
 
 The resolved row is merged into the existing one, which produces a new object.
-To store the resolved row as-is instead, resolve with a [`{ _action: 'replace', row }` update](/x/react-data-grid/row-updates/#replacing-a-row-instead-of-merging-it).
+To store the resolved row as-is instead, resolve with a [row replacement](/x/react-data-grid/row-updates/#replacing-a-row-instead-of-merging-it).
 Use it when rows are class instances whose prototype chain, `#private` fields, or object identity must survive the update:
 
 ```ts
@@ -329,7 +329,7 @@ const dataSource: GridDataSource = {
 };
 ```
 
-With this pattern, `apiRef.current.getRow(id)` returns the very instance provided in `row`.
+In this case, `apiRef.current.getRow(id)` returns the very instance provided in `row`.
 The rows resolved by `getRows()` are always stored as-is, so this keeps editing consistent with the initial fetch.
 
 :::warning

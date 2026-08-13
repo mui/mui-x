@@ -47,13 +47,11 @@ apiRef.current.updateRows([{ _action: 'replace', row }]);
 ```
 
 The Data Grid stores `row` by reference, so `apiRef.current.getRow(id)` returns the very object you passed in, with its prototype chain and its `#private` fields intact.
-The `row` object itself is never modified: the `_action` marker lives on the update object, which is discarded after the call.
 Use this when the row is a class instance whose identity or private state must survive the update.
 Any field missing from the replacement is removed from the row, because a replace is never a merge.
 
 :::warning
-Pass the object itself, as shown above.
-Spreading it, as in `{ _action: 'replace', row: { ...row } }`, creates a plain object and drops the prototype chain and the private fields that `_action: 'replace'` exists to preserve.
+Spreading the row, as in `{ _action: 'replace', row: { ...row } }`, creates a plain object and drops the prototype chain and the private fields that `_action: 'replace'` exists to preserve.
 :::
 
 Provide a replacement that is a different object from the one currently stored.
@@ -62,7 +60,7 @@ The Data Grid and its memoized rows rely on reference changes to re-render, so r
 When a single `updateRows()` call contains several updates for the same row, make the replace the last one for that row.
 The updates that follow it are merged onto the replacement, which keeps its prototype but is no longer the same object and no longer carries its `#private` fields, because a merge can't copy them.
 
-The same update can be returned from `processRowUpdate()` so that row and cell editing also store the row without merging.
+The same update can be returned from `processRowUpdate()`.
 See [Editing persistence—Replacing the row instead of merging it](/x/react-data-grid/editing/persistence/#replacing-the-row-instead-of-merging-it) for details.
 
 ## Infinite loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')

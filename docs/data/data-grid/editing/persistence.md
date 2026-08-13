@@ -47,7 +47,7 @@ If `shouldDeleteRow` returns `true`, the row will be deleted from the Data Grid'
 
 ### Replacing the row instead of merging it
 
-You can also return a [`{ _action: 'replace', row }` update](/x/react-data-grid/row-updates/#replacing-a-row-instead-of-merging-it) from `processRowUpdate()` to store `row` as the new row instead of merging it into the existing one.
+You can also return a [row replacement](/x/react-data-grid/row-updates/#replacing-a-row-instead-of-merging-it) from `processRowUpdate()` to store `row` as the new row instead of merging it into the existing one.
 Use it when rows are class instances whose prototype chain, `#private` fields, or object identity must survive the edit.
 The updated row that `processRowUpdate()` receives is always a plain object—a draft with the edited values applied—so build a proper instance from it, typically from the server response after persisting the change:
 
@@ -61,7 +61,7 @@ The updated row that `processRowUpdate()` receives is always a plain object—a 
 />
 ```
 
-With this pattern, `apiRef.current.getRow(id)` returns the very instance provided in `row` after the edit is saved.
+In this case, `apiRef.current.getRow(id)` returns the very instance provided in `row` after the edit is saved.
 The instance must be a different object from the one currently stored, as the Data Grid relies on reference changes to re-render.
 
 ## Server-side validation
