@@ -2,13 +2,14 @@ import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import type { RefObject } from '@mui/x-internals/types';
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, gridFilterModelSelector, useGridApiRef } from '@mui/x-data-grid';
 import type {
   DataGridProps,
   GridApi,
   GridDataSource,
   GridFilterItem,
   GridGetRowsParams,
+  GridLogicOperator,
   GridGetRowsResponse,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
@@ -253,6 +254,82 @@ describe('<DataGrid /> - Data source', () => {
       });
       expect(getSentFilterItems()).to.deep.equal([
         { id: 1, field: 'id', operator: 'contains', value: '1' },
+      ]);
+    });
+  });
+
+  describe('inapplicable filter model changes', () => {
+    const renderAndWaitForInitialFetch = async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+    };
+
+    // A logic operator needs two operands to change anything.
+    it('should not re-fetch when the logic operator changes without two complete items', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterLogicOperator('or' as GridLogicOperator);
+      });
+      await sleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    it('should not re-fetch when the quick filter values only contain falsy entries', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['']);
+      });
+      await sleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    it('should not re-fetch when the quick filter logic operator changes below two values', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterModel({
+          ...gridFilterModelSelector(apiRef),
+          quickFilterLogicOperator: 'or' as GridLogicOperator,
+        });
+      });
+      await sleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    it('should re-fetch when a quick filter value is added', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      expect(JSON.parse(url.searchParams.get('filterModel')!).quickFilterValues).to.deep.equal([
+        'abc',
       ]);
     });
   });
