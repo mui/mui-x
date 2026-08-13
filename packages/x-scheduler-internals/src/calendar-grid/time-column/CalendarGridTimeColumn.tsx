@@ -190,7 +190,7 @@ export namespace CalendarGridTimeColumn {
      */
     dayStartMinute?: number;
     /**
-     * Last displayed minute of the day, as an offset from midnight.
+     * End of the displayed window of the day, as an exclusive offset from midnight (1440 for the full day).
      * Derived from the view's whole-hour window so it stays aligned with the
      * grid rows even on DST-transition days.
      * @default 1440
