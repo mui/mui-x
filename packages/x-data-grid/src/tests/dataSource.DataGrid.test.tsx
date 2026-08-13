@@ -1119,5 +1119,102 @@ describe('<DataGrid /> - Data source', () => {
       // #private state survives the edit because the stored row is the instance itself.
       expect(updatedRow.revision).to.equal(1);
     });
+
+    describe('cache invalidation with a replace update', () => {
+      const initialRows = [
+        { id: 0, commodity: 'Nickel' },
+        { id: 1, commodity: 'Cobalt' },
+      ];
+
+      function createTestCase(updateRow: NonNullable<GridDataSource['updateRow']>) {
+        const clearSpy = spy();
+        const cache = new Map<string, GridGetRowsResponse>();
+        const dataSourceCache = {
+          get: (key: GridGetRowsParams) => cache.get(getKeyDefault(key)),
+          set: (key: GridGetRowsParams, value: GridGetRowsResponse) =>
+            cache.set(getKeyDefault(key), value),
+          clear: () => {
+            cache.clear();
+            clearSpy();
+          },
+        };
+        const dataSource: GridDataSource = {
+          getRows: async () => ({ rows: initialRows, rowCount: initialRows.length }),
+          updateRow,
+        };
+
+        function TestCase() {
+          apiRef = useGridApiRef();
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid
+                apiRef={apiRef}
+                columns={[{ field: 'commodity', editable: true }]}
+                dataSource={dataSource}
+                dataSourceCache={dataSourceCache}
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+                }}
+                pagination
+                pageSizeOptions={pageSizeOptions}
+                disableVirtualization
+              />
+            </div>
+          );
+        }
+
+        return { TestCase, clearSpy };
+      }
+
+      async function editCommodityCell() {
+        await act(async () => apiRef.current?.startCellEditMode({ id: 1, field: 'commodity' }));
+        await act(async () =>
+          apiRef.current?.setEditCellValue({ id: 1, field: 'commodity', value: 'Silver' }),
+        );
+        await act(async () => apiRef.current?.stopCellEditMode({ id: 1, field: 'commodity' }));
+        // The cell only leaves edit mode once `dataSource.updateRow()` has been applied.
+        await waitFor(() => {
+          expect(apiRef.current?.getCellMode(1, 'commodity')).to.equal('view');
+        });
+      }
+
+      it('should not clear the cache when the replacement matches the previous row', async () => {
+        // The server refuses the change and echoes the stored row back.
+        const { TestCase, clearSpy } = createTestCase(async (params) => ({
+          _action: 'replace',
+          row: { ...params.previousRow },
+        }));
+
+        render(<TestCase />);
+        await waitFor(() => {
+          expect(apiRef.current?.getRow(1)).not.to.equal(null);
+        });
+        clearSpy.resetHistory();
+
+        await editCommodityCell();
+
+        expect(apiRef.current?.getRow(1)!.commodity).to.equal('Cobalt');
+        // The row did not change, so the cached pages are still valid.
+        expect(clearSpy.callCount).to.equal(0);
+      });
+
+      it('should clear the cache when the replacement changes the row', async () => {
+        const { TestCase, clearSpy } = createTestCase(async (params) => ({
+          _action: 'replace',
+          row: { ...params.previousRow, commodity: params.updatedRow.commodity },
+        }));
+
+        render(<TestCase />);
+        await waitFor(() => {
+          expect(apiRef.current?.getRow(1)).not.to.equal(null);
+        });
+        clearSpy.resetHistory();
+
+        await editCommodityCell();
+
+        expect(apiRef.current?.getRow(1)!.commodity).to.equal('Silver');
+        expect(clearSpy.callCount).to.equal(1);
+      });
+    });
   });
 });
