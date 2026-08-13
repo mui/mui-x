@@ -54,7 +54,12 @@ import { useTitleScrollSync } from './useTitleScrollSync';
 import { useEventTabNavigation } from './useEventTabNavigation';
 import { getRowHeightForLaneCount } from './rowGeometry';
 import { getVisibleFractionRange } from './getVisibleFractionRange';
-import { EventTimelinePremiumDependencyArrows } from './timeline-dependency-arrows';
+import {
+  EventTimelinePremiumDependencyArrows,
+  EventTimelinePremiumDependencyGeometryProvider,
+  EventTimelinePremiumDependencyInteractions,
+  EventTimelinePremiumDependencyTerminals,
+} from './timeline-dependency-arrows';
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
@@ -903,14 +908,20 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                     showCurrentTimeIndicator={showCurrentTimeIndicator}
                   />
                   <RowContainer role="rowgroup" {...positionerProps}>
-                    {virtualizer.api.getters.getRows()}
-                    {showCurrentTimeIndicator && (
-                      <EventTimelinePremiumCurrentTimeIndicator
-                        className={classes.currentTimeIndicator}
-                        aria-hidden
-                      />
-                    )}
-                    <EventTimelinePremiumDependencyArrows />
+                    <EventTimelinePremiumDependencyGeometryProvider>
+                      <EventTimelinePremiumDependencyArrows />
+                      {virtualizer.api.getters.getRows()}
+                      {showCurrentTimeIndicator && (
+                        <EventTimelinePremiumCurrentTimeIndicator
+                          className={classes.currentTimeIndicator}
+                          aria-hidden
+                        />
+                      )}
+                      <EventTimelinePremiumDependencyInteractions />
+                      {/* Last so the revealed terminals win their z-index ties and
+                          paint above the arrows and their click hit-areas. */}
+                      <EventTimelinePremiumDependencyTerminals />
+                    </EventTimelinePremiumDependencyGeometryProvider>
                   </RowContainer>
                   <FillerRow />
                 </EventTimelinePremiumViewport>

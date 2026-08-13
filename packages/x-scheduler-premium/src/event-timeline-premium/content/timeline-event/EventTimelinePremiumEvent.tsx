@@ -56,6 +56,10 @@ const EventTimelinePremiumEventRoot = styled('div', {
   [`&:hover .${eventTimelinePremiumClasses.eventResizeHandler}`]: {
     opacity: 1,
   },
+  '&[data-dependency-drop-target]': {
+    outline: '2px solid var(--event-surface-accent)',
+    outlineOffset: 1,
+  },
   '&::before': {
     content: '""',
     position: 'absolute',
