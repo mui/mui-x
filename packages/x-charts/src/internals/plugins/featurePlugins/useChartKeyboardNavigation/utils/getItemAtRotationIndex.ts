@@ -37,8 +37,7 @@ export function getItemAtRotationIndex({
   }
 
   const data = processedSeries[target.type]?.series[target.seriesId]?.data as
-    | ReadonlyArray<unknown>
-    | undefined;
+    ReadonlyArray<unknown> | undefined;
   if (!data || data.length === 0) {
     return null;
   }

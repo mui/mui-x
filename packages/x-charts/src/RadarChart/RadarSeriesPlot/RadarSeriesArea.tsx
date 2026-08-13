@@ -14,8 +14,7 @@ import {
   RADAR_ACTIVATION_PRIORITY,
   useRegisterRadarItemActivation,
 } from './useRegisterRadarItemActivation';
-import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
-import type { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
+import { useRadarHoveredItem } from './useRadarHoveredItem';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
@@ -51,7 +50,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const { instance } = useChartsContext<[UseChartInteractionSignature]>();
+  const { reportHoveredItem, clearHoveredItem } = useRadarHoveredItem();
   const getHighlightState = useItemHighlightStateGetter<'radar'>();
 
   /**
@@ -59,11 +58,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
    * bound to `pointerdown`, because a touch tap may never produce a `pointermove`.
    */
   const handlePointerItem = (seriesId: SeriesId) => (event: React.PointerEvent<SVGPathElement>) => {
-    instance.setHoveredItem?.({
-      type: 'radar',
-      seriesId,
-      dataIndex: getRotationIndex(event),
-    });
+    reportHoveredItem(seriesId, getRotationIndex(event));
   };
 
   const classes = useUtilityClasses(inClasses);
@@ -99,7 +94,14 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
             cursor={onItemClick ? 'pointer' : 'unset'}
             {...interactionProps[seriesIndex]}
             onPointerMove={handlePointerItem(id)}
-            onPointerDown={handlePointerItem(id)}
+            onPointerDown={(event) => {
+              interactionProps[seriesIndex].onPointerDown?.(event);
+              handlePointerItem(id)(event);
+            }}
+            onPointerLeave={() => {
+              interactionProps[seriesIndex].onPointerLeave?.();
+              clearHoveredItem(id);
+            }}
             {...other}
           />
         );

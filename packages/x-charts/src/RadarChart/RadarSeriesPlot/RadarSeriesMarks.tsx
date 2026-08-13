@@ -12,8 +12,7 @@ import {
   RADAR_ACTIVATION_PRIORITY,
   useRegisterRadarItemActivation,
 } from './useRegisterRadarItemActivation';
-import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
-import type { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
+import { useRadarHoveredItem } from './useRadarHoveredItem';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
@@ -49,7 +48,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   const classes = useUtilityClasses(inClasses);
   const getHighlightState = useItemHighlightStateGetter();
-  const { instance } = useChartsContext<[UseChartInteractionSignature]>();
+  const { reportHoveredItem, clearHoveredItem } = useRadarHoveredItem();
 
   useRegisterRadarItemActivation(seriesId, onItemClick, RADAR_ACTIVATION_PRIORITY.mark);
 
@@ -76,12 +75,9 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                 pointerEvents={onItemClick ? undefined : 'none'}
                 // Marks only take pointer events when clickable, and then they hide the area
                 // underneath, so they have to report the pointer item themselves.
-                onPointerMove={() =>
-                  instance.setHoveredItem?.({ type: 'radar', seriesId: id, dataIndex: index })
-                }
-                onPointerDown={() =>
-                  instance.setHoveredItem?.({ type: 'radar', seriesId: id, dataIndex: index })
-                }
+                onPointerMove={() => reportHoveredItem(id, index)}
+                onPointerDown={() => reportHoveredItem(id, index)}
+                onPointerLeave={() => clearHoveredItem(id)}
                 onClick={(event) =>
                   onItemClick?.(event, { type: 'radar', seriesId: id, dataIndex: index })
                 }

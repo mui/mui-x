@@ -8,8 +8,7 @@ import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGe
 import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
-import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
-import type { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
+import { useRadarHoveredItem } from './useRadarHoveredItem';
 import type { SeriesId } from '../../models/seriesType';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
@@ -18,7 +17,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const { instance } = useChartsContext<[UseChartInteractionSignature]>();
+  const { reportHoveredItem, clearHoveredItem } = useRadarHoveredItem();
   const getHighlightState = useItemHighlightStateGetter();
 
   /**
@@ -26,11 +25,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
    * bound to `pointerdown`, because a touch tap may never produce a `pointermove`.
    */
   const handlePointerItem = (seriesId: SeriesId) => (event: React.PointerEvent<SVGPathElement>) => {
-    instance.setHoveredItem?.({
-      type: 'radar',
-      seriesId,
-      dataIndex: getRotationIndex(event),
-    });
+    reportHoveredItem(seriesId, getRotationIndex(event));
   };
 
   const classes = useUtilityClasses(inClasses);
@@ -66,7 +61,14 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                   cursor={onAreaClick ? 'pointer' : 'unset'}
                   {...interactionProps[seriesIndex]}
                   onPointerMove={handlePointerItem(seriesId)}
-                  onPointerDown={handlePointerItem(seriesId)}
+                  onPointerDown={(event) => {
+                    interactionProps[seriesIndex].onPointerDown?.(event);
+                    handlePointerItem(seriesId)(event);
+                  }}
+                  onPointerLeave={() => {
+                    interactionProps[seriesIndex].onPointerLeave?.();
+                    clearHoveredItem(seriesId);
+                  }}
                 />
               }
               {!hideMark &&
@@ -85,12 +87,9 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                       onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
                     }
                     cursor={onMarkClick ? 'pointer' : 'unset'}
-                    onPointerMove={() =>
-                      instance.setHoveredItem?.({ type: 'radar', seriesId, dataIndex: index })
-                    }
-                    onPointerDown={() =>
-                      instance.setHoveredItem?.({ type: 'radar', seriesId, dataIndex: index })
-                    }
+                    onPointerMove={() => reportHoveredItem(seriesId, index)}
+                    onPointerDown={() => reportHoveredItem(seriesId, index)}
+                    onPointerLeave={() => clearHoveredItem(seriesId)}
                   />
                 ))}
             </g>
