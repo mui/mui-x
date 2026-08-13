@@ -108,14 +108,6 @@ components: {
 }
 ```
 
-Click a point on the radar below, then use the arrow keys: navigation resumes from the point you clicked rather than from the start of the series.
-
-{{"demo": "RadarClickToFocus.js"}}
-
-The `onMarkClick` toggle changes which element the click lands on.
-Radar marks only take pointer events when a click callback makes them interactive; without one the click falls through to the area, and the clicked point is resolved from the angle of the pointer instead.
-Both resolve to the same item.
-
 ### Activating the focused item
 
 Charts can trigger their click callbacks from the keyboard, so mouse-only interactions such as drill-down or filtering stay available to keyboard users ([WCAG 2.1 SC 2.1.1](https://www.w3.org/WAI/WCAG21/Understanding/keyboard.html)).
