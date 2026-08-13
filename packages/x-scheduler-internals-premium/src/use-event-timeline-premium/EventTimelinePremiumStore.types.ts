@@ -11,6 +11,7 @@ import type { EventTimelinePremiumPreferences } from '../models/preferences';
 import type {
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
+  SchedulerDependencyCreation,
 } from '../models/dependency';
 
 export interface EventTimelinePremiumState extends SchedulerState, SchedulerDependenciesState {
@@ -30,6 +31,15 @@ export interface EventTimelinePremiumState extends SchedulerState, SchedulerDepe
    * Configuration applied to each preset, keyed by the preset name.
    */
   presetConfig: EventTimelinePremiumPresetConfig;
+  /**
+   * Whether the dependencies feature is enabled, i.e. the internal `dependencies`
+   * parameter is provided.
+   */
+  areDependenciesEnabled: boolean;
+  /**
+   * The pending create-dependency drag gesture, or `null` when none is in progress.
+   */
+  dependencyCreation: SchedulerDependencyCreation | null;
   /**
    * `false` until the first parameters→state mapping has applied, then `true`.
    * Gates the lazy-loading plugin's first fetch so it doesn't run against the
