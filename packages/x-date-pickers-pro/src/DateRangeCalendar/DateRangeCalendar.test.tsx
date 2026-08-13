@@ -865,8 +865,8 @@ describe('<DateRangeCalendar />', () => {
       expect(grid.querySelectorAll(`.${dayClasses.fillerCell}`)).to.have.length(4);
     });
 
-    // The week number is a `rowheader` taking the first position of the row, so a cell without
-    // an explicit column index would be off by one.
+    // The week number is a `rowheader` taking the first column, so a cell without an explicit
+    // column index would be off by one.
     it('should keep the column index of the day they replace', () => {
       render(<DateRangeCalendar calendars={1} displayWeekNumber referenceDate={referenceDate} />);
 
@@ -879,9 +879,26 @@ describe('<DateRangeCalendar />', () => {
           .getAllByRole('gridcell')
           .map((cell) => cell.getAttribute('aria-colindex'));
 
-        expect(columnIndexes).to.deep.equal(['1', '2', '3', '4', '5', '6', '7']);
+        expect(columnIndexes).to.deep.equal(['2', '3', '4', '5', '6', '7', '8']);
       });
     });
+  });
+
+  // A screen reader announces the column header only when the column changes,
+  // so the description is what makes the week day audible on a vertical move.
+  it('should describe the day cells of every calendar with their week day', () => {
+    render(<DateRangeCalendar calendars={2} referenceDate={adapterToUse.date('2018-01-01')} />);
+
+    // January 7th and February 4th 2018 are Sundays, the first column of their grid.
+    const januarySunday = getPickerDay('7');
+    const februarySunday = getPickerDay('4', 'February 2018');
+
+    expect(januarySunday).toHaveAccessibleDescription('Sunday');
+    expect(februarySunday).toHaveAccessibleDescription('Sunday');
+    // Each grid owns its week day headers.
+    expect(januarySunday.getAttribute('aria-describedby')).not.to.equal(
+      februarySunday.getAttribute('aria-describedby'),
+    );
   });
 
   describe('Performance', () => {
