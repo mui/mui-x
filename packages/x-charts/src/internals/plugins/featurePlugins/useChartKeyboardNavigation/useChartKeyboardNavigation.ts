@@ -14,6 +14,11 @@ import {
 } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import { getChartPoint } from '../../../getChartPoint';
 import { getItemAtAxisPosition } from './utils/getItemAtAxisPosition';
+import { getItemAtRotationAxisPosition } from './utils/getItemAtRotationAxisPosition';
+import {
+  selectorChartPolarCenter,
+  selectorChartRotationAxis,
+} from '../useChartPolarAxis/useChartPolarAxis.selectors';
 import type { ChartPlugin } from '../../models';
 import type {
   FocusItemOptions,
@@ -186,18 +191,34 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     const element = chartsLayerContainerRef.current;
     const point = element === null ? null : getChartPoint(element, event);
 
-    const item =
-      point && instance.isPointInside?.(point.x, point.y)
-        ? getItemAtAxisPosition({
-            point,
-            xAxis: selectorChartXAxis(store.state),
-            yAxis: selectorChartYAxis(store.state),
-            processedSeries: selectorChartSeriesProcessed(store.state),
-            focusedItem: store.state.keyboardNavigation.item,
-          })
-        : null;
+    if (point === null || !instance.isPointInside?.(point.x, point.y)) {
+      return null;
+    }
 
-    return item;
+    const processedSeries = selectorChartSeriesProcessed(store.state);
+    const focusedItem = store.state.keyboardNavigation.item;
+
+    const item = getItemAtAxisPosition({
+      point,
+      xAxis: selectorChartXAxis(store.state),
+      yAxis: selectorChartYAxis(store.state),
+      processedSeries,
+      focusedItem,
+    });
+
+    if (item !== null) {
+      return item;
+    }
+
+    // A radar has no cartesian axis, and its area path only covers the polygon the data draws, so
+    // a click inside the chart but outside that polygon reaches here with nothing resolved.
+    return getItemAtRotationAxisPosition({
+      point,
+      center: selectorChartPolarCenter(store.state),
+      rotationAxis: selectorChartRotationAxis(store.state),
+      processedSeries,
+      focusedItem,
+    });
   });
 
   const activationRegistrationsRef = React.useRef(new Map<number, ItemActivationRegistration>());

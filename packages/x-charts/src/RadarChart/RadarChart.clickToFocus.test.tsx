@@ -43,6 +43,34 @@ describe.skipIf(isJSDOM)('<RadarChart /> - click to focus', () => {
     expect(getFocusedMarkIndex(container)).to.equal(3);
   });
 
+  it('focuses the item at the click angle when the click lands outside the area', async () => {
+    // The area path only covers the polygon the data draws, so a click between it and the outer
+    // edge hits no element. The rotation axis still has an index for that angle.
+    const { container, user } = render(<RadarChart {...radarProps} />);
+
+    const marks = Array.from(container.querySelectorAll<SVGElement>('circle')).map(getCenter);
+    // The metrics sit at the top, right, bottom and left. The two horizontal ones give the centre,
+    // and each metric is scaled on its own, so the radius is read off the marks rather than values.
+    const center = { x: (marks[1].clientX + marks[3].clientX) / 2, y: marks[1].clientY };
+    const radiusOf = (mark: { clientX: number; clientY: number }) =>
+      Math.hypot(mark.clientX - center.x, mark.clientY - center.y);
+    const outerRadius = Math.max(...marks.map(radiusOf));
+
+    // Straight down is the `C` angle. Its point is the closest to the centre, so the band between
+    // it and the outer edge is on no element.
+    const clickRadius = (radiusOf(marks[2]) + outerRadius) / 2;
+    await user.pointer([
+      {
+        keys: '[MouseLeft]',
+        target: container.querySelector<SVGElement>('svg')!,
+        coords: { clientX: center.x, clientY: center.y + clickRadius },
+      },
+    ]);
+    await user.keyboard('[ArrowRight]');
+
+    expect(getFocusedMarkIndex(container)).to.equal(3);
+  });
+
   it('focuses the mark through the area when no click callback is set', async () => {
     // Marks are pointer transparent without `onMarkClick`, so the click lands on the area,
     // which resolves the index from the click angle.
