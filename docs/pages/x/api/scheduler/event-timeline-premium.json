@@ -85,6 +85,12 @@
         "description": "'dayAndHour'<br>&#124;&nbsp;'dayAndMonth'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
       }
     },
+    "presetConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ dayAndHour?: { endTime?: number, startTime?: number } }"
+      }
+    },
     "presets": {
       "type": {
         "name": "arrayOf",

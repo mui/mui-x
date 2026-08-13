@@ -648,6 +648,24 @@ describe('<DataGridPro /> - Columns', () => {
       });
     });
 
+    // Regression test for https://github.com/mui/mui-x/issues/23298
+    it('should not reject when the grid unmounts while autosizing', async () => {
+      const { unmount } = render(<Test rows={rows} columns={columns} />);
+
+      let error: unknown;
+      await act(async () => {
+        // Not awaited on purpose: the grid unmounts while `autosizeColumns` is suspended on
+        // its internal `await`, which nulls the root element ref.
+        const promise = apiRef.current!.autosizeColumns().catch((err) => {
+          error = err;
+        });
+        unmount();
+        await promise;
+      });
+
+      expect(error).to.equal(undefined);
+    });
+
     // Regression test for https://github.com/mui/mui-x/issues/22505
     it('should wait for all rows to be rendered on mount when rows fit the viewport', async () => {
       const shortValue = 'Nike';

@@ -33,6 +33,7 @@ import { useGridVisibleRows } from '../utils/useGridVisibleRows';
 import { gridPaginationSelector } from '../features/pagination';
 import { gridFocusedVirtualCellSelector } from '../features/virtualization/gridFocusedVirtualCellSelector';
 import { gridRowSelectionManagerSelector } from '../features/rowSelection';
+import { gridColumnGroupsHeaderMaxDepthSelector } from '../features/columnGrouping/gridColumnGroupsSelector';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../constants/dataGridPropsDefaultValues';
 import {
   getValidRowHeight,
@@ -128,6 +129,8 @@ export function useGridVirtualizer() {
     (rootProps.headerFilterHeight ?? rootProps.columnHeaderHeight) * density,
   );
   const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
+  // `getTotalHeaderHeight` reads the group depth imperatively, subscribe so it re-renders when it changes.
+  eslintUseValue(useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector));
   const headersTotalHeight = getTotalHeaderHeight(apiRef, rootProps);
 
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
