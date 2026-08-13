@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { computeOffsetLeft } from '@mui/x-virtualizer';
+import { computeOffsetLeft } from '@base-ui/virtualizer';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';

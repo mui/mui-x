@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import type { RowSpanningState } from '@mui/x-virtualizer/models';
-import { Rowspan } from '@mui/x-virtualizer/features';
+import type { RowSpanningState } from '@base-ui/virtualizer/models';
+import { Rowspan } from '@base-ui/virtualizer/features';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';

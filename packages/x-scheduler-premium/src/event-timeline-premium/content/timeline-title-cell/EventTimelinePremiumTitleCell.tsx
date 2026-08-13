@@ -11,7 +11,7 @@ import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
-import { Virtualization } from '@mui/x-virtualizer';
+import { Virtualization } from '@base-ui/virtualizer';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 import { useReportTitleWidth } from '../useTitleColumnWidth';

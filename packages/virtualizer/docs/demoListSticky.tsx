@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
-import { useVirtualizer, Virtualizer, LayoutList, LayoutListSticky } from '@mui/x-virtualizer';
+import { useVirtualizer, Virtualizer, LayoutList, LayoutListSticky } from '@base-ui/virtualizer';
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 

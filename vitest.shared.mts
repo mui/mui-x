@@ -22,7 +22,6 @@ export const alias = [
     { lib: 'x-internal-gestures' },
     { lib: 'x-license' },
     { lib: 'x-telemetry' },
-    { lib: 'x-virtualizer' },
   ].flatMap((v) => {
     return [
       {
@@ -39,6 +38,11 @@ export const alias = [
   {
     find: /^@mui\/x-charts-vendor\/(.+)$/,
     replacement: resolve(WORKSPACE_ROOT, './packages/x-charts-vendor/build/$1'),
+  },
+  // the virtualizer lives under the @base-ui npm scope
+  {
+    find: '@base-ui/virtualizer',
+    replacement: resolve(WORKSPACE_ROOT, './packages/virtualizer/src'),
   },
   {
     find: 'test/utils',

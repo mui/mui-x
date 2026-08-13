@@ -1,4 +1,4 @@
-import { Virtualization } from '@mui/x-virtualizer';
+import { Virtualization } from '@base-ui/virtualizer';
 import { PinnedColumnPosition } from '../../internals/constants';
 import type { useGridPrivateApiContext } from './useGridPrivateApiContext';
 

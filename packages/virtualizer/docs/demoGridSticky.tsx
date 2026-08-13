@@ -9,7 +9,7 @@ import {
   Virtualization,
   Dimensions,
   LayoutGridSticky,
-} from '@mui/x-virtualizer';
+} from '@base-ui/virtualizer';
 
 const ROW_COUNT = 100_000;
 const COLUMN_COUNT = 40;

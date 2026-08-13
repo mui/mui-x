@@ -6,8 +6,8 @@ import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
 import useLazyRef from '@mui/utils/useLazyRef';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
-import type { ColumnWithWidth, PinnedColumns } from '@mui/x-virtualizer';
-import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@mui/x-virtualizer';
+import type { ColumnWithWidth, PinnedColumns } from '@base-ui/virtualizer';
+import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@base-ui/virtualizer';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
