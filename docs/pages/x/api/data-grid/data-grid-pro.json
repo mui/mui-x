@@ -574,9 +574,9 @@
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R | GridRowReplaceUpdate<R>> | R | GridRowReplaceUpdate<R>",
+        "type": "function(newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>",
         "describedArgs": ["newRow", "oldRow", "params"],
-        "returned": "Promise<R | GridRowReplaceUpdate<R>> | R | GridRowReplaceUpdate<R>"
+        "returned": "Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>"
       }
     },
     "resizeThrottleMs": { "type": { "name": "number" }, "default": "60" },

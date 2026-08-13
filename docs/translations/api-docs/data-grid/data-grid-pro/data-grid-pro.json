@@ -768,8 +768,8 @@
         "newRow": { "name": "newRow", "description": "Row object with the new values." },
         "oldRow": { "name": "oldRow", "description": "Row object with the old values." },
         "params": { "name": "params", "description": "Additional parameters." },
-        "Promise<R | GridRowReplaceUpdate<R>> | R | GridRowReplaceUpdate<R>": {
-          "name": "Promise<R | GridRowReplaceUpdate<R>> | R | GridRowReplaceUpdate<R>",
+        "Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>": {
+          "name": "Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>",
           "description": "The final values to update the row, or a <code>{ _action: &#39;replace&#39;, row }</code> update to store <code>row</code> as the new row without merging."
         }
       }

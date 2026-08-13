@@ -597,7 +597,7 @@
     },
     "updateRows": {
       "type": {
-        "description": "(updates: Array&lt;GridRowModelUpdate | GridRowReplaceUpdate&gt;) =&gt; void"
+        "description": "(updates: Array&lt;GridRowModelUpdate | GridRowModelReplace&gt;) =&gt; void"
       },
       "required": true
     },

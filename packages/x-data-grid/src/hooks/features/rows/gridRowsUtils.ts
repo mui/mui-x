@@ -10,7 +10,7 @@ import type {
   GridRowIdGetter,
   GridRowModel,
   GridRowModelUpdate,
-  GridRowReplaceUpdate,
+  GridRowModelReplace,
   GridRowTreeConfig,
   GridSkeletonRowNode,
   GridTreeNode,
@@ -262,18 +262,18 @@ export const getTreeNodeDescendants = (
 };
 
 export const isReplaceUpdate = (
-  update: GridRowModelUpdate | GridRowReplaceUpdate,
-): update is GridRowReplaceUpdate =>
+  update: GridRowModelUpdate | GridRowModelReplace,
+): update is GridRowModelReplace =>
   // eslint-disable-next-line no-underscore-dangle
   update._action === 'replace';
 
 /**
  * Extracts the replacement row from a `{ _action: 'replace', row }` update.
  * The marker lives on the throwaway envelope, so the row object itself is never touched.
- * @param {GridRowReplaceUpdate} update The update provided to `updateRows()`.
+ * @param {GridRowModelReplace} update The update provided to `updateRows()`.
  * @returns {GridRowModel} The object to store as the row, verbatim.
  */
-export const getReplaceRow = (update: GridRowReplaceUpdate): GridRowModel => {
+export const getReplaceRow = (update: GridRowModelReplace): GridRowModel => {
   const { row } = update;
   if (row == null) {
     throw new Error(
@@ -358,7 +358,7 @@ export const updateCacheWithNewRows = ({
 }: {
   previousCache: GridRowsInternalCache;
   getRowId: DataGridProcessedProps['getRowId'];
-  updates: Array<GridRowModelUpdate | GridRowReplaceUpdate>;
+  updates: Array<GridRowModelUpdate | GridRowModelReplace>;
   groupKeys?: string[];
 }): GridRowsInternalCache => {
   if (previousCache.updates.type === 'full') {
@@ -529,10 +529,10 @@ export const minimalContentHeight = 'var(--DataGrid-overlayHeight, calc(var(--he
 
 export function computeRowsUpdates(
   apiRef: RefObject<GridApiCommunity>,
-  updates: Array<GridRowModelUpdate | GridRowReplaceUpdate>,
+  updates: Array<GridRowModelUpdate | GridRowModelReplace>,
   getRowId: DataGridProcessedProps['getRowId'],
 ) {
-  const nonPinnedRowsUpdates: Array<GridRowModelUpdate | GridRowReplaceUpdate> = [];
+  const nonPinnedRowsUpdates: Array<GridRowModelUpdate | GridRowModelReplace> = [];
 
   updates.forEach((update) => {
     const isReplace = isReplaceUpdate(update);

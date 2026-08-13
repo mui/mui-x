@@ -19,7 +19,7 @@ export interface GridRowModelUpdate extends GridRowModel {
    * - `undefined` (default) performs a shallow, `Object.assign`-style partial merge into
    *   the existing row, which produces a new object.
    *
-   * To store an object as the row without merging, see [[GridRowReplaceUpdate]].
+   * To store an object as the row without merging, see [[GridRowModelReplace]].
    */
   _action?: 'delete';
 }
@@ -33,7 +33,7 @@ export interface GridRowModelUpdate extends GridRowModel {
  * never a merge.
  * It can be passed to `updateRows()` or returned from `processRowUpdate()`.
  */
-export interface GridRowReplaceUpdate<R extends GridValidRowModel = GridValidRowModel> {
+export interface GridRowModelReplace<R extends GridValidRowModel = GridValidRowModel> {
   _action: 'replace';
   /**
    * The object stored as the new row, verbatim. Pass the instance itself — spreading it

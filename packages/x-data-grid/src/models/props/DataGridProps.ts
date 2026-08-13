@@ -11,7 +11,7 @@ import type { GridSlotsComponent } from '../gridSlotsComponent';
 import type {
   GridRowId,
   GridRowIdGetter,
-  GridRowReplaceUpdate,
+  GridRowModelReplace,
   GridRowsProp,
   GridValidRowModel,
 } from '../gridRows';
@@ -872,13 +872,13 @@ export interface DataGridPropsWithoutDefaultValue<
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
    * @param {{ rowId: GridRowId }} params Additional parameters.
-   * @returns {Promise<R | GridRowReplaceUpdate<R>> | R | GridRowReplaceUpdate<R>} The final values to update the row, or a `{ _action: 'replace', row }` update to store `row` as the new row without merging.
+   * @returns {Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>} The final values to update the row, or a `{ _action: 'replace', row }` update to store `row` as the new row without merging.
    */
   processRowUpdate?: (
     newRow: R,
     oldRow: R,
     params: { rowId: GridRowId },
-  ) => Promise<R | GridRowReplaceUpdate<R>> | R | GridRowReplaceUpdate<R>;
+  ) => Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>;
   /**
    * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.

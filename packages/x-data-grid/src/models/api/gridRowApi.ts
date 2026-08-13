@@ -2,7 +2,7 @@ import type {
   GridRowModel,
   GridRowId,
   GridRowModelUpdate,
-  GridRowReplaceUpdate,
+  GridRowModelReplace,
   GridValidRowModel,
   GridTreeNode,
 } from '../gridRows';
@@ -69,9 +69,9 @@ export interface GridRowApi {
   setRows: (rows: GridRowModel[]) => void;
   /**
    * Allows to update, insert, replace and delete rows.
-   * @param {Array<GridRowModelUpdate | GridRowReplaceUpdate>} updates An array of rows with an `action` specifying what to do.
+   * @param {Array<GridRowModelUpdate | GridRowModelReplace>} updates An array of rows with an `action` specifying what to do.
    */
-  updateRows: (updates: Array<GridRowModelUpdate | GridRowReplaceUpdate>) => void;
+  updateRows: (updates: Array<GridRowModelUpdate | GridRowModelReplace>) => void;
   /**
    * Gets the row data with a given id.
    * @param {GridRowId} id The id of the row.
@@ -156,11 +156,11 @@ export interface GridRowProApi {
 export interface GridRowProPrivateApi {
   /**
    * Allows to update, insert, replace and delete rows at a specific nested level.
-   * @param {Array<GridRowModelUpdate | GridRowReplaceUpdate>} updates An array of rows with an `action` specifying what to do.
+   * @param {Array<GridRowModelUpdate | GridRowModelReplace>} updates An array of rows with an `action` specifying what to do.
    * @param {string[]} nestedLevel The nested level of the rows to update, it represents the path to the row in the tree based on `node.groupingKey`.
    */
   updateNestedRows: (
-    updates: Array<GridRowModelUpdate | GridRowReplaceUpdate>,
+    updates: Array<GridRowModelUpdate | GridRowModelReplace>,
     nestedLevel?: string[],
   ) => void;
 }
