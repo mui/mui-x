@@ -211,6 +211,29 @@ describe('<DateRangePickerDay />', () => {
       expect(container.firstChild).not.to.have.class(classes.insideSelection);
       expect(container.firstChild).to.have.style('opacity', '0');
     });
+
+    it('should keep the role and the column index it received', () => {
+      const { container } = render(
+        <DateRangePickerDay
+          day={adapterToUse.date('2018-02-01')}
+          onDaySelect={() => {}}
+          outsideCurrentMonth
+          role="gridcell"
+          aria-colindex={5}
+          isPreviewing={false}
+          isStartOfPreviewing={false}
+          isEndOfPreviewing={false}
+          isStartOfHighlighting={false}
+          isEndOfHighlighting={false}
+          isFirstVisibleCell={false}
+          isLastVisibleCell={false}
+        />,
+      );
+
+      expect(container.firstChild).to.have.class(classes.fillerCell);
+      expect(container.firstChild).to.have.attribute('role', 'gridcell');
+      expect(container.firstChild).to.have.attribute('aria-colindex', '5');
+    });
   });
 
   // jsdom does not compute styles of pseudo-elements.
