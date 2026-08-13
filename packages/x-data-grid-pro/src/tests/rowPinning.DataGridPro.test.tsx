@@ -832,4 +832,61 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getCell(0, 1).textContent).to.equal('Marcus');
     expect(getCell(4, 1).textContent).to.equal('Tom');
   });
+
+  describe('`updateRows` on a pinned row', () => {
+    class Person {
+      id: number;
+
+      name: string;
+
+      constructor(id: number, name: string) {
+        this.id = id;
+        this.name = name;
+      }
+
+      getLabel() {
+        return `${this.name} (person)`;
+      }
+    }
+
+    const columns: GridColDef[] = [
+      { field: 'id' },
+      // The cell is empty if the stored row lost its prototype.
+      { field: 'label', valueGetter: (value, row) => (row as Person).getLabel?.() },
+    ];
+    const rows = [new Person(1, 'Jack')];
+    const pinnedRows = { top: [new Person(3, 'Joe')] };
+
+    let apiRef: RefObject<GridApi | null>;
+
+    function TestCase() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 400, height: 400 }}>
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} pinnedRows={pinnedRows} />
+        </div>
+      );
+    }
+
+    it('should preserve the prototype of the pinned row when merging a partial update', async () => {
+      render(<TestCase />);
+
+      expect(getCell(0, 1).textContent).to.equal('Joe (person)');
+
+      await act(async () => apiRef.current?.updateRows([{ id: 3, name: 'Marcus' }]));
+
+      expect(getCell(0, 1).textContent).to.equal('Marcus (person)');
+      expect(apiRef.current?.getRow(3) instanceof Person).to.equal(true);
+    });
+
+    it('should store the pinned row verbatim when it is replaced', async () => {
+      render(<TestCase />);
+
+      const replacement = new Person(3, 'Marcus');
+      await act(async () => apiRef.current?.updateRows([{ _action: 'replace', row: replacement }]));
+
+      expect(getCell(0, 1).textContent).to.equal('Marcus (person)');
+      expect(apiRef.current?.getRow(3)).to.equal(replacement);
+    });
+  });
 });

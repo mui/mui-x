@@ -553,10 +553,7 @@ export function computeRowsUpdates(
           warnIfReplaceLosesPrototype(prevModel, row, id);
           pinnedRowsCache.idLookup[id] = row;
         } else {
-          pinnedRowsCache.idLookup[id] = {
-            ...prevModel,
-            ...update,
-          };
+          pinnedRowsCache.idLookup[id] = mergeRowUpdate(prevModel, update);
         }
       }
     } else {
