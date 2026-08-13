@@ -317,6 +317,27 @@ describe('<DataGrid /> - Data source', () => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
 
+    // `passFilterLogic` runs every value through the logic operator, so a falsy one added
+    // next to an applying value does change the matched rows.
+    it('should re-fetch when a falsy value joins an applying quick filter value', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc', '']);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+    });
+
     it('should re-fetch when a quick filter value is added', async () => {
       await renderAndWaitForInitialFetch();
 

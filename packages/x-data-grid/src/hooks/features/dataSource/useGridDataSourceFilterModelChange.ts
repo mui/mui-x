@@ -6,27 +6,36 @@ import type { RefObject } from '@mui/x-internals/types';
 import { gridColumnLookupSelector } from '../columns';
 import type { GridColumnLookup } from '../columns';
 import { gridFilterModelSelector } from '../filter/gridFilterSelector';
+import { getDefaultGridFilterModel } from '../filter/gridFilterState';
 import { removeIncompleteFilterItems } from '../filter/gridFilterUtils';
 import type { GridFilterModel } from '../../../models/gridFilterModel';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
- * The parts of a filter model that can change the rows the data source returns.
- * A logic operator needs two operands to mean anything, and a falsy quick filter value
- * filters nothing (`buildAggregatedQuickFilterApplier` drops those too).
+ * The parts of a filter model that can change the rows the data source returns, so that a
+ * change to the rest is not mistaken for a new query. A logic operator needs two operands to
+ * mean anything, and quick filter values only apply once one of them is truthy
+ * (`buildAggregatedQuickFilterApplier` returns `null` otherwise).
+ * Falsy values are kept when another one applies: `passFilterLogic` runs the whole array
+ * through its logic operator, so `['a', '']` and `['a']` do not match the same rows.
  */
 const getApplicableFilterModel = (model: GridFilterModel, columnsLookup: GridColumnLookup) => {
+  const defaultModel = getDefaultGridFilterModel();
   const { items } = removeIncompleteFilterItems(model, columnsLookup);
-  const quickFilterValues = model.quickFilterValues?.filter(Boolean) ?? [];
+  const appliesQuickFilter = model.quickFilterValues?.some(Boolean) ?? false;
+  const quickFilterValues = appliesQuickFilter ? (model.quickFilterValues ?? []) : [];
 
   return {
     items,
-    logicOperator: items.length > 1 ? model.logicOperator : undefined,
+    logicOperator: items.length > 1 ? (model.logicOperator ?? defaultModel.logicOperator) : null,
     quickFilterValues,
     quickFilterLogicOperator:
-      quickFilterValues.length > 1 ? model.quickFilterLogicOperator : undefined,
-    quickFilterExcludeHiddenColumns:
-      quickFilterValues.length > 0 ? model.quickFilterExcludeHiddenColumns : undefined,
+      quickFilterValues.length > 1
+        ? (model.quickFilterLogicOperator ?? defaultModel.quickFilterLogicOperator)
+        : null,
+    quickFilterExcludeHiddenColumns: appliesQuickFilter
+      ? (model.quickFilterExcludeHiddenColumns ?? defaultModel.quickFilterExcludeHiddenColumns)
+      : null,
   };
 };
 
