@@ -4,6 +4,7 @@ import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useOnMount } from '@base-ui/utils/useOnMount';
 import { useDisposable } from '@mui/x-internals/useDisposable';
 import { useRtl } from '@mui/system/RtlProvider';
+import useId from '@mui/utils/useId';
 import type { TreeViewAnyStore } from '../models';
 
 interface ValidTreeViewStoreConstructor<TStore extends TreeViewAnyStore> {
@@ -12,7 +13,7 @@ interface ValidTreeViewStoreConstructor<TStore extends TreeViewAnyStore> {
 
 export type UseTreeViewStoreParameters<TStore extends TreeViewAnyStore> = Omit<
   Parameters<TStore['updateStateFromParameters']>[0],
-  'isRtl'
+  'isRtl' | 'defaultId'
 >;
 
 /**
@@ -23,9 +24,10 @@ export function useTreeViewStore<TStore extends TreeViewAnyStore>(
   parameters: UseTreeViewStoreParameters<TStore>,
 ): TStore {
   const isRtl = useRtl();
+  const defaultId = useId();
   const storeParameters = React.useMemo(
-    () => ({ ...parameters, isRtl }) as TStore['parameters'],
-    [parameters, isRtl],
+    () => ({ ...parameters, isRtl, defaultId }) as TStore['parameters'],
+    [parameters, isRtl, defaultId],
   );
   const store = useDisposable(() => new StoreClass(storeParameters));
 

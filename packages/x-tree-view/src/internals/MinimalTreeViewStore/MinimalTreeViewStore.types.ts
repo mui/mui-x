@@ -91,6 +91,10 @@ export interface MinimalTreeViewParameters<
    */
   isRtl: boolean;
   /**
+   * The id used to build the id attributes of the items when the `id` parameter is not provided.
+   */
+  defaultId: string | undefined;
+  /**
    * Whether the items should be focusable when disabled.
    * @default false
    */

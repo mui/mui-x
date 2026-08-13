@@ -47,18 +47,12 @@ function applyModelInitialValue<T>(
   return fallback;
 }
 
-let globalTreeViewDefaultId = 0;
-export const createTreeViewDefaultId = () => {
-  globalTreeViewDefaultId += 1;
-  return `mui-tree-view-${globalTreeViewDefaultId}`;
-};
-
 export function createMinimalInitialState<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
 >(parameters: MinimalTreeViewParameters<R, Multiple>): MinimalTreeViewState<R, Multiple> {
   return {
-    treeId: createTreeViewDefaultId(),
+    treeId: parameters.defaultId,
     focusedItemId: null,
     ...deriveStateFromParameters(parameters),
     ...TreeViewItemsPlugin.buildItemsStateIfNeeded(parameters),
