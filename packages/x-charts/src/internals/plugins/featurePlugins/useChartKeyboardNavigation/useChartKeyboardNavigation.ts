@@ -14,11 +14,9 @@ import {
 } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import { getChartPoint } from '../../../getChartPoint';
 import { getItemAtAxisPosition } from './utils/getItemAtAxisPosition';
-import { getItemAtRotationAxisPosition } from './utils/getItemAtRotationAxisPosition';
-import {
-  selectorChartPolarCenter,
-  selectorChartRotationAxis,
-} from '../useChartPolarAxis/useChartPolarAxis.selectors';
+import { getItemAtRotationIndex } from './utils/getItemAtRotationIndex';
+import { selectorChartRotationAxis } from '../useChartPolarAxis/useChartPolarAxis.selectors';
+import { selectorChartsInteractionRotationAxisIndex } from '../useChartPolarAxis/useChartPolarInteraction.selectors';
 import type { ChartPlugin } from '../../models';
 import type {
   FocusItemOptions,
@@ -191,7 +189,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     const element = chartsLayerContainerRef.current;
     const point = element === null ? null : getChartPoint(element, event);
 
-    if (point === null || !instance.isPointInside?.(point.x, point.y)) {
+    if (!point || !instance.isPointInside?.(point.x, point.y)) {
       return null;
     }
 
@@ -211,11 +209,15 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     // A radar has no cartesian axis, and its area path only covers the polygon the data draws, so
-    // a click inside the chart but outside that polygon reaches here with nothing resolved.
-    return getItemAtRotationAxisPosition({
-      point,
-      center: selectorChartPolarCenter(store.state),
-      rotationAxis: selectorChartRotationAxis(store.state),
+    // a click inside the chart but outside that polygon reaches here with nothing resolved. The
+    // rotation axis index is the one the axis highlight already resolved from this pointer, so the
+    // focus lands on the spoke the highlight is showing.
+    if (selectorChartRotationAxis(store.state).axisIds.length === 0) {
+      return null;
+    }
+
+    return getItemAtRotationIndex({
+      dataIndex: selectorChartsInteractionRotationAxisIndex(store.state),
       processedSeries,
       focusedItem,
     });
