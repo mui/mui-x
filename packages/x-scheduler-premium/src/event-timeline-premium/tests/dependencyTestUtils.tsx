@@ -68,9 +68,15 @@ export function TestTimeline({
   const [events, setEvents] = React.useState(initialEvents);
   const [dependencies, setDependencies] = React.useState(initialDependencies);
 
+  // Between parameter changes the controlled loop owns the value; a new one re-seeds
+  // it, so a test can turn the feature on or off after mount.
+  React.useEffect(() => {
+    setDependencies(initialDependencies);
+  }, [initialDependencies]);
+
   // Providing a dependencies parameter enables the feature: tests without one must
   // render a timeline with dependencies disabled.
-  const dependenciesEnabled = initialDependencies !== undefined;
+  const dependenciesEnabled = dependencies !== undefined;
 
   const parameters: EventTimelinePremiumStoreParameters<SchedulerEvent, SchedulerResource> = {
     events,
@@ -120,46 +126,62 @@ interface RenderTimelineParameters {
 }
 
 /**
+ * The rendered root, so `view.setProps` reaches the timeline: the host element it
+ * needs for layout would otherwise be the one receiving the new props.
+ */
+function TimelineHost({
+  events,
+  resources = [resource1, resource2],
+  dependencies,
+  presetConfig,
+  readOnly,
+  onDependenciesChange,
+  onStoreReady,
+}: RenderTimelineParameters & {
+  onStoreReady: (store: EventTimelinePremiumStore<any, any>) => void;
+}) {
+  return (
+    // Mimics the layout, font-size and box-sizing reset the `EventTimelinePremium`
+    // root provides to the content (the row-height CSS resolves against them).
+    <div
+      className="test-timeline-host"
+      style={{
+        width: 1200,
+        height: 600,
+        display: 'flex',
+        flexDirection: 'column',
+        fontSize: '0.875rem',
+      }}
+    >
+      <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
+      <TestTimeline
+        events={events}
+        resources={resources}
+        dependencies={dependencies}
+        presetConfig={presetConfig}
+        readOnly={readOnly}
+        onDependenciesChange={onDependenciesChange}
+        onStoreReady={onStoreReady}
+      />
+    </div>
+  );
+}
+
+/**
  * Binds the dependency timeline harness to a renderer created with
  * `createSchedulerRenderer` inside the suite.
  */
 export function createDependencyTimelineRenderer(render: (element: React.ReactElement) => any) {
-  function renderTimeline({
-    events,
-    resources = [resource1, resource2],
-    dependencies,
-    presetConfig,
-    readOnly,
-    onDependenciesChange,
-  }: RenderTimelineParameters) {
+  function renderTimeline(parameters: RenderTimelineParameters) {
     let store!: EventTimelinePremiumStore<any, any>;
 
     const view = render(
-      // Mimics the layout, font-size and box-sizing reset the `EventTimelinePremium`
-      // root provides to the content (the row-height CSS resolves against them).
-      <div
-        className="test-timeline-host"
-        style={{
-          width: 1200,
-          height: 600,
-          display: 'flex',
-          flexDirection: 'column',
-          fontSize: '0.875rem',
+      <TimelineHost
+        {...parameters}
+        onStoreReady={(mountedStore) => {
+          store = mountedStore;
         }}
-      >
-        <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
-        <TestTimeline
-          events={events}
-          resources={resources}
-          dependencies={dependencies}
-          presetConfig={presetConfig}
-          readOnly={readOnly}
-          onDependenciesChange={onDependenciesChange}
-          onStoreReady={(mountedStore) => {
-            store = mountedStore;
-          }}
-        />
-      </div>,
+      />,
     );
 
     return { store, ...view };

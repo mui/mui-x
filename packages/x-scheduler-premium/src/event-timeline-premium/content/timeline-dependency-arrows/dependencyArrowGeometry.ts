@@ -89,8 +89,10 @@ export interface DependencyArrow {
    * The path of the invisible click hit-area: the same route with both ends trimmed,
    * so the terminal (at the source anchor) and the start resize handle (under the
    * arrowhead) stay reachable.
+   * Derived on first read and cached: only the interactions layer needs it, and only
+   * for the arrows surviving the viewport filter.
    */
-  hitD: string;
+  readonly hitD: string;
   /**
    * The point where the arrowhead is drawn, in the same coordinate space as `d`: the
    * target's start-edge anchor, except when the route clamps at the timeline edge.
@@ -398,26 +400,35 @@ export function computeDependencyArrows(
 
     // The event boxes the route may cross, used to pick the route and to cut the
     // hit-area around them. The endpoint events stay out: the end trims already
-    // handle their edges.
-    const obstacles: DependencyArrowObstacle[] = [];
-    for (let rowIndex = minRowIndex; rowIndex <= maxRowIndex; rowIndex += 1) {
-      for (const obstacle of resolver.getRowObstacles(rowIndex)) {
-        if (
-          obstacle.occurrenceKey !== sourceAnchor.occurrence.key &&
-          obstacle.occurrenceKey !== targetAnchor.occurrence.key
-        ) {
-          obstacles.push(obstacle);
+    // handle their edges. Gathered on demand — a single-candidate route only needs
+    // them if something reads the hit-area.
+    let obstacles: DependencyArrowObstacle[] | null = null;
+    const getObstacles = () => {
+      if (obstacles === null) {
+        const gathered: DependencyArrowObstacle[] = [];
+        for (let rowIndex = minRowIndex; rowIndex <= maxRowIndex; rowIndex += 1) {
+          for (const obstacle of resolver.getRowObstacles(rowIndex)) {
+            if (
+              obstacle.occurrenceKey !== sourceAnchor.occurrence.key &&
+              obstacle.occurrenceKey !== targetAnchor.occurrence.key
+            ) {
+              gathered.push(obstacle);
+            }
+          }
         }
+        obstacles = gathered;
       }
-    }
+      return obstacles;
+    };
 
     // With several candidates, keep the one crossing the fewest events (first wins on
     // a tie). Best-effort avoidance, not full pathfinding.
     let points = routes[0];
     if (routes.length > 1) {
-      let bestCollisions = countRouteCollisions(points, obstacles);
+      const routeObstacles = getObstacles();
+      let bestCollisions = countRouteCollisions(points, routeObstacles);
       for (let index = 1; index < routes.length && bestCollisions > 0; index += 1) {
-        const collisions = countRouteCollisions(routes[index], obstacles);
+        const collisions = countRouteCollisions(routes[index], routeObstacles);
         if (collisions < bestCollisions) {
           bestCollisions = collisions;
           points = routes[index];
@@ -432,19 +443,26 @@ export function computeDependencyArrows(
       maxX = Math.max(maxX, point.x);
     }
 
+    let hitD: string | null = null;
+
     return {
       // The id type is part of the key: `SchedulerDependencyId` accepts both strings
       // and numbers, so `1` and `"1"` would otherwise share a key on the same row pair.
       key: `${typeof dependency.id}:${String(dependency.id)}:${sourceAnchor.rowIndex}:${targetAnchor.rowIndex}`,
       id: dependency.id,
       d: buildRoundedOrthogonalPath(points, DEPENDENCY_ARROW_CORNER_RADIUS),
-      hitD: clipRouteAroundObstacles(
-        trimRouteEnds(points, DEPENDENCY_ARROW_HIT_TRIM_START, DEPENDENCY_ARROW_HIT_TRIM_END),
-        obstacles,
-      )
-        .map((polyline) => buildRoundedOrthogonalPath(polyline, DEPENDENCY_ARROW_CORNER_RADIUS))
-        .filter((subpath) => subpath !== '')
-        .join(' '),
+      get hitD() {
+        if (hitD === null) {
+          hitD = clipRouteAroundObstacles(
+            trimRouteEnds(points, DEPENDENCY_ARROW_HIT_TRIM_START, DEPENDENCY_ARROW_HIT_TRIM_END),
+            getObstacles(),
+          )
+            .map((polyline) => buildRoundedOrthogonalPath(polyline, DEPENDENCY_ARROW_CORNER_RADIUS))
+            .filter((subpath) => subpath !== '')
+            .join(' ');
+        }
+        return hitD;
+      },
       endPoint: points[points.length - 1],
       minXFraction: minX / eventsWidth,
       maxXFraction: maxX / eventsWidth,

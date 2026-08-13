@@ -659,21 +659,33 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         const match = d.match(/L ([\d.-]+) ([\d.-]+)$/)!;
         return { x: Number(match[1]), y: Number(match[2]) };
       };
-      const firstEnd = parseLineEnd(
-        document.querySelector('[data-dependency-drag-line]')!.getAttribute('d')!,
-      );
+      // Every drag frame overwrites the path, so a sample must wait for the frame its
+      // own move produced: the previous cursor position also matches "a line is drawn"
+      // and would be measured instead. The x the move maps to is read against the
+      // overlay's live rect, which only settles a frame after it mounts.
+      const sampleLineEnd = async (clientX: number) => {
+        const svg = document.querySelector('[data-dependency-arrows]')!;
+        await waitFor(() => {
+          const end = parseLineEnd(
+            document.querySelector('[data-dependency-drag-line]')!.getAttribute('d')!,
+          );
+          expect(end.x).to.equal(clientX - svg.getBoundingClientRect().left);
+        });
+        return parseLineEnd(
+          document.querySelector('[data-dependency-drag-line]')!.getAttribute('d')!,
+        );
+      };
+
+      const firstEnd = await sampleLineEnd(140);
       fireEvent.dragOver(document.body, {
         dataTransfer: new DataTransfer(),
         clientX: 170,
         clientY: 85,
       });
-      await waitFor(() => {
-        const nextEnd = parseLineEnd(
-          document.querySelector('[data-dependency-drag-line]')!.getAttribute('d')!,
-        );
-        expect(nextEnd.x - firstEnd.x).to.equal(30);
-        expect(nextEnd.y - firstEnd.y).to.equal(25);
-      });
+      const nextEnd = await sampleLineEnd(170);
+
+      expect(nextEnd.x - firstEnd.x).to.equal(30);
+      expect(nextEnd.y - firstEnd.y).to.equal(25);
 
       fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
       fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
@@ -1381,6 +1393,67 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       fireEvent.drop(r1Appearance, { dataTransfer: new DataTransfer() });
       fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+    });
+  });
+
+  describe('feature lifecycle', () => {
+    it('should enable the feature when the dependencies parameter appears after mount', async () => {
+      const view = renderTimeline({ events: [eventA, eventB] });
+
+      expect(view.store.state.areDependenciesEnabled).to.equal(false);
+      expect(getTerminal('Event A')).to.equal(null);
+
+      view.setProps({ dependencies: [] });
+
+      await waitFor(() => {
+        expect(view.store.state.areDependenciesEnabled).to.equal(true);
+      });
+      expect(getTerminal('Event A')).not.to.equal(null);
+    });
+
+    it('should discard the in-flight gesture when the feature is disabled mid-drag', async () => {
+      const view = renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(document.body, {
+        dataTransfer: new DataTransfer(),
+        clientX: 120,
+        clientY: 40,
+      });
+      await waitFor(() => {
+        expect(view.store.state.dependencyCreation).not.to.equal(null);
+      });
+
+      view.setProps({ dependencies: undefined });
+
+      await waitFor(() => {
+        expect(view.store.state.areDependenciesEnabled).to.equal(false);
+      });
+      // The gesture leaves nothing behind: neither in the state nor on screen.
+      expect(view.store.state.dependencyCreation).to.equal(null);
+      expect(document.querySelector('[data-dependency-drag-line]')).to.equal(null);
+      expect(getTerminal('Event A')).to.equal(null);
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+    });
+
+    it('should drop the selection and its arrows when the feature is disabled', async () => {
+      const view = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      expect(view.store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
+
+      view.setProps({ dependencies: undefined });
+
+      await waitFor(() => {
+        expect(view.store.state.selection).to.equal(null);
+      });
+      expect(getArrowPaths()).to.have.length(0);
     });
   });
 
