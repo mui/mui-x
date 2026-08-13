@@ -5,14 +5,12 @@ import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import { useDrawingArea, useYAxes, useYAxisTicks } from '@mui/x-charts/hooks';
 import { dataset, valueFormatter } from '../dataset/weather';
 
-// Space between the label and the grid line it belongs to.
 const LABEL_GAP = 4;
 
 function GridLabelsYAxis(props) {
   const { yAxisIds } = useYAxes();
   const axisId = props.axisId ?? yAxisIds[0];
 
-  // Ticks outside of the drawing area are already filtered out.
   const ticks = useYAxisTicks(axisId);
   const { left } = useDrawingArea();
 
@@ -21,13 +19,9 @@ function GridLabelsYAxis(props) {
       {ticks.map((tick) => (
         <text
           key={tick.value}
-          // Place the label inside the drawing area, next to its left border.
           x={left + LABEL_GAP}
-          // `dominantBaseline="auto"` puts the baseline on `y`, so the text sits
-          // above the grid line.
           y={tick.offset - LABEL_GAP}
           textAnchor="start"
-          dominantBaseline="auto"
           className="grid-label"
         >
           {tick.formattedValue}
