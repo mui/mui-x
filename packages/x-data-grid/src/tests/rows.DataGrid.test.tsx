@@ -1652,38 +1652,6 @@ describe('<DataGrid /> - Rows', () => {
 
     describe('_action: "replace" on updateRows', () => {
       it('should store the row as-is, bypassing the Object.assign merge', async () => {
-        class BrandRow {
-          id: number;
-          brand: string;
-          constructor(id: number, brand: string) {
-            this.id = id;
-            this.brand = brand;
-          }
-          getBrand() {
-            return this.brand;
-          }
-        }
-
-        const classRows = [
-          new BrandRow(0, 'Nike'),
-          new BrandRow(1, 'Adidas'),
-          new BrandRow(2, 'Puma'),
-        ];
-        render(<TestCase rows={classRows} />);
-
-        const replacement = new BrandRow(1, 'Fila');
-        await act(async () =>
-          apiRef.current?.updateRows([{ _action: 'replace', row: replacement }]),
-        );
-
-        const updatedRow = apiRef.current?.getRow(1);
-        // Reference identity is preserved: it's literally the same instance, not a copy.
-        expect(updatedRow).to.equal(replacement);
-        // The marker lives on the envelope, the instance itself is never touched.
-        expect('_action' in replacement).to.equal(false);
-      });
-
-      it('should preserve #private fields, which a merge-based update cannot support', async () => {
         class Person {
           id: number;
           firstName: string;
@@ -1701,12 +1669,18 @@ describe('<DataGrid /> - Rows', () => {
         const rows = [new Person(0, 'Grace', 90_000), new Person(1, 'Ada', 80_000)];
         render(<TestCase rows={rows} />);
 
-        const updated = new Person(1, 'Ada', 120_000);
-        await act(async () => apiRef.current?.updateRows([{ _action: 'replace', row: updated }]));
+        const replacement = new Person(1, 'Ada', 120_000);
+        await act(async () =>
+          apiRef.current?.updateRows([{ _action: 'replace', row: replacement }]),
+        );
 
         const updatedRow = apiRef.current?.getRow(1) as Person;
-        // Would throw a brand-check TypeError if the row had gone through Object.assign merge.
+        // Reference identity is preserved: it's literally the same instance, not a copy.
+        expect(updatedRow).to.equal(replacement);
+        // Reading a #private field would throw a brand-check TypeError on a merged copy.
         expect(updatedRow.salaryBand).to.equal('senior');
+        // The marker lives on the envelope, the instance itself is never touched.
+        expect('_action' in replacement).to.equal(false);
       });
 
       it('should insert a new row as-is when the id does not exist yet', async () => {
