@@ -321,12 +321,10 @@ export const mergeRowUpdate = (
  * Dev-only, does nothing in production.
  * @param {GridRowModel | undefined} oldRow The row being replaced, if any.
  * @param {GridRowModel} replacement The row provided in a `{ _action: 'replace', row }` update.
- * @param {GridRowId} id The id of the row.
  */
 export const warnIfReplaceLosesPrototype = (
   oldRow: GridRowModel | undefined,
   replacement: GridRowModel,
-  id: GridRowId,
 ): void => {
   if (process.env.NODE_ENV === 'production' || !oldRow) {
     return;
@@ -342,8 +340,10 @@ export const warnIfReplaceLosesPrototype = (
     return;
   }
 
+  // The message must stay free of row-specific details: `warnOnce()` caches by message, so
+  // interpolating the id would log once per row and grow the cache with every update.
   warnOnce([
-    `MUI X Data Grid: A plain object was provided as the \`row\` of a \`_action: 'replace'\` update for the row with id "${id}", but that row is a class instance.`,
+    "MUI X Data Grid: A plain object was provided as the `row` of a `_action: 'replace'` update, but the row it replaces is a class instance.",
     "Building the replacement with a spread (`{ _action: 'replace', row: { ...row } }`) creates a plain object, dropping the prototype chain and the private fields that `_action: 'replace'` exists to preserve.",
     "Pass the instance itself instead, for example `{ _action: 'replace', row }`.",
     'For more detail, see https://mui.com/x/react-data-grid/row-updates/.',
@@ -395,9 +395,9 @@ export const updateCacheWithNewRows = ({
       const accumulatedUpdate = uniqueUpdates.get(id)!;
       if (process.env.NODE_ENV !== 'production' && replaceIds.has(id)) {
         warnOnce([
-          `MUI X Data Grid: The row with id "${id}" was provided with \`_action: 'replace'\` but it is not the last update for that id in this batch.`,
-          'The remaining updates are merged onto the replacement, so the row keeps its prototype but is no longer the same object reference.',
-          'Make the replace the last update for that id if `apiRef.current.getRow(id)` must return the object you passed in.',
+          "MUI X Data Grid: A row was provided with `_action: 'replace'` but it is not the last update for that row in this batch.",
+          'The remaining updates are merged onto the replacement, so the row keeps its prototype but is neither the same object nor carries its `#private` fields, which a merge cannot copy.',
+          'Make the replace the last update for that row if `apiRef.current.getRow(id)` must return the object you passed in.',
           'For more detail, see https://mui.com/x/react-data-grid/row-updates/.',
         ]);
       }
@@ -463,7 +463,7 @@ export const updateCacheWithNewRows = ({
     // fields (#field) and reference identity are all preserved.
     const isReplace = replaceIds.has(id);
     if (isReplace) {
-      warnIfReplaceLosesPrototype(oldRow, partialRow, id);
+      warnIfReplaceLosesPrototype(oldRow, partialRow);
     }
 
     // Action === "modify"
@@ -550,7 +550,7 @@ export function computeRowsUpdates(
       const prevModel = pinnedRowsCache.idLookup[id];
       if (prevModel) {
         if (isReplace) {
-          warnIfReplaceLosesPrototype(prevModel, row, id);
+          warnIfReplaceLosesPrototype(prevModel, row);
           pinnedRowsCache.idLookup[id] = row;
         } else {
           pinnedRowsCache.idLookup[id] = mergeRowUpdate(prevModel, update);

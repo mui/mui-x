@@ -507,7 +507,7 @@ export const useGridPivoting = (
           if (isReplaceUpdate(update)) {
             const row = getReplaceRow(update);
             const rowId = gridRowIdSelector(apiRef, row);
-            warnIfReplaceLosesPrototype(rowsMap.get(rowId), row, rowId);
+            warnIfReplaceLosesPrototype(rowsMap.get(rowId), row);
             rowsMap.set(rowId, row);
             return;
           }

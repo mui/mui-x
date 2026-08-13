@@ -305,9 +305,9 @@ describe('<DataGridPro /> - Rows', () => {
           );
         }).toWarnDev(
           [
-            `MUI X Data Grid: The row with id "1" was provided with \`_action: 'replace'\` but it is not the last update for that id in this batch.`,
-            'The remaining updates are merged onto the replacement, so the row keeps its prototype but is no longer the same object reference.',
-            'Make the replace the last update for that id if `apiRef.current.getRow(id)` must return the object you passed in.',
+            "MUI X Data Grid: A row was provided with `_action: 'replace'` but it is not the last update for that row in this batch.",
+            'The remaining updates are merged onto the replacement, so the row keeps its prototype but is neither the same object nor carries its `#private` fields, which a merge cannot copy.',
+            'Make the replace the last update for that row if `apiRef.current.getRow(id)` must return the object you passed in.',
             'For more detail, see https://mui.com/x/react-data-grid/row-updates/.',
           ].join('\n'),
         );

@@ -60,7 +60,7 @@ Provide a replacement that is a different object from the one currently stored.
 The Data Grid and its memoized rows rely on reference changes to re-render, so replacing a row with the same, mutated instance may not repaint that row.
 
 When a single `updateRows()` call contains several updates for the same row, make the replace the last one for that row.
-The updates that follow it are merged onto the replacement, which keeps its prototype but is no longer the same object.
+The updates that follow it are merged onto the replacement, which keeps its prototype but is no longer the same object and no longer carries its `#private` fields, because a merge can't copy them.
 
 The same update can be returned from `processRowUpdate()` so that row and cell editing also store the row without merging.
 See [Editing persistence—Replacing the row instead of merging it](/x/react-data-grid/editing/persistence/#replacing-the-row-instead-of-merging-it) for details.
