@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { DataGrid, renderLongTextCell } from '@mui/x-data-grid';
-import type { GridApi, GridValueFormatter } from '@mui/x-data-grid';
+import { DataGrid, gridClasses, renderLongTextCell } from '@mui/x-data-grid';
+import type { GridApi, GridColDef, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -131,6 +131,42 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
     expect(getCell(0, 0)).to.have.text('');
+  });
+
+  // See https://github.com/mui/mui-x/issues/23332
+  describe('text overflow', () => {
+    function renderCellColumn(column: GridColDef) {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid autoHeight={isJSDOM} columns={[column]} rows={[{ id: 1, brand: 'Nike' }]} />
+        </div>,
+      );
+    }
+
+    it('should flag the cell when renderCell returns an element', () => {
+      renderCellColumn({ field: 'brand', renderCell: () => <button type="button">Edit</button> });
+      expect(getCell(0, 0)).to.have.class(gridClasses['cell--element']);
+    });
+
+    it('should not flag the cell when renderCell returns text', () => {
+      renderCellColumn({ field: 'brand', renderCell: ({ value }) => value });
+      expect(getCell(0, 0)).not.to.have.class(gridClasses['cell--element']);
+    });
+
+    it('should not flag the cell when the value is rendered by default', () => {
+      renderCellColumn({ field: 'brand' });
+      expect(getCell(0, 0)).not.to.have.class(gridClasses['cell--element']);
+    });
+
+    it.skipIf(isJSDOM)('should not ellipsize element content', () => {
+      renderCellColumn({ field: 'brand', renderCell: () => <button type="button">Edit</button> });
+      expect(window.getComputedStyle(getCell(0, 0)).textOverflow).to.equal('clip');
+    });
+
+    it.skipIf(isJSDOM)('should ellipsize text content', () => {
+      renderCellColumn({ field: 'brand' });
+      expect(window.getComputedStyle(getCell(0, 0)).textOverflow).to.equal('ellipsis');
+    });
   });
 
   // See https://github.com/mui/mui-x/issues/22831

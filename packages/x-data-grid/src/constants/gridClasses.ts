@@ -108,6 +108,10 @@ export interface GridClasses {
    */
   'cell--editing': string;
   /**
+   * Styles applied to the cell element if its content is not text.
+   */
+  'cell--element': string;
+  /**
    * Styles applied to the cell element in flex display mode.
    */
   'cell--flex': string;
@@ -1084,6 +1088,7 @@ export const gridClassesOverrides = {
     'cell',
     'cell--editable',
     'cell--editing',
+    'cell--element',
     'cell--flex',
     'cell--pinnedLeft',
     'cell--pinnedRight',

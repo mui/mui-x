@@ -1197,6 +1197,12 @@
       "isGlobal": false
     },
     {
+      "key": "cell--element",
+      "className": "MuiDataGrid-cell--element",
+      "description": "Styles applied to the cell element if its content is not text.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--fillPreview",
       "className": "MuiDataGrid-cell--fillPreview",
       "description": "Styles applied to the cell element when it is in the fill preview range.",

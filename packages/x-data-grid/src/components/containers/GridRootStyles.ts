@@ -558,6 +558,10 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
+      // Avoids painting a clipped "…" next to overflowing widget content.
+      [`&.${c['cell--element']}`]: {
+        textOverflow: 'clip',
+      },
       '&.Mui-selected': selectedStyles,
     },
     /* Default range border styles using box-shadow to avoid layout shift */
