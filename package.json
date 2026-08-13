@@ -55,7 +55,7 @@
     "use-material-ui-next": "code-infra set-version-overrides --pkg @mui/material@next",
     "release:changelog": "node scripts/releaseChangelog.mjs",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private",
-    "release:build": "lerna run --scope '@mui/*' build",
+    "release:build": "lerna run --scope '@mui/*' --scope '@base-ui/*' build",
     "release:publish": "code-infra publish --github-release",
     "release:publish:dry-run": "code-infra publish --github-release --dry-run",
     "release:tag": "node scripts/releaseTag.mjs",
