@@ -4,7 +4,8 @@ import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 
 export interface TimelineGridEventRowContext {
   /**
-   * The id of the resource this row represents.
+   * The resource this row renders. Qualifies the occurrence keys of the row's events:
+   * an event assigned to several resources repeats the same key on each of its rows.
    */
   resourceId: SchedulerResourceId;
   /**

@@ -4,9 +4,13 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type {
   SchedulerEventOccurrence,
   SchedulerResource,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import {
+  computeElementPositionInCollection,
+  getTimelineAxisDurationMs,
+} from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 
 type ResourceWithOccurrences = {
   resource: SchedulerResource;
@@ -24,45 +28,36 @@ type ResourceWithOccurrences = {
  */
 export function useEventTabNavigation(params: {
   adapter: Adapter;
+  /**
+   * The visible resources with the occurrences that occupy space on the axis, in row
+   * render order. Occurrences hidden by the hour window must already be excluded:
+   * they never mount, so navigating to one would swallow Tab forever.
+   */
   resources: readonly ResourceWithOccurrences[];
   scrollerRef: React.RefObject<HTMLDivElement | null>;
-  collectionStart: TemporalSupportedObject;
-  collectionEnd: TemporalSupportedObject;
+  axis: TimelineAxis;
   tickCount: number;
   tickWidth: number;
   titleColumnWidth: number;
 }) {
-  const {
-    adapter,
-    resources,
-    scrollerRef,
-    collectionStart,
-    collectionEnd,
-    tickCount,
-    tickWidth,
-    titleColumnWidth,
-  } = params;
+  const { adapter, resources, scrollerRef, axis, tickCount, tickWidth, titleColumnWidth } = params;
 
   const pendingFocusRef = React.useRef<{ key: string; resourceId: string } | null>(null);
 
-  // Map (timestamp - collectionStart) into [0, 1]
-  const collectionStartTs = React.useMemo(
-    () => adapter.getTime(collectionStart),
-    [adapter, collectionStart],
-  );
-  const totalMs = React.useMemo(
-    () => Math.max(1, adapter.getTime(collectionEnd) - collectionStartTs),
-    [adapter, collectionEnd, collectionStartTs],
-  );
+  // Map an axis offset into [0, 1] of the events area, matching the rendered
+  // geometry (a trimmed hour window compresses the days).
+  const totalMs = React.useMemo(() => getTimelineAxisDurationMs(adapter, axis), [adapter, axis]);
 
   const eventsTotalWidth = tickCount * tickWidth;
 
   const computeFractionRange = useStableCallback((occurrence: SchedulerEventOccurrence) => {
-    const clamp = (ms: number) => Math.min(Math.max(ms - collectionStartTs, 0), totalMs);
-    return {
-      fractionStart: clamp(occurrence.displayTimezone.start.timestamp) / totalMs,
-      fractionEnd: clamp(occurrence.displayTimezone.end.timestamp) / totalMs,
-    };
+    const { position, duration } = computeElementPositionInCollection(adapter, {
+      start: occurrence.displayTimezone.start,
+      end: occurrence.displayTimezone.end,
+      collection: axis,
+      durationMs: totalMs,
+    });
+    return { fractionStart: position, fractionEnd: position + duration };
   });
 
   // Scoped by `data-resource-id`: occurrence keys are event-scoped, not unique

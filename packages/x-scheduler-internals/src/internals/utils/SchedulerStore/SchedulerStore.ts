@@ -7,6 +7,7 @@ import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { EventManager } from '@mui/x-internals/EventManager';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
@@ -20,6 +21,7 @@ import type {
   SchedulerPreferences,
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
+  SchedulerSelection,
   SchedulerRenderableEventOccurrence,
 } from '../../../models';
 import type {
@@ -57,6 +59,11 @@ import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
+
+/**
+ * How long a transient error stays in `state.errors` before dismissing itself.
+ */
+const TRANSIENT_ERROR_DURATION_MS = 5000;
 
 export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
   ampm: true,
@@ -126,6 +133,7 @@ export class SchedulerStore<
       occurrencePlaceholder: null,
       editingOccurrence: null,
       copiedEvent: null,
+      selection: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
       pendingRecurringEventOperation: null,
       visibleResources:
@@ -303,10 +311,25 @@ export class SchedulerStore<
   }
 
   /**
-   * Removes the error with the given key from `state.errors`.
+   * Selects an entity, or clears the selection when called with `null`. A single
+   * slice shared by every selectable type keeps the selection mutually exclusive
+   * across features.
+   */
+  public setSelection = (selection: SchedulerSelection | null) => {
+    if (isDeepEqual(this.state.selection, selection)) {
+      return;
+    }
+    this.set('selection', selection);
+  };
+
+  /**
+   * Removes the error with the given key from `state.errors`, canceling its
+   * auto-dismiss timer if it was transient.
    * The key is the one carried by the matching `StoredError` entry.
    */
   public dismissError = (key: string) => {
+    this.timeoutManager.clearTimeout(`transient-error-${key}`);
+    this.transientErrorKeys.delete(key);
     this.set(
       'errors',
       this.state.errors.filter((entry) => entry.key !== key),
@@ -315,21 +338,45 @@ export class SchedulerStore<
 
   private nextErrorKey = 0;
 
+  private transientErrorKeys = new Set<string>();
+
   /**
    * Appends an error to `state.errors`, wrapping non-Error rejections to preserve
    * the original payload via `cause`. The store owns the key counter so uniqueness
    * is enforced in one place. Does not dedupe — pushing the same `Error` instance
    * twice produces two entries (intentional; e.g. a retried failure that should
    * re-display after the previous one was dismissed).
+   * With `transient: true` the entry behaves as gesture feedback instead of a
+   * failure that must stay until acknowledged: it replaces a previous transient
+   * entry carrying the same message (refreshing its timer) rather than stacking,
+   * and dismisses itself after `TRANSIENT_ERROR_DURATION_MS`.
+   * Returns the entry's key, so the caller can `dismissError` it later.
    * @internal
    */
-  public pushError = (error: unknown) => {
+  public pushError = (error: unknown, options?: { transient?: boolean }): string => {
     const wrapped =
       error instanceof Error
         ? error
         : /* minify-error-disabled */ new Error(String(error), { cause: error });
+    if (options?.transient) {
+      const existing = this.state.errors.find(
+        (entry) =>
+          this.transientErrorKeys.has(entry.key) && entry.error.message === wrapped.message,
+      );
+      if (existing !== undefined) {
+        this.dismissError(existing.key);
+      }
+    }
     this.nextErrorKey += 1;
-    this.set('errors', [...this.state.errors, { error: wrapped, key: String(this.nextErrorKey) }]);
+    const key = String(this.nextErrorKey);
+    this.set('errors', [...this.state.errors, { error: wrapped, key }]);
+    if (options?.transient) {
+      this.transientErrorKeys.add(key);
+      this.timeoutManager.startTimeout(`transient-error-${key}`, TRANSIENT_ERROR_DURATION_MS, () =>
+        this.dismissError(key),
+      );
+    }
+    return key;
   };
 
   /**

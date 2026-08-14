@@ -68,6 +68,9 @@
     },
     "preferences": { "description": "Preferences currently displayed in the timeline." },
     "preset": { "description": "The preset currently displayed in the timeline." },
+    "presetConfig": {
+      "description": "Configuration applied to each preset, keyed by the preset name. For the <code>dayAndHour</code> preset, <code>startTime</code> and <code>endTime</code> limit the hours displayed on each day: <code>startTime</code> is inclusive and <code>endTime</code> exclusive, so <code>{ startTime: 8, endTime: 20 }</code> renders the cells 8 AM through 7 PM and an event ending at 20:00 is still fully visible. Both must be whole hours between 0 and 24 with <code>startTime</code> lower than <code>endTime</code>; they default to 0 and 24, the full day, and an invalid range falls back to the full day with a warning in development. Presets that do not tick in hours ignore the configuration."
+    },
     "presets": {
       "description": "The presets available in the timeline. The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally, so a future zoom API (<code>zoomIn()</code> / <code>zoomOut()</code>) behaves consistently regardless of the order in which the presets are provided."
     },
