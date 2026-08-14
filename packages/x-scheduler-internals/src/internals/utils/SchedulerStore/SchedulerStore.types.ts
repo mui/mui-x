@@ -14,6 +14,7 @@ import type {
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
+  SchedulerSelection,
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
@@ -199,11 +200,17 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
   /**
+   * The selected entity (a dependency arrow, later an event...), or `null`.
+   * See `SchedulerSelectionTypeLookup` for how features register their type.
+   */
+  selection: SchedulerSelection | null;
+  /**
    * Whether the store is currently loading events from the data source.
    */
   isLoading: boolean;
   /**
-   * The errors that occurred during data fetching.
+   * The scheduler errors surfaced through the error container: persistent data-source
+   * failures, and transient interaction feedback that dismisses itself.
    * Each entry carries a stable `key` assigned at push time so the UI can use it
    * directly as a React key and as the argument to `store.dismissError(key)`.
    */
