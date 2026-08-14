@@ -541,6 +541,73 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       await user.click(screen.getByRole('button', { name: 'Save' }));
     });
+
+    it('should keep a section rendered twice in sync through the shared form store', async () => {
+      function DuplicatedSections() {
+        return (
+          <React.Fragment>
+            <DescriptionSection />
+            <DescriptionSection />
+          </React.Fragment>
+        );
+      }
+      const { user } = renderWithSlot({ eventDialogGeneralTab: DuplicatedSections });
+
+      const [first, second] = screen.getAllByRole('textbox', { name: 'Description' });
+      expect(second).to.have.value('Morning run');
+
+      await user.clear(first);
+      await user.type(first, 'Evening run');
+      expect(second).to.have.value('Evening run');
+    });
+
+    it('should produce duplicate DOM ids when a section with a static id is rendered twice', () => {
+      function DuplicatedSections() {
+        return (
+          <React.Fragment>
+            <DateTimeSection />
+            <DateTimeSection />
+          </React.Fragment>
+        );
+      }
+      renderWithSlot({ eventDialogGeneralTab: DuplicatedSections });
+
+      // The all-day switch id is built from the scheduler id, not from the section instance,
+      // so duplicating the section duplicates the id. Pinned as a documented limitation.
+      const switches = document.querySelectorAll('[id$="-enable-all-day-switch"]');
+      expect(switches.length).to.equal(2);
+      expect(switches[0].id).to.equal(switches[1].id);
+    });
+
+    it('should keep the draft when the slot component identity changes', async () => {
+      function SlotA() {
+        return <CustomSection />;
+      }
+      function SlotB() {
+        return <CustomSection />;
+      }
+      function Harness(harnessProps: { slot: React.ComponentType<EventDialogGeneralTabProps> }) {
+        return (
+          <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+            <SchedulerSlotsProvider
+              slots={{ eventDialogGeneralTab: harnessProps.slot }}
+              slotProps={undefined}
+            >
+              <EventDialogContent open {...defaultProps} occurrence={occurrenceWithDescription} />
+            </SchedulerSlotsProvider>
+          </EventCalendarProvider>
+        );
+      }
+      const { user, setProps } = render(<Harness slot={SlotA} />);
+
+      const priority = screen.getByRole('textbox', { name: 'Priority' });
+      await user.clear(priority);
+      await user.type(priority, 'high');
+
+      // The new identity remounts the slot content, but the draft lives in the form store above it.
+      setProps({ slot: SlotB });
+      expect(screen.getByRole('textbox', { name: 'Priority' })).to.have.value('high');
+    });
   });
 
   // The sections read the occurrence from context instead of receiving it as a prop, so they

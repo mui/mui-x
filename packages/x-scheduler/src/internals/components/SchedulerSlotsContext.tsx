@@ -30,12 +30,19 @@ export interface SchedulerSlotsProviderProps {
 export function SchedulerSlotsProvider(props: SchedulerSlotsProviderProps) {
   const { slots, slotProps, children } = props;
 
+  // Memoized on the individual slot references rather than on the `slots` / `slotProps`
+  // containers, which are usually inline object literals with a new identity on every render.
+  const eventDialogGeneralTab = slots?.eventDialogGeneralTab;
+  const eventDialogGeneralTabProps = slotProps?.eventDialogGeneralTab;
+
   const value = React.useMemo(
     () => ({
-      slots: slots ?? (EMPTY_OBJECT as SchedulerSlots),
-      slotProps: slotProps ?? (EMPTY_OBJECT as SchedulerSlotProps),
+      slots: eventDialogGeneralTab ? { eventDialogGeneralTab } : (EMPTY_OBJECT as SchedulerSlots),
+      slotProps: eventDialogGeneralTabProps
+        ? { eventDialogGeneralTab: eventDialogGeneralTabProps }
+        : (EMPTY_OBJECT as SchedulerSlotProps),
     }),
-    [slots, slotProps],
+    [eventDialogGeneralTab, eventDialogGeneralTabProps],
   );
 
   return <SchedulerSlotsContext.Provider value={value}>{children}</SchedulerSlotsContext.Provider>;
