@@ -2,7 +2,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useId from '@mui/utils/useId';
-import visuallyHidden from '@mui/utils/visuallyHidden';
 import Typography from '@mui/material/Typography';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -549,11 +548,10 @@ export function DayCalendar(inProps: DayCalendarProps) {
             variant="caption"
             role="columnheader"
             aria-colindex={columnIndexOffset + i + 1}
+            aria-label={adapter.format(weekday, 'weekday')}
             className={classes.weekDayLabel}
           >
-            <span aria-hidden="true">{dayOfWeekFormatter(weekday)}</span>
-            {/* The day cells describe themselves with this text, an `aria-label` would not be read. */}
-            <span style={visuallyHidden}>{adapter.format(weekday, 'weekday')}</span>
+            {dayOfWeekFormatter(weekday)}
           </PickerCalendarWeekDayLabel>
         ))}
       </PickerCalendarDayHeader>

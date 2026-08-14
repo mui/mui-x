@@ -1,5 +1,5 @@
 import { screen, createRenderer } from '@mui/internal-test-utils';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { DateCalendar, dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import type { AdapterName } from 'test/utils/pickers';
 import { createPickerRenderer, availableAdapters } from 'test/utils/pickers';
@@ -45,13 +45,17 @@ describe('<DateCalendar /> - localization', () => {
             </LocalizationProvider>,
           );
 
-          expect(screen.getAllByRole('columnheader')[0]).toHaveAccessibleName('Sunday');
+          expect(document.querySelector(`.${dayCalendarClasses.weekDayLabel}`)!.ariaLabel).to.equal(
+            'Sunday',
+          );
 
           setProps({
             adapterLocale: adapterName === 'date-fns' ? fr : 'fr',
           });
 
-          expect(screen.getAllByRole('columnheader')[0]).toHaveAccessibleName('lundi');
+          expect(document.querySelector(`.${dayCalendarClasses.weekDayLabel}`)!.ariaLabel).to.equal(
+            'lundi',
+          );
         });
       });
     });
