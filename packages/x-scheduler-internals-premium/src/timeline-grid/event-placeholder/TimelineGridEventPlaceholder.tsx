@@ -36,15 +36,15 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Feature hooks
   const { position, duration, startingBeforeEdge, endingAfterEdge } =
     useElementPositionInCollection({
       start,
       end,
-      collectionStart: presetConfig.start,
-      collectionEnd: presetConfig.end,
+      collection: config,
+      durationMs: config.durationMs,
     });
 
   const { state: eventState } = useEvent({ start, end });

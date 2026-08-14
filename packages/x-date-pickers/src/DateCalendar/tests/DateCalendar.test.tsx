@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, waitFor } from '@mui/internal-test-utils';
+import { screen, waitFor, within } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
@@ -101,6 +101,24 @@ describe('<DateCalendar />', () => {
 
     expect(cells.length).to.equal(35);
     expect(disabledDays.length).to.equal(31);
+  });
+
+  // The week number is a `rowheader` taking the first position of the row, so a cell without
+  // an explicit column index would be off by one.
+  it('should keep the column index of the days replaced by a filler cell', () => {
+    render(<DateCalendar displayWeekNumber referenceDate={adapterToUse.date('2018-01-01')} />);
+
+    const grid = screen.getByRole('grid', { name: 'January 2018' });
+    const weeks = within(within(grid).getByRole('rowgroup')).getAllByRole('row');
+
+    expect(weeks).to.have.length(5);
+    weeks.forEach((week) => {
+      const columnIndexes = within(week)
+        .getAllByRole('gridcell')
+        .map((cell) => cell.getAttribute('aria-colindex'));
+
+      expect(columnIndexes).to.deep.equal(['1', '2', '3', '4', '5', '6', '7']);
+    });
   });
 
   it('should render column header according to dayOfWeekFormatter', () => {

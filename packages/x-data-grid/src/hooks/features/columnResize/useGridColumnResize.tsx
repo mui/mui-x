@@ -812,6 +812,11 @@ export const useGridColumnResize = (
         if (!props.disableVirtualization && options.disableColumnVirtualization) {
           apiRef.current.unstable_setColumnVirtualization(false);
           await columnVirtualizationDisabled();
+
+          // The grid may have unmounted while awaiting, which nulls the root element ref.
+          if (!apiRef.current.rootElementRef?.current) {
+            return;
+          }
         }
 
         const widthByField = extractColumnWidths(apiRef, options, columns);

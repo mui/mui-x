@@ -22,7 +22,6 @@ import { clamp } from '../../../utils/utils';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
 import type { GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
-import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 
@@ -487,7 +486,12 @@ export function getTotalHeaderHeight(
   apiRef: RefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps<any, any>,
-    'columnHeaderHeight' | 'headerFilterHeight' | 'listView' | 'columnGroupHeaderHeight'
+    | 'columnHeaderHeight'
+    | 'headerFilterHeight'
+    | 'listView'
+    | 'columnGroupHeaderHeight'
+    | 'signature'
+    | 'headerFilters'
   >,
 ) {
   if (props.listView) {
@@ -496,7 +500,8 @@ export function getTotalHeaderHeight(
 
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
-  const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);
+  // Not `gridHeaderFilteringEnabledSelector`: that state is synced in an effect, so it lags one render behind `props.headerFilters`.
+  const isHeaderFilteringEnabled = props.signature !== 'DataGrid' && (props.headerFilters ?? false);
 
   const columnHeadersHeight = Math.floor(props.columnHeaderHeight * densityFactor);
   const columnGroupHeadersHeight = Math.floor(
