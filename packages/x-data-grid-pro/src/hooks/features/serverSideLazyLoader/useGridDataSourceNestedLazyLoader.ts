@@ -38,6 +38,7 @@ import {
   useGridRegisterStrategyProcessor,
   runIf,
   DataSourceRowsUpdateStrategy,
+  useGridDataSourceFilterModelChange,
 } from '@mui/x-data-grid/internals';
 import type { GridStrategyProcessor } from '@mui/x-data-grid/internals';
 import type {
@@ -173,6 +174,8 @@ export const useGridDataSourceNestedLazyLoader = (
     () => debounce(fetchRootRowsIncremental, 0),
     [fetchRootRowsIncremental],
   );
+
+  const hasFilterModelChanged = useGridDataSourceFilterModelChange(privateApiRef);
 
   // Adjust the render context range to fit the pagination model's page size
   // First row index should be decreased to the start of the page, end row index should be increased to the end of the page
@@ -1068,6 +1071,10 @@ export const useGridDataSourceNestedLazyLoader = (
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
     (newFilterModel) => {
+      if (!hasFilterModelChanged(newFilterModel)) {
+        return;
+      }
+
       markRowsStale();
       stopPolling();
 
@@ -1083,7 +1090,7 @@ export const useGridDataSourceNestedLazyLoader = (
       privateApiRef.current.setLoading(true);
       debouncedFetchRows(getRowsParams);
     },
-    [privateApiRef, debouncedFetchRows, markRowsStale, stopPolling],
+    [privateApiRef, debouncedFetchRows, markRowsStale, stopPolling, hasFilterModelChanged],
   );
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>((row) => {

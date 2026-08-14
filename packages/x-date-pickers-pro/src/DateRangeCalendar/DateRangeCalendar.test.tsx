@@ -11,7 +11,10 @@ import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
-import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
+import {
+  DateRangePickerDay,
+  dateRangePickerDayClasses as dayClasses,
+} from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import type { RangePosition } from '../models';
@@ -814,6 +817,71 @@ describe('<DateRangeCalendar />', () => {
     render(<DateRangeCalendar calendars={3} />);
 
     expect(screen.getAllByTestId('pickers-calendar')).to.have.length(3);
+  });
+
+  describe('prop: showDaysOutsideCurrentMonth', () => {
+    const props = {
+      referenceDate: adapterToUse.date('2018-01-01'),
+      showDaysOutsideCurrentMonth: true,
+    } as const;
+
+    // January 2018 starts on a Monday and ends on a Wednesday, its grid is 5 weeks long:
+    // 31 days of January, one day of December and three days of February.
+    const getJanuaryCells = () => {
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const cells = grid.querySelectorAll(`.${dayClasses.root}`);
+      return {
+        cells,
+        fillerCells: grid.querySelectorAll(`.${dayClasses.fillerCell}`),
+      };
+    };
+
+    it('should render the days outside the current month with a single calendar', () => {
+      render(<DateRangeCalendar {...props} calendars={1} />);
+
+      const { cells, fillerCells } = getJanuaryCells();
+      expect(cells).to.have.length(35);
+      expect(fillerCells).to.have.length(0);
+    });
+
+    it('should be ignored with several calendars', () => {
+      render(<DateRangeCalendar {...props} calendars={2} />);
+
+      const { cells, fillerCells } = getJanuaryCells();
+      expect(cells).to.have.length(35);
+      expect(fillerCells).to.have.length(4);
+    });
+  });
+
+  describe('filler cells', () => {
+    const referenceDate = adapterToUse.date('2018-01-01');
+
+    it('should be exposed as grid cells', () => {
+      render(<DateRangeCalendar calendars={1} referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+
+      expect(within(grid).getAllByRole('gridcell')).to.have.length(35);
+      expect(grid.querySelectorAll(`.${dayClasses.fillerCell}`)).to.have.length(4);
+    });
+
+    // The week number is a `rowheader` taking the first position of the row, so a cell without
+    // an explicit column index would be off by one.
+    it('should keep the column index of the day they replace', () => {
+      render(<DateRangeCalendar calendars={1} displayWeekNumber referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const weeks = within(within(grid).getByRole('rowgroup')).getAllByRole('row');
+
+      expect(weeks).to.have.length(5);
+      weeks.forEach((week) => {
+        const columnIndexes = within(week)
+          .getAllByRole('gridcell')
+          .map((cell) => cell.getAttribute('aria-colindex'));
+
+        expect(columnIndexes).to.deep.equal(['1', '2', '3', '4', '5', '6', '7']);
+      });
+    });
   });
 
   describe('Performance', () => {

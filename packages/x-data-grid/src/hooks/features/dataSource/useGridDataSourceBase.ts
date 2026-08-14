@@ -20,7 +20,10 @@ import {
   gridVisibleRowsSelector,
 } from '../pagination/gridPaginationSelector';
 import { gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { gridColumnLookupSelector } from '../columns';
+import { removeIncompleteFilterItems } from '../filter/gridFilterUtils';
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
+import { useGridDataSourceFilterModelChange } from './useGridDataSourceFilterModelChange';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
 import { GridDataSourceCacheDefault } from './cache';
 import type { GridDataSourceCacheDefaultConfig } from './cache';
@@ -136,6 +139,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
         ...getRowsParams,
       };
+      // The selector prunes the incomplete items, but a caller passing its own `filterModel`
+      // overrides it, so prune again on the merged params.
+      fetchParams.filterModel = removeIncompleteFilterItems(
+        fetchParams.filterModel,
+        gridColumnLookupSelector(apiRef),
+      );
 
       if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
         options.fetchRowChildren?.([parentId], [fetchParams], showChildrenLoading);
@@ -443,6 +452,19 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     debouncedFetchRows();
   }, [apiRef, props.dataSourceKeepPreviousData, stopPolling, debouncedFetchRows]);
 
+  const hasFilterModelChanged = useGridDataSourceFilterModelChange(apiRef);
+  const handleFetchRowsOnFilterModelChange = React.useCallback<
+    GridEventListener<'filterModelChange'>
+  >(
+    (newFilterModel) => {
+      if (!hasFilterModelChanged(newFilterModel)) {
+        return;
+      }
+      handleFetchRowsOnParamsChange();
+    },
+    [hasFilterModelChanged, handleFetchRowsOnParamsChange],
+  );
+
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (isFirstRender.current) {
@@ -565,7 +587,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
       sortModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
-      filterModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
+      filterModelChange: runIf(
+        standardRowsUpdateStrategyActive,
+        handleFetchRowsOnFilterModelChange,
+      ),
       paginationModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
     },
   };
