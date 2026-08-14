@@ -1,7 +1,7 @@
 import * as React from 'react';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 import { DataGrid, gridRowSelectionIdsSelector } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -12,52 +12,34 @@ export default function SelectorInEventHandler() {
     maxColumns: 6,
   });
 
-  const [selectedDesks, setSelectedDesks] = React.useState([]);
+  const [message, setMessage] = React.useState('');
 
-  const updateSelectedDesks = (details) => {
+  const handleFilterModelChange = (model, details) => {
+    // The row selection is not part of the callback arguments,
+    // but it can be read from the state through `details.apiRef`
     const selectedRows = gridRowSelectionIdsSelector(details.apiRef);
     const desks = [...selectedRows.values()].map((row) => row?.desk).filter(Boolean);
-    setSelectedDesks(desks);
+
+    if (selectedRows.size === 0) {
+      setMessage('Filter changed with no rows selected');
+    } else {
+      setMessage(
+        `Filter changed with ${selectedRows.size} selected row(s): ${desks.join(', ')}`,
+      );
+    }
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <DataGrid
-        checkboxSelection
-        onRowSelectionModelChange={(newRowSelectionModel, details) => {
-          updateSelectedDesks(details);
-        }}
-        onFilterModelChange={(newFilterModel, details) => {
-          updateSelectedDesks(details);
-        }}
-        {...data}
-        sx={{ height: 400 }}
-      />
-      <Box
-        sx={{
-          mt: 1,
-          p: 1.5,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-          minHeight: 48,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          flexWrap: 'wrap',
-        }}
-      >
-        <Typography variant="body2" color="text.secondary" sx={{ mr: 0.5 }}>
-          Selected desks:
-        </Typography>
-        {selectedDesks.length === 0 ? (
-          <Typography variant="body2" color="text.disabled">
-            None
-          </Typography>
-        ) : (
-          selectedDesks.map((desk) => <Chip key={desk} label={desk} size="small" />)
-        )}
+    <Stack spacing={2} sx={{ width: '100%' }}>
+      <Box sx={{ height: 400, width: '100%' }}>
+        <DataGrid
+          {...data}
+          checkboxSelection
+          showToolbar
+          onFilterModelChange={handleFilterModelChange}
+        />
       </Box>
-    </Box>
+      {message && <Alert severity="info">{message}</Alert>}
+    </Stack>
   );
 }

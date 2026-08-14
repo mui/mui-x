@@ -62,7 +62,8 @@ Otherwise, you will get an error saying that the state is not initialized during
 ### In event handlers
 
 The `GridCallbackDetails` object passed as the second argument to callbacks like `onRowSelectionModelChange` or `onFilterModelChange` exposes an `apiRef` property.
-Pass it directly to any selector to read state inside the callback without needing a separate `useGridApiRef`:
+Pass it directly to any selector to read state that is not part of the callback arguments, without needing a separate `useGridApiRef`.
+In the demo below, the current row selection is read inside `onFilterModelChange` to capture which rows are selected at the moment the filter changes:
 
 {{"demo": "SelectorInEventHandler.js", "bg": "inline", "disableAd": true}}
 
