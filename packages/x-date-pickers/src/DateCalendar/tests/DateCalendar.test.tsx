@@ -177,6 +177,16 @@ describe('<DateCalendar />', () => {
       expect(grid).to.have.attribute('aria-rowcount', '6');
       expect(rowIndexes).to.deep.equal(['1', '2', '3', '4', '5', '6']);
     });
+
+    // `aria-rowcount` describes the whole grid, including the rows absent from the DOM.
+    it('should keep the row count while loading', () => {
+      render(<DateCalendar loading referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+
+      expect(grid).to.have.attribute('aria-rowcount', '6');
+      expect(within(grid).queryByRole('rowgroup')).to.equal(null);
+    });
   });
 
   it('should render column header according to dayOfWeekFormatter', () => {

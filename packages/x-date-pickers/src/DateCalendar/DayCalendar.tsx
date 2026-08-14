@@ -523,7 +523,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
       role="grid"
       aria-labelledby={gridLabelId}
       aria-colcount={columnIndexOffset + 7}
-      aria-rowcount={loading ? 1 : weeksToDisplay.length + 1}
+      aria-rowcount={weeksToDisplay.length + 1}
       className={classes.root}
     >
       <PickerCalendarDayHeader role="row" aria-rowindex={1} className={classes.header}>
