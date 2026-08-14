@@ -49,7 +49,7 @@ export interface GridCoreApi {
 export interface GridCorePrivateApi<
   GridPublicApi extends GridApiCommon,
   GridPrivateApi extends GridPrivateApiCommon,
-  GridProps extends DataGridProcessedProps,
+  GridProps extends DataGridProcessedProps<any, any>,
 > {
   /**
    * The caches used by hooks and state initializers.

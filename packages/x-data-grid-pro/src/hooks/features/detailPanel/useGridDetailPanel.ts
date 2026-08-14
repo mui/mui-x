@@ -22,7 +22,7 @@ import type {
 const emptySet = new Set();
 
 export const detailPanelStateInitializer: GridStateInitializer<
-  Pick<DataGridProProcessedProps, 'initialState' | 'detailPanelExpandedRowIds'>
+  Pick<DataGridProProcessedProps<any, any>, 'initialState' | 'detailPanelExpandedRowIds'>
 > = (state, props) => {
   return {
     ...state,
@@ -73,7 +73,7 @@ function cacheContentAndHeight(
 export const useGridDetailPanel = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
-    DataGridProProcessedProps,
+    DataGridProProcessedProps<any, any>,
     | 'getDetailPanelContent'
     | 'getDetailPanelHeight'
     | 'detailPanelExpandedRowIds'

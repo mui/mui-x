@@ -1,7 +1,7 @@
 import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommon } from '../models/api/gridApiCommon';
 
-const publicApiRefCache = new WeakMap<GridPrivateApiCommon, RefObject<unknown>>();
+const publicApiRefCache = new WeakMap<GridPrivateApiCommon, Readonly<RefObject<unknown>>>();
 
 export function getPublicApiRef<PrivateApi extends GridPrivateApiCommon>(
   apiRef: RefObject<PrivateApi>,
@@ -19,5 +19,5 @@ export function getPublicApiRef<PrivateApi extends GridPrivateApiCommon>(
     };
     publicApiRefCache.set(privateApi, publicApiRef);
   }
-  return publicApiRef as RefObject<ReturnType<PrivateApi['getPublicApi']>>;
+  return publicApiRef as Readonly<RefObject<ReturnType<PrivateApi['getPublicApi']>>>;
 }

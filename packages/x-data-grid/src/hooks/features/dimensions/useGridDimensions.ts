@@ -30,7 +30,7 @@ import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridProps
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 
 type RootProps = Pick<
-  DataGridProcessedProps,
+  DataGridProcessedProps<any, any>,
   | 'onResize'
   | 'scrollbarSize'
   | 'pagination'

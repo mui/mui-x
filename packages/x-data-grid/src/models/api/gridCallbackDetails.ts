@@ -26,5 +26,5 @@ export interface GridCallbackDetails<
    *   const rows = gridRowSelectionIdsSelector(details.apiRef);
    * }}
    */
-  apiRef: RefObject<Api>;
+  apiRef: Readonly<RefObject<Api>>;
 }

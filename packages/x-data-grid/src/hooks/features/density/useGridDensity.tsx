@@ -13,7 +13,7 @@ import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import type { GridPipeProcessor } from '../../core/pipeProcessing';
 
 export const densityStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'initialState' | 'density'>
+  Pick<DataGridProcessedProps<any, any>, 'initialState' | 'density'>
 > = (state, props) => ({
   ...state,
   density: props.initialState?.density ?? props.density ?? 'standard',
@@ -21,7 +21,7 @@ export const densityStateInitializer: GridStateInitializer<
 
 export const useGridDensity = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'density' | 'onDensityChange' | 'initialState'>,
+  props: Pick<DataGridProcessedProps<any, any>, 'density' | 'onDensityChange' | 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useDensity');
 

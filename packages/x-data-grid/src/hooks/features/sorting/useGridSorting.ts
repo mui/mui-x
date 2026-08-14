@@ -36,7 +36,10 @@ import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getTreeNodeDescendants } from '../rows/gridRowsUtils';
 
 export const sortingStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'sortModel' | 'initialState' | 'disableMultipleColumnsSorting'>
+  Pick<
+    DataGridProcessedProps<any, any>,
+    'sortModel' | 'initialState' | 'disableMultipleColumnsSorting'
+  >
 > = (state, props) => {
   const sortModel = props.sortModel ?? props.initialState?.sorting?.sortModel ?? [];
 
@@ -56,7 +59,7 @@ export const sortingStateInitializer: GridStateInitializer<
 export const useGridSorting = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     | 'initialState'
     | 'sortModel'
     | 'onSortModelChange'

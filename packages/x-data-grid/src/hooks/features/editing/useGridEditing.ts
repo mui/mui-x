@@ -26,7 +26,7 @@ export const editingStateInitializer: GridStateInitializer = (state) => ({
 export const useGridEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     'isCellEditable' | 'editMode' | 'processRowUpdate' | 'dataSource' | 'onDataSourceError'
   >,
   configuration: GridConfiguration,

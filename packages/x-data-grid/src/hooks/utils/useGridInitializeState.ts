@@ -10,7 +10,7 @@ type DeepPartial<T> = {
 };
 
 export type GridStateInitializer<
-  P extends Partial<DataGridProcessedProps> = DataGridProcessedProps,
+  P extends Partial<DataGridProcessedProps<any, any>> = DataGridProcessedProps<any, any>,
   PrivateApi extends GridPrivateApiCommon = GridPrivateApiCommunity,
 > = (
   state: DeepPartial<PrivateApi['state']>,
@@ -19,7 +19,7 @@ export type GridStateInitializer<
 ) => DeepPartial<PrivateApi['state']>;
 
 export const useGridInitializeState = <
-  P extends Partial<DataGridProcessedProps>,
+  P extends Partial<DataGridProcessedProps<any, any>>,
   PrivateApi extends GridPrivateApiCommon = GridPrivateApiCommunity,
 >(
   initializer: GridStateInitializer<P, PrivateApi>,

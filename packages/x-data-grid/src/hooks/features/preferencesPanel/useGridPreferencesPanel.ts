@@ -11,7 +11,7 @@ import type { GridPreferencesPanelApi } from '../../../models/api/gridPreference
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 export const preferencePanelStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'initialState'>
+  Pick<DataGridProcessedProps<any, any>, 'initialState'>
 > = (state, props) => ({
   ...state,
   preferencePanel: props.initialState?.preferencePanel ?? { open: false },
@@ -22,7 +22,7 @@ export const preferencePanelStateInitializer: GridStateInitializer<
  */
 export const useGridPreferencesPanel = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'initialState'>,
+  props: Pick<DataGridProcessedProps<any, any>, 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
 

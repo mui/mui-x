@@ -56,7 +56,7 @@ const gridVisibleRowsWithPinnedRowsSelector = createSelectorMemoized(
 export const useGridKeyboardNavigation = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     'pagination' | 'paginationMode' | 'getRowId' | 'signature' | 'headerFilters' | 'tabNavigation'
   >,
 ): void => {

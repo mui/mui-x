@@ -29,7 +29,7 @@ class MissingRowIdError extends Error {}
  */
 export function useGridParamsApi(
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: DataGridProcessedProps,
+  props: DataGridProcessedProps<any, any>,
   configuration: GridConfiguration,
 ) {
   const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(

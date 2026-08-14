@@ -10,7 +10,7 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
 export function useGridEvents(
   apiRef: RefObject<GridApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     | 'onColumnHeaderClick'
     | 'onColumnHeaderDoubleClick'
     | 'onColumnHeaderContextMenu'

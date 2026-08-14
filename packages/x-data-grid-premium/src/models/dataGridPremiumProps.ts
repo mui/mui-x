@@ -184,7 +184,7 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
 export interface DataGridPremiumPropsWithoutDefaultValue<
   R extends GridValidRowModel = any,
 > extends Omit<
-  DataGridProPropsWithoutDefaultValue<R>,
+  DataGridProPropsWithoutDefaultValue<R, GridApiPremium>,
   'initialState' | 'apiRef' | 'dataSource' | 'onDataSourceError'
 > {
   /**

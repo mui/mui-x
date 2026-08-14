@@ -39,7 +39,7 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
 export const useGridRowsMeta = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   _props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     | 'getRowHeight'
     | 'getEstimatedRowHeight'
     | 'getRowSpacing'

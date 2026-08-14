@@ -14,7 +14,7 @@ import type { GridEventLookup } from '../../../models/events';
  */
 export const useGridDataSource = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: DataGridProcessedProps,
+  props: DataGridProcessedProps<any, any>,
 ) => {
   const { api, strategyProcessor, events, setStrategyAvailability } = useGridDataSourceBase(
     apiRef,

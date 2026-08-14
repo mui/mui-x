@@ -1,12 +1,18 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { createRenderer, act } from '@mui/internal-test-utils';
+import { createRenderer, act, fireEvent } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
   useGridApiRef,
   gridRowGroupingSanitizedModelSelector,
 } from '@mui/x-data-grid-premium';
-import type { DataGridPremiumProps, GridApiPremium, GridRowsProp } from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridApiPremium,
+  GridRowGroupingModel,
+  GridRowsProp,
+} from '@mui/x-data-grid-premium';
+import { getColumnHeaderCell } from 'test/utils/helperFn';
 
 describe('<DataGridPremium /> - GridCallbackDetails apiRef', () => {
   const { render } = createRenderer();
@@ -43,5 +49,49 @@ describe('<DataGridPremium /> - GridCallbackDetails apiRef', () => {
 
     expect(receivedApiRef).not.to.equal(null);
     expect(gridRowGroupingSanitizedModelSelector(receivedApiRef!)).to.deep.equal(['category']);
+  });
+
+  it('should accept Premium selectors on community-inherited callbacks', () => {
+    let modelFromFilterCallback: GridRowGroupingModel | null = null;
+    let modelFromHeaderClick: GridRowGroupingModel | null = null;
+    render(
+      <TestCase
+        rowGroupingModel={['category']}
+        onFilterModelChange={(model, details) => {
+          // Control-state callback declared in the community props interface.
+          modelFromFilterCallback = gridRowGroupingSanitizedModelSelector(details.apiRef);
+        }}
+        onColumnHeaderClick={(params, event, details) => {
+          // `GridEventListener`-based callback declared in the community props interface.
+          modelFromHeaderClick = gridRowGroupingSanitizedModelSelector(details.apiRef);
+        }}
+        onCellModesModelChange={(model, details) => {
+          // Editing hook path: the ref must be Premium-typed as well.
+          const premiumApiRef: RefObject<GridApiPremium> = details.apiRef;
+          expect(premiumApiRef.current).to.equal(apiRef.current);
+        }}
+      />,
+    );
+
+    fireEvent.click(getColumnHeaderCell(0));
+    act(() =>
+      apiRef.current?.setFilterModel({
+        items: [{ field: 'category', operator: 'contains', value: 'A' }],
+      }),
+    );
+
+    expect(modelFromFilterCallback).to.deep.equal(['category']);
+    expect(modelFromHeaderClick).to.deep.equal(['category']);
+  });
+
+  it('should type the apiRef as read-only', () => {
+    render(
+      <TestCase
+        onRowGroupingModelChange={(model, details) => {
+          // @ts-expect-error `current` is read-only on the details' apiRef
+          details.apiRef.current = null;
+        }}
+      />,
+    );
   });
 });

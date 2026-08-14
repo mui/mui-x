@@ -15,7 +15,7 @@ import type { GridOverlayType, GridLoadingOverlayVariant } from './gridOverlaysI
  */
 export const useGridOverlays = (
   apiRef: React.RefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'slotProps'>,
+  props: Pick<DataGridProcessedProps<any, any>, 'slotProps'>,
 ) => {
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);

@@ -6,7 +6,7 @@ import {
   useGridApiRef,
   gridDetailPanelExpandedRowIdsSelector,
 } from '@mui/x-data-grid-pro';
-import type { DataGridProProps, GridApiPro, GridApiCommon, GridRowId } from '@mui/x-data-grid-pro';
+import type { DataGridProProps, GridApiPro, GridRowId } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 describe('<DataGridPro /> - GridCallbackDetails apiRef', () => {
@@ -44,8 +44,8 @@ describe('<DataGridPro /> - GridCallbackDetails apiRef', () => {
     );
   });
 
-  it('should expose an apiRef on onCellModesModelChange (editing hook path)', () => {
-    let receivedApiRef: RefObject<GridApiCommon> | null = null;
+  it('should expose a Pro-typed apiRef on onCellModesModelChange (editing hook path)', () => {
+    let receivedApiRef: RefObject<GridApiPro> | null = null;
     render(
       <TestCase
         columns={defaultData.columns.map((column) =>
@@ -61,5 +61,27 @@ describe('<DataGridPro /> - GridCallbackDetails apiRef', () => {
 
     expect(receivedApiRef).not.to.equal(null);
     expect(receivedApiRef!.current).to.equal(apiRef.current);
+  });
+
+  it('should expose a Pro-typed apiRef on a community-inherited callback (onFilterModelChange)', () => {
+    let expandedRowIds: Set<GridRowId> | null = null;
+    render(
+      <TestCase
+        getDetailPanelContent={() => <div>Detail</div>}
+        onFilterModelChange={(model, details) => {
+          // A Pro selector must accept the apiRef of a callback declared in the community props.
+          expandedRowIds = gridDetailPanelExpandedRowIdsSelector(details.apiRef);
+        }}
+      />,
+    );
+
+    act(() => apiRef.current?.toggleDetailPanel(0));
+    act(() =>
+      apiRef.current?.setFilterModel({
+        items: [{ field: 'id', operator: '>', value: '0' }],
+      }),
+    );
+
+    expect(expandedRowIds).to.deep.equal(new Set<GridRowId>([0]));
   });
 });

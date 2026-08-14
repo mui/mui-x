@@ -102,7 +102,7 @@ export const createRowsInternalCache = ({
   loading,
   rowCount,
 }: Pick<
-  DataGridProcessedProps,
+  DataGridProcessedProps<any, any>,
   'rows' | 'getRowId' | 'loading' | 'rowCount'
 >): GridRowsInternalCache => {
   const updates: GridRowsFullUpdate = {

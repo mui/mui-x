@@ -62,7 +62,7 @@ export const getDerivedPaginationModel = (
 export const useGridPaginationModel = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     | 'paginationModel'
     | 'onPaginationModelChange'
     | 'autoPageSize'

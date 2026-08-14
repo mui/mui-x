@@ -52,7 +52,7 @@ import type { GridUpdateRowParams } from '../../../models/gridDataSource';
 export const useGridRowEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     | 'editMode'
     | 'processRowUpdate'
     | 'onRowEditStart'

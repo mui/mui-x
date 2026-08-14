@@ -77,7 +77,7 @@ export interface GridApiCommon<
 export interface GridPrivateOnlyApiCommon<
   Api extends GridApiCommon,
   PrivateApi extends GridPrivateApiCommon,
-  Props extends DataGridProcessedProps,
+  Props extends DataGridProcessedProps<any, any>,
 >
   extends
     GridCorePrivateApi<Api, PrivateApi, Props>,
@@ -101,4 +101,8 @@ export interface GridPrivateOnlyApiCommon<
 export interface GridPrivateApiCommon
   extends
     GridApiCommon,
-    GridPrivateOnlyApiCommon<GridApiCommon, GridPrivateApiCommon, DataGridProcessedProps> {}
+    GridPrivateOnlyApiCommon<
+      GridApiCommon,
+      GridPrivateApiCommon,
+      DataGridProcessedProps<any, any>
+    > {}

@@ -42,7 +42,7 @@ export interface GridApiPro
 export interface GridPrivateApiPro
   extends
     GridApiPro,
-    GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro, DataGridProProcessedProps>,
+    GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro, DataGridProProcessedProps<any, any>>,
     GridDetailPanelPrivateApi,
     GridInfiniteLoaderPrivateApi,
     GridRowReorderPrivateApi,

@@ -25,7 +25,7 @@ const InfiniteLoadingTriggerElement = styled('div', {
 export const useGridInfiniteLoadingIntersection = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
-    DataGridProProcessedProps,
+    DataGridProProcessedProps<any, any>,
     'onRowsScrollEnd' | 'dataSource' | 'lazyLoading' | 'rowsLoadingMode' | 'scrollEndThreshold'
   >,
 ): void => {

@@ -44,7 +44,10 @@ import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilt
 import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
 export const filterStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
+  Pick<
+    DataGridProcessedProps<any, any>,
+    'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'
+  >
 > = (state, props, apiRef) => {
   const filterModel =
     props.filterModel ?? props.initialState?.filter?.filterModel ?? getDefaultGridFilterModel();
@@ -86,7 +89,7 @@ function createMemoizedValues() {
 export const useGridFilter = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     | 'rows'
     | 'initialState'
     | 'filterModel'

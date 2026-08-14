@@ -12,7 +12,7 @@ import { useGridPaginationMeta } from './useGridPaginationMeta';
 
 export const paginationStateInitializer: GridStateInitializer<
   Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     | 'paginationModel'
     | 'rowCount'
     | 'initialState'
@@ -54,7 +54,7 @@ export const paginationStateInitializer: GridStateInitializer<
  */
 export const useGridPagination = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: DataGridProcessedProps,
+  props: DataGridProcessedProps<any, any>,
 ) => {
   useGridPaginationMeta(apiRef, props);
   useGridPaginationModel(apiRef, props);

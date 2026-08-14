@@ -63,7 +63,7 @@ function hasNativeSelection(element: HTMLInputElement) {
 export const useGridClipboard = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     'ignoreValueFormatterDuringExport' | 'onClipboardCopy' | 'clipboardCopyCellDelimiter'
   >,
 ): void => {

@@ -342,7 +342,7 @@ function createResizeRefs() {
 export const useGridColumnResize = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     | 'autosizeOptions'
     | 'autosizeOnMount'
     | 'disableAutosize'

@@ -49,7 +49,7 @@ export const INITIAL_STATE = {
 
 export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   apiRef: RefObject<Api>,
-  props: DataGridProProcessedProps,
+  props: DataGridProProcessedProps<any, any>,
   options: GridDataSourceBaseOptions = {},
 ) => {
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);

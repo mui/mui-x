@@ -53,7 +53,10 @@ import { gridPivotActiveSelector } from '../pivoting';
 import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
 export const rowsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
+  Pick<
+    DataGridProcessedProps<any, any>,
+    'dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'
+  >
 > = (state, props, apiRef) => {
   const isDataSourceAvailable = !!props.dataSource;
   apiRef.current.caches.rows = createRowsInternalCache({
@@ -78,7 +81,7 @@ export const rowsStateInitializer: GridStateInitializer<
 export const useGridRows = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     | 'rows'
     | 'getRowId'
     | 'rowCount'

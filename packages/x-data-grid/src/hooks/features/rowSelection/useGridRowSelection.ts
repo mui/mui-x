@@ -51,7 +51,7 @@ import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 const emptyModel = { type: 'include', ids: new Set<GridRowId>() } as const;
 
 export const rowSelectionStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'rowSelectionModel' | 'rowSelection'>
+  Pick<DataGridProcessedProps<any, any>, 'rowSelectionModel' | 'rowSelection'>
 > = (state, props) => ({
   ...state,
   rowSelection: props.rowSelection ? (props.rowSelectionModel ?? emptyModel) : emptyModel,
@@ -66,7 +66,7 @@ export const rowSelectionStateInitializer: GridStateInitializer<
 export const useGridRowSelection = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     | 'checkboxSelection'
     | 'rowSelectionModel'
     | 'onRowSelectionModelChange'

@@ -75,7 +75,10 @@ function buildPrintWindow(title?: string): HTMLIFrameElement {
  */
 export const useGridPrintExport = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight' | 'headerFilterHeight'>,
+  props: Pick<
+    DataGridProcessedProps<any, any>,
+    'pagination' | 'columnHeaderHeight' | 'headerFilterHeight'
+  >,
 ): void => {
   const hasRootReference = apiRef.current.rootElementRef.current !== null;
   const logger = useGridLogger(apiRef, 'useGridPrintExport');

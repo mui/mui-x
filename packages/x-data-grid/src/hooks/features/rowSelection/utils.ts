@@ -143,7 +143,7 @@ export const checkboxPropsSelector = createSelector(
 
 export function isMultipleRowSelectionEnabled(
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     'signature' | 'disableMultipleRowSelection' | 'checkboxSelection'
   >,
 ) {

@@ -12,7 +12,7 @@ import { gridPaginationMetaSelector } from './gridPaginationSelector';
 export const useGridPaginationMeta = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps,
+    DataGridProcessedProps<any, any>,
     'paginationMeta' | 'initialState' | 'paginationMode' | 'onPaginationMetaChange'
   >,
 ) => {

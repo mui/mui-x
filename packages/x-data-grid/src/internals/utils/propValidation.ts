@@ -5,7 +5,7 @@ import { GridSignature } from '../../constants/signature';
 
 export type PropValidator<TProps> = (props: TProps) => string | undefined;
 
-export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
+export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps<any, any>>[] = [
   (props) =>
     (props.autoPageSize &&
       props.autoHeight &&

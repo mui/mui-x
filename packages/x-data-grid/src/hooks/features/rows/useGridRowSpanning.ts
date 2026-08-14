@@ -156,7 +156,7 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state) => {
 
 export const useGridRowSpanning = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridProcessedProps<any, any>, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
   const updateRowSpanningState = React.useCallback(
     (renderContext: GridRenderContext, resetState: boolean = false) => {

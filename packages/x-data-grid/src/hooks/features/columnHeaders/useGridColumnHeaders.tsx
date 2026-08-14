@@ -76,7 +76,7 @@ export interface GetHeadersParams {
   maxLastColumn?: number;
 }
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = DataGridProcessedProps<any, any>;
 
 export const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
