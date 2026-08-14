@@ -558,10 +558,6 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
-      // Avoids painting a clipped "…" next to overflowing widget content.
-      [`&.${c['cell--element']}`]: {
-        textOverflow: 'clip',
-      },
       '&.Mui-selected': selectedStyles,
     },
     /* Default range border styles using box-shadow to avoid layout shift */
@@ -705,6 +701,10 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
       lineHeight: 'inherit',
+    },
+    // Kept at the same specificity as the cell rule so that users can restore the ellipsis.
+    [`& .${c['cell--nonText']}`]: {
+      textOverflow: 'clip',
     },
     [`& .${c['cell--textLeft']}`]: {
       textAlign: 'left',

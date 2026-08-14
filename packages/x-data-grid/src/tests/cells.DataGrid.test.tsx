@@ -145,7 +145,7 @@ describe('<DataGrid /> - Cells', () => {
 
     it('should flag the cell when renderCell returns an element', () => {
       renderCellColumn({ field: 'brand', renderCell: () => <button type="button">Edit</button> });
-      expect(getCell(0, 0)).to.have.class(gridClasses['cell--element']);
+      expect(getCell(0, 0)).to.have.class(gridClasses['cell--nonText']);
     });
 
     it('should append the custom class passed through the classes prop', () => {
@@ -155,7 +155,7 @@ describe('<DataGrid /> - Cells', () => {
             autoHeight={isJSDOM}
             columns={[{ field: 'brand', renderCell: () => <button type="button">Edit</button> }]}
             rows={[{ id: 1, brand: 'Nike' }]}
-            classes={{ 'cell--element': 'foobar' }}
+            classes={{ 'cell--nonText': 'foobar' }}
           />
         </div>,
       );
@@ -164,12 +164,36 @@ describe('<DataGrid /> - Cells', () => {
 
     it('should not flag the cell when renderCell returns text', () => {
       renderCellColumn({ field: 'brand', renderCell: ({ value }) => value });
-      expect(getCell(0, 0)).not.to.have.class(gridClasses['cell--element']);
+      expect(getCell(0, 0)).not.to.have.class(gridClasses['cell--nonText']);
     });
 
     it('should not flag the cell when the value is rendered by default', () => {
       renderCellColumn({ field: 'brand' });
-      expect(getCell(0, 0)).not.to.have.class(gridClasses['cell--element']);
+      expect(getCell(0, 0)).not.to.have.class(gridClasses['cell--nonText']);
+    });
+
+    it('should not flag the cell when renderCell returns `null`', () => {
+      renderCellColumn({ field: 'brand', renderCell: () => null });
+      expect(getCell(0, 0)).not.to.have.class(gridClasses['cell--nonText']);
+    });
+
+    it('should not flag the cell when renderCell returns `false`', () => {
+      renderCellColumn({ field: 'brand', renderCell: () => false });
+      expect(getCell(0, 0)).not.to.have.class(gridClasses['cell--nonText']);
+    });
+
+    it.skipIf(isJSDOM)('should let the user restore the ellipsis on the cell', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={[{ field: 'brand', renderCell: () => <button type="button">Edit</button> }]}
+            rows={[{ id: 1, brand: 'Nike' }]}
+            sx={{ [`& .${gridClasses.cell}`]: { textOverflow: 'ellipsis' } }}
+          />
+        </div>,
+      );
+      expect(window.getComputedStyle(getCell(0, 0)).textOverflow).to.equal('ellipsis');
     });
 
     it.skipIf(isJSDOM)('should not ellipsize element content', () => {

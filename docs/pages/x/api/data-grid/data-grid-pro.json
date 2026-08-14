@@ -1369,12 +1369,6 @@
       "isGlobal": false
     },
     {
-      "key": "cell--element",
-      "className": "MuiDataGridPro-cell--element",
-      "description": "Styles applied to the cell element if its content is not text.",
-      "isGlobal": false
-    },
-    {
       "key": "cell--fillPreview",
       "className": "MuiDataGridPro-cell--fillPreview",
       "description": "Styles applied to the cell element when it is in the fill preview range.",
@@ -1408,6 +1402,12 @@
       "key": "cell--flex",
       "className": "MuiDataGridPro-cell--flex",
       "description": "Styles applied to the cell element in flex display mode.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--nonText",
+      "className": "MuiDataGridPro-cell--nonText",
+      "description": "Styles applied to the cell element if its content is not text.",
       "isGlobal": false
     },
     {

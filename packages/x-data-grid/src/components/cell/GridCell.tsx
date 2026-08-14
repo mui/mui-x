@@ -432,9 +432,10 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     title = valueString;
   }
 
-  if (children != null && typeof children !== 'string' && typeof children !== 'number') {
-    classNames.push(gridClasses['cell--element']);
-    classNames.push(rootClasses?.['cell--element']);
+  // Primitives are rendered as text or not at all, only objects can overflow as an element.
+  if (typeof children === 'object' && children !== null) {
+    classNames.push(gridClasses['cell--nonText']);
+    classNames.push(rootClasses?.['cell--nonText']);
   }
 
   const draggableEventHandlers = disableDragEvents

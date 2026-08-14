@@ -758,11 +758,6 @@
       "nodeName": "the cell element",
       "conditions": "the cell is in edit mode"
     },
-    "cell--element": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the cell element",
-      "conditions": "its content is not text"
-    },
     "cell--fillPreview": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the cell element",
@@ -791,6 +786,11 @@
     "cell--flex": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell element in flex display mode"
+    },
+    "cell--nonText": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "its content is not text"
     },
     "cell--pinnedLeft": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
