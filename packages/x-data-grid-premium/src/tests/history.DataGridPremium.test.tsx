@@ -45,6 +45,18 @@ describe('<DataGridPremium /> - History', () => {
     );
   }
 
+  function paste(cell: HTMLElement, pasteText: string) {
+    const pasteEvent = new Event('paste');
+
+    // @ts-ignore
+    pasteEvent.clipboardData = {
+      getData: () => pasteText,
+    };
+
+    fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
+    act(() => document.activeElement!.dispatchEvent(pasteEvent));
+  }
+
   describe('API', () => {
     it('should start with an empty stack', () => {
       render(<Test />);
@@ -752,18 +764,6 @@ describe('<DataGridPremium /> - History', () => {
 
   // These tests are flaky in JSDOM
   describe.skipIf(isJSDOM)('Clipboard paste history', () => {
-    function paste(cell: HTMLElement, pasteText: string) {
-      const pasteEvent = new Event('paste');
-
-      // @ts-ignore
-      pasteEvent.clipboardData = {
-        getData: () => pasteText,
-      };
-
-      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
-      act(() => document.activeElement!.dispatchEvent(pasteEvent));
-    }
-
     it('should undo clipboard paste and restore original values', async () => {
       const { user } = render(<Test />);
 
@@ -878,6 +878,80 @@ describe('<DataGridPremium /> - History', () => {
       });
 
       expect(apiRef.current!.history.canUndo()).to.equal(false);
+    });
+  });
+
+  describe('Clipboard paste history with a replace update', () => {
+    class Commodity {
+      id: number;
+
+      commodity: string;
+
+      #revision: number;
+
+      constructor(id: number, commodity: string, revision = 0) {
+        this.id = id;
+        this.commodity = commodity;
+        this.#revision = revision;
+      }
+
+      get revision() {
+        return this.#revision;
+      }
+
+      withCommodity(commodity: string) {
+        return new Commodity(this.id, commodity, this.#revision + 1);
+      }
+    }
+
+    function ReplaceTest() {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium
+            rows={[new Commodity(0, 'Nickel'), new Commodity(1, 'Cobalt')]}
+            columns={[{ field: 'commodity', editable: true }]}
+            apiRef={apiRef}
+            processRowUpdate={(newRow, oldRow) => ({
+              _action: 'replace',
+              row: (oldRow as Commodity).withCommodity(newRow.commodity),
+            })}
+            disableVirtualization
+            cellSelection
+          />
+        </div>
+      );
+    }
+
+    it('should restore the stored rows rather than merged copies', async () => {
+      const { user } = render(<ReplaceTest />);
+
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      paste(cell, 'Silver');
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).commodity).to.equal('Silver');
+      });
+      // `processRowUpdate()` replaced the row, so the paste kept the instance.
+      expect(apiRef.current!.getRow(0).revision).to.equal(1);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      // Merging the snapshot back in would build a copy without the `#revision` state,
+      // and reading it would throw.
+      expect(apiRef.current!.getRow(0).commodity).to.equal('Nickel');
+      expect(apiRef.current!.getRow(0).revision).to.equal(0);
+
+      await act(async () => {
+        await apiRef.current!.history.redo();
+      });
+
+      expect(apiRef.current!.getRow(0).commodity).to.equal('Silver');
+      expect(apiRef.current!.getRow(0).revision).to.equal(1);
     });
   });
 });
