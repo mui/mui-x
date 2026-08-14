@@ -256,11 +256,11 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
   /**
    * Callback fired when the clipboard paste operation starts.
    */
-  onClipboardPasteStart?: GridEventListener<'clipboardPasteStart'>;
+  onClipboardPasteStart?: GridEventListener<'clipboardPasteStart', GridApiPremium>;
   /**
    * Callback fired when the clipboard paste operation ends.
    */
-  onClipboardPasteEnd?: GridEventListener<'clipboardPasteEnd'>;
+  onClipboardPasteEnd?: GridEventListener<'clipboardPasteEnd', GridApiPremium>;
   /**
    * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
@@ -375,14 +375,14 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onSidebarClose?: GridEventListener<'sidebarClose'>;
+  onSidebarClose?: GridEventListener<'sidebarClose', GridApiPremium>;
   /**
    * Callback fired when the sidebar is opened.
    * @param {GridSidebarParams} params With all properties from [[GridSidebarParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onSidebarOpen?: GridEventListener<'sidebarOpen'>;
+  onSidebarOpen?: GridEventListener<'sidebarOpen', GridApiPremium>;
   /**
    * The id of the active chart.
    */
@@ -395,9 +395,9 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
   /**
    * Callback fired when an undo operation is executed.
    */
-  onUndo?: GridEventListener<'undo'>;
+  onUndo?: GridEventListener<'undo', GridApiPremium>;
   /**
    * Callback fired when a redo operation is executed.
    */
-  onRedo?: GridEventListener<'redo'>;
+  onRedo?: GridEventListener<'redo', GridApiPremium>;
 }
