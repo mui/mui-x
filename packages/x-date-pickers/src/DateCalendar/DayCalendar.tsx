@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import useId from '@mui/utils/useId';
 import Typography from '@mui/material/Typography';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -370,10 +369,8 @@ export function DayCalendar(inProps: DayCalendarProps) {
   const now = useNow(timezone);
   const classes = useUtilityClasses(classesProp);
   const isRtl = useRtl();
-  const id = useId();
   // The week number is a `rowheader`, so it takes the first column of the grid.
   const columnIndexOffset = displayWeekNumber ? 1 : 0;
-  const getWeekDayLabelId = (dayIndex: number) => `${id}-week-day-${dayIndex}`;
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -544,7 +541,6 @@ export function DayCalendar(inProps: DayCalendarProps) {
         {getWeekdays(adapter, now).map((weekday, i) => (
           <PickerCalendarWeekDayLabel
             key={i.toString()}
-            id={getWeekDayLabelId(i)}
             variant="caption"
             role="columnheader"
             aria-colindex={columnIndexOffset + i + 1}
@@ -611,9 +607,6 @@ export function DayCalendar(inProps: DayCalendarProps) {
                     isDateDisabled={isDateDisabled}
                     currentMonthNumber={currentMonthNumber}
                     aria-colindex={columnIndexOffset + dayIndex + 1}
-                    // A screen reader announces the column header only when the column changes,
-                    // so the description is what makes the week day audible on a vertical move.
-                    aria-describedby={getWeekDayLabelId(dayIndex)}
                   />
                 ))}
               </PickerCalendarWeek>

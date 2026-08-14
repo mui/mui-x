@@ -115,10 +115,14 @@ describe('<DateCalendar />', () => {
       render(<DateCalendar referenceDate={referenceDate} />);
 
       const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const headers = within(grid).getAllByRole('columnheader');
       const headerIndexes = getColumnIndexes(grid, 'columnheader');
 
       expect(grid).to.have.attribute('aria-colcount', '7');
       expect(headerIndexes).to.deep.equal(['1', '2', '3', '4', '5', '6', '7']);
+      // The header carries the week day a screen reader announces on a column change.
+      expect(headers[0]).toHaveAccessibleName('Sunday');
+      expect(headers[6]).toHaveAccessibleName('Saturday');
 
       const weeks = within(within(grid).getByRole('rowgroup')).getAllByRole('row');
       expect(weeks).to.have.length(5);
@@ -172,27 +176,6 @@ describe('<DateCalendar />', () => {
 
       expect(grid).to.have.attribute('aria-rowcount', '6');
       expect(rowIndexes).to.deep.equal(['1', '2', '3', '4', '5', '6']);
-    });
-
-    // A screen reader announces the column header only when the column changes,
-    // so the description is what makes the week day audible on a vertical move.
-    it('should describe the day cells with their week day header', () => {
-      render(<DateCalendar referenceDate={referenceDate} />);
-
-      const grid = screen.getByRole('grid', { name: 'January 2018' });
-      const headers = within(grid).getAllByRole('columnheader');
-
-      // January 7th 2018 is a Sunday and January 13th is a Saturday.
-      expect(within(grid).getByRole('gridcell', { name: '7' })).to.have.attribute(
-        'aria-describedby',
-        headers[0].id,
-      );
-      expect(within(grid).getByRole('gridcell', { name: '13' })).to.have.attribute(
-        'aria-describedby',
-        headers[6].id,
-      );
-      expect(headers[0]).toHaveAccessibleName('Sunday');
-      expect(headers[6]).toHaveAccessibleName('Saturday');
     });
   });
 

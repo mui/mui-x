@@ -884,25 +884,18 @@ describe('<DateRangeCalendar />', () => {
     });
   });
 
-  // A screen reader announces the column header only when the column changes,
-  // so the description is what makes the week day audible on a vertical move.
-  it('should describe the day cells of every calendar with their week day header', () => {
+  it('should give every calendar its own week day headers', () => {
     render(<DateRangeCalendar calendars={2} referenceDate={adapterToUse.date('2018-01-01')} />);
 
-    // January 7th and February 4th 2018 are Sundays, the first column of their grid.
-    const grids = ['January 2018', 'February 2018'].map((month) => ({
-      sunday: getPickerDay(month === 'January 2018' ? '7' : '4', month),
-      firstHeader: within(screen.getByRole('grid', { name: month })).getAllByRole(
+    ['January 2018', 'February 2018'].forEach((month) => {
+      const headers = within(screen.getByRole('grid', { name: month })).getAllByRole(
         'columnheader',
-      )[0],
-    }));
+      );
 
-    grids.forEach(({ sunday, firstHeader }) => {
-      expect(sunday).to.have.attribute('aria-describedby', firstHeader.id);
-      expect(firstHeader).toHaveAccessibleName('Sunday');
+      expect(headers).to.have.length(7);
+      expect(headers[0]).toHaveAccessibleName('Sunday');
+      expect(headers[0]).to.have.attribute('aria-colindex', '1');
     });
-    // Each grid owns its week day headers.
-    expect(grids[0].firstHeader.id).not.to.equal(grids[1].firstHeader.id);
   });
 
   describe('Performance', () => {
