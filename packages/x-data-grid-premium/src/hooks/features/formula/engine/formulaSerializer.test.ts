@@ -95,10 +95,21 @@ describe('formulaSerializer', () => {
       'REF(COLUMN_POSITION(2), ROW_POSITION(1))',
     );
     expectSerialized(
-      'RANGE(REF(COLUMN("a"), ROW(1)), REF(COLUMN("b"), ROW(2)))',
-      'RANGE(REF(COLUMN("a"), ROW(1)), REF(COLUMN("b"), ROW(2)))',
+      'range_ref(column_from(1), row_from(1), column_to(2), row_to(3))',
+      'RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3))',
     );
     expectSerialized('COLUMN_VALUES("price")', 'COLUMN_VALUES("price")');
+  });
+
+  it('serializes a FIXED() axis back through FIXED()', () => {
+    expectSerialized(
+      'RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(1)), ROW_TO(4))',
+      'RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(1)), ROW_TO(4))',
+    );
+    expectSerialized(
+      'RANGE_REF(COLUMN_FROM(2), FIXED(ROW_FROM(3)), COLUMN_TO(4), FIXED(ROW_TO(5)))',
+      'RANGE_REF(COLUMN_FROM(2), FIXED(ROW_FROM(3)), COLUMN_TO(4), FIXED(ROW_TO(5)))',
+    );
   });
 
   it('serializes function calls with uppercase names and ", " separators', () => {
@@ -118,7 +129,8 @@ describe('formulaSerializer', () => {
       'FIELD("unit price") * 2',
       'REF(COLUMN("total"), ROW("order-1")) + REF(COLUMN_POSITION(1), ROW_POSITION(2))',
       'REF(COLUMN("a"), ROW(-1))',
-      'SUM(RANGE(REF(COLUMN("a"), ROW(1)), REF(COLUMN("b"), ROW_POSITION(5))))',
+      'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(5)))',
+      'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), ROW_FROM(2), COLUMN_TO(3), FIXED(ROW_TO(4))))',
       'SUM(COLUMN_VALUES("price"), 1, two, "three")',
       '1e308 * 5e-324',
       'a = b',

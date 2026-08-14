@@ -82,19 +82,27 @@ const rows = [
     years: 20,
     payment: monthlyPayment,
   },
-  {
-    id: 5,
-    lender: 'Best offer',
-    payment:
-      '=MIN(RANGE(REF(COLUMN("payment"), ROW(1)), REF(COLUMN("payment"), ROW(4))))',
-  },
 ];
+
+const pinnedRows = {
+  bottom: [
+    {
+      id: 5,
+      lender: 'Best offer',
+      // A window over view positions E1:E4 — pinned outside the data band, so
+      // sorting the lenders can never pull the summary into its own range.
+      payment:
+        '=MIN(RANGE_REF(COLUMN_FROM(5), ROW_FROM(1), COLUMN_TO(5), ROW_TO(4)))',
+    },
+  ],
+};
 
 export default function FormulaExcelExport() {
   return (
     <div style={{ height: 340, width: '100%' }}>
       <DataGridPremium
         rows={rows}
+        pinnedRows={pinnedRows}
         columns={columns}
         formulaA1Notation
         rowSelection={false}

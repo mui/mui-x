@@ -416,7 +416,7 @@ function getStaticDependencies(ast: FormulaAstNode): FormulaStaticDependencies {
 
 /**
  * Re-resolves a record's dependencies. Stable refs bind context-free;
- * positional selectors, `RANGE` and `COLUMN_VALUES` resolve against the
+ * positional selectors, `RANGE_REF` and `COLUMN_VALUES` resolve against the
  * pass's position context.
  */
 function bindRecordDependencies(

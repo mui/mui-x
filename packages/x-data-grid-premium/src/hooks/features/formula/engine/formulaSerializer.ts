@@ -1,5 +1,10 @@
 import { FORMULA_BINARY_PRECEDENCE } from './formulaAst';
-import type { FormulaAstNode, FormulaColumnSelector, FormulaRowSelector } from './formulaAst';
+import type {
+  FormulaAstNode,
+  FormulaColumnSelector,
+  FormulaRangeAxis,
+  FormulaRowSelector,
+} from './formulaAst';
 
 const BARE_FIELD_REGEX = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
@@ -33,6 +38,11 @@ function serializeRowSelector(selector: FormulaRowSelector): string {
   return `ROW_POSITION(${selector.index})`;
 }
 
+function serializeRangeAxis(label: string, axis: FormulaRangeAxis): string {
+  const inner = `${label}(${axis.index})`;
+  return axis.fixed ? `FIXED(${inner})` : inner;
+}
+
 /**
  * Wraps the operand in parentheses when its precedence is below the minimum
  * the surrounding context requires. Unary expressions and atoms never need them.
@@ -60,8 +70,8 @@ function serializeNode(node: FormulaAstNode): string {
       return serializeFieldRef(node.field);
     case 'cellRef':
       return `REF(${serializeColumnSelector(node.column)}, ${serializeRowSelector(node.row)})`;
-    case 'range':
-      return `RANGE(${serializeNode(node.start)}, ${serializeNode(node.end)})`;
+    case 'rangeRef':
+      return `RANGE_REF(${serializeRangeAxis('COLUMN_FROM', node.columnFrom)}, ${serializeRangeAxis('ROW_FROM', node.rowFrom)}, ${serializeRangeAxis('COLUMN_TO', node.columnTo)}, ${serializeRangeAxis('ROW_TO', node.rowTo)})`;
     case 'columnValues':
       return `COLUMN_VALUES(${serializeString(node.field)})`;
     case 'unaryExpression': {

@@ -10,7 +10,12 @@ export const FORMULA_RESERVED_NAMES: readonly string[] = [
   'COLUMN_POSITION',
   'ROW_POSITION',
   'FIELD',
-  'RANGE',
+  'RANGE_REF',
+  'COLUMN_FROM',
+  'ROW_FROM',
+  'COLUMN_TO',
+  'ROW_TO',
+  'FIXED',
   'COLUMN_VALUES',
   'TRUE',
   'FALSE',
@@ -67,13 +72,27 @@ export interface FormulaCellRefNode extends FormulaAstBase {
 }
 
 /**
- * `RANGE(REF(...), REF(...))` — the inclusive rectangle between the two anchors,
- * resolved against the position context at bind time.
+ * One axis of a `RANGE_REF()` window endpoint: a 1-based view position and its
+ * fill behavior. A non-fixed axis shifts with the fill handle / paste offset;
+ * a `FIXED(...)` axis (the canonical `$`) never moves.
  */
-export interface FormulaRangeNode extends FormulaAstBase {
-  type: 'range';
-  start: FormulaCellRefNode;
-  end: FormulaCellRefNode;
+export interface FormulaRangeAxis {
+  index: number;
+  fixed: boolean;
+}
+
+/**
+ * `RANGE_REF(COLUMN_FROM(c1), ROW_FROM(r1), COLUMN_TO(c2), ROW_TO(r2))` — the
+ * inclusive positional window over the current view. The covered rectangle is
+ * whatever occupies those positions after sorting/filtering; endpoints outside
+ * the view clip to the available rows/columns instead of erroring.
+ */
+export interface FormulaRangeRefNode extends FormulaAstBase {
+  type: 'rangeRef';
+  columnFrom: FormulaRangeAxis;
+  rowFrom: FormulaRangeAxis;
+  columnTo: FormulaRangeAxis;
+  rowTo: FormulaRangeAxis;
 }
 
 /**
@@ -138,7 +157,7 @@ export type FormulaAstNode =
   | FormulaBooleanLiteralNode
   | FormulaFieldRefNode
   | FormulaCellRefNode
-  | FormulaRangeNode
+  | FormulaRangeRefNode
   | FormulaColumnValuesNode
   | FormulaUnaryExpressionNode
   | FormulaBinaryExpressionNode

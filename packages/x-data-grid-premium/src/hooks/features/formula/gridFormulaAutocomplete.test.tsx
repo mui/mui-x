@@ -23,9 +23,20 @@ describe('toFormulaFieldReference', () => {
   });
 
   it('escapes field names colliding with reserved names or constants', () => {
-    expect(toFormulaFieldReference('RANGE')).toEqual('FIELD("RANGE")');
+    expect(toFormulaFieldReference('RANGE_REF')).toEqual('FIELD("RANGE_REF")');
     expect(toFormulaFieldReference('TRUE')).toEqual('FIELD("TRUE")');
     expect(toFormulaFieldReference('ref')).toEqual('FIELD("ref")');
+  });
+
+  it('escapes the RANGE_REF axis keywords', () => {
+    expect(toFormulaFieldReference('fixed')).toEqual('FIELD("fixed")');
+    expect(toFormulaFieldReference('COLUMN_FROM')).toEqual('FIELD("COLUMN_FROM")');
+    expect(toFormulaFieldReference('row_to')).toEqual('FIELD("row_to")');
+  });
+
+  it('keeps `range` bare — it is no longer part of the grammar', () => {
+    expect(toFormulaFieldReference('range')).toEqual('range');
+    expect(toFormulaFieldReference('RANGE')).toEqual('RANGE');
   });
 
   it('doubles embedded quotes', () => {

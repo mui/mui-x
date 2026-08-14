@@ -623,6 +623,53 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(worksheet.getCell('A2').value).to.equal('=1+1');
     });
 
+    it('exports range windows as A1 ranges, marking FIXED axes absolute', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[
+                { field: 'price', type: 'number' },
+                { field: 'qty', type: 'number' },
+                { field: 'total', type: 'number', allowFormulas: true },
+              ]}
+              rows={[
+                // Column position 2 is `qty`; row positions 1..3 are the three
+                // data rows → Excel B2:B4 (header row included).
+                {
+                  id: 0,
+                  price: 10,
+                  qty: 2,
+                  total: '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3)))',
+                },
+                {
+                  id: 1,
+                  price: 20,
+                  qty: 3,
+                  total:
+                    '=SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(2)), FIXED(ROW_TO(3))))',
+                },
+                { id: 2, price: 30, qty: 4, total: 9 },
+              ]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      // A plain (shifting) axis exports relative, a FIXED axis exports `$`-marked.
+      expect(worksheet.getCell('C2').type).to.equal(Excel.ValueType.Formula);
+      expect((worksheet.getCell('C2').value as any).formula).to.equal('SUM(B2:B4)');
+      expect((worksheet.getCell('C2').value as any).result).to.equal(9);
+      expect((worksheet.getCell('C3').value as any).formula).to.equal('SUM($B$2:$B$4)');
+      expect((worksheet.getCell('C3').value as any).result).to.equal(9);
+    });
+
     it('exports a date-valued formula consistently with a plain date column', async () => {
       function Test() {
         apiRef = useGridApiRef();

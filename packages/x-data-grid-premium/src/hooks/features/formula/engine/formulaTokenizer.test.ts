@@ -189,7 +189,8 @@ describe('formulaTokenizer', () => {
     });
 
     it('leaves the canonical dialect alone', () => {
-      const expression = 'RANGE(REF(COLUMN("a"), ROW(1)), REF(COLUMN("b"), ROW(2))) + 2';
+      const expression =
+        'RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), FIXED(COLUMN_TO(2)), ROW_TO(3)) + 2';
       expect(tokenizeFormula(expression, { a1Notation: true })).to.deep.equal(
         tokenizeFormula(expression),
       );

@@ -16,7 +16,7 @@ The feature ships in 6 independently mergeable iterations:
   freeze at the end of I1.
 - **I2** — grid adapter: state/cache/selectors, value overlay, editing, invalidation, public API.
   Ships a usable computed-column feature with same-row and stable cross-row references.
-- **I3** — ranges + position context: `COLUMN_VALUES`/`RANGE` evaluation, rebind machinery,
+- **I3** — ranges + position context: `COLUMN_VALUES`/range evaluation, rebind machinery,
   `#REF!` propagation on row/column removal, re-grouping/re-spanning on evaluated values
   (the two D18 deferrals from I2).
 - **I4** — A1 editor syntax (explicitly cuttable): bidirectional A1 ↔ canonical transform,
@@ -62,7 +62,8 @@ the never-throws contracts of `evaluateFormula` and `serializeFormulaAst` downst
 apostrophe-escape stores a literal `=` string.
 
 **D3. Canonical special forms are dedicated AST nodes, not registry functions** — `REF`, `COLUMN`,
-`ROW`, `COLUMN_POSITION`, `ROW_POSITION`, `FIELD`, `RANGE`, `COLUMN_VALUES` with **literal-only
+`ROW`, `COLUMN_POSITION`, `ROW_POSITION`, `FIELD`, `RANGE_REF` (with its axis labels `COLUMN_FROM`/
+`ROW_FROM`/`COLUMN_TO`/`ROW_TO` and the `FIXED` wrapper), `COLUMN_VALUES` with **literal-only
 arguments enforced by the parser** (computed refs → parse error; a sign before a numeric `ROW()` id
 is still a literal). This keeps static dependency extraction decidable. The registry rejects
 reserved names and names the parser can never produce as calls. Unified `cellRef` node with
@@ -117,14 +118,27 @@ name in both dialects ("Keep D5", confirmed 2026-06-15): `=price * quantity` edi
 `=price * quantity`, not `=B3*C3` (a `fieldRef` cannot round-trip through `B3`, which would freeze
 to a specific row).
 
-**D6. Ranges.** `RANGE(anchorRef, anchorRef)` = inclusive rectangle resolved **positionally at bind
-time** (stable anchors mapped to current positions; normalized min/max; anchor without a position →
-`#REF!`); any formula containing `RANGE` is position-context-dependent even with stable anchors.
+**D6-B amendment (2026-08, PR 22807 RFC).** The `$` inversion is scoped to **single-cell refs**.
+Range endpoints are always positional (see D6 rewrite below), so on a range endpoint `$` carries
+its Excel meaning only: fill-pinning. `A1:B5` → all four axes shifting windows positions;
+`$A$1:$B$5` → `FIXED(...)`-wrapped axes that the fill offset never moves.
+
+**D6. Ranges (rewritten 2026-08, Option B of the PR 22807 RFC — supersedes the original
+identity-anchored `RANGE(REF, REF)`, which is removed).**
+`RANGE_REF(COLUMN_FROM(c1), ROW_FROM(r1), COLUMN_TO(c2), ROW_TO(r2))` = an inclusive **positional
+window** over the current view, Excel/Sheets semantics: sorting/filtering recalculates the same
+positions from whatever occupies them; the stored text never mutates. Each axis is
+`{index, fixed}`; `FIXED(...)` wrapping (`$` in A1) affects only fill offsets. Resolution
+normalizes min/max and **auto-clips**: rows clamp to the pinned-row-free data band, columns to
+`[1, columnCount]`; an entirely out-of-view window is empty (SUM = 0) — range endpoints can no
+longer produce `#REF!`. Windows never grow/shrink on row add/remove (view-order auto-adjustment
+decided but deferred to a follow-up PR). Identity-anchored rectangles are no longer expressible;
+`RANGE` is no longer reserved (legacy text degrades to `#NAME?` unknown function).
 `COLUMN_VALUES("field")` = the field's values over the current **sorted+filtered** row set
 (consistent with `aggregationRowsScope: 'filtered'`) — the recommended, sort-proof "sum the column"
-form; editor sugar `A:A`. Ranges legal only as args to `acceptsRanges` functions (enforced on both
-the eager and lazy argument paths); range in scalar position → `#VALUE!`. Dev warning above ~100k
-materialized cells.
+form; editor sugar `A:A` (`$` has no effect on it). Ranges legal only as args to `acceptsRanges`
+functions (enforced on both the eager and lazy argument paths); range in scalar position →
+`#VALUE!`. Dev warning above ~100k materialized cells.
 
 **D7. Range dependencies are interval records, never exploded edges.**
 `FormulaBoundDependencies = { cells: Set<key>, columnIntervals: {field, fromIndex, toIndex}[],
@@ -149,9 +163,10 @@ _Amended during I3 (implementation specifics):_
 - Range materialization is row-major (left to right, then top to bottom); the first error value
   inside a range propagates (strict-propagation rule — uniform for SUM and COUNT alike, a deliberate
   simplification vs. Excel's error-ignoring COUNT). `COLUMN_VALUES` accepts hidden fields (values
-  exist without a position); `RANGE` anchors need positions, hence hidden/filtered anchors →
-  `#REF!`. Membership changes (row add/remove, filter flips) are NOT handled by per-cell dirtying —
-  the rebind pass dirties every position-dependent record when the view order changes.
+  exist without a position); a `RANGE_REF` window auto-clips to the view (empty window = zero
+  intervals, no error). Membership changes (row add/remove, filter flips) are NOT handled by
+  per-cell dirtying — the rebind pass dirties every position-dependent record when the view order
+  changes.
 - Dev-mode warning when one formula materializes more than 100k range cells.
 
 **D8. Evaluation & errors.** Resolver interface supplied by adapter; contract: side-effect free,
@@ -387,7 +402,10 @@ selectors (`COLUMN("f")`/`ROW(id)`, from relative refs) re-anchor to the field/r
 `position + delta`; positional selectors (`COLUMN_POSITION`/`ROW_POSITION`, from `$`-absolute) never
 shift; same-row `fieldRef` and `COLUMN_VALUES` shift only on horizontal fill; overshoot past the last
 row/column → positional selector → `#REF!`; underflow past position 1 keeps the original reference
-(the 1-based store has no representable position < 1 — the parser rejects `ROW_POSITION(0)`). Adapter
+(the 1-based store has no representable position < 1 — the parser rejects `ROW_POSITION(0)`).
+_D6-B amendment:_ `RANGE_REF` axes follow the Excel `$` rule instead — every non-`FIXED` axis shifts
+by `max(1, index + delta)` (pure arithmetic, no context lookup; overshoot clips at resolve time,
+underflow clamps at 1 and may shrink the window), `FIXED` axes never move. Adapter
 glue `getFilledFormulaSource(apiRef, source, target)` (`gridFormulaFill.ts`) gates on eligibility:
 the **target** column must be `allowFormulas` (else the caller copies the evaluated value — a `=…`
 string must never land in a plain column), and the **source** must be a live formula
@@ -414,7 +432,12 @@ References resolve in two stages: a positional (`$`-absolute) ref → identity v
 `gridFormulaA1PositionContextSelector` (as `bindFormulaDependencies` resolves it), then identity →
 **export** coordinate (export column order → `columnIndexToLetters`; export row index + header-row
 offset). Mirrors the grid's relative/absolute distinction: stable → relative (`B2`), positional →
-absolute (`$B$2`) — identical computed value, `$` only governs Excel copy/fill. `COLUMN_VALUES` → a
+absolute (`$B$2`) — identical computed value, `$` only governs Excel copy/fill. _D6-B amendment:_ a
+`RANGE_REF` window resolves through `resolveRangeWindow` on the serialize context (adapter clips via
+the shared `resolveFormulaRangeRectangle`, then maps corners to export coordinates); each axis emits
+`$` exactly when `FIXED`, so exported ranges copy/fill in Excel like the grid's fill handle; an
+empty (fully clipped) window makes `getCellExcelFormula` return `null` → value-only export.
+`COLUMN_VALUES` → a
 bounded data range (`B2:B<lastDataRow>`, no header); a reference to a cell outside the export bakes
 Excel's `#REF!` with the cached result `{ error: '#REF!' }`; engine-only error codes map to the
 nearest Excel sentinel (`#CYCLE!`→`#REF!`, `#ERROR!`→`#VALUE!`). Adapter `gridFormulaExcelExport.ts`
@@ -428,7 +451,7 @@ true` and reads raw `includeColumnGroupsHeaders`, so its layout matches the shee
 reuses the grid's interning parser (`apiRef.current.caches.formula.parser`) so export is all cache
 hits; date-valued results get the same local→UTC reconstruction as the plain date path (the sheet is
 timezone-naive). _Limitations:_ header rows injected by `exceljsPreProcess` shift the baked A1 row
-numbers; and `COLUMN_VALUES`/`RANGE` emit a single contiguous A1 range over all exported rows, but
+numbers; and `COLUMN_VALUES`/`RANGE_REF` emit a single contiguous A1 range over all exported rows, but
 the cached aggregate covers data rows only (the position context excludes group/pinned rows) — when
 the export interleaves group/pinned rows, a contiguous range cannot express the data-only set, so a
 manual Excel recalc may diverge (the cached result stays correct), consistent with the
@@ -507,7 +530,7 @@ reference (scrolled away, on another page, or in a collapsed tree/group) still c
 but renders no rectangle, and a range straddling the current page is culled rather than partially
 drawn (the position context ignores pagination/expansion while the overlay outlines only rendered
 rows — the edge chip is the proper fast-follow); canonical mode colors the whole
-`REF(...)`/`RANGE(...)` chunk (inner-identity coloring deferred); a canonical form typed in A1 mode is
+`REF(...)`/`RANGE_REF(...)` chunk (inner-identity coloring deferred); a canonical form typed in A1 mode is
 not scanned; and the in-grid overlay is disabled under the experimental
 `experimentalFeatures.virtualizerLayoutMode: 'controlled'` (it is portaled into the scroller and
 relies on the default native-scroll layout — the editor's coloring still works). The single-layer

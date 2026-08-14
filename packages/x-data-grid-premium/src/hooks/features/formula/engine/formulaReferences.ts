@@ -3,9 +3,9 @@ import type {
   FormulaCellRefNode,
   FormulaColumnValuesNode,
   FormulaFieldRefNode,
-  FormulaRangeNode,
+  FormulaRangeRefNode,
 } from './formulaAst';
-import { buildCellRefNode, buildColumnValuesNode } from './formulaA1';
+import { buildCellRefNode, buildColumnValuesNode, buildRangeRefNode } from './formulaA1';
 import {
   CELL_REF_REGEX,
   IDENTIFIER_REGEX,
@@ -20,11 +20,11 @@ import type { FormulaPositionContext, FormulaSourceSpan } from './formulaTypes';
 
 /**
  * The reference-bearing AST node kinds the editor colors and the grid outlines.
- * A `range`/`cellRef`/`columnValues`/`fieldRef` is one reference: the whole node
- * is one colored chunk, never its inner anchors.
+ * A `rangeRef`/`cellRef`/`columnValues`/`fieldRef` is one reference: the whole
+ * node is one colored chunk, never its inner axes.
  */
 export type FormulaReferenceNode =
-  FormulaFieldRefNode | FormulaCellRefNode | FormulaRangeNode | FormulaColumnValuesNode;
+  FormulaFieldRefNode | FormulaCellRefNode | FormulaRangeRefNode | FormulaColumnValuesNode;
 
 /**
  * A reference scanned from formula source, dialect-agnostic. `spans` are
@@ -40,10 +40,10 @@ export interface FormulaRawReference {
 }
 
 /**
- * Collects references from a parsed canonical AST. A `range` is taken whole —
- * its anchor `cellRef`s are not walked — so the editor colors the entire
- * `RANGE(...)` chunk (Option A) and the grid draws one rectangle. References are
- * returned in source order (by span start) so palette colors cycle stably.
+ * Collects references from a parsed canonical AST. A `rangeRef` is taken whole
+ * so the editor colors the entire `RANGE_REF(...)` chunk and the grid draws one
+ * rectangle. References are returned in source order (by span start) so palette
+ * colors cycle stably.
  */
 export function collectCanonicalReferences(ast: FormulaAstNode): FormulaRawReference[] {
   const references: FormulaRawReference[] = [];
@@ -53,7 +53,7 @@ export function collectCanonicalReferences(ast: FormulaAstNode): FormulaRawRefer
     switch (node.type) {
       case 'fieldRef':
       case 'cellRef':
-      case 'range':
+      case 'rangeRef':
       case 'columnValues':
         references.push({ spans: [node.span], node });
         break;
@@ -119,10 +119,10 @@ export function scanA1References(
       const rangeTail = matchRangeTail(expression, afterFirst);
       if (rangeTail !== null) {
         const span: FormulaSourceSpan = { start: index, end: rangeTail.end };
-        const node: FormulaRangeNode = {
-          type: 'range',
-          start: buildCellRefNode(startRef, positionContext, 0, 0),
-          end: buildCellRefNode(rangeTail.endRef, positionContext, 0, 0),
+        // Built with the same `buildRangeRefNode` the commit transform uses, so
+        // the highlighted window is exactly the one the commit stores.
+        const node: FormulaRangeRefNode = {
+          ...buildRangeRefNode(startRef, rangeTail.endRef, 0, 0),
           span,
         };
         references.push({ spans: [span], node });

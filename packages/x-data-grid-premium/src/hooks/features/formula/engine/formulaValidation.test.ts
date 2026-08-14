@@ -31,6 +31,26 @@ describe('formulaValidation', () => {
     ]);
   });
 
+  it('reports the removed RANGE() grammar as an unknown function', () => {
+    const functions = createFormulaFunctionRegistry();
+    const expression = 'SUM(RANGE(REF(COLUMN("a"), ROW(1)), REF(COLUMN("a"), ROW(2))))';
+    const result = validateFormulaExpression(expression, { functions });
+    expect(result.valid).to.equal(false);
+    expect(result.issues).to.have.length(1);
+    expect(result.issues[0].code).to.equal('#NAME?');
+    expect(result.issues[0].message).to.equal('Unknown function "RANGE".');
+  });
+
+  it('accepts the canonical RANGE_REF() window', () => {
+    const functions = createFormulaFunctionRegistry();
+    expect(
+      validateFormulaExpression(
+        'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), FIXED(COLUMN_TO(2)), ROW_TO(3)))',
+        { functions },
+      ),
+    ).to.deep.equal({ valid: true, issues: [] });
+  });
+
   it('reports an unknown function once even when called repeatedly', () => {
     const functions = createFormulaFunctionRegistry();
     const result = validateFormulaExpression('NOPE(1) + NOPE(2)', { functions });

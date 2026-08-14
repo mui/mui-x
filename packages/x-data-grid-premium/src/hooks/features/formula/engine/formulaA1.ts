@@ -4,7 +4,8 @@ import type {
   FormulaCellRefNode,
   FormulaColumnSelector,
   FormulaColumnValuesNode,
-  FormulaRangeNode,
+  FormulaRangeAxis,
+  FormulaRangeRefNode,
   FormulaRowSelector,
 } from './formulaAst';
 import {
@@ -23,13 +24,13 @@ import type { FormulaPositionContext, FormulaSourceSpan } from './formulaTypes';
 
 /**
  * A1 notation is an editor-facing dialect layered on top of the canonical
- * (`REF`/`RANGE`/`COLUMN_VALUES`) syntax. It is never stored: `toCanonicalFormula`
+ * (`REF`/`RANGE_REF`/`COLUMN_VALUES`) syntax. It is never stored: `toCanonicalFormula`
  * runs at commit/paste and `toDisplayFormula` runs at edit-begin. The canonical
  * dialect is a superset, so any canonical formula round-trips through `toDisplay`
  * losslessly (refs without a current position render in canonical form inline).
  *
- * Reference convention (D5), inverted from Excel's `$` semantics on purpose so
- * that the grid stays loop-free under re-sorting:
+ * Reference convention (D5) for single cells, inverted from Excel's `$`
+ * semantics on purpose so that the grid stays loop-free under re-sorting:
  *
  * - A **relative** axis (no `$`) **freezes** to the stable identity currently at
  *   that position — `A` → `COLUMN("fieldAtColumnA")`, `1` → `ROW(idAtRow1)`. The
@@ -38,6 +39,10 @@ import type { FormulaPositionContext, FormulaSourceSpan } from './formulaTypes';
  * - An **absolute** axis (`$`) stays **positional** — `$A` → `COLUMN_POSITION(1)`,
  *   `$1` → `ROW_POSITION(1)`. It follows the grid position (tracks re-sorts) and
  *   does not shift on paste.
+ *
+ * Ranges are the exception: a `RANGE_REF` window is positional on every axis
+ * (Excel/Sheets semantics), so `$` on a range endpoint controls only the fill
+ * behavior — a plain axis shifts on paste/fill, a `$` axis is pinned (`FIXED`).
  *
  * The transform is purely textual: it rewrites the A1 reference tokens and copies
  * every other token (operators, function calls, string literals, numbers, bare
@@ -97,13 +102,15 @@ export interface A1TransformContext {
 
 export interface ToCanonicalOptions {
   /**
-   * Added to relative (no-`$`) column positions before freezing — the Excel-style
-   * fill adjustment applied when an A1 formula is pasted away from its origin.
+   * Added to relative (no-`$`) column positions — the Excel-style fill
+   * adjustment applied when an A1 formula is pasted away from its origin.
+   * Single-cell refs freeze the offset position to an identity; range window
+   * axes store the offset position directly.
    * @default 0
    */
   columnOffset?: number;
   /**
-   * Added to relative (no-`$`) row positions before freezing.
+   * Added to relative (no-`$`) row positions.
    * @default 0
    */
   rowOffset?: number;
@@ -178,6 +185,44 @@ export function buildCellRefNode(
   };
 }
 
+function buildRangeAxis(baseIndex: number, absolute: boolean, offset: number): FormulaRangeAxis {
+  if (absolute) {
+    // `$` on a range endpoint pins the axis against paste/fill offsets.
+    return { index: baseIndex, fixed: true };
+  }
+  return { index: Math.max(1, baseIndex + offset), fixed: false };
+}
+
+/**
+ * Builds the positional window for an A1 range (`A1:B5`). Both endpoints are
+ * view positions on both axes; `$` marks an axis as fill-pinned. No position
+ * context is consulted — out-of-view positions are stored as written and clip
+ * at resolve time.
+ */
+export function buildRangeRefNode(
+  startRef: ParsedRef,
+  endRef: ParsedRef,
+  columnOffset: number,
+  rowOffset: number,
+): FormulaRangeRefNode {
+  return {
+    type: 'rangeRef',
+    columnFrom: buildRangeAxis(
+      columnLettersToIndex(startRef.letters),
+      startRef.columnAbsolute,
+      columnOffset,
+    ),
+    rowFrom: buildRangeAxis(startRef.rowNumber, startRef.rowAbsolute, rowOffset),
+    columnTo: buildRangeAxis(
+      columnLettersToIndex(endRef.letters),
+      endRef.columnAbsolute,
+      columnOffset,
+    ),
+    rowTo: buildRangeAxis(endRef.rowNumber, endRef.rowAbsolute, rowOffset),
+    span: ZERO_SPAN,
+  };
+}
+
 export function buildColumnValuesNode(
   range: { letters: string; absolute: boolean },
   context: FormulaPositionContext,
@@ -237,12 +282,7 @@ export function toCanonicalFormula(
       const startRef = readParsedRef(cellMatch);
       const rangeTail = matchRangeTail(expression, index + cellMatch[0].length);
       if (rangeTail !== null) {
-        const rangeNode: FormulaRangeNode = {
-          type: 'range',
-          start: buildCellRefNode(startRef, positionContext, columnOffset, rowOffset),
-          end: buildCellRefNode(rangeTail.endRef, positionContext, columnOffset, rowOffset),
-          span: ZERO_SPAN,
-        };
+        const rangeNode = buildRangeRefNode(startRef, rangeTail.endRef, columnOffset, rowOffset);
         result += serializeFormulaAst(rangeNode);
         index = rangeTail.end;
       } else {
@@ -307,6 +347,15 @@ function cellRefToA1(node: FormulaCellRefNode, context: FormulaPositionContext):
   return `${columnPart}${rowPart}`;
 }
 
+function rangeAxisToA1Column(axis: FormulaRangeAxis): string {
+  const letters = columnIndexToLetters(axis.index);
+  return axis.fixed ? `$${letters}` : letters;
+}
+
+function rangeAxisToA1Row(axis: FormulaRangeAxis): string {
+  return axis.fixed ? `$${axis.index}` : String(axis.index);
+}
+
 function serializeA1Operand(
   node: FormulaAstNode,
   minPrecedence: number,
@@ -328,14 +377,10 @@ function serializeA1Node(node: FormulaAstNode, context: FormulaPositionContext):
       const a1 = cellRefToA1(node, context);
       return a1 ?? serializeFormulaAst(node);
     }
-    case 'range': {
-      const start = cellRefToA1(node.start, context);
-      const end = cellRefToA1(node.end, context);
-      if (start !== null && end !== null) {
-        return `${start}:${end}`;
-      }
-      return serializeFormulaAst(node);
-    }
+    case 'rangeRef':
+      // Window axes are view positions, so a range always renders in A1 —
+      // including windows that currently clip against the view edge.
+      return `${rangeAxisToA1Column(node.columnFrom)}${rangeAxisToA1Row(node.rowFrom)}:${rangeAxisToA1Column(node.columnTo)}${rangeAxisToA1Row(node.rowTo)}`;
     case 'columnValues': {
       const position = context.getPositionOfField(node.field);
       if (position !== undefined) {

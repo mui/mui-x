@@ -1,5 +1,10 @@
 import { FORMULA_BINARY_PRECEDENCE } from './formulaAst';
-import type { FormulaAstNode, FormulaColumnSelector, FormulaRowSelector } from './formulaAst';
+import type {
+  FormulaAstNode,
+  FormulaColumnSelector,
+  FormulaRangeRefNode,
+  FormulaRowSelector,
+} from './formulaAst';
 import type { FormulaErrorCode } from './formulaErrors';
 
 /**
@@ -18,6 +23,20 @@ export type ExcelFormulaErrorCode =
 export interface FormulaExcelSerializeContext {
   resolveColumn: (selector: FormulaColumnSelector) => { letter: string; absolute: boolean } | null;
   resolveRow: (selector: FormulaRowSelector) => { number: number; absolute: boolean } | null;
+  /**
+   * Resolves a `RANGE_REF` window to its clipped, normalized corner coordinates
+   * in the exported sheet. `null` when any corner falls outside the export —
+   * the converter bakes `#REF!` in place, like a single ref to a missing row.
+   * (`$` markers come from the node's `fixed` flags, not from this resolver.)
+   * @param {FormulaRangeRefNode} node The window to resolve.
+   * @returns {object | null} The corner coordinates, or `null` when unexportable.
+   */
+  resolveRangeWindow: (node: FormulaRangeRefNode) => {
+    startLetter: string;
+    startNumber: number;
+    endLetter: string;
+    endNumber: number;
+  } | null;
   /** 1-based Excel row of the cell that owns the formula (for same-row `fieldRef`). */
   ownerRowNumber: number;
   /** 1-based Excel row bounds of the exported data area (for whole-column `columnValues`). */
@@ -104,11 +123,17 @@ function serializeNode(
     }
     case 'cellRef':
       return resolveCellRef(node.column, node.row, context, state);
-    case 'range': {
-      // Each endpoint resolves independently, so a half-broken range reads
-      // `B2:#REF!`, exactly as Excel renders a deleted range endpoint.
-      const start = resolveCellRef(node.start.column, node.start.row, context, state);
-      const end = resolveCellRef(node.end.column, node.end.row, context, state);
+    case 'rangeRef': {
+      const window = context.resolveRangeWindow(node);
+      if (window === null) {
+        state.hasRefError = true;
+        return EXCEL_REF_ERROR;
+      }
+      // `$` mirrors the grid's fill semantics: a FIXED axis exports absolute,
+      // a plain (shifting) axis exports relative — so copy/fill inside Excel
+      // behaves like the grid's fill handle.
+      const start = `${node.columnFrom.fixed ? '$' : ''}${window.startLetter}${node.rowFrom.fixed ? '$' : ''}${window.startNumber}`;
+      const end = `${node.columnTo.fixed ? '$' : ''}${window.endLetter}${node.rowTo.fixed ? '$' : ''}${window.endNumber}`;
       return `${start}:${end}`;
     }
     case 'columnValues': {
@@ -148,7 +173,8 @@ function serializeNode(
  * `#REF!` token in place and set `hasRefError`. Pure: engine types only.
  *
  * Mirrors the grid's relative/absolute distinction: stable selectors emit
- * relative refs (`B2`), positional selectors emit absolute refs (`$B$2`). The
+ * relative refs (`B2`), positional selectors emit absolute refs (`$B$2`), and a
+ * `RANGE_REF` axis emits `$` exactly when it is `FIXED` (fill-pinned). The
  * computed value is identical either way; `$` only governs copy/fill inside Excel.
  */
 export function serializeFormulaAstToExcel(

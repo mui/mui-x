@@ -66,7 +66,7 @@ export function scanStringLiteral(expression: string, start: number): number {
 
 /**
  * After a cell reference at `afterFirst`, matches an optional `: <cellRef>` tail
- * that turns it into a `RANGE`.
+ * that turns it into a `RANGE_REF`.
  */
 export function matchRangeTail(
   expression: string,

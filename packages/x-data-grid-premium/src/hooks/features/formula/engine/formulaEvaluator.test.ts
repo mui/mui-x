@@ -162,52 +162,62 @@ describe('formulaEvaluator', () => {
   });
 
   describe('ranges', () => {
+    // Column positions in the default fixture context: price=1, quantity=2,
+    // name=3, inStock=4, note=5. Row positions: r1=1, r2=2.
     it('materializes single-column ranges', () => {
-      expectValue(
-        'SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("price"), ROW("r2"))))',
-        250,
-      );
+      expectValue('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(2)))', 250);
     });
 
     it('materializes rectangles across columns', () => {
-      expectValue(
-        'SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("quantity"), ROW("r2"))))',
-        255,
-      );
+      expectValue('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(2)))', 255);
     });
 
     it('normalizes reversed anchors', () => {
-      expectValue(
-        'SUM(RANGE(REF(COLUMN("quantity"), ROW("r2")), REF(COLUMN("price"), ROW("r1"))))',
-        255,
-      );
+      expectValue('SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(2), COLUMN_TO(1), ROW_TO(1)))', 255);
     });
 
-    it('accepts positional anchors', () => {
+    it('accepts fixed axes', () => {
       expectValue(
-        'SUM(RANGE(REF(COLUMN_POSITION(1), ROW_POSITION(1)), REF(COLUMN_POSITION(2), ROW_POSITION(2))))',
+        'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(2)), FIXED(ROW_TO(2))))',
         255,
       );
     });
 
     it('materializes rectangles row-major (left to right, then top to bottom)', () => {
       expectValue(
-        'CONCAT(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("quantity"), ROW("r2"))))',
+        'CONCAT(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(2)))',
         '5042001',
       );
     });
 
-    it('returns #REF! when an anchor row has no position in the current view', () => {
-      const result = evaluate(
-        'SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("price"), ROW("r2"))))',
+    it('clips the window to the rows available in the current view', () => {
+      // Only r1 is in view: the second row of the window clips away instead of
+      // erroring, and the range covers whatever is left.
+      const clipped = evaluate(
+        'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(2)))',
         ROWS,
         { rowOrder: ['r1'] },
       );
-      expect(result).to.deep.equal({
-        type: 'error',
-        code: '#REF!',
-        message: 'The row with id "r2" has no position in the current view.',
-      });
+      expect(clipped).to.deep.equal({ type: 'value', value: 50 });
+
+      // The same window recovers its full extent once both rows are back in view.
+      expectValue('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(2)))', 250);
+    });
+
+    it('clips the window to the visible columns', () => {
+      const rows: TestRow[] = [{ id: 'r1', price: 50, quantity: 4 }];
+      const result = evaluate(
+        'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(9), ROW_TO(9)))',
+        rows,
+      );
+      expect(result).to.deep.equal({ type: 'value', value: 54 });
+    });
+
+    it('materializes an entirely out-of-view window as an empty range', () => {
+      // Rows 5..6 sit past the end of the view: the window clips to nothing.
+      expectValue('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(5), COLUMN_TO(1), ROW_TO(6)))', 0);
+      expectValue('COUNT(RANGE_REF(COLUMN_FROM(1), ROW_FROM(5), COLUMN_TO(1), ROW_TO(6)))', 0);
+      expectValue('COUNTA(RANGE_REF(COLUMN_FROM(1), ROW_FROM(5), COLUMN_TO(1), ROW_TO(6)))', 0);
     });
 
     it('materializes COLUMN_VALUES over the position-context rows in view order', () => {

@@ -65,18 +65,26 @@ const rows: GridRowsProp = [
     unitPrice: 29,
     total: '=quantity * unitPrice',
   },
-  {
-    id: 5,
-    item: 'Total due',
-    total: '=SUM(RANGE(REF(COLUMN("total"), ROW(1)), REF(COLUMN("total"), ROW(4))))',
-  },
 ];
+
+const pinnedRows = {
+  bottom: [
+    {
+      id: 5,
+      item: 'Total due',
+      // The window covers view positions D1:D4 — pinned rows sit outside the
+      // sortable data band, so the total can never be swept into its own range.
+      total: '=SUM(RANGE_REF(COLUMN_FROM(4), ROW_FROM(1), COLUMN_TO(4), ROW_TO(4)))',
+    },
+  ],
+};
 
 export default function FormulaBarBasic() {
   return (
     <div style={{ height: 480, width: '100%' }}>
       <DataGridPremium
         rows={rows}
+        pinnedRows={pinnedRows}
         columns={columns}
         formulaA1Notation
         showToolbar

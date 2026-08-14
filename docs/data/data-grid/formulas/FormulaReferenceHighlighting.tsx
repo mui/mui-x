@@ -69,29 +69,38 @@ const rows: GridRowsProp = [
     mar: 43900,
     q1: '=jan + feb + mar',
   },
-  // Row data stores the canonical syntax; the editor displays these ranges
-  // as `=SUM(B1:B4)`, `=SUM(E1:E4)`, and so on.
-  {
-    id: 5,
-    department: 'All departments',
-    jan: '=SUM(RANGE(REF(COLUMN("jan"), ROW(1)), REF(COLUMN("jan"), ROW(4))))',
-    feb: '=SUM(RANGE(REF(COLUMN("feb"), ROW(1)), REF(COLUMN("feb"), ROW(4))))',
-    mar: '=SUM(RANGE(REF(COLUMN("mar"), ROW(1)), REF(COLUMN("mar"), ROW(4))))',
-    q1: '=SUM(RANGE(REF(COLUMN("q1"), ROW(1)), REF(COLUMN("q1"), ROW(4))))',
-  },
-  // A rectangular range across the summary row: displays as `=AVERAGE(B5:D5)`.
-  {
-    id: 6,
-    department: 'Annual run rate',
-    q1: '=ROUND(AVERAGE(RANGE(REF(COLUMN("jan"), ROW(5)), REF(COLUMN("mar"), ROW(5)))) * 4, 0)',
-  },
 ];
+
+// Summary rows are pinned: a range window covers view positions of the data
+// band, so a pinned total can never be swept into its own range by sorting.
+const pinnedRows = {
+  bottom: [
+    // Row data stores the canonical syntax; the editor displays these windows
+    // as `=SUM(B1:B4)`, `=SUM(E1:E4)`, and so on.
+    {
+      id: 5,
+      department: 'All departments',
+      jan: '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(1), COLUMN_TO(2), ROW_TO(4)))',
+      feb: '=SUM(RANGE_REF(COLUMN_FROM(3), ROW_FROM(1), COLUMN_TO(3), ROW_TO(4)))',
+      mar: '=SUM(RANGE_REF(COLUMN_FROM(4), ROW_FROM(1), COLUMN_TO(4), ROW_TO(4)))',
+      q1: '=SUM(RANGE_REF(COLUMN_FROM(5), ROW_FROM(1), COLUMN_TO(5), ROW_TO(4)))',
+    },
+    // Three single-cell references into the pinned summary row: displays as
+    // `=ROUND((B5 + C5 + D5) / 3 * 4, 0)`, each reference with its own color.
+    {
+      id: 6,
+      department: 'Annual run rate',
+      q1: '=ROUND((REF(COLUMN("jan"), ROW(5)) + REF(COLUMN("feb"), ROW(5)) + REF(COLUMN("mar"), ROW(5))) / 3 * 4, 0)',
+    },
+  ],
+};
 
 export default function FormulaReferenceHighlighting() {
   return (
     <div style={{ height: 340, width: '100%' }}>
       <DataGridPremium
         rows={rows}
+        pinnedRows={pinnedRows}
         columns={columns}
         formulaA1Notation
         rowSelection={false}

@@ -92,7 +92,7 @@ export interface GridFormulaCellRecord {
   parse: FormulaParseResult | null;
   dependencies: FormulaBoundDependencies | null;
   /**
-   * `true` when the formula contains positional selectors, `RANGE` or
+   * `true` when the formula contains positional selectors, `RANGE_REF` or
    * `COLUMN_VALUES` — its dependencies were resolved against a position
    * context and must rebind when that context changes.
    */
@@ -107,7 +107,7 @@ export interface GridFormulaCellRecord {
  */
 export interface GridFormulaRangeDependency {
   /**
-   * Bounded `RANGE` slices: rows `fromIndex..toIndex` (1-based, inclusive)
+   * Bounded `RANGE_REF` slices: rows `fromIndex..toIndex` (1-based, inclusive)
    * of the field in the position context's row order.
    */
   intervals: { fromIndex: number; toIndex: number }[];
@@ -167,7 +167,7 @@ export interface GridFormulaInternalCache {
   positionDependentKeys: Set<GridFormulaCellKey>;
   /**
    * Reverse range-dependency tier: for each field, the formula cells whose
-   * `RANGE`/`COLUMN_VALUES` dependencies read it, as interval records.
+   * `RANGE_REF`/`COLUMN_VALUES` dependencies read it, as interval records.
    * A change to cell `(id, field)` dirties the dependents whose interval
    * contains the row's position (or any whole-column dependent).
    */

@@ -284,22 +284,94 @@ describe('formulaParser', () => {
       });
     });
 
-    it('parses RANGE with REF anchors', () => {
+    it('parses RANGE_REF as a positional window', () => {
       expect(
-        parseOk('RANGE(REF(COLUMN("a"), ROW(1)), REF(COLUMN("b"), ROW_POSITION(5)))'),
+        parseOk('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(5))'),
       ).to.deep.equal({
-        type: 'range',
-        start: {
-          type: 'cellRef',
-          column: { kind: 'field', field: 'a' },
-          row: { kind: 'id', id: 1 },
-        },
-        end: {
-          type: 'cellRef',
-          column: { kind: 'field', field: 'b' },
-          row: { kind: 'position', index: 5 },
-        },
+        type: 'rangeRef',
+        columnFrom: { index: 1, fixed: false },
+        rowFrom: { index: 1, fixed: false },
+        columnTo: { index: 2, fixed: false },
+        rowTo: { index: 5, fixed: false },
       });
+    });
+
+    it('parses a FIXED() wrapper on any RANGE_REF axis', () => {
+      expect(
+        parseOk('RANGE_REF(FIXED(COLUMN_FROM(1)), ROW_FROM(2), COLUMN_TO(3), FIXED(ROW_TO(4)))'),
+      ).to.deep.equal({
+        type: 'rangeRef',
+        columnFrom: { index: 1, fixed: true },
+        rowFrom: { index: 2, fixed: false },
+        columnTo: { index: 3, fixed: false },
+        rowTo: { index: 4, fixed: true },
+      });
+      expect(
+        parseOk(
+          'RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(1)), FIXED(ROW_TO(4)))',
+        ),
+      ).to.deep.equal({
+        type: 'rangeRef',
+        columnFrom: { index: 1, fixed: true },
+        rowFrom: { index: 1, fixed: true },
+        columnTo: { index: 1, fixed: true },
+        rowTo: { index: 4, fixed: true },
+      });
+    });
+
+    it('is case-insensitive for RANGE_REF and its axis labels', () => {
+      expect(
+        parseOk('range_ref(column_from(1), row_from(2), fixed(column_to(3)), row_to(4))'),
+      ).to.deep.equal({
+        type: 'rangeRef',
+        columnFrom: { index: 1, fixed: false },
+        rowFrom: { index: 2, fixed: false },
+        columnTo: { index: 3, fixed: true },
+        rowTo: { index: 4, fixed: false },
+      });
+    });
+
+    it('validates the label of every RANGE_REF axis slot', () => {
+      // Wrong label in a slot.
+      expect(parseError('RANGE_REF(ROW_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3))')).to.equal(
+        'Expected COLUMN_FROM(index) or FIXED(COLUMN_FROM(index)).',
+      );
+      expect(
+        parseError('RANGE_REF(COLUMN_FROM(1), COLUMN_TO(1), COLUMN_TO(2), ROW_TO(3))'),
+      ).to.equal('Expected ROW_FROM(index) or FIXED(ROW_FROM(index)).');
+      expect(parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), ROW_TO(2), ROW_TO(3))')).to.equal(
+        'Expected COLUMN_TO(index) or FIXED(COLUMN_TO(index)).',
+      );
+      expect(
+        parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), COLUMN_TO(3))'),
+      ).to.equal('Expected ROW_TO(index) or FIXED(ROW_TO(index)).');
+      // A missing trailing slot is reported at the separator that must precede it.
+      expect(parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2))')).to.equal(
+        'Expected ",".',
+      );
+      // An empty slot reports the expectation for that slot.
+      expect(parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), )')).to.equal(
+        'Expected ROW_TO(index) or FIXED(ROW_TO(index)).',
+      );
+      // The label is also validated inside a FIXED() wrapper.
+      expect(
+        parseError('RANGE_REF(FIXED(ROW_FROM(1)), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3))'),
+      ).to.equal('Expected COLUMN_FROM(index) or FIXED(COLUMN_FROM(index)).');
+    });
+
+    it('validates RANGE_REF position literals', () => {
+      expect(
+        parseError('RANGE_REF(COLUMN_FROM("a"), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3))'),
+      ).to.equal('COLUMN_FROM() expects a number literal.');
+      expect(
+        parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(0), COLUMN_TO(2), ROW_TO(3))'),
+      ).to.equal('ROW_FROM() expects a positive integer (1-based position).');
+      expect(
+        parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1.5), ROW_TO(3))'),
+      ).to.equal('COLUMN_TO() expects a positive integer (1-based position).');
+      expect(
+        parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(-3))'),
+      ).to.equal('ROW_TO() expects a number literal.');
     });
 
     it('parses COLUMN_VALUES', () => {
@@ -332,13 +404,41 @@ describe('formulaParser', () => {
 
     it('rejects selector forms at expression level', () => {
       expect(parseError('COLUMN("a")')).to.equal('"COLUMN" can only be used inside REF().');
+      expect(parseError('ROW("a")')).to.equal('"ROW" can only be used inside REF().');
+      expect(parseError('COLUMN_POSITION(1)')).to.equal(
+        '"COLUMN_POSITION" can only be used inside REF().',
+      );
       expect(parseError('ROW_POSITION(1)')).to.equal(
         '"ROW_POSITION" can only be used inside REF().',
       );
     });
 
-    it('rejects RANGE anchors that are not REF()', () => {
-      expect(parseError('RANGE(1, 2)')).to.equal('RANGE() anchors must be REF() references.');
+    it('rejects RANGE_REF axis forms at expression level', () => {
+      expect(parseError('COLUMN_FROM(1)')).to.equal(
+        '"COLUMN_FROM" can only be used inside RANGE_REF().',
+      );
+      expect(parseError('ROW_FROM(1)')).to.equal('"ROW_FROM" can only be used inside RANGE_REF().');
+      expect(parseError('COLUMN_TO(1)')).to.equal(
+        '"COLUMN_TO" can only be used inside RANGE_REF().',
+      );
+      expect(parseError('ROW_TO(1)')).to.equal('"ROW_TO" can only be used inside RANGE_REF().');
+      expect(parseError('FIXED(COLUMN_FROM(1))')).to.equal(
+        '"FIXED" can only be used inside RANGE_REF().',
+      );
+    });
+
+    it('parses the removed RANGE() grammar as an ordinary function call', () => {
+      // `RANGE` is no longer reserved: the name resolves (and fails) at
+      // validation/evaluation time as an unknown function, not at parse time.
+      expect(parseOk('RANGE(1, 2)')).to.deep.equal({
+        type: 'functionCall',
+        name: 'RANGE',
+        args: [
+          { type: 'numberLiteral', value: 1 },
+          { type: 'numberLiteral', value: 2 },
+        ],
+      });
+      expect(parseOk('range')).to.deep.equal({ type: 'fieldRef', field: 'range' });
     });
 
     it('treats reserved names without parentheses as field refs', () => {

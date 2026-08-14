@@ -4,7 +4,8 @@ import type {
   FormulaColumnSelector,
   FormulaColumnValuesNode,
   FormulaFieldRefNode,
-  FormulaRangeNode,
+  FormulaRangeAxis,
+  FormulaRangeRefNode,
   FormulaRowSelector,
 } from './formulaAst';
 import type { FormulaPositionContext } from './formulaTypes';
@@ -18,8 +19,8 @@ import type { FormulaPositionContext } from './formulaTypes';
  * paste adjustment and `ROW_POSITION` use, so offsets can never disagree with
  * what the user sees.
  *
- * Selector semantics mirror `buildColumnSelector`/`buildRowSelector` in
- * `formulaA1.ts`:
+ * Single-cell selector semantics mirror `buildColumnSelector`/`buildRowSelector`
+ * in `formulaA1.ts`:
  * - **Positional** selectors (`COLUMN_POSITION`/`ROW_POSITION`, the canonical
  *   form of `$`-absolute refs) never shift — they are absolute.
  * - **Stable** selectors (`COLUMN("field")`/`ROW(id)`, the canonical form of
@@ -31,6 +32,12 @@ import type { FormulaPositionContext } from './formulaTypes';
  *   1-based canonical store has no representable out-of-bounds-low position
  *   (the parser rejects `ROW_POSITION(0)`), so the reference stays put rather
  *   than corrupting the whole formula into `#ERROR!`.
+ *
+ * `RANGE_REF` windows follow the Excel `$` rule instead: every non-`FIXED`
+ * axis shifts by the delta (pure arithmetic — window resolution auto-clips, so
+ * overshoot needs no special casing), a `FIXED(...)` axis never moves, and
+ * underflow clamps at position 1 (the window may shrink at the top edge, the
+ * clipping rule applied at fill time).
  *
  * Pure: engine types only, no grid imports. The walk is recursive, bounded by
  * the parser's AST-height limit exactly like the serializer and evaluator.
@@ -108,16 +115,24 @@ function offsetCellRef(
   };
 }
 
-function offsetRange(
-  node: FormulaRangeNode,
+function offsetRangeAxis(axis: FormulaRangeAxis, delta: number): FormulaRangeAxis {
+  if (axis.fixed || delta === 0) {
+    return axis;
+  }
+  return { index: Math.max(1, axis.index + delta), fixed: false };
+}
+
+function offsetRangeRef(
+  node: FormulaRangeRefNode,
   rowDelta: number,
   columnDelta: number,
-  context: FormulaPositionContext,
-): FormulaRangeNode {
+): FormulaRangeRefNode {
   return {
     ...node,
-    start: offsetCellRef(node.start, rowDelta, columnDelta, context),
-    end: offsetCellRef(node.end, rowDelta, columnDelta, context),
+    columnFrom: offsetRangeAxis(node.columnFrom, columnDelta),
+    rowFrom: offsetRangeAxis(node.rowFrom, rowDelta),
+    columnTo: offsetRangeAxis(node.columnTo, columnDelta),
+    rowTo: offsetRangeAxis(node.rowTo, rowDelta),
   };
 }
 
@@ -159,8 +174,8 @@ function offsetNode(
   switch (node.type) {
     case 'cellRef':
       return offsetCellRef(node, rowDelta, columnDelta, context);
-    case 'range':
-      return offsetRange(node, rowDelta, columnDelta, context);
+    case 'rangeRef':
+      return offsetRangeRef(node, rowDelta, columnDelta);
     case 'fieldRef':
     case 'columnValues':
       return offsetFieldOnly(node, columnDelta, context);

@@ -1,5 +1,6 @@
 <DataGridPremium
   rows={rows}
+  pinnedRows={pinnedRows}
   columns={columns}
   formulaA1Notation
   showToolbar

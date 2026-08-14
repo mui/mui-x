@@ -116,15 +116,33 @@ describe('formulaA1', () => {
   });
 
   describe('toCanonicalFormula — ranges', () => {
-    it('rewrites a rectangle A1:B5 into RANGE', () => {
+    it('rewrites a rectangle A1:B5 into a positional RANGE_REF window', () => {
       expect(toCanonical('SUM(A1:B5)')).to.equal(
-        'SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("qty"), ROW("r5"))))',
+        'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(5)))',
+      );
+    });
+
+    it('marks `$` axes as FIXED (fill-pinned), positions stay positions', () => {
+      expect(toCanonical('SUM($A$1:$A$4)')).to.equal(
+        'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(1)), FIXED(ROW_TO(4))))',
+      );
+      // Mixed: only the `$` axes are pinned.
+      expect(toCanonical('$A1:B5')).to.equal(
+        'RANGE_REF(FIXED(COLUMN_FROM(1)), ROW_FROM(1), COLUMN_TO(2), ROW_TO(5))',
+      );
+    });
+
+    it('stores an out-of-view window as written (it clips at resolve time)', () => {
+      // Row 9 does not exist in the 5-row context: no identity is consulted, the
+      // window is stored verbatim and auto-clips to the last row when resolved.
+      expect(toCanonical('SUM(A1:A9)')).to.equal(
+        'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(9)))',
       );
     });
 
     it('tolerates spaces around the colon', () => {
       expect(toCanonical('A1 : B2')).to.equal(
-        'RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("qty"), ROW("r2")))',
+        'RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(2))',
       );
     });
 
@@ -189,6 +207,24 @@ describe('formulaA1', () => {
         'REF(COLUMN_POSITION(1), ROW("r2"))',
       );
     });
+
+    it('shifts the non-`$` axes of a range window', () => {
+      expect(toCanonical('A1:B2', { rowOffset: 1, columnOffset: 1 })).to.equal(
+        'RANGE_REF(COLUMN_FROM(2), ROW_FROM(2), COLUMN_TO(3), ROW_TO(3))',
+      );
+    });
+
+    it('pins the `$` axes of a range window against the offset', () => {
+      expect(toCanonical('$A$1:B2', { rowOffset: 1, columnOffset: 1 })).to.equal(
+        'RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), COLUMN_TO(3), ROW_TO(3))',
+      );
+    });
+
+    it('clamps a range axis pushed below position 1', () => {
+      expect(toCanonical('A1:B2', { rowOffset: -5, columnOffset: -5 })).to.equal(
+        'RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(1))',
+      );
+    });
   });
 
   describe('toDisplayFormula', () => {
@@ -203,10 +239,29 @@ describe('formulaA1', () => {
       expect(toDisplay('REF(COLUMN_POSITION(1), ROW("r1"))')).to.equal('$A1');
     });
 
-    it('renders RANGE as an A1 rectangle', () => {
+    it('renders RANGE_REF as an A1 rectangle', () => {
       expect(
-        toDisplay('SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("qty"), ROW("r5"))))'),
+        toDisplay('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(5)))'),
       ).to.equal('SUM(A1:B5)');
+    });
+
+    it('renders FIXED window axes with `$`', () => {
+      expect(
+        toDisplay(
+          'RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(1)), FIXED(ROW_TO(4)))',
+        ),
+      ).to.equal('$A$1:$A$4');
+      expect(
+        toDisplay('RANGE_REF(FIXED(COLUMN_FROM(1)), ROW_FROM(1), COLUMN_TO(2), ROW_TO(5))'),
+      ).to.equal('$A1:B5');
+    });
+
+    it('renders a window that currently clips against the view edge', () => {
+      // Positions are the model, so there is no canonical fallback for ranges:
+      // an out-of-view window still renders as A1 and clips only when resolved.
+      expect(
+        toDisplay('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(9)))'),
+      ).to.equal('SUM(A1:A9)');
     });
 
     it('renders COLUMN_VALUES as a whole-column range', () => {
@@ -250,6 +305,15 @@ describe('formulaA1', () => {
       roundTrips('B3 + C5');
       roundTrips('SUM(A1:B5)');
       roundTrips('SUM(C:C)');
+    });
+
+    it('is stable for every range window shape', () => {
+      roundTrips('SUM(A1:B5)');
+      roundTrips('SUM($A$1:$A$4)');
+      roundTrips('$A1:B5');
+      roundTrips('A$1:$B5');
+      // A window reaching past the current view survives the round-trip too.
+      roundTrips('SUM(A1:A9)');
     });
 
     it('preserves the canonical AST through a display round-trip', () => {

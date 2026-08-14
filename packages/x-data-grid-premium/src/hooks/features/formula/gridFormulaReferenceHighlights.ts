@@ -10,7 +10,6 @@ import {
   createFormulaCellKey,
   getFormulaExpression,
   isEscapedFormulaSource,
-  isFormulaErrorValue,
   isFormulaSource,
   resolveFormulaRangeRectangle,
   scanStringLiteral,
@@ -201,9 +200,10 @@ function resolveFormulaReferenceTarget(
       }
       return resolveCellTarget(field, rowId, ownerCell);
     }
-    case 'range': {
+    case 'rangeRef': {
       const rectangle = resolveFormulaRangeRectangle(node, positionContext);
-      if (isFormulaErrorValue(rectangle)) {
+      if (rectangle.fromColumn > rectangle.toColumn || rectangle.fromIndex > rectangle.toIndex) {
+        // The window clipped away entirely — nothing to outline.
         return UNRESOLVED;
       }
       const startField = positionContext.getFieldAtPosition(rectangle.fromColumn);

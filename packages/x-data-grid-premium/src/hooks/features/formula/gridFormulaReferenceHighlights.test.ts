@@ -33,8 +33,9 @@ describe('gridFormulaReferenceHighlights', () => {
     });
 
     it('resolves a range to its normalized corners', () => {
+      // The window is authored inverted (total/r3 → item/r1): positions 4,3 → 1,1.
       const { references } = build(
-        '=SUM(RANGE(REF(COLUMN("total"), ROW("r3")), REF(COLUMN("item"), ROW("r1"))))',
+        '=SUM(RANGE_REF(COLUMN_FROM(4), ROW_FROM(3), COLUMN_TO(1), ROW_TO(1)))',
       );
       expect(references[0].target).to.deep.equal({
         kind: 'range',
@@ -43,6 +44,31 @@ describe('gridFormulaReferenceHighlights', () => {
         startRowId: 'r1',
         endRowId: 'r3',
       });
+    });
+
+    it('resolves a partially out-of-view window to its clipped corners', () => {
+      // Columns clip to 2..4 (price..total), rows to 2..3 (r2..r3).
+      const { references } = build(
+        '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(2), COLUMN_TO(9), ROW_TO(9)))',
+      );
+      expect(references[0].target).to.deep.equal({
+        kind: 'range',
+        startField: 'price',
+        endField: 'total',
+        startRowId: 'r2',
+        endRowId: 'r3',
+      });
+      expect(references[0].colorIndex).to.equal(0);
+    });
+
+    it('marks a fully clipped window as unresolved', () => {
+      // Rows 8..9 are past the last data row: the window covers nothing, so
+      // there is no rectangle to outline (and no color).
+      const { references } = build(
+        '=SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(8), COLUMN_TO(2), ROW_TO(9)))',
+      );
+      expect(references[0].target).to.deep.equal({ kind: 'unresolved' });
+      expect(references[0].colorIndex).to.equal(null);
     });
 
     it('resolves COLUMN_VALUES to a whole column', () => {

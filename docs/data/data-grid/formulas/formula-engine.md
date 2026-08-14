@@ -75,7 +75,7 @@ A definition supports the following fields:
 
 | Field                                  | Description                                                                                            |
 | :------------------------------------- | :----------------------------------------------------------------------------------------------------- |
-| `name`                                 | Uppercase identifier (`A–Z`, `0–9`, `_`). Reserved names such as `REF` or `RANGE` are rejected.        |
+| `name`                                 | Uppercase identifier (`A–Z`, `0–9`, `_`). Reserved names such as `REF` or `RANGE_REF` are rejected.    |
 | `minArgs` / `maxArgs`                  | Accepted argument count. `maxArgs: null` makes the function variadic.                                  |
 | `apply(args, context)`                 | The implementation. Returns a number, string, boolean, `Date`, `null`, or an error value.              |
 | `lazy`                                 | Arguments arrive as functions to call on demand—how `IF` skips the branch that is not taken.           |

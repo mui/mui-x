@@ -88,7 +88,7 @@ export interface FormulaPositionContext {
    * First and last 1-based row positions of the **data band** — the rows that
    * take part in sorting and filtering. Pinned rows sit outside it: they hold
    * an address, so `REF`/A1 can point at them and they can point back, but a
-   * `RANGE` or `COLUMN_VALUES` never covers them. That is what lets a pinned
+   * `RANGE_REF` or `COLUMN_VALUES` never covers them. That is what lets a pinned
    * summary row aggregate the body without aggregating itself.
    * The band is empty when `dataToIndex < dataFromIndex`.
    */

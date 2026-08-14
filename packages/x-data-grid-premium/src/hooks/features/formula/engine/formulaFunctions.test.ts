@@ -1,4 +1,5 @@
 import { createFormulaFunctionRegistry, FORMULA_BUILT_IN_FUNCTIONS } from './formulaFunctions';
+import { FORMULA_RESERVED_NAMES } from './formulaAst';
 
 describe('formulaFunctions', () => {
   describe('createFormulaFunctionRegistry', () => {
@@ -58,11 +59,17 @@ describe('formulaFunctions', () => {
         'COLUMN_POSITION',
         'ROW_POSITION',
         'FIELD',
-        'RANGE',
+        'RANGE_REF',
+        'COLUMN_FROM',
+        'ROW_FROM',
+        'COLUMN_TO',
+        'ROW_TO',
+        'FIXED',
         'COLUMN_VALUES',
         'TRUE',
         'FALSE',
       ];
+      expect(reserved).to.deep.equal([...FORMULA_RESERVED_NAMES]);
       for (const name of reserved) {
         expect(() =>
           createFormulaFunctionRegistry([{ name, minArgs: 0, maxArgs: 0, apply: () => 0 }]),
@@ -70,9 +77,19 @@ describe('formulaFunctions', () => {
       }
     });
 
+    it('allows RANGE as a custom function name (no longer part of the grammar)', () => {
+      const custom = { name: 'RANGE', minArgs: 2, maxArgs: 2, apply: () => 0 };
+      const registry = createFormulaFunctionRegistry([...FORMULA_BUILT_IN_FUNCTIONS, custom]);
+      expect(registry.get('RANGE')).to.equal(custom);
+      expect(registry.get('range')).to.equal(custom);
+    });
+
     it('throws on reserved names regardless of case', () => {
       expect(() =>
         createFormulaFunctionRegistry([{ name: 'ref', minArgs: 0, maxArgs: 0, apply: () => 0 }]),
+      ).to.throw('reserved by the formula syntax');
+      expect(() =>
+        createFormulaFunctionRegistry([{ name: 'Fixed', minArgs: 1, maxArgs: 1, apply: () => 0 }]),
       ).to.throw('reserved by the formula syntax');
     });
 

@@ -20,7 +20,34 @@ const POSITION_LETTERS: Record<number, string> = { 1: 'A', 2: 'B', 3: 'C', 4: 'D
 const ROW_NUMBERS: Record<string, number> = { r1: 2, r2: 3, r3: 4 };
 const POSITION_ROWS: Record<number, number> = { 1: 2, 2: 3, 3: 4 };
 
+const COLUMN_COUNT = 4;
+const ROW_COUNT = 3;
+
+// Mirrors the adapter: normalize + auto-clip the window to the view, then map the
+// corners into the sheet. `$` never comes from here — it comes from the node's
+// per-axis `fixed` flags.
+const resolveRangeWindow: FormulaExcelSerializeContext['resolveRangeWindow'] = (node) => {
+  const fromColumn = Math.max(Math.min(node.columnFrom.index, node.columnTo.index), 1);
+  const toColumn = Math.min(Math.max(node.columnFrom.index, node.columnTo.index), COLUMN_COUNT);
+  const fromIndex = Math.max(Math.min(node.rowFrom.index, node.rowTo.index), 1);
+  const toIndex = Math.min(Math.max(node.rowFrom.index, node.rowTo.index), ROW_COUNT);
+  const startLetter = POSITION_LETTERS[fromColumn];
+  const endLetter = POSITION_LETTERS[toColumn];
+  const startNumber = POSITION_ROWS[fromIndex];
+  const endNumber = POSITION_ROWS[toIndex];
+  if (
+    startLetter === undefined ||
+    endLetter === undefined ||
+    startNumber === undefined ||
+    endNumber === undefined
+  ) {
+    return null;
+  }
+  return { startLetter, startNumber, endLetter, endNumber };
+};
+
 const context: FormulaExcelSerializeContext = {
+  resolveRangeWindow,
   resolveColumn: (selector) => {
     if (selector.kind === 'field') {
       const letter = FIELD_LETTERS[selector.field];
@@ -43,6 +70,9 @@ const context: FormulaExcelSerializeContext = {
 };
 
 const toExcel = (expression: string) => serializeFormulaAstToExcel(parseOk(expression), context);
+
+// price column (B), data rows 1..3 → Excel B2:B4.
+const PRICE_WINDOW = 'RANGE_REF(COLUMN_FROM(2), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3))';
 
 describe('serializeFormulaAstToExcel', () => {
   describe('cell references', () => {
@@ -77,10 +107,36 @@ describe('serializeFormulaAstToExcel', () => {
   });
 
   describe('ranges and whole columns', () => {
-    it('renders a RANGE as start:end', () => {
+    it('renders a RANGE_REF window as start:end', () => {
+      expect(toExcel(`SUM(${PRICE_WINDOW})`).formula).to.equal('SUM(B2:B4)');
+    });
+
+    it('renders FIXED axes as absolute', () => {
       expect(
-        toExcel('SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("price"), ROW("r3"))))')
-          .formula,
+        toExcel(
+          'SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(2)), FIXED(ROW_TO(3))))',
+        ).formula,
+      ).to.equal('SUM($B$2:$B$4)');
+    });
+
+    it('renders `$` per axis, from that axis alone', () => {
+      expect(
+        toExcel(
+          'SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), ROW_FROM(1), COLUMN_TO(3), FIXED(ROW_TO(3))))',
+        ).formula,
+      ).to.equal('SUM($B2:C$4)');
+    });
+
+    it('renders the clipped corners of a window reaching past the export', () => {
+      // Rows clip to 1..3 and columns to 1..4, exactly as the grid evaluates it.
+      expect(
+        toExcel('SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(1), COLUMN_TO(9), ROW_TO(9)))'),
+      ).to.deep.equal({ formula: 'SUM(B2:D4)', hasRefError: false });
+    });
+
+    it('normalizes inverted window endpoints', () => {
+      expect(
+        toExcel('SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(3), COLUMN_TO(2), ROW_TO(1)))').formula,
       ).to.equal('SUM(B2:B4)');
     });
 
@@ -155,10 +211,16 @@ describe('serializeFormulaAstToExcel', () => {
       expect(toExcel('missing').formula).to.equal('#REF!');
     });
 
-    it('keeps the resolvable endpoint of a half-broken range', () => {
+    it('bakes #REF! for a window whose corners are outside the export', () => {
+      // Partial export: the window resolves in the grid, but a corner row/column
+      // is not part of the exported sheet, so the adapter returns `null`.
+      const partialContext: FormulaExcelSerializeContext = {
+        ...context,
+        resolveRangeWindow: () => null,
+      };
       expect(
-        toExcel('SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("price"), ROW("rX"))))'),
-      ).to.deep.equal({ formula: 'SUM(B2:#REF!)', hasRefError: true });
+        serializeFormulaAstToExcel(parseOk(`SUM(${PRICE_WINDOW})`), partialContext),
+      ).to.deep.equal({ formula: 'SUM(#REF!)', hasRefError: true });
     });
 
     it('bakes #REF! into one operand and keeps the rest', () => {

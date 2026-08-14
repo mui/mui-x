@@ -150,6 +150,35 @@ describe('previewFormulaResult', () => {
     expect((result as { code: string }).code).to.equal('#CYCLE!');
   });
 
+  it('reports a self-reference through a RANGE_REF window as #CYCLE!', async () => {
+    render(<Test />);
+    await microtasks();
+    // Columns: A=item(1), B=price(2), C=quantity(3), D=total(4); rows: id 0 at
+    // position 1. The window D1:D2 covers the edited cell itself.
+    const result = previewFormulaResult(
+      privateApi(),
+      { id: 0, field: 'total' },
+      '=SUM(RANGE_REF(COLUMN_FROM(4), ROW_FROM(1), COLUMN_TO(4), ROW_TO(2)))',
+      { a1Notation: false },
+    );
+    expect(result?.type).to.equal('error');
+    expect((result as { code: string }).code).to.equal('#CYCLE!');
+  });
+
+  it('does not report a range cycle when the window excludes the edited cell', async () => {
+    render(<Test />);
+    await microtasks();
+    // The same column, but row position 2 only: row id 1's committed total is 5.
+    expect(
+      previewFormulaResult(
+        privateApi(),
+        { id: 0, field: 'total' },
+        '=SUM(RANGE_REF(COLUMN_FROM(4), ROW_FROM(2), COLUMN_TO(4), ROW_TO(2)))',
+        { a1Notation: false },
+      ),
+    ).to.deep.equal({ type: 'value', value: 5 });
+  });
+
   it('does not report a range cycle when the own row is filtered out', async () => {
     render(
       <Test filterModel={{ items: [{ field: 'item', operator: 'equals', value: 'Banana' }] }} />,

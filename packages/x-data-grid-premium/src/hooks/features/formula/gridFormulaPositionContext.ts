@@ -53,7 +53,7 @@ export interface GridFormulaPositionSnapshot {
  * Assembles the addressable row order from the data band and the pinned rows
  * around it, and records where the data band starts and ends. Pinned rows are
  * addressable (they take a row number and an A1 address) but never take part
- * in a `RANGE` or `COLUMN_VALUES` — see `FormulaPositionContext.dataFromIndex`.
+ * in a `RANGE_REF` or `COLUMN_VALUES` — see `FormulaPositionContext.dataFromIndex`.
  */
 function assemblePositionRowIds(
   dataIds: GridRowId[],

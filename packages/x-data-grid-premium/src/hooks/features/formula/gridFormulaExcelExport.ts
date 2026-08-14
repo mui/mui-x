@@ -4,14 +4,17 @@ import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   columnIndexToLetters,
+  extractFormulaDependencies,
   getFormulaExpression,
   mapFormulaErrorCodeToExcel,
+  resolveFormulaRangeRectangle,
   serializeFormulaAstToExcel,
 } from './engine';
 import type {
   ExcelFormulaErrorCode,
   FormulaColumnSelector,
   FormulaPositionContext,
+  FormulaRangeRefNode,
   FormulaRowId,
   FormulaRowSelector,
 } from './engine';
@@ -141,6 +144,17 @@ export function getCellExcelFormula(
     return null;
   }
 
+  // A window that clipped away entirely evaluates to an empty range in the
+  // grid; there is no Excel range to write for it, so fall back to exporting
+  // the evaluated value (contiguous with the no-#REF!-from-windows rule).
+  const { ranges } = extractFormulaDependencies(ast);
+  for (const range of ranges) {
+    const rectangle = resolveFormulaRangeRectangle(range, layout.positionContext);
+    if (rectangle.fromColumn > rectangle.toColumn || rectangle.fromIndex > rectangle.toIndex) {
+      return null;
+    }
+  }
+
   const resolveColumn = (selector: FormulaColumnSelector) => {
     let resolvedField: string | undefined;
     let absolute: boolean;
@@ -177,9 +191,43 @@ export function getCellExcelFormula(
     return number === undefined ? null : { number, absolute };
   };
 
+  const resolveRangeWindow = (node: FormulaRangeRefNode) => {
+    // Clip against the live view first (shared resolver — same rectangle the
+    // grid evaluates), then map the normalized corners into the export sheet.
+    const rectangle = resolveFormulaRangeRectangle(node, layout.positionContext);
+    const startField = layout.positionContext.getFieldAtPosition(rectangle.fromColumn);
+    const endField = layout.positionContext.getFieldAtPosition(rectangle.toColumn);
+    const startId = layout.positionContext.getRowIdAtPosition(rectangle.fromIndex);
+    const endId = layout.positionContext.getRowIdAtPosition(rectangle.toIndex);
+    if (
+      startField === undefined ||
+      endField === undefined ||
+      startId === undefined ||
+      endId === undefined
+    ) {
+      return null;
+    }
+    const startLetter = layout.fieldToColumnLetter.get(startField);
+    const endLetter = layout.fieldToColumnLetter.get(endField);
+    const startNumber = layout.rowIdToRowNumber.get(String(startId));
+    const endNumber = layout.rowIdToRowNumber.get(String(endId));
+    if (
+      startLetter === undefined ||
+      endLetter === undefined ||
+      startNumber === undefined ||
+      endNumber === undefined
+    ) {
+      // A corner row/column is excluded from this export (partial export):
+      // bake #REF!, exactly as a single ref to a missing row does.
+      return null;
+    }
+    return { startLetter, startNumber, endLetter, endNumber };
+  };
+
   const { formula, hasRefError } = serializeFormulaAstToExcel(ast, {
     resolveColumn,
     resolveRow,
+    resolveRangeWindow,
     ownerRowNumber,
     firstDataRowNumber: layout.firstDataRowNumber,
     lastDataRowNumber: layout.lastDataRowNumber,

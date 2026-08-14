@@ -4,7 +4,7 @@ import type {
   FormulaCellRefNode,
   FormulaColumnValuesNode,
   FormulaFunctionCallNode,
-  FormulaRangeNode,
+  FormulaRangeRefNode,
 } from './formulaAst';
 import { resolveFormulaRangeRectangle } from './formulaDependencies';
 import { createFormulaError, isFormulaErrorValue } from './formulaErrors';
@@ -102,21 +102,19 @@ function evaluateCellRef(
 }
 
 /**
- * Materializes a `RANGE(...)` rectangle into a flat value list, row-major
- * (left to right, then top to bottom). The first error value inside the
- * rectangle propagates, consistent with the strict propagation rule.
+ * Materializes a `RANGE_REF(...)` rectangle into a flat value list, row-major
+ * (left to right, then top to bottom). The window auto-clips to the current
+ * view, so an out-of-view window yields an empty list, never an error. The
+ * first error value inside the rectangle propagates, consistent with the
+ * strict propagation rule.
  */
 function evaluateRange(
-  node: FormulaRangeNode,
+  node: FormulaRangeRefNode,
   context: FormulaEvaluationContext,
 ): FormulaRangeValue | FormulaErrorValue {
   const rectangle = resolveFormulaRangeRectangle(node, context.position);
-  if (isFormulaErrorValue(rectangle)) {
-    return rectangle;
-  }
   const values: FormulaScalar[] = [];
   for (let rowIndex = rectangle.fromIndex; rowIndex <= rectangle.toIndex; rowIndex += 1) {
-    // Anchor rows resolved, so every position between them exists.
     const id = context.position.getRowIdAtPosition(rowIndex);
     if (id === undefined) {
       continue;
@@ -332,7 +330,7 @@ function evaluateNode(node: FormulaAstNode, context: FormulaEvaluationContext): 
     }
     case 'cellRef':
       return evaluateCellRef(node, context);
-    case 'range':
+    case 'rangeRef':
       return evaluateRange(node, context);
     case 'columnValues':
       return evaluateColumnValues(node, context);

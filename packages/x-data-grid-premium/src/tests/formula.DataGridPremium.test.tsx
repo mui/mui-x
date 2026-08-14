@@ -548,7 +548,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(0)).to.deep.equal(['5', '']);
     });
 
-    it('should evaluate RANGE rectangles and track edits inside the bounds', async () => {
+    it('should evaluate RANGE_REF rectangles and track edits inside the bounds', async () => {
       await render(
         <Test
           rows={[
@@ -556,7 +556,8 @@ describe('<DataGridPremium /> - Formulas', () => {
               id: 0,
               p1: 1,
               p2: 2,
-              total: '=SUM(RANGE(REF(COLUMN("p1"), ROW(0)), REF(COLUMN("p2"), ROW(1))))',
+              // Columns 1..2 (p1, p2) over view positions 1..2 (ids 0 and 1).
+              total: '=SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(2)))',
             },
             { id: 1, p1: 3, p2: 4 },
             { id: 2, p1: 100, p2: 100 },
@@ -584,7 +585,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(2)).to.deep.equal(['20', '', '']);
     });
 
-    it('should resolve a RANGE anchor without a view position as #REF! and recover', async () => {
+    it('should clip a RANGE_REF window to the filtered view and recover', async () => {
       await render(
         <Test
           rows={[
@@ -592,7 +593,8 @@ describe('<DataGridPremium /> - Formulas', () => {
               id: 0,
               category: 'keep',
               price: 2,
-              summary: '=SUM(RANGE(REF(COLUMN("price"), ROW(0)), REF(COLUMN("price"), ROW(2))))',
+              // Column 2 (price) over view positions 1..3.
+              summary: '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3)))',
             },
             { id: 1, category: 'keep', price: 3 },
             { id: 2, category: 'drop', price: 5 },
@@ -606,20 +608,61 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       expect(getColumnValues(2)).to.deep.equal(['10', '', '']);
 
-      // The anchor row is filtered out — it has no position to resolve against.
+      // Position 3 no longer exists: the window clips to the two rows left in
+      // the view instead of erroring.
       await act(async () =>
         apiRef.current!.setFilterModel({
           items: [{ field: 'category', operator: 'equals', value: 'keep' }],
         }),
       );
-      expect(getColumnValues(2)).to.deep.equal(['#REF!', '']);
-      const result = formulaApi().getCellFormulaResult(0, 'summary');
-      expect(result?.type === 'error' && result.message).to.include(
-        'has no position in the current view',
-      );
+      expect(getColumnValues(2)).to.deep.equal(['5', '']);
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 5,
+      });
 
       await act(async () => apiRef.current!.setFilterModel({ items: [] }));
       expect(getColumnValues(2)).to.deep.equal(['10', '', '']);
+    });
+
+    it('should evaluate a RANGE_REF window clipped out of the view as empty', async () => {
+      await render(
+        <Test
+          rows={[
+            {
+              id: 0,
+              category: 'keep',
+              price: 2,
+              // Column 2 (price) over view positions 2..3.
+              summary: '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(2), COLUMN_TO(2), ROW_TO(3)))',
+            },
+            { id: 1, category: 'drop', price: 3 },
+            { id: 2, category: 'drop', price: 5 },
+          ]}
+          columns={[
+            { field: 'category' },
+            { field: 'price', type: 'number' },
+            { field: 'summary', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(getColumnValues(2)).to.deep.equal(['8', '', '']);
+
+      // Only one row is left: the whole window falls outside the view. It
+      // covers nothing — SUM of an empty range is 0, not `#REF!`.
+      await act(async () =>
+        apiRef.current!.setFilterModel({
+          items: [{ field: 'category', operator: 'equals', value: 'keep' }],
+        }),
+      );
+      expect(getColumnValues(2)).to.deep.equal(['0']);
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 0,
+      });
+
+      await act(async () => apiRef.current!.setFilterModel({ items: [] }));
+      expect(getColumnValues(2)).to.deep.equal(['8', '', '']);
     });
 
     it('should mark a COLUMN_VALUES aggregation over its own column as #CYCLE!', async () => {
@@ -779,6 +822,72 @@ describe('<DataGridPremium /> - Formulas', () => {
       });
     });
 
+    it('should mark an unpinned summary row swept into its own window as #CYCLE!', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 10 },
+            { id: 1, price: 20 },
+            {
+              id: 2,
+              price: 5,
+              // Both columns over view positions 1..2 — the summary row sits at
+              // position 3, outside its own window.
+              summary: '=SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(2)))',
+            },
+          ]}
+          columns={summaryColumns}
+        />,
+      );
+      expect(formulaApi().getCellFormulaResult(2, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 30,
+      });
+
+      await act(async () => apiRef.current!.setSortModel([{ field: 'price', sort: 'asc' }]));
+
+      // View order is now [2, 0, 1]: the summary row moved to position 1, which
+      // its own window covers.
+      expect(getColumnValues(1)).to.deep.equal(['#CYCLE!', '', '']);
+      const result = formulaApi().getCellFormulaResult(2, 'summary');
+      expect(result?.type === 'error' && result.code).to.equal('#CYCLE!');
+    });
+
+    it('should keep a bottom-pinned summary row out of its own window', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 10 },
+            { id: 1, price: 20 },
+          ]}
+          pinnedRows={{
+            bottom: [
+              {
+                id: 2,
+                price: 5,
+                // Positions 1..3 — position 3 is the pinned row itself, so the
+                // window clamps to the data band and never covers it.
+                summary: '=SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3)))',
+              },
+            ],
+          }}
+          columns={summaryColumns}
+        />,
+      );
+      expect(formulaApi().getCellFormulaResult(2, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 30,
+      });
+
+      // Pinned rows never travel with a sort: the window still covers the data
+      // band only.
+      await act(async () => apiRef.current!.setSortModel([{ field: 'price', sort: 'desc' }]));
+      expect(formulaApi().getCellFormulaResult(2, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 30,
+      });
+    });
+
     it('should include rows added with updateRows in COLUMN_VALUES', async () => {
       await render(
         <Test
@@ -812,15 +921,12 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(1)).to.deep.equal(['5', '']);
     });
 
-    it('should resolve RANGE rectangles positionally: a re-sort changes the covered rows', async () => {
+    it('should keep a RANGE_REF window on the same view positions across sorting', async () => {
+      const windowFormula = '=SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(2)))';
       await render(
         <Test
           rows={[
-            {
-              id: 0,
-              price: 1,
-              summary: '=SUM(RANGE(REF(COLUMN("price"), ROW(0)), REF(COLUMN("price"), ROW(1))))',
-            },
+            { id: 0, price: 1, summary: windowFormula },
             { id: 1, price: 8 },
             { id: 2, price: 2 },
             { id: 3, price: 4 },
@@ -828,19 +934,21 @@ describe('<DataGridPremium /> - Formulas', () => {
           columns={summaryColumns}
         />,
       );
-      // Anchors at view positions 1 and 2: rows 0 and 1.
+      // Prices in view order are [1, 8, 2, 4]: positions 1..2 hold 1 and 8.
       expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
         type: 'value',
         value: 9,
       });
 
       await act(async () => apiRef.current!.setSortModel([{ field: 'price', sort: 'asc' }]));
-      // View order is now [0, 2, 3, 1]: the anchors sit at positions 1 and 4,
-      // so the rectangle covers every row (D6: positional bind-time resolution).
+      // View order is now [0, 2, 3, 1] — prices [1, 2, 4, 8]. The window still
+      // covers positions 1..2, it just recomputes from whatever occupies them.
       expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
         type: 'value',
-        value: 15,
+        value: 3,
       });
+      // The window is stored positionally: sorting never rewrites the source.
+      expect(apiRef.current!.getRow(0).summary).to.equal(windowFormula);
     });
 
     it('should not re-filter after rebinding a position-dependent filtered column', async () => {
@@ -3753,6 +3861,58 @@ describe('<DataGridPremium /> - Formulas', () => {
         });
         // Origin is row 0; the formula one row down freezes to row id 1, not id 0.
         expect(apiRef.current!.getRow(1).total).to.equal('=REF(COLUMN("price"), ROW(1))');
+      });
+
+      it('should shift the relative axes of a pasted A1 range by the fill offset', async () => {
+        const { user } = await render(
+          <Test formulaA1Notation cellSelection disableRowSelectionOnClick />,
+        );
+        const cell = getCell(0, 4);
+        await user.click(cell);
+
+        const pasteEvent = new Event('paste');
+        // B is `price`: [2, 1, 4].
+        // @ts-ignore
+        pasteEvent.clipboardData = { getData: () => '=SUM(B1:B2)\n=SUM(B1:B2)' };
+        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
+        await act(async () => document.activeElement!.dispatchEvent(pasteEvent));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow(0).total).to.equal(
+            '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(1), COLUMN_TO(2), ROW_TO(2)))',
+          );
+        });
+        // The second target shifted both relative row axes by +1.
+        expect(apiRef.current!.getRow(1).total).to.equal(
+          '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(2), COLUMN_TO(2), ROW_TO(3)))',
+        );
+        expect(getColumnValues(4)).to.deep.equal(['3', '5', '8']);
+      });
+
+      it('should leave the `$` axes of a pasted A1 range at their written position', async () => {
+        const { user } = await render(
+          <Test formulaA1Notation cellSelection disableRowSelectionOnClick />,
+        );
+        const cell = getCell(0, 4);
+        await user.click(cell);
+
+        const pasteEvent = new Event('paste');
+        // @ts-ignore
+        pasteEvent.clipboardData = { getData: () => '=SUM($B$1:$B$2)\n=SUM($B$1:B2)' };
+        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
+        await act(async () => document.activeElement!.dispatchEvent(pasteEvent));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow(0).total).to.equal(
+            '=SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(2)), FIXED(ROW_TO(2))))',
+          );
+        });
+        // One row down: the pinned start axes stay put, only the relative end
+        // axes move.
+        expect(apiRef.current!.getRow(1).total).to.equal(
+          '=SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), FIXED(ROW_FROM(1)), COLUMN_TO(2), ROW_TO(3)))',
+        );
+        expect(getColumnValues(4)).to.deep.equal(['3', '7', '8']);
       });
     });
 

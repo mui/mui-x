@@ -113,6 +113,80 @@ describe('<DataGridPremium /> - Formula fill handle', () => {
     expect(apiRef.current!.getRow('r1')!.total).to.contain('ROW_POSITION(5)');
   });
 
+  // `RANGE_REF` windows address view positions, so the fill rule is the Excel `$`
+  // rule: a plain axis shifts by the delta, a `FIXED(...)` axis never moves, and
+  // resolution auto-clips whatever the arithmetic produces.
+  // Column 2 is `qty` (price=1, qty=2, total=3, plain=4); rows r0..r3 are
+  // positions 1..4 with qty 3, 5, 7, 9.
+  const qtyWindow = (rowFrom: string, rowTo: string, column = 'COLUMN_FROM(2)') =>
+    `=SUM(RANGE_REF(${column}, ${rowFrom}, ${column.replace('FROM', 'TO')}, ${rowTo}))`;
+
+  it('shifts a relative range window when filling down (Ctrl+D)', async () => {
+    // qty rows 1..4 → 3 + 5 + 7 + 9.
+    const { user } = render(<TestGrid rows={makeRows(qtyWindow('ROW_FROM(1)', 'ROW_TO(4)'))} />);
+    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('24'));
+
+    await user.click(getCell(0, 2));
+    fillDownShortcut(getCell(0, 2));
+
+    // The window slides one row down to 2..5; the overshooting end clips back to
+    // the last data row, so r1 sums qty of r1..r3 = 5 + 7 + 9.
+    await waitFor(() => expect(getCell(1, 2).textContent).to.equal('21'));
+    expect(apiRef.current!.getRow('r1')!.total).to.equal(
+      '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(2), COLUMN_TO(2), ROW_TO(5)))',
+    );
+  });
+
+  it('never moves a fully FIXED range window on fill', async () => {
+    const fixedWindow = qtyWindow(
+      'FIXED(ROW_FROM(1))',
+      'FIXED(ROW_TO(4))',
+      'FIXED(COLUMN_FROM(2))',
+    );
+    const { user } = render(<TestGrid rows={makeRows(fixedWindow)} />);
+    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('24'));
+
+    await user.click(getCell(0, 2));
+    fillDownShortcut(getCell(0, 2));
+
+    // Every axis is absolute: the filled cell keeps the identical window.
+    await waitFor(() => expect(getCell(1, 2).textContent).to.equal('24'));
+    expect(apiRef.current!.getRow('r1')!.total).to.equal(fixedWindow);
+  });
+
+  it('grows a running-total window with a FIXED start and a relative end', async () => {
+    const runningTotal = qtyWindow('FIXED(ROW_FROM(1))', 'ROW_TO(1)', 'FIXED(COLUMN_FROM(2))');
+    const { user } = render(<TestGrid rows={makeRows(runningTotal)} />);
+    // Rows 1..1 of qty = 3.
+    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('3'));
+
+    await user.click(getCell(0, 2));
+    fillDownShortcut(getCell(0, 2));
+
+    // The anchored start stays at row 1 while the end follows the fill: 3 + 5.
+    await waitFor(() => expect(getCell(1, 2).textContent).to.equal('8'));
+    expect(apiRef.current!.getRow('r1')!.total).to.equal(
+      '=SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(2)), ROW_TO(2)))',
+    );
+  });
+
+  it('keeps the arithmetic indexes and clips when a fill pushes the window past the last row', async () => {
+    // qty rows 3..4 → 7 + 9.
+    const { user } = render(<TestGrid rows={makeRows(qtyWindow('ROW_FROM(3)', 'ROW_TO(4)'))} />);
+    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('16'));
+
+    await user.click(getCell(0, 2));
+    fillDownShortcut(getCell(0, 2));
+
+    // Rows 4..5: the stored source keeps the out-of-view index, and resolution
+    // clips it to the last data row instead of erroring — qty of r3 = 9.
+    await waitFor(() => expect(getCell(1, 2).textContent).to.equal('9'));
+    expect(getCell(1, 2).textContent).not.to.equal('#REF!');
+    expect(apiRef.current!.getRow('r1')!.total).to.equal(
+      '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(4), COLUMN_TO(2), ROW_TO(5)))',
+    );
+  });
+
   it('copies the evaluated value when filling into a non-allowFormulas column (Ctrl+R)', async () => {
     const { user } = render(<TestGrid />);
     await waitFor(() => expect(getCell(0, 2).textContent).to.equal('6'));

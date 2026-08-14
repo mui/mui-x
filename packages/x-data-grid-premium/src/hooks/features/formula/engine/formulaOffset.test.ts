@@ -77,27 +77,53 @@ describe('offsetFormulaReferences', () => {
     });
   });
 
-  describe('ranges', () => {
-    it('shifts both endpoints independently (=SUM(A1:A3) down one → =SUM(A2:A4))', () => {
+  describe('range windows', () => {
+    it('shifts every non-fixed axis (=SUM(A1:A3) down one → =SUM(A2:A4))', () => {
       expect(
-        offset(
-          'SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("price"), ROW("r3"))))',
-          1,
-          0,
-        ),
-      ).toBe('SUM(RANGE(REF(COLUMN("price"), ROW("r2")), REF(COLUMN("price"), ROW("r4"))))');
+        offset('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(3)))', 1, 0),
+      ).toBe('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(2), COLUMN_TO(1), ROW_TO(4)))');
     });
 
-    it('keeps an absolute start anchor while shifting a relative end (running total)', () => {
+    it('shifts the column axes on a horizontal fill (A1:A3 → B1:B3)', () => {
+      expect(
+        offset('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(3)))', 0, 1),
+      ).toBe('SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3)))');
+    });
+
+    it('keeps a FIXED start while shifting a relative end (running total)', () => {
+      // `=SUM($A$1:A1)` dragged down one → `=SUM($A$1:A2)`.
       expect(
         offset(
-          'SUM(RANGE(REF(COLUMN_POSITION(1), ROW_POSITION(1)), REF(COLUMN("price"), ROW("r1"))))',
+          'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), COLUMN_TO(1), ROW_TO(1)))',
           1,
           0,
         ),
-      ).toBe(
-        'SUM(RANGE(REF(COLUMN_POSITION(1), ROW_POSITION(1)), REF(COLUMN("price"), ROW("r2"))))',
-      );
+      ).toBe('SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), COLUMN_TO(1), ROW_TO(2)))');
+    });
+
+    it('never moves a FIXED axis, on either delta', () => {
+      const window =
+        'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(2)), FIXED(ROW_TO(4))))';
+      expect(offset(window, 3, 2)).toBe(window);
+    });
+
+    it('clamps an underflowing axis at position 1 (the window shrinks at the top)', () => {
+      // Filling `A2:A4` two rows up: the start clamps to 1, the end follows.
+      expect(
+        offset('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(2), COLUMN_TO(1), ROW_TO(4)))', -3, 0),
+      ).toBe('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(1)))');
+    });
+
+    it('keeps the arithmetic index on overshoot (resolution clips, not the offset)', () => {
+      // r5 is the last row; the window keeps counting past it and auto-clips
+      // when it is resolved against the view.
+      expect(
+        offset('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(4), COLUMN_TO(1), ROW_TO(5)))', 2, 0),
+      ).toBe('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(6), COLUMN_TO(1), ROW_TO(7)))');
+      // Same past the last column.
+      expect(
+        offset('SUM(RANGE_REF(COLUMN_FROM(3), ROW_FROM(1), COLUMN_TO(3), ROW_TO(2)))', 0, 2),
+      ).toBe('SUM(RANGE_REF(COLUMN_FROM(5), ROW_FROM(1), COLUMN_TO(5), ROW_TO(2)))');
     });
   });
 

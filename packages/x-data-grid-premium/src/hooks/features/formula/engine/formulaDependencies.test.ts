@@ -39,8 +39,14 @@ describe('formulaDependencies', () => {
 
     it('flags ranges and column slices as position-context-dependent', () => {
       expect(
-        extract('SUM(RANGE(REF(COLUMN("a"), ROW(1)), REF(COLUMN("a"), ROW(2))))')
+        extract('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(2)))')
           .usesPositionContext,
+      ).to.equal(true);
+      // Fixed axes still describe view positions — the window rebinds too.
+      expect(
+        extract(
+          'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(1)), FIXED(ROW_TO(2))))',
+        ).usesPositionContext,
       ).to.equal(true);
       const deps = extract('SUM(COLUMN_VALUES("price"))');
       expect(deps.usesPositionContext).to.equal(true);
@@ -111,7 +117,7 @@ describe('formulaDependencies', () => {
     it('binds ranges to column interval records, never exploded cells', () => {
       const bound = bindFormulaDependencies(
         owner,
-        extract('SUM(RANGE(REF(COLUMN("a"), ROW("r1")), REF(COLUMN("b"), ROW("r3"))))'),
+        extract('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3)))'),
         context,
       );
       expect(bound.cells.size).to.equal(0);
@@ -121,10 +127,10 @@ describe('formulaDependencies', () => {
       ]);
     });
 
-    it('normalizes inverted range anchors', () => {
+    it('normalizes inverted range endpoints', () => {
       const bound = bindFormulaDependencies(
         owner,
-        extract('SUM(RANGE(REF(COLUMN("b"), ROW("r3")), REF(COLUMN("a"), ROW("r1"))))'),
+        extract('SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(3), COLUMN_TO(1), ROW_TO(1)))'),
         context,
       );
       expect(bound.columnIntervals).to.deep.equal([
@@ -133,36 +139,74 @@ describe('formulaDependencies', () => {
       ]);
     });
 
-    it('resolves positional range anchors against the context', () => {
+    it('binds the window to whatever occupies its positions', () => {
       const bound = bindFormulaDependencies(
         owner,
-        extract(
-          'SUM(RANGE(REF(COLUMN_POSITION(1), ROW_POSITION(2)), REF(COLUMN("a"), ROW("r3"))))',
-        ),
+        extract('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(2), COLUMN_TO(1), ROW_TO(3)))'),
         context,
       );
       expect(bound.columnIntervals).to.deep.equal([{ field: 'a', fromIndex: 2, toIndex: 3 }]);
     });
 
-    it('records #REF! when a range anchor has no position', () => {
+    it('binds fixed axes exactly like plain ones', () => {
       const bound = bindFormulaDependencies(
         owner,
-        extract('SUM(RANGE(REF(COLUMN("a"), ROW("filtered-out")), REF(COLUMN("a"), ROW("r2"))))'),
+        extract(
+          'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(2)), COLUMN_TO(1), ROW_TO(3)))',
+        ),
+        context,
+      );
+      expect(bound.columnIntervals).to.deep.equal([{ field: 'a', fromIndex: 2, toIndex: 3 }]);
+      expect(bound.errors).to.have.length(0);
+    });
+
+    it('clips a window that overflows the rows in view', () => {
+      const bound = bindFormulaDependencies(
+        owner,
+        extract('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(9)))'),
+        context,
+      );
+      expect(bound.columnIntervals).to.deep.equal([{ field: 'a', fromIndex: 1, toIndex: 3 }]);
+      expect(bound.errors).to.have.length(0);
+    });
+
+    it('clips the column axis to the visible columns', () => {
+      const bound = bindFormulaDependencies(
+        owner,
+        extract('SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(1), COLUMN_TO(9), ROW_TO(2)))'),
+        context,
+      );
+      expect(bound.columnIntervals).to.deep.equal([
+        { field: 'b', fromIndex: 1, toIndex: 2 },
+        { field: 'c', fromIndex: 1, toIndex: 2 },
+      ]);
+      expect(bound.errors).to.have.length(0);
+    });
+
+    it('clips the row axis to the data band, excluding pinned rows', () => {
+      // r1 is pinned at the top: the sortable body is positions 2..3.
+      const pinned = createTestPositionContext(['r1', 'r2', 'r3'], ['a', 'b', 'c'], 0, {
+        dataFromIndex: 2,
+        dataToIndex: 3,
+      });
+      const bound = bindFormulaDependencies(
+        owner,
+        extract('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(3)))'),
+        pinned,
+      );
+      expect(bound.columnIntervals).to.deep.equal([{ field: 'a', fromIndex: 2, toIndex: 3 }]);
+      expect(bound.errors).to.have.length(0);
+    });
+
+    it('binds no intervals and no errors for a fully clipped window', () => {
+      const bound = bindFormulaDependencies(
+        owner,
+        extract('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(7), COLUMN_TO(1), ROW_TO(9)))'),
         context,
       );
       expect(bound.columnIntervals).to.have.length(0);
-      expect(bound.errors).to.have.length(1);
-      expect(bound.errors[0].code).to.equal('#REF!');
-    });
-
-    it('records #REF! when a range anchor column is hidden', () => {
-      const bound = bindFormulaDependencies(
-        owner,
-        extract('SUM(RANGE(REF(COLUMN("hidden"), ROW("r1")), REF(COLUMN("a"), ROW("r2"))))'),
-        context,
-      );
-      expect(bound.errors).to.have.length(1);
-      expect(bound.errors[0].code).to.equal('#REF!');
+      expect(bound.cells.size).to.equal(0);
+      expect(bound.errors).to.have.length(0);
     });
 
     it('binds COLUMN_VALUES to whole-column records', () => {

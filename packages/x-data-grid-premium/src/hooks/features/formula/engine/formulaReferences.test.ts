@@ -56,13 +56,12 @@ describe('formulaReferences', () => {
       expect(slices(expression, references)).to.deep.equal([expression]);
     });
 
-    it('collects a range as one reference, never its inner anchors', () => {
-      const expression =
-        'SUM(RANGE(REF(COLUMN("item"), ROW("r1")), REF(COLUMN("total"), ROW("r3"))))';
+    it('collects a range window as one reference, never its inner axes', () => {
+      const expression = 'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(4), ROW_TO(3)))';
       const references = canonical(expression);
       expect(references).to.have.length(1);
-      expect(references[0].node.type).to.equal('range');
-      expect(slices(expression, references)[0]).to.match(/^RANGE\(.*\)$/);
+      expect(references[0].node.type).to.equal('rangeRef');
+      expect(slices(expression, references)[0]).to.match(/^RANGE_REF\(.*\)$/);
     });
 
     it('collects COLUMN_VALUES', () => {
@@ -100,11 +99,33 @@ describe('formulaReferences', () => {
       expect((node as any).row).to.deep.equal({ kind: 'position', index: 1 });
     });
 
-    it('scans a range as one reference', () => {
+    it('scans a range as one reference, as a positional window', () => {
       const references = a1('A1:B2');
       expect(references).to.have.length(1);
-      expect(references[0].node.type).to.equal('range');
+      const { node } = references[0];
+      expect(node.type).to.equal('rangeRef');
+      expect((node as any).columnFrom).to.deep.equal({ index: 1, fixed: false });
+      expect((node as any).rowFrom).to.deep.equal({ index: 1, fixed: false });
+      expect((node as any).columnTo).to.deep.equal({ index: 2, fixed: false });
+      expect((node as any).rowTo).to.deep.equal({ index: 2, fixed: false });
       expect(references[0].spans[0]).to.deep.equal({ start: 0, end: 5 });
+    });
+
+    it('marks the `$` axes of a scanned window as fixed', () => {
+      const { node } = a1('$A1:B$2')[0];
+      expect((node as any).columnFrom).to.deep.equal({ index: 1, fixed: true });
+      expect((node as any).rowFrom).to.deep.equal({ index: 1, fixed: false });
+      expect((node as any).columnTo).to.deep.equal({ index: 2, fixed: false });
+      expect((node as any).rowTo).to.deep.equal({ index: 2, fixed: true });
+    });
+
+    it('scans a window reaching past the view without consulting identities', () => {
+      // Row 9 does not exist in this 3-row context: the window is still one
+      // reference, stored as written, and clips only when resolved.
+      const references = a1('A1:B9');
+      expect(references).to.have.length(1);
+      expect(references[0].node.type).to.equal('rangeRef');
+      expect((references[0].node as any).rowTo).to.deep.equal({ index: 9, fixed: false });
     });
 
     it('scans a whole-column range as COLUMN_VALUES', () => {

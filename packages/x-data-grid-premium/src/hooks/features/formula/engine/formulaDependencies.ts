@@ -1,10 +1,4 @@
-import type {
-  FormulaAstNode,
-  FormulaCellRefNode,
-  FormulaColumnSelector,
-  FormulaRangeNode,
-  FormulaRowSelector,
-} from './formulaAst';
+import type { FormulaAstNode, FormulaCellRefNode, FormulaRangeRefNode } from './formulaAst';
 import { createFormulaCellKey } from './formulaTypes';
 import type {
   FormulaCellKey,
@@ -12,7 +6,7 @@ import type {
   FormulaPositionContext,
   FormulaRowId,
 } from './formulaTypes';
-import { createFormulaError, isFormulaErrorValue } from './formulaErrors';
+import { createFormulaError } from './formulaErrors';
 import type { FormulaErrorValue } from './formulaErrors';
 
 /**
@@ -29,11 +23,11 @@ export interface FormulaStaticDependencies {
    * Explicit `REF(...)` nodes, any selector mix.
    */
   cellRefs: FormulaCellRefNode[];
-  ranges: FormulaRangeNode[];
+  ranges: FormulaRangeRefNode[];
   columnValues: Set<string>;
   /**
-   * `true` when any positional selector, `RANGE` or `COLUMN_VALUES` is present —
-   * the formula must rebind when the position context changes.
+   * `true` when any positional selector, `RANGE_REF` or `COLUMN_VALUES` is
+   * present — the formula must rebind when the position context changes.
    */
   usesPositionContext: boolean;
   /**
@@ -66,7 +60,7 @@ export function extractFormulaDependencies(ast: FormulaAstNode): FormulaStaticDe
           dependencies.usesPositionContext = true;
         }
         break;
-      case 'range':
+      case 'rangeRef':
         dependencies.ranges.push(node);
         dependencies.usesPositionContext = true;
         break;
@@ -132,14 +126,10 @@ export interface FormulaBoundDependencies {
   errors: FormulaErrorValue[];
 }
 
-interface ResolvedAnchor {
-  columnIndex: number;
-  rowIndex: number;
-}
-
 /**
- * The normalized rectangle a `RANGE(...)` node spans in a position context.
- * All indexes are 1-based and inclusive.
+ * The normalized rectangle a `RANGE_REF(...)` node spans in a position context.
+ * All indexes are 1-based and inclusive. An empty window is expressed as
+ * `fromColumn > toColumn` or `fromIndex > toIndex` — never as an error.
  */
 export interface FormulaRangeRectangle {
   fromColumn: number;
@@ -148,91 +138,29 @@ export interface FormulaRangeRectangle {
   toIndex: number;
 }
 
-function resolveColumnIndex(
-  selector: FormulaColumnSelector,
-  context: FormulaPositionContext,
-): number | FormulaErrorValue {
-  if (selector.kind === 'position') {
-    if (context.getFieldAtPosition(selector.index) === undefined) {
-      return createFormulaError('#REF!', `There is no column at position ${selector.index}.`);
-    }
-    return selector.index;
-  }
-  const index = context.getPositionOfField(selector.field);
-  if (index === undefined) {
-    return createFormulaError(
-      '#REF!',
-      `The column "${selector.field}" has no position in the current view.`,
-    );
-  }
-  return index;
-}
-
-function resolveRowIndex(
-  selector: FormulaRowSelector,
-  context: FormulaPositionContext,
-): number | FormulaErrorValue {
-  if (selector.kind === 'position') {
-    if (context.getRowIdAtPosition(selector.index) === undefined) {
-      return createFormulaError('#REF!', `There is no row at position ${selector.index}.`);
-    }
-    return selector.index;
-  }
-  const index = context.getPositionOfRowId(selector.id);
-  if (index === undefined) {
-    return createFormulaError(
-      '#REF!',
-      `The row with id "${selector.id}" has no position in the current view.`,
-    );
-  }
-  return index;
-}
-
-function isErrorValue(value: number | FormulaErrorValue): value is FormulaErrorValue {
-  return typeof value !== 'number';
-}
-
-function resolveAnchor(
-  anchor: FormulaCellRefNode,
-  context: FormulaPositionContext,
-): ResolvedAnchor | FormulaErrorValue {
-  const columnIndex = resolveColumnIndex(anchor.column, context);
-  if (isErrorValue(columnIndex)) {
-    return columnIndex;
-  }
-  const rowIndex = resolveRowIndex(anchor.row, context);
-  if (isErrorValue(rowIndex)) {
-    return rowIndex;
-  }
-  return { columnIndex, rowIndex };
-}
-
 /**
- * Resolves a `RANGE` node's anchors against a position context and normalizes
- * them (`RANGE(B5, A1)` spans the same rectangle as `RANGE(A1, B5)`). Shared
- * by dependency binding and range materialization so the two can never
+ * Resolves a `RANGE_REF` window against a position context: normalizes the
+ * endpoints (`RANGE_REF(B5..A1)` spans the same rectangle as `A1..B5`) and
+ * auto-clips them to the current view — a window larger than the view covers
+ * whatever is available instead of erroring. Shared by dependency binding,
+ * range materialization and reference highlighting so the three can never
  * disagree about the rectangle a range covers.
  */
 export function resolveFormulaRangeRectangle(
-  range: FormulaRangeNode,
+  range: FormulaRangeRefNode,
   context: FormulaPositionContext,
-): FormulaRangeRectangle | FormulaErrorValue {
-  const start = resolveAnchor(range.start, context);
-  if (isFormulaErrorValue(start)) {
-    return start;
-  }
-  const end = resolveAnchor(range.end, context);
-  if (isFormulaErrorValue(end)) {
-    return end;
-  }
+): FormulaRangeRectangle {
   // Clamp the row span to the data band: pinned rows are addressable but never
   // aggregated, so a pinned summary row can hold `SUM(E1:E8)` without covering
   // itself however the body is sorted, filtered or paginated.
-  const fromIndex = Math.max(Math.min(start.rowIndex, end.rowIndex), context.dataFromIndex);
-  const toIndex = Math.min(Math.max(start.rowIndex, end.rowIndex), context.dataToIndex);
+  const fromIndex = Math.max(
+    Math.min(range.rowFrom.index, range.rowTo.index),
+    context.dataFromIndex,
+  );
+  const toIndex = Math.min(Math.max(range.rowFrom.index, range.rowTo.index), context.dataToIndex);
   return {
-    fromColumn: Math.min(start.columnIndex, end.columnIndex),
-    toColumn: Math.max(start.columnIndex, end.columnIndex),
+    fromColumn: Math.max(Math.min(range.columnFrom.index, range.columnTo.index), 1),
+    toColumn: Math.min(Math.max(range.columnFrom.index, range.columnTo.index), context.columnCount),
     fromIndex,
     toIndex,
   };
@@ -243,7 +171,7 @@ export function resolveFormulaRangeRectangle(
  * against a position-context snapshot. Stable cell refs (`ROW(id)` +
  * `COLUMN(field)`) bind without consulting positions — a stable ref to a row
  * that is currently filtered out still binds (its existence is checked at
- * evaluation time). Only positional selectors and range anchors need the
+ * evaluation time). Only positional selectors and range windows need the
  * context.
  */
 export function bindFormulaDependencies(
@@ -294,8 +222,8 @@ export function bindFormulaDependencies(
 
   for (const range of dependencies.ranges) {
     const rectangle = resolveFormulaRangeRectangle(range, context);
-    if (isFormulaErrorValue(rectangle)) {
-      bound.errors.push(rectangle);
+    if (rectangle.fromIndex > rectangle.toIndex) {
+      // The window clipped away entirely — an empty range has no precedents.
       continue;
     }
     for (

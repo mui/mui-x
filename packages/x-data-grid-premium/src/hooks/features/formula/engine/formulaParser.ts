@@ -6,6 +6,7 @@ import type {
   FormulaBinaryOperator,
   FormulaCellRefNode,
   FormulaColumnSelector,
+  FormulaRangeAxis,
   FormulaRowSelector,
 } from './formulaAst';
 import type { FormulaSourceSpan } from './formulaTypes';
@@ -27,6 +28,9 @@ export interface FormulaParseResult {
 const SPECIAL_FORM_NAMES = new Set(
   FORMULA_RESERVED_NAMES.filter((name) => name !== 'TRUE' && name !== 'FALSE'),
 );
+
+// Names that are only meaningful as RANGE_REF() arguments.
+const RANGE_REF_ONLY_NAMES = new Set(['COLUMN_FROM', 'ROW_FROM', 'COLUMN_TO', 'ROW_TO', 'FIXED']);
 
 /**
  * Bounds both parser recursion depth and constructed AST height, so that the
@@ -302,16 +306,22 @@ class Parser {
       }
       case 'REF':
         return this.parseRef(nameToken);
-      case 'RANGE': {
+      case 'RANGE_REF': {
         this.expectPunctuation('(');
-        const start = this.parseRefAnchor();
+        const columnFrom = this.parseRangeAxis('COLUMN_FROM');
         this.expectPunctuation(',');
-        const end = this.parseRefAnchor();
+        const rowFrom = this.parseRangeAxis('ROW_FROM');
+        this.expectPunctuation(',');
+        const columnTo = this.parseRangeAxis('COLUMN_TO');
+        this.expectPunctuation(',');
+        const rowTo = this.parseRangeAxis('ROW_TO');
         const closing = this.expectPunctuation(')');
         return {
-          type: 'range',
-          start,
-          end,
+          type: 'rangeRef',
+          columnFrom,
+          rowFrom,
+          columnTo,
+          rowTo,
           span: { start: nameToken.span.start, end: closing.span.end },
         };
       }
@@ -325,19 +335,40 @@ class Parser {
           span: { start: nameToken.span.start, end: closing.span.end },
         };
       }
-      default:
-        // COLUMN, ROW, COLUMN_POSITION, ROW_POSITION
-        throw this.failure(`"${name}" can only be used inside REF().`, nameToken.span);
+      default: {
+        // COLUMN, ROW, COLUMN_POSITION, ROW_POSITION belong inside REF();
+        // COLUMN_FROM, ROW_FROM, COLUMN_TO, ROW_TO, FIXED belong inside RANGE_REF().
+        const enclosingForm = RANGE_REF_ONLY_NAMES.has(name) ? 'RANGE_REF' : 'REF';
+        throw this.failure(`"${name}" can only be used inside ${enclosingForm}().`, nameToken.span);
+      }
     }
   }
 
-  private parseRefAnchor(): FormulaCellRefNode {
-    const token = this.peek();
-    if (token === null || token.type !== 'identifier' || token.value.toUpperCase() !== 'REF') {
-      throw this.failure('RANGE() anchors must be REF() references.');
+  /**
+   * One axis of a RANGE_REF() window: `<LABEL>(index)` or `FIXED(<LABEL>(index))`.
+   * The label is validated per slot so the stored text stays self-documenting.
+   */
+  private parseRangeAxis(label: string): FormulaRangeAxis {
+    const expected = `Expected ${label}(index) or FIXED(${label}(index)).`;
+    let fixed = false;
+    let token = this.peek();
+    if (token !== null && token.type === 'identifier' && token.value.toUpperCase() === 'FIXED') {
+      this.next();
+      this.expectPunctuation('(');
+      fixed = true;
+      token = this.peek();
     }
-    const nameToken = this.next()!;
-    return this.parseRef(nameToken);
+    if (token === null || token.type !== 'identifier' || token.value.toUpperCase() !== label) {
+      throw this.failure(expected);
+    }
+    this.next();
+    this.expectPunctuation('(');
+    const index = this.expectPositionLiteral(label);
+    this.expectPunctuation(')');
+    if (fixed) {
+      this.expectPunctuation(')');
+    }
+    return { index, fixed };
   }
 
   private parseRef(nameToken: FormulaToken): FormulaCellRefNode {

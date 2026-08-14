@@ -42,6 +42,49 @@ describe('getFormulaCompletionTokens', () => {
     expect(columnValues?.kind).toEqual('specialForm');
   });
 
+  it('lists exactly the canonical special forms', () => {
+    const tokens = getFormulaCompletionTokens();
+    const specialForms = tokens
+      .filter((token) => token.kind === 'specialForm')
+      .map((token) => token.label);
+    expect(specialForms).toEqual([
+      'REF',
+      'COLUMN',
+      'ROW',
+      'COLUMN_POSITION',
+      'ROW_POSITION',
+      'FIELD',
+      'RANGE_REF',
+      'COLUMN_FROM',
+      'ROW_FROM',
+      'COLUMN_TO',
+      'ROW_TO',
+      'FIXED',
+      'COLUMN_VALUES',
+    ]);
+    // The old RANGE() grammar is gone from the vocabulary entirely.
+    expect(tokens.some((token) => token.label === 'RANGE')).toEqual(false);
+  });
+
+  it('describes the RANGE_REF window forms', () => {
+    const tokens = getFormulaCompletionTokens();
+    expect(tokens.find((token) => token.label === 'RANGE_REF')).toMatchObject({
+      kind: 'specialForm',
+      callable: true,
+      signature: 'RANGE_REF(COLUMN_FROM(c1), ROW_FROM(r1), COLUMN_TO(c2), ROW_TO(r2))',
+    });
+    for (const label of ['COLUMN_FROM', 'ROW_FROM', 'COLUMN_TO', 'ROW_TO']) {
+      expect(tokens.find((token) => token.label === label)).toMatchObject({
+        kind: 'specialForm',
+        signature: `${label}(index)`,
+      });
+    }
+    expect(tokens.find((token) => token.label === 'FIXED')).toMatchObject({
+      kind: 'specialForm',
+      signature: 'FIXED(axis)',
+    });
+  });
+
   it('includes the boolean constants (not callable) and operators', () => {
     const tokens = getFormulaCompletionTokens();
     const trueToken = tokens.find((token) => token.label === 'TRUE');
@@ -145,6 +188,25 @@ describe('getFormulaCompletionContext', () => {
     const context = getFormulaCompletionContext(expression, expression.length);
     expect(context.functionContext).toEqual({ name: 'ROUND', argIndex: 0 });
     expect(context.token).toEqual('pr');
+  });
+
+  it('reports the innermost RANGE_REF axis form for signature help', () => {
+    // RANGE_REF(FIXED(COLUMN_FROM(|
+    const expression = 'RANGE_REF(FIXED(COLUMN_FROM(';
+    expect(getFormulaCompletionContext(expression, expression.length).functionContext).toEqual({
+      name: 'COLUMN_FROM',
+      argIndex: 0,
+    });
+    // One level out, the wrapper itself.
+    expect(getFormulaCompletionContext(expression, 16).functionContext).toEqual({
+      name: 'FIXED',
+      argIndex: 0,
+    });
+    // At the window's own argument list.
+    expect(getFormulaCompletionContext(expression, 10).functionContext).toEqual({
+      name: 'RANGE_REF',
+      argIndex: 0,
+    });
   });
 
   it('ignores commas inside a nested grouping for the outer argument index', () => {
@@ -252,7 +314,8 @@ describe('getFormulaCompletionContext', () => {
     });
 
     it('leaves the canonical dialect analysis unchanged', () => {
-      const expression = 'SUM(RANGE(REF(COLUMN("a"), ROW(1)), REF(COLUMN("a"), ROW(5))))';
+      const expression =
+        'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), FIXED(COLUMN_TO(2)), ROW_TO(5)))';
       for (let caret = 0; caret <= expression.length; caret += 1) {
         expect(getFormulaCompletionContext(expression, caret, a1)).toEqual(
           getFormulaCompletionContext(expression, caret),

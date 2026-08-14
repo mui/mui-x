@@ -113,9 +113,31 @@ const SPECIAL_FORM_META: Record<string, { signature: string; description: string
     signature: 'FIELD("field name")',
     description: 'A same-row field by name. Use it for fields whose name is not a bare identifier.',
   },
-  RANGE: {
-    signature: 'RANGE(startRef, endRef)',
-    description: 'The inclusive rectangle of cells between two cell references.',
+  RANGE_REF: {
+    signature: 'RANGE_REF(COLUMN_FROM(c1), ROW_FROM(r1), COLUMN_TO(c2), ROW_TO(r2))',
+    description:
+      'The inclusive rectangle of cells between two view positions. Wrap an axis in FIXED() to pin it against fill.',
+  },
+  COLUMN_FROM: {
+    signature: 'COLUMN_FROM(index)',
+    description: 'The starting column of a RANGE_REF() window, by 1-based view position.',
+  },
+  ROW_FROM: {
+    signature: 'ROW_FROM(index)',
+    description: 'The starting row of a RANGE_REF() window, by 1-based view position.',
+  },
+  COLUMN_TO: {
+    signature: 'COLUMN_TO(index)',
+    description: 'The ending column of a RANGE_REF() window, by 1-based view position.',
+  },
+  ROW_TO: {
+    signature: 'ROW_TO(index)',
+    description: 'The ending row of a RANGE_REF() window, by 1-based view position.',
+  },
+  FIXED: {
+    signature: 'FIXED(axis)',
+    description:
+      'Pins a RANGE_REF() axis against the fill handle — the canonical form of the A1 "$" prefix.',
   },
   COLUMN_VALUES: {
     signature: 'COLUMN_VALUES("field")',
