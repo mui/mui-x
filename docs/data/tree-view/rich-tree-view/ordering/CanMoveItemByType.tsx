@@ -33,11 +33,10 @@ export default function CanMoveItemByType() {
         items={ITEMS}
         itemsReordering
         defaultExpandedItems={['documents']}
-        // `newPosition.parentId` is enough to know whether the drop would nest
-        // the item inside another one (`make-child`) or just reorder it among
-        // its siblings, so there's no need to read the drag overlay's `action`.
+        // Only allow drops where the new parent is a folder.
+        // `newPosition.parentId` is `null` when the item is dropped at the root.
         canMoveItemToNewPosition={(params) =>
-          params.newPosition.parentId === null ||
+          params.newPosition.parentId !== null &&
           apiRef.current!.getItem(params.newPosition.parentId).fileType === 'folder'
         }
       />
