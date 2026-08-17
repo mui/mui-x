@@ -8,7 +8,6 @@ import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGe
 import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
-import { useRadarHoveredItem } from './useRadarHoveredItem';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const { seriesId: inSeriesId, className, classes: inClasses, onAreaClick, onMarkClick } = props;
@@ -16,7 +15,6 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const { getAreaPointerProps, getMarkPointerProps } = useRadarHoveredItem();
   const getHighlightState = useItemHighlightStateGetter();
 
   const classes = useUtilityClasses(inClasses);
@@ -51,11 +49,6 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                   }
                   cursor={onAreaClick ? 'pointer' : 'unset'}
                   {...interactionProps[seriesIndex]}
-                  {...getAreaPointerProps(
-                    seriesId,
-                    getRotationIndex,
-                    interactionProps[seriesIndex],
-                  )}
                 />
               }
               {!hideMark &&
@@ -75,7 +68,6 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                       onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
                     }
                     cursor={onMarkClick ? 'pointer' : 'unset'}
-                    {...getMarkPointerProps(seriesId, index)}
                   />
                 ))}
             </g>

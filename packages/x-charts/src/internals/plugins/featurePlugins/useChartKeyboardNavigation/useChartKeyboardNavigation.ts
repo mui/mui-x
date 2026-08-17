@@ -171,18 +171,18 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   );
 
   /**
-   * The item a click landed on, read from the item the pointer is over. Falls back to the axis
-   * under the pointer, which covers the line and area paths, whose hovered item only knows its
-   * series.
+   * The item a click landed on, read from the item the pointer is over. An area or line path only
+   * knows its series, and a radar reports no item at all, so an incomplete one falls back to the
+   * axis under the pointer.
    *
    * A click that resolves nothing is left alone rather than focusing the chart. The drawing area
    * is a rectangle, but the data rarely fills it: taking the focus from a click next to a pie,
    * outside its circle, reads as the chart grabbing clicks that were not meant for it.
    */
   const resolveItemAtPointer = useEventCallback((event: MouseEvent | PointerEvent) => {
-    // Every series reports the item under the pointer, so the click itself needs no wiring.
+    // Series that report a complete item need no further wiring.
     const hoveredItem = store.state.interaction?.hoveredItem;
-    if (hoveredItem != null) {
+    if (hoveredItem != null && isCompleteFocusIdentifier(hoveredItem)) {
       return hoveredItem as FocusedItemIdentifier<ChartSeriesType>;
     }
 
@@ -194,7 +194,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     const processedSeries = selectorChartSeriesProcessed(store.state);
-    const focusedItem = store.state.keyboardNavigation.item;
+    // An incomplete hovered item still names the series under the pointer, which is a better
+    // target than the focused one: a click on a series should stay on it.
+    const focusedItem =
+      (hoveredItem as FocusedItemIdentifier<ChartSeriesType> | null) ??
+      store.state.keyboardNavigation.item;
 
     const item = getItemAtAxisPosition({
       point,

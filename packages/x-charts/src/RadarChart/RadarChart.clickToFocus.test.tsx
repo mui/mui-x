@@ -14,6 +14,11 @@ describe.skipIf(isJSDOM)('<RadarChart /> - click to focus', () => {
     series: [{ id: 'radar', data: [10, 20, 30, 40] }],
   };
 
+  /** The grid draws circles too, so the marks have to be read by their own class. */
+  function getMarks(container: HTMLElement) {
+    return Array.from(container.querySelectorAll<SVGElement>(`.${radarClasses.seriesMark}`));
+  }
+
   /** The focus indicator is a rect centered on the focused point. */
   function getFocusedMarkIndex(container: HTMLElement) {
     const indicator = container.querySelector('[fill="none"][stroke-width="2"]');
@@ -22,7 +27,7 @@ describe.skipIf(isJSDOM)('<RadarChart /> - click to focus', () => {
     }
 
     const center = getCenter(indicator);
-    return Array.from(container.querySelectorAll<SVGElement>('circle')).findIndex((mark) => {
+    return getMarks(container).findIndex((mark) => {
       const markCenter = getCenter(mark);
       return (
         Math.abs(markCenter.clientX - center.clientX) < 2 &&
@@ -31,10 +36,21 @@ describe.skipIf(isJSDOM)('<RadarChart /> - click to focus', () => {
     });
   }
 
+  /**
+   * The click is resolved from the rotation axis, whose pointer coordinate the gesture manager
+   * writes on move, so the pointer has to travel to the target before pressing.
+   */
+  async function clickAt(container: HTMLElement, user: any, coords: any) {
+    const surface = container.querySelector<SVGElement>('svg')!;
+    await user.pointer([{ target: surface, coords }]);
+    await user.pointer([{ keys: '[MouseLeft]', target: surface, coords }]);
+  }
+
   it('focuses the clicked mark', async () => {
     const { container, user } = render(<RadarChart {...radarProps} onMarkClick={() => {}} />);
 
-    await user.click(container.querySelectorAll<SVGElement>('circle')[2]);
+    const marks = getMarks(container);
+    await clickAt(container, user, getCenter(marks[2]));
 
     // Hidden, but stored: the next key moves on from the clicked mark.
     expect(container.querySelector('[fill="none"][stroke-width="2"]')).to.equal(null);
@@ -44,13 +60,10 @@ describe.skipIf(isJSDOM)('<RadarChart /> - click to focus', () => {
   });
 
   it('focuses the mark through the area when no click callback is set', async () => {
-    // Marks are pointer transparent without `onMarkClick`, so the click lands on the area,
-    // which resolves the index from the click angle.
     const { container, user } = render(<RadarChart {...radarProps} />);
 
-    const marks = container.querySelectorAll<SVGElement>('circle');
-    const area = container.querySelector<SVGElement>(`.${radarClasses.seriesArea}`)!;
-    await user.pointer([{ keys: '[MouseLeft]', target: area, coords: getCenter(marks[2]) }]);
+    const marks = getMarks(container);
+    await clickAt(container, user, getCenter(marks[2]));
     await user.keyboard('[ArrowRight]');
 
     expect(getFocusedMarkIndex(container)).to.equal(3);
