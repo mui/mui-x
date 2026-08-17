@@ -85,8 +85,8 @@ catalogs:
       specifier: ^1.1.8
       version: 1.1.8
     '@types/luxon':
-      specifier: ^3.7.2
-      version: 3.7.2
+      specifier: ^3.7.4
+      version: 3.7.4
     '@types/moment-hijri':
       specifier: ^2.1.4
       version: 2.1.4
@@ -106,8 +106,8 @@ catalogs:
       specifier: ^4.4.12
       version: 4.4.12
     '@types/semver':
-      specifier: ^7.7.1
-      version: 7.7.1
+      specifier: ^7.8.0
+      version: 7.8.0
     '@types/use-sync-external-store':
       specifier: ^1.5.0
       version: 1.5.0
@@ -711,7 +711,7 @@ importers:
         version: 3.1.0
       '@types/luxon':
         specifier: 'catalog:'
-        version: 3.7.2
+        version: 3.7.4
       '@types/moment-hijri':
         specifier: 'catalog:'
         version: 2.1.4
@@ -726,7 +726,7 @@ importers:
         version: 19.2.4(@types/react@19.2.18)
       '@types/semver':
         specifier: 'catalog:'
-        version: 7.7.1
+        version: 7.8.0
       '@types/stylis':
         specifier: 4.2.7
         version: 4.2.7
@@ -1512,7 +1512,7 @@ importers:
         version: 9.3.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@types/react@19.2.18)(react@19.2.8)
       '@types/luxon':
         specifier: 'catalog:'
-        version: 3.7.2
+        version: 3.7.4
       '@types/moment-hijri':
         specifier: 'catalog:'
         version: 2.1.4
@@ -1607,7 +1607,7 @@ importers:
         version: 9.3.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@types/react@19.2.18)(react@19.2.8)
       '@types/luxon':
         specifier: 'catalog:'
-        version: 3.7.2
+        version: 3.7.4
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -2223,7 +2223,7 @@ importers:
         version: 4.4.12(@types/react@19.2.18)
       '@types/semver':
         specifier: 'catalog:'
-        version: 7.7.1
+        version: 7.8.0
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0
@@ -2355,7 +2355,7 @@ importers:
         version: 19.2.18
       '@types/semver':
         specifier: 'catalog:'
-        version: 7.7.1
+        version: 7.8.0
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 6.0.5(babel-plugin-react-compiler@1.0.0)(vite@8.2.1(@types/node@22.20.1)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.1)(yaml@2.9.0))
@@ -2481,7 +2481,7 @@ importers:
         version: 19.2.18
       '@types/semver':
         specifier: 'catalog:'
-        version: 7.7.1
+        version: 7.8.0
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 6.0.5(babel-plugin-react-compiler@1.0.0)(vite@8.2.1(@types/node@22.20.1)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.1)(yaml@2.9.0))
@@ -5716,8 +5716,8 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
-  '@types/luxon@3.7.2':
-    resolution: {integrity: sha512-gW+Oib+vUtGJBtNC8V9Reww0oIpusw+4m81uncg9REGZAJfqOQHfo/nkabnc7w0QReXyPqjrbWMJk6NuAkiX3Q==}
+  '@types/luxon@3.7.4':
+    resolution: {integrity: sha512-V536ZAd6ZJztrrBlLcDFaaZrXNAL2E5uGmssWf/dpSiLkmkLScXUYhUBnWPmtW+cIqnNHzf6//TCMpIc9SCRRQ==}
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
@@ -5766,8 +5766,8 @@ packages:
   '@types/resolve@1.20.6':
     resolution: {integrity: sha512-A4STmOXPhMUtHH+S6ymgE2GiBSMqf4oTvcQZMcHzokuTLVYzXTB8ttjcgxOVaAp2lGwEdzZ0J+cRbbeevQj1UQ==}
 
-  '@types/semver@7.7.1':
-    resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
+  '@types/semver@7.8.0':
+    resolution: {integrity: sha512-1mAINjtQCXXeLkJ9ehXkwOcBpqtLxiVtKhpUf83DdRNdQKV0iXZpaHYqRr7nj+wvxuJzoAmAwXI+sCNMv1CzLQ==}
 
   '@types/sinon@22.0.0':
     resolution: {integrity: sha512-TDbVpbccc2HfiqHR09Argj3mHV1KMW7sCCKj52fsl8lbRLkEn7fB1966EWhOKWUBcqfBueZuPoA7/OK1CKiy3g==}
@@ -14924,7 +14924,7 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/luxon@3.7.2': {}
+  '@types/luxon@3.7.4': {}
 
   '@types/mdast@4.0.4':
     dependencies:
@@ -14970,7 +14970,7 @@ snapshots:
 
   '@types/resolve@1.20.6': {}
 
-  '@types/semver@7.7.1': {}
+  '@types/semver@7.8.0': {}
 
   '@types/sinon@22.0.0':
     dependencies:
