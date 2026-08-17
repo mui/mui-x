@@ -50,6 +50,13 @@ export function microtasks() {
   return act(() => Promise.resolve()) as unknown as Promise<void>;
 }
 
+// `sleep` inside `act`, so updates settling during the wait don't warn about missing `act`.
+export function actSleep(duration: number) {
+  return act(async () => {
+    await sleep(duration);
+  }) as unknown as Promise<void>;
+}
+
 export function spyApi(api: GridApiCommon, methodName: string) {
   const methodKey = methodName as keyof GridApiCommon;
   const privateApi = unwrapPrivateAPI(api);
