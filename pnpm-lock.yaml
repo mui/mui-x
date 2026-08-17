@@ -797,8 +797,8 @@ importers:
         specifier: 'catalog:'
         version: 7.29.7
       eventsource-parser:
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^4.0.0
+        version: 4.0.0
       p-queue:
         specifier: ^9.3.3
         version: 9.3.3
@@ -7532,6 +7532,10 @@ packages:
   eventsource-parser@3.1.0:
     resolution: {integrity: sha512-kJezFj9YFAMLeORyi7aCLxLbD5/qWMQnoMVlVPyHIll7lgRJCc3JVln9Vgl9nwQi0YkMnhdGTMNn7CkRRAptMg==}
     engines: {node: '>=18.0.0'}
+
+  eventsource-parser@4.0.0:
+    resolution: {integrity: sha512-aIpvYxbqTx4KYWw73KpCt1Rh22tEAJ144F1qR76CT3Ex+LNMEPKf5HFrK5Yz9fMP1EVT0GrfA35VZvWQhMPuSQ==}
+    engines: {node: '>=22.12'}
 
   eventsource@3.0.7:
     resolution: {integrity: sha512-CRT1WTyuQoD771GW56XEZFQ/ZoSfWid1alKGDYMmkt2yl8UXrVR4pspqWNEcqKvVIzg6PAltWjxcSSPrboA4iA==}
@@ -17015,6 +17019,8 @@ snapshots:
   events@3.3.0: {}
 
   eventsource-parser@3.1.0: {}
+
+  eventsource-parser@4.0.0: {}
 
   eventsource@3.0.7:
     dependencies:
