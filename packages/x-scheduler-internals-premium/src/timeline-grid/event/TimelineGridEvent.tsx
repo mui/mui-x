@@ -2,21 +2,20 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
-import {
-  useButton,
-  useRenderElement,
-  BaseUIComponentProps,
-  NonNativeButtonProps,
-} from '@mui/x-scheduler-internals/base-ui-copy';
-import {
+import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
+import { useButton } from '@base-ui/react/internals/use-button';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
+  SchedulerResourceId,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import {
   useDraggableEvent,
   generateOccurrenceFromEvent,
   useElementPositionInCollection,
+  dateToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -24,14 +23,20 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
-import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import {
+  eventTimelinePremiumDependencySelectors,
+  eventTimelinePremiumPresetSelectors,
+} from '../../event-timeline-premium-selectors';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
+import { useEventDependencyDropTarget } from './useEventDependencyDropTarget';
 
-const overflowStateAttributesMapping = {
+const extraStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) =>
     value ? { [TimelineGridEventDataAttributes.startingBeforeEdge]: '' } : null,
   endingAfterEdge: (value: boolean) =>
     value ? { [TimelineGridEventDataAttributes.endingAfterEdge]: '' } : null,
+  dependencyDropTarget: (value: boolean) =>
+    value ? { [TimelineGridEventDataAttributes.dependencyDropTarget]: '' } : null,
 };
 
 export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
@@ -62,19 +67,31 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
-  const { hasFocus: rowHasFocus, getCursorPositionInElementMs } = useTimelineGridEventRowContext();
+  const {
+    resourceId: rowResourceId,
+    hasFocus: rowHasFocus,
+    getCursorPositionInElementMs,
+  } = useTimelineGridEventRowContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const dependencyDropTarget = useStore(
+    store,
+    eventTimelinePremiumDependencySelectors.isCreationTarget,
+    occurrenceKey,
+    rowResourceId,
+  );
 
   // Feature hooks
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
+      // Measured on the axis so it stays consistent with the cursor offsets when a
+      // trimmed hour window compresses the days.
       const offsetBeforeRowStart = Math.max(
-        adapter.getTime(presetConfig.start) - start.timestamp,
+        -dateToTimelineAxisOffsetMs(adapter, config, start.value),
         0,
       );
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
@@ -95,6 +112,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         start: start.value,
         end: end.value,
         initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
+        sourceResourceId: rowResourceId,
       };
     },
   );
@@ -103,6 +121,14 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     ...getSharedDragData(input),
     source: 'TimelineGridEvent',
   }));
+
+  const elementPosition = useElementPositionInCollection({
+    start,
+    end,
+    collection: config,
+    durationMs: config.durationMs,
+  });
+  const { position, duration, startingBeforeEdge, endingAfterEdge } = elementPosition;
 
   const {
     state,
@@ -117,8 +143,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     isDraggable,
     renderDragPreview,
     getDragData,
-    collectionStart: presetConfig.start,
-    collectionEnd: presetConfig.end,
+    position: elementPosition,
   });
 
   const { getButtonProps, buttonRef } = useButton({
@@ -127,15 +152,14 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     tabIndex: rowHasFocus ? 0 : -1,
   });
 
-  const { position, duration, startingBeforeEdge, endingAfterEdge } =
-    useElementPositionInCollection({
-      start,
-      end,
-      collectionStart: presetConfig.start,
-      collectionEnd: presetConfig.end,
-    });
+  useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId: rowResourceId });
 
-  const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
+  const mergedState = {
+    ...state,
+    startingBeforeEdge,
+    endingAfterEdge,
+    dependencyDropTarget,
+  };
 
   const contextValue: TimelineGridEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
@@ -156,7 +180,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       { [TimelineGridEventDataAttributes.occurrenceKey]: occurrenceKey } as Record<string, string>,
       getButtonProps,
     ],
-    stateAttributesMapping: overflowStateAttributesMapping,
+    stateAttributesMapping: extraStateAttributesMapping,
   });
 
   return (
@@ -171,6 +195,7 @@ export namespace TimelineGridEvent {
   export interface State extends useDraggableEvent.State {
     startingBeforeEdge: boolean;
     endingAfterEdge: boolean;
+    dependencyDropTarget: boolean;
   }
 
   export interface Props
@@ -185,7 +210,14 @@ export namespace TimelineGridEvent {
     originalOccurrence: SchedulerEventOccurrence;
     start: TemporalSupportedObject;
     end: TemporalSupportedObject;
+    /**
+     * Cursor offset from the event start, in axis milliseconds.
+     */
     initialCursorPositionInEventMs: number;
+    /**
+     * The id of the resource row the occurrence was dragged from.
+     */
+    sourceResourceId: SchedulerResourceId;
   }
 
   export interface DragData extends SharedDragData {

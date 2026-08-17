@@ -159,12 +159,10 @@ export const selectorChartsInteractionTooltipRotationAxes = createSelectorMemoiz
   }
 
   return axes.axisIds
-    .map(
-      (axisId, axisIndex): AxisItemIdentifier => ({
-        axisId,
-        dataIndex: indexes[axisIndex],
-      }),
-    )
+    .map((axisId, axisIndex): AxisItemIdentifier => ({
+      axisId,
+      dataIndex: indexes[axisIndex],
+    }))
     .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
 });
 
@@ -254,12 +252,10 @@ export const selectorChartsInteractionTooltipRadiusAxes = createSelectorMemoized
   }
 
   return axes.axisIds
-    .map(
-      (axisId, axisIndex): AxisItemIdentifier => ({
-        axisId,
-        dataIndex: indexes[axisIndex],
-      }),
-    )
+    .map((axisId, axisIndex): AxisItemIdentifier => ({
+      axisId,
+      dataIndex: indexes[axisIndex],
+    }))
     .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
 });
 

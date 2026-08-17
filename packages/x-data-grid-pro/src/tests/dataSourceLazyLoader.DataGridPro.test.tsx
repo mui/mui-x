@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
-import { getCell, getRow } from 'test/utils/helperFn';
+import { getCell, getRow, sleep } from 'test/utils/helperFn';
 import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, useGridApiRef, GRID_ROOT_GROUP_ID } from '@mui/x-data-grid-pro';
 import type {
@@ -9,6 +9,7 @@ import type {
   GridApi,
   GridDataSource,
   GridGetRowsParams,
+  GridFilterItem,
   GridGetRowsResponse,
   GridGroupNode,
   GridRowSelectionModel,
@@ -131,6 +132,47 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+  });
+
+  describe('incomplete filter items', () => {
+    const upsertFilterItem = async (item: GridFilterItem) => {
+      await act(async () => {
+        apiRef.current!.upsertFilterItem(item);
+      });
+    };
+
+    // See https://github.com/mui/mui-x/issues/23243
+    it('should not send a filter item without a value to the data source', async () => {
+      render(<TestDataSourceLazyLoader dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      expect(JSON.parse(url.searchParams.get('filterModel')!).items).to.deep.equal([]);
+    });
+
+    it('should not re-fetch when the change only adds an incomplete item', async () => {
+      render(<TestDataSourceLazyLoader dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+      await sleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(1);
     });
   });
 

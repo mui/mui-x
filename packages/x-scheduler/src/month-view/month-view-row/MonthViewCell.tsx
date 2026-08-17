@@ -16,13 +16,15 @@ import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
-import { EventDialogTrigger } from '../../internals/components/event-dialog';
-import { useEventDialogContext } from '../../internals/components/event-dialog/EventDialog';
+import {
+  EventEditingTrigger,
+  useEventEditingContext,
+} from '../../internals/components/event-editing';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventSkeleton } from '../../internals/components/event-skeleton';
@@ -174,7 +176,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { classes, localeText } = useEventCalendarStyledContext();
-  const { onOpen: startEditing } = useEventDialogContext();
+  const { startEditing } = useEventEditingContext();
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
@@ -195,11 +197,16 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
 
+  const inBoundOccurrences = day.withPosition.filter((o) => o.position.index <= maxEvents);
+  const overflowOccurrences = day.withPosition.filter((o) => o.position.index > maxEvents);
+
   const visibleOccurrences =
-    day.withPosition.length > maxEvents
-      ? day.withPosition.slice(0, maxEvents - 1)
-      : day.withPosition;
-  const hiddenCount = day.withPosition.length - visibleOccurrences.length;
+    overflowOccurrences.length > 0
+      ? inBoundOccurrences.slice(0, maxEvents - 1)
+      : inBoundOccurrences;
+
+  const hiddenCount =
+    overflowOccurrences.length + (inBoundOccurrences.length - visibleOccurrences.length);
 
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
@@ -255,15 +262,20 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               );
             }
 
+            const startsBeforeThisDay =
+              !adapter.isSameDay(occurrence.displayTimezone.start.value, day.value) &&
+              adapter.isBefore(occurrence.displayTimezone.start.value, day.value);
+
             return (
-              <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+              <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
                 <DayGridEvent
                   occurrence={occurrence}
                   variant={
                     isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
                   }
+                  {...(startsBeforeThisDay ? { 'data-starting-before-edge': '' } : {})}
                 />
-              </EventDialogTrigger>
+              </EventEditingTrigger>
             );
           })}
         {hiddenCount > 0 && (

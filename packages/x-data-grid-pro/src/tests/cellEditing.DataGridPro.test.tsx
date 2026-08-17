@@ -538,6 +538,44 @@ describe('<DataGridPro /> - Cell editing', () => {
         expect(processRowUpdate.lastCall.args[1]).to.deep.equal(defaultData.rows[0]);
       });
 
+      it('should not re-insert a row deleted while processRowUpdate is pending', async () => {
+        const testRow = defaultData.rows[0];
+        const otherRows = defaultData.rows.slice(1);
+        let resolveProcessRowUpdate = () => {};
+        const processRowUpdate = spy(
+          (newRow: any) =>
+            new Promise<any>((resolve) => {
+              resolveProcessRowUpdate = () => resolve(newRow);
+            }),
+        );
+        const { setProps } = render(
+          <TestCase rows={[testRow, ...otherRows]} processRowUpdate={processRowUpdate} />,
+        );
+        act(() => apiRef.current?.startCellEditMode({ id: testRow.id, field: 'currencyPair' }));
+        await act(() =>
+          apiRef.current?.setEditCellValue({
+            id: testRow.id,
+            field: 'currencyPair',
+            value: 'testing',
+          }),
+        );
+
+        // commit the edit; processRowUpdate is now pending
+        act(() => apiRef.current?.stopCellEditMode({ id: testRow.id, field: 'currencyPair' }));
+        expect(processRowUpdate.callCount).to.equal(1);
+
+        // remove the row while processRowUpdate is still pending
+        setProps({ rows: otherRows });
+        expect(apiRef.current?.getRowsCount()).to.equal(otherRows.length);
+
+        // when processRowUpdate resolves, the deleted row must not be re-inserted
+        await act(async () => {
+          resolveProcessRowUpdate();
+        });
+        expect(apiRef.current?.getRowsCount()).to.equal(otherRows.length);
+        expect(apiRef.current?.getRow(testRow.id)).to.equal(null);
+      });
+
       it('should stay in edit mode if processRowUpdate throws an error', async () => {
         const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => undefined);
         onTestFinished(() => {

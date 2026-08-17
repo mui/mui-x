@@ -8,7 +8,7 @@ import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import {
+import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
@@ -16,22 +16,27 @@ import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getDisplayedHourRange } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
-import { DayTimeGridProps } from './DayTimeGrid.types';
+import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
+import { useEventEditingContext } from '../event-editing';
+import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
-import {
-  EVENT_CALENDAR_CONTAINER_NAME,
-  RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
-} from '../../constants/responsiveTypography';
+import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
 
 const HOUR_HEIGHT = 46;
-const HOURS_IN_DAY = 24;
+// Number of hours displayed in the grid. Defaults to a full day; overridden per render via the
+// `--hours-count` CSS variable when a view limits its visible hour range.
+const DEFAULT_HOURS_IN_DAY = 24;
 
 const DayTimeGridContainer = styled(CalendarGrid.Root, {
   name: 'MuiEventCalendar',
@@ -250,11 +255,10 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   '[data-current] button:hover &': {
     backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
-  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < ${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM}px)`]:
-    {
-      width: 32,
-      height: 32,
-    },
+  [eventCalendarContentCompactQuery]: {
+    width: 32,
+    height: 32,
+  },
 }));
 
 const DayTimeGridBody = styled('div', {
@@ -270,7 +274,7 @@ const DayTimeGridScrollableContent = styled(CalendarGrid.TimeScrollableContent, 
   slot: 'DayTimeGridScrollableContent',
 })({
   display: 'flex',
-  height: `calc(var(--hour-height) * 24)`,
+  height: `calc(var(--hour-height) * var(--hours-count, ${DEFAULT_HOURS_IN_DAY}))`,
   position: 'relative',
   overflowY: 'auto',
   overflowX: 'clip',
@@ -290,8 +294,8 @@ const DayTimeGridTimeAxisCell = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridTimeAxisCell',
 })(({ theme }) => ({
-  height: `calc(100% / ${HOURS_IN_DAY})`,
-  lineHeight: `calc(100% / ${HOURS_IN_DAY})`,
+  height: `calc(100% / var(--hours-count, ${DEFAULT_HOURS_IN_DAY}))`,
+  lineHeight: `calc(100% / var(--hours-count, ${DEFAULT_HOURS_IN_DAY}))`,
   paddingInline: theme.spacing(1),
   textAlign: 'end',
   '&:not(:first-of-type)::after': {
@@ -310,7 +314,7 @@ const DayTimeGridTimeAxisText = styled('time', {
   slot: 'DayTimeGridTimeAxisText',
 })(({ theme }) => ({
   fontSize: 'var(--EventCalendar-fontSize-timeText, 0.75rem)',
-  lineHeight: 'calc(100% / 24)',
+  lineHeight: `calc(100% / var(--hours-count, ${DEFAULT_HOURS_IN_DAY}))`,
   color: (theme.vars || theme).palette.text.secondary,
   whiteSpace: 'nowrap',
 }));
@@ -332,18 +336,40 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { days, className, ...other } = props;
+  const {
+    days,
+    className,
+    startTime: startTimeProp,
+    endTime: endTimeProp,
+    hourRangeSource = 'viewConfig',
+    ...other
+  } = props;
+
+  const { startTime, endTime } = getDisplayedHourRange(startTimeProp, endTimeProp, hourRangeSource);
+  const hoursCount = endTime - startTime;
 
   // Context hooks
   const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
+  const { stopEditing } = useEventEditingContext();
+  const isArmed = useStore(store, schedulerOtherSelectors.editingMode) === 'armed';
 
   // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
+  const scrollRootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
+
+  // The resize handle is skipped so finishing a resize doesn't disarm.
+  // Armed only: closing the open form on a stray grid click would discard the draft.
+  useDisarmOnOutsidePointer({
+    ref: containerRef,
+    active: isArmed,
+    onDisarm: stopEditing,
+    ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}`,
+  });
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
@@ -484,24 +510,28 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         <div className={classes.dayTimeGridScrollablePlaceholder} />
       </DayTimeGridAllDayEventsGrid>
 
-      <DayTimeGridRoot className={classes.dayTimeGrid}>
+      <DayTimeGridRoot className={classes.dayTimeGrid} ref={scrollRootRef}>
         <DayTimeGridBody className={classes.dayTimeGridBody} ref={bodyRef}>
           <DayTimeGridScrollableContent
             className={classes.dayTimeGridScrollableContent}
-            as={CalendarGrid.TimeScrollableContent}
+            scrollableRef={scrollRootRef}
+            style={{ '--hours-count': hoursCount } as React.CSSProperties}
           >
             <DayTimeGridTimeAxis className={classes.dayTimeGridTimeAxis} aria-hidden="true">
-              {Array.from({ length: 24 }, (_, hour) => (
-                <DayTimeGridTimeAxisCell
-                  className={classes.dayTimeGridTimeAxisCell}
-                  key={hour}
-                  style={{ '--hour': hour } as React.CSSProperties}
-                >
-                  <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
-                    {hour === 0 ? null : formatTime(adapter.setHours(template, hour))}
-                  </DayTimeGridTimeAxisText>
-                </DayTimeGridTimeAxisCell>
-              ))}
+              {Array.from({ length: hoursCount }, (_, index) => {
+                const hour = startTime + index;
+                return (
+                  <DayTimeGridTimeAxisCell
+                    className={classes.dayTimeGridTimeAxisCell}
+                    key={hour}
+                    style={{ '--hour': index } as React.CSSProperties}
+                  >
+                    <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
+                      {index === 0 ? null : formatTime(adapter.setHours(template, hour))}
+                    </DayTimeGridTimeAxisText>
+                  </DayTimeGridTimeAxisCell>
+                );
+              })}
             </DayTimeGridTimeAxis>
 
             <DayTimeGridGrid
@@ -516,6 +546,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   day={day}
                   index={index}
                   colIndex={index + 1}
+                  startTime={startTime}
+                  endTime={endTime}
                   showCurrentTimeIndicator={showCurrentTimeIndicator && isTodayInView}
                 />
               ))}

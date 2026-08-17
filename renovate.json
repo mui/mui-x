@@ -19,6 +19,10 @@
       "matchPackageNames": ["@base-ui/**"]
     },
     {
+      "groupName": "pragmatic-drag-and-drop",
+      "matchSourceUrls": ["https://github.com/atlassian/pragmatic-drag-and-drop"]
+    },
+    {
       "groupName": "bundling fixtures",
       "matchFileNames": ["test/bundling/fixtures/**/package.json"],
       "schedule": "* * 1 1,7 *"

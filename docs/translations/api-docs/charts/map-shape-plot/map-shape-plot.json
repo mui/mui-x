@@ -4,6 +4,16 @@
     "fill": {
       "description": "Fill color applied to every feature path. Overrides item and series colors."
     },
+    "onItemClick": {
+      "description": "Callback fired when clicking on a map shape.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event source of the callback." },
+        "mapShapeItemIdentifier": {
+          "name": "mapShapeItemIdentifier",
+          "description": "The identifier of the clicked map shape."
+        }
+      }
+    },
     "stroke": { "description": "Stroke color applied to every feature path." },
     "strokeWidth": { "description": "Stroke width applied to every feature path." }
   },

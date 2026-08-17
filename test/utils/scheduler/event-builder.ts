@@ -16,7 +16,7 @@ import {
   getWeekDayCode,
 } from '@mui/x-scheduler-internals-premium/internals';
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy/types';
+import { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { adapter as defaultAdapter } from './adapters';
 
@@ -82,9 +82,15 @@ export class EventBuilder {
     return this;
   }
 
-  /** Associate a resource. */
+  /** Associate a single resource. */
   resource(resource: SchedulerResource) {
     this.event.resource = resource.id;
+    return this;
+  }
+
+  /** Associate multiple resources. */
+  resources(resourceList: SchedulerResource[]) {
+    this.event.resource = resourceList.map((r) => r.id);
     return this;
   }
 

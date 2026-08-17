@@ -1,5 +1,24 @@
-import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS, getPresetPxPerDay } from './preset-utils';
-import { EventTimelinePremiumPreset } from '../../models';
+import { adapter } from 'test/utils/scheduler';
+import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS, getPresetPxPerDay } from './preset-utils';
+import type { EventTimelinePremiumPreset } from '../../models';
+
+describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
+  describe('dayAndHour.getCssUnitCount', () => {
+    const start = adapter.date('2025-07-03T00:00:00Z', 'default');
+    const end = adapter.endOfDay(adapter.addDays(start, 3));
+
+    it('should pin the tick count to 4 days × 24 hours', () => {
+      // The displayed hour window scales this in the preset selector, so the preset
+      // always sizes the full day.
+      const count = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndHour.getCssUnitCount!(
+        adapter,
+        start,
+        end,
+      );
+      expect(count).to.equal(4 * 24);
+    });
+  });
+});
 
 describe('getPresetPxPerDay', () => {
   // Concrete values prove the derivation formula `tickWidth × ticksPerDay[timeResolution]`
@@ -31,7 +50,7 @@ describe('getPresetPxPerDay', () => {
   // accidentally share a px/day with an existing one before they reach the store.
   it('should produce a unique value for every registered preset', () => {
     const presets = Object.keys(
-      EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
+      EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS,
     ) as EventTimelinePremiumPreset[];
     const values = presets.map(getPresetPxPerDay);
     expect(new Set(values).size).to.equal(presets.length);

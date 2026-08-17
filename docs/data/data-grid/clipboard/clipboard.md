@@ -15,6 +15,14 @@ The priority of the data copied to the clipboard is the following, from highest 
 
 {{"demo": "ClipboardCopy.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Add new rows from copied data
+
+The `onClipboardCopy` prop can be used to capture the copied data and reuse it outside of the regular paste flow—for example, to duplicate the selected rows as new rows when a button is clicked, instead of overwriting the existing ones.
+
+The demo below stores the data copied with <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">C</kbd></kbd> on macOS) and adds it back as new rows when the button is clicked, while leaving the regular copy and paste behavior untouched.
+
+{{"demo": "ClipboardCopyAddRows.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Triggering a copy without the keyboard shortcut
 
 To let users copy the current selection from a button (or any other UI, such as a context menu), combine public APIs: `apiRef.current.getSelectedCellsAsArray()` and `getCellSelectionModel()` for cell selection, `apiRef.current.getDataAsCsv()` for row selection, and `gridFocusCellSelector` as a fallback for a single focused cell.

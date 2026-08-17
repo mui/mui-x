@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { TreeViewItemId } from '../../models';
-import { MinimalTreeViewState } from '../MinimalTreeViewStore';
+import type { TreeViewItemId } from '../../models';
+import type { MinimalTreeViewState } from '../MinimalTreeViewStore';
 
 export const TreeViewItemDepthContext = React.createContext<
   ((state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) => number) | number

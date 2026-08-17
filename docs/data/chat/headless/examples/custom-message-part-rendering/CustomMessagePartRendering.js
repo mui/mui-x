@@ -124,7 +124,7 @@ export default function CustomMessagePartRendering() {
         slotProps={{
           root: {
             style: {
-              height: 520,
+              height: 500,
               display: 'grid',
               gridTemplateRows: 'auto minmax(0, 1fr) auto',
               gap: 14,

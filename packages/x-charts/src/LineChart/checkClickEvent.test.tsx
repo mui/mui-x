@@ -1,6 +1,7 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
-import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
+import { LineChart, LinePlot, lineClasses } from '@mui/x-charts/LineChart';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
@@ -196,16 +197,30 @@ describe('LineChart - click event', () => {
 
       const areas = document.querySelectorAll<HTMLElement>(`path.${lineClasses.area}`);
 
-      await user.click(areas[0]);
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: areas[0],
+          coords: { clientX: 198, clientY: 60 },
+        },
+      ]);
       expect(onAreaClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
+        dataIndex: 1,
       });
 
-      await user.click(areas[1]);
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: areas[1],
+          coords: { clientX: 320, clientY: 60 },
+        },
+      ]);
       expect(onAreaClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's2',
+        dataIndex: 3,
       });
     });
   });
@@ -255,17 +270,134 @@ describe('LineChart - click event', () => {
 
       const lines = document.querySelectorAll<HTMLElement>(`path.${lineClasses.line}`);
 
-      await user.click(lines[0]);
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: lines[0],
+          coords: { clientX: 198, clientY: 60 },
+        },
+      ]);
       expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
+        dataIndex: 1,
       });
 
-      await user.click(lines[1]);
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: lines[1],
+          coords: { clientX: 250, clientY: 60 },
+        },
+      ]);
       expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's2',
+        dataIndex: 2,
       });
     });
+  });
+
+  describe('composition', () => {
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    it.skipIf(isJSDOM)(
+      'should provide `dataIndex` to the `LinePlot` onItemClick callback',
+      async () => {
+        const onItemClick = vi.fn();
+        const { user, container } = render(
+          <div
+            style={{
+              width: 400,
+              height: 400,
+            }}
+          >
+            <ChartsContainer
+              {...config}
+              series={[
+                { type: 'line', dataKey: 'v1', id: 's1' },
+                { type: 'line', dataKey: 'v2', id: 's2' },
+              ]}
+              xAxis={[{ scaleType: 'band', dataKey: 'x', position: 'none' }]}
+            >
+              <LinePlot onItemClick={onItemClick} />
+            </ChartsContainer>
+          </div>,
+        );
+
+        const lines = container.querySelectorAll<HTMLElement>(`path.${lineClasses.line}`);
+
+        await user.pointer([
+          {
+            keys: '[MouseLeft]',
+            target: lines[0],
+            coords: { clientX: 198, clientY: 60 },
+          },
+        ]);
+        expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
+          type: 'line',
+          seriesId: 's1',
+          dataIndex: 1,
+        });
+
+        await user.pointer([
+          {
+            keys: '[MouseLeft]',
+            target: lines[1],
+            coords: { clientX: 320, clientY: 60 },
+          },
+        ]);
+        expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
+          type: 'line',
+          seriesId: 's2',
+          dataIndex: 3,
+        });
+      },
+    );
+
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    it.skipIf(isJSDOM)(
+      'should provide the axis data to the container onAxisClick callback',
+      async () => {
+        const onAxisClick = vi.fn();
+        const { user, container } = render(
+          <div
+            style={{
+              width: 400,
+              height: 400,
+            }}
+          >
+            <ChartsContainer
+              {...config}
+              series={[
+                { type: 'line', dataKey: 'v1', id: 's1' },
+                { type: 'line', dataKey: 'v2', id: 's2' },
+              ]}
+              xAxis={[{ scaleType: 'point', dataKey: 'x', position: 'none' }]}
+              onAxisClick={onAxisClick}
+            >
+              <LinePlot />
+            </ChartsContainer>
+          </div>,
+        );
+
+        const layerContainer = container.querySelector<HTMLElement>(
+          `.${chartsSvgLayerClasses.root}`,
+        )!.parentElement!;
+
+        await user.pointer([
+          {
+            keys: '[MouseLeft]',
+            target: layerContainer,
+            coords: { clientX: 198, clientY: 60 },
+          },
+        ]);
+
+        expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
+          dataIndex: 1,
+          axisValue: 20,
+          seriesValues: { s1: 5, s2: 8 },
+        });
+      },
+    );
   });
 });

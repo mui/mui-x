@@ -1,46 +1,42 @@
 'use client';
 import * as React from 'react';
-import { styled, useTheme, Theme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
-import {
-  useVirtualizer,
-  LayoutDataGrid,
-  Dimensions,
-  Virtualization,
-  ColumnWithWidth,
-  PinnedColumns,
-} from '@mui/x-virtualizer';
+import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type { ColumnWithWidth, PinnedColumns } from '@mui/x-virtualizer';
+import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@mui/x-virtualizer';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumPresetSelectors,
+  eventTimelinePremiumOccurrenceSelectors,
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import {
-  computeOccurrencesMaxIndex,
-  useEventOccurrencesWithTimelinePosition,
-} from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import { computeOccurrencesMaxIndex } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import {
   schedulerNowSelectors,
-  schedulerOccurrenceSelectors,
   schedulerOtherSelectors,
+  schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
-  EventDialogTrigger,
+  EventEditingTrigger,
   EventSkeleton,
-  useEventDialogContext,
+  useEventEditingContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
-import { useTimelineDragAutoScroll } from '@mui/x-scheduler-internals/internals';
+import {
+  computeElementPositionInCollection,
+  useTimelineDragAutoScroll,
+} from '@mui/x-scheduler-internals/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { EventTimelinePremiumHeader } from './timeline-header';
-import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
+import type { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
@@ -56,6 +52,14 @@ import {
 } from './useTitleColumnWidth';
 import { useTitleScrollSync } from './useTitleScrollSync';
 import { useEventTabNavigation } from './useEventTabNavigation';
+import { getRowHeightForLaneCount } from './rowGeometry';
+import { getVisibleFractionRange } from './getVisibleFractionRange';
+import {
+  EventTimelinePremiumDependencyArrows,
+  EventTimelinePremiumDependencyGeometryProvider,
+  EventTimelinePremiumDependencyInteractions,
+  EventTimelinePremiumDependencyTerminals,
+} from './timeline-dependency-arrows';
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
@@ -205,7 +209,10 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   name: 'MuiEventTimeline',
   slot: 'EventsCell',
 })(({ theme }) => ({
-  flex: 1,
+  // Never grow past the ticks: the virtualizer stretches `--row-width` to fill the
+  // viewport when the columns are narrower than it, and events are positioned as a
+  // fraction of this box, so growing would drift them away from the header.
+  flex: '0 0 auto',
   minWidth: 0,
   overflow: 'clip',
   width: 'calc(var(--unit-count) * var(--unit-width))',
@@ -216,11 +223,30 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   padding: theme.spacing(2, 0),
   alignContent: 'start',
   zIndex: 1,
+  // Counted by `getRowHeightForLaneCount`, so it has to stay on this element: moving it
+  // to the row would shrink the cell's content box and shift every event by a pixel.
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   '&:focus-visible': {
     outline: 'none',
     backgroundColor: getCellFocusBackground(theme),
   },
+}));
+
+/**
+ * Carries the row divider across the space left over when the ticks are narrower than
+ * `--row-width`. The divider can't live on the events cell alone (it is pinned to the
+ * tick width so the events stay aligned with the header) nor on the row (its height is
+ * measured by `getRowHeightForLaneCount` from the cell's border box). Purely decorative:
+ * it holds no content and is never measured.
+ */
+const EventTimelinePremiumBodyRowFiller = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'BodyRowFiller',
+})(({ theme }) => ({
+  flex: '1 1 auto',
+  minWidth: 0,
+  pointerEvents: 'none',
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
 const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTimeIndicator, {
@@ -473,17 +499,16 @@ function FillerRow() {
   );
 }
 
-// Fixed 24h grid (must match useElementPositionInCollection)
-const FIXED_24H_GRID_MINUTES = 24 * 60;
-
 /**
  * Renders only the events that intersect the virtualizer's visible column range.
  * Isolated into its own component so that scrolling (which updates `renderContext`)
  * only re-renders this subtree, not the surrounding row logic.
  */
 function EventList({
+  resourceId,
   occurrences,
 }: {
+  resourceId: SchedulerResourceId;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
 }) {
   const adapter = useAdapterContext();
@@ -491,53 +516,42 @@ function EventList({
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
 
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const visiblePositions = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
+  );
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
 
   // Precompute position fractions for all occurrences (recomputed only when occurrences or preset changes)
-  const occurrencesWithFraction = React.useMemo(() => {
-    const collectionStart = presetConfig.start;
-    const collectionEnd = presetConfig.end;
+  const occurrencesWithFraction = React.useMemo(
+    () =>
+      occurrences.map((occurrence) => {
+        // On a trimmed hour window the axis filter already positioned the occurrence.
+        const { position, duration } =
+          visiblePositions?.get(occurrence.key) ??
+          computeElementPositionInCollection(adapter, {
+            start: occurrence.displayTimezone.start,
+            end: occurrence.displayTimezone.end,
+            collection: config,
+            durationMs: config.durationMs,
+          });
 
-    const totalDays =
-      adapter.differenceInDays(
-        adapter.startOfDay(collectionEnd),
-        adapter.startOfDay(collectionStart),
-      ) + 1;
-    const totalMinutes = Math.max(1, totalDays * FIXED_24H_GRID_MINUTES);
-    const clamp = (v: number) => Math.min(Math.max(v, 0), totalMinutes);
-
-    return occurrences.map((occurrence) => {
-      const start = occurrence.displayTimezone.start;
-      const end = occurrence.displayTimezone.end;
-
-      const startDayIndex = adapter.differenceInDays(
-        adapter.startOfDay(start.value),
-        adapter.startOfDay(collectionStart),
-      );
-      const endDayIndex = adapter.differenceInDays(
-        adapter.startOfDay(end.value),
-        adapter.startOfDay(collectionStart),
-      );
-
-      const startMinutes = startDayIndex * FIXED_24H_GRID_MINUTES + start.minutesInDay;
-      let endMinutes = endDayIndex * FIXED_24H_GRID_MINUTES + end.minutesInDay;
-      if (endMinutes < startMinutes) {
-        endMinutes += FIXED_24H_GRID_MINUTES;
-      }
-
-      return {
-        occurrence,
-        fractionStart: clamp(startMinutes) / totalMinutes,
-        fractionEnd: clamp(endMinutes) / totalMinutes,
-      };
-    });
-  }, [adapter, occurrences, presetConfig.start, presetConfig.end]);
+        return {
+          occurrence,
+          fractionStart: position,
+          fractionEnd: position + duration,
+        };
+      }),
+    // The config selector is memoized, so the object identity only changes with its content.
+    [adapter, occurrences, config, visiblePositions],
+  );
 
   // Convert virtualizer column range to fraction range
-  const { tickCount } = presetConfig;
-  const visibleStart = Math.max(0, renderContext.firstColumnIndex - 1) / tickCount;
-  const visibleEnd = Math.max(0, renderContext.lastColumnIndex - 1) / tickCount;
+  const { start: visibleStart, end: visibleEnd } = getVisibleFractionRange(
+    renderContext,
+    config.tickCount,
+  );
 
   return (
     <React.Fragment>
@@ -545,13 +559,13 @@ function EventList({
         ({ occurrence, fractionStart, fractionEnd }) =>
           fractionEnd > visibleStart &&
           fractionStart < visibleEnd && (
-            <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+            <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
               <EventTimelinePremiumEvent
                 occurrence={occurrence}
-                ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
+                ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
                 variant="regular"
               />
-            </EventDialogTrigger>
+            </EventEditingTrigger>
           ),
       )}
     </React.Fragment>
@@ -569,7 +583,7 @@ function EventRowContent({
 }) {
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
-  const { onOpen: startEditing } = useEventDialogContext();
+  const { startEditing } = useEventEditingContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
@@ -592,12 +606,12 @@ function EventRowContent({
 
   return (
     <React.Fragment>
-      <EventList occurrences={occurrences} />
+      <EventList resourceId={resourceId} occurrences={occurrences} />
       {placeholder != null && (
         <EventTimelinePremiumEvent
           ref={placeholderRef}
           occurrence={placeholder}
-          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${placeholder.resource}`}
+          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
           variant="placeholder"
         />
       )}
@@ -663,18 +677,19 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     store,
     schedulerNowSelectors.showCurrentTimeIndicator,
   );
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const hasNestedResources = useStore(store, schedulerResourceSelectors.hasNestedResources);
   const isNowInView = React.useMemo(
-    () => adapter.isWithinRange(now, [presetConfig.start, presetConfig.end]),
-    [adapter, now, presetConfig.start, presetConfig.end],
+    () => adapter.isWithinRange(now, [config.start, config.end]),
+    [adapter, now, config.start, config.end],
   );
   const showCurrentTimeIndicator = showCurrentTimeIndicatorSetting && isNowInView;
 
-  const resources = useStore(
+  // The visible list preserves the resource entries (only their occurrence lists are
+  // filtered), so it also drives the row models and the virtualized row heights.
+  const visibleResources = useStore(
     store,
-    schedulerOccurrenceSelectors.groupedByResourceList,
-    presetConfig.start,
-    presetConfig.end,
+    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
   );
 
   // Measure header height for the virtualizer's topPinnedHeight
@@ -698,8 +713,8 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const layout = useLazyRef(() => new LayoutDataGrid(virtualizerRefs)).current;
 
   const rows = React.useMemo(
-    () => resources.map(({ resource }) => ({ id: resource.id, model: resource })),
-    [resources],
+    () => visibleResources.map(({ resource }) => ({ id: resource.id, model: resource })),
+    [visibleResources],
   );
 
   const {
@@ -728,13 +743,14 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             <EventRowContent resourceId={id} occurrences={occurrences} placeholder={placeholder} />
           )}
         </EventTimelinePremiumEventsCell>
+        <EventTimelinePremiumBodyRowFiller role="none" />
       </EventTimelinePremiumBodyRow>
     ),
     [classes.eventsCell, titleColumnWidth],
   );
 
   // Build virtualizer column model: one pinned title column + one column per tick.
-  const { tickCount, tickWidth } = presetConfig;
+  const { tickCount, tickWidth } = config;
   const columnsTotalWidth = titleColumnWidth + tickCount * tickWidth;
 
   // Row heights mirror the CSS. The cell stretches to fit overlapping events
@@ -742,11 +758,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const theme = useTheme();
   const laneCountByResource = React.useMemo(() => {
     const map = new Map<SchedulerResourceId, number>();
-    for (const { resource, occurrences } of resources) {
+    for (const { resource, occurrences } of visibleResources) {
       map.set(resource.id, computeOccurrencesMaxIndex(adapter, occurrences));
     }
     return map;
-  }, [resources, adapter]);
+  }, [visibleResources, adapter]);
 
   const getRowHeight = React.useCallback(
     (row: { id: SchedulerResourceId }) =>
@@ -819,7 +835,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     if (scrollbarHorizontalRef.current) {
       scrollbarHorizontalRef.current.scrollLeft = 0;
     }
-  }, [presetConfig.start]);
+  }, [config.start]);
 
   useTitleScrollSync({
     enabled: hasTitleOverflow,
@@ -836,16 +852,17 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   const { handleKeyDown: handleEventTabKeyDown } = useEventTabNavigation({
     adapter,
-    resources,
+    // The axis-filtered list: a hidden occurrence never mounts, so navigating to it
+    // would swallow Tab in an unfocusable retry loop.
+    resources: visibleResources,
     scrollerRef: gridRef,
-    collectionStart: presetConfig.start,
-    collectionEnd: presetConfig.end,
-    tickCount: presetConfig.tickCount,
-    tickWidth: presetConfig.tickWidth,
+    axis: config,
+    tickCount: config.tickCount,
+    tickWidth: config.tickWidth,
     titleColumnWidth,
   });
 
-  const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
+  const eventsWidth = config.tickCount * config.tickWidth;
   const hasScrollX = dimensions.hasScrollX;
   const hasScrollY = dimensions.hasScrollY;
   const hasBottomScrollbar = hasScrollX || hasTitleOverflow;
@@ -857,6 +874,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   return (
     <EventTimelinePremiumContentRoot
       className={classes.content}
+      data-flat={!hasNestedResources || undefined}
       {...props}
       {...containerProps}
       ref={containerMergedRef}
@@ -864,7 +882,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
         {
           '--row-width': `${dimensions.rowWidth}px`,
           '--title-column-width': `${titleColumnWidth}px`,
-          '--unit-width': `${presetConfig.tickWidth}px`,
+          '--unit-width': `${config.tickWidth}px`,
           '--scrollbar-size': `${dimensions.scrollbarSize}px`,
           '--header-height': `${headerHeight}px`,
           '--filler-height': `${fillerHeight}px`,
@@ -888,13 +906,20 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                     showCurrentTimeIndicator={showCurrentTimeIndicator}
                   />
                   <RowContainer role="rowgroup" {...positionerProps}>
-                    {virtualizer.api.getters.getRows()}
-                    {showCurrentTimeIndicator && (
-                      <EventTimelinePremiumCurrentTimeIndicator
-                        className={classes.currentTimeIndicator}
-                        aria-hidden
-                      />
-                    )}
+                    <EventTimelinePremiumDependencyGeometryProvider>
+                      <EventTimelinePremiumDependencyArrows />
+                      {virtualizer.api.getters.getRows()}
+                      {showCurrentTimeIndicator && (
+                        <EventTimelinePremiumCurrentTimeIndicator
+                          className={classes.currentTimeIndicator}
+                          aria-hidden
+                        />
+                      )}
+                      <EventTimelinePremiumDependencyInteractions />
+                      {/* Last so the revealed terminals win their z-index ties and
+                          paint above the arrows and their click hit-areas. */}
+                      <EventTimelinePremiumDependencyTerminals />
+                    </EventTimelinePremiumDependencyGeometryProvider>
                   </RowContainer>
                   <FillerRow />
                 </EventTimelinePremiumViewport>
@@ -937,36 +962,3 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     </EventTimelinePremiumContentRoot>
   );
 });
-
-// `EventsCell` is the tallest in-flow child of the body row and therefore drives
-// its rendered height. These helpers mirror the CSS so the virtualizer's
-// `getRowHeight` returns the same value the browser will lay out.
-//
-// CSS for EventsCell:
-//   padding: theme.spacing(2, 0);
-//   grid-template-rows: repeat(var(--lane-count, 1),
-//                              minmax(calc(${body2.lineHeight}em + ${theme.spacing(1.125)}), auto));
-//   row-gap: theme.spacing(0.5);
-//   border-bottom: 1px solid divider;
-//
-// `em` in the grid track resolves against the EventsCell's font-size, which
-// inherits `theme.typography.body2.fontSize` from the Content root.
-export function getEventsCellLaneMinHeight(theme: Theme): number {
-  const fontSizeRem = parseFloat(String(theme.typography.body2.fontSize));
-  const fontSize =
-    Number.isFinite(fontSizeRem) && fontSizeRem > 0
-      ? fontSizeRem * (theme.typography.htmlFontSize ?? 16)
-      : 14;
-  const lineHeight = Number(theme.typography.body2.lineHeight) || 1.43;
-  const extra = parseFloat(theme.spacing(1.125)) || 9;
-  return lineHeight * fontSize + extra;
-}
-
-export function getRowHeightForLaneCount(theme: Theme, laneCount: number): number {
-  const padding = parseFloat(theme.spacing(2)) || 16;
-  const gap = parseFloat(theme.spacing(0.5)) || 4;
-  const laneMin = getEventsCellLaneMinHeight(theme);
-  const lanes = Math.max(1, laneCount);
-  // 2 paddings + N lanes + (N-1) row-gaps + bottom border.
-  return 2 * padding + lanes * laneMin + (lanes - 1) * gap + 1;
-}

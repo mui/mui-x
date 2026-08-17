@@ -5,13 +5,12 @@ import { useStore } from '@base-ui/utils/store';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { DayGridEvent } from '../event';
-import { EventDialogTrigger } from '../event-dialog';
-import { useEventDialogContext } from '../event-dialog/EventDialog';
+import { EventEditingTrigger, useEventEditingContext } from '../event-editing';
 import { EventSkeleton } from '../event-skeleton';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
@@ -61,7 +60,7 @@ export function DayGridCell(props: DayGridCellProps) {
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { onOpen: startEditing } = useEventDialogContext();
+  const { startEditing } = useEventEditingContext();
   const { schedulerId, classes } = useEventCalendarStyledContext();
 
   // Ref hooks
@@ -111,9 +110,9 @@ export function DayGridCell(props: DayGridCellProps) {
           }
 
           return (
-            <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+            <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
               <DayGridEvent occurrence={occurrence} variant="filled" />
-            </EventDialogTrigger>
+            </EventEditingTrigger>
           );
         })}
         {placeholder != null && (

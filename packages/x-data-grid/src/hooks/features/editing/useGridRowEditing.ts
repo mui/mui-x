@@ -210,7 +210,7 @@ export const useGridRowEditing = (
         } else if (event.key === 'Tab') {
           const columnFields = gridVisibleColumnFieldsSelector(apiRef).filter((field) => {
             const column = apiRef.current.getColumn(field);
-            if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+            if (column?.type === GRID_ACTIONS_COLUMN_TYPE) {
               return true;
             }
             return apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field));
@@ -456,11 +456,10 @@ export const useGridRowEditing = (
           return acc;
         }
 
-        const column = apiRef.current.getColumn(field);
         let newValue = apiRef.current.getCellValue(id, field);
         if (fieldToFocus === field && (deleteValue || initialValue)) {
           if (deleteValue) {
-            newValue = getDefaultCellValue(column);
+            newValue = getDefaultCellValue(col);
           } else if (initialValue) {
             newValue = initialValue;
           }
@@ -469,7 +468,7 @@ export const useGridRowEditing = (
         acc[field] = {
           value: newValue,
           error: false,
-          isProcessingProps: column.editable && !!column.preProcessEditCellProps && deleteValue,
+          isProcessingProps: col.editable && !!col.preProcessEditCellProps && deleteValue,
         };
 
         return acc;
@@ -647,6 +646,9 @@ export const useGridRowEditing = (
       throwIfNotEditable(id, field);
 
       const column = apiRef.current.getColumn(field);
+      if (!column) {
+        return Promise.resolve(false);
+      }
       const row = apiRef.current.getRow(id)!;
 
       let parsedValue = value;
@@ -712,7 +714,7 @@ export const useGridRowEditing = (
           }
 
           const fieldColumn = apiRef.current.getColumn(thisField);
-          if (!fieldColumn.preProcessEditCellProps) {
+          if (!fieldColumn?.preProcessEditCellProps) {
             return;
           }
 

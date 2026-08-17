@@ -1,13 +1,18 @@
 import * as React from 'react';
-import { screen, waitFor } from '@mui/internal-test-utils';
-import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { act, screen, waitFor } from '@mui/internal-test-utils';
+import {
+  EventTimelinePremium,
+  eventTimelinePremiumClasses as classes,
+} from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
+  EventBuilder,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { EventTimelinePremiumPresetConfig } from '@mui/x-scheduler-internals-premium/models';
 import { isJSDOM } from 'test/utils/skipIf';
 
 function getTitleColumnWidth(): number {
@@ -24,15 +29,23 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  function renderTimeline(resources: SchedulerResource[], hostWidth: number = 1200) {
+  function renderTimeline(
+    resources: SchedulerResource[],
+    hostWidth: number = 1200,
+    options: {
+      events?: SchedulerEvent[];
+      presetConfig?: EventTimelinePremiumPresetConfig;
+    } = {},
+  ) {
     return render(
       <div style={{ width: hostWidth, height: 600 }}>
         <EventTimelinePremium
           resources={resources}
-          events={[]}
+          events={options.events ?? []}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           preset="dayAndHour"
           presets={['dayAndHour']}
+          presetConfig={options.presetConfig}
         />
       </div>,
     );
@@ -102,6 +115,94 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
         // collapse below the floor.
         expect(getTitleColumnWidth()).to.be.greaterThanOrEqual(50);
       });
+    });
+  });
+
+  describe('grid narrower than the viewport', () => {
+    // 4 days × 4 visible hours = 16 ticks × 64px = 1024px, so the grid plus the title
+    // column fits inside the 1200px host. The virtualizer stretches its row width to
+    // fill the viewport in that case; the events layer must keep the tick width instead,
+    // or events drift away from the header they are labelled by.
+    const PRESET_CONFIG = { dayAndHour: { startTime: 8, endTime: 12 } };
+
+    it('should align an event with its own day when the ticks do not fill the viewport', async () => {
+      const resource = ResourceBuilder.new().id('r1').title('A').build();
+      // The second visible day (Jul 4), spanning exactly that day's visible window.
+      const fullDay = EventBuilder.new()
+        .title('Full day')
+        .resource(resource)
+        .span('2025-07-04T08:00:00', '2025-07-04T12:00:00')
+        .build();
+
+      renderTimeline([resource], 1200, { events: [fullDay], presetConfig: PRESET_CONFIG });
+
+      await waitFor(() => {
+        expect(getTitleColumnWidth()).to.be.greaterThan(0);
+      });
+
+      const dayCell = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="day"]`,
+      )[1];
+      const event = document.querySelector<HTMLElement>(`.${classes.event}`)!;
+
+      const dayRect = dayCell.getBoundingClientRect();
+      const eventRect = event.getBoundingClientRect();
+      expect(eventRect.left).to.be.closeTo(dayRect.left, 1);
+      expect(eventRect.width).to.be.closeTo(dayRect.width, 1);
+    });
+  });
+
+  describe('grid with a vertical scrollbar', () => {
+    // `--row-width` reserves the scrollbar width on top of the columns. The events layer
+    // must still measure exactly the ticks, or every event drifts right by a fraction of
+    // the scrollbar, growing along the axis.
+    it('should align an event with its own day when the rows reserve a scrollbar', async () => {
+      const resources = Array.from({ length: 20 }, (_, i) =>
+        ResourceBuilder.new().id(`r${i}`).title(`R${i}`).build(),
+      );
+      // Last visible day (Jul 6), filling the second half of that day's window.
+      const lateEvent = EventBuilder.new()
+        .title('Late')
+        .resource(resources[0])
+        .span('2025-07-06T14:00:00', '2025-07-06T20:00:00')
+        .build();
+
+      render(
+        <div style={{ width: 1200, height: 300 }}>
+          <EventTimelinePremium
+            resources={resources}
+            events={[lateEvent]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            preset="dayAndHour"
+            presets={['dayAndHour']}
+            presetConfig={{ dayAndHour: { startTime: 8, endTime: 20 } }}
+          />
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(getTitleColumnWidth()).to.be.greaterThan(0);
+      });
+
+      // Scroll to the end so both the event and its day header are mounted.
+      const scroller = screen.getByRole('grid');
+      act(() => {
+        scroller.scrollLeft = scroller.scrollWidth;
+      });
+
+      let event: HTMLElement | null = null;
+      await waitFor(() => {
+        event = document.querySelector<HTMLElement>(`.${classes.event}`);
+        expect(event).not.to.equal(null);
+      });
+
+      const dayCells = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="day"]`,
+      );
+      const lastDay = dayCells[dayCells.length - 1].getBoundingClientRect();
+      const eventRect = event!.getBoundingClientRect();
+      // The event ends on the window edge, so it ends where its day cell does.
+      expect(eventRect.right).to.be.closeTo(lastDay.right, 1);
     });
   });
 

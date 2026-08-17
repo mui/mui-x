@@ -1,13 +1,13 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
-import { EventHandlers } from '@mui/utils/types';
-import { TreeViewCancellableEvent } from '../../models';
+import type { EventHandlers } from '@mui/utils/types';
+import type { TreeViewCancellableEvent } from '../../models';
 import { idSelectors } from '../plugins/id';
 import { selectionSelectors } from '../plugins/selection';
 import { itemsSelectors } from '../plugins/items';
-import { TreeViewAnyStore } from '../models';
-import { TreeViewStoreInContext } from '../TreeViewProvider';
+import type { TreeViewAnyStore } from '../models';
+import type { TreeViewStoreInContext } from '../TreeViewProvider';
 
 export function useTreeViewRootProps<TStore extends TreeViewAnyStore>(
   store: TreeViewStoreInContext<TStore>,

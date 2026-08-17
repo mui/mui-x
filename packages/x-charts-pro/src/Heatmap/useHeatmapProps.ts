@@ -67,6 +67,8 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     highlightedItem,
     onHighlightChange,
     disableKeyboardNavigation,
+    focusItemOnClick,
+    experimentalFeatures,
     borderRadius,
     hideLegend,
   } = props;
@@ -140,6 +142,8 @@ export function useHeatmapProps(props: UseHeatmapProps) {
       highlightedItem,
       onHighlightChange,
       disableKeyboardNavigation,
+      focusItemOnClick,
+      experimentalFeatures,
       onItemClick,
       plugins: HEATMAP_PLUGINS,
     };

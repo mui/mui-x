@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, screen, waitFor } from '@mui/internal-test-utils';
+import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   createSchedulerRenderer,
@@ -8,7 +8,8 @@ import {
   EventBuilder,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { EventTimelinePremiumPresetConfig } from '@mui/x-scheduler-internals-premium/models';
 import { isJSDOM } from 'test/utils/skipIf';
 
 // Tab between events only works on top of real layout (the handler reads
@@ -44,15 +45,22 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     eventAt(6, 20),
   ];
 
-  function renderTimeline() {
+  function renderTimeline(
+    options: {
+      events?: SchedulerEvent[];
+      presetConfig?: EventTimelinePremiumPresetConfig;
+      hostWidth?: number;
+    } = {},
+  ) {
     return render(
-      <div style={{ width: 1200, height: 600 }}>
+      <div style={{ width: options.hostWidth ?? 1200, height: 600 }}>
         <EventTimelinePremium
           resources={[resource]}
-          events={events}
+          events={options.events ?? events}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           preset="dayAndHour"
           presets={['dayAndHour']}
+          presetConfig={options.presetConfig}
         />
       </div>,
     );
@@ -196,5 +204,149 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     // the events cell is outside the events row (or outside the grid entirely).
     await user.keyboard('{Tab}');
     expect(document.activeElement).to.not.equal(getEvent('evt-d6-h20'));
+  });
+
+  describe('with a trimmed hour window', () => {
+    // 8:00 → 20:00 leaves 12 ticks per day (768px), so the 4-day axis is 3072px wide.
+    const TRIMMED = { dayAndHour: { startTime: 8, endTime: 20 } };
+
+    it('should skip the occurrences hidden by the trimmed hour window instead of trapping focus', async () => {
+      // 21:00 hides inside the window: its occurrence never mounts, so navigating to it
+      // would swallow Tab forever.
+      const { user } = renderTimeline({
+        events: [eventAt(3, 10), eventAt(3, 21), eventAt(4, 10)],
+        presetConfig: TRIMMED,
+      });
+
+      await waitFor(() => {
+        expect(getEvent('evt-d3-h10')).not.to.equal(null);
+      });
+      expect(getEvent('evt-d3-h21')).to.equal(null);
+
+      act(() => {
+        getEvent('evt-d3-h10')!.focus();
+      });
+
+      await user.keyboard('{Tab}');
+      await waitFor(() => {
+        const next = getEvent('evt-d4-h10');
+        expect(next).not.to.equal(null);
+        expect(document.activeElement).to.equal(next);
+      });
+    });
+
+    it('should scroll a virtualized-out target into view at its compressed-axis position', async () => {
+      // The target sits on the last day at 19:00 — tick 47 of 48, around x=3008 — while
+      // the 600px host shows roughly the first 540px. It cannot be reached without the
+      // interceptor scrolling to the position the trimmed axis puts it at.
+      const { user } = renderTimeline({
+        events: [eventAt(3, 10), eventAt(3, 21), eventAt(6, 19)],
+        presetConfig: TRIMMED,
+        hostWidth: 600,
+      });
+
+      await waitFor(() => {
+        expect(getEvent('evt-d3-h10')).not.to.equal(null);
+      });
+      // The premise of the test: the target starts virtualized out.
+      expect(getEvent('evt-d6-h19')).to.equal(null);
+      expect(getScroller().scrollLeft).to.equal(0);
+
+      act(() => {
+        getEvent('evt-d3-h10')!.focus();
+      });
+
+      await user.keyboard('{Tab}');
+
+      await waitFor(() => {
+        const target = getEvent('evt-d6-h19');
+        expect(target).not.to.equal(null);
+        expect(document.activeElement).to.equal(target);
+      });
+
+      // Scrolled to where the compressed axis puts the target, not merely far enough to
+      // mount it: an offset derived from the untrimmed geometry lands elsewhere. The box
+      // is checked by its start edge, since a short event renders wider than its slot to
+      // fit the label.
+      expect(getScroller().scrollLeft).to.be.greaterThan(0);
+      const scrollerRect = getScroller().getBoundingClientRect();
+      const targetRect = getEvent('evt-d6-h19')!.getBoundingClientRect();
+      expect(targetRect.left).to.be.greaterThanOrEqual(scrollerRect.left);
+      expect(targetRect.left).to.be.lessThan(scrollerRect.right);
+    });
+  });
+
+  describe('multi-resource occurrences', () => {
+    // Occurrence keys aren't unique across rows: a multi-resource event renders
+    // one copy per assigned resource, all sharing the same `data-occurrence-key`.
+    // Resolving the "next" DOM node for such a key must be scoped by row, or an
+    // unscoped lookup can resolve to a same-key copy mounted in a different row.
+    const resourceB = ResourceBuilder.new().title('B').build();
+    const resourceA = ResourceBuilder.new().title('A').build();
+
+    function getEventRow(resourceId: string): HTMLElement {
+      const row = document.querySelector<HTMLElement>(
+        `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
+      );
+      if (!row) {
+        throw new Error(`Could not find event row for resource "${resourceId}"`);
+      }
+      return row;
+    }
+
+    // `getByText` resolves to the innermost element with that text (a `<span>`
+    // clamp, not focusable); walk up to the event root that actually carries
+    // `data-occurrence-key`/`tabindex`.
+    function getEventInRow(resourceId: string, title: string): HTMLElement {
+      const textNode = within(getEventRow(resourceId)).getByText(title);
+      const eventRoot = textNode.closest<HTMLElement>('[data-occurrence-key]');
+      if (!eventRoot) {
+        throw new Error(`Could not find the event root for "${title}" in row "${resourceId}"`);
+      }
+      return eventRoot;
+    }
+
+    it('should scope focus restoration by row when the target occurrence key is duplicated in another row', async () => {
+      const soloInA = EventBuilder.new()
+        .title('Solo A')
+        .singleDay('2025-07-03T09:00:00Z', 30)
+        .resource(resourceA)
+        .build();
+      const shared = EventBuilder.new()
+        .title('Shared')
+        .singleDay('2025-07-03T10:00:00Z', 30)
+        .resources([resourceA, resourceB])
+        .build();
+
+      const { user } = render(
+        <div style={{ width: 1200, height: 600 }}>
+          <EventTimelinePremium
+            // B listed before A so its (duplicate-keyed) copy of `shared` sits
+            // earlier in DOM order than A's copy — an unscoped lookup for the
+            // shared key would wrongly resolve to B's copy instead of A's.
+            resources={[resourceB, resourceA]}
+            events={[soloInA, shared]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            preset="dayAndHour"
+            presets={['dayAndHour']}
+          />
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(within(getEventRow(resourceA.id)).queryByText('Solo A')).not.to.equal(null);
+        expect(within(getEventRow(resourceA.id)).queryByText('Shared')).not.to.equal(null);
+        expect(within(getEventRow(resourceB.id)).queryByText('Shared')).not.to.equal(null);
+      });
+
+      act(() => {
+        getEventInRow(resourceA.id, 'Solo A').focus();
+      });
+      expect(document.activeElement).to.equal(getEventInRow(resourceA.id, 'Solo A'));
+
+      await user.keyboard('{Tab}');
+
+      expect(document.activeElement).to.equal(getEventInRow(resourceA.id, 'Shared'));
+    });
   });
 });

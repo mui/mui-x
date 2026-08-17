@@ -1,12 +1,15 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import type { IteratedCell } from '../../models';
 import { iterate } from './iterate';
 
 export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
@@ -27,15 +30,29 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const { start, end, headers, timeResolution } = useStore(
+  const { start, end, headers, timeResolution, dayStartMinute, dayEndMinute } = useStore(
     store,
     eventTimelinePremiumPresetSelectors.config,
   );
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
 
+  // The header re-renders on every horizontal scroll (it subscribes to the
+  // virtualizer's render context): only recompute the cell walk when the range
+  // actually changes.
+  const cellsPerLevel = React.useMemo(
+    () =>
+      headers.map((level) =>
+        iterate(adapter, level.unit, timeResolution, start, end, weekStartsOn, {
+          dayStartMinute,
+          dayEndMinute,
+        }),
+      ),
+    [adapter, headers, timeResolution, start, end, weekStartsOn, dayStartMinute, dayEndMinute],
+  );
+
   const children = headers.map((level, levelIndex) => {
-    const allCells = iterate(adapter, level.unit, timeResolution, start, end, weekStartsOn);
+    const allCells = cellsPerLevel[levelIndex];
 
     let cells: ReturnType<typeof iterate>;
     let offsetInTicks = 0;
@@ -68,10 +85,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
             data-weekend={level.unit === 'day' && isWeekend(adapter, cell.date) ? '' : undefined}
             style={{ '--span': cell.spanInTicks } as React.CSSProperties}
           >
-            <time
-              className={classNames?.label}
-              dateTime={adapter.formatByString(cell.date, "yyyy-MM-dd'T'HH:mm")}
-            >
+            <time className={classNames?.label} dateTime={getCellDateTime(adapter, cell)}>
               {level.renderCell
                 ? level.renderCell({
                     adapter,
@@ -84,6 +98,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
                     level: levelIndex,
                     spanInTicks: cell.spanInTicks,
                     unit: level.unit,
+                    wallClockHour: cell.wallClockHour,
                   })
                 : level.formatDate(adapter, cell.date)}
             </time>
@@ -122,6 +137,19 @@ export namespace TimelineGridHeader {
       lastTickIndex: number;
     };
   }
+}
+
+/**
+ * Machine-readable local date-time of a cell. Hour cells are built from `wallClockHour`
+ * rather than from `date`: the hour skipped by a spring-forward transition has no instant,
+ * so its `date` normalizes to the next hour and would repeat that cell's value.
+ */
+function getCellDateTime(adapter: TemporalAdapter, cell: IteratedCell) {
+  if (cell.wallClockHour === undefined) {
+    return adapter.formatByString(cell.date, "yyyy-MM-dd'T'HH:mm");
+  }
+  const day = adapter.formatByString(cell.date, 'yyyy-MM-dd');
+  return `${day}T${String(cell.wallClockHour).padStart(2, '0')}:00`;
 }
 
 /**
