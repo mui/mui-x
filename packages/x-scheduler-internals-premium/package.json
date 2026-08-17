@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-internals-premium",
-  "version": "9.0.0-beta.7",
+  "version": "9.0.0-beta.8",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Scheduler internals.",
   "license": "SEE LICENSE IN LICENSE",
@@ -48,6 +48,7 @@
     "directory": "packages/x-scheduler-internals-premium"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "catalog:",
     "@babel/runtime": "catalog:",
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",

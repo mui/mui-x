@@ -29,6 +29,7 @@ import {
   useGridRegisterPipeProcessor,
   runIf,
   DataSourceRowsUpdateStrategy,
+  useGridDataSourceFilterModelChange,
 } from '@mui/x-data-grid/internals';
 import type { GridStrategyProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
@@ -103,6 +104,8 @@ export const useGridDataSourceLazyLoader = (
   );
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
+
+  const hasFilterModelChanged = useGridDataSourceFilterModelChange(privateApiRef);
 
   const revalidate = useEventCallback((params: Partial<GridGetRowsParams>) => {
     if (rowsStale.current) {
@@ -596,6 +599,10 @@ export const useGridDataSourceLazyLoader = (
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
     (newFilterModel) => {
+      if (!hasFilterModelChanged(newFilterModel)) {
+        return;
+      }
+
       rowsStale.current = true;
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
@@ -613,7 +620,13 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setLoading(true);
       debouncedFetchRows(getRowsParams);
     },
-    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange, stopPolling],
+    [
+      privateApiRef,
+      debouncedFetchRows,
+      throttledHandleRenderedRowsIntervalChange,
+      stopPolling,
+      hasFilterModelChanged,
+    ],
   );
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>((row) => {
