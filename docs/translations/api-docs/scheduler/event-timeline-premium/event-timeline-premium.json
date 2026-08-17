@@ -60,6 +60,9 @@
     "onCollapsedResourcesChange": {
       "description": "Event handler called when the collapsed resources change."
     },
+    "onEventEditingStart": {
+      "description": "Event handler called when the user starts editing an event occurrence, right before the built-in editing UI opens, regardless of what triggered it (pointer, keyboard or event creation). Call <code>eventDetails.cancel()</code> to keep the built-in UI closed and handle editing in your own UI."
+    },
     "onEventsChange": { "description": "Callback fired when some event of the calendar change." },
     "onPresetChange": { "description": "Event handler called when the preset changes." },
     "onVisibleDateChange": { "description": "Event handler called when the visible date changes." },

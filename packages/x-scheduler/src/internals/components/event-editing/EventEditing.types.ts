@@ -10,6 +10,7 @@ export interface EventEditingContextValue {
   startEditing: (
     anchorRef: React.RefObject<HTMLElement | null>,
     occurrence: SchedulerRenderableEventOccurrence,
+    event?: Event,
   ) => void;
   /**
    * Stops editing, closing the editing surface.

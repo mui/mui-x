@@ -59,6 +59,7 @@ describe('<EventTimelinePremium />', () => {
     defaultCollapsedResources?: Record<string, boolean>;
     onCollapsedResourcesChange?: (collapsedResources: Record<string, boolean>) => void;
     defaultVisibleResources?: Record<string, boolean>;
+    onEventEditingStart?: React.ComponentProps<typeof EventTimelinePremium>['onEventEditingStart'];
   }) {
     return render(
       <EventTimelinePremium
@@ -76,6 +77,7 @@ describe('<EventTimelinePremium />', () => {
         defaultCollapsedResources={options?.defaultCollapsedResources}
         onCollapsedResourcesChange={options?.onCollapsedResourcesChange}
         defaultVisibleResources={options?.defaultVisibleResources}
+        onEventEditingStart={options?.onEventEditingStart}
       />,
     );
   }
@@ -948,6 +950,37 @@ describe('<EventTimelinePremium />', () => {
       expect(
         rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);
+    });
+  });
+
+  describe('onEventEditingStart', () => {
+    const standupEvent = EventBuilder.new()
+      .singleDay('2025-07-03T09:00:00Z')
+      .resource(engineering)
+      .title('Standup')
+      .build();
+
+    it('should be called with the occurrence when activating an event and still open the built-in dialog', async () => {
+      const onEventEditingStart = spy();
+      const { user } = renderTimeline({ events: [standupEvent], onEventEditingStart });
+
+      await user.click(screen.getByText('Standup'));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.lastCall.firstArg.id).to.equal(standupEvent.id);
+    });
+
+    it('should keep the built-in dialog closed when the handler cancels', async () => {
+      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = renderTimeline({ events: [standupEvent], onEventEditingStart });
+
+      await user.click(screen.getByText('Standup'));
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(screen.queryByRole('dialog')).to.equal(null);
     });
   });
 });

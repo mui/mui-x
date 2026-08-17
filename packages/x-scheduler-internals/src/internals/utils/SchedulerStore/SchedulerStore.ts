@@ -901,7 +901,17 @@ export class SchedulerStore<
   public startEditing = (
     occurrence: SchedulerRenderableEventOccurrence,
     mode: SchedulerEditingMode = 'edit',
+    event?: Event,
   ) => {
+    const eventDetails = createChangeEventDetails('none', event);
+    this.parameters.onEventEditingStart?.(occurrence, eventDetails);
+    if (eventDetails.isCanceled) {
+      // Canceled during a creation: the draft placeholder already exists — drop it.
+      if (this.state.occurrencePlaceholder?.type === 'creation') {
+        this.setOccurrencePlaceholder(null);
+      }
+      return;
+    }
     this.set('editingOccurrence', { occurrence, mode });
   };
 

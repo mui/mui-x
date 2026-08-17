@@ -182,6 +182,13 @@ StandaloneAgendaView.propTypes /* remove-proptypes */ = {
    */
   localeText: PropTypes.object,
   /**
+   * Event handler called when the user starts editing an event occurrence,
+   * right before the built-in editing UI opens, regardless of what triggered it
+   * (pointer, keyboard or event creation).
+   * Call `eventDetails.cancel()` to keep the built-in UI closed and handle editing in your own UI.
+   */
+  onEventEditingStart: PropTypes.func,
+  /**
    * Callback fired when some event of the calendar change.
    */
   onEventsChange: PropTypes.func,

@@ -28,4 +28,18 @@ describe('useExtractEventTimelinePremiumParameters', () => {
     expect(result.current.parameters.presetConfig).to.equal(presetConfig);
     expect(result.current.forwardedProps).to.not.have.property('presetConfig');
   });
+
+  it('should forward `onEventEditingStart` to the parameters object instead of the forwarded props', () => {
+    const onEventEditingStart = () => {};
+    const { result } = renderHook(() =>
+      useExtractEventTimelinePremiumParameters({
+        events: [],
+        resources: [ResourceBuilder.new().build()],
+        onEventEditingStart,
+      }),
+    );
+
+    expect(result.current.parameters.onEventEditingStart).to.equal(onEventEditingStart);
+    expect(result.current.forwardedProps).to.not.have.property('onEventEditingStart');
+  });
 });

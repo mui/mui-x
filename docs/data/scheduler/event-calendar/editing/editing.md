@@ -68,6 +68,31 @@ All other dialog features (editing title, dates, resources, colors, description,
 Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode.
 :::
 
+### Replace the dialog with your own UI
+
+Use the `onEventEditingStart` callback to intercept editing before the built-in dialog opens.
+It fires for every entry point (pointer, keyboard, touch, and event creation).
+Call `eventDetails.cancel()` to keep the built-in UI closed and open your own editing UI instead:
+
+```tsx
+<EventCalendar
+  onEventEditingStart={(occurrence, eventDetails) => {
+    eventDetails.cancel();
+    openYourEditingUI(occurrence.id);
+  }}
+/>
+```
+
+In the demo below, both clicking an event and clicking an empty cell open a custom dialog instead of the built-in one:
+
+{{"demo": "CustomEditingUI.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+Canceling `onEventEditingStart` means your UI owns the entire editing flow: the form itself, the recurring event scope selection ("this event", "this and following events", "all events"), the delete confirmation, and persisting the changes (for example through `onEventsChange`).
+
+Interactions that stay inside the calendar, like drag and drop and resizing, are not affected and keep the built-in behavior, including the recurring scope dialog.
+:::
+
 ## Read-only
 
 Use the `readOnly` prop to disable all editing interactions (event creation, drag-and-drop, resizing, and popover editing):

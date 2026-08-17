@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
@@ -438,6 +439,47 @@ describe('EventCalendar', () => {
       const eventElement = document.querySelector('.agenda-class');
       expect(eventElement).not.to.equal(null);
       expect(eventElement?.textContent).to.include('Agenda Event');
+    });
+  });
+
+  describe('onEventEditingStart', () => {
+    it('should be called with the occurrence when activating an event and still open the built-in dialog', async () => {
+      const onEventEditingStart = spy();
+      const { user } = render(
+        <EventCalendar events={[event1]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Running/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.lastCall.firstArg.id).to.equal(event1.id);
+    });
+
+    it('should keep the built-in dialog closed when the handler cancels', async () => {
+      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[event1]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Running/i }));
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
+    it('should keep the built-in dialog closed when the handler cancels an event creation', async () => {
+      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[]} defaultView="month" onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(withinMonthView().getAllByRole('gridcell')[10]);
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(screen.queryByRole('dialog')).to.equal(null);
     });
   });
 

@@ -45,12 +45,17 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
     (
       forwardedAnchorRef: React.RefObject<HTMLElement | null>,
       occurrence: SchedulerRenderableEventOccurrence,
+      event?: Event,
     ) => {
       // Batched with the store write below, so the surface never renders anchored to `null`.
       setAnchor(forwardedAnchorRef.current);
       const isCreating = schedulerOccurrencePlaceholderSelectors.isCreating(store.state);
       const isReadOnly = schedulerEventSelectors.isReadOnly(store.state, occurrence.id);
-      store.startEditing(occurrence, getInitialEditingMode(surface, { isCreating, isReadOnly }));
+      store.startEditing(
+        occurrence,
+        getInitialEditingMode(surface, { isCreating, isReadOnly }),
+        event,
+      );
     },
   );
 
@@ -95,7 +100,7 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
     ref,
     onClick: (event: React.MouseEvent<HTMLElement>) => {
       onClick?.(event);
-      startEditing(ref, occurrence);
+      startEditing(ref, occurrence, event.nativeEvent);
     },
   });
 }

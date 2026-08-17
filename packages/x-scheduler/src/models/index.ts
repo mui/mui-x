@@ -11,4 +11,8 @@ export type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
   SchedulerOccurrencePlaceholderExternalDragData,
+  SchedulerEventOccurrence,
+  SchedulerEventOccurrencePlaceholder,
+  SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
+export type { SchedulerChangeEventDetails } from '@mui/x-scheduler-internals/internals';

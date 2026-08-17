@@ -1,5 +1,6 @@
 import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { spy } from 'sinon';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
   DEFAULT_PREFERENCES_MENU_CONFIG,
@@ -112,6 +113,45 @@ describe('Core - EventCalendarStore', () => {
         store.startEditing(occurrence('event-1'), 'armed');
 
         expect(store.state.editingOccurrence?.mode).to.equal('armed');
+      });
+
+      it('should call `onEventEditingStart` with the occurrence before recording the editing state', () => {
+        const onEventEditingStart = spy();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const edited = occurrence('event-1');
+
+        store.startEditing(edited);
+
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+        expect(onEventEditingStart.lastCall.firstArg).to.equal(edited);
+        expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
+      });
+
+      it('should not record the editing state when `onEventEditingStart` cancels', () => {
+        const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+        expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should clear the creation placeholder when `onEventEditingStart` cancels a creation', () => {
+        const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const placeholder = {
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T10:30:00', 'default'),
+        } as any;
+        store.setOccurrencePlaceholder(placeholder);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(store.state.editingOccurrence).to.equal(null);
+        expect(store.state.occurrencePlaceholder).to.equal(null);
       });
     });
 
