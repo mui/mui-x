@@ -36,41 +36,42 @@ const resources: SchedulerResource[] = [
   { id: 'personal', title: 'Personal', eventColor: 'teal' },
 ];
 
+interface EditedEvent {
+  occurrence: SchedulerRenderableEventOccurrence;
+  isNew: boolean;
+}
+
 export default function CustomEditingUI() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
-  const [editedOccurrence, setEditedOccurrence] =
-    React.useState<SchedulerRenderableEventOccurrence | null>(null);
-
-  const isNewEvent =
-    editedOccurrence != null &&
-    !events.some((event) => event.id === editedOccurrence.id);
+  const [editedEvent, setEditedEvent] = React.useState<EditedEvent | null>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (editedOccurrence == null) {
+    if (editedEvent == null) {
       return;
     }
 
+    const { occurrence, isNew } = editedEvent;
     const title =
       (new FormData(event.currentTarget).get('title') as string) || '(No title)';
-    if (isNewEvent) {
+    if (isNew) {
       setEvents([
         ...events,
         {
           id: `custom-${Date.now()}`,
           title,
-          start: editedOccurrence.displayTimezone.start.value,
-          end: editedOccurrence.displayTimezone.end.value,
+          start: occurrence.displayTimezone.start.value,
+          end: occurrence.displayTimezone.end.value,
         },
       ]);
     } else {
       setEvents(
         events.map((item) =>
-          item.id === editedOccurrence.id ? { ...item, title } : item,
+          item.id === occurrence.id ? { ...item, title } : item,
         ),
       );
     }
-    setEditedOccurrence(null);
+    setEditedEvent(null);
   };
 
   return (
@@ -83,17 +84,19 @@ export default function CustomEditingUI() {
         defaultPreferences={{ isSidePanelOpen: false }}
         onEventEditingStart={(occurrence, eventDetails) => {
           eventDetails.cancel();
-          setEditedOccurrence(occurrence);
+          setEditedEvent({ occurrence, isNew: eventDetails.reason === 'creation' });
         }}
       />
       <Dialog
-        open={editedOccurrence != null}
-        onClose={() => setEditedOccurrence(null)}
+        open={editedEvent != null}
+        onClose={() => setEditedEvent(null)}
         fullWidth
         maxWidth="xs"
       >
         <form onSubmit={handleSubmit}>
-          <DialogTitle>{isNewEvent ? 'New event' : 'Edit event'}</DialogTitle>
+          <DialogTitle>
+            {editedEvent?.isNew ? 'New event' : 'Edit event'}
+          </DialogTitle>
           <DialogContent>
             <TextField
               autoFocus
@@ -101,11 +104,13 @@ export default function CustomEditingUI() {
               name="title"
               label="Title"
               margin="dense"
-              defaultValue={isNewEvent ? '' : (editedOccurrence?.title ?? '')}
+              defaultValue={
+                editedEvent?.isNew ? '' : (editedEvent?.occurrence.title ?? '')
+              }
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setEditedOccurrence(null)}>Cancel</Button>
+            <Button onClick={() => setEditedEvent(null)}>Cancel</Button>
             <Button type="submit" variant="contained">
               Save
             </Button>

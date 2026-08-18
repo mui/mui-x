@@ -71,7 +71,7 @@ Events with `readOnly: true` (or belonging to a read-only resource) open the dia
 ### Replace the dialog with your own UI
 
 Use the `onEventEditingStart` callback to intercept editing before the built-in dialog opens.
-It fires for every entry point (pointer, keyboard, touch, and event creation).
+It fires for every entry point (pointer, keyboard, touch, and event creation), and `eventDetails.reason` is `"creation"` when the user is creating a new event and `"edit"` otherwise.
 Call `eventDetails.cancel()` to keep the built-in UI closed and open your own editing UI instead:
 
 ```tsx

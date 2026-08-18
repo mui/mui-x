@@ -124,6 +124,7 @@ describe('Core - EventCalendarStore', () => {
 
         expect(onEventEditingStart.calledOnce).to.equal(true);
         expect(onEventEditingStart.lastCall.firstArg).to.equal(edited);
+        expect(onEventEditingStart.lastCall.args[1].reason).to.equal('edit');
         expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
       });
 
@@ -150,6 +151,7 @@ describe('Core - EventCalendarStore', () => {
 
         store.startEditing(occurrence('event-1'));
 
+        expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
         expect(store.state.editingOccurrence).to.equal(null);
         expect(store.state.occurrencePlaceholder).to.equal(null);
       });

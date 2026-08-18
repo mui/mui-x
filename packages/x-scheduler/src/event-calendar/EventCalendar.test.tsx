@@ -456,6 +456,7 @@ describe('EventCalendar', () => {
       });
       expect(onEventEditingStart.calledOnce).to.equal(true);
       expect(onEventEditingStart.lastCall.firstArg.id).to.equal(event1.id);
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('edit');
     });
 
     it('should keep the built-in dialog closed when the handler cancels', async () => {
@@ -479,6 +480,7 @@ describe('EventCalendar', () => {
       await user.click(withinMonthView().getAllByRole('gridcell')[10]);
 
       expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
   });
