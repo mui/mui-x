@@ -6,12 +6,13 @@ export interface EventEditingContextValue {
   /**
    * Begins editing `occurrence`, anchoring the editing surface to `anchorRef`. The initial editing
    * mode (armed vs edit) is resolved from the provider's surface.
+   * Returns `false` when `onEventEditingStart` canceled the editing.
    */
   startEditing: (
     anchorRef: React.RefObject<HTMLElement | null>,
     occurrence: SchedulerRenderableEventOccurrence,
     event?: Event,
-  ) => void;
+  ) => boolean;
   /**
    * Stops editing, closing the editing surface.
    */
@@ -40,6 +41,8 @@ export interface EventEditingTriggerProps {
   /** A single element. The trigger clones it and replaces its `ref`. */
   children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLElement>;
+  /** Called when an activation is canceled by `onEventEditingStart`. */
+  onEditingCanceled?: () => void;
 }
 
 export interface CompactEventEditingProviderProps {

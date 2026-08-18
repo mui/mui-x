@@ -1013,7 +1013,7 @@ describe('<EventTimelinePremium />', () => {
       expect(onEventEditingStart.calledOnce).to.equal(true);
       expect(onEventEditingStart.lastCall.firstArg.id).to.equal(standupEvent.id);
       expect(onEventEditingStart.lastCall.args[1].reason).to.equal('edit');
-      expect(onEventEditingStart.lastCall.args[1].event).to.be.instanceOf(Event);
+      expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('click');
     });
 
     it('should keep the built-in dialog closed when the handler cancels', async () => {

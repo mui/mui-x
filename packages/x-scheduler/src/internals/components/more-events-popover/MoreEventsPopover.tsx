@@ -110,7 +110,11 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       </MoreEventsPopoverHeader>
       <MoreEventsPopoverBody className={classes.moreEventsPopoverBody}>
         {occurrences.map((occurrence) => (
-          <EventEditingTrigger occurrence={occurrence} key={occurrence.key}>
+          <EventEditingTrigger
+            occurrence={occurrence}
+            key={occurrence.key}
+            onEditingCanceled={onClose}
+          >
             <EventItem
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
               occurrence={occurrence}

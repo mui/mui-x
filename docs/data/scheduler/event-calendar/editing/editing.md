@@ -93,9 +93,10 @@ In the demo below, both clicking an event and clicking an empty cell open a cust
 {{"demo": "CustomEditingUI.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-Canceling `onEventEditingStart` means your UI owns the entire editing flow: the form itself, the recurring event scope selection ("this event", "this and following events", "all events"), the delete confirmation, and persisting the changes (for example through `onEventsChange`).
+Canceling `onEventEditingStart` means your UI owns the entire editing flow: the form itself, the recurring event scope selection ("this event", "this and following events", "all events"), the delete confirmation, and persisting the changes (for example by updating your controlled `events` state).
 
-Interactions that stay inside the calendar, like drag and drop and resizing, are not affected and keep the built-in behavior, including the recurring scope dialog.
+Drag and drop and pointer-based resizing are not affected and keep the built-in behavior, including the recurring scope dialog.
+On touch devices, resizing is only reachable through the built-in editing surface, so canceling suppresses it as well.
 :::
 
 ## Read-only

@@ -155,6 +155,23 @@ describe('Core - EventCalendarStore', () => {
         expect(store.state.editingOccurrence).to.equal(null);
         expect(store.state.occurrencePlaceholder).to.equal(null);
       });
+
+      it('should forward the native event that initiated the creation placeholder', () => {
+        const onEventEditingStart = spy();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const nativeEvent = new Event('click');
+        const placeholder = {
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T10:30:00', 'default'),
+        } as any;
+        store.setOccurrencePlaceholder(placeholder, nativeEvent);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(onEventEditingStart.lastCall.args[1].event).to.equal(nativeEvent);
+      });
     });
 
     describe('setEditingMode', () => {

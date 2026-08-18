@@ -51,7 +51,7 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
       setAnchor(forwardedAnchorRef.current);
       const isCreating = schedulerOccurrencePlaceholderSelectors.isCreating(store.state);
       const isReadOnly = schedulerEventSelectors.isReadOnly(store.state, occurrence.id);
-      store.startEditing(
+      return store.startEditing(
         occurrence,
         getInitialEditingMode(surface, { isCreating, isReadOnly }),
         event,
@@ -78,7 +78,7 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
  * both the desktop dialog and the compact drawer.
  */
 export function EventEditingTrigger(props: EventEditingTriggerProps) {
-  const { occurrence, onClick, children } = props;
+  const { occurrence, onClick, onEditingCanceled, children } = props;
   const ref = React.useRef<HTMLElement | null>(null);
   const store = useSchedulerStoreContext();
   const { startEditing, setAnchor } = useEventEditingContext();
@@ -100,7 +100,10 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
     ref,
     onClick: (event: React.MouseEvent<HTMLElement>) => {
       onClick?.(event);
-      startEditing(ref, occurrence, event.nativeEvent);
+      const started = startEditing(ref, occurrence, event.nativeEvent);
+      if (!started) {
+        onEditingCanceled?.();
+      }
     },
   });
 }

@@ -887,12 +887,22 @@ export class SchedulerStore<
   /**
    * Sets the occurrence placeholder to render while creating a new event or dragging an existing event occurrence.
    */
-  public setOccurrencePlaceholder = (newPlaceholder: SchedulerOccurrencePlaceholder | null) => {
+  public setOccurrencePlaceholder = (
+    newPlaceholder: SchedulerOccurrencePlaceholder | null,
+    event?: Event,
+  ) => {
     const { adapter, occurrencePlaceholder: previous } = this.state;
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
+      this.occurrencePlaceholderEvent = newPlaceholder == null ? undefined : event;
       this.set('occurrencePlaceholder', newPlaceholder);
     }
   };
+
+  /**
+   * Native event that initiated the current placeholder, forwarded to `onEventEditingStart`
+   * when the creation flow reaches `startEditing` (which runs in an effect, past the DOM event).
+   */
+  private occurrencePlaceholderEvent: Event | undefined;
 
   /**
    * Marks an occurrence (existing or creation draft) as the one being edited. Only records *what*
@@ -902,18 +912,22 @@ export class SchedulerStore<
     occurrence: SchedulerRenderableEventOccurrence,
     mode: SchedulerEditingMode = 'edit',
     event?: Event,
-  ) => {
+  ): boolean => {
     const isCreation = this.state.occurrencePlaceholder?.type === 'creation';
-    const eventDetails = createChangeEventDetails(isCreation ? 'creation' : 'edit', event);
+    const eventDetails = createChangeEventDetails(
+      isCreation ? 'creation' : 'edit',
+      event ?? (isCreation ? this.occurrencePlaceholderEvent : undefined),
+    );
     this.parameters.onEventEditingStart?.(occurrence, eventDetails);
     if (eventDetails.isCanceled) {
       // Canceled during a creation: the draft placeholder already exists — drop it.
       if (isCreation) {
         this.setOccurrencePlaceholder(null);
       }
-      return;
+      return false;
     }
     this.set('editingOccurrence', { occurrence, mode });
+    return true;
   };
 
   /**

@@ -496,6 +496,7 @@ describe('EventCalendar', () => {
 
       expect(onEventEditingStart.calledOnce).to.equal(true);
       expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
+      expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('click');
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
   });

@@ -117,9 +117,9 @@ describe('<MonthView />', () => {
   });
 
   describe('Event keyboard accessibility in "more events" popover', () => {
-    async function renderAndOpenPopover() {
+    async function renderAndOpenPopover(providerProps: { onEventEditingStart?: any } = {}) {
       const { user } = render(
-        <EventCalendarProvider events={manyEvents} resources={[]}>
+        <EventCalendarProvider events={manyEvents} resources={[]} {...providerProps}>
           <EventDialogProvider>
             <MonthView />
           </EventDialogProvider>
@@ -185,6 +185,22 @@ describe('<MonthView />', () => {
             null,
           );
         });
+      });
+    });
+
+    it('should close the popover when `onEventEditingStart` cancels an activation from it', async () => {
+      const onEventEditingStart = spy((_occurrence: any, eventDetails: any) =>
+        eventDetails.cancel(),
+      );
+      const { user, popover } = await renderAndOpenPopover({ onEventEditingStart });
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
       });
     });
 

@@ -10,7 +10,10 @@ import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
 describe('CompactDayView - event toolbar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
 
-  function renderEvent(onEventsChange = spy(), { readOnly = false } = {}) {
+  function renderEvent(
+    onEventsChange = spy(),
+    { readOnly = false, onEventEditingStart = undefined as any } = {},
+  ) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -24,6 +27,7 @@ describe('CompactDayView - event toolbar', () => {
         resources={[]}
         onEventsChange={onEventsChange}
         visibleDate={new Date('2025-07-03T00:00:00Z')}
+        onEventEditingStart={onEventEditingStart}
       />,
     );
 
@@ -33,6 +37,18 @@ describe('CompactDayView - event toolbar', () => {
   function getEvent(): HTMLElement {
     return screen.getByRole('button', { name: /Morning Meeting/i });
   }
+
+  it('should not arm the event nor dock the toolbar when `onEventEditingStart` cancels', () => {
+    const onEventEditingStart = spy((_occurrence: any, eventDetails: any) => eventDetails.cancel());
+    renderEvent(spy(), { onEventEditingStart });
+
+    const eventElement = getEvent();
+    fireEvent.click(eventElement);
+
+    expect(onEventEditingStart.calledOnce).to.equal(true);
+    expect(eventElement).not.to.have.attribute('data-armed');
+    expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+  });
 
   it('should dock the edit/delete toolbar once an event is armed', () => {
     renderEvent();
