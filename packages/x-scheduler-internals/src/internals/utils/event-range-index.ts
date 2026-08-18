@@ -98,6 +98,7 @@ export function createEventRangeIndex(
 ): SchedulerEventRangeIndex {
   const recurringEntries: EventRangeEntry[] = [];
   const rangeEntries: EventRangeEntry[] = [];
+  let earliestRangeEnd = Infinity;
 
   events.forEach((event, index) => {
     const entry: EventRangeEntry = [
@@ -111,16 +112,23 @@ export function createEventRangeIndex(
       recurringEntries.push(entry);
     } else {
       rangeEntries.push(entry);
+      earliestRangeEnd = Math.min(earliestRangeEnd, entry[3]);
     }
   });
 
   rangeEntries.sort((a, b) => a[2] - b[2] || a[1] - b[1]);
   const { leafCount, maxEndByNode } = buildMaxEndIndex(rangeEntries);
+  const latestRangeStart = rangeEntries[rangeEntries.length - 1]?.[2] ?? -Infinity;
 
   return {
     getEventsForRange(start, end) {
       const startTimestamp = adapter.getTime(start);
       const endTimestamp = adapter.getTime(end);
+
+      if (startTimestamp <= earliestRangeEnd && endTimestamp >= latestRangeStart) {
+        return events.slice();
+      }
+
       const matches: EventRangeEntry[] = [];
       queryMaxEndIndex(
         rangeEntries,
