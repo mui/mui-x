@@ -564,6 +564,7 @@ function EventList({
                 occurrence={occurrence}
                 ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
                 variant="regular"
+                resourceId={resourceId}
               />
             </EventEditingTrigger>
           ),
@@ -613,6 +614,7 @@ function EventRowContent({
           occurrence={placeholder}
           ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
           variant="placeholder"
+          resourceId={resourceId}
         />
       )}
     </React.Fragment>
