@@ -761,10 +761,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const laneCountByResource = React.useMemo(() => {
     const map = new Map<SchedulerResourceId, number>();
     for (const { resource, occurrences } of visibleResources) {
-      map.set(resource.id, computeOccurrencesMaxIndex(adapter, occurrences));
+      map.set(resource.id, computeOccurrencesMaxIndex(occurrences));
     }
     return map;
-  }, [visibleResources, adapter]);
+  }, [visibleResources]);
 
   const getRowHeight = React.useCallback(
     (row: { id: SchedulerResourceId }) =>
