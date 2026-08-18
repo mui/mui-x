@@ -3,12 +3,6 @@ import type { SchedulerProcessedEvent } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 
 type EventRangeEntry = [event: SchedulerProcessedEvent, index: number, start: number, end: number];
-type EventRangeNode = [
-  entry: EventRangeEntry,
-  left: EventRangeNode | null,
-  right: EventRangeNode | null,
-  maxEnd: number,
-];
 
 export interface SchedulerEventRangeIndex {
   getEventsForRange(
@@ -17,39 +11,84 @@ export interface SchedulerEventRangeIndex {
   ): SchedulerProcessedEvent[];
 }
 
-function buildTree(entries: EventRangeEntry[], start: number, end: number): EventRangeNode | null {
-  if (start >= end) {
-    return null;
+function buildMaxEndIndex(entries: EventRangeEntry[]) {
+  let leafCount = 1;
+  while (leafCount < entries.length) {
+    leafCount *= 2;
   }
 
-  const middle = Math.floor((start + end) / 2);
-  const entry = entries[middle];
-  const left = buildTree(entries, start, middle);
-  const right = buildTree(entries, middle + 1, end);
+  const maxEndByNode = new Float64Array(leafCount * 2);
+  maxEndByNode.fill(-Infinity);
 
-  return [entry, left, right, Math.max(entry[3], left?.[3] ?? -Infinity, right?.[3] ?? -Infinity)];
+  for (let index = 0; index < entries.length; index += 1) {
+    maxEndByNode[leafCount + index] = entries[index][3];
+  }
+  for (let nodeIndex = leafCount - 1; nodeIndex > 0; nodeIndex -= 1) {
+    maxEndByNode[nodeIndex] = Math.max(
+      maxEndByNode[nodeIndex * 2],
+      maxEndByNode[nodeIndex * 2 + 1],
+    );
+  }
+
+  return { leafCount, maxEndByNode };
 }
 
-function queryTree(
-  node: EventRangeNode | null,
+function findFirstEntryStartingAfter(entries: EventRangeEntry[], end: number) {
+  let low = 0;
+  let high = entries.length;
+
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (entries[middle][2] <= end) {
+      low = middle + 1;
+    } else {
+      high = middle;
+    }
+  }
+
+  return low;
+}
+
+function queryMaxEndIndex(
+  entries: EventRangeEntry[],
+  maxEndByNode: Float64Array,
+  nodeIndex: number,
+  entryStartIndex: number,
+  entryEndIndex: number,
+  firstEntryStartingAfterRange: number,
   start: number,
-  end: number,
   result: EventRangeEntry[],
 ) {
-  if (node == null || node[3] < start) {
+  if (entryStartIndex >= firstEntryStartingAfterRange || maxEndByNode[nodeIndex] < start) {
     return;
   }
 
-  queryTree(node[1], start, end, result);
-
-  const entry = node[0];
-  if (entry[2] <= end && entry[3] >= start) {
-    result.push(entry);
+  if (entryEndIndex - entryStartIndex === 1) {
+    result.push(entries[entryStartIndex]);
+    return;
   }
 
-  if (entry[2] <= end) {
-    queryTree(node[2], start, end, result);
-  }
+  const middle = Math.floor((entryStartIndex + entryEndIndex) / 2);
+  queryMaxEndIndex(
+    entries,
+    maxEndByNode,
+    nodeIndex * 2,
+    entryStartIndex,
+    middle,
+    firstEntryStartingAfterRange,
+    start,
+    result,
+  );
+  queryMaxEndIndex(
+    entries,
+    maxEndByNode,
+    nodeIndex * 2 + 1,
+    middle,
+    entryEndIndex,
+    firstEntryStartingAfterRange,
+    start,
+    result,
+  );
 }
 
 export function createEventRangeIndex(
@@ -76,13 +115,34 @@ export function createEventRangeIndex(
   });
 
   rangeEntries.sort((a, b) => a[2] - b[2] || a[1] - b[1]);
-  const root = buildTree(rangeEntries, 0, rangeEntries.length);
+  const { leafCount, maxEndByNode } = buildMaxEndIndex(rangeEntries);
 
   return {
     getEventsForRange(start, end) {
+      const startTimestamp = adapter.getTime(start);
+      const endTimestamp = adapter.getTime(end);
       const matches: EventRangeEntry[] = [];
-      queryTree(root, adapter.getTime(start), adapter.getTime(end), matches);
+      queryMaxEndIndex(
+        rangeEntries,
+        maxEndByNode,
+        1,
+        0,
+        leafCount,
+        findFirstEntryStartingAfter(rangeEntries, endTimestamp),
+        startTimestamp,
+        matches,
+      );
       matches.push(...recurringEntries);
+
+      if (matches.length > events.length / 4) {
+        return events.filter(
+          (event) =>
+            (expandRecurringEvents && Boolean(event.displayTimezone.rrule)) ||
+            (event.displayTimezone.start.timestamp <= endTimestamp &&
+              event.displayTimezone.end.timestamp >= startTimestamp),
+        );
+      }
+
       matches.sort((a, b) => a[1] - b[1]);
       return matches.map((entry) => entry[0]);
     },

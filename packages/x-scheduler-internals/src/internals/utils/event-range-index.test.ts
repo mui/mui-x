@@ -90,4 +90,47 @@ describe('createEventRangeIndex', () => {
       );
     }
   });
+
+  it('preserves input order for a broad query over shuffled events', () => {
+    const firstDay = adapter.date('2025-01-01T00:00:00Z', 'default');
+    const events = Array.from({ length: 40 }, (_, eventIndex) => {
+      const eventStart = adapter.addDays(firstDay, (eventIndex * 17) % 40);
+      return EventBuilder.new(adapter)
+        .id(eventIndex)
+        .span(eventStart.toISOString(), adapter.addDays(eventStart, 1).toISOString())
+        .toProcessed();
+    });
+    const index = createEventRangeIndex(events, adapter, false);
+    const rangeStart = adapter.addDays(firstDay, 5);
+    const rangeEnd = adapter.addDays(firstDay, 30);
+    const expected = events.filter(
+      (event) =>
+        event.displayTimezone.start.timestamp <= adapter.getTime(rangeEnd) &&
+        event.displayTimezone.end.timestamp >= adapter.getTime(rangeStart),
+    );
+
+    expect(index.getEventsForRange(rangeStart, rangeEnd)).to.deep.equal(expected);
+  });
+
+  it('indexes events before the Unix epoch', () => {
+    const events = [
+      EventBuilder.new(adapter)
+        .id('before-epoch')
+        .span('1960-01-01T00:00:00Z', '1960-01-02T00:00:00Z')
+        .toProcessed(),
+      EventBuilder.new(adapter)
+        .id('after-epoch')
+        .span('2025-01-01T00:00:00Z', '2025-01-02T00:00:00Z')
+        .toProcessed(),
+    ];
+
+    expect(
+      createEventRangeIndex(events, adapter, false)
+        .getEventsForRange(
+          adapter.date('1959-12-31T00:00:00Z', 'default'),
+          adapter.date('1960-01-03T00:00:00Z', 'default'),
+        )
+        .map((event) => event.id),
+    ).to.deep.equal(['before-epoch']);
+  });
 });

@@ -14,13 +14,17 @@ const events = Array.from({ length: eventCount }, (_, index) => {
 const start = adapter.addHours(firstDay, eventCount * 2);
 const end = adapter.addDays(start, 7);
 const eventRangeIndex = createEventRangeIndex(events, adapter, false);
+const shuffledEvents = events.toReversed();
+const shuffledEventRangeIndex = createEventRangeIndex(shuffledEvents, adapter, false);
+const broadStart = firstDay;
+const broadEnd = adapter.addHours(firstDay, eventCount * 4);
 
 describe('event range index', () => {
   bench('build index of 50k events', () => {
     createEventRangeIndex(events, adapter, false);
   });
 
-  bench('linear scan of 50k events', () => {
+  bench('linear narrow query of 50k events', () => {
     events.filter(
       (event) =>
         !adapter.isAfter(event.displayTimezone.start.value, end) &&
@@ -28,7 +32,19 @@ describe('event range index', () => {
     );
   });
 
-  bench('indexed query of 50k events', () => {
+  bench('indexed narrow query of 50k chronological events', () => {
     eventRangeIndex.getEventsForRange(start, end);
+  });
+
+  bench('indexed narrow query of 50k shuffled events', () => {
+    shuffledEventRangeIndex.getEventsForRange(start, end);
+  });
+
+  bench('indexed broad query of 50k chronological events', () => {
+    eventRangeIndex.getEventsForRange(broadStart, broadEnd);
+  });
+
+  bench('indexed broad query of 50k shuffled events', () => {
+    shuffledEventRangeIndex.getEventsForRange(broadStart, broadEnd);
   });
 });

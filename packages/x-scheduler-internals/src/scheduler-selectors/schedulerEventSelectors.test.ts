@@ -19,6 +19,18 @@ describe('schedulerEventSelectors', () => {
       const index = schedulerEventSelectors.processedEventRangeIndex(state);
 
       expect(schedulerEventSelectors.processedEventRangeIndex(state)).to.equal(index);
+      expect(
+        schedulerEventSelectors.processedEventRangeIndex({
+          ...state,
+          isLoading: !state.isLoading,
+        }),
+      ).to.equal(index);
+      const stateWithDifferentEvents = getEventCalendarStateFromParameters({
+        events: [readOnlyEvent],
+      });
+      expect(
+        schedulerEventSelectors.processedEventRangeIndex(stateWithDifferentEvents),
+      ).not.to.equal(index);
       const stateInAnotherTimezone = getEventCalendarStateFromParameters({
         events: [defaultEvent],
         displayTimezone: 'Europe/Paris',
