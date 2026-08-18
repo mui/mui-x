@@ -414,6 +414,17 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(callArgs.deleted).toEqual(['1']);
       expect(callArgs.updated).toHaveLength(0);
       expect(callArgs.created).toHaveLength(0);
+
+      await vi.waitFor(() => {
+        expect(store.state.eventIdList).not.toContain('1');
+        expect(store.state.eventModelLookup.has('1')).to.equal(false);
+        expect(store.state.processedEventLookup.has('1')).to.equal(false);
+      });
+
+      // Re-reading a covered range uses the updated cache and must not restore the deleted event.
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      expect(dataSource.getEvents.calledOnce).to.equal(true);
+      expect(store.state.eventIdList).not.toContain('1');
     });
 
     it('should pass full event objects keyed by custom eventModelStructure to dataSource.persistEvents', async () => {
