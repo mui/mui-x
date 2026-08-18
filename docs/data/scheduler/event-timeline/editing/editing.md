@@ -44,6 +44,36 @@ Set `eventCreation.interaction` to `"double-click"` to open the creation form wh
 
 {{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Event dialog
+
+Clicking an event or creating a new one opens the same event dialog as the Event Calendar.
+See [Event Calendar - Editing](/x/react-scheduler/event-calendar/editing/#event-dialog) for a description of its tabs and features.
+
+### Replace the dialog with your own UI
+
+Use the `onEventEditingStart` callback to intercept editing before the built-in dialog opens.
+It fires for every entry point (pointer, keyboard, touch, and event creation), and `eventDetails.reason` is `"creation"` when the user is creating a new event and `"edit"` otherwise.
+Call `eventDetails.cancel()` to keep the built-in UI closed and open your own editing UI instead:
+
+```tsx
+<EventTimelinePremium
+  onEventEditingStart={(occurrence, eventDetails) => {
+    eventDetails.cancel();
+    openYourEditingUI(occurrence.id);
+  }}
+/>
+```
+
+In the demo below, both clicking an event and clicking an empty cell open a custom dialog instead of the built-in one:
+
+{{"demo": "CustomEditingUI.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+Canceling `onEventEditingStart` means your UI owns the entire editing flow: the form itself, the recurring event scope selection ("this event", "this and following events", "all events"), the delete confirmation, and persisting the changes (for example through `onEventsChange`).
+
+Interactions that stay inside the timeline, like drag and drop and resizing, are not affected and keep the built-in behavior, including the recurring scope dialog.
+:::
+
 ## Read-only
 
 Use the `readOnly` prop to disable all editing interactions (event creation, drag-and-drop, resizing, and popover editing):

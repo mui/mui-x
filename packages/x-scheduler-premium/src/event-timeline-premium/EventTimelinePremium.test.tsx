@@ -1023,5 +1023,22 @@ describe('<EventTimelinePremium />', () => {
       expect(onEventEditingStart.calledOnce).to.equal(true);
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
+
+    it('should fire once with the shared occurrence when activating one appearance of a multi-resource event', async () => {
+      const sharedEvent = EventBuilder.new()
+        .title('Shared event')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resources([engineering, design])
+        .build();
+      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = renderTimeline({ events: [sharedEvent], onEventEditingStart });
+
+      const designRow = document.querySelector(`[data-resource-id="${design.id}"]`) as HTMLElement;
+      await user.click(within(designRow).getByText('Shared event'));
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.lastCall.firstArg.id).to.equal(sharedEvent.id);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
   });
 });
