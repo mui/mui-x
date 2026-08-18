@@ -1,5 +1,8 @@
 'use client';
-import { selectorChartZoomOptionsLookup } from '@mui/x-charts/internals';
+import {
+  selectorChartZoomOptionsLookup,
+  selectorChartsIsKeyboardNavigationEnabled,
+} from '@mui/x-charts/internals';
 import type { ChartPlugin, ZoomData } from '@mui/x-charts/internals';
 import type { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { calculateZoom } from '../calculateZoom';
@@ -16,8 +19,11 @@ export const useZoomOnKeyboard = (
 ) => {
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const config = store.use(selectorZoomInteractionConfig, 'keyboard' as const);
+  // The keys are only reachable through the focus the keyboard navigation provides.
+  const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
 
-  const isZoomOnKeyboardEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
+  const isZoomOnKeyboardEnabled: boolean =
+    isKeyboardNavigationEnabled && Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   useKeyboardGesture(instance, {
     enabled: isZoomOnKeyboardEnabled,

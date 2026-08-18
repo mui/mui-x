@@ -32,6 +32,7 @@ const liveRegionStyle: React.CSSProperties = {
   overflow: 'hidden',
   clipPath: 'inset(50%)',
   whiteSpace: 'nowrap',
+  pointerEvents: 'none',
 };
 
 // The proxy is implemented by having two divs with the same content, and toggling the visibility of each one when the content changes.

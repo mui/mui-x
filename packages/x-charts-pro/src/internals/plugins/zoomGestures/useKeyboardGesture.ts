@@ -13,6 +13,22 @@ export interface UseKeyboardGestureOptions {
   onKeyDown: (event: KeyboardEvent) => void;
 }
 
+const EDITABLE_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
+
+/**
+ * Whether the key belongs to an element that consumes its own typing, such as an input rendered
+ * in a `foreignObject` overlay. Those keys must not be turned into a zoom or a pan.
+ */
+function isEditableTarget(target: EventTarget | null) {
+  const element = target as HTMLElement | null;
+
+  if (element == null || typeof element.tagName !== 'string') {
+    return false;
+  }
+
+  return EDITABLE_TAGS.has(element.tagName) || element.isContentEditable === true;
+}
+
 /**
  * Generic keyboard gesture binding.
  *
@@ -36,7 +52,13 @@ export function useKeyboardGesture(
       return () => {};
     }
 
-    const handler = (event: KeyboardEvent) => onKeyDownRef.current(event);
+    const handler = (event: KeyboardEvent) => {
+      if (isEditableTarget(event.target)) {
+        return;
+      }
+
+      onKeyDownRef.current(event);
+    };
 
     element.addEventListener('keydown', handler);
 

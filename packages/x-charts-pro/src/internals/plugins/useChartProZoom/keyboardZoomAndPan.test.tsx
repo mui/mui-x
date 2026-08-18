@@ -1,4 +1,4 @@
-import { createRenderer, fireEvent } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
@@ -238,6 +238,77 @@ describe('keyboard zoom and pan', () => {
       await user.keyboard('{Tab}');
       await user.keyboard('+');
 
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should not listen to the chart itself when keyboard navigation is disabled', async () => {
+      const onZoomChange = vi.fn();
+      // A composition can render something focusable inside the chart, so the keys must be
+      // disabled, not merely unreachable.
+      const { user, container } = render(
+        <BarChartPro {...barChartProps} disableKeyboardNavigation onZoomChange={onZoomChange}>
+          <foreignObject width={100} height={100}>
+            <button type="button">inside</button>
+          </foreignObject>
+        </BarChartPro>,
+      );
+
+      act(() => container.querySelector('button')!.focus());
+      await user.keyboard('+');
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should zoom from a focusable element composed in the chart', async () => {
+      const onZoomChange = vi.fn();
+      const { user, container } = render(
+        <BarChartPro {...barChartProps} onZoomChange={onZoomChange}>
+          <foreignObject width={100} height={100}>
+            <button type="button">inside</button>
+          </foreignObject>
+        </BarChartPro>,
+      );
+
+      act(() => container.querySelector('button')!.focus());
+      await user.keyboard('+');
+
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 5, end: 95 });
+    });
+
+    it('should leave the keys to an editable element composed in the chart', async () => {
+      const onZoomChange = vi.fn();
+      const { user, container } = render(
+        <BarChartPro {...barChartProps} onZoomChange={onZoomChange}>
+          <foreignObject width={100} height={100}>
+            <input type="text" />
+          </foreignObject>
+        </BarChartPro>,
+      );
+
+      act(() => container.querySelector('input')!.focus());
+      await user.keyboard('+');
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should not pan a chart whose drawing area has no size', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          width={0}
+          height={0}
+          initialZoom={[{ axisId: 'x', start: 0, end: 50 }]}
+          onZoomChange={onZoomChange}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+
+      // Panning by a zero-pixel drawing area would write a `NaN` range.
       expect(onZoomChange.mock.calls.length).to.equal(0);
     });
   });

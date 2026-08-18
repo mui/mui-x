@@ -1,5 +1,9 @@
 'use client';
-import { selectorChartDrawingArea, selectorChartZoomOptionsLookup } from '@mui/x-charts/internals';
+import {
+  selectorChartDrawingArea,
+  selectorChartZoomOptionsLookup,
+  selectorChartsIsKeyboardNavigationEnabled,
+} from '@mui/x-charts/internals';
 import type { ChartPlugin, ZoomData } from '@mui/x-charts/internals';
 import type { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
@@ -17,9 +21,13 @@ export const usePanOnKeyboard = (
   const drawingArea = store.use(selectorChartDrawingArea);
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const config = store.use(selectorPanInteractionConfig, 'keyboard' as const);
+  // The keys are only reachable through the focus the keyboard navigation provides.
+  const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
 
   const isPanOnKeyboardEnabled: boolean =
-    Object.values(optionsLookup).some((v) => v.panning) && Boolean(config);
+    isKeyboardNavigationEnabled &&
+    Object.values(optionsLookup).some((v) => v.panning) &&
+    Boolean(config);
 
   useKeyboardGesture(instance, {
     enabled: isPanOnKeyboardEnabled,
@@ -27,6 +35,11 @@ export const usePanOnKeyboard = (
       const direction = getPanKeyDirection(event);
 
       if (direction === null) {
+        return;
+      }
+
+      // A collapsed drawing area has no pixels to translate, and dividing by it yields `NaN` zoom.
+      if (drawingArea.width <= 0 || drawingArea.height <= 0) {
         return;
       }
 

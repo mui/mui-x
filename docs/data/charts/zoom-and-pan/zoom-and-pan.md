@@ -252,10 +252,12 @@ Setting `zoomInteractionConfig` replaces those defaults, so list `keyboard` ther
 <LineChartPro
   zoomInteractionConfig={{
     zoom: ['wheel', 'pinch', 'keyboard'],
-    pan: ['drag', 'keyboard'],
+    pan: ['drag', 'wheel', 'keyboard'],
   }}
 />
 ```
+
+Listing the pan interactions also replaces the `wheel` entry the chart adds on its own to x-only zoom, so keep it if the chart relies on horizontal wheel panning.
 
 The keys only apply while the focus is inside the chart, so they never conflict with the shortcuts of the rest of the page.
 
