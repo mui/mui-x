@@ -56,15 +56,14 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     if (!ref.current) {
       return undefined;
     }
-    const getDataFromInside: useDropTarget.GetDataFromInside = (data, newStart, newEnd) => {
-      const type =
-        data.source === 'CalendarGridDayEventResizeHandler' ||
-        data.source === 'CalendarGridTimeEventResizeHandler'
-          ? 'internal-resize'
-          : 'internal-drag';
-
+    const getDataFromInside: useDropTarget.GetDataFromInside = (
+      data,
+      newStart,
+      newEnd,
+      interaction,
+    ) => {
       return {
-        type,
+        type: interaction === 'resize' ? 'internal-resize' : 'internal-drag',
         surfaceType,
         start: newStart,
         end: newEnd,
@@ -199,6 +198,7 @@ export namespace useDropTarget {
     data: Exclude<EventDropData, StandaloneEvent.DragData>,
     newStart: TemporalSupportedObject,
     newEnd: TemporalSupportedObject,
+    interaction: 'drag' | 'resize',
   ) => SchedulerOccurrencePlaceholderInternalDragOrResize;
 
   export type GetDataFromOutside = (

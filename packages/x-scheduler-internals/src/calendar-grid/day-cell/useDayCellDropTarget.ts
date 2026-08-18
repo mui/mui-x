@@ -37,6 +37,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           data,
           offset === 0 ? data.start : adapter.addDays(data.start, offset),
           offset === 0 ? data.end : adapter.addDays(data.end, offset),
+          'drag',
         );
       }
 
@@ -53,7 +54,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           } else {
             newStart = mergeDateAndTime(adapter, value, data.start);
           }
-          return getDataFromInside(data, newStart, data.end);
+          return getDataFromInside(data, newStart, data.end, 'resize');
         }
 
         if (data.side === 'end') {
@@ -68,7 +69,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
             draggedDay = mergeDateAndTime(adapter, value, data.end);
           }
 
-          return getDataFromInside(data, data.start, draggedDay);
+          return getDataFromInside(data, data.start, draggedDay, 'resize');
         }
       }
 
@@ -82,6 +83,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           data,
           offset === 0 ? data.start : adapter.addDays(data.start, offset),
           offset === 0 ? data.end : adapter.addDays(data.end, offset),
+          'drag',
         );
       }
 

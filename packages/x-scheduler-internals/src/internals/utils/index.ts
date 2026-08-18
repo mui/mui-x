@@ -4,6 +4,7 @@ export * from './drag-utils';
 export * from './pointer-utils';
 export * from './dom-utils';
 export * from './useDropTarget';
+export * from './useLinearTimeDropTarget';
 export * from './useEventResizeHandler';
 export * from './resize-utils';
 export * from './useElementPositionInCollection';
