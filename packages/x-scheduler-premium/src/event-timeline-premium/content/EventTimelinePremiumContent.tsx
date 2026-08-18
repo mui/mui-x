@@ -39,6 +39,7 @@ import { EventTimelinePremiumHeader } from './timeline-header';
 import type { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
+import { createEventTimelinePremiumOccurrenceIndex } from '../utils/eventTimelinePremiumOccurrenceIndex';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import {
   EventTimelinePremiumVirtualizerContext,
@@ -539,12 +540,16 @@ function EventList({
 
         return {
           occurrence,
-          fractionStart: position,
-          fractionEnd: position + duration,
+          start: position,
+          end: position + duration,
         };
       }),
     // The config selector is memoized, so the object identity only changes with its content.
     [adapter, occurrences, config, visiblePositions],
+  );
+  const occurrenceIndex = React.useMemo(
+    () => createEventTimelinePremiumOccurrenceIndex(occurrencesWithFraction),
+    [occurrencesWithFraction],
   );
 
   // Convert virtualizer column range to fraction range
@@ -552,23 +557,20 @@ function EventList({
     renderContext,
     config.tickCount,
   );
+  const visibleOccurrences = occurrenceIndex(visibleStart, visibleEnd);
 
   return (
     <React.Fragment>
-      {occurrencesWithFraction.map(
-        ({ occurrence, fractionStart, fractionEnd }) =>
-          fractionEnd > visibleStart &&
-          fractionStart < visibleEnd && (
-            <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
-              <EventTimelinePremiumEvent
-                occurrence={occurrence}
-                ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
-                variant="regular"
-                resourceId={resourceId}
-              />
-            </EventEditingTrigger>
-          ),
-      )}
+      {visibleOccurrences.map(({ occurrence }) => (
+        <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
+          <EventTimelinePremiumEvent
+            occurrence={occurrence}
+            ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
+            variant="regular"
+            resourceId={resourceId}
+          />
+        </EventEditingTrigger>
+      ))}
     </React.Fragment>
   );
 }
