@@ -51,10 +51,10 @@ export function microtasks() {
 }
 
 // `sleep` inside `act`, so updates settling during the wait don't warn about missing `act`.
-export function actSleep(duration: number) {
-  return act(async () => {
+export async function actSleep(duration: number) {
+  await act(async () => {
     await sleep(duration);
-  }) as unknown as Promise<void>;
+  });
 }
 
 export function spyApi(api: GridApiCommon, methodName: string) {
