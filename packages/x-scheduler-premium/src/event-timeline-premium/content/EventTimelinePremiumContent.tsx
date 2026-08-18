@@ -15,8 +15,8 @@ import {
   eventTimelinePremiumOccurrenceSelectors,
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import type { EventTimelinePremiumLayoutOccurrence } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
-import { computeOccurrencesMaxIndex } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
@@ -30,10 +30,7 @@ import {
   useEventEditingContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
-import {
-  computeElementPositionInCollection,
-  useTimelineDragAutoScroll,
-} from '@mui/x-scheduler-internals/internals';
+import { useTimelineDragAutoScroll } from '@mui/x-scheduler-internals/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { EventTimelinePremiumHeader } from './timeline-header';
 import type { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
@@ -509,43 +506,14 @@ function EventList({
   occurrences,
 }: {
   resourceId: SchedulerResourceId;
-  occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
+  occurrences: EventTimelinePremiumLayoutOccurrence[];
 }) {
-  const adapter = useAdapterContext();
-  const store = useEventTimelinePremiumStoreContext();
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
 
-  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const visiblePositions = useStore(
-    store,
-    eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
-  );
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
-
-  // Precompute position fractions for all occurrences (recomputed only when occurrences or preset changes)
-  const occurrencesWithFraction = React.useMemo(
-    () =>
-      occurrences.map((occurrence) => {
-        // On a trimmed hour window the axis filter already positioned the occurrence.
-        const { position, duration } =
-          visiblePositions?.get(occurrence.key) ??
-          computeElementPositionInCollection(adapter, {
-            start: occurrence.displayTimezone.start,
-            end: occurrence.displayTimezone.end,
-            collection: config,
-            durationMs: config.durationMs,
-          });
-
-        return {
-          occurrence,
-          fractionStart: position,
-          fractionEnd: position + duration,
-        };
-      }),
-    // The config selector is memoized, so the object identity only changes with its content.
-    [adapter, occurrences, config, visiblePositions],
-  );
+  const store = useEventTimelinePremiumStoreContext();
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Convert virtualizer column range to fraction range
   const { start: visibleStart, end: visibleEnd } = getVisibleFractionRange(
@@ -555,20 +523,23 @@ function EventList({
 
   return (
     <React.Fragment>
-      {occurrencesWithFraction.map(
-        ({ occurrence, fractionStart, fractionEnd }) =>
-          fractionEnd > visibleStart &&
-          fractionStart < visibleEnd && (
+      {occurrences.map((occurrence) => {
+        const { position, duration } = occurrence.timelinePosition;
+        return (
+          position + duration > visibleStart &&
+          position < visibleEnd && (
             <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
               <EventTimelinePremiumEvent
                 occurrence={occurrence}
+                elementPosition={occurrence.timelinePosition}
                 ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
                 variant="regular"
                 resourceId={resourceId}
               />
             </EventEditingTrigger>
-          ),
-      )}
+          )
+        );
+      })}
     </React.Fragment>
   );
 }
@@ -579,7 +550,7 @@ function EventRowContent({
   placeholder,
 }: {
   resourceId: SchedulerResourceId;
-  occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
+  occurrences: EventTimelinePremiumLayoutOccurrence[];
   placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
 }) {
   const store = useEventTimelinePremiumStoreContext();
@@ -691,7 +662,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   // filtered), so it also drives the row models and the virtualized row heights.
   const visibleResources = useStore(
     store,
-    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
+    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceLayout,
   );
 
   // Measure header height for the virtualizer's topPinnedHeight
@@ -760,11 +731,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const theme = useTheme();
   const laneCountByResource = React.useMemo(() => {
     const map = new Map<SchedulerResourceId, number>();
-    for (const { resource, occurrences } of visibleResources) {
-      map.set(resource.id, computeOccurrencesMaxIndex(adapter, occurrences));
+    for (const { resource, maxIndex } of visibleResources) {
+      map.set(resource.id, maxIndex);
     }
     return map;
-  }, [visibleResources, adapter]);
+  }, [visibleResources]);
 
   const getRowHeight = React.useCallback(
     (row: { id: SchedulerResourceId }) =>

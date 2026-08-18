@@ -153,4 +153,78 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
       expect(second).to.equal(first);
     });
   });
+
+  describe('visibleResourceLayout', () => {
+    it('should derive lanes and timeline positions once per resource', () => {
+      const state = buildState({
+        events: [
+          EventBuilder.new().id('first').resource(resource).span(at(10), at(12)).build(),
+          EventBuilder.new().id('second').resource(resource).span(at(11), at(13)).build(),
+        ],
+      });
+      const config = eventTimelinePremiumPresetSelectors.config(state);
+
+      const layout = eventTimelinePremiumOccurrenceSelectors.visibleResourceLayout(state, 'r1');
+
+      expect(layout.maxIndex).to.equal(2);
+      expect(layout.occurrences.map(({ id, position }) => ({ id, position }))).to.deep.equal([
+        { id: 'first', position: { firstIndex: 1, lastIndex: 1 } },
+        { id: 'second', position: { firstIndex: 2, lastIndex: 2 } },
+      ]);
+      expect(layout.occurrences[0].timelinePosition).to.deep.equal(
+        computeElementPositionInCollection(adapter, {
+          start: layout.occurrences[0].displayTimezone.start,
+          end: layout.occurrences[0].displayTimezone.end,
+          collection: config,
+          durationMs: config.durationMs,
+        }),
+      );
+    });
+
+    it('should reuse the layout while its inputs are unchanged', () => {
+      const state = buildState({ presetConfig: PRESET_CONFIG });
+
+      const first = eventTimelinePremiumOccurrenceSelectors.visibleResourceLayout(state, 'r1');
+      const second = eventTimelinePremiumOccurrenceSelectors.visibleResourceLayout(
+        { ...state },
+        'r1',
+      );
+
+      expect(second).to.equal(first);
+    });
+
+    it('should share an occurrence position between resource rows', () => {
+      const secondResource = ResourceBuilder.new().id('r2').build();
+      const state = getEventTimelinePremiumStateFromParameters({
+        resources: [resource, secondResource],
+        events: [
+          EventBuilder.new()
+            .id('shared')
+            .resources([resource, secondResource])
+            .span(at(10), at(12))
+            .build(),
+        ],
+        preset: 'dayAndHour',
+        visibleDate: VISIBLE_DATE,
+      });
+
+      const layouts = eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceLayout(state);
+      expect(layouts[0].occurrences[0].timelinePosition).to.equal(
+        layouts[1].occurrences[0].timelinePosition,
+      );
+    });
+
+    it('should keep the empty layout identity for an unknown resource', () => {
+      const state = buildState();
+
+      const first = eventTimelinePremiumOccurrenceSelectors.visibleResourceLayout(state, 'unknown');
+      const second = eventTimelinePremiumOccurrenceSelectors.visibleResourceLayout(
+        state,
+        'unknown',
+      );
+
+      expect(first.occurrences).to.have.length(0);
+      expect(second).to.equal(first);
+    });
+  });
 });

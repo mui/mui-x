@@ -115,7 +115,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
   // occurrences hidden by the preset's hour window.
   const resources = useStore(
     store,
-    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
+    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceLayout,
   );
   const positionByOccurrenceKey = useStore(
     store,

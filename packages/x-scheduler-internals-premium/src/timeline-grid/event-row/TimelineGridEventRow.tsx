@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   useEventCreation,
@@ -20,6 +20,7 @@ import {
   eventTimelinePremiumPresetSelectors,
   eventTimelinePremiumOccurrenceSelectors,
 } from '../../event-timeline-premium-selectors';
+import type { EventTimelinePremiumLayoutOccurrence } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventRowDataAttributes } from './TimelineGridEventRowDataAttributes';
 import { useTimelineGridRowKeyboard } from '../../internals/utils/useTimelineGridRowKeyboard';
 
@@ -60,9 +61,9 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   // Occurrences fully inside the hidden hours would render as zero-width slivers and
   // inflate the lane count, so the selector excludes them before positioning.
-  const occurrences = useStore(
+  const occurrenceLayout = useStore(
     store,
-    eventTimelinePremiumOccurrenceSelectors.visibleResourceOccurrences,
+    eventTimelinePremiumOccurrenceSelectors.visibleResourceLayout,
     resourceId,
   );
 
@@ -124,20 +125,20 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     [resourceId, hasFocus, getCursorPositionInElementMs],
   );
 
-  const occurrencesWithPosition = useEventOccurrencesWithTimelinePosition({
-    occurrences,
-    maxSpan: 1,
-  });
-
   const placeholder = usePlaceholderInRow({
     resourceId,
-    occurrences: occurrencesWithPosition.occurrences,
-    maxIndex: occurrencesWithPosition.maxIndex,
+    occurrences: occurrenceLayout.occurrences,
+    maxIndex: occurrenceLayout.maxIndex,
   });
 
   const children = React.useMemo(
-    () => childrenProp({ placeholder, ...occurrencesWithPosition }),
-    [childrenProp, placeholder, occurrencesWithPosition],
+    () =>
+      childrenProp({
+        placeholder,
+        occurrences: occurrenceLayout.occurrences,
+        maxIndex: occurrenceLayout.maxIndex,
+      }),
+    [childrenProp, placeholder, occurrenceLayout],
   );
 
   const state: TimelineGridEventRow.State = {
@@ -160,7 +161,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
       {
         children,
         style: {
-          '--lane-count': occurrencesWithPosition.maxIndex,
+          '--lane-count': occurrenceLayout.maxIndex,
         } as React.CSSProperties,
       },
       keyboardProps,
@@ -192,7 +193,11 @@ export namespace TimelineGridEventRow {
     children: (parameters: ChildrenParameters) => React.ReactNode;
   }
 
-  export interface ChildrenParameters extends useEventOccurrencesWithTimelinePosition.ReturnValue {
+  export interface ChildrenParameters extends Omit<
+    useEventOccurrencesWithTimelinePosition.ReturnValue,
+    'occurrences'
+  > {
+    occurrences: EventTimelinePremiumLayoutOccurrence[];
     placeholder: usePlaceholderInRow.ReturnValue;
   }
 }

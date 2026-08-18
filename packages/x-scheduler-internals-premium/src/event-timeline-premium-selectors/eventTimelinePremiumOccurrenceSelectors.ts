@@ -7,12 +7,32 @@ import {
 } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventOccurrence,
+  SchedulerResource,
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
+import { computeOccurrencesFirstIndexLookup } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 
 type OccurrencePosition = ReturnType<typeof computeElementPositionInCollection>;
+
+export interface EventTimelinePremiumLayoutOccurrence
+  extends useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition {
+  timelinePosition: OccurrencePosition;
+}
+
+export interface EventTimelinePremiumResourceLayout {
+  occurrences: EventTimelinePremiumLayoutOccurrence[];
+  maxIndex: number;
+}
+
+const EMPTY_RESOURCE_LAYOUT: EventTimelinePremiumResourceLayout = {
+  occurrences: [],
+  maxIndex: 1,
+};
 
 /**
  * The visible resources with the occurrences that occupy space on the timeline axis,
@@ -76,6 +96,62 @@ const visibleOccurrencesByResourceMapSelector = createSelectorMemoized(
   },
 );
 
+export function buildEventTimelinePremiumLayout({
+  adapter,
+  config,
+  resources,
+  positionByOccurrenceKey,
+}: {
+  adapter: Adapter;
+  config: ReturnType<typeof eventTimelinePremiumPresetSelectors.config>;
+  resources: readonly {
+    resource: SchedulerResource;
+    occurrences: SchedulerEventOccurrence[];
+  }[];
+  positionByOccurrenceKey: Map<string, OccurrencePosition> | null;
+}) {
+  const layoutPositionByOccurrenceKey = positionByOccurrenceKey ?? new Map();
+  const layoutByResource = new Map<SchedulerResourceId, EventTimelinePremiumResourceLayout>();
+  const groupedByResourceList = resources.map(({ resource, occurrences }) => {
+    const firstIndexLookup = computeOccurrencesFirstIndexLookup(adapter, occurrences);
+    let maxIndex = 1;
+    const positionedOccurrences = sortEventOccurrences(occurrences).map((occurrence) => {
+      const firstIndex = firstIndexLookup[occurrence.key];
+      maxIndex = Math.max(maxIndex, firstIndex);
+
+      let timelinePosition = layoutPositionByOccurrenceKey.get(occurrence.key);
+      if (timelinePosition == null) {
+        timelinePosition = computeElementPositionInCollection(adapter, {
+          start: occurrence.displayTimezone.start,
+          end: occurrence.displayTimezone.end,
+          collection: config,
+          durationMs: config.durationMs,
+        });
+        layoutPositionByOccurrenceKey.set(occurrence.key, timelinePosition);
+      }
+
+      return {
+        ...occurrence,
+        position: { firstIndex, lastIndex: firstIndex },
+        timelinePosition,
+      };
+    });
+    const resourceLayout = { occurrences: positionedOccurrences, maxIndex };
+    layoutByResource.set(resource.id, resourceLayout);
+    return { resource, ...resourceLayout };
+  });
+
+  return { groupedByResourceList, layoutByResource };
+}
+
+const visibleLayoutDataSelector = createSelectorMemoized(
+  (state: State) => state.adapter,
+  eventTimelinePremiumPresetSelectors.config,
+  visibleAxisDataSelector,
+  (adapter, config, { resources, positionByOccurrenceKey }) =>
+    buildEventTimelinePremiumLayout({ adapter, config, resources, positionByOccurrenceKey }),
+);
+
 export const eventTimelinePremiumOccurrenceSelectors = {
   visibleGroupedByResourceList: visibleGroupedByResourceListSelector,
   /**
@@ -90,5 +166,14 @@ export const eventTimelinePremiumOccurrenceSelectors = {
     visibleOccurrencesByResourceMapSelector,
     (map, resourceId: SchedulerResourceId): readonly SchedulerEventOccurrence[] =>
       map.get(resourceId) ?? EMPTY_ARRAY,
+  ),
+  visibleGroupedByResourceLayout: createSelector(
+    visibleLayoutDataSelector,
+    (data) => data.groupedByResourceList,
+  ),
+  visibleResourceLayout: createSelector(
+    visibleLayoutDataSelector,
+    (data, resourceId: SchedulerResourceId) =>
+      data.layoutByResource.get(resourceId) ?? EMPTY_RESOURCE_LAYOUT,
   ),
 };
