@@ -128,6 +128,31 @@ describe('Core - EventCalendarStore', () => {
         expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
       });
 
+      it('should not call `onEventEditingStart` when arming, then call it on the armed → edit transition', () => {
+        const onEventEditingStart = spy();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const edited = occurrence('event-1');
+
+        store.startEditing(edited, 'armed');
+        expect(onEventEditingStart.callCount).to.equal(0);
+
+        store.setEditingMode('edit');
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+        expect(onEventEditingStart.lastCall.firstArg).to.equal(edited);
+      });
+
+      it('should keep the occurrence armed when `onEventEditingStart` cancels the armed → edit transition', () => {
+        const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const edited = occurrence('event-1');
+        store.startEditing(edited, 'armed');
+
+        store.setEditingMode('edit');
+
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+        expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'armed' });
+      });
+
       it('should not record the editing state when `onEventEditingStart` cancels', () => {
         const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
         const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);

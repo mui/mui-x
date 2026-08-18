@@ -70,9 +70,9 @@ Events with `readOnly: true` (or belonging to a read-only resource) open the dia
 
 ### Replace the dialog with your own UI
 
-Use the `onEventEditingStart` callback to intercept editing before the built-in dialog opens.
+Use the `onEventEditingStart` callback to intercept editing right before the built-in editing form opens.
 It fires for every entry point (pointer, keyboard, touch, and event creation), and `eventDetails.reason` is `"creation"` when the user is creating a new event and `"edit"` otherwise.
-Call `eventDetails.cancel()` to keep the built-in UI closed and open your own editing UI instead:
+Call `eventDetails.cancel()` to keep the built-in form closed and open your own editing UI instead:
 
 ```tsx
 <EventCalendar
@@ -93,10 +93,9 @@ In the demo below, both clicking an event and clicking an empty cell open a cust
 {{"demo": "CustomEditingUI.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-Canceling `onEventEditingStart` means your UI owns the entire editing flow: the form itself, the recurring event scope selection ("this event", "this and following events", "all events"), the delete confirmation, and persisting the changes (for example by updating your controlled `events` state).
+Canceling `onEventEditingStart` replaces the built-in editing form: your UI owns the form, the recurring event scope selection ("this event", "this and following events", "all events"), and persisting the changes (for example by updating your controlled `events` state).
 
-Drag and drop and pointer-based resizing are not affected and keep the built-in behavior, including the recurring scope dialog.
-On touch devices, resizing is only reachable through the built-in editing surface, so canceling suppresses it as well.
+Everything else keeps the built-in behavior: drag and drop, resizing, the recurring scope dialog they trigger, and on touch devices the event toolbar with its edit, delete and resize affordances — there, the callback fires when the user taps the toolbar's Edit action, right before the form opens.
 :::
 
 ## Read-only

@@ -38,16 +38,21 @@ describe('CompactDayView - event toolbar', () => {
     return screen.getByRole('button', { name: /Morning Meeting/i });
   }
 
-  it('should not arm the event nor dock the toolbar when `onEventEditingStart` cancels', () => {
+  it('should keep arming built-in and only fire `onEventEditingStart` when the toolbar Edit is tapped', () => {
     const onEventEditingStart = spy((_occurrence: any, eventDetails: any) => eventDetails.cancel());
     renderEvent(spy(), { onEventEditingStart });
 
+    // Arming (toolbar + resize affordances) is not the editing form: no callback yet.
     const eventElement = getEvent();
     fireEvent.click(eventElement);
+    expect(onEventEditingStart.callCount).to.equal(0);
+    expect(eventElement).to.have.attribute('data-armed');
 
+    // Tapping Edit is what opens the form; canceling keeps the event armed and the form closed.
+    fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
     expect(onEventEditingStart.calledOnce).to.equal(true);
-    expect(eventElement).not.to.have.attribute('data-armed');
-    expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+    expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
+    expect(eventElement).to.have.attribute('data-armed');
   });
 
   it('should dock the edit/delete toolbar once an event is armed', () => {

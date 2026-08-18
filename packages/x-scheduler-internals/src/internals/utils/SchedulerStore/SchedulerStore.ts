@@ -908,11 +908,15 @@ export class SchedulerStore<
    * Marks an occurrence (existing or creation draft) as the one being edited. Only records *what*
    * is edited; opening the surface (dialog or drawer) is handled separately.
    */
-  public startEditing = (
+  /**
+   * Runs `onEventEditingStart` right before the editing form opens. Arming does not go through
+   * here — only the transitions that actually open the form (dialog or drawer) do.
+   * Returns `false` when the handler canceled, cleaning up a pending creation draft.
+   */
+  private requestEditingStart(
     occurrence: SchedulerRenderableEventOccurrence,
-    mode: SchedulerEditingMode = 'edit',
     event?: Event,
-  ): boolean => {
+  ): boolean {
     const isCreation = this.state.occurrencePlaceholder?.type === 'creation';
     const eventDetails = createChangeEventDetails(
       isCreation ? 'creation' : 'edit',
@@ -926,6 +930,17 @@ export class SchedulerStore<
       }
       return false;
     }
+    return true;
+  }
+
+  public startEditing = (
+    occurrence: SchedulerRenderableEventOccurrence,
+    mode: SchedulerEditingMode = 'edit',
+    event?: Event,
+  ): boolean => {
+    if (mode === 'edit' && !this.requestEditingStart(occurrence, event)) {
+      return false;
+    }
     this.set('editingOccurrence', { occurrence, mode });
     return true;
   };
@@ -937,6 +952,10 @@ export class SchedulerStore<
   public setEditingMode = (mode: SchedulerEditingMode) => {
     const { editingOccurrence } = this.state;
     if (editingOccurrence == null || editingOccurrence.mode === mode) {
+      return;
+    }
+    // Armed → edit opens the form (e.g. the armed toolbar's Edit action); canceling keeps it armed.
+    if (mode === 'edit' && !this.requestEditingStart(editingOccurrence.occurrence)) {
       return;
     }
     this.set('editingOccurrence', { ...editingOccurrence, mode });
