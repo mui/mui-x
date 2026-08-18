@@ -46,8 +46,21 @@ Set `eventCreation.interaction` to `"double-click"` to open the creation form wh
 
 ## Event dialog
 
-Clicking an event or creating a new one opens the same event dialog as the Event Calendar.
-See [Event Calendar - Editing](/x/react-scheduler/event-calendar/editing/#event-dialog) for a description of its tabs and features.
+Clicking an event or creating a new one opens the event dialog.
+
+The dialog has two tabs:
+
+- **General**: title, start/end date and time, all-day toggle, resource and color selectors, and description.
+- **Recurrence**: frequency, interval, days of the week, and end condition.
+
+Click any event in the demo below to open the dialog.
+From there you can edit the event details or delete it.
+
+{{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode.
+:::
 
 ### Replace the dialog with your own UI
 
