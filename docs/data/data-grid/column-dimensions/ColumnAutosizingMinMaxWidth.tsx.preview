@@ -1,0 +1,10 @@
+<Button
+  variant="outlined"
+  onClick={() => apiRef.current?.autosizeColumns({ includeHeaders: true })}
+  sx={{ mb: 1 }}
+>
+  Autosize columns
+</Button>
+<div style={{ height: 300, width: '100%' }}>
+  <DataGrid apiRef={apiRef} rows={rows} columns={columns} />
+</div>
