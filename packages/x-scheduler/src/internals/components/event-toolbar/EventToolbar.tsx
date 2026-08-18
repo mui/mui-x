@@ -64,8 +64,8 @@ export function EventToolbar(props: EventToolbarProps) {
   // Rendered only while armed (desktop anchored surface + mobile dock), so Escape here disarms both.
   useDisarmOnEscape({ active: true, onDisarm: stopEditing });
 
-  const handleEdit = () => {
-    store.setEditingMode('edit');
+  const handleEdit = (event: React.MouseEvent) => {
+    store.setEditingMode('edit', event.nativeEvent);
   };
 
   // Mirrors `FormContent`'s delete: recurring events open the scope dialog (which closes the surface

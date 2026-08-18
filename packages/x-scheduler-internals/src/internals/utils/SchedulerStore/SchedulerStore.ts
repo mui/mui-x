@@ -905,10 +905,6 @@ export class SchedulerStore<
   private occurrencePlaceholderEvent: Event | undefined;
 
   /**
-   * Marks an occurrence (existing or creation draft) as the one being edited. Only records *what*
-   * is edited; opening the surface (dialog or drawer) is handled separately.
-   */
-  /**
    * Runs `onEventEditingStart` right before the editing surface (dialog or drawer) opens. Arming
    * does not go through here — only the transitions that actually open the surface do.
    * Returns `false` when the handler canceled, cleaning up a pending creation draft.
@@ -933,6 +929,11 @@ export class SchedulerStore<
     return true;
   }
 
+  /**
+   * Marks an occurrence (existing or creation draft) as the one being edited, running
+   * `onEventEditingStart` first when the mode opens the editing surface.
+   * Returns `false` when the handler canceled and nothing was recorded.
+   */
   public startEditing = (
     occurrence: SchedulerRenderableEventOccurrence,
     mode: SchedulerEditingMode = 'edit',
@@ -949,13 +950,13 @@ export class SchedulerStore<
    * Switches the edited occurrence between the armed state (toolbar + resize) and the editing form,
    * keeping the same occurrence. No-op when nothing is being edited.
    */
-  public setEditingMode = (mode: SchedulerEditingMode) => {
+  public setEditingMode = (mode: SchedulerEditingMode, event?: Event) => {
     const { editingOccurrence } = this.state;
     if (editingOccurrence == null || editingOccurrence.mode === mode) {
       return;
     }
     // Armed → edit opens the surface (e.g. the armed toolbar's Edit action); canceling keeps it armed.
-    if (mode === 'edit' && !this.requestEditingStart(editingOccurrence.occurrence)) {
+    if (mode === 'edit' && !this.requestEditingStart(editingOccurrence.occurrence, event)) {
       return;
     }
     this.set('editingOccurrence', { ...editingOccurrence, mode });

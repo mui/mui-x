@@ -136,9 +136,11 @@ describe('Core - EventCalendarStore', () => {
         store.startEditing(edited, 'armed');
         expect(onEventEditingStart.callCount).to.equal(0);
 
-        store.setEditingMode('edit');
+        const nativeEvent = new Event('click');
+        store.setEditingMode('edit', nativeEvent);
         expect(onEventEditingStart.calledOnce).to.equal(true);
         expect(onEventEditingStart.lastCall.firstArg).to.equal(edited);
+        expect(onEventEditingStart.lastCall.args[1].event).to.equal(nativeEvent);
       });
 
       it('should keep the occurrence armed when `onEventEditingStart` cancels the armed → edit transition', () => {
