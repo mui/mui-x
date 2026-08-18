@@ -81,6 +81,9 @@
       "description": "Allows to render a component in the column header filter cell."
     },
     "resizable": { "description": "If <code>false</code>, disables resizing for this column." },
+    "rowHeader": {
+      "description": "If <code>true</code>, the cells in this column identify their respective rows and receive the <code>rowheader</code> ARIA role."
+    },
     "rowSpanValueGetter": {
       "description": "Function that returns a specific value to be used in row spanning."
     },
