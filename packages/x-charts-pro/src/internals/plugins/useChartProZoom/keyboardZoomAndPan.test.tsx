@@ -342,41 +342,4 @@ describe('keyboard zoom and pan', () => {
       });
     });
   });
-
-  describe('screen reader announcement', () => {
-    it('should announce the visible range after a keyboard zoom', async () => {
-      const { user, container } = render(
-        <BarChartPro {...barChartProps} initialZoom={[{ axisId: 'x', start: 20, end: 70 }]} />,
-      );
-
-      const liveRegion = container.querySelector<HTMLElement>('[role="status"]')!;
-      expect(liveRegion).not.to.equal(null);
-      expect(liveRegion.getAttribute('aria-live')).to.equal('polite');
-      // Nothing is announced before the user interacts with the zoom.
-      expect(liveRegion.textContent).to.equal('');
-
-      await user.keyboard('{Tab}');
-      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
-
-      expect(liveRegion.textContent).to.equal('Showing 25% to 75% of the horizontal axis');
-    });
-
-    it('should stop announcing once the chart loses focus', async () => {
-      const { user, container } = render(
-        <div>
-          <BarChartPro {...barChartProps} />
-          <button type="button">outside</button>
-        </div>,
-      );
-
-      const liveRegion = container.querySelector<HTMLElement>('[role="status"]')!;
-
-      await user.keyboard('{Tab}');
-      await user.keyboard('+');
-      expect(liveRegion.textContent).to.equal('Showing 5% to 95% of the horizontal axis');
-
-      await user.click(container.querySelector('button')!);
-      expect(liveRegion.textContent).to.equal('');
-    });
-  });
 });

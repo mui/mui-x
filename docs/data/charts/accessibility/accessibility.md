@@ -114,7 +114,6 @@ Charts with zoom enabled accept keyboard zoom and pan, so a keyboard-only user c
 
 While the chart is focused, <kbd class="key">+</kbd> and <kbd class="key">-</kbd> zoom, <kbd class="key">0</kbd> resets the zoom, and <kbd class="key">Shift</kbd>+ arrow keys pan.
 The arrow keys keep moving the focus between items when pressed without <kbd class="key">Shift</kbd>.
-The visible range is announced in a live region each time it changes.
 
 See [Keyboard zoom and pan](/x/react-charts/zoom-and-pan/#keyboard-zoom-and-pan) for the complete list of keys and the interaction configuration.
 

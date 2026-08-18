@@ -447,20 +447,6 @@ export interface ChartsLocaleText {
    */
   a11yConnector: string;
   /**
-   * The description of the visible range of a zoomable axis for accessibility purpose.
-   * It is announced when the user zooms or pans the chart with the keyboard.
-   * @param {object} params - The parameters for the description getter.
-   * @param {'x'|'y'} params.axisDirection - The direction of the zoomed axis.
-   * @param {number} params.start - The start of the visible range, as a percentage of the axis extent.
-   * @param {number} params.end - The end of the visible range, as a percentage of the axis extent.
-   * @returns {string} The localized description of the visible range.
-   */
-  zoomRangeDescription: (params: {
-    axisDirection: 'x' | 'y';
-    start: number;
-    end: number;
-  }) => string;
-  /**
    * The description of a bar series item for accessibility purpose.
    * @param {object} params - The parameters for the description getter.
    * @param {number|null} params.value - The value of the bar item.

@@ -218,16 +218,6 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     [],
   );
 
-  const announceZoomChange = React.useCallback(() => {
-    if (store.state.keyboardNavigation.announceZoom) {
-      return;
-    }
-    store.set('keyboardNavigation', {
-      ...store.state.keyboardNavigation,
-      announceZoom: true,
-    });
-  }, [store]);
-
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
 
@@ -246,13 +236,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         return;
       }
 
-      if (store.state.keyboardNavigation.isFocused || store.state.keyboardNavigation.announceZoom) {
+      if (store.state.keyboardNavigation.isFocused) {
         store.set('keyboardNavigation', {
           ...store.state.keyboardNavigation,
           isFocused: false,
           isFocusVisible: false,
-          // The zoom range is only announced while the user operates the chart.
-          announceZoom: false,
         });
       }
     }
@@ -419,7 +407,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     });
   }, [store, params.disableKeyboardNavigation]);
 
-  return { instance: { focusItem, registerItemActivationHandler, announceZoomChange } };
+  return { instance: { focusItem, registerItemActivationHandler } };
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({
@@ -428,7 +416,6 @@ useChartKeyboardNavigation.getInitialState = (params) => ({
     isFocused: false,
     isFocusVisible: false,
     enabled: !params.disableKeyboardNavigation,
-    announceZoom: false,
   },
 });
 
