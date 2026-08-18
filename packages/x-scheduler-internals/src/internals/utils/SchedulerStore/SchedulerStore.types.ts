@@ -5,6 +5,8 @@ import type {
   SchedulerEventCreationConfig,
   SchedulerEventCreationProperties,
   SchedulerEventId,
+  SchedulerEventOccurrence,
+  SchedulerEventOccurrencePlaceholder,
   SchedulerEventModelStructure,
   SchedulerEventUpdatedProperties,
   SchedulerOccurrencePlaceholder,
@@ -501,7 +503,9 @@ export interface UpdateEventsParameters {
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
 
-export type SchedulerEventEditingStartEventDetails = BaseUIChangeEventDetails<'edit' | 'creation'>;
+export type SchedulerEventEditingStartEventDetails =
+  | BaseUIChangeEventDetails<'edit', { occurrence: SchedulerEventOccurrence }>
+  | BaseUIChangeEventDetails<'creation', { occurrence: SchedulerEventOccurrencePlaceholder }>;
 
 /**
  * The unique identifier for each scheduler store type.

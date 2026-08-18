@@ -23,6 +23,8 @@ import type {
   SchedulerEventPasteProperties,
   SchedulerSelection,
   SchedulerRenderableEventOccurrence,
+  SchedulerEventOccurrence,
+  SchedulerEventOccurrencePlaceholder,
 } from '../../../models';
 import type {
   SchedulerState,
@@ -34,6 +36,7 @@ import type {
   UpdateEventsParameters,
   SchedulerInstanceName,
   SchedulerEditingMode,
+  SchedulerEventEditingStartEventDetails,
 } from './SchedulerStore.types';
 import { processDate } from '../../../process-date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
@@ -914,10 +917,15 @@ export class SchedulerStore<
     event?: Event,
   ): boolean {
     const isCreation = this.state.occurrencePlaceholder?.type === 'creation';
-    const eventDetails = createChangeEventDetails(
-      isCreation ? 'creation' : 'edit',
-      event ?? (isCreation ? this.occurrencePlaceholderEvent : undefined),
-    );
+    // The casts encode the runtime correlation the type system can't prove: a creation always
+    // edits the draft placeholder, anything else edits a real occurrence.
+    const eventDetails: SchedulerEventEditingStartEventDetails = isCreation
+      ? createChangeEventDetails('creation', event ?? this.occurrencePlaceholderEvent, undefined, {
+          occurrence: occurrence as SchedulerEventOccurrencePlaceholder,
+        })
+      : createChangeEventDetails('edit', event, undefined, {
+          occurrence: occurrence as SchedulerEventOccurrence,
+        });
     this.parameters.onEventEditingStart?.(occurrence, eventDetails);
     if (eventDetails.isCanceled) {
       // Canceled during a creation: the draft placeholder already exists — drop it.
