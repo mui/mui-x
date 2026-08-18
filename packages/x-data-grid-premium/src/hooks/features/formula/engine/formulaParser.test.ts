@@ -289,10 +289,10 @@ describe('formulaParser', () => {
         parseOk('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(5))'),
       ).to.deep.equal({
         type: 'rangeRef',
-        columnFrom: { index: 1, fixed: false },
-        rowFrom: { index: 1, fixed: false },
-        columnTo: { index: 2, fixed: false },
-        rowTo: { index: 5, fixed: false },
+        columnFrom: { kind: 'position', index: 1, fixed: false },
+        rowFrom: { kind: 'position', index: 1, fixed: false },
+        columnTo: { kind: 'position', index: 2, fixed: false },
+        rowTo: { kind: 'position', index: 5, fixed: false },
       });
     });
 
@@ -301,10 +301,10 @@ describe('formulaParser', () => {
         parseOk('RANGE_REF(FIXED(COLUMN_FROM(1)), ROW_FROM(2), COLUMN_TO(3), FIXED(ROW_TO(4)))'),
       ).to.deep.equal({
         type: 'rangeRef',
-        columnFrom: { index: 1, fixed: true },
-        rowFrom: { index: 2, fixed: false },
-        columnTo: { index: 3, fixed: false },
-        rowTo: { index: 4, fixed: true },
+        columnFrom: { kind: 'position', index: 1, fixed: true },
+        rowFrom: { kind: 'position', index: 2, fixed: false },
+        columnTo: { kind: 'position', index: 3, fixed: false },
+        rowTo: { kind: 'position', index: 4, fixed: true },
       });
       expect(
         parseOk(
@@ -312,10 +312,10 @@ describe('formulaParser', () => {
         ),
       ).to.deep.equal({
         type: 'rangeRef',
-        columnFrom: { index: 1, fixed: true },
-        rowFrom: { index: 1, fixed: true },
-        columnTo: { index: 1, fixed: true },
-        rowTo: { index: 4, fixed: true },
+        columnFrom: { kind: 'position', index: 1, fixed: true },
+        rowFrom: { kind: 'position', index: 1, fixed: true },
+        columnTo: { kind: 'position', index: 1, fixed: true },
+        rowTo: { kind: 'position', index: 4, fixed: true },
       });
     });
 
@@ -324,39 +324,41 @@ describe('formulaParser', () => {
         parseOk('range_ref(column_from(1), row_from(2), fixed(column_to(3)), row_to(4))'),
       ).to.deep.equal({
         type: 'rangeRef',
-        columnFrom: { index: 1, fixed: false },
-        rowFrom: { index: 2, fixed: false },
-        columnTo: { index: 3, fixed: true },
-        rowTo: { index: 4, fixed: false },
+        columnFrom: { kind: 'position', index: 1, fixed: false },
+        rowFrom: { kind: 'position', index: 2, fixed: false },
+        columnTo: { kind: 'position', index: 3, fixed: true },
+        rowTo: { kind: 'position', index: 4, fixed: false },
       });
     });
 
     it('validates the label of every RANGE_REF axis slot', () => {
       // Wrong label in a slot.
       expect(parseError('RANGE_REF(ROW_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3))')).to.equal(
-        'Expected COLUMN_FROM(index) or FIXED(COLUMN_FROM(index)).',
+        'Expected COLUMN_FROM(index), COLUMN_FROM(ANCHOR(delta)) or FIXED(COLUMN_FROM(index)).',
       );
       expect(
         parseError('RANGE_REF(COLUMN_FROM(1), COLUMN_TO(1), COLUMN_TO(2), ROW_TO(3))'),
-      ).to.equal('Expected ROW_FROM(index) or FIXED(ROW_FROM(index)).');
+      ).to.equal('Expected ROW_FROM(index), ROW_FROM(ANCHOR(delta)) or FIXED(ROW_FROM(index)).');
       expect(parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), ROW_TO(2), ROW_TO(3))')).to.equal(
-        'Expected COLUMN_TO(index) or FIXED(COLUMN_TO(index)).',
+        'Expected COLUMN_TO(index), COLUMN_TO(ANCHOR(delta)) or FIXED(COLUMN_TO(index)).',
       );
       expect(
         parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), COLUMN_TO(3))'),
-      ).to.equal('Expected ROW_TO(index) or FIXED(ROW_TO(index)).');
+      ).to.equal('Expected ROW_TO(index), ROW_TO(ANCHOR(delta)) or FIXED(ROW_TO(index)).');
       // A missing trailing slot is reported at the separator that must precede it.
       expect(parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2))')).to.equal(
         'Expected ",".',
       );
       // An empty slot reports the expectation for that slot.
       expect(parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), )')).to.equal(
-        'Expected ROW_TO(index) or FIXED(ROW_TO(index)).',
+        'Expected ROW_TO(index), ROW_TO(ANCHOR(delta)) or FIXED(ROW_TO(index)).',
       );
       // The label is also validated inside a FIXED() wrapper.
       expect(
         parseError('RANGE_REF(FIXED(ROW_FROM(1)), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3))'),
-      ).to.equal('Expected COLUMN_FROM(index) or FIXED(COLUMN_FROM(index)).');
+      ).to.equal(
+        'Expected COLUMN_FROM(index), COLUMN_FROM(ANCHOR(delta)) or FIXED(COLUMN_FROM(index)).',
+      );
     });
 
     it('validates RANGE_REF position literals', () => {
@@ -372,6 +374,69 @@ describe('formulaParser', () => {
       expect(
         parseError('RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(-3))'),
       ).to.equal('ROW_TO() expects a number literal.');
+    });
+
+    it('parses ANCHOR axes with signed and zero deltas', () => {
+      expect(
+        parseOk(
+          'RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(3)))',
+        ),
+      ).to.deep.equal({
+        type: 'rangeRef',
+        columnFrom: { kind: 'anchor', delta: -2 },
+        rowFrom: { kind: 'anchor', delta: 0 },
+        columnTo: { kind: 'anchor', delta: -2 },
+        rowTo: { kind: 'anchor', delta: 3 },
+      });
+    });
+
+    it('parses mixed ANCHOR, positional and FIXED axes in one window', () => {
+      expect(
+        parseOk(
+          'RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), COLUMN_TO(2), ROW_TO(ANCHOR(0)))',
+        ),
+      ).to.deep.equal({
+        type: 'rangeRef',
+        columnFrom: { kind: 'position', index: 1, fixed: true },
+        rowFrom: { kind: 'position', index: 1, fixed: true },
+        columnTo: { kind: 'position', index: 2, fixed: false },
+        rowTo: { kind: 'anchor', delta: 0 },
+      });
+    });
+
+    it('is case-insensitive for ANCHOR', () => {
+      expect(
+        parseOk('range_ref(column_from(anchor(-1)), row_from(1), column_to(1), row_to(1))'),
+      ).to.deep.equal({
+        type: 'rangeRef',
+        columnFrom: { kind: 'anchor', delta: -1 },
+        rowFrom: { kind: 'position', index: 1, fixed: false },
+        columnTo: { kind: 'position', index: 1, fixed: false },
+        rowTo: { kind: 'position', index: 1, fixed: false },
+      });
+    });
+
+    it('rejects FIXED() around an ANCHOR axis', () => {
+      expect(
+        parseError(
+          'RANGE_REF(FIXED(COLUMN_FROM(ANCHOR(1))), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3))',
+        ),
+      ).to.equal(
+        'FIXED() cannot contain ANCHOR(): an anchor-relative axis always moves with the formula.',
+      );
+    });
+
+    it('rejects non-integer ANCHOR deltas', () => {
+      expect(
+        parseError('RANGE_REF(COLUMN_FROM(ANCHOR(1.5)), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3))'),
+      ).to.equal('ANCHOR() expects an integer offset.');
+      expect(
+        parseError('RANGE_REF(COLUMN_FROM(ANCHOR("a")), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3))'),
+      ).to.equal('ANCHOR() expects an integer offset.');
+    });
+
+    it('rejects ANCHOR outside RANGE_REF', () => {
+      expect(parseError('ANCHOR(1)')).to.equal('"ANCHOR" can only be used inside RANGE_REF().');
     });
 
     it('parses COLUMN_VALUES', () => {

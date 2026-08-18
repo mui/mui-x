@@ -63,7 +63,8 @@ apostrophe-escape stores a literal `=` string.
 
 **D3. Canonical special forms are dedicated AST nodes, not registry functions** — `REF`, `COLUMN`,
 `ROW`, `COLUMN_POSITION`, `ROW_POSITION`, `FIELD`, `RANGE_REF` (with its axis labels `COLUMN_FROM`/
-`ROW_FROM`/`COLUMN_TO`/`ROW_TO` and the `FIXED` wrapper), `COLUMN_VALUES` with **literal-only
+`ROW_FROM`/`COLUMN_TO`/`ROW_TO`, the `FIXED` wrapper and the `ANCHOR` offset form), `COLUMN_VALUES`
+with **literal-only
 arguments enforced by the parser** (computed refs → parse error; a sign before a numeric `ROW()` id
 is still a literal). This keeps static dependency extraction decidable. The registry rejects
 reserved names and names the parser can never produce as calls. Unified `cellRef` node with
@@ -118,21 +119,36 @@ name in both dialects ("Keep D5", confirmed 2026-06-15): `=price * quantity` edi
 `=price * quantity`, not `=B3*C3` (a `fieldRef` cannot round-trip through `B3`, which would freeze
 to a specific row).
 
-**D6-B amendment (2026-08, PR 22807 RFC).** The `$` inversion is scoped to **single-cell refs**.
-Range endpoints are always positional (see D6 rewrite below), so on a range endpoint `$` carries
-its Excel meaning only: fill-pinning. `A1:B5` → all four axes shifting windows positions;
-`$A$1:$B$5` → `FIXED(...)`-wrapped axes that the fill offset never moves.
+**D6-B+ amendment (2026-08-18, review request on PR 22807).** The `$` inversion is scoped to
+**single-cell refs**. On a range endpoint, `$` is uniform with spreadsheets: **absolute** — a
+`FIXED(...)` axis is a view position that never adjusts, on fill or on view-order changes. A
+**plain** endpoint typed from a cell **inside the data band** freezes to `ANCHOR(delta)`, a signed
+offset from the committing cell (the Sheets storage model): the window moves with the formula
+under sort/filter/reorder and copies **verbatim** on fill/paste. A plain endpoint typed from a
+**pinned row** (or committed without an anchor) freezes to a non-`FIXED` view position — the
+pre-B+ form, which stays put under sorting and shifts by fill arithmetic. So `A1:B5` in-band →
+four `ANCHOR` axes; `$A$1:$B$5` → four `FIXED` axes; `$A$1:A1` → the running total that survives
+both fill and sort.
 
 **D6. Ranges (rewritten 2026-08, Option B of the PR 22807 RFC — supersedes the original
 identity-anchored `RANGE(REF, REF)`, which is removed).**
-`RANGE_REF(COLUMN_FROM(c1), ROW_FROM(r1), COLUMN_TO(c2), ROW_TO(r2))` = an inclusive **positional
-window** over the current view, Excel/Sheets semantics: sorting/filtering recalculates the same
-positions from whatever occupies them; the stored text never mutates. Each axis is
-`{index, fixed}`; `FIXED(...)` wrapping (`$` in A1) affects only fill offsets. Resolution
-normalizes min/max and **auto-clips**: rows clamp to the pinned-row-free data band, columns to
-`[1, columnCount]`; an entirely out-of-view window is empty (SUM = 0) — range endpoints can no
-longer produce `#REF!`. Windows never grow/shrink on row add/remove (view-order auto-adjustment
-decided but deferred to a follow-up PR). Identity-anchored rectangles are no longer expressible;
+`RANGE_REF(COLUMN_FROM(c1), ROW_FROM(r1), COLUMN_TO(c2), ROW_TO(r2))` = an inclusive window over
+the current view; the stored text never mutates. Each axis is a union:
+`{kind:'position', index, fixed}` (a view position; `FIXED(...)` = `$` = absolute, never adjusts)
+or `{kind:'anchor', delta}` (`ANCHOR(delta)` = a signed offset from the owner cell — the plain-A1
+in-band form; `FIXED(ANCHOR(...))` is a parse error). Resolution
+(`resolveFormulaRangeRectangle(range, context, anchor)`, anchor = the owner's view positions from
+`getFormulaRangeAnchor`) resolves anchor axes to `ownerPosition + delta`, then normalizes min/max
+and **auto-clips position axes**: rows clamp to the pinned-row-free data band, columns to
+`[1, columnCount]`; an entirely out-of-view positional window is empty (SUM = 0). **Anchor axes
+are strict instead**: an owner without a position on a needed axis (own row filtered out, own
+column hidden), or a resolved endpoint outside the band/columns, makes the whole range `#REF!` —
+clipping would silently aggregate cells the user never anchored to, and Sheets/Excel error here
+too. Consequently a sort can never sweep an anchored window over its own cell (`#CYCLE!` from
+sorting is gone for plain in-band ranges — it turns into `#REF!` when the geometry stops
+fitting), and the deferred view-order auto-adjustment follow-up is obsolete for anchored windows
+(offsets need no rewriting — the write-back problem never arises). Windows never grow/shrink on
+row add/remove. Identity-anchored rectangles are no longer expressible;
 `RANGE` is no longer reserved (legacy text degrades to `#NAME?` unknown function).
 `COLUMN_VALUES("field")` = the field's values over the current **sorted+filtered** row set
 (consistent with `aggregationRowsScope: 'filtered'`) — the recommended, sort-proof "sum the column"
@@ -163,8 +179,11 @@ _Amended during I3 (implementation specifics):_
 - Range materialization is row-major (left to right, then top to bottom); the first error value
   inside a range propagates (strict-propagation rule — uniform for SUM and COUNT alike, a deliberate
   simplification vs. Excel's error-ignoring COUNT). `COLUMN_VALUES` accepts hidden fields (values
-  exist without a position); a `RANGE_REF` window auto-clips to the view (empty window = zero
-  intervals, no error). Membership changes (row add/remove, filter flips) are NOT handled by
+  exist without a position); a positional `RANGE_REF` window auto-clips to the view (empty window
+  = zero intervals, no error), while an anchored window with no resolvable anchor or an
+  out-of-band endpoint binds/evaluates to `#REF!` (binding pushes the error into `bound.errors`,
+  the evaluator's `evaluateRange` re-derives it from `context.currentCell` as defense in depth).
+  Membership changes (row add/remove, filter flips) are NOT handled by
   per-cell dirtying — the rebind pass dirties every position-dependent record when the view order
   changes.
 - Dev-mode warning when one formula materializes more than 100k range cells.
@@ -403,9 +422,11 @@ selectors (`COLUMN("f")`/`ROW(id)`, from relative refs) re-anchor to the field/r
 shift; same-row `fieldRef` and `COLUMN_VALUES` shift only on horizontal fill; overshoot past the last
 row/column → positional selector → `#REF!`; underflow past position 1 keeps the original reference
 (the 1-based store has no representable position < 1 — the parser rejects `ROW_POSITION(0)`).
-_D6-B amendment:_ `RANGE_REF` axes follow the Excel `$` rule instead — every non-`FIXED` axis shifts
-by `max(1, index + delta)` (pure arithmetic, no context lookup; overshoot clips at resolve time,
-underflow clamps at 1 and may shrink the window), `FIXED` axes never move. Adapter
+_D6-B+ amendment:_ `RANGE_REF` axes: an `ANCHOR` axis copies **verbatim** (the offset is relative
+to the owner cell, so moving the formula IS the adjustment — zero arithmetic); a non-`FIXED`
+position axis shifts by `max(1, index + delta)` (pure arithmetic, no context lookup; overshoot
+clips at resolve time, underflow clamps at 1 and may shrink the window); `FIXED` axes never move.
+Adapter
 glue `getFilledFormulaSource(apiRef, source, target)` (`gridFormulaFill.ts`) gates on eligibility:
 the **target** column must be `allowFormulas` (else the caller copies the evaluated value — a `=…`
 string must never land in a plain column), and the **source** must be a live formula
@@ -432,11 +453,14 @@ References resolve in two stages: a positional (`$`-absolute) ref → identity v
 `gridFormulaA1PositionContextSelector` (as `bindFormulaDependencies` resolves it), then identity →
 **export** coordinate (export column order → `columnIndexToLetters`; export row index + header-row
 offset). Mirrors the grid's relative/absolute distinction: stable → relative (`B2`), positional →
-absolute (`$B$2`) — identical computed value, `$` only governs Excel copy/fill. _D6-B amendment:_ a
-`RANGE_REF` window resolves through `resolveRangeWindow` on the serialize context (adapter clips via
-the shared `resolveFormulaRangeRectangle`, then maps corners to export coordinates); each axis emits
-`$` exactly when `FIXED`, so exported ranges copy/fill in Excel like the grid's fill handle; an
-empty (fully clipped) window makes `getCellExcelFormula` return `null` → value-only export.
+absolute (`$B$2`) — identical computed value, `$` only governs Excel copy/fill. _D6-B+ amendment:_ a
+`RANGE_REF` window resolves through `resolveRangeWindow` on the serialize context (adapter resolves
+via the shared `resolveFormulaRangeRectangle` with the owner's anchor, then maps corners to export
+coordinates); each axis emits `$` exactly when `FIXED`, and `ANCHOR` axes emit relative A1 at their
+anchored position — Excel stores relative endpoints as offsets from the formula cell, so exported
+anchored windows copy/fill AND sort in Excel like they do in the grid; an empty (fully clipped) or
+unresolvable (anchorless/out-of-band → `#REF!`) window makes `getCellExcelFormula` return `null` →
+value-only export.
 `COLUMN_VALUES` → a
 bounded data range (`B2:B<lastDataRow>`, no header); a reference to a cell outside the export bakes
 Excel's `#REF!` with the cached result `{ error: '#REF!' }`; engine-only error codes map to the

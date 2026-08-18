@@ -137,9 +137,9 @@ Then edit the tax rate and watch every total update.
 
 - **Relative references shift** by the distance the cell moved: a formula written as `=A1 * B1` becomes `=A2 * B2` one row down, and same-row field references such as `=price * quantity` move to the next column when filled sideways.
 - **Absolute references stay fixed**: positional references (the `$A$1` form) are never shifted.
-- **Range windows shift too**: `=SUM(B1:B4)` becomes `=SUM(B2:B5)` one row down, while a `$` axis stays pinned—`=SUM($A$1:A1)` filled down builds a running total. See [Ranges](/x/react-data-grid/formula-syntax/#ranges-and-whole-columns).
+- **Range windows follow too**: a plain range endpoint is stored as an offset from the formula's own cell, so `=SUM(B1:B4)` filled one row down reads `=SUM(B2:B5)`—the copied text is identical, each copy re-anchors to its own row. A `$` axis stays pinned, so `=SUM($A$1:A1)` filled down builds a running total. See [Ranges](/x/react-data-grid/formula-syntax/#ranges-and-whole-columns).
 - Offsets are measured in the current **sorted and filtered** view order, so a fill respects the rows as they are displayed.
-- A single-cell reference that would move past the first row or column keeps its original target; one that moves past the last row or column resolves to `#REF!`. A range window clips instead: filling past the top clamps it at the first row, and past the bottom it covers whatever rows exist.
+- A single-cell reference that would move past the first row or column keeps its original target; one that moves past the last row or column resolves to `#REF!`. A range whose window ends up outside the data rows is a `#REF!` error too, like in a spreadsheet.
 
 Filling a formula into a column that is **not** `allowFormulas` copies the source cell's evaluated value instead of the formula, so a `=…` string is never stored in a plain column.
 
@@ -168,7 +168,8 @@ apiRef.current.exportDataAsExcel({ escapeFormulas: false });
 ```
 
 Exported references are rewritten to Excel A1 notation pointing at each cell's position in the **exported sheet**, accounting for header rows and the exported column and row order—independently of the `formulaA1Notation` prop.
-Relative references stay relative (`B2`) and absolute references stay absolute (`$B$2`), matching the grid—for a range window, an axis exports with `$` exactly when it is `FIXED()`, so copy and fill inside Excel behave like the grid's fill handle.
+Relative references stay relative (`B2`) and absolute references stay absolute (`$B$2`), matching the grid—for a range window, an axis exports with `$` exactly when it is `FIXED()`.
+Excel itself stores a relative range endpoint as an offset from the formula cell, which is exactly how the grid stores it too—so copy, fill, and sort inside Excel behave like they do in the grid.
 
 - A reference to a cell **outside the export**—a filtered-out row, or a column removed with `disableExport` or the `fields` option—is marked as a `#REF!` error.
 - Functions are exported unchanged: a function that Excel does not recognize keeps its cached value but shows `#NAME?` if the spreadsheet recalculates.
@@ -190,7 +191,7 @@ Setting it to `false` exports grid formulas as live formulas, but also lets such
 - Formulas are not supported with the [server-side data source](/x/react-data-grid/server-side-data/) or while [pivoting](/x/react-data-grid/pivoting/) is active.
 - The formula syntax is en-US only, and the built-in function metadata is not localized.
 - Ranges and `COLUMN_VALUES` never cover pinned rows—reference their cells individually instead.
-- A range window does not adjust when rows are added or removed—it keeps covering the same view positions. Automatic adjustment in view order is planned as a follow-up.
+- A range window does not grow or shrink when rows are added or removed. A plain (anchored) window keeps its geometry relative to its formula and a `$` (fixed) window keeps its view positions, so an inserted row that sorts into the middle of a window changes which rows it covers.
 - The formula editor does not support in-editor undo—the grid-level undo and redo of committed values work as usual.
 - A formula column's own `valueGetter` is ignored for its formula cells (a development-mode warning points this out); it applies normally to plain cells in the column.
 - Clipboard copy places evaluated values on the clipboard—use the [fill handle](#fill-handle) to replicate formulas inside the grid.

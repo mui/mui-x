@@ -16,6 +16,7 @@ export const FORMULA_RESERVED_NAMES: readonly string[] = [
   'COLUMN_TO',
   'ROW_TO',
   'FIXED',
+  'ANCHOR',
   'COLUMN_VALUES',
   'TRUE',
   'FALSE',
@@ -72,20 +73,28 @@ export interface FormulaCellRefNode extends FormulaAstBase {
 }
 
 /**
- * One axis of a `RANGE_REF()` window endpoint: a 1-based view position and its
- * fill behavior. A non-fixed axis shifts with the fill handle / paste offset;
- * a `FIXED(...)` axis (the canonical `$`) never moves.
+ * One axis of a `RANGE_REF()` window endpoint.
+ *
+ * - `position`: a 1-based view position. `fixed: true` (the canonical `$`,
+ *   spelled `FIXED(...)`) also pins the axis against the fill handle / paste
+ *   offset; a non-fixed position axis shifts by the fill delta.
+ * - `anchor` (spelled `ANCHOR(delta)`): a signed offset from the cell that owns
+ *   the formula — the Sheets model for a plain (no-`$`) endpoint. It resolves to
+ *   `ownerPosition + delta` against the current view, so the window moves with
+ *   the formula under sorting/filtering/reordering, and it copies verbatim on
+ *   fill/paste (offsets are inherently relative). An anchor axis is never
+ *   `FIXED` — the parser rejects the combination.
  */
-export interface FormulaRangeAxis {
-  index: number;
-  fixed: boolean;
-}
+export type FormulaRangeAxis =
+  { kind: 'position'; index: number; fixed: boolean } | { kind: 'anchor'; delta: number };
 
 /**
  * `RANGE_REF(COLUMN_FROM(c1), ROW_FROM(r1), COLUMN_TO(c2), ROW_TO(r2))` — the
- * inclusive positional window over the current view. The covered rectangle is
- * whatever occupies those positions after sorting/filtering; endpoints outside
- * the view clip to the available rows/columns instead of erroring.
+ * inclusive window over the current view. `position` endpoints outside the view
+ * clip to the available rows/columns instead of erroring; `anchor` endpoints
+ * are strict — an axis that resolves without an owner position or outside the
+ * data band makes the whole range `#REF!` (a relative window either keeps its
+ * geometry or reports that it cannot).
  */
 export interface FormulaRangeRefNode extends FormulaAstBase {
   type: 'rangeRef';

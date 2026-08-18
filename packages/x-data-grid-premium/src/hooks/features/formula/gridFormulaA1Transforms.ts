@@ -1,5 +1,5 @@
 import { gridFocusCellSelector, gridRowIdSelector } from '@mui/x-data-grid-pro';
-import type { GridColDef, GridRowModel } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridRowId, GridRowModel } from '@mui/x-data-grid-pro';
 import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { getFormulaExpression, toCanonicalFormula, toDisplayFormula } from './engine';
@@ -13,14 +13,20 @@ import { gridFormulaA1PositionContextSelector } from './gridFormulaPositionConte
  */
 
 /**
- * Renders a stored canonical formula source as A1 for the editor seed.
+ * Renders a stored canonical formula source as A1 for the editor seed. `cell`
+ * is the cell that owns the formula — anchor-relative range axes render
+ * against its current view position.
  */
 export function convertCanonicalToA1Display(
   source: string,
   apiRef: RefObject<GridPrivateApiPremium>,
+  cell: { id: GridRowId; field: string },
 ): string {
   const positionContext = gridFormulaA1PositionContextSelector(apiRef);
-  return `=${toDisplayFormula(getFormulaExpression(source), { positionContext })}`;
+  return `=${toDisplayFormula(getFormulaExpression(source), {
+    positionContext,
+    anchorCell: cell,
+  })}`;
 }
 
 /**
@@ -42,7 +48,12 @@ export function convertA1ToCanonicalCommit(
     return seed.canonical;
   }
   const positionContext = gridFormulaA1PositionContextSelector(apiRef);
-  return `=${toCanonicalFormula(getFormulaExpression(source), { positionContext }).source}`;
+  return `=${
+    toCanonicalFormula(getFormulaExpression(source), {
+      positionContext,
+      anchorCell: { id, field: colDef.field },
+    }).source
+  }`;
 }
 
 /**
@@ -97,7 +108,7 @@ export function convertA1ToCanonicalPaste(
   return `=${
     toCanonicalFormula(
       getFormulaExpression(source),
-      { positionContext },
+      { positionContext, anchorCell: { id, field: colDef.field } },
       { rowOffset, columnOffset },
     ).source
   }`;

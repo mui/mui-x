@@ -9,7 +9,9 @@ import {
   buildFormulaReferences,
   createFormulaCellKey,
   getFormulaExpression,
+  getFormulaRangeAnchor,
   isEscapedFormulaSource,
+  isFormulaErrorValue,
   isFormulaSource,
   resolveFormulaRangeRectangle,
   scanStringLiteral,
@@ -201,7 +203,15 @@ function resolveFormulaReferenceTarget(
       return resolveCellTarget(field, rowId, ownerCell);
     }
     case 'rangeRef': {
-      const rectangle = resolveFormulaRangeRectangle(node, positionContext);
+      const rectangle = resolveFormulaRangeRectangle(
+        node,
+        positionContext,
+        getFormulaRangeAnchor(ownerCell, positionContext),
+      );
+      if (isFormulaErrorValue(rectangle)) {
+        // An anchor axis without a resolvable position — no rectangle to draw.
+        return UNRESOLVED;
+      }
       if (rectangle.fromColumn > rectangle.toColumn || rectangle.fromIndex > rectangle.toIndex) {
         // The window clipped away entirely — nothing to outline.
         return UNRESOLVED;

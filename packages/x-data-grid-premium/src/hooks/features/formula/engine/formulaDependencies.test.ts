@@ -230,5 +230,124 @@ describe('formulaDependencies', () => {
       const after = bindFormulaDependencies(owner, deps, reordered);
       expect(Array.from(after.cells)).to.deep.equal([createFormulaCellKey('r3', 'a')]);
     });
+
+    describe('ANCHOR windows', () => {
+      // Positioned owner: row position 2, column position 2 ("b").
+      const anchoredOwner = { id: 'r2', field: 'b' };
+
+      it('binds an ANCHOR window against the owner position', () => {
+        const bound = bindFormulaDependencies(
+          anchoredOwner,
+          extract(
+            'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-1)), ROW_FROM(ANCHOR(-1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(1))))',
+          ),
+          context,
+        );
+        expect(bound.columnIntervals).to.deep.equal([{ field: 'a', fromIndex: 1, toIndex: 3 }]);
+        expect(bound.errors).to.have.length(0);
+      });
+
+      it('normalizes inverted ANCHOR endpoints after resolution', () => {
+        const bound = bindFormulaDependencies(
+          anchoredOwner,
+          extract(
+            'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-1)), ROW_FROM(ANCHOR(1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(-1))))',
+          ),
+          context,
+        );
+        expect(bound.columnIntervals).to.deep.equal([{ field: 'a', fromIndex: 1, toIndex: 3 }]);
+      });
+
+      it('binds the running-total shape (FIXED start, ANCHOR end)', () => {
+        const bound = bindFormulaDependencies(
+          anchoredOwner,
+          extract(
+            'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(0))))',
+          ),
+          context,
+        );
+        expect(bound.columnIntervals).to.deep.equal([{ field: 'a', fromIndex: 1, toIndex: 2 }]);
+      });
+
+      it('reports #REF! when the owner row has no position', () => {
+        const bound = bindFormulaDependencies(
+          { id: 'r9', field: 'b' },
+          extract(
+            'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(-1)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(0))))',
+          ),
+          context,
+        );
+        expect(bound.columnIntervals).to.have.length(0);
+        expect(bound.errors).to.have.length(1);
+        expect(bound.errors[0].code).to.equal('#REF!');
+        expect(bound.errors[0].message).to.contain("The formula's row has no position");
+      });
+
+      it('reports #REF! when the owner column has no position and a column axis is anchored', () => {
+        const bound = bindFormulaDependencies(
+          { id: 'r2', field: 'hidden' },
+          extract(
+            'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-1)), ROW_FROM(1), COLUMN_TO(ANCHOR(-1)), ROW_TO(2)))',
+          ),
+          context,
+        );
+        expect(bound.errors).to.have.length(1);
+        expect(bound.errors[0].message).to.contain("The formula's column has no position");
+      });
+
+      it('still binds row-anchored windows when only the owner COLUMN is unpositioned', () => {
+        // The column axes are positional — the hidden owner column is not consulted.
+        const bound = bindFormulaDependencies(
+          { id: 'r2', field: 'hidden' },
+          extract(
+            'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(ANCHOR(-1)), COLUMN_TO(1), ROW_TO(ANCHOR(0))))',
+          ),
+          context,
+        );
+        expect(bound.columnIntervals).to.deep.equal([{ field: 'a', fromIndex: 1, toIndex: 2 }]);
+        expect(bound.errors).to.have.length(0);
+      });
+
+      it('reports #REF! when an ANCHOR row endpoint leaves the data band', () => {
+        // Owner at row 2 of 3: me+2 = 4 is past the last data row. Clipping
+        // would silently sum a smaller window, so the range errors instead.
+        const overflow = bindFormulaDependencies(
+          anchoredOwner,
+          extract(
+            'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(2))))',
+          ),
+          context,
+        );
+        expect(overflow.errors).to.have.length(1);
+        expect(overflow.errors[0].message).to.contain('outside the data rows');
+
+        // The band edge counts: with r1 pinned, me−1 = 1 is a pinned row.
+        const pinned = createTestPositionContext(['r1', 'r2', 'r3'], ['a', 'b', 'c'], 0, {
+          dataFromIndex: 2,
+          dataToIndex: 3,
+        });
+        const underflow = bindFormulaDependencies(
+          anchoredOwner,
+          extract(
+            'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(-1)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(0))))',
+          ),
+          pinned,
+        );
+        expect(underflow.errors).to.have.length(1);
+        expect(underflow.errors[0].message).to.contain('outside the data rows');
+      });
+
+      it('reports #REF! when an ANCHOR column endpoint leaves the visible columns', () => {
+        const bound = bindFormulaDependencies(
+          anchoredOwner,
+          extract(
+            'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(2)), ROW_TO(ANCHOR(0))))',
+          ),
+          context,
+        );
+        expect(bound.errors).to.have.length(1);
+        expect(bound.errors[0].message).to.contain('outside the visible columns');
+      });
+    });
   });
 });

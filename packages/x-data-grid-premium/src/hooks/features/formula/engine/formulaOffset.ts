@@ -33,11 +33,12 @@ import type { FormulaPositionContext } from './formulaTypes';
  *   (the parser rejects `ROW_POSITION(0)`), so the reference stays put rather
  *   than corrupting the whole formula into `#ERROR!`.
  *
- * `RANGE_REF` windows follow the Excel `$` rule instead: every non-`FIXED`
- * axis shifts by the delta (pure arithmetic — window resolution auto-clips, so
- * overshoot needs no special casing), a `FIXED(...)` axis never moves, and
- * underflow clamps at position 1 (the window may shrink at the top edge, the
- * clipping rule applied at fill time).
+ * `RANGE_REF` windows: an `ANCHOR(delta)` axis copies verbatim — the offset is
+ * relative to the formula's own cell, so moving the formula IS the adjustment
+ * (the Sheets fill model, no arithmetic). A plain positional axis follows the
+ * Excel `$` rule instead: it shifts by the delta (pure arithmetic — window
+ * resolution auto-clips, so overshoot needs no special casing) with underflow
+ * clamping at position 1, and a `FIXED(...)` axis never moves.
  *
  * Pure: engine types only, no grid imports. The walk is recursive, bounded by
  * the parser's AST-height limit exactly like the serializer and evaluator.
@@ -116,10 +117,10 @@ function offsetCellRef(
 }
 
 function offsetRangeAxis(axis: FormulaRangeAxis, delta: number): FormulaRangeAxis {
-  if (axis.fixed || delta === 0) {
+  if (axis.kind === 'anchor' || axis.fixed || delta === 0) {
     return axis;
   }
-  return { index: Math.max(1, axis.index + delta), fixed: false };
+  return { kind: 'position', index: Math.max(1, axis.index + delta), fixed: false };
 }
 
 function offsetRangeRef(

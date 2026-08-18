@@ -116,7 +116,7 @@ const SPECIAL_FORM_META: Record<string, { signature: string; description: string
   RANGE_REF: {
     signature: 'RANGE_REF(COLUMN_FROM(c1), ROW_FROM(r1), COLUMN_TO(c2), ROW_TO(r2))',
     description:
-      'The inclusive rectangle of cells between two view positions. Wrap an axis in FIXED() to pin it against fill.',
+      'The inclusive rectangle of cells between two endpoints. An axis is a view position, ANCHOR(delta) for an offset from the formula cell, or FIXED(…) for an absolute position.',
   },
   COLUMN_FROM: {
     signature: 'COLUMN_FROM(index)',
@@ -137,7 +137,12 @@ const SPECIAL_FORM_META: Record<string, { signature: string; description: string
   FIXED: {
     signature: 'FIXED(axis)',
     description:
-      'Pins a RANGE_REF() axis against the fill handle — the canonical form of the A1 "$" prefix.',
+      'Makes a RANGE_REF() axis absolute — the canonical form of the A1 "$" prefix. It never adjusts, on fill or when the view order changes.',
+  },
+  ANCHOR: {
+    signature: 'ANCHOR(delta)',
+    description:
+      'A RANGE_REF() axis as a signed offset from the cell that owns the formula — the canonical form of a plain (no "$") A1 range endpoint. The window moves with the formula.',
   },
   COLUMN_VALUES: {
     signature: 'COLUMN_VALUES("field")',

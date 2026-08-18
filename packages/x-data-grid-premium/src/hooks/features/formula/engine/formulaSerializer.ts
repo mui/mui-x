@@ -39,6 +39,9 @@ function serializeRowSelector(selector: FormulaRowSelector): string {
 }
 
 function serializeRangeAxis(label: string, axis: FormulaRangeAxis): string {
+  if (axis.kind === 'anchor') {
+    return `${label}(ANCHOR(${axis.delta}))`;
+  }
   const inner = `${label}(${axis.index})`;
   return axis.fixed ? `FIXED(${inner})` : inner;
 }

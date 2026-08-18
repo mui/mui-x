@@ -60,6 +60,7 @@ describe('getFormulaCompletionTokens', () => {
       'COLUMN_TO',
       'ROW_TO',
       'FIXED',
+      'ANCHOR',
       'COLUMN_VALUES',
     ]);
     // The old RANGE() grammar is gone from the vocabulary entirely.

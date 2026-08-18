@@ -20,7 +20,7 @@ import {
 import type { ParsedRef } from './formulaA1Tokens';
 import { parseFormula } from './formulaParser';
 import { serializeFormulaAst } from './formulaSerializer';
-import type { FormulaPositionContext, FormulaSourceSpan } from './formulaTypes';
+import type { FormulaCellRef, FormulaPositionContext, FormulaSourceSpan } from './formulaTypes';
 
 /**
  * A1 notation is an editor-facing dialect layered on top of the canonical
@@ -40,9 +40,16 @@ import type { FormulaPositionContext, FormulaSourceSpan } from './formulaTypes';
  *   `$1` → `ROW_POSITION(1)`. It follows the grid position (tracks re-sorts) and
  *   does not shift on paste.
  *
- * Ranges are the exception: a `RANGE_REF` window is positional on every axis
- * (Excel/Sheets semantics), so `$` on a range endpoint controls only the fill
- * behavior — a plain axis shifts on paste/fill, a `$` axis is pinned (`FIXED`).
+ * Ranges follow the Sheets model instead: a plain (no-`$`) endpoint axis
+ * freezes to an `ANCHOR(delta)` offset from the cell committing the formula, so
+ * the window keeps its geometry relative to the formula under re-sorting and
+ * copies verbatim on fill/paste; a `$` axis freezes to the absolute view
+ * position (`FIXED`) and never adjusts — on fill or on movement. So `$` means
+ * the same thing on single refs and range endpoints: positional, tracking the
+ * view. When the committing cell is a pinned row (or no anchor is supplied),
+ * plain axes freeze to absolute non-fixed positions — a pinned summary is
+ * outside the data band, so "relative to me" has no meaning and a fixed window
+ * that shifts on fill is what Sheets' outside-the-range totals do too.
  *
  * The transform is purely textual: it rewrites the A1 reference tokens and copies
  * every other token (operators, function calls, string literals, numbers, bare
@@ -98,6 +105,15 @@ export function columnLettersToIndex(letters: string): number {
 
 export interface A1TransformContext {
   positionContext: FormulaPositionContext;
+  /**
+   * The cell the formula is being committed to / displayed for. Plain range
+   * endpoints freeze to `ANCHOR(delta)` offsets from this cell when it sits in
+   * the data band, and anchor axes render as `anchorPosition + delta` at
+   * display time. Without it (or with a pinned/positionless cell), plain range
+   * endpoints freeze to absolute positions and anchor axes display in
+   * canonical form inline.
+   */
+  anchorCell?: FormulaCellRef;
 }
 
 export interface ToCanonicalOptions {
@@ -105,7 +121,7 @@ export interface ToCanonicalOptions {
    * Added to relative (no-`$`) column positions — the Excel-style fill
    * adjustment applied when an A1 formula is pasted away from its origin.
    * Single-cell refs freeze the offset position to an identity; range window
-   * axes store the offset position directly.
+   * axes freeze the offset position (as an anchor delta for in-band anchors).
    * @default 0
    */
   columnOffset?: number;
@@ -114,6 +130,36 @@ export interface ToCanonicalOptions {
    * @default 0
    */
   rowOffset?: number;
+}
+
+/**
+ * The freeze target for plain range axes: the committing cell's view position,
+ * or `null` when plain axes must freeze to absolute positions instead — no
+ * anchor cell supplied, its row filtered out or pinned (outside the data
+ * band), or its column hidden. The band test is on the ROW: a pinned summary's
+ * window must not follow anything, its column axes included, so band
+ * membership decides the whole endpoint at once.
+ */
+export function getRangeFreezeAnchor(
+  context: FormulaPositionContext,
+  anchorCell: FormulaCellRef | undefined,
+): { rowIndex: number; columnIndex: number } | null {
+  if (anchorCell === undefined) {
+    return null;
+  }
+  const rowIndex = context.getPositionOfRowId(anchorCell.id);
+  if (
+    rowIndex === undefined ||
+    rowIndex < context.dataFromIndex ||
+    rowIndex > context.dataToIndex
+  ) {
+    return null;
+  }
+  const columnIndex = context.getPositionOfField(anchorCell.field);
+  if (columnIndex === undefined) {
+    return null;
+  }
+  return { rowIndex, columnIndex };
 }
 
 export interface A1TransformResult {
@@ -185,40 +231,59 @@ export function buildCellRefNode(
   };
 }
 
-function buildRangeAxis(baseIndex: number, absolute: boolean, offset: number): FormulaRangeAxis {
+function buildRangeAxis(
+  baseIndex: number,
+  absolute: boolean,
+  offset: number,
+  anchorIndex: number | null,
+): FormulaRangeAxis {
   if (absolute) {
-    // `$` on a range endpoint pins the axis against paste/fill offsets.
-    return { index: baseIndex, fixed: true };
+    // `$` on a range endpoint is absolute: it never adjusts, on fill or on movement.
+    return { kind: 'position', index: baseIndex, fixed: true };
   }
-  return { index: Math.max(1, baseIndex + offset), fixed: false };
+  // The paste/fill offset applies to the literal position first (Excel fill
+  // arithmetic), then the result freezes — against the anchor when there is
+  // one, absolutely otherwise. Underflow clamps at 1 exactly like the
+  // positional arm, so both freeze modes agree on what a shifted axis means.
+  const position = Math.max(1, baseIndex + offset);
+  if (anchorIndex !== null) {
+    return { kind: 'anchor', delta: position - anchorIndex };
+  }
+  return { kind: 'position', index: position, fixed: false };
 }
 
 /**
- * Builds the positional window for an A1 range (`A1:B5`). Both endpoints are
- * view positions on both axes; `$` marks an axis as fill-pinned. No position
- * context is consulted — out-of-view positions are stored as written and clip
- * at resolve time.
+ * Builds the window for an A1 range (`A1:B5`). A `$` axis stores its absolute
+ * view position; a plain axis stores an `ANCHOR` offset from `anchor` (the
+ * committing in-band cell) or, without an anchor, the absolute position in
+ * today's non-fixed form. Out-of-view positions are stored as written and clip
+ * (positional) or error (anchor) at resolve time.
  */
 export function buildRangeRefNode(
   startRef: ParsedRef,
   endRef: ParsedRef,
   columnOffset: number,
   rowOffset: number,
+  anchor: { rowIndex: number; columnIndex: number } | null = null,
 ): FormulaRangeRefNode {
+  const anchorRow = anchor === null ? null : anchor.rowIndex;
+  const anchorColumn = anchor === null ? null : anchor.columnIndex;
   return {
     type: 'rangeRef',
     columnFrom: buildRangeAxis(
       columnLettersToIndex(startRef.letters),
       startRef.columnAbsolute,
       columnOffset,
+      anchorColumn,
     ),
-    rowFrom: buildRangeAxis(startRef.rowNumber, startRef.rowAbsolute, rowOffset),
+    rowFrom: buildRangeAxis(startRef.rowNumber, startRef.rowAbsolute, rowOffset, anchorRow),
     columnTo: buildRangeAxis(
       columnLettersToIndex(endRef.letters),
       endRef.columnAbsolute,
       columnOffset,
+      anchorColumn,
     ),
-    rowTo: buildRangeAxis(endRef.rowNumber, endRef.rowAbsolute, rowOffset),
+    rowTo: buildRangeAxis(endRef.rowNumber, endRef.rowAbsolute, rowOffset, anchorRow),
     span: ZERO_SPAN,
   };
 }
@@ -254,6 +319,7 @@ export function toCanonicalFormula(
   const { positionContext } = context;
   const columnOffset = options.columnOffset ?? 0;
   const rowOffset = options.rowOffset ?? 0;
+  const rangeAnchor = getRangeFreezeAnchor(positionContext, context.anchorCell);
 
   let result = '';
   let changed = false;
@@ -282,7 +348,13 @@ export function toCanonicalFormula(
       const startRef = readParsedRef(cellMatch);
       const rangeTail = matchRangeTail(expression, index + cellMatch[0].length);
       if (rangeTail !== null) {
-        const rangeNode = buildRangeRefNode(startRef, rangeTail.endRef, columnOffset, rowOffset);
+        const rangeNode = buildRangeRefNode(
+          startRef,
+          rangeTail.endRef,
+          columnOffset,
+          rowOffset,
+          rangeAnchor,
+        );
         result += serializeFormulaAst(rangeNode);
         index = rangeTail.end;
       } else {
@@ -347,21 +419,64 @@ function cellRefToA1(node: FormulaCellRefNode, context: FormulaPositionContext):
   return `${columnPart}${rowPart}`;
 }
 
-function rangeAxisToA1Column(axis: FormulaRangeAxis): string {
-  const letters = columnIndexToLetters(axis.index);
-  return axis.fixed ? `$${letters}` : letters;
+/**
+ * The owner positions anchor axes render against at display time. Band
+ * membership is irrelevant here — rendering only needs a position to add the
+ * delta to.
+ */
+interface A1DisplayAnchor {
+  rowIndex: number | undefined;
+  columnIndex: number | undefined;
 }
 
-function rangeAxisToA1Row(axis: FormulaRangeAxis): string {
-  return axis.fixed ? `$${axis.index}` : String(axis.index);
+/**
+ * Resolves one range axis to the 1-based view position its A1 token shows.
+ * `null` when an anchor axis has no owner position, or resolves below 1 — A1
+ * has no token for either, and rendering a clamped position would silently
+ * re-freeze to different offsets on the next edited commit.
+ */
+function rangeAxisDisplayIndex(
+  axis: FormulaRangeAxis,
+  anchorIndex: number | undefined,
+): number | null {
+  if (axis.kind === 'position') {
+    return axis.index;
+  }
+  if (anchorIndex === undefined) {
+    return null;
+  }
+  const resolved = anchorIndex + axis.delta;
+  return resolved >= 1 ? resolved : null;
+}
+
+/**
+ * Renders a range window in A1, or `null` for the whole-range canonical
+ * fallback (an anchor axis without a renderable position — see
+ * `rangeAxisDisplayIndex`). Positional windows always render, including ones
+ * that currently clip against the view edge.
+ */
+function rangeRefToA1(node: FormulaRangeRefNode, anchor: A1DisplayAnchor): string | null {
+  const columnFrom = rangeAxisDisplayIndex(node.columnFrom, anchor.columnIndex);
+  const rowFrom = rangeAxisDisplayIndex(node.rowFrom, anchor.rowIndex);
+  const columnTo = rangeAxisDisplayIndex(node.columnTo, anchor.columnIndex);
+  const rowTo = rangeAxisDisplayIndex(node.rowTo, anchor.rowIndex);
+  if (columnFrom === null || rowFrom === null || columnTo === null || rowTo === null) {
+    return null;
+  }
+  const columnPart = (axis: FormulaRangeAxis, index: number) =>
+    `${axis.kind === 'position' && axis.fixed ? '$' : ''}${columnIndexToLetters(index)}`;
+  const rowPart = (axis: FormulaRangeAxis, index: number) =>
+    `${axis.kind === 'position' && axis.fixed ? '$' : ''}${index}`;
+  return `${columnPart(node.columnFrom, columnFrom)}${rowPart(node.rowFrom, rowFrom)}:${columnPart(node.columnTo, columnTo)}${rowPart(node.rowTo, rowTo)}`;
 }
 
 function serializeA1Operand(
   node: FormulaAstNode,
   minPrecedence: number,
   context: FormulaPositionContext,
+  anchor: A1DisplayAnchor,
 ): string {
-  const text = serializeA1Node(node, context);
+  const text = serializeA1Node(node, context, anchor);
   if (
     node.type === 'binaryExpression' &&
     FORMULA_BINARY_PRECEDENCE[node.operator] < minPrecedence
@@ -371,16 +486,20 @@ function serializeA1Operand(
   return text;
 }
 
-function serializeA1Node(node: FormulaAstNode, context: FormulaPositionContext): string {
+function serializeA1Node(
+  node: FormulaAstNode,
+  context: FormulaPositionContext,
+  anchor: A1DisplayAnchor,
+): string {
   switch (node.type) {
     case 'cellRef': {
       const a1 = cellRefToA1(node, context);
       return a1 ?? serializeFormulaAst(node);
     }
-    case 'rangeRef':
-      // Window axes are view positions, so a range always renders in A1 —
-      // including windows that currently clip against the view edge.
-      return `${rangeAxisToA1Column(node.columnFrom)}${rangeAxisToA1Row(node.rowFrom)}:${rangeAxisToA1Column(node.columnTo)}${rangeAxisToA1Row(node.rowTo)}`;
+    case 'rangeRef': {
+      const a1 = rangeRefToA1(node, anchor);
+      return a1 ?? serializeFormulaAst(node);
+    }
     case 'columnValues': {
       const position = context.getPositionOfField(node.field);
       if (position !== undefined) {
@@ -390,7 +509,7 @@ function serializeA1Node(node: FormulaAstNode, context: FormulaPositionContext):
       return serializeFormulaAst(node);
     }
     case 'unaryExpression': {
-      const operand = serializeA1Node(node.operand, context);
+      const operand = serializeA1Node(node.operand, context, anchor);
       if (node.operand.type === 'binaryExpression' || node.operand.type === 'unaryExpression') {
         return `${node.operator}(${operand})`;
       }
@@ -398,28 +517,39 @@ function serializeA1Node(node: FormulaAstNode, context: FormulaPositionContext):
     }
     case 'binaryExpression': {
       const precedence = FORMULA_BINARY_PRECEDENCE[node.operator];
-      const left = serializeA1Operand(node.left, precedence, context);
-      const right = serializeA1Operand(node.right, precedence + 1, context);
+      const left = serializeA1Operand(node.left, precedence, context, anchor);
+      const right = serializeA1Operand(node.right, precedence + 1, context, anchor);
       return `${left} ${node.operator} ${right}`;
     }
     case 'functionCall':
-      return `${node.name}(${node.args.map((arg) => serializeA1Node(arg, context)).join(', ')})`;
+      return `${node.name}(${node.args.map((arg) => serializeA1Node(arg, context, anchor)).join(', ')})`;
     default:
       // Literals and bare field references render identically in both dialects.
       return serializeFormulaAst(node);
   }
 }
 
+const NO_DISPLAY_ANCHOR: A1DisplayAnchor = { rowIndex: undefined, columnIndex: undefined };
+
 /**
  * Renders a canonical expression (without the leading `=`) into A1 notation for
  * editing. References whose identity has no current position (hidden column,
- * filtered-out row) fall back to canonical form inline. Never throws; returns the
- * input unchanged when it is not parseable as canonical.
+ * filtered-out row) and anchor-relative range axes without a renderable
+ * position fall back to canonical form inline. Never throws; returns the input
+ * unchanged when it is not parseable as canonical.
  */
 export function toDisplayFormula(expression: string, context: A1TransformContext): string {
   const { ast } = parseFormula(expression);
   if (ast === null) {
     return expression;
   }
-  return serializeA1Node(ast, context.positionContext);
+  const { positionContext, anchorCell } = context;
+  const anchor: A1DisplayAnchor =
+    anchorCell === undefined
+      ? NO_DISPLAY_ANCHOR
+      : {
+          rowIndex: positionContext.getPositionOfRowId(anchorCell.id),
+          columnIndex: positionContext.getPositionOfField(anchorCell.field),
+        };
+  return serializeA1Node(ast, positionContext, anchor);
 }

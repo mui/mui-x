@@ -112,6 +112,17 @@ describe('formulaSerializer', () => {
     );
   });
 
+  it('serializes ANCHOR axes back through ANCHOR(), signs included', () => {
+    expectSerialized(
+      'RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(3)))',
+      'RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(3)))',
+    );
+    expectSerialized(
+      'range_ref(fixed(column_from(1)), fixed(row_from(1)), column_to(anchor(-1)), row_to(anchor(0)))',
+      'RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(0)))',
+    );
+  });
+
   it('serializes function calls with uppercase names and ", " separators', () => {
     expectSerialized('sum(a,b , 1)', 'SUM(a, b, 1)');
     expectSerialized('FOO()', 'FOO()');
@@ -131,6 +142,7 @@ describe('formulaSerializer', () => {
       'REF(COLUMN("a"), ROW(-1))',
       'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(5)))',
       'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), ROW_FROM(2), COLUMN_TO(3), FIXED(ROW_TO(4))))',
+      'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-3)), ROW_FROM(ANCHOR(-4)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(-1))))',
       'SUM(COLUMN_VALUES("price"), 1, two, "three")',
       '1e308 * 5e-324',
       'a = b',

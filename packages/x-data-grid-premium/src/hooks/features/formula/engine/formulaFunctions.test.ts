@@ -65,6 +65,7 @@ describe('formulaFunctions', () => {
         'COLUMN_TO',
         'ROW_TO',
         'FIXED',
+        'ANCHOR',
         'COLUMN_VALUES',
         'TRUE',
         'FALSE',

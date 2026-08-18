@@ -187,6 +187,22 @@ describe('<DataGridPremium /> - Formula fill handle', () => {
     );
   });
 
+  it('copies an ANCHOR window verbatim on fill — each copy re-anchors to its own row', async () => {
+    // "My own row's qty" (total is column 3, qty is column 2).
+    const anchoredWindow =
+      '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-1)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(0))))';
+    const { user } = render(<TestGrid rows={makeRows(anchoredWindow)} />);
+    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('3'));
+
+    await user.click(getCell(0, 2));
+    fillDownShortcut(getCell(0, 2));
+
+    // No arithmetic: the offsets are inherently relative, so the copied text is
+    // byte-identical and the window follows the target row (qty of r1 = 5).
+    await waitFor(() => expect(getCell(1, 2).textContent).to.equal('5'));
+    expect(apiRef.current!.getRow('r1')!.total).to.equal(anchoredWindow);
+  });
+
   it('copies the evaluated value when filling into a non-allowFormulas column (Ctrl+R)', async () => {
     const { user } = render(<TestGrid />);
     await waitFor(() => expect(getCell(0, 2).textContent).to.equal('6'));

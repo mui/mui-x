@@ -1,4 +1,9 @@
-import type { FormulaAstNode, FormulaCellRefNode, FormulaRangeRefNode } from './formulaAst';
+import type {
+  FormulaAstNode,
+  FormulaCellRefNode,
+  FormulaRangeAxis,
+  FormulaRangeRefNode,
+} from './formulaAst';
 import { createFormulaCellKey } from './formulaTypes';
 import type {
   FormulaCellKey,
@@ -6,7 +11,7 @@ import type {
   FormulaPositionContext,
   FormulaRowId,
 } from './formulaTypes';
-import { createFormulaError } from './formulaErrors';
+import { createFormulaError, isFormulaErrorValue } from './formulaErrors';
 import type { FormulaErrorValue } from './formulaErrors';
 
 /**
@@ -139,30 +144,116 @@ export interface FormulaRangeRectangle {
 }
 
 /**
- * Resolves a `RANGE_REF` window against a position context: normalizes the
- * endpoints (`RANGE_REF(B5..A1)` spans the same rectangle as `A1..B5`) and
- * auto-clips them to the current view — a window larger than the view covers
- * whatever is available instead of erroring. Shared by dependency binding,
- * range materialization and reference highlighting so the three can never
- * disagree about the rectangle a range covers.
+ * The owner cell's current view positions — the reference point `anchor` range
+ * axes resolve against. Either index is `undefined` when the owner has no
+ * position on that axis (its row is filtered out, or its column is hidden).
+ */
+export interface FormulaRangeAnchor {
+  rowIndex: number | undefined;
+  columnIndex: number | undefined;
+}
+
+/**
+ * Looks up the owner cell's view positions once, for the axis resolution of
+ * every range in the formula.
+ */
+export function getFormulaRangeAnchor(
+  ownerCell: FormulaCellRef,
+  context: FormulaPositionContext,
+): FormulaRangeAnchor {
+  return {
+    rowIndex: context.getPositionOfRowId(ownerCell.id),
+    columnIndex: context.getPositionOfField(ownerCell.field),
+  };
+}
+
+/**
+ * Resolves one range axis to a view position, or to the `#REF!` that dooms the
+ * whole range. `position` axes resolve to their stored index (clipping happens
+ * later). `anchor` axes are strict: without an owner position there is no
+ * reference point, and a resolved endpoint outside the addressable span means
+ * the window's geometry does not fit the current view — clipping either case
+ * would silently aggregate a different set of cells than the one the user
+ * anchored to themselves.
+ */
+function resolveRangeAxisIndex(
+  axis: FormulaRangeAxis,
+  anchorIndex: number | undefined,
+  bounds: { from: number; to: number },
+  axisName: 'row' | 'column',
+): number | FormulaErrorValue {
+  if (axis.kind === 'position') {
+    return axis.index;
+  }
+  if (anchorIndex === undefined) {
+    return createFormulaError(
+      '#REF!',
+      `The formula's ${axisName} has no position in the current view, so its relative range cannot resolve.`,
+    );
+  }
+  const resolved = anchorIndex + axis.delta;
+  if (resolved < bounds.from || resolved > bounds.to) {
+    return createFormulaError(
+      '#REF!',
+      axisName === 'row'
+        ? 'The relative range extends outside the data rows in the current view.'
+        : 'The relative range extends outside the visible columns in the current view.',
+    );
+  }
+  return resolved;
+}
+
+/**
+ * Resolves a `RANGE_REF` window against a position context and the owner cell's
+ * anchor: `anchor` axes resolve to `ownerPosition + delta` (strict — see
+ * `resolveRangeAxisIndex`), then the endpoints are normalized
+ * (`RANGE_REF(B5..A1)` spans the same rectangle as `A1..B5`) and `position`
+ * endpoints auto-clip to the current view — a window larger than the view
+ * covers whatever is available instead of erroring. Shared by dependency
+ * binding, range materialization, reference highlighting and the Excel export
+ * so the four can never disagree about the rectangle a range covers.
  */
 export function resolveFormulaRangeRectangle(
   range: FormulaRangeRefNode,
   context: FormulaPositionContext,
-): FormulaRangeRectangle {
+  anchor: FormulaRangeAnchor,
+): FormulaRangeRectangle | FormulaErrorValue {
+  const rowBounds = { from: context.dataFromIndex, to: context.dataToIndex };
+  const columnBounds = { from: 1, to: context.columnCount };
+  const rowFrom = resolveRangeAxisIndex(range.rowFrom, anchor.rowIndex, rowBounds, 'row');
+  if (isFormulaErrorValue(rowFrom)) {
+    return rowFrom;
+  }
+  const rowTo = resolveRangeAxisIndex(range.rowTo, anchor.rowIndex, rowBounds, 'row');
+  if (isFormulaErrorValue(rowTo)) {
+    return rowTo;
+  }
+  const columnFrom = resolveRangeAxisIndex(
+    range.columnFrom,
+    anchor.columnIndex,
+    columnBounds,
+    'column',
+  );
+  if (isFormulaErrorValue(columnFrom)) {
+    return columnFrom;
+  }
+  const columnTo = resolveRangeAxisIndex(
+    range.columnTo,
+    anchor.columnIndex,
+    columnBounds,
+    'column',
+  );
+  if (isFormulaErrorValue(columnTo)) {
+    return columnTo;
+  }
   // Clamp the row span to the data band: pinned rows are addressable but never
   // aggregated, so a pinned summary row can hold `SUM(E1:E8)` without covering
   // itself however the body is sorted, filtered or paginated.
-  const fromIndex = Math.max(
-    Math.min(range.rowFrom.index, range.rowTo.index),
-    context.dataFromIndex,
-  );
-  const toIndex = Math.min(Math.max(range.rowFrom.index, range.rowTo.index), context.dataToIndex);
   return {
-    fromColumn: Math.max(Math.min(range.columnFrom.index, range.columnTo.index), 1),
-    toColumn: Math.min(Math.max(range.columnFrom.index, range.columnTo.index), context.columnCount),
-    fromIndex,
-    toIndex,
+    fromColumn: Math.max(Math.min(columnFrom, columnTo), 1),
+    toColumn: Math.min(Math.max(columnFrom, columnTo), context.columnCount),
+    fromIndex: Math.max(Math.min(rowFrom, rowTo), context.dataFromIndex),
+    toIndex: Math.min(Math.max(rowFrom, rowTo), context.dataToIndex),
   };
 }
 
@@ -220,8 +311,13 @@ export function bindFormulaDependencies(
     bound.cells.add(createFormulaCellKey(id, field));
   }
 
+  const anchor = getFormulaRangeAnchor(ownerCell, context);
   for (const range of dependencies.ranges) {
-    const rectangle = resolveFormulaRangeRectangle(range, context);
+    const rectangle = resolveFormulaRangeRectangle(range, context, anchor);
+    if (isFormulaErrorValue(rectangle)) {
+      bound.errors.push(rectangle);
+      continue;
+    }
     if (rectangle.fromIndex > rectangle.toIndex) {
       // The window clipped away entirely — an empty range has no precedents.
       continue;

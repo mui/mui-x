@@ -6,7 +6,7 @@ import type {
   FormulaFunctionCallNode,
   FormulaRangeRefNode,
 } from './formulaAst';
-import { resolveFormulaRangeRectangle } from './formulaDependencies';
+import { getFormulaRangeAnchor, resolveFormulaRangeRectangle } from './formulaDependencies';
 import { createFormulaError, isFormulaErrorValue } from './formulaErrors';
 import type { FormulaErrorValue } from './formulaErrors';
 import { isFormulaRangeValue } from './formulaTypes';
@@ -112,7 +112,14 @@ function evaluateRange(
   node: FormulaRangeRefNode,
   context: FormulaEvaluationContext,
 ): FormulaRangeValue | FormulaErrorValue {
-  const rectangle = resolveFormulaRangeRectangle(node, context.position);
+  const rectangle = resolveFormulaRangeRectangle(
+    node,
+    context.position,
+    getFormulaRangeAnchor(context.currentCell, context.position),
+  );
+  if (isFormulaErrorValue(rectangle)) {
+    return rectangle;
+  }
   const values: FormulaScalar[] = [];
   for (let rowIndex = rectangle.fromIndex; rowIndex <= rectangle.toIndex; rowIndex += 1) {
     const id = context.position.getRowIdAtPosition(rowIndex);

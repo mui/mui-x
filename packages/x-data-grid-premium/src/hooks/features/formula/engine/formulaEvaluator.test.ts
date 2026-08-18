@@ -220,6 +220,62 @@ describe('formulaEvaluator', () => {
       expectValue('COUNTA(RANGE_REF(COLUMN_FROM(1), ROW_FROM(5), COLUMN_TO(1), ROW_TO(6)))', 0);
     });
 
+    it('materializes ANCHOR windows relative to the current cell', () => {
+      // Default current cell: r1/price = row position 1, column position 1.
+      expectValue(
+        'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(1))))',
+        250,
+      );
+      expectValue(
+        'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(1)), ROW_TO(ANCHOR(1))))',
+        255,
+      );
+    });
+
+    it('resolves the same ANCHOR window differently for a different current cell', () => {
+      // "The column left of me, from the row above me through my row."
+      const window =
+        'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-1)), ROW_FROM(ANCHOR(-1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(0))))';
+      const result = evaluate(window, ROWS, {
+        currentCell: { id: 'r2', field: 'quantity' },
+      });
+      expect(result).to.deep.equal({ type: 'value', value: 250 });
+    });
+
+    it('keeps an ANCHOR window on its own row wherever sorting moves it', () => {
+      // "My own price cell": position-independent by construction.
+      const ownPrice =
+        'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(0))))';
+      expectValue(ownPrice, 50);
+      const reversed = evaluate(ownPrice, ROWS, { rowOrder: ['r2', 'r1'] });
+      expect(reversed).to.deep.equal({ type: 'value', value: 50 });
+    });
+
+    it('returns #REF! for an ANCHOR window whose current cell has no position', () => {
+      const result = evaluate(
+        'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(0))))',
+        ROWS,
+        { rowOrder: ['r2'] },
+      );
+      expect(result.type).to.equal('error');
+      expect((result as { message?: string }).message).to.contain(
+        "The formula's row has no position",
+      );
+    });
+
+    it('returns #REF! for an ANCHOR endpoint outside the data band', () => {
+      // r1 is the first row: "the row above me" does not exist.
+      expectErrorCode(
+        'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(-1)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(0))))',
+        '#REF!',
+      );
+      // "Two rows below me" overshoots the 2-row view.
+      expectErrorCode(
+        'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(2))))',
+        '#REF!',
+      );
+    });
+
     it('materializes COLUMN_VALUES over the position-context rows in view order', () => {
       expectValue('SUM(COLUMN_VALUES("price"))', 250);
       expectValue('CONCAT(COLUMN_VALUES("name"))', 'ChairDesk');

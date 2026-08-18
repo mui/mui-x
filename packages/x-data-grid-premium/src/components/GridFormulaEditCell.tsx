@@ -136,7 +136,7 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
     // so a custom editor that commits the seeded value round-trips losslessly.
     let seededValue = rawValue;
     if (a1NotationEnabled && isFormulaSource(rawValue) && !isUserCustomEditor) {
-      const display = convertCanonicalToA1Display(rawValue, apiRef);
+      const display = convertCanonicalToA1Display(rawValue, apiRef, { id, field });
       cache.lastA1Seed = { id, field, display, canonical: rawValue };
       seededValue = display;
     }

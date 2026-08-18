@@ -85,6 +85,7 @@ export { serializeFormulaAstToExcel, mapFormulaErrorCodeToExcel } from './formul
 export type {
   FormulaBoundDependencies,
   FormulaColumnIntervalDependency,
+  FormulaRangeAnchor,
   FormulaRangeRectangle,
   FormulaStaticDependencies,
   FormulaWholeColumnDependency,
@@ -92,6 +93,7 @@ export type {
 export {
   extractFormulaDependencies,
   bindFormulaDependencies,
+  getFormulaRangeAnchor,
   resolveFormulaRangeRectangle,
 } from './formulaDependencies';
 

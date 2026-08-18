@@ -30,7 +30,14 @@ const SPECIAL_FORM_NAMES = new Set(
 );
 
 // Names that are only meaningful as RANGE_REF() arguments.
-const RANGE_REF_ONLY_NAMES = new Set(['COLUMN_FROM', 'ROW_FROM', 'COLUMN_TO', 'ROW_TO', 'FIXED']);
+const RANGE_REF_ONLY_NAMES = new Set([
+  'COLUMN_FROM',
+  'ROW_FROM',
+  'COLUMN_TO',
+  'ROW_TO',
+  'FIXED',
+  'ANCHOR',
+]);
 
 /**
  * Bounds both parser recursion depth and constructed AST height, so that the
@@ -345,11 +352,13 @@ class Parser {
   }
 
   /**
-   * One axis of a RANGE_REF() window: `<LABEL>(index)` or `FIXED(<LABEL>(index))`.
-   * The label is validated per slot so the stored text stays self-documenting.
+   * One axis of a RANGE_REF() window: `<LABEL>(index)`, `<LABEL>(ANCHOR(delta))`
+   * or `FIXED(<LABEL>(index))`. The label is validated per slot so the stored
+   * text stays self-documenting. `FIXED` cannot wrap an `ANCHOR` axis: an
+   * owner-relative offset is never fixed.
    */
   private parseRangeAxis(label: string): FormulaRangeAxis {
-    const expected = `Expected ${label}(index) or FIXED(${label}(index)).`;
+    const expected = `Expected ${label}(index), ${label}(ANCHOR(delta)) or FIXED(${label}(index)).`;
     let fixed = false;
     let token = this.peek();
     if (token !== null && token.type === 'identifier' && token.value.toUpperCase() === 'FIXED') {
@@ -363,12 +372,31 @@ class Parser {
     }
     this.next();
     this.expectPunctuation('(');
+    const anchorToken = this.peek();
+    if (
+      anchorToken !== null &&
+      anchorToken.type === 'identifier' &&
+      anchorToken.value.toUpperCase() === 'ANCHOR'
+    ) {
+      if (fixed) {
+        throw this.failure(
+          'FIXED() cannot contain ANCHOR(): an anchor-relative axis always moves with the formula.',
+          anchorToken.span,
+        );
+      }
+      this.next();
+      this.expectPunctuation('(');
+      const delta = this.expectSignedIntegerLiteral('ANCHOR');
+      this.expectPunctuation(')');
+      this.expectPunctuation(')');
+      return { kind: 'anchor', delta };
+    }
     const index = this.expectPositionLiteral(label);
     this.expectPunctuation(')');
     if (fixed) {
       this.expectPunctuation(')');
     }
-    return { index, fixed };
+    return { kind: 'position', index, fixed };
   }
 
   private parseRef(nameToken: FormulaToken): FormulaCellRefNode {
@@ -477,6 +505,30 @@ class Parser {
     }
     this.next();
     return index;
+  }
+
+  /**
+   * A signed integer literal, for `ANCHOR(delta)`. The tokenizer emits `-` as
+   * an operator token, so the sign is consumed here; `0` is a valid delta
+   * (the owner's own row/column).
+   */
+  private expectSignedIntegerLiteral(formName: string): number {
+    let negative = false;
+    let token = this.peek();
+    if (token !== null && token.type === 'operator' && token.value === '-') {
+      this.next();
+      negative = true;
+      token = this.peek();
+    }
+    if (token === null || token.type !== 'number') {
+      throw this.failure(`${formName}() expects an integer offset.`);
+    }
+    const magnitude = parseFloat(token.value);
+    if (!Number.isInteger(magnitude)) {
+      throw this.failure(`${formName}() expects an integer offset.`, token.span);
+    }
+    this.next();
+    return negative ? -magnitude : magnitude;
   }
 }
 

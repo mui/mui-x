@@ -6,6 +6,8 @@ import {
   columnIndexToLetters,
   extractFormulaDependencies,
   getFormulaExpression,
+  getFormulaRangeAnchor,
+  isFormulaErrorValue,
   mapFormulaErrorCodeToExcel,
   resolveFormulaRangeRectangle,
   serializeFormulaAstToExcel,
@@ -145,12 +147,18 @@ export function getCellExcelFormula(
   }
 
   // A window that clipped away entirely evaluates to an empty range in the
-  // grid; there is no Excel range to write for it, so fall back to exporting
+  // grid, and an anchor axis without a resolvable position evaluates to
+  // `#REF!`; neither has an Excel range to write, so fall back to exporting
   // the evaluated value (contiguous with the no-#REF!-from-windows rule).
+  const rangeAnchor = getFormulaRangeAnchor({ id, field }, layout.positionContext);
   const { ranges } = extractFormulaDependencies(ast);
   for (const range of ranges) {
-    const rectangle = resolveFormulaRangeRectangle(range, layout.positionContext);
-    if (rectangle.fromColumn > rectangle.toColumn || rectangle.fromIndex > rectangle.toIndex) {
+    const rectangle = resolveFormulaRangeRectangle(range, layout.positionContext, rangeAnchor);
+    if (
+      isFormulaErrorValue(rectangle) ||
+      rectangle.fromColumn > rectangle.toColumn ||
+      rectangle.fromIndex > rectangle.toIndex
+    ) {
       return null;
     }
   }
@@ -194,7 +202,12 @@ export function getCellExcelFormula(
   const resolveRangeWindow = (node: FormulaRangeRefNode) => {
     // Clip against the live view first (shared resolver — same rectangle the
     // grid evaluates), then map the normalized corners into the export sheet.
-    const rectangle = resolveFormulaRangeRectangle(node, layout.positionContext);
+    const rectangle = resolveFormulaRangeRectangle(node, layout.positionContext, rangeAnchor);
+    if (isFormulaErrorValue(rectangle)) {
+      // Unreachable in practice: the pre-scan above already fell back to a
+      // value-only export for any unresolvable window.
+      return null;
+    }
     const startField = layout.positionContext.getFieldAtPosition(rectangle.fromColumn);
     const endField = layout.positionContext.getFieldAtPosition(rectangle.toColumn);
     const startId = layout.positionContext.getRowIdAtPosition(rectangle.fromIndex);

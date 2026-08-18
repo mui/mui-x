@@ -670,6 +670,46 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect((worksheet.getCell('C3').value as any).result).to.equal(9);
     });
 
+    it('exports ANCHOR windows as relative A1 at the anchored position', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[
+                { field: 'price', type: 'number' },
+                { field: 'qty', type: 'number' },
+                { field: 'total', type: 'number', allowFormulas: true },
+              ]}
+              rows={[
+                // "My own row's price through qty" on the second data row:
+                // columns me−2..me−1 = A..B, row me = Excel row 3.
+                { id: 0, price: 10, qty: 2, total: 9 },
+                {
+                  id: 1,
+                  price: 20,
+                  qty: 3,
+                  total:
+                    '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(0))))',
+                },
+              ]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      // Relative A1 is Excel's own offset representation, so the exported
+      // formula keeps the grid's anchor behavior under fill and sort.
+      expect(worksheet.getCell('C3').type).to.equal(Excel.ValueType.Formula);
+      expect((worksheet.getCell('C3').value as any).formula).to.equal('SUM(A3:B3)');
+      expect((worksheet.getCell('C3').value as any).result).to.equal(23);
+    });
+
     it('exports a date-valued formula consistently with a plain date column', async () => {
       function Test() {
         apiRef = useGridApiRef();

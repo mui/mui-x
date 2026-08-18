@@ -53,7 +53,10 @@ export function previewFormulaResult(
     // The commit-time conversion, without a fill offset. Canonical text carries
     // no bare A1 tokens and passes through unchanged (the same idempotency the
     // paste path relies on).
-    expression = toCanonicalFormula(expression, { positionContext }).source;
+    expression = toCanonicalFormula(expression, {
+      positionContext,
+      anchorCell: { id: cell.id, field: cell.field },
+    }).source;
   }
   // Deliberately NOT the interning parser: drafts are transient one-off strings
   // and would grow the intern map by one entry per keystroke.

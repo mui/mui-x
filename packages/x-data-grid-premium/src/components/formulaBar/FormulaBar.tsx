@@ -194,7 +194,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
     }
     const formula = allowFormulas ? apiRef.current.getCellFormula(cell.id, cell.field) : null;
     if (formula !== null) {
-      return a1Enabled ? convertCanonicalToA1Display(formula, apiRef) : formula;
+      return a1Enabled ? convertCanonicalToA1Display(formula, apiRef, cell) : formula;
     }
     const value = apiRef.current.getCellValue(cell.id, cell.field);
     return value == null ? '' : String(value);

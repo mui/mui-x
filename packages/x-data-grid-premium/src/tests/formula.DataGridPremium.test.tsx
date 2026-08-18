@@ -951,6 +951,118 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(apiRef.current!.getRow(0).summary).to.equal(windowFormula);
     });
 
+    it('should keep an ANCHOR window relative to its formula across sorting', async () => {
+      // "My own row, one column left of me" — the plain-A1 (no `$`) form.
+      const anchoredFormula =
+        '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-1)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(0))))';
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 1, summary: anchoredFormula },
+            { id: 1, price: 8 },
+            { id: 2, price: 2 },
+            { id: 3, price: 4 },
+          ]}
+          columns={summaryColumns}
+        />,
+      );
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 1,
+      });
+
+      await act(async () => apiRef.current!.setSortModel([{ field: 'price', sort: 'desc' }]));
+      // The formula moved from view position 1 to 4 — its window moved with it,
+      // so it still reads its own row's price (a positional window would now
+      // read whatever occupies position 1 instead).
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 1,
+      });
+      // Movement never rewrites the source: the offsets are byte-stable.
+      expect(apiRef.current!.getRow(0).summary).to.equal(anchoredFormula);
+    });
+
+    it('should keep a running total (FIXED start, ANCHOR end) correct across sorting', async () => {
+      // The canonical form of `=SUM($A$1:A<my row>)` — identical text in every row.
+      const runningTotal =
+        '=SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(0))))';
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 1, summary: runningTotal },
+            { id: 1, price: 8, summary: runningTotal },
+            { id: 2, price: 2, summary: runningTotal },
+            { id: 3, price: 4, summary: runningTotal },
+          ]}
+          columns={summaryColumns}
+        />,
+      );
+      // Prices in view order [1, 8, 2, 4]: each row sums positions 1..itself.
+      expect(getColumnValues(1)).to.deep.equal(['1', '9', '11', '15']);
+
+      await act(async () => apiRef.current!.setSortModel([{ field: 'price', sort: 'asc' }]));
+      // View order [1, 2, 4, 8]: every copy re-anchors to its new position, so
+      // the column stays a running total after the sort.
+      expect(getColumnValues(1)).to.deep.equal(['1', '3', '7', '15']);
+    });
+
+    it('should report #REF! instead of re-shaping when sorting pushes an ANCHOR window out of the band', async () => {
+      // "The two rows above me, one column left" — valid while the formula is
+      // last, impossible once sorting moves it to the top.
+      const aboveMe =
+        '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-1)), ROW_FROM(ANCHOR(-2)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(-1))))';
+      await render(
+        <Test
+          rows={[
+            { id: 1, price: 1 },
+            { id: 2, price: 2 },
+            { id: 0, price: 9, summary: aboveMe },
+          ]}
+          columns={summaryColumns}
+        />,
+      );
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 3,
+      });
+
+      await act(async () => apiRef.current!.setSortModel([{ field: 'price', sort: 'desc' }]));
+      // The formula is now first: "two rows above me" does not exist. The
+      // window errors loudly instead of silently covering different rows —
+      // and geometry preservation means a sort can never make it cover
+      // its own cell (#CYCLE!).
+      const result = formulaApi().getCellFormulaResult(0, 'summary');
+      expect(result?.type).to.equal('error');
+      expect((result as { code?: string }).code).to.equal('#REF!');
+      expect(apiRef.current!.getRow(0).summary).to.equal(aboveMe);
+    });
+
+    it('should propagate #REF! to dependents when an ANCHOR formula loses its own row to a filter', async () => {
+      const ownPrice =
+        '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-1)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(0))))';
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 1, summary: ownPrice },
+            { id: 1, price: 5, summary: '=REF(COLUMN("summary"), ROW(0))' },
+          ]}
+          columns={summaryColumns}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['1', '1']);
+
+      await act(async () =>
+        apiRef.current!.setFilterModel({
+          items: [{ field: 'price', operator: '>=', value: 2 }],
+        }),
+      );
+      // Row 0 is filtered out: its relative window has no anchor position, so
+      // its (hidden) value is #REF! and the visible stable ref reports it
+      // rather than silently reading a stale or empty window.
+      expect(getColumnValues(1)).to.deep.equal(['#REF!']);
+    });
+
     it('should not re-filter after rebinding a position-dependent filtered column', async () => {
       await render(
         <Test
@@ -3816,6 +3928,30 @@ describe('<DataGridPremium /> - Formulas', () => {
 
         expect(apiRef.current!.getRow(0).total).to.equal('=REF(COLUMN("price"), ROW(0))');
       });
+
+      it('should freeze a plain A1 range to ANCHOR offsets and round-trip it through the editor', async () => {
+        const { user } = await render(<Test formulaA1Notation processRowUpdate={(row) => row} />);
+        const cell = getCell(0, 4);
+        await user.dblClick(cell);
+        setEditableValue(0, 4, '=SUM(B1:B2)');
+        fireEvent.keyDown(getCellEditable(0, 4), { key: 'Enter' });
+        await microtasks();
+
+        // Committing cell: `total` at column position 4, row position 1. The
+        // plain endpoints store as offsets from it (Sheets model): B = −2,
+        // rows 1..2 = 0..+1.
+        expect(apiRef.current!.getRow(0).total).to.equal(
+          '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(1))))',
+        );
+        // Prices are [2, 1, 4]: B1 + B2 = 3.
+        expect(getColumnValues(4)).to.deep.equal(['3', '5', '8']);
+
+        // Reopening renders the offsets back at the anchor: the typed text.
+        await user.dblClick(getCell(0, 4));
+        await waitFor(() => {
+          expect(getCellEditable(0, 4).textContent).to.equal('=SUM(B1:B2)');
+        });
+      });
     });
 
     describe('paste', () => {
@@ -3878,13 +4014,18 @@ describe('<DataGridPremium /> - Formulas', () => {
         await act(async () => document.activeElement!.dispatchEvent(pasteEvent));
 
         await waitFor(() => {
+          // Plain axes freeze to ANCHOR offsets from the committing cell
+          // (column `total` at position 4, row position 1): B = 2 → −2,
+          // rows 1..2 → 0..+1.
           expect(apiRef.current!.getRow(0).total).to.equal(
-            '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(1), COLUMN_TO(2), ROW_TO(2)))',
+            '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(1))))',
           );
         });
-        // The second target shifted both relative row axes by +1.
+        // The second target's literal shifted by the fill offset AND its anchor
+        // moved down one row — the deltas cancel, so the stored text is
+        // byte-identical to the first target's (offsets copy verbatim).
         expect(apiRef.current!.getRow(1).total).to.equal(
-          '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(2), COLUMN_TO(2), ROW_TO(3)))',
+          '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(1))))',
         );
         expect(getColumnValues(4)).to.deep.equal(['3', '5', '8']);
       });
@@ -3907,10 +4048,12 @@ describe('<DataGridPremium /> - Formulas', () => {
             '=SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(2)), FIXED(ROW_TO(2))))',
           );
         });
-        // One row down: the pinned start axes stay put, only the relative end
-        // axes move.
+        // One row down: the `$` start axes stay at their absolute position,
+        // the plain end axes freeze to offsets from the target (shifted row 3
+        // − anchor row 2 = +1; column 2 − column 4 = −2) — the running-total
+        // shape.
         expect(apiRef.current!.getRow(1).total).to.equal(
-          '=SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), FIXED(ROW_FROM(1)), COLUMN_TO(2), ROW_TO(3)))',
+          '=SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), FIXED(ROW_FROM(1)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(1))))',
         );
         expect(getColumnValues(4)).to.deep.equal(['3', '7', '8']);
       });

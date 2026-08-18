@@ -1,7 +1,7 @@
 import { parseFormula } from './formulaParser';
 import { serializeFormulaAstToExcel, mapFormulaErrorCodeToExcel } from './formulaExcel';
 import type { FormulaExcelSerializeContext } from './formulaExcel';
-import type { FormulaAstNode } from './formulaAst';
+import type { FormulaAstNode, FormulaRangeAxis } from './formulaAst';
 
 const parseOk = (expression: string): FormulaAstNode => {
   const { ast, error } = parseFormula(expression);
@@ -23,14 +23,30 @@ const POSITION_ROWS: Record<number, number> = { 1: 2, 2: 3, 3: 4 };
 const COLUMN_COUNT = 4;
 const ROW_COUNT = 3;
 
-// Mirrors the adapter: normalize + auto-clip the window to the view, then map the
-// corners into the sheet. `$` never comes from here — it comes from the node's
-// per-axis `fixed` flags.
+// The owner cell's view positions the mock resolver uses for ANCHOR axes:
+// row position 1 ("r1", Excel row 2 = `ownerRowNumber` below), column
+// position 4 ("total").
+const ANCHOR_ROW_INDEX = 1;
+const ANCHOR_COLUMN_INDEX = 4;
+
+const axisIndex = (axis: FormulaRangeAxis, anchorIndex: number): number =>
+  axis.kind === 'position' ? axis.index : anchorIndex + axis.delta;
+
+// Mirrors the adapter: resolve ANCHOR axes against the owner position, then
+// normalize + auto-clip the window to the view and map the corners into the
+// sheet. `$` never comes from here — it comes from the node's FIXED flags.
 const resolveRangeWindow: FormulaExcelSerializeContext['resolveRangeWindow'] = (node) => {
-  const fromColumn = Math.max(Math.min(node.columnFrom.index, node.columnTo.index), 1);
-  const toColumn = Math.min(Math.max(node.columnFrom.index, node.columnTo.index), COLUMN_COUNT);
-  const fromIndex = Math.max(Math.min(node.rowFrom.index, node.rowTo.index), 1);
-  const toIndex = Math.min(Math.max(node.rowFrom.index, node.rowTo.index), ROW_COUNT);
+  const columnFromIndex = axisIndex(node.columnFrom, ANCHOR_COLUMN_INDEX);
+  const columnToIndex = axisIndex(node.columnTo, ANCHOR_COLUMN_INDEX);
+  const rowFromIndex = axisIndex(node.rowFrom, ANCHOR_ROW_INDEX);
+  const rowToIndex = axisIndex(node.rowTo, ANCHOR_ROW_INDEX);
+  if (rowFromIndex < 1 || rowToIndex < 1 || columnFromIndex < 1 || columnToIndex < 1) {
+    return null;
+  }
+  const fromColumn = Math.max(Math.min(columnFromIndex, columnToIndex), 1);
+  const toColumn = Math.min(Math.max(columnFromIndex, columnToIndex), COLUMN_COUNT);
+  const fromIndex = Math.max(Math.min(rowFromIndex, rowToIndex), 1);
+  const toIndex = Math.min(Math.max(rowFromIndex, rowToIndex), ROW_COUNT);
   const startLetter = POSITION_LETTERS[fromColumn];
   const endLetter = POSITION_LETTERS[toColumn];
   const startNumber = POSITION_ROWS[fromIndex];
@@ -138,6 +154,25 @@ describe('serializeFormulaAstToExcel', () => {
       expect(
         toExcel('SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(3), COLUMN_TO(2), ROW_TO(1)))').formula,
       ).to.equal('SUM(B2:B4)');
+    });
+
+    it('renders ANCHOR axes as relative refs at the anchored position', () => {
+      // Owner at row position 1, column position 4: rows me..me+2 = 1..3,
+      // column me−2 = 2 (B). Relative A1 is Excel's own offset storage, so the
+      // exported formula keeps the anchor behavior under fill and sort.
+      expect(
+        toExcel(
+          'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(2))))',
+        ),
+      ).to.deep.equal({ formula: 'SUM(B2:B4)', hasRefError: false });
+    });
+
+    it('renders a mixed FIXED/ANCHOR window (running total shape)', () => {
+      expect(
+        toExcel(
+          'SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), FIXED(ROW_FROM(1)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(0))))',
+        ).formula,
+      ).to.equal('SUM($B$2:B2)');
     });
 
     it('renders COLUMN_VALUES as a bounded data range (no header)', () => {

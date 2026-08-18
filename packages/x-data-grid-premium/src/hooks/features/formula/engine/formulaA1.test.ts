@@ -49,6 +49,21 @@ const toCanonical = (
 const toDisplay = (expression: string, context: FormulaPositionContext = CONTEXT) =>
   toDisplayFormula(expression, { positionContext: context });
 
+// Anchored variants: the committing/owning cell is supplied, so plain range
+// endpoints freeze to / render from ANCHOR offsets.
+const toCanonicalAt = (
+  expression: string,
+  anchorCell: { id: FormulaRowId; field: string },
+  options?: { columnOffset?: number; rowOffset?: number },
+  context: FormulaPositionContext = CONTEXT,
+) => toCanonicalFormula(expression, { positionContext: context, anchorCell }, options).source;
+
+const toDisplayAt = (
+  expression: string,
+  anchorCell: { id: FormulaRowId; field: string },
+  context: FormulaPositionContext = CONTEXT,
+) => toDisplayFormula(expression, { positionContext: context, anchorCell });
+
 describe('formulaA1', () => {
   describe('columnIndexToLetters', () => {
     it('maps 1-based indexes to bijective base-26 letters', () => {
@@ -224,6 +239,104 @@ describe('formulaA1', () => {
       expect(toCanonical('A1:B2', { rowOffset: -5, columnOffset: -5 })).to.equal(
         'RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(1))',
       );
+    });
+  });
+
+  describe('toCanonicalFormula — anchored ranges', () => {
+    // r3/total = row position 3, column position 3, inside the default band.
+    const ANCHOR_CELL = { id: 'r3' as FormulaRowId, field: 'total' };
+
+    it('freezes plain endpoints to ANCHOR offsets from the committing cell', () => {
+      expect(toCanonicalAt('SUM(A1:B2)', ANCHOR_CELL)).to.equal(
+        'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(-2)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(-1))))',
+      );
+    });
+
+    it('keeps `$` endpoints absolute (FIXED) with an anchor present', () => {
+      expect(toCanonicalAt('SUM($A$1:$B$2)', ANCHOR_CELL)).to.equal(
+        'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(2)), FIXED(ROW_TO(2))))',
+      );
+    });
+
+    it('freezes the running-total shape ($A$1:A3) to FIXED start + ANCHOR end', () => {
+      expect(toCanonicalAt('SUM($A$1:A3)', ANCHOR_CELL)).to.equal(
+        'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(0))))',
+      );
+    });
+
+    it('freezes plain endpoints absolutely when the anchor row is pinned (outside the band)', () => {
+      // r1 pinned top, r5 pinned bottom: the data band is rows 2..4.
+      const pinnedContext = createTestPositionContext(ROW_IDS, FIELDS, 0, {
+        dataFromIndex: 2,
+        dataToIndex: 4,
+      });
+      expect(
+        toCanonicalAt('SUM(A2:A4)', { id: 'r1', field: 'total' }, undefined, pinnedContext),
+      ).to.equal('SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(2), COLUMN_TO(1), ROW_TO(4)))');
+    });
+
+    it('freezes plain endpoints absolutely when the anchor has no position', () => {
+      // Unknown row id and hidden column both disable the anchor.
+      expect(toCanonicalAt('SUM(A1:A2)', { id: 'r9', field: 'total' })).to.equal(
+        'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(2)))',
+      );
+      expect(toCanonicalAt('SUM(A1:A2)', { id: 'r3', field: 'hidden' })).to.equal(
+        'SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(1), ROW_TO(2)))',
+      );
+    });
+
+    it('applies the paste offset to the literal before freezing the delta', () => {
+      // Rows 1..2 shift to 2..3, then freeze against row 3: deltas −1..0.
+      expect(toCanonicalAt('SUM(A1:A2)', ANCHOR_CELL, { rowOffset: 1 })).to.equal(
+        'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(-1)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(0))))',
+      );
+    });
+
+    it('leaves single-cell refs on the D5 mapping — the anchor only affects ranges', () => {
+      expect(toCanonicalAt('A1 + $B$2', ANCHOR_CELL)).to.equal(toCanonical('A1 + $B$2'));
+    });
+  });
+
+  describe('toDisplayFormula — anchored ranges', () => {
+    const ANCHOR_CELL = { id: 'r3' as FormulaRowId, field: 'total' };
+    const ANCHORED_WINDOW =
+      'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(-2)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(-1))))';
+
+    it('renders ANCHOR axes at the anchored position', () => {
+      expect(toDisplayAt(ANCHORED_WINDOW, ANCHOR_CELL)).to.equal('SUM(A1:B2)');
+    });
+
+    it('renders the window at the anchor cell it is displayed for — it moves with the formula', () => {
+      // The same stored text one row lower shows the shifted window.
+      expect(toDisplayAt(ANCHORED_WINDOW, { id: 'r4', field: 'total' })).to.equal('SUM(A2:B3)');
+    });
+
+    it('renders mixed FIXED/ANCHOR windows with `$` on the fixed axes only', () => {
+      expect(
+        toDisplayAt(
+          'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), FIXED(ROW_FROM(1)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(0))))',
+          ANCHOR_CELL,
+        ),
+      ).to.equal('SUM($A$1:A3)');
+    });
+
+    it('falls back to canonical when an ANCHOR axis resolves below position 1', () => {
+      // Anchor at row 2: ROW_FROM(ANCHOR(-3)) points above the view — A1 has
+      // no token for it, and a clamped token would re-freeze to different
+      // offsets on the next edited commit.
+      const source =
+        'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(-3)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(-1))))';
+      expect(toDisplayAt(source, { id: 'r2', field: 'total' })).to.equal(source);
+    });
+
+    it('falls back to canonical without an anchor cell or without an anchor position', () => {
+      expect(toDisplay(ANCHORED_WINDOW)).to.equal(ANCHORED_WINDOW);
+      expect(toDisplayAt(ANCHORED_WINDOW, { id: 'r9', field: 'total' })).to.equal(ANCHORED_WINDOW);
+    });
+
+    it('round-trips: an unchanged display re-freezes to the same canonical text', () => {
+      const display = toDisplayAt(ANCHORED_WINDOW, ANCHOR_CELL);
+      expect(toCanonicalAt(display, ANCHOR_CELL)).to.equal(ANCHORED_WINDOW);
     });
   });
 

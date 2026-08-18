@@ -2,6 +2,7 @@ import { FORMULA_BINARY_PRECEDENCE } from './formulaAst';
 import type {
   FormulaAstNode,
   FormulaColumnSelector,
+  FormulaRangeAxis,
   FormulaRangeRefNode,
   FormulaRowSelector,
 } from './formulaAst';
@@ -52,6 +53,10 @@ export interface FormulaExcelSerializeResult {
 }
 
 const EXCEL_REF_ERROR = '#REF!';
+
+function isFixedRangeAxis(axis: FormulaRangeAxis): boolean {
+  return axis.kind === 'position' && axis.fixed;
+}
 
 interface SerializeState {
   hasRefError: boolean;
@@ -129,11 +134,12 @@ function serializeNode(
         state.hasRefError = true;
         return EXCEL_REF_ERROR;
       }
-      // `$` mirrors the grid's fill semantics: a FIXED axis exports absolute,
-      // a plain (shifting) axis exports relative — so copy/fill inside Excel
-      // behaves like the grid's fill handle.
-      const start = `${node.columnFrom.fixed ? '$' : ''}${window.startLetter}${node.rowFrom.fixed ? '$' : ''}${window.startNumber}`;
-      const end = `${node.columnTo.fixed ? '$' : ''}${window.endLetter}${node.rowTo.fixed ? '$' : ''}${window.endNumber}`;
+      // `$` mirrors the grid's semantics: a FIXED axis exports absolute, while
+      // plain positional and ANCHOR axes export relative — Excel itself stores
+      // relative A1 as an offset from the formula cell, so an anchor axis's
+      // fill AND sort behavior survive the export with full fidelity.
+      const start = `${isFixedRangeAxis(node.columnFrom) ? '$' : ''}${window.startLetter}${isFixedRangeAxis(node.rowFrom) ? '$' : ''}${window.startNumber}`;
+      const end = `${isFixedRangeAxis(node.columnTo) ? '$' : ''}${window.endLetter}${isFixedRangeAxis(node.rowTo) ? '$' : ''}${window.endNumber}`;
       return `${start}:${end}`;
     }
     case 'columnValues': {

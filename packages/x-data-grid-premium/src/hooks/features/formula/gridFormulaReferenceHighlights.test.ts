@@ -71,6 +71,37 @@ describe('gridFormulaReferenceHighlights', () => {
       expect(references[0].colorIndex).to.equal(null);
     });
 
+    it('resolves an ANCHOR window against the owner cell', () => {
+      // Owner r1/total = row 1, column 4: "my row, two columns left of me
+      // through one left of me" = price..quantity on r1.
+      const { references } = build(
+        '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(0))))',
+      );
+      expect(references[0].target).to.deep.equal({
+        kind: 'range',
+        startField: 'price',
+        endField: 'quantity',
+        startRowId: 'r1',
+        endRowId: 'r1',
+      });
+    });
+
+    it('marks an ANCHOR window without a resolvable owner position as unresolved', () => {
+      // Unpositioned owner row: no reference point, no rectangle.
+      const filtered = build(
+        '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(0))))',
+        false,
+        { id: 'r9', field: 'total' },
+      );
+      expect(filtered.references[0].target).to.deep.equal({ kind: 'unresolved' });
+
+      // An endpoint outside the data band: same strict rule as evaluation.
+      const outside = build(
+        '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(0)), ROW_FROM(ANCHOR(-1)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(0))))',
+      );
+      expect(outside.references[0].target).to.deep.equal({ kind: 'unresolved' });
+    });
+
     it('resolves COLUMN_VALUES to a whole column', () => {
       const { references } = build('=COLUMN_VALUES("quantity")');
       expect(references[0].target).to.deep.equal({ kind: 'wholeColumn', field: 'quantity' });

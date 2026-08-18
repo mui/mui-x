@@ -125,6 +125,23 @@ describe('offsetFormulaReferences', () => {
         offset('SUM(RANGE_REF(COLUMN_FROM(3), ROW_FROM(1), COLUMN_TO(3), ROW_TO(2)))', 0, 2),
       ).toBe('SUM(RANGE_REF(COLUMN_FROM(5), ROW_FROM(1), COLUMN_TO(5), ROW_TO(2)))');
     });
+
+    it('copies ANCHOR axes verbatim — moving the formula IS the adjustment', () => {
+      const window =
+        'SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(-3)), COLUMN_TO(ANCHOR(0)), ROW_TO(ANCHOR(-1))))';
+      expect(offset(window, 3, 1)).toBe(window);
+      expect(offset(window, -2, 0)).toBe(window);
+    });
+
+    it('shifts only the positional axes of a mixed FIXED/positional/ANCHOR window', () => {
+      expect(
+        offset(
+          'SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), ROW_FROM(2), COLUMN_TO(2), ROW_TO(ANCHOR(0))))',
+          1,
+          1,
+        ),
+      ).toBe('SUM(RANGE_REF(FIXED(COLUMN_FROM(1)), ROW_FROM(3), COLUMN_TO(3), ROW_TO(ANCHOR(0))))');
+    });
   });
 
   describe('same-row field references', () => {
