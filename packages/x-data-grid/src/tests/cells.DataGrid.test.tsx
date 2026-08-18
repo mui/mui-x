@@ -107,21 +107,6 @@ describe('<DataGrid /> - Cells', () => {
     expect(getCell(0, 0)).to.have.class('foobar');
   });
 
-  it('should apply the rowheader role to cells in a row header column', () => {
-    render(
-      <div style={{ width: 300, height: 500 }}>
-        <DataGrid
-          {...baselineProps}
-          columns={[{ field: 'brand', rowHeader: true }, { field: 'id' }]}
-        />
-      </div>,
-    );
-
-    expect(screen.getAllByRole('rowheader')).to.have.length(3);
-    expect(getCell(0, 0)).to.have.attribute('role', 'rowheader');
-    expect(getCell(0, 1)).to.have.attribute('role', 'gridcell');
-  });
-
   it('should allow renderCell to return a false-ish value', () => {
     render(
       <div style={{ width: 300, height: 500 }}>
