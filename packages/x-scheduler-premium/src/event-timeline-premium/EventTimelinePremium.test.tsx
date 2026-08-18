@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { act, screen, waitFor } from '@mui/internal-test-utils';
+import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import {
   EventTimelinePremium,
   eventTimelinePremiumClasses,
@@ -104,6 +104,47 @@ describe('<EventTimelinePremium />', () => {
       renderTimeline({ resources: extendedResources });
 
       expect(screen.queryByText('QA')).to.not.equal(null);
+    });
+  });
+
+  describe('event color', () => {
+    const red = ResourceBuilder.new().title('Red team').eventColor('red').build();
+    const blue = ResourceBuilder.new().title('Blue team').eventColor('blue').build();
+    const multiResourceResources: SchedulerResource[] = [red, blue];
+
+    const getEventInRow = (resourceId: string, title: string) => {
+      const row = document.querySelector(`[data-resource-id="${resourceId}"]`) as HTMLElement;
+      expect(row).not.to.equal(null);
+      return within(row)
+        .getByText(title)
+        .closest(`.${eventTimelinePremiumClasses.event}`) as HTMLElement;
+    };
+
+    it('should resolve a colorless multi-resource event against each row resource, not just the primary one', () => {
+      const multiResourceEvent = EventBuilder.new()
+        .title('Shared event')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resources([red, blue])
+        .build();
+
+      renderTimeline({ resources: multiResourceResources, events: [multiResourceEvent] });
+
+      expect(getEventInRow(red.id, 'Shared event')).to.have.attribute('data-palette', 'red');
+      expect(getEventInRow(blue.id, 'Shared event')).to.have.attribute('data-palette', 'blue');
+    });
+
+    it("should keep the event's own color in every row of a multi-resource event", () => {
+      const multiResourceEvent = EventBuilder.new()
+        .title('Shared event')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resources([red, blue])
+        .color('purple')
+        .build();
+
+      renderTimeline({ resources: multiResourceResources, events: [multiResourceEvent] });
+
+      expect(getEventInRow(red.id, 'Shared event')).to.have.attribute('data-palette', 'purple');
+      expect(getEventInRow(blue.id, 'Shared event')).to.have.attribute('data-palette', 'purple');
     });
   });
 
