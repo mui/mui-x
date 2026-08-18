@@ -108,7 +108,7 @@ components: {
 }
 ```
 
-### Zooming and panning [<span class="plan-pro"></span>](/x/introduction/licensing/#plan 'Pro plan')
+### Zooming and panning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 Charts with zoom enabled accept keyboard zoom and pan, so a keyboard-only user can reach the data outside the visible window.
 
