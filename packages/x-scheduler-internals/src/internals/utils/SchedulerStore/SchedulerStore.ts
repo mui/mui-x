@@ -909,8 +909,8 @@ export class SchedulerStore<
    * is edited; opening the surface (dialog or drawer) is handled separately.
    */
   /**
-   * Runs `onEventEditingStart` right before the editing form opens. Arming does not go through
-   * here — only the transitions that actually open the form (dialog or drawer) do.
+   * Runs `onEventEditingStart` right before the editing surface (dialog or drawer) opens. Arming
+   * does not go through here — only the transitions that actually open the surface do.
    * Returns `false` when the handler canceled, cleaning up a pending creation draft.
    */
   private requestEditingStart(
@@ -954,7 +954,7 @@ export class SchedulerStore<
     if (editingOccurrence == null || editingOccurrence.mode === mode) {
       return;
     }
-    // Armed → edit opens the form (e.g. the armed toolbar's Edit action); canceling keeps it armed.
+    // Armed → edit opens the surface (e.g. the armed toolbar's Edit action); canceling keeps it armed.
     if (mode === 'edit' && !this.requestEditingStart(editingOccurrence.occurrence)) {
       return;
     }

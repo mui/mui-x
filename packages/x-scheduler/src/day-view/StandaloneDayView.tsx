@@ -183,10 +183,10 @@ StandaloneDayView.propTypes /* remove-proptypes */ = {
    */
   localeText: PropTypes.object,
   /**
-   * Event handler called right before the built-in editing form (dialog or drawer) opens,
+   * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
    * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
    * `eventDetails.reason` is `"creation"` when the user is creating a new event and `"edit"` otherwise.
-   * Call `eventDetails.cancel()` to keep the form closed and handle editing in your own UI.
+   * Call `eventDetails.cancel()` to keep it closed and handle editing in your own UI.
    */
   onEventEditingStart: PropTypes.func,
   /**
