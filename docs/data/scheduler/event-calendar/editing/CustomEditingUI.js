@@ -50,8 +50,8 @@ export default function CustomEditingUI() {
         {
           id: `custom-${Date.now()}`,
           title,
-          start: occurrence.displayTimezone.start.value,
-          end: occurrence.displayTimezone.end.value,
+          start: new Date(occurrence.displayTimezone.start.timestamp).toISOString(),
+          end: new Date(occurrence.displayTimezone.end.timestamp).toISOString(),
         },
       ]);
     } else {
