@@ -12,8 +12,8 @@ const shapes = ['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye
 
 export default function MarkSize() {
   const [shape, setShape] = React.useState('circle');
-  const [radius, setRadius] = React.useState(5);
-  const [scale, setScale] = React.useState(1);
+  const [radius, setRadius] = React.useState(6);
+  const [scale, setScale] = React.useState(1.2);
 
   const isCircle = shape === 'circle';
   const markStyle = isCircle ? { r: radius } : { scale: `${scale}` };
