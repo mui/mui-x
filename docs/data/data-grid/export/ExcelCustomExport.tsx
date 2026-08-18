@@ -229,6 +229,7 @@ const rows = [
 const columns: GridColDef[] = [
   {
     field: 'plan',
+    rowHeader: true,
     type: 'singleSelect',
     valueOptions: ['Community', 'Pro', 'Premium'],
   },
