@@ -73,7 +73,7 @@ Ranges are only valid as arguments of range-accepting functions such as `SUM`—
 
 Each `RANGE_REF()` axis takes one of two forms, matching the relative/absolute distinction spreadsheets make:
 
-- A plain **view position** (`ROW_FROM(1)`) covers that position whatever occupies it. Wrapping it in `FIXED()`—the canonical form of the `$` prefix in [A1 notation](#a1-notation)—additionally pins it against the [fill handle](/x/react-data-grid/formulas/#filling-formulas): a non-`FIXED()` position shifts with the fill offset, a `FIXED()` one never adjusts, on fill or otherwise.
+- A plain **view position** (`ROW_FROM(1)`) covers that position whatever occupies it. Wrapping it in `FIXED()`—the canonical form of the `$` prefix in [A1 notation](#a1-notation)—additionally pins it against the fill handle: a non-`FIXED()` position shifts with the fill offset, a `FIXED()` one never adjusts, on fill or otherwise.
 - **`ANCHOR(delta)`** (`ROW_FROM(ANCHOR(-3))`) is a signed offset from the cell that owns the formula—the canonical form of a plain (no-`$`) A1 endpoint. The window keeps its geometry relative to the formula: re-sorting or re-filtering moves it along with its cell, and filling copies it verbatim because the offsets re-anchor to each target on their own.
 
 A positional window always covers the same view coordinates and clips to what is available when the view is smaller—an entirely out-of-view window is simply empty, never a `#REF!` error.
