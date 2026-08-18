@@ -205,7 +205,6 @@ RadialBarChart.propTypes /* remove-proptypes */ = {
    */
   experimentalFeatures: PropTypes.shape({
     keyboardActivation: PropTypes.bool,
-    keyboardZoom: PropTypes.bool,
   }),
   /**
    * Option to display a radial grid in the background.

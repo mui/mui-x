@@ -78,13 +78,7 @@ When focused, the chart highlights a value item that can be modified with arrow 
 
 ### Zooming and panning [<span class="plan-pro"></span>](/x/introduction/licensing/#plan 'Pro plan')
 
-Zoom and pan are pointer interactions by default, so a keyboard-only user cannot reach the data outside the visible window.
-
-Charts with zoom enabled accept keyboard zoom and pan once you opt in:
-
-```jsx
-<LineChartPro experimentalFeatures={{ keyboardZoom: true }} {...otherProps} />
-```
+Charts with zoom enabled accept keyboard zoom and pan, so a keyboard-only user can reach the data outside the visible window.
 
 While the chart is focused, <kbd class="key">+</kbd> and <kbd class="key">-</kbd> zoom, <kbd class="key">0</kbd> resets the zoom, and <kbd class="key">Shift</kbd>+ arrow keys pan.
 The arrow keys keep moving the focus between items when pressed without <kbd class="key">Shift</kbd>.

@@ -21,18 +21,18 @@ describe('keyboard zoom and pan', () => {
   const lastZoom = (onZoomChange: ReturnType<typeof vi.fn>, axisId = 'x') =>
     onZoomChange.mock.lastCall?.[0].find((zoom: { axisId: string }) => zoom.axisId === axisId);
 
-  describe('opt-in', () => {
-    it('should not zoom without the `keyboardZoom` experimental feature', async () => {
+  describe('defaults', () => {
+    it('should zoom without any interaction configuration', async () => {
       const onZoomChange = vi.fn();
       const { user } = render(<BarChartPro {...barChartProps} onZoomChange={onZoomChange} />);
 
       await user.keyboard('{Tab}');
       await user.keyboard('+');
 
-      expect(onZoomChange.mock.calls.length).to.equal(0);
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 5, end: 95 });
     });
 
-    it('should not pan without the `keyboardZoom` experimental feature', async () => {
+    it('should pan without any interaction configuration', async () => {
       const onZoomChange = vi.fn();
       const { user } = render(
         <BarChartPro
@@ -45,7 +45,7 @@ describe('keyboard zoom and pan', () => {
       await user.keyboard('{Tab}');
       await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
 
-      expect(onZoomChange.mock.calls.length).to.equal(0);
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 5, end: 55 });
     });
 
     it('should zoom when the `keyboard` interaction is set explicitly', async () => {
@@ -70,7 +70,6 @@ describe('keyboard zoom and pan', () => {
         <BarChartPro
           {...barChartProps}
           onZoomChange={onZoomChange}
-          experimentalFeatures={{ keyboardZoom: true }}
           zoomInteractionConfig={{ zoom: ['wheel'], pan: ['drag'] }}
         />,
       );
@@ -86,12 +85,7 @@ describe('keyboard zoom and pan', () => {
     const renderChart = (props?: Partial<React.ComponentProps<typeof BarChartPro>>) => {
       const onZoomChange = vi.fn();
       const view = render(
-        <BarChartPro
-          {...barChartProps}
-          onZoomChange={onZoomChange}
-          experimentalFeatures={{ keyboardZoom: true }}
-          {...props}
-        />,
+        <BarChartPro {...barChartProps} onZoomChange={onZoomChange} {...props} />,
       );
       return { ...view, onZoomChange };
     };
@@ -175,7 +169,6 @@ describe('keyboard zoom and pan', () => {
           yAxis={[{ id: 'y', zoom: true }]}
           initialZoom={[{ axisId: 'y', start: 20, end: 70 }]}
           onZoomChange={onZoomChange}
-          experimentalFeatures={{ keyboardZoom: true }}
         />,
       );
 
@@ -213,13 +206,7 @@ describe('keyboard zoom and pan', () => {
   describe('focus requirements', () => {
     it('should not react to keys pressed outside of the chart', async () => {
       const onZoomChange = vi.fn();
-      render(
-        <BarChartPro
-          {...barChartProps}
-          onZoomChange={onZoomChange}
-          experimentalFeatures={{ keyboardZoom: true }}
-        />,
-      );
+      render(<BarChartPro {...barChartProps} onZoomChange={onZoomChange} />);
 
       fireEvent.keyDown(document.body, { key: '+' });
       fireEvent.keyDown(document.body, { key: 'ArrowRight', shiftKey: true });
@@ -230,11 +217,7 @@ describe('keyboard zoom and pan', () => {
     it('should make the chart focusable and zoom once focused', async () => {
       const onZoomChange = vi.fn();
       const { user, container } = render(
-        <BarChartPro
-          {...barChartProps}
-          onZoomChange={onZoomChange}
-          experimentalFeatures={{ keyboardZoom: true }}
-        />,
+        <BarChartPro {...barChartProps} onZoomChange={onZoomChange} />,
       );
 
       await user.keyboard('{Tab}');
@@ -249,12 +232,7 @@ describe('keyboard zoom and pan', () => {
     it('should not zoom when keyboard navigation is disabled', async () => {
       const onZoomChange = vi.fn();
       const { user } = render(
-        <BarChartPro
-          {...barChartProps}
-          disableKeyboardNavigation
-          onZoomChange={onZoomChange}
-          experimentalFeatures={{ keyboardZoom: true }}
-        />,
+        <BarChartPro {...barChartProps} disableKeyboardNavigation onZoomChange={onZoomChange} />,
       );
 
       await user.keyboard('{Tab}');
@@ -274,7 +252,7 @@ describe('keyboard zoom and pan', () => {
           initialZoom={[{ axisId: 'x', start: 20, end: 70 }]}
           onZoomChange={onZoomChange}
           onItemClick={onItemClick}
-          experimentalFeatures={{ keyboardZoom: true, keyboardActivation: true }}
+          experimentalFeatures={{ keyboardActivation: true }}
         />,
       );
 
@@ -297,11 +275,7 @@ describe('keyboard zoom and pan', () => {
   describe('screen reader announcement', () => {
     it('should announce the visible range after a keyboard zoom', async () => {
       const { user, container } = render(
-        <BarChartPro
-          {...barChartProps}
-          initialZoom={[{ axisId: 'x', start: 20, end: 70 }]}
-          experimentalFeatures={{ keyboardZoom: true }}
-        />,
+        <BarChartPro {...barChartProps} initialZoom={[{ axisId: 'x', start: 20, end: 70 }]} />,
       );
 
       const liveRegion = container.querySelector<HTMLElement>('[role="status"]')!;
@@ -319,7 +293,7 @@ describe('keyboard zoom and pan', () => {
     it('should stop announcing once the chart loses focus', async () => {
       const { user, container } = render(
         <div>
-          <BarChartPro {...barChartProps} experimentalFeatures={{ keyboardZoom: true }} />
+          <BarChartPro {...barChartProps} />
           <button type="button">outside</button>
         </div>,
       );

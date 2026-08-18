@@ -251,7 +251,6 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
    */
   experimentalFeatures: PropTypes.shape({
     keyboardActivation: PropTypes.bool,
-    keyboardZoom: PropTypes.bool,
     progressiveRendering: PropTypes.bool,
   }),
   /**

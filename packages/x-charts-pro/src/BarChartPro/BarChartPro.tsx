@@ -208,7 +208,6 @@ BarChartPro.propTypes /* remove-proptypes */ = {
    */
   experimentalFeatures: PropTypes.shape({
     keyboardActivation: PropTypes.bool,
-    keyboardZoom: PropTypes.bool,
   }),
   /**
    * Option to display a cartesian grid in the background.

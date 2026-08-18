@@ -11,11 +11,6 @@ import type {
 export const initializeZoomInteractionConfig = (
   zoomInteractionConfig?: ZoomInteractionConfig,
   optionsLookup?: Record<AxisId, DefaultizedZoomOptions>,
-  /**
-   * Whether the `keyboard` interaction is part of the defaults.
-   * Opted into with `experimentalFeatures={{ keyboardZoom: true }}`, until it becomes the default in v10.
-   */
-  enableKeyboard: boolean = false,
 ): DefaultizedZoomInteractionConfig => {
   const defaultizedConfig: DefaultizedZoomInteractionConfig = { zoom: {}, pan: {} };
 
@@ -24,16 +19,8 @@ export const initializeZoomInteractionConfig = (
     defaultizedConfig.zoom = {
       wheel: { type: 'wheel', requiredKeys: [], mouse: {}, touch: {} },
       pinch: { type: 'pinch', requiredKeys: [], mouse: {}, touch: {} },
+      keyboard: { type: 'keyboard', requiredKeys: [], mouse: {}, touch: {} },
     };
-
-    if (enableKeyboard) {
-      defaultizedConfig.zoom.keyboard = {
-        type: 'keyboard',
-        requiredKeys: [],
-        mouse: {},
-        touch: {},
-      };
-    }
   } else {
     defaultizedConfig.zoom = initializeFor('zoom', zoomInteractionConfig.zoom);
   }
@@ -42,11 +29,8 @@ export const initializeZoomInteractionConfig = (
   if (!zoomInteractionConfig?.pan) {
     defaultizedConfig.pan = {
       drag: { type: 'drag', requiredKeys: [], mouse: {}, touch: {} },
+      keyboard: { type: 'keyboard', requiredKeys: [], mouse: {}, touch: {} },
     };
-
-    if (enableKeyboard) {
-      defaultizedConfig.pan.keyboard = { type: 'keyboard', requiredKeys: [], mouse: {}, touch: {} };
-    }
 
     let hasXZoom = false;
     let hasYZoom = false;

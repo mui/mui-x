@@ -17,10 +17,7 @@
     "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ keyboardActivation?: bool, keyboardZoom?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
     },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {

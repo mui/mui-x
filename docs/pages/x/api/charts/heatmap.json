@@ -28,10 +28,7 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ keyboardActivation?: bool, keyboardZoom?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
     },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },

@@ -23,10 +23,7 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ keyboardActivation?: bool, keyboardZoom?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
     },
     "grid": { "type": { "name": "shape", "description": "{ radius?: bool, rotation?: bool }" } },
     "height": { "type": { "name": "number" } },

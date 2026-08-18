@@ -7,14 +7,6 @@ interface CommonExperimentalFeatures {
    * firing `onItemClick` and `onAxisClick` as a pointer click would.
    */
   keyboardActivation?: boolean;
-  /**
-   * Enables zooming and panning the chart from the keyboard, on charts with zoom enabled (Pro).
-   *
-   * It adds the `keyboard` interaction to the default `zoomInteractionConfig`, which listens to
-   * <kbd>+</kbd>, <kbd>-</kbd>, <kbd>0</kbd> and <kbd>Shift</kbd> + arrow keys while the chart is focused.
-   * Setting `zoomInteractionConfig` explicitly takes precedence over this flag.
-   */
-  keyboardZoom?: boolean;
 }
 
 interface LineExperimentalFeatures {

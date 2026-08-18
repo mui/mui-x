@@ -223,7 +223,6 @@ LineChartPro.propTypes /* remove-proptypes */ = {
   experimentalFeatures: PropTypes.shape({
     enablePositionBasedPointerInteraction: PropTypes.bool,
     keyboardActivation: PropTypes.bool,
-    keyboardZoom: PropTypes.bool,
   }),
   /**
    * Option to display a cartesian grid in the background.

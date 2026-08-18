@@ -8,7 +8,6 @@ export default function ZoomKeyboard() {
       xAxis={[{ data: randomData.map((v, i) => i), zoom: true }]}
       yAxis={[{ zoom: true, width: 50 }]}
       series={series}
-      experimentalFeatures={{ keyboardZoom: true }}
     />
   );
 }

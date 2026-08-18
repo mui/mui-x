@@ -60,21 +60,10 @@ describe('initializeZoomInteractionConfig', () => {
     expect(result.pan.wheel?.allowedDirection).toBe('x');
   });
 
-  it('should not add the keyboard interaction to the defaults', () => {
+  it('should add the keyboard interaction to the defaults', () => {
     const result = initializeZoomInteractionConfig(undefined, {
       x: { axisId: 'x', axisDirection: 'x' } as any,
     });
-
-    expect(result.zoom.keyboard).toBeUndefined();
-    expect(result.pan.keyboard).toBeUndefined();
-  });
-
-  it('should add the keyboard interaction to the defaults when opted in', () => {
-    const result = initializeZoomInteractionConfig(
-      undefined,
-      { x: { axisId: 'x', axisDirection: 'x' } as any },
-      true,
-    );
 
     expect(result.zoom.keyboard).toBeDefined();
     expect(result.pan.keyboard).toBeDefined();
@@ -86,7 +75,6 @@ describe('initializeZoomInteractionConfig', () => {
     const result = initializeZoomInteractionConfig(
       { zoom: ['wheel'], pan: ['drag'] },
       { x: { axisId: 'x', axisDirection: 'x' } as any },
-      true,
     );
 
     expect(result.zoom.keyboard).toBeUndefined();
