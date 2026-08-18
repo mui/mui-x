@@ -74,6 +74,7 @@ export default function ValidateServerNameGrid() {
     {
       field: 'name',
       headerName: 'MUI Contributor',
+      rowHeader: true,
       width: 180,
       editable: true,
       preProcessEditCellProps,

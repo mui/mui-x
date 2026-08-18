@@ -1,5 +1,5 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Accessibility', () => {
@@ -35,6 +35,34 @@ describe('<DataGrid /> - Accessibility', () => {
       'Grid aria-labelledby',
     );
     expect(document.querySelector('div[role="grid"]')).not.to.have.attribute('aria-label');
+  });
+
+  it('should apply the rowheader role to cells in a row header column', () => {
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid
+          rows={[
+            { id: 0, brand: 'Nike' },
+            { id: 1, brand: 'Adidas' },
+            { id: 2, brand: 'Puma' },
+          ]}
+          columns={[{ field: 'brand', rowHeader: true }, { field: 'id' }]}
+        />
+      </div>,
+    );
+
+    expect(screen.getAllByRole('rowheader')).to.have.length(3);
+    expect(getCell(0, 0)).to.have.attribute('role', 'rowheader');
+    expect(getCell(0, 1)).to.have.attribute('role', 'gridcell');
+  });
+
+  it('should apply the rowgroup role to the column headers', () => {
+    render(<DataGrid {...baselineProps} />);
+
+    expect(document.querySelector(`.${gridClasses.columnHeaders}`)).to.have.attribute(
+      'role',
+      'rowgroup',
+    );
   });
 
   describe('column type: longText', () => {
