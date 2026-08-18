@@ -42,17 +42,20 @@ describe('CompactDayView - event toolbar', () => {
     const onEventEditingStart = spy((_occurrence: any, eventDetails: any) => eventDetails.cancel());
     renderEvent(spy(), { onEventEditingStart });
 
-    // Arming (toolbar + resize affordances) is not the editing form: no callback yet.
+    // Arming (toolbar + resize affordances) is not the editing surface: no callback yet.
     const eventElement = getEvent();
     fireEvent.click(eventElement);
     expect(onEventEditingStart.callCount).to.equal(0);
     expect(eventElement).to.have.attribute('data-armed');
 
-    // Tapping Edit is what opens the form; canceling keeps the event armed and the form closed.
+    // Tapping Edit is what opens the surface. Canceling disarms: the armed state keeps
+    // document-wide guards that must not stay active under the consumer's custom UI.
     fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
     expect(onEventEditingStart.calledOnce).to.equal(true);
+    expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('click');
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
-    expect(eventElement).to.have.attribute('data-armed');
+    expect(eventElement).not.to.have.attribute('data-armed');
+    expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
   });
 
   it('should dock the edit/delete toolbar once an event is armed', () => {

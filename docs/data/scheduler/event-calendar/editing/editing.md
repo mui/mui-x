@@ -81,9 +81,9 @@ Call `eventDetails.cancel()` to keep the built-in dialog closed and open your ow
     eventDetails.cancel();
     if (eventDetails.reason === 'creation') {
       // Creation drafts have a synthetic `id` — use the proposed dates instead.
-      openYourCreationUI(occurrence.displayTimezone);
+      openYourCreationUI(eventDetails.occurrence.displayTimezone);
     } else {
-      openYourEditingUI(occurrence.id);
+      openYourEditingUI(eventDetails.occurrence.id);
     }
   }}
 />

@@ -115,7 +115,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     }
     if (event.key === 'Enter' && event.target === event.currentTarget && triggerKeyboardCreation) {
       event.preventDefault();
-      triggerKeyboardCreation();
+      triggerKeyboardCreation(event.nativeEvent);
     }
   };
 

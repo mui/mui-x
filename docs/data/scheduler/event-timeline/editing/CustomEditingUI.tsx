@@ -64,9 +64,12 @@ export default function CustomEditingUI() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         defaultPreset="monthAndYear"
-        onEventEditingStart={(occurrence, eventDetails) => {
+        onEventEditingStart={(_occurrence, eventDetails) => {
           eventDetails.cancel();
-          setEditedEvent({ occurrence, isNew: eventDetails.reason === 'creation' });
+          setEditedEvent({
+            occurrence: eventDetails.occurrence,
+            isNew: eventDetails.reason === 'creation',
+          });
         }}
       />
       <Dialog

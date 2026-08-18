@@ -963,8 +963,11 @@ export class SchedulerStore<
     if (editingOccurrence == null || editingOccurrence.mode === mode) {
       return;
     }
-    // Armed → edit opens the surface (e.g. the armed toolbar's Edit action); canceling keeps it armed.
+    // Armed → edit opens the surface (e.g. the armed toolbar's Edit action). Canceling disarms:
+    // the armed state keeps document-wide guards (scroll block, outside-pointer capture) that must
+    // not stay active under the custom UI the consumer opens instead.
     if (mode === 'edit' && !this.requestEditingStart(editingOccurrence.occurrence, event)) {
+      this.stopEditing();
       return;
     }
     this.set('editingOccurrence', { ...editingOccurrence, mode });

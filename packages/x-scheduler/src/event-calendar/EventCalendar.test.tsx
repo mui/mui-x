@@ -497,6 +497,11 @@ describe('EventCalendar', () => {
       expect(onEventEditingStart.calledOnce).to.equal(true);
       expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
       expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('click');
+      const draft = onEventEditingStart.lastCall.args[1].occurrence;
+      expect(draft.allDay).to.equal(true);
+      expect(draft.displayTimezone.start.timestamp).to.be.lessThan(
+        draft.displayTimezone.end.timestamp,
+      );
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
   });

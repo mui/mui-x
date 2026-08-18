@@ -74,15 +74,22 @@ export function DayGridCell(props: DayGridCellProps) {
   );
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
+  // The placeholder churns identity on unrelated updates; gate on the store to detect editing started.
+  const isEditingPlaceholder = useStore(
+    store,
+    schedulerOtherSelectors.isEditedOccurrence,
+    placeholder?.key,
+  );
 
   const rowCount = Math.max(row.maxIndex, placeholder?.position.index ?? 0);
 
   React.useEffect(() => {
-    if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
+    // Start editing once when creation begins; skip redundant re-fires that churn every subscriber.
+    if (!isCreatingAnEvent || !placeholder || !cellRef.current || isEditingPlaceholder) {
       return;
     }
     startEditing(cellRef, placeholder);
-  }, [isCreatingAnEvent, placeholder, startEditing]);
+  }, [isCreatingAnEvent, placeholder, startEditing, isEditingPlaceholder]);
 
   return (
     <DayTimeGridAllDayEventsCell

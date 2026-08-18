@@ -593,13 +593,20 @@ function EventRowContent({
     timelineOccurrencePlaceholderSelectors.isCreatingInResource,
     resourceId,
   );
+  // The placeholder churns identity on unrelated updates; gate on the store to detect editing started.
+  const isEditingPlaceholder = useStore(
+    store,
+    schedulerOtherSelectors.isEditedOccurrence,
+    placeholder?.key,
+  );
 
   React.useEffect(() => {
-    if (!isCreatingAnEvent || !placeholder || !placeholderRef.current) {
+    // Start editing once when creation begins; skip redundant re-fires that churn every subscriber.
+    if (!isCreatingAnEvent || !placeholder || !placeholderRef.current || isEditingPlaceholder) {
       return;
     }
     startEditing(placeholderRef, placeholder);
-  }, [isCreatingAnEvent, placeholder, startEditing]);
+  }, [isCreatingAnEvent, placeholder, startEditing, isEditingPlaceholder]);
 
   if (isLoading) {
     return <EventSkeleton data-variant="timeline-row" />;

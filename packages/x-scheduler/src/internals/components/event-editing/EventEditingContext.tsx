@@ -47,15 +47,18 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
       occurrence: SchedulerRenderableEventOccurrence,
       event?: Event,
     ) => {
-      // Batched with the store write below, so the surface never renders anchored to `null`.
-      setAnchor(forwardedAnchorRef.current);
       const isCreating = schedulerOccurrencePlaceholderSelectors.isCreating(store.state);
       const isReadOnly = schedulerEventSelectors.isReadOnly(store.state, occurrence.id);
-      return store.startEditing(
+      const started = store.startEditing(
         occurrence,
         getInitialEditingMode(surface, { isCreating, isReadOnly }),
         event,
       );
+      if (started) {
+        // Batched with the store write above, so the surface never renders anchored to `null`.
+        setAnchor(forwardedAnchorRef.current);
+      }
+      return started;
     },
   );
 

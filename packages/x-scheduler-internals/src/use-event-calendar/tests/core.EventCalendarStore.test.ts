@@ -144,16 +144,16 @@ describe('Core - EventCalendarStore', () => {
         expect(onEventEditingStart.lastCall.args[1].event).to.equal(nativeEvent);
       });
 
-      it('should keep the occurrence armed when `onEventEditingStart` cancels the armed → edit transition', () => {
+      it('should disarm when `onEventEditingStart` cancels the armed → edit transition', () => {
         const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
         const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
-        const edited = occurrence('event-1');
-        store.startEditing(edited, 'armed');
+        store.startEditing(occurrence('event-1'), 'armed');
 
         store.setEditingMode('edit');
 
         expect(onEventEditingStart.calledOnce).to.equal(true);
-        expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'armed' });
+        // The armed state keeps document-wide guards active, so a canceled edit fully disarms.
+        expect(store.state.editingOccurrence).to.equal(null);
       });
 
       it('should not record the editing state when `onEventEditingStart` cancels', () => {

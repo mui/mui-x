@@ -1,13 +1,16 @@
 import { spy } from 'sinon';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   ResourceBuilder,
+  SchedulerStoreRunner,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
-import { screen, within, waitFor } from '@mui/internal-test-utils';
+import { act, screen, within, waitFor } from '@mui/internal-test-utils';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
@@ -226,6 +229,44 @@ describe('<MonthView />', () => {
       await waitFor(() => {
         expect(document.body.contains(popover)).to.equal(false);
       });
+    });
+  });
+
+  describe('creation placeholder updates', () => {
+    it('should not re-fire `onEventEditingStart` when the built-in form updates the creation placeholder', async () => {
+      let store: AnyEventCalendarStore | null = null;
+      const onEventEditingStart = spy();
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={[]} onEventEditingStart={onEventEditingStart}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getAllByRole('gridcell')[10]);
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+
+      // Mirrors the built-in form pushing a date change into the draft while the dialog is open.
+      const placeholder = store!.state.occurrencePlaceholder!;
+      await act(async () => {
+        store!.setOccurrencePlaceholder({
+          ...placeholder,
+          end: adapter.addHours(placeholder.end, -1),
+        });
+      });
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(screen.queryByRole('dialog')).not.to.equal(null);
     });
   });
 
