@@ -76,6 +76,22 @@ When focused, the chart highlights a value item that can be modified with arrow 
 | <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series |
 |    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series     |
 
+### Zooming and panning [<span class="plan-pro"></span>](/x/introduction/licensing/#plan 'Pro plan')
+
+Zoom and pan are pointer interactions by default, so a keyboard-only user cannot reach the data outside the visible window.
+
+Charts with zoom enabled accept keyboard zoom and pan once you opt in:
+
+```jsx
+<LineChartPro experimentalFeatures={{ keyboardZoom: true }} {...otherProps} />
+```
+
+While the chart is focused, <kbd class="key">+</kbd> and <kbd class="key">-</kbd> zoom, <kbd class="key">0</kbd> resets the zoom, and <kbd class="key">Shift</kbd>+ arrow keys pan.
+The arrow keys keep moving the focus between items when pressed without <kbd class="key">Shift</kbd>.
+The visible range is announced in a live region each time it changes.
+
+See [Keyboard zoom and pan](/x/react-charts/zoom-and-pan/#keyboard-zoom-and-pan) for the complete list of keys and the interaction configuration.
+
 ### Activating the focused item
 
 Charts can trigger their click callbacks from the keyboard, so mouse-only interactions such as drill-down or filtering stay available to keyboard users ([WCAG 2.1 SC 2.1.1](https://www.w3.org/WAI/WCAG21/Understanding/keyboard.html)).

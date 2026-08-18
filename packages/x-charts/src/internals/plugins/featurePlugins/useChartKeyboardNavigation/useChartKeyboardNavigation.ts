@@ -40,6 +40,16 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     [],
   );
 
+  const announceZoomChange = React.useCallback(() => {
+    if (store.state.keyboardNavigation.announceZoom) {
+      return;
+    }
+    store.set('keyboardNavigation', {
+      ...store.state.keyboardNavigation,
+      announceZoom: true,
+    });
+  }, [store]);
+
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
 
@@ -58,10 +68,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         return;
       }
 
-      if (store.state.keyboardNavigation.isFocused) {
+      if (store.state.keyboardNavigation.isFocused || store.state.keyboardNavigation.announceZoom) {
         store.set('keyboardNavigation', {
           ...store.state.keyboardNavigation,
           isFocused: false,
+          // The zoom range is only announced while the user operates the chart.
+          announceZoom: false,
         });
       }
     }
@@ -112,6 +124,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function keyboardHandler(event: KeyboardEvent) {
+      // Item navigation only uses unmodified keys.
+      // Modified ones are left to the browser, and to chart interactions such as keyboard zoom and pan.
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+        return;
+      }
+
       let newFocusedItem = store.state.keyboardNavigation.item;
 
       const seriesConfig = selectorChartSeriesConfig(store.state);
@@ -173,7 +191,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     });
   }, [store, params.disableKeyboardNavigation]);
 
-  return { instance: { registerItemActivationHandler } };
+  return { instance: { registerItemActivationHandler, announceZoomChange } };
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({
@@ -181,6 +199,7 @@ useChartKeyboardNavigation.getInitialState = (params) => ({
     item: null,
     isFocused: false,
     enabled: !params.disableKeyboardNavigation,
+    announceZoom: false,
   },
 });
 

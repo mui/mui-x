@@ -206,6 +206,8 @@ The `zoomInteractionConfig` prop lets you specify which interactions are enabled
   Dragging up zooms in, dragging down zooms out
 - `brush`: Zoom into a selected area by clicking and dragging to create a selection rectangle
 - `doubleTapReset`: Reset the zoom level to the original state when double-tapping
+- `keyboard`: Zoom in and out from the keyboard while the chart is focused.
+  See [Keyboard zoom and pan](#keyboard-zoom-and-pan)
 
 #### Pan interactions
 
@@ -216,6 +218,8 @@ The `zoomInteractionConfig` prop lets you specify which interactions are enabled
 - `drag` (default): Pan the chart by dragging with the mouse or touch
 - `pressAndDrag`: Pan the chart by pressing and holding, then dragging.
   Useful for avoiding conflicts with selection gestures
+- `keyboard`: Pan the chart from the keyboard while the chart is focused.
+  See [Keyboard zoom and pan](#keyboard-zoom-and-pan)
 
 :::warning
 
@@ -236,6 +240,50 @@ The brush zoom interaction lets users select a specific area to zoom into by cli
 This provides an intuitive way to focus on a particular region of interest in the chart.
 
 {{"demo": "BrushZoom.js"}}
+
+### Keyboard zoom and pan
+
+Zoom and pan are pointer interactions by default, which leaves keyboard-only users without a way to reach data outside the visible window ([WCAG 2.1 SC 2.1.1](https://www.w3.org/WAI/WCAG21/Understanding/keyboard.html)).
+The `keyboard` interaction closes that gap.
+
+It is opt-in, because it binds keys that used to do nothing on a focused chart:
+
+```jsx
+<LineChartPro experimentalFeatures={{ keyboardZoom: true }} {...otherProps} />
+```
+
+The flag adds `keyboard` to the default zoom and pan interactions.
+To pick the interactions yourself, list `keyboard` in `zoomInteractionConfig` instead:
+
+```jsx
+<LineChartPro
+  zoomInteractionConfig={{
+    zoom: ['wheel', 'pinch', 'keyboard'],
+    pan: ['drag', 'keyboard'],
+  }}
+/>
+```
+
+The keys only apply while the focus is inside the chart, so they never conflict with the shortcuts of the rest of the page.
+
+|                                                                                                                            Keys | Description                      |
+| ------------------------------------------------------------------------------------------------------------------------------: | :------------------------------- |
+|                                                                              <kbd class="key">+</kbd>, <kbd class="key">=</kbd> | Zoom in                          |
+|                                                                             <kbd class="key">-</kbd>, <kbd class="key">\_</kbd> | Zoom out                         |
+|                                                                                                        <kbd class="key">0</kbd> | Reset the zoom to the full range |
+| <kbd class="key">Shift</kbd>+<kbd class="key">Arrow Left</kbd>, <kbd class="key">Shift</kbd>+<kbd class="key">Arrow Right</kbd> | Pan the horizontal axis          |
+|    <kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up</kbd>, <kbd class="key">Shift</kbd>+<kbd class="key">Arrow Down</kbd> | Pan the vertical axis            |
+
+Panning uses <kbd class="key">Shift</kbd> because the unmodified arrow keys already [move the focus between chart items](/x/react-charts/accessibility/#keyboard-support).
+
+:::info
+The keys require [keyboard navigation](/x/react-charts/accessibility/#keyboard-support), which makes the chart focusable.
+Charts rendered with `disableKeyboardNavigation` have no keyboard zoom.
+:::
+
+The visible range is announced to screen readers each time it changes from the keyboard.
+
+{{"demo": "ZoomKeyboard.js"}}
 
 ### Key modifiers
 

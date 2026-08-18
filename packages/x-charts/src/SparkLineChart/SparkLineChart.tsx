@@ -432,6 +432,7 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
   experimentalFeatures: PropTypes.shape({
     enablePositionBasedPointerInteraction: PropTypes.bool,
     keyboardActivation: PropTypes.bool,
+    keyboardZoom: PropTypes.bool,
     progressiveRendering: PropTypes.bool,
   }),
   /**

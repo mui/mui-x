@@ -21,7 +21,10 @@
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ keyboardActivation?: bool, keyboardZoom?: bool }"
+      }
     },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {

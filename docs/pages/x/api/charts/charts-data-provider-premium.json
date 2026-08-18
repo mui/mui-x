@@ -6,7 +6,10 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ keyboardActivation?: bool, keyboardZoom?: bool }"
+      }
     },
     "height": { "type": { "name": "number" } },
     "id": { "type": { "name": "string" } },

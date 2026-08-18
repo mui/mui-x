@@ -93,6 +93,7 @@ ChartsRadialDataProvider.propTypes /* remove-proptypes */ = {
    */
   experimentalFeatures: PropTypes.shape({
     keyboardActivation: PropTypes.bool,
+    keyboardZoom: PropTypes.bool,
   }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.

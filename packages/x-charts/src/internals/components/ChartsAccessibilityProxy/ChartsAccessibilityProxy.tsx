@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useChartId } from '../../../hooks/useChartId';
 import { useDescription } from './useDescription';
+import { useZoomDescription } from './useZoomDescription';
 
 /**
  * Make the proxy looks like a layer.
@@ -19,6 +20,18 @@ const fullSizeLayerStyle: React.CSSProperties = {
   pointerEvents: 'none',
 };
 
+/**
+ * Keeps the live region out of sight without removing it from the accessibility tree.
+ */
+const liveRegionStyle: React.CSSProperties = {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  overflow: 'hidden',
+  clipPath: 'inset(50%)',
+  whiteSpace: 'nowrap',
+};
+
 // The proxy is implemented by having two divs with the same content, and toggling the visibility of each one when the content changes.
 // The idea is to imitate the behavior of the focus moving from a list element to another, but with the minimal number of DOM elements.
 
@@ -28,6 +41,7 @@ const fullSizeLayerStyle: React.CSSProperties = {
  */
 export function ChartsAccessibilityProxy() {
   const message = useDescription();
+  const zoomMessage = useZoomDescription();
   const chartId = useChartId();
 
   const currentFormatRef = React.useRef<string | null>(null);
@@ -108,11 +122,17 @@ export function ChartsAccessibilityProxy() {
   }, [message, chartId]);
 
   return (
-    <div
-      role="none"
-      tabIndex={message ? undefined : 0}
-      ref={containerRef}
-      style={fullSizeLayerStyle}
-    />
+    <React.Fragment>
+      <div
+        role="none"
+        tabIndex={message ? undefined : 0}
+        ref={containerRef}
+        style={fullSizeLayerStyle}
+      />
+      {/* The zoom range does not move the focus, so it is announced with a live region instead of the proxy. */}
+      <div role="status" aria-live="polite" aria-atomic="true" style={liveRegionStyle}>
+        {zoomMessage}
+      </div>
+    </React.Fragment>
   );
 }

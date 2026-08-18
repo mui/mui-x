@@ -31,6 +31,8 @@ import { useZoomOnTapAndDrag } from './gestureHooks/useZoomOnTapAndDrag';
 import { usePanOnPressAndDrag } from './gestureHooks/usePanOnPressAndDrag';
 import { useZoomOnBrush } from './gestureHooks/useZoomOnBrush';
 import { useZoomOnDoubleTapReset } from './gestureHooks/useZoomOnDoubleTapReset';
+import { useZoomOnKeyboard } from './gestureHooks/useZoomOnKeyboard';
+import { usePanOnKeyboard } from './gestureHooks/usePanOnKeyboard';
 import { initializeZoomInteractionConfig } from './initializeZoomInteractionConfig';
 import { initializeZoomData } from './initializeZoomData';
 import { useRegisterZoomGestures } from './gestureHooks/useRegisterZoomGestures';
@@ -52,13 +54,18 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
+  const isKeyboardZoomEnabled = params.experimentalFeatures?.keyboardZoom === true;
 
   useEffectAfterFirstRender(() => {
     store.set('zoom', {
       ...store.state.zoom,
-      zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig, optionsLookup),
+      zoomInteractionConfig: initializeZoomInteractionConfig(
+        zoomInteractionConfig,
+        optionsLookup,
+        isKeyboardZoomEnabled,
+      ),
     });
-  }, [store, zoomInteractionConfig, optionsLookup]);
+  }, [store, zoomInteractionConfig, optionsLookup, isKeyboardZoomEnabled]);
 
   // This is debounced. We want to run it only once after the interaction ends.
   const removeIsInteracting = React.useMemo(
@@ -262,6 +269,10 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
 
   useZoomOnDoubleTapReset(pluginData, setZoomDataCallback);
 
+  useZoomOnKeyboard(pluginData, setZoomDataCallback);
+
+  usePanOnKeyboard(pluginData, setZoomDataCallback);
+
   const zoom = React.useCallback(
     (step: number) => {
       setZoomDataCallback((prev) =>
@@ -327,6 +338,7 @@ useChartProZoom.getInitialState = (params) => {
       zoomInteractionConfig: initializeZoomInteractionConfig(
         params.zoomInteractionConfig,
         optionsLookup,
+        params.experimentalFeatures?.keyboardZoom === true,
       ),
     },
   };

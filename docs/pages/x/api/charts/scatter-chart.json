@@ -46,7 +46,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ keyboardActivation?: bool, progressiveRendering?: bool }"
+        "description": "{ keyboardActivation?: bool, keyboardZoom?: bool, progressiveRendering?: bool }"
       }
     },
     "grid": {

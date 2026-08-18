@@ -261,6 +261,7 @@ FunnelChart.propTypes /* remove-proptypes */ = {
    */
   experimentalFeatures: PropTypes.shape({
     keyboardActivation: PropTypes.bool,
+    keyboardZoom: PropTypes.bool,
   }),
   /**
    * The gap, in pixels, between funnel sections.

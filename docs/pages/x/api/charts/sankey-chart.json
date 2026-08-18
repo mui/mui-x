@@ -9,7 +9,10 @@
     "desc": { "type": { "name": "string" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ keyboardActivation?: bool, keyboardZoom?: bool }"
+      }
     },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {

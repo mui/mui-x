@@ -48,6 +48,11 @@ export const selectorChartsFocusedOrToFocusedItem = createSelector(
   (keyboardNavigationState) => keyboardNavigationState?.item ?? null,
 );
 
+export const selectorChartsIsZoomAnnounced = createSelector(
+  selectKeyboardNavigation,
+  (keyboardNavigationState) => keyboardNavigationState?.announceZoom === true,
+);
+
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
   selectKeyboardNavigation,
   (keyboardNavigationState) => !!keyboardNavigationState?.enabled,
