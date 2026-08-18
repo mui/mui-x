@@ -10,6 +10,7 @@ import type {
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getDateKey } from './date-utils';
+import type { SchedulerEventRangeIndex } from './event-range-index';
 
 /**
  * The render key of a non-recurring occurrence: the event id stringified.
@@ -94,11 +95,21 @@ export function getDaysTheOccurrenceIsVisibleOn(
  * Returns the occurrences to render in the given date range, expanding recurring events.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { adapter, start, end, events, visibleResources, displayTimezone, recurringEventsPlugin } =
-    parameters;
+  const {
+    adapter,
+    start,
+    end,
+    events,
+    eventRangeIndex,
+    visibleResources,
+    displayTimezone,
+    recurringEventsPlugin,
+  } = parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
+  const eventsInRange =
+    eventRangeIndex == null ? events : eventRangeIndex.getEventsForRange(start, end);
 
-  for (const event of events) {
+  for (const event of eventsInRange) {
     // STEP 1: Skip events from resources that are not visible
     const eventResourceIds = getEventResourceIds(event.resource);
     const allHidden =
@@ -135,12 +146,14 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       continue;
     }
 
-    // STEP 2-B: Non-recurring event processing, skip events that are not within the visible days
-    if (
-      adapter.isAfter(event.displayTimezone.start.value, end) ||
-      adapter.isBefore(event.displayTimezone.end.value, start)
-    ) {
-      continue;
+    // The index already excludes non-recurring events outside the visible range.
+    if (eventRangeIndex == null) {
+      if (
+        adapter.isAfter(event.displayTimezone.start.value, end) ||
+        adapter.isBefore(event.displayTimezone.end.value, start)
+      ) {
+        continue;
+      }
     }
 
     occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
@@ -212,12 +225,17 @@ export function getResourceSelectionMode(
   return canHaveMultipleResources ? 'multiple' : 'single';
 }
 
-export interface GetOccurrencesFromEventsParameters {
+interface GetOccurrencesFromEventsBaseParameters {
   adapter: Adapter;
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
-  events: SchedulerProcessedEvent[];
   visibleResources: Record<string, boolean>;
   displayTimezone: TemporalTimezone;
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
 }
+
+export type GetOccurrencesFromEventsParameters = GetOccurrencesFromEventsBaseParameters &
+  (
+    | { events: SchedulerProcessedEvent[]; eventRangeIndex?: never }
+    | { events?: never; eventRangeIndex: SchedulerEventRangeIndex }
+  );

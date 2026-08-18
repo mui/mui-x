@@ -26,7 +26,7 @@ export function useEventOccurrencesGroupedByDay(
   const { days } = parameters;
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const events = useStore(store, schedulerEventSelectors.processedEventList);
+  const eventRangeIndex = useStore(store, schedulerEventSelectors.processedEventRangeIndex);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
@@ -36,12 +36,12 @@ export function useEventOccurrencesGroupedByDay(
       innerGetEventOccurrencesGroupedByDay({
         adapter,
         days,
-        events,
+        eventRangeIndex,
         visibleResources,
         displayTimezone,
         recurringEventsPlugin,
       }),
-    [adapter, days, events, visibleResources, displayTimezone, recurringEventsPlugin],
+    [adapter, days, eventRangeIndex, visibleResources, displayTimezone, recurringEventsPlugin],
   );
 }
 
@@ -60,14 +60,14 @@ export namespace useEventOccurrencesGroupedByDay {
  * Do not use directly, use the `useEventOccurrencesGroupedByDay` hook instead.
  * This is only exported for testing purposes.
  */
+type GroupedByDayParameters<T> = T extends unknown ? Omit<T, 'start' | 'end'> : never;
+
 export function innerGetEventOccurrencesGroupedByDay(
-  parameters: Pick<
-    GetOccurrencesFromEventsParameters,
-    'adapter' | 'visibleResources' | 'events' | 'displayTimezone' | 'recurringEventsPlugin'
-  > & { days: SchedulerProcessedDate[] },
+  parameters: GroupedByDayParameters<GetOccurrencesFromEventsParameters> & {
+    days: SchedulerProcessedDate[];
+  },
 ): Map<string, SchedulerEventOccurrence[]> {
-  const { adapter, days, events, visibleResources, displayTimezone, recurringEventsPlugin } =
-    parameters;
+  const { adapter, days, visibleResources, displayTimezone, recurringEventsPlugin } = parameters;
 
   const occurrenceMap = new Map<string, SchedulerEventOccurrence[]>(
     days.map((day) => [day.key, []]),
@@ -75,15 +75,21 @@ export function innerGetEventOccurrencesGroupedByDay(
 
   const start = adapter.startOfDay(days[0].value);
   const end = adapter.endOfDay(days[days.length - 1].value);
-  const occurrences = getOccurrencesFromEvents({
+  const occurrenceParameters = {
     adapter,
     start,
     end,
-    events,
     visibleResources,
     displayTimezone,
     recurringEventsPlugin,
-  });
+  };
+  const occurrences =
+    parameters.eventRangeIndex == null
+      ? getOccurrencesFromEvents({ ...occurrenceParameters, events: parameters.events })
+      : getOccurrencesFromEvents({
+          ...occurrenceParameters,
+          eventRangeIndex: parameters.eventRangeIndex,
+        });
 
   for (const occurrence of occurrences) {
     const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter);

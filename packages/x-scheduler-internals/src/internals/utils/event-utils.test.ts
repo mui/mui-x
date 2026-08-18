@@ -1,4 +1,5 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import {
   getDaysTheOccurrenceIsVisibleOn,
   getEventResourceIds,
@@ -7,6 +8,7 @@ import {
   getResourceSelectionMode,
 } from './event-utils';
 import { processDate } from '../../process-date';
+import { createEventRangeIndex } from './event-range-index';
 
 describe('event-utils', () => {
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
@@ -173,6 +175,61 @@ describe('event-utils', () => {
       });
 
       expect(result.map((o) => o.id)).toEqual([event.id]);
+    });
+
+    it('should preserve visibility filtering when using the range index', () => {
+      const visibleEvent = EventBuilder.new(adapter)
+        .id('visible')
+        .resource(resourceA)
+        .singleDay('2024-01-15T10:00:00Z')
+        .toProcessed();
+      const hiddenEvent = EventBuilder.new(adapter)
+        .id('hidden')
+        .resource(resourceB)
+        .singleDay('2024-01-15T10:00:00Z')
+        .toProcessed();
+      const events = [visibleEvent, hiddenEvent];
+
+      const result = getOccurrencesFromEvents({
+        adapter,
+        start,
+        end,
+        eventRangeIndex: createEventRangeIndex(events, adapter, false),
+        visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
+        displayTimezone: 'default',
+        recurringEventsPlugin: null,
+      });
+
+      expect(result.map((occurrence) => occurrence.id)).to.deep.equal(['visible']);
+    });
+
+    it('should preserve event order when indexed recurring events are expanded', () => {
+      const events = [
+        EventBuilder.new(adapter).id('first').singleDay('2024-01-15T08:00:00Z').toProcessed(),
+        EventBuilder.new(adapter)
+          .id('recurring')
+          .singleDay('2024-01-01T09:00:00Z')
+          .rrule({ freq: 'DAILY' })
+          .toProcessed(),
+        EventBuilder.new(adapter).id('last').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+      ];
+      const rangeStart = adapter.date('2024-01-15T00:00:00Z', 'default');
+
+      const result = getOccurrencesFromEvents({
+        adapter,
+        start: adapter.startOfDay(rangeStart),
+        end: adapter.endOfDay(rangeStart),
+        eventRangeIndex: createEventRangeIndex(events, adapter, true),
+        visibleResources: {},
+        displayTimezone: 'default',
+        recurringEventsPlugin: schedulerRecurringEventsPlugin,
+      });
+
+      expect(result.map((occurrence) => occurrence.id)).to.deep.equal([
+        'first',
+        'recurring',
+        'last',
+      ]);
     });
 
     it('should exclude an event when all of its assigned resources are hidden', () => {
