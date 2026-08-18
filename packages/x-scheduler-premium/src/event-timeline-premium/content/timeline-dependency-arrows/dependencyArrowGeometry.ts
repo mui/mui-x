@@ -117,12 +117,7 @@ export interface DependencyArrowAnchor {
    * key) repeats on every row of a multi-resource event.
    */
   resourceId: SchedulerResourceId;
-  occurrence: DependencyLayoutOccurrence;
-}
-
-interface DependencyLayoutOccurrence extends SchedulerEventOccurrence {
-  position?: { firstIndex: number };
-  timelinePosition?: ReturnType<typeof computeElementPositionInCollection>;
+  occurrence: SchedulerEventOccurrence;
 }
 
 export interface DependencyArrowObstacle {
@@ -138,10 +133,7 @@ export interface DependencyAnchorResolverParameters {
   /**
    * The visible resources with their occurrences, in row render order.
    */
-  resources: readonly {
-    resource: SchedulerResource;
-    occurrences: DependencyLayoutOccurrence[];
-  }[];
+  resources: readonly { resource: SchedulerResource; occurrences: SchedulerEventOccurrence[] }[];
   /**
    * The y offset of each row in pixels, in the same order as `resources`.
    */
@@ -265,7 +257,7 @@ export function createDependencyAnchorResolver(
 
   // Lane assignment of a row, computed on demand and only once per involved row.
   const laneLookupByRow = new Map<number, { [occurrenceKey: string]: number }>();
-  const getLaneLookup = (rowIndex: number): Readonly<Record<string, number>> => {
+  const getLaneLookup = (rowIndex: number): { [occurrenceKey: string]: number } => {
     let laneLookup = laneLookupByRow.get(rowIndex);
     if (laneLookup == null) {
       laneLookup = computeOccurrencesFirstIndexLookup(adapter, resources[rowIndex].occurrences);
@@ -278,9 +270,7 @@ export function createDependencyAnchorResolver(
   const axisDurationMs = getTimelineAxisDurationMs(adapter, axis);
   const positionCache = new Map<string, ReturnType<typeof computeElementPositionInCollection>>();
   const getPosition = (occurrence: SchedulerEventOccurrence) => {
-    const precomputed =
-      (occurrence as DependencyLayoutOccurrence).timelinePosition ??
-      positionByOccurrenceKey?.get(occurrence.key);
+    const precomputed = positionByOccurrenceKey?.get(occurrence.key);
     if (precomputed != null) {
       return precomputed;
     }
@@ -300,8 +290,6 @@ export function createDependencyAnchorResolver(
   const laneStep = laneMetrics.laneMinHeight + laneMetrics.laneGap;
   const getLaneTop = (rowIndex: number, lane: number): number =>
     rowPositions[rowIndex] + laneMetrics.topPadding + (lane - 1) * laneStep;
-  const getLane = (rowIndex: number, occurrence: DependencyLayoutOccurrence) =>
-    occurrence.position?.firstIndex ?? getLaneLookup(rowIndex)[occurrence.key];
 
   const getEdgePoint = (
     anchor: DependencyArrowAnchor,
@@ -312,7 +300,7 @@ export function createDependencyAnchorResolver(
     return {
       x: xFraction * eventsWidth,
       y:
-        getLaneTop(anchor.rowIndex, getLane(anchor.rowIndex, anchor.occurrence)) +
+        getLaneTop(anchor.rowIndex, getLaneLookup(anchor.rowIndex)[anchor.occurrence.key]) +
         laneMetrics.laneMinHeight / 2,
     };
   };
@@ -322,9 +310,10 @@ export function createDependencyAnchorResolver(
   const getRowObstacles = (rowIndex: number): DependencyArrowObstacle[] => {
     let obstacles = obstaclesByRow.get(rowIndex);
     if (obstacles == null) {
+      const laneLookup = getLaneLookup(rowIndex);
       obstacles = resources[rowIndex].occurrences.map((occurrence) => {
         const position = getPosition(occurrence);
-        const laneTop = getLaneTop(rowIndex, getLane(rowIndex, occurrence));
+        const laneTop = getLaneTop(rowIndex, laneLookup[occurrence.key]);
         return {
           occurrenceKey: occurrence.key,
           x1: position.position * eventsWidth,

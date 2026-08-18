@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   useEventCreation,
@@ -17,6 +17,7 @@ import { useEventRowDropTarget } from './useEventRowDropTarget';
 import { usePlaceholderInRow } from './usePlaceholderInRow';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import {
+  addTimelinePositionsToOccurrences,
   eventTimelinePremiumPresetSelectors,
   eventTimelinePremiumOccurrenceSelectors,
 } from '../../event-timeline-premium-selectors';
@@ -61,10 +62,31 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   // Occurrences fully inside the hidden hours would render as zero-width slivers and
   // inflate the lane count, so the selector excludes them before positioning.
-  const occurrenceLayout = useStore(
+  const occurrences = useStore(
     store,
-    eventTimelinePremiumOccurrenceSelectors.visibleResourceLayout,
+    eventTimelinePremiumOccurrenceSelectors.visibleResourceOccurrences,
     resourceId,
+  );
+  const positionByOccurrenceKey = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
+  );
+
+  const occurrenceLayoutWithoutTimelinePositions = useEventOccurrencesWithTimelinePosition({
+    occurrences,
+    maxSpan: 1,
+  });
+  const occurrenceLayout = React.useMemo(
+    () => ({
+      ...occurrenceLayoutWithoutTimelinePositions,
+      occurrences: addTimelinePositionsToOccurrences({
+        adapter,
+        config,
+        occurrences: occurrenceLayoutWithoutTimelinePositions.occurrences,
+        positionByOccurrenceKey,
+      }),
+    }),
+    [adapter, config, occurrenceLayoutWithoutTimelinePositions, positionByOccurrenceKey],
   );
 
   // Feature hooks

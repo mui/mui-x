@@ -17,6 +17,7 @@ import {
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { EventTimelinePremiumLayoutOccurrence } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import { computeOccurrencesMaxIndex } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
@@ -662,7 +663,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   // filtered), so it also drives the row models and the virtualized row heights.
   const visibleResources = useStore(
     store,
-    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceLayout,
+    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
   );
 
   // Measure header height for the virtualizer's topPinnedHeight
@@ -731,11 +732,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const theme = useTheme();
   const laneCountByResource = React.useMemo(() => {
     const map = new Map<SchedulerResourceId, number>();
-    for (const { resource, maxIndex } of visibleResources) {
-      map.set(resource.id, maxIndex);
+    for (const { resource, occurrences } of visibleResources) {
+      map.set(resource.id, computeOccurrencesMaxIndex(adapter, occurrences));
     }
     return map;
-  }, [visibleResources]);
+  }, [visibleResources, adapter]);
 
   const getRowHeight = React.useCallback(
     (row: { id: SchedulerResourceId }) =>

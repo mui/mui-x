@@ -584,25 +584,6 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].maxXFraction).to.equal(728 / EVENTS_WIDTH);
     });
 
-    it('should use a precomputed lane lookup', () => {
-      const [occurrence] = getOccurrences([eventA]);
-      const positionedOccurrence = { ...occurrence, position: { firstIndex: 3 } };
-      const resolver = buildResolver({
-        resources: [
-          {
-            resource: RESOURCE_1,
-            occurrences: [positionedOccurrence],
-          },
-        ],
-        rowPositions: [0],
-      });
-
-      const [anchor] = resolver.getAppearances(eventA.id);
-      expect(resolver.getEdgePoint(anchor, 'start').y).to.equal(
-        LANE_METRICS.topPadding + 2 * (LANE_METRICS.laneMinHeight + LANE_METRICS.laneGap) + 15,
-      );
-    });
-
     it('should turn before the target when the default elbow crosses an event', () => {
       // The obstacle (11:30–13:15) sits on the default vertical at x = 728; the late
       // turn at x = 840 − 12 avoids it.

@@ -16,7 +16,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
-import { buildEventTimelinePremiumLayout } from './eventTimelinePremiumOccurrenceSelectors';
+import { addTimelinePositionsToOccurrences } from './eventTimelinePremiumOccurrenceSelectors';
 
 const resourceCount = 100;
 const occurrencesPerResource = 100;
@@ -42,6 +42,16 @@ const groupedOccurrences = resources.map((resource, resourceIndex) => ({
     return { ...occurrenceTemplate, id: key, key } as SchedulerEventOccurrence;
   }),
 }));
+const positionedGroupedOccurrences = groupedOccurrences.map(({ resource, occurrences }) => {
+  const firstIndexLookup = computeOccurrencesFirstIndexLookup(adapter, occurrences);
+  return {
+    resource,
+    occurrences: sortEventOccurrences(occurrences).map((occurrence) => {
+      const firstIndex = firstIndexLookup[occurrence.key];
+      return { ...occurrence, position: { firstIndex, lastIndex: firstIndex } };
+    }),
+  };
+});
 export const benchmarkResult = { value: undefined as unknown };
 
 describe('event timeline resource layout', () => {
@@ -64,13 +74,32 @@ describe('event timeline resource layout', () => {
     benchmarkResult.value = result;
   });
 
-  bench('derive the shared resource layout once', () => {
-    const layout = buildEventTimelinePremiumLayout({
-      adapter,
-      config,
-      resources: groupedOccurrences,
-      positionByOccurrenceKey: null,
-    });
-    benchmarkResult.value = layout.groupedByResourceList.length;
+  bench('derive global lane counts for the virtualizer', () => {
+    let result = 0;
+    for (const { occurrences } of groupedOccurrences) {
+      result += computeOccurrencesMaxIndex(adapter, occurrences);
+    }
+    benchmarkResult.value = result;
+  });
+
+  bench('derive geometry for 10 mounted rows', () => {
+    let result = 0;
+    for (const { occurrences } of positionedGroupedOccurrences.slice(0, 10)) {
+      result += addTimelinePositionsToOccurrences({
+        adapter,
+        config,
+        occurrences,
+        positionByOccurrenceKey: null,
+      }).length;
+    }
+    benchmarkResult.value = result;
+  });
+
+  bench('derive dependency lanes for 2 involved rows', () => {
+    let result = 0;
+    for (const { occurrences } of groupedOccurrences.slice(0, 2)) {
+      result += Object.keys(computeOccurrencesFirstIndexLookup(adapter, occurrences)).length;
+    }
+    benchmarkResult.value = result;
   });
 });
