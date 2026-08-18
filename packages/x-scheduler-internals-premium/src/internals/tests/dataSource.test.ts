@@ -93,6 +93,54 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(dataSource.getEvents.secondCall.args[1]).toEqual(end2);
     });
 
+    it('should reuse cached event processing until processing options change', async () => {
+      const firstEvent = buildTestEvent('1');
+      const secondEvent = buildTestEvent('2');
+      let fetchCount = 0;
+      const dataSource = {
+        getEvents: spy(async () => {
+          fetchCount += 1;
+          return fetchCount === 1 ? [firstEvent] : [secondEvent];
+        }),
+        persistEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      await store.lazyLoading?.queueDataFetchForRange(
+        {
+          start: adapter.date('2025-07-01T00:00:00Z', 'default'),
+          end: adapter.date('2025-07-07T00:00:00Z', 'default'),
+        },
+        true,
+      );
+      const firstProcessedEvent = store.state.processedEventLookup.get('1');
+
+      await store.lazyLoading?.queueDataFetchForRange(
+        {
+          start: adapter.date('2025-08-01T00:00:00Z', 'default'),
+          end: adapter.date('2025-08-07T00:00:00Z', 'default'),
+        },
+        true,
+      );
+
+      expect(store.state.processedEventLookup.get('1')).to.equal(firstProcessedEvent);
+      expect(store.state.processedEventLookup.get('2')).not.to.equal(undefined);
+
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, dataSource, displayTimezone: 'Europe/Paris' },
+        adapter,
+      );
+      await store.lazyLoading?.queueDataFetchForRange(
+        {
+          start: adapter.date('2025-09-01T00:00:00Z', 'default'),
+          end: adapter.date('2025-09-07T00:00:00Z', 'default'),
+        },
+        true,
+      );
+
+      expect(store.state.processedEventLookup.get('1')).not.to.equal(firstProcessedEvent);
+    });
+
     it('should use cached data when fetching a range that is already covered', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
