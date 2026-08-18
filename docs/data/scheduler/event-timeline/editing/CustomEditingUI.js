@@ -33,6 +33,7 @@ export default function CustomEditingUI() {
           title,
           start: new Date(occurrence.displayTimezone.start.timestamp).toISOString(),
           end: new Date(occurrence.displayTimezone.end.timestamp).toISOString(),
+          allDay: occurrence.allDay,
           resource: occurrence.resource,
         },
       ]);

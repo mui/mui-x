@@ -471,6 +471,21 @@ describe('EventCalendar', () => {
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
 
+    it('should keep the built-in dialog closed when the handler cancels a keyboard activation', async () => {
+      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[event1]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      const eventButton = screen.getByRole('button', { name: /Running/i });
+      eventButton.focus();
+      expect(eventButton).to.equal(document.activeElement);
+      await user.keyboard('{Enter}');
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
     it('should keep the built-in dialog closed when the handler cancels an event creation', async () => {
       const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
       const { user } = render(

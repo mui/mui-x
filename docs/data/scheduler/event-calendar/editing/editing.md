@@ -78,7 +78,12 @@ Call `eventDetails.cancel()` to keep the built-in UI closed and open your own ed
 <EventCalendar
   onEventEditingStart={(occurrence, eventDetails) => {
     eventDetails.cancel();
-    openYourEditingUI(occurrence.id);
+    if (eventDetails.reason === 'creation') {
+      // Creation drafts have a synthetic `id` — use the proposed dates instead.
+      openYourCreationUI(occurrence.displayTimezone);
+    } else {
+      openYourEditingUI(occurrence.id);
+    }
   }}
 />
 ```
