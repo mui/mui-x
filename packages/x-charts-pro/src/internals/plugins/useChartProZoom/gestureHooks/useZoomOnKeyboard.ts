@@ -56,6 +56,7 @@ export const useZoomOnKeyboard = (
         }),
       );
 
+      instance.announceZoomChange?.();
     },
   });
 };

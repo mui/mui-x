@@ -55,6 +55,8 @@ export const usePanOnKeyboard = (
         translateZoom(prev, movement, drawingArea, optionsLookup, direction.x === 0 ? 'y' : 'x'),
       );
 
+      instance.announceZoomChange?.();
+
     },
   });
 };
