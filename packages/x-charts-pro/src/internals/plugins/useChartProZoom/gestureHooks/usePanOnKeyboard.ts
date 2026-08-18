@@ -54,7 +54,6 @@ export const usePanOnKeyboard = (
       setZoomDataCallback((prev) =>
         translateZoom(prev, movement, drawingArea, optionsLookup, direction.x === 0 ? 'y' : 'x'),
       );
-
     },
   });
 };
