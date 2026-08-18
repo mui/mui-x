@@ -5,6 +5,14 @@ import type { UseChartHighlightSignature } from '../useChartHighlight';
 import type { FocusedItemIdentifier, SeriesId } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
+export interface FocusItemOptions {
+  /**
+   * Whether the focus indicator should be rendered.
+   * Defaults to `focusItemOnClick || <the focus is already visible>`.
+   */
+  visible?: boolean;
+}
+
 /**
  * Called when the focused item is activated with the keyboard.
  * @param {KeyboardEvent} event The keyboard event that triggered the activation.
@@ -39,6 +47,16 @@ export interface ItemActivationScope {
 
 export interface UseChartKeyboardNavigationInstance {
   /**
+   * Makes an item the one keyboard navigation starts from, moving the DOM focus into the chart
+   * when it is not already there.
+   * Does nothing when keyboard navigation is disabled, when the series type does not support it,
+   * or when the identifier is not complete enough to be focused.
+   * @param {FocusedItemIdentifier} item The item to focus.
+   * @param {FocusItemOptions} options Options to override the focus visibility.
+   * @returns {boolean} `true` when the focus state was updated.
+   */
+  focusItem: (item: FocusedItemIdentifier<ChartSeriesType>, options?: FocusItemOptions) => boolean;
+  /**
    * Registers a handler triggered when the focused item is activated with the keyboard.
    * Only the handler with the most specific matching scope runs, so plots sharing a series
    * do not fire the callback twice.
@@ -69,6 +87,11 @@ export interface UseChartKeyboardNavigationState {
      */
     isFocused: boolean;
     /**
+     * If `false` the focused item is not rendered as focused, and does not drive the highlight and tooltip.
+     * Set when the focus was moved by a pointer instead of the keyboard. Implies `isFocused`.
+     */
+    isFocusVisible: boolean;
+    /**
      * Indicates whether keyboard navigation is enabled or not.
      */
     enabled: boolean;
@@ -85,6 +108,13 @@ type UseChartKeyboardNavigationParameters = {
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation?: boolean;
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick?: boolean;
 };
 
 export type UseChartKeyboardNavigationSignature = ChartPluginSignature<{

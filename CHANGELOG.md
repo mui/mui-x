@@ -1,5 +1,44 @@
 # Changelog
 
+## 9.11.1
+
+_Aug 6, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐛 Fix the empty `@mui/x-charts-vendor` package published in v9.11.0
+
+The following team members contributed to this release:
+@JCQuintas, @rita-codes
+
+### Charts
+
+#### `@mui/x-charts@9.11.1`
+
+- [charts] Fix empty `@mui/x-charts-vendor` published package (#23310) @JCQuintas
+
+#### `@mui/x-charts-pro@9.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.11.1`.
+
+#### `@mui/x-charts-premium@9.11.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.11.1`.
+
+#### `@mui/x-charts-vendor@9.11.1`
+
+- [charts] Fix empty `@mui/x-charts-vendor` published package (#23310) @JCQuintas
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.9`
+
+- [scheduler] Show the range validation errors on the End date and End time fields (#23291) @rita-codes
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.9`.
+
 ## 9.11.0
 
 _Aug 6, 2026_

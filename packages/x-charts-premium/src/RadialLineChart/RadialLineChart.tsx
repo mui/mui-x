@@ -224,6 +224,13 @@ RadialLineChart.propTypes /* remove-proptypes */ = {
     keyboardActivation: PropTypes.bool,
   }),
   /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
+  /**
    * Option to display a radial grid in the background.
    */
   grid: PropTypes.shape({
@@ -369,6 +376,13 @@ RadialLineChart.propTypes /* remove-proptypes */ = {
    * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The callback fired when an item is clicked.
+   *
+   * @param {ChartsActivationEvent<HTMLDivElement>} event The click event.
+   * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
+   */
+  onItemClick: PropTypes.func,
   /**
    * The callback fired when the tooltip item changes.
    *

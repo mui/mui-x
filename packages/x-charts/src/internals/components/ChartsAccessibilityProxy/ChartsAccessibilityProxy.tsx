@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { useChartId } from '../../../hooks/useChartId';
+import { useChartsContext } from '../../../context/ChartsProvider';
 import { useDescription } from './useDescription';
 import { useZoomDescription } from './useZoomDescription';
 
@@ -44,12 +46,15 @@ export function ChartsAccessibilityProxy() {
   const zoomMessage = useZoomDescription();
   const chartId = useChartId();
 
+  const { instance } = useChartsContext();
+
   const currentFormatRef = React.useRef<string | null>(null);
   const currentIndexRef = React.useRef<number>(0);
-  const containerRef = React.useRef(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(containerRef, instance.chartsAccessibilityProxyRef);
 
   React.useEffect(() => {
-    const container = containerRef.current as HTMLDivElement | null;
+    const container = containerRef.current;
     if (!container) {
       return;
     }
@@ -125,8 +130,10 @@ export function ChartsAccessibilityProxy() {
     <React.Fragment>
       <div
         role="none"
-        tabIndex={message ? undefined : 0}
-        ref={containerRef}
+        // Stays focusable once an announcer child owns the tab stop, otherwise the browser would
+        // blur the root mid hand-off and the chart would look like it lost the focus.
+        tabIndex={message ? -1 : 0}
+        ref={handleRef}
         style={fullSizeLayerStyle}
       />
       {/* The zoom range does not move the focus, so it is announced with a live region instead of the proxy. */}

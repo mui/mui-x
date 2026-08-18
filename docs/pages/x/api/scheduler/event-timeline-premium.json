@@ -59,7 +59,7 @@
     "eventCreation": {
       "type": {
         "name": "union",
-        "description": "{ duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
+        "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
       }
     },
     "eventModelStructure": { "type": { "name": "object" } },
@@ -83,6 +83,12 @@
       "type": {
         "name": "enum",
         "description": "'dayAndHour'<br>&#124;&nbsp;'dayAndMonth'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
+      }
+    },
+    "presetConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ dayAndHour?: { endTime?: number, startTime?: number } }"
       }
     },
     "presets": {

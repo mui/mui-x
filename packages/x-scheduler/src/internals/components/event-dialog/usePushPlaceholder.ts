@@ -6,18 +6,19 @@ import {
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
 import type { EventDialogBuiltInFormValues, EventDialogFormValues } from './utils';
 import { computeRange } from './utils';
 
 // Gate on the whole hook: only writes to these keys reach the placeholder.
-// Must stay in sync with what `computeRange` reads, plus `resourceId`.
+// Must stay in sync with what `computeRange` reads, plus `resourceIds`.
 const PLACEHOLDER_KEYS: ReadonlySet<string> = new Set<keyof EventDialogBuiltInFormValues>([
   'startDate',
   'startTime',
   'endDate',
   'endTime',
   'allDay',
-  'resourceId',
+  'resourceIds',
 ]);
 
 /**
@@ -47,7 +48,7 @@ export function usePushPlaceholder() {
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: surfaceTypeToUse,
-      resourceId: values.resourceId,
+      resourceId: getPrimaryResourceId(values.resourceIds),
       start,
       end,
       lockSurfaceType: rawPlaceholder.lockSurfaceType,
