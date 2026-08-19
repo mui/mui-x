@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import { useVirtualizer, LayoutListSticky, type RowEntry } from '@mui/x-virtualizer';
+import { useVirtualizer, LayoutListSticky, type RowEntry } from '@base-ui/virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
 
 const ROW_HEIGHT = 48;

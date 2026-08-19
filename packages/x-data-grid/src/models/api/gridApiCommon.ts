@@ -1,4 +1,4 @@
-import type { Virtualizer } from '@mui/x-virtualizer';
+import type { Virtualizer } from '@base-ui/virtualizer';
 import type { GridColumnApi } from './gridColumnApi';
 import type { GridColumnMenuApi } from './gridColumnMenuApi';
 import type { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';

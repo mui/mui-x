@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { Virtualizer } from '@mui/x-virtualizer';
+import type { Virtualizer } from '@base-ui/virtualizer';
 
 export const EventTimelinePremiumVirtualizerContext = React.createContext<
   Virtualizer['store'] | null

@@ -571,7 +571,7 @@ export default defineConfig(
       `packages/x-scheduler-premium/src/**/*${EXTENSION_TS}`,
       `packages/x-scheduler-internals/src/**/*${EXTENSION_TS}`,
       `packages/x-scheduler-internals-premium/src/**/*${EXTENSION_TS}`,
-      `packages/x-virtualizer/src/**/*${EXTENSION_TS}`,
+      `packages/virtualizer/src/**/*${EXTENSION_TS}`,
     ],
     rules: {
       '@typescript-eslint/no-namespace': 'off',

@@ -69,8 +69,8 @@
       "@mui/x-internal-gestures/*": ["./packages/x-internal-gestures/src/*"],
       "@mui/x-telemetry": ["./packages/x-telemetry/src"],
       "@mui/x-telemetry/*": ["./packages/x-telemetry/src/*"],
-      "@mui/x-virtualizer": ["./packages/x-virtualizer/src"],
-      "@mui/x-virtualizer/*": ["./packages/x-virtualizer/src/*"],
+      "@base-ui/virtualizer": ["./packages/virtualizer/src"],
+      "@base-ui/virtualizer/*": ["./packages/virtualizer/src/*"],
       "test/*": ["./test/*"],
       "docs/*": ["./docs/*"]
     },

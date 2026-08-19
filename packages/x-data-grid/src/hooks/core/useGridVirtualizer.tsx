@@ -11,8 +11,8 @@ import {
   LayoutDataGrid,
   Virtualization,
   EMPTY_RENDER_CONTEXT,
-} from '@mui/x-virtualizer';
-import type { VirtualizerParams } from '@mui/x-virtualizer';
+} from '@base-ui/virtualizer';
+import type { VirtualizerParams } from '@base-ui/virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';

@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import type { Virtualizer } from '@mui/x-virtualizer';
-import { LayoutList, useVirtualizer } from '@mui/x-virtualizer';
+import type { Virtualizer } from '@base-ui/virtualizer';
+import { LayoutList, useVirtualizer } from '@base-ui/virtualizer';
 import { createSelectorMemoized, useStore } from '@mui/x-internals/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';

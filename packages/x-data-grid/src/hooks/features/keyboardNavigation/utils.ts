@@ -1,5 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { Rowspan } from '@mui/x-virtualizer';
+import { Rowspan } from '@base-ui/virtualizer';
 import { gridFilteredSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import type { GridRowId } from '../../../models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';

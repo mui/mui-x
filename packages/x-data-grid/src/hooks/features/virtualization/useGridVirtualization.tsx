@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
-import type { Virtualization, LayoutDataGrid } from '@mui/x-virtualizer';
+import { EMPTY_RENDER_CONTEXT } from '@base-ui/virtualizer';
+import type { Virtualization, LayoutDataGrid } from '@base-ui/virtualizer';
 import { platform } from '@base-ui/utils/platform';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';

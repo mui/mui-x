@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { Dimensions, Virtualization } from '@mui/x-virtualizer';
+import { Dimensions, Virtualization } from '@base-ui/virtualizer';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type {
   SchedulerEventId,

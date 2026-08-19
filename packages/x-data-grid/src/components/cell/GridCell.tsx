@@ -11,7 +11,7 @@ import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useStore } from '@mui/x-internals/store';
-import { Rowspan } from '@mui/x-virtualizer';
+import { Rowspan } from '@base-ui/virtualizer';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { focusElement } from '../../utils/focusElement';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';

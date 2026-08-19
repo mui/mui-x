@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import { useVirtualizer, Virtualization, LayoutGridSticky, Dimensions } from '@mui/x-virtualizer';
+import { useVirtualizer, Virtualization, LayoutGridSticky, Dimensions } from '@base-ui/virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
 
 const ROW_COUNT = 1000;
