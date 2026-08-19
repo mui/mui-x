@@ -41,6 +41,7 @@ export function createFormulaInternalCache(
     lastCellEditStart: null,
     lastA1Seed: null,
     pasteOrigin: null,
+    plainEditDraft: null,
     editorSession: null,
     focusSafeElements: new Set(),
   };

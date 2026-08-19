@@ -24,6 +24,11 @@ import { getFormulaReferencePaletteStyles } from '../hooks/features/formula/grid
 import { formulaBarOwnsFocus } from '../hooks/features/formula/gridFormulaBarElements';
 import { captureFormulaLiveResizeSession } from '../hooks/features/formula/gridFormulaLiveGeometry';
 import type { GridFormulaLiveResizeSession } from '../hooks/features/formula/gridFormulaLiveGeometry';
+import {
+  getPlainEditDraftText,
+  parsePlainEditValue,
+  shouldIgnorePlainEditInput,
+} from '../hooks/features/formula/gridFormulaPlainEditing';
 import { GridFormulaEditable, valueToText } from './GridFormulaEditable';
 import type { GridFormulaEditableHandle } from './GridFormulaEditable';
 
@@ -159,7 +164,10 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
   const [rootEl, setRootEl] = React.useState<HTMLDivElement | null>(null);
 
   const editState = useGridSelector(apiRef, gridEditCellStateSelector, { rowId: id, field });
-  const text = valueToText(editState?.value);
+  // The plain-edit draft wins while it matches: the parser is lossy mid-edit
+  // and the anchor must echo what the user typed, not the parsed value.
+  const text =
+    getPlainEditDraftText(apiRef, id, field, editState?.value) ?? valueToText(editState?.value);
 
   const surfaceId = `${id}-${field}-formula-editor-surface`;
   // Only the focused cell opens the surface — row edit mode puts every cell of the
@@ -268,7 +276,8 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   const clampBasisRef = React.useRef<{ width: number; height: number } | null>(null);
 
   const editState = useGridSelector(apiRef, gridEditCellStateSelector, { rowId: id, field });
-  const text = valueToText(editState?.value);
+  const text =
+    getPlainEditDraftText(apiRef, id, field, editState?.value) ?? valueToText(editState?.value);
   const ownerCell = React.useMemo(() => ({ id, field }), [id, field]);
 
   // Whether the edited row is currently rendered as the zero-size virtual-focus
@@ -559,25 +568,39 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
     [appliedWidth, enterWrapMode, ensureClamp, growHeightToFit, snapWidths],
   );
 
-  // The edit-state adapter: run the column's value parser exactly like the plain
-  // edit input — a formula source passes through (the formula wrapper protects
-  // `=` strings), a plain value is parsed to its typed form (e.g. a number on a
-  // number column) so the commit stores the right type. Writes are NOT debounced:
-  // a debounced keystroke timer firing after an accepted-suggestion immediate
-  // write would clobber it. Per-keystroke writes are negligible for one editing
-  // cell.
+  // The edit-state adapter: parse the typed text to the edit-state value the
+  // way the column's native editor would — a formula source passes through
+  // (the formula wrapper protects `=` strings), a plain value is parsed to its
+  // typed form, and a number column never receives `NaN` (text a native number
+  // input cannot represent parses as the empty string does). The exact typed
+  // text rides in the shared plain-edit draft, which is what the surfaces
+  // display while the parser is lossy. Writes are NOT debounced: a debounced
+  // keystroke timer firing after an accepted-suggestion immediate write would
+  // clobber it. Per-keystroke writes are negligible for one editing cell.
   const handleValueChange = React.useCallback(
     (nextText: string, caret: number | null, event: React.SyntheticEvent) => {
       const column = apiRef.current.getColumn(field);
-      const parsedValue = column?.valueParser
-        ? column.valueParser(nextText, apiRef.current.getRow(id), column, apiRef)
-        : nextText;
+      const parsedValue = parsePlainEditValue(nextText, column, apiRef.current.getRow(id), apiRef);
+      apiRef.current.caches.formula.plainEditDraft = {
+        id,
+        field,
+        text: nextText,
+        value: parsedValue,
+      };
       apiRef.current.setEditCellValue(
         { id, field, value: parsedValue, unstable_skipValueParser: true },
         event,
       );
     },
     [apiRef, field, id],
+  );
+
+  // The native-editor input filter: characters a number `<input>` would ignore
+  // are neglected here too, instead of parsing to `NaN`.
+  const shouldIgnoreInput = React.useCallback(
+    (nextText: string, previousText: string) =>
+      shouldIgnorePlainEditInput(apiRef.current.getColumn(field), nextText, previousText),
+    [apiRef, field],
   );
 
   // Live mirror of the editing session (engaged flag + caret offset + the grown
@@ -944,6 +967,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
         popupId={`${id}-${field}-formula-autocomplete`}
         ariaLabel={colDef.headerName || field}
         onValueChange={handleValueChange}
+        shouldIgnoreInput={shouldIgnoreInput}
         onAfterRebuild={growToFit}
         onInteraction={updateEditorSession}
       />

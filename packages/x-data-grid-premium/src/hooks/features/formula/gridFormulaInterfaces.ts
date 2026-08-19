@@ -245,6 +245,18 @@ export interface GridFormulaInternalCache {
    */
   focusSafeElements: Set<Element>;
   /**
+   * The text currently typed in a formula editing surface (the cell editor or
+   * the bar's edit-mode mirror) together with the edit-state value it parsed
+   * to. The column's parser is lossy mid-edit — on a number column `-` parses
+   * to `null` (never `NaN`, matching a native number input's `badInput`
+   * report), `0.50` to `0.5`, and deleting the leading `=` of a formula leaves
+   * text that does not parse at all — so the surfaces render this text instead
+   * of the parsed value while the draft's value still matches the edit state
+   * exactly. Shared through the cache so the cell editor and the bar mirror
+   * always display the same text. Cleared when the cell leaves edit mode.
+   */
+  plainEditDraft: { id: GridRowId; field: string; text: string; value: unknown } | null;
+  /**
    * Live mirror of the formula-editor session (engaged flag + caret offset +
    * the grown floating-surface box), written by the focused editor on every
    * user interaction. When virtualization remounts the editing cell (the

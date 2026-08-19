@@ -31,6 +31,12 @@ import {
   unregisterFormulaFocusSafeElement,
 } from '../../hooks/features/formula/gridFormulaBarElements';
 import type { GridFormulaResult } from '../../hooks/features/formula/gridFormulaInterfaces';
+import {
+  getPlainEditDraftText,
+  getPlainEditParserInput,
+  parsePlainEditValue,
+  shouldIgnorePlainEditInput,
+} from '../../hooks/features/formula/gridFormulaPlainEditing';
 import { CellValueUpdater } from '../../hooks/features/clipboard/useGridClipboardImport';
 import { GridFormulaEditable, valueToText } from '../GridFormulaEditable';
 import type { GridFormulaEditableHandle } from '../GridFormulaEditable';
@@ -203,7 +209,13 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiRef, cell, allowFormulas, a1Enabled, rowsLookup, positionContext]);
 
-  const text = isMirror ? valueToText(editCellState?.value) : (draft ?? displayValue);
+  // In mirror mode the plain-edit draft wins while it matches the edit state:
+  // the column parser is lossy mid-edit and the bar must echo the typed text
+  // (its own or the cell editor's), not the parsed value.
+  const text = isMirror
+    ? (getPlainEditDraftText(apiRef, cell.id, cell.field, editCellState?.value) ??
+      valueToText(editCellState?.value))
+    : (draft ?? displayValue);
 
   const isEditable =
     cell !== null &&
@@ -283,7 +295,14 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
   // references anchor to the target cell itself.
   const commitDraft = React.useCallback(
     (targetCell: FormulaBarCell, nextText: string) => {
-      apiRef.current.publishEvent('clipboardPasteStart', { data: [[nextText]] });
+      // The paste pipeline's parser would turn leftover non-representable text
+      // (e.g. `SUM(1)` after deleting the `=` on a number column) into `NaN` —
+      // commit what the column's native editor would have reported instead.
+      const effectiveText = getPlainEditParserInput(
+        nextText,
+        apiRef.current.getColumn(targetCell.field),
+      );
+      apiRef.current.publishEvent('clipboardPasteStart', { data: [[effectiveText]] });
       const updater = new CellValueUpdater({
         apiRef,
         processRowUpdate: rootProps.processRowUpdate,
@@ -293,7 +312,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
       updater.updateCell({
         rowId: targetCell.id,
         field: targetCell.field,
-        pastedCellValue: nextText,
+        pastedCellValue: effectiveText,
       });
       updater.applyUpdates();
     },
@@ -369,12 +388,23 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
         return;
       }
       if (isMirror) {
-        // The same write path as the in-cell editor: parse plain values through
-        // the column parser, let formula text pass through.
+        // The same write path as the in-cell editor: formula text passes
+        // through, plain values parse the way the column's native editor would
+        // (a number column never receives `NaN`), and the exact typed text
+        // rides in the shared plain-edit draft both surfaces display.
         const column = apiRef.current.getColumn(targetCell.field);
-        const parsedValue = column?.valueParser
-          ? column.valueParser(nextText, apiRef.current.getRow(targetCell.id), column, apiRef)
-          : nextText;
+        const parsedValue = parsePlainEditValue(
+          nextText,
+          column,
+          apiRef.current.getRow(targetCell.id),
+          apiRef,
+        );
+        apiRef.current.caches.formula.plainEditDraft = {
+          id: targetCell.id,
+          field: targetCell.field,
+          text: nextText,
+          value: parsedValue,
+        };
         apiRef.current.setEditCellValue(
           {
             id: targetCell.id,
@@ -395,6 +425,19 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
       schedulePreview(targetCell, nextText);
     },
     [apiRef, displayValue, isMirror, publishDraftHighlights, readOnly, schedulePreview],
+  );
+
+  // The native-editor input filter, in both mirror and draft mode: characters
+  // the column's default editor would ignore (letters in a number column) are
+  // neglected here too, instead of parsing to `NaN`.
+  const shouldIgnoreInput = React.useCallback(
+    (nextText: string, previousText: string) =>
+      shouldIgnorePlainEditInput(
+        cellRef.current === null ? undefined : apiRef.current.getColumn(cellRef.current.field),
+        nextText,
+        previousText,
+      ),
+    [apiRef],
   );
 
   // Invalidates any pending mirror-stop focus move (new interaction, cancel,
@@ -596,6 +639,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
         popupId={popupId}
         ariaLabel={apiRef.current.getLocaleText('formulaBarInputLabel')}
         onValueChange={handleValueChange}
+        shouldIgnoreInput={shouldIgnoreInput}
         onCommitKey={handleCommitKey}
         onCancelKey={handleCancelKey}
         onBlur={handleBlur}

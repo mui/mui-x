@@ -1761,6 +1761,97 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(3)).to.deep.equal(['=not a formula']);
     });
 
+    it('should neglect characters a number column cannot represent, like the default editor', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
+      });
+
+      setEditableValue(0, 3, '12');
+      // An appended letter is an insertion the number column cannot represent —
+      // the editor neglects it, the way `<input type="number">` does.
+      setEditableValue(0, 3, '12a');
+      expect(getCellEditable(0, 3).textContent).to.equal('12');
+
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
+      await microtasks();
+      expect(apiRef.current!.getRow(0).total).to.equal(12);
+    });
+
+    it('should show the typed text, not NaN, after the leading `=` is deleted', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
+      });
+
+      // Deleting the `=` leaves text the number parser cannot represent: the
+      // editor keeps showing exactly what was typed (it used to rewrite itself
+      // to `NaN`), and the edit state holds what a native number input would
+      // report — null, never NaN.
+      setEditableValue(0, 3, 'price * quantity');
+      expect(getCellEditable(0, 3).textContent).to.equal('price * quantity');
+      expect(formulaApi().state.editRows[0]?.total?.value).to.equal(null);
+
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
+      await microtasks();
+      expect(apiRef.current!.getRow(0).total).to.equal(null);
+    });
+
+    it('should keep partial numeric text as typed and commit its numeric value', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
+      });
+
+      // `-` alone parses to null — the editor still shows the typed `-`.
+      setEditableValue(0, 3, '-');
+      expect(getCellEditable(0, 3).textContent).to.equal('-');
+      setEditableValue(0, 3, '-5');
+      setEditableValue(0, 3, '-5.');
+      expect(getCellEditable(0, 3).textContent).to.equal('-5.');
+
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
+      await microtasks();
+      expect(apiRef.current!.getRow(0).total).to.equal(-5);
+    });
+
+    it('should preserve trailing decimal zeros while typing', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
+      });
+
+      setEditableValue(0, 3, '0.50');
+      // The parser reads 0.5 — the editor must keep the text as typed.
+      expect(getCellEditable(0, 3).textContent).to.equal('0.50');
+
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
+      await microtasks();
+      expect(apiRef.current!.getRow(0).total).to.equal(0.5);
+    });
+
+    it('should allow typing an escaped literal on a number column', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
+      });
+
+      setEditableValue(0, 3, '');
+      // A leading `'` may become an escaped literal — never neglected.
+      setEditableValue(0, 3, "'=not math");
+      expect(getCellEditable(0, 3).textContent).to.equal("'=not math");
+
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
+      await microtasks();
+      expect(apiRef.current!.getRow(0).total).to.equal("'=not math");
+      expect(getColumnValues(3)).to.deep.equal(['=not math', '5', '8']);
+    });
+
     it('should not seed the source when the edit starts by typing', async () => {
       await render(<Test />);
       const cell = getCell(0, 3);
@@ -2351,6 +2442,32 @@ describe('<DataGridPremium /> - Formulas', () => {
       // The character landed at the caret (not the end), and the caret sits just
       // after it — the classic contenteditable "jump to end" bug does not happen.
       expect(getCaretOffset(getCellEditable(0, 3))).to.equal(10);
+    });
+
+    it.skipIf(isJSDOM)('neglects real keystrokes a number column cannot represent', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      const editable = getCellEditable(0, 3);
+      await waitFor(() => {
+        expect(editable.textContent).to.equal('=price * quantity');
+      });
+
+      // Replace the formula with a plain number, then type a letter: real key
+      // events carry `inputType: 'insertText'`, the letter is neglected and the
+      // caret stays put — the native number input's behavior.
+      await user.keyboard('{Control>}a{/Control}');
+      await user.keyboard('12');
+      await user.keyboard('a');
+      await waitFor(() => {
+        expect(getCellEditable(0, 3).textContent).to.equal('12');
+      });
+      expect(getCaretOffset(getCellEditable(0, 3))).to.equal(2);
+
+      // Typing valid characters continues naturally after the rejection.
+      await user.keyboard('5');
+      await waitFor(() => {
+        expect(getCellEditable(0, 3).textContent).to.equal('125');
+      });
     });
 
     it.skipIf(isJSDOM)('shows a native, colored text selection over a token', async () => {

@@ -423,12 +423,12 @@ export const useGridFormula = (
     // unchanged-commit guard re-freeze the formula. The seed is invalidated at
     // the next editor mount instead (`GridFormulaEditCell`), and its
     // id + field + exact-display-text match keeps a lingering one inert.
-    // The editor-session mirror must not resume into a later edit. This is the
-    // immediate clear for the common cell-mode path; `pruneEditorSession` below
-    // covers every path that never publishes `cellEditStop`.
+    // The editor-session mirror must not resume into a later edit, and the
+    // plain-edit draft must not leak its text into one. This is the immediate
+    // clear for the common cell-mode path; `pruneEditorSession` below covers
+    // every path that never publishes `cellEditStop`.
     cache.editorSession = null;
-    // The editor-session mirror must not resume into a later edit.
-    cache.editorSession = null;
+    cache.plainEditDraft = null;
     // Turn off reference highlighting (the editor set it on mount; this is the
     // only thing that clears it — the editor unmounting from virtualization
     // must not).
@@ -450,6 +450,13 @@ export const useGridFormula = (
       apiRef.current.getCellMode(session.id, session.field) !== GridCellModes.Edit
     ) {
       cache.editorSession = null;
+    }
+    const draft = cache.plainEditDraft;
+    if (
+      draft !== null &&
+      apiRef.current.getCellMode(draft.id, draft.field) !== GridCellModes.Edit
+    ) {
+      cache.plainEditDraft = null;
     }
   }, [apiRef]);
 

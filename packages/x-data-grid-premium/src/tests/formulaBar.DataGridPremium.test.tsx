@@ -284,6 +284,30 @@ describe('<DataGridPremium /> - Formula bar', () => {
       expect(getCell(0, 3).textContent).to.equal('21');
     });
 
+    it('neglects invalid characters typed over a plain number value', async () => {
+      render(<Test />);
+      await microtasks();
+      focusCell(2, 'total'); // plain value 8
+      focusBar();
+      typeInBar('8a');
+      expect(getBarEditable().textContent).to.equal('8');
+    });
+
+    it('commits what the native number editor would for leftover non-numeric text', async () => {
+      render(<Test />);
+      await microtasks();
+      focusCell(0, 'total');
+      // Deleting the `=` leaves text the number column cannot represent — the
+      // commit stores what a native number input would report (empty → null),
+      // never NaN.
+      typeInBar('price * quantity');
+      focusBar();
+      fireEvent.keyDown(getBarEditable(), { key: 'Enter' });
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).total).to.equal(null);
+      });
+    });
+
     it('commits on Tab and moves the focus right', async () => {
       render(<Test />);
       await microtasks();
@@ -413,6 +437,39 @@ describe('<DataGridPremium /> - Formula bar', () => {
       await microtasks();
       expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
       expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+    });
+
+    it('neglects characters the number column cannot represent', async () => {
+      render(<Test />);
+      await microtasks();
+      focusCell(0, 'total');
+      act(() => {
+        apiRef.current!.startCellEditMode({ id: 0, field: 'total' });
+      });
+      await microtasks();
+      focusBar();
+      typeInBar('12');
+      // The appended letter is an insertion a number column cannot hold — the
+      // bar neglects it, like the column's own `<input type="number">` would.
+      typeInBar('12a');
+      expect(getBarEditable().textContent).to.equal('12');
+      expect(privateApi().current.state.editRows[0]?.total?.value).to.equal(12);
+    });
+
+    it('shows the typed text, not NaN, when the leading `=` is deleted', async () => {
+      render(<Test />);
+      await microtasks();
+      focusCell(0, 'total');
+      act(() => {
+        apiRef.current!.startCellEditMode({ id: 0, field: 'total' });
+      });
+      await microtasks();
+      focusBar();
+      typeInBar('price * quantity');
+      expect(getBarEditable().textContent).to.equal('price * quantity');
+      // The edit state holds what a native number input would report for text
+      // it cannot represent — null, never NaN.
+      expect(privateApi().current.state.editRows[0]?.total?.value).to.equal(null);
     });
 
     it('keeps the cell edit alive when a bare mouseup lands inside the bar', async () => {

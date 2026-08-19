@@ -31,6 +31,7 @@ import {
   setCaretOffset,
   setSelectionOffsets,
 } from './formulaEditorCaret';
+import type { FormulaEditorSelection } from './formulaEditorCaret';
 
 /**
  * The font formula text is rendered in — monospace, so a formula reads as the
@@ -257,6 +258,16 @@ export interface GridFormulaEditableProps {
    */
   onValueChange: (text: string, caret: number | null, event: React.SyntheticEvent) => void;
   /**
+   * Consulted before an INSERTION (typing, paste, IME commit) is accepted:
+   * return `true` to neglect it — the editable restores the previous text and
+   * selection, the way a native number input ignores characters it cannot
+   * represent. Deletions are never filtered.
+   * @param {string} nextText The text the insertion would produce.
+   * @param {string} previousText The text currently rendered.
+   * @returns {boolean} `true` to reject the insertion.
+   */
+  shouldIgnoreInput?: (nextText: string, previousText: string) => boolean;
+  /**
    * Enter pressed while the popup is closed (or the accept was a no-op). The
    * newline is always prevented; when this is not provided the event keeps
    * propagating so an enclosing grid cell commits the edit.
@@ -308,6 +319,7 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
       ariaLabel,
       className,
       onValueChange,
+      shouldIgnoreInput,
       onCommitKey,
       onCancelKey,
       onAfterRebuild,
@@ -468,20 +480,61 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
       node?.scrollIntoView?.({ block: 'nearest' });
     }, [showPopup, hasList, activeIndex, popupId]);
 
+    // The selection as it stood before the DOM mutated, captured on
+    // `beforeinput` (and by the paste handler, whose `execCommand` insertion
+    // fires no `beforeinput`) — where the caret returns when `shouldIgnoreInput`
+    // rejects the change. Consumed and cleared by every `runInput`.
+    const beforeInputSelectionRef = React.useRef<FormulaEditorSelection | null>(null);
+
+    const handleBeforeInput = React.useCallback(() => {
+      const root = editableRef.current;
+      beforeInputSelectionRef.current = root ? getSelectionOffsets(root) : null;
+    }, []);
+
     const runInput = React.useCallback(
       (event: React.SyntheticEvent) => {
         const root = editableRef.current;
         if (!root) {
           return;
         }
-        engagedRef.current = true;
         const rawText = normalizeSingleLine(root.textContent ?? '');
+        const previousText = renderedTextRef.current;
+        const savedSelection = beforeInputSelectionRef.current;
+        beforeInputSelectionRef.current = null;
+        // Only insertions can be neglected — deleting the `=` of a formula on a
+        // number column must land even though the remaining text is not
+        // numeric. A missing/empty `inputType` (composition commits, synthetic
+        // events, jsdom) falls back to a length heuristic.
+        const inputType = (event.nativeEvent as Partial<InputEvent>).inputType;
+        const isInsertion = inputType
+          ? inputType.startsWith('insert')
+          : rawText.length > previousText.length;
+        if (isInsertion && rawText !== previousText && shouldIgnoreInput?.(rawText, previousText)) {
+          // Neglected: put the previous content back and restore the selection,
+          // the way a native number input ignores a character it cannot
+          // represent. No value write, no popup refresh — nothing happened.
+          const caretAfterInput = getCaretOffset(root);
+          renderSegments(root, renderedSegmentsRef.current);
+          if (savedSelection !== null) {
+            setSelectionOffsets(root, savedSelection);
+          } else {
+            const lengthDelta = rawText.length - previousText.length;
+            const fallbackCaret = Math.max(
+              0,
+              Math.min(previousText.length, (caretAfterInput ?? previousText.length) - lengthDelta),
+            );
+            setCaretOffset(root, fallbackCaret);
+          }
+          onInteraction?.(getCaretOffset(root));
+          return;
+        }
+        engagedRef.current = true;
         pendingCaretRef.current = getCaretOffset(root);
         onValueChange(rawText, pendingCaretRef.current, event);
         refresh(pendingCaretRef.current);
         onInteraction?.(pendingCaretRef.current);
       },
-      [onInteraction, onValueChange, refresh],
+      [onInteraction, onValueChange, refresh, shouldIgnoreInput],
     );
 
     const handleInput = React.useCallback(
@@ -514,6 +567,10 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
           return;
         }
         const pasted = normalizeSingleLine(event.clipboardData.getData('text/plain'));
+        // `execCommand` fires no `beforeinput`, so the pre-insertion selection
+        // (the revert point should `shouldIgnoreInput` reject the paste) is
+        // captured here.
+        beforeInputSelectionRef.current = getSelectionOffsets(root);
         // `contenteditable="plaintext-only"` is unavailable below the Firefox
         // floor, so insert the plain text explicitly. `insertText` fires its own
         // `input` event (which runs the input pipeline); the manual fallback does
@@ -733,6 +790,7 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
           spellCheck={false}
           autoCorrect="off"
           autoCapitalize="off"
+          onBeforeInput={handleBeforeInput}
           onInput={handleInput}
           onKeyDown={handleKeyDown}
           onKeyUp={handleKeyUp}
