@@ -13,7 +13,11 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
-import type { EventDialogGeneralTabProps, SchedulerSlots } from '../../../models/slots';
+import type {
+  EventDialogGeneralTabProps,
+  SchedulerSlotProps,
+  SchedulerSlots,
+} from '../../../models/slots';
 import { MonthView } from '../../../month-view';
 import { EventDialogContent, EventDialogProvider } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
@@ -343,10 +347,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       slots: SchedulerSlots,
       providerProps?: Partial<React.ComponentProps<typeof EventCalendarProvider>>,
       occurrence = occurrenceWithDescription,
+      slotProps?: SchedulerSlotProps,
     ) {
       return render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources} {...providerProps}>
-          <SchedulerSlotsProvider slots={slots} slotProps={undefined}>
+          <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
             <EventDialogContent open {...defaultProps} occurrence={occurrence} />
           </SchedulerSlotsProvider>
         </EventCalendarProvider>,
@@ -454,6 +459,23 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         return null;
       }
       renderWithSlot({ eventDialogGeneralTab: OccurrenceProbe });
+
+      expect(occurrences[0]).to.equal(DEFAULT_EVENT.title);
+    });
+
+    it('should keep the scheduler-owned occurrence over one supplied through slotProps', () => {
+      const occurrences: string[] = [];
+      function OccurrenceProbe(props: EventDialogGeneralTabProps) {
+        occurrences.push(props.occurrence.title);
+        return null;
+      }
+      // A variable dodges the excess property check, like a consumer spreading a wider object.
+      const overridingProps = {
+        occurrence: EventBuilder.new().title('Other event').toOccurrence(),
+      };
+      renderWithSlot({ eventDialogGeneralTab: OccurrenceProbe }, undefined, undefined, {
+        eventDialogGeneralTab: overridingProps,
+      });
 
       expect(occurrences[0]).to.equal(DEFAULT_EVENT.title);
     });

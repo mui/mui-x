@@ -30,7 +30,7 @@ export function GeneralTab(props: GeneralTabProps) {
       hidden={value !== 'general'}
     >
       <EventDialogTabContent className={classes.eventDialogTabContent}>
-        <GeneralTabContent occurrence={occurrence} {...slotProps.eventDialogGeneralTab} />
+        <GeneralTabContent {...slotProps.eventDialogGeneralTab} occurrence={occurrence} />
       </EventDialogTabContent>
     </EventDialogTabPanel>
   );
