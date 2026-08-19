@@ -13,6 +13,7 @@ import {
   type Locator,
 } from '@playwright/test';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
+import { pickersOutlinedInputClasses } from '@mui/x-date-pickers/PickersTextField';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
@@ -807,6 +808,72 @@ async function initializeEnvironment(
         //   expect(await status.isVisible()).to.equal(true);
         //   expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
         // });
+
+        it('should keep the selected section when clicking the blank space after the last section', async () => {
+          // Needs trusted input: Chromium delegates the focus to the nearest
+          // section without the `preventDefault` on mousedown.
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+          await page.getByRole('spinbutton', { name: 'Day' }).click();
+
+          const container = (await page
+            .locator(`.${pickersSectionListClasses.root}`)
+            .boundingBox())!;
+          const year = (await page.getByRole('spinbutton', { name: 'Year' }).boundingBox())!;
+          // Without blank space to click, the assertion below would pass vacuously.
+          expect(container.x + container.width).to.be.greaterThan(year.x + year.width + 16);
+
+          await page.mouse.click(
+            container.x + container.width - 2,
+            container.y + container.height / 2,
+          );
+
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('DD');
+        });
+
+        it('should keep the selected section when clicking the padding of the field', async () => {
+          // Needs trusted input: the browser blurs the section without the
+          // `preventDefault` on mousedown, so the field flashes.
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+          await page.getByRole('spinbutton', { name: 'Day' }).click();
+
+          const root = (await page.locator(`.${pickersOutlinedInputClasses.root}`).boundingBox())!;
+          const container = (await page
+            .locator(`.${pickersSectionListClasses.root}`)
+            .boundingBox())!;
+          // Without padding to click, the assertion below would pass vacuously.
+          expect(container.x).to.be.greaterThan(root.x + 8);
+
+          await page.mouse.click(root.x + 4, root.y + root.height / 2);
+
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('DD');
+        });
+
+        it('should keep the field editable after several blank space clicks', async () => {
+          // Regression test for https://github.com/mui/mui-x/issues/19809: the
+          // field stayed focused but stopped accepting keystrokes.
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+          const container = (await page
+            .locator(`.${pickersSectionListClasses.root}`)
+            .boundingBox())!;
+          const year = (await page.getByRole('spinbutton', { name: 'Year' }).boundingBox())!;
+          // Without blank space to click, the assertion below would pass vacuously.
+          expect(container.x + container.width).to.be.greaterThan(year.x + year.width + 16);
+          const x = container.x + container.width - 2;
+          const y = container.y + container.height / 2;
+
+          await page.mouse.click(x, y);
+          await page.mouse.click(x, y);
+          await page.mouse.click(x, y);
+
+          await page.keyboard.press('4');
+
+          expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+            '04/DD/YYYY',
+          );
+        });
 
         it('should correctly select a day in a calendar with "AdapterMomentJalaali"', async () => {
           await renderFixture('DatePicker/MomentJalaliDateCalendar');

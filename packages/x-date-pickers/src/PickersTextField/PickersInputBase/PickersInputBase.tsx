@@ -134,6 +134,15 @@ const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, 
   letterSpacing: 'inherit',
   width: 'fit-content',
   outline: 'none',
+  // Disables Chromium's focus-delegation onto contenteditable descendants
+  // while the field is not focused. Gated to Chromium via a Blink-only
+  // property, because the rule breaks Playwright's `fill()` on WebKit.
+  '@supports (-webkit-app-region: drag)': {
+    [`.${pickersInputBaseClasses.root}:not(:focus-within) &`]: {
+      WebkitUserModify: 'read-only',
+      userSelect: 'none',
+    },
+  },
 }));
 
 const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparator, {
@@ -516,6 +525,7 @@ PickersInputBase.propTypes = {
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,

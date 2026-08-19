@@ -50,6 +50,7 @@ export const useFieldV7TextField = <
     sectionListRef: sectionListRefProp,
     onBlur,
     onClick,
+    onMouseDown,
     onFocus,
     onInput,
     onPaste,
@@ -169,6 +170,18 @@ export const useFieldV7TextField = <
     rootProps.onClick(event);
   });
 
+  const handleRootMouseDown = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    // The `isDefaultPrevented` check skips mousedowns that have already been
+    // suppressed before this handler runs -- in particular, propagated events
+    // from the clear / open buttons whose own handlers `preventDefault`, and
+    // capture-phase parents that intentionally block field interactions.
+    if (event.isDefaultPrevented()) {
+      return;
+    }
+    onMouseDown?.(event);
+    rootProps.onMouseDown(event);
+  });
+
   const handleRootPaste = useEventCallback((event: React.ClipboardEvent<HTMLDivElement>) => {
     onPaste?.(event);
     rootProps.onPaste(event);
@@ -277,6 +290,7 @@ export const useFieldV7TextField = <
     ...rootProps,
     onBlur: handleRootBlur,
     onClick: handleRootClick,
+    onMouseDown: handleRootMouseDown,
     onFocus: handleRootFocus,
     onInput: handleRootInput,
     onPaste: handleRootPaste,
