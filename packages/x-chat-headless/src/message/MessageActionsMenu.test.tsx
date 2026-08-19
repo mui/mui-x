@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
 import { Menu } from '@base-ui/react/menu';
 import {
   MessageActionsMenu,

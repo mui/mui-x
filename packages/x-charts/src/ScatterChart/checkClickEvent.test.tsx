@@ -1,5 +1,4 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';

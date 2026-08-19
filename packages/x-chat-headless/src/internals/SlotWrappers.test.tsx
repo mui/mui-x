@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProgressIndicator, ProgressRoot, ProgressTrack } from './ProgressSlots';
 import { ScrollRoot, ScrollScrollbar, ScrollThumb, ScrollViewport } from './ScrollAreaSlots';
 

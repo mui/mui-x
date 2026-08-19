@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import { createMuiAgentToolset } from './toolset';
 import { LRUCache } from './utils/cache';
 import type { AgentToolsConfig } from './config';

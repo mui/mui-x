@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
 

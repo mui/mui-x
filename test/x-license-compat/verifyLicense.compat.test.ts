@@ -42,7 +42,6 @@
 // regression stays visible in CI and the day older majors are no longer supported, the
 // markers can be removed cleanly.
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import { verifyLicense as verifyLicenseV5, LicenseStatus as STATUS_V5 } from 'x-license-v5';
 import { verifyLicense as verifyLicenseV6, LICENSE_STATUS as STATUS_V6 } from 'x-license-v6';

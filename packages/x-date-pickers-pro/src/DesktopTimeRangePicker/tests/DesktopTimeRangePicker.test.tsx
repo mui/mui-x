@@ -1,6 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
-import { vi } from 'vitest';
 import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopTimeRangePicker';
 
 describe('<DesktopTimeRangePicker />', () => {

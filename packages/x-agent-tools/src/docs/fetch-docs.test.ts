@@ -1,4 +1,3 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import PQueue from 'p-queue';
 import { LRUCache } from '../utils/cache';
 import { absolutizeDocLinks, urlListFetcher } from './fetch-docs';

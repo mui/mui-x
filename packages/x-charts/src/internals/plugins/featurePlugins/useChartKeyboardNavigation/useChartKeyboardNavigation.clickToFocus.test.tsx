@@ -3,7 +3,6 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { useChartsContext } from '@mui/x-charts/internals';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { vi } from 'vitest';
 import { getCenter } from 'test/utils/charts/getCenter';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { chartsSvgLayerClasses } from '@mui/x-charts/ChartsSvgLayer';

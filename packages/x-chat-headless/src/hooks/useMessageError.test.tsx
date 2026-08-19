@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { act, renderHook } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '../adapters';
 import type { ChatMessage } from '../types/chat-entities';
 import { ChatProvider } from '../ChatProvider';

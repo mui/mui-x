@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
-import { describe, it, expect } from 'vitest';
 import { act, reactMajor } from '@mui/internal-test-utils';
 import { DataGrid, useGridApiContext, useGridSelector } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';

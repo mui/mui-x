@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import { consumeCodegenStream } from './stream';
 
 /** Build a `text/event-stream` Response from a sequence of pre-formatted SSE frames. */

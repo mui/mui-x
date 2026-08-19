@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { flushMicrotasks, randomStringValue } from '@mui/internal-test-utils';
-import { describe, it, expect } from 'vitest';
 import { throwMissingPropError } from './utils';
 import type {
   ConformantComponentProps,

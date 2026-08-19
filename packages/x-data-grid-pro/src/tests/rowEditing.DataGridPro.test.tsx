@@ -14,7 +14,6 @@ import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, screen, waitFor } from '@mui/internal-test-utils';
 import { getCell, getRow, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { onTestFinished, vi } from 'vitest';
 
 describe('<DataGridPro /> - Row editing', () => {
   const { render } = createRenderer();

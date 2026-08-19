@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import {
   createUseMuiDocsTool as baseUseMuiDocsTool,
   createFetchDocTool as baseFetchDocTool,

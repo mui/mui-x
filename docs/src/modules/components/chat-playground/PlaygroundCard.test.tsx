@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
-import { describe, expect, it, vi } from 'vitest';
 import PlaygroundCardComponent from './PlaygroundCard';
 
 const { render } = createRenderer();

@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { combineAbortSignals } from './abort-signal';
 
 describe('combineAbortSignals', () => {

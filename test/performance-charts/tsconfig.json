@@ -7,6 +7,6 @@
     "module": "es2022",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "types": ["vite/client"]
+    "types": ["vite/client", "vitest/globals"]
   }
 }

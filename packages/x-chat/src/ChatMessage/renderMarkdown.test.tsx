@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
 import { renderMarkdown } from './renderMarkdown';
 
 const { render } = createRenderer();

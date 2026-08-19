@@ -88,6 +88,30 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-scheduler-internals-premium',
 ];
 
+// Vitest injects these with `globals: true`, so test files must not import them.
+const RESTRICTED_VITEST_GLOBAL_IMPORTS = {
+  name: 'vitest',
+  importNames: [
+    'suite',
+    'chai',
+    'describe',
+    'it',
+    'expectTypeOf',
+    'assertType',
+    'expect',
+    'assert',
+    'vitest',
+    'vi',
+    'beforeAll',
+    'afterAll',
+    'beforeEach',
+    'afterEach',
+    'onTestFailed',
+    'onTestFinished',
+  ],
+  message: 'Vitest globals are enabled (`globals: true`). Use the global directly instead.',
+};
+
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
   {
     packagesNames: CHARTS_PACKAGES,
@@ -229,6 +253,28 @@ export default defineConfig(
     ],
     extends: createTestConfig({ useMocha: false, useVitest: true }),
     ignores: ['test/e2e/**/*', 'test/regressions/**/*'],
+    languageOptions: {
+      // Vitest injects these with `globals: true`. TypeScript files get the
+      // types from `vitest/globals`. Plain JS test files need them for `no-undef`.
+      globals: {
+        suite: 'readonly',
+        test: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+        expectTypeOf: 'readonly',
+        assertType: 'readonly',
+        expect: 'readonly',
+        assert: 'readonly',
+        vitest: 'readonly',
+        vi: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        onTestFailed: 'readonly',
+        onTestFinished: 'readonly',
+      },
+    },
     rules: {
       // Doesn't work reliantly with chai style .to.deep.equal (replace with .toEqual?)
       'vitest/valid-expect': 'off',
@@ -283,7 +329,11 @@ export default defineConfig(
       'no-restricted-imports': [
         'error',
         {
-          paths: ['@testing-library/react', 'test/utils/index'],
+          paths: [
+            '@testing-library/react',
+            'test/utils/index',
+            RESTRICTED_VITEST_GLOBAL_IMPORTS,
+          ],
         },
       ],
       'compat/compat': 'off',
@@ -447,10 +497,13 @@ export default defineConfig(
       'no-restricted-imports': [
         'error',
         {
-          paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
-            name,
-            message: 'Use deeper import instead',
-          })),
+          paths: [
+            ...RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
+              name,
+              message: 'Use deeper import instead',
+            })),
+            RESTRICTED_VITEST_GLOBAL_IMPORTS,
+          ],
           patterns: [
             {
               group: [

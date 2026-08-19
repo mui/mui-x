@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import { createEchoAdapter } from './createEchoAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import type { ChatMessageChunk, ChatStreamEnvelope } from '../types/chat-stream';

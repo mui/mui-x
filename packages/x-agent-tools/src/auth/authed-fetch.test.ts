@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import { createAuthedFetch } from './authed-fetch';
 
 const ok = (): Response => new Response('ok', { status: 200 });

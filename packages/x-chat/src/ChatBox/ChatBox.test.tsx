@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createEchoAdapter, useChatStatus, type ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from './ChatBox';
 

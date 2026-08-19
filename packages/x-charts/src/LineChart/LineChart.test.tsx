@@ -3,7 +3,6 @@ import { describeConformance } from 'test/utils/charts/describeConformance';
 import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { screen } from '@mui/internal-test-utils';
 import * as React from 'react';
-import { vi } from 'vitest';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';

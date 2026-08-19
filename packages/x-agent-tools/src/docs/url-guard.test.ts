@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import { createDocsUrlGuard } from './url-guard';
 
 describe('createDocsUrlGuard', () => {

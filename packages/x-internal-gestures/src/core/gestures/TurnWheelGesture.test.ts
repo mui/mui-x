@@ -1,4 +1,3 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mouseGesture } from '../../testing';
 import { GestureManager } from '../GestureManager';
 import { TurnWheelGesture } from './TurnWheelGesture';

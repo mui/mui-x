@@ -6,7 +6,6 @@ import {
   expectFieldValue,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
-import { vi } from 'vitest';
 
 describe('<MobileDateTimeRangePicker />', () => {
   const { render } = createPickerRenderer();

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { describe, it, expect } from 'vitest';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { Store } from '@mui/x-internals/store';
 import { useGridSelector } from './useGridSelector';

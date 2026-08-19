@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import { initializeZoomInteractionConfig } from './initializeZoomInteractionConfig';
 
 describe('initializeZoomInteractionConfig', () => {

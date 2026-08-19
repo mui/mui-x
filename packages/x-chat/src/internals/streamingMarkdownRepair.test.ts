@@ -1,4 +1,3 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { fallbackRepair, loadRemend, resetRemendCache } from './streamingMarkdownRepair';
 
 describe('streamingMarkdownRepair', () => {

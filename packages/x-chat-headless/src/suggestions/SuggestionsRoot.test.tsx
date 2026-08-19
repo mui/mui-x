@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters/chatAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import { ChatRoot } from '../chat/ChatRoot';

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatRoot, MessageListRoot } from '@mui/x-chat-headless';
 import { ChatScrollToBottomAffordance } from './ChatScrollToBottomAffordance';

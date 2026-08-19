@@ -1,5 +1,4 @@
 import { createRenderer, screen, within } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';

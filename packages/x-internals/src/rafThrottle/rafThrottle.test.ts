@@ -1,4 +1,3 @@
-import { expect } from 'vitest';
 import { rafThrottle } from './rafThrottle';
 
 describe('rafThrottle', () => {

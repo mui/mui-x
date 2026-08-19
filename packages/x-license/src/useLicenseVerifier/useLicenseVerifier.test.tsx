@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { vi } from 'vitest';
 import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import { LicenseInfo, Unstable_LicenseInfoProvider as LicenseInfoProvider } from '@mui/x-license';
 import { isJSDOM } from 'test/utils/skipIf';

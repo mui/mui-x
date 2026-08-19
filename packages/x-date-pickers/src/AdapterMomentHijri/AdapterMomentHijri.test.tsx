@@ -10,7 +10,6 @@ import {
   buildFieldInteractions,
 } from 'test/utils/pickers';
 import 'moment/locale/ar-sa';
-import { beforeAll } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<AdapterMomentHijri />', () => {

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { afterAll } from 'vitest';
 import {
   ConformanceOptions,
   MuiRenderResult,

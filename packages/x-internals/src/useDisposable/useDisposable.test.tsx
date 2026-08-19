@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'vitest';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { spy, type SinonSpy } from 'sinon';
 import { disposeSymbol } from '../disposable';

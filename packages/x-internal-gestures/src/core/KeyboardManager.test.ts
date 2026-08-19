@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach, afterEach, type MockInstance } from 'vitest';
+import { type MockInstance } from 'vitest';
 import { KeyboardManager } from './KeyboardManager';
 
 describe('KeyboardManager', () => {

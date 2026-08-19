@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { getFakeState } from '../equals';
 import { MockBadCloneGesture } from '../mocks/MockBadCloneGesture';
 import { MockBadInstanceGesture } from '../mocks/MockBadInstanceGesture';

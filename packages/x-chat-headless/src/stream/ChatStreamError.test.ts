@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { ChatStreamError } from './ChatStreamError';
 import type { ChatError } from '../types/chat-error';
 

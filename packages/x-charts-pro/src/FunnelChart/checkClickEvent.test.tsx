@@ -1,5 +1,4 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
 import { FunnelChart, funnelClasses } from '@mui/x-charts-pro/FunnelChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
