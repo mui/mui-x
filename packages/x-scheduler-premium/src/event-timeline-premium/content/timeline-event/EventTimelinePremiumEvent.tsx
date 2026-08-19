@@ -144,6 +144,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     id: idProp,
     style,
     resourceId,
+    elementPosition,
     ...other
   } = props;
 
@@ -212,6 +213,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
+      elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
       aria-describedby={dependsOnTitles.length > 0 ? `${id}-dependencies` : undefined}
