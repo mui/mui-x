@@ -826,6 +826,10 @@ async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}
 
   await page.waitForFunction(() => window.muiFixture?.isReady);
 
+  // Screenshots taken with fallback faces look like a repo-wide text rendering
+  // change. Fail the run instead of publishing them.
+  await page.evaluate(() => window.muiFixture.fontsReady);
+
   return page;
 }
 

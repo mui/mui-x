@@ -7,6 +7,7 @@ import '../utils/setupFakeClock';
 import { LicenseInfo } from '@mui/x-license';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import { resetRandomGenerators } from '@mui/x-data-grid-generator';
+import loadFonts from './loadFonts';
 import TestViewer from './TestViewer';
 import OverviewWrapper from './overviews/OverviewWrapper';
 import { type Test, testsBySuite } from './testsBySuite';
@@ -23,6 +24,7 @@ declare global {
   interface Window {
     muiFixture: {
       allTests: { url: string }[];
+      fontsReady: Promise<void>;
       isReady: boolean;
       navigate: (test: string) => void;
     };
@@ -35,6 +37,8 @@ const allTests = Object.values(testsBySuite).flatMap((suite) =>
 
 window.muiFixture = {
   allTests,
+  // `index.test.ts` awaits this before it screenshots anything.
+  fontsReady: loadFonts(),
   isReady: false,
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);
