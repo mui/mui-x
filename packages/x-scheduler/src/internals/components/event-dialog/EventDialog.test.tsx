@@ -539,14 +539,18 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       ]);
     });
 
-    it('should not warn when the slot keeps the resource section', async () => {
+    it('should not warn and save the assigned resource when the slot keeps the resource section', async () => {
       clearWarningsCache();
+      const onEventsChange = spy();
       const { user } = renderWithSlot(
         { eventDialogGeneralTab: () => <ResourceAndColorSection /> },
-        { shouldEventRequireResource: true, onEventsChange: () => {} },
+        { shouldEventRequireResource: true, onEventsChange },
       );
 
       await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(1);
+      expect(onEventsChange.lastCall.firstArg[0]).to.have.property('resource', personalResource.id);
     });
 
     it('should not warn when a section rendered by the slot validates the resource itself', async () => {
