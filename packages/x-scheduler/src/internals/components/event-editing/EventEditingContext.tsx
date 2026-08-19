@@ -53,6 +53,7 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
         occurrence,
         getInitialEditingMode(surface, { isCreating, isReadOnly }),
         event,
+        forwardedAnchorRef.current ?? undefined,
       );
       if (started) {
         // Batched with the store write above, so the surface never renders anchored to `null`.

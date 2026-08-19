@@ -65,7 +65,7 @@ export function EventToolbar(props: EventToolbarProps) {
   useDisarmOnEscape({ active: true, onDisarm: stopEditing });
 
   const handleEdit = (event: React.MouseEvent) => {
-    store.setEditingMode('edit', event.nativeEvent);
+    store.setEditingMode('edit', event.nativeEvent, event.currentTarget as HTMLElement);
   };
 
   // Mirrors `FormContent`'s delete: recurring events open the scope dialog (which closes the surface

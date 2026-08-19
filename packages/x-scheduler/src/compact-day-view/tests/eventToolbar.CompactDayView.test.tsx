@@ -50,9 +50,11 @@ describe('CompactDayView - event toolbar', () => {
 
     // Tapping Edit is what opens the surface. Canceling disarms: the armed state keeps
     // document-wide guards that must not stay active under the consumer's custom UI.
-    fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+    const editButton = screen.getByRole('button', { name: 'Edit event' });
+    fireEvent.click(editButton);
     expect(onEventEditingStart.calledOnce).to.equal(true);
     expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('click');
+    expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(editButton);
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
     expect(eventElement).not.to.have.attribute('data-armed');
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);

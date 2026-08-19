@@ -449,7 +449,8 @@ describe('EventCalendar', () => {
         <EventCalendar events={[event1]} onEventEditingStart={onEventEditingStart} />,
       );
 
-      await user.click(screen.getByRole('button', { name: /Running/i }));
+      const eventButton = screen.getByRole('button', { name: /Running/i });
+      await user.click(eventButton);
 
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);
@@ -457,6 +458,7 @@ describe('EventCalendar', () => {
       expect(onEventEditingStart.calledOnce).to.equal(true);
       expect(onEventEditingStart.lastCall.firstArg.id).to.equal(event1.id);
       expect(onEventEditingStart.lastCall.args[1].reason).to.equal('edit');
+      expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(eventButton);
     });
 
     it('should keep the built-in dialog closed when the handler cancels', async () => {
@@ -501,6 +503,9 @@ describe('EventCalendar', () => {
       expect(draft.allDay).to.equal(true);
       expect(draft.displayTimezone.start.timestamp).to.be.lessThan(
         draft.displayTimezone.end.timestamp,
+      );
+      expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(
+        withinMonthView().getAllByRole('gridcell')[10],
       );
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
