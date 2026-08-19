@@ -122,7 +122,7 @@
   "slots": [
     {
       "name": "eventDialogGeneralTab",
-      "description": "The content of the \"General\" tab of the event editing dialog.\nIt is rendered inside the tab panel, so it must not render a tab panel of its own.\nReturn a fragment rather than a wrapper element to keep the spacing between the sections.",
+      "description": "The content of the \"General\" tab of the event editing surface:\nthe dialog on regular views, the compact editing drawer on compact views.\nIt is rendered inside the tab panel, so it must not render a tab panel of its own.\nReturn a fragment rather than a wrapper element to keep the spacing between the sections.",
       "default": "EventDialogGeneralTabContent",
       "class": null
     }
