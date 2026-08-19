@@ -693,6 +693,95 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       setProps({ slot: SlotB });
       expect(screen.getByRole('textbox', { name: 'Priority' })).to.have.value('high');
     });
+
+    describe('async validation', () => {
+      function createDeferred() {
+        let resolve!: (value: null) => void;
+        const promise = new Promise<null>((internalResolve) => {
+          resolve = internalResolve;
+        });
+        return { promise, resolve };
+      }
+
+      it('should validate the values as they are when the async validation settles, not as they were on submit', async () => {
+        const onEventsChange = spy();
+        const deferred = createDeferred();
+        function AsyncValidatedSection() {
+          const client = useEventDialogFormField<string>('client', {
+            defaultValue: 'Acme',
+            validate: (value) => (value === '' ? 'Client is required' : deferred.promise),
+          });
+          return (
+            <React.Fragment>
+              <input
+                aria-label="Client"
+                value={client.value}
+                onChange={(event) => client.setValue(event.target.value)}
+              />
+              {client.error && <p role="alert">{client.error}</p>}
+            </React.Fragment>
+          );
+        }
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: AsyncValidatedSection },
+          { onEventsChange },
+        );
+
+        // The validation of "Acme" is now pending on the deferred promise.
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+        await user.clear(screen.getByRole('textbox', { name: 'Client' }));
+        await act(async () => deferred.resolve(null));
+
+        expect(onEventsChange.callCount).to.equal(0);
+        expect(screen.getByRole('alert')).to.have.text('Client is required');
+      });
+
+      it('should ignore a submission that settles after its editing session ended', async () => {
+        const onEventsChange = spy();
+        const deferred = createDeferred();
+        function AsyncValidatedSection() {
+          useEventDialogFormField<string>('client', {
+            defaultValue: 'Acme',
+            validate: () => deferred.promise,
+          });
+          return null;
+        }
+        const { user, unmount } = renderWithSlot(
+          { eventDialogGeneralTab: AsyncValidatedSection },
+          { onEventsChange },
+        );
+
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+        // Both editing surfaces unmount the form when the session stops.
+        unmount();
+        await act(async () => deferred.resolve(null));
+
+        expect(onEventsChange.callCount).to.equal(0);
+      });
+
+      it('should submit only once when Save is pressed twice while the validation is pending', async () => {
+        const onEventsChange = spy();
+        const deferred = createDeferred();
+        function AsyncValidatedSection() {
+          useEventDialogFormField<string>('client', {
+            defaultValue: 'Acme',
+            validate: () => deferred.promise,
+          });
+          return null;
+        }
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: AsyncValidatedSection },
+          { onEventsChange },
+        );
+
+        const saveButton = screen.getByRole('button', { name: 'Save' });
+        await user.click(saveButton);
+        await user.click(saveButton);
+        await act(async () => deferred.resolve(null));
+
+        expect(onEventsChange.callCount).to.equal(1);
+      });
+    });
   });
 
   // The sections read the occurrence from context instead of receiving it as a prop, so they

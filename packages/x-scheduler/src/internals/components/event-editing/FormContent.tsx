@@ -229,8 +229,25 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
 
+  // Both surfaces unmount the form synchronously when the editing session stops,
+  // so the cleanup running is exactly "this session is over". An async validator
+  // can outlive it: a submit resolving afterwards must not commit into whatever
+  // session is open by then.
+  const isSessionAliveRef = React.useRef(true);
+  React.useEffect(() => {
+    isSessionAliveRef.current = true;
+    return () => {
+      isSessionAliveRef.current = false;
+    };
+  }, []);
+  const isSubmittingRef = React.useRef(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (isSubmittingRef.current) {
+      return;
+    }
 
     if (process.env.NODE_ENV !== 'production') {
       // Checked on submit rather than on mount: the registry is only complete once
@@ -238,86 +255,95 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       if (shouldEventRequireResource && !formStore.hasValidator('resourceIds')) {
         warnOnce([
           'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
-          'The built-in resource section is not rendered, so an event can be saved without a resource.',
+          'Saving without a resource is still blocked, but the end user has no visible field to fix it.',
           'Render the resource section in the General tab, or register a validator for the "resourceIds" field.',
         ]);
       }
     }
 
-    const isValid = await formStore.validateAll();
+    isSubmittingRef.current = true;
+    try {
+      const isValid = await formStore.validateAll();
 
-    // Checked here so a custom General tab without the resource section cannot bypass the requirement.
-    const isMissingRequiredResource =
-      shouldEventRequireResource && formStore.state.values.resourceIds.length === 0;
-    if (isMissingRequiredResource) {
-      formStore.setError('resourceIds', localeText.requiredResourceError);
-    }
-    if (!isValid || isMissingRequiredResource) {
-      return;
-    }
+      if (!isSessionAliveRef.current) {
+        return;
+      }
 
-    const values = formStore.state.values;
-    const { start, end } = computeRange(adapter, values, displayTimezone);
+      // Checked here so a custom General tab without the resource section cannot bypass the requirement.
+      const isMissingRequiredResource =
+        shouldEventRequireResource && formStore.state.values.resourceIds.length === 0;
+      if (isMissingRequiredResource) {
+        formStore.setError('resourceIds', localeText.requiredResourceError);
+      }
+      if (!isValid || isMissingRequiredResource) {
+        return;
+      }
 
-    // Only the custom fields the user actually edited enter the changes payload,
-    // so untouched fields keep resolving against the live model on the recurring paths.
-    const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
+      const values = formStore.state.values;
+      const { start, end } = computeRange(adapter, values, displayTimezone);
 
-    const metaChanges = {
-      ...editedCustomValues,
-      title: values.title.trim(),
-      description: values.description.trim(),
-      allDay: values.allDay,
-      resource: resourceSelectionMode === 'multiple' ? values.resourceIds : values.resourceIds[0],
-      color: values.color === null ? undefined : values.color,
-    };
+      // Only the custom fields the user actually edited enter the changes payload,
+      // so untouched fields keep resolving against the live model on the recurring paths.
+      const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
 
-    let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
-    if (!showRecurrence || !recurrencePresets) {
-      rruleToSubmit = undefined;
-    } else if (values.recurrenceSelection === null) {
-      rruleToSubmit = undefined;
-    } else if (values.recurrenceSelection === 'custom') {
-      rruleToSubmit = values.rruleDraft;
-    } else {
-      rruleToSubmit = recurrencePresets[values.recurrenceSelection];
-    }
-
-    if (rawPlaceholder?.type === 'creation') {
-      store.createEvent({
-        ...metaChanges,
-        start,
-        end,
-        rrule: rruleToSubmit,
-      });
-    } else if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
-      const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
-        store.state,
-        occurrence.displayTimezone.rrule,
-        rruleToSubmit,
-      );
-
-      const changes: SchedulerEventUpdatedProperties = {
-        ...metaChanges,
-        id: occurrence.id,
-        start,
-        end,
-        ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
+      const metaChanges = {
+        ...editedCustomValues,
+        title: values.title.trim(),
+        description: values.description.trim(),
+        allDay: values.allDay,
+        resource: resourceSelectionMode === 'multiple' ? values.resourceIds : values.resourceIds[0],
+        color: values.color === null ? undefined : values.color,
       };
 
-      await store.updateRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
-        changes,
-        onSubmit: onClose,
-      });
+      let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
+      if (!showRecurrence || !recurrencePresets) {
+        rruleToSubmit = undefined;
+      } else if (values.recurrenceSelection === null) {
+        rruleToSubmit = undefined;
+      } else if (values.recurrenceSelection === 'custom') {
+        rruleToSubmit = values.rruleDraft;
+      } else {
+        rruleToSubmit = recurrencePresets[values.recurrenceSelection];
+      }
 
-      // don't close the dialog
-      return;
-    } else {
-      store.updateEvent({ ...metaChanges, id: occurrence.id, start, end, rrule: rruleToSubmit });
+      if (rawPlaceholder?.type === 'creation') {
+        store.createEvent({
+          ...metaChanges,
+          start,
+          end,
+          rrule: rruleToSubmit,
+        });
+      } else if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+        const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
+          store.state,
+          occurrence.displayTimezone.rrule,
+          rruleToSubmit,
+        );
+
+        const changes: SchedulerEventUpdatedProperties = {
+          ...metaChanges,
+          id: occurrence.id,
+          start,
+          end,
+          ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
+        };
+
+        await store.updateRecurringEvent({
+          occurrenceStart: occurrence.displayTimezone.start.value,
+          changes,
+          onSubmit: onClose,
+        });
+
+        // don't close the dialog
+        return;
+      } else {
+        store.updateEvent({ ...metaChanges, id: occurrence.id, start, end, rrule: rruleToSubmit });
+      }
+
+      onClose();
+    } finally {
+      isSubmittingRef.current = false;
     }
-
-    onClose();
   };
 
   const handleDelete = () => {

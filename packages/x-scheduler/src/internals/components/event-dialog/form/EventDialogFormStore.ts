@@ -214,27 +214,36 @@ export class EventDialogFormStore<
 
   /**
    * Runs every registered validator and stores the failures (first error per field wins).
+   * Restarts when a value is written while an async validator is pending, so the stored
+   * errors and the resolved verdict always describe the values current at resolution time.
    * Resolves with whether the form is valid.
    */
   public validateAll = async (): Promise<boolean> => {
-    const { values } = this.state;
-    const errors: Record<string, React.ReactNode[]> = {};
-    await Promise.all(
-      Array.from(this.validators, async ([key, validators]) => {
-        const results = await Promise.all(
-          Array.from(validators, (validator) => validator(values[key], values)),
-        );
-        for (const result of results) {
-          const messages = normalizeValidatorResult(result);
-          if (messages !== null) {
-            errors[key] = messages;
-            break;
+    while (true) {
+      // `setValues` replaces the values object on every write, so its identity
+      // doubles as a revision check.
+      const { values } = this.state;
+      const errors: Record<string, React.ReactNode[]> = {};
+      // eslint-disable-next-line no-await-in-loop
+      await Promise.all(
+        Array.from(this.validators, async ([key, validators]) => {
+          const results = await Promise.all(
+            Array.from(validators, (validator) => validator(values[key], values)),
+          );
+          for (const result of results) {
+            const messages = normalizeValidatorResult(result);
+            if (messages !== null) {
+              errors[key] = messages;
+              break;
+            }
           }
-        }
-      }),
-    );
-    this.set('errors', errors);
-    return Object.keys(errors).length === 0;
+        }),
+      );
+      if (this.state.values === values) {
+        this.set('errors', errors);
+        return Object.keys(errors).length === 0;
+      }
+    }
   };
 
   /**
