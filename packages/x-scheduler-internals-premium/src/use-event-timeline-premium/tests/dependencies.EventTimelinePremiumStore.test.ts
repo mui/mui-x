@@ -159,7 +159,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     it('should reject a dependency referencing a recurring event', () => {
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
-        { events: [eventA, recurringEvent], resources: TEST_RESOURCES, onDependenciesChange },
+        {
+          events: [eventA, recurringEvent],
+          resources: TEST_RESOURCES,
+          dependencies: [],
+          onDependenciesChange,
+        },
         adapter,
       );
 
@@ -237,7 +242,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // A self-loop is the degenerate cycle; rejection belongs to the cycle guard (#22858).
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, onDependenciesChange },
+        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
         adapter,
       );
 
@@ -256,7 +261,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // consumer round-trips the prop — same known limitation as consecutive adds.
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, onDependenciesChange },
+        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
         adapter,
       );
 
@@ -298,7 +303,9 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         adapter,
       );
 
-      store.deleteDependency('nope');
+      // `false` — nothing was deleted: `true` would let the callers pairing the
+      // deletion with a side effect (clearing the selection) act on a no-op.
+      expect(store.deleteDependency('nope')).to.equal(false);
 
       expect(onDependenciesChange.called).to.equal(false);
     });
@@ -455,7 +462,122 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
   });
 
+  describe('method: setDependencyCreation', () => {
+    it('should not write to the state when the gesture values did not change', () => {
+      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
+      const creation = {
+        sourceEventId: 'event-a',
+        sourceOccurrenceKey: 'key-a',
+        sourceResourceId: 'r1',
+        sourceSide: 'end' as const,
+        targetEventId: null,
+        targetOccurrenceKey: null,
+        targetResourceId: null,
+      };
+      store.setDependencyCreation(creation);
+      const stateBefore = store.state;
+
+      // A fresh but value-equal object: entering and leaving targets produces them.
+      store.setDependencyCreation({ ...creation });
+      expect(store.state).to.equal(stateBefore);
+
+      store.setDependencyCreation({ ...creation, targetEventId: 'event-b' });
+      expect(store.state).not.to.equal(stateBefore);
+    });
+  });
+
+  describe('method: setSelectedDependencyId', () => {
+    it('should not write to the state when the selection did not change', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.setSelectedDependencyId('dep-1');
+      const stateBefore = store.state;
+
+      store.setSelectedDependencyId('dep-1');
+      expect(store.state).to.equal(stateBefore);
+
+      store.setSelectedDependencyId(null);
+      expect(store.state).not.to.equal(stateBefore);
+    });
+  });
+
+  describe('transient state resets', () => {
+    it('should discard the creation gesture and the selection when the feature is disabled', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.setDependencyCreation({
+        sourceEventId: 'event-a',
+        sourceOccurrenceKey: 'key-a',
+        sourceResourceId: 'r1',
+        sourceSide: 'end',
+        targetEventId: null,
+        targetOccurrenceKey: null,
+        targetResourceId: null,
+      });
+      store.setSelectedDependencyId('dep-1');
+
+      store.updateStateFromParameters(DEFAULT_PARAMS, adapter);
+
+      expect(store.state.dependencyCreation).to.equal(null);
+      expect(store.state.selection).to.equal(null);
+    });
+
+    it('should clear the selection of a removed dependency so a re-added id does not resurrect it', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.setSelectedDependencyId('dep-1');
+
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
+      expect(store.state.selection).to.equal(null);
+
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] }, adapter);
+      expect(eventTimelinePremiumDependencySelectors.selectedId(store.state)).to.equal(null);
+    });
+  });
+
+  it('should clear the selection when an endpoint event of the selected dependency becomes recurring', () => {
+    const store = new EventTimelinePremiumStore(
+      { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+      adapter,
+    );
+    store.setSelectedDependencyId('dep-1');
+
+    // The dependency deactivates (recurring endpoint) without being removed: the
+    // raw selection must clear, or the arrow would come back already selected.
+    const recurringB = EventBuilder.new().id('event-b').recurrent('DAILY').build();
+    expect(() => {
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, events: [eventA, recurringB], dependencies: [DEP_AB] },
+        adapter,
+      );
+    }).toWarnDev([
+      'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-b".',
+    ]);
+
+    expect(store.state.selection).to.equal(null);
+  });
+
   describe('dev warnings', () => {
+    it('should warn and keep the feature disabled when onDependenciesChange is provided without dependencies', () => {
+      let store!: EventTimelinePremiumStore<any, any>;
+      expect(() => {
+        store = new EventTimelinePremiumStore(
+          { ...DEFAULT_PARAMS, onDependenciesChange: () => {} },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
+      ]);
+
+      expect(store.state.areDependenciesEnabled).to.equal(false);
+    });
+
     it('should warn when a dependency from props references an unknown event and there is no dataSource', () => {
       expect(() => {
         // eslint-disable-next-line no-new

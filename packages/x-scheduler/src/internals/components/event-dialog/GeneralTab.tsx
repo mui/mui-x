@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
+import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
+import { useEventEditingStyledContext } from '../event-editing';
 import type { EventDialogSectionProps } from './EventDialog.types';
 import DateTimeSection from './DateTimeSection';
 import ResourceAndColorSection from './ResourceAndColorSection';
@@ -10,12 +11,17 @@ import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPane
 
 interface GeneralTabProps extends EventDialogSectionProps {
   value: string;
+  /**
+   * Forwarded to `ResourceAndColorSection` as-is — see there for why it's a prop
+   * instead of a value the section derives for itself.
+   */
+  resourceSelectionMode: ResourceSelectionMode;
 }
 
 export function GeneralTab(props: GeneralTabProps) {
-  const { occurrence, errors, setErrors, controlled, setControlled, value } = props;
+  const { occurrence, value, resourceSelectionMode } = props;
 
-  const { schedulerId, classes } = useEventDialogStyledContext();
+  const { schedulerId, classes } = useEventEditingStyledContext();
 
   return (
     <EventDialogTabPanel
@@ -26,20 +32,11 @@ export function GeneralTab(props: GeneralTabProps) {
       hidden={value !== 'general'}
     >
       <EventDialogTabContent className={classes.eventDialogTabContent}>
-        <DateTimeSection
-          occurrence={occurrence}
-          controlled={controlled}
-          setControlled={setControlled}
-          errors={errors}
-          setErrors={setErrors}
-        />
+        <DateTimeSection occurrence={occurrence} />
         <Divider />
         <ResourceAndColorSection
           occurrence={occurrence}
-          controlled={controlled}
-          setControlled={setControlled}
-          errors={errors}
-          setErrors={setErrors}
+          resourceSelectionMode={resourceSelectionMode}
         />
         <Divider />
         <DescriptionSection occurrence={occurrence} />

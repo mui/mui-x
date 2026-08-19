@@ -1,33 +1,23 @@
-import * as React from 'react';
-import { act, screen, waitFor } from '@mui/internal-test-utils';
+import { act, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import type {
-  EventTimelinePremiumStore,
-  EventTimelinePremiumStoreParameters,
-} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
-import {
-  EventDialogStyledContext,
-  EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-  SharedComponentsStyledContext,
-} from '@mui/x-scheduler/internals';
 import {
   adapter,
   createSchedulerRenderer,
-  DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import { EventTimelinePremiumContent } from '../content';
-import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
+import { createTheme } from '@mui/material/styles';
+import { getEventsCellLaneMetrics, getRowHeightForLaneCount } from '../content/rowGeometry';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
-
-const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
-const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
+import {
+  buildDependency,
+  createDependencyTimelineRenderer,
+  getArrowPaths,
+  getEventElement,
+  resource1,
+  resource2,
+} from './dependencyTestUtils';
 
 const eventA = EventBuilder.new()
   .id('event-a')
@@ -48,117 +38,11 @@ const eventC = EventBuilder.new()
   .resource(resource2)
   .build();
 
-function buildDependency(id: string, source: string, target: string): SchedulerDependency {
-  return { id, source, target, type: 'FinishToStart' };
-}
-
-const styledContextValue = {
-  schedulerId: 'test-timeline',
-  classes: eventTimelinePremiumClasses,
-  localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-};
-
-const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
-
 describe('<EventTimelinePremium /> dependency arrows', () => {
   const { render } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
-
-  // `dependencies` is not a public prop yet, so the harness feeds the internal store
-  // parameters to the same hook the component uses, and closes the controlled loop
-  // (`onEventsChange` / `onDependenciesChange` → new parameter values) like a consumer.
-  function TestTimeline({
-    events: initialEvents,
-    resources,
-    dependencies: initialDependencies,
-    onStoreReady,
-  }: {
-    events: SchedulerEvent[];
-    resources: SchedulerResource[];
-    dependencies?: SchedulerDependency[];
-    onStoreReady: (store: EventTimelinePremiumStore<any, any>) => void;
-  }) {
-    const [events, setEvents] = React.useState(initialEvents);
-    const [dependencies, setDependencies] = React.useState(initialDependencies);
-
-    const parameters: EventTimelinePremiumStoreParameters<SchedulerEvent, SchedulerResource> = {
-      events,
-      resources,
-      dependencies,
-      onEventsChange: setEvents,
-      onDependenciesChange: setDependencies,
-      visibleDate: DEFAULT_TESTING_VISIBLE_DATE,
-      preset: 'dayAndHour',
-      presets: ['dayAndHour'],
-    };
-    const store = useEventTimelinePremium(parameters);
-    React.useEffect(() => {
-      onStoreReady(store);
-    }, [onStoreReady, store]);
-    // The context is typed on the base scheduler state and the store generic is
-    // invariant, so the premium store (extra state slices) needs the cast.
-    const storeContextValue = store as any;
-
-    return (
-      <SchedulerStoreContext.Provider value={storeContextValue}>
-        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-          <EventDialogStyledContext.Provider value={styledContextValue}>
-            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-              <EventTimelinePremiumContent />
-            </SharedComponentsStyledContext.Provider>
-          </EventDialogStyledContext.Provider>
-        </EventTimelinePremiumStyledContext.Provider>
-      </SchedulerStoreContext.Provider>
-    );
-  }
-
-  function renderTimeline({
-    events,
-    resources = [resource1, resource2],
-    dependencies,
-  }: {
-    events: SchedulerEvent[];
-    resources?: SchedulerResource[];
-    dependencies?: SchedulerDependency[];
-  }) {
-    let store!: EventTimelinePremiumStore<any, any>;
-
-    const view = render(
-      // Mimics the layout, font-size and box-sizing reset the `EventTimelinePremium`
-      // root provides to the content (the row-height CSS resolves against them).
-      <div
-        className="test-timeline-host"
-        style={{
-          width: 1200,
-          height: 600,
-          display: 'flex',
-          flexDirection: 'column',
-          fontSize: '0.875rem',
-        }}
-      >
-        <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
-        <TestTimeline
-          events={events}
-          resources={resources}
-          dependencies={dependencies}
-          onStoreReady={(mountedStore) => {
-            store = mountedStore;
-          }}
-        />
-      </div>,
-    );
-
-    return { store, ...view };
-  }
-
-  function getArrowPaths() {
-    return Array.from(document.querySelectorAll<SVGPathElement>('[data-dependency-id]'));
-  }
-
-  function getEventElement(title: string) {
-    return screen.getByText(title).closest('[data-occurrence-key]')!;
-  }
+  const { renderTimeline } = createDependencyTimelineRenderer(render);
 
   it('should render one arrow per active dependency', () => {
     renderTimeline({
@@ -223,6 +107,82 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
 
     // S route: four softened corners.
     expect(d.match(/Q /g)).to.have.length(4);
+  });
+
+  describe('virtualized row heights with a trimmed hour window', () => {
+    const PRESET_CONFIG = { dayAndHour: { startTime: 8, endTime: 20 } };
+    const theme = createTheme();
+
+    const sourceEvent = EventBuilder.new()
+      .id('event-source')
+      .title('Source')
+      .span('2025-07-03T18:00:00Z', '2025-07-03T22:00:00Z')
+      .resource(resource1)
+      .build();
+    const targetEvent = EventBuilder.new()
+      .id('event-target')
+      .title('Target')
+      .singleDay('2025-07-04T10:00:00Z')
+      .resource(resource2)
+      .build();
+    const dependency = buildDependency('dep-1', 'event-source', 'event-target');
+
+    function getArrowEndY() {
+      const coordinates = getArrowPaths()[0]
+        .getAttribute('d')!
+        .match(/-?[\d.]+/g)!
+        .map(parseFloat);
+      return coordinates[coordinates.length - 1];
+    }
+
+    // The arrow enters the target at lane 1 of the second row, so its end Y measures
+    // the virtualized height the first row got from `getRowHeight`.
+    function getTargetAnchorY(firstRowLaneCount: number) {
+      const metrics = getEventsCellLaneMetrics(theme);
+      return (
+        getRowHeightForLaneCount(theme, firstRowLaneCount) +
+        metrics.topPadding +
+        metrics.laneMinHeight / 2
+      );
+    }
+
+    it('should not reserve a lane for an occurrence hidden by the hour window', () => {
+      // 21:00 → 22:00 overlaps the source in real time but is fully hidden: the
+      // virtualized first row must keep its one-lane height.
+      const hiddenOverlap = EventBuilder.new()
+        .id('event-hidden')
+        .title('Hidden')
+        .span('2025-07-03T21:00:00Z', '2025-07-03T22:00:00Z')
+        .resource(resource1)
+        .build();
+
+      renderTimeline({
+        events: [sourceEvent, hiddenOverlap, targetEvent],
+        dependencies: [dependency],
+        presetConfig: PRESET_CONFIG,
+      });
+
+      expect(getArrowEndY()).to.be.closeTo(getTargetAnchorY(1), 0.01);
+    });
+
+    it('should reserve a second lane for a visible overlapping occurrence', () => {
+      // Sensitivity control for the previous test: a visible overlap must grow the
+      // first row, proving the anchor really tracks its virtualized height.
+      const visibleOverlap = EventBuilder.new()
+        .id('event-overlap')
+        .title('Overlap')
+        .span('2025-07-03T19:00:00Z', '2025-07-03T21:00:00Z')
+        .resource(resource1)
+        .build();
+
+      renderTimeline({
+        events: [sourceEvent, visibleOverlap, targetEvent],
+        dependencies: [dependency],
+        presetConfig: PRESET_CONFIG,
+      });
+
+      expect(getArrowEndY()).to.be.closeTo(getTargetAnchorY(2), 0.01);
+    });
   });
 
   // TODO(multi-resource rendering): add an integration test rendering one arrow per
@@ -491,6 +451,55 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       expect(
         getComputedStyle(document.querySelector('[data-dependency-arrows]')!).pointerEvents,
       ).to.equal('none');
+    });
+  });
+
+  describe.skipIf(isJSDOM)('layering', () => {
+    function getGrid() {
+      return document.querySelector<HTMLElement>(`.${eventTimelinePremiumClasses.grid}`)!;
+    }
+
+    it('should keep the pinned title column above the arrow hit-areas on horizontal scroll', async () => {
+      renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      const getHitPath = () => document.querySelector<SVGPathElement>('[data-dependency-hit]')!;
+      await waitFor(() => {
+        expect(getHitPath()).not.to.equal(null);
+      });
+
+      const getTitleRect = () =>
+        document
+          .querySelector(`.${eventTimelinePremiumClasses.titleCell}`)!
+          .getBoundingClientRect();
+
+      // Scroll right so the hit stroke slides under the pinned title column. Rects are
+      // re-measured after the scroll settles: the pinned column and the overlays both
+      // shift on screen when the virtualizer processes the scroll.
+      const initialHitRect = getHitPath().getBoundingClientRect();
+      act(() => {
+        getGrid().scrollLeft =
+          initialHitRect.left + initialHitRect.width / 2 - getTitleRect().right + 20;
+      });
+      await waitFor(() => {
+        const hitRect = getHitPath().getBoundingClientRect();
+        const titleRect = getTitleRect();
+        expect(hitRect.left).to.be.lessThan(titleRect.right - 4);
+        expect(hitRect.right).to.be.greaterThan(titleRect.left + 4);
+      });
+
+      // A point on the hit stroke inside the pinned column must reach the title cell,
+      // not the arrow's hit-area riding underneath it.
+      const hitRect = getHitPath().getBoundingClientRect();
+      const titleRect = getTitleRect();
+      const probeX =
+        (Math.max(hitRect.left, titleRect.left) + Math.min(hitRect.right, titleRect.right)) / 2;
+      const probed = document.elementFromPoint(probeX, hitRect.top + hitRect.height / 2)!;
+
+      expect(probed.closest('[data-dependency-interactions]')).to.equal(null);
+      expect(probed.closest(`.${eventTimelinePremiumClasses.titleCell}`)).not.to.equal(null);
     });
   });
 });

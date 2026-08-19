@@ -16,7 +16,7 @@ import {
   ErrorContainer,
   SharedComponentsStyledContext,
   eventDialogSlots,
-  EventDialogStyledContext,
+  EventEditingStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
 import type { EventTimelinePremiumProps } from './EventTimelinePremium.types';
@@ -120,7 +120,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
     [schedulerId, classes, mergedLocaleText, resourceColumnLabel],
   );
 
-  const dialogStyledContextValue = React.useMemo(
+  const editingStyledContextValue = React.useMemo(
     () => ({ schedulerId, classes, localeText: mergedLocaleText }),
     [schedulerId, classes, mergedLocaleText],
   );
@@ -130,7 +130,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
-        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
+        <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <EventTimelinePremiumRoot
               ref={forwardedRef}
@@ -142,7 +142,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
               {watermark}
             </EventTimelinePremiumRoot>
           </SharedComponentsStyledContext.Provider>
-        </EventDialogStyledContext.Provider>
+        </EventEditingStyledContext.Provider>
       </EventTimelinePremiumStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
@@ -293,6 +293,7 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
+      canHaveMultipleResources: PropTypes.bool,
       duration: PropTypes.number,
       interaction: PropTypes.oneOf(['click', 'double-click']),
     }),
@@ -346,6 +347,23 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * The preset currently displayed in the timeline.
    */
   preset: PropTypes.oneOf(['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']),
+  /**
+   * Configuration applied to each preset, keyed by the preset name.
+   * For the `dayAndHour` preset, `startTime` and `endTime` limit the hours displayed on
+   * each day: `startTime` is inclusive and `endTime` exclusive, so `{ startTime: 8,
+   * endTime: 20 }` renders the cells 8 AM through 7 PM and an event ending at 20:00 is
+   * still fully visible. Both must be whole hours between 0 and 24 with
+   * `startTime` lower than `endTime`; they default to 0 and 24, the full day, and an
+   * invalid range falls back to the full day with a warning in development.
+   * Presets that do not tick in hours ignore the configuration.
+   * @example { dayAndHour: { startTime: 8, endTime: 20 } }
+   */
+  presetConfig: PropTypes.shape({
+    dayAndHour: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+  }),
   /**
    * The presets available in the timeline.
    * The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally,

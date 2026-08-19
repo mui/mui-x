@@ -12,7 +12,8 @@ import {
 import { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
-  EventDialogStyledContext,
+  ErrorContainer,
+  EventEditingStyledContext,
   SharedComponentsStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
@@ -25,7 +26,9 @@ const resources: SchedulerResource[] = [
 ];
 
 // The dataset covers every arrow shape: same-row straight, cross-row elbow (with an
-// event blocking the default turn), adjacent events, and backward S routes.
+// event blocking the default turn), adjacent events, and backward S routes. `Handoff`
+// is assigned to two resources, so it renders one appearance per row and its
+// dependencies fan out to one arrow per pair of appearances.
 // Early hours so every arrow is inside the initial viewport without scrolling.
 const initialEvents: SchedulerEvent[] = [
   {
@@ -91,6 +94,13 @@ const initialEvents: SchedulerEvent[] = [
     end: '2025-07-03T06:30:00',
     resource: 'frontend',
   },
+  {
+    id: 'handoff',
+    title: 'Handoff',
+    start: '2025-07-03T04:00:00',
+    end: '2025-07-03T05:30:00',
+    resource: ['backend', 'qa'],
+  },
 ];
 
 const initialDependencies: SchedulerDependency[] = [
@@ -100,6 +110,10 @@ const initialDependencies: SchedulerDependency[] = [
   { id: 'd4', source: 'review', target: 'publish', type: 'FinishToStart' },
   { id: 'd5', source: 'hotfix', target: 'retro', type: 'FinishToStart' },
   { id: 'd6', source: 'spike', target: 'impl', type: 'FinishToStart' },
+  // Both endpoints of a multi-resource event: one arrow leaves each of its rows, and
+  // one arrow reaches each of them.
+  { id: 'd7', source: 'handoff', target: 'impl', type: 'FinishToStart' },
+  { id: 'd8', source: 'review', target: 'handoff', type: 'FinishToStart' },
 ];
 
 const styledContextValue = {
@@ -148,6 +162,8 @@ export default function TimelineDependencyArrows() {
         display: 'flex',
         flexDirection: 'column',
         fontSize: '0.875rem',
+        // Contains the ErrorContainer toasts, absolutely positioned bottom-right.
+        position: 'relative',
       }}
     >
       <style>
@@ -157,11 +173,12 @@ export default function TimelineDependencyArrows() {
       </style>
       <SchedulerStoreContext.Provider value={storeContextValue}>
         <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-          <EventDialogStyledContext.Provider value={styledContextValue}>
+          <EventEditingStyledContext.Provider value={styledContextValue}>
             <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
               <EventTimelinePremiumContent />
+              <ErrorContainer />
             </SharedComponentsStyledContext.Provider>
-          </EventDialogStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
         </EventTimelinePremiumStyledContext.Provider>
       </SchedulerStoreContext.Provider>
     </div>

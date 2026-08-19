@@ -25,7 +25,7 @@ Use the `viewConfig` prop to limit the hours displayed in the time grid with `st
 {{"demo": "WeekViewStartEndTime.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-`startTime` and `endTime` must be whole hours (integers between `0` and `24`). Minute-level precision isn't supported yet.
+`startTime` and `endTime` must be whole hours (integers between `0` and `24`) with `startTime` lower than `endTime`. Minute-level precision isn't supported yet. An invalid range falls back to the full day and logs a warning in development.
 :::
 
 ### Day view
@@ -39,7 +39,7 @@ The `viewConfig` prop also limits the hours displayed in the day view with `star
 {{"demo": "DayViewStartEndTime.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-`startTime` and `endTime` must be whole hours (integers between `0` and `24`). Minute-level precision isn't supported yet.
+`startTime` and `endTime` must be whole hours (integers between `0` and `24`) with `startTime` lower than `endTime`. Minute-level precision isn't supported yet. An invalid range falls back to the full day and logs a warning in development.
 :::
 
 ### Month view

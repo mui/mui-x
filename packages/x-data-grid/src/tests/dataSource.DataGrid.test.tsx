@@ -2,22 +2,26 @@ import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import type { RefObject } from '@mui/x-internals/types';
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, gridFilterModelSelector, useGridApiRef } from '@mui/x-data-grid';
 import type {
   DataGridProps,
   GridApi,
   GridDataSource,
+  GridFilterItem,
   GridGetRowsParams,
+  GridLogicOperator,
   GridGetRowsResponse,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
-import { getCell } from 'test/utils/helperFn';
+import { actSleep, getCell } from 'test/utils/helperFn';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 import { TestCache } from '../internals/utils';
 
 const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
 const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
+
+const SUPPORTS_ACTIVITY = 'Activity' in React;
 
 describe('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
@@ -34,15 +38,32 @@ describe('<DataGrid /> - Data source', () => {
     return null;
   }
 
+  function ActivityFallback({ children }: React.ActivityProps) {
+    return children;
+  }
+
+  const Activity = SUPPORTS_ACTIVITY ? React.Activity : ActivityFallback;
+
   function TestDataSource(
     props: Partial<DataGridProps> & {
       shouldRequestsFail?: boolean;
       dataSetOptions?: Partial<typeof dataSetOptions>;
       onFetchRows?: typeof fetchRowsSpy;
+      dataSourceKey?: number;
+      activityMode?: 'visible' | 'hidden';
+      stallResponsePromise?: Promise<void>;
     },
   ) {
     apiRef = useGridApiRef();
-    const { dataSetOptions: dataSetOptionsProp, shouldRequestsFail, onFetchRows, ...other } = props;
+    const {
+      dataSetOptions: dataSetOptionsProp,
+      shouldRequestsFail,
+      dataSourceKey = 1,
+      onFetchRows,
+      activityMode = 'visible',
+      stallResponsePromise,
+      ...other
+    } = props;
     const effectiveFetchRowsSpy = onFetchRows ?? fetchRowsSpy;
     mockServer = useMockServer(
       dataSetOptionsProp ?? dataSetOptions,
@@ -52,7 +73,14 @@ describe('<DataGrid /> - Data source', () => {
 
     const { fetchRows, editRow } = mockServer;
 
+    // Read through a ref so that stalling a response does not change the `dataSource` identity
+    const stallResponsePromiseRef = React.useRef(stallResponsePromise);
+    stallResponsePromiseRef.current = stallResponsePromise;
+
     const dataSource: GridDataSource = React.useMemo(() => {
+      // Recreate the data source when this key changes
+      void dataSourceKey;
+
       return {
         getRows: async (params: GridGetRowsParams) => {
           const urlParams = new URLSearchParams({
@@ -66,6 +94,8 @@ describe('<DataGrid /> - Data source', () => {
           effectiveFetchRowsSpy(url);
           const getRowsResponse = await fetchRows(url);
 
+          await stallResponsePromiseRef.current;
+
           return {
             rows: getRowsResponse.rows,
             rowCount: getRowsResponse.rowCount,
@@ -77,7 +107,7 @@ describe('<DataGrid /> - Data source', () => {
           return syncedRow;
         },
       };
-    }, [fetchRows, editRow, effectiveFetchRowsSpy]);
+    }, [dataSourceKey, effectiveFetchRowsSpy, fetchRows, editRow]);
 
     if (!mockServer.isReady) {
       return null;
@@ -86,16 +116,20 @@ describe('<DataGrid /> - Data source', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <Reset />
-        <DataGrid
-          apiRef={apiRef}
-          columns={mockServer.columns}
-          dataSource={dataSource}
-          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
-          pagination
-          pageSizeOptions={pageSizeOptions}
-          disableVirtualization
-          {...other}
-        />
+        <Activity mode={activityMode}>
+          <DataGrid
+            apiRef={apiRef}
+            columns={mockServer.columns}
+            dataSource={dataSource}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+            }}
+            pagination
+            pageSizeOptions={pageSizeOptions}
+            disableVirtualization
+            {...other}
+          />
+        </Activity>
       </div>
     );
   }
@@ -104,6 +138,17 @@ describe('<DataGrid /> - Data source', () => {
     render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+  });
+
+  it('should re-fetch the data on data source change', async () => {
+    const { setProps } = render(<TestDataSource />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+    setProps({ dataSourceKey: 2 });
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
@@ -117,6 +162,196 @@ describe('<DataGrid /> - Data source', () => {
     });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+  });
+
+  describe('incomplete filter items', () => {
+    const getSentFilterItems = () => {
+      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      return JSON.parse(url.searchParams.get('filterModel')!).items;
+    };
+
+    const renderAndWaitForInitialFetch = async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+    };
+
+    const upsertFilterItem = async (item: GridFilterItem) => {
+      await act(async () => {
+        apiRef.current!.upsertFilterItem(item);
+      });
+    };
+
+    // See https://github.com/mui/mui-x/issues/23243
+    it('should not send a filter item without a value to the data source', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+      expect(getSentFilterItems()).to.deep.equal([]);
+    });
+
+    it('should not send a filter item whose array value is empty', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isAnyOf', value: ['1'] });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isAnyOf', value: [] });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+      expect(getSentFilterItems()).to.deep.equal([]);
+    });
+
+    // Operators like `isEmpty` are complete without a value.
+    // See https://github.com/mui/mui-x/issues/5402
+    it('should send a valueless filter item whose operator requires no value', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isEmpty' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      expect(getSentFilterItems()).to.deep.equal([{ id: 1, field: 'id', operator: 'isEmpty' }]);
+    });
+
+    // Adding a filter row asks the data source for what the previous call already returned.
+    it('should not re-fetch when the change only adds an incomplete item', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    it('should re-fetch when an incomplete item becomes complete', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+      await actSleep(50);
+      expect(fetchRowsSpy.callCount).to.equal(1);
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      expect(getSentFilterItems()).to.deep.equal([
+        { id: 1, field: 'id', operator: 'contains', value: '1' },
+      ]);
+    });
+  });
+
+  describe('inapplicable filter model changes', () => {
+    const renderAndWaitForInitialFetch = async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+    };
+
+    // A logic operator needs two operands to change anything.
+    it('should not re-fetch when the logic operator changes without two complete items', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterLogicOperator('or' as GridLogicOperator);
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    it('should not re-fetch when the quick filter values only contain falsy entries', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['']);
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    it('should not re-fetch when the quick filter logic operator changes below two values', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterModel({
+          ...gridFilterModelSelector(apiRef),
+          quickFilterLogicOperator: 'or' as GridLogicOperator,
+        });
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    // `passFilterLogic` runs every value through the logic operator, so a falsy one added
+    // next to an applying value does change the matched rows.
+    it('should re-fetch when a falsy value joins an applying quick filter value', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc', '']);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+    });
+
+    it('should re-fetch when a quick filter value is added', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      expect(JSON.parse(url.searchParams.get('filterModel')!).quickFilterValues).to.deep.equal([
+        'abc',
+      ]);
     });
   });
 
@@ -158,6 +393,110 @@ describe('<DataGrid /> - Data source', () => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
+
+  if (SUPPORTS_ACTIVITY) {
+    describe('Activity', () => {
+      async function toggleActivity(
+        setProps: (props: { activityMode: 'visible' | 'hidden' }) => void,
+      ) {
+        await act(async () => {
+          setProps({ activityMode: 'hidden' });
+        });
+        await act(async () => {
+          setProps({ activityMode: 'visible' });
+        });
+      }
+
+      it('should not re-fetch the data when the Activity becomes visible', async () => {
+        const { setProps } = render(<TestDataSource />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        await toggleActivity(setProps);
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      it('should keep a request in flight when the Activity is hidden', async () => {
+        const { promise, resolve } = Promise.withResolvers<void>();
+        const { setProps } = render(<TestDataSource stallResponsePromise={promise} />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        await toggleActivity(setProps);
+        await act(async () => {
+          resolve();
+        });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowsCount()).to.be.above(0);
+        });
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      it('should apply a response that settles while the Activity is hidden', async () => {
+        const { promise, resolve } = Promise.withResolvers<void>();
+        const { setProps } = render(<TestDataSource stallResponsePromise={promise} />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        await act(async () => {
+          setProps({ activityMode: 'hidden' });
+        });
+        await act(async () => {
+          resolve();
+        });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowsCount()).to.be.above(0);
+        });
+        await act(async () => {
+          setProps({ activityMode: 'visible' });
+        });
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      it('should re-fetch the data when the Activity becomes visible after a failed request', async () => {
+        const onDataSourceError = spy();
+        const { setProps } = render(
+          <TestDataSource shouldRequestsFail onDataSourceError={onDataSourceError} />,
+        );
+        await waitFor(() => {
+          expect(onDataSourceError.callCount).to.equal(1);
+        });
+        const callCountBeforeToggle = fetchRowsSpy.callCount;
+        await toggleActivity(setProps);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.be.above(callCountBeforeToggle);
+        });
+      });
+
+      it('should apply a filter change response that settles while the Activity is hidden', async () => {
+        const { promise, resolve } = Promise.withResolvers<void>();
+        const { setProps } = render(<TestDataSource />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        setProps({
+          stallResponsePromise: promise,
+          filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
+        });
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(2);
+        });
+        await act(async () => {
+          setProps({ activityMode: 'hidden' });
+        });
+        await act(async () => {
+          resolve();
+        });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowsCount()).to.be.above(0);
+        });
+        await act(async () => {
+          setProps({ activityMode: 'visible' });
+        });
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+    });
+  }
 
   describe('Cache', () => {
     it('should cache the data using the default cache', async () => {

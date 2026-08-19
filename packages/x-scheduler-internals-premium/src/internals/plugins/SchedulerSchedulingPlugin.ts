@@ -8,7 +8,8 @@ import type {
   UpdateEventsParameters,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
-import { createChangeEventDetails } from '@mui/x-scheduler-internals/base-ui-copy';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   SchedulerAddDependencyResult,
   SchedulerDependency,
@@ -17,7 +18,7 @@ import type {
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
 } from '../../models';
-import { classifyDependencyEvent } from '../utils/dependency-utils';
+import { classifyDependencyEvent, isDependencyReadOnly } from '../utils/dependency-utils';
 
 /**
  * Plugin that provides event-scheduling support (dependencies).
@@ -108,8 +109,8 @@ export class SchedulerSchedulingPlugin<
 
   /**
    * Adds a dependency between two events.
-   * Rejects dependencies referencing an unknown or recurring event, or duplicating an
-   * existing dependency.
+   * Rejects dependencies referencing an unknown, recurring or read-only event, or
+   * duplicating an existing dependency.
    * Implementation of the store's `addDependency()` — call it through the store.
    */
   public addDependency = (
@@ -120,6 +121,9 @@ export class SchedulerSchedulingPlugin<
       const status = classifyDependencyEvent(processedEventLookup, eventId);
       if (status !== 'ok') {
         return { status: 'rejected', reason: status, eventId };
+      }
+      if (schedulerEventSelectors.isReadOnly(this.store.state, eventId)) {
+        return { status: 'rejected', reason: 'readOnlyEvent', eventId };
       }
     }
 
@@ -139,13 +143,21 @@ export class SchedulerSchedulingPlugin<
   };
 
   /**
-   * Deletes a dependency.
+   * Deletes a dependency, returning whether it was deleted. Refused (`false`) for an
+   * unknown id and when either endpoint event is read-only, so the store stays safe
+   * regardless of which affordance calls it and the callers pairing the deletion with
+   * a side effect (clearing the selection) never act on a no-op.
    * Implementation of the store's `deleteDependency()` — call it through the store.
    */
-  public deleteDependency = (dependencyId: SchedulerDependencyId) => {
+  public deleteDependency = (dependencyId: SchedulerDependencyId): boolean => {
+    const dependency = this.store.state.dependencyModelLookup.get(dependencyId);
+    if (dependency === undefined || isDependencyReadOnly(this.store.state, dependency)) {
+      return false;
+    }
     const current = this.store.state.dependencyModelList;
-    const remaining = current.filter((dependency) => dependency.id !== dependencyId);
+    const remaining = current.filter((entry) => entry.id !== dependencyId);
     this.updateDependenciesIfChanged(current, remaining);
+    return true;
   };
 
   private warnOnInvalidDependencies() {

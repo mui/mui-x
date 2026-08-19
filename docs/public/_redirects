@@ -86,4 +86,5 @@
 /x/api/charts/chart-data-provider/ /x/api/charts/charts-data-provider/ 301
 /x/api/charts/chart-data-provider-pro/ /x/api/charts/charts-data-provider-pro/ 301
 /x/api/charts/chart-data-provider-premium/ /x/api/charts/charts-data-provider-premium/ 301
+/x/react-scheduler/event-timeline/views/ /x/react-scheduler/event-timeline/presets/ 301
 # Proxies

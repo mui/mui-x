@@ -1,5 +1,5 @@
 import type { BaseUIChangeEventDetails } from '@base-ui/react';
-import type { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
@@ -10,9 +10,11 @@ import type {
   SchedulerOccurrencePlaceholder,
   SchedulerPreferences,
   SchedulerProcessedEvent,
+  SchedulerRenderableEventOccurrence,
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
+  SchedulerSelection,
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
@@ -29,6 +31,26 @@ export interface StoredError {
    * argument to `store.dismissError(key)`.
    */
   key: string;
+}
+
+/**
+ * Which face the edited occurrence is in:
+ * - `'armed'`: no surface is shown; the event displays its resize handles and an action toolbar
+ *   (Edit / Delete). A resize commits immediately. The drawer surface always arms; the dialog
+ *   surface arms only on a coarse pointer.
+ * - `'edit'`: the editing surface (dialog or drawer) is shown; the event is not resizable while open.
+ */
+export type SchedulerEditingMode = 'armed' | 'edit';
+
+export interface SchedulerEditingState {
+  /** The occurrence being edited — existing or a creation draft. */
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * Whether the occurrence is armed (toolbar + resize handles, no surface) or being edited (surface open).
+   * The toolbar's Edit switches `'armed'` to `'edit'`. The drawer surface always opens in `'armed'`;
+   * the dialog surface opens in `'armed'` on a coarse pointer and directly in `'edit'` otherwise.
+   */
+  mode: SchedulerEditingMode;
 }
 
 export interface SchedulerState<TEvent extends object = any> {
@@ -168,20 +190,27 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
-   * The key of the occurrence currently active (e.g. open in the event dialog).
-   * `null` when no occurrence is active.
+   * The occurrence currently being edited (existing or a creation draft), or `null`.
+   * Single source of truth for *what* is edited, decoupled from *which* surface is open; surfaces
+   * and the highlight read from here.
    */
-  editedOccurrenceKey: string | null;
+  editingOccurrence: SchedulerEditingState | null;
   /**
    * The event that has been copied or cut, if any.
    */
   copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
   /**
+   * The selected entity (a dependency arrow, later an event...), or `null`.
+   * See `SchedulerSelectionTypeLookup` for how features register their type.
+   */
+  selection: SchedulerSelection | null;
+  /**
    * Whether the store is currently loading events from the data source.
    */
   isLoading: boolean;
   /**
-   * The errors that occurred during data fetching.
+   * The scheduler errors surfaced through the error container: persistent data-source
+   * failures, and transient interaction feedback that dismisses itself.
    * Each entry carries a stable `key` assigned at push time so the UI can use it
    * directly as a React key and as the argument to `store.dismissError(key)`.
    */
