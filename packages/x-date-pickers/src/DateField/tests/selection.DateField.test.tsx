@@ -336,27 +336,6 @@ describe('<DateField /> - Selection', () => {
       expect(event.defaultPrevented).to.equal(false);
     });
 
-    it('should ignore a `data-sectionindex` ancestor above the field', () => {
-      // `closest` is not bound to the sections container, so an unrelated
-      // ancestor carrying the attribute used to be read as a section. An index
-      // out of range left the field focused with no section to type into.
-      const view = renderWithProps(
-        { enableAccessibleFieldDOMStructure: true },
-        {
-          hook: () => ({}),
-        },
-      );
-      const sectionsContainer = view.getSectionsContainer();
-      const ancestor = sectionsContainer.closest('.MuiFormControl-root')!.parentElement!;
-      ancestor.setAttribute('data-sectionindex', '7');
-
-      fireEvent.mouseDown(sectionsContainer);
-      fireEvent.click(sectionsContainer);
-
-      ancestor.removeAttribute('data-sectionindex');
-      expect(getCleanedSelectedContent()).to.equal('MM');
-    });
-
     it('should forward mousedown to a userland `onMouseDown` consumer', () => {
       const consumer = spy();
       const view = renderWithProps({

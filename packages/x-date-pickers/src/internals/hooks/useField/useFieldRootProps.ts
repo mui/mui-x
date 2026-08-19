@@ -127,16 +127,9 @@ export function useFieldRootProps(
     if (!isInsideSectionList && target !== event.currentTarget) {
       return;
     }
-    // `closest` walks past `sectionListRoot`, so a consumer element above the
-    // field that carries `data-sectionindex` would be read as a section. Keep
-    // only a match the sections container owns.
-    const closestSectionElement = isInsideSectionList
+    const sectionElement = isInsideSectionList
       ? target.closest<HTMLElement>('[data-sectionindex]')
       : null;
-    const sectionElement =
-      closestSectionElement && sectionListRoot.contains(closestSectionElement)
-        ? closestSectionElement
-        : null;
 
     // Blank space is the field padding and the area past the sections. Mimic
     // the native date input: first section on entry, keep it afterwards.
