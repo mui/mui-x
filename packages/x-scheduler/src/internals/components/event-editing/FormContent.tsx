@@ -195,15 +195,17 @@ export function FormContent(props: FormContentProps) {
   );
 }
 
-function FormContentInner(props: FormContentProps) {
-  const { occurrence, onClose, dragHandlerRef, isDraggable } = props;
+function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
+  const { onClose, dragHandlerRef, isDraggable } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
-  const { resourceSelectionMode } = formStore;
+  // The session constants live on the form store; reading them anywhere else
+  // would give the sections and the submit logic two owners to disagree on.
+  const { occurrence, resourceSelectionMode } = formStore;
 
   // Selector hooks
   const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
@@ -366,10 +368,7 @@ function FormContentInner(props: FormContentProps) {
             </EventDialogTabs>
           </EventDialogTabsContainer>
         )}
-        <GeneralTab
-          occurrence={occurrence}
-          value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'}
-        />
+        <GeneralTab value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'} />
         {showRecurrence && RecurrenceTabRenderer && (
           <RecurrenceTabRenderer occurrence={occurrence} tabValue={tabValue} />
         )}
