@@ -342,11 +342,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     function renderWithSlot(
       slots: SchedulerSlots,
       providerProps?: Partial<React.ComponentProps<typeof EventCalendarProvider>>,
+      occurrence = occurrenceWithDescription,
     ) {
       return render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources} {...providerProps}>
           <SchedulerSlotsProvider slots={slots} slotProps={undefined}>
-            <EventDialogContent open {...defaultProps} occurrence={occurrenceWithDescription} />
+            <EventDialogContent open {...defaultProps} occurrence={occurrence} />
           </SchedulerSlotsProvider>
         </EventCalendarProvider>,
       );
@@ -540,6 +541,67 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
 
       await user.click(screen.getByRole('button', { name: 'Save' }));
+    });
+
+    it('should block the submit of an event without resource when the slot omits the resource section', async () => {
+      clearWarningsCache();
+      const onEventsChange = spy();
+      const noResourceEvent: SchedulerEvent = EventBuilder.new()
+        .title('Running')
+        .singleDay('2025-05-26T07:30:00Z', 45)
+        .build();
+      const noResourceOccurrence = EventBuilder.new()
+        .id(noResourceEvent.id)
+        .title(noResourceEvent.title)
+        .span(noResourceEvent.start, noResourceEvent.end)
+        .toOccurrence();
+
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: CustomSection },
+          { events: [noResourceEvent], shouldEventRequireResource: true, onEventsChange },
+          noResourceOccurrence,
+        );
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev([
+        'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
+      ]);
+
+      expect(onEventsChange.callCount).to.equal(0);
+    });
+
+    it('should surface the required-resource error on a custom field bound to resourceIds', async () => {
+      clearWarningsCache();
+      const onEventsChange = spy();
+      const noResourceEvent: SchedulerEvent = EventBuilder.new()
+        .title('Running')
+        .singleDay('2025-05-26T07:30:00Z', 45)
+        .build();
+      const noResourceOccurrence = EventBuilder.new()
+        .id(noResourceEvent.id)
+        .title(noResourceEvent.title)
+        .span(noResourceEvent.start, noResourceEvent.end)
+        .toOccurrence();
+
+      // No validator registered, so the message can only come from the submit-level check.
+      function CustomResourceField() {
+        const resourceField = useEventDialogFormField<string[]>('resourceIds');
+        return resourceField.error ? <p role="alert">{resourceField.error}</p> : null;
+      }
+
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: CustomResourceField },
+          { events: [noResourceEvent], shouldEventRequireResource: true, onEventsChange },
+          noResourceOccurrence,
+        );
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev([
+        'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
+      ]);
+
+      expect(onEventsChange.callCount).to.equal(0);
+      expect(screen.getByRole('alert')).to.have.text('A resource is required.');
     });
 
     it('should keep a section rendered twice in sync through the shared form store', async () => {

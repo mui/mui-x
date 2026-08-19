@@ -144,6 +144,19 @@ export class EventDialogFormStore<
   };
 
   /**
+   * Writes the error message(s) of a single field, replacing any existing ones.
+   * Clears the field's error when the messages normalize to none.
+   */
+  public setError = (key: string, error: EventDialogFormValidatorResult) => {
+    const messages = normalizeValidatorResult(error);
+    if (messages === null) {
+      this.clearErrors([key]);
+      return;
+    }
+    this.set('errors', { ...this.state.errors, [key]: messages });
+  };
+
+  /**
    * Removes the errors of the provided keys, or every error when no keys are provided.
    */
   public clearErrors = (keys?: readonly string[]) => {

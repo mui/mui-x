@@ -148,6 +148,36 @@ describe('EventDialogFormStore', () => {
     });
   });
 
+  describe('setError', () => {
+    it('should set the error messages of the field, replacing any existing ones', () => {
+      const store = createFormStore({ title: '' });
+      store.setError('title', 'Required');
+      expect(store.state.errors).to.deep.equal({ title: ['Required'] });
+
+      store.setError('title', ['Too long', 'Invalid characters']);
+      expect(store.state.errors).to.deep.equal({ title: ['Too long', 'Invalid characters'] });
+    });
+
+    it('should keep the errors of the other fields', async () => {
+      const store = createFormStore({ title: '', priority: null });
+      store.registerValidator('priority', () => 'Priority required');
+      await store.validateAll();
+
+      store.setError('title', 'Required');
+      expect(store.state.errors).to.deep.equal({
+        title: ['Required'],
+        priority: ['Priority required'],
+      });
+    });
+
+    it('should clear the error of the field when the messages normalize to none', () => {
+      const store = createFormStore({ title: '' });
+      store.setError('title', 'Required');
+      store.setError('title', null);
+      expect(store.state.errors).to.deep.equal({});
+    });
+  });
+
   describe('clearErrors', () => {
     it('should remove all the errors', async () => {
       const store = createFormStore({ title: '' });

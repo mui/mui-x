@@ -242,7 +242,15 @@ function FormContentInner(props: FormContentProps) {
       }
     }
 
-    if (!(await formStore.validateAll())) {
+    const isValid = await formStore.validateAll();
+
+    // Checked here so a custom General tab without the resource section cannot bypass the requirement.
+    const isMissingRequiredResource =
+      shouldEventRequireResource && formStore.state.values.resourceIds.length === 0;
+    if (isMissingRequiredResource) {
+      formStore.setError('resourceIds', localeText.requiredResourceError);
+    }
+    if (!isValid || isMissingRequiredResource) {
       return;
     }
 
