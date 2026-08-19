@@ -18,6 +18,8 @@ const ptBRDialog: Partial<EventEditingLocaleText> = {
   // editEventButtonAriaLabel: 'Edit event',
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
+  // editEvent: 'Edit event',
+  // eventContextMenuAriaLabel: 'Event actions',
   deleteEvent: 'Excluir evento',
   descriptionLabel: 'Descrição',
   endDateLabel: 'Data de término',

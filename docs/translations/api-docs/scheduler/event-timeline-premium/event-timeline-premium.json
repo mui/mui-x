@@ -156,6 +156,18 @@
       "nodeName": "the error message element"
     },
     "event": { "description": "Styles applied to {{nodeName}}.", "nodeName": "event elements" },
+    "eventContextMenu": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event context menu root element"
+    },
+    "eventContextMenuDeleteItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event context menu delete item element"
+    },
+    "eventContextMenuEditItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event context menu edit item element"
+    },
     "eventDialog": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog root element"

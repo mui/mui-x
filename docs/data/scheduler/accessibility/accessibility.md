@@ -124,11 +124,11 @@ The Resources sidebar uses the [MUI X Rich Tree View](/x/react-tree-view/) inte
 
 ### Menus and popovers
 
-|                          Keys | Description                                                             |
-| ----------------------------: | :---------------------------------------------------------------------- |
-| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, or More Events popover |
-|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event in the More Events popover            |
-|  <kbd class="key">Space</kbd> | Activates (opens) a focused event in the More Events popover            |
+|                          Keys | Description                                                                                 |
+| ----------------------------: | :------------------------------------------------------------------------------------------ |
+| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, or event context menu |
+|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event                                                           |
+|  <kbd class="key">Space</kbd> | Opens the event context menu for a focused event                                            |
 
 ## Live region announcements
 
@@ -157,7 +157,7 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 
 - The popover header element carries an `aria-label` with the full formatted date (for example, `"Monday, May 26"`).
 - Each event inside the popover uses `aria-labelledby` that composes the popover header ID and the event title element ID, so screen readers announce the day context alongside the event title.
-- Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd>.
+- Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd>. <kbd class="key">Space</kbd> opens the [event context menu](#event-context-menu) instead, same as everywhere else an event renders.
 
 ## Preferences menu
 
@@ -166,6 +166,14 @@ Inside the menu:
 
 - Toggle items (for example, **Show weekends**, **Show week number**) use `role="menuitemcheckbox"` with `aria-checked`.
 - Time format options use `role="menuitemradio"` with `aria-checked`.
+
+## Event context menu
+
+Right-clicking an event, or pressing <kbd class="key">Space</kbd> while it is focused, opens a context menu with **Edit** and **Delete** actions.
+
+- The menu exposes `role="menu"` (via MUI's `Menu`) with a localized `aria-label` (default: `"Event actions"`).
+- **Edit** opens the same editing surface a click on the event would — the event dialog or the armed toolbar, depending on the surface.
+- **Delete** removes the event immediately. For a recurring event it opens the recurring scope confirmation dialog instead, the same as the Delete action in the event dialog and the armed-event toolbar.
 
 ## Localization of ARIA labels
 
@@ -183,6 +191,9 @@ The following keys are specifically relevant to accessibility:
   colorPickerLabel: 'Event color',
   selectColorAriaLabel: (color) => `Select ${color} as event color`,
   radioGroupAriaLabel: 'Editing recurring events scope',
+
+  // Event context menu
+  eventContextMenuAriaLabel: 'Event actions',
 
   // Events
   noResourceAriaLabel: 'No specific resource',

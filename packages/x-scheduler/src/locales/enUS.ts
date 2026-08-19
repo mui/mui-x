@@ -19,6 +19,8 @@ const enUSDialog: EventEditingLocaleText = {
   deleteEventButtonAriaLabel: 'Delete event',
   eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Delete event',
+  editEvent: 'Edit event',
+  eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Description',
   endDateLabel: 'End date',
   endTimeLabel: 'End time',

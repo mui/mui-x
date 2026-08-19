@@ -157,7 +157,7 @@ describe('<MonthView />', () => {
       });
     });
 
-    it('should allow Space key to activate events in the popover', async () => {
+    it('should open the event context menu on Space, and Edit from there activates the event', async () => {
       const { user, popover } = await renderAndOpenPopover();
 
       const firstEventButton = within(popover).getAllByRole('button')[0];
@@ -165,6 +165,13 @@ describe('<MonthView />', () => {
       expect(firstEventButton).to.equal(document.activeElement);
 
       await user.keyboard(' ');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+      });
+      expect(screen.queryByRole('dialog')).to.equal(null);
+
+      await user.click(screen.getByRole('menuitem', { name: /edit/i }));
 
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);

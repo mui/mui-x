@@ -479,6 +479,24 @@
       "isGlobal": false
     },
     {
+      "key": "eventContextMenu",
+      "className": "MuiEventCalendarPremium-eventContextMenu",
+      "description": "Styles applied to the event context menu root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenuDeleteItem",
+      "className": "MuiEventCalendarPremium-eventContextMenuDeleteItem",
+      "description": "Styles applied to the event context menu delete item element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenuEditItem",
+      "className": "MuiEventCalendarPremium-eventContextMenuEditItem",
+      "description": "Styles applied to the event context menu edit item element.",
+      "isGlobal": false
+    },
+    {
       "key": "eventDialog",
       "className": "MuiEventCalendarPremium-eventDialog",
       "description": "Styles applied to the event dialog root element.",

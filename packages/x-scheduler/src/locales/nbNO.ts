@@ -18,6 +18,8 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   // editEventButtonAriaLabel: 'Edit event',
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
+  // editEvent: 'Edit event',
+  // eventContextMenuAriaLabel: 'Event actions',
   deleteEvent: 'Slett hendelse',
   descriptionLabel: 'Beskrivelse',
   endDateLabel: 'Sluttdato',

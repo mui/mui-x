@@ -20,6 +20,9 @@ export interface EventEditingLocaleText {
   deleteEventButtonAriaLabel: string;
   eventActionsToolbarAriaLabel: string;
   deleteEvent: string;
+  // EventContextMenu (shown on right-click of an event, or on Space while it is focused)
+  editEvent: string;
+  eventContextMenuAriaLabel: string;
   descriptionLabel: string;
   endDateLabel: string;
   endTimeLabel: string;

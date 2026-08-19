@@ -69,11 +69,11 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
 }
 
 /**
- * Wraps an element so activating it edits its occurrence and opens the editing surface. Works for
- * both the desktop dialog and the compact drawer.
+ * Ref, anchoring, and `startEditing` wiring shared by every trigger that edits an occurrence
+ * (`EventEditingTrigger` below and `EventContextMenuTrigger`), so they stay in lockstep instead of
+ * duplicating the re-anchoring effect.
  */
-export function EventEditingTrigger(props: EventEditingTriggerProps) {
-  const { occurrence, onClick, children } = props;
+export function useEventEditingTriggerProps(occurrence: SchedulerRenderableEventOccurrence) {
   const ref = React.useRef<HTMLElement | null>(null);
   const store = useSchedulerStoreContext();
   const { startEditing, setAnchor } = useEventEditingContext();
@@ -91,11 +91,25 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
     return () => setAnchor(null);
   }, [isEdited, setAnchor]);
 
-  return React.cloneElement(children as React.ReactElement<any>, {
+  return {
     ref,
+    onClick: () => startEditing(ref, occurrence),
+  };
+}
+
+/**
+ * Wraps an element so activating it edits its occurrence and opens the editing surface. Works for
+ * both the desktop dialog and the compact drawer.
+ */
+export function EventEditingTrigger(props: EventEditingTriggerProps) {
+  const { occurrence, onClick, children } = props;
+  const editing = useEventEditingTriggerProps(occurrence);
+
+  return React.cloneElement(children as React.ReactElement<any>, {
+    ref: editing.ref,
     onClick: (event: React.MouseEvent<HTMLElement>) => {
       onClick?.(event);
-      startEditing(ref, occurrence);
+      editing.onClick();
     },
   });
 }
