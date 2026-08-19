@@ -123,14 +123,8 @@ export function FormContent(props: FormContentProps) {
     occurrence.displayTimezone.start,
   );
 
-  // Derived once, right alongside `initialValues` below, for the same reason: the dialog
-  // remounts on `key={occurrence.key}`, so this is exactly "the data this occurrence started
-  // with", and it must stay that way for the lifetime of the editing session. Two components
-  // read it — `ResourceAndColorSection` (what the Select renders as) and `FormContentInner`
-  // (what gets written on submit) — and they have to agree, so it's derived once, here, and
-  // carried by the form store instead of each freezing its own copy against a live
-  // subscription that could drift between them. See `getResourceSelectionMode` for the
-  // creating-vs-editing rule.
+  // Captured once per editing session, like `initialValues` below.
+  // See `getResourceSelectionMode` for the creating-vs-editing rule.
   const resourceSelectionMode = useRefWithInit(() =>
     getResourceSelectionMode(occurrence.resource, canHaveMultipleResources, isCreating),
   ).current;

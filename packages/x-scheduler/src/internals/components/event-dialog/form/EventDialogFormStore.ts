@@ -97,8 +97,8 @@ export class EventDialogFormStore<
 
   /**
    * Whether the resource picker of the editing session is single- or multi-select.
-   * Constant for the lifetime of the store: what the resource Select renders as and
-   * what the submit logic writes both read this value, so they always agree.
+   * Constant for the lifetime of the store: the resource Select and the submit
+   * logic must read the same value.
    */
   public readonly resourceSelectionMode: ResourceSelectionMode;
 

@@ -140,10 +140,6 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
 
 export default function ResourceAndColorSection() {
   // Context hooks
-  // `resourceSelectionMode`: whether the picker is single- or multi-select. Derived once by
-  // `FormContent`, alongside the form's `initialValues` — the same value also decides what
-  // `handleSubmit` writes, so both must read the exact same "captured at mount" answer.
-  // See `getResourceSelectionMode`.
   const { occurrence, resourceSelectionMode: mode } = useEventDialogFormContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
