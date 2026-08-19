@@ -1,5 +1,6 @@
 export * from './translations';
 export * from './slots';
+export type { PropsFromSlot } from '@mui/x-internals/slots';
 export type {
   EventCalendarPreferences,
   EventCalendarViewConfig,

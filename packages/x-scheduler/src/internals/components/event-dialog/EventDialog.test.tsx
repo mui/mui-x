@@ -15,6 +15,7 @@ import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import type {
   EventDialogGeneralTabProps,
+  EventDialogGeneralTabPropsOverrides,
   SchedulerSlotProps,
   SchedulerSlots,
 } from '../../../models/slots';
@@ -469,10 +470,10 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         occurrences.push(props.occurrence.title);
         return null;
       }
-      // A variable dodges the excess property check, like a consumer spreading a wider object.
+      // Bypasses the compile-time protection the way a consumer's wider spread object can.
       const overridingProps = {
         occurrence: EventBuilder.new().title('Other event').toOccurrence(),
-      };
+      } as EventDialogGeneralTabPropsOverrides;
       renderWithSlot({ eventDialogGeneralTab: OccurrenceProbe }, undefined, undefined, {
         eventDialogGeneralTab: overridingProps,
       });
