@@ -329,11 +329,7 @@ export default defineConfig(
       'no-restricted-imports': [
         'error',
         {
-          paths: [
-            '@testing-library/react',
-            'test/utils/index',
-            RESTRICTED_VITEST_GLOBAL_IMPORTS,
-          ],
+          paths: ['@testing-library/react', 'test/utils/index', RESTRICTED_VITEST_GLOBAL_IMPORTS],
         },
       ],
       'compat/compat': 'off',
