@@ -34,3 +34,16 @@ export interface SchedulerSlotProps {
    */
   eventDialogGeneralTab?: EventDialogGeneralTabPropsOverrides;
 }
+
+export interface SchedulerSlotsAndSlotProps {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: SchedulerSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: SchedulerSlotProps;
+}

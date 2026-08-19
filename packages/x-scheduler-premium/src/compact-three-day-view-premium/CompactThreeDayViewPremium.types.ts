@@ -5,11 +5,7 @@ import type {
   EventCalendarSchedulerParametersOverrides,
   CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
-import type {
-  EventCalendarLocaleText,
-  SchedulerSlots,
-  SchedulerSlotProps,
-} from '@mui/x-scheduler/models';
+import type { EventCalendarLocaleText, SchedulerSlotsAndSlotProps } from '@mui/x-scheduler/models';
 import type { CompactThreeDayViewProps } from '@mui/x-scheduler/compact-three-day-view';
 
 export interface StandaloneCompactThreeDayViewPremiumProps<
@@ -24,23 +20,14 @@ export interface StandaloneCompactThreeDayViewPremiumProps<
       | keyof EventCalendarSchedulerParametersOverrides
       | CollapsibleResourcesParameterKeys
     >,
-    EventCalendarSchedulerParametersOverrides {
+    EventCalendarSchedulerParametersOverrides,
+    SchedulerSlotsAndSlotProps {
   /**
    * Set the locale text of the view.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
    * in the GitHub repository.
    */
   localeText?: Partial<EventCalendarLocaleText>;
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: SchedulerSlots;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: SchedulerSlotProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

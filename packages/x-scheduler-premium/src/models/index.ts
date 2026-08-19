@@ -6,6 +6,7 @@ export type {
 export type {
   SchedulerSlots,
   SchedulerSlotProps,
+  SchedulerSlotsAndSlotProps,
   EventDialogGeneralTabProps,
   EventDialogGeneralTabPropsOverrides,
   PropsFromSlot,

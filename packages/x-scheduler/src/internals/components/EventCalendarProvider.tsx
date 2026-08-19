@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useId } from '@base-ui/utils/useId';
 import { EventCalendarProvider as UnstyledEventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { EventCalendarLocaleText } from '../../models/translations';
-import type { SchedulerSlots, SchedulerSlotProps } from '../../models/slots';
+import type { SchedulerSlotsAndSlotProps } from '../../models/slots';
 import { SchedulerSlotsProvider } from './SchedulerSlotsContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
@@ -36,24 +36,14 @@ const StandaloneViewRoot = styled('div', {
   ...responsiveTypographyContainerQueries,
 }));
 
-export interface EventCalendarProviderProps<
-  TEvent extends object,
-  TResource extends object,
-> extends UnstyledEventCalendarProvider.Props<TEvent, TResource> {
+export interface EventCalendarProviderProps<TEvent extends object, TResource extends object>
+  extends UnstyledEventCalendarProvider.Props<TEvent, TResource>, SchedulerSlotsAndSlotProps {
   /**
    * Set the locale text of the view.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
    * in the GitHub repository.
    */
   localeText?: Partial<EventCalendarLocaleText>;
-  /**
-   * Overridable component slots.
-   */
-  slots?: SchedulerSlots;
-  /**
-   * The props used for each component slot.
-   */
-  slotProps?: SchedulerSlotProps;
 }
 
 export function EventCalendarProvider<TEvent extends object, TResource extends object>(
