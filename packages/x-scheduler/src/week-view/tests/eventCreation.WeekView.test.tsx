@@ -40,6 +40,10 @@ describe('<WeekView /> event creation', () => {
     expect(onEventEditingStart.calledOnce).to.equal(true);
     expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
     expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('keydown');
+    // The trigger is the built-in dialog's anchor for this path, i.e. the column's interactive layer.
+    expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(
+      column.querySelector(`.${eventCalendarClasses.dayTimeGridColumnInteractiveLayer}`),
+    );
     expect(screen.queryByRole('dialog')).to.equal(null);
     // Canceling a creation drops the draft placeholder.
     expect(store!.state.occurrencePlaceholder).to.equal(null);
