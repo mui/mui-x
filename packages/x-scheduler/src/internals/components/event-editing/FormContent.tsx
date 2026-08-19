@@ -203,8 +203,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
-  // The session constants live on the form store; reading them anywhere else
-  // would give the sections and the submit logic two owners to disagree on.
   const { occurrence, resourceSelectionMode } = formStore;
 
   // Selector hooks
@@ -229,10 +227,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
 
-  // Both surfaces unmount the form synchronously when the editing session stops,
-  // so the cleanup running is exactly "this session is over". An async validator
-  // can outlive it: a submit resolving afterwards must not commit into whatever
-  // session is open by then.
+  // Both surfaces unmount the form when the editing session stops, so the cleanup
+  // marks the end of the session for submissions still awaiting async validation.
   const isSessionAliveRef = React.useRef(true);
   React.useEffect(() => {
     isSessionAliveRef.current = true;
