@@ -3929,6 +3929,78 @@ describe('<DataGridPremium /> - Formulas', () => {
         expect(apiRef.current!.getRow(0).total).to.equal('=REF(COLUMN("price"), ROW(0))');
       });
 
+      // The formula-bar demo shape: field names (`q1`, `q2`) that lexically
+      // read as A1 cell addresses. The display must escape them as FIELD("…")
+      // or the commit transform freezes them into dead cell references.
+      describe('field names colliding with A1 addresses', () => {
+        const collisionProps: Partial<DataGridPremiumProps> = {
+          processRowUpdate: (row) => row,
+          rows: [
+            { id: 1, product: 'Widgets', q1: 320, q2: 410, total: '=q1 + q2' },
+            { id: 2, product: 'Gadgets', q1: 150, q2: 220, total: '=q1 + q2' },
+          ],
+          columns: [
+            { field: 'product' },
+            { field: 'q1', type: 'number', editable: true },
+            { field: 'q2', type: 'number', editable: true },
+            { field: 'total', type: 'number', allowFormulas: true, editable: true },
+          ],
+        };
+
+        it('should seed the editor with the FIELD("…") escape', async () => {
+          const { user } = await render(<Test formulaA1Notation {...collisionProps} />);
+          expect(getColumnValues(4)).to.deep.equal(['730', '370']);
+          await user.dblClick(getCell(0, 4));
+          await waitFor(() => {
+            expect(getCellEditable(0, 4).textContent).to.equal('=FIELD("q1") + FIELD("q2")');
+          });
+        });
+
+        it('should keep the stored formula on an unchanged commit', async () => {
+          const { user } = await render(<Test formulaA1Notation {...collisionProps} />);
+          await user.dblClick(getCell(0, 4));
+          await waitFor(() => {
+            expect(getCellEditable(0, 4).textContent).to.equal('=FIELD("q1") + FIELD("q2")');
+          });
+          fireEvent.keyDown(getCellEditable(0, 4), { key: 'Enter' });
+          await microtasks();
+
+          // The exact source text survives — the seed guard must outlive
+          // `cellEditStop` (the commit re-runs the value setter after it).
+          expect(apiRef.current!.getRow(1).total).to.equal('=q1 + q2');
+          expect(getColumnValues(4)).to.deep.equal(['730', '370']);
+        });
+
+        it('should keep the stored formula on an unchanged blur commit', async () => {
+          const { user } = await render(<Test formulaA1Notation {...collisionProps} />);
+          await user.dblClick(getCell(0, 4));
+          await waitFor(() => {
+            expect(getCellEditable(0, 4).textContent).to.equal('=FIELD("q1") + FIELD("q2")');
+          });
+          await user.click(getCell(1, 1));
+          await microtasks();
+
+          expect(apiRef.current!.getRow(1).total).to.equal('=q1 + q2');
+          expect(getColumnValues(4)).to.deep.equal(['730', '370']);
+        });
+
+        it('should keep referencing the field on an edited commit', async () => {
+          const { user } = await render(<Test formulaA1Notation {...collisionProps} />);
+          await user.dblClick(getCell(0, 4));
+          await waitFor(() => {
+            expect(getCellEditable(0, 4).textContent).to.equal('=FIELD("q1") + FIELD("q2")');
+          });
+          setEditableValue(0, 4, '=FIELD("q1") + FIELD("q2") + 10');
+          fireEvent.keyDown(getCellEditable(0, 4), { key: 'Enter' });
+          await microtasks();
+
+          const stored = apiRef.current!.getRow(1).total as string;
+          expect(stored).to.contain('FIELD("q1")');
+          expect(stored).not.to.contain('REF(');
+          expect(getColumnValues(4)).to.deep.equal(['740', '370']);
+        });
+      });
+
       it('should freeze a plain A1 range to ANCHOR offsets and round-trip it through the editor', async () => {
         const { user } = await render(<Test formulaA1Notation processRowUpdate={(row) => row} />);
         const cell = getCell(0, 4);

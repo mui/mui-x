@@ -417,9 +417,12 @@ export const useGridFormula = (
   const handleCellEditStop = React.useCallback<GridEventListener<'cellEditStop'>>(() => {
     const cache = apiRef.current.caches.formula;
     cache.lastCellEditStart = null;
-    // A1 seed is consumed by the commit parser; clear it so it cannot affect a
-    // later edit of the same cell.
-    cache.lastA1Seed = null;
+    // `lastA1Seed` is deliberately NOT cleared here: the editing hook's stop
+    // flow re-runs the value setter after this event fires (the commit
+    // continues past `cellEditStop`), and clearing the seed under it made the
+    // unchanged-commit guard re-freeze the formula. The seed is invalidated at
+    // the next editor mount instead (`GridFormulaEditCell`), and its
+    // id + field + exact-display-text match keeps a lingering one inert.
     // The editor-session mirror must not resume into a later edit. This is the
     // immediate clear for the common cell-mode path; `pruneEditorSession` below
     // covers every path that never publishes `cellEditStop`.

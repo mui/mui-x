@@ -140,6 +140,7 @@ export type { A1TransformContext, A1TransformResult, ToCanonicalOptions } from '
 export {
   columnIndexToLetters,
   columnLettersToIndex,
+  isA1AmbiguousFieldName,
   toCanonicalFormula,
   toDisplayFormula,
 } from './formulaA1';

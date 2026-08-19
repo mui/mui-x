@@ -11,6 +11,7 @@ import {
   IDENTIFIER_REGEX,
   WHITESPACE_REGEX,
   matchColumnRange,
+  matchFieldEscape,
   matchRangeTail,
   readParsedRef,
   scanStringLiteral,
@@ -150,6 +151,20 @@ export function scanA1References(
       }
       // Out-of-bounds whole-column (`Z:Z` past the last column): no resolvable
       // target, so it is left as plain text — same end state as `unresolved`.
+    }
+
+    // A `FIELD("…")` escape is one field reference — the whole call is the
+    // colored chunk, matching the span the canonical AST walk produces for it.
+    // The A1 display dialect emits it for field names that would otherwise
+    // read as cell addresses (a field named `q1`), so without this branch
+    // exactly those fields would lose their highlight.
+    const fieldEscape = matchFieldEscape(expression, index);
+    if (fieldEscape !== null) {
+      const span: FormulaSourceSpan = { start: index, end: fieldEscape.end };
+      const node: FormulaFieldRefNode = { type: 'fieldRef', field: fieldEscape.field, span };
+      references.push({ spans: [span], node });
+      index = fieldEscape.end;
+      continue;
     }
 
     const identifier = IDENTIFIER_REGEX.exec(rest);

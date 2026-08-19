@@ -3,6 +3,7 @@ import { serializeFormulaAst } from './formulaSerializer';
 import {
   columnIndexToLetters,
   columnLettersToIndex,
+  isA1AmbiguousFieldName,
   toCanonicalFormula,
   toDisplayFormula,
 } from './formulaA1';
@@ -101,6 +102,21 @@ describe('formulaA1', () => {
     it('returns 0 for non-letters', () => {
       expect(columnLettersToIndex('')).to.equal(0);
       expect(columnLettersToIndex('A1')).to.equal(0);
+    });
+  });
+
+  describe('isA1AmbiguousFieldName', () => {
+    it('flags exactly the letters-then-digits names the A1 scanners read as cell refs', () => {
+      expect(isA1AmbiguousFieldName('q1')).to.equal(true);
+      expect(isA1AmbiguousFieldName('A1')).to.equal(true);
+      expect(isA1AmbiguousFieldName('AB12')).to.equal(true);
+      expect(isA1AmbiguousFieldName('price')).to.equal(false);
+      // Trailing identifier characters break the cell-ref token, same as the
+      // scanners' boundary: these stay bare field references in A1 text.
+      expect(isA1AmbiguousFieldName('q1x')).to.equal(false);
+      expect(isA1AmbiguousFieldName('q1_')).to.equal(false);
+      expect(isA1AmbiguousFieldName('1q')).to.equal(false);
+      expect(isA1AmbiguousFieldName('')).to.equal(false);
     });
   });
 
@@ -392,7 +408,25 @@ describe('formulaA1', () => {
     });
 
     it('preserves operators, precedence and bare field refs', () => {
-      expect(toDisplay('(A1 + B1) * price')).to.equal('(A1 + B1) * price');
+      expect(toDisplay('(price + qty) * total')).to.equal('(price + qty) * total');
+    });
+
+    it('escapes field names that read as A1 cell addresses', () => {
+      // The escape is lexical: bare, the A1 scanners would take `q1` for cell
+      // Q1 — no highlight, and the next commit would freeze the field
+      // reference into a dead cell reference (`#REF!`).
+      expect(toDisplay('q1 + q2')).to.equal('FIELD("q1") + FIELD("q2")');
+      expect(toDisplay('(A1 + B1) * price')).to.equal('(FIELD("A1") + FIELD("B1")) * price');
+    });
+
+    it('round-trips an escaped ambiguous field through commit unchanged', () => {
+      const display = toDisplay('q1 + q2');
+      const { source, changed } = toCanonicalFormula(display, { positionContext: CONTEXT });
+      // The commit transform copies the escape verbatim (no A1 token rewritten)
+      // and the canonical parser reads it back as the same field reference.
+      expect(changed).to.equal(false);
+      expect(stripSpans(parseOk(source))).to.deep.equal(stripSpans(parseOk('q1 + q2')));
+      expect(toDisplay(source)).to.equal(display);
     });
 
     it('returns the input unchanged when it does not parse', () => {
@@ -418,6 +452,10 @@ describe('formulaA1', () => {
       roundTrips('B3 + C5');
       roundTrips('SUM(A1:B5)');
       roundTrips('SUM(C:C)');
+    });
+
+    it('is stable for an escaped ambiguous field name', () => {
+      roundTrips('FIELD("q1")');
     });
 
     it('is stable for every range window shape', () => {

@@ -179,6 +179,7 @@ A1 notation is an editing layer only:
 - Row data, clipboard copy, export, and `processRowUpdate` always carry the canonical syntax.
   A1 text is converted at commit time.
 - Same-row references keep their field names (`=price * quantity`)—an A1 address would pin them to one specific row.
+  A field whose name reads as an A1 address (a field named `q1`, for example) displays and is written as `FIELD("q1")` while editing, so it can't be mistaken for cell `Q1`.
 - The row numbers and header letters always show the coordinates that A1 addresses and position-based references resolve to, even after sorting or filtering.
 
 The prop has no effect when `disableFormulas` is enabled or a [data source](/x/react-data-grid/server-side-data/) is set.

@@ -12,6 +12,15 @@ function serializeString(value: string): string {
   return `"${value.replace(/"/g, '""')}"`;
 }
 
+/**
+ * The `FIELD("…")` escape for a field name that cannot be written bare —
+ * shared with the A1 display serializer, which additionally escapes names
+ * that would read as A1 cell addresses.
+ */
+export function serializeEscapedFieldRef(field: string): string {
+  return `FIELD(${serializeString(field)})`;
+}
+
 function serializeFieldRef(field: string): string {
   const upper = field.toUpperCase();
   // TRUE/FALSE parse as boolean literals when bare; other reserved names are
@@ -19,7 +28,7 @@ function serializeFieldRef(field: string): string {
   if (BARE_FIELD_REGEX.test(field) && upper !== 'TRUE' && upper !== 'FALSE') {
     return field;
   }
-  return `FIELD(${serializeString(field)})`;
+  return serializeEscapedFieldRef(field);
 }
 
 function serializeColumnSelector(selector: FormulaColumnSelector): string {

@@ -85,6 +85,60 @@ export function matchRangeTail(
 }
 
 /**
+ * Matches a `FIELD("name")` escape at `start` (function name case-insensitive,
+ * `""` escapes in the literal, inline whitespace allowed) and returns the
+ * unescaped field name. The A1 display dialect writes ambiguous field names —
+ * ones that would read as cell addresses, like a field named `q1` — through
+ * this escape, and the reference highlighter must color the whole call as one
+ * field reference: exactly what the canonical parser turns it into at commit.
+ * Returns `null` on anything else (`FIELD(price)`, an unterminated literal, a
+ * different function) — those fall back to the generic scanning branches.
+ */
+export function matchFieldEscape(
+  expression: string,
+  start: number,
+): { field: string; end: number } | null {
+  const identifier = IDENTIFIER_REGEX.exec(expression.slice(start));
+  if (identifier === null || identifier[0].toUpperCase() !== 'FIELD') {
+    return null;
+  }
+  let index = skipInlineWhitespace(expression, start + identifier[0].length);
+  if (expression[index] !== '(') {
+    return null;
+  }
+  index = skipInlineWhitespace(expression, index + 1);
+  if (expression[index] !== '"') {
+    return null;
+  }
+  index += 1;
+  let field = '';
+  let terminated = false;
+  while (index < expression.length) {
+    const char = expression[index];
+    if (char === '"') {
+      if (expression[index + 1] === '"') {
+        field += '"';
+        index += 2;
+        continue;
+      }
+      terminated = true;
+      index += 1;
+      break;
+    }
+    field += char;
+    index += 1;
+  }
+  if (!terminated) {
+    return null;
+  }
+  index = skipInlineWhitespace(expression, index);
+  if (expression[index] !== ')') {
+    return null;
+  }
+  return { field, end: index + 1 };
+}
+
+/**
  * Matches a whole-column range `A:A`. Only same-column ranges map to a single
  * `COLUMN_VALUES`; mixed columns return `null` and are copied verbatim.
  */

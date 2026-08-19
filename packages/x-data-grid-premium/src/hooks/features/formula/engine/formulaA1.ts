@@ -19,7 +19,7 @@ import {
 } from './formulaA1Tokens';
 import type { ParsedRef } from './formulaA1Tokens';
 import { parseFormula } from './formulaParser';
-import { serializeFormulaAst } from './formulaSerializer';
+import { serializeEscapedFieldRef, serializeFormulaAst } from './formulaSerializer';
 import type { FormulaCellRef, FormulaPositionContext, FormulaSourceSpan } from './formulaTypes';
 
 /**
@@ -101,6 +101,16 @@ export function columnLettersToIndex(letters: string): number {
     index = index * 26 + value;
   }
   return index;
+}
+
+/**
+ * `true` when a field name is lexically an A1 cell address (`q1`, `AB12`): the
+ * A1 scanners would read the bare name as a cell reference, so the A1 dialect
+ * must write such a field through the `FIELD("…")` escape.
+ */
+export function isA1AmbiguousFieldName(field: string): boolean {
+  const match = CELL_REF_REGEX.exec(field);
+  return match !== null && match[0].length === field.length;
 }
 
 export interface A1TransformContext {
@@ -523,8 +533,16 @@ function serializeA1Node(
     }
     case 'functionCall':
       return `${node.name}(${node.args.map((arg) => serializeA1Node(arg, context, anchor)).join(', ')})`;
+    case 'fieldRef':
+      // A field name that reads as an A1 cell address (`q1`) must not render
+      // bare: the commit transform and the highlighter would take it for a
+      // cell reference and rewrite it (`q1` → column Q, row 1 → `#REF!`).
+      if (isA1AmbiguousFieldName(node.field)) {
+        return serializeEscapedFieldRef(node.field);
+      }
+      return serializeFormulaAst(node);
     default:
-      // Literals and bare field references render identically in both dialects.
+      // Literals render identically in both dialects.
       return serializeFormulaAst(node);
   }
 }

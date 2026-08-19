@@ -223,7 +223,9 @@ export interface GridFormulaInternalCache {
    * The A1 value last seeded into the editor and the canonical source it came
    * from (A1 notation only). Lets the commit parser detect an unchanged edit
    * and restore the stored canonical instead of re-freezing relative references
-   * against a possibly re-sorted view. Cleared on `cellEditStop`.
+   * against a possibly re-sorted view. It must survive `cellEditStop` — the
+   * commit's value setter runs again after that event — so it is overwritten or
+   * invalidated at the next editor mount instead (`GridFormulaEditCell`).
    */
   lastA1Seed: { id: GridRowId; field: string; display: string; canonical: string } | null;
   /**

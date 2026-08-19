@@ -107,13 +107,28 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
       // programmatic edit of the same cell.
       cache.lastCellEditStart = null;
     }
+    // A seed left by an earlier edit of this cell must not survive into a
+    // session that will not show it: the commit guard restores the seed's
+    // canonical on an exact display-text match, and a stale seed would restore
+    // an outdated formula instead of freezing the typed text against the
+    // current view. Scoped to this cell — another cell's seed is not ours to
+    // drop — and only on paths that are first mounts of a session (the
+    // programmatic/remount branch below must keep the live session's seed).
+    const invalidateOwnA1Seed = () => {
+      const seed = cache.lastA1Seed;
+      if (seed !== null && seed.id === id && seed.field === field) {
+        cache.lastA1Seed = null;
+      }
+    };
     if (!rawIsFormula) {
+      invalidateOwnA1Seed();
       return;
     }
     if (isOwnStart) {
       if (startInfo.replaceValue) {
         // The edit started by typing/deleting/pasting — the value was
         // intentionally replaced.
+        invalidateOwnA1Seed();
         return;
       }
     } else {

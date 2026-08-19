@@ -39,6 +39,14 @@ describe('toFormulaFieldReference', () => {
     expect(toFormulaFieldReference('RANGE')).toEqual('RANGE');
   });
 
+  it('escapes names that read as A1 cell addresses — in A1 mode only', () => {
+    // Bare `q1` in A1 text is cell Q1: inserting it from the suggestion list
+    // would plant a reference the commit transform freezes as a dead cell.
+    expect(toFormulaFieldReference('q1', true)).toEqual('FIELD("q1")');
+    expect(toFormulaFieldReference('q1', false)).toEqual('q1');
+    expect(toFormulaFieldReference('price', true)).toEqual('price');
+  });
+
   it('doubles embedded quotes', () => {
     expect(toFormulaFieldReference('a"b')).toEqual('FIELD("a""b")');
   });

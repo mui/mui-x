@@ -6,6 +6,7 @@ import {
   FORMULA_RESERVED_NAMES,
   getFormulaCompletionContext,
   getFormulaCompletionTokens,
+  isA1AmbiguousFieldName,
   isFormulaSource,
   rankFormulaCompletions,
 } from './engine';
@@ -59,10 +60,16 @@ const BARE_IDENTIFIER_REGEX = /^[A-Za-z_][A-Za-z0-9_]*$/;
 /**
  * The reference text that resolves to `field` as a same-row reference. A field
  * whose name is not a bare identifier — or collides with a reserved name or a
- * boolean constant — must go through the `FIELD("…")` escape.
+ * boolean constant — must go through the `FIELD("…")` escape. In the A1
+ * editing dialect a name that reads as a cell address (a field named `q1`)
+ * must be escaped too, or the commit transform would freeze it as cell Q1.
  */
-export function toFormulaFieldReference(field: string): string {
-  if (BARE_IDENTIFIER_REGEX.test(field) && !RESERVED_NAME_SET.has(field.toUpperCase())) {
+export function toFormulaFieldReference(field: string, a1Notation: boolean = false): string {
+  if (
+    BARE_IDENTIFIER_REGEX.test(field) &&
+    !RESERVED_NAME_SET.has(field.toUpperCase()) &&
+    !(a1Notation && isA1AmbiguousFieldName(field))
+  ) {
     return field;
   }
   return `FIELD("${field.replace(/"/g, '""')}")`;
@@ -109,7 +116,7 @@ export function getFormulaSuggestions(
     const headerName = columnLookup[field]?.headerName;
     columnTokens.push({
       label: field,
-      insertText: toFormulaFieldReference(field),
+      insertText: toFormulaFieldReference(field, a1NotationEnabled),
       kind: 'field',
       detail: headerName && headerName !== field ? headerName : undefined,
     });

@@ -174,6 +174,35 @@ describe('formulaReferences', () => {
       const references = a1(expression);
       expect(slices(expression, references)).to.deep.equal(['$A$1', 'B2:C3', 'total']);
     });
+
+    it('scans a FIELD("…") escape as one field reference', () => {
+      // The A1 display dialect writes a field named like a cell address (`q1`)
+      // through the escape; the whole call is the colored chunk, exactly the
+      // span the canonical walk produces for the node it parses into.
+      const expression = 'FIELD("q1") + B2';
+      const references = a1(expression);
+      expect(references.map((ref) => ref.node.type)).to.deep.equal(['fieldRef', 'cellRef']);
+      expect((references[0].node as any).field).to.equal('q1');
+      expect(slices(expression, references)).to.deep.equal(['FIELD("q1")', 'B2']);
+    });
+
+    it('scans FIELD escapes with any casing, inner whitespace and `""` escapes', () => {
+      const expression = 'field ( "a""b" )';
+      const references = a1(expression);
+      expect(references).to.have.length(1);
+      expect(references[0].node.type).to.equal('fieldRef');
+      expect((references[0].node as any).field).to.equal('a"b');
+      expect(slices(expression, references)).to.deep.equal([expression]);
+    });
+
+    it('leaves a malformed FIELD escape to the generic branches', () => {
+      // Not a string argument: `FIELD` is a call and `q1` scans as a cell ref,
+      // matching what the commit transform would do with the same text.
+      const nonString = a1('FIELD(q1)');
+      expect(nonString.map((ref) => ref.node.type)).to.deep.equal(['cellRef']);
+      // Unterminated literal: no reference, no crash.
+      expect(a1('FIELD("q1')).to.deep.equal([]);
+    });
   });
 
   describe('dialect equivalence', () => {
