@@ -985,7 +985,10 @@ export class SchedulerStore<
     // Armed → edit opens the surface (e.g. the armed toolbar's Edit action). Canceling disarms:
     // the armed state keeps document-wide guards (scroll block, outside-pointer capture) that must
     // not stay active under the custom UI the consumer opens instead.
-    if (mode === 'edit' && !this.requestEditingStart(editingOccurrence.occurrence, event, trigger)) {
+    if (
+      mode === 'edit' &&
+      !this.requestEditingStart(editingOccurrence.occurrence, event, trigger)
+    ) {
       this.stopEditing();
       return;
     }

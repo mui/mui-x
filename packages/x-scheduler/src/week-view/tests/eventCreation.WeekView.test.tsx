@@ -13,9 +13,7 @@ describe('<WeekView /> event creation', () => {
 
   it('should fire `onEventEditingStart` once with the initiating keydown and drop the draft when canceling a keyboard creation', async () => {
     let store: AnyEventCalendarStore | null = null;
-    const onEventEditingStart = spy((_occurrence: any, eventDetails: any) =>
-      eventDetails.cancel(),
-    );
+    const onEventEditingStart = spy((_occurrence: any, eventDetails: any) => eventDetails.cancel());
     const { user } = render(
       <EventCalendarProvider events={[]} resources={[]} onEventEditingStart={onEventEditingStart}>
         <EventDialogProvider>
