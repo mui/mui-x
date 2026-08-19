@@ -21,15 +21,10 @@ export interface EventEditingContextValue {
    */
   anchor: HTMLElement | null;
   /**
-   * Offers `node` as an anchor. It is only taken when the surface has none, so the element the user
-   * activated keeps it while it is mounted.
+   * Offers `node` as an anchor and returns a cleanup that withdraws it. If the withdrawn node was
+   * the anchor, the surface moves to another registered element, or to `null` when none is left.
    */
-  registerAnchor: (node: HTMLElement) => void;
-  /**
-   * Withdraws `node`. If it was the anchor, the surface moves to another registered element, or to
-   * `null` when none is left.
-   */
-  unregisterAnchor: (node: HTMLElement) => void;
+  registerAnchor: (node: HTMLElement) => () => void;
 }
 
 export interface EventEditingProviderProps {

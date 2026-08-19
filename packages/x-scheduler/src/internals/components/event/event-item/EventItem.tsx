@@ -34,7 +34,6 @@ const EventItemCard = styled('div', {
 })<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
-  // Every variant renders inside a button, so the pointer belongs on the root.
   cursor: 'pointer',
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,

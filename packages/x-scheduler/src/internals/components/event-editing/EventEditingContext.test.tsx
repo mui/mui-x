@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
 import { EventCalendarProvider } from '../EventCalendarProvider';
+import { EventDialogProvider } from '../event-dialog';
 import { EventEditingProvider, EventEditingTrigger, useEventEditingContext } from './index';
 
 const eventBuilder = EventBuilder.new().title('Running').singleDay('2025-05-26T07:30:00Z', 45);
@@ -13,12 +14,10 @@ describe('<EventEditingProvider />', () => {
   const { render } = createSchedulerRenderer();
 
   /**
-   * Stands in for the same event being on screen more than once — in a month cell and in the
-   * "+N more" popover, or on each day a multi-day event spans. Every copy can be unmounted on its
-   * own, so a test can pick which one goes away, and every anchor the provider publishes is
-   * recorded, so it can assert what the anchor went through and not only where it ended up.
+   * Renders the same occurrence behind several triggers, each unmountable on its own. Every anchor
+   * the provider publishes is recorded so tests can assert the intermediate values too.
    */
-  function renderTriggers(triggerIds: string[]) {
+  function renderTriggers(triggerIds: string[], { withDialog = false } = {}) {
     const anchors: (string | null)[] = [];
 
     function AnchorRecorder() {
@@ -29,12 +28,19 @@ describe('<EventEditingProvider />', () => {
       return null;
     }
 
+    // EventDialogProvider renders its own EventEditingProvider with the dialog surface.
+    const Provider = withDialog
+      ? EventDialogProvider
+      : ({ children }: { children: React.ReactNode }) => (
+          <EventEditingProvider surface="dialog">{children}</EventEditingProvider>
+        );
+
     function Harness() {
       const [mounted, setMounted] = React.useState(triggerIds);
 
       return (
         <EventCalendarProvider events={[event]} resources={[]}>
-          <EventEditingProvider surface="dialog">
+          <Provider>
             <AnchorRecorder />
             {triggerIds.map((id) =>
               mounted.includes(id) ? (
@@ -55,7 +61,7 @@ describe('<EventEditingProvider />', () => {
                 unmount {id}
               </button>
             ))}
-          </EventEditingProvider>
+          </Provider>
         </EventCalendarProvider>
       );
     }
@@ -95,6 +101,20 @@ describe('<EventEditingProvider />', () => {
     expect(currentAnchor()).to.equal('cell');
     // A `null` in between unmounts the editing surface, which reseeds the form and drops the draft.
     expect(anchors.slice(beforeUnmount)).to.not.include(null);
+  });
+
+  it('should keep the dialog and its draft when the trigger it was opened from unmounts', async () => {
+    const { user } = renderTriggers(['cell', 'popover'], { withDialog: true });
+
+    await user.click(screen.getByTestId('popover'));
+    const titleInput = await screen.findByLabelText<HTMLInputElement>(/event title/i);
+    await user.type(titleInput, ' draft');
+
+    await user.click(screen.getByTestId('unmount-popover'));
+
+    // A remount would reseed the form from the event, discarding the typed draft.
+    expect(screen.getByRole('dialog')).not.to.equal(null);
+    expect(screen.getByLabelText<HTMLInputElement>(/event title/i).value).to.equal('Running draft');
   });
 
   it('should clear the anchor once no trigger is left to hold it', async () => {

@@ -99,8 +99,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     );
   }, [store, onClose]);
 
-  // Editing an event can empty the day and unmount the "+N more" button with it, so remember the
-  // cell while the button is still in the document.
+  // Editing an event can unmount the "+N more" button, so remember the cell as a focus fallback.
   const fallbackFocusRef = React.useRef<HTMLElement | null>(null);
   useIsoLayoutEffect(() => {
     if (open && anchor) {
@@ -108,14 +107,11 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     }
   }, [open, anchor]);
 
-  // The editing surface hands focus back to the event it was opened from, and that event unmounts
-  // with this popover, so focus would be left on the document and the next Tab would leave the
-  // page. Restored only from where it is about to be lost: on the document, or on something inside
-  // the popover that is going away with it.
+  // Restore focus when it is about to be lost with the closing popover: on the document, or on
+  // something unmounting with the popover. Focus already moved elsewhere is preserved.
   const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
     const ownerDocument = paper.ownerDocument;
-    // `document.activeElement` stops at the shadow host, which contains the popover rather than
-    // being contained by it, so the checks below would read a focused event as focus moved away.
+    // `getActiveElement` pierces shadow roots, where `document.activeElement` stops at the host.
     const activeElement = getActiveElement(ownerDocument);
     const focusIsAboutToBeLost =
       activeElement === null ||

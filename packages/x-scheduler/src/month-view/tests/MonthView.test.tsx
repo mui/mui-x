@@ -131,8 +131,7 @@ describe('<MonthView />', () => {
           </EventDialogProvider>
         </EventCalendarProvider>
       );
-      // The theme goes in a wrapper rather than around the element, so `setProps` still reaches the
-      // calendar provider.
+      // The theme goes in a wrapper so `setProps` still reaches the calendar provider.
       const { user, setProps } = render(calendar, {
         wrapper: theme
           ? ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>
@@ -233,9 +232,8 @@ describe('<MonthView />', () => {
       await user.click(firstEventButton);
       await screen.findByRole('dialog');
 
-      // Enter from the title field submits the form, which closes the editing surface. Typed into
-      // the field rather than sent to whatever holds focus, which the dialog and its focus trap
-      // settle on at different moments across React versions.
+      // Typed into the title field rather than sent to whatever holds focus, which the dialog's
+      // focus trap settles at different moments across React versions.
       const titleInput = await screen.findByLabelText(/event title/i);
       await user.type(titleInput, '{Enter}');
 
@@ -259,8 +257,8 @@ describe('<MonthView />', () => {
     });
 
     it('should return focus to the day cell when the trigger is gone by the time the dialog is submitted', async () => {
-      // Editing can empty the day and take the "+N more" button with it. Assigned right after the
-      // render, which is where `setProps` comes from, and only called on submit.
+      // Emptying the day on submit unmounts the "+N more" button. Assigned after the render
+      // because it needs `setProps`.
       let emptyTheDay = () => {};
       const { user, setProps, popover } = await renderAndOpenPopover({
         onEventsChange: () => emptyTheDay(),
@@ -290,9 +288,8 @@ describe('<MonthView />', () => {
     });
 
     it('should leave focus alone when it moved out of the popover while it was closing', async () => {
-      // The restore runs when the exit transition ends, so the transition has to last long enough
-      // to move focus while it plays: `setupVitest` disables transitions, and the popover's `auto`
-      // duration measures a paper of height 0 in jsdom, which rounds to no transition at all.
+      // Re-enable transitions and force a duration: the popover's `auto` duration measures 0 in
+      // jsdom, and the exit has to last long enough to move focus while it plays.
       config.disabled = false;
       const { user, popover } = await renderAndOpenPopover({
         theme: createTheme({
