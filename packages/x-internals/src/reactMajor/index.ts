@@ -1,3 +1,1 @@
-import * as React from 'react';
-
-export default parseInt(React.version, 10);
+export { reactMajor as default } from '@base-ui/utils/reactVersion';

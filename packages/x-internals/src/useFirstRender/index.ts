@@ -1,1 +1,1 @@
-export * from './useFirstRender';
+export { useOnFirstRender as useFirstRender } from '@base-ui/utils/useOnFirstRender';
