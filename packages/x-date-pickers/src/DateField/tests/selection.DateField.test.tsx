@@ -409,7 +409,7 @@ describe('<DateField /> - Selection', () => {
           </div>,
         );
 
-        const { userEvent } = await import('@vitest/browser/context');
+        const { userEvent } = await import('vitest/browser');
         await userEvent.click(screen.getByTestId('flex-wrapper'));
 
         expect(getCleanedSelectedContent()).to.equal('');
