@@ -528,8 +528,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     it('should not warn when a section rendered by the slot validates the resource itself', async () => {
       clearWarningsCache();
       function CustomResourceSection() {
-        useEventDialogFormField<string>('resourceId', {
-          validate: (value) => (value ? null : 'Required'),
+        useEventDialogFormField<string[]>('resourceIds', {
+          validate: (value) => (value.length > 0 ? null : 'Required'),
         });
         return null;
       }

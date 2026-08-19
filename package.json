@@ -112,6 +112,7 @@
     "babel-plugin-transform-replace-expressions": "0.2.0",
     "concurrently": "10.0.4",
     "cross-env": "catalog:",
+    "date-fns": "catalog:",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
     "es-toolkit": "catalog:",
@@ -151,9 +152,9 @@
   "config": {
     "valeVersion": "3.17.0"
   },
-  "packageManager": "pnpm@11.17.0",
+  "packageManager": "pnpm@11.20.0",
   "engines": {
-    "pnpm": "11.17.0",
+    "pnpm": "11.20.0",
     "node": ">=22.23.2"
   }
 }

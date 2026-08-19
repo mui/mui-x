@@ -423,6 +423,7 @@ describe('<DataGridPro /> - Tree data', () => {
       render(<Test />);
       const columnsHeader = getColumnHeadersTextContent();
       expect(columnsHeader).to.deep.equal(['Group', 'name']);
+      expect(getCell(0, 0)).to.have.attribute('role', 'rowheader');
     });
 
     it('should render a toggling icon only when a row has children', () => {

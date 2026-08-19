@@ -297,5 +297,6 @@
   "297": "MUI X Scheduler: useEventDialogFormContext must be used within an <EventDialogFormProvider />. The component requires access to the draft form values. Ensure the component is rendered inside the event dialog form.",
   "298": "MUI X Scheduler: `EventEditingContext` is missing. Hook must be placed within its Provider.",
   "299": "MUI X Scheduler: `MoreEventsPopoverContext` is missing. Hook must be placed within its Provider.",
-  "300": "MUI X Scheduler: useEventEditingOccurrence must be used within the event editing form. The component requires access to the occurrence being edited. Ensure the component is rendered inside the event dialog or the compact editing drawer."
+  "300": "MUI X Scheduler: useEventEditingOccurrence must be used within the event editing form. The component requires access to the occurrence being edited. Ensure the component is rendered inside the event dialog or the compact editing drawer.",
+  "301": "MUI X Scheduler: useEventEditingResourceSelectionMode must be used within the event editing form. The component requires the resource selection mode captured when the form mounted. Ensure the component is rendered inside the event dialog or the compact editing drawer."
 }

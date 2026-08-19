@@ -442,7 +442,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   return (
     <div
       className={clsx(classes.root, classNames, className)}
-      role="gridcell"
+      role={column.rowHeader ? 'rowheader' : 'gridcell'}
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}

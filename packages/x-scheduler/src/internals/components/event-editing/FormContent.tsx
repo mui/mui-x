@@ -27,11 +27,16 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   getCustomEventProperties,
-  getPrimaryResourceId,
+  getEventResourceIds,
+  getResourceSelectionMode,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
 import { EventEditingOccurrenceContext } from './EventEditingOccurrenceContext';
+import {
+  EventEditingResourceSelectionModeContext,
+  useEventEditingResourceSelectionMode,
+} from './EventEditingResourceSelectionModeContext';
 import type { EventDialogFormValues } from '../event-dialog/utils';
 import { computeRange, hasProp, BUILT_IN_FORM_KEYS } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
@@ -110,12 +115,30 @@ export function FormContent(props: FormContentProps) {
   const store = useSchedulerStoreContext();
   const pushPlaceholder = usePushPlaceholder();
 
+  const canHaveMultipleResources = useStore(
+    store,
+    schedulerEventSelectors.canHaveMultipleResources,
+  );
+  const isCreating = useStore(store, schedulerOccurrencePlaceholderSelectors.isCreating);
+
   const defaultRecurrencePresetKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
     occurrence.displayTimezone.rrule,
     occurrence.displayTimezone.start,
   );
+
+  // Derived once, right alongside `initialValues` below, for the same reason: the dialog
+  // remounts on `key={occurrence.key}`, so this is exactly "the data this occurrence started
+  // with", and it must stay that way for the lifetime of the editing session. Two components
+  // read it — `ResourceAndColorSection` (what the Select renders as) and `FormContentInner`
+  // (what gets written on submit) — and they have to agree, so it's derived once, here, and
+  // provided through context to both instead of each freezing its own copy against a live
+  // subscription that could drift between them. See `getResourceSelectionMode` for the
+  // creating-vs-editing rule.
+  const resourceSelectionMode = useRefWithInit(() =>
+    getResourceSelectionMode(occurrence.resource, canHaveMultipleResources, isCreating),
+  ).current;
 
   // Built once: the provider ignores later values anyway, and this component
   // re-renders on every placeholder push during creation (`usePushPlaceholder`
@@ -150,7 +173,7 @@ export function FormContent(props: FormContentProps) {
       endDate: fmtDate(occurrence.displayTimezone.end),
       startTime: fmtTime(occurrence.displayTimezone.start),
       endTime: fmtTime(occurrence.displayTimezone.end),
-      resourceId: getPrimaryResourceId(occurrence.resource),
+      resourceIds: getEventResourceIds(occurrence.resource),
       allDay: !!occurrence.allDay,
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: defaultRecurrencePresetKey,
@@ -167,9 +190,11 @@ export function FormContent(props: FormContentProps) {
 
   return (
     <EventEditingOccurrenceContext.Provider value={occurrence}>
-      <EventDialogFormProvider initialValues={initialValues} onValuesChange={pushPlaceholder}>
-        <FormContentInner {...props} />
-      </EventDialogFormProvider>
+      <EventEditingResourceSelectionModeContext.Provider value={resourceSelectionMode}>
+        <EventDialogFormProvider initialValues={initialValues} onValuesChange={pushPlaceholder}>
+          <FormContentInner {...props} />
+        </EventDialogFormProvider>
+      </EventEditingResourceSelectionModeContext.Provider>
     </EventEditingOccurrenceContext.Provider>
   );
 }
@@ -179,6 +204,7 @@ function FormContentInner(props: FormContentProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
+  const resourceSelectionMode = useEventEditingResourceSelectionMode();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
@@ -211,11 +237,11 @@ function FormContentInner(props: FormContentProps) {
     if (process.env.NODE_ENV !== 'production') {
       // Checked on submit rather than on mount: the registry is only complete once
       // every section has run its effects, whatever the composition.
-      if (shouldEventRequireResource && !formStore.hasValidator('resourceId')) {
+      if (shouldEventRequireResource && !formStore.hasValidator('resourceIds')) {
         warnOnce([
           'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
           'The built-in resource section is not rendered, so an event can be saved without a resource.',
-          'Render the resource section in the General tab, or register a validator for the "resourceId" field.',
+          'Render the resource section in the General tab, or register a validator for the "resourceIds" field.',
         ]);
       }
     }
@@ -236,7 +262,7 @@ function FormContentInner(props: FormContentProps) {
       title: values.title.trim(),
       description: values.description.trim(),
       allDay: values.allDay,
-      resource: values.resourceId === null ? undefined : values.resourceId,
+      resource: resourceSelectionMode === 'multiple' ? values.resourceIds : values.resourceIds[0],
       color: values.color === null ? undefined : values.color,
     };
 

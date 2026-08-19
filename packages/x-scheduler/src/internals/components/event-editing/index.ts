@@ -18,6 +18,10 @@ export {
   EventEditingOccurrenceContext,
   useEventEditingOccurrence,
 } from './EventEditingOccurrenceContext';
+export {
+  EventEditingResourceSelectionModeContext,
+  useEventEditingResourceSelectionMode,
+} from './EventEditingResourceSelectionModeContext';
 export { FormContent } from './FormContent';
 export { ReadonlyEventDetails } from './ReadonlyEventDetails';
 export { getInitialEditingMode } from './editingModePolicy';
