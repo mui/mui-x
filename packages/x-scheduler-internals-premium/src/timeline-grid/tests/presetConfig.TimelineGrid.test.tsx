@@ -22,6 +22,7 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
   // dayAndHour: 4 days × 12 visible hours (8:00 → 20:00) = 2880 axis minutes.
   const PRESET_CONFIG = { dayAndHour: { startTime: 8, endTime: 20 } };
   const AXIS_MINUTES = 4 * 12 * 60;
+  const FULL_DAY_AXIS_MINUTES = 4 * 24 * 60;
 
   function Grid({
     events,
@@ -51,6 +52,7 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
                       occurrenceKey={occurrence.key}
                       start={occurrence.displayTimezone.start}
                       end={occurrence.displayTimezone.end}
+                      elementPosition={occurrence.timelinePosition}
                       renderDragPreview={() => null}
                       data-testid={`event-${occurrence.id}`}
                     >
@@ -106,6 +108,47 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       );
       expect(parseFloat(element.style.getPropertyValue('--width'))).to.be.closeTo(
         (120 / AXIS_MINUTES) * 100,
+        0.001,
+      );
+    });
+
+    it('should update precomputed event positions when the preset config changes', () => {
+      const event = EventBuilder.new()
+        .id('visible')
+        .resource(resource)
+        .span(at(10), at(12))
+        .build();
+      const { rerender } = render(<Grid events={[event]} />);
+
+      const element = screen.getByTestId('event-visible');
+      expect(parseFloat(element.style.getPropertyValue('--x-position'))).to.be.closeTo(
+        (600 / FULL_DAY_AXIS_MINUTES) * 100,
+        0.001,
+      );
+      expect(parseFloat(element.style.getPropertyValue('--width'))).to.be.closeTo(
+        (120 / FULL_DAY_AXIS_MINUTES) * 100,
+        0.001,
+      );
+
+      rerender(<Grid events={[event]} presetConfig={PRESET_CONFIG} />);
+
+      expect(parseFloat(element.style.getPropertyValue('--x-position'))).to.be.closeTo(
+        (120 / AXIS_MINUTES) * 100,
+        0.001,
+      );
+      expect(parseFloat(element.style.getPropertyValue('--width'))).to.be.closeTo(
+        (120 / AXIS_MINUTES) * 100,
+        0.001,
+      );
+
+      rerender(<Grid events={[event]} />);
+
+      expect(parseFloat(element.style.getPropertyValue('--x-position'))).to.be.closeTo(
+        (600 / FULL_DAY_AXIS_MINUTES) * 100,
+        0.001,
+      );
+      expect(parseFloat(element.style.getPropertyValue('--width'))).to.be.closeTo(
+        (120 / FULL_DAY_AXIS_MINUTES) * 100,
         0.001,
       );
     });
