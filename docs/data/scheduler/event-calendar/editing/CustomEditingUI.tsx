@@ -84,6 +84,9 @@ export default function CustomEditingUI() {
         onEventsChange={setEvents}
         defaultPreferences={{ isSidePanelOpen: false }}
         onEventEditingStart={(_occurrence, eventDetails) => {
+          if (eventDetails.reason === 'view') {
+            return;
+          }
           eventDetails.cancel();
           setEditedEvent({
             occurrence: eventDetails.occurrence,

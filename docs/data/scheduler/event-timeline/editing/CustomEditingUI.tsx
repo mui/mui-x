@@ -65,6 +65,9 @@ export default function CustomEditingUI() {
         onEventsChange={setEvents}
         defaultPreset="monthAndYear"
         onEventEditingStart={(_occurrence, eventDetails) => {
+          if (eventDetails.reason === 'view') {
+            return;
+          }
           eventDetails.cancel();
           setEditedEvent({
             occurrence: eventDetails.occurrence,
