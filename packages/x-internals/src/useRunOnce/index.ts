@@ -1,1 +1,1 @@
-export * from './useRunOnce';
+export { useRunOnce } from '@base-ui/utils/useRunOnce';

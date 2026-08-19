@@ -1,1 +1,1 @@
-export { fastMemo } from './fastMemo';
+export { fastMemo } from '@base-ui/utils/fastMemo';
