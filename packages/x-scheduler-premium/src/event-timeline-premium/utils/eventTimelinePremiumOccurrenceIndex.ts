@@ -4,6 +4,20 @@
 export function createEventTimelinePremiumOccurrenceIndex<T extends { start: number; end: number }>(
   items: readonly T[],
 ) {
+  if (process.env.NODE_ENV !== 'production') {
+    for (let index = 1; index < items.length; index += 1) {
+      if (items[index - 1].start > items[index].start) {
+        // TODO: fix mui/no-guarded-throw
+        // eslint-disable-next-line mui/no-guarded-throw
+        throw new Error(
+          `MUI X Scheduler: The timeline occurrence index received items that are not sorted by start position.
+The index uses this order to find visible occurrences, so unsorted items can disappear while scrolling.
+Sort the items by start position before building the index.`,
+        );
+      }
+    }
+  }
+
   let leafCount = 1;
   while (leafCount < items.length) {
     leafCount *= 2;

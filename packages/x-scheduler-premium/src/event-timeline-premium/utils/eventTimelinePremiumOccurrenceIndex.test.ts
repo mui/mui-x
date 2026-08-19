@@ -31,6 +31,14 @@ describe('createEventTimelinePremiumOccurrenceIndex', () => {
     expect(createEventTimelinePremiumOccurrenceIndex<TestOccurrence>([])(0, 1)).to.deep.equal([]);
   });
 
+  it('should throw in development when occurrences are not sorted by start position', () => {
+    const occurrences = [createOccurrence(1, 0.2, 0.1), createOccurrence(2, 0.1, 0.1)];
+
+    expect(() => createEventTimelinePremiumOccurrenceIndex(occurrences)).to.throw(
+      /items that are not sorted by start position/,
+    );
+  });
+
   it('should match a linear scan', () => {
     let seed = 1;
     const random = () => {
