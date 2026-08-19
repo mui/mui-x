@@ -372,6 +372,9 @@ importers:
       cross-env:
         specifier: 'catalog:'
         version: 10.1.0
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.4.0
       date-fns-jalali-v2:
         specifier: npm:date-fns-jalali@2.30.0-0
         version: date-fns-jalali@2.30.0-0
