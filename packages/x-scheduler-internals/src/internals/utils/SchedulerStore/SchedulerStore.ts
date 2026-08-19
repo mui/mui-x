@@ -951,12 +951,19 @@ export class SchedulerStore<
    * Marks an occurrence (existing or creation draft) as the one being edited, running
    * `onEventEditingStart` first when the mode opens the editing surface.
    * Returns `false` when the handler canceled and nothing was recorded.
+   * Repeat calls for an occurrence already open in the surface are no-ops that return `true`.
    */
   public startEditing = (
     occurrence: SchedulerRenderableEventOccurrence,
     mode: SchedulerEditingMode = 'edit',
     event?: Event,
   ): boolean => {
+    const current = this.state.editingOccurrence;
+    // Creation effects re-run on placeholder churn: once the surface is open for this occurrence,
+    // repeat calls are no-ops so the consumer callback stays one-shot per activation.
+    if (mode === 'edit' && current?.mode === 'edit' && current.occurrence.key === occurrence.key) {
+      return true;
+    }
     if (mode === 'edit' && !this.requestEditingStart(occurrence, event)) {
       return false;
     }

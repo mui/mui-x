@@ -593,20 +593,14 @@ function EventRowContent({
     timelineOccurrencePlaceholderSelectors.isCreatingInResource,
     resourceId,
   );
-  // The placeholder churns identity on unrelated updates; gate on the store to detect editing started.
-  const isEditingPlaceholder = useStore(
-    store,
-    schedulerOtherSelectors.isEditedOccurrence,
-    placeholder?.key,
-  );
 
   React.useEffect(() => {
-    // Start editing once when creation begins; skip redundant re-fires that churn every subscriber.
-    if (!isCreatingAnEvent || !placeholder || !placeholderRef.current || isEditingPlaceholder) {
+    // `startEditing` is a no-op once the surface is open, so placeholder churn doesn't re-fire it.
+    if (!isCreatingAnEvent || !placeholder || !placeholderRef.current) {
       return;
     }
     startEditing(placeholderRef, placeholder);
-  }, [isCreatingAnEvent, placeholder, startEditing, isEditingPlaceholder]);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
 
   if (isLoading) {
     return <EventSkeleton data-variant="timeline-row" />;

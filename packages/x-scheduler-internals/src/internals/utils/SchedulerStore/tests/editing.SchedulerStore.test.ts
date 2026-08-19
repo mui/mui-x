@@ -1,3 +1,4 @@
+import { spy } from 'sinon';
 import {
   adapter,
   EventBuilder,
@@ -181,6 +182,55 @@ storeClasses.forEach((storeClass) => {
         );
 
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).not.to.equal(null);
+      });
+    });
+
+    describe('startEditing one-shot invariant', () => {
+      function buildOccurrence() {
+        return {
+          id: 'standup',
+          key: 'standup::2025-07-07',
+          displayTimezone: {
+            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
+            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
+          },
+        } as any;
+      }
+
+      it('should not re-run `onEventEditingStart` when the occurrence is already open in the surface', () => {
+        const onEventEditingStart = spy();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const occurrence = buildOccurrence();
+
+        expect(store.startEditing(occurrence)).to.equal(true);
+        expect(store.startEditing(occurrence)).to.equal(true);
+
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+      });
+
+      it('should run `onEventEditingStart` again when the previous start was canceled', () => {
+        const onEventEditingStart = spy((_occurrence: any, eventDetails: any) =>
+          eventDetails.cancel(),
+        );
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const occurrence = buildOccurrence();
+
+        expect(store.startEditing(occurrence)).to.equal(false);
+        expect(store.startEditing(occurrence)).to.equal(false);
+
+        expect(onEventEditingStart.callCount).to.equal(2);
+      });
+
+      it('should run `onEventEditingStart` when the armed occurrence opens the surface', () => {
+        const onEventEditingStart = spy();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const occurrence = buildOccurrence();
+
+        store.startEditing(occurrence, 'armed');
+        expect(onEventEditingStart.callCount).to.equal(0);
+
+        store.setEditingMode('edit');
+        expect(onEventEditingStart.calledOnce).to.equal(true);
       });
     });
   });

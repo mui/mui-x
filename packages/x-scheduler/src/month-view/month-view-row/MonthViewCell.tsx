@@ -189,12 +189,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isToday = useStore(store, schedulerNowSelectors.isCurrentDay, day.value);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row, maxEvents);
-  // The placeholder churns identity on unrelated updates; gate on the store to detect editing started.
-  const isEditingPlaceholder = useStore(
-    store,
-    schedulerOtherSelectors.isEditedOccurrence,
-    placeholder?.key,
-  );
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -226,12 +220,12 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const rowCount = 1 + maxEvents;
 
   React.useEffect(() => {
-    // Start editing once when creation begins; skip redundant re-fires that churn every subscriber.
-    if (!isCreatingAnEvent || !placeholder || !cellRef.current || isEditingPlaceholder) {
+    // `startEditing` is a no-op once the surface is open, so placeholder churn doesn't re-fire it.
+    if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
     startEditing(cellRef, placeholder);
-  }, [isCreatingAnEvent, placeholder, startEditing, isEditingPlaceholder]);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
     <MonthViewCellRoot
