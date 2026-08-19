@@ -172,7 +172,8 @@ Relative references stay relative (`B2`) and absolute references stay absolute (
 Excel itself stores a relative range endpoint as an offset from the formula cell, which is exactly how the grid stores it too—so copy, fill, and sort inside Excel behave like they do in the grid.
 
 - A reference to a cell **outside the export**—a filtered-out row, or a column removed with `disableExport` or the `fields` option—is marked as a `#REF!` error.
-- Functions are exported unchanged: a function that Excel does not recognize keeps its cached value but shows `#NAME?` if the spreadsheet recalculates.
+- A cell exports as a live formula only when every function it calls is registered in the grid—including [custom functions](/x/react-data-grid/formula-engine/#custom-functions). A formula calling an unknown function exports its evaluated value instead, so untrusted row data can never smuggle a spreadsheet-evaluated formula into the file.
+- Registered functions are exported unchanged: a custom function that Excel does not recognize keeps its cached value but shows `#NAME?` if the spreadsheet recalculates.
 - `COLUMN_VALUES` and `RANGE_REF` export as contiguous A1 ranges. When the export includes grouped or pinned rows, those ranges also cover them, so the value is correct but a manual recalculation in Excel can differ.
 - CSV export always writes evaluated values.
 

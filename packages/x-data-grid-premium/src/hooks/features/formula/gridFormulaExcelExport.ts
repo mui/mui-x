@@ -115,7 +115,12 @@ export function createFormulaExcelExportLayout(
  *   pivot, and a genuine `=` value, and rejects a literal `=text` in a plain
  *   column);
  * - the canonical source is missing or fails to parse (defensive — stored
- *   canonical formulas should always parse).
+ *   canonical formulas should always parse);
+ * - the formula calls a function that is not in the registry. Editing validates
+ *   function names, but raw row data does not, so an unregistered call can only
+ *   come from untrusted data — writing it as a live formula would let that data
+ *   smuggle spreadsheet-evaluated formulas (`WEBSERVICE`, `HYPERLINK`, …) into
+ *   the exported file.
  *
  * References to cells outside the export bake `#REF!` into the formula and the
  * result becomes `{ error: '#REF!' }` (never silently dropped).
@@ -146,12 +151,24 @@ export function getCellExcelFormula(
     return null;
   }
 
+  // Only formulas whose every call resolves in the registry export as live
+  // formulas: an unregistered name evaluates to `#NAME?` in the grid, and
+  // exporting it verbatim would hand untrusted row data a live formula that
+  // Excel evaluates on recalc (formula injection). Fall back to the evaluated
+  // value instead — the export then shows exactly what the grid shows.
+  const { ranges, calls } = extractFormulaDependencies(ast);
+  const registry = apiRef.current.caches.formula.registry;
+  for (const name of calls) {
+    if (registry.get(name) === undefined) {
+      return null;
+    }
+  }
+
   // A window that clipped away entirely evaluates to an empty range in the
   // grid, and an anchor axis without a resolvable position evaluates to
   // `#REF!`; neither has an Excel range to write, so fall back to exporting
   // the evaluated value (contiguous with the no-#REF!-from-windows rule).
   const rangeAnchor = getFormulaRangeAnchor({ id, field }, layout.positionContext);
-  const { ranges } = extractFormulaDependencies(ast);
   for (const range of ranges) {
     const rectangle = resolveFormulaRangeRectangle(range, layout.positionContext, rangeAnchor);
     if (

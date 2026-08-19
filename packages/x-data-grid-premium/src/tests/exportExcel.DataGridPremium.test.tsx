@@ -1,6 +1,16 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { useGridApiRef, DataGridPremium, GridActionsCellItem } from '@mui/x-data-grid-premium';
-import type { GridColDef, GridApi, DataGridPremiumProps } from '@mui/x-data-grid-premium';
+import {
+  useGridApiRef,
+  DataGridPremium,
+  GridActionsCellItem,
+  GRID_FORMULA_FUNCTIONS,
+} from '@mui/x-data-grid-premium';
+import type {
+  GridColDef,
+  GridApi,
+  DataGridPremiumProps,
+  GridFormulaFunctionDefinition,
+} from '@mui/x-data-grid-premium';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import type { SinonSpy } from 'sinon';
@@ -598,6 +608,68 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(worksheet.getCell('B2').type).to.equal(Excel.ValueType.Formula);
       expect((worksheet.getCell('B2').value as any).formula).to.equal('A2/0');
       expect((worksheet.getCell('B2').value as any).result).to.deep.equal({ error: '#DIV/0!' });
+    });
+
+    it('does not export a live formula for a call to an unregistered function', async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[
+                { field: 'price', type: 'number' },
+                { field: 'out', type: 'number', allowFormulas: true },
+              ]}
+              rows={[
+                // Unknown to the grid but live in Excel: exporting it verbatim
+                // would turn untrusted row data into an evaluated formula.
+                { id: 0, price: 10, out: '=WEBSERVICE("https://example.com")' },
+              ]}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('B2').type).to.not.equal(Excel.ValueType.Formula);
+      expect(worksheet.getCell('B2').value).to.equal('#NAME?');
+    });
+
+    it('exports a live formula for a registered custom function', async () => {
+      const DOUBLE: GridFormulaFunctionDefinition = {
+        name: 'DOUBLE',
+        minArgs: 1,
+        maxArgs: 1,
+        apply: ([first]) => (typeof first === 'number' ? first * 2 : 0),
+      };
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[
+                { field: 'price', type: 'number' },
+                { field: 'out', type: 'number', allowFormulas: true },
+              ]}
+              rows={[{ id: 0, price: 10, out: '=DOUBLE(price)' }]}
+              formulaFunctions={{ ...GRID_FORMULA_FUNCTIONS, DOUBLE }}
+              autoHeight={isJSDOM}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('B2').type).to.equal(Excel.ValueType.Formula);
+      expect((worksheet.getCell('B2').value as any).formula).to.equal('DOUBLE(A2)');
+      expect((worksheet.getCell('B2').value as any).result).to.equal(20);
     });
 
     it('does not promote a literal = string in a non-formula column to a formula', async () => {
