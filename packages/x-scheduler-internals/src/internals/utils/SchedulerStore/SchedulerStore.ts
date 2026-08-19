@@ -919,13 +919,23 @@ export class SchedulerStore<
     const isCreation = this.state.occurrencePlaceholder?.type === 'creation';
     // The casts encode the runtime correlation the type system can't prove: a creation always
     // edits the draft placeholder, anything else edits a real occurrence.
-    const eventDetails: SchedulerEventEditingStartEventDetails = isCreation
-      ? createChangeEventDetails('creation', event ?? this.occurrencePlaceholderEvent, undefined, {
-          occurrence: occurrence as SchedulerEventOccurrencePlaceholder,
-        })
-      : createChangeEventDetails('edit', event, undefined, {
-          occurrence: occurrence as SchedulerEventOccurrence,
-        });
+    let eventDetails: SchedulerEventEditingStartEventDetails;
+    if (isCreation) {
+      eventDetails = createChangeEventDetails(
+        'creation',
+        event ?? this.occurrencePlaceholderEvent,
+        undefined,
+        { occurrence: occurrence as SchedulerEventOccurrencePlaceholder },
+      );
+    } else {
+      // The dialog renders view-only content for read-only occurrences — surface that as its own reason.
+      const reason = schedulerEventSelectors.isReadOnly(this.state, occurrence.id)
+        ? 'view'
+        : 'edit';
+      eventDetails = createChangeEventDetails(reason, event, undefined, {
+        occurrence: occurrence as SchedulerEventOccurrence,
+      });
+    }
     this.parameters.onEventEditingStart?.(occurrence, eventDetails);
     if (eventDetails.isCanceled) {
       // Canceled during a creation: the draft placeholder already exists — drop it.

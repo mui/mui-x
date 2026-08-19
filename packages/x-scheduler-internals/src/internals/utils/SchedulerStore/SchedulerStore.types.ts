@@ -385,8 +385,10 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
    * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
-   * `eventDetails.reason` is `"creation"` when the user is creating a new event and `"edit"` otherwise.
-   * Call `eventDetails.cancel()` to keep it closed and handle editing in your own UI.
+   * `eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the
+   * occurrence is read-only (through the event, its resource or the `readOnly` prop) and the dialog
+   * opens in view-only mode, and `"edit"` otherwise.
+   * Call `eventDetails.cancel()` to keep it closed and handle the interaction in your own UI.
    */
   onEventEditingStart?: (
     occurrence: SchedulerRenderableEventOccurrence,
@@ -505,6 +507,7 @@ export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
 
 export type SchedulerEventEditingStartEventDetails =
   | BaseUIChangeEventDetails<'edit', { occurrence: SchedulerEventOccurrence }>
+  | BaseUIChangeEventDetails<'view', { occurrence: SchedulerEventOccurrence }>
   | BaseUIChangeEventDetails<'creation', { occurrence: SchedulerEventOccurrencePlaceholder }>;
 
 /**

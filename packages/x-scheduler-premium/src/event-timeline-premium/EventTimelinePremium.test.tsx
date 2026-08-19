@@ -1042,5 +1042,27 @@ describe('<EventTimelinePremium />', () => {
       expect(onEventEditingStart.lastCall.firstArg.id).to.equal(sharedEvent.id);
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
+
+    it('should report a `view` reason when the event belongs to a read-only resource', async () => {
+      const readOnlyResource = ResourceBuilder.new().areEventsReadOnly().build();
+      const lockedEvent = EventBuilder.new()
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(readOnlyResource)
+        .title('Locked')
+        .build();
+      const onEventEditingStart = spy();
+      const { user } = renderTimeline({
+        resources: [readOnlyResource],
+        events: [lockedEvent],
+        onEventEditingStart,
+      });
+
+      await user.click(screen.getByText('Locked'));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('view');
+    });
   });
 });

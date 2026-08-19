@@ -504,6 +504,63 @@ describe('EventCalendar', () => {
       );
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
+
+    it('should report a `view` reason when the whole calendar is read-only', async () => {
+      const onEventEditingStart = spy();
+      const { user } = render(
+        <EventCalendar events={[event1]} readOnly onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Running/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('view');
+    });
+
+    it('should report a `view` reason when the event belongs to a read-only resource', async () => {
+      const readOnlyResource = ResourceBuilder.new().areEventsReadOnly().build();
+      const lockedEvent = EventBuilder.new()
+        .title('Locked')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .resource(readOnlyResource)
+        .build();
+      const onEventEditingStart = spy();
+      const { user } = render(
+        <EventCalendar
+          events={[lockedEvent]}
+          resources={[readOnlyResource]}
+          onEventEditingStart={onEventEditingStart}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Locked/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('view');
+    });
+
+    it('should keep the built-in view-only dialog closed when the handler cancels a read-only activation', async () => {
+      const readOnlyEvent = EventBuilder.new()
+        .title('Locked')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .readOnly()
+        .build();
+      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[readOnlyEvent]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Locked/i }));
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('view');
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
   });
 
   describe('ErrorContainer', () => {
