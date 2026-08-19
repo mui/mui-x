@@ -16,6 +16,17 @@ export interface GridDataSourceFetchRowChildrenOptions {
   showChildrenLoading?: boolean;
 }
 
+/**
+ * Fetches root rows without invalidating the data source state.
+ * Used by the strategies whose root fetches are incremental viewport loads that run
+ * concurrently with child requests.
+ * @param {GridDataSourceFetchRowsParams<GridGetRowsParams>} params Request parameters override.
+ * @returns {Promise<void>} A promise that resolves when the rows are fetched.
+ */
+export type GridDataSourceFetchRootRowsIncremental = (
+  params?: GridDataSourceFetchRowsParams<GridGetRowsParams>,
+) => Promise<void>;
+
 export interface GridDataSourceApi {
   /**
    * The data source API.
