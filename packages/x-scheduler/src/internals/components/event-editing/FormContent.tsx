@@ -32,11 +32,6 @@ import {
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
-import { EventEditingOccurrenceContext } from './EventEditingOccurrenceContext';
-import {
-  EventEditingResourceSelectionModeContext,
-  useEventEditingResourceSelectionMode,
-} from './EventEditingResourceSelectionModeContext';
 import type { EventDialogFormValues } from '../event-dialog/utils';
 import { computeRange, hasProp, BUILT_IN_FORM_KEYS } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
@@ -133,7 +128,7 @@ export function FormContent(props: FormContentProps) {
   // with", and it must stay that way for the lifetime of the editing session. Two components
   // read it — `ResourceAndColorSection` (what the Select renders as) and `FormContentInner`
   // (what gets written on submit) — and they have to agree, so it's derived once, here, and
-  // provided through context to both instead of each freezing its own copy against a live
+  // carried by the form store instead of each freezing its own copy against a live
   // subscription that could drift between them. See `getResourceSelectionMode` for the
   // creating-vs-editing rule.
   const resourceSelectionMode = useRefWithInit(() =>
@@ -189,13 +184,14 @@ export function FormContent(props: FormContentProps) {
   }).current;
 
   return (
-    <EventEditingOccurrenceContext.Provider value={occurrence}>
-      <EventEditingResourceSelectionModeContext.Provider value={resourceSelectionMode}>
-        <EventDialogFormProvider initialValues={initialValues} onValuesChange={pushPlaceholder}>
-          <FormContentInner {...props} />
-        </EventDialogFormProvider>
-      </EventEditingResourceSelectionModeContext.Provider>
-    </EventEditingOccurrenceContext.Provider>
+    <EventDialogFormProvider
+      initialValues={initialValues}
+      occurrence={occurrence}
+      resourceSelectionMode={resourceSelectionMode}
+      onValuesChange={pushPlaceholder}
+    >
+      <FormContentInner {...props} />
+    </EventDialogFormProvider>
   );
 }
 
@@ -204,10 +200,10 @@ function FormContentInner(props: FormContentProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
-  const resourceSelectionMode = useEventEditingResourceSelectionMode();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
+  const { resourceSelectionMode } = formStore;
 
   // Selector hooks
   const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);

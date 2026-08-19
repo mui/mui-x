@@ -27,12 +27,9 @@ import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-
 import { useStore } from '@base-ui/utils/store';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
-import {
-  useEventEditingOccurrence,
-  useEventEditingResourceSelectionMode,
-  useEventEditingStyledContext,
-} from '../event-editing';
+import { useEventEditingStyledContext } from '../event-editing';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
+import { useEventDialogFormContext } from './form/EventDialogFormContext';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
 
 // Only meaningful in single-select mode: the sentinel value backing the "no resource"
@@ -143,11 +140,11 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
 
 export default function ResourceAndColorSection() {
   // Context hooks
-  const occurrence = useEventEditingOccurrence();
-  // Whether the picker is single- or multi-select. Derived once by `FormContent`, alongside
-  // the form's `initialValues` — the same value also decides what `handleSubmit` writes, so
-  // both must read the exact same "captured at mount" answer. See `getResourceSelectionMode`.
-  const mode = useEventEditingResourceSelectionMode();
+  // `resourceSelectionMode`: whether the picker is single- or multi-select. Derived once by
+  // `FormContent`, alongside the form's `initialValues` — the same value also decides what
+  // `handleSubmit` writes, so both must read the exact same "captured at mount" answer.
+  // See `getResourceSelectionMode`.
+  const { occurrence, resourceSelectionMode: mode } = useEventDialogFormContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 

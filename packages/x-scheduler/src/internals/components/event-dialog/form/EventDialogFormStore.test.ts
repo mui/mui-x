@@ -1,17 +1,32 @@
 import { spy } from 'sinon';
+import { EventBuilder } from 'test/utils/scheduler';
+import type { EventDialogFormParameters } from './EventDialogFormStore';
 import { EventDialogFormStore } from './EventDialogFormStore';
+
+const occurrence = EventBuilder.new().toOccurrence();
+
+function createFormStore<TValues extends Record<string, unknown>>(
+  initialValues: TValues,
+  parameters?: Partial<EventDialogFormParameters<TValues>>,
+) {
+  return new EventDialogFormStore<TValues>(initialValues, {
+    occurrence,
+    resourceSelectionMode: 'single',
+    ...parameters,
+  });
+}
 
 describe('EventDialogFormStore', () => {
   describe('constructor', () => {
     it('should seed the values from the provided object', () => {
-      const store = new EventDialogFormStore({ title: 'Meeting', priority: 'high' });
+      const store = createFormStore({ title: 'Meeting', priority: 'high' });
       expect(store.state.values).to.deep.equal({ title: 'Meeting', priority: 'high' });
       expect(store.state.errors).to.deep.equal({});
     });
 
     it('should not share the seed object with the caller', () => {
       const seed: Record<string, unknown> = { title: 'Meeting' };
-      const store = new EventDialogFormStore(seed);
+      const store = createFormStore(seed);
       seed.title = 'Mutated';
       expect(store.state.values).to.deep.equal({ title: 'Meeting' });
       // The dirty baseline is also detached from the caller's object.
@@ -21,19 +36,19 @@ describe('EventDialogFormStore', () => {
 
   describe('setValue', () => {
     it('should update the value and keep the other keys', () => {
-      const store = new EventDialogFormStore({ title: 'Meeting', priority: 'high' });
+      const store = createFormStore({ title: 'Meeting', priority: 'high' });
       store.setValue('title', 'Updated');
       expect(store.state.values).to.deep.equal({ title: 'Updated', priority: 'high' });
     });
 
     it('should add a key not present in the initial values', () => {
-      const store = new EventDialogFormStore({ title: 'Meeting' });
+      const store = createFormStore({ title: 'Meeting' });
       store.setValue('priority', 'low');
       expect(store.state.values).to.deep.equal({ title: 'Meeting', priority: 'low' });
     });
 
     it('should clear the error of the written key', async () => {
-      const store = new EventDialogFormStore({ title: '' });
+      const store = createFormStore({ title: '' });
       store.registerValidator('title', (value) => (value ? null : 'Required'));
       await store.validateAll();
       expect(store.state.errors).to.deep.equal({ title: ['Required'] });
@@ -43,7 +58,7 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should keep the errors of the other keys', async () => {
-      const store = new EventDialogFormStore({ title: '', priority: null });
+      const store = createFormStore({ title: '', priority: null });
       store.registerValidator('title', (value) => (value ? null : 'Required'));
       store.registerValidator('priority', (value) => (value ? null : 'Required'));
       await store.validateAll();
@@ -54,7 +69,7 @@ describe('EventDialogFormStore', () => {
 
     it('should call onValuesChange with the new values and the changed keys', () => {
       const onValuesChange = spy();
-      const store = new EventDialogFormStore({ title: 'Meeting' }, { onValuesChange });
+      const store = createFormStore({ title: 'Meeting' }, { onValuesChange });
       store.setValue('title', 'Updated');
       expect(onValuesChange.calledOnce).to.equal(true);
       expect(onValuesChange.lastCall.args[0]).to.deep.equal({ title: 'Updated' });
@@ -64,7 +79,7 @@ describe('EventDialogFormStore', () => {
 
   describe('setValues', () => {
     it('should merge several keys in a single update', () => {
-      const store = new EventDialogFormStore({ a: 1, b: 2, c: 3 });
+      const store = createFormStore({ a: 1, b: 2, c: 3 });
       const listener = spy();
       store.subscribe(listener);
       store.setValues({ a: 10, b: 20 });
@@ -73,14 +88,14 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should accept a functional updater receiving the current values', () => {
-      const store = new EventDialogFormStore({ count: 1, other: 'x' });
+      const store = createFormStore({ count: 1, other: 'x' });
       store.setValues((prev) => ({ count: (prev.count as number) + 1 }));
       expect(store.state.values).to.deep.equal({ count: 2, other: 'x' });
     });
 
     it('should notify nobody when the changes object is empty', () => {
       const onValuesChange = spy();
-      const store = new EventDialogFormStore({ title: 'Meeting' }, { onValuesChange });
+      const store = createFormStore({ title: 'Meeting' }, { onValuesChange });
       const listener = spy();
       store.subscribe(listener);
 
@@ -92,7 +107,7 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should clear the errors of all the written keys', async () => {
-      const store = new EventDialogFormStore<Record<string, unknown>>({
+      const store = createFormStore<Record<string, unknown>>({
         a: null,
         b: null,
         c: null,
@@ -110,7 +125,7 @@ describe('EventDialogFormStore', () => {
   describe('seedDefault', () => {
     it('should seed a missing key without marking it dirty or notifying onValuesChange', () => {
       const onValuesChange = spy();
-      const store = new EventDialogFormStore({ title: '' }, { onValuesChange });
+      const store = createFormStore({ title: '' }, { onValuesChange });
       store.seedDefault('notes', 'default');
 
       expect(store.state.values).to.deep.equal({ title: '', notes: 'default' });
@@ -119,13 +134,13 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should not overwrite a key already present in the values', () => {
-      const store = new EventDialogFormStore({ notes: 'from-model' });
+      const store = createFormStore({ notes: 'from-model' });
       store.seedDefault('notes', 'default');
       expect(store.state.values).to.deep.equal({ notes: 'from-model' });
     });
 
     it('should report a seeded key as dirty once edited, including a reset to undefined', () => {
-      const store = new EventDialogFormStore({ title: '' });
+      const store = createFormStore({ title: '' });
       store.seedDefault('notes', 'default');
 
       store.setValue('notes', undefined);
@@ -135,7 +150,7 @@ describe('EventDialogFormStore', () => {
 
   describe('clearErrors', () => {
     it('should remove all the errors', async () => {
-      const store = new EventDialogFormStore({ title: '' });
+      const store = createFormStore({ title: '' });
       store.registerValidator('title', () => 'Required');
       await store.validateAll();
       store.clearErrors();
@@ -143,7 +158,7 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should only remove the errors of the provided keys', async () => {
-      const store = new EventDialogFormStore({ title: '', priority: null });
+      const store = createFormStore({ title: '', priority: null });
       store.registerValidator('title', () => 'Title required');
       store.registerValidator('priority', () => 'Priority required');
       await store.validateAll();
@@ -153,7 +168,7 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should not notify subscribers when none of the provided keys has an error', async () => {
-      const store = new EventDialogFormStore({ title: '', priority: null });
+      const store = createFormStore({ title: '', priority: null });
       store.registerValidator('priority', () => 'Priority required');
       await store.validateAll();
 
@@ -167,7 +182,7 @@ describe('EventDialogFormStore', () => {
 
   describe('hasValidator', () => {
     it('should report whether a key has at least one validator registered', () => {
-      const store = new EventDialogFormStore({ title: '' });
+      const store = createFormStore({ title: '' });
       const validator = () => 'Required';
 
       expect(store.hasValidator('title')).to.equal(false);
@@ -177,7 +192,7 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should report false once the last validator of a key is unregistered', () => {
-      const store = new EventDialogFormStore({ title: '' });
+      const store = createFormStore({ title: '' });
       const first = () => 'Required';
       const second = () => 'Too short';
       store.registerValidator('title', first);
@@ -192,14 +207,14 @@ describe('EventDialogFormStore', () => {
 
   describe('validateAll', () => {
     it('should resolve with true and clear the errors when every validator passes', async () => {
-      const store = new EventDialogFormStore({ title: 'Meeting' });
+      const store = createFormStore({ title: 'Meeting' });
       store.registerValidator('title', (value) => (value ? null : 'Required'));
       expect(await store.validateAll()).to.equal(true);
       expect(store.state.errors).to.deep.equal({});
     });
 
     it('should collect the errors of all the failing fields at once', async () => {
-      const store = new EventDialogFormStore({ title: '', priority: null });
+      const store = createFormStore({ title: '', priority: null });
       store.registerValidator('title', (value) => (value ? null : 'Title required'));
       store.registerValidator('priority', (value) => (value ? null : 'Priority required'));
       expect(await store.validateAll()).to.equal(false);
@@ -210,7 +225,7 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should keep the first error when a field has several validators', async () => {
-      const store = new EventDialogFormStore({ title: '' });
+      const store = createFormStore({ title: '' });
       store.registerValidator('title', () => 'First');
       store.registerValidator('title', () => 'Second');
       await store.validateAll();
@@ -218,7 +233,7 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should pass all the values to the validator', async () => {
-      const store = new EventDialogFormStore({ startDate: '2025-01-02', endDate: '2025-01-01' });
+      const store = createFormStore({ startDate: '2025-01-02', endDate: '2025-01-01' });
       store.registerValidator('startDate', (value, allValues) =>
         String(value) > String(allValues.endDate) ? 'Start after end' : null,
       );
@@ -227,7 +242,7 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should ignore a validator once unregistered', async () => {
-      const store = new EventDialogFormStore({ title: '' });
+      const store = createFormStore({ title: '' });
       const validator = () => 'Required';
       store.registerValidator('title', validator);
       store.unregisterValidator('title', validator);
@@ -235,7 +250,7 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should support an async validator', async () => {
-      const store = new EventDialogFormStore({ title: '' });
+      const store = createFormStore({ title: '' });
       store.registerValidator('title', async (value) => (value ? null : 'Required'));
 
       expect(await store.validateAll()).to.equal(false);
@@ -246,21 +261,21 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should keep several error messages returned as an array', async () => {
-      const store = new EventDialogFormStore({ title: '' });
+      const store = createFormStore({ title: '' });
       store.registerValidator('title', () => ['Too long', 'Invalid characters']);
       expect(await store.validateAll()).to.equal(false);
       expect(store.state.errors).to.deep.equal({ title: ['Too long', 'Invalid characters'] });
     });
 
     it('should treat an empty error array as valid', async () => {
-      const store = new EventDialogFormStore({ title: '' });
+      const store = createFormStore({ title: '' });
       store.registerValidator('title', () => []);
       expect(await store.validateAll()).to.equal(true);
       expect(store.state.errors).to.deep.equal({});
     });
 
     it('should treat an empty error string as valid', async () => {
-      const store = new EventDialogFormStore({ title: '' });
+      const store = createFormStore({ title: '' });
       store.registerValidator('title', () => '');
       expect(await store.validateAll()).to.equal(true);
       expect(store.state.errors).to.deep.equal({});
@@ -269,25 +284,25 @@ describe('EventDialogFormStore', () => {
 
   describe('getDirtyValues', () => {
     it('should return only the values that changed since seeding', () => {
-      const store = new EventDialogFormStore({ title: 'Meeting', priority: 'high' });
+      const store = createFormStore({ title: 'Meeting', priority: 'high' });
       store.setValue('priority', 'low');
       expect(store.getDirtyValues()).to.deep.equal({ priority: 'low' });
     });
 
     it('should exclude the provided keys', () => {
-      const store = new EventDialogFormStore({ title: 'Meeting', priority: 'high' });
+      const store = createFormStore({ title: 'Meeting', priority: 'high' });
       store.setValues({ title: 'Updated', priority: 'low' });
       expect(store.getDirtyValues(new Set(['title']))).to.deep.equal({ priority: 'low' });
     });
 
     it('should include keys added after seeding', () => {
-      const store = new EventDialogFormStore({ title: 'Meeting' });
+      const store = createFormStore({ title: 'Meeting' });
       store.setValue('priority', 'low');
       expect(store.getDirtyValues()).to.deep.equal({ priority: 'low' });
     });
 
     it('should not report a value reverted to its initial state', () => {
-      const store = new EventDialogFormStore({ title: 'Meeting' });
+      const store = createFormStore({ title: 'Meeting' });
       store.setValue('title', 'Updated');
       store.setValue('title', 'Meeting');
       expect(store.getDirtyValues()).to.deep.equal({});

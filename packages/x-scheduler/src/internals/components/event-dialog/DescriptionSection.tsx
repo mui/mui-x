@@ -4,12 +4,13 @@ import { useStore } from '@base-ui/utils/store';
 import TextField from '@mui/material/TextField';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventEditingOccurrence, useEventEditingStyledContext } from '../event-editing';
+import { useEventEditingStyledContext } from '../event-editing';
+import { useEventDialogFormContext } from './form/EventDialogFormContext';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
 
 export default function DescriptionSection() {
   // Context hooks
-  const occurrence = useEventEditingOccurrence();
+  const { occurrence } = useEventDialogFormContext();
   const { localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 

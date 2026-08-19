@@ -1,5 +1,7 @@
 import type * as React from 'react';
 import { createSelector, Store } from '@base-ui/utils/store';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import type { EventDialogFormValues } from '../utils';
 
 export interface EventDialogFormState<
@@ -42,9 +44,18 @@ function normalizeValidatorResult(
   return [result];
 }
 
-export interface EventDialogFormStoreOptions<
+export interface EventDialogFormParameters<
   TValues extends Record<string, unknown> = EventDialogFormValues,
 > {
+  /**
+   * The occurrence the editing session targets. Captured when the dialog opens.
+   */
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * Whether the resource picker of the editing session is single- or multi-select.
+   * Captured when the dialog opens.
+   */
+  resourceSelectionMode: ResourceSelectionMode;
   /**
    * Called synchronously after each write with the new values and the written keys.
    */
@@ -60,7 +71,8 @@ export const eventDialogFormSelectors = {
 /**
  * Ephemeral draft store backing the event dialog form.
  * Seeded from the event when the dialog opens and discarded when it closes,
- * it holds the edited values until they are committed to the scheduler store on save.
+ * it holds the edited values until they are committed to the scheduler store on save,
+ * along with the constants of the editing session (`occurrence`, `resourceSelectionMode`).
  *
  * Deliberately not built on Base UI's `Form`/`Field`: every input in the dialog is
  * MUI Material, and the store holds non-DOM values (`rruleDraft`, `recurrenceSelection`)
@@ -71,17 +83,31 @@ export class EventDialogFormStore<
 > extends Store<EventDialogFormState<TValues>> {
   private validators = new Map<string, Set<EventDialogFormValidator<TValues>>>();
 
-  private options: EventDialogFormStoreOptions<TValues>;
+  private parameters: EventDialogFormParameters<TValues>;
 
   /**
    * Values the form was seeded with, used to detect edited fields.
    */
   private readonly initialValues: TValues;
 
-  constructor(initialValues: TValues, options: EventDialogFormStoreOptions<TValues> = {}) {
+  /**
+   * The occurrence the editing session targets. Constant for the lifetime of the store.
+   */
+  public readonly occurrence: SchedulerRenderableEventOccurrence;
+
+  /**
+   * Whether the resource picker of the editing session is single- or multi-select.
+   * Constant for the lifetime of the store: what the resource Select renders as and
+   * what the submit logic writes both read this value, so they always agree.
+   */
+  public readonly resourceSelectionMode: ResourceSelectionMode;
+
+  constructor(initialValues: TValues, parameters: EventDialogFormParameters<TValues>) {
     super({ values: { ...initialValues }, errors: {} });
     this.initialValues = { ...initialValues };
-    this.options = options;
+    this.parameters = parameters;
+    this.occurrence = parameters.occurrence;
+    this.resourceSelectionMode = parameters.resourceSelectionMode;
   }
 
   /**
@@ -114,7 +140,7 @@ export class EventDialogFormStore<
     }
 
     this.update({ values, errors });
-    this.options.onValuesChange?.(values, changedKeys);
+    this.parameters.onValuesChange?.(values, changedKeys);
   };
 
   /**
