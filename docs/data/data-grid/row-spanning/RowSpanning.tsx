@@ -49,6 +49,7 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
   {
     field: 'description',
     headerName: 'Description',
+    rowHeader: true,
     width: 170,
   },
   {

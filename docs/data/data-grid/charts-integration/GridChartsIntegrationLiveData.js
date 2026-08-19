@@ -16,7 +16,7 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
 const columns = [
   { field: 'id' },
-  { field: 'process', headerName: 'Process', width: 150 },
+  { field: 'process', headerName: 'Process', width: 150, rowHeader: true },
   {
     field: 'cpu',
     headerName: 'CPU',

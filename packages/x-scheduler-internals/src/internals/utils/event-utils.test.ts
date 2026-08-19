@@ -4,6 +4,7 @@ import {
   getEventResourceIds,
   getOccurrencesFromEvents,
   getPrimaryResourceId,
+  getResourceSelectionMode,
 } from './event-utils';
 import { processDate } from '../../process-date';
 
@@ -114,6 +115,38 @@ describe('event-utils', () => {
 
     it('should return null when the resource is an empty array', () => {
       expect(getPrimaryResourceId([])).toBeNull();
+    });
+  });
+
+  describe('getResourceSelectionMode', () => {
+    it('should return "multiple" while creating, regardless of the resource shape, when canHaveMultipleResources is true', () => {
+      expect(getResourceSelectionMode('resource-1', true, true)).toBe('multiple');
+      expect(getResourceSelectionMode(['resource-1'], true, true)).toBe('multiple');
+      expect(getResourceSelectionMode(null, true, true)).toBe('multiple');
+      expect(getResourceSelectionMode(undefined, true, true)).toBe('multiple');
+    });
+
+    it('should return "single" while creating, regardless of the resource shape, when canHaveMultipleResources is false', () => {
+      expect(getResourceSelectionMode('resource-1', false, true)).toBe('single');
+      expect(getResourceSelectionMode(['resource-1'], false, true)).toBe('single');
+      expect(getResourceSelectionMode(null, false, true)).toBe('single');
+      expect(getResourceSelectionMode(undefined, false, true)).toBe('single');
+    });
+
+    it('should return "single" while editing when the resource is a string', () => {
+      expect(getResourceSelectionMode('resource-1', true, false)).toBe('single');
+    });
+
+    it('should return "multiple" while editing when the resource is an array, including an empty one', () => {
+      expect(getResourceSelectionMode(['resource-1', 'resource-2'], false, false)).toBe('multiple');
+      expect(getResourceSelectionMode([], false, false)).toBe('multiple');
+    });
+
+    it('should fall back to canHaveMultipleResources while editing when the resource is null or undefined', () => {
+      expect(getResourceSelectionMode(null, true, false)).toBe('multiple');
+      expect(getResourceSelectionMode(null, false, false)).toBe('single');
+      expect(getResourceSelectionMode(undefined, true, false)).toBe('multiple');
+      expect(getResourceSelectionMode(undefined, false, false)).toBe('single');
     });
   });
 

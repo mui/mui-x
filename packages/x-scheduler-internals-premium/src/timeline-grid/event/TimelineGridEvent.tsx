@@ -14,23 +14,30 @@ import type {
 import {
   useDraggableEvent,
   generateOccurrenceFromEvent,
-  useElementPositionInCollection,
+  computeElementPositionInCollection,
   dateToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
+import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
-import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import {
+  eventTimelinePremiumDependencySelectors,
+  eventTimelinePremiumPresetSelectors,
+} from '../../event-timeline-premium-selectors';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
+import { useEventDependencyDropTarget } from './useEventDependencyDropTarget';
 
-const overflowStateAttributesMapping = {
+const extraStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) =>
     value ? { [TimelineGridEventDataAttributes.startingBeforeEdge]: '' } : null,
   endingAfterEdge: (value: boolean) =>
     value ? { [TimelineGridEventDataAttributes.endingAfterEdge]: '' } : null,
+  dependencyDropTarget: (value: boolean) =>
+    value ? { [TimelineGridEventDataAttributes.dependencyDropTarget]: '' } : null,
 };
 
 export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
@@ -49,6 +56,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     occurrenceKey,
     renderDragPreview,
     isDraggable,
+    elementPosition: elementPositionProp,
     nativeButton = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -72,6 +80,12 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   // Selector hooks
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const dependencyDropTarget = useStore(
+    store,
+    eventTimelinePremiumDependencySelectors.isCreationTarget,
+    occurrenceKey,
+    rowResourceId,
+  );
 
   // Feature hooks
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
@@ -110,12 +124,17 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     source: 'TimelineGridEvent',
   }));
 
-  const elementPosition = useElementPositionInCollection({
-    start,
-    end,
-    collection: config,
-    durationMs: config.durationMs,
-  });
+  const elementPosition = React.useMemo(
+    () =>
+      elementPositionProp ??
+      computeElementPositionInCollection(adapter, {
+        start,
+        end,
+        collection: config,
+        durationMs: config.durationMs,
+      }),
+    [adapter, config, elementPositionProp, end, start],
+  );
   const { position, duration, startingBeforeEdge, endingAfterEdge } = elementPosition;
 
   const {
@@ -140,7 +159,14 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     tabIndex: rowHasFocus ? 0 : -1,
   });
 
-  const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
+  useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId: rowResourceId });
+
+  const mergedState = {
+    ...state,
+    startingBeforeEdge,
+    endingAfterEdge,
+    dependencyDropTarget,
+  };
 
   const contextValue: TimelineGridEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
@@ -161,7 +187,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       { [TimelineGridEventDataAttributes.occurrenceKey]: occurrenceKey } as Record<string, string>,
       getButtonProps,
     ],
-    stateAttributesMapping: overflowStateAttributesMapping,
+    stateAttributesMapping: extraStateAttributesMapping,
   });
 
   return (
@@ -176,13 +202,16 @@ export namespace TimelineGridEvent {
   export interface State extends useDraggableEvent.State {
     startingBeforeEdge: boolean;
     endingAfterEdge: boolean;
+    dependencyDropTarget: boolean;
   }
 
   export interface Props
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {}
+      useDraggableEvent.PublicParameters {
+    elementPosition?: useElementPositionInCollection.ReturnValue;
+  }
 
   export interface SharedDragData {
     eventId: SchedulerEventId;

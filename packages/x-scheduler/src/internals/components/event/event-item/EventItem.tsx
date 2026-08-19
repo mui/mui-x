@@ -211,7 +211,7 @@ export const EventItem = React.forwardRef(function EventItem(
     schedulerResourceSelectors.processedResource,
     getPrimaryResourceId(occurrence.resource),
   );
-  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const formatTime = useFormatTime();

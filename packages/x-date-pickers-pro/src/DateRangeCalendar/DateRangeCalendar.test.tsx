@@ -853,6 +853,51 @@ describe('<DateRangeCalendar />', () => {
     });
   });
 
+  describe('filler cells', () => {
+    const referenceDate = adapterToUse.date('2018-01-01');
+
+    it('should be exposed as grid cells', () => {
+      render(<DateRangeCalendar calendars={1} referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+
+      expect(within(grid).getAllByRole('gridcell')).to.have.length(35);
+      expect(grid.querySelectorAll(`.${dayClasses.fillerCell}`)).to.have.length(4);
+    });
+
+    // The week number is a `rowheader` taking the first column, so a cell without an explicit
+    // column index would be off by one.
+    it('should keep the column index of the day they replace', () => {
+      render(<DateRangeCalendar calendars={1} displayWeekNumber referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const weeks = within(within(grid).getByRole('rowgroup')).getAllByRole('row');
+
+      expect(weeks).to.have.length(5);
+      weeks.forEach((week) => {
+        const columnIndexes = within(week)
+          .getAllByRole('gridcell')
+          .map((cell) => cell.getAttribute('aria-colindex'));
+
+        expect(columnIndexes).to.deep.equal(['2', '3', '4', '5', '6', '7', '8']);
+      });
+    });
+  });
+
+  it('should give every calendar its own week day headers', () => {
+    render(<DateRangeCalendar calendars={2} referenceDate={adapterToUse.date('2018-01-01')} />);
+
+    ['January 2018', 'February 2018'].forEach((month) => {
+      const headers = within(screen.getByRole('grid', { name: month })).getAllByRole(
+        'columnheader',
+      );
+
+      expect(headers).to.have.length(7);
+      expect(headers[0]).toHaveAccessibleName('Sunday');
+      expect(headers[0]).to.have.attribute('aria-colindex', '1');
+    });
+  });
+
   describe('Performance', () => {
     it('should only render the new start day when selecting a start day without a previously selected start day', () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);

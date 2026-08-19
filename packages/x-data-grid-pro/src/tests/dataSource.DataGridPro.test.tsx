@@ -1,16 +1,18 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { createRenderer, waitFor } from '@mui/internal-test-utils';
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
+import { DataGridPro, gridFilterModelSelector, useGridApiRef } from '@mui/x-data-grid-pro';
 import type {
   DataGridProProps,
   GridApi,
   GridDataSource,
+  GridFilterItem,
   GridGetRowsResponse,
+  GridLogicOperator,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { getRow } from 'test/utils/helperFn';
+import { actSleep, getRow } from 'test/utils/helperFn';
 import { TestCache } from '@mui/x-data-grid/internals';
 
 describe('<DataGridPro /> - Data source', () => {
@@ -77,6 +79,129 @@ describe('<DataGridPro /> - Data source', () => {
       </div>
     );
   }
+
+  describe('incomplete filter items', () => {
+    const upsertFilterItem = async (item: GridFilterItem) => {
+      await act(async () => {
+        apiRef.current!.upsertFilterItem(item);
+      });
+    };
+
+    it('should not re-fetch when an incomplete item is added next to a complete one', async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await upsertFilterItem({ id: 2, field: 'id', operator: 'contains' });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.lastCall.args[0].filterModel.items).to.have.length(1);
+    });
+
+    // The logic operator only applies once two items can be combined.
+    it('should re-fetch when the logic operator changes with two complete items', async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      await upsertFilterItem({ id: 2, field: 'id', operator: 'contains', value: '2' });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterLogicOperator('or' as GridLogicOperator);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(4);
+      });
+      expect(fetchRowsSpy.lastCall.args[0].filterModel.logicOperator).to.equal('or');
+    });
+
+    it('should not re-fetch when the logic operator changes next to an incomplete item', async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      await upsertFilterItem({ id: 2, field: 'id', operator: 'contains' });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterLogicOperator('or' as GridLogicOperator);
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    // The skipped operator change must not be lost: the next real fetch carries it.
+    it('should send the logic operator set while it could not apply', async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterLogicOperator('or' as GridLogicOperator);
+      });
+      await actSleep(50);
+      expect(fetchRowsSpy.callCount).to.equal(2);
+
+      await upsertFilterItem({ id: 2, field: 'id', operator: 'contains', value: '2' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+      const { filterModel } = fetchRowsSpy.lastCall.args[0];
+      expect(filterModel.logicOperator).to.equal('or');
+      expect(filterModel.items).to.have.length(2);
+    });
+
+    it('should re-fetch when the quick filter logic operator changes with two values', async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['1', '2']);
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterModel({
+          ...gridFilterModelSelector(apiRef),
+          quickFilterLogicOperator: 'or' as GridLogicOperator,
+        });
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+      expect(fetchRowsSpy.lastCall.args[0].filterModel.quickFilterLogicOperator).to.equal('or');
+    });
+  });
 
   describe('Cache', () => {
     it('should cache the data in one chunk when pagination is disabled', async () => {

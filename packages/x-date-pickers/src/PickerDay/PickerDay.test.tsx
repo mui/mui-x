@@ -73,6 +73,24 @@ describe('<PickerDay />', () => {
     expect(day).toHaveAccessibleName('2');
   });
 
+  it('should keep the role and the column index a filler cell received', () => {
+    const { container } = render(
+      <PickerDay
+        day={adapterToUse.date('2018-02-01')}
+        onDaySelect={() => {}}
+        outsideCurrentMonth
+        role="gridcell"
+        aria-colindex={5}
+        isFirstVisibleCell={false}
+        isLastVisibleCell={false}
+      />,
+    );
+
+    expect(container.firstChild).to.have.class(classes.fillerCell);
+    expect(container.firstChild).to.have.attribute('role', 'gridcell');
+    expect(container.firstChild).to.have.attribute('aria-colindex', '5');
+  });
+
   it('should render children instead of the day of the month when children prop is present', () => {
     render(
       <PickerDay

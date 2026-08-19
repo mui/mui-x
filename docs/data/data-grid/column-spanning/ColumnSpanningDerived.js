@@ -83,6 +83,7 @@ const slotColumnCommonFields = {
 const columns = [
   {
     field: 'day',
+    rowHeader: true,
     headerName: 'Day',
   },
   {

@@ -96,6 +96,7 @@
       "isProPlan": true
     },
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
+    "rowHeader": { "type": { "description": "boolean" }, "default": "false" },
     "rowSpanValueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },

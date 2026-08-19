@@ -13,6 +13,8 @@ import {
   buildDependencyArrowRoutes,
   buildRoundedOrthogonalPath,
   computeDependencyArrows,
+  createDependencyAnchorResolver,
+  getEventEdgeAnchor,
 } from './dependencyArrowGeometry';
 
 const collectionStart = adapter.date('2024-01-15', 'default');
@@ -60,6 +62,22 @@ function getOccurrences(events: SchedulerProcessedEvent[]) {
 
 function buildDependency(id: string, source: string, target: string): SchedulerDependency {
   return { id, source, target, type: 'FinishToStart' };
+}
+
+function buildResolver(parameters: {
+  resources: Parameters<typeof createDependencyAnchorResolver>[0]['resources'];
+  rowPositions: readonly number[];
+  axis?: TimelineAxis;
+  eventsWidth?: number;
+}) {
+  return createDependencyAnchorResolver({
+    adapter,
+    resources: parameters.resources,
+    rowPositions: parameters.rowPositions,
+    axis: parameters.axis ?? FULL_DAY_AXIS,
+    eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
+    laneMetrics: LANE_METRICS,
+  });
 }
 
 describe('dependencyArrowGeometry', () => {
@@ -333,15 +351,13 @@ describe('dependencyArrowGeometry', () => {
     const eventC = EventBuilder.new().id('event-c').singleDay('2024-01-15T13:00:00Z').toProcessed();
 
     it('should return a straight arrow between two events in the same row and lane', () => {
-      const arrows = computeDependencyArrows({
-        adapter,
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
-        rowPositions: [0],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: EVENTS_WIDTH,
-        laneMetrics: LANE_METRICS,
-      });
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
 
       expect(arrows).to.have.length(1);
       expect(arrows[0].d).to.equal(`M 720 ${LANE_1_CENTER} L 780 ${LANE_1_CENTER}`);
@@ -351,24 +367,187 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].maxRowIndex).to.equal(0);
     });
 
+    it('should keep a clickable hit-area between two adjacent events', () => {
+      // event-adj starts exactly when event-a ends → the 16px adjacent-events route.
+      const eventAdjacent = EventBuilder.new()
+        .id('event-adj')
+        .singleDay('2024-01-15T12:00:00Z')
+        .toProcessed();
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventAdjacent]) },
+          ],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-adj')],
+      );
+
+      expect(arrows).to.have.length(1);
+      // Route 704 → 720; the 12/8 trims scale down to 6/4 to leave the middle stretch.
+      expect(arrows[0].hitD).to.equal(`M 710 ${LANE_1_CENTER} L 716 ${LANE_1_CENTER}`);
+    });
+
+    it('should scale the hit-area trims down on a short straight arrow', () => {
+      // 12:20 → start x = 740, a 20px gap: full trims would leave nothing clickable.
+      const eventNear = EventBuilder.new()
+        .id('event-near')
+        .singleDay('2024-01-15T12:20:00Z')
+        .toProcessed();
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventNear]) }],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-near')],
+      );
+
+      expect(arrows).to.have.length(1);
+      expect(arrows[0].hitD).to.equal(`M 728.4 ${LANE_1_CENTER} L 734.4 ${LANE_1_CENTER}`);
+    });
+
+    it('should trim the hit-area at both ends of a long straight arrow', () => {
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
+
+      expect(arrows).to.have.length(1);
+      // The 60px route keeps the full 12px source and 8px target trims.
+      expect(arrows[0].hitD).to.equal(`M 732 ${LANE_1_CENTER} L 772 ${LANE_1_CENTER}`);
+    });
+
+    it('should cut the hit-area around an event the route crosses', () => {
+      // 12:20–12:40 in the same lane as the endpoints: the straight route rides over
+      // it, but its hit band must not — the event stays clickable and draggable, the
+      // arrow is selected from the open stretches on both sides (box [740, 760]
+      // expanded by the 5px half-stroke → [735, 765]).
+      const crossedEvent = EventBuilder.new()
+        .id('event-crossed')
+        .singleDay('2024-01-15T12:20:00Z', 20)
+        .toProcessed();
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA, crossedEvent, eventB]) },
+          ],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
+
+      expect(arrows).to.have.length(1);
+      expect(arrows[0].d).to.equal(`M 720 ${LANE_1_CENTER} L 780 ${LANE_1_CENTER}`);
+      expect(arrows[0].hitD).to.equal(
+        `M 732 ${LANE_1_CENTER} L 735 ${LANE_1_CENTER} M 765 ${LANE_1_CENTER} L 772 ${LANE_1_CENTER}`,
+      );
+    });
+
+    it('should cut the hit-area around an event the vertical segment crosses', () => {
+      // Three rows: the route drops from row 0 to row 2 through row 1, whose event
+      // (9:00–15:00, x 540–900) covers both candidate verticals — the default turn at
+      // x = 728 is kept and its descent rides over that event. The hit band must break
+      // around the box expanded by the 5px half-stroke (y 73–113).
+      const crossedEvent = EventBuilder.new()
+        .id('event-crossed')
+        .singleDay('2024-01-15T09:00:00Z', 360)
+        .toProcessed();
+      const eventT = EventBuilder.new()
+        .id('event-t')
+        .singleDay('2024-01-15T14:00:00Z')
+        .toProcessed();
+      const resource3 = ResourceBuilder.new().id('r3').title('Resource 3').build();
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
+            { resource: RESOURCE_2, occurrences: getOccurrences([crossedEvent]) },
+            { resource: resource3, occurrences: getOccurrences([eventT]) },
+          ],
+          rowPositions: [0, 62, 124],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-t')],
+      );
+
+      expect(arrows).to.have.length(1);
+      expect(arrows[0].hitD).to.equal(
+        'M 724 31 L 726 31 Q 728 31 728 33 L 728 73 M 728 113 L 728 151 Q 728 155 732 155 L 832 155',
+      );
+    });
+
+    it('should keep the whole trimmed hit-area when the crossed events cover all of it', () => {
+      // 12:05–12:55 spans the entire trimmed stretch once expanded: with no open
+      // stretch left, an uncovered band beats an unselectable arrow.
+      const coveringEvent = EventBuilder.new()
+        .id('event-covering')
+        .singleDay('2024-01-15T12:05:00Z', 50)
+        .toProcessed();
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA, coveringEvent, eventB]) },
+          ],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
+
+      expect(arrows).to.have.length(1);
+      expect(arrows[0].hitD).to.equal(`M 732 ${LANE_1_CENTER} L 772 ${LANE_1_CENTER}`);
+    });
+
+    it('should place the arrowhead endpoint on the drawn tip when the route clamps at the left edge', () => {
+      // The target starts at x = 0: the S route's entry vertical clamps at the
+      // timeline edge and the tip lands at the entry clearance, not on the anchor.
+      const earlyEvent = EventBuilder.new()
+        .id('event-early')
+        .singleDay('2024-01-15T00:00:00Z')
+        .toProcessed();
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
+            { resource: RESOURCE_2, occurrences: getOccurrences([earlyEvent]) },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-early')],
+      );
+
+      expect(arrows).to.have.length(1);
+      expect(arrows[0].endPoint).to.deep.equal({ x: 12, y: 62 + LANE_1_CENTER });
+    });
+
     it('should route an orthogonal elbow between two rows using the row positions', () => {
-      const arrows = computeDependencyArrows({
-        adapter,
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-c')],
-        resources: [
-          { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-          { resource: RESOURCE_2, occurrences: getOccurrences([eventC]) },
-        ],
-        rowPositions: [0, 62],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: EVENTS_WIDTH,
-        laneMetrics: LANE_METRICS,
-      });
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
+            { resource: RESOURCE_2, occurrences: getOccurrences([eventC]) },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-c')],
+      );
 
       expect(arrows).to.have.length(1);
       // Source y = 31 (row 0), target y = 62 + 31 = 93 (row 1), turn at x = 720 + 8.
       expect(arrows[0].d).to.equal(
         'M 720 31 L 724 31 Q 728 31 728 35 L 728 89 Q 728 93 732 93 L 780 93',
+      );
+      // The 12px start trim caps at half of the 8px stub (4px, keeping the terminal
+      // reachable), the 8px end trim applies in full on the long last segment.
+      expect(arrows[0].hitD).to.equal(
+        'M 724 31 L 726 31 Q 728 31 728 33 L 728 89 Q 728 93 732 93 L 772 93',
       );
       expect(arrows[0].minRowIndex).to.equal(0);
       expect(arrows[0].maxRowIndex).to.equal(1);
@@ -381,21 +560,24 @@ describe('dependencyArrowGeometry', () => {
         .singleDay('2024-01-15T11:00:00Z', 240)
         .toProcessed();
 
-      const arrows = computeDependencyArrows({
-        adapter,
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-d')],
-        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventD]) }],
-        rowPositions: [0],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: EVENTS_WIDTH,
-        laneMetrics: LANE_METRICS,
-      });
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventD]) }],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-d')],
+      );
 
       expect(arrows).to.have.length(1);
       // Backward S route: source (720, 31, lane 1) → target (660, 65, lane 2), detour
       // hugging the source at y = 31 + 21.
       expect(arrows[0].d).to.equal(
         'M 720 31 L 724 31 Q 728 31 728 35 L 728 48 Q 728 52 724 52 L 652 52 Q 648 52 648 56 L 648 61 Q 648 65 652 65 L 660 65',
+      );
+      // Both trims cap at half of their short end segments (the 8px stub and the
+      // 12px entry), so the hit path never starts behind the terminal.
+      expect(arrows[0].hitD).to.equal(
+        'M 724 31 L 726 31 Q 728 31 728 33 L 728 48 Q 728 52 724 52 L 652 52 Q 648 52 648 56 L 648 62 Q 648 65 651 65 L 654 65',
       );
       // The bounding box includes the stub and entry-clearance overhangs.
       expect(arrows[0].minXFraction).to.equal(648 / EVENTS_WIDTH);
@@ -414,18 +596,16 @@ describe('dependencyArrowGeometry', () => {
         .singleDay('2024-01-15T14:00:00Z')
         .toProcessed();
 
-      const arrows = computeDependencyArrows({
-        adapter,
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-t')],
-        resources: [
-          { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-          { resource: RESOURCE_2, occurrences: getOccurrences([obstacle, eventT]) },
-        ],
-        rowPositions: [0, 62],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: EVENTS_WIDTH,
-        laneMetrics: LANE_METRICS,
-      });
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
+            { resource: RESOURCE_2, occurrences: getOccurrences([obstacle, eventT]) },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-t')],
+      );
 
       expect(arrows).to.have.length(1);
       expect(arrows[0].d).to.equal(
@@ -445,19 +625,17 @@ describe('dependencyArrowGeometry', () => {
         .toProcessed();
       const resource3 = ResourceBuilder.new().id('r3').title('Resource 3').build();
 
-      const arrows = computeDependencyArrows({
-        adapter,
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-t')],
-        resources: [
-          { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-          { resource: RESOURCE_2, occurrences: getOccurrences([obstacle]) },
-          { resource: resource3, occurrences: getOccurrences([eventT]) },
-        ],
-        rowPositions: [0, 62, 124],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: EVENTS_WIDTH,
-        laneMetrics: LANE_METRICS,
-      });
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
+            { resource: RESOURCE_2, occurrences: getOccurrences([obstacle]) },
+            { resource: resource3, occurrences: getOccurrences([eventT]) },
+          ],
+          rowPositions: [0, 62, 124],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-t')],
+      );
 
       expect(arrows).to.have.length(1);
       expect(arrows[0].d).to.equal(
@@ -466,18 +644,16 @@ describe('dependencyArrowGeometry', () => {
     });
 
     it('should skip a dependency when one of its events has no occurrence in any row', () => {
-      const arrows = computeDependencyArrows({
-        adapter,
-        dependencies: [
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          rowPositions: [0],
+        }),
+        [
           buildDependency('dep-1', 'event-a', 'event-b'),
           buildDependency('dep-2', 'event-a', 'event-x'),
         ],
-        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
-        rowPositions: [0],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: EVENTS_WIDTH,
-        laneMetrics: LANE_METRICS,
-      });
+      );
 
       expect(arrows.map((arrow) => arrow.id)).to.deep.equal(['dep-1']);
     });
@@ -485,21 +661,22 @@ describe('dependencyArrowGeometry', () => {
     it('should render an arrow to every row appearance of the target event', () => {
       const occurrencesB = getOccurrences([eventB]);
 
-      const arrows = computeDependencyArrows({
-        adapter,
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-        resources: [
-          { resource: RESOURCE_1, occurrences: [...getOccurrences([eventA]), ...occurrencesB] },
-          { resource: RESOURCE_2, occurrences: occurrencesB },
-        ],
-        rowPositions: [0, 62],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: EVENTS_WIDTH,
-        laneMetrics: LANE_METRICS,
-      });
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: [...getOccurrences([eventA]), ...occurrencesB] },
+            { resource: RESOURCE_2, occurrences: occurrencesB },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
 
       expect(arrows.map((arrow) => arrow.id)).to.deep.equal(['dep-1', 'dep-1']);
-      expect(arrows.map((arrow) => arrow.key)).to.deep.equal(['dep-1:0:0', 'dep-1:0:1']);
+      expect(arrows.map((arrow) => arrow.key)).to.deep.equal([
+        'string:dep-1:0:0',
+        'string:dep-1:0:1',
+      ]);
       expect(arrows.map((arrow) => arrow.maxRowIndex)).to.deep.equal([0, 1]);
     });
 
@@ -507,25 +684,40 @@ describe('dependencyArrowGeometry', () => {
       const occurrencesA = getOccurrences([eventA]);
       const occurrencesB = getOccurrences([eventB]);
 
-      const arrows = computeDependencyArrows({
-        adapter,
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-        resources: [
-          { resource: RESOURCE_1, occurrences: [...occurrencesA, ...occurrencesB] },
-          { resource: RESOURCE_2, occurrences: [...occurrencesA, ...occurrencesB] },
-        ],
-        rowPositions: [0, 62],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: EVENTS_WIDTH,
-        laneMetrics: LANE_METRICS,
-      });
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: [...occurrencesA, ...occurrencesB] },
+            { resource: RESOURCE_2, occurrences: [...occurrencesA, ...occurrencesB] },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
 
       expect(arrows.map((arrow) => arrow.key)).to.deep.equal([
-        'dep-1:0:0',
-        'dep-1:0:1',
-        'dep-1:1:0',
-        'dep-1:1:1',
+        'string:dep-1:0:0',
+        'string:dep-1:0:1',
+        'string:dep-1:1:0',
+        'string:dep-1:1:1',
       ]);
+    });
+
+    it('should give distinct keys to dependencies whose ids differ only in type', () => {
+      // `SchedulerDependencyId` accepts both strings and numbers: `1` and `"1"` are
+      // two dependencies, and on the same row pair only the id type separates them.
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          rowPositions: [0],
+        }),
+        [
+          { id: 1, source: 'event-a', target: 'event-b', type: 'FinishToStart' },
+          { id: '1', source: 'event-a', target: 'event-b', type: 'FinishToStart' },
+        ],
+      );
+
+      expect(arrows.map((arrow) => arrow.key)).to.deep.equal(['number:1:0:0', 'string:1:0:0']);
     });
 
     it('should keep the route inside the events area when an anchor sits at a timeline edge', () => {
@@ -541,18 +733,16 @@ describe('dependencyArrowGeometry', () => {
         .singleDay('2024-01-15T00:05:00Z', 55)
         .toProcessed();
 
-      const arrows = computeDependencyArrows({
-        adapter,
-        dependencies: [buildDependency('dep-1', 'event-late', 'event-early')],
-        resources: [
-          { resource: RESOURCE_1, occurrences: getOccurrences([lateEvent]) },
-          { resource: RESOURCE_2, occurrences: getOccurrences([earlyEvent]) },
-        ],
-        rowPositions: [0, 62],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: EVENTS_WIDTH,
-        laneMetrics: LANE_METRICS,
-      });
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([lateEvent]) },
+            { resource: RESOURCE_2, occurrences: getOccurrences([earlyEvent]) },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-late', 'event-early')],
+      );
 
       expect(arrows).to.have.length(1);
       // Both stubs ride over their event: the exit starts 8px before the source's end
@@ -565,31 +755,74 @@ describe('dependencyArrowGeometry', () => {
     });
 
     it('should return no arrow when the events area has no width', () => {
-      const arrows = computeDependencyArrows({
-        adapter,
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
-        rowPositions: [0],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: 0,
-        laneMetrics: LANE_METRICS,
-      });
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          rowPositions: [0],
+          eventsWidth: 0,
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
 
       expect(arrows).to.deep.equal([]);
     });
 
     it('should return no arrow when there is no dependency', () => {
-      const arrows = computeDependencyArrows({
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA]) }],
+          rowPositions: [0],
+        }),
+        [],
+      );
+
+      expect(arrows).to.deep.equal([]);
+    });
+
+    it('should resolve an event outside the endpoint filter through the targeted scan', () => {
+      const resolver = createDependencyAnchorResolver({
         adapter,
-        dependencies: [],
-        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA]) }],
+        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
         rowPositions: [0],
         axis: FULL_DAY_AXIS,
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
+        endpointIds: new Set(['event-a']),
       });
 
-      expect(arrows).to.deep.equal([]);
+      // Filtered id: indexed by the build pass.
+      expect(resolver.getAppearances('event-a')).to.have.length(1);
+      // Off-filter id (the in-flight creation's event): targeted scan, cached.
+      const first = resolver.getAppearances('event-b');
+      expect(first).to.have.length(1);
+      expect(resolver.getAppearances('event-b')).to.equal(first);
+      // Unknown off-filter id caches its empty result too.
+      expect(resolver.getAppearances('nope')).to.have.length(0);
+    });
+
+    it('should anchor the rubber band on the appearance matching the resource', () => {
+      // A multi-resource event repeats the very same occurrence — key included — on
+      // each of its rows, so only the resource tells its appearances apart.
+      const [occurrence] = getOccurrences([eventA]);
+      const resolver = buildResolver({
+        resources: [
+          { resource: RESOURCE_1, occurrences: [occurrence] },
+          { resource: RESOURCE_2, occurrences: [occurrence] },
+        ],
+        rowPositions: [0, 62],
+      });
+
+      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', occurrence.key, 'r2')!.y).to.equal(
+        62 + LANE_1_CENTER,
+      );
+      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', occurrence.key, 'r1')!.y).to.equal(
+        LANE_1_CENTER,
+      );
+      // An unknown (or absent) key silently falls back to the first appearance.
+      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', 'unknown-key')!.y).to.equal(
+        LANE_1_CENTER,
+      );
+      expect(getEventEdgeAnchor(resolver, 'event-a', 'end')!.y).to.equal(LANE_1_CENTER);
     });
 
     describe('trimmed hour window', () => {
@@ -606,15 +839,15 @@ describe('dependencyArrowGeometry', () => {
       it('should anchor the arrows on the trimmed axis', () => {
         // event-a 10:00–12:00 → end x = 240; event-b starts 13:00 → start x = 300
         // (the full-day mapping would give 720 and 780).
-        const arrows = computeDependencyArrows({
-          adapter,
-          dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
-          rowPositions: [0],
-          axis: TRIMMED_AXIS,
-          eventsWidth: TRIMMED_WIDTH,
-          laneMetrics: LANE_METRICS,
-        });
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+            rowPositions: [0],
+            axis: TRIMMED_AXIS,
+            eventsWidth: TRIMMED_WIDTH,
+          }),
+          [buildDependency('dep-1', 'event-a', 'event-b')],
+        );
 
         expect(arrows).to.have.length(1);
         expect(arrows[0].d).to.equal(`M 240 ${LANE_1_CENTER} L 300 ${LANE_1_CENTER}`);
@@ -632,15 +865,15 @@ describe('dependencyArrowGeometry', () => {
           getOccurrences([hiddenSource, eventB]),
         );
 
-        const arrows = computeDependencyArrows({
-          adapter,
-          dependencies: [buildDependency('dep-1', 'event-hidden', 'event-b')],
-          resources: [{ resource: RESOURCE_1, occurrences }],
-          rowPositions: [0],
-          axis: TRIMMED_AXIS,
-          eventsWidth: TRIMMED_WIDTH,
-          laneMetrics: LANE_METRICS,
-        });
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources: [{ resource: RESOURCE_1, occurrences }],
+            rowPositions: [0],
+            axis: TRIMMED_AXIS,
+            eventsWidth: TRIMMED_WIDTH,
+          }),
+          [buildDependency('dep-1', 'event-hidden', 'event-b')],
+        );
 
         expect(arrows).to.deep.equal([]);
       });
@@ -682,18 +915,18 @@ describe('dependencyArrowGeometry', () => {
           getTwoDayOccurrences([hidden, visibleSource]),
         );
 
-        const arrows = computeDependencyArrows({
-          adapter,
-          dependencies: [buildDependency('dep-1', 'event-source', 'event-target')],
-          resources: [
-            { resource: RESOURCE_1, occurrences: sourceRowOccurrences },
-            { resource: RESOURCE_2, occurrences: getTwoDayOccurrences([target]) },
-          ],
-          rowPositions: [0, 62],
-          axis: twoDayAxis,
-          eventsWidth: 1440,
-          laneMetrics: LANE_METRICS,
-        });
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources: [
+              { resource: RESOURCE_1, occurrences: sourceRowOccurrences },
+              { resource: RESOURCE_2, occurrences: getTwoDayOccurrences([target]) },
+            ],
+            rowPositions: [0, 62],
+            axis: twoDayAxis,
+            eventsWidth: 1440,
+          }),
+          [buildDependency('dep-1', 'event-source', 'event-target')],
+        );
 
         expect(arrows).to.have.length(1);
         // The source anchor leaves from lane 1 of the first row (end x = 840).

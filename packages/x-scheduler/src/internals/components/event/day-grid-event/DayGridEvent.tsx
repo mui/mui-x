@@ -317,7 +317,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     schedulerResourceSelectors.processedResource,
     getPrimaryResourceId(occurrence.resource),
   );
-  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
 
   // Feature hooks
   const formatTime = useFormatTime();
