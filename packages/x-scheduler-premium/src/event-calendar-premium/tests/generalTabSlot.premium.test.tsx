@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
-import type { SchedulerSlots } from '@mui/x-scheduler/models';
+import type {
+  EventDialogGeneralTabProps,
+  EventDialogGeneralTabPropsOverrides,
+  SchedulerSlotProps,
+  SchedulerSlots,
+} from '@mui/x-scheduler/models';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { StandaloneDayViewPremium } from '@mui/x-scheduler-premium/day-view-premium';
@@ -23,15 +28,19 @@ const event = EventBuilder.new()
   .resource(engineering)
   .build();
 
-function CustomGeneralTab() {
-  return <p>Custom general tab</p>;
+function CustomGeneralTab(props: EventDialogGeneralTabProps & { marker?: string }) {
+  return <p>{props.marker ? `Custom general tab ${props.marker}` : 'Custom general tab'}</p>;
 }
 
 const slots: SchedulerSlots = { eventDialogGeneralTab: CustomGeneralTab };
+const slotProps: SchedulerSlotProps = {
+  // The overrides interface is only populated through module augmentation on the consumer side.
+  eventDialogGeneralTab: { marker: 'via slotProps' } as EventDialogGeneralTabPropsOverrides,
+};
 
 /**
- * Every premium public component that opens an editing surface forwards `slots` down to it.
- * The compact views open the drawer, the others the dialog; both render the same form.
+ * Every premium public component that opens an editing surface forwards `slots` and `slotProps`
+ * down to it. The compact views open the drawer, the others the dialog; both render the same form.
  */
 describe('eventDialogGeneralTab slot - premium surfaces', () => {
   const { render } = createSchedulerRenderer({ clockConfig: visibleDate });
@@ -49,7 +58,7 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
   ] as const;
 
   surfaces.forEach(([name, Component, isCompact]) => {
-    it(`should forward the eventDialogGeneralTab slot from <${name} />`, () => {
+    it(`should forward the eventDialogGeneralTab slot and its slot props from <${name} />`, () => {
       render(
         <Component
           events={[event]}
@@ -57,6 +66,7 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
           visibleDate={visibleDate}
           onEventsChange={() => {}}
           slots={slots}
+          slotProps={slotProps}
         />,
       );
 
@@ -66,7 +76,7 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
       }
 
-      expect(screen.getByText('Custom general tab')).not.to.equal(null);
+      expect(screen.getByText('Custom general tab via slotProps')).not.to.equal(null);
     });
   });
 

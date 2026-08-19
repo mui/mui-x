@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
-import type { SchedulerSlots } from '@mui/x-scheduler/models';
+import type {
+  EventDialogGeneralTabProps,
+  EventDialogGeneralTabPropsOverrides,
+  SchedulerSlotProps,
+  SchedulerSlots,
+} from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
@@ -19,14 +24,18 @@ const event = EventBuilder.new()
   .singleDay('2025-07-03T10:00:00Z', 60)
   .build();
 
-function CustomGeneralTab() {
-  return <p>Custom general tab</p>;
+function CustomGeneralTab(props: EventDialogGeneralTabProps & { marker?: string }) {
+  return <p>{props.marker ? `Custom general tab ${props.marker}` : 'Custom general tab'}</p>;
 }
 
 const slots: SchedulerSlots = { eventDialogGeneralTab: CustomGeneralTab };
+const slotProps: SchedulerSlotProps = {
+  // The overrides interface is only populated through module augmentation on the consumer side.
+  eventDialogGeneralTab: { marker: 'via slotProps' } as EventDialogGeneralTabPropsOverrides,
+};
 
 /**
- * Every public component that opens an editing surface forwards `slots` down to it.
+ * Every public component that opens an editing surface forwards `slots` and `slotProps` down to it.
  * The compact views open the drawer, the others the dialog; both render the same form.
  */
 describe('eventDialogGeneralTab slot - public surfaces', () => {
@@ -44,7 +53,7 @@ describe('eventDialogGeneralTab slot - public surfaces', () => {
   ] as const;
 
   surfaces.forEach(([name, Component, isCompact]) => {
-    it(`should forward the eventDialogGeneralTab slot from <${name} />`, () => {
+    it(`should forward the eventDialogGeneralTab slot and its slot props from <${name} />`, () => {
       render(
         <Component
           events={[event]}
@@ -52,6 +61,7 @@ describe('eventDialogGeneralTab slot - public surfaces', () => {
           visibleDate={visibleDate}
           onEventsChange={() => {}}
           slots={slots}
+          slotProps={slotProps}
         />,
       );
 
@@ -61,7 +71,7 @@ describe('eventDialogGeneralTab slot - public surfaces', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
       }
 
-      expect(screen.getByText('Custom general tab')).not.to.equal(null);
+      expect(screen.getByText('Custom general tab via slotProps')).not.to.equal(null);
     });
   });
 
