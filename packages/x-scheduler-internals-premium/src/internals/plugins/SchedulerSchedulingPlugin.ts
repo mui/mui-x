@@ -9,6 +9,7 @@ import type {
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   SchedulerAddDependencyResult,
@@ -109,8 +110,11 @@ export class SchedulerSchedulingPlugin<
 
   /**
    * Adds a dependency between two events.
-   * Rejects dependencies referencing an unknown, recurring or read-only event, or
-   * duplicating an existing dependency.
+   * Rejects dependencies referencing an unknown, recurring or read-only event,
+   * duplicating an existing dependency, or closing a cycle.
+   * The guards read the controlled `dependencyModelList`, which only updates when the
+   * consumer round-trips the prop — so two adds in the same tick can jointly form a
+   * duplicate or a cycle without being rejected.
    * Implementation of the store's `addDependency()` — call it through the store.
    */
   public addDependency = (
@@ -127,6 +131,10 @@ export class SchedulerSchedulingPlugin<
       }
     }
 
+    if (this.isCreatingCycle(properties.source, properties.target)) {
+      return { status: 'rejected', reason: 'cyclicDependency' };
+    }
+
     // Only `source`/`target` define identity while the type union has a single member;
     // TODO(#22853): include `type` in the identity when the type union widens.
     const duplicate = this.store.state.dependencyModelList.find(
@@ -141,6 +149,43 @@ export class SchedulerSchedulingPlugin<
     this.updateDependencies([...this.store.state.dependencyModelList, dependency]);
     return { status: 'added', id: dependency.id };
   };
+
+  /**
+   * Whether adding the dependency `source → target` would close a cycle, i.e. whether
+   * `target` already reaches `source` (a self-loop is the zero-length path).
+   * The search walks the full dependency list — not only the active dependencies —
+   * because a cycle through a recurring or not-yet-loaded endpoint is kept in the data
+   * and becomes live the moment the endpoint reactivates.
+   */
+  private isCreatingCycle(source: SchedulerEventId, target: SchedulerEventId): boolean {
+    const adjacency = new Map<SchedulerEventId, SchedulerEventId[]>();
+    for (const dependency of this.store.state.dependencyModelList) {
+      const targets = adjacency.get(dependency.source);
+      if (targets) {
+        targets.push(dependency.target);
+      } else {
+        adjacency.set(dependency.source, [dependency.target]);
+      }
+    }
+
+    const queue: SchedulerEventId[] = [target];
+    const visited = new Set<SchedulerEventId>();
+    while (queue.length > 0) {
+      const eventId = queue.pop()!;
+      if (eventId === source) {
+        return true;
+      }
+      if (visited.has(eventId)) {
+        continue;
+      }
+      visited.add(eventId);
+      const nextIds = adjacency.get(eventId);
+      if (nextIds) {
+        queue.push(...nextIds);
+      }
+    }
+    return false;
+  }
 
   /**
    * Deletes a dependency, returning whether it was deleted. Refused (`false`) for an

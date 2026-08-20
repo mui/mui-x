@@ -9,6 +9,8 @@ import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 const TEST_RESOURCES = [ResourceBuilder.new().id('r1').title('Resource 1').build()];
 const eventA = EventBuilder.new().id('event-a').build();
 const eventB = EventBuilder.new().id('event-b').build();
+const eventC = EventBuilder.new().id('event-c').build();
+const eventD = EventBuilder.new().id('event-d').build();
 const recurringEvent = EventBuilder.new().id('event-r').recurrent('DAILY').build();
 
 const DEP_AB: SchedulerDependency = {
@@ -91,13 +93,18 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     it('should emit onDependenciesChange with the new dependency appended', () => {
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        {
+          events: [eventA, eventB, eventC],
+          resources: TEST_RESOURCES,
+          dependencies: [DEP_AB],
+          onDependenciesChange,
+        },
         adapter,
       );
 
       const result = store.addDependency({
         source: 'event-b',
-        target: 'event-a',
+        target: 'event-c',
         type: 'FinishToStart',
       });
 
@@ -107,7 +114,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect(newDependencies).to.have.length(2);
       expect(newDependencies[1]).to.deep.include({
         source: 'event-b',
-        target: 'event-a',
+        target: 'event-c',
         type: 'FinishToStart',
       });
       // controlled prop: state is not written directly
@@ -116,7 +123,6 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should generate a distinct id for each added dependency and echo it back to the caller', () => {
       const onDependenciesChange = spy();
-      const eventC = EventBuilder.new().id('event-c').build();
       const store = new EventTimelinePremiumStore(
         {
           events: [eventA, eventB, eventC],
@@ -127,10 +133,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         adapter,
       );
 
-      // Two distinct new dependencies, neither duplicating `DEP_AB` (a→b) nor each other.
+      // Two distinct new dependencies, neither duplicating `DEP_AB` (a→b), cycling with it,
+      // nor duplicating each other.
       const firstResult = store.addDependency({
         source: 'event-b',
-        target: 'event-a',
+        target: 'event-c',
         type: 'FinishToStart',
       });
       const secondResult = store.addDependency({
@@ -238,8 +245,8 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect(onDependenciesChange.called).to.equal(false);
     });
 
-    it('should accept a self-referencing dependency until the cycle guard lands', () => {
-      // A self-loop is the degenerate cycle; rejection belongs to the cycle guard (#22858).
+    it('should reject a self-referencing dependency', () => {
+      // A self-loop is the degenerate cycle: the zero-length path from `target` to `source`.
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
@@ -252,13 +259,120 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         type: 'FinishToStart',
       });
 
+      expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
+      expect(onDependenciesChange.called).to.equal(false);
+    });
+
+    it('should reject a dependency closing a direct cycle', () => {
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      const result = store.addDependency({
+        source: 'event-b',
+        target: 'event-a',
+        type: 'FinishToStart',
+      });
+
+      expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
+      expect(onDependenciesChange.called).to.equal(false);
+    });
+
+    it('should reject a dependency closing a transitive cycle', () => {
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        {
+          events: [eventA, eventB, eventC],
+          resources: TEST_RESOURCES,
+          dependencies: [
+            DEP_AB,
+            { id: 'dep-2', source: 'event-b', target: 'event-c', type: 'FinishToStart' },
+          ],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      const result = store.addDependency({
+        source: 'event-c',
+        target: 'event-a',
+        type: 'FinishToStart',
+      });
+
+      expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
+      expect(onDependenciesChange.called).to.equal(false);
+    });
+
+    it('should accept a dependency that only creates a diamond', () => {
+      // Reconvergence (a→b→d and a→c→d) is not a cycle: no path returns to its start.
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        {
+          events: [eventA, eventB, eventC, eventD],
+          resources: TEST_RESOURCES,
+          dependencies: [
+            DEP_AB,
+            { id: 'dep-2', source: 'event-a', target: 'event-c', type: 'FinishToStart' },
+            { id: 'dep-3', source: 'event-b', target: 'event-d', type: 'FinishToStart' },
+          ],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      const result = store.addDependency({
+        source: 'event-c',
+        target: 'event-d',
+        type: 'FinishToStart',
+      });
+
       expect(result.status).to.equal('added');
       expect(onDependenciesChange.calledOnce).to.equal(true);
     });
 
+    it('should reject a cycle running through an inactive endpoint', () => {
+      // The reachability search walks the full dependency list, not only the active
+      // dependencies: a cycle through a recurring (or not-yet-loaded) endpoint is kept in
+      // the data and becomes live the moment the endpoint reactivates, so it must be
+      // rejected upfront.
+      const onDependenciesChange = spy();
+      const createStore = () =>
+        new EventTimelinePremiumStore(
+          {
+            events: [eventA, eventC, recurringEvent],
+            resources: TEST_RESOURCES,
+            dependencies: [
+              { id: 'dep-1', source: 'event-a', target: 'event-r', type: 'FinishToStart' },
+              { id: 'dep-2', source: 'event-r', target: 'event-c', type: 'FinishToStart' },
+            ],
+            onDependenciesChange,
+          },
+          adapter,
+        );
+      let store!: ReturnType<typeof createStore>;
+      expect(() => {
+        store = createStore();
+      }).toWarnDev([
+        'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-r".',
+        'MUI X Scheduler: The dependency "dep-2" references the recurring event "event-r".',
+      ]);
+
+      const result = store.addDependency({
+        source: 'event-c',
+        target: 'event-a',
+        type: 'FinishToStart',
+      });
+
+      expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
+      expect(onDependenciesChange.called).to.equal(false);
+    });
+
     it('should not detect a duplicate added earlier in the same update cycle', () => {
-      // The guard reads the controlled `dependencyModelList`, which only updates when the
-      // consumer round-trips the prop — same known limitation as consecutive adds.
+      // The duplicate and cycle guards read the controlled `dependencyModelList`, which only
+      // updates when the consumer round-trips the prop — so two adds in the same tick can
+      // also jointly form a cycle. Same known limitation as consecutive adds.
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
@@ -693,12 +807,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should warn in dev when dependencies are updated without onDependenciesChange', () => {
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        { ...DEFAULT_PARAMS, dependencies: [] },
         adapter,
       );
 
       expect(() => {
-        store.addDependency({ source: 'event-b', target: 'event-a', type: 'FinishToStart' });
+        store.addDependency({ source: 'event-a', target: 'event-b', type: 'FinishToStart' });
       }).toWarnDev([
         'MUI X Scheduler: A dependency update was ignored because no `onDependenciesChange` handler is provided.',
       ]);

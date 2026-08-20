@@ -45,6 +45,7 @@ function getDependencyDropTarget(
 // The `Record` is exhaustive on the rejection union: a new reason (e.g. the cycle
 // guard of #22858) fails to compile until it brings a message.
 const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
+  cyclicDependency: 'This dependency would create a cycle between events.',
   duplicateDependency: 'This dependency already exists between these two events.',
   recurringEvent: 'Dependencies cannot involve recurring events.',
   readOnlyEvent: 'Dependencies cannot involve read-only events.',
