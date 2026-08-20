@@ -1774,6 +1774,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.2.8(react@19.2.8)
+      react-transition-group:
+        specifier: 'catalog:'
+        version: 4.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
