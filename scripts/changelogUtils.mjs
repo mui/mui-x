@@ -250,7 +250,6 @@ async function generateChangelog({
   const docsCommits = [];
   const otherCommits = [];
   const codemodCommits = [];
-  const virtualizerCommits = [];
 
   commitsItems
     .filter((item) => !item.labels?.some((label) => excludeLabels.includes(label)))
@@ -312,9 +311,6 @@ async function generateChangelog({
           break;
         case 'scheduler-premium':
           schedulerPremiumCommits.push(commitItem);
-          break;
-        case 'virtualizer':
-          virtualizerCommits.push(commitItem);
           break;
         case 'internal':
         case 'support-infra':
@@ -595,13 +591,6 @@ ${logProductSection({
   packageName: 'x-codemod',
   baseCommits: codemodCommits,
   changelogKey: 'codemod',
-})}
-
-${logProductSection({
-  productName: 'Virtualizer',
-  packageName: 'x-virtualizer',
-  baseCommits: virtualizerCommits,
-  changelogKey: 'virtualizer',
 })}
 
 ${logOtherSection({
