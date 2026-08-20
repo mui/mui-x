@@ -49,7 +49,7 @@ const rows = [
     item: 'Laptop workstation',
     quantity: 4,
     unitPrice: 1650,
-    total: '=quantity * unitPrice',
+    total: '=ROUND(quantity * unitPrice * (1 - discount / 100), 2)',
   },
   {
     id: 2,
@@ -64,7 +64,7 @@ const rows = [
     item: 'Docking station',
     quantity: 8,
     unitPrice: 185,
-    total: '=quantity * unitPrice',
+    total: '=ROUND(quantity * unitPrice * (1 - discount / 100), 2)',
   },
   {
     id: 4,
@@ -87,14 +87,14 @@ const rows = [
     item: 'Thunderbolt cable',
     quantity: 12,
     unitPrice: 29,
-    total: '=quantity * unitPrice',
+    total: '=ROUND(quantity * unitPrice * (1 - discount / 100), 2)',
   },
   {
     id: 7,
     item: 'On-site setup (hours)',
     quantity: 6,
     unitPrice: 120,
-    total: '=quantity * unitPrice',
+    total: '=ROUND(quantity * unitPrice * (1 - discount / 100), 2)',
   },
   {
     id: 8,
