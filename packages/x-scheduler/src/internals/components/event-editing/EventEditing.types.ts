@@ -17,13 +17,14 @@ export interface EventEditingContextValue {
   stopEditing: () => void;
   /**
    * The element the editing surface (desktop dialog / toolbar) anchors to. State and not a ref, so
-   * surfaces re-position when the anchored element is swapped.
+   * surfaces re-position when the anchored element is swapped. `null` means no surface is rendered.
    */
   anchor: HTMLElement | null;
   /**
-   * Re-anchors the editing surface to `node`.
+   * Offers `node` as an anchor and returns a cleanup that withdraws it. If the withdrawn node was
+   * the anchor, the surface moves to another registered element, or to `null` when none is left.
    */
-  setAnchor: (node: HTMLElement | null) => void;
+  registerAnchor: (node: HTMLElement) => () => void;
 }
 
 export interface EventEditingProviderProps {
