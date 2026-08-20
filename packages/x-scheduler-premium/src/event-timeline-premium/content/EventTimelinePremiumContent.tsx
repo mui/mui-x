@@ -575,8 +575,7 @@ function EventRowContent({
     if (!isCreatingAnEvent || !placeholder || !placeholderRef.current) {
       return;
     }
-    // A cancellation drops the draft, unmounting the placeholder: the row stays as the
-    // `eventDetails.anchor`.
+    // The row outlives the placeholder, which a cancellation unmounts.
     startEditing(placeholderRef, placeholder, undefined, rowRef.current);
   }, [isCreatingAnEvent, placeholder, startEditing, rowRef]);
 

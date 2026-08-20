@@ -510,10 +510,9 @@ export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
  */
 interface SchedulerEventEditingStartCustomProperties {
   /**
-   * An element that stays in the DOM after the callback returns, even when it cancels — unlike
-   * `trigger`, which some flows unmount right after a cancellation (the armed toolbar's Edit
-   * button, an item inside the "+N more" popover, a creation placeholder). Use it to position
-   * a custom popover; use `trigger` to identify what the user activated.
+   * An element that stays in the DOM after the callback returns, even when it cancels.
+   * Position custom UI against it rather than `trigger`, which some flows unmount right
+   * after a canceled activation.
    */
   anchor: HTMLElement | undefined;
 }

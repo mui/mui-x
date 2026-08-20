@@ -59,8 +59,6 @@ describe('CompactDayView - event toolbar', () => {
     expect(eventElement).not.to.have.attribute('data-armed');
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
 
-    // Canceling unmounts the toolbar (and its Edit button trigger) with it, so the occurrence
-    // element is exposed as `anchor` — the element a custom popover can safely position against.
     expect(editButton.isConnected).to.equal(false);
     expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(eventElement);
     expect(eventElement.isConnected).to.equal(true);

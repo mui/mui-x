@@ -65,8 +65,7 @@ export function EventToolbar(props: EventToolbarProps) {
   useDisarmOnEscape({ active: true, onDisarm: stopEditing });
 
   const handleEdit = (event: React.MouseEvent) => {
-    // Canceling disarms, unmounting this toolbar (and the Edit button with it): the armed
-    // occurrence element keeps serving as the `eventDetails.anchor` the consumer positions against.
+    // A canceled edit disarms and unmounts this toolbar, so the occurrence element is the anchor.
     store.setEditingMode(
       'edit',
       event.nativeEvent,

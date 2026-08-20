@@ -1077,8 +1077,6 @@ describe('<EventTimelinePremium />', () => {
       expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
       expect(screen.queryByRole('dialog')).to.equal(null);
 
-      // Canceling drops the creation draft, unmounting the placeholder trigger with it: the
-      // row stays as `anchor` — the element a custom popover can safely position against.
       expect(onEventEditingStart.lastCall.args[1].trigger.isConnected).to.equal(false);
       expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(row);
       expect(row.isConnected).to.equal(true);
