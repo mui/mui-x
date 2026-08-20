@@ -34,7 +34,7 @@ catalogs:
       specifier: ^1.6.0
       version: 1.6.0
     '@base-ui/utils':
-      specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8
+      specifier: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1
       version: 0.3.2
     '@date-fns/tz':
       specifier: ^1.5.0
@@ -254,7 +254,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/cache':
         specifier: 'catalog:'
         version: 11.14.0
@@ -1230,7 +1230,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -1348,7 +1348,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -1644,7 +1644,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     publishDirectory: build
 
   packages/x-internals:
@@ -1654,7 +1654,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.3.0(@types/react@19.2.18)(react@19.2.8)
@@ -1721,7 +1721,7 @@ importers:
         version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -1792,7 +1792,7 @@ importers:
         version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@date-fns/tz':
         specifier: 'catalog:'
         version: 1.5.0
@@ -1839,7 +1839,7 @@ importers:
         version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
@@ -1886,7 +1886,7 @@ importers:
         version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -1986,7 +1986,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -2042,7 +2042,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -2116,7 +2116,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.3.0(@types/react@19.2.18)(react@19.2.8)
@@ -2151,7 +2151,7 @@ importers:
         version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/cache':
         specifier: 'catalog:'
         version: 11.14.0
@@ -3258,8 +3258,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@base-ui/utils@https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8':
-    resolution: {integrity: sha512-BcfxvbEbbgCUthmXgFTtDZAeun0+9s4NwCHZuR/26aPwYTaKxNzYdXCxZW3YyZ24LAnejFpyiroSEHuNVXLITw==, tarball: https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8}
+  '@base-ui/utils@https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1':
+    resolution: {integrity: sha512-jm19IIBKL5KXb67KlHKHOswKuv4jXYEDACzSAug1agUha/c+64x9waYW5TdsjEAB5vzGpU1QPA1vuLzOJk/1QQ==, tarball: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1}
     version: 0.3.2
     peerDependencies:
       '@types/react': ^17 || ^18 || ^19
@@ -12491,7 +12491,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.18
 
-  '@base-ui/utils@https://pkg.pr.new/mui/base-ui/@base-ui/utils@98001c8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@base-ui/utils@https://pkg.pr.new/mui/base-ui/@base-ui/utils@bd856a1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@floating-ui/utils': 0.2.12
