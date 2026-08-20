@@ -272,6 +272,10 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-data-grid/formula-engine',
                 title: 'Formula engine',
               },
+              {
+                pathname: '/x/react-data-grid/spreadsheet-playground',
+                title: 'Spreadsheet playground',
+              },
             ],
           },
           {
