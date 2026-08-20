@@ -255,9 +255,14 @@ async function generateChangelog({
     .filter((item) => !item.labels?.some((label) => excludeLabels.includes(label)))
     .filter((item) => !excludeTitleTags.some((tag) => item.commit.message.includes(tag)))
     .forEach((commitItem) => {
-      const tag = parseTags(commitItem.commit.message);
+      const tags = parseTags(commitItem.commit.message).split(',');
+      // a `docs` tag wins over the product one: `[docs][charts]` is a docs change
+      if (tags.includes('docs')) {
+        docsCommits.push(commitItem);
+        return;
+      }
       // for now we use only one parsed tag
-      const firstTag = tag.split(',')[0];
+      const firstTag = tags[0];
       switch (firstTag) {
         case 'DataGrid':
         case 'data grid':
@@ -276,6 +281,7 @@ async function generateChangelog({
         case 'fields':
           pickersCommits.push(commitItem);
           break;
+        case 'DateRangeCalendar':
         case 'DateRangePicker':
         case 'DateTimeRangePicker':
         case 'TimeRangePicker':
@@ -306,13 +312,11 @@ async function generateChangelog({
         case 'scheduler-premium':
           schedulerPremiumCommits.push(commitItem);
           break;
-        case 'docs':
-          docsCommits.push(commitItem);
-          break;
         case 'internal':
         case 'support-infra':
         case 'code-infra':
         case 'docs-infra':
+        case 'virtualizer':
           internalCommits.push(commitItem);
           break;
         case 'codemod':
