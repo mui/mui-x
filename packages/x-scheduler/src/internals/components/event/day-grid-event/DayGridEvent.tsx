@@ -25,7 +25,13 @@ import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
-import { ARROW_DEPTH, LEFT_ARROW_CLIP, RIGHT_ARROW_CLIP, BOTH_ARROWS_CLIP } from '../arrowClips';
+import {
+  ARROW_DEPTH,
+  LEFT_ARROW_CLIP,
+  RIGHT_ARROW_CLIP,
+  BOTH_ARROWS_CLIP,
+  getArrowFocusVisibleStyles,
+} from '../arrowClips';
 
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
@@ -88,10 +94,7 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       '&[data-starting-before-edge][data-ending-after-edge]': {
         clipPath: BOTH_ARROWS_CLIP,
       },
-      '&[data-starting-before-edge]:focus-visible, &[data-ending-after-edge]:focus-visible': {
-        clipPath: 'none',
-        borderRadius: (theme.shape.borderRadius as number) * 0.75,
-      },
+      ...getArrowFocusVisibleStyles((theme.shape.borderRadius as number) * 0.75),
     },
     '&[data-variant="invisible"]': {
       width: '100%',
