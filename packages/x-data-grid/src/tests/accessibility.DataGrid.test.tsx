@@ -1,4 +1,4 @@
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
 
@@ -54,6 +54,36 @@ describe('<DataGrid /> - Accessibility', () => {
     expect(screen.getAllByRole('rowheader')).to.have.length(3);
     expect(getCell(0, 0)).to.have.attribute('role', 'rowheader');
     expect(getCell(0, 1)).to.have.attribute('role', 'gridcell');
+  });
+
+  it('should keep row header cells mounted during horizontal virtualization', async () => {
+    const columns = Array.from({ length: 10 }, (_, index) => ({
+      field: `field${index}`,
+      width: 100,
+      rowHeader: index === 0 || index === 9,
+    }));
+    const row = columns.reduce<Record<string, string | number>>(
+      (model, column) => ({ ...model, [column.field]: column.field }),
+      { id: 0 },
+    );
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={[row]} columns={columns} columnBufferPx={0} />
+      </div>,
+    );
+
+    const firstRowHeader = getCell(0, 0);
+    const lastRowHeader = getCell(0, 9);
+
+    const virtualScroller = document.querySelector<HTMLElement>(`.${gridClasses.virtualScroller}`)!;
+    fireEvent.scroll(virtualScroller, { target: { scrollLeft: 700 } });
+
+    await waitFor(() => {
+      expect(getCell(0, 7)).to.have.attribute('data-field', 'field7');
+    });
+    expect(getCell(0, 0)).to.equal(firstRowHeader);
+    expect(getCell(0, 9)).to.equal(lastRowHeader);
   });
 
   it('should apply the rowgroup role to the column headers', () => {
