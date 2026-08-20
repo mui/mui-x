@@ -345,14 +345,12 @@ export interface GridFormulaPrivateApi {
    */
   validateCellFormula: (formula: string) => GridFormulaValidationResult;
   /**
-   * Discards every formula cache and re-evaluates all formulas.
-   * Escape hatch for in-place row mutations the grid cannot observe.
+   * Discards every formula cache, re-evaluates all formulas from scratch and
+   * refreshes the features that consume formula values (aggregation, row
+   * spanning, row grouping). Escape hatch for in-place row mutations the grid
+   * cannot observe.
    */
   reevaluateFormulas: () => void;
-  /**
-   * Runs a full formula evaluation pass and refreshes dependent features.
-   */
-  applyFormulaEvaluation: () => void;
   /**
    * Sets (or clears with `null`) the cell whose formula references are
    * highlighted in the editor and outlined in the grid.

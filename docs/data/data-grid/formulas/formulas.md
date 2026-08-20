@@ -93,6 +93,7 @@ Double-click any **Q1 total** cell in the demo below to see its three references
 
 - Colors are keyed on the **resolved target**, so two references to the same cell share a color, and a reference repeated in the formula is outlined once.
 - A reference that cannot be resolved—a hidden column, a filtered-out row, or the edited cell itself—is left uncolored and is not outlined.
+- A reference to a cell in a pinned column or a pinned row keeps its color in the editor, but no rectangle is drawn in the grid—the pinned sections paint above the highlight overlay.
 - Highlighting works in both the canonical and the A1 syntax.
 - A column with a custom `renderEditCell` keeps full control of its editor and is not highlighted.
 

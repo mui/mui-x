@@ -28,11 +28,6 @@ export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbar
    * Props passed to the quick filter component.
    */
   quickFilterProps?: GridToolbarQuickFilterProps;
-  /**
-   * Show the formula bar below the toolbar row (Premium formulas feature).
-   * @default false
-   */
-  formulaBar?: boolean;
 }
 
 /**
@@ -48,9 +43,6 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
     excelOptions,
     showQuickFilter = true,
     quickFilterProps = {},
-    // Consumed by the Premium default toolbar; stripped here so it never
-    // reaches the DOM.
-    formulaBar,
     ...other
   } = props as typeof props & { excelOptions: any };
   const rootProps = useGridRootProps();
@@ -88,11 +80,6 @@ GridToolbar.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   csvOptions: PropTypes.object,
-  /**
-   * Show the formula bar below the toolbar row (Premium formulas feature).
-   * @default false
-   */
-  formulaBar: PropTypes.bool,
   printOptions: PropTypes.object,
   /**
    * Props passed to the quick filter component.

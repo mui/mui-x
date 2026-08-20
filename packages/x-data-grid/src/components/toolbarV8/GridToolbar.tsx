@@ -98,9 +98,6 @@ function GridToolbar(props: GridToolbarProps) {
     printOptions,
     mainControls,
     additionalExportMenuItems,
-    // Consumed by the Premium default toolbar; stripped here so it never
-    // reaches the DOM.
-    formulaBar,
     ...other
   } = props;
   const apiRef = useGridApiContext();
@@ -227,11 +224,6 @@ GridToolbar.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   additionalExportMenuItems: PropTypes.func,
   csvOptions: PropTypes.object,
-  /**
-   * Show the formula bar below the toolbar row (Premium formulas feature).
-   * @default false
-   */
-  formulaBar: PropTypes.bool,
   mainControls: PropTypes.node,
   printOptions: PropTypes.object,
   /**

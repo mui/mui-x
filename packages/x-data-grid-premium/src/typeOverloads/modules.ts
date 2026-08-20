@@ -209,6 +209,16 @@ declare module '@mui/x-data-grid-pro' {
   }
 }
 
+declare module '@mui/x-data-grid' {
+  interface GridToolbarProps {
+    /**
+     * Show the formula bar below the toolbar row.
+     * @default false
+     */
+    formulaBar?: boolean;
+  }
+}
+
 declare module '@mui/x-data-grid-pro/internals' {
   interface GridApiCaches extends GridApiCachesPremium {}
 

@@ -284,18 +284,12 @@ export const useGridFormula = (
     [apiRef],
   );
 
-  const applyFormulaEvaluation = React.useCallback<
-    GridFormulaPrivateApi['applyFormulaEvaluation']
-  >(() => {
+  const reevaluateFormulas = React.useCallback<GridFormulaPrivateApi['reevaluateFormulas']>(() => {
     // Aggregation, row spanning and grouping consumed formula values through
     // `getRowValue` — refresh them after passes that are not part of a rows
-    // update cascade (registry change, enablement toggle, `reevaluateFormulas`).
+    // update cascade (registry change, enablement toggle, in-place mutations).
     triggerDependentFeatures(runPass('full'), { aggregation: true, rowSpanning: true });
   }, [runPass, triggerDependentFeatures]);
-
-  const reevaluateFormulas = React.useCallback<GridFormulaPrivateApi['reevaluateFormulas']>(() => {
-    apiRef.current.applyFormulaEvaluation();
-  }, [apiRef]);
 
   const setFormulaActiveEdit = React.useCallback<GridFormulaPrivateApi['setFormulaActiveEdit']>(
     (cell) => {
@@ -329,7 +323,6 @@ export const useGridFormula = (
     getCellFormulaResult,
     validateCellFormula,
     reevaluateFormulas,
-    applyFormulaEvaluation,
     setFormulaActiveEdit,
   };
 
@@ -570,7 +563,7 @@ export const useGridFormula = (
       return;
     }
     cache.registry = createFormulaFunctionRegistry(Object.values(props.formulaFunctions));
-    apiRef.current.applyFormulaEvaluation();
+    apiRef.current.reevaluateFormulas();
   }, [apiRef, props.formulaFunctions]);
 
   const isFirstEnablementEffect = React.useRef(true);
@@ -579,7 +572,7 @@ export const useGridFormula = (
       isFirstEnablementEffect.current = false;
       return;
     }
-    apiRef.current.applyFormulaEvaluation();
+    apiRef.current.reevaluateFormulas();
   }, [apiRef, props.disableFormulas, props.dataSource]);
 
   const hasKickedInitialRegroup = React.useRef(false);
