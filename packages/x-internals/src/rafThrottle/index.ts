@@ -1,1 +1,1 @@
-export * from './rafThrottle';
+export * from '@base-ui/utils/rafThrottle';

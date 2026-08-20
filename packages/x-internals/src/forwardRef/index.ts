@@ -1,1 +1,1 @@
-export * from './forwardRef';
+export * from '@base-ui/utils/forwardRef';

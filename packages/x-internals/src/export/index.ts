@@ -1,1 +1,1 @@
-export { loadStyleSheets } from './loadStyleSheets';
+export { loadStyleSheets } from '@base-ui/utils/loadStyleSheets';

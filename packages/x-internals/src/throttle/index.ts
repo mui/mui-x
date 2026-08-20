@@ -1,1 +1,1 @@
-export * from './throttle';
+export * from '@base-ui/utils/throttle';

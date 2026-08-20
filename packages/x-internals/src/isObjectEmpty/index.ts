@@ -1,1 +1,1 @@
-export { isObjectEmpty } from './isObjectEmpty';
+export { isObjectEmpty } from '@base-ui/utils/isObjectEmpty';

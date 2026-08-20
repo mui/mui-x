@@ -1,1 +1,1 @@
-export * from './useEffectAfterFirstRender';
+export { useEffectAfterFirstRender } from '@base-ui/utils/useEffectAfterFirstRender';

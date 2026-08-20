@@ -1,1 +1,1 @@
-export * from './useDisposable';
+export { useDisposable } from '@base-ui/utils/useDisposable';
