@@ -1,7 +1,8 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
-import type { SchedulerDependencyId } from '../models';
+import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
+import type { SchedulerDependencyId, SchedulerDependenciesState } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import {
   classifyDependencyEvent,
@@ -9,9 +10,15 @@ import {
   isDependencyReadOnly,
 } from '../internals/utils/dependency-utils';
 
+// The active-dependency selectors only read these two slices. Typing them against the
+// narrow intersection (instead of the full timeline state) lets the scheduling plugin —
+// generic over `SchedulerState & SchedulerDependenciesState` — consume them directly,
+// sharing their memoization with the rendering.
+type DependenciesState = SchedulerState & SchedulerDependenciesState;
+
 const activeModelListSelector = createSelectorMemoized(
-  (state: State) => state.dependencyModelLookup,
-  (state: State) => state.processedEventLookup,
+  (state: DependenciesState) => state.dependencyModelLookup,
+  (state: DependenciesState) => state.processedEventLookup,
   (dependencyModelLookup, processedEventLookup) =>
     // `dependencyModelLookup` already deduped duplicate ids (last wins) while
     // preserving insertion order, so no separate dedup pass is needed here.

@@ -19,6 +19,8 @@ import type {
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
 } from '../../models';
+import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors/eventTimelinePremiumDependencySelectors';
+import { computeAutoSchedulingCascade } from '../utils/auto-scheduling';
 import {
   classifyDependencyEvent,
   groupByEventId,
@@ -92,24 +94,40 @@ export class SchedulerSchedulingPlugin<
   }
 
   /**
-   * Removes the dependencies referencing deleted events, in the same update.
+   * Removes the dependencies referencing deleted events and computes the
+   * auto-scheduling cascade for the updated ones, all in the same update.
    *
    * With a `dataSource`, event deletions are persisted asynchronously after this hook has
    * already emitted `onDependenciesChange`. If that persistence fails, the event survives but
    * its dependencies were already removed — a known v1 limitation, there is no rollback.
    */
   public handleEventsUpdate = (parameters: UpdateEventsParameters) => {
-    const { deleted } = parameters;
-    if (!deleted || deleted.length === 0) {
-      return;
+    const { deleted, updated } = parameters;
+    if (deleted && deleted.length > 0) {
+      const deletedSet = new Set(deleted);
+      const current = this.store.state.dependencyModelList;
+      const remaining = current.filter(
+        (dependency) => !deletedSet.has(dependency.source) && !deletedSet.has(dependency.target),
+      );
+      this.updateDependenciesIfChanged(current, remaining);
     }
 
-    const deletedSet = new Set(deleted);
-    const current = this.store.state.dependencyModelList;
-    const remaining = current.filter(
-      (dependency) => !deletedSet.has(dependency.source) && !deletedSet.has(dependency.target),
-    );
-    this.updateDependenciesIfChanged(current, remaining);
+    // Covers both the feature being disabled and an empty collection.
+    if (!updated || updated.length === 0 || this.store.state.dependencyModelList.length === 0) {
+      return undefined;
+    }
+
+    const cascaded = computeAutoSchedulingCascade({
+      adapter: this.store.state.adapter,
+      processedEventLookup: this.store.state.processedEventLookup,
+      activeDependenciesBySource: eventTimelinePremiumDependencySelectors.activeModelListBySource(
+        this.store.state,
+      ),
+      isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
+      updated,
+      deleted: new Set(deleted),
+    });
+    return cascaded.length > 0 ? { updated: cascaded } : undefined;
   };
 
   /**

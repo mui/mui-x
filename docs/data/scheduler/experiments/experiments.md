@@ -20,6 +20,12 @@ Finish-to-Start dependencies on the timeline. The dataset covers every route sha
 
 {{"demo": "TimelineDependencyArrows.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Timeline auto-scheduling (#22857, #22858)
+
+The Finish-to-Start auto-scheduling engine. Moving or resizing an event pushes its violated successors forward on the drop, transitively, as one atomic change — and only when the relationship is actually broken: dragging `Plan` slightly to the right lands inside `Build`'s slack and moves nothing, dragging it past `Build`'s start pushes the whole chain. Moving a predecessor earlier never pulls its successors back. The `Design` diamond reconverges on `Integrate`, which settles once behind the later of its two branches. `Audit` is read-only: pushing `Setup` into it leaves it in place with the violated arrow visible, and nothing beyond it moves. The all-day pair shifts by whole days and stays all-day. Dragging a terminal to close a cycle (for example `Deploy` onto `Plan`) is rejected with a transient toast. The feature has no public API yet, so the demo feeds the internal store parameters.
+
+{{"demo": "TimelineAutoScheduling.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Month view multi-day overflow
 
 ### Continuation after overflow (#22735)

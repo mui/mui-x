@@ -462,6 +462,23 @@ export class SchedulerStore<
         }
       }
     }
+
+    const contributions = this.schedulingPlugin?.handleEventsUpdate(parameters);
+    if (contributions?.updated) {
+      for (const entry of contributions.updated) {
+        if (deleted.has(entry.id)) {
+          continue;
+        }
+        // Append, never rebuild the Map: `pasteEvent` reads `.updated[0]` from the
+        // return value, so the caller's entries must keep their insertion order.
+        const existing = updated.get(entry.id);
+        updated.set(
+          entry.id,
+          existing ? { ...existing, start: entry.start, end: entry.end } : entry,
+        );
+      }
+    }
+
     const originalEventIds = schedulerEventSelectors.idList(this.state);
     const originalEventModelLookup = schedulerEventSelectors.modelLookup(this.state);
     const newEvents: TEvent[] = [];
@@ -508,8 +525,6 @@ export class SchedulerStore<
       createdEvents.push(response.model);
       createdIds.push(response.id);
     }
-
-    this.schedulingPlugin?.handleEventsUpdate(parameters);
 
     if (process.env.NODE_ENV !== 'production') {
       if (!this.parameters.onEventsChange && !this.parameters.dataSource) {
