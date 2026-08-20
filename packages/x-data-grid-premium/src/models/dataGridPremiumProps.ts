@@ -1,6 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
 import type {
-  GridCallbackDetails,
   GridValidRowModel,
   GridGroupNode,
   GridEventListener,
@@ -28,7 +27,7 @@ import type {
 import type { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import type { GridPremiumSlotProps } from './gridPremiumSlotProps';
 import type { GridInitialStatePremium } from './gridStatePremium';
-import type { GridApiPremium } from './gridApiPremium';
+import type { GridApiPremium, GridCallbackDetailsPremium } from './gridApiPremium';
 import type { GridCellSelectionModel } from '../hooks/features/cellSelection';
 import type {
   GridPivotingColDefOverrides,
@@ -211,7 +210,7 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
 export interface DataGridPremiumPropsWithoutDefaultValue<
   R extends GridValidRowModel = any,
 > extends Omit<
-  DataGridProPropsWithoutDefaultValue<R>,
+  DataGridProPropsWithoutDefaultValue<R, GridApiPremium>,
   'initialState' | 'apiRef' | 'dataSource' | 'onDataSourceError'
 > {
   /**
@@ -237,7 +236,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * @param {GridRowGroupingModel} model Columns used as grouping criteria.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
+  onRowGroupingModelChange?: (
+    model: GridRowGroupingModel,
+    details: GridCallbackDetailsPremium,
+  ) => void;
   /**
    * Set the aggregation model of the grid.
    */
@@ -247,7 +249,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * @param {GridAggregationModel} model The aggregated columns.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
+  onAggregationModelChange?: (
+    model: GridAggregationModel,
+    details: GridCallbackDetailsPremium,
+  ) => void;
   /**
    * Set the cell selection model of the grid.
    */
@@ -259,7 +264,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    */
   onCellSelectionModelChange?: (
     cellSelectionModel: GridCellSelectionModel,
-    details: GridCallbackDetails,
+    details: GridCallbackDetailsPremium,
   ) => void;
   /**
    * Callback fired when the state of the Excel export changes.
@@ -277,11 +282,11 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
   /**
    * Callback fired when the clipboard paste operation starts.
    */
-  onClipboardPasteStart?: GridEventListener<'clipboardPasteStart'>;
+  onClipboardPasteStart?: GridEventListener<'clipboardPasteStart', GridApiPremium>;
   /**
    * Callback fired when the clipboard paste operation ends.
    */
-  onClipboardPasteEnd?: GridEventListener<'clipboardPasteEnd'>;
+  onClipboardPasteEnd?: GridEventListener<'clipboardPasteEnd', GridApiPremium>;
   /**
    * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
@@ -396,14 +401,14 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onSidebarClose?: GridEventListener<'sidebarClose'>;
+  onSidebarClose?: GridEventListener<'sidebarClose', GridApiPremium>;
   /**
    * Callback fired when the sidebar is opened.
    * @param {GridSidebarParams} params With all properties from [[GridSidebarParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onSidebarOpen?: GridEventListener<'sidebarOpen'>;
+  onSidebarOpen?: GridEventListener<'sidebarOpen', GridApiPremium>;
   /**
    * The id of the active chart.
    */
@@ -416,9 +421,9 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
   /**
    * Callback fired when an undo operation is executed.
    */
-  onUndo?: GridEventListener<'undo'>;
+  onUndo?: GridEventListener<'undo', GridApiPremium>;
   /**
    * Callback fired when a redo operation is executed.
    */
-  onRedo?: GridEventListener<'redo'>;
+  onRedo?: GridEventListener<'redo', GridApiPremium>;
 }

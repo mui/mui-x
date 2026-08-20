@@ -1,7 +1,9 @@
 import type { GridPrivateOnlyApiCommon } from '@mui/x-data-grid/internals';
 import type {
   GridApiCommon,
+  GridCallbackDetails,
   GridColumnPinningApi,
+  GridControlledStateReasonLookup,
   GridDetailPanelApi,
   GridDetailPanelPrivateApi,
   GridRowPinningApi,
@@ -68,3 +70,9 @@ export interface GridPrivateApiPremium
     GridRowReorderPrivateApi,
     GridPivotingPrivateApi,
     GridChartsIntegrationPrivateApi {}
+
+/**
+ * The details passed to the callbacks of Data Grid Premium, with `apiRef` typed to `GridApiPremium`.
+ */
+export type GridCallbackDetailsPremium<K extends keyof GridControlledStateReasonLookup = any> =
+  GridCallbackDetails<K, GridApiPremium>;
