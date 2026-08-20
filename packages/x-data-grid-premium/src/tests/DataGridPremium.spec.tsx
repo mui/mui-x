@@ -1,5 +1,7 @@
 import * as React from 'react';
+import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import type { GridApiPremium } from '@mui/x-data-grid-premium';
 
 function ColumnPropTest() {
   return (
@@ -113,6 +115,23 @@ function ApiRefPublicMethods() {
   const apiRef = useGridApiRef();
 
   apiRef.current!.unstable_applyPipeProcessors('exportMenu', [], {});
+}
+
+function CallbackDetailsApiRef() {
+  return (
+    <DataGridPremium
+      rows={[]}
+      columns={[]}
+      onRowGroupingModelChange={(model, details) => {
+        // @ts-expect-error `current` is read-only on the details' apiRef
+        details.apiRef.current = null;
+      }}
+      onCellModesModelChange={(model, details) => {
+        // The editing hook path must expose a Premium-typed apiRef.
+        const premiumApiRef: RefObject<GridApiPremium> = details.apiRef;
+      }}
+    />
+  );
 }
 
 function ApiRefProMethods() {
