@@ -485,7 +485,7 @@ export function getFirstNonSpannedColumnToRender({
 export function getTotalHeaderHeight(
   apiRef: RefObject<GridApiCommunity>,
   props: Pick<
-    DataGridProcessedProps<any, any>,
+    DataGridProcessedProps,
     | 'columnHeaderHeight'
     | 'headerFilterHeight'
     | 'listView'

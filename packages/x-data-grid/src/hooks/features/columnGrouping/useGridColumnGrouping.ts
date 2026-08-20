@@ -21,7 +21,7 @@ import type { GridEventListener } from '../../../models/events';
 import { gridColumnFieldsSelector, gridVisibleColumnFieldsSelector } from '../columns';
 
 export const columnGroupsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps<any, any>, 'columnGroupingModel'>
+  Pick<DataGridProcessedProps, 'columnGroupingModel'>
 > = (state, props, apiRef) => {
   apiRef.current.caches.columnGrouping = {
     lastColumnGroupingModel: props.columnGroupingModel,
@@ -65,7 +65,7 @@ export const columnGroupsStateInitializer: GridStateInitializer<
  */
 export const useGridColumnGrouping = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps<any, any>, 'columnGroupingModel'>,
+  props: Pick<DataGridProcessedProps, 'columnGroupingModel'>,
 ) => {
   /**
    * API METHODS

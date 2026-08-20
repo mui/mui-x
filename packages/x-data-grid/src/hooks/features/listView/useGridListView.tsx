@@ -14,7 +14,7 @@ import { useGridEvent } from '../../utils/useGridEvent';
 export type GridListViewState = (GridListViewColDef & { computedWidth: number }) | undefined;
 
 export const listViewStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps<any, any>, 'listViewColumn'>
+  Pick<DataGridProcessedProps, 'listViewColumn'>
 > = (state, props, apiRef) => ({
   ...state,
   listViewColumn: props.listViewColumn
@@ -24,7 +24,7 @@ export const listViewStateInitializer: GridStateInitializer<
 
 export function useGridListView(
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps<any, any>, 'listView' | 'listViewColumn'>,
+  props: Pick<DataGridProcessedProps, 'listView' | 'listViewColumn'>,
 ) {
   /*
    * EVENTS

@@ -19,7 +19,7 @@ import {
 export const useGridRowCount = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps<any, any>,
+    DataGridProcessedProps,
     'rowCount' | 'initialState' | 'paginationMode' | 'onRowCountChange'
   >,
 ) => {

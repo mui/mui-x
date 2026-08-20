@@ -19,7 +19,7 @@ import type {
 
 export const headerFilteringStateInitializer: GridStateInitializer = (
   state,
-  props: DataGridProcessedProps<any, any>,
+  props: DataGridProcessedProps,
 ) => ({
   ...state,
   headerFiltering: { enabled: props.headerFilters ?? false, editing: null, menuOpen: null },
@@ -27,7 +27,7 @@ export const headerFilteringStateInitializer: GridStateInitializer = (
 
 export const useGridHeaderFiltering = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps<any, any>, 'signature' | 'headerFilters'>,
+  props: Pick<DataGridProcessedProps, 'signature' | 'headerFilters'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridHeaderFiltering');
   const setHeaderFilterState = React.useCallback(

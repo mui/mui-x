@@ -987,10 +987,12 @@ export interface DataGridPremiumSharedPropsWithDefaultValue {
 
 /**
  * The props of the Data Grid component after the pre-processing phase.
+ * `Api` defaults to `any` so that the internals, which are shared across packages,
+ * accept props typed with any of the three API types.
  */
 export interface DataGridProcessedProps<
   R extends GridValidRowModel = any,
-  Api extends GridApiCommon = GridApiCommunity,
+  Api extends GridApiCommon = any,
 >
   extends
     DataGridPropsWithDefaultValues,

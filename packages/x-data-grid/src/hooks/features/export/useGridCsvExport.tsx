@@ -23,7 +23,7 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
  */
 export const useGridCsvExport = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps<any, any>, 'ignoreValueFormatterDuringExport'>,
+  props: Pick<DataGridProcessedProps, 'ignoreValueFormatterDuringExport'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');
 

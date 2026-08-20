@@ -51,7 +51,7 @@ function getCache(
 export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   apiRef: RefObject<Api>,
   props: Pick<
-    DataGridProcessedProps<any, any>,
+    DataGridProcessedProps,
     | 'dataSource'
     | 'dataSourceCache'
     | 'dataSourceKeepPreviousData'

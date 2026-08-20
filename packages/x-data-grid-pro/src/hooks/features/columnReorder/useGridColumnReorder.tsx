@@ -61,7 +61,7 @@ export const columnReorderStateInitializer: GridStateInitializer = (state) => ({
 export const useGridColumnReorder = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
-    DataGridProProcessedProps<any, any>,
+    DataGridProProcessedProps,
     | 'disableColumnReorder'
     | 'keepColumnPositionIfDraggedOutside'
     | 'classes'

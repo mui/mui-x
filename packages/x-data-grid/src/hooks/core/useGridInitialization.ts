@@ -15,7 +15,7 @@ import { useGridProps } from './useGridProps';
  */
 export const useGridInitialization = <PrivateApi extends GridPrivateApiCommon>(
   privateApiRef: RefObject<PrivateApi>,
-  props: DataGridProcessedProps<any, any>,
+  props: DataGridProcessedProps,
 ) => {
   useGridRefs(privateApiRef);
   useGridProps(privateApiRef, props);

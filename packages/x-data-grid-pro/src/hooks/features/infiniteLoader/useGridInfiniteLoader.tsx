@@ -19,7 +19,7 @@ import type { DataGridProProcessedProps } from '../../../models/dataGridProProps
 export const useGridInfiniteLoader = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
-    DataGridProProcessedProps<any, any>,
+    DataGridProProcessedProps,
     'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode'
   >,
 ): void => {

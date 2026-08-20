@@ -29,7 +29,7 @@ import type { DataGridProProcessedProps } from '../../../models/dataGridProProps
 import type { GridColumnPinningApi } from './gridColumnPinningInterface';
 
 export const columnPinningStateInitializer: GridStateInitializer<
-  Pick<DataGridProProcessedProps<any, any>, 'pinnedColumns' | 'initialState'>
+  Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState'>
 > = (state, props, apiRef) => {
   apiRef.current.caches.columnPinning = {
     orderedFieldsBeforePinningColumns: null,
@@ -53,7 +53,7 @@ export const columnPinningStateInitializer: GridStateInitializer<
 export const useGridColumnPinning = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
-    DataGridProProcessedProps<any, any>,
+    DataGridProProcessedProps,
     | 'disableColumnPinning'
     | 'initialState'
     | 'pinnedColumns'

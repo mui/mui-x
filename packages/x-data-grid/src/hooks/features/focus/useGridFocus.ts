@@ -40,7 +40,7 @@ export const focusStateInitializer: GridStateInitializer = (state) => ({
  */
 export const useGridFocus = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps<any, any>, 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
 

@@ -25,7 +25,7 @@ import { findSkeletonRowsSection } from './utils';
 export const useGridLazyLoader = (
   privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
-    DataGridProProcessedProps<any, any>,
+    DataGridProProcessedProps,
     'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode'
   >,
 ): void => {

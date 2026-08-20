@@ -47,7 +47,7 @@ import {
 } from '../pivoting/gridPivotingSelectors';
 
 export const columnsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps<any, any>, 'columnVisibilityModel' | 'initialState' | 'columns'>
+  Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columns'>
 > = (state, props, apiRef) => {
   apiRef.current.caches.columns = {
     lastColumnsProp: props.columns,
@@ -78,7 +78,7 @@ export const columnsStateInitializer: GridStateInitializer<
 export function useGridColumns(
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
-    DataGridProcessedProps<any, any>,
+    DataGridProcessedProps,
     | 'initialState'
     | 'columns'
     | 'columnVisibilityModel'

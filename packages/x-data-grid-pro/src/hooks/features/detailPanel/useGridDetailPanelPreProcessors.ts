@@ -14,7 +14,7 @@ import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector
 
 export const useGridDetailPanelPreProcessors = (
   privateApiRef: RefObject<GridPrivateApiPro>,
-  props: DataGridProProcessedProps<any, any>,
+  props: DataGridProProcessedProps,
 ) => {
   const addToggleColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {

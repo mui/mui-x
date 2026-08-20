@@ -26,7 +26,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 export const useGridRowSelectionPreProcessors = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: DataGridProcessedProps<any, any>,
+  props: DataGridProcessedProps,
 ) => {
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);

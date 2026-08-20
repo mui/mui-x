@@ -18,11 +18,7 @@ export interface GridApiCommunity
 export interface GridPrivateApiCommunity
   extends
     GridApiCommunity,
-    GridPrivateOnlyApiCommon<
-      GridApiCommunity,
-      GridPrivateApiCommunity,
-      DataGridProcessedProps<any, any>
-    >,
+    GridPrivateOnlyApiCommon<GridApiCommunity, GridPrivateApiCommunity, DataGridProcessedProps>,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi,

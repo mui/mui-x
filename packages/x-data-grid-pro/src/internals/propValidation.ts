@@ -2,7 +2,7 @@ import { GridSignature, isNumber, propValidatorsDataGrid } from '@mui/x-data-gri
 import type { PropValidator } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 
-export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps<any, any>>[] = [
+export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>[] = [
   ...propValidatorsDataGrid,
   (props) =>
     (props.pagination &&

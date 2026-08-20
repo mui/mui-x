@@ -94,7 +94,7 @@ export const rowReorderStateInitializer: GridStateInitializer = (state) => ({
 export const useGridRowReorder = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
-    DataGridProProcessedProps<any, any>,
+    DataGridProProcessedProps,
     | 'rowReordering'
     | 'onRowOrderChange'
     | 'classes'

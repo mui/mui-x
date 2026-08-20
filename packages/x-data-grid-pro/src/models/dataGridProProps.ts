@@ -70,10 +70,12 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing extends Omit<
 
 /**
  * The props of the Data Grid Pro component after the pre-processing phase.
+ * `Api` defaults to `any` so that the internals, which are shared with the Premium package,
+ * accept props typed with either API type.
  */
 export interface DataGridProProcessedProps<
   R extends GridValidRowModel = any,
-  Api extends GridApiCommon = GridApiPro,
+  Api extends GridApiCommon = any,
 >
   extends
     DataGridProPropsWithDefaultValue<R>,

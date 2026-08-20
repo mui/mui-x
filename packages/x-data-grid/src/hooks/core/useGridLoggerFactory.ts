@@ -45,7 +45,7 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
 
 export const useGridLoggerFactory = (
   apiRef: RefObject<GridPrivateApiCommon>,
-  props: Pick<DataGridProcessedProps<any, any>, 'logger' | 'logLevel'>,
+  props: Pick<DataGridProcessedProps, 'logger' | 'logLevel'>,
 ) => {
   const getLogger = React.useCallback<GridLoggerApi['getLogger']>(
     (name: string): Logger => {

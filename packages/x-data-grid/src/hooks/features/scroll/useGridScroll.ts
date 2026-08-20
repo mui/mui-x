@@ -53,7 +53,7 @@ function scrollIntoView(dimensions: {
  */
 export const useGridScroll = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps<any, any>, 'pagination'>,
+  props: Pick<DataGridProcessedProps, 'pagination'>,
 ): void => {
   const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridScroll');
