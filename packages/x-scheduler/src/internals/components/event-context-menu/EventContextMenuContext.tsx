@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { isCoarsePointer } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { useEventEditingTriggerProps } from '../event-editing';
 import { EventContextMenu } from './EventContextMenu';
@@ -81,6 +82,11 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
 /**
  * Wraps an element so it edits its occurrence on click (same as `EventEditingTrigger`) and opens
  * the event context menu on right-click or on `Space` while it is focused.
+ *
+ * On a coarse pointer, activation arms the toolbar instead of opening the dialog directly
+ * (`editingModePolicy.ts`), and that toolbar already exposes Edit and Delete — so right-click and
+ * Space fall through to their default behavior (arm/re-arm) here instead of also opening a
+ * redundant menu whose own Edit item would otherwise just re-arm a no-op.
  */
 export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
   const { occurrence, onClick, children } = props;
@@ -94,7 +100,7 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
       editing.onClick();
     },
     onContextMenu: (event: React.MouseEvent<HTMLElement>) => {
-      if (!menuContext) {
+      if (!menuContext || isCoarsePointer()) {
         return;
       }
       event.preventDefault();
@@ -104,13 +110,15 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
       });
     },
     onKeyUp: (event: React.KeyboardEvent<HTMLElement>) => {
-      if (event.key !== ' ' || !menuContext) {
+      if (event.key !== ' ' || !menuContext || isCoarsePointer()) {
         return;
       }
-      // Suppresses Base UI's `useButton` Space->click synthesis (which would open Edit instead)
-      // for this keyup. See the "Key mechanism" section of the implementation plan for why this
-      // works: `elementProps` (this handler) is merged in before `getButtonProps` in every event
-      // primitive, so calling this before returning suppresses the internal click synthesis.
+      // Suppresses Base UI's `useButton` Space->click synthesis (which would open Edit instead) for
+      // this keyup. `useButton`'s own `onKeyUp` calls `makeEventPreventable(event)`, then this
+      // external handler (since every calendar-grid event primitive merges `elementProps` — what
+      // this trigger clones onto the child — before its own `getButtonProps`), and only afterward
+      // checks `event.baseUIHandlerPrevented` before firing the click. Calling `preventBaseUIHandler`
+      // here, before that check runs, is what suppresses it.
       (event as unknown as { preventBaseUIHandler?: () => void }).preventBaseUIHandler?.();
       event.preventDefault();
       menuContext.openMenu(occurrence, event.currentTarget);

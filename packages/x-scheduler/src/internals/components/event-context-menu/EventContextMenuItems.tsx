@@ -18,6 +18,19 @@ interface UseEventContextMenuItemsParameters {
 }
 
 /**
+ * The nearest surviving focusable ancestor of an event about to be removed from the DOM — the
+ * grid column/cell it lives in, which (unlike the event itself) doesn't unmount on delete.
+ *
+ * An immediate delete removes `anchorEl` from the DOM in the same commit that closes the menu.
+ * MUI's `Menu` tries to restore focus to the element that had it when the menu opened (`anchorEl`
+ * itself here), but since that node is now detached, the restore silently fails and focus is lost
+ * to `<body>`. Falling back to this ancestor keeps a keyboard user's place in the grid.
+ */
+function getFocusFallback(anchorEl: HTMLElement): HTMLElement | null {
+  return anchorEl.parentElement?.closest<HTMLElement>('[tabindex]') ?? null;
+}
+
+/**
  * Builds the Edit / Delete menu items for `EventContextMenu`. Both actions go through the exact
  * same store calls as `EventEditingTrigger`'s click and `EventToolbar`/`FormContent`'s delete, so
  * behavior (dialog positioning, the recurring scope dialog) matches those flows exactly.
@@ -55,7 +68,10 @@ export function useEventContextMenuItems(
       return;
     }
 
+    // Captured before the delete unmounts `anchorEl` — see `getFocusFallback`.
+    const focusFallback = getFocusFallback(anchorEl);
     store.deleteEvent(occurrence.id);
+    focusFallback?.focus();
   };
 
   return [

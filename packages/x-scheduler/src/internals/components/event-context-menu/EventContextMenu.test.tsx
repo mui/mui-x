@@ -1,14 +1,9 @@
+import * as React from 'react';
 import { spy } from 'sinon';
-import { screen, fireEvent } from '@mui/internal-test-utils';
-import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import { screen, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
-
-const createMatchMedia = (matches: boolean) => () =>
-  ({
-    matches,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-  }) as any;
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 
 describe('EventContextMenu', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
@@ -37,6 +32,25 @@ describe('EventContextMenu', () => {
 
   function getEvent(name: RegExp | string = /Morning Meeting/i): HTMLElement {
     return screen.getByRole('button', { name });
+  }
+
+  // `events` is a fully-controlled prop (the store warns if nothing feeds `onEventsChange` back
+  // into it) — `renderEvent`'s fixed array intentionally never does, since most tests here only
+  // assert on the `onEventsChange` call args. Deleting through it never actually removes the
+  // event from the DOM, so it can't exercise what happens once an occurrence really unmounts.
+  function renderStatefulEvent() {
+    const initialEvent = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .build();
+
+    function StatefulDayView() {
+      const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
+      return <StandaloneDayView events={events} resources={[]} onEventsChange={setEvents} />;
+    }
+
+    render(<StatefulDayView />);
   }
 
   it('should open the menu with Edit and Delete on right-click', () => {
@@ -106,5 +120,49 @@ describe('EventContextMenu', () => {
     expect(onEventsChange.firstCall.args[0]).to.have.length(0);
     expect(screen.queryByRole('menu')).to.equal(null);
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
+  });
+
+  it('should not lose focus to <body> after Delete: it falls back to the owning grid column', async () => {
+    renderStatefulEvent();
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+
+    // Confirms the event actually unmounts here (unlike the other tests' fixed `events` array),
+    // so the assertion below exercises the real focus-loss scenario, not a no-op.
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Morning Meeting/i })).to.equal(null);
+    });
+
+    expect(document.activeElement).not.to.equal(document.body);
+    expect(document.activeElement).to.have.attribute('tabindex', '0');
+  });
+
+  describe('on a coarse pointer', () => {
+    beforeEach(() => {
+      // Activation arms the toolbar instead of opening the dialog directly on a coarse pointer;
+      // that toolbar already exposes Edit and Delete, so the context menu should stay out of the way.
+      window.matchMedia = createMatchMedia(true);
+    });
+
+    it('should not open the menu on right-click', () => {
+      renderEvent();
+
+      fireEvent.contextMenu(getEvent());
+
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+
+    it('should arm the toolbar on Space instead of opening the menu', () => {
+      renderEvent();
+      const event = getEvent();
+      event.focus();
+
+      fireEvent.keyDown(event, { key: ' ' });
+      fireEvent.keyUp(event, { key: ' ' });
+
+      expect(screen.queryByRole('menu')).to.equal(null);
+      expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
+    });
   });
 });

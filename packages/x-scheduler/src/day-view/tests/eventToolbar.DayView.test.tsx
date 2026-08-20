@@ -1,14 +1,7 @@
 import { spy } from 'sinon';
 import { screen, fireEvent } from '@mui/internal-test-utils';
-import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
-
-const createMatchMedia = (matches: boolean) => () =>
-  ({
-    matches,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-  }) as any;
 
 /**
  * A coarse pointer arms the event (toolbar); a fine pointer opens the dialog directly. The pointer
