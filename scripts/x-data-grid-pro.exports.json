@@ -120,6 +120,7 @@
   { "name": "GridBody", "kind": "ImportSpecifier" },
   { "name": "GridBooleanCell", "kind": "Variable" },
   { "name": "GridCallbackDetails", "kind": "Interface" },
+  { "name": "GridCallbackDetailsPro", "kind": "TypeAlias" },
   { "name": "GridCell", "kind": "Variable" },
   { "name": "GridCellCheckboxForwardRef", "kind": "Variable" },
   { "name": "GridCellCheckboxRenderer", "kind": "Variable" },
