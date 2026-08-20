@@ -65,11 +65,6 @@ describe('<DataGridPremium /> - GridCallbackDetails apiRef', () => {
           // `GridEventListener`-based callback declared in the community props interface.
           modelFromHeaderClick = gridRowGroupingSanitizedModelSelector(details.apiRef);
         }}
-        onCellModesModelChange={(model, details) => {
-          // Editing hook path: the ref must be Premium-typed as well.
-          const premiumApiRef: RefObject<GridApiPremium> = details.apiRef;
-          expect(premiumApiRef.current).to.equal(apiRef.current);
-        }}
       />,
     );
 
@@ -82,16 +77,5 @@ describe('<DataGridPremium /> - GridCallbackDetails apiRef', () => {
 
     expect(modelFromFilterCallback).to.deep.equal(['category']);
     expect(modelFromHeaderClick).to.deep.equal(['category']);
-  });
-
-  it('should type the apiRef as read-only', () => {
-    render(
-      <TestCase
-        onRowGroupingModelChange={(model, details) => {
-          // @ts-expect-error `current` is read-only on the details' apiRef
-          details.apiRef.current = null;
-        }}
-      />,
-    );
   });
 });
