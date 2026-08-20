@@ -87,6 +87,12 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.10`, plus:
 - [scheduler-premium] Allow to control the min and max hour in the Event Timeline (#23212) @rita-codes
 - [scheduler-premium] Dependencies - Create, select and delete via terminals (#23200) @rita-codes
 
+### Virtualizer
+
+#### `@mui/x-virtualizer@0.6.4`
+
+- [virtualizer] Add inverse-sticky layouts (#23053) @romgrk
+
 ### Docs
 
 - [docs][charts] Document line mark size customization (#23370) @JCQuintas
@@ -98,7 +104,6 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.10`, plus:
 
 - [code-infra] Add release skill (#23308) @brijeshb42
 - [code-infra] Sync mui-release skill (#23330) @brijeshb42
-- [virtualizer] Add inverse-sticky layouts (#23053) @romgrk
 
 ### Miscellaneous
 
