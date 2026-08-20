@@ -1,5 +1,109 @@
 # Changelog
 
+## 9.12.0
+
+_Aug 20, 2026_
+
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Expose `apiRef` on `GridCallbackDetails` for selector access in Data Grid callbacks
+- ♿️ Improve the accessibility of Data Grid cells and picker day cells
+- 📊 Add `onItemClick` to the radial charts
+- 🗓️ Enable multi-resource event creation and editing in the Scheduler
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@Anexus5919, @mustafajw07
+
+The following team members contributed to this release:
+@brijeshb42, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @silviuaavram
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.12.0`
+
+- [DataGrid] Expose `apiRef` on `GridCallbackDetails` for selector access in callbacks (#22973) @michelengelen
+- [DataGrid] Fix header height not updating when `headerFilters` or `columnGroupingModel` change (#23059) @MBilalShafi
+- [DataGrid] Fix unhandled rejection when unmounting mid-autosize (#23319) @JCQuintas
+- [DataGrid] Label the blank `singleSelect` filter option (#23294) @JCQuintas
+- [DataGrid] Stop sending incomplete filter items to the data source (#23303) @JCQuintas
+- [DataGrid] Support the "rowheader" attribute for grid cells (#23340) @silviuaavram
+
+#### `@mui/x-data-grid-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.12.0`, plus:
+
+- [DataGridPro] Honor `hasNextPage` in infinite lazy loading (#23048) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@9.12.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.12.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.12.0`
+
+- [fields] Keep the selected section on blank space clicks (#23318) @LukasTy
+- [pickers] Associate the day cells with their week day column header (#23339) @LukasTy
+- [pickers] Keep the gridcell role and the column index on filler cells (#23326) @Anexus5919
+
+#### `@mui/x-date-pickers-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.12.0`, plus:
+
+- [DateRangePicker] Keep the range highlight opaque for disabled days (#23317) @JCQuintas
+
+### Charts
+
+#### `@mui/x-charts@9.12.0`
+
+- [charts] Add a demo for label on grid row (#23333) @noraleonte
+- [charts] Focus the clicked item for keyboard navigation (#23247) @JCQuintas
+- [docs][charts] Document line mark size customization (#23370) @JCQuintas
+
+#### `@mui/x-charts-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.12.0`.
+
+#### `@mui/x-charts-premium@9.12.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.12.0`, plus:
+
+- [charts-premium] Add onItemClick to the radial charts (#23253) @JCQuintas
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.10`
+
+- [scheduler] Honor `viewConfig` hour limits in the compact day and week views (#23316) @rita-codes
+- [scheduler] Share timeline event layout data (#23366) @flaviendelangle
+- [scheduler] enable multi-resource event creation and editing (#23313) @mustafajw07
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.10` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.10`, plus:
+
+- [scheduler-premium] Allow to control the min and max hour in the Event Timeline (#23212) @rita-codes
+- [scheduler-premium] Dependencies - Create, select and delete via terminals (#23200) @rita-codes
+
+### Docs
+
+- [docs] Add recipe for constraining the `make-child` drop action by item type (#22940) @michelengelen
+- [docs] Redirect the renamed Event Timeline views page (#23324) @brijeshb42
+- [docs] Remove unused adapter-dependencies.json (#23328) @LukasTy
+
+### Core
+
+- [code-infra] Add release skill (#23308) @brijeshb42
+- [code-infra] Sync mui-release skill (#23330) @brijeshb42
+
+### Miscellaneous
+
+- [DateRangeCalendar] Round the range highlight at the month grid edges (#23297) @JCQuintas
+- [test] Fix act warnings in the data source filter tests (#23360) @JCQuintas
+- [virtualizer] Add inverse-sticky layouts (#23053) @romgrk
+
 ## 9.11.1
 
 _Aug 6, 2026_
