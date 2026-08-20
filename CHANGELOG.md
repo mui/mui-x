@@ -60,6 +60,7 @@ Same changes as in `@mui/x-date-pickers@9.12.0`, plus:
 #### `@mui/x-charts@9.12.0`
 
 - [charts] Add a demo for label on grid row (#23333) @noraleonte
+- [charts] Fix React 18 propTypes warnings and stray-pointer test flakiness (#23384) @LukasTy
 - [charts] Focus the clicked item for keyboard navigation (#23247) @JCQuintas
 
 #### `@mui/x-charts-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -72,10 +73,21 @@ Same changes as in `@mui/x-charts-pro@9.12.0`, plus:
 
 - [charts-premium] Add onItemClick to the radial charts (#23253) @JCQuintas
 
+### Tree View
+
+#### `@mui/x-tree-view@9.12.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.12.0`.
+
 ### Scheduler
 
 #### `@mui/x-scheduler@9.0.0-beta.10`
 
+- [scheduler] Fix keyboard and focus issues around the "+N more" popover (#23312) @rita-codes
 - [scheduler] Honor `viewConfig` hour limits in the compact day and week views (#23316) @rita-codes
 - [scheduler] Share timeline event layout data (#23366) @flaviendelangle
 - [scheduler] enable multi-resource event creation and editing (#23313) @mustafajw07
@@ -87,6 +99,12 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.10`, plus:
 - [scheduler-premium] Allow to control the min and max hour in the Event Timeline (#23212) @rita-codes
 - [scheduler-premium] Dependencies - Create, select and delete via terminals (#23200) @rita-codes
 
+### Codemod
+
+#### `@mui/x-codemod@9.12.0`
+
+Internal changes.
+
 ### Docs
 
 - [docs][charts] Document line mark size customization (#23370) @JCQuintas
@@ -97,10 +115,12 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.10`, plus:
 ### Core
 
 - [code-infra] Add release skill (#23308) @brijeshb42
+- [code-infra] Fix changelog categorization of docs and DateRangeCalendar tags (#23385) @JCQuintas
 - [code-infra] Sync mui-release skill (#23330) @brijeshb42
 
 ### Miscellaneous
 
+- [core] Declare the missing `react-dom` peer dependencies (#23381) @LukasTy
 - [test] Fix act warnings in the data source filter tests (#23360) @JCQuintas
 - [virtualizer] Add inverse-sticky layouts (#23053) @romgrk
 
