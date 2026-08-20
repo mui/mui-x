@@ -1,4 +1,4 @@
-import { createLogOnce, reset } from '@base-ui/utils/warn';
+import { createLogOnce, reset } from '@base-ui/utils/createLogOnce';
 
 const logWarning = createLogOnce('warn');
 const logError = createLogOnce('error');
