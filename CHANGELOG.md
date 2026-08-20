@@ -5,6 +5,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.29.3
+
+_Aug 20, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@LukasTy, @MBilalShafi
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.29.3`
+
+- [DataGrid] Fix toolbar button stealing focus when a sibling's disabled state changes (#23265) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@8.29.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.29.3`.
+
+#### `@mui/x-data-grid-premium@8.29.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.29.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.29.3`
+
+- [fields] Keep the field editable on blank space clicks (#23372) @LukasTy
+- [pickers] Fix format placeholder brightness with a start adornment (#23205) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.29.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.29.3`, plus:
+
+- [DateRangePicker] Fix broken active range position underline in single input range fields (#23201) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@8.29.3`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.29.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.29.3`.
+
+#### `@mui/x-charts-premium@8.29.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.29.3`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.29.3`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.29.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.29.3`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.29.3`
+
+Internal changes.
+
+### Miscellaneous
+
+- [core] Fix `test-react-18` install failure on v8.x (#23202) @LukasTy
+
 ## 8.29.2
 
 _Jul 2, 2026_
