@@ -27,7 +27,7 @@ const MarkElementPath = styled('path', {
   fill: (theme.vars || theme).palette.background.paper,
   [`&.${lineClasses.markAnimate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionProperty: 'transform, transform-origin, opacity',
+    transitionProperty: 'transform, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 }));
@@ -112,11 +112,10 @@ function MarkElement(props: MarkElementProps) {
     <MarkElementPath
       {...other}
       {...(enablePositionBasedPointerInteraction ? {} : interactionProps)}
-      style={{
-        ...style,
-        transform: `translate(${x}px, ${y}px)`,
-        transformOrigin: `${x}px ${y}px`,
-      }}
+      style={style}
+      // The `transform` attribute places the mark in `viewBox` units, the chart's own coordinates.
+      // A CSS `px` transform puts the mark in the wrong place in Safari under browser zoom, see https://github.com/mui/mui-x/issues/23377
+      transform={`translate(${x} ${y})`}
       ownerState={ownerState}
       className={classes.mark}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
