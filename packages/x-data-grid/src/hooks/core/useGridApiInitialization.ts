@@ -36,7 +36,7 @@ function createPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends G
   const state = {} as Api['state'];
   const privateApi = {
     state,
-    store: new Store(state),
+    store: Store.create(state),
     instanceId: { id: globalId },
   } as any as PrivateApi;
 

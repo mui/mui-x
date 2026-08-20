@@ -20,7 +20,7 @@ type TestApiRef = {
 };
 
 const createApiRef = (initialState: TestState): TestApiRef => {
-  const store = new Store(initialState);
+  const store = Store.create(initialState);
 
   return {
     current: {
