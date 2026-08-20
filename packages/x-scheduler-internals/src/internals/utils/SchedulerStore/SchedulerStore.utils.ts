@@ -416,6 +416,7 @@ export function buildEventsState<TEvent extends object, TResource extends object
       const previousEventModel = previousState.eventModelLookup.get(id);
       const previousProcessedEvent = previousState.processedEventLookup.get(id);
 
+      // For duplicate ids, keep one mismatch per id based on the latest occurrence.
       if (alreadySeen) {
         if (eventModelLookup.get(id) !== previousEventModel) {
           eventModelMismatchCount -= 1;

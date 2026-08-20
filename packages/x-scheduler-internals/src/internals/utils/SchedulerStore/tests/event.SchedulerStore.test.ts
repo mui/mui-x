@@ -411,6 +411,19 @@ storeClasses.forEach((storeClass) => {
         expect(schedulerEventSelectors.processedEvent(store.state, second.id)!.title).to.equal(
           second.title,
         );
+
+        const initialEventIdList = store.state.eventIdList;
+        const initialEventModelLookup = store.state.eventModelLookup;
+        const initialProcessedEventLookup = store.state.processedEventLookup;
+
+        store.updateStateFromParameters(
+          { resources: TEST_RESOURCES, events: [first, second] },
+          adapter,
+        );
+
+        expect(store.state.eventIdList).to.equal(initialEventIdList);
+        expect(store.state.eventModelLookup).to.equal(initialEventModelLookup);
+        expect(store.state.processedEventLookup).to.equal(initialProcessedEventLookup);
       });
     });
 
