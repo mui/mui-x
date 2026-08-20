@@ -52,6 +52,7 @@ Same changes as in `@mui/x-data-grid-pro@9.12.0`.
 
 Same changes as in `@mui/x-date-pickers@9.12.0`, plus:
 
+- [DateRangeCalendar] Round the range highlight at the month grid edges (#23297) @JCQuintas
 - [DateRangePicker] Keep the range highlight opaque for disabled days (#23317) @JCQuintas
 
 ### Charts
@@ -60,7 +61,6 @@ Same changes as in `@mui/x-date-pickers@9.12.0`, plus:
 
 - [charts] Add a demo for label on grid row (#23333) @noraleonte
 - [charts] Focus the clicked item for keyboard navigation (#23247) @JCQuintas
-- [docs][charts] Document line mark size customization (#23370) @JCQuintas
 
 #### `@mui/x-charts-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -89,6 +89,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.10`, plus:
 
 ### Docs
 
+- [docs][charts] Document line mark size customization (#23370) @JCQuintas
 - [docs] Add recipe for constraining the `make-child` drop action by item type (#22940) @michelengelen
 - [docs] Redirect the renamed Event Timeline views page (#23324) @brijeshb42
 - [docs] Remove unused adapter-dependencies.json (#23328) @LukasTy
@@ -97,12 +98,11 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.10`, plus:
 
 - [code-infra] Add release skill (#23308) @brijeshb42
 - [code-infra] Sync mui-release skill (#23330) @brijeshb42
+- [virtualizer] Add inverse-sticky layouts (#23053) @romgrk
 
 ### Miscellaneous
 
-- [DateRangeCalendar] Round the range highlight at the month grid edges (#23297) @JCQuintas
 - [test] Fix act warnings in the data source filter tests (#23360) @JCQuintas
-- [virtualizer] Add inverse-sticky layouts (#23053) @romgrk
 
 ## 9.11.1
 
