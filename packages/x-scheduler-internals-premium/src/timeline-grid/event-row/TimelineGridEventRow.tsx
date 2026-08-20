@@ -143,8 +143,8 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   };
 
   const contextValue: TimelineGridEventRowContext = React.useMemo(
-    () => ({ resourceId, hasFocus, getCursorPositionInElementMs }),
-    [resourceId, hasFocus, getCursorPositionInElementMs],
+    () => ({ resourceId, rowRef, hasFocus, getCursorPositionInElementMs }),
+    [resourceId, rowRef, hasFocus, getCursorPositionInElementMs],
   );
 
   const placeholder = usePlaceholderInRow({

@@ -6,6 +6,9 @@ import type {
 
 // Narrowing on `eventDetails.reason` types `eventDetails.occurrence` per branch.
 export function narrowEventDetails(details: SchedulerEventEditingStartEventDetails) {
+  // Every branch carries the stable positioning anchor alongside the activation trigger.
+  details.anchor satisfies HTMLElement | undefined;
+  details.trigger satisfies Element | undefined;
   if (details.reason === 'edit') {
     const occurrence: SchedulerEventOccurrence = details.occurrence;
     occurrence.modelInBuiltInFormat.id;

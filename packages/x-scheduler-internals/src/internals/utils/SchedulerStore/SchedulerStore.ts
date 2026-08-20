@@ -916,8 +916,12 @@ export class SchedulerStore<
     occurrence: SchedulerRenderableEventOccurrence,
     event?: Event,
     trigger?: HTMLElement,
+    anchor?: HTMLElement,
   ): boolean {
     const isCreation = this.state.occurrencePlaceholder?.type === 'creation';
+    // Callers whose trigger a cancellation would unmount pass a dedicated `anchor` that survives it;
+    // everywhere else the trigger doubles as the positioning anchor.
+    const resolvedAnchor = anchor ?? trigger;
     // The casts encode the runtime correlation the type system can't prove: a creation always
     // edits the draft placeholder, anything else edits a real occurrence.
     let eventDetails: SchedulerEventEditingStartEventDetails;
@@ -926,7 +930,10 @@ export class SchedulerStore<
         'creation',
         event ?? this.occurrencePlaceholderEvent,
         trigger,
-        { occurrence: occurrence as SchedulerEventOccurrencePlaceholder },
+        {
+          occurrence: occurrence as SchedulerEventOccurrencePlaceholder,
+          anchor: resolvedAnchor,
+        },
       );
     } else {
       // The dialog renders view-only content for read-only occurrences — surface that as its own reason.
@@ -935,6 +942,7 @@ export class SchedulerStore<
         : 'edit';
       eventDetails = createChangeEventDetails(reason, event, trigger, {
         occurrence: occurrence as SchedulerEventOccurrence,
+        anchor: resolvedAnchor,
       });
     }
     this.parameters.onEventEditingStart?.(occurrence, eventDetails);
@@ -959,6 +967,7 @@ export class SchedulerStore<
     mode: SchedulerEditingMode = 'edit',
     event?: Event,
     trigger?: HTMLElement,
+    anchor?: HTMLElement,
   ): boolean => {
     const current = this.state.editingOccurrence;
     // Creation effects re-run on placeholder churn: once the surface is open for this occurrence,
@@ -966,7 +975,7 @@ export class SchedulerStore<
     if (mode === 'edit' && current?.mode === 'edit' && current.occurrence.key === occurrence.key) {
       return true;
     }
-    if (mode === 'edit' && !this.requestEditingStart(occurrence, event, trigger)) {
+    if (mode === 'edit' && !this.requestEditingStart(occurrence, event, trigger, anchor)) {
       return false;
     }
     this.set('editingOccurrence', { occurrence, mode });
@@ -977,7 +986,12 @@ export class SchedulerStore<
    * Switches the edited occurrence between the armed state (toolbar + resize) and the editing form,
    * keeping the same occurrence. No-op when nothing is being edited.
    */
-  public setEditingMode = (mode: SchedulerEditingMode, event?: Event, trigger?: HTMLElement) => {
+  public setEditingMode = (
+    mode: SchedulerEditingMode,
+    event?: Event,
+    trigger?: HTMLElement,
+    anchor?: HTMLElement,
+  ) => {
     const { editingOccurrence } = this.state;
     if (editingOccurrence == null || editingOccurrence.mode === mode) {
       return;
@@ -987,7 +1001,7 @@ export class SchedulerStore<
     // not stay active under the custom UI the consumer opens instead.
     if (
       mode === 'edit' &&
-      !this.requestEditingStart(editingOccurrence.occurrence, event, trigger)
+      !this.requestEditingStart(editingOccurrence.occurrence, event, trigger, anchor)
     ) {
       this.stopEditing();
       return;

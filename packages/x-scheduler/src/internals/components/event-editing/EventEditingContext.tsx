@@ -67,6 +67,7 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
       forwardedAnchorRef: React.RefObject<HTMLElement | null>,
       occurrence: SchedulerRenderableEventOccurrence,
       event?: Event,
+      stableAnchor?: HTMLElement | null,
     ) => {
       const isCreating = schedulerOccurrencePlaceholderSelectors.isCreating(store.state);
       const isReadOnly = schedulerEventSelectors.isReadOnly(store.state, occurrence.id);
@@ -75,6 +76,7 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
         getInitialEditingMode(surface, { isCreating, isReadOnly }),
         event,
         forwardedAnchorRef.current ?? undefined,
+        stableAnchor ?? undefined,
       );
       if (started) {
         // Batched with the store write above, so the surface never renders anchored to `null`.
@@ -99,7 +101,7 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
  * both the desktop dialog and the compact drawer.
  */
 export function EventEditingTrigger(props: EventEditingTriggerProps) {
-  const { occurrence, onClick, onEditingCanceled, children } = props;
+  const { occurrence, onClick, onEditingCanceled, stableAnchor, children } = props;
   const ref = React.useRef<HTMLElement | null>(null);
   const store = useSchedulerStoreContext();
   const { startEditing, registerAnchor } = useEventEditingContext();
@@ -120,7 +122,7 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
     ref,
     onClick: (event: React.MouseEvent<HTMLElement>) => {
       onClick?.(event);
-      const started = startEditing(ref, occurrence, event.nativeEvent);
+      const started = startEditing(ref, occurrence, event.nativeEvent, stableAnchor);
       if (!started) {
         onEditingCanceled?.();
       }

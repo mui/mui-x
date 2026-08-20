@@ -147,6 +147,9 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
             occurrence={occurrence}
             key={occurrence.key}
             onEditingCanceled={onClose}
+            // A cancellation closes this popover, unmounting the clicked item: the "+N more"
+            // button that opened it stays as the `eventDetails.anchor`.
+            stableAnchor={anchor}
           >
             <EventItem
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}

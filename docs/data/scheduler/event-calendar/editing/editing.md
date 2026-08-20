@@ -73,7 +73,8 @@ Events with `readOnly: true` (or belonging to a read-only resource) open the dia
 Use the `onEventEditingStart` callback to intercept editing right before the built-in dialog opens.
 It fires for every entry point (pointer, keyboard, touch, and event creation).
 `eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the occurrence is read-only (through the event, its resource, or the `readOnly` prop) and the dialog opens in view-only mode, and `"edit"` otherwise.
-`eventDetails.occurrence` is typed by that reason, so narrowing on it gives you the persisted occurrence fields on `"edit"` and `"view"` and the draft on `"creation"`, and `eventDetails.trigger` is the activated element, ready to anchor your own popover to.
+`eventDetails.occurrence` is typed by that reason, so narrowing on it gives you the persisted occurrence fields on `"edit"` and `"view"` and the draft on `"creation"`.
+`eventDetails.anchor` is an element that stays in the DOM after a cancellation, ready to anchor your own popover to; `eventDetails.trigger` identifies the exact activated element, but some flows unmount it right after a canceled activation (the armed toolbar's Edit button, an item inside the "+N more" popover, a creation placeholder), so don't position against it.
 Call `eventDetails.cancel()` to keep the built-in dialog closed and open your own editing UI instead:
 
 ```tsx

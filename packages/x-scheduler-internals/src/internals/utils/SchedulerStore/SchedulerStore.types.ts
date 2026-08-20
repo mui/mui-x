@@ -505,10 +505,34 @@ export interface UpdateEventsParameters {
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
 
+/**
+ * Properties shared by every `onEventEditingStart` reason on top of the Base UI change details.
+ */
+interface SchedulerEventEditingStartCustomProperties {
+  /**
+   * An element that stays in the DOM after the callback returns, even when it cancels — unlike
+   * `trigger`, which some flows unmount right after a cancellation (the armed toolbar's Edit
+   * button, an item inside the "+N more" popover, a creation placeholder). Use it to position
+   * a custom popover; use `trigger` to identify what the user activated.
+   */
+  anchor: HTMLElement | undefined;
+}
+
 export type SchedulerEventEditingStartEventDetails =
-  | BaseUIChangeEventDetails<'edit', { occurrence: SchedulerEventOccurrence }>
-  | BaseUIChangeEventDetails<'view', { occurrence: SchedulerEventOccurrence }>
-  | BaseUIChangeEventDetails<'creation', { occurrence: SchedulerEventOccurrencePlaceholder }>;
+  | BaseUIChangeEventDetails<
+      'edit',
+      SchedulerEventEditingStartCustomProperties & { occurrence: SchedulerEventOccurrence }
+    >
+  | BaseUIChangeEventDetails<
+      'view',
+      SchedulerEventEditingStartCustomProperties & { occurrence: SchedulerEventOccurrence }
+    >
+  | BaseUIChangeEventDetails<
+      'creation',
+      SchedulerEventEditingStartCustomProperties & {
+        occurrence: SchedulerEventOccurrencePlaceholder;
+      }
+    >;
 
 /**
  * The unique identifier for each scheduler store type.

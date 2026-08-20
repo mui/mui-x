@@ -6,12 +6,15 @@ export interface EventEditingContextValue {
   /**
    * Begins editing `occurrence`, anchoring the editing surface to `anchorRef`. The initial editing
    * mode (armed vs edit) is resolved from the provider's surface.
+   * `stableAnchor` becomes `eventDetails.anchor` in `onEventEditingStart` — pass it when a
+   * cancellation would unmount the `anchorRef` element (it defaults to that element otherwise).
    * Returns `false` when `onEventEditingStart` canceled the editing.
    */
   startEditing: (
     anchorRef: React.RefObject<HTMLElement | null>,
     occurrence: SchedulerRenderableEventOccurrence,
     event?: Event,
+    stableAnchor?: HTMLElement | null,
   ) => boolean;
   /**
    * Stops editing, closing the editing surface.
@@ -44,6 +47,12 @@ export interface EventEditingTriggerProps {
   onClick?: React.MouseEventHandler<HTMLElement>;
   /** Called when an activation is canceled by `onEventEditingStart`. */
   onEditingCanceled?: () => void;
+  /**
+   * Element exposed as `eventDetails.anchor` in `onEventEditingStart`. Pass it when a cancellation
+   * unmounts this trigger (e.g. it lives in the "+N more" popover, which the cancellation closes);
+   * it defaults to the trigger element itself.
+   */
+  stableAnchor?: HTMLElement | null;
 }
 
 export interface CompactEventEditingProviderProps {

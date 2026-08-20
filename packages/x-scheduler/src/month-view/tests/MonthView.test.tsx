@@ -217,6 +217,14 @@ describe('<MonthView />', () => {
       await waitFor(() => {
         expect(document.body.contains(popover)).to.equal(false);
       });
+
+      // The clicked item left with the popover, so `anchor` exposes the "+N more" button —
+      // the element a custom popover can safely position against after the cancellation.
+      expect(firstEventButton.isConnected).to.equal(false);
+      const moreButton = screen.getByRole('button', { name: /more/i });
+      expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(firstEventButton);
+      expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(moreButton);
+      expect(moreButton.isConnected).to.equal(true);
     });
 
     it('should stay open while editing and close once the editing surface closes', async () => {

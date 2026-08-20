@@ -52,7 +52,7 @@ export function EventToolbar(props: EventToolbarProps) {
   const { occurrence } = props;
 
   const store = useSchedulerStoreContext();
-  const { stopEditing } = useEventEditingContext();
+  const { stopEditing, anchor } = useEventEditingContext();
   const { classes, localeText } = useEventEditingStyledContext();
 
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
@@ -65,7 +65,14 @@ export function EventToolbar(props: EventToolbarProps) {
   useDisarmOnEscape({ active: true, onDisarm: stopEditing });
 
   const handleEdit = (event: React.MouseEvent) => {
-    store.setEditingMode('edit', event.nativeEvent, event.currentTarget as HTMLElement);
+    // Canceling disarms, unmounting this toolbar (and the Edit button with it): the armed
+    // occurrence element keeps serving as the `eventDetails.anchor` the consumer positions against.
+    store.setEditingMode(
+      'edit',
+      event.nativeEvent,
+      event.currentTarget as HTMLElement,
+      anchor ?? undefined,
+    );
   };
 
   // Mirrors `FormContent`'s delete: recurring events open the scope dialog (which closes the surface

@@ -1064,5 +1064,24 @@ describe('<EventTimelinePremium />', () => {
       });
       expect(onEventEditingStart.lastCall.args[1].reason).to.equal('view');
     });
+
+    it('should expose the persistent row as `anchor` when the handler cancels an event creation', async () => {
+      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = renderTimeline({ events: [standupEvent], onEventEditingStart });
+
+      const row = document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement;
+      await act(async () => row.focus());
+      await user.keyboard('{Enter}');
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
+      expect(screen.queryByRole('dialog')).to.equal(null);
+
+      // Canceling drops the creation draft, unmounting the placeholder trigger with it: the
+      // row stays as `anchor` — the element a custom popover can safely position against.
+      expect(onEventEditingStart.lastCall.args[1].trigger.isConnected).to.equal(false);
+      expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(row);
+      expect(row.isConnected).to.equal(true);
+    });
   });
 });

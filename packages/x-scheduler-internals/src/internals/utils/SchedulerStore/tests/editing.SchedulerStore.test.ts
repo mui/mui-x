@@ -233,6 +233,55 @@ storeClasses.forEach((storeClass) => {
         expect(onEventEditingStart.calledOnce).to.equal(true);
       });
     });
+
+    describe('`onEventEditingStart` positioning anchor', () => {
+      function buildOccurrence() {
+        return {
+          id: 'standup',
+          key: 'standup::2025-07-07',
+          displayTimezone: {
+            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
+            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
+          },
+        } as any;
+      }
+
+      it('should expose the trigger as `anchor` when no dedicated anchor is provided', () => {
+        const onEventEditingStart = spy();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const trigger = document.createElement('button');
+
+        store.startEditing(buildOccurrence(), 'edit', undefined, trigger);
+
+        expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(trigger);
+        expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(trigger);
+      });
+
+      it('should expose the dedicated anchor without replacing the trigger', () => {
+        const onEventEditingStart = spy();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const trigger = document.createElement('button');
+        const anchor = document.createElement('div');
+
+        store.startEditing(buildOccurrence(), 'edit', undefined, trigger, anchor);
+
+        expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(trigger);
+        expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(anchor);
+      });
+
+      it('should forward the dedicated anchor when the armed occurrence opens the surface', () => {
+        const onEventEditingStart = spy();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const trigger = document.createElement('button');
+        const anchor = document.createElement('div');
+
+        store.startEditing(buildOccurrence(), 'armed');
+        store.setEditingMode('edit', undefined, trigger, anchor);
+
+        expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(trigger);
+        expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(anchor);
+      });
+    });
   });
 });
 
