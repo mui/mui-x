@@ -14,6 +14,15 @@ const FACES = [
   { family: 'Roboto', weight: 400, style: 'italic' },
 ];
 
+// Google splits every face into `unicode-range` subsets, and `load()` only
+// fetches the ones covering its text — a single space by default. Probe each
+// subset the fixtures render, otherwise a broken file goes unnoticed.
+const SUBSETS = [
+  { name: 'latin', text: ' ' },
+  // Chart demos label standard deviations, e.g. `docs/data/charts/composition/BellCurveOverlay.js`.
+  { name: 'greek', text: 'σ' },
+];
+
 const TIMEOUT = 20000;
 
 function loadStylesheet(href: string) {
@@ -36,24 +45,38 @@ async function loadFaces() {
   // set, so gating on it cannot see a failure. `load()` forces the download.
   const missing: string[] = [];
   await Promise.all(
-    FACES.map(async ({ family, weight, style }) => {
-      try {
-        // `load()` applies normal CSS matching, so a request for a weight the
-        // stylesheet omits resolves to the nearest one. Compare what came back.
-        const faces = await document.fonts.load(`${style} ${weight} 16px "${family}"`);
-        if (!faces.some((face) => face.weight === String(weight) && face.style === style)) {
-          missing.push(`${family} ${style} ${weight}`);
+    FACES.flatMap(({ family, weight, style }) =>
+      SUBSETS.map(async ({ name, text }) => {
+        const label = `${family} ${style} ${weight} (${name})`;
+        try {
+          // `load()` applies normal CSS matching, so a request for a weight the
+          // stylesheet omits resolves to the nearest one. Compare what came back.
+          const faces = await document.fonts.load(`${style} ${weight} 16px "${family}"`, text);
+          if (!faces.some((face) => face.weight === String(weight) && face.style === style)) {
+            missing.push(label);
+          }
+        } catch {
+          // The rule matched but the font file failed to download.
+          missing.push(label);
         }
-      } catch {
-        // The rule matched but the font file failed to download.
-        missing.push(`${family} ${style} ${weight}`);
-      }
-    }),
+      }),
+    ),
   );
 
   if (missing.length > 0) {
     throw new Error(`Fonts failed to load. Missing: ${missing.join(', ')}`);
   }
+}
+
+// `../utils/setupFakeClock` installs Sinon fake timers before this module runs,
+// and `TestViewer` calls `runToLast()`, which would fire a `setTimeout` at once.
+// `AbortSignal.timeout` is not faked, so it still measures real time.
+function rejectAfter(ms: number) {
+  return new Promise<never>((_, reject) => {
+    AbortSignal.timeout(ms).addEventListener('abort', () => {
+      reject(new Error(`Fonts did not load within ${ms}ms.`));
+    });
+  });
 }
 
 /**
@@ -62,10 +85,5 @@ async function loadFaces() {
  * @returns a promise that rejects when a face does not load.
  */
 export default function loadFonts() {
-  return Promise.race([
-    loadFaces(),
-    new Promise<void>((_, reject) => {
-      setTimeout(() => reject(new Error(`Fonts did not load within ${TIMEOUT}ms.`)), TIMEOUT);
-    }),
-  ]);
+  return Promise.race([loadFaces(), rejectAfter(TIMEOUT)]);
 }
