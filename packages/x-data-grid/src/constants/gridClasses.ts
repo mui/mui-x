@@ -112,6 +112,10 @@ export interface GridClasses {
    */
   'cell--flex': string;
   /**
+   * Styles applied to the cell element if its content is not text.
+   */
+  'cell--nonText': string;
+  /**
    * Styles applied to the cell element if `align="center"`.
    */
   'cell--textCenter': string;
@@ -1085,6 +1089,7 @@ export const gridClassesOverrides = {
     'cell--editable',
     'cell--editing',
     'cell--flex',
+    'cell--nonText',
     'cell--pinnedLeft',
     'cell--pinnedRight',
     'cell--rangeBottom',
