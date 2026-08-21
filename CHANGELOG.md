@@ -6,7 +6,7 @@ _Aug 21, 2026_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 🧮 Add formula support to the Data Grid Premium
+- 🧮 Support [Formulas](https://mui.com/x/react-data-grid/formulas/) on the Data Grid: cells in opted-in columns can hold spreadsheet-like formulas (`=SUM(RANGE(…))`, `=price * quantity`) evaluated by a built-in engine, with a formula editor and [Formula Bar](https://mui.com/x/react-data-grid/components/formula-bar/), autocomplete, reference highlighting, optional A1 notation, fill-handle reference adjustment, custom functions, and live formula Excel export
 - ♿️ Improve the accessibility of Data Grid cells and picker day cells
 - 🗓️ Enable multi-resource event creation and editing in the Scheduler
 - 🐞 Bugfixes
