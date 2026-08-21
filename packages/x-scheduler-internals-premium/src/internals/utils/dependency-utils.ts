@@ -47,6 +47,26 @@ export function buildDependenciesState(
 }
 
 /**
+ * Groups dependencies by the event id at one of their ends.
+ */
+export function groupByEventId(
+  dependencies: readonly SchedulerDependency[],
+  property: 'source' | 'target',
+): Map<SchedulerEventId, SchedulerDependency[]> {
+  const groups = new Map<SchedulerEventId, SchedulerDependency[]>();
+  for (const dependency of dependencies) {
+    const eventId = dependency[property];
+    const group = groups.get(eventId);
+    if (group) {
+      group.push(dependency);
+    } else {
+      groups.set(eventId, [dependency]);
+    }
+  }
+  return groups;
+}
+
+/**
  * Whether the dependency cannot be created or deleted because one of its endpoint
  * events is read-only. The single definition shared by the store guard and the
  * `isModelReadOnly` selector.
