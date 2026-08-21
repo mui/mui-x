@@ -225,6 +225,44 @@ describe('<MonthView />', () => {
       expect(moreButton.isConnected).to.equal(true);
     });
 
+    it('should keep the "+N more" button as `anchor` when the cancellation comes from the armed toolbar', async () => {
+      // A coarse pointer arms first instead of opening the dialog, so the callback only fires
+      // on the toolbar's Edit — after the popover item became the built-in toolbar's anchor.
+      const originalMatchMedia = window.matchMedia;
+      window.matchMedia = (() =>
+        ({
+          matches: true,
+          addEventListener: () => {},
+          removeEventListener: () => {},
+        }) as any) as any;
+      try {
+        const onEventEditingStart = spy((_occurrence: any, eventDetails: any) =>
+          eventDetails.cancel(),
+        );
+        const { user, popover } = await renderAndOpenPopover({ onEventEditingStart });
+
+        const firstEventButton = within(popover).getAllByRole('button')[0];
+        await user.click(firstEventButton);
+        expect(onEventEditingStart.callCount).to.equal(0);
+
+        const editButton = screen.getByRole('button', { name: 'Edit event' });
+        await user.click(editButton);
+
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+        await waitFor(() => {
+          expect(document.body.contains(popover)).to.equal(false);
+        });
+
+        expect(firstEventButton.isConnected).to.equal(false);
+        const moreButton = screen.getByRole('button', { name: /more/i });
+        expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(editButton);
+        expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(moreButton);
+        expect(moreButton.isConnected).to.equal(true);
+      } finally {
+        window.matchMedia = originalMatchMedia;
+      }
+    });
+
     it('should stay open while editing and close once the editing surface closes', async () => {
       const { user, popover } = await renderAndOpenPopover();
 

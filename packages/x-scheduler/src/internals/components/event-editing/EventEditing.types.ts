@@ -30,6 +30,12 @@ export interface EventEditingContextValue {
    * the anchor, the surface moves to another registered element, or to `null` when none is left.
    */
   registerAnchor: (node: HTMLElement) => () => void;
+  /**
+   * The `stableAnchor` of the activation that started the current editing, retained across the
+   * armed state (which fires no callback) so the toolbar's Edit can still forward it. `null` when
+   * the activation had a stable trigger.
+   */
+  stableAnchorRef: React.RefObject<HTMLElement | null>;
 }
 
 export interface EventEditingProviderProps {

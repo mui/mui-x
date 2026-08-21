@@ -42,6 +42,9 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
   // Every mounted trigger of the edited occurrence.
   const registeredAnchorsRef = React.useRef(new Set<HTMLElement>());
+  // An armed start skips `onEventEditingStart`, so the activation's stable anchor is retained
+  // here until the toolbar's Edit finally fires the callback.
+  const stableAnchorRef = React.useRef<HTMLElement | null>(null);
 
   const registerAnchor = useStableCallback((node: HTMLElement) => {
     registeredAnchorsRef.current.add(node);
@@ -81,13 +84,20 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
       if (started) {
         // Batched with the store write above, so the surface never renders anchored to `null`.
         setAnchor(forwardedAnchorRef.current);
+        stableAnchorRef.current = stableAnchor ?? null;
       }
       return started;
     },
   );
 
   const contextValue = React.useMemo<EventEditingContextValue>(
-    () => ({ startEditing, stopEditing: store.stopEditing, anchor, registerAnchor }),
+    () => ({
+      startEditing,
+      stopEditing: store.stopEditing,
+      anchor,
+      registerAnchor,
+      stableAnchorRef,
+    }),
     [startEditing, store, anchor, registerAnchor],
   );
 
