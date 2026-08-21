@@ -159,7 +159,8 @@ function AnchoredEventToolbarSurface() {
 }
 
 /**
- * Mounts the desktop dialog during the `'edit'` stage, anchored to the element editing started from.
+ * Mounts the desktop dialog during the `'edit'` stage, anchored to the element editing started from,
+ * or to another mounted trigger of the same occurrence once that one is gone.
  * Open state comes from the store; the anchor comes from the editing context.
  */
 function EventDialogSurface() {

@@ -60,6 +60,9 @@
     "onCollapsedResourcesChange": {
       "description": "Event handler called when the collapsed resources change."
     },
+    "onEventEditingStart": {
+      "description": "Event handler called right before the built-in event dialog (or its mobile drawer variant) opens, regardless of what triggered it (pointer, keyboard, the armed toolbar&#39;s Edit action or event creation). <code>eventDetails.reason</code> is <code>&quot;creation&quot;</code> when the user is creating a new event, <code>&quot;view&quot;</code> when the occurrence is read-only (through the event, its resource or the <code>readOnly</code> prop) and the dialog opens in view-only mode, and <code>&quot;edit&quot;</code> otherwise. Call <code>eventDetails.cancel()</code> to keep it closed and handle the interaction in your own UI."
+    },
     "onEventsChange": { "description": "Callback fired when some event of the calendar change." },
     "onPresetChange": { "description": "Event handler called when the preset changes." },
     "onVisibleDateChange": { "description": "Event handler called when the visible date changes." },
