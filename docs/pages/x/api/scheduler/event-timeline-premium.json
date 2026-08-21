@@ -69,6 +69,7 @@
     },
     "localeText": { "type": { "name": "object" } },
     "onCollapsedResourcesChange": { "type": { "name": "func" } },
+    "onEventEditingStart": { "type": { "name": "func" } },
     "onEventsChange": { "type": { "name": "func" } },
     "onPresetChange": { "type": { "name": "func" } },
     "onVisibleDateChange": { "type": { "name": "func" } },
