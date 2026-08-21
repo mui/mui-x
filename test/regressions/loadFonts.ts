@@ -37,9 +37,8 @@ function loadStylesheet(href: string) {
 /**
  * Loads the webfonts the fixtures render with.
  *
- * This never times out. `index.test.ts` races it against a real timer, because
- * the bundle installs Sinon fake timers and vitest's `testTimeout` does not
- * cover the module-scope call that acquires the first page.
+ * This never times out. `index.test.ts` races it against a real timer -- see the
+ * comment there for why nothing else guards it.
  *
  * @returns a promise that rejects when a face does not load.
  */
