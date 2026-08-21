@@ -2,13 +2,12 @@
 
 ## 9.12.0
 
-_Aug 20, 2026_
+_Aug 21, 2026_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- ✨ Expose `apiRef` on `GridCallbackDetails` for selector access in Data Grid callbacks
+- 🧮 Add formula support to the Data Grid Premium
 - ♿️ Improve the accessibility of Data Grid cells and picker day cells
-- 📊 Add `onItemClick` to the radial charts
 - 🗓️ Enable multi-resource event creation and editing in the Scheduler
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -38,7 +37,9 @@ Same changes as in `@mui/x-data-grid@9.12.0`, plus:
 
 #### `@mui/x-data-grid-premium@9.12.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@9.12.0`.
+Same changes as in `@mui/x-data-grid-pro@9.12.0`, plus:
+
+- [DataGridPremium] Formula support (#22807) @MBilalShafi
 
 ### Date and Time Pickers
 
@@ -87,6 +88,7 @@ Same changes as in `@mui/x-tree-view@9.12.0`.
 
 #### `@mui/x-scheduler@9.0.0-beta.10`
 
+- [scheduler] Add `onEventEditingStart` to let consumers open their own edit UI (#23361) @rita-codes
 - [scheduler] Fix keyboard and focus issues around the "+N more" popover (#23312) @rita-codes
 - [scheduler] Honor `viewConfig` hour limits in the compact day and week views (#23316) @rita-codes
 - [scheduler] Share timeline event layout data (#23366) @flaviendelangle
