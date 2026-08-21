@@ -296,5 +296,6 @@
   "296": "MUI X Tree View: Unable to add items at index \"%s\" because it is out of range. The index must be between 0 and the amount of children of the parent item (%s).",
   "297": "MUI X Scheduler: useEventDialogFormContext must be used within an <EventDialogFormProvider />. The component requires access to the draft form values. Ensure the component is rendered inside the event dialog form.",
   "298": "MUI X Scheduler: `EventEditingContext` is missing. Hook must be placed within its Provider.",
-  "299": "MUI X Scheduler: `MoreEventsPopoverContext` is missing. Hook must be placed within its Provider."
+  "299": "MUI X Scheduler: `MoreEventsPopoverContext` is missing. Hook must be placed within its Provider.",
+  "300": "MUI X Tree View: All items must have a `label` property. You can use the `getItemLabel` prop to specify a custom label (string or React node) for each item. An item was provided without a label: %s"
 }

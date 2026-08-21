@@ -79,7 +79,7 @@ export function buildItemsLookups<R extends TreeViewValidItem<R>>(
     if (label == null) {
       throw new Error(
         'MUI X Tree View: All items must have a `label` property. ' +
-          'You can use the `getItemLabel` prop to specify a custom label for each item. ' +
+          'You can use the `getItemLabel` prop to specify a custom label (string or React node) for each item. ' +
           `An item was provided without a label: ${JSON.stringify(item)}`,
       );
     }
