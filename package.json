@@ -118,7 +118,7 @@
     "es-toolkit": "catalog:",
     "eslint": "10.8.0",
     "eslint-plugin-consistent-default-export-name": "0.0.15",
-    "eslint-plugin-jsdoc": "63.3.2",
+    "eslint-plugin-jsdoc": "64.2.1",
     "eslint-plugin-mui-x": "workspace:^",
     "execa": "catalog:",
     "globby": "16.2.3",
