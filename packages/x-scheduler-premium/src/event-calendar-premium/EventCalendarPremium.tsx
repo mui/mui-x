@@ -13,6 +13,7 @@ import {
   EventDialogProvider,
   EventCalendarRoot,
   SharedComponentsStyledContext,
+  SchedulerSlotsProvider,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
   EventCalendarStyledContext,
   useEventCalendarUtilityClasses,
@@ -51,7 +52,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
   const store = useEventCalendarPremium(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { localeText, apiRef, ...other } = forwardedProps;
+  const { localeText, apiRef, slots, slotProps, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
   const schedulerId = useId();
@@ -78,11 +79,13 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-            <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-              <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
-                {watermark}
-              </EventCalendarRoot>
-            </EventDialogProvider>
+            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+                <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+                  {watermark}
+                </EventCalendarRoot>
+              </EventDialogProvider>
+            </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
@@ -339,6 +342,16 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
    * @default true
    */
   showCurrentTimeIndicator: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

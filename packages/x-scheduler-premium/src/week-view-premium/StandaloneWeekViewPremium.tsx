@@ -38,13 +38,15 @@ const StandaloneWeekViewPremium = React.forwardRef(function StandaloneWeekViewPr
     typeof props
   >(props);
 
-  const { localeText, ...other } = forwardedProps;
+  const { localeText, slots, slotProps, ...other } = forwardedProps;
 
   return (
     <EventCalendarProvider
       {...parameters}
       storeClass={EventCalendarPremiumStore}
       localeText={localeText}
+      slots={slots}
+      slotProps={slotProps}
     >
       <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
         <WeekView ref={forwardedRef} {...other} />
@@ -276,6 +278,16 @@ StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
    * @default true
    */
   showCurrentTimeIndicator: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

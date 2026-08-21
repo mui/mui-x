@@ -73,6 +73,13 @@ export function useEventDialogFormField<T = unknown>(
         'Use a custom key that does not collide with the event model.',
       ]);
     }
+    if (BUILT_IN_FORM_KEYS.has(key) && parameters.defaultValue !== undefined) {
+      warnOnce([
+        `MUI X Scheduler: useEventDialogFormField() received a \`defaultValue\` for the built-in key "${key}".`,
+        'Built-in keys are always seeded from the event being edited, so the default is never applied.',
+        'Remove the `defaultValue`, or use a custom key if you meant to add a field of your own.',
+      ]);
+    }
   }
 
   const store = useEventDialogFormContext();
