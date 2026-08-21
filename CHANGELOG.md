@@ -27,7 +27,7 @@ The following team members contributed to this release:
 - [DataGrid] Fix unhandled rejection when unmounting mid-autosize (#23319) @JCQuintas
 - [DataGrid] Label the blank `singleSelect` filter option (#23294) @JCQuintas
 - [DataGrid] Stop sending incomplete filter items to the data source (#23303) @JCQuintas
-- [DataGrid] Support the "rowheader" attribute for grid cells (#23340) @silviuaavram
+- [DataGrid] Support the `rowheader` attribute for grid cells (#23340) @silviuaavram
 
 #### `@mui/x-data-grid-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -47,7 +47,7 @@ Same changes as in `@mui/x-data-grid-pro@9.12.0`, plus:
 
 - [fields] Keep the selected section on blank space clicks (#23318) @LukasTy
 - [pickers] Associate the day cells with their week day column header (#23339) @LukasTy
-- [pickers] Keep the gridcell role and the column index on filler cells (#23326) @Anexus5919
+- [pickers] Keep the `gridcell` role and the column index on filler cells (#23326) @Anexus5919
 
 #### `@mui/x-date-pickers-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -61,7 +61,7 @@ Same changes as in `@mui/x-date-pickers@9.12.0`, plus:
 #### `@mui/x-charts@9.12.0`
 
 - [charts] Add a demo for label on grid row (#23333) @noraleonte
-- [charts] Fix React 18 propTypes warnings and stray-pointer test flakiness (#23384) @LukasTy
+- [charts] Fix React 18 `propTypes` warnings and stray-pointer test flakiness (#23384) @LukasTy
 - [charts] Focus the clicked item for keyboard navigation (#23247) @JCQuintas
 
 #### `@mui/x-charts-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -72,7 +72,7 @@ Same changes as in `@mui/x-charts@9.12.0`.
 
 Same changes as in `@mui/x-charts-pro@9.12.0`, plus:
 
-- [charts-premium] Add onItemClick to the radial charts (#23253) @JCQuintas
+- [charts-premium] Add `onItemClick` to the radial charts (#23253) @JCQuintas
 
 ### Tree View
 
@@ -112,19 +112,19 @@ Internal changes.
 - [docs][charts] Document line mark size customization (#23370) @JCQuintas
 - [docs] Add recipe for constraining the `make-child` drop action by item type (#22940) @michelengelen
 - [docs] Redirect the renamed Event Timeline views page (#23324) @brijeshb42
-- [docs] Remove unused adapter-dependencies.json (#23328) @LukasTy
+- [docs] Remove unused `adapter-dependencies.json` (#23328) @LukasTy
 
 ### Core
 
 - [code-infra] Add release skill (#23308) @brijeshb42
-- [code-infra] Fix changelog categorization of docs and DateRangeCalendar tags (#23385) @JCQuintas
+- [code-infra] Fix changelog categorization of docs and `DateRangeCalendar` tags (#23385) @JCQuintas
 - [code-infra] Sync mui-release skill (#23330) @brijeshb42
 
 ### Miscellaneous
 
 - [core] Declare the missing `react-dom` peer dependencies (#23381) @LukasTy
 - [test] Fix act warnings in the data source filter tests (#23360) @JCQuintas
-- [virtualizer] Add inverse-sticky layouts (#23053) @romgrk
+- [virtualizer] Add inverse-sticky layout (#23053) @romgrk
 
 ## 9.11.1
 
