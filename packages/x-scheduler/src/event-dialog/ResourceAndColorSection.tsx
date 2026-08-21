@@ -247,8 +247,8 @@ export function ResourceAndColorSection() {
   const errorId = `${schedulerId}-resource-error`;
 
   return (
-    <SectionFieldset className={classes.eventDialogSectionFieldset}>
-      <SectionHeaderTitle className={classes.eventDialogSectionHeaderTitle}>
+    <SectionFieldset>
+      <SectionHeaderTitle>
         {resources.length > 0 ? localeText.resourceColorSectionLabel : localeText.colorSectionLabel}
       </SectionHeaderTitle>
       {/* Resources are optional; skip the picker entirely when none are configured. */}

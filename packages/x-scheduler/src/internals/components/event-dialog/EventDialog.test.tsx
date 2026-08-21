@@ -27,6 +27,8 @@ import {
   DateTimeSection,
   DescriptionSection,
   ResourceAndColorSection,
+  SectionFieldset,
+  SectionHeaderTitle,
   useEventDialogFormField,
 } from '@mui/x-scheduler/event-dialog';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
@@ -388,6 +390,28 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(panel.querySelector(`.${eventCalendarClasses.eventDialogTabContent}`)).not.to.equal(
         null,
       );
+    });
+
+    it('should apply the theme classes to SectionFieldset and SectionHeaderTitle in a custom section', () => {
+      function CustomFieldsetSection() {
+        return (
+          <SectionFieldset className="custom-fieldset">
+            <SectionHeaderTitle className="custom-title">Priority</SectionHeaderTitle>
+          </SectionFieldset>
+        );
+      }
+      renderWithSlot({ eventDialogGeneralTab: CustomFieldsetSection });
+
+      const fieldset = document.querySelector(
+        `.${eventCalendarClasses.eventDialogSectionFieldset}`,
+      );
+      expect(fieldset).not.to.equal(null);
+      expect(fieldset!.classList.contains('custom-fieldset')).to.equal(true);
+      const legend = document.querySelector(
+        `.${eventCalendarClasses.eventDialogSectionHeaderTitle}`,
+      );
+      expect(legend).not.to.equal(null);
+      expect(legend!.classList.contains('custom-title')).to.equal(true);
     });
 
     it('should render the built-in sections in the order the slot returns them', () => {
