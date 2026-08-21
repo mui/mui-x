@@ -1,6 +1,12 @@
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
+import {
+  getCell,
+  getColumnHeaderCell,
+  openLongTextEditPopup,
+  openLongTextViewPopup,
+} from 'test/utils/helperFn';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Accessibility', () => {
   const { render } = createRenderer();
@@ -56,35 +62,55 @@ describe('<DataGrid /> - Accessibility', () => {
     expect(getCell(0, 1)).to.have.attribute('role', 'gridcell');
   });
 
-  it('should keep row header cells mounted during horizontal virtualization', async () => {
-    const columns = Array.from({ length: 10 }, (_, index) => ({
-      field: `field${index}`,
-      width: 100,
-      rowHeader: index === 0 || index === 9,
-    }));
-    const row = columns.reduce<Record<string, string | number>>(
-      (model, column) => ({ ...model, [column.field]: column.field }),
-      { id: 0 },
-    );
+  // JSDOM has no layout, so every column stays inside the render context and the test would pass
+  // whether or not row header cells are retained.
+  it.skipIf(isJSDOM)(
+    'should keep row header cells mounted during horizontal virtualization',
+    async () => {
+      const columns = Array.from({ length: 10 }, (_, index) => ({
+        field: `field${index}`,
+        width: 100,
+        rowHeader: index === 0 || index === 9,
+      }));
+      const row = columns.reduce<Record<string, string | number>>(
+        (model, column) => ({ ...model, [column.field]: column.field }),
+        { id: 0 },
+      );
 
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid rows={[row]} columns={columns} columnBufferPx={0} />
-      </div>,
-    );
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={[row]} columns={columns} columnBufferPx={0} />
+        </div>,
+      );
 
-    const firstRowHeader = getCell(0, 0);
-    const lastRowHeader = getCell(0, 9);
+      const firstRowHeader = getCell(0, 0);
+      const lastRowHeader = getCell(0, 9);
 
-    const virtualScroller = document.querySelector<HTMLElement>(`.${gridClasses.virtualScroller}`)!;
-    fireEvent.scroll(virtualScroller, { target: { scrollLeft: 700 } });
+      const virtualScroller = document.querySelector<HTMLElement>(
+        `.${gridClasses.virtualScroller}`,
+      )!;
+      fireEvent.scroll(virtualScroller, { target: { scrollLeft: 700 } });
 
-    await waitFor(() => {
-      expect(getCell(0, 7)).to.have.attribute('data-field', 'field7');
-    });
-    expect(getCell(0, 0)).to.equal(firstRowHeader);
-    expect(getCell(0, 9)).to.equal(lastRowHeader);
-  });
+      await waitFor(() => {
+        expect(getCell(0, 7)).to.have.attribute('data-field', 'field7');
+      });
+      expect(getCell(0, 0)).to.equal(firstRowHeader);
+      expect(getCell(0, 9)).to.equal(lastRowHeader);
+
+      // The retained cells keep their place in the reading order...
+      const colIndexes = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          '[role="row"][data-rowindex] :is([role="gridcell"], [role="rowheader"])',
+        ),
+      ).map((cell) => Number(cell.getAttribute('data-colindex')));
+      expect(colIndexes).to.deep.equal([...colIndexes].sort((a, b) => a - b));
+
+      // ...without taking up space, so the rendered cells stay aligned with their column headers.
+      expect(getCell(0, 7).getBoundingClientRect().left).to.equal(
+        getColumnHeaderCell(7).getBoundingClientRect().left,
+      );
+    },
+  );
 
   it('should apply the rowgroup role to the column headers', () => {
     render(<DataGrid {...baselineProps} />);
