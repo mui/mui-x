@@ -631,8 +631,8 @@ importers:
         specifier: 'catalog:'
         version: 3.7.2
       markdown-to-jsx:
-        specifier: ^9.8.2
-        version: 9.8.2(react@19.2.8)
+        specifier: ^9.10.2
+        version: 9.10.2(react@19.2.8)
       moment:
         specifier: 'catalog:'
         version: 2.30.1
@@ -1136,8 +1136,8 @@ importers:
         specifier: 'catalog:'
         version: 2.1.1
       markdown-to-jsx:
-        specifier: ^9.8.2
-        version: 9.8.2(react@19.2.8)
+        specifier: ^9.10.2
+        version: 9.10.2(react@19.2.8)
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
@@ -8870,8 +8870,8 @@ packages:
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
 
-  markdown-to-jsx@9.8.2:
-    resolution: {integrity: sha512-rWUuxKB5NsuJmSfUOuXkQ0O5qk0J/Lr3Lk6dzxKoKQI/jeHYlsVfz3zJdMLAhI46hHoXDYERWhtBOiqtWDZ4LA==}
+  markdown-to-jsx@9.10.2:
+    resolution: {integrity: sha512-iR9GadlIox0q1uXnpqdxpF02Vb1WDmZ/QIXWjBR5htzjUEEhyIWbM65LuVKavdwJaVo4q95C/F2OOyNjWe91ig==}
     engines: {node: '>= 18'}
     peerDependencies:
       react: '>= 16.0.0'
@@ -18465,7 +18465,7 @@ snapshots:
 
   markdown-table@3.0.4: {}
 
-  markdown-to-jsx@9.8.2(react@19.2.8):
+  markdown-to-jsx@9.10.2(react@19.2.8):
     optionalDependencies:
       react: 19.2.8
 
