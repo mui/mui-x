@@ -78,6 +78,7 @@ const columns: GridColDef[] = [
   {
     field: 'slot',
     headerName: 'Slot',
+    rowHeader: true,
     width: 240,
     renderCell: (params: GridRenderCellParams<any, string>) => (
       <ComponentTag value={params.value} plan={params.row.plan} />

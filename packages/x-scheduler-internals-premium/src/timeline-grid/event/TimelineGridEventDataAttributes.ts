@@ -22,6 +22,11 @@ export enum TimelineGridEventDataAttributes {
    */
   resizing = 'data-resizing',
   /**
+   * Present when the event is hovered as a valid target of the pending
+   * create-dependency gesture.
+   */
+  dependencyDropTarget = 'data-dependency-drop-target',
+  /**
    * Present when the event's start does not render at its real position: it is before
    * the visible timeline range, or inside the hours the preset config hides.
    */

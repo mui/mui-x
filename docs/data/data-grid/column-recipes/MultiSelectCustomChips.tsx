@@ -134,7 +134,7 @@ const renderDepartmentOption: NonNullable<
 };
 
 const columns: GridColDef[] = [
-  { field: 'title', headerName: 'Title', width: 160 },
+  { field: 'title', headerName: 'Title', width: 160, rowHeader: true },
   {
     field: 'tags',
     headerName: 'Tags (colored)',

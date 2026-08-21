@@ -46,6 +46,7 @@ const baseColumnOptions = {
 const columns: GridColDef<Row>[] = [
   {
     field: 'item',
+    rowHeader: true,
     headerName: 'Item/Description',
     ...baseColumnOptions,
     flex: 3,

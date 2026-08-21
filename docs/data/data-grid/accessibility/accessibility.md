@@ -17,6 +17,29 @@ Level AA exceeds the basic criteria for accessibility and is a common target for
 
 The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
 
+## Row headers
+
+Column headers describe the data in each column, while row headers identify the data in each row.
+Screen readers use these associations to provide context as users navigate the grid.
+
+Set `rowHeader: true` on a column that contains a meaningful label for each row, such as a person's name or a product name.
+The cells in that column receive the [`rowheader` role](https://www.w3.org/TR/wai-aria-1.2/#rowheader):
+
+```tsx
+const columns: GridColDef[] = [
+  { field: 'name', headerName: 'Product', rowHeader: true },
+  { field: 'price', headerName: 'Price', type: 'number' },
+];
+```
+
+{{"demo": "RowHeaderGrid.js", "bg": "inline"}}
+
+Do not use an arbitrary index as a row header.
+A grid can have multiple row header columns when more than one value is needed to identify a row.
+
+The `rowHeader` property only changes the cell's semantic role.
+It does not change the column's position, visibility, styling, or behavior.
+
 ## Density
 
 `DataGrid` exposes the `density` prop which supports the following values:

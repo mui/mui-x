@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid-generator';
 
 const columns = [
-  { field: 'name', headerName: 'Name', width: 180, editable: true },
+  { field: 'name', headerName: 'Name', width: 180, editable: true, rowHeader: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },
   {
     field: 'dateCreated',
