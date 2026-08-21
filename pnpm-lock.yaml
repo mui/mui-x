@@ -2537,8 +2537,8 @@ importers:
         specifier: npm:@mui/x-license@7.29.1
         version: '@mui/x-license@7.29.1(@types/react@19.2.18)(react@19.2.8)'
       x-license-v8:
-        specifier: npm:@mui/x-license@8.29.2
-        version: '@mui/x-license@8.29.2(@types/react@19.2.18)(react@19.2.8)'
+        specifier: npm:@mui/x-license@8.29.3
+        version: '@mui/x-license@8.29.3(@types/react@19.2.18)(react@19.2.8)'
     devDependencies:
       vitest:
         specifier: 'catalog:'
@@ -4575,8 +4575,8 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@mui/x-internals@8.29.2':
-    resolution: {integrity: sha512-TLILyHia5NHh3MGErFDh0bXZ4V6iS45hdStofsV5wklF6dpgZjduo65oJB0h81mI5mexNlhHANEVfw0KV6BxBg==}
+  '@mui/x-internals@8.29.3':
+    resolution: {integrity: sha512-xJSaAXQDZ+35svja+i5N0qg7gTbZwcnAGZBgC+37Z3SoxRlTR5NwNBUlqKDm5TJwLvG17DeDYolxqWtcR93tsg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4601,8 +4601,8 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@mui/x-license@8.29.2':
-    resolution: {integrity: sha512-rq/WGwPkMyu9PpMU/Psa+o7ebXMN6ljxIa0uh5kgptk36TEY8bMdW6cgGbhlTTS83L9/AzTOTBafhUAucsVxbg==}
+  '@mui/x-license@8.29.3':
+    resolution: {integrity: sha512-8fIMx9UWahP6OgIgnOLSfkapp9/qU7a+4ECwHOECxIySzXr67ipczwIPlcL+SWpr7jJ5lThIeDcrY/cxSS1StQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -13709,7 +13709,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-internals@8.29.2(@types/react@19.2.18)(react@19.2.8)':
+  '@mui/x-internals@8.29.3(@types/react@19.2.18)(react@19.2.8)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@mui/utils': 7.3.11(@types/react@19.2.18)(react@19.2.8)
@@ -13744,11 +13744,11 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-license@8.29.2(@types/react@19.2.18)(react@19.2.8)':
+  '@mui/x-license@8.29.3(@types/react@19.2.18)(react@19.2.8)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@mui/utils': 7.3.11(@types/react@19.2.18)(react@19.2.8)
-      '@mui/x-internals': 8.29.2(@types/react@19.2.18)(react@19.2.8)
+      '@mui/x-internals': 8.29.3(@types/react@19.2.18)(react@19.2.8)
       '@mui/x-telemetry': 8.29.0
       react: 19.2.8
     transitivePeerDependencies:
