@@ -631,7 +631,7 @@ BarChartPro.propTypes /* remove-proptypes */ = {
   zoomInteractionConfig: PropTypes.shape({
     pan: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
+        PropTypes.oneOf(['drag', 'keyboard', 'pressAndDrag', 'wheel']),
         PropTypes.shape({
           allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
           pointerMode: PropTypes.any,
@@ -648,11 +648,16 @@ BarChartPro.propTypes /* remove-proptypes */ = {
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
         }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['keyboard']).isRequired,
+        }),
       ]).isRequired,
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
+        PropTypes.oneOf(['brush', 'doubleTapReset', 'keyboard', 'pinch', 'tapAndDrag', 'wheel']),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
@@ -667,6 +672,11 @@ BarChartPro.propTypes /* remove-proptypes */ = {
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['keyboard']).isRequired,
         }),
         PropTypes.shape({
           pointerMode: PropTypes.any,

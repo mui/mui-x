@@ -203,6 +203,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   const activationRegistrationsRef = React.useRef(new Map<number, ItemActivationRegistration>());
   const nextRegistrationIdRef = React.useRef(0);
 
+  const announceZoomChange = React.useCallback(() => {
+    store.set('keyboardNavigation', {
+      ...store.state.keyboardNavigation,
+      zoomAnnouncement: store.state.keyboardNavigation.zoomAnnouncement + 1,
+    });
+  }, [store]);
+
   const registerItemActivationHandler = React.useCallback(
     (scope: ItemActivationScope, handler: ItemActivationHandler) => {
       const registrationId = nextRegistrationIdRef.current;
@@ -236,11 +243,14 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         return;
       }
 
-      if (store.state.keyboardNavigation.isFocused) {
+      const keyboardNavigation = store.state.keyboardNavigation;
+      if (keyboardNavigation.isFocused || keyboardNavigation.zoomAnnouncement > 0) {
         store.set('keyboardNavigation', {
-          ...store.state.keyboardNavigation,
+          ...keyboardNavigation,
           isFocused: false,
           isFocusVisible: false,
+          // The visible range is only announced while the user operates the chart.
+          zoomAnnouncement: 0,
         });
       }
     }
@@ -299,6 +309,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function keyboardHandler(event: KeyboardEvent) {
+      // Item navigation only uses unmodified keys.
+      // Modified ones are left to the browser, and to chart interactions such as keyboard zoom and pan.
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+        return;
+      }
+
       let newFocusedItem = store.state.keyboardNavigation.item;
 
       const seriesConfig = selectorChartSeriesConfig(store.state);
@@ -401,7 +417,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     });
   }, [store, params.disableKeyboardNavigation]);
 
-  return { instance: { focusItem, registerItemActivationHandler } };
+  return { instance: { focusItem, registerItemActivationHandler, announceZoomChange } };
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({
@@ -410,6 +426,7 @@ useChartKeyboardNavigation.getInitialState = (params) => ({
     isFocused: false,
     isFocusVisible: false,
     enabled: !params.disableKeyboardNavigation,
+    zoomAnnouncement: 0,
   },
 });
 
