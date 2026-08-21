@@ -1,5 +1,7 @@
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGrid, gridClasses, useGridApiRef } from '@mui/x-data-grid';
+import type { GridApi } from '@mui/x-data-grid';
 import {
   getCell,
   getColumnHeaderCell,
@@ -109,6 +111,62 @@ describe('<DataGrid /> - Accessibility', () => {
       expect(getCell(0, 7).getBoundingClientRect().left).to.equal(
         getColumnHeaderCell(7).getBoundingClientRect().left,
       );
+    },
+  );
+
+  // A cell collapsed outside the render context can hold the grid's tab stop: the row header is
+  // retained, and `tabIndex.cell` outlives the focus state (it survives a click outside the grid).
+  // Same JSDOM caveat as above.
+  it.skipIf(isJSDOM)(
+    'should not make a row header cell a tab stop while it is outside the render context',
+    async () => {
+      const columns = Array.from({ length: 10 }, (_, index) => ({
+        field: `field${index}`,
+        width: 100,
+        rowHeader: index === 0,
+      }));
+      const row = columns.reduce<Record<string, string | number>>(
+        (model, column) => ({ ...model, [column.field]: column.field }),
+        { id: 0 },
+      );
+
+      let apiRef: RefObject<GridApi | null>;
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid apiRef={apiRef} rows={[row]} columns={columns} columnBufferPx={0} />
+          </div>
+        );
+      }
+      render(<Test />);
+
+      act(() => {
+        apiRef.current!.setCellFocus(0, 'field0');
+      });
+      expect(getCell(0, 0)).to.have.attribute('tabindex', '0');
+
+      const virtualScroller = document.querySelector<HTMLElement>(
+        `.${gridClasses.virtualScroller}`,
+      )!;
+      fireEvent.scroll(virtualScroller, { target: { scrollLeft: 700 } });
+
+      await waitFor(() => {
+        expect(getCell(0, 7)).to.have.attribute('data-field', 'field7');
+      });
+
+      // The cell keeps the focus it already had, but takes up no space, so tabbing into the grid
+      // must not land on it.
+      const rowHeader = getCell(0, 0);
+      expect(rowHeader.getBoundingClientRect().width).to.equal(0);
+      expect(rowHeader).to.have.attribute('tabindex', '-1');
+      expect(document.activeElement).to.equal(rowHeader);
+
+      // Scrolling the column back into view makes it a tab stop again.
+      fireEvent.scroll(virtualScroller, { target: { scrollLeft: 0 } });
+      await waitFor(() => {
+        expect(getCell(0, 0)).to.have.attribute('tabindex', '0');
+      });
     },
   );
 

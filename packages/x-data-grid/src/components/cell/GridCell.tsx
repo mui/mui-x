@@ -170,6 +170,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     cellMode,
     rowNode: rowNode as GridTreeNodeWithRender,
     tabIndex: useGridSelector(apiRef, () => {
+      // A cell kept mounted outside the render context is collapsed to zero size, so it must not
+      // become the grid's tab stop: tabbing in would move focus to something the user can't see.
+      if (isNotVisible) {
+        return -1;
+      }
       const cellTabIndex = gridTabIndexCellSelector(apiRef);
       return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
     }),
