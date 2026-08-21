@@ -97,6 +97,7 @@ export const usePicker = <
     null,
   );
   const rootRefObject = React.useRef<HTMLDivElement>(null);
+  const isRestoringFocusRef = React.useRef(false);
   const rootRef = useForkRef(ref, rootRefObject);
 
   const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
@@ -355,6 +356,7 @@ export const usePicker = <
       hasUIView,
       getCurrentViewMode,
       rootRefObject,
+      isRestoringFocusRef,
       labelId,
       triggerElement,
       viewContainerRole,
