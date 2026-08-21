@@ -285,7 +285,9 @@ export class SchedulerStore<
       updateModel,
     );
 
-    this.update(newState);
+    // The mapper builds a dynamic subset of keys, which `update()`'s exact-subset
+    // signature cannot infer from a `Partial`.
+    this.update(newState as Pick<State, keyof State>);
     this.parameters = parameters;
   };
 
