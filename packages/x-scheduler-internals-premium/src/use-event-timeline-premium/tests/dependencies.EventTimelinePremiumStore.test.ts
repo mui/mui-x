@@ -929,10 +929,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should warn in dev when dependencies are updated without onDependenciesChange', () => {
-      const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, dependencies: [] },
-        adapter,
-      );
+      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
 
       expect(() => {
         store.addDependency({ source: 'event-a', target: 'event-b', type: 'FinishToStart' });
