@@ -25,6 +25,8 @@ export interface GridFormulaFeature {
    * Registers the `hydrateColumns` pipe processor that wraps `allowFormulas`
    * columns and injects the A1 row-number column.
    * Wired before the column pinning pre-processors.
+   * @param {RefObject<GridPrivateApiPremium>} apiRef The private API ref.
+   * @param {DataGridPremiumProcessedProps} props The processed props.
    */
   usePreProcessors: (
     apiRef: RefObject<GridPrivateApiPremium>,
@@ -34,6 +36,8 @@ export interface GridFormulaFeature {
    * The main feature hook: event handlers, private API methods and effects.
    * Wired before `useGridFilter`/`useGridSorting` — the formula `rowsSet`
    * handler must run before filtering and sorting read cell values.
+   * @param {RefObject<GridPrivateApiPremium>} apiRef The private API ref.
+   * @param {DataGridPremiumProcessedProps} props The processed props.
    */
   useFeature: (
     apiRef: RefObject<GridPrivateApiPremium>,
@@ -42,6 +46,8 @@ export interface GridFormulaFeature {
   /**
    * The `useColumnHeaderAdornment` configuration hook implementation:
    * the A1 column-letter adornment next to each column header title.
+   * @param {string} field The column field the header belongs to.
+   * @returns {React.ReactNode} The adornment, or `null` when A1 notation is inactive.
    */
   useColumnHeaderAdornment: (field: string) => React.ReactNode;
   /**

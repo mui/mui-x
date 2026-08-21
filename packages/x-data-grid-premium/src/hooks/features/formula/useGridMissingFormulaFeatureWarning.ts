@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
