@@ -31,11 +31,11 @@ catalogs:
       specifier: ^7.29.7
       version: 7.29.7
     '@base-ui/react':
-      specifier: ^1.6.0
-      version: 1.6.0
+      specifier: ^1.7.0
+      version: 1.7.0
     '@base-ui/utils':
-      specifier: ^0.3.1
-      version: 0.3.1
+      specifier: ^0.3.2
+      version: 0.3.2
     '@date-fns/tz':
       specifier: ^1.5.0
       version: 1.5.0
@@ -254,7 +254,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/cache':
         specifier: 'catalog:'
         version: 11.14.0
@@ -281,7 +281,7 @@ importers:
         version: 0.0.4-canary.104(@next/eslint-plugin-next@16.3.1(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2)))(@types/node@22.20.1)(@typescript-eslint/eslint-plugin@8.65.0(@typescript-eslint/parser@8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(@typescript-eslint/parser@8.65.0(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(@typescript/native-preview@7.0.0-dev.20260707.2)(@vitest/expect@4.1.10)(eslint-import-resolver-node@0.3.9(supports-color@10.2.2))(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))(postcss@8.5.25)(prettier@3.9.6)(stylelint@17.14.1(supports-color@10.2.2)(typescript@6.0.3))(supports-color@10.2.2)(typescript@6.0.3)(vitest@4.1.10)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.1.2-canary.3(d20619c8b97b4d4498978bd01399fee2)
+        version: 9.1.2-canary.3(4de8bfd0c53abefa668585dd67798783)
       '@mui/internal-markdown':
         specifier: 3.0.11-canary.3
         version: 3.0.11-canary.3
@@ -512,7 +512,7 @@ importers:
         version: 9.3.1(@mui/material@9.3.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react@19.2.18)(react@19.2.8)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.1.2-canary.3(d20619c8b97b4d4498978bd01399fee2)
+        version: 9.1.2-canary.3(4de8bfd0c53abefa668585dd67798783)
       '@mui/internal-docs-infra':
         specifier: ^0.12.1-canary.30
         version: 0.12.1-canary.30(@types/react@19.2.18)(next@16.3.1(@babel/core@7.29.7(supports-color@10.2.2))(@playwright/test@1.62.1)(@types/node@22.20.1)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(prettier@3.9.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(supports-color@10.2.2)(typescript@6.0.3)
@@ -1175,7 +1175,7 @@ importers:
         version: 7.29.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.7.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.3.0(@types/react@19.2.18)(react@19.2.8)
@@ -1233,7 +1233,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -1354,7 +1354,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -1650,7 +1650,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
         specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.2.8
@@ -1666,7 +1666,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.3.0(@types/react@19.2.18)(react@19.2.8)
@@ -1730,10 +1730,10 @@ importers:
         version: 7.29.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.7.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -1804,10 +1804,10 @@ importers:
         version: 7.29.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.7.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@date-fns/tz':
         specifier: 'catalog:'
         version: 1.5.0
@@ -1854,10 +1854,10 @@ importers:
         version: 7.29.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.7.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
@@ -1901,10 +1901,10 @@ importers:
         version: 7.29.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.7.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -2004,7 +2004,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -2060,7 +2060,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
@@ -2134,7 +2134,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.3.0(@types/react@19.2.18)(react@19.2.8)
@@ -2166,10 +2166,10 @@ importers:
         version: 7.29.7
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.7.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/cache':
         specifier: 'catalog:'
         version: 11.14.0
@@ -3249,8 +3249,8 @@ packages:
     resolution: {integrity: sha512-4zBIxpPzowiZpusoFkyGVwakdRJUyuH5PxQ/PrqghfdFWWasvnCdPfQXHrenDai+gyLARulZjZowCOj6fjT4pA==}
     engines: {node: '>=6.9.0'}
 
-  '@base-ui/react@1.6.0':
-    resolution: {integrity: sha512-/jzjTWJYXhRFO45Bev9lc3cHbmjzCMpUqbMZ2AgKy/z25mY9B6shGSNcXcjQar9n5doM0KYW1W8fcFv2jZBuMw==}
+  '@base-ui/react@1.7.0':
+    resolution: {integrity: sha512-j+8QjX44C32jrXD/qyEAGpFr70FRpGL2CY61mQd9nBPWN737CK0xxD1ceJ055rW4RtdvFDT1e7otzdlfxvsYug==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@date-fns/tz': ^1.2.0
@@ -3266,8 +3266,8 @@ packages:
       date-fns:
         optional: true
 
-  '@base-ui/utils@0.3.1':
-    resolution: {integrity: sha512-gFFiltORVmW/N6IILTGxizP3PBpVpysqML1ALY5Vk0mH+7faVkCknOU31goYHN5Aoek2dkjxva1XOD2Ce9WuIg==}
+  '@base-ui/utils@0.3.2':
+    resolution: {integrity: sha512-oWy1aq/I2GmYjpl4PhEAhzflF8VPGKgZeq0xAWTbfD5KBWyxcN0ZP2+WHSUm/5Z6lVMBDLReLcoXwSYoRc/zNQ==}
     peerDependencies:
       '@types/react': ^17 || ^18 || ^19
       react: ^17 || ^18 || ^19
@@ -12320,10 +12320,10 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@base-ui/react@1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@base-ui/react@1.7.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@babel/runtime': 7.29.7
-      '@base-ui/utils': 0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@base-ui/utils': 0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@floating-ui/react-dom': 2.1.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@floating-ui/utils': 0.2.12
       react: 19.2.8
@@ -12334,7 +12334,7 @@ snapshots:
       '@types/react': 19.2.18
       date-fns: 4.4.0
 
-  '@base-ui/utils@0.3.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@base-ui/utils@0.3.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@floating-ui/utils': 0.2.12
@@ -13420,10 +13420,10 @@ snapshots:
       - supports-color
       - vitest
 
-  '@mui/internal-core-docs@9.1.2-canary.3(d20619c8b97b4d4498978bd01399fee2)':
+  '@mui/internal-core-docs@9.1.2-canary.3(4de8bfd0c53abefa668585dd67798783)':
     dependencies:
       '@babel/runtime': 7.29.7
-      '@base-ui/react': 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@base-ui/react': 1.7.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@docsearch/react': 4.7.0(@algolia/client-search@5.35.0)(@types/react@19.2.18)(algoliasearch@5.35.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(search-insights@2.17.3)
       '@emotion/cache': 11.14.0
       '@emotion/react': 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
