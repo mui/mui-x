@@ -13,6 +13,15 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
+import {
+  DateTimeSection,
+  DescriptionSection,
+  ResourceAndColorSection,
+  SectionFieldset,
+  SectionHeaderTitle,
+  useEventDialogFormField,
+  useEventDialogOccurrence,
+} from '@mui/x-scheduler/event-dialog';
 import type {
   EventDialogGeneralTabProps,
   EventDialogGeneralTabPropsOverrides,
@@ -23,15 +32,6 @@ import { MonthView } from '../../../month-view';
 import { EventDialogContent, EventDialogProvider } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { SchedulerSlotsProvider } from '../SchedulerSlotsContext';
-import {
-  DateTimeSection,
-  DescriptionSection,
-  ResourceAndColorSection,
-  SectionFieldset,
-  SectionHeaderTitle,
-  useEventDialogFormField,
-  useEventDialogOccurrence,
-} from '@mui/x-scheduler/event-dialog';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
 const personalResource = ResourceBuilder.new().title('Personal').eventColor('teal').build();
