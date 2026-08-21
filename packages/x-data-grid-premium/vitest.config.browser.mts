@@ -7,7 +7,12 @@ export default mergeConfig(
   defineConfig({
     test: {
       name: getTestName(import.meta.url),
-      exclude: ['**/materialVersion.test.tsx'],
+      exclude: [
+        '**/materialVersion.test.tsx',
+        // The formula engine is DOM-free by design (no React/grid imports) —
+        // its suites run in jsdom only to keep the browser run lean.
+        '**/hooks/features/formula/engine/*.test.ts',
+      ],
       browser: {
         enabled: true,
         instances: [{ browser: 'chromium' }],
