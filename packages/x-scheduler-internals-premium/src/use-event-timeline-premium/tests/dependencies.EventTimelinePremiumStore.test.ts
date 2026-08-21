@@ -333,6 +333,33 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect(onDependenciesChange.calledOnce).to.equal(true);
     });
 
+    it('should accept a dependency whose walk enters a pre-existing cycle', () => {
+      // The `visited` set is what terminates the walk here: the data already contains
+      // the cycle b→c→b, and the added edge never reaches it back.
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        {
+          events: [eventA, eventB, eventC],
+          resources: TEST_RESOURCES,
+          dependencies: [
+            { id: 'dep-1', source: 'event-b', target: 'event-c', type: 'FinishToStart' },
+            { id: 'dep-2', source: 'event-c', target: 'event-b', type: 'FinishToStart' },
+          ],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      const result = store.addDependency({
+        source: 'event-a',
+        target: 'event-b',
+        type: 'FinishToStart',
+      });
+
+      expect(result.status).to.equal('added');
+      expect(onDependenciesChange.calledOnce).to.equal(true);
+    });
+
     it('should report a duplicate before a cycle when the data already contains one', () => {
       // A controlled `dependencies` value can arrive already cyclic. Re-adding an
       // existing pair must report the duplicate (its arrow gets selected), not the cycle.
