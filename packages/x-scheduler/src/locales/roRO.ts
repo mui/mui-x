@@ -20,6 +20,7 @@ const roRODialog: Partial<EventEditingLocaleText> = {
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Șterge evenimentul',
   // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Descriere',
   endDateLabel: 'Data de sfârșit',

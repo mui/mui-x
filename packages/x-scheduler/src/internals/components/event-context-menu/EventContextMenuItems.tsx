@@ -6,8 +6,12 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import EditRounded from '@mui/icons-material/EditRounded';
 import DeleteRounded from '@mui/icons-material/DeleteRounded';
+import SearchRounded from '@mui/icons-material/SearchRounded';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 
@@ -35,9 +39,14 @@ function getFocusFallback(anchorEl: HTMLElement): HTMLElement | null {
 }
 
 /**
- * Builds the Edit / Delete menu items for `EventContextMenu`. Both actions go through the exact
- * same store calls as `EventEditingTrigger`'s click and `EventToolbar`/`FormContent`'s delete, so
- * behavior (dialog positioning, the recurring scope dialog) matches those flows exactly.
+ * Builds the menu items for `EventContextMenu`. Every action goes through the exact same store
+ * calls as `EventEditingTrigger`'s click and `EventToolbar`/`FormContent`'s delete, so behavior
+ * (dialog positioning, the recurring scope dialog) matches those flows exactly.
+ *
+ * A read-only event mirrors every other surface's mutation gate (the dialog swaps to
+ * `ReadonlyContent`, and `getInitialEditingMode` never arms the toolbar for one): the menu still
+ * opens, but "Edit event" becomes "Show details" — `startEditing` already resolves to the
+ * read-only view, the label just has to say so — and Delete is dropped entirely.
  */
 export function useEventContextMenuItems(
   params: UseEventContextMenuItemsParameters,
@@ -48,6 +57,7 @@ export function useEventContextMenuItems(
   const { classes, localeText } = useEventEditingStyledContext();
   const { startEditing } = useEventEditingContext();
 
+  const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const areRecurringEventsAvailable = useStore(
     store,
@@ -86,18 +96,38 @@ export function useEventContextMenuItems(
     focusFallback?.focus();
   };
 
-  return [
-    <MenuItem className={classes.eventContextMenuEditItem} key="edit" onClick={handleEdit}>
-      <ListItemIcon>
-        <EditRounded fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{localeText.editEvent}</ListItemText>
-    </MenuItem>,
-    <MenuItem className={classes.eventContextMenuDeleteItem} key="delete" onClick={handleDelete}>
-      <ListItemIcon>
-        <DeleteRounded fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{localeText.deleteEvent}</ListItemText>
-    </MenuItem>,
+  const items: React.ReactNode[] = [
+    isReadOnly ? (
+      <MenuItem
+        className={classes.eventContextMenuShowDetailsItem}
+        key="show-details"
+        onClick={handleEdit}
+      >
+        <ListItemIcon>
+          <SearchRounded fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{localeText.showEventDetails}</ListItemText>
+      </MenuItem>
+    ) : (
+      <MenuItem className={classes.eventContextMenuEditItem} key="edit" onClick={handleEdit}>
+        <ListItemIcon>
+          <EditRounded fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{localeText.editEvent}</ListItemText>
+      </MenuItem>
+    ),
   ];
+
+  if (!isReadOnly) {
+    items.push(
+      <MenuItem className={classes.eventContextMenuDeleteItem} key="delete" onClick={handleDelete}>
+        <ListItemIcon>
+          <DeleteRounded fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{localeText.deleteEvent}</ListItemText>
+      </MenuItem>,
+    );
+  }
+
+  return items;
 }

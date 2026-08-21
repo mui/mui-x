@@ -230,6 +230,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventContextMenuShowDetailsItem",
+      "className": "MuiEventTimelinePremium-eventContextMenuShowDetailsItem",
+      "description": "Styles applied to the event context menu show details item element (read-only events).",
+      "isGlobal": false
+    },
+    {
       "key": "eventDialog",
       "className": "MuiEventTimelinePremium-eventDialog",
       "description": "Styles applied to the event dialog root element.",

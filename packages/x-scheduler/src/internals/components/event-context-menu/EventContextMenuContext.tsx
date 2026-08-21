@@ -130,10 +130,12 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
       }
       // Suppresses Base UI's `useButton` Space->click synthesis (which would open Edit instead) for
       // this keyup. `useButton`'s own `onKeyUp` calls `makeEventPreventable(event)`, then this
-      // external handler (since every calendar-grid event primitive merges `elementProps` — what
-      // this trigger clones onto the child — before its own `getButtonProps`), and only afterward
-      // checks `event.baseUIHandlerPrevented` before firing the click. Calling `preventBaseUIHandler`
-      // here, before that check runs, is what suppresses it.
+      // external handler — every render path this trigger wraps merges `elementProps` (what it
+      // clones onto the child) before its own `getButtonProps`, whether that's the calendar-grid
+      // day/time primitives, `EventItem` (agenda view, "+N more" popover) via `@base-ui/react/button`,
+      // or the timeline event — and only afterward checks `event.baseUIHandlerPrevented` before
+      // firing the click. Calling `preventBaseUIHandler` here, before that check runs, is what
+      // suppresses it.
       (event as unknown as { preventBaseUIHandler?: () => void }).preventBaseUIHandler?.();
       event.preventDefault();
       menuContext.openMenu(occurrence, event.currentTarget, { onEditingCanceled, stableAnchor });

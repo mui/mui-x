@@ -20,6 +20,7 @@ const frFRDialog: Partial<EventEditingLocaleText> = {
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: "Supprimer l'événement",
   // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Description',
   endDateLabel: 'Date de fin',

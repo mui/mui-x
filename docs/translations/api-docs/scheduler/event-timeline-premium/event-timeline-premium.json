@@ -171,6 +171,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event context menu edit item element"
     },
+    "eventContextMenuShowDetailsItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event context menu show details item element (read-only events)"
+    },
     "eventDialog": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog root element"

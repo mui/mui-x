@@ -20,6 +20,7 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Ereignis löschen',
   // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Beschreibung',
   endDateLabel: 'Enddatum',

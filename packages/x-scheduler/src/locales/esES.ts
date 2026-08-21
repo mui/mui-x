@@ -20,6 +20,7 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Eliminar evento',
   // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Descripción',
   endDateLabel: 'Fecha de fin',

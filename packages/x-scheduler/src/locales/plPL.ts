@@ -20,6 +20,7 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Usuń wydarzenie',
   // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Opis',
   endDateLabel: 'Data zakończenia',

@@ -498,6 +498,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventContextMenuShowDetailsItem",
+      "className": "MuiEventCalendarPremium-eventContextMenuShowDetailsItem",
+      "description": "Styles applied to the event context menu show details item element (read-only events).",
+      "isGlobal": false
+    },
+    {
       "key": "eventDialog",
       "className": "MuiEventCalendarPremium-eventDialog",
       "description": "Styles applied to the event dialog root element.",

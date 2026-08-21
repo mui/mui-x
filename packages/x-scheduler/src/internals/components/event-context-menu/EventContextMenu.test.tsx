@@ -138,6 +138,53 @@ describe('EventContextMenu', () => {
     expect(document.activeElement).to.have.attribute('tabindex', '0');
   });
 
+  describe('read-only events', () => {
+    function renderReadOnlyEvent(onEventsChange = spy()) {
+      const event = EventBuilder.new()
+        .id('event-1')
+        .title('Read-only event')
+        .singleDay('2025-07-03T10:00:00Z', 60)
+        .readOnly(true)
+        .build();
+
+      render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+
+      return { onEventsChange };
+    }
+
+    it('should show "Show details" instead of Edit, and no Delete item', () => {
+      renderReadOnlyEvent();
+
+      fireEvent.contextMenu(getEvent(/Read-only event/i));
+
+      expect(screen.getByRole('menu')).not.to.equal(null);
+      expect(screen.getByRole('menuitem', { name: /show details/i })).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: /^edit/i })).to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: /delete/i })).to.equal(null);
+    });
+
+    it('should open the read-only view, not the edit form, when "Show details" is clicked', () => {
+      renderReadOnlyEvent();
+
+      fireEvent.contextMenu(getEvent(/Read-only event/i));
+      fireEvent.click(screen.getByRole('menuitem', { name: /show details/i }));
+
+      expect(screen.getByRole('dialog')).not.to.equal(null);
+      expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
+    });
+
+    it('should not offer Delete on Space either (regression guard: the menu still gates on read-only when opened via keyboard)', () => {
+      renderReadOnlyEvent();
+      const event = getEvent(/Read-only event/i);
+      event.focus();
+
+      fireEvent.keyDown(event, { key: ' ' });
+      fireEvent.keyUp(event, { key: ' ' });
+
+      expect(screen.queryByRole('menuitem', { name: /delete/i })).to.equal(null);
+    });
+  });
+
   describe('on a coarse pointer', () => {
     beforeEach(() => {
       // Activation arms the toolbar instead of opening the dialog directly on a coarse pointer;

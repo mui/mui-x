@@ -20,6 +20,7 @@ const faIRDialog: Partial<EventEditingLocaleText> = {
   // eventActionsToolbarAriaLabel: 'Event actions',
   // deleteEvent: 'Delete event',
   // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
   // descriptionLabel: 'Description',
   // endDateLabel: 'End date',

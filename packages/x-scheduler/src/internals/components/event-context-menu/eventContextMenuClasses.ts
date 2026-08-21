@@ -3,6 +3,8 @@ export interface EventContextMenuClasses {
   eventContextMenu: string;
   /** Styles applied to the event context menu edit item element. */
   eventContextMenuEditItem: string;
+  /** Styles applied to the event context menu show details item element (read-only events). */
+  eventContextMenuShowDetailsItem: string;
   /** Styles applied to the event context menu delete item element. */
   eventContextMenuDeleteItem: string;
 }
@@ -12,6 +14,7 @@ export type EventContextMenuClassKey = keyof EventContextMenuClasses;
 export const eventContextMenuClassKeys: EventContextMenuClassKey[] = [
   'eventContextMenu',
   'eventContextMenuEditItem',
+  'eventContextMenuShowDetailsItem',
   'eventContextMenuDeleteItem',
 ];
 
@@ -19,5 +22,6 @@ export const eventContextMenuClassKeys: EventContextMenuClassKey[] = [
 export const eventContextMenuSlots: Record<EventContextMenuClassKey, [EventContextMenuClassKey]> = {
   eventContextMenu: ['eventContextMenu'],
   eventContextMenuEditItem: ['eventContextMenuEditItem'],
+  eventContextMenuShowDetailsItem: ['eventContextMenuShowDetailsItem'],
   eventContextMenuDeleteItem: ['eventContextMenuDeleteItem'],
 };
