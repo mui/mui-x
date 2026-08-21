@@ -95,6 +95,7 @@ function GridChartsPanelChart(props: GridChartsPanelChartProps) {
         {Object.entries(schema).map(([type, config]) => (
           <GridChartTypeButton
             key={type}
+            type="button"
             className={classes.button}
             isSelected={type === selectedChartType}
             onClick={() => onChartTypeChange(type)}

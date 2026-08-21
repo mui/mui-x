@@ -92,6 +92,7 @@ function GridChartsPanelChartSelector(props: {
     <React.Fragment>
       <GridChartsPanelChartSelection
         id={triggerId}
+        type="button"
         aria-haspopup="true"
         aria-controls={open ? menuId : undefined}
         aria-expanded={open ? 'true' : undefined}
