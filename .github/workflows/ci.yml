@@ -16,3 +16,38 @@ jobs:
     uses: mui/mui-public/.github/workflows/ci-base.yml@bcba759d16e06c283bcf4dba32ed562f2f9e77cc # @mui/internal-code-infra@0.0.4-canary.28
     with:
       node-version: '22.18.0'
+
+  # Mirrors the real publish workflow environment (`publish.yml`) so an env mismatch, such as the
+  # npm version installed by `publish-prepare` breaking the pinned code-infra, is caught here
+  # instead of during a release.
+  publish-dry-run:
+    name: Publish Dry Run
+    if: ${{ github.repository_owner == 'mui' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - name: Prepare for publishing
+        uses: mui/mui-public/.github/actions/publish-prepare@2266e66cb9b09ec1f0439b053aee05549f1f5f25 # master
+        with:
+          node-version: '22.23.2'
+      # Keep in sync with `publish.yml`.
+      - name: Pin npm to 11
+        run: npm install -g npm@11
+      - name: Dry run npm publishing
+        env:
+          # Honored by newer code-infra versions. The one pinned on this branch ignores it and
+          # always pushes the tag, so the failure is filtered out below instead.
+          IS_PUBLISH_TEST: 'true'
+        run: |
+          set +e
+          output=$(pnpm code-infra publish --ci --dry-run 2>&1)
+          status=$?
+          echo "$output"
+          # `git push --dry-run` still authenticates, and this check runs with a read-only token.
+          # Everything before the tag push is what we want to smoke-test, so only that specific
+          # failure is tolerated.
+          if [ $status -ne 0 ] && echo "$output" | grep -q 'Failed to create git tag'; then
+            echo 'Tag push requires write access, which this check does not have. Ignoring.'
+            exit 0
+          fi
+          exit $status

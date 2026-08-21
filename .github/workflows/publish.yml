@@ -43,6 +43,12 @@ jobs:
         uses: mui/mui-public/.github/actions/publish-prepare@2266e66cb9b09ec1f0439b053aee05549f1f5f25 # master
         with:
           node-version: '22.23.2'
+      # The `@mui/internal-code-infra` version pinned on this branch reads the release version
+      # with `pnpm pkg get version` and parses it as JSON. npm 12 prints the raw value instead of
+      # a quoted string, so the parse fails. Keep npm 11 until this branch moves to a code-infra
+      # version that reads `package.json` directly.
+      - name: Pin npm to 11
+        run: npm install -g npm@11
       - name: Publish packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
