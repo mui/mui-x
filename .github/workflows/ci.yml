@@ -35,5 +35,19 @@ jobs:
         run: npm install -g npm@11
       - name: Dry run npm publishing
         env:
+          # Honored by newer code-infra versions. The one pinned on this branch ignores it and
+          # always pushes the tag, so the failure is filtered out below instead.
           IS_PUBLISH_TEST: 'true'
-        run: pnpm code-infra publish --ci --dry-run
+        run: |
+          set +e
+          output=$(pnpm code-infra publish --ci --dry-run 2>&1)
+          status=$?
+          echo "$output"
+          # `git push --dry-run` still authenticates, and this check runs with a read-only token.
+          # Everything before the tag push is what we want to smoke-test, so only that specific
+          # failure is tolerated.
+          if [ $status -ne 0 ] && echo "$output" | grep -q 'Failed to create git tag'; then
+            echo 'Tag push requires write access, which this check does not have. Ignoring.'
+            exit 0
+          fi
+          exit $status
