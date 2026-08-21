@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material/styles';
 import type { SelectChangeEvent } from '@mui/material/Select';
@@ -137,6 +138,41 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
     />
   );
 }
+
+ResourceSelectAdornment.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Whether the field has a selection at all. Kept separate from `resource` because
+   * `resource` is also `null` when the selection references an id that isn't in `resources`
+   * (e.g. a deleted resource) — that's an invalid selection, not an empty one, and shouldn't
+   * render the "no resource" dashed dot.
+   */
+  hasSelection: PropTypes.bool.isRequired,
+  resource: PropTypes.shape({
+    eventColor: PropTypes.oneOf([
+      'amber',
+      'blue',
+      'green',
+      'grey',
+      'indigo',
+      'lime',
+      'orange',
+      'pink',
+      'purple',
+      'red',
+      'teal',
+    ]).isRequired,
+    hidden: PropTypes.bool,
+    indentLevel: PropTypes.number.isRequired,
+    isGroupRoot: PropTypes.bool.isRequired,
+    label: PropTypes.string.isRequired,
+    showDivider: PropTypes.bool.isRequired,
+    value: PropTypes.string.isRequired,
+  }),
+} as any;
 
 export function ResourceAndColorSection() {
   // Context hooks
