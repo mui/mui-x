@@ -248,7 +248,7 @@ If you want to remove the margins, you can use the `--PickerDay-horizontalMargin
 ```tsx
 <DatePicker
   slotProps={{
-    day: { sx: { '--PickerDay-horizontalMargin': 0 } },
+    day: { sx: { '--PickerDay-horizontalMargin': '0px' } },
   }}
 />
 ```
