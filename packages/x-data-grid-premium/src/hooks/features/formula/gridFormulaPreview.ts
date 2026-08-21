@@ -123,6 +123,6 @@ export function previewFormulaResult(
     hasRow: (id) => rowsLookup[id] !== undefined,
     hasField: (field) => columnsLookup[field] !== undefined,
     position: positionContext,
-    functions: apiRef.current.caches.formula.registry,
+    functions: apiRef.current.caches.formula!.registry,
   });
 }

@@ -420,7 +420,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
     if (clampRef.current !== null) {
       return clampRef.current;
     }
-    const session = apiRef.current.caches.formula.editorSession;
+    const session = apiRef.current.caches.formula!.editorSession;
     if (
       session !== null &&
       session.id === id &&
@@ -581,7 +581,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
     (nextText: string, caret: number | null, event: React.SyntheticEvent) => {
       const column = apiRef.current.getColumn(field);
       const parsedValue = parsePlainEditValue(nextText, column, apiRef.current.getRow(id), apiRef);
-      apiRef.current.caches.formula.plainEditDraft = {
+      apiRef.current.caches.formula!.plainEditDraft = {
         id,
         field,
         text: nextText,
@@ -620,7 +620,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
       if (!core || !root || root.ownerDocument.activeElement !== root) {
         return;
       }
-      apiRef.current.caches.formula.editorSession = {
+      apiRef.current.caches.formula!.editorSession = {
         id,
         field,
         engaged: core.isEngaged(),
@@ -647,7 +647,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   const restoreSessionGeometry = React.useCallback(() => {
     const surface = surfaceRef.current;
     const editable = coreRef.current?.getRoot();
-    const session = apiRef.current.caches.formula.editorSession;
+    const session = apiRef.current.caches.formula!.editorSession;
     if (!surface || session === null || session.id !== id || session.field !== field) {
       return;
     }
@@ -905,7 +905,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
       // every scroll tick. Same defense as GridEditLongTextCell.
       core.focus({ preventScroll: true });
     }
-    const session = apiRef.current.caches.formula.editorSession;
+    const session = apiRef.current.caches.formula!.editorSession;
     if (session !== null && session.id === id && session.field === field) {
       // The editing cell remounted mid-edit: resume the live session — restore
       // the engaged flag and put the caret back where it was, not at the end. The

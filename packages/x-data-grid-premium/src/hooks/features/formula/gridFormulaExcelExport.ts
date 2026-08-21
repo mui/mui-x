@@ -131,18 +131,18 @@ export function getCellExcelFormula(
   id: GridRowId,
   field: string,
 ): ExcelFormulaCell | null {
-  const result = apiRef.current.getCellFormulaResult(id, field);
+  const result = apiRef.current.getCellFormulaResult!(id, field);
   if (result === null) {
     return null;
   }
-  const source = apiRef.current.getCellFormula(id, field);
+  const source = apiRef.current.getCellFormula!(id, field);
   if (source === null) {
     return null;
   }
   // Reuse the grid's interning parser: every formula's AST was already interned
   // during evaluation, so each export parse is a cache hit — no re-parsing across
   // rows that share a formula.
-  const { ast } = apiRef.current.caches.formula.parser.parse(getFormulaExpression(source));
+  const { ast } = apiRef.current.caches.formula!.parser.parse(getFormulaExpression(source));
   if (ast === null) {
     return null;
   }
@@ -157,7 +157,7 @@ export function getCellExcelFormula(
   // Excel evaluates on recalc (formula injection). Fall back to the evaluated
   // value instead — the export then shows exactly what the grid shows.
   const { ranges, calls } = extractFormulaDependencies(ast);
-  const registry = apiRef.current.caches.formula.registry;
+  const registry = apiRef.current.caches.formula!.registry;
   for (const name of calls) {
     if (registry.get(name) === undefined) {
       return null;

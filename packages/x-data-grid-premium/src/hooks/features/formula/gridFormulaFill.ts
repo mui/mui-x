@@ -41,10 +41,10 @@ export function getFilledFormulaSource(
   if (apiRef.current.getColumn(targetCell.field)?.allowFormulas !== true) {
     return null;
   }
-  if (apiRef.current.getCellFormulaResult(sourceCell.id, sourceCell.field) === null) {
+  if (apiRef.current.getCellFormulaResult!(sourceCell.id, sourceCell.field) === null) {
     return null;
   }
-  const source = apiRef.current.getCellFormula(sourceCell.id, sourceCell.field);
+  const source = apiRef.current.getCellFormula!(sourceCell.id, sourceCell.field);
   if (source === null) {
     return null;
   }

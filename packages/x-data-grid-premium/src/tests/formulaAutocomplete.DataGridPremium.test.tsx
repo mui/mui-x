@@ -4,6 +4,7 @@ import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, microtasks } from 'test/utils/helperFn';
 import { describe, expect, it } from 'vitest';
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCaretOffset, setCaretOffset } from '../components/formulaEditorCaret';
@@ -11,6 +12,7 @@ import { getCaretOffset, setCaretOffset } from '../components/formulaEditorCaret
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
   disableVirtualization: true,
+  featureDependencies: { formula: formulaFeature },
   rows: [
     { id: 0, item: 'Apple', price: 2, quantity: 3, total: '=price * quantity' },
     { id: 1, item: 'Banana', price: 1, quantity: 5, total: '=price * quantity' },

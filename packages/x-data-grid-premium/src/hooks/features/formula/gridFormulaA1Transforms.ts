@@ -41,7 +41,7 @@ export function convertA1ToCanonicalCommit(
   colDef: GridColDef,
   apiRef: RefObject<GridPrivateApiPremium>,
 ): string {
-  const cache = apiRef.current.caches.formula;
+  const cache = apiRef.current.caches.formula!;
   const seed = cache.lastA1Seed;
   const id = gridRowIdSelector(apiRef, row);
   if (seed !== null && seed.id === id && seed.field === colDef.field && seed.display === source) {
@@ -68,7 +68,7 @@ export function convertA1ToCanonicalPaste(
   colDef: GridColDef,
   apiRef: RefObject<GridPrivateApiPremium>,
 ): string {
-  const cache = apiRef.current.caches.formula;
+  const cache = apiRef.current.caches.formula!;
   const positionContext = gridFormulaA1PositionContextSelector(apiRef);
   const id = gridRowIdSelector(apiRef, row);
   const rowPosition = positionContext.getPositionOfRowId(id);

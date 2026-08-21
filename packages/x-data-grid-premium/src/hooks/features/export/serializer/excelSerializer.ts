@@ -19,10 +19,6 @@ import {
   createValueOptionsSheetIfNeeded,
   getExcelJs,
 } from './utils';
-import {
-  createFormulaExcelExportLayout,
-  getCellExcelFormula,
-} from '../../formula/gridFormulaExcelExport';
 import type { FormulaExcelExportLayout } from '../../formula/gridFormulaExcelExport';
 import type { SerializedColumns, SerializedRow, ValueOptionsData } from './utils';
 
@@ -224,7 +220,7 @@ export const serializeRowUnsafe = (
     // The value above stays as the fallback (used when the cell is not a formula
     // or its formula cannot be expressed against the export layout).
     if (formulaExport) {
-      const cellFormula = getCellExcelFormula(apiRef, formulaExport, id, column.field);
+      const cellFormula = apiRef.current.getCellExcelFormula?.(formulaExport, id, column.field);
       if (cellFormula) {
         formulas[column.field] = cellFormula;
       }
@@ -378,12 +374,14 @@ export async function buildExcel(
   // Formulas are exported as real Excel formulas only when injection-escaping is
   // off (`escapeFormulas: false`) — that flag already governs whether `=`-content
   // may be live in the export. Layout maps identities to this sheet's coordinates.
+  // The layout builder is a private API seam registered by the injected formula
+  // feature — without the feature the export stays value-only.
   const formulaExport = options.escapeFormulas
     ? null
-    : createFormulaExcelExportLayout(apiRef, columns, rowIds, {
+    : (apiRef.current.createFormulaExcelExportLayout?.(columns, rowIds, {
         includeHeaders,
         includeColumnGroupsHeaders,
-      });
+      }) ?? null);
 
   apiRef.current.resetColSpan();
   rowIds.forEach((id) => {

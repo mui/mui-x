@@ -40,7 +40,6 @@ import type { GridCellSelectionApi } from './gridCellSelectionInterfaces';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { CellValueUpdater } from '../clipboard/useGridClipboardImport';
-import { getFilledFormulaSource } from '../formula/gridFormulaFill';
 
 export const cellSelectionStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'cellSelectionModel' | 'initialState'>
@@ -683,7 +682,10 @@ export const useGridCellSelection = (
           // A dragged formula is copied with its references adjusted for the
           // target cell; otherwise (plain cell, or non-formula target column)
           // the source's evaluated value is copied as before.
-          const filledFormula = getFilledFormulaSource(apiRef, sourceCell, { id: rowId, field });
+          const filledFormula = apiRef.current.getFilledFormulaSource?.(sourceCell, {
+            id: rowId,
+            field,
+          });
           const pastedCellValue = filledFormula ?? sourceValues[i % sourceValues.length];
           cellUpdater.updateCell({ rowId, field, pastedCellValue });
         });
@@ -703,7 +705,7 @@ export const useGridCellSelection = (
         const sourceCells = getSourceCellsForField(sourceField);
         targetRowIds.forEach((rowId, rowIdx) => {
           const sourceCell = sourceCells[rowIdx % sourceCells.length];
-          const filledFormula = getFilledFormulaSource(apiRef, sourceCell, {
+          const filledFormula = apiRef.current.getFilledFormulaSource?.(sourceCell, {
             id: rowId,
             field: targetField,
           });
@@ -1155,8 +1157,7 @@ export const useGridCellSelection = (
         rowId: nextRowId,
         field: cell.field,
         pastedCellValue:
-          getFilledFormulaSource(
-            apiRef,
+          apiRef.current.getFilledFormulaSource?.(
             { id: cell.id, field: cell.field },
             { id: nextRowId, field: cell.field },
           ) ?? sourceValue,
@@ -1206,8 +1207,10 @@ export const useGridCellSelection = (
           rowId: nextRowId,
           field,
           pastedCellValue:
-            getFilledFormulaSource(apiRef, { id: cells[0].id, field }, { id: nextRowId, field }) ??
-            sourceValue,
+            apiRef.current.getFilledFormulaSource?.(
+              { id: cells[0].id, field },
+              { id: nextRowId, field },
+            ) ?? sourceValue,
         });
         if (!newSelectionModel[nextRowId]) {
           newSelectionModel[nextRowId] = {};
@@ -1274,8 +1277,7 @@ export const useGridCellSelection = (
           rowId: sortedCells[i].id,
           field,
           pastedCellValue:
-            getFilledFormulaSource(
-              apiRef,
+            apiRef.current.getFilledFormulaSource?.(
               { id: sourceCell.id, field: sourceCell.field },
               { id: sortedCells[i].id, field },
             ) ?? sourceValue,
@@ -1345,8 +1347,7 @@ export const useGridCellSelection = (
         rowId: cell.id,
         field: nextField,
         pastedCellValue:
-          getFilledFormulaSource(
-            apiRef,
+          apiRef.current.getFilledFormulaSource?.(
             { id: cell.id, field: cell.field },
             { id: cell.id, field: nextField },
           ) ?? sourceValue,
@@ -1398,8 +1399,7 @@ export const useGridCellSelection = (
           rowId,
           field: nextField,
           pastedCellValue:
-            getFilledFormulaSource(
-              apiRef,
+            apiRef.current.getFilledFormulaSource?.(
               { id: cells[0].id, field: cells[0].field },
               { id: rowId, field: nextField },
             ) ?? sourceValue,
@@ -1458,8 +1458,7 @@ export const useGridCellSelection = (
           rowId,
           field: sortedCells[i].field,
           pastedCellValue:
-            getFilledFormulaSource(
-              apiRef,
+            apiRef.current.getFilledFormulaSource?.(
               { id: sourceCell.id, field: sourceCell.field },
               { id: rowId, field: sortedCells[i].field },
             ) ?? sourceValue,

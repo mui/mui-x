@@ -6,12 +6,8 @@ import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/
 import { spy } from 'sinon';
 import type { SinonSpy } from 'sinon';
 import { onTestFinished } from 'vitest';
-import {
-  DataGridPremium,
-  GRID_FORMULA_FUNCTIONS,
-  useGridApiContext,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiContext, useGridApiRef } from '@mui/x-data-grid-premium';
+import { GRID_FORMULA_FUNCTIONS, formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type {
   DataGridPremiumProps,
   GridApi,
@@ -22,11 +18,13 @@ import type {
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
+import type { GridFormulaPrivateApi } from '../hooks/features/formula/gridFormulaInterfaces';
 import { getCaretOffset, setCaretOffset } from '../components/formulaEditorCaret';
 
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
   disableVirtualization: true,
+  featureDependencies: { formula: formulaFeature },
   rows: [
     { id: 0, item: 'Apple', price: 2, quantity: 3, total: '=price * quantity' },
     { id: 1, item: 'Banana', price: 1, quantity: 5, total: '=price * quantity' },
@@ -93,7 +91,10 @@ describe('<DataGridPremium /> - Formulas', () => {
   let apiRef: RefObject<GridApi | null>;
 
   // The formula API methods are private for now.
-  const formulaApi = () => unwrapPrivateAPI<GridPrivateApiPremium, GridApi>(apiRef.current!);
+  // The tests always inject the formula feature, so its private API methods are present.
+  const formulaApi = () =>
+    unwrapPrivateAPI<GridPrivateApiPremium, GridApi>(apiRef.current!) as GridPrivateApiPremium &
+      GridFormulaPrivateApi;
 
   function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
@@ -2926,13 +2927,13 @@ describe('<DataGridPremium /> - Formulas', () => {
         setCaretOffset(before, 4);
       });
       fireEvent.mouseUp(before);
-      expect(formulaApi().caches.formula.editorSession?.caret).to.equal(4);
+      expect(formulaApi().caches.formula!.editorSession?.caret).to.equal(4);
       // An arrow-key caret move mirrors through the keyup path.
       act(() => {
         setCaretOffset(before, 6);
       });
       fireEvent.keyUp(before, { key: 'ArrowLeft' });
-      expect(formulaApi().caches.formula.editorSession?.caret).to.equal(6);
+      expect(formulaApi().caches.formula!.editorSession?.caret).to.equal(6);
       // Remount the editing cell for real — pinning moves it into the pinned
       // section, exactly like virtualization moves it into the virtual-focus
       // slot when the edited row leaves the render window.
@@ -2964,7 +2965,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       });
       // Plant a session as a mid-edit interaction would; committing the edit
       // must clear it so it cannot resume into a later edit.
-      formulaApi().caches.formula.editorSession = {
+      formulaApi().caches.formula!.editorSession = {
         id: 0,
         field: 'total',
         engaged: true,
@@ -2981,7 +2982,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       };
       fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
-      expect(formulaApi().caches.formula.editorSession).to.equal(null);
+      expect(formulaApi().caches.formula!.editorSession).to.equal(null);
     });
 
     it('clears the session when the commit keyup lands after an async processRowUpdate commit', async () => {
@@ -3010,7 +3011,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       await waitFor(() => {
         expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
       });
-      expect(formulaApi().caches.formula.editorSession).to.equal(null);
+      expect(formulaApi().caches.formula!.editorSession).to.equal(null);
     });
 
     it('clears the session when a row edit stops (no cellEditStop in row edit mode)', async () => {
@@ -3020,12 +3021,12 @@ describe('<DataGridPremium /> - Formulas', () => {
         expect(getCellEditable(0, 3)).not.to.equal(null);
       });
       await user.keyboard('9');
-      expect(formulaApi().caches.formula.editorSession).not.to.equal(null);
+      expect(formulaApi().caches.formula!.editorSession).not.to.equal(null);
       fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await waitFor(() => {
         expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
       });
-      expect(formulaApi().caches.formula.editorSession).to.equal(null);
+      expect(formulaApi().caches.formula!.editorSession).to.equal(null);
     });
 
     it('clears the session on a programmatic stopCellEditMode', async () => {
@@ -3035,11 +3036,11 @@ describe('<DataGridPremium /> - Formulas', () => {
         expect(getCellEditable(0, 3)).not.to.equal(null);
       });
       await user.keyboard('9');
-      expect(formulaApi().caches.formula.editorSession).not.to.equal(null);
+      expect(formulaApi().caches.formula!.editorSession).not.to.equal(null);
       await act(async () => {
         apiRef.current!.stopCellEditMode({ id: 0, field: 'total' });
       });
-      expect(formulaApi().caches.formula.editorSession).to.equal(null);
+      expect(formulaApi().caches.formula!.editorSession).to.equal(null);
     });
   });
 
@@ -3159,7 +3160,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       fireEvent.mouseUp(getCellEditable(0, 3));
       await microtasks();
       expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');
-      expect(formulaApi().caches.formula.editorSession).not.to.equal(null);
+      expect(formulaApi().caches.formula!.editorSession).not.to.equal(null);
     });
 
     it('opens only the focused cell surface in row edit mode and hands it over on Tab', async () => {

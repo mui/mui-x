@@ -19,7 +19,25 @@ The [Formula engine](/x/react-data-grid/formula-engine/) page explains how evalu
 
 ## Enabling formulas
 
-Formula support is opt-in per column:
+The formula runtime—the parser, the evaluation engine, and the formula editor—is not bundled with the grid, so applications that do not use formulas do not pay for it in bundle size.
+To enable formulas, import the feature from the `@mui/x-data-grid-premium/formula` entry point and inject it through the `featureDependencies` prop:
+
+```tsx
+import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { formulaFeature } from '@mui/x-data-grid-premium/formula';
+
+<DataGridPremium featureDependencies={{ formula: formulaFeature }} />;
+```
+
+The prop is read when the grid mounts and must not change afterwards.
+Without it, `=` cell values render as plain strings and the formula props have no effect—a console warning points at the missing dependency in development builds.
+
+:::info
+Everything formula-related that is a runtime value—`formulaFeature`, the [`FormulaBar`](/x/react-data-grid/components/formula-bar/) component, and the [`GRID_FORMULA_FUNCTIONS`](/x/react-data-grid/formula-engine/#custom-functions) built-in function set—is exported from `@mui/x-data-grid-premium/formula`.
+The formula TypeScript types remain available from the package root.
+:::
+
+With the feature injected, formula support is opt-in per column:
 
 ```tsx
 const columns: GridColDef[] = [
@@ -34,7 +52,7 @@ const rows = [{ id: 1, price: 2, quantity: 3, total: '=price * quantity' }];
 Without `allowFormulas`, values starting with `=` render as plain strings.
 To store a literal string starting with `=` in a formula column, prefix it with an apostrophe: `'=not a formula`.
 
-Use the `disableFormulas` prop to turn the feature off for the whole grid.
+Use the `disableFormulas` prop to turn evaluation off at runtime for the whole grid—unlike omitting `featureDependencies`, it can be toggled while the grid is mounted.
 
 ## Editing
 
@@ -104,7 +122,11 @@ The palette contains ten colors, exposed as the `--DataGrid-formulaRefColor-0` t
 Enable the spreadsheet-style formula bar on the default toolbar with `slotProps.toolbar.formulaBar`:
 
 ```tsx
-<DataGridPremium showToolbar slotProps={{ toolbar: { formulaBar: true } }} />
+<DataGridPremium
+  showToolbar
+  featureDependencies={{ formula: formulaFeature }}
+  slotProps={{ toolbar: { formulaBar: true } }}
+/>
 ```
 
 The bar is a permanently open formula editor for the focused cell:

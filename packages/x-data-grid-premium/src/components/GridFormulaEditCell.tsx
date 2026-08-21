@@ -83,7 +83,7 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
     if (rawIsFormula || isFormulaEditValue(value)) {
       return true;
     }
-    const startInfo = apiRef.current.caches.formula.lastCellEditStart;
+    const startInfo = apiRef.current.caches.formula!.lastCellEditStart;
     return (
       startInfo !== null &&
       startInfo.id === id &&
@@ -99,7 +99,7 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
     }
     seededRef.current = true;
 
-    const cache = apiRef.current.caches.formula;
+    const cache = apiRef.current.caches.formula!;
     const startInfo = cache.lastCellEditStart;
     const isOwnStart = startInfo !== null && startInfo.id === id && startInfo.field === field;
     if (isOwnStart) {
@@ -170,7 +170,7 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
   const highlightActive = showFormulaInput && !isUserCustomEditor;
   useEnhancedEffect(() => {
     if (highlightActive) {
-      apiRef.current.setFormulaActiveEdit({ id, field });
+      apiRef.current.setFormulaActiveEdit!({ id, field });
     }
     // Intentionally no cleanup: only `cellEditStop` clears the signal.
   }, [apiRef, highlightActive, id, field]);

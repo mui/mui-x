@@ -1,4 +1,11 @@
-import type { GridRowId, GridValidRowModel, GridColDef } from '@mui/x-data-grid-pro';
+import type {
+  GridRowId,
+  GridValidRowModel,
+  GridColDef,
+  GridCellCoordinates,
+} from '@mui/x-data-grid-pro';
+import type { GridStateColDef } from '@mui/x-data-grid/internals';
+import type { FormulaExcelExportLayout, ExcelFormulaCell } from './gridFormulaExcelExport';
 import type {
   FormulaBoundDependencies,
   FormulaCellKey,
@@ -357,4 +364,52 @@ export interface GridFormulaPrivateApi {
    * @param {GridFormulaActiveEdit | null} cell The cell being edited, or `null` to clear.
    */
   setFormulaActiveEdit: (cell: GridFormulaActiveEdit | null) => void;
+  /**
+   * Computes the value to fill into `targetCell` when the fill handle or a
+   * paste repeats `sourceCell`: a live formula has its relative references
+   * shifted by the source→target positional delta (Excel fill semantics).
+   * Returns `null` when the source is not a live formula or the target column
+   * does not accept formulas — the caller copies the evaluated value instead.
+   * Seam for the cell selection fill: registered by the injected formula
+   * feature, absent otherwise.
+   * @param {GridCellCoordinates} sourceCell The cell the fill originates from.
+   * @param {GridCellCoordinates} targetCell The cell being filled.
+   * @returns {string | null} The adjusted canonical formula source, or `null`.
+   */
+  getFilledFormulaSource: (
+    sourceCell: GridCellCoordinates,
+    targetCell: GridCellCoordinates,
+  ) => string | null;
+  /**
+   * Builds the layout that re-anchors live formulas to the exported Excel
+   * sheet's A1 coordinates, or `null` when no exported column allows formulas.
+   * Seam for the Excel export: registered by the injected formula feature,
+   * absent otherwise.
+   * @param {GridStateColDef[]} columns The exported columns, in export order.
+   * @param {GridRowId[]} rowIds The exported row ids, in export order.
+   * @param {object} options The header rows the export writes above the data.
+   * @param {boolean} options.includeHeaders Whether the column-header row is written.
+   * @param {boolean} options.includeColumnGroupsHeaders Whether column-group header rows are written.
+   * @returns {FormulaExcelExportLayout | null} The layout, or `null`.
+   */
+  createFormulaExcelExportLayout: (
+    columns: GridStateColDef[],
+    rowIds: GridRowId[],
+    options: { includeHeaders: boolean; includeColumnGroupsHeaders: boolean },
+  ) => FormulaExcelExportLayout | null;
+  /**
+   * Resolves the live Excel formula (with its cached result) for one exported
+   * cell against the export layout, or `null` when the cell does not hold a
+   * live formula. Seam for the Excel export: registered by the injected
+   * formula feature, absent otherwise.
+   * @param {FormulaExcelExportLayout} layout The layout built by `createFormulaExcelExportLayout`.
+   * @param {GridRowId} id The row id.
+   * @param {string} field The column field.
+   * @returns {ExcelFormulaCell | null} The Excel formula cell, or `null`.
+   */
+  getCellExcelFormula: (
+    layout: FormulaExcelExportLayout,
+    id: GridRowId,
+    field: string,
+  ) => ExcelFormulaCell | null;
 }

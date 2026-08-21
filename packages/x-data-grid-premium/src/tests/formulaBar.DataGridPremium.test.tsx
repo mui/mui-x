@@ -6,11 +6,11 @@ import { getCell, microtasks } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import {
   DataGridPremium,
-  FormulaBar,
   Toolbar,
   gridFocusCellSelector,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
+import { FormulaBar, formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -20,6 +20,7 @@ import { setCaretOffset } from '../components/formulaEditorCaret';
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
   disableVirtualization: true,
+  featureDependencies: { formula: formulaFeature },
   showToolbar: true,
   slotProps: { toolbar: { formulaBar: true } },
   rows: [

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGridPremium, FormulaBar } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { formulaFeature, FormulaBar } from '@mui/x-data-grid-premium/formula';
 
 const columns = [
   { field: 'product', headerName: 'Product', width: 160 },
@@ -34,6 +35,7 @@ export default function GridFormulaBar() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
+        featureDependencies={{ formula: formulaFeature }}
         rows={rows}
         columns={columns}
         formulaA1Notation

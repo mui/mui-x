@@ -3,13 +3,12 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import { DataGridPremium, GridColDef, useGridApiRef } from '@mui/x-data-grid-premium';
 import {
-  DataGridPremium,
+  formulaFeature,
   FormulaBar,
   GRID_FORMULA_FUNCTIONS,
-  GridColDef,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+} from '@mui/x-data-grid-premium/formula';
 import { TEMPLATES, TemplateId, withPlaygroundColumnBehavior } from './playgroundData';
 import { PLAYGROUND_FUNCTIONS } from './playgroundFunctions';
 import {
@@ -203,6 +202,7 @@ export default function SpreadsheetPlayground() {
           <DataGridPremium
             key={gridKey}
             apiRef={apiRef}
+            featureDependencies={{ formula: formulaFeature }}
             rows={template.rows}
             columns={columns}
             pinnedRows={pinnedRows}

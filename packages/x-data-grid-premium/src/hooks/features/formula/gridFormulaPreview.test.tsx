@@ -4,6 +4,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { microtasks } from 'test/utils/helperFn';
 import { describe, expect, it } from 'vitest';
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -15,6 +16,7 @@ describe('previewFormulaResult', () => {
   let apiRef: RefObject<GridApi | null>;
 
   const baselineProps: DataGridPremiumProps = {
+    featureDependencies: { formula: formulaFeature },
     autoHeight: true,
     rows: [
       { id: 0, item: 'Apple', price: 2, quantity: 3, total: '=price * quantity' },
@@ -225,7 +227,7 @@ describe('previewFormulaResult', () => {
     render(<Test />);
     await microtasks();
     const api = privateApi();
-    const cache = api.current.caches.formula;
+    const cache = api.current.caches.formula!;
     const trackedBefore = new Map(
       Array.from(cache.trackedValues.entries(), ([key, values]) => [key, values.size]),
     );

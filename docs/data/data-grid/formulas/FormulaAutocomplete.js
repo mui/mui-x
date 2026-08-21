@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { DataGridPremium, GRID_FORMULA_FUNCTIONS } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
+import {
+  formulaFeature,
+  GRID_FORMULA_FUNCTIONS,
+} from '@mui/x-data-grid-premium/formula';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -117,6 +121,7 @@ export default function FormulaAutocomplete() {
   return (
     <div style={{ height: 340, width: '100%' }}>
       <DataGridPremium
+        featureDependencies={{ formula: formulaFeature }}
         rows={rows}
         columns={columns}
         formulaFunctions={formulaFunctions}

@@ -116,6 +116,12 @@
         "description": "{ virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
       }
     },
+    "featureDependencies": {
+      "type": {
+        "name": "shape",
+        "description": "{ formula?: { FormulaBar?: elementType, ReferenceOverlay?: elementType, stateInitializer: func, transformProps: func, useColumnHeaderAdornment: func, useFeature: func, usePreProcessors: func } }"
+      }
+    },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },

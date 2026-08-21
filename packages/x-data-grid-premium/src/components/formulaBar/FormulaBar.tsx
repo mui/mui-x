@@ -198,7 +198,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
     if (cell === null) {
       return '';
     }
-    const formula = allowFormulas ? apiRef.current.getCellFormula(cell.id, cell.field) : null;
+    const formula = allowFormulas ? apiRef.current.getCellFormula!(cell.id, cell.field) : null;
     if (formula !== null) {
       return a1Enabled ? convertCanonicalToA1Display(formula, apiRef, cell) : formula;
     }
@@ -257,7 +257,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
   const publishDraftHighlights = React.useCallback(
     (targetCell: FormulaBarCell, nextText: string) => {
       if (allowFormulas && isFormulaSource(nextText)) {
-        apiRef.current.setFormulaActiveEdit({
+        apiRef.current.setFormulaActiveEdit!({
           id: targetCell.id,
           field: targetCell.field,
           draft: nextText,
@@ -266,7 +266,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
       }
       const current = gridFormulaActiveEditSelector(apiRef);
       if (current !== null && current.draft !== undefined) {
-        apiRef.current.setFormulaActiveEdit(null);
+        apiRef.current.setFormulaActiveEdit!(null);
       }
     },
     [apiRef, allowFormulas],
@@ -283,7 +283,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
     coreRef.current?.setEngaged(false);
     const current = gridFormulaActiveEditSelector(apiRef);
     if (current !== null && current.draft !== undefined) {
-      apiRef.current.setFormulaActiveEdit(null);
+      apiRef.current.setFormulaActiveEdit!(null);
     }
   }, [apiRef, clearPreview]);
 
@@ -399,7 +399,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
           apiRef.current.getRow(targetCell.id),
           apiRef,
         );
-        apiRef.current.caches.formula.plainEditDraft = {
+        apiRef.current.caches.formula!.plainEditDraft = {
           id: targetCell.id,
           field: targetCell.field,
           text: nextText,
@@ -585,7 +585,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
       }
       const current = gridFormulaActiveEditSelector(apiRef);
       if (current !== null && current.draft !== undefined) {
-        api.setFormulaActiveEdit(null);
+        api.setFormulaActiveEdit!(null);
       }
     };
   }, [apiRef]);

@@ -3,6 +3,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import { getCell } from 'test/utils/helperFn';
 import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { DataGridPremium, useGridApiRef, gridClasses } from '@mui/x-data-grid-premium';
+import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi, GridColDef } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -41,6 +42,7 @@ describe('<DataGridPremium /> - Formula fill handle', () => {
       <div style={{ width: 500, height: 300 }}>
         <DataGridPremium
           apiRef={apiRef}
+          featureDependencies={{ formula: formulaFeature }}
           columns={columns}
           rows={makeRows()}
           getRowId={(row) => row.id}

@@ -87,7 +87,7 @@ export function getPlainEditDraftText(
   field: string,
   editValue: unknown,
 ): string | null {
-  const draft = apiRef.current.caches.formula.plainEditDraft;
+  const draft = apiRef.current.caches.formula!.plainEditDraft;
   if (
     draft !== null &&
     draft.id === id &&

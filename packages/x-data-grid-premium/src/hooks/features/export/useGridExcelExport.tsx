@@ -25,7 +25,6 @@ import {
 import type { ExcelExportInitEvent } from './serializer/excelSerializer';
 import { GridExcelExportMenuItem } from '../../../components';
 import type { SerializedRow } from './serializer/utils';
-import { createFormulaExcelExportLayout } from '../formula/gridFormulaExcelExport';
 
 /**
  * @requires useGridColumns (state)
@@ -147,10 +146,10 @@ export const useGridExcelExport = (
       const formulaExport =
         (options.escapeFormulas ?? true)
           ? null
-          : createFormulaExcelExportLayout(apiRef, exportedColumns, exportedRowIds, {
+          : (apiRef.current.createFormulaExcelExportLayout?.(exportedColumns, exportedRowIds, {
               includeHeaders: true,
               includeColumnGroupsHeaders: Boolean(options.includeColumnGroupsHeaders),
-            });
+            }) ?? null);
 
       apiRef.current.resetColSpan();
       const serializedRows: SerializedRow[] = [];

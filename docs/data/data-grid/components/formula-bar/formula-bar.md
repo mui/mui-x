@@ -1,7 +1,6 @@
 ---
 title: Data Grid - Formula Bar component
 productId: x-data-grid
-components: FormulaBar
 packageName: '@mui/x-data-grid-premium'
 githubLabel: 'scope: data grid'
 ---
@@ -14,6 +13,7 @@ The formula bar is part of the [formulas feature](/x/react-data-grid/formulas/).
 On the default toolbar, enable it with `slotProps.toolbar.formulaBar`—see [Formulas—Formula bar](/x/react-data-grid/formulas/#formula-bar).
 
 Use the Formula Bar component together with the [Toolbar](/x/react-data-grid/components/toolbar/) component when implementing a custom toolbar.
+The component ships with the injectable formula feature: it is exported from the `@mui/x-data-grid-premium/formula` entry point, and the grid it belongs to must receive the feature through the [`featureDependencies` prop](/x/react-data-grid/formulas/#enabling-formulas).
 The bar renders nothing when formulas are unavailable (`disableFormulas`, a [data source](/x/react-data-grid/server-side-data/), or active [pivoting](/x/react-data-grid/pivoting/)).
 
 ## Basic usage
@@ -25,7 +25,7 @@ The demo below renders the Formula Bar from a custom toolbar.
 ## Anatomy
 
 ```tsx
-import { FormulaBar } from '@mui/x-data-grid-premium';
+import { FormulaBar } from '@mui/x-data-grid-premium/formula';
 
 <FormulaBar />;
 ```

@@ -175,7 +175,7 @@ export interface GridApiCachesPremium extends GridApiCachesPro {
   pivoting: GridPivotingInternalCache;
   rowGrouping: GridRowGroupingInternalCache;
   aggregation: GridAggregationInternalCache;
-  formula: GridFormulaInternalCache;
+  formula?: GridFormulaInternalCache;
 }
 
 export interface GridPipeProcessingLookupPremium {

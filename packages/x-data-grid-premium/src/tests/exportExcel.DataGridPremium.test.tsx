@@ -1,10 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  useGridApiRef,
-  DataGridPremium,
-  GridActionsCellItem,
-  GRID_FORMULA_FUNCTIONS,
-} from '@mui/x-data-grid-premium';
+import { useGridApiRef, DataGridPremium, GridActionsCellItem } from '@mui/x-data-grid-premium';
+import { GRID_FORMULA_FUNCTIONS, formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type {
   GridColDef,
   GridApi,
@@ -466,6 +462,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGridPremium
             apiRef={apiRef}
+            featureDependencies={{ formula: formulaFeature }}
             columns={[
               { field: 'price', type: 'number' },
               { field: 'qty', type: 'number' },
@@ -527,6 +524,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           <div style={{ width: 300, height: 300 }}>
             <DataGridPremium
               apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
               columns={[
                 { field: 'a', type: 'number' },
                 { field: 'b', type: 'number', allowFormulas: true },
@@ -591,6 +589,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           <div style={{ width: 300, height: 300 }}>
             <DataGridPremium
               apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
               columns={[
                 { field: 'price', type: 'number' },
                 { field: 'ratio', type: 'number', allowFormulas: true },
@@ -617,6 +616,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           <div style={{ width: 300, height: 300 }}>
             <DataGridPremium
               apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
               columns={[
                 { field: 'price', type: 'number' },
                 { field: 'out', type: 'number', allowFormulas: true },
@@ -652,6 +652,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           <div style={{ width: 300, height: 300 }}>
             <DataGridPremium
               apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
               columns={[
                 { field: 'price', type: 'number' },
                 { field: 'out', type: 'number', allowFormulas: true },
@@ -679,6 +680,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           <div style={{ width: 300, height: 300 }}>
             <DataGridPremium
               apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
               columns={[{ field: 'note' }, { field: 'total', type: 'number', allowFormulas: true }]}
               rows={[{ id: 0, note: '=1+1', total: 5 }]}
               autoHeight={isJSDOM}
@@ -702,6 +704,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           <div style={{ width: 300, height: 300 }}>
             <DataGridPremium
               apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
               columns={[
                 { field: 'price', type: 'number' },
                 { field: 'qty', type: 'number' },
@@ -749,6 +752,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           <div style={{ width: 300, height: 300 }}>
             <DataGridPremium
               apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
               columns={[
                 { field: 'price', type: 'number' },
                 { field: 'qty', type: 'number' },
@@ -789,6 +793,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           <div style={{ width: 300, height: 300 }}>
             <DataGridPremium
               apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
               columns={[
                 { field: 'start', type: 'date' },
                 { field: 'copy', type: 'date', allowFormulas: true },
@@ -870,6 +875,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           <div style={{ width: 300, height: 300 }}>
             <DataGridPremium
               apiRef={apiRef}
+              featureDependencies={{ formula: formulaFeature }}
               columns={[
                 { field: 'price', type: 'number' },
                 { field: 'qty', type: 'number' },

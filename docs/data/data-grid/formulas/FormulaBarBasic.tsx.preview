@@ -1,4 +1,5 @@
 <DataGridPremium
+  featureDependencies={{ formula: formulaFeature }}
   rows={rows}
   pinnedRows={pinnedRows}
   columns={columns}

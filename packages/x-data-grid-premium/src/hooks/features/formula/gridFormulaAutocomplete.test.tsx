@@ -3,7 +3,8 @@ import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer } from '@mui/internal-test-utils';
 import { microtasks } from 'test/utils/helperFn';
 import { describe, expect, it } from 'vitest';
-import { DataGridPremium, GRID_FORMULA_FUNCTIONS, useGridApiRef } from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import { GRID_FORMULA_FUNCTIONS, formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -58,6 +59,7 @@ describe('getFormulaSuggestions', () => {
   let apiRef: RefObject<GridApi | null>;
 
   const baselineProps: DataGridPremiumProps = {
+    featureDependencies: { formula: formulaFeature },
     autoHeight: true,
     rows: [
       { id: 0, item: 'Apple', price: 2, quantity: 3, total: '=price * quantity' },

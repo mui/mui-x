@@ -42,9 +42,12 @@ The prop **replaces** the built-in set—spread `GRID_FORMULA_FUNCTIONS` to exte
 ```tsx
 import {
   DataGridPremium,
-  GRID_FORMULA_FUNCTIONS,
   GridFormulaFunctionDefinition,
 } from '@mui/x-data-grid-premium';
+import {
+  GRID_FORMULA_FUNCTIONS,
+  formulaFeature,
+} from '@mui/x-data-grid-premium/formula';
 
 const MARGIN: GridFormulaFunctionDefinition = {
   name: 'MARGIN',
@@ -66,7 +69,10 @@ const MARGIN: GridFormulaFunctionDefinition = {
   },
 };
 
-<DataGridPremium formulaFunctions={{ ...GRID_FORMULA_FUNCTIONS, MARGIN }} />;
+<DataGridPremium
+  featureDependencies={{ formula: formulaFeature }}
+  formulaFunctions={{ ...GRID_FORMULA_FUNCTIONS, MARGIN }}
+/>;
 ```
 
 The [autocomplete demo](/x/react-data-grid/formulas/#autocomplete) registers this exact `MARGIN` function—type `=M` in its **Gross margin** column to see the signature help in the dropdown.

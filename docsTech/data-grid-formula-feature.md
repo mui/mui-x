@@ -35,6 +35,9 @@ The feature ships in 6 independently mergeable iterations:
   surface grows by whole lines, bounded, so the whole formula stays visible (D27).
 - **I12** — dialect-aware completion analysis: the autocomplete reads the caret in the dialect the
   editor is actually showing, so a formula built from A1 ranges completes and helps correctly (D28).
+- **I13** — injectable feature: the formula runtime moves behind a `@mui/x-data-grid-premium/formula`
+  entry point injected through the `featureDependencies` prop, so grids that do not use formulas do
+  not bundle the engine, evaluation glue or editor components (D29).
 
 ## Locked design decisions
 
@@ -874,6 +877,39 @@ offered (`expectReference` — nothing else can close a range; Excel and Sheets 
 there), and a caret parked strictly inside a complete reference offers nothing (`insideReference`
 — the reference is whole, and the full function list was pure noise). Neither can fire while
 typing left to right; both need a deliberate caret placement. No public API change.
+
+**D29. The feature is injectable — the grid bundles seams, not the runtime (I13).** Prompted by
+Andrew's bundle-size review of #22807 (+109KB parsed / +32.5KB gzip on the premium entry): every
+guard in the feature was a runtime early-return inside an always-called hook, so even
+`disableFormulas` grids parsed the whole ~11.5k-LOC runtime — the props-defaults module alone
+dragged in the full engine through `GRID_FORMULA_FUNCTIONS`. The runtime now ships as a
+`formulaFeature` object from the `@mui/x-data-grid-premium/formula` entry point (the existing
+`"./*": "./src/*/index.ts"` export pattern — `src/formula/index.ts` is the whole subpath), passed
+through the new `featureDependencies` prop and captured on the **first render** (the object carries
+hooks, so its presence must not change; a dev warning fires if it does, and the change is ignored).
+The `GridFormulaFeature` interface (`models/gridFeatureDependencies.ts`, type-only for the grid)
+has seven members mapped to the load-bearing seams: `stateInitializer` /`usePreProcessors`/
+`useFeature` fill the three order-critical slots in `useDataGridPremiumComponent` (noop fallbacks
+otherwise — the absent-state initializer still writes `formula: { lookup: {}, activeEdit: null }`
+so the bundled selectors read an empty slice, never `undefined`); `useColumnHeaderAdornment` rides
+the existing `GridConfiguration.hooks` slot through a thin rootProps-reading passthrough;
+`ReferenceOverlay` and `FormulaBar` are conditionally rendered by `DataGridPremium`/
+`GridPremiumToolbar`; `transformProps` carries the A1 pinning override out of
+`useDataGridPremiumProps`. The `formulaFunctions` default also moved into the feature
+(`getEffectiveFormulaFunctions`: prop ?? built-ins, `{}` under `dataSource`) — the prop is now
+optional on the processed props, which incidentally fixes the explicit-`undefined` crash. The
+value seams (cell-selection fill, Excel export layout + per-cell formulas) became **optional
+private API methods** (`getFilledFormulaSource`, `createFormulaExcelExportLayout`,
+`getCellExcelFormula`) registered by `useGridFormula` and consumed via `?.()` with the existing
+value fallbacks — `GridPrivateApiPremium` includes `Partial<GridFormulaPrivateApi>`, and
+`GridApiCaches.formula` is optional (feature code asserts `!`; it only runs when installed). The
+Excel worker needed no seam at all: rows are serialized on the main thread in both paths, the
+worker only consumes the plain `SerializedRow.formulas` data. Public-API move: `FormulaBar`,
+`GRID_FORMULA_FUNCTIONS` and the three selectors left the root barrel for `/formula`; the types
+stayed on the root. Without the feature, `=` values render as raw strings (the `disableFormulas`
+path) and a dev-only `warnOnce` (`useGridMissingFormulaFeatureWarning`, bundled, zero formula
+imports) fires when formula-ish props are used. `disableFormulas` keeps its meaning as the
+_runtime_ toggle when the feature is installed.
 
 **Invariant (all iterations): formula source lives only in row data; every cache and state slice is
 derived.** This is what keeps undo/redo, `processRowUpdate`, and controlled-rows scenarios working

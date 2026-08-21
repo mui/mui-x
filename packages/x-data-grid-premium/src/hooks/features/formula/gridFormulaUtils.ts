@@ -8,6 +8,7 @@ import type {
   GridFormulaFunctionDefinition,
   GridFormulaInternalCache,
 } from './gridFormulaInterfaces';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 /**
  * The built-in formula functions.
@@ -15,6 +16,24 @@ import type {
  */
 export const GRID_FORMULA_FUNCTIONS: Record<string, GridFormulaFunctionDefinition> =
   Object.fromEntries(FORMULA_BUILT_IN_FUNCTIONS.map((definition) => [definition.name, definition]));
+
+const EMPTY_FORMULA_FUNCTIONS: Record<string, GridFormulaFunctionDefinition> = {};
+
+/**
+ * Resolves the `formulaFunctions` prop default. The default lives here — not in
+ * `useDataGridPremiumProps` — so the grid does not bundle the built-in function
+ * set (and, through it, the engine) when the formula feature is not injected.
+ * Stable identities: the return value is compared by identity against the
+ * registry source cache.
+ */
+export function getEffectiveFormulaFunctions(
+  props: Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'dataSource'>,
+): Record<string, GridFormulaFunctionDefinition> {
+  if (props.formulaFunctions !== undefined) {
+    return props.formulaFunctions;
+  }
+  return props.dataSource ? EMPTY_FORMULA_FUNCTIONS : GRID_FORMULA_FUNCTIONS;
+}
 
 export function createFormulaInternalCache(
   formulaFunctions: Record<string, GridFormulaFunctionDefinition>,

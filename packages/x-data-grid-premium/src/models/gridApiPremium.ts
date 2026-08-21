@@ -65,7 +65,9 @@ export interface GridPrivateApiPremium
     GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium, DataGridPremiumProcessedProps>,
     GridDataSourcePremiumPrivateApi,
     GridAggregationPrivateApi,
-    GridFormulaPrivateApi,
+    // The formula feature is injectable — its private API methods only exist
+    // when the feature is provided through `featureDependencies`.
+    Partial<GridFormulaPrivateApi>,
     GridDetailPanelPrivateApi,
     GridRowReorderPrivateApi,
     GridPivotingPrivateApi,

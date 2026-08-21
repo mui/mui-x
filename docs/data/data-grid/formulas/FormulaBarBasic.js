@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -83,6 +84,7 @@ export default function FormulaBarBasic() {
   return (
     <div style={{ height: 480, width: '100%' }}>
       <DataGridPremium
+        featureDependencies={{ formula: formulaFeature }}
         rows={rows}
         pinnedRows={pinnedRows}
         columns={columns}

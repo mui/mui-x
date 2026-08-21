@@ -106,7 +106,7 @@ export function getFormulaSuggestions(
     a1Notation: a1NotationEnabled,
   });
 
-  const staticTokens = getFormulaCompletionTokens(apiRef.current.caches.formula.registry);
+  const staticTokens = getFormulaCompletionTokens(apiRef.current.caches.formula!.registry);
   const columnLookup = gridColumnLookupSelector(apiRef);
   const fields = gridFormulaReferenceableFieldsSelector(apiRef);
   const positionContext = a1NotationEnabled ? gridFormulaA1PositionContextSelector(apiRef) : null;

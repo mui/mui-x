@@ -59,15 +59,18 @@ import {
   areFormulaFunctionRecordsEqual,
   computeColumnsSignature,
   createFormulaInternalCache,
+  getEffectiveFormulaFunctions,
   getFormulaFields,
   resetFormulaEvaluationCache,
 } from './gridFormulaUtils';
+import { getFilledFormulaSource } from './gridFormulaFill';
+import { createFormulaExcelExportLayout, getCellExcelFormula } from './gridFormulaExcelExport';
 
 export const formulaStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'disableFormulas' | 'dataSource'>,
   GridPrivateApiPremium
 > = (state, props, apiRef) => {
-  const cache = createFormulaInternalCache(props.formulaFunctions);
+  const cache = createFormulaInternalCache(getEffectiveFormulaFunctions(props));
   apiRef.current.caches.formula = cache;
 
   const premiumState = state as Partial<GridStatePremium>;
@@ -109,7 +112,7 @@ export const useGridFormula = (
 
   const runPass = React.useCallback(
     (mode: 'diff' | 'full' | 'rebind'): GridCellCoordinates[] | null => {
-      const cache = apiRef.current.caches.formula;
+      const cache = apiRef.current.caches.formula!;
       const formulaFields = computeEffectiveFormulaFields();
       const previousLookup = gridFormulaLookupSelector(apiRef);
 
@@ -207,7 +210,7 @@ export const useGridFormula = (
       if (options.rowSpanning) {
         apiRef.current.resetRowSpanningState();
       }
-      const cache = apiRef.current.caches.formula;
+      const cache = apiRef.current.caches.formula!;
       if (cache.suppressRegroupTrigger) {
         return;
       }
@@ -279,7 +282,7 @@ export const useGridFormula = (
   const validateCellFormula = React.useCallback<GridFormulaPrivateApi['validateCellFormula']>(
     (formula) =>
       validateFormulaExpression(getFormulaExpression(typeof formula === 'string' ? formula : ''), {
-        functions: apiRef.current.caches.formula.registry,
+        functions: apiRef.current.caches.formula!.registry,
       }),
     [apiRef],
   );
@@ -316,6 +319,24 @@ export const useGridFormula = (
     [apiRef],
   );
 
+  // Seams consumed by bundled grid code (cell selection fill, Excel export)
+  // through optional calls — they exist exactly when the feature is injected.
+  const getFilledFormulaSourceMethod = React.useCallback<
+    GridFormulaPrivateApi['getFilledFormulaSource']
+  >((sourceCell, targetCell) => getFilledFormulaSource(apiRef, sourceCell, targetCell), [apiRef]);
+
+  const createFormulaExcelExportLayoutMethod = React.useCallback<
+    GridFormulaPrivateApi['createFormulaExcelExportLayout']
+  >(
+    (columns, rowIds, options) => createFormulaExcelExportLayout(apiRef, columns, rowIds, options),
+    [apiRef],
+  );
+
+  const getCellExcelFormulaMethod = React.useCallback<GridFormulaPrivateApi['getCellExcelFormula']>(
+    (layout, id, field) => getCellExcelFormula(apiRef, layout, id, field),
+    [apiRef],
+  );
+
   // The formula API stays private until a userland use case justifies exposing it.
   const formulaPrivateApi: GridFormulaPrivateApi = {
     setCellFormula,
@@ -324,6 +345,9 @@ export const useGridFormula = (
     validateCellFormula,
     reevaluateFormulas,
     setFormulaActiveEdit,
+    getFilledFormulaSource: getFilledFormulaSourceMethod,
+    createFormulaExcelExportLayout: createFormulaExcelExportLayoutMethod,
+    getCellExcelFormula: getCellExcelFormulaMethod,
   };
 
   useGridApiMethod(apiRef, formulaPrivateApi, 'private');
@@ -362,7 +386,7 @@ export const useGridFormula = (
   }, [runPass, triggerDependentFeatures]);
 
   const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
-    const cache = apiRef.current.caches.formula;
+    const cache = apiRef.current.caches.formula!;
     const fieldsChanged = !areFormulaFieldsEqual(
       computeEffectiveFormulaFields(),
       cache.formulaFields,
@@ -394,7 +418,7 @@ export const useGridFormula = (
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params, event) => {
       const isPrintableKeyDown = params.reason === GridCellEditStartReasons.printableKeyDown;
-      apiRef.current.caches.formula.lastCellEditStart = {
+      apiRef.current.caches.formula!.lastCellEditStart = {
         id: params.id,
         field: params.field,
         replaceValue:
@@ -408,7 +432,7 @@ export const useGridFormula = (
   );
 
   const handleCellEditStop = React.useCallback<GridEventListener<'cellEditStop'>>(() => {
-    const cache = apiRef.current.caches.formula;
+    const cache = apiRef.current.caches.formula!;
     cache.lastCellEditStart = null;
     // `lastA1Seed` is deliberately NOT cleared here: the editing hook's stop
     // flow re-runs the value setter after this event fires (the commit
@@ -425,7 +449,7 @@ export const useGridFormula = (
     // Turn off reference highlighting (the editor set it on mount; this is the
     // only thing that clears it — the editor unmounting from virtualization
     // must not).
-    apiRef.current.setFormulaActiveEdit(null);
+    apiRef.current.setFormulaActiveEdit!(null);
   }, [apiRef]);
 
   // Drop the editor-session mirror once its cell is no longer being edited.
@@ -436,7 +460,7 @@ export const useGridFormula = (
   // promise settles). Every one of those paths does update a modes model when
   // the cell finally leaves edit mode, so this is the authoritative clear.
   const pruneEditorSession = React.useCallback(() => {
-    const cache = apiRef.current.caches.formula;
+    const cache = apiRef.current.caches.formula!;
     const session = cache.editorSession;
     if (
       session !== null &&
@@ -456,7 +480,7 @@ export const useGridFormula = (
   // Arm the A1 paste origin: the first cell of the batch sets it, the rest
   // offset their relative references from it (Excel fill).
   const handleClipboardPasteStart = React.useCallback(() => {
-    apiRef.current.caches.formula.pasteOrigin = null;
+    apiRef.current.caches.formula!.pasteOrigin = null;
   }, [apiRef]);
 
   // The formula editor floats in a surface portaled into the ROW, so the grid's
@@ -547,24 +571,25 @@ export const useGridFormula = (
   /**
    * EFFECTS
    */
+  const effectiveFormulaFunctions = getEffectiveFormulaFunctions(props);
   React.useEffect(() => {
-    const cache = apiRef.current.caches.formula;
-    if (cache.registrySource === props.formulaFunctions) {
+    const cache = apiRef.current.caches.formula!;
+    if (cache.registrySource === effectiveFormulaFunctions) {
       return;
     }
     // Inline `formulaFunctions={{ ... }}` props change identity on every
     // parent render — only rebuild when a definition actually changed.
     const sameDefinitions = areFormulaFunctionRecordsEqual(
       cache.registrySource,
-      props.formulaFunctions,
+      effectiveFormulaFunctions,
     );
-    cache.registrySource = props.formulaFunctions;
+    cache.registrySource = effectiveFormulaFunctions;
     if (sameDefinitions) {
       return;
     }
-    cache.registry = createFormulaFunctionRegistry(Object.values(props.formulaFunctions));
-    apiRef.current.reevaluateFormulas();
-  }, [apiRef, props.formulaFunctions]);
+    cache.registry = createFormulaFunctionRegistry(Object.values(effectiveFormulaFunctions));
+    apiRef.current.reevaluateFormulas!();
+  }, [apiRef, effectiveFormulaFunctions]);
 
   const isFirstEnablementEffect = React.useRef(true);
   React.useEffect(() => {
@@ -572,7 +597,7 @@ export const useGridFormula = (
       isFirstEnablementEffect.current = false;
       return;
     }
-    apiRef.current.reevaluateFormulas();
+    apiRef.current.reevaluateFormulas!();
   }, [apiRef, props.disableFormulas, props.dataSource]);
 
   const hasKickedInitialRegroup = React.useRef(false);

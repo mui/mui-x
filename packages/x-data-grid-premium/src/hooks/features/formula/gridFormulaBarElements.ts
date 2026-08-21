@@ -18,14 +18,14 @@ export function registerFormulaFocusSafeElement(
   apiRef: RefObject<GridPrivateApiPremium>,
   element: Element,
 ): void {
-  apiRef.current.caches.formula.focusSafeElements.add(element);
+  apiRef.current.caches.formula!.focusSafeElements.add(element);
 }
 
 export function unregisterFormulaFocusSafeElement(
   apiRef: RefObject<GridPrivateApiPremium>,
   element: Element,
 ): void {
-  apiRef.current.caches.formula.focusSafeElements.delete(element);
+  apiRef.current.caches.formula!.focusSafeElements.delete(element);
 }
 
 /**
@@ -46,7 +46,7 @@ export function isFormulaFocusSafeTarget(
   if (node === null || typeof node !== 'object' || !('nodeType' in node)) {
     return false;
   }
-  for (const element of apiRef.current.caches.formula.focusSafeElements) {
+  for (const element of apiRef.current.caches.formula!.focusSafeElements) {
     if (element.contains(node)) {
       return true;
     }
