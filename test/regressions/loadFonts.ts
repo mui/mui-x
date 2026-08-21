@@ -34,7 +34,16 @@ function loadStylesheet(href: string) {
   });
 }
 
-async function loadFaces() {
+/**
+ * Loads the webfonts the fixtures render with.
+ *
+ * This never times out. `index.test.ts` races it against a real timer, because
+ * the bundle installs Sinon fake timers and vitest's `testTimeout` does not
+ * cover the module-scope call that acquires the first page.
+ *
+ * @returns a promise that rejects when a face does not load.
+ */
+export default async function loadFonts() {
   // `document.fonts` only matches `@font-face` rules that are already parsed.
   await Promise.all(STYLESHEETS.map(loadStylesheet));
 
@@ -64,17 +73,4 @@ async function loadFaces() {
   if (missing.length > 0) {
     throw new Error(`Fonts failed to load. Missing: ${missing.join(', ')}`);
   }
-}
-
-/**
- * Loads the webfonts the fixtures render with.
- *
- * This never times out. `index.test.ts` races it against a real timer, because
- * the bundle installs Sinon fake timers and vitest's `testTimeout` does not
- * cover the module-scope call that acquires the first page.
- *
- * @returns a promise that rejects when a face does not load.
- */
-export default function loadFonts() {
-  return loadFaces();
 }
