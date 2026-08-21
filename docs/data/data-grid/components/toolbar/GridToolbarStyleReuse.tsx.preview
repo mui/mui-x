@@ -1,0 +1,16 @@
+<Paper variant="outlined" sx={{ width: '100%' }}>
+  <ToolbarRoot sx={{ justifyContent: 'space-between' }}>
+    <Typography sx={{ fontWeight: 'medium', paddingLeft: 1 }}>
+      Commodities
+    </Typography>
+    <Button size="small">Learn more</Button>
+  </ToolbarRoot>
+  <div style={{ height: 300 }}>
+    <DataGrid
+      {...data}
+      loading={loading}
+      sx={{ border: 0, borderRadius: 0 }}
+      hideFooter
+    />
+  </div>
+</Paper>

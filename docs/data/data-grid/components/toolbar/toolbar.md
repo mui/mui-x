@@ -34,10 +34,27 @@ import { Toolbar, ToolbarButton } from '@mui/x-data-grid';
 The Toolbar is the top level component that provides context to child components.
 It renders a styled `<div />` element.
 
+The styled element is also exported on its own as `ToolbarRoot`. See [Reusing the toolbar styles](#reusing-the-toolbar-styles).
+
 ### Toolbar Button
 
 `<ToolbarButton />` is a button for performing actions from the toolbar.
 It renders the `baseIconButton` slot.
+
+## Reusing the toolbar styles
+
+Use the `<ToolbarRoot />` component to apply the toolbar styles to elements outside of the toolbar, so they stay in sync with the Data Grid.
+
+```tsx
+import { ToolbarRoot } from '@mui/x-data-grid';
+
+<ToolbarRoot>Header</ToolbarRoot>;
+```
+
+It can be rendered anywhere, including outside of a Data Grid, and picks up the theme values the Data Grid uses.
+It doesn't provide the toolbar context, so [Toolbar Button](#toolbar-button) and the other toolbar subcomponents can't be used inside it.
+
+{{"demo": "GridToolbarStyleReuse.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Recipes
 
