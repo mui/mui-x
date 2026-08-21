@@ -6,7 +6,7 @@ import { getGridStringOperators, getGridStringQuickFilterFn } from './gridString
 /**
  * TODO: Move pro and premium properties outside of this Community file
  */
-export const GRID_STRING_COL_DEF: GridColTypeDef<any, any> = {
+export const GRID_STRING_COL_DEF = {
   width: 100,
   minWidth: 50,
   maxWidth: Infinity,
@@ -26,4 +26,4 @@ export const GRID_STRING_COL_DEF: GridColTypeDef<any, any> = {
   filterOperators: getGridStringOperators(),
   renderEditCell: renderEditInputCell,
   getApplyQuickFilterFn: getGridStringQuickFilterFn,
-};
+} as const satisfies GridColTypeDef<any, any>;

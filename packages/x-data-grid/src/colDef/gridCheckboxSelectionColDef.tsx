@@ -6,7 +6,7 @@ import { gridRowIdSelector } from '../hooks/core/gridPropsSelectors';
 
 export const GRID_CHECKBOX_SELECTION_FIELD = '__check__';
 
-export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
+export const GRID_CHECKBOX_SELECTION_COL_DEF = {
   ...GRID_BOOLEAN_COL_DEF,
   type: 'custom',
   field: GRID_CHECKBOX_SELECTION_FIELD,
@@ -29,4 +29,4 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   rowSpanValueGetter: (_, row, column, apiRef) => gridRowIdSelector(apiRef, row),
   renderHeader: (params) => <GridHeaderCheckbox {...params} />,
   renderCell: (params) => <GridCellCheckboxRenderer {...params} />,
-};
+} as const satisfies GridColDef;
