@@ -21,7 +21,7 @@ catalog:
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.3.1
-  '@mui/internal-test-utils': 2.0.18-canary.31
+  '@mui/internal-test-utils': 2.0.18-canary.32
   '@mui/internal-core-docs': 9.1.2-canary.3
   '@mui/material': 9.3.1
   '@mui/stylis-plugin-rtl': 9.3.0
