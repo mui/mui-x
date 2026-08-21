@@ -406,6 +406,35 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
       });
     });
+
+    it('should remove rows dropped by the server on revalidation', async () => {
+      let dropRows = false;
+      transformGetRowsResponse = (response: GridGetRowsResponse) => {
+        if (!dropRows) {
+          return response;
+        }
+        return {
+          rows: response.rows.slice(0, Math.max(response.rows.length - 1, 0)),
+          rowCount: (response.rowCount ?? 0) - 1,
+        };
+      };
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={12}
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={spy()}
+        />,
+      );
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      dropRows = true;
+
+      await waitFor(() => {
+        expect(
+          apiRef.current!.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children.length,
+        ).to.equal(11);
+      });
+    });
   });
 
   describe('Nested viewport loading', () => {
@@ -950,6 +979,101 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
       const parentNode = apiRef.current!.getRowNode<GridGroupNode>('A')!;
       expect(parentNode.children).to.include('A-0-updated');
+    });
+
+    it('should remove the last root row dropped by the server on revalidation', async () => {
+      const transformRows = (rows: TreeRow[], params: GridGetRowsParams, requestCount: number) => {
+        if ((params.groupKeys?.length ?? 0) === 0 && requestCount > 2) {
+          return rows.filter((row) => row.id !== 'L');
+        }
+        return rows;
+      };
+      render(
+        <TestNestedDataSourceLazyLoader
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={spy()}
+          transformRows={transformRows}
+        />,
+      );
+
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      await waitFor(() => {
+        expect(
+          apiRef.current!.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children.length,
+        ).to.equal(11);
+      });
+      expect(apiRef.current!.getRow('L')).to.equal(null);
+    });
+
+    it('should remove a middle root row dropped by the server on revalidation', async () => {
+      const transformRows = (rows: TreeRow[], params: GridGetRowsParams, requestCount: number) => {
+        if ((params.groupKeys?.length ?? 0) === 0 && requestCount > 2) {
+          return rows.filter((row) => row.id !== 'C');
+        }
+        return rows;
+      };
+      render(
+        <TestNestedDataSourceLazyLoader
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={spy()}
+          transformRows={transformRows}
+        />,
+      );
+
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('C')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(
+          apiRef.current!.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children.length,
+        ).to.equal(11);
+      });
+
+      // The tail skeleton left by the shrink must resolve to the row that moved up into it.
+      await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('L')).not.to.equal(null);
+      });
+      const rootChildren = apiRef.current!.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
+      expect(rootChildren.length).to.equal(11);
+      expect(
+        rootChildren.filter((id) => apiRef.current!.getRowNode(id)?.type === 'skeletonRow').length,
+      ).to.equal(0);
+    });
+
+    it('should remove the last child of an expanded group dropped by the server on revalidation', async () => {
+      let dropChild = false;
+      const transformRows = (rows: TreeRow[], params: GridGetRowsParams) => {
+        if ((params.groupKeys?.length ?? 0) === 1 && dropChild) {
+          return rows.filter((row) => row.id !== 'A-1');
+        }
+        return rows;
+      };
+      const { user } = render(
+        <TestNestedDataSourceLazyLoader
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={spy()}
+          transformRows={transformRows}
+        />,
+      );
+
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      await user.click(within(getCell(0, 0)).getByRole('button'));
+      await waitFor(() => expect(apiRef.current!.getRow('A-1')).not.to.equal(null));
+
+      dropChild = true;
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('A-1')).to.equal(null);
+      });
+      const parentNode = apiRef.current!.getRowNode<GridGroupNode>('A')!;
+      expect(parentNode.children.length).to.equal(1);
     });
 
     it('should not leave orphaned descendants when a changed id replaces an expanded group', async () => {
