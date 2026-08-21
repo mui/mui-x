@@ -41,17 +41,7 @@ import {
   EventDialogTabContent,
   getWeekdayToken,
 } from '@mui/x-scheduler/internals';
-
-const SectionHeaderTitle = styled('legend', {
-  name: 'MuiEventDialog',
-  slot: 'SectionHeaderTitle',
-})(({ theme }) => ({
-  ...theme.typography.subtitle2,
-  padding: 0,
-  marginBlockEnd: theme.spacing(2),
-  textTransform: 'uppercase',
-  color: (theme.vars || theme).palette.text.secondary,
-}));
+import { SectionHeaderTitle } from '@mui/x-scheduler/event-dialog';
 
 const RecurrenceSelectorContainer = styled('div', {
   name: 'MuiEventDialog',
@@ -494,9 +484,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         </FormControl>
 
         <RepeatSectionFieldset className={classes.eventDialogRepeatSectionFieldset}>
-          <SectionHeaderTitle className={classes.eventDialogSectionHeaderTitle}>
-            {localeText.recurrenceRepeatLabel}
-          </SectionHeaderTitle>
+          <SectionHeaderTitle>{localeText.recurrenceRepeatLabel}</SectionHeaderTitle>
           <RepeatSectionContent className={classes.eventDialogRepeatSectionContent}>
             <InlineRow className={classes.eventDialogInlineRow}>
               <RepeatSectionLabel
@@ -601,9 +589,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         </RepeatSectionFieldset>
 
         <FormControl component="fieldset">
-          <SectionHeaderTitle className={classes.eventDialogSectionHeaderTitle}>
-            {localeText.recurrenceEndsLabel}
-          </SectionHeaderTitle>
+          <SectionHeaderTitle>{localeText.recurrenceEndsLabel}</SectionHeaderTitle>
           <EndsRadioGroup
             className={classes.eventDialogEndsRadioGroup}
             value={customEndsValue}

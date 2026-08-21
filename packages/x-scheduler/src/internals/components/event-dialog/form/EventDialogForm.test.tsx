@@ -4,7 +4,7 @@ import { ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventDialogFormProvider, useEventDialogFormContext } from './EventDialogFormContext';
-import { useEventDialogFormField } from './useEventDialogFormField';
+import { useEventDialogFormField } from '../../../../event-dialog/useEventDialogFormField';
 import type { EventDialogFormStore } from './EventDialogFormStore';
 
 describe('EventDialogForm', () => {

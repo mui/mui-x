@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material/styles';
 import type { SelectChangeEvent } from '@mui/material/Select';
@@ -25,12 +26,12 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useStore } from '@base-ui/utils/store';
-import type { PaletteName } from '../../utils/tokens';
-import { getPaletteVariants } from '../../utils/tokens';
-import { useEventEditingStyledContext } from '../event-editing';
+import type { PaletteName } from '../internals/utils/tokens';
+import { getPaletteVariants } from '../internals/utils/tokens';
+import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
-import { useEventDialogFormContext } from './form/EventDialogFormContext';
-import { useEventDialogFormField } from './form/useEventDialogFormField';
+import { useEventDialogFormContext } from '../internals/components/event-dialog/form/EventDialogFormContext';
+import { useEventDialogFormField } from './useEventDialogFormField';
 
 // Only meaningful in single-select mode: the sentinel value backing the "no resource"
 // MenuItem, so MUI Select's `value=""` always matches a rendered option — otherwise it logs
@@ -138,7 +139,42 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
   );
 }
 
-export default function ResourceAndColorSection() {
+ResourceSelectAdornment.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Whether the field has a selection at all. Kept separate from `resource` because
+   * `resource` is also `null` when the selection references an id that isn't in `resources`
+   * (e.g. a deleted resource) — that's an invalid selection, not an empty one, and shouldn't
+   * render the "no resource" dashed dot.
+   */
+  hasSelection: PropTypes.bool.isRequired,
+  resource: PropTypes.shape({
+    eventColor: PropTypes.oneOf([
+      'amber',
+      'blue',
+      'green',
+      'grey',
+      'indigo',
+      'lime',
+      'orange',
+      'pink',
+      'purple',
+      'red',
+      'teal',
+    ]).isRequired,
+    hidden: PropTypes.bool,
+    indentLevel: PropTypes.number.isRequired,
+    isGroupRoot: PropTypes.bool.isRequired,
+    label: PropTypes.string.isRequired,
+    showDivider: PropTypes.bool.isRequired,
+    value: PropTypes.string.isRequired,
+  }),
+} as any;
+
+export function ResourceAndColorSection() {
   // Context hooks
   const { occurrence, resourceSelectionMode: mode } = useEventDialogFormContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -247,8 +283,8 @@ export default function ResourceAndColorSection() {
   const errorId = `${schedulerId}-resource-error`;
 
   return (
-    <SectionFieldset className={classes.eventDialogSectionFieldset}>
-      <SectionHeaderTitle className={classes.eventDialogSectionHeaderTitle}>
+    <SectionFieldset>
+      <SectionHeaderTitle>
         {resources.length > 0 ? localeText.resourceColorSectionLabel : localeText.colorSectionLabel}
       </SectionHeaderTitle>
       {/* Resources are optional; skip the picker entirely when none are configured. */}

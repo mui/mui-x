@@ -13,6 +13,15 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
+import {
+  DateTimeSection,
+  DescriptionSection,
+  ResourceAndColorSection,
+  SectionFieldset,
+  SectionHeaderTitle,
+  useEventDialogFormField,
+  useEventDialogOccurrence,
+} from '@mui/x-scheduler/event-dialog';
 import type {
   EventDialogGeneralTabProps,
   EventDialogGeneralTabPropsOverrides,
@@ -23,10 +32,6 @@ import { MonthView } from '../../../month-view';
 import { EventDialogContent, EventDialogProvider } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { SchedulerSlotsProvider } from '../SchedulerSlotsContext';
-import DateTimeSection from './DateTimeSection';
-import DescriptionSection from './DescriptionSection';
-import ResourceAndColorSection from './ResourceAndColorSection';
-import { useEventDialogFormField } from './form/useEventDialogFormField';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
 const personalResource = ResourceBuilder.new().title('Personal').eventColor('teal').build();
@@ -388,6 +393,40 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
     });
 
+    it('should expose the edited occurrence to a custom section through useEventDialogOccurrence', () => {
+      function OccurrenceProbe() {
+        const occurrence = useEventDialogOccurrence();
+        return <span data-testid="occurrence-probe">{`${occurrence.id}:${occurrence.title}`}</span>;
+      }
+      renderWithSlot({ eventDialogGeneralTab: OccurrenceProbe });
+
+      expect(screen.getByTestId('occurrence-probe').textContent).to.equal(
+        `${occurrenceWithDescription.id}:${occurrenceWithDescription.title}`,
+      );
+    });
+
+    it('should apply the theme classes to SectionFieldset and SectionHeaderTitle in a custom section', () => {
+      function CustomFieldsetSection() {
+        return (
+          <SectionFieldset className="custom-fieldset">
+            <SectionHeaderTitle className="custom-title">Priority</SectionHeaderTitle>
+          </SectionFieldset>
+        );
+      }
+      renderWithSlot({ eventDialogGeneralTab: CustomFieldsetSection });
+
+      const fieldset = document.querySelector(
+        `.${eventCalendarClasses.eventDialogSectionFieldset}`,
+      );
+      expect(fieldset).not.to.equal(null);
+      expect(fieldset!.classList.contains('custom-fieldset')).to.equal(true);
+      const legend = document.querySelector(
+        `.${eventCalendarClasses.eventDialogSectionHeaderTitle}`,
+      );
+      expect(legend).not.to.equal(null);
+      expect(legend!.classList.contains('custom-title')).to.equal(true);
+    });
+
     it('should render the built-in sections in the order the slot returns them', () => {
       function ReorderedSections() {
         return (
@@ -487,6 +526,38 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       await user.clear(screen.getByRole('textbox', { name: 'Priority' }));
       await user.type(screen.getByRole('textbox', { name: 'Priority' }), 'high');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(1);
+      expect(onEventsChange.lastCall.firstArg[0]).to.have.property('priority', 'high');
+    });
+
+    it('should still submit a value written in a section the slot conditionally unmounted', async () => {
+      // `getDirtyValues` iterates the whole values bag: unmounting a section removes its
+      // validator, not its written value.
+      function ToggleableSections() {
+        const [showPriority, setShowPriority] = React.useState(true);
+        return (
+          <React.Fragment>
+            <button type="button" onClick={() => setShowPriority(false)}>
+              Hide priority
+            </button>
+            {showPriority ? <CustomSection /> : null}
+          </React.Fragment>
+        );
+      }
+
+      const onEventsChange = spy();
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: ToggleableSections },
+        { onEventsChange },
+      );
+
+      await user.clear(screen.getByRole('textbox', { name: 'Priority' }));
+      await user.type(screen.getByRole('textbox', { name: 'Priority' }), 'high');
+      await user.click(screen.getByRole('button', { name: 'Hide priority' }));
+      expect(screen.queryByRole('textbox', { name: 'Priority' })).to.equal(null);
+
       await user.click(screen.getByRole('button', { name: 'Save' }));
 
       expect(onEventsChange.callCount).to.equal(1);
