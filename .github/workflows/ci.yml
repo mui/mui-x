@@ -16,3 +16,24 @@ jobs:
     uses: mui/mui-public/.github/workflows/ci-base.yml@bcba759d16e06c283bcf4dba32ed562f2f9e77cc # @mui/internal-code-infra@0.0.4-canary.28
     with:
       node-version: '22.18.0'
+
+  # Mirrors the real publish workflow environment (`publish.yml`) so an env mismatch, such as the
+  # npm version installed by `publish-prepare` breaking the pinned code-infra, is caught here
+  # instead of during a release.
+  publish-dry-run:
+    name: Publish Dry Run
+    if: ${{ github.repository_owner == 'mui' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - name: Prepare for publishing
+        uses: mui/mui-public/.github/actions/publish-prepare@2266e66cb9b09ec1f0439b053aee05549f1f5f25 # master
+        with:
+          node-version: '22.23.2'
+      # Keep in sync with `publish.yml`.
+      - name: Pin npm to 11
+        run: npm install -g npm@11
+      - name: Dry run npm publishing
+        env:
+          IS_PUBLISH_TEST: 'true'
+        run: pnpm code-infra publish --ci --dry-run
