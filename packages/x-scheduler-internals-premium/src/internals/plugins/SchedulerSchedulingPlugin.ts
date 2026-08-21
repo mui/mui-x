@@ -116,6 +116,8 @@ export class SchedulerSchedulingPlugin<
    * Adds a dependency between two events.
    * Rejects dependencies referencing an unknown, recurring or read-only event,
    * duplicating an existing dependency, or closing a cycle.
+   * The guards read the controlled `dependencies` value, so two adds in the same
+   * tick are not validated against each other.
    * Implementation of the store's `addDependency()` — call it through the store.
    */
   public addDependency = (
