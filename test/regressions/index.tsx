@@ -7,7 +7,7 @@ import '../utils/setupFakeClock';
 import { LicenseInfo } from '@mui/x-license';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import { resetRandomGenerators } from '@mui/x-data-grid-generator';
-import loadFonts from './loadFonts';
+import loadFonts from '@mui/internal-test-utils/loadFonts';
 import TestViewer from './TestViewer';
 import OverviewWrapper from './overviews/OverviewWrapper';
 import { type Test, testsBySuite } from './testsBySuite';
@@ -37,8 +37,25 @@ const allTests = Object.values(testsBySuite).flatMap((suite) =>
 
 window.muiFixture = {
   allTests,
-  // `index.test.ts` awaits this before it screenshots anything.
-  fontsReady: loadFonts(),
+  // `index.test.ts` awaits this before it screenshots anything, and races it
+  // against a real timer -- see the comment there for why nothing else guards it.
+  // `display=swap` is dropped on purpose: it paints fallback text first, and the
+  // font files Google serves are identical without it.
+  fontsReady: loadFonts({
+    stylesheets: [
+      'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400',
+    ],
+    faces: [
+      ...[300, 400, 500, 700].map((weight) => ({ family: 'Roboto', weight })),
+      { family: 'Roboto', weight: 400, style: 'italic' },
+    ],
+    subsets: [
+      { name: 'latin', text: ' ' },
+      // Chart demos label standard deviations, e.g.
+      // `docs/data/charts/composition/BellCurveOverlay.js`.
+      { name: 'greek', text: 'σ' },
+    ],
+  }),
   isReady: false,
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);
