@@ -12,6 +12,7 @@ import {
   RADAR_ACTIVATION_PRIORITY,
   useRegisterRadarItemActivation,
 } from './useRegisterRadarItemActivation';
+import { useRadarHoveredItem } from './useRadarHoveredItem';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
@@ -47,6 +48,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   const classes = useUtilityClasses(inClasses);
   const getHighlightState = useItemHighlightStateGetter();
+  const { getMarkPointerProps } = useRadarHoveredItem();
 
   useRegisterRadarItemActivation(seriesId, onItemClick, RADAR_ACTIVATION_PRIORITY.mark);
 
@@ -76,6 +78,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                 }
                 cursor={onItemClick ? 'pointer' : 'unset'}
                 {...other}
+                {...getMarkPointerProps(id, index, other)}
               />
             ))}
           </g>

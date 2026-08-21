@@ -14,6 +14,9 @@ import {
 } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import { getChartPoint } from '../../../getChartPoint';
 import { getItemAtAxisPosition } from './utils/getItemAtAxisPosition';
+import { getItemAtRotationIndex } from './utils/getItemAtRotationIndex';
+import { selectorChartRotationAxis } from '../useChartPolarAxis/useChartPolarAxis.selectors';
+import { selectorChartsInteractionRotationAxisIndex } from '../useChartPolarAxis/useChartPolarInteraction.selectors';
 import type { ChartPlugin } from '../../models';
 import type {
   FocusItemOptions,
@@ -186,18 +189,36 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     const element = chartsLayerContainerRef.current;
     const point = element === null ? null : getChartPoint(element, event);
 
-    const item =
-      point && instance.isPointInside?.(point.x, point.y)
-        ? getItemAtAxisPosition({
-            point,
-            xAxis: selectorChartXAxis(store.state),
-            yAxis: selectorChartYAxis(store.state),
-            processedSeries: selectorChartSeriesProcessed(store.state),
-            focusedItem: store.state.keyboardNavigation.item,
-          })
-        : null;
+    if (!point || !instance.isPointInside?.(point.x, point.y)) {
+      return null;
+    }
 
-    return item;
+    const processedSeries = selectorChartSeriesProcessed(store.state);
+    const focusedItem = store.state.keyboardNavigation.item;
+
+    const item = getItemAtAxisPosition({
+      point,
+      xAxis: selectorChartXAxis(store.state),
+      yAxis: selectorChartYAxis(store.state),
+      processedSeries,
+      focusedItem,
+    });
+
+    if (item !== null) {
+      return item;
+    }
+
+    // A radar area only covers the polygon the data draws, so a click inside the chart but outside
+    // it resolves nothing above. Fall back to the rotation axis, the same one the highlight uses.
+    if (selectorChartRotationAxis(store.state).axisIds.length === 0) {
+      return null;
+    }
+
+    return getItemAtRotationIndex({
+      dataIndex: selectorChartsInteractionRotationAxisIndex(store.state),
+      processedSeries,
+      focusedItem,
+    });
   });
 
   const activationRegistrationsRef = React.useRef(new Map<number, ItemActivationRegistration>());

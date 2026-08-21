@@ -14,6 +14,7 @@ import {
   RADAR_ACTIVATION_PRIORITY,
   useRegisterRadarItemActivation,
 } from './useRegisterRadarItemActivation';
+import { useRadarHoveredItem } from './useRadarHoveredItem';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
@@ -49,6 +50,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
+  const { getAreaPointerProps } = useRadarHoveredItem();
   const getHighlightState = useItemHighlightStateGetter<'radar'>();
 
   const classes = useUtilityClasses(inClasses);
@@ -61,6 +63,9 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
         if (hidden) {
           return null;
         }
+
+        // Spread last so the reporting survives whatever handlers the caller passes.
+        const pointerBase = { ...interactionProps[seriesIndex], ...other };
 
         return (
           <path
@@ -82,8 +87,8 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
               })
             }
             cursor={onItemClick ? 'pointer' : 'unset'}
-            {...interactionProps[seriesIndex]}
-            {...other}
+            {...pointerBase}
+            {...getAreaPointerProps(id, getRotationIndex, pointerBase)}
           />
         );
       })}
