@@ -11,6 +11,7 @@ const eventA = EventBuilder.new().id('event-a').build();
 const eventB = EventBuilder.new().id('event-b').build();
 const eventC = EventBuilder.new().id('event-c').build();
 const eventD = EventBuilder.new().id('event-d').build();
+const eventE = EventBuilder.new().id('event-e').build();
 const recurringEvent = EventBuilder.new().id('event-r').recurrent('DAILY').build();
 
 const DEP_AB: SchedulerDependency = {
@@ -303,17 +304,19 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect(onDependenciesChange.called).to.equal(false);
     });
 
-    it('should accept a dependency that only creates a diamond', () => {
-      // Reconvergence is not a cycle: no path returns to its start.
+    it('should accept a dependency whose walk traverses a diamond', () => {
+      // Reconvergence is not a cycle: the walk from `event-a` reaches `event-d` through
+      // both branches (revisit, not cycle) and must still accept the new edge.
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
         {
-          events: [eventA, eventB, eventC, eventD],
+          events: [eventA, eventB, eventC, eventD, eventE],
           resources: TEST_RESOURCES,
           dependencies: [
             DEP_AB,
             { id: 'dep-2', source: 'event-a', target: 'event-c', type: 'FinishToStart' },
             { id: 'dep-3', source: 'event-b', target: 'event-d', type: 'FinishToStart' },
+            { id: 'dep-4', source: 'event-c', target: 'event-d', type: 'FinishToStart' },
           ],
           onDependenciesChange,
         },
@@ -321,8 +324,72 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       );
 
       const result = store.addDependency({
-        source: 'event-c',
-        target: 'event-d',
+        source: 'event-e',
+        target: 'event-a',
+        type: 'FinishToStart',
+      });
+
+      expect(result.status).to.equal('added');
+      expect(onDependenciesChange.calledOnce).to.equal(true);
+    });
+
+    it('should report a duplicate before a cycle when the data already contains one', () => {
+      // A controlled `dependencies` value can arrive already cyclic. Re-adding an
+      // existing pair must report the duplicate (its arrow gets selected), not the cycle.
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          dependencies: [
+            DEP_AB,
+            { id: 'dep-2', source: 'event-b', target: 'event-a', type: 'FinishToStart' },
+          ],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      const result = store.addDependency({
+        source: 'event-a',
+        target: 'event-b',
+        type: 'FinishToStart',
+      });
+
+      expect(result).to.deep.equal({
+        status: 'rejected',
+        reason: 'duplicateDependency',
+        dependencyId: 'dep-1',
+      });
+      expect(onDependenciesChange.called).to.equal(false);
+    });
+
+    it('should ignore a dependency shadowed by a duplicate id', () => {
+      // With duplicate ids only the last entry per id exists for the feature (last
+      // wins): a shadowed edge is invisible and undeletable, so it must not reject
+      // an add as cyclic either.
+      const onDependenciesChange = spy();
+      const createStore = () =>
+        new EventTimelinePremiumStore(
+          {
+            events: [eventA, eventB, eventC, eventD],
+            resources: TEST_RESOURCES,
+            dependencies: [
+              DEP_AB,
+              { id: 'dep-1', source: 'event-c', target: 'event-d', type: 'FinishToStart' },
+            ],
+            onDependenciesChange,
+          },
+          adapter,
+        );
+      let store!: ReturnType<typeof createStore>;
+      expect(() => {
+        store = createStore();
+      }).toWarnDev(['MUI X Scheduler: Two or more dependencies share the same id "dep-1".']);
+
+      // The shadowed `a→b` edge would make this add cyclic; only `c→d` exists.
+      const result = store.addDependency({
+        source: 'event-b',
+        target: 'event-a',
         type: 'FinishToStart',
       });
 
@@ -363,6 +430,67 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
       expect(onDependenciesChange.called).to.equal(false);
+    });
+
+    it('should reject a cycle running through a not-yet-loaded endpoint', async () => {
+      // Same full-list decision as the recurring leg: the dormant edges through the
+      // unloaded event become live once its range is fetched.
+      vi.useFakeTimers();
+      try {
+        const dataSource = {
+          getEvents: async () => [eventA, eventC],
+          persistEvents: noopPersistEvents,
+        };
+        const params = {
+          events: [],
+          resources: TEST_RESOURCES,
+          dataSource,
+          dependencies: [
+            { id: 'dep-1', source: 'event-a', target: 'event-x', type: 'FinishToStart' },
+            { id: 'dep-2', source: 'event-x', target: 'event-c', type: 'FinishToStart' },
+          ] as SchedulerDependency[],
+          onDependenciesChange: () => {},
+        };
+        const store = new EventTimelinePremiumStore(params, adapter);
+        store.updateStateFromParameters(params, adapter);
+
+        await flushEffect();
+        await flushDebounce();
+
+        const result = store.addDependency({
+          source: 'event-c',
+          target: 'event-a',
+          type: 'FinishToStart',
+        });
+
+        expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('should not detect a cycle closed by a dependency added earlier in the same update cycle', () => {
+      // Same known limitation as the duplicate leg below: the guard reads the
+      // controlled `dependencyModelList`, which has not round-tripped yet.
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
+        adapter,
+      );
+
+      const firstResult = store.addDependency({
+        source: 'event-a',
+        target: 'event-b',
+        type: 'FinishToStart',
+      });
+      const secondResult = store.addDependency({
+        source: 'event-b',
+        target: 'event-a',
+        type: 'FinishToStart',
+      });
+
+      expect(firstResult.status).to.equal('added');
+      expect(secondResult.status).to.equal('added');
     });
 
     it('should not detect a duplicate added earlier in the same update cycle', () => {

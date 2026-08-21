@@ -19,7 +19,11 @@ import type {
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
 } from '../../models';
-import { classifyDependencyEvent, isDependencyReadOnly } from '../utils/dependency-utils';
+import {
+  classifyDependencyEvent,
+  groupByEventId,
+  isDependencyReadOnly,
+} from '../utils/dependency-utils';
 
 /**
  * Plugin that provides event-scheduling support (dependencies).
@@ -128,18 +132,26 @@ export class SchedulerSchedulingPlugin<
       }
     }
 
-    if (this.isCreatingCycle(properties.source, properties.target)) {
-      return { status: 'rejected', reason: 'cyclicDependency' };
-    }
+    // Grouped from the lookup, not the raw list: with duplicate ids only the last
+    // entry per id exists for the feature, so a shadowed edge must not reject an add.
+    const dependenciesBySource = groupByEventId(
+      Array.from(this.store.state.dependencyModelLookup.values()),
+      'source',
+    );
 
+    // Duplicate before cycle: on data that already contains a cycle, re-adding an
+    // existing pair must report the duplicate (and select its arrow), not the cycle.
     // Only `source`/`target` define identity while the type union has a single member;
     // TODO(#22853): include `type` in the identity when the type union widens.
-    const duplicate = this.store.state.dependencyModelList.find(
-      (dependency) =>
-        dependency.source === properties.source && dependency.target === properties.target,
-    );
+    const duplicate = dependenciesBySource
+      .get(properties.source)
+      ?.find((dependency) => dependency.target === properties.target);
     if (duplicate) {
       return { status: 'rejected', reason: 'duplicateDependency', dependencyId: duplicate.id };
+    }
+
+    if (this.isCreatingCycle(dependenciesBySource, properties.source, properties.target)) {
+      return { status: 'rejected', reason: 'cyclicDependency' };
     }
 
     const dependency: SchedulerDependency = { ...properties, id: generateId('dependency') };
@@ -149,24 +161,18 @@ export class SchedulerSchedulingPlugin<
 
   /**
    * Whether adding `source → target` would close a cycle: `target` already reaches
-   * `source` (a self-loop is the zero-length path). Walks the full dependency list,
-   * not the active one — a dormant cycle becomes live when its endpoint reactivates.
+   * `source` (a self-loop is the zero-length path). Walks every dependency, not only
+   * the active ones — a dormant cycle becomes live when its endpoint reactivates.
    */
-  private isCreatingCycle(source: SchedulerEventId, target: SchedulerEventId): boolean {
-    const adjacency = new Map<SchedulerEventId, SchedulerEventId[]>();
-    for (const dependency of this.store.state.dependencyModelList) {
-      const targets = adjacency.get(dependency.source);
-      if (targets) {
-        targets.push(dependency.target);
-      } else {
-        adjacency.set(dependency.source, [dependency.target]);
-      }
-    }
-
-    const queue: SchedulerEventId[] = [target];
+  private isCreatingCycle(
+    dependenciesBySource: Map<SchedulerEventId, SchedulerDependency[]>,
+    source: SchedulerEventId,
+    target: SchedulerEventId,
+  ): boolean {
+    const stack: SchedulerEventId[] = [target];
     const visited = new Set<SchedulerEventId>();
-    while (queue.length > 0) {
-      const eventId = queue.pop()!;
+    while (stack.length > 0) {
+      const eventId = stack.pop()!;
       if (eventId === source) {
         return true;
       }
@@ -174,9 +180,8 @@ export class SchedulerSchedulingPlugin<
         continue;
       }
       visited.add(eventId);
-      const nextIds = adjacency.get(eventId);
-      if (nextIds) {
-        queue.push(...nextIds);
+      for (const dependency of dependenciesBySource.get(eventId) ?? []) {
+        stack.push(dependency.target);
       }
     }
     return false;
