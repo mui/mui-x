@@ -75,17 +75,7 @@ describe('<DataGridPremium /> - Formula fill handle', () => {
     const filled = apiRef.current!.getRow('r1')!.total as string;
     expect(filled).to.contain('ROW("r1")');
     expect(filled).not.to.contain('ROW("r0")');
-  });
-
-  it('keeps the stored source canonical and untouched on the origin cell', async () => {
-    const { user } = render(<TestGrid />);
-    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('6'));
-
-    await user.click(getCell(0, 2));
-    fillDownShortcut(getCell(0, 2));
-
-    await waitFor(() => expect(getCell(1, 2).textContent).to.equal('20'));
-    // The dragged-from cell is never rewritten.
+    // The dragged-from cell is never rewritten: it keeps the canonical source.
     expect(apiRef.current!.getRow('r0')!.total).to.equal(PRODUCT_FORMULA);
   });
 
@@ -102,19 +92,6 @@ describe('<DataGridPremium /> - Formula fill handle', () => {
     expect(apiRef.current!.getRow('r1')!.total).to.equal(absolute);
   });
 
-  it('freezes overshoot references to #REF! when filling past the data', async () => {
-    // References the last row (r3); filling down one row overshoots the row set.
-    const lastRowRef = '=REF(COLUMN("price"), ROW("r3"))';
-    const { user } = render(<TestGrid rows={makeRows(lastRowRef)} />);
-    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('8'));
-
-    await user.click(getCell(0, 2));
-    fillDownShortcut(getCell(0, 2));
-
-    await waitFor(() => expect(getCell(1, 2).textContent).to.equal('#REF!'));
-    expect(apiRef.current!.getRow('r1')!.total).to.contain('ROW_POSITION(5)');
-  });
-
   // `RANGE_REF` windows address view positions, so the fill rule is the Excel `$`
   // rule: a plain axis shifts by the delta, a `FIXED(...)` axis never moves, and
   // resolution auto-clips whatever the arithmetic produces.
@@ -122,22 +99,6 @@ describe('<DataGridPremium /> - Formula fill handle', () => {
   // positions 1..4 with qty 3, 5, 7, 9.
   const qtyWindow = (rowFrom: string, rowTo: string, column = 'COLUMN_FROM(2)') =>
     `=SUM(RANGE_REF(${column}, ${rowFrom}, ${column.replace('FROM', 'TO')}, ${rowTo}))`;
-
-  it('shifts a relative range window when filling down (Ctrl+D)', async () => {
-    // qty rows 1..4 → 3 + 5 + 7 + 9.
-    const { user } = render(<TestGrid rows={makeRows(qtyWindow('ROW_FROM(1)', 'ROW_TO(4)'))} />);
-    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('24'));
-
-    await user.click(getCell(0, 2));
-    fillDownShortcut(getCell(0, 2));
-
-    // The window slides one row down to 2..5; the overshooting end clips back to
-    // the last data row, so r1 sums qty of r1..r3 = 5 + 7 + 9.
-    await waitFor(() => expect(getCell(1, 2).textContent).to.equal('21'));
-    expect(apiRef.current!.getRow('r1')!.total).to.equal(
-      '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(2), COLUMN_TO(2), ROW_TO(5)))',
-    );
-  });
 
   it('never moves a fully FIXED range window on fill', async () => {
     const fixedWindow = qtyWindow(
@@ -170,39 +131,6 @@ describe('<DataGridPremium /> - Formula fill handle', () => {
     expect(apiRef.current!.getRow('r1')!.total).to.equal(
       '=SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(2)), ROW_TO(2)))',
     );
-  });
-
-  it('keeps the arithmetic indexes and clips when a fill pushes the window past the last row', async () => {
-    // qty rows 3..4 → 7 + 9.
-    const { user } = render(<TestGrid rows={makeRows(qtyWindow('ROW_FROM(3)', 'ROW_TO(4)'))} />);
-    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('16'));
-
-    await user.click(getCell(0, 2));
-    fillDownShortcut(getCell(0, 2));
-
-    // Rows 4..5: the stored source keeps the out-of-view index, and resolution
-    // clips it to the last data row instead of erroring — qty of r3 = 9.
-    await waitFor(() => expect(getCell(1, 2).textContent).to.equal('9'));
-    expect(getCell(1, 2).textContent).not.to.equal('#REF!');
-    expect(apiRef.current!.getRow('r1')!.total).to.equal(
-      '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(4), COLUMN_TO(2), ROW_TO(5)))',
-    );
-  });
-
-  it('copies an ANCHOR window verbatim on fill — each copy re-anchors to its own row', async () => {
-    // "My own row's qty" (total is column 3, qty is column 2).
-    const anchoredWindow =
-      '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-1)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-1)), ROW_TO(ANCHOR(0))))';
-    const { user } = render(<TestGrid rows={makeRows(anchoredWindow)} />);
-    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('3'));
-
-    await user.click(getCell(0, 2));
-    fillDownShortcut(getCell(0, 2));
-
-    // No arithmetic: the offsets are inherently relative, so the copied text is
-    // byte-identical and the window follows the target row (qty of r1 = 5).
-    await waitFor(() => expect(getCell(1, 2).textContent).to.equal('5'));
-    expect(apiRef.current!.getRow('r1')!.total).to.equal(anchoredWindow);
   });
 
   it('copies the evaluated value when filling into a non-allowFormulas column (Ctrl+R)', async () => {

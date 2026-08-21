@@ -131,44 +131,34 @@ describe('<DataGridPremium /> - Formula bar', () => {
   });
 
   describe('display', () => {
-    it('shows the canonical formula source of the focused formula cell', async () => {
+    it('shows the focused cell content and updates on focus changes', async () => {
       render(<Test />);
       await microtasks();
+      // Formula cells show their canonical source.
       focusCell(0, 'total');
       expect(getBarEditable().textContent).to.equal('=price * quantity');
-    });
-
-    it('shows the A1 rendering with formulaA1Notation', async () => {
-      render(<Test formulaA1Notation />);
-      await microtasks();
-      focusCell(0, 'total');
-      // Same-row references keep their field names in the A1 dialect.
+      focusCell(1, 'total');
       expect(getBarEditable().textContent).to.equal('=price * quantity');
-      act(() => {
-        apiRef.current!.updateRows([{ id: 2, total: '=REF(COLUMN("price"), ROW(0))' }]);
-      });
-      focusCell(2, 'total');
-      expect(getBarEditable().textContent).to.equal('=B1');
-    });
-
-    it('shows the plain value of a non-formula cell', async () => {
-      render(<Test />);
-      await microtasks();
+      // Non-formula cells show their plain value.
       focusCell(0, 'price');
       expect(getBarEditable().textContent).to.equal('2');
       focusCell(2, 'total');
       expect(getBarEditable().textContent).to.equal('8');
     });
 
-    it('updates on keyboard-driven focus changes', async () => {
-      render(<Test />);
+    it('shows the A1 rendering and the cell address with formulaA1Notation', async () => {
+      render(<Test formulaA1Notation />);
       await microtasks();
       focusCell(0, 'total');
+      // Same-row references keep their field names in the A1 dialect.
       expect(getBarEditable().textContent).to.equal('=price * quantity');
-      focusCell(1, 'total');
-      expect(getBarEditable().textContent).to.equal('=price * quantity');
+      const address = getBar()!.querySelector('[aria-label="Active cell"]')!;
+      expect(address.textContent).to.equal('D1');
+      act(() => {
+        apiRef.current!.updateRows([{ id: 2, total: '=REF(COLUMN("price"), ROW(0))' }]);
+      });
       focusCell(2, 'total');
-      expect(getBarEditable().textContent).to.equal('8');
+      expect(getBarEditable().textContent).to.equal('=B1');
     });
 
     it('is read-only for a non-editable column', async () => {
@@ -179,40 +169,10 @@ describe('<DataGridPremium /> - Formula bar', () => {
       expect(editable.getAttribute('contenteditable')).to.equal('false');
       expect(editable.getAttribute('aria-readonly')).to.equal('true');
     });
-
-    it('shows the cell address in the name box', async () => {
-      render(<Test formulaA1Notation />);
-      await microtasks();
-      focusCell(0, 'total');
-      const address = getBar()!.querySelector('[aria-label="Active cell"]')!;
-      expect(address.textContent).to.equal('D1');
-    });
   });
 
   describe('view-mode editing (draft)', () => {
-    it('publishes the draft for reference highlighting', async () => {
-      render(<Test />);
-      await microtasks();
-      focusCell(2, 'total');
-      typeInBar('=price * 2');
-      const activeEdit = privateApi().current.state.formula.activeEdit;
-      expect(activeEdit).to.deep.equal({ id: 2, field: 'total', draft: '=price * 2' });
-      // The bar text shows the draft, the cell keeps its committed value.
-      expect(getBarEditable().textContent).to.equal('=price * 2');
-      expect(getCell(2, 3).textContent).to.equal('8');
-    });
-
-    it('colors reference tokens in the bar', async () => {
-      render(<Test />);
-      await microtasks();
-      focusCell(2, 'total');
-      typeInBar('=price * 2');
-      const tokens = getBar()!.querySelectorAll('.MuiDataGrid-formulaReferenceToken');
-      expect(tokens).to.have.length(1);
-      expect(tokens[0].textContent).to.equal('price');
-    });
-
-    it('marks formula text for the monospace font and mutes its syntax', async () => {
+    it('publishes the draft for reference highlighting, colors its tokens, and mutes its syntax', async () => {
       render(<Test />);
       await microtasks();
       // A plain cell value goes through the same editable and must stay in the UI
@@ -223,6 +183,14 @@ describe('<DataGridPremium /> - Formula bar', () => {
 
       focusCell(2, 'total');
       typeInBar('=price * 2');
+      const activeEdit = privateApi().current.state.formula.activeEdit;
+      expect(activeEdit).to.deep.equal({ id: 2, field: 'total', draft: '=price * 2' });
+      // The bar text shows the draft, the cell keeps its committed value.
+      expect(getBarEditable().textContent).to.equal('=price * 2');
+      expect(getCell(2, 3).textContent).to.equal('8');
+      const tokens = getBar()!.querySelectorAll('.MuiDataGrid-formulaReferenceToken');
+      expect(tokens).to.have.length(1);
+      expect(tokens[0].textContent).to.equal('price');
       expect(getBarEditable().dataset.formula).to.equal('true');
       const syntax = getBar()!.querySelectorAll('.MuiDataGrid-formulaSyntaxToken');
       expect(Array.from(syntax).map((span) => span.textContent)).to.deep.equal(['=', '*']);
@@ -230,7 +198,7 @@ describe('<DataGridPremium /> - Formula bar', () => {
       expect(getBarEditable().textContent).to.equal('=price * 2');
     });
 
-    it('previews the draft result on the fly', async () => {
+    it('previews the draft result on the fly, including error results', async () => {
       render(<Test />);
       await microtasks();
       focusCell(2, 'total');
@@ -239,12 +207,6 @@ describe('<DataGridPremium /> - Formula bar', () => {
         const preview = getBar()!.querySelector('[role="status"]');
         expect(preview?.textContent).to.equal('= 8');
       });
-    });
-
-    it('previews error results', async () => {
-      render(<Test />);
-      await microtasks();
-      focusCell(2, 'total');
       typeInBar('=1 / 0');
       await waitFor(() => {
         const preview = getBar()!.querySelector('[role="status"]');

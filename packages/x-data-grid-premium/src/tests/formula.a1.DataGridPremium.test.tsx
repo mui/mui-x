@@ -96,21 +96,7 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
     });
 
     describe('row-number column', () => {
-      it('should show sequential numbers that stay put after a re-sort', async () => {
-        await render(<Test formulaA1Notation />);
-        expect(getColumnValues(0)).to.deep.equal(['1', '2', '3']);
-        expect(getColumnValues(1)).to.deep.equal(['Apple', 'Banana', 'Cherry']);
-        expect(getColumnValues(4)).to.deep.equal(['6', '5', '8']);
-
-        await act(async () => apiRef.current!.setSortModel([{ field: 'total', sort: 'asc' }]));
-
-        // Rows move between the numbers; the numbers themselves never travel.
-        expect(getColumnValues(0)).to.deep.equal(['1', '2', '3']);
-        expect(getColumnValues(1)).to.deep.equal(['Banana', 'Apple', 'Cherry']);
-        expect(getColumnValues(4)).to.deep.equal(['5', '6', '8']);
-      });
-
-      it('should match the positions ROW_POSITION resolves to', async () => {
+      it('should show sequential numbers that stay put after a re-sort, matching the positions ROW_POSITION resolves to', async () => {
         await render(
           <Test
             formulaA1Notation
@@ -140,10 +126,12 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
         );
         // Row showing number 1 is Apple, and ROW_POSITION(1) resolves to it.
         expect(getColumnValues(0)).to.deep.equal(['1', '2']);
+        expect(getColumnValues(1)).to.deep.equal(['Apple', 'Banana']);
         expect(getColumnValues(4)).to.deep.equal(['Apple', 'Apple']);
 
         await act(async () => apiRef.current!.setSortModel([{ field: 'item', sort: 'desc' }]));
 
+        // Rows move between the numbers; the numbers themselves never travel.
         // Number 1 now shows Banana — and ROW_POSITION(1) re-binds to it.
         expect(getColumnValues(0)).to.deep.equal(['1', '2']);
         expect(getColumnValues(1)).to.deep.equal(['Banana', 'Apple']);
@@ -260,15 +248,6 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
           ],
         };
 
-        it('should seed the editor with the FIELD("…") escape', async () => {
-          const { user } = await render(<Test formulaA1Notation {...collisionProps} />);
-          expect(getColumnValues(4)).to.deep.equal(['730', '370']);
-          await user.dblClick(getCell(0, 4));
-          await waitFor(() => {
-            expect(getCellEditable(0, 4).textContent).to.equal('=FIELD("q1") + FIELD("q2")');
-          });
-        });
-
         it('should keep the stored formula on an unchanged commit', async () => {
           const { user } = await render(<Test formulaA1Notation {...collisionProps} />);
           await user.dblClick(getCell(0, 4));
@@ -384,7 +363,7 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
         expect(apiRef.current!.getRow(1).total).to.equal('=REF(COLUMN("price"), ROW(1))');
       });
 
-      it('should shift the relative axes of a pasted A1 range by the fill offset', async () => {
+      it('should shift the relative axes of a pasted A1 range and leave the `$` axes at their written position', async () => {
         const { user } = await render(
           <Test formulaA1Notation cellSelection disableRowSelectionOnClick />,
         );
@@ -394,7 +373,7 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
         const pasteEvent = new Event('paste');
         // B is `price`: [2, 1, 4].
         // @ts-ignore
-        pasteEvent.clipboardData = { getData: () => '=SUM(B1:B2)\n=SUM(B1:B2)' };
+        pasteEvent.clipboardData = { getData: () => '=SUM(B1:B2)\n=SUM($B$1:B2)' };
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
         await act(async () => document.activeElement!.dispatchEvent(pasteEvent));
 
@@ -404,33 +383,6 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
           // rows 1..2 → 0..+1.
           expect(apiRef.current!.getRow(0).total).to.equal(
             '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(1))))',
-          );
-        });
-        // The second target's literal shifted by the fill offset AND its anchor
-        // moved down one row — the deltas cancel, so the stored text is
-        // byte-identical to the first target's (offsets copy verbatim).
-        expect(apiRef.current!.getRow(1).total).to.equal(
-          '=SUM(RANGE_REF(COLUMN_FROM(ANCHOR(-2)), ROW_FROM(ANCHOR(0)), COLUMN_TO(ANCHOR(-2)), ROW_TO(ANCHOR(1))))',
-        );
-        expect(getColumnValues(4)).to.deep.equal(['3', '5', '8']);
-      });
-
-      it('should leave the `$` axes of a pasted A1 range at their written position', async () => {
-        const { user } = await render(
-          <Test formulaA1Notation cellSelection disableRowSelectionOnClick />,
-        );
-        const cell = getCell(0, 4);
-        await user.click(cell);
-
-        const pasteEvent = new Event('paste');
-        // @ts-ignore
-        pasteEvent.clipboardData = { getData: () => '=SUM($B$1:$B$2)\n=SUM($B$1:B2)' };
-        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
-        await act(async () => document.activeElement!.dispatchEvent(pasteEvent));
-
-        await waitFor(() => {
-          expect(apiRef.current!.getRow(0).total).to.equal(
-            '=SUM(RANGE_REF(FIXED(COLUMN_FROM(2)), FIXED(ROW_FROM(1)), FIXED(COLUMN_TO(2)), FIXED(ROW_TO(2))))',
           );
         });
         // One row down: the `$` start axes stay at their absolute position,

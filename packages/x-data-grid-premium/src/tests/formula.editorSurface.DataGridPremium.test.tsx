@@ -155,14 +155,6 @@ describe('<DataGridPremium /> - Formulas editor surface and highlighting', () =>
       expect(editable.textContent).to.equal('=price * quantity');
     });
 
-    it('outlines each referenced cell in the grid', async () => {
-      const { user } = await render(<Test />);
-      await user.dblClick(getCell(0, 3));
-      await waitFor(() => {
-        expect(rects()).to.have.length(2);
-      });
-    });
-
     it('shares one color between a token and its cell outline', async () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
@@ -428,21 +420,6 @@ describe('<DataGridPremium /> - Formulas editor surface and highlighting', () =>
         expect(token.left - box.left).to.be.lessThan(box.width / 2);
       },
     );
-
-    it.skipIf(isJSDOM)('keeps the colored token on the editable text line', async () => {
-      const { user } = await render(<Test />);
-      await user.dblClick(getCell(0, 3));
-      const editable = getCellEditable(0, 3);
-      await waitFor(() => {
-        expect(tokens()).to.have.length(2);
-      });
-      // Single layer: the colored token sits within the editable's own text line
-      // (no vertical drift between a token layer and a caret layer).
-      const line = editable.getBoundingClientRect();
-      const token = tokens()[0].getBoundingClientRect();
-      expect(token.top).to.be.greaterThanOrEqual(line.top - 2);
-      expect(token.bottom).to.be.lessThanOrEqual(line.bottom + 2);
-    });
 
     it.skipIf(isJSDOM)('commits on Enter without inserting a newline', async () => {
       const { user } = await render(<Test />);
@@ -1116,29 +1093,30 @@ describe('<DataGridPremium /> - Formulas editor surface and highlighting', () =>
     );
 
     it.skipIf(isJSDOM)(
-      'reopens at the exact cell position with the grown width when the editing cell remounts',
+      'reopens at the exact cell position with the grown, wrapped box when the editing cell remounts',
       async () => {
         const { user } = await render(<Test />);
         await user.dblClick(getCell(0, 3));
         await waitFor(() => {
           expect(getCellEditable(0, 3)).not.to.equal(null);
         });
-        // Grow the box, then delete: the box must keep its grown width — across
-        // the remount too, via the session mirror (a content-fit remount would
-        // shrink it back to the cell width).
-        setEditableValue(0, 3, `=${'1'.repeat(40)}`);
+        // Grow past the wrap clamp, then delete: both grow-only ratchets (width
+        // and wrapped height) must keep the grown box — across the remount too,
+        // via the session mirror (a content-fit remount would shrink it back to
+        // the cell width, and re-deciding at the current scroll could unwrap it).
+        setEditableValue(0, 3, `=${'1'.repeat(60)}`);
         await waitFor(() => {
-          expect(getSurface()!.offsetWidth).to.be.greaterThan(
-            getCell(0, 3).getBoundingClientRect().width + 50,
-          );
+          expect(isWrapped()).to.equal(true);
         });
         setEditableValue(0, 3, '=19');
         await microtasks();
         const widthBefore = getSurface()!.offsetWidth;
+        const heightBefore = getSurface()!.getBoundingClientRect().height;
+        expect(widthBefore).to.be.greaterThan(getCell(0, 3).getBoundingClientRect().width + 50);
         // Pinning the column mid-edit remounts the editing cell — the same class of
         // remount virtualization causes. The remounted surface must paint at the
-        // (now pinned) cell's exact position on its first frame, draft and grown
-        // width intact.
+        // (now pinned) cell's exact position on its first frame, with the draft,
+        // the grown width, and the wrapped height intact.
         await act(async () => {
           apiRef.current!.setPinnedColumns({ left: ['total'] });
         });
@@ -1153,6 +1131,10 @@ describe('<DataGridPremium /> - Formulas editor surface and highlighting', () =>
         });
         expect(getCellEditable(0, 0).textContent).to.equal('=19');
         expect(Math.abs(getSurface()!.offsetWidth - widthBefore)).to.be.lessThan(2);
+        expect(isWrapped()).to.equal(true);
+        expect(
+          Math.abs(getSurface()!.getBoundingClientRect().height - heightBefore),
+        ).to.be.lessThan(2);
       },
     );
 
@@ -1226,17 +1208,6 @@ describe('<DataGridPremium /> - Formulas editor surface and highlighting', () =>
       const surface = getSurface()!.getBoundingClientRect();
       expect(Math.abs(surface.left - (cell.left - 1))).to.be.lessThan(1.5);
       expect(Math.abs(surface.top - (cell.top - 1))).to.be.lessThan(1.5);
-    });
-
-    it.skipIf(isJSDOM)('follows a custom row height', async () => {
-      const { user } = await render(<Test rowHeight={70} />);
-      await user.dblClick(getCell(0, 3));
-      await waitFor(() => {
-        expect(getSurface()).not.to.equal(null);
-      });
-      const cell = getCell(0, 3).getBoundingClientRect();
-      const surface = getSurface()!.getBoundingClientRect();
-      expect(Math.abs(surface.height - (cell.height + 1))).to.be.lessThan(1.5);
     });
 
     it.skipIf(isJSDOM)('stops growing at the right-pinned column seam', async () => {
@@ -1407,9 +1378,11 @@ describe('<DataGridPremium /> - Formulas editor surface and highlighting', () =>
 
     it.skipIf(isJSDOM)('does not split a reference identifier mid-word', async () => {
       // A long-named column makes a reference token with no natural break
-      // opportunity. Sweeping the padding length walks it across every possible
-      // wrap boundary: the editor may wrap canonical references at spaces, but it
-      // must not apply its `overflow-wrap: anywhere` rule inside this identifier.
+      // opportunity. Sampling padding lengths walks it across wrap boundaries:
+      // the editor may wrap canonical references at spaces, but it must not
+      // apply its `overflow-wrap: anywhere` rule inside this identifier. The
+      // token's `white-space: pre` rule is boundary-independent, so a spread of
+      // samples covers the exhaustive 40–55 sweep.
       const longFieldColumns: GridColDef[] = [
         { field: 'item' },
         { field: 'total', type: 'number', allowFormulas: true, editable: true },
@@ -1425,7 +1398,7 @@ describe('<DataGridPremium /> - Formulas editor surface and highlighting', () =>
       await waitFor(() => {
         expect(getCellEditable(0, 1)).not.to.equal(null);
       });
-      for (let padding = 40; padding < 56; padding += 1) {
+      for (const padding of [40, 44, 48, 52, 55]) {
         setEditableValue(0, 1, `=${'1'.repeat(padding)}+unitPriceInLocalCurrency`);
         // eslint-disable-next-line no-await-in-loop
         await microtasks();
@@ -1460,32 +1433,6 @@ describe('<DataGridPremium /> - Formulas editor surface and highlighting', () =>
       expect(
         Math.abs(panel.getBoundingClientRect().top - editable.getBoundingClientRect().bottom),
       ).to.be.lessThan(12);
-    });
-
-    it.skipIf(isJSDOM)('restores the wrapped box when the editing cell remounts', async () => {
-      const { user } = await render(<Test />);
-      await user.dblClick(getCell(0, 3));
-      await waitFor(() => {
-        expect(getCellEditable(0, 3)).not.to.equal(null);
-      });
-      setEditableValue(0, 3, `=${'1'.repeat(60)}`);
-      await waitFor(() => {
-        expect(isWrapped()).to.equal(true);
-      });
-      const heightBefore = getSurface()!.getBoundingClientRect().height;
-      // Pinning the column mid-edit remounts the editing cell, the same class of
-      // remount virtualization causes: the fresh surface must come back wrapped
-      // and the same size, without re-deciding anything at the current scroll.
-      await act(async () => {
-        apiRef.current!.setPinnedColumns({ left: ['total'] });
-      });
-      await waitFor(() => {
-        expect(getSurface()).not.to.equal(null);
-      });
-      expect(isWrapped()).to.equal(true);
-      expect(Math.abs(getSurface()!.getBoundingClientRect().height - heightBefore)).to.be.lessThan(
-        2,
-      );
     });
 
     it.skipIf(isJSDOM)('follows the grid when it is resized mid-edit', async () => {

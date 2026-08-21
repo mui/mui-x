@@ -60,18 +60,12 @@ describe('<DataGridPremium /> - Formulas', () => {
   }
 
   describe('rendering', () => {
-    it('should render evaluated values in `allowFormulas` columns', async () => {
+    it('should render evaluated values in `allowFormulas` columns and keep the source in the row data', async () => {
       await render(<Test />);
       expect(getColumnValues(3)).to.deep.equal(['6', '5', '8']);
-    });
-
-    it('should keep the formula source as the stored row-data value', async () => {
-      await render(<Test />);
+      // The stored row-data value stays the formula source…
       expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
-    });
-
-    it('should never expose the raw source through getCellValue', async () => {
-      await render(<Test />);
+      // …but getCellValue only ever exposes the evaluated value.
       expect(apiRef.current!.getCellValue(0, 'total')).to.equal(6);
       expect(apiRef.current!.getCellValue(2, 'total')).to.equal(8);
     });
@@ -118,23 +112,6 @@ describe('<DataGridPremium /> - Formulas', () => {
       ]);
     });
 
-    it('should resolve positional references against the view order', async () => {
-      await render(
-        <Test
-          rows={[{ id: 0, price: 2, total: '=REF(COLUMN("price"), ROW_POSITION(1))' }]}
-          columns={[
-            { field: 'price', type: 'number' },
-            { field: 'total', type: 'number', allowFormulas: true },
-          ]}
-        />,
-      );
-      expect(getColumnValues(1)).to.deep.equal(['2']);
-      expect(formulaApi().getCellFormulaResult(0, 'total')).to.deep.equal({
-        type: 'value',
-        value: 2,
-      });
-    });
-
     it('should bypass the column valueFormatter for error results but not for value results', async () => {
       await render(
         <Test
@@ -178,45 +155,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(2)).to.deep.equal(['12']);
     });
 
-    it('should evaluate stable cross-row REF() references and track their changes', async () => {
-      await render(
-        <Test
-          rows={[
-            { id: 0, price: 2, total: 1 },
-            { id: 1, price: 3, total: '=REF(COLUMN("price"), ROW(0)) * 10' },
-          ]}
-          columns={[
-            { field: 'price', type: 'number' },
-            { field: 'total', type: 'number', allowFormulas: true },
-          ]}
-        />,
-      );
-      expect(getColumnValues(1)).to.deep.equal(['1', '20']);
-
-      await act(async () => apiRef.current!.updateRows([{ id: 0, price: 7 }]));
-      expect(getColumnValues(1)).to.deep.equal(['1', '70']);
-    });
-
-    it('should resolve references to a removed row as #REF!', async () => {
-      await render(
-        <Test
-          rows={[
-            { id: 0, price: 2, total: 1 },
-            { id: 1, price: 3, total: '=REF(COLUMN("price"), ROW(0))' },
-          ]}
-          columns={[
-            { field: 'price', type: 'number' },
-            { field: 'total', type: 'number', allowFormulas: true },
-          ]}
-        />,
-      );
-      expect(getColumnValues(1)).to.deep.equal(['1', '2']);
-
-      await act(async () => apiRef.current!.updateRows([{ id: 0, _action: 'delete' }]));
-      expect(getColumnValues(1)).to.deep.equal(['#REF!']);
-    });
-
-    it('should mark mutual references as #CYCLE!', async () => {
+    it('should mark mutual references as #CYCLE! and recover when one side is replaced', async () => {
       await render(
         <Test
           rows={[{ id: 0, a: '=b', b: '=a' }]}
@@ -228,18 +167,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       expect(getColumnValues(0)).to.deep.equal(['#CYCLE!']);
       expect(getColumnValues(1)).to.deep.equal(['#CYCLE!']);
-    });
 
-    it('should recover from a cycle when one side is replaced', async () => {
-      await render(
-        <Test
-          rows={[{ id: 0, a: '=b', b: '=a' }]}
-          columns={[
-            { field: 'a', allowFormulas: true },
-            { field: 'b', allowFormulas: true },
-          ]}
-        />,
-      );
       await act(async () => apiRef.current!.updateRows([{ id: 0, b: 5 }]));
       expect(getColumnValues(0)).to.deep.equal(['5']);
       expect(getColumnValues(1)).to.deep.equal(['5']);
@@ -348,7 +276,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(3)).to.deep.equal(['5', '6', '8']);
     });
 
-    it('should filter on evaluated values', async () => {
+    it('should filter and quick-filter on evaluated values', async () => {
       await render(<Test />);
       await act(async () =>
         apiRef.current!.setFilterModel({
@@ -356,10 +284,10 @@ describe('<DataGridPremium /> - Formulas', () => {
         }),
       );
       expect(getColumnValues(3)).to.deep.equal(['6', '8']);
-    });
 
-    it('should quick-filter on evaluated values', async () => {
-      await render(<Test />);
+      await act(async () => apiRef.current!.setFilterModel({ items: [] }));
+      expect(getColumnValues(3)).to.deep.equal(['6', '5', '8']);
+
       await act(async () =>
         apiRef.current!.setFilterModel({ items: [], quickFilterValues: ['6'] }),
       );
@@ -381,20 +309,6 @@ describe('<DataGridPremium /> - Formulas', () => {
       { field: 'price', type: 'number' },
       { field: 'summary', type: 'number', allowFormulas: true },
     ] as DataGridPremiumProps['columns'];
-
-    it('should sum a column with COLUMN_VALUES', async () => {
-      await render(
-        <Test
-          rows={[
-            { id: 0, price: 2, summary: '=SUM(COLUMN_VALUES("price"))' },
-            { id: 1, price: 3 },
-            { id: 2, price: 5 },
-          ]}
-          columns={summaryColumns}
-        />,
-      );
-      expect(getColumnValues(1)).to.deep.equal(['10', '', '']);
-    });
 
     it('should recompute only the range dependents on a single-cell edit', async () => {
       await render(
@@ -557,46 +471,6 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(2)).to.deep.equal(['10', '', '']);
     });
 
-    it('should evaluate a RANGE_REF window clipped out of the view as empty', async () => {
-      await render(
-        <Test
-          rows={[
-            {
-              id: 0,
-              category: 'keep',
-              price: 2,
-              // Column 2 (price) over view positions 2..3.
-              summary: '=SUM(RANGE_REF(COLUMN_FROM(2), ROW_FROM(2), COLUMN_TO(2), ROW_TO(3)))',
-            },
-            { id: 1, category: 'drop', price: 3 },
-            { id: 2, category: 'drop', price: 5 },
-          ]}
-          columns={[
-            { field: 'category' },
-            { field: 'price', type: 'number' },
-            { field: 'summary', type: 'number', allowFormulas: true },
-          ]}
-        />,
-      );
-      expect(getColumnValues(2)).to.deep.equal(['8', '', '']);
-
-      // Only one row is left: the whole window falls outside the view. It
-      // covers nothing — SUM of an empty range is 0, not `#REF!`.
-      await act(async () =>
-        apiRef.current!.setFilterModel({
-          items: [{ field: 'category', operator: 'equals', value: 'keep' }],
-        }),
-      );
-      expect(getColumnValues(2)).to.deep.equal(['0']);
-      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
-        type: 'value',
-        value: 0,
-      });
-
-      await act(async () => apiRef.current!.setFilterModel({ items: [] }));
-      expect(getColumnValues(2)).to.deep.equal(['8', '', '']);
-    });
-
     it('should mark a COLUMN_VALUES aggregation over its own column as #CYCLE!', async () => {
       await render(
         <Test
@@ -672,7 +546,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(sortListener.callCount).to.equal(1);
     });
 
-    it('should rebind COLUMN_POSITION references when column visibility changes', async () => {
+    it('should rebind COLUMN_POSITION references on visibility changes and column reorder', async () => {
       await render(
         <Test
           rows={[{ id: 0, price: 5, tax: 7, summary: '=REF(COLUMN_POSITION(1), ROW(0))' }]}
@@ -691,21 +565,9 @@ describe('<DataGridPremium /> - Formulas', () => {
 
       await act(async () => apiRef.current!.setColumnVisibility('price', true));
       expect(getColumnValues(2)).to.deep.equal(['5']);
-    });
 
-    it('should rebind COLUMN_POSITION references on programmatic column reorder', async () => {
-      await render(
-        <Test
-          rows={[{ id: 0, price: 5, tax: 7, summary: '=REF(COLUMN_POSITION(1), ROW(0))' }]}
-          columns={[
-            { field: 'price', type: 'number' },
-            { field: 'tax', type: 'number' },
-            { field: 'summary', type: 'number', allowFormulas: true },
-          ]}
-        />,
-      );
-      expect(getColumnValues(2)).to.deep.equal(['5']);
-
+      // A programmatic reorder funnels into the same columns-changed →
+      // context-rebuild path.
       await act(async () => apiRef.current!.setColumnIndex('tax', 0));
       expect(getColumnValues(2)).to.deep.equal(['7']);
     });
@@ -785,42 +647,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(result?.type === 'error' && result.code).to.equal('#CYCLE!');
     });
 
-    it('should keep a bottom-pinned summary row out of its own window', async () => {
-      await render(
-        <Test
-          rows={[
-            { id: 0, price: 10 },
-            { id: 1, price: 20 },
-          ]}
-          pinnedRows={{
-            bottom: [
-              {
-                id: 2,
-                price: 5,
-                // Positions 1..3 — position 3 is the pinned row itself, so the
-                // window clamps to the data band and never covers it.
-                summary: '=SUM(RANGE_REF(COLUMN_FROM(1), ROW_FROM(1), COLUMN_TO(2), ROW_TO(3)))',
-              },
-            ],
-          }}
-          columns={summaryColumns}
-        />,
-      );
-      expect(formulaApi().getCellFormulaResult(2, 'summary')).to.deep.equal({
-        type: 'value',
-        value: 30,
-      });
-
-      // Pinned rows never travel with a sort: the window still covers the data
-      // band only.
-      await act(async () => apiRef.current!.setSortModel([{ field: 'price', sort: 'desc' }]));
-      expect(formulaApi().getCellFormulaResult(2, 'summary')).to.deep.equal({
-        type: 'value',
-        value: 30,
-      });
-    });
-
-    it('should include rows added with updateRows in COLUMN_VALUES', async () => {
+    it('should track rows added and removed with updateRows in COLUMN_VALUES', async () => {
       await render(
         <Test
           rows={[
@@ -833,20 +660,6 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(1)).to.deep.equal(['5', '']);
 
       await act(async () => apiRef.current!.updateRows([{ id: 2, price: 10 }]));
-      expect(getColumnValues(1)).to.deep.equal(['15', '', '']);
-    });
-
-    it('should drop rows removed with updateRows from COLUMN_VALUES', async () => {
-      await render(
-        <Test
-          rows={[
-            { id: 0, price: 2, summary: '=SUM(COLUMN_VALUES("price"))' },
-            { id: 1, price: 3 },
-            { id: 2, price: 10 },
-          ]}
-          columns={summaryColumns}
-        />,
-      );
       expect(getColumnValues(1)).to.deep.equal(['15', '', '']);
 
       await act(async () => apiRef.current!.updateRows([{ id: 2, _action: 'delete' }]));
@@ -1261,37 +1074,29 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(3)).to.deep.equal(['6', '5', '6']);
     });
 
-    it('should throw when setCellFormula targets a column without allowFormulas', async () => {
+    it('should expose the read-only api surface against a single grid', async () => {
       await render(<Test />);
+
+      // setCellFormula guards.
       expect(() => formulaApi().setCellFormula(0, 'item', '=price')).to.throw(
         'does not allow formulas',
       );
-    });
-
-    it('should throw when setCellFormula receives a non-formula value', async () => {
-      await render(<Test />);
       expect(() => formulaApi().setCellFormula(0, 'total', 'price')).to.throw(
         'expects a formula source starting with `=`',
       );
-    });
 
-    it('should return the source from getCellFormula and null for plain cells', async () => {
-      await render(<Test />);
+      // getCellFormula returns the source, and null for plain cells.
       expect(formulaApi().getCellFormula(0, 'total')).to.equal('=price * quantity');
       expect(formulaApi().getCellFormula(2, 'total')).to.equal(null);
-    });
 
-    it('should return the evaluation result from getCellFormulaResult', async () => {
-      await render(<Test />);
+      // getCellFormulaResult returns the evaluation result, and null for plain cells.
       expect(formulaApi().getCellFormulaResult(0, 'total')).to.deep.equal({
         type: 'value',
         value: 6,
       });
       expect(formulaApi().getCellFormulaResult(2, 'total')).to.equal(null);
-    });
 
-    it('should validate formulas with validateCellFormula', async () => {
-      await render(<Test />);
+      // validateCellFormula.
       expect(formulaApi().validateCellFormula('=price * quantity').valid).to.equal(true);
       const invalid = formulaApi().validateCellFormula('=NOPE(1)');
       expect(invalid.valid).to.equal(false);

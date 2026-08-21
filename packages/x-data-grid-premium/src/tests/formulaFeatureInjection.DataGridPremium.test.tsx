@@ -58,9 +58,12 @@ describe('<DataGridPremium /> - Formula feature injection', () => {
     );
   }
 
-  it('renders `=` cell values as raw strings when the feature is not provided', async () => {
+  it('renders `=` values as raw strings and keeps an empty state slice without the feature', async () => {
     await render(<Test />);
     expect(getColumnValues(3)).to.deep.equal(['=price * quantity', '']);
+    // The `formula` state slice still exists so the bundled readers find an
+    // empty lookup instead of `undefined`.
+    expect(apiRef.current!.state.formula).to.deep.equal({ lookup: {}, activeEdit: null });
   });
 
   it('evaluates formulas when the feature is provided', async () => {
@@ -68,11 +71,6 @@ describe('<DataGridPremium /> - Formula feature injection', () => {
       <Test featureDependencies={{ formula: formulaFeature }} columns={columnsWithFormulas} />,
     );
     expect(getColumnValues(3)).to.deep.equal(['6', '']);
-  });
-
-  it('initializes an empty formula state slice when the feature is not provided', async () => {
-    await render(<Test />);
-    expect(apiRef.current!.state.formula).to.deep.equal({ lookup: {}, activeEdit: null });
   });
 
   it('warns about formula-related props used without the feature', () => {

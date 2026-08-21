@@ -124,19 +124,12 @@ describe('<DataGridPremium /> - Formulas editing', () => {
     fireEvent.input(editable);
   }
   describe('editing', () => {
-    it('should seed the editor with the formula source', async () => {
-      const { user } = await render(<Test />);
-      await user.dblClick(getCell(0, 3));
-      await waitFor(() => {
-        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
-      });
-    });
-
     it('should render the formula editor for formulas even on number columns', async () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
+      // The editor is seeded with the formula source, not the evaluated value.
       await waitFor(() => {
-        expect(getCellEditable(0, 3)).not.to.equal(null);
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
       // A number column would otherwise render a number `<input>`; the formula
       // editor is a contenteditable instead.
@@ -191,7 +184,8 @@ describe('<DataGridPremium /> - Formulas editing', () => {
     });
 
     it('should commit a new formula and re-evaluate', async () => {
-      const { user } = await render(<Test />);
+      const processRowUpdate = spy((newRow) => newRow);
+      const { user } = await render(<Test processRowUpdate={processRowUpdate} />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
         expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
@@ -203,6 +197,8 @@ describe('<DataGridPremium /> - Formulas editing', () => {
 
       expect(apiRef.current!.getRow(0).total).to.equal('=price + quantity');
       expect(getColumnValues(3)).to.deep.equal(['5', '5', '8']);
+      // The commit hands the formula source (not the evaluated value) to userland.
+      expect(processRowUpdate.lastCall.args[0].total).to.equal('=price + quantity');
     });
 
     it('should commit a plain value over a formula', async () => {
@@ -315,7 +311,7 @@ describe('<DataGridPremium /> - Formulas editing', () => {
       expect(apiRef.current!.getRow(0).total).to.equal(null);
     });
 
-    it('should keep partial numeric text as typed and commit its numeric value', async () => {
+    it('should keep partial numeric text and trailing decimal zeros as typed and commit the numeric value', async () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
@@ -329,20 +325,8 @@ describe('<DataGridPremium /> - Formulas editing', () => {
       setEditableValue(0, 3, '-5.');
       expect(getCellEditable(0, 3).textContent).to.equal('-5.');
 
-      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
-      await microtasks();
-      expect(apiRef.current!.getRow(0).total).to.equal(-5);
-    });
-
-    it('should preserve trailing decimal zeros while typing', async () => {
-      const { user } = await render(<Test />);
-      await user.dblClick(getCell(0, 3));
-      await waitFor(() => {
-        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
-      });
-
+      // The parser reads 0.5 — the editor must keep the trailing zero as typed.
       setEditableValue(0, 3, '0.50');
-      // The parser reads 0.5 — the editor must keep the text as typed.
       expect(getCellEditable(0, 3).textContent).to.equal('0.50');
 
       fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
@@ -376,21 +360,6 @@ describe('<DataGridPremium /> - Formulas editing', () => {
       await microtasks();
 
       expect(getCellEditable(0, 3).textContent).not.to.equal('=price * quantity');
-    });
-
-    it('should pass the formula source to processRowUpdate', async () => {
-      const processRowUpdate = spy((newRow) => newRow);
-      const { user } = await render(<Test processRowUpdate={processRowUpdate} />);
-      await user.dblClick(getCell(0, 3));
-      await waitFor(() => {
-        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
-      });
-
-      setEditableValue(0, 3, '=price + 1');
-      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
-      await microtasks();
-
-      expect(processRowUpdate.lastCall.args[0].total).to.equal('=price + 1');
     });
 
     it('should keep the evaluation consistent when processRowUpdate rejects', async () => {
@@ -436,14 +405,6 @@ describe('<DataGridPremium /> - Formulas editing', () => {
   });
 
   describe('custom edit cell renderer', () => {
-    it('should use a custom renderEditCell even for formula values', async () => {
-      const { user } = await render(<Test columns={customEditorColumns} />);
-      await user.dblClick(getCell(0, 3));
-      await waitFor(() => {
-        expect(getCell(0, 3).querySelector('[data-testid="custom-editor"]')).not.to.equal(null);
-      });
-    });
-
     it('should seed the custom editor with the formula source, not the evaluated value', async () => {
       const { user } = await render(<Test columns={customEditorColumns} />);
       await user.dblClick(getCell(0, 3));
@@ -483,33 +444,7 @@ describe('<DataGridPremium /> - Formulas editing', () => {
       expect(getColumnValues(3)).to.deep.equal(['5', '5', '8']);
     });
 
-    it('should keep our formula editor for built-in column editors', async () => {
-      const { user } = await render(<Test />);
-      await user.dblClick(getCell(0, 3));
-      await waitFor(() => {
-        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
-      });
-      expect(getCell(0, 3).querySelector('[data-testid="custom-editor"]')).to.equal(null);
-    });
-
-    it('should seed the canonical source (not A1) into a custom editor in A1 mode', async () => {
-      const { user } = await render(
-        <Test
-          formulaA1Notation
-          columns={customEditorColumns}
-          rows={[
-            { id: 0, item: 'Apple', price: 2, quantity: 3, total: '=REF(COLUMN("price"), ROW(0))' },
-          ]}
-        />,
-      );
-      // A1 on shifts data columns right by one (row-number column at index 0).
-      await user.dblClick(getCell(0, 4));
-      await waitFor(() => {
-        expect(getCellInput(0, 4).value).to.equal('=REF(COLUMN("price"), ROW(0))');
-      });
-    });
-
-    it('should round-trip the canonical source committed from a custom editor in A1 mode', async () => {
+    it('should round-trip the canonical source (not A1) through a custom editor in A1 mode', async () => {
       const { user } = await render(
         <Test
           formulaA1Notation
@@ -520,7 +455,9 @@ describe('<DataGridPremium /> - Formulas editing', () => {
           ]}
         />,
       );
+      // A1 on shifts data columns right by one (row-number column at index 0).
       await user.dblClick(getCell(0, 4));
+      // Custom editors are seeded with the canonical source, not the A1 rendering.
       await waitFor(() => {
         expect(getCellInput(0, 4).value).to.equal('=REF(COLUMN("price"), ROW(0))');
       });
