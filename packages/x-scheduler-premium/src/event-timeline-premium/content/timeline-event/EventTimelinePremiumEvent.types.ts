@@ -1,5 +1,6 @@
 import type * as React from 'react';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 
 export interface EventTimelinePremiumEventProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -21,4 +22,8 @@ export interface EventTimelinePremiumEventProps extends React.HTMLAttributes<HTM
    * primary resource, so a multi-resource event can render a different color per row.
    */
   resourceId: SchedulerResourceId;
+  /**
+   * Position already derived by the timeline layout model.
+   */
+  elementPosition?: useElementPositionInCollection.ReturnValue;
 }

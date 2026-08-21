@@ -17,9 +17,11 @@ import { useEventRowDropTarget } from './useEventRowDropTarget';
 import { usePlaceholderInRow } from './usePlaceholderInRow';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import {
+  addTimelinePositionsToOccurrences,
   eventTimelinePremiumPresetSelectors,
   eventTimelinePremiumOccurrenceSelectors,
 } from '../../event-timeline-premium-selectors';
+import type { EventTimelinePremiumLayoutOccurrence } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventRowDataAttributes } from './TimelineGridEventRowDataAttributes';
 import { useTimelineGridRowKeyboard } from '../../internals/utils/useTimelineGridRowKeyboard';
 
@@ -64,6 +66,27 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     store,
     eventTimelinePremiumOccurrenceSelectors.visibleResourceOccurrences,
     resourceId,
+  );
+  const positionByOccurrenceKey = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
+  );
+
+  const occurrenceLayoutWithoutTimelinePositions = useEventOccurrencesWithTimelinePosition({
+    occurrences,
+    maxSpan: 1,
+  });
+  const occurrenceLayout = React.useMemo(
+    () => ({
+      ...occurrenceLayoutWithoutTimelinePositions,
+      occurrences: addTimelinePositionsToOccurrences({
+        adapter,
+        config,
+        occurrences: occurrenceLayoutWithoutTimelinePositions.occurrences,
+        positionByOccurrenceKey,
+      }),
+    }),
+    [adapter, config, occurrenceLayoutWithoutTimelinePositions, positionByOccurrenceKey],
   );
 
   // Feature hooks
@@ -115,29 +138,29 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     }
     if (event.key === 'Enter' && event.target === event.currentTarget && triggerKeyboardCreation) {
       event.preventDefault();
-      triggerKeyboardCreation();
+      triggerKeyboardCreation(event.nativeEvent);
     }
   };
 
   const contextValue: TimelineGridEventRowContext = React.useMemo(
-    () => ({ resourceId, hasFocus, getCursorPositionInElementMs }),
-    [resourceId, hasFocus, getCursorPositionInElementMs],
+    () => ({ resourceId, rowRef, hasFocus, getCursorPositionInElementMs }),
+    [resourceId, rowRef, hasFocus, getCursorPositionInElementMs],
   );
-
-  const occurrencesWithPosition = useEventOccurrencesWithTimelinePosition({
-    occurrences,
-    maxSpan: 1,
-  });
 
   const placeholder = usePlaceholderInRow({
     resourceId,
-    occurrences: occurrencesWithPosition.occurrences,
-    maxIndex: occurrencesWithPosition.maxIndex,
+    occurrences: occurrenceLayout.occurrences,
+    maxIndex: occurrenceLayout.maxIndex,
   });
 
   const children = React.useMemo(
-    () => childrenProp({ placeholder, ...occurrencesWithPosition }),
-    [childrenProp, placeholder, occurrencesWithPosition],
+    () =>
+      childrenProp({
+        placeholder,
+        occurrences: occurrenceLayout.occurrences,
+        maxIndex: occurrenceLayout.maxIndex,
+      }),
+    [childrenProp, placeholder, occurrenceLayout],
   );
 
   const state: TimelineGridEventRow.State = {
@@ -160,7 +183,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
       {
         children,
         style: {
-          '--lane-count': occurrencesWithPosition.maxIndex,
+          '--lane-count': occurrenceLayout.maxIndex,
         } as React.CSSProperties,
       },
       keyboardProps,
@@ -192,7 +215,11 @@ export namespace TimelineGridEventRow {
     children: (parameters: ChildrenParameters) => React.ReactNode;
   }
 
-  export interface ChildrenParameters extends useEventOccurrencesWithTimelinePosition.ReturnValue {
+  export interface ChildrenParameters extends Omit<
+    useEventOccurrencesWithTimelinePosition.ReturnValue,
+    'occurrences'
+  > {
+    occurrences: EventTimelinePremiumLayoutOccurrence[];
     placeholder: usePlaceholderInRow.ReturnValue;
   }
 }

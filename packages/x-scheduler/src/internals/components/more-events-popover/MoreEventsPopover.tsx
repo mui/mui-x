@@ -1,7 +1,9 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { styled } from '@mui/material/styles';
+import getActiveElement from '@mui/utils/getActiveElement';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -97,8 +99,39 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     );
   }, [store, onClose]);
 
+  // Editing an event can unmount the "+N more" button, so remember the cell as a focus fallback.
+  const fallbackFocusRef = React.useRef<HTMLElement | null>(null);
+  useIsoLayoutEffect(() => {
+    if (open && anchor) {
+      fallbackFocusRef.current = anchor.closest<HTMLElement>('[role="gridcell"]');
+    }
+  }, [open, anchor]);
+
+  // Restore focus when it is about to be lost with the closing popover: on the document, or on
+  // something unmounting with the popover. Focus already moved elsewhere is preserved.
+  const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
+    const ownerDocument = paper.ownerDocument;
+    // `getActiveElement` pierces shadow roots, where `document.activeElement` stops at the host.
+    const activeElement = getActiveElement(ownerDocument);
+    const focusIsAboutToBeLost =
+      activeElement === null ||
+      activeElement === ownerDocument.body ||
+      paper.contains(activeElement);
+    if (!focusIsAboutToBeLost) {
+      return;
+    }
+    const target = anchor?.isConnected ? anchor : fallbackFocusRef.current;
+    target?.focus({ preventScroll: true });
+  });
+
   return (
-    <Popover className={classes.moreEventsPopover} open={open} anchorEl={anchor} onClose={onClose}>
+    <Popover
+      className={classes.moreEventsPopover}
+      open={open}
+      anchorEl={anchor}
+      onClose={onClose}
+      slotProps={{ transition: { onExited: restoreFocusOnExit } }}
+    >
       <MoreEventsPopoverHeader
         className={classes.moreEventsPopoverHeader}
         id={`${schedulerId}-PopoverHeader-${day.key}`}
@@ -110,7 +143,13 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       </MoreEventsPopoverHeader>
       <MoreEventsPopoverBody className={classes.moreEventsPopoverBody}>
         {occurrences.map((occurrence) => (
-          <EventEditingTrigger occurrence={occurrence} key={occurrence.key}>
+          <EventEditingTrigger
+            occurrence={occurrence}
+            key={occurrence.key}
+            onEditingCanceled={onClose}
+            // A cancellation closes this popover and unmounts the clicked item.
+            stableAnchor={anchor}
+          >
             <EventItem
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
               occurrence={occurrence}

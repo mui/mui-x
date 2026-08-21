@@ -4,6 +4,8 @@ import { styled } from '@mui/material/styles';
 import { useId } from '@base-ui/utils/useId';
 import { EventCalendarProvider as UnstyledEventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { EventCalendarLocaleText } from '../../models/translations';
+import type { SchedulerSlotsAndSlotProps } from '../../models/slots';
+import { SchedulerSlotsProvider } from './SchedulerSlotsContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { EventEditingStyledContext } from './event-editing/EventEditingStyledContext';
@@ -34,10 +36,8 @@ const StandaloneViewRoot = styled('div', {
   ...responsiveTypographyContainerQueries,
 }));
 
-export interface EventCalendarProviderProps<
-  TEvent extends object,
-  TResource extends object,
-> extends UnstyledEventCalendarProvider.Props<TEvent, TResource> {
+export interface EventCalendarProviderProps<TEvent extends object, TResource extends object>
+  extends UnstyledEventCalendarProvider.Props<TEvent, TResource>, SchedulerSlotsAndSlotProps {
   /**
    * Set the locale text of the view.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
@@ -49,7 +49,7 @@ export interface EventCalendarProviderProps<
 export function EventCalendarProvider<TEvent extends object, TResource extends object>(
   props: EventCalendarProviderProps<TEvent, TResource>,
 ) {
-  const { children, localeText, ...other } = props;
+  const { children, localeText, slots, slotProps, ...other } = props;
   const schedulerId = useId();
 
   const mergedLocaleText = React.useMemo(
@@ -80,7 +80,9 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
       <EventCalendarStyledContext.Provider value={calendarStyledValue}>
         <EventEditingStyledContext.Provider value={editingStyledValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledValue}>
-            <StandaloneViewRoot>{children}</StandaloneViewRoot>
+            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              <StandaloneViewRoot>{children}</StandaloneViewRoot>
+            </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
       </EventCalendarStyledContext.Provider>

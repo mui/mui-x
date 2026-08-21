@@ -13,6 +13,7 @@ import {
   EventDialogProvider,
   EventCalendarRoot,
   SharedComponentsStyledContext,
+  SchedulerSlotsProvider,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
   EventCalendarStyledContext,
   useEventCalendarUtilityClasses,
@@ -51,7 +52,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
   const store = useEventCalendarPremium(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { localeText, apiRef, ...other } = forwardedProps;
+  const { localeText, apiRef, slots, slotProps, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
   const schedulerId = useId();
@@ -78,11 +79,13 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-            <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-              <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
-                {watermark}
-              </EventCalendarRoot>
-            </EventDialogProvider>
+            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+                <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+                  {watermark}
+                </EventCalendarRoot>
+              </EventDialogProvider>
+            </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
@@ -262,6 +265,15 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
    */
   onCollapsedResourcesChange: PropTypes.func,
   /**
+   * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
+   * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
+   * `eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the
+   * occurrence is read-only (through the event, its resource or the `readOnly` prop) and the dialog
+   * opens in view-only mode, and `"edit"` otherwise.
+   * Call `eventDetails.cancel()` to keep it closed and handle the interaction in your own UI.
+   */
+  onEventEditingStart: PropTypes.func,
+  /**
    * Callback fired when some event of the calendar change.
    */
   onEventsChange: PropTypes.func,
@@ -333,6 +345,16 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
    * @default true
    */
   showCurrentTimeIndicator: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

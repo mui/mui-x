@@ -83,7 +83,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
     if (event.key === 'Enter' && event.target === event.currentTarget && triggerKeyboardCreation) {
       event.preventDefault();
-      triggerKeyboardCreation();
+      triggerKeyboardCreation(event.nativeEvent);
     }
   };
 

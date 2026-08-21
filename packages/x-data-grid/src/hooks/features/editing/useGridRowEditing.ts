@@ -15,6 +15,7 @@ import type {
 } from '../../../models/gridEditRowModel';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import type {
   GridRowEditingApi,
   GridEditingSharedApi,
@@ -367,6 +368,7 @@ export const useGridRowEditing = (
     if (onRowModesModelChange && isNewModelDifferentFromProp) {
       onRowModesModelChange(newModel, {
         api: apiRef.current,
+        apiRef: getPublicApiRef(apiRef),
       });
     }
 
