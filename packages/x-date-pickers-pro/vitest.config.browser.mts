@@ -14,6 +14,8 @@ export default mergeConfig(
         enabled: true,
         instances: [{ browser: 'chromium' }],
       },
+      // Avoid Chromium renderer crashes caused by running this memory-heavy project in parallel.
+      sequence: { groupOrder: 1 },
     },
   }),
 );
