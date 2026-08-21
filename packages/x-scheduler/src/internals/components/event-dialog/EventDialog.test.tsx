@@ -532,6 +532,38 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(onEventsChange.lastCall.firstArg[0]).to.have.property('priority', 'high');
     });
 
+    it('should still submit a value written in a section the slot conditionally unmounted', async () => {
+      // `getDirtyValues` iterates the whole values bag: unmounting a section removes its
+      // validator, not its written value.
+      function ToggleableSections() {
+        const [showPriority, setShowPriority] = React.useState(true);
+        return (
+          <React.Fragment>
+            <button type="button" onClick={() => setShowPriority(false)}>
+              Hide priority
+            </button>
+            {showPriority ? <CustomSection /> : null}
+          </React.Fragment>
+        );
+      }
+
+      const onEventsChange = spy();
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: ToggleableSections },
+        { onEventsChange },
+      );
+
+      await user.clear(screen.getByRole('textbox', { name: 'Priority' }));
+      await user.type(screen.getByRole('textbox', { name: 'Priority' }), 'high');
+      await user.click(screen.getByRole('button', { name: 'Hide priority' }));
+      expect(screen.queryByRole('textbox', { name: 'Priority' })).to.equal(null);
+
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(1);
+      expect(onEventsChange.lastCall.firstArg[0]).to.have.property('priority', 'high');
+    });
+
     it('should block the submit when a validator of a section rendered by the slot fails', async () => {
       const onEventsChange = spy();
       function RequiredCustomSection() {

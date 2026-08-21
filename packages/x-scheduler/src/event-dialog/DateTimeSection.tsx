@@ -103,9 +103,7 @@ export function DateTimeSection() {
 
   return (
     <SectionFieldset>
-      <SectionHeaderTitle>
-        {localeText.dateTimeSectionLabel}
-      </SectionHeaderTitle>
+      <SectionHeaderTitle>{localeText.dateTimeSectionLabel}</SectionHeaderTitle>
       <DateTimeFieldsContainer className={classes.eventDialogDateTimeFieldsContainer}>
         <DateTimeFieldsRow className={classes.eventDialogDateTimeFieldsRow}>
           <TextField

@@ -4,7 +4,10 @@ import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isBuiltInEventProperty } from '@mui/x-scheduler-internals/internals';
-import type { EventDialogBuiltInFormValues, EventDialogFormValues } from '../internals/components/event-dialog/utils';
+import type {
+  EventDialogBuiltInFormValues,
+  EventDialogFormValues,
+} from '../internals/components/event-dialog/utils';
 import { BUILT_IN_FORM_KEYS } from '../internals/components/event-dialog/utils';
 import { eventDialogFormSelectors } from '../internals/components/event-dialog/form/EventDialogFormStore';
 import type {
