@@ -30,7 +30,6 @@ import {
   getEventResourceIds,
   getResourceSelectionMode,
 } from '@mui/x-scheduler-internals/internals';
-import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
 import type { EventDialogFormValues } from '../event-dialog/utils';
@@ -124,13 +123,8 @@ export function FormContent(props: FormContentProps) {
     occurrence.displayTimezone.start,
   );
 
-  // Derived once, right alongside `initialValues` below, for the same reason: the dialog
-  // remounts on `key={occurrence.key}`, so this is exactly "the data this occurrence started
-  // with", and it must stay that way for the lifetime of the editing session. Two components
-  // read it — `ResourceAndColorSection` (what the Select renders as) and `FormContentInner`
-  // (what gets written on submit) — and they have to agree, so it's derived once, here, and
-  // passed to both instead of each freezing its own copy against a live subscription that
-  // could drift between them. See `getResourceSelectionMode` for the creating-vs-editing rule.
+  // Captured once per editing session, like `initialValues` below.
+  // See `getResourceSelectionMode` for the creating-vs-editing rule.
   const resourceSelectionMode = useRefWithInit(() =>
     getResourceSelectionMode(occurrence.resource, canHaveMultipleResources, isCreating),
   ).current;
@@ -184,30 +178,36 @@ export function FormContent(props: FormContentProps) {
   }).current;
 
   return (
-    <EventDialogFormProvider initialValues={initialValues} onValuesChange={pushPlaceholder}>
-      <FormContentInner {...props} resourceSelectionMode={resourceSelectionMode} />
+    <EventDialogFormProvider
+      initialValues={initialValues}
+      occurrence={occurrence}
+      resourceSelectionMode={resourceSelectionMode}
+      onValuesChange={pushPlaceholder}
+    >
+      <FormContentInner {...props} />
     </EventDialogFormProvider>
   );
 }
 
-interface FormContentInnerProps extends FormContentProps {
-  resourceSelectionMode: ResourceSelectionMode;
-}
-
-function FormContentInner(props: FormContentInnerProps) {
-  const { occurrence, onClose, dragHandlerRef, isDraggable, resourceSelectionMode } = props;
+function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
+  const { onClose, dragHandlerRef, isDraggable } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
+  const { occurrence, resourceSelectionMode } = formStore;
 
   // Selector hooks
   const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+  const shouldEventRequireResource = useStore(
+    store,
+    schedulerOtherSelectors.shouldEventRequireResource,
+  );
 
   // Optional renderer hooks
   const { recurrenceTab: RecurrenceTabRenderer } = useEventEditingOptionalRenderers();
@@ -221,75 +221,119 @@ function FormContentInner(props: FormContentInnerProps) {
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
 
+  // Both surfaces unmount the form when the editing session stops, so the cleanup
+  // marks the end of the session for submissions still awaiting async validation.
+  const isSessionAliveRef = React.useRef(true);
+  React.useEffect(() => {
+    isSessionAliveRef.current = true;
+    return () => {
+      isSessionAliveRef.current = false;
+    };
+  }, []);
+  const isSubmittingRef = React.useRef(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!(await formStore.validateAll())) {
+    if (isSubmittingRef.current) {
       return;
     }
 
-    const values = formStore.state.values;
-    const { start, end } = computeRange(adapter, values, displayTimezone);
-
-    // Only the custom fields the user actually edited enter the changes payload,
-    // so untouched fields keep resolving against the live model on the recurring paths.
-    const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
-
-    const metaChanges = {
-      ...editedCustomValues,
-      title: values.title.trim(),
-      description: values.description.trim(),
-      allDay: values.allDay,
-      resource: resourceSelectionMode === 'multiple' ? values.resourceIds : values.resourceIds[0],
-      color: values.color === null ? undefined : values.color,
-    };
-
-    let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
-    if (!showRecurrence || !recurrencePresets) {
-      rruleToSubmit = undefined;
-    } else if (values.recurrenceSelection === null) {
-      rruleToSubmit = undefined;
-    } else if (values.recurrenceSelection === 'custom') {
-      rruleToSubmit = values.rruleDraft;
-    } else {
-      rruleToSubmit = recurrencePresets[values.recurrenceSelection];
+    if (process.env.NODE_ENV !== 'production') {
+      // Checked on submit rather than on mount: the registry is only complete once
+      // every section has run its effects, whatever the composition.
+      if (shouldEventRequireResource && !formStore.hasValidator('resourceIds')) {
+        warnOnce([
+          'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
+          'Saving without a resource is still blocked, but the end user has no visible field to fix it.',
+          'Render the resource section in the General tab, or register a validator for the "resourceIds" field.',
+        ]);
+      }
     }
 
-    if (rawPlaceholder?.type === 'creation') {
-      store.createEvent({
-        ...metaChanges,
-        start,
-        end,
-        rrule: rruleToSubmit,
-      });
-    } else if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
-      const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
-        store.state,
-        occurrence.displayTimezone.rrule,
-        rruleToSubmit,
-      );
+    isSubmittingRef.current = true;
+    try {
+      const isValid = await formStore.validateAll();
 
-      const changes: SchedulerEventUpdatedProperties = {
-        ...metaChanges,
-        id: occurrence.id,
-        start,
-        end,
-        ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
+      if (!isSessionAliveRef.current) {
+        return;
+      }
+
+      // Checked here so a custom General tab without the resource section cannot bypass the requirement.
+      const isMissingRequiredResource =
+        shouldEventRequireResource && formStore.state.values.resourceIds.length === 0;
+      if (isMissingRequiredResource) {
+        formStore.setError('resourceIds', localeText.requiredResourceError);
+      }
+      if (!isValid || isMissingRequiredResource) {
+        return;
+      }
+
+      const values = formStore.state.values;
+      const { start, end } = computeRange(adapter, values, displayTimezone);
+
+      // Only the custom fields the user actually edited enter the changes payload,
+      // so untouched fields keep resolving against the live model on the recurring paths.
+      const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
+
+      const metaChanges = {
+        ...editedCustomValues,
+        title: values.title.trim(),
+        description: values.description.trim(),
+        allDay: values.allDay,
+        resource: resourceSelectionMode === 'multiple' ? values.resourceIds : values.resourceIds[0],
+        color: values.color === null ? undefined : values.color,
       };
 
-      await store.updateRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
-        changes,
-        onSubmit: onClose,
-      });
+      let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
+      if (!showRecurrence || !recurrencePresets) {
+        rruleToSubmit = undefined;
+      } else if (values.recurrenceSelection === null) {
+        rruleToSubmit = undefined;
+      } else if (values.recurrenceSelection === 'custom') {
+        rruleToSubmit = values.rruleDraft;
+      } else {
+        rruleToSubmit = recurrencePresets[values.recurrenceSelection];
+      }
 
-      // don't close the dialog
-      return;
-    } else {
-      store.updateEvent({ ...metaChanges, id: occurrence.id, start, end, rrule: rruleToSubmit });
+      if (rawPlaceholder?.type === 'creation') {
+        store.createEvent({
+          ...metaChanges,
+          start,
+          end,
+          rrule: rruleToSubmit,
+        });
+      } else if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+        const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
+          store.state,
+          occurrence.displayTimezone.rrule,
+          rruleToSubmit,
+        );
+
+        const changes: SchedulerEventUpdatedProperties = {
+          ...metaChanges,
+          id: occurrence.id,
+          start,
+          end,
+          ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
+        };
+
+        await store.updateRecurringEvent({
+          occurrenceStart: occurrence.displayTimezone.start.value,
+          changes,
+          onSubmit: onClose,
+        });
+
+        // don't close the dialog
+        return;
+      } else {
+        store.updateEvent({ ...metaChanges, id: occurrence.id, start, end, rrule: rruleToSubmit });
+      }
+
+      onClose();
+    } finally {
+      isSubmittingRef.current = false;
     }
-
-    onClose();
   };
 
   const handleDelete = () => {
@@ -320,7 +364,7 @@ function FormContentInner(props: FormContentInnerProps) {
           dragHandlerRef={dragHandlerRef}
           isDraggable={isDraggable}
         >
-          <TitleSection occurrence={occurrence} />
+          <TitleSection />
         </EventDialogHeader>
         {showRecurrence && RecurrenceTabRenderer && (
           <EventDialogTabsContainer className={classes.eventDialogTabsContainer}>
@@ -340,11 +384,7 @@ function FormContentInner(props: FormContentInnerProps) {
             </EventDialogTabs>
           </EventDialogTabsContainer>
         )}
-        <GeneralTab
-          occurrence={occurrence}
-          value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'}
-          resourceSelectionMode={resourceSelectionMode}
-        />
+        <GeneralTab value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'} />
         {showRecurrence && RecurrenceTabRenderer && (
           <RecurrenceTabRenderer occurrence={occurrence} tabValue={tabValue} />
         )}

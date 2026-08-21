@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler",
-  "version": "9.0.0-beta.9",
+  "version": "9.0.0-beta.10",
   "author": "MUI Team",
   "description": "The community edition of the Scheduler component (MUI X).",
   "license": "MIT",
@@ -96,6 +96,7 @@
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-transition-group": "catalog:",
     "rimraf": "catalog:"
   },
   "engines": {

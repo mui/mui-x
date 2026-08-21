@@ -28,11 +28,16 @@ const StandaloneDayView = React.forwardRef(function StandaloneDayView<
     typeof props
   >(props);
 
-  const { localeText, ...other } = forwardedProps;
+  const { localeText, slots, slotProps, ...other } = forwardedProps;
 
   return (
     <ResponsiveTypographyContainer>
-      <EventCalendarProvider {...parameters} localeText={localeText}>
+      <EventCalendarProvider
+        {...parameters}
+        localeText={localeText}
+        slots={slots}
+        slotProps={slotProps}
+      >
         <EventDialogProvider>
           <DayView ref={forwardedRef} {...other} />
         </EventDialogProvider>
@@ -173,6 +178,9 @@ StandaloneDayView.propTypes /* remove-proptypes */ = {
   eventModelStructure: PropTypes.object,
   /**
    * The events currently available in the calendar.
+   *
+   * Event models are compared by reference to avoid reprocessing unchanged events.
+   * Replace an event model with a new object when updating it instead of mutating it in place.
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
@@ -182,6 +190,15 @@ StandaloneDayView.propTypes /* remove-proptypes */ = {
    * in the GitHub repository.
    */
   localeText: PropTypes.object,
+  /**
+   * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
+   * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
+   * `eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the
+   * occurrence is read-only (through the event, its resource or the `readOnly` prop) and the dialog
+   * opens in view-only mode, and `"edit"` otherwise.
+   * Call `eventDetails.cancel()` to keep it closed and handle the interaction in your own UI.
+   */
+  onEventEditingStart: PropTypes.func,
   /**
    * Callback fired when some event of the calendar change.
    */
@@ -254,6 +271,16 @@ StandaloneDayView.propTypes /* remove-proptypes */ = {
    * @default true
    */
   showCurrentTimeIndicator: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

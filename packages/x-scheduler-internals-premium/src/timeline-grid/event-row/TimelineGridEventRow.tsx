@@ -138,13 +138,13 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     }
     if (event.key === 'Enter' && event.target === event.currentTarget && triggerKeyboardCreation) {
       event.preventDefault();
-      triggerKeyboardCreation();
+      triggerKeyboardCreation(event.nativeEvent);
     }
   };
 
   const contextValue: TimelineGridEventRowContext = React.useMemo(
-    () => ({ resourceId, hasFocus, getCursorPositionInElementMs }),
-    [resourceId, hasFocus, getCursorPositionInElementMs],
+    () => ({ resourceId, rowRef, hasFocus, getCursorPositionInElementMs }),
+    [resourceId, rowRef, hasFocus, getCursorPositionInElementMs],
   );
 
   const placeholder = usePlaceholderInRow({
