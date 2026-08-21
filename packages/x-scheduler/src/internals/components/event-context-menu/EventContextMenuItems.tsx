@@ -15,6 +15,10 @@ interface UseEventContextMenuItemsParameters {
   occurrence: SchedulerRenderableEventOccurrence;
   anchorEl: HTMLElement;
   onRequestClose: () => void;
+  /** Forwarded to `startEditing` for Edit — see `EventEditingTriggerProps`. */
+  onEditingCanceled?: () => void;
+  /** Forwarded to `startEditing` for Edit — see `EventEditingTriggerProps`. */
+  stableAnchor?: HTMLElement | null;
 }
 
 /**
@@ -38,7 +42,7 @@ function getFocusFallback(anchorEl: HTMLElement): HTMLElement | null {
 export function useEventContextMenuItems(
   params: UseEventContextMenuItemsParameters,
 ): React.ReactNode[] {
-  const { occurrence, anchorEl, onRequestClose } = params;
+  const { occurrence, anchorEl, onRequestClose, onEditingCanceled, stableAnchor } = params;
 
   const store = useSchedulerStoreContext();
   const { classes, localeText } = useEventEditingStyledContext();
@@ -50,9 +54,17 @@ export function useEventContextMenuItems(
     schedulerOtherSelectors.areRecurringEventsAvailable,
   );
 
-  const handleEdit = () => {
+  const handleEdit = (event: React.MouseEvent) => {
     onRequestClose();
-    startEditing({ current: anchorEl }, occurrence);
+    const started = startEditing(
+      { current: anchorEl },
+      occurrence,
+      event.nativeEvent,
+      stableAnchor,
+    );
+    if (!started) {
+      onEditingCanceled?.();
+    }
   };
 
   // Mirrors EventToolbar's delete / FormContent's delete: recurring events open the scope dialog;

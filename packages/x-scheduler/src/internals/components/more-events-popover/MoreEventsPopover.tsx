@@ -143,7 +143,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       </MoreEventsPopoverHeader>
       <MoreEventsPopoverBody className={classes.moreEventsPopoverBody}>
         {occurrences.map((occurrence) => (
-          <EventEditingTrigger
+          <EventContextMenuTrigger
             occurrence={occurrence}
             key={occurrence.key}
             onEditingCanceled={onClose}

@@ -6,6 +6,15 @@ export interface EventContextMenuAnchorPosition {
   left: number;
 }
 
+export interface OpenEventContextMenuOptions {
+  /** Anchors the menu to a point (right-click). Anchors to `anchorEl` itself when omitted. */
+  anchorPosition?: EventContextMenuAnchorPosition | null;
+  /** Forwarded to `startEditing` when Edit is chosen — see `EventEditingTriggerProps`. */
+  onEditingCanceled?: () => void;
+  /** Forwarded to `startEditing` when Edit is chosen — see `EventEditingTriggerProps`. */
+  stableAnchor?: HTMLElement | null;
+}
+
 export interface EventContextMenuContextValue {
   /**
    * Opens the context menu for `occurrence`, anchored either to a point (right-click) or to
@@ -14,7 +23,7 @@ export interface EventContextMenuContextValue {
   openMenu: (
     occurrence: SchedulerRenderableEventOccurrence,
     anchorEl: HTMLElement,
-    anchorPosition?: EventContextMenuAnchorPosition | null,
+    options?: OpenEventContextMenuOptions,
   ) => void;
 }
 
@@ -27,6 +36,17 @@ export interface EventContextMenuTriggerProps {
   /** A single element. The trigger clones it to attach its editing and context menu handlers. */
   children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLElement>;
+  /**
+   * Called when an activation (click, or Edit from the context menu) is canceled by
+   * `onEventEditingStart`. See `EventEditingTriggerProps`.
+   */
+  onEditingCanceled?: () => void;
+  /**
+   * Element exposed as `eventDetails.anchor` in `onEventEditingStart`. Pass it when a cancellation
+   * unmounts this trigger (e.g. it lives in the "+N more" popover, which the cancellation closes);
+   * it defaults to the trigger element itself. See `EventEditingTriggerProps`.
+   */
+  stableAnchor?: HTMLElement | null;
 }
 
 export interface EventContextMenuProps {
@@ -34,5 +54,7 @@ export interface EventContextMenuProps {
   occurrence: SchedulerRenderableEventOccurrence;
   anchorEl: HTMLElement;
   anchorPosition: EventContextMenuAnchorPosition | null;
+  onEditingCanceled?: () => void;
+  stableAnchor?: HTMLElement | null;
   onClose: () => void;
 }

@@ -11,10 +11,17 @@ import type { EventContextMenuProps } from './EventContextMenu.types';
  * `useEventContextMenuItems`.
  */
 export function EventContextMenu(props: EventContextMenuProps) {
-  const { open, occurrence, anchorEl, anchorPosition, onClose } = props;
+  const { open, occurrence, anchorEl, anchorPosition, onEditingCanceled, stableAnchor, onClose } =
+    props;
 
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
-  const items = useEventContextMenuItems({ occurrence, anchorEl, onRequestClose: onClose });
+  const items = useEventContextMenuItems({
+    occurrence,
+    anchorEl,
+    onRequestClose: onClose,
+    onEditingCanceled,
+    stableAnchor,
+  });
 
   return (
     <Menu

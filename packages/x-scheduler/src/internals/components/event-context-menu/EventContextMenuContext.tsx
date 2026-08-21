@@ -10,6 +10,7 @@ import type {
   EventContextMenuContextValue,
   EventContextMenuProviderProps,
   EventContextMenuTriggerProps,
+  OpenEventContextMenuOptions,
 } from './EventContextMenu.types';
 
 export const EventContextMenuContext = React.createContext<
@@ -30,6 +31,8 @@ interface EventContextMenuState {
   occurrence: SchedulerRenderableEventOccurrence | null;
   anchorEl: HTMLElement | null;
   anchorPosition: EventContextMenuAnchorPosition | null;
+  onEditingCanceled?: () => void;
+  stableAnchor?: HTMLElement | null;
 }
 
 const INITIAL_STATE: EventContextMenuState = {
@@ -47,9 +50,16 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
     (
       occurrence: SchedulerRenderableEventOccurrence,
       anchorEl: HTMLElement,
-      anchorPosition: EventContextMenuAnchorPosition | null = null,
+      options: OpenEventContextMenuOptions = {},
     ) => {
-      setState({ open: true, occurrence, anchorEl, anchorPosition });
+      setState({
+        open: true,
+        occurrence,
+        anchorEl,
+        anchorPosition: options.anchorPosition ?? null,
+        onEditingCanceled: options.onEditingCanceled,
+        stableAnchor: options.stableAnchor,
+      });
     },
   );
 
@@ -72,6 +82,8 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
           occurrence={state.occurrence}
           anchorEl={state.anchorEl}
           anchorPosition={state.anchorPosition}
+          onEditingCanceled={state.onEditingCanceled}
+          stableAnchor={state.stableAnchor}
           onClose={closeMenu}
         />
       )}
@@ -81,7 +93,9 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
 
 /**
  * Wraps an element so it edits its occurrence on click (same as `EventEditingTrigger`) and opens
- * the event context menu on right-click or on `Space` while it is focused.
+ * the event context menu on right-click or on `Space` while it is focused. `onEditingCanceled` and
+ * `stableAnchor` behave exactly as they do on `EventEditingTrigger` — forwarded to `startEditing`
+ * both for the direct click and for Edit chosen from the menu.
  *
  * On a coarse pointer, activation arms the toolbar instead of opening the dialog directly
  * (`editingModePolicy.ts`), and that toolbar already exposes Edit and Delete — so right-click and
@@ -89,15 +103,15 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
  * redundant menu whose own Edit item would otherwise just re-arm a no-op.
  */
 export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
-  const { occurrence, onClick, children } = props;
-  const editing = useEventEditingTriggerProps(occurrence);
+  const { occurrence, onClick, onEditingCanceled, stableAnchor, children } = props;
+  const editing = useEventEditingTriggerProps(occurrence, { onEditingCanceled, stableAnchor });
   const menuContext = useEventContextMenuContext();
 
   return React.cloneElement(children as React.ReactElement<any>, {
     ref: editing.ref,
     onClick: (event: React.MouseEvent<HTMLElement>) => {
       onClick?.(event);
-      editing.onClick();
+      editing.onClick(event);
     },
     onContextMenu: (event: React.MouseEvent<HTMLElement>) => {
       if (!menuContext || isCoarsePointer()) {
@@ -105,8 +119,9 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
       }
       event.preventDefault();
       menuContext.openMenu(occurrence, event.currentTarget, {
-        top: event.clientY - 4,
-        left: event.clientX - 2,
+        anchorPosition: { top: event.clientY - 4, left: event.clientX - 2 },
+        onEditingCanceled,
+        stableAnchor,
       });
     },
     onKeyUp: (event: React.KeyboardEvent<HTMLElement>) => {
@@ -121,7 +136,7 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
       // here, before that check runs, is what suppresses it.
       (event as unknown as { preventBaseUIHandler?: () => void }).preventBaseUIHandler?.();
       event.preventDefault();
-      menuContext.openMenu(occurrence, event.currentTarget);
+      menuContext.openMenu(occurrence, event.currentTarget, { onEditingCanceled, stableAnchor });
     },
   });
 }
