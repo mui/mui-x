@@ -4,6 +4,7 @@ export { ResourceAndColorSection } from './ResourceAndColorSection';
 export { DescriptionSection } from './DescriptionSection';
 export { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
 export { useEventDialogFormField } from './useEventDialogFormField';
+export { useEventDialogOccurrence } from './useEventDialogOccurrence';
 export type {
   EventDialogFormFieldKey,
   UseEventDialogFormFieldParameters,

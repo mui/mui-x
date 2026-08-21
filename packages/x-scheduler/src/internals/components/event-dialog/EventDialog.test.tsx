@@ -30,6 +30,7 @@ import {
   SectionFieldset,
   SectionHeaderTitle,
   useEventDialogFormField,
+  useEventDialogOccurrence,
 } from '@mui/x-scheduler/event-dialog';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
@@ -389,6 +390,18 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       // The slot owns the content, not the panel, so the content wrapper is still there.
       expect(panel.querySelector(`.${eventCalendarClasses.eventDialogTabContent}`)).not.to.equal(
         null,
+      );
+    });
+
+    it('should expose the edited occurrence to a custom section through useEventDialogOccurrence', () => {
+      function OccurrenceProbe() {
+        const occurrence = useEventDialogOccurrence();
+        return <span data-testid="occurrence-probe">{`${occurrence.id}:${occurrence.title}`}</span>;
+      }
+      renderWithSlot({ eventDialogGeneralTab: OccurrenceProbe });
+
+      expect(screen.getByTestId('occurrence-probe').textContent).to.equal(
+        `${occurrenceWithDescription.id}:${occurrenceWithDescription.title}`,
       );
     });
 
