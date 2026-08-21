@@ -12,6 +12,9 @@ declare global {
   }
 }
 
+// Guards against a font host that accepts the connection but never responds.
+const FONT_TIMEOUT = 20_000;
+
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
   'ColumnAutosizingAsync',
@@ -827,8 +830,18 @@ async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}
   await page.waitForFunction(() => window.muiFixture?.isReady);
 
   // Screenshots taken with fallback faces look like a repo-wide text rendering
-  // change. Fail the run instead of publishing them.
-  await page.evaluate(() => window.muiFixture.fontsReady);
+  // change. Fail the run instead of publishing them. `loadFonts` never times out
+  // on its own, and this runs at module scope for the first page, where vitest's
+  // `testTimeout` does not apply -- so race it against a real timer here.
+  await Promise.race([
+    page.evaluate(() => window.muiFixture.fontsReady),
+    new Promise((_, reject) => {
+      setTimeout(
+        () => reject(new Error(`Fonts did not load within ${FONT_TIMEOUT}ms.`)),
+        FONT_TIMEOUT,
+      );
+    }),
+  ]);
 
   return page;
 }

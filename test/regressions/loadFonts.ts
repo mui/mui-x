@@ -23,8 +23,6 @@ const SUBSETS = [
   { name: 'greek', text: 'σ' },
 ];
 
-const TIMEOUT = 20000;
-
 function loadStylesheet(href: string) {
   return new Promise<void>((resolve, reject) => {
     const link = document.createElement('link');
@@ -68,22 +66,15 @@ async function loadFaces() {
   }
 }
 
-// `../utils/setupFakeClock` installs Sinon fake timers before this module runs,
-// and `TestViewer` calls `runToLast()`, which would fire a `setTimeout` at once.
-// `AbortSignal.timeout` is not faked, so it still measures real time.
-function rejectAfter(ms: number) {
-  return new Promise<never>((_, reject) => {
-    AbortSignal.timeout(ms).addEventListener('abort', () => {
-      reject(new Error(`Fonts did not load within ${ms}ms.`));
-    });
-  });
-}
-
 /**
  * Loads the webfonts the fixtures render with.
+ *
+ * This never times out. `index.test.ts` races it against a real timer, because
+ * the bundle installs Sinon fake timers and vitest's `testTimeout` does not
+ * cover the module-scope call that acquires the first page.
  *
  * @returns a promise that rejects when a face does not load.
  */
 export default function loadFonts() {
-  return Promise.race([loadFaces(), rejectAfter(TIMEOUT)]);
+  return loadFaces();
 }
