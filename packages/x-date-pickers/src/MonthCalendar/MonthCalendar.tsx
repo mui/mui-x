@@ -18,7 +18,7 @@ import type { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
-import { DIALOG_WIDTH } from '../internals/constants/dimensions';
+import { CALENDAR_WIDTH_VAR } from '../internals/constants/dimensions';
 import type { MuiPickersAdapter, PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
@@ -67,7 +67,7 @@ const MonthCalendarRoot = styled('div', {
   justifyContent: 'space-evenly',
   rowGap: 16,
   padding: '8px 0',
-  width: DIALOG_WIDTH,
+  width: CALENDAR_WIDTH_VAR,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
   variants: [
