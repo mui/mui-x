@@ -1,0 +1,12 @@
+<DataGridPremium
+  featureDependencies={{ formula: formulaFeature }}
+  rows={rows}
+  pinnedRows={pinnedRows}
+  columns={columns}
+  formulaA1Notation
+  rowSelection={false}
+  density="compact"
+  showCellVerticalBorder
+  showColumnVerticalBorder
+  disablePivoting
+/>

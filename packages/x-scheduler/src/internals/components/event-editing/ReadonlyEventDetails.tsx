@@ -108,7 +108,7 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const store = useSchedulerStoreContext();
 
   // Selector hooks
-  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,

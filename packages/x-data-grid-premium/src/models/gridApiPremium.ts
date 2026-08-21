@@ -1,7 +1,9 @@
 import type { GridPrivateOnlyApiCommon } from '@mui/x-data-grid/internals';
 import type {
   GridApiCommon,
+  GridCallbackDetails,
   GridColumnPinningApi,
+  GridControlledStateReasonLookup,
   GridDetailPanelApi,
   GridDetailPanelPrivateApi,
   GridRowPinningApi,
@@ -19,6 +21,7 @@ import type {
   GridDataSourceApiPremium,
 } from '../hooks/features/dataSource/models';
 import type { GridAggregationPrivateApi } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import type { GridFormulaPrivateApi } from '../hooks/features/formula/gridFormulaInterfaces';
 import type {
   GridPivotingApi,
   GridPivotingPrivateApi,
@@ -62,7 +65,16 @@ export interface GridPrivateApiPremium
     GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium, DataGridPremiumProcessedProps>,
     GridDataSourcePremiumPrivateApi,
     GridAggregationPrivateApi,
+    // The formula feature is injectable — its private API methods only exist
+    // when the feature is provided through `featureDependencies`.
+    Partial<GridFormulaPrivateApi>,
     GridDetailPanelPrivateApi,
     GridRowReorderPrivateApi,
     GridPivotingPrivateApi,
     GridChartsIntegrationPrivateApi {}
+
+/**
+ * The details passed to the callbacks of Data Grid Premium, with `apiRef` typed to `GridApiPremium`.
+ */
+export type GridCallbackDetailsPremium<K extends keyof GridControlledStateReasonLookup = any> =
+  GridCallbackDetails<K, GridApiPremium>;

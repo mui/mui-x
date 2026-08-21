@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
-import { getCell, getRow, sleep } from 'test/utils/helperFn';
+import { actSleep, getCell, getRow } from 'test/utils/helperFn';
 import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, useGridApiRef, GRID_ROOT_GROUP_ID } from '@mui/x-data-grid-pro';
 import type {
@@ -79,6 +79,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           return {
             rows: response.rows,
             rowCount: response.rowCount,
+            pageInfo: response.pageInfo, // allow tests to exercise `hasNextPage`
           };
         },
       };
@@ -169,7 +170,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
-      await sleep(50);
+      await actSleep(50);
 
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
@@ -1173,6 +1174,244 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       const afterFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is the end of the first page
       expect(afterFilteringSearchParams.get('end')).to.equal('9');
+    });
+
+    it('should not fetch more rows when the data source reports hasNextPage: false', async () => {
+      // The first page is the final page: fewer rows than the page size, unknown row
+      // count, and no next page available.
+      transformGetRowsResponse = (response) => ({
+        ...response,
+        rowCount: -1,
+        pageInfo: { hasNextPage: false },
+      });
+
+      // 2 rows with a page size of 2 do not fill the 4-row viewport, so the scroll-end
+      // trigger is immediately within the threshold. Without honoring `hasNextPage`, the
+      // grid makes a second (wasted) request to try to fill the viewport (see "should stop
+      // making data source requests if the new rows were not added on the last call").
+      // `hasNextPage: false` must prevent that second request.
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={2}
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 2 } } }}
+        />,
+      );
+
+      // wait until the first page is rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      // give the scroll-end intersection observer time to (incorrectly) fire a second fetch
+      await act(async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 200);
+        });
+      });
+
+      // only the initial page was fetched; the wasted second request was suppressed
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    it('should resume fetching after a query change once hasNextPage is true again', async () => {
+      let isFirstResponse = true;
+      transformGetRowsResponse = (response) => ({
+        ...response,
+        rowCount: -1,
+        // the initial response reports no next page, subsequent ones report more pages
+        pageInfo: { hasNextPage: !isFirstResponse },
+      });
+
+      render(<TestDataSourceLazyLoader mockServerRowCount={100} />);
+
+      // wait until the initial response (hasNextPage: false) is fully processed
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      // subsequent responses now report that more pages are available
+      isFirstResponse = false;
+      fetchRowsSpy.resetHistory();
+
+      // a new query (sorting) re-queries the first page
+      await act(async () => {
+        apiRef.current?.sortColumn(mockServer.columns[0].field, 'asc');
+      });
+      await waitFor(() => expect(fetchRowsSpy.callCount).to.be.at.least(1));
+
+      // scrolling to the bottom fetches the next page again
+      fetchRowsSpy.resetHistory();
+      await act(async () => {
+        apiRef.current?.scrollToIndexes({ rowIndex: 9 });
+      });
+      await waitFor(() => expect(fetchRowsSpy.callCount).to.be.at.least(1));
+    });
+
+    it('should handle an empty result set with hasNextPage: false without extra fetches', async () => {
+      transformGetRowsResponse = (response) => ({
+        ...response,
+        rows: [],
+        rowCount: -1,
+        pageInfo: { hasNextPage: false },
+      });
+
+      render(<TestDataSourceLazyLoader mockServerRowCount={0} />);
+
+      // Only the initial request is made. An empty result set produces no rows and no
+      // skeleton rows, so there is no last row to attach the scroll-end trigger to and
+      // therefore no further request — and no crash.
+      await waitFor(() => expect(fetchRowsSpy.callCount).to.equal(1));
+      expect(() => getRow(0)).to.throw();
+    });
+
+    it('should not fetch more rows when paginationMeta reports hasNextPage: false', async () => {
+      // Row count stays unknown (infinite loading) and the response carries no pageInfo,
+      // but the controlled `paginationMeta` prop signals there is no next page.
+      transformGetRowsResponse = (response) => ({ ...response, rowCount: -1 });
+
+      // 2 rows with a page size of 2 do not fill the 4-row viewport, so without honoring
+      // `paginationMeta.hasNextPage` the grid would make a second (wasted) request.
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={2}
+          paginationMeta={{ hasNextPage: false }}
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 2 } } }}
+        />,
+      );
+
+      // wait until the first page is rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      // give the scroll-end intersection observer time to (incorrectly) fire a second fetch
+      await act(async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 200);
+        });
+      });
+
+      // only the initial page was fetched; the wasted second request was suppressed
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    it('should let a controlled paginationMeta.hasNextPage: true override a false response', async () => {
+      // The data source response says there are no more pages, but the controlled
+      // `paginationMeta` prop says there are — the controlled prop wins.
+      transformGetRowsResponse = (response) => ({
+        ...response,
+        rowCount: -1,
+        pageInfo: { hasNextPage: false },
+      });
+
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={100}
+          paginationMeta={{ hasNextPage: true }}
+        />,
+      );
+
+      // wait until the first page is rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      fetchRowsSpy.resetHistory();
+
+      // scrolling to the bottom still fetches the next page despite the false response
+      await act(async () => {
+        apiRef.current?.scrollToIndexes({ rowIndex: 9 });
+      });
+      await waitFor(() => expect(fetchRowsSpy.callCount).to.be.at.least(1));
+    });
+
+    it('should honor initialState pagination meta hasNextPage: false', async () => {
+      // The responses carry no pageInfo; the "no next page" signal comes solely from
+      // initialState and must persist (a missing pageInfo keeps the previous value).
+      transformGetRowsResponse = (response) => ({ ...response, rowCount: -1 });
+
+      // 2 rows with a page size of 2 would normally trigger a wasted auto-fill request.
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={2}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 2 },
+              meta: { hasNextPage: false },
+            },
+          }}
+        />,
+      );
+
+      // wait until the first page is rendered
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      // give the scroll-end intersection observer time to (incorrectly) fire a second fetch
+      await act(async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 200);
+        });
+      });
+
+      // only the initial page was fetched; initialState suppressed the wasted request
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    it('should re-evaluate hasNextPage when the dataSource reference changes', async () => {
+      // A new `dataSource` reference is a full restart: the rows and the cache are cleared
+      // and the first page is refetched. The previous source reporting no next page says
+      // nothing about the new one, which here never sends `pageInfo` at all.
+      const createStaticDataSource = (
+        onFetch: (params: GridGetRowsParams) => void,
+        pageInfo?: { hasNextPage: boolean },
+      ): GridDataSource => ({
+        getRows: async (params) => {
+          onFetch(params);
+          const start = Number(params.start ?? 0);
+          const end = Number(params.end ?? 9);
+          return {
+            rows: Array.from({ length: end - start + 1 }, (__, index) => ({ id: start + index })),
+            rowCount: -1,
+            ...(pageInfo === undefined ? {} : { pageInfo }),
+          };
+        },
+      });
+
+      const exhaustedFetchSpy = spy();
+      const silentFetchSpy = spy();
+      const exhaustedDataSource = createStaticDataSource(exhaustedFetchSpy, {
+        hasNextPage: false,
+      });
+      const silentDataSource = createStaticDataSource(silentFetchSpy);
+
+      const { setProps } = render(<TestDataSourceLazyLoader dataSource={exhaustedDataSource} />);
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      setProps({ dataSource: silentDataSource });
+      await waitFor(() => expect(silentFetchSpy.callCount).to.be.at.least(1));
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      silentFetchSpy.resetHistory();
+
+      // scrolling to the bottom must fetch again: the stale `false` from the previous
+      // data source must not survive the restart
+      await act(async () => {
+        apiRef.current?.scrollToIndexes({ rowIndex: 9 });
+      });
+      await waitFor(() => expect(silentFetchSpy.callCount).to.be.at.least(1));
+    });
+
+    it('should honor a pagination meta update made through the API', async () => {
+      // The response reports no next page, then `setPaginationMeta` says otherwise. An
+      // explicit update of the pagination meta overrides the response.
+      transformGetRowsResponse = (response) => ({
+        ...response,
+        rowCount: -1,
+        pageInfo: { hasNextPage: false },
+      });
+
+      render(<TestDataSourceLazyLoader mockServerRowCount={100} />);
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      await act(async () => {
+        apiRef.current?.setPaginationMeta({ hasNextPage: true });
+      });
+      fetchRowsSpy.resetHistory();
+
+      await act(async () => {
+        apiRef.current?.scrollToIndexes({ rowIndex: 9 });
+      });
+      await waitFor(() => expect(fetchRowsSpy.callCount).to.be.at.least(1));
     });
   });
 

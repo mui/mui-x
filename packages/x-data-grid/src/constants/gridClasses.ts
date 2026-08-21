@@ -87,6 +87,18 @@ export interface GridClasses {
    */
   aggregationRowOverlayWrapper: string;
   /**
+   * Styles applied to the A1-notation column-letter adornment in the column header (Premium formulas).
+   */
+  formulaColumnHeaderLetter: string;
+  /**
+   * Styles applied to the cells of the A1-notation row-number column (Premium formulas).
+   */
+  formulaRowNumberCell: string;
+  /**
+   * Styles applied to the formula bar root element (Premium formulas).
+   */
+  formulaBar: string;
+  /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
   autoHeight: string;
@@ -1209,6 +1221,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeader--alignRight',
   'aggregationColumnHeaderLabel',
   'aggregationRowOverlayWrapper',
+  'formulaColumnHeaderLetter',
+  'formulaRowNumberCell',
+  'formulaBar',
   'mainContent',
   'withSidePanel',
   'collapsible',

@@ -85,6 +85,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
         expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        expect(getCell(0, 0)).to.have.attribute('role', 'rowheader');
       });
 
       it('should not react to initial state updates', () => {
