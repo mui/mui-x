@@ -13,11 +13,7 @@ import type {
   MinimalTreeViewState,
 } from './MinimalTreeViewStore.types';
 import type { TreeViewValidItem } from '../../models';
-import {
-  createMinimalInitialState,
-  createTreeViewDefaultId,
-  deriveStateFromParameters,
-} from './MinimalTreeViewStore.utils';
+import { createMinimalInitialState, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationPlugin } from '../plugins/keyboardNavigation';
 import { TreeViewFocusPlugin } from '../plugins/focus/TreeViewFocusPlugin';
@@ -44,6 +40,9 @@ export class MinimalTreeViewStore<
   private initialParameters: Parameters | null = null;
 
   private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
+
+  // Set when `applyParametersDuringRender` updated the state without notifying the subscribers.
+  private hasRenderUpdate = false;
 
   // Owns the store's teardown. Declared first so the resources below register
   // against it during field initialization; disposed by `useDisposable` on
@@ -116,6 +115,33 @@ export class MinimalTreeViewStore<
    * Updates the state of the Tree View based on the new parameters provided to the root component.
    */
   public updateStateFromParameters(parameters: Parameters) {
+    this.update(this.buildStateFromParameters(parameters));
+    this.parameters = parameters;
+  }
+
+  // Applies the new parameters during render, without notifying the subscribers.
+  public applyParametersDuringRender(parameters: Parameters) {
+    const newState = this.buildStateFromParameters(parameters);
+    for (const key in newState) {
+      if (!Object.is(this.state[key], newState[key])) {
+        this.state = { ...this.state, ...newState };
+        this.hasRenderUpdate = true;
+        break;
+      }
+    }
+
+    this.parameters = parameters;
+  }
+
+  // Notifies the subscribers of the state applied by `applyParametersDuringRender`.
+  public flushRenderUpdate = () => {
+    if (this.hasRenderUpdate) {
+      this.hasRenderUpdate = false;
+      this.setState(this.state);
+    }
+  };
+
+  private buildStateFromParameters(parameters: Parameters) {
     const updateModel: TreeViewModelUpdater<State, Parameters> = (
       mutableNewState,
       controlledProp,
@@ -161,8 +187,8 @@ export class MinimalTreeViewStore<
     updateModel(newMinimalState, 'expandedItems', 'defaultExpandedItems');
     updateModel(newMinimalState, 'selectedItems', 'defaultSelectedItems');
 
-    if (this.state.providedTreeId !== parameters.id || this.state.treeId === undefined) {
-      newMinimalState.treeId = createTreeViewDefaultId();
+    if (this.state.treeId !== parameters.defaultId) {
+      newMinimalState.treeId = parameters.defaultId;
     }
 
     if (
@@ -172,14 +198,7 @@ export class MinimalTreeViewStore<
       Object.assign(newMinimalState, TreeViewItemsPlugin.buildItemsStateIfNeeded(parameters));
     }
 
-    const newState = this.mapper.updateStateFromParameters(
-      newMinimalState,
-      parameters,
-      updateModel,
-    );
-
-    this.update(newState);
-    this.parameters = parameters;
+    return this.mapper.updateStateFromParameters(newMinimalState, parameters, updateModel);
   }
 
   /**
