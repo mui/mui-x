@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useEventEditingStyledContext } from '../event-editing';
 import { useSchedulerSlots } from '../SchedulerSlotsContext';
 import { useEventDialogFormContext } from './form/EventDialogFormContext';
-import { EventDialogGeneralTabContent } from './EventDialogGeneralTabContent';
+import { EventDialogGeneralTabContent } from '../../../event-dialog/EventDialogGeneralTabContent';
 import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 
 interface GeneralTabProps {

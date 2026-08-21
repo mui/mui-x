@@ -8,7 +8,7 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-schedul
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventEditingStyledContext } from '../event-editing';
 import { useEventDialogFormContext } from './form/EventDialogFormContext';
-import { useEventDialogFormField } from './form/useEventDialogFormField';
+import { useEventDialogFormField } from '../../../event-dialog/useEventDialogFormField';
 
 const TitleTextField = styled(TextField, {
   name: 'MuiEventDialog',

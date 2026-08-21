@@ -23,10 +23,12 @@ import { MonthView } from '../../../month-view';
 import { EventDialogContent, EventDialogProvider } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { SchedulerSlotsProvider } from '../SchedulerSlotsContext';
-import DateTimeSection from './DateTimeSection';
-import DescriptionSection from './DescriptionSection';
-import ResourceAndColorSection from './ResourceAndColorSection';
-import { useEventDialogFormField } from './form/useEventDialogFormField';
+import {
+  DateTimeSection,
+  DescriptionSection,
+  ResourceAndColorSection,
+  useEventDialogFormField,
+} from '@mui/x-scheduler/event-dialog';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
 const personalResource = ResourceBuilder.new().title('Personal').eventColor('teal').build();

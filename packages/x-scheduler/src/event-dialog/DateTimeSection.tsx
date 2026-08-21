@@ -11,12 +11,12 @@ import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventEditingStyledContext } from '../event-editing';
-import type { EventDialogFormValues } from './utils';
-import { computeRange, validateRange } from './utils';
+import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
+import type { EventDialogFormValues } from '../internals/components/event-dialog/utils';
+import { computeRange, validateRange } from '../internals/components/event-dialog/utils';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
-import { useEventDialogFormContext } from './form/EventDialogFormContext';
-import { useEventDialogFormField } from './form/useEventDialogFormField';
+import { useEventDialogFormContext } from '../internals/components/event-dialog/form/EventDialogFormContext';
+import { useEventDialogFormField } from './useEventDialogFormField';
 
 const DateTimeFieldsContainer = styled('div', {
   name: 'MuiEventDialog',
@@ -55,7 +55,7 @@ const AllDayFormControlLabel = styled(FormControlLabel, {
   },
 });
 
-export default function DateTimeSection() {
+export function DateTimeSection() {
   // Context hooks
   const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();

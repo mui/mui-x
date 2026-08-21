@@ -4,14 +4,14 @@ import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isBuiltInEventProperty } from '@mui/x-scheduler-internals/internals';
-import type { EventDialogBuiltInFormValues, EventDialogFormValues } from '../utils';
-import { BUILT_IN_FORM_KEYS } from '../utils';
-import { eventDialogFormSelectors } from './EventDialogFormStore';
+import type { EventDialogBuiltInFormValues, EventDialogFormValues } from '../internals/components/event-dialog/utils';
+import { BUILT_IN_FORM_KEYS } from '../internals/components/event-dialog/utils';
+import { eventDialogFormSelectors } from '../internals/components/event-dialog/form/EventDialogFormStore';
 import type {
   EventDialogFormValidator,
   EventDialogFormValidatorResult,
-} from './EventDialogFormStore';
-import { useEventDialogFormContext } from './EventDialogFormContext';
+} from '../internals/components/event-dialog/form/EventDialogFormStore';
+import { useEventDialogFormContext } from '../internals/components/event-dialog/form/EventDialogFormContext';
 
 /**
  * Built-in form keys get autocompleted, any other string is a custom field.

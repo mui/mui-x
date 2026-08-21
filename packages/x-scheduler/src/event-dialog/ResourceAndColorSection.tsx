@@ -25,12 +25,12 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useStore } from '@base-ui/utils/store';
-import type { PaletteName } from '../../utils/tokens';
-import { getPaletteVariants } from '../../utils/tokens';
-import { useEventEditingStyledContext } from '../event-editing';
+import type { PaletteName } from '../internals/utils/tokens';
+import { getPaletteVariants } from '../internals/utils/tokens';
+import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
-import { useEventDialogFormContext } from './form/EventDialogFormContext';
-import { useEventDialogFormField } from './form/useEventDialogFormField';
+import { useEventDialogFormContext } from '../internals/components/event-dialog/form/EventDialogFormContext';
+import { useEventDialogFormField } from './useEventDialogFormField';
 
 // Only meaningful in single-select mode: the sentinel value backing the "no resource"
 // MenuItem, so MUI Select's `value=""` always matches a rendered option — otherwise it logs
@@ -138,7 +138,7 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
   );
 }
 
-export default function ResourceAndColorSection() {
+export function ResourceAndColorSection() {
   // Context hooks
   const { occurrence, resourceSelectionMode: mode } = useEventDialogFormContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
