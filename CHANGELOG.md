@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.29.3
 
-_Aug 20, 2026_
+_Aug 21, 2026_
 
 We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
 
