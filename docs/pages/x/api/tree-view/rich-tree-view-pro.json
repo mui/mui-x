@@ -107,6 +107,8 @@
     },
     "itemHeight": { "type": { "name": "number" }, "default": "32" },
     "itemsReordering": { "type": { "name": "bool" }, "default": "false" },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
+    "loadingItemsCount": { "type": { "name": "number" }, "default": "5" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
@@ -287,6 +289,18 @@
       "key": "itemLoadingIcon",
       "className": "MuiRichTreeViewPro-itemLoadingIcon",
       "description": "Styles applied to the item's loading icon element",
+      "isGlobal": false
+    },
+    {
+      "key": "skeletonContent",
+      "className": "MuiRichTreeViewPro-skeletonContent",
+      "description": "Styles applied to the skeleton item's content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "skeletonItem",
+      "className": "MuiRichTreeViewPro-skeletonItem",
+      "description": "Styles applied to each skeleton item element.",
       "isGlobal": false
     }
   ],
