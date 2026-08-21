@@ -30,11 +30,11 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@mui/x-internals": "workspace:^",
     "jscodeshift": "catalog:",
     "yargs": "catalog:"
   },
   "devDependencies": {
+    "@mui/x-internals": "workspace:^",
     "@types/jscodeshift": "17.3.0",
     "dayjs": "catalog:",
     "moment-timezone": "catalog:",
