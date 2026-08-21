@@ -1,5 +1,7 @@
+import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Slider from '@mui/material/Slider';
 import { interpolateOrRd } from 'd3-scale-chromatic';
 import {
   HeatmapPremium,
@@ -45,12 +47,39 @@ const settings: HeatmapPremiumProps = {
 };
 
 export default function WebGLHeatmap() {
+  const [N, setN] = React.useState(100);
+
   return (
     <Stack sx={{ width: '100%' }}>
       <Typography variant="h6" sx={{ alignSelf: 'center', textAlign: 'center' }}>
         Yellow Taxi Trip Count - 2024
       </Typography>
-      <HeatmapPremium renderer="webgl" {...settings} />
+
+      <Typography variant="body2" sx={{ alignSelf: 'center', textAlign: 'center' }}>
+        Number of colors in the color map: {N}
+      </Typography>
+      <Slider
+        value={N}
+        min={1}
+        max={200}
+        step={1}
+        onChange={(event, value: any) => setN(value as number)}
+      />
+      <HeatmapPremium
+        renderer="webgl"
+        {...settings}
+        zAxis={[
+          {
+            min: 0,
+            max,
+            colorMap: {
+              type: 'continuous',
+              color: (t: number) => interpolateOrRd(Math.floor(t * N) / N),
+              max,
+            },
+          },
+        ]}
+      />
       <Typography variant="caption">Source: NYC.gov</Typography>
     </Stack>
   );
