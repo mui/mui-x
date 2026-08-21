@@ -78,6 +78,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const rowCount = Math.max(row.maxIndex, placeholder?.position.index ?? 0);
 
   React.useEffect(() => {
+    // `startEditing` is a no-op once the surface is open, so placeholder churn doesn't re-fire it.
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
