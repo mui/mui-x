@@ -112,9 +112,6 @@ export class SchedulerSchedulingPlugin<
    * Adds a dependency between two events.
    * Rejects dependencies referencing an unknown, recurring or read-only event,
    * duplicating an existing dependency, or closing a cycle.
-   * The guards read the controlled `dependencyModelList`, which only updates when the
-   * consumer round-trips the prop — so two adds in the same tick can jointly form a
-   * duplicate or a cycle without being rejected.
    * Implementation of the store's `addDependency()` — call it through the store.
    */
   public addDependency = (
@@ -151,11 +148,9 @@ export class SchedulerSchedulingPlugin<
   };
 
   /**
-   * Whether adding the dependency `source → target` would close a cycle, i.e. whether
-   * `target` already reaches `source` (a self-loop is the zero-length path).
-   * The search walks the full dependency list — not only the active dependencies —
-   * because a cycle through a recurring or not-yet-loaded endpoint is kept in the data
-   * and becomes live the moment the endpoint reactivates.
+   * Whether adding `source → target` would close a cycle: `target` already reaches
+   * `source` (a self-loop is the zero-length path). Walks the full dependency list,
+   * not the active one — a dormant cycle becomes live when its endpoint reactivates.
    */
   private isCreatingCycle(source: SchedulerEventId, target: SchedulerEventId): boolean {
     const adjacency = new Map<SchedulerEventId, SchedulerEventId[]>();

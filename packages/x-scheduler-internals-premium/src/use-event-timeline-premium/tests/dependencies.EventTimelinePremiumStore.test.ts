@@ -133,8 +133,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         adapter,
       );
 
-      // Two distinct new dependencies, neither duplicating `DEP_AB` (a→b), cycling with it,
-      // nor duplicating each other.
+      // Two distinct new dependencies, neither duplicating `DEP_AB` (a→b) nor each other.
       const firstResult = store.addDependency({
         source: 'event-b',
         target: 'event-c',
@@ -246,7 +245,6 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should reject a self-referencing dependency', () => {
-      // A self-loop is the degenerate cycle: the zero-length path from `target` to `source`.
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
@@ -306,7 +304,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should accept a dependency that only creates a diamond', () => {
-      // Reconvergence (a→b→d and a→c→d) is not a cycle: no path returns to its start.
+      // Reconvergence is not a cycle: no path returns to its start.
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
         {
@@ -333,10 +331,8 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should reject a cycle running through an inactive endpoint', () => {
-      // The reachability search walks the full dependency list, not only the active
-      // dependencies: a cycle through a recurring (or not-yet-loaded) endpoint is kept in
-      // the data and becomes live the moment the endpoint reactivates, so it must be
-      // rejected upfront.
+      // The guard walks the full dependency list: this cycle is dormant (recurring
+      // endpoint) but becomes live if the endpoint reactivates.
       const onDependenciesChange = spy();
       const createStore = () =>
         new EventTimelinePremiumStore(
@@ -370,9 +366,8 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should not detect a duplicate added earlier in the same update cycle', () => {
-      // The duplicate and cycle guards read the controlled `dependencyModelList`, which only
-      // updates when the consumer round-trips the prop — so two adds in the same tick can
-      // also jointly form a cycle. Same known limitation as consecutive adds.
+      // The duplicate and cycle guards read the controlled `dependencyModelList`, which
+      // only updates when the consumer round-trips the prop — same known limitation.
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
