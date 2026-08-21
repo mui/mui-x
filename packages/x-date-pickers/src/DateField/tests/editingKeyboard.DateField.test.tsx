@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { expectFieldValue } from 'test/utils/pickers';
+import { buildFieldInteractions, createPickerRenderer, expectFieldValue } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 describe('<DateField /> - Editing Keyboard', () => {
@@ -570,6 +570,30 @@ describe('<DateField /> - Editing Keyboard', () => {
           expectedValue: adapter.lib === 'dayjs' ? '1898' : '9998',
         });
       });
+    });
+  });
+
+  describe('Dates predating the timezone standardization - Dayjs', () => {
+    const { render, adapter } = createPickerRenderer({ adapterName: 'dayjs' });
+    const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
+
+    // `getDaysInMonth` used to return `1` on those dates, which is the maximum the day section is
+    // clamped to when editing it with the arrows. The day was stuck on `01`.
+    // See https://github.com/mui/mui-x/issues/23301
+    it('should increment the day of the month with the arrows', async () => {
+      const view = renderWithProps({
+        defaultValue: adapter.setYear(adapter.date('2026-08-15T12:30:00', 'Asia/Kolkata')!, 1883),
+        format: 'MM/DD/YYYY',
+        timezone: 'Asia/Kolkata',
+      });
+
+      await view.selectSection('day');
+
+      await view.user.keyboard('{ArrowUp}');
+      expectFieldValue(view.getSectionsContainer(), '08/16/1883');
+
+      await view.user.keyboard('{ArrowUp}');
+      expectFieldValue(view.getSectionsContainer(), '08/17/1883');
     });
   });
 });
