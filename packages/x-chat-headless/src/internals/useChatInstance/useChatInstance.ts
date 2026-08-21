@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useStoreEffect } from '@mui/x-internals/store';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
+import { useDisposable } from '@mui/x-internals/useDisposable';
 import { chatSelectors } from '../../selectors';
 import {
   ChatStore,
@@ -17,13 +18,7 @@ export function useChatInstance<Cursor = string>(
 ): ChatStore<Cursor> {
   const ResolvedStoreClass = StoreClass ?? ChatStore;
   const syncingControlledModelsRef = React.useRef<Set<ControlledModel> | null>(null);
-  const storeRef = React.useRef<ChatStore<Cursor> | null>(null);
-
-  if (storeRef.current == null) {
-    storeRef.current = new ResolvedStoreClass(parameters);
-  }
-
-  const store = storeRef.current;
+  const store = useDisposable(() => new ResolvedStoreClass(parameters));
   const selectMessages = chatSelectors.messages as (
     state: ChatInternalState<Cursor>,
   ) => ReturnType<typeof chatSelectors.messages>;
@@ -147,8 +142,6 @@ export function useChatInstance<Cursor = string>(
       store.parameters.onComposerValueChange?.(nextComposerValue);
     }
   });
-
-  React.useEffect(() => store.disposeEffect(), [store]);
 
   return store;
 }
