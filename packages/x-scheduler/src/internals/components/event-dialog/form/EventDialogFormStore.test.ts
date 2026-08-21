@@ -290,6 +290,54 @@ describe('EventDialogFormStore', () => {
       expect(await store.validateAll()).to.equal(true);
     });
 
+    it('should run a validator registered while an async validation is pending', async () => {
+      const store = createFormStore({ title: 'Meeting', priority: null });
+      let release!: () => void;
+      const gate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      let titleCalls = 0;
+      store.registerValidator('title', async () => {
+        titleCalls += 1;
+        if (titleCalls === 1) {
+          await gate;
+        }
+        return null;
+      });
+
+      const validation = store.validateAll();
+      store.registerValidator('priority', (value) => (value ? null : 'Priority required'));
+      release();
+
+      expect(await validation).to.equal(false);
+      expect(store.state.errors).to.deep.equal({ priority: ['Priority required'] });
+    });
+
+    it('should drop the error of a validator unregistered while an async validation is pending', async () => {
+      const store = createFormStore({ title: 'Meeting', priority: null });
+      let release!: () => void;
+      const gate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      let titleCalls = 0;
+      store.registerValidator('title', async () => {
+        titleCalls += 1;
+        if (titleCalls === 1) {
+          await gate;
+        }
+        return null;
+      });
+      const priorityValidator = () => 'Priority required';
+      store.registerValidator('priority', priorityValidator);
+
+      const validation = store.validateAll();
+      store.unregisterValidator('priority', priorityValidator);
+      release();
+
+      expect(await validation).to.equal(true);
+      expect(store.state.errors).to.deep.equal({});
+    });
+
     it('should keep several error messages returned as an array', async () => {
       const store = createFormStore({ title: '' });
       store.registerValidator('title', () => ['Too long', 'Invalid characters']);

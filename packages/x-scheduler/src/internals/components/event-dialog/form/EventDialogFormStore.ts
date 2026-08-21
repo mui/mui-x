@@ -83,6 +83,11 @@ export class EventDialogFormStore<
 > extends Store<EventDialogFormState<TValues>> {
   private validators = new Map<string, Set<EventDialogFormValidator<TValues>>>();
 
+  /**
+   * Bumped on every registration change so a pending `validateAll` can detect it.
+   */
+  private validatorsRevision = 0;
+
   private parameters: EventDialogFormParameters<TValues>;
 
   /**
@@ -185,6 +190,7 @@ export class EventDialogFormStore<
       this.validators.set(key, validators);
     }
     validators.add(validator);
+    this.validatorsRevision += 1;
   };
 
   public unregisterValidator = (key: string, validator: EventDialogFormValidator<TValues>) => {
@@ -193,6 +199,7 @@ export class EventDialogFormStore<
     if (validators?.size === 0) {
       this.validators.delete(key);
     }
+    this.validatorsRevision += 1;
   };
 
   /**
@@ -214,8 +221,9 @@ export class EventDialogFormStore<
 
   /**
    * Runs every registered validator and stores the failures (first error per field wins).
-   * Restarts when a value is written while an async validator is pending, so the stored
-   * errors and the resolved verdict always describe the values current at resolution time.
+   * Restarts when a value is written or a validator is (un)registered while an async
+   * validator is pending, so the stored errors and the resolved verdict always describe
+   * the values and validators current at resolution time.
    * Resolves with whether the form is valid.
    */
   public validateAll = async (): Promise<boolean> => {
@@ -223,6 +231,7 @@ export class EventDialogFormStore<
       // `setValues` replaces the values object on every write, so its identity
       // doubles as a revision check.
       const { values } = this.state;
+      const { validatorsRevision } = this;
       const errors: Record<string, React.ReactNode[]> = {};
       // eslint-disable-next-line no-await-in-loop
       await Promise.all(
@@ -239,7 +248,7 @@ export class EventDialogFormStore<
           }
         }),
       );
-      if (this.state.values === values) {
+      if (this.state.values === values && this.validatorsRevision === validatorsRevision) {
         this.set('errors', errors);
         return Object.keys(errors).length === 0;
       }
