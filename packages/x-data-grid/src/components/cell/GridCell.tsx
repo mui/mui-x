@@ -256,6 +256,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const publishMouseUp = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+      // The row might have been deleted during the click
+      if (!apiRef.current.getRow(rowId)) {
+        return;
+      }
+
       const params = apiRef.current.getCellParams(rowId, field || '');
       apiRef.current.publishEvent(eventName, params, event);
 
@@ -268,6 +273,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const publishMouseDown = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+      // The row might have been deleted during the click
+      if (!apiRef.current.getRow(rowId)) {
+        return;
+      }
+
       const params = apiRef.current.getCellParams(rowId, field || '');
       apiRef.current.publishEvent(eventName, params, event);
       if (onMouseDown) {
