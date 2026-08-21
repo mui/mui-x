@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiKeyJwtClient, ApiKeyJwtClientError } from './api-key-jwt-client';
 
 function makeOkResponse(token: string, expiresAtIso: string): Response {

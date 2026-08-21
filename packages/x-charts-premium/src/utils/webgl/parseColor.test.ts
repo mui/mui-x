@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { parseColor } from './parseColor';
 

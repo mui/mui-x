@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { vi } from 'vitest';
 import { createRenderer } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useChartsLocalization } from '@mui/x-charts/hooks';

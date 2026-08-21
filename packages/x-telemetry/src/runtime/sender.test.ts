@@ -1,4 +1,3 @@
-import { vi } from 'vitest';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import { isJSDOM } from 'test/utils/skipIf';
 import telemetryContext from '../context';

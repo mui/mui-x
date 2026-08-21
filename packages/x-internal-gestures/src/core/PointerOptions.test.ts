@@ -1,4 +1,3 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mouseGesture, touchGesture } from '../testing';
 import { GestureManager } from './GestureManager';
 import { TapGesture } from './gestures/TapGesture';

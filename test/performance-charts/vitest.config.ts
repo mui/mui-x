@@ -10,6 +10,7 @@ export default mergeConfig(
   }),
   defineConfig({
     test: {
+      globals: true,
       setupFiles: ['./setup.ts'],
     },
     resolve: {

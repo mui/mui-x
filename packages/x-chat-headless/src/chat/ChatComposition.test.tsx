@@ -1,7 +1,6 @@
 import axe from 'axe-core';
 import * as React from 'react';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters/chatAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import { ComposerTextArea, ComposerRoot } from '../composer';

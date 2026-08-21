@@ -1,4 +1,3 @@
-import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   TEST_LICENSE_KEY_PRO,

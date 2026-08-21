@@ -1,5 +1,4 @@
 import { spy } from 'sinon';
-import { vi } from 'vitest';
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';

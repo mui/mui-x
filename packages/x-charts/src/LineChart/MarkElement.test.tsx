@@ -1,5 +1,4 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
 import * as React from 'react';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartsDataProvider } from '../ChartsDataProvider';

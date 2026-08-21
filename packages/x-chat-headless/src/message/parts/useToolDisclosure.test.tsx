@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
 import type { ChatToolInvocationState } from '../../types/chat-message-parts';
 import type { ToolPartOwnerState } from './ToolPart';
 import {

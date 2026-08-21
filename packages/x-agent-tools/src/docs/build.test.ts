@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import { createDocsTools } from './build';
 import { LRUCache } from '../utils/cache';
 

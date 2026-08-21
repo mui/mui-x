@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { registerFetchDocsTool, registerUseMuiDocsTool } from './register';
 

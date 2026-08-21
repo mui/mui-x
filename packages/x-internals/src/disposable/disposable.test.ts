@@ -1,4 +1,3 @@
-import { afterEach, expect, vi } from 'vitest';
 import {
   AsyncDisposableStack,
   DisposableStack,

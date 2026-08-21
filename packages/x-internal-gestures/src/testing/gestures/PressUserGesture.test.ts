@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import { Mock } from 'vitest';
 import { PointerManager } from '../PointerManager';
 import { press } from './PressUserGesture';
 

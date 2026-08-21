@@ -1,6 +1,5 @@
 /* eslint-disable no-promise-executor-return */
 import { act, createRenderer } from '@mui/internal-test-utils';
-import { describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { brushOverlayClasses } from './ChartsBrushOverlay.classes';

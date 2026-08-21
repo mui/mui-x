@@ -1,4 +1,4 @@
-import { describe, bench } from 'vitest';
+import { bench } from 'vitest';
 import { Flatbush } from './Flatbush';
 
 const data: Array<{ x: number; y: number }> = [],

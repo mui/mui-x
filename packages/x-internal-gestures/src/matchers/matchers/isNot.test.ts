@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { Gesture } from '../../core';
 import { MatcherState } from '../Matcher.types';
 import { toBeClonable } from './toBeClonable';

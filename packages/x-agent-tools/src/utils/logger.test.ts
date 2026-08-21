@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import { buildCombinedLogger, MAX_LOG_BYTES } from './logger';
 
 describe('buildCombinedLogger', () => {

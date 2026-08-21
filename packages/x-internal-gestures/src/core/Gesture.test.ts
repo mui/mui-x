@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { Gesture } from '.';
 
 export class MockGesture extends Gesture<string> {

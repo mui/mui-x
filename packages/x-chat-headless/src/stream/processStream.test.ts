@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import { ChatStore } from '../store/ChatStore';
 import { processStream } from './processStream';
 import type { ChatMessageChunk, ChatStreamEnvelope } from '../types/chat-stream';

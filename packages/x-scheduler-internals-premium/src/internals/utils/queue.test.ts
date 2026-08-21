@@ -1,5 +1,4 @@
 import { spy } from 'sinon';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { adapter } from 'test/utils/scheduler';
 import type { DateRange } from './queue';

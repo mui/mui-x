@@ -1,5 +1,4 @@
 import { spy } from 'sinon';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { disposeSymbol } from '@mui/x-internals/disposable';
 import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';

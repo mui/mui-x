@@ -1,5 +1,4 @@
 import type * as React from 'react';
-import { vi } from 'vitest';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { DEFAULT_TESTING_VISIBLE_DATE, EventBuilder } from 'test/utils/scheduler';
 import { DEBOUNCE_MS } from '../utils/queue';

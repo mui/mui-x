@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { createDocsQueue, DEFAULT_DOCS_CONCURRENCY } from './queue';
 
 describe('createDocsQueue', () => {

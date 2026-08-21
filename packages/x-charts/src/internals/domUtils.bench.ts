@@ -1,4 +1,4 @@
-import { bench, describe } from 'vitest';
+import { bench } from 'vitest';
 import { batchMeasureStrings, clearStringMeasurementCache, getStringSize } from './domUtils';
 
 export const strings = [

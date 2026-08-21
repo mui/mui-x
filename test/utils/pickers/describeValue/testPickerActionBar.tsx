@@ -8,7 +8,6 @@ import {
   expectPickerChangeHandlerValue,
   isPickerRangeType,
 } from 'test/utils/pickers';
-import { vi } from 'vitest';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (

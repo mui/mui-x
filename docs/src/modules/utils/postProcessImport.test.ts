@@ -1,4 +1,3 @@
-import { vi } from 'vitest';
 import { getPickerAdapterDeps } from './getPickerAdapterDeps';
 import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
 

@@ -1,4 +1,3 @@
-import { expect } from 'vitest';
 import { Transition } from './Transition';
 
 // Wait for the next animation frame

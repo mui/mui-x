@@ -1,5 +1,4 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
 import { LineChart, LinePlot, lineClasses } from '@mui/x-charts/LineChart';
 import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { isJSDOM } from 'test/utils/skipIf';

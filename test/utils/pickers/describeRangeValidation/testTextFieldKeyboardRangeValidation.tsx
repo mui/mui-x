@@ -2,7 +2,6 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { act } from '@mui/internal-test-utils/createRenderer';
-import { vi } from 'vitest';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (

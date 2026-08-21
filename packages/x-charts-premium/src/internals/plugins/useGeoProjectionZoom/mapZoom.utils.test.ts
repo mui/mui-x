@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import {
   geoConicConformal,

@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { resolveAgentToolsConfig } from './config';
 
 describe('resolveAgentToolsConfig', () => {

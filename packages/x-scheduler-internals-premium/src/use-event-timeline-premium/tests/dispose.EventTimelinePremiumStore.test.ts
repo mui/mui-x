@@ -1,5 +1,4 @@
 import { spy } from 'sinon';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { disposeSymbol } from '@mui/x-internals/disposable';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';

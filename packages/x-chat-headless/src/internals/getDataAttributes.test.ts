@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { getDataAttributes } from './getDataAttributes';
 
 describe('getDataAttributes', () => {

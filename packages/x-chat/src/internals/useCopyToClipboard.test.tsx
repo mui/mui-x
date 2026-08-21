@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useCopyToClipboard } from './useCopyToClipboard';
 
 const { render } = createRenderer();

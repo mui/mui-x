@@ -1,5 +1,4 @@
 /* eslint-disable no-underscore-dangle,no-plusplus,no-bitwise */
-import { expect, test } from 'vitest';
 import { Flatbush } from './Flatbush';
 
 const data = [

@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { ChatStore } from '../store/ChatStore';
 import { chatSelectors } from './chatSelectors';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';

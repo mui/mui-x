@@ -4,7 +4,6 @@ import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import type { BarChartProps } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCenter } from 'test/utils/charts/getCenter';
-import { onTestFinished } from 'vitest';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';

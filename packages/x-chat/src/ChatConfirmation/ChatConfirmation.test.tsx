@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
-import { describe, expect, it, vi } from 'vitest';
 import { ChatConfirmation } from './ChatConfirmation';
 
 const { render } = createRenderer();

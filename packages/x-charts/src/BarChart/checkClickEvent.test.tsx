@@ -1,5 +1,4 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCenter } from 'test/utils/charts/getCenter';

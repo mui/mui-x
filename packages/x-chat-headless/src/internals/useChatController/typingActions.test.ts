@@ -1,4 +1,3 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { ChatStore } from '../../store/ChatStore';
 import { createTypingActions, type TypingActionsRuntimeRef } from './typingActions';

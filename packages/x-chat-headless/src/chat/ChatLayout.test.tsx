@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
 import { ChatLayout } from './ChatLayout';
 import { markChatLayoutPane } from './internals/chatLayoutPaneKind';
 

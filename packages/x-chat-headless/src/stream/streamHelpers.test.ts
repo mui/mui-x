@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import { ChatStore } from '../store/ChatStore';
 import {
   getOrCreateMessage,

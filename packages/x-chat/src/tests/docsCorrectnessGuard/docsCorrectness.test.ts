@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { beforeAll, describe, expect, it } from 'vitest';
 import { ALLOWED_SPECIFIERS, CHAT_DOCS_DIR, ENTRY_POINTS, workspaceRoot } from './entryPoints';
 import { type ExportSurface, getExportSurfaces } from './exportSurface';
 import {

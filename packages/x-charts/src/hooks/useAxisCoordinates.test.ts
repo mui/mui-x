@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import { getXAxisCoordinates, getYAxisCoordinates } from './useAxisCoordinates';
 import type { ChartDrawingArea } from './useDrawingArea';
 

@@ -1,4 +1,3 @@
-import { afterAll, it, describe } from 'vitest';
 import { RuleTester } from '@typescript-eslint/rule-tester';
 import TSESlintParser from '@typescript-eslint/parser';
 import path from 'node:path';

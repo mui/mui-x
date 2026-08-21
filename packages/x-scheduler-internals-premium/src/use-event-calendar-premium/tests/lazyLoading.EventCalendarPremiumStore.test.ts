@@ -1,5 +1,4 @@
 import { spy } from 'sinon';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';

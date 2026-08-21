@@ -1,5 +1,4 @@
 import { createRenderer, fireEvent } from '@mui/internal-test-utils/createRenderer';
-import { vi } from 'vitest';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';

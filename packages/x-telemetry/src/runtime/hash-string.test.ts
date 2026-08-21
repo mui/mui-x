@@ -1,4 +1,3 @@
-import { describe, it, expect, vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 
 async function nodeHash(input: string): Promise<string> {

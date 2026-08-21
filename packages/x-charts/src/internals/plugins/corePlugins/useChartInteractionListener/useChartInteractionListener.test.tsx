@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { onTestFinished } from 'vitest';
 import { createRenderer } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
 

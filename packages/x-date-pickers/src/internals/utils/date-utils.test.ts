@@ -1,5 +1,4 @@
 import { adapterToUse } from 'test/utils/pickers';
-import { vi } from 'vitest';
 import { findClosestEnabledDate } from './date-utils';
 
 describe('findClosestEnabledDate', () => {

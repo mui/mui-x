@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import { sha256 } from './hash';
 
 describe('sha256', () => {

@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
-import { onTestFinished } from 'vitest';
 import { PickerComponentFamily } from './describe.types';
 import { OpenPickerParams } from './openPicker';
 

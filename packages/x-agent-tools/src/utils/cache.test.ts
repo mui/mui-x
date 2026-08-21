@@ -1,4 +1,3 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LRUCache, resolveCache } from './cache';
 
 const HOUR_MS = 60 * 60 * 1000;

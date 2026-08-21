@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, screen, fireEvent, act, isJsdom } from '@mui/internal-test-utils';
-import { describe, expect, it, vi } from 'vitest';
 import { ChatCodeBlock } from './ChatCodeBlock';
 
 const { render } = createRenderer();
