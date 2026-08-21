@@ -10,7 +10,10 @@ import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
 describe('CompactDayView - event toolbar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
 
-  function renderEvent(onEventsChange = spy(), { readOnly = false } = {}) {
+  function renderEvent(
+    onEventsChange = spy(),
+    { readOnly = false, onEventEditingStart = undefined as any } = {},
+  ) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -24,6 +27,7 @@ describe('CompactDayView - event toolbar', () => {
         resources={[]}
         onEventsChange={onEventsChange}
         visibleDate={new Date('2025-07-03T00:00:00Z')}
+        onEventEditingStart={onEventEditingStart}
       />,
     );
 
@@ -33,6 +37,32 @@ describe('CompactDayView - event toolbar', () => {
   function getEvent(): HTMLElement {
     return screen.getByRole('button', { name: /Morning Meeting/i });
   }
+
+  it('should keep arming built-in and only fire `onEventEditingStart` when the toolbar Edit is tapped', () => {
+    const onEventEditingStart = spy((_occurrence: any, eventDetails: any) => eventDetails.cancel());
+    renderEvent(spy(), { onEventEditingStart });
+
+    // Arming (toolbar + resize affordances) is not the editing surface: no callback yet.
+    const eventElement = getEvent();
+    fireEvent.click(eventElement);
+    expect(onEventEditingStart.callCount).to.equal(0);
+    expect(eventElement).to.have.attribute('data-armed');
+
+    // Tapping Edit is what opens the surface. Canceling disarms: the armed state keeps
+    // document-wide guards that must not stay active under the consumer's custom UI.
+    const editButton = screen.getByRole('button', { name: 'Edit event' });
+    fireEvent.click(editButton);
+    expect(onEventEditingStart.calledOnce).to.equal(true);
+    expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('click');
+    expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(editButton);
+    expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
+    expect(eventElement).not.to.have.attribute('data-armed');
+    expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+
+    expect(editButton.isConnected).to.equal(false);
+    expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(eventElement);
+    expect(eventElement.isConnected).to.equal(true);
+  });
 
   it('should dock the edit/delete toolbar once an event is armed', () => {
     renderEvent();

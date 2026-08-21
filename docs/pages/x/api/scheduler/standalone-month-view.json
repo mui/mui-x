@@ -47,7 +47,7 @@
     "eventCreation": {
       "type": {
         "name": "union",
-        "description": "{ duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
+        "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
       }
     },
     "eventModelStructure": { "type": { "name": "object" } },
@@ -56,6 +56,7 @@
       "default": "[]"
     },
     "localeText": { "type": { "name": "object" } },
+    "onEventEditingStart": { "type": { "name": "func" } },
     "onEventsChange": { "type": { "name": "func" } },
     "onPreferencesChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },

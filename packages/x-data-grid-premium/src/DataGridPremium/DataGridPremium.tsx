@@ -313,6 +313,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
     renderHeader: PropTypes.func,
     renderHeaderFilter: PropTypes.func,
     resizable: PropTypes.bool,
+    rowHeader: PropTypes.bool,
     rowSpanValueGetter: PropTypes.func,
     sortable: PropTypes.bool,
     sortComparator: PropTypes.func,

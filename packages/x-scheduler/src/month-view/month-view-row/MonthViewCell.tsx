@@ -220,6 +220,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const rowCount = 1 + maxEvents;
 
   React.useEffect(() => {
+    // `startEditing` is a no-op once the surface is open, so placeholder churn doesn't re-fire it.
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }

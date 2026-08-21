@@ -179,6 +179,7 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
     renderEditCell: PropTypes.func,
     renderHeader: PropTypes.func,
     resizable: PropTypes.bool,
+    rowHeader: PropTypes.bool,
     rowSpanValueGetter: PropTypes.func,
     sortable: PropTypes.bool,
     sortComparator: PropTypes.func,

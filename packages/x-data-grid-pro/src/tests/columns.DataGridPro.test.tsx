@@ -617,7 +617,7 @@ describe('<DataGridPro /> - Columns', () => {
     ];
     const columns = [
       { field: 'id', headerName: 'This is the ID column' },
-      { field: 'brand', headerName: 'This is the brand column' },
+      { field: 'brand', headerName: 'This is the brand column', rowHeader: true },
     ];
 
     const getWidths = () => {
