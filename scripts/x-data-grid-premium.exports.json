@@ -622,6 +622,7 @@
   { "name": "gridRowMaximumTreeDepthSelector", "kind": "Variable" },
   { "name": "GridRowMode", "kind": "TypeAlias" },
   { "name": "GridRowModel", "kind": "TypeAlias" },
+  { "name": "GridRowModelReplace", "kind": "Interface" },
   { "name": "GridRowModelUpdate", "kind": "Interface" },
   { "name": "GridRowModes", "kind": "Enum" },
   { "name": "GridRowModesModel", "kind": "TypeAlias" },
