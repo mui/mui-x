@@ -66,6 +66,7 @@
     },
     "localeText": { "type": { "name": "object" } },
     "onCollapsedResourcesChange": { "type": { "name": "func" } },
+    "onEventEditingStart": { "type": { "name": "func" } },
     "onEventsChange": { "type": { "name": "func" } },
     "onPreferencesChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },

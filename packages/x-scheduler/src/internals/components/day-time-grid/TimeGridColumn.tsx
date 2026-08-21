@@ -167,20 +167,14 @@ function ColumnInteractiveLayer({
   );
   const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
-  // The placeholder churns identity on unrelated updates; gate on the store to detect editing started.
-  const isEditingPlaceholder = useStore(
-    store,
-    schedulerOtherSelectors.isEditedOccurrence,
-    placeholder?.key,
-  );
 
   React.useEffect(() => {
-    // Start editing once when creation begins; skip redundant re-fires that churn every subscriber.
-    if (!isCreatingAnEvent || !placeholder || !columnRef.current || isEditingPlaceholder) {
+    // `startEditing` is a no-op once the surface is open, so placeholder churn doesn't re-fire it.
+    if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
       return;
     }
     startEditing(columnRef, placeholder);
-  }, [isCreatingAnEvent, placeholder, startEditing, isEditingPlaceholder]);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
     <DayTimeGridColumnInteractiveLayer
