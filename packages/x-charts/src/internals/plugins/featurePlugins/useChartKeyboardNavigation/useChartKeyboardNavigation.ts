@@ -299,6 +299,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function keyboardHandler(event: KeyboardEvent) {
+      // Item navigation only uses unmodified keys.
+      // Modified ones are left to the browser, and to chart interactions such as keyboard zoom and pan.
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+        return;
+      }
+
       let newFocusedItem = store.state.keyboardNavigation.item;
 
       const seriesConfig = selectorChartSeriesConfig(store.state);
