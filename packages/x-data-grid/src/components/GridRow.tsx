@@ -341,7 +341,17 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       scrollbarWidth,
     );
 
+    // Virtual cells stay mounted for focus and accessibility relationships, but GridCell collapses
+    // them to zero size so they do not participate in the visible row layout.
+    const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
+
     if (rowNode.type === 'skeletonRow') {
+      // Skeleton cells have no value to expose and don't support the collapsed style, so a virtual
+      // one would only add a full-width placeholder that shifts the rest of the row.
+      if (cellIsNotVisible) {
+        return null;
+      }
+
       return (
         <slots.skeletonCell
           key={column.field}
@@ -375,10 +385,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       (isReorderCell && canReorderRow) ||
       isRowDragActive
     );
-
-    // Virtual cells stay mounted for focus and accessibility relationships, but GridCell collapses
-    // them to zero size so they do not participate in the visible row layout.
-    const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
 
     const showLeftBorder = shouldCellShowLeftBorder(
       pinnedPosition,
