@@ -44,6 +44,8 @@ import type {
   PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
+import type { GridFormulaFunctionDefinition } from '../hooks/features/formula/gridFormulaInterfaces';
+import type { GridPremiumFeatureDependencies } from './gridFeatureDependencies';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -129,6 +131,25 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    */
   getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
   /**
+   * If `true`, the formula evaluation is disabled: `=` cell values render as raw strings.
+   * @default false
+   */
+  disableFormulas: boolean;
+  /**
+   * If `true`, formulas can be entered and are displayed using A1 notation
+   * (`=A1 + B2`) while still being stored in the canonical syntax.
+   * A leftmost row-number column and column-letter header adornments are shown.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  formulaA1Notation: boolean;
+  /**
+   * If `true`, the suggestion dropdown shown while editing a formula cell is disabled.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  disableFormulaAutocomplete: boolean;
+  /**
    * If `true`, the clipboard paste is disabled.
    * @default false
    */
@@ -201,6 +222,21 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps?: GridPremiumSlotProps;
+  /**
+   * Injectable feature implementations.
+   * Import the formula feature from `@mui/x-data-grid-premium/formula` and pass it here to
+   * enable formula evaluation — the feature is not bundled with the grid itself.
+   * The value is read on the first render and must not change afterwards.
+   */
+  featureDependencies?: GridPremiumFeatureDependencies;
+  /**
+   * Functions available to formulas, keyed by name.
+   * The prop replaces the built-in set: spread `GRID_FORMULA_FUNCTIONS`
+   * (imported from `@mui/x-data-grid-premium/formula`) to extend it.
+   * Has no effect unless the formula feature is provided through `featureDependencies`.
+   * @default GRID_FORMULA_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
+   */
+  formulaFunctions?: Record<string, GridFormulaFunctionDefinition>;
   /**
    * Set the row grouping model of the grid.
    */
