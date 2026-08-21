@@ -281,7 +281,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     }
 
     this.parameters = parameters;
-    this.update(newState);
+    this.update(newState as ChatInternalState<Cursor>);
   };
 
   /**

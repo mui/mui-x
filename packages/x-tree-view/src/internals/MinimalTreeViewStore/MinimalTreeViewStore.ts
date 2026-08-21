@@ -178,7 +178,7 @@ export class MinimalTreeViewStore<
       updateModel,
     );
 
-    this.update(newState);
+    this.update(newState as State);
     this.parameters = parameters;
   }
 

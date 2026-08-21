@@ -1,5 +1,7 @@
 import { spy } from 'sinon';
 import { describe, expect, it, vi } from 'vitest';
+import type { Store } from '@base-ui/utils/store';
+import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventModelStructure,
@@ -9,6 +11,12 @@ import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { DEBOUNCE_MS } from '../utils/queue';
 
 const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
+
+// The parameterized store classes form a union type whose generic `set` method
+// cannot be invoked directly, so state seeding goes through a common supertype.
+function setErrors(store: Store<SchedulerState>, errors: SchedulerState['errors']) {
+  store.set('errors', errors);
+}
 
 // Basic types for testing
 interface TestEvent {
@@ -921,7 +929,7 @@ premiumStoreClasses.forEach((storeClass) => {
         const a = new Error('A');
         const b = new Error('B');
         const c = new Error('C');
-        store.set('errors', [
+        setErrors(store, [
           { error: a, key: '1' },
           { error: b, key: '2' },
           { error: c, key: '3' },
@@ -939,7 +947,7 @@ premiumStoreClasses.forEach((storeClass) => {
       it('should distinguish duplicate Error instances by key', () => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
         const shared = new Error('shared');
-        store.set('errors', [
+        setErrors(store, [
           { error: shared, key: '1' },
           { error: shared, key: '2' },
         ]);
@@ -957,7 +965,7 @@ premiumStoreClasses.forEach((storeClass) => {
           { error: new Error('A'), key: '1' },
           { error: new Error('B'), key: '2' },
         ];
-        store.set('errors', entries);
+        setErrors(store, entries);
 
         store.dismissError('does-not-exist');
 
