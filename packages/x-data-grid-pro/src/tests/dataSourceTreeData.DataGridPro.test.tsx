@@ -25,6 +25,8 @@ const pageSizeOptions = [5, 10, 50];
 
 const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 
+const SUPPORTS_ACTIVITY = 'Activity' in React;
+
 // Needs layout
 describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
@@ -856,4 +858,113 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     // Collapse the first parent row
     await user.click(within(cell).getByRole('button'));
   });
+  if (SUPPORTS_ACTIVITY) {
+    // https://github.com/mui/mui-x/issues/23262
+    describe('Activity', () => {
+      const NESTED_DATA: Record<string, any[]> = {
+        '[]': [
+          { id: 'g1', name: 'Group 1', descendantCount: 50 },
+          { id: 'g2', name: 'Group 2', descendantCount: 50 },
+        ],
+        '["Group 1"]': Array.from({ length: 50 }, (_, i) => ({
+          id: `g1-c${i}`,
+          name: `G1 Child ${i}`,
+          descendantCount: 0,
+        })),
+        '["Group 2"]': Array.from({ length: 50 }, (_, i) => ({
+          id: `g2-c${i}`,
+          name: `G2 Child ${i}`,
+          descendantCount: 0,
+        })),
+      };
+
+      function countSkeletonRows(api: GridApi) {
+        return Object.values(api.state.rows.tree).filter((node) => node.type === 'skeletonRow')
+          .length;
+      }
+
+      function TestActivity(props: { activityMode?: 'visible' | 'hidden'; rowCount?: number }) {
+        const { activityMode = 'visible', rowCount } = props;
+        apiRef = useGridApiRef();
+
+        const dataSource: GridDataSource = React.useMemo(
+          () => ({
+            getRows: async (params: GridGetRowsParams) => {
+              const rows = NESTED_DATA[JSON.stringify(params.groupKeys)] ?? [];
+              const start = typeof params.start === 'number' ? params.start : 0;
+              const end = typeof params.end === 'number' ? params.end + 1 : rows.length;
+              return { rows: rows.slice(start, end), rowCount: rows.length };
+            },
+            getGroupKey: (row) => row.name,
+            getChildrenCount: (row) => row.descendantCount,
+          }),
+          [],
+        );
+
+        return (
+          <React.Activity mode={activityMode}>
+            <div style={{ width: 400, height: 400 }}>
+              <DataGridPro
+                apiRef={apiRef}
+                columns={[{ field: 'name', width: 200 }]}
+                dataSource={dataSource}
+                treeData
+                lazyLoading
+                disableVirtualization
+                rowCount={rowCount}
+              />
+            </div>
+          </React.Activity>
+        );
+      }
+
+      it('should keep the loaded children, the skeleton rows and the expansion state when it becomes visible', async () => {
+        const { setProps, user } = render(<TestActivity />);
+
+        await waitFor(() => {
+          expect(apiRef.current!.state.rows.tree.g1).not.to.equal(undefined);
+        });
+
+        await user.click(getCell(0, 0).querySelector('button')!);
+
+        await waitFor(() => {
+          const node = apiRef.current!.state.rows.tree.g1 as GridGroupNode;
+          expect(node.childrenExpanded).to.equal(true);
+          expect(node.children.length).to.be.greaterThan(0);
+        });
+
+        const childrenBefore = (apiRef.current!.state.rows.tree.g1 as GridGroupNode).children
+          .length;
+        const skeletonRowsBefore = countSkeletonRows(apiRef.current!);
+
+        await act(async () => {
+          setProps({ activityMode: 'hidden' });
+        });
+        await act(async () => {
+          setProps({ activityMode: 'visible' });
+        });
+
+        const node = apiRef.current!.state.rows.tree.g1 as GridGroupNode;
+        expect(node.children.length).to.equal(childrenBefore);
+        expect(node.childrenExpanded).to.equal(true);
+        expect(countSkeletonRows(apiRef.current!)).to.equal(skeletonRowsBefore);
+      });
+
+      it('should still apply a `rowCount` prop update when it becomes visible', async () => {
+        const { setProps } = render(<TestActivity />);
+
+        await waitFor(() => {
+          expect(apiRef.current!.state.rows.tree.g1).not.to.equal(undefined);
+        });
+
+        await act(async () => {
+          setProps({ rowCount: 99 });
+        });
+
+        await waitFor(() => {
+          expect(apiRef.current!.state.rows.totalRowCount).to.equal(99);
+        });
+      });
+    });
+  }
 });
