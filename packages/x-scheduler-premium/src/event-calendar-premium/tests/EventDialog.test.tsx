@@ -26,8 +26,10 @@ import {
   EventCalendarProvider,
   EventDialogContent,
   EventEditingOptionalRenderersContext,
+  SchedulerSlotsProvider,
   useEventDialogFormField,
 } from '@mui/x-scheduler/internals';
+import { EventDialogGeneralTabContent } from '@mui/x-scheduler/event-dialog';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
 
@@ -2949,7 +2951,7 @@ describe('<EventDialogContent open />', () => {
         expect(created.customField).to.equal('preserve-me');
       });
 
-      it('should save a custom field edited through useEventDialogFormField', async () => {
+      describe('custom fields through the eventDialogGeneralTab slot', () => {
         function CustomFieldSection() {
           const { value, setValue } = useEventDialogFormField<string>('customField');
           return (
@@ -2960,73 +2962,187 @@ describe('<EventDialogContent open />', () => {
             />
           );
         }
-        // The recurrence-tab renderer is only used here as a seam to mount the probe
-        // inside the form until the General-tab slot (#22871) lands — it renders the
-        // real tab untouched and is not a customization surface.
-        function FormProbeInjector(
-          props: React.ComponentProps<
-            NonNullable<typeof PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS.recurrenceTab>
-          >,
-        ) {
-          const RecurrenceTabRenderer = PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS.recurrenceTab!;
+        function CustomGeneralTab() {
           return (
             <React.Fragment>
-              <RecurrenceTabRenderer {...props} />
+              <EventDialogGeneralTabContent />
               <CustomFieldSection />
             </React.Fragment>
           );
         }
 
-        const onEventsChange = spy();
-        let updateEventSpy;
-        const { user } = render(
-          <EventCalendarProvider
-            events={[nonRecurringEventWithCustomData]}
-            onEventsChange={onEventsChange}
-            resources={resources}
-            storeClass={PremiumTestStore}
-          >
-            <StoreSpy
-              Context={SchedulerStoreContext}
-              method="updateEvent"
-              onSpyReady={(sp) => {
-                updateEventSpy = sp;
-              }}
-            />
-            <EventEditingOptionalRenderersContext.Provider
-              value={{
-                ...PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS,
-                recurrenceTab: FormProbeInjector,
-              }}
+        const recurringEventWithUntouchedData = {
+          ...EventBuilder.new()
+            .id('recurring-custom-2')
+            .title('Daily standup')
+            .description('sync')
+            .singleDay('2025-06-11T10:00:00Z', 30)
+            .resource(personalResource)
+            .recurrent('DAILY')
+            .build(),
+          customField: 'preserve-me',
+          untouchedField: 'keep-me',
+        } as SchedulerEvent;
+        const recurringEventWithUntouchedDataOccurrence = EventBuilder.new(adapter)
+          .id(recurringEventWithUntouchedData.id)
+          .title(recurringEventWithUntouchedData.title)
+          .description(recurringEventWithUntouchedData.description)
+          .span(recurringEventWithUntouchedData.start, recurringEventWithUntouchedData.end)
+          .recurrent('DAILY')
+          .toOccurrence();
+
+        function renderWithCustomFieldSlot(
+          event: SchedulerEvent,
+          occurrence: ReturnType<typeof EventBuilder.prototype.toOccurrence>,
+          onEventsChange: ReturnType<typeof spy>,
+          onSpyReady: (sp: any) => void,
+          // Recurring saves go through `updateRecurringEvent`, non-recurring through `updateEvent`.
+          method: 'updateEvent' | 'updateRecurringEvent' = 'updateEvent',
+        ) {
+          return render(
+            <EventCalendarProvider
+              events={[event]}
+              onEventsChange={onEventsChange}
+              resources={resources}
+              storeClass={PremiumTestStore}
             >
-              <EventDialogContent
-                open
-                {...defaultProps}
-                occurrence={nonRecurringEventWithCustomDataOccurrence}
-              />
-            </EventEditingOptionalRenderersContext.Provider>
-          </EventCalendarProvider>,
-        );
+              <StoreSpy Context={SchedulerStoreContext} method={method} onSpyReady={onSpyReady} />
+              <SchedulerSlotsProvider
+                slots={{ eventDialogGeneralTab: CustomGeneralTab }}
+                slotProps={undefined}
+              >
+                <TestEventDialogContent open {...defaultProps} occurrence={occurrence} />
+              </SchedulerSlotsProvider>
+              <RecurringScopeDialog />
+            </EventCalendarProvider>,
+          );
+        }
 
-        // The custom field is seeded from the event model.
-        expect(screen.getByLabelText('custom field')).to.have.value('preserve-me');
+        async function editCustomFieldAndSave(user: any) {
+          await user.clear(screen.getByLabelText('custom field'));
+          await user.type(screen.getByLabelText('custom field'), 'edited');
+          await user.click(screen.getByRole('button', { name: /save/i }));
+        }
 
-        await user.clear(screen.getByLabelText('custom field'));
-        await user.type(screen.getByLabelText('custom field'), 'edited');
-        await user.click(screen.getByRole('button', { name: /save/i }));
+        it('should save a custom field edited through useEventDialogFormField', async () => {
+          const onEventsChange = spy();
+          let updateEventSpy;
+          const { user } = renderWithCustomFieldSlot(
+            nonRecurringEventWithCustomData,
+            nonRecurringEventWithCustomDataOccurrence,
+            onEventsChange,
+            (sp) => {
+              updateEventSpy = sp;
+            },
+          );
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        const updated = onEventsChange.lastCall.firstArg.find(
-          (event) => event.id === nonRecurringEventWithCustomData.id,
-        );
-        expect(updated.customField).to.equal('edited');
+          // The custom field is seeded from the event model.
+          expect(screen.getByLabelText('custom field')).to.have.value('preserve-me');
 
-        // Only the edited custom field enters the changes payload — an untouched
-        // seeded field keeps resolving against the live model instead.
-        const changes = updateEventSpy!.lastCall.firstArg;
-        expect(changes.customField).to.equal('edited');
-        expect(changes).not.to.have.property('untouchedField');
-        expect(updated.untouchedField).to.equal('keep-me');
+          await editCustomFieldAndSave(user);
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.lastCall.firstArg.find(
+            (event) => event.id === nonRecurringEventWithCustomData.id,
+          );
+          expect(updated.customField).to.equal('edited');
+
+          // Only the edited custom field enters the changes payload — an untouched
+          // seeded field keeps resolving against the live model instead.
+          const changes = updateEventSpy!.lastCall.firstArg;
+          expect(changes.customField).to.equal('edited');
+          expect(changes).not.to.have.property('untouchedField');
+          expect(updated.untouchedField).to.equal('keep-me');
+        });
+
+        it("should save a custom field edited through the slot with scope 'all'", async () => {
+          const onEventsChange = spy();
+          let updateEventSpy;
+          const { user } = renderWithCustomFieldSlot(
+            recurringEventWithUntouchedData,
+            recurringEventWithUntouchedDataOccurrence,
+            onEventsChange,
+            (sp) => {
+              updateEventSpy = sp;
+            },
+            'updateRecurringEvent',
+          );
+
+          await editCustomFieldAndSave(user);
+
+          await screen.findByText(/Apply this change to:/i);
+          await user.click(screen.getByText(/All events/i));
+          await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+          const updated = onEventsChange.lastCall.firstArg.find(
+            (event) => event.id === recurringEventWithUntouchedData.id,
+          );
+          expect(updated.customField).to.equal('edited');
+          expect(updated.untouchedField).to.equal('keep-me');
+          const { changes } = updateEventSpy!.lastCall.firstArg;
+          expect(changes.customField).to.equal('edited');
+          expect(changes).not.to.have.property('untouchedField');
+        });
+
+        it("should save a custom field edited through the slot with scope 'only-this'", async () => {
+          const onEventsChange = spy();
+          let updateEventSpy;
+          const { user } = renderWithCustomFieldSlot(
+            recurringEventWithUntouchedData,
+            recurringEventWithUntouchedDataOccurrence,
+            onEventsChange,
+            (sp) => {
+              updateEventSpy = sp;
+            },
+            'updateRecurringEvent',
+          );
+
+          await editCustomFieldAndSave(user);
+
+          await screen.findByText(/Apply this change to:/i);
+          await user.click(screen.getByText(/Only this event/i));
+          await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+          const created = onEventsChange.lastCall.firstArg.find(
+            (event) => event.extractedFromId === recurringEventWithUntouchedData.id,
+          );
+          expect(created).to.not.equal(undefined);
+          expect(created.customField).to.equal('edited');
+          expect(created.untouchedField).to.equal('keep-me');
+          const { changes } = updateEventSpy!.lastCall.firstArg;
+          expect(changes.customField).to.equal('edited');
+          expect(changes).not.to.have.property('untouchedField');
+        });
+
+        it("should save a custom field edited through the slot with scope 'this-and-following'", async () => {
+          const onEventsChange = spy();
+          let updateEventSpy;
+          const { user } = renderWithCustomFieldSlot(
+            recurringEventWithUntouchedData,
+            recurringEventWithUntouchedDataOccurrence,
+            onEventsChange,
+            (sp) => {
+              updateEventSpy = sp;
+            },
+            'updateRecurringEvent',
+          );
+
+          await editCustomFieldAndSave(user);
+
+          await screen.findByText(/Apply this change to:/i);
+          await user.click(screen.getByText(/This and following events/i));
+          await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+          const created = onEventsChange.lastCall.firstArg.find(
+            (event) => event.extractedFromId === recurringEventWithUntouchedData.id,
+          );
+          expect(created).to.not.equal(undefined);
+          expect(created.customField).to.equal('edited');
+          expect(created.untouchedField).to.equal('keep-me');
+          const { changes } = updateEventSpy!.lastCall.firstArg;
+          expect(changes.customField).to.equal('edited');
+          expect(changes).not.to.have.property('untouchedField');
+        });
       });
 
       it('should use the latest custom data when it changes while the scope dialog is open', async () => {
