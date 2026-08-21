@@ -143,7 +143,13 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       </MoreEventsPopoverHeader>
       <MoreEventsPopoverBody className={classes.moreEventsPopoverBody}>
         {occurrences.map((occurrence) => (
-          <EventEditingTrigger occurrence={occurrence} key={occurrence.key}>
+          <EventEditingTrigger
+            occurrence={occurrence}
+            key={occurrence.key}
+            onEditingCanceled={onClose}
+            // A cancellation closes this popover and unmounts the clicked item.
+            stableAnchor={anchor}
+          >
             <EventItem
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
               occurrence={occurrence}

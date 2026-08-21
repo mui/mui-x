@@ -42,6 +42,9 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
   // Every mounted trigger of the edited occurrence.
   const registeredAnchorsRef = React.useRef(new Set<HTMLElement>());
+  // An armed start skips `onEventEditingStart`, so the activation's stable anchor is retained
+  // here until the toolbar's Edit finally fires the callback.
+  const stableAnchorRef = React.useRef<HTMLElement | null>(null);
 
   const registerAnchor = useStableCallback((node: HTMLElement) => {
     registeredAnchorsRef.current.add(node);
@@ -66,17 +69,35 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
     (
       forwardedAnchorRef: React.RefObject<HTMLElement | null>,
       occurrence: SchedulerRenderableEventOccurrence,
+      event?: Event,
+      stableAnchor?: HTMLElement | null,
     ) => {
-      // Batched with the store write below, so the surface never renders anchored to `null`.
-      setAnchor(forwardedAnchorRef.current);
       const isCreating = schedulerOccurrencePlaceholderSelectors.isCreating(store.state);
       const isReadOnly = schedulerEventSelectors.isReadOnly(store.state, occurrence.id);
-      store.startEditing(occurrence, getInitialEditingMode(surface, { isCreating, isReadOnly }));
+      const started = store.startEditing(
+        occurrence,
+        getInitialEditingMode(surface, { isCreating, isReadOnly }),
+        event,
+        forwardedAnchorRef.current ?? undefined,
+        stableAnchor ?? undefined,
+      );
+      if (started) {
+        // Batched with the store write above, so the surface never renders anchored to `null`.
+        setAnchor(forwardedAnchorRef.current);
+        stableAnchorRef.current = stableAnchor ?? null;
+      }
+      return started;
     },
   );
 
   const contextValue = React.useMemo<EventEditingContextValue>(
-    () => ({ startEditing, stopEditing: store.stopEditing, anchor, registerAnchor }),
+    () => ({
+      startEditing,
+      stopEditing: store.stopEditing,
+      anchor,
+      registerAnchor,
+      stableAnchorRef,
+    }),
     [startEditing, store, anchor, registerAnchor],
   );
 
@@ -90,7 +111,7 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
  * both the desktop dialog and the compact drawer.
  */
 export function EventEditingTrigger(props: EventEditingTriggerProps) {
-  const { occurrence, onClick, children } = props;
+  const { occurrence, onClick, onEditingCanceled, stableAnchor, children } = props;
   const ref = React.useRef<HTMLElement | null>(null);
   const store = useSchedulerStoreContext();
   const { startEditing, registerAnchor } = useEventEditingContext();
@@ -111,7 +132,10 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
     ref,
     onClick: (event: React.MouseEvent<HTMLElement>) => {
       onClick?.(event);
-      startEditing(ref, occurrence);
+      const started = startEditing(ref, occurrence, event.nativeEvent, stableAnchor);
+      if (!started) {
+        onEditingCanceled?.();
+      }
     },
   });
 }

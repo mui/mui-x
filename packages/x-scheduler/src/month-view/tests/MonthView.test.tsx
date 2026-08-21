@@ -2,15 +2,18 @@ import { spy } from 'sinon';
 import { config } from 'react-transition-group';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   ResourceBuilder,
+  SchedulerStoreRunner,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
@@ -200,6 +203,66 @@ describe('<MonthView />', () => {
       });
     });
 
+    it('should close the popover when `onEventEditingStart` cancels an activation from it', async () => {
+      const onEventEditingStart = spy((_occurrence: any, eventDetails: any) =>
+        eventDetails.cancel(),
+      );
+      const { user, popover } = await renderAndOpenPopover({ onEventEditingStart });
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      expect(firstEventButton.isConnected).to.equal(false);
+      const moreButton = screen.getByRole('button', { name: /more/i });
+      expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(firstEventButton);
+      expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(moreButton);
+      expect(moreButton.isConnected).to.equal(true);
+    });
+
+    it('should keep the "+N more" button as `anchor` when the cancellation comes from the armed toolbar', async () => {
+      // A coarse pointer arms first instead of opening the dialog, so the callback only fires
+      // on the toolbar's Edit — after the popover item became the built-in toolbar's anchor.
+      const originalMatchMedia = window.matchMedia;
+      window.matchMedia = (() =>
+        ({
+          matches: true,
+          addEventListener: () => {},
+          removeEventListener: () => {},
+        }) as any) as any;
+      try {
+        const onEventEditingStart = spy((_occurrence: any, eventDetails: any) =>
+          eventDetails.cancel(),
+        );
+        const { user, popover } = await renderAndOpenPopover({ onEventEditingStart });
+
+        const firstEventButton = within(popover).getAllByRole('button')[0];
+        await user.click(firstEventButton);
+        expect(onEventEditingStart.callCount).to.equal(0);
+
+        const editButton = screen.getByRole('button', { name: 'Edit event' });
+        await user.click(editButton);
+
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+        await waitFor(() => {
+          expect(document.body.contains(popover)).to.equal(false);
+        });
+
+        expect(firstEventButton.isConnected).to.equal(false);
+        const moreButton = screen.getByRole('button', { name: /more/i });
+        expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(editButton);
+        expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(moreButton);
+        expect(moreButton.isConnected).to.equal(true);
+      } finally {
+        window.matchMedia = originalMatchMedia;
+      }
+    });
+
     it('should stay open while editing and close once the editing surface closes', async () => {
       const { user, popover } = await renderAndOpenPopover();
 
@@ -325,6 +388,44 @@ describe('<MonthView />', () => {
       await waitFor(() => {
         expect(document.activeElement).to.equal(screen.getByRole('button', { name: /more/i }));
       });
+    });
+  });
+
+  describe('creation placeholder updates', () => {
+    it('should not re-fire `onEventEditingStart` when the built-in form updates the creation placeholder', async () => {
+      let store: AnyEventCalendarStore | null = null;
+      const onEventEditingStart = spy();
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={[]} onEventEditingStart={onEventEditingStart}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getAllByRole('gridcell')[10]);
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+
+      // Mirrors the built-in form pushing a date change into the draft while the dialog is open.
+      const placeholder = store!.state.occurrencePlaceholder!;
+      await act(async () => {
+        store!.setOccurrencePlaceholder({
+          ...placeholder,
+          end: adapter.addHours(placeholder.end, -1),
+        });
+      });
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(screen.queryByRole('dialog')).not.to.equal(null);
     });
   });
 
