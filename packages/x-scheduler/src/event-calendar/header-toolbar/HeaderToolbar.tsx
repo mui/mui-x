@@ -98,7 +98,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
 ) {
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { classes, localeText } = useEventCalendarStyledContext();
+  const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const adapter = useAdapterContext();
 
   // Selector hooks
@@ -137,6 +137,8 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           data-expanded-only
           className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
+          aria-controls={`${schedulerId}-side-panel`}
+          aria-expanded={isSidePanelOpen ? 'true' : undefined}
           onClick={(event) =>
             store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
           }

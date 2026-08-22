@@ -150,7 +150,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
     const { children, className, ...other } = props;
 
     const store = useEventCalendarStoreContext();
-    const { classes, localeText } = useEventCalendarStyledContext();
+    const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
 
     const view = useStore(store, eventCalendarViewSelectors.view);
     const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
@@ -210,7 +210,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             orientation="horizontal"
             className={classes.sidePanelCollapse}
           >
-            <EventCalendarSidePanel className={classes.sidePanel}>
+            <EventCalendarSidePanel id={`${schedulerId}-side-panel`} className={classes.sidePanel}>
               <MiniCalendar />
               <Divider className={classes.sidePanelDivider} />
               <ResourcesTree />
