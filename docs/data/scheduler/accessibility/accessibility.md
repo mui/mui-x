@@ -124,11 +124,11 @@ The Resources sidebar uses the [MUI X Rich Tree View](/x/react-tree-view/) inte
 
 ### Menus and popovers
 
-|                          Keys | Description                                                             |
-| ----------------------------: | :---------------------------------------------------------------------- |
-| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, or More Events popover |
-|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event in the More Events popover            |
-|  <kbd class="key">Space</kbd> | Activates (opens) a focused event in the More Events popover            |
+|                          Keys | Description                                                                                               |
+| ----------------------------: | :-------------------------------------------------------------------------------------------------------- |
+| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, or event context menu               |
+|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event                                                                         |
+|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below) |
 
 ## Live region announcements
 
@@ -157,8 +157,9 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 
 - The popover header element carries an `aria-label` with the full formatted date (for example, `"Monday, May 26"`).
 - Each event inside the popover uses `aria-labelledby` that composes the popover header ID and the event title element ID, so screen readers announce the day context alongside the event title.
-- Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd>.
-- When the popover closes and focus would otherwise be lost, it returns to the **"X more"** button that opened it, or to the day cell if editing left the day with too few events for that button to be displayed. Focus that already moved outside the popover is preserved.
+- Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd>. On a mouse/trackpad, <kbd class="key">Space</kbd> opens the [event context menu](#event-context-menu) instead of activating the event directly.
+- Editing an event from the popover closes the popover with it. When focus would otherwise be lost, it returns to the **"X more"** button that opened it, or to the day cell if editing left the day with too few events for that button to be displayed. Focus that already moved outside the popover is preserved.
+- Deleting an event from the popover's context menu does not close the popover.
 
 ## Preferences menu
 
@@ -167,6 +168,17 @@ Inside the menu:
 
 - Toggle items (for example, **Show weekends**, **Show week number**) use `role="menuitemcheckbox"` with `aria-checked`.
 - Time format options use `role="menuitemradio"` with `aria-checked`.
+
+## Event context menu
+
+Right-clicking an event, or pressing <kbd class="key">Space</kbd> while it is focused, opens a context menu with **Edit** and **Delete** actions.
+
+- The menu exposes `role="menu"` (via MUI's `Menu`) with a localized `aria-label` (default: `"Event actions"`).
+- **Edit** opens the event dialog directly, the same as clicking the event on a mouse/trackpad.
+- **Delete** removes the event immediately. For a recurring event it opens the recurring scope confirmation dialog instead, the same as the Delete action in the event dialog and the armed-event toolbar.
+- For a read-only event, **Edit** is replaced by **Show details** — it opens the same read-only view a click would, and **Delete** is omitted, matching every other surface's mutation gate (the dialog swaps to its read-only content, and the armed toolbar never appears for one).
+
+The menu is only available where activating an event opens the dialog directly: a mouse or trackpad on the desktop views. On a coarse pointer (touch), and on the compact (mobile) layout, activating an event arms its toolbar instead — which already exposes Edit and Delete — so right-click and <kbd class="key">Space</kbd> fall through to that same behavior rather than opening a redundant menu.
 
 ## Localization of ARIA labels
 
@@ -184,6 +196,10 @@ The following keys are specifically relevant to accessibility:
   colorPickerLabel: 'Event color',
   selectColorAriaLabel: (color) => `Select ${color} as event color`,
   radioGroupAriaLabel: 'Editing recurring events scope',
+
+  // Event context menu
+  eventContextMenuAriaLabel: 'Event actions',
+  showEventDetails: 'Show details',
 
   // Events
   noResourceAriaLabel: 'No specific resource',

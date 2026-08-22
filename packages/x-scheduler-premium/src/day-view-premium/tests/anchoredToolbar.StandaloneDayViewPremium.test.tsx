@@ -5,6 +5,7 @@ import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
+  createMatchMedia,
   createSchedulerRenderer,
   EventBuilder,
   mockElementBounds,
@@ -15,15 +16,6 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { StandaloneDayViewPremium } from '@mui/x-scheduler-premium/day-view-premium';
-
-// Report a coarse pointer so a tap arms the event and mounts the anchored action toolbar (instead of
-// opening the editing dialog directly).
-const createMatchMedia = (matches: boolean) => () =>
-  ({
-    matches,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-  }) as any;
 
 /**
  * On a large touch screen the armed-event toolbar is anchored next to the event and follows it on
