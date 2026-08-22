@@ -15,6 +15,7 @@ import { useId } from '@base-ui/utils/useId';
 import {
   ErrorContainer,
   SharedComponentsStyledContext,
+  SchedulerSlotsProvider,
   eventDialogSlots,
   eventContextMenuSlots,
   EventEditingStyledContext,
@@ -107,7 +108,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   const store = useEventTimelinePremium(parameters);
   const classes = useUtilityClasses(classesProp);
 
-  const { localeText, resourceColumnLabel, apiRef, ...other } = forwardedProps;
+  const { localeText, resourceColumnLabel, apiRef, slots, slotProps, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
   const schedulerId = useId();
@@ -134,15 +135,17 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
       <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-            <EventTimelinePremiumRoot
-              ref={forwardedRef}
-              className={clsx(classes.root, className)}
-              {...other}
-            >
-              <EventTimelinePremiumContent />
-              <ErrorContainer />
-              {watermark}
-            </EventTimelinePremiumRoot>
+            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              <EventTimelinePremiumRoot
+                ref={forwardedRef}
+                className={clsx(classes.root, className)}
+                {...other}
+              >
+                <EventTimelinePremiumContent />
+                <ErrorContainer />
+                {watermark}
+              </EventTimelinePremiumRoot>
+            </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
       </EventTimelinePremiumStyledContext.Provider>
@@ -309,6 +312,9 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
   eventModelStructure: PropTypes.object,
   /**
    * The events currently available in the calendar.
+   *
+   * Event models are compared by reference to avoid reprocessing unchanged events.
+   * Replace an event model with a new object when updating it instead of mutating it in place.
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
@@ -415,6 +421,16 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * @default true
    */
   showCurrentTimeIndicator: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

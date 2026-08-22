@@ -53,7 +53,9 @@
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
-    "events": { "description": "The events currently available in the calendar." },
+    "events": {
+      "description": "The events currently available in the calendar.<br>Event models are compared by reference to avoid reprocessing unchanged events. Replace an event model with a new object when updating it instead of mutating it in place."
+    },
     "localeText": {
       "description": "Set the locale text of the Event Timeline. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts\">the source</a> in the GitHub repository."
     },
@@ -91,6 +93,8 @@
     "showCurrentTimeIndicator": {
       "description": "Whether the component should display the current time indicator."
     },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
@@ -461,5 +465,8 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title header cell element"
     }
+  },
+  "slotDescriptions": {
+    "eventDialogGeneralTab": "The content of the &quot;General&quot; tab of the event editing surface: the dialog on regular views, the compact editing drawer on compact views. It is rendered inside the tab panel, so it must not render a tab panel of its own. Return a fragment rather than a wrapper element to keep the spacing between the sections."
   }
 }

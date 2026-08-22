@@ -2,13 +2,16 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventDialogFormProvider, useEventDialogFormContext } from './EventDialogFormContext';
 import { useEventDialogFormField } from './useEventDialogFormField';
 import type { EventDialogFormStore } from './EventDialogFormStore';
 
 describe('EventDialogForm', () => {
   const { render } = createSchedulerRenderer();
+
+  const occurrence = EventBuilder.new().toOccurrence();
+  const sessionParameters = { occurrence, resourceSelectionMode: 'single' } as const;
 
   interface FieldProbeProps {
     fieldKey: string;
@@ -48,7 +51,7 @@ describe('EventDialogForm', () => {
   describe('useEventDialogFormField', () => {
     it('should read the seeded value', () => {
       render(
-        <EventDialogFormProvider initialValues={{ title: 'Meeting' }}>
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: 'Meeting' }}>
           <FieldProbe fieldKey="title" />
         </EventDialogFormProvider>,
       );
@@ -57,7 +60,7 @@ describe('EventDialogForm', () => {
 
     it('should write the value through setValue', async () => {
       const { user } = render(
-        <EventDialogFormProvider initialValues={{ title: '' }}>
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '' }}>
           <FieldProbe fieldKey="title" />
         </EventDialogFormProvider>,
       );
@@ -68,7 +71,7 @@ describe('EventDialogForm', () => {
     it('should expose the field error after a failed validateAll', async () => {
       let formStore: EventDialogFormStore | null = null;
       render(
-        <EventDialogFormProvider initialValues={{ title: '' }}>
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '' }}>
           <FieldProbe fieldKey="title" validate={(value) => (value ? null : 'Required')} />
           <StoreGrabber
             onMount={(store) => {
@@ -87,7 +90,7 @@ describe('EventDialogForm', () => {
     it('should clear the field error when the field is written', async () => {
       let formStore: EventDialogFormStore | null = null;
       const { user } = render(
-        <EventDialogFormProvider initialValues={{ title: '' }}>
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '' }}>
           <FieldProbe fieldKey="title" validate={(value) => (value ? null : 'Required')} />
           <StoreGrabber
             onMount={(store) => {
@@ -109,7 +112,7 @@ describe('EventDialogForm', () => {
     it('should render the first message when the validator returns several', async () => {
       let formStore: EventDialogFormStore | null = null;
       render(
-        <EventDialogFormProvider initialValues={{ title: '' }}>
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '' }}>
           <FieldProbe fieldKey="title" validate={() => ['Too long', 'Invalid characters']} />
           <StoreGrabber
             onMount={(store) => {
@@ -128,7 +131,7 @@ describe('EventDialogForm', () => {
     it('should seed an absent key with the provided default value', async () => {
       let formStore: EventDialogFormStore | null = null;
       const { user } = render(
-        <EventDialogFormProvider initialValues={{ title: '' }}>
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '' }}>
           <FieldProbe fieldKey="notes" defaultValue="default" />
           <StoreGrabber
             onMount={(store) => {
@@ -148,7 +151,7 @@ describe('EventDialogForm', () => {
 
     it('should keep the value from the seed over the default value', () => {
       render(
-        <EventDialogFormProvider initialValues={{ notes: 'from-model' }}>
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ notes: 'from-model' }}>
           <FieldProbe fieldKey="notes" defaultValue="default" />
         </EventDialogFormProvider>,
       );
@@ -158,7 +161,7 @@ describe('EventDialogForm', () => {
     it('should not fall back to the default value when the field is reset to undefined', async () => {
       let formStore: EventDialogFormStore | null = null;
       render(
-        <EventDialogFormProvider initialValues={{ title: '' }}>
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '' }}>
           <FieldProbe fieldKey="notes" defaultValue="default" />
           <StoreGrabber
             onMount={(store) => {
@@ -181,7 +184,7 @@ describe('EventDialogForm', () => {
       const onTitleRender = spy();
       const onPriorityRender = spy();
       const { user } = render(
-        <EventDialogFormProvider initialValues={{ title: '', priority: '' }}>
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '', priority: '' }}>
           <FieldProbe fieldKey="title" onRender={onTitleRender} />
           <FieldProbe fieldKey="priority" onRender={onPriorityRender} />
         </EventDialogFormProvider>,
@@ -198,7 +201,7 @@ describe('EventDialogForm', () => {
       clearWarningsCache();
       expect(() => {
         render(
-          <EventDialogFormProvider initialValues={{}}>
+          <EventDialogFormProvider {...sessionParameters} initialValues={{}}>
             <FieldProbe fieldKey="timezone" />
           </EventDialogFormProvider>,
         );
@@ -208,9 +211,34 @@ describe('EventDialogForm', () => {
     it('should not warn for a built-in form key or a custom key', () => {
       clearWarningsCache();
       render(
-        <EventDialogFormProvider initialValues={{ title: '', priority: 'high' }}>
+        <EventDialogFormProvider
+          {...sessionParameters}
+          initialValues={{ title: '', priority: 'high' }}
+        >
           <FieldProbe fieldKey="title" />
           <FieldProbe fieldKey="priority" />
+        </EventDialogFormProvider>,
+      );
+    });
+
+    it('should warn when a built-in form key receives a defaultValue', () => {
+      clearWarningsCache();
+      expect(() => {
+        render(
+          <EventDialogFormProvider {...sessionParameters} initialValues={{ title: 'Meeting' }}>
+            <FieldProbe fieldKey="title" defaultValue="Untitled" />
+          </EventDialogFormProvider>,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: useEventDialogFormField() received a `defaultValue` for the built-in key "title".',
+      ]);
+    });
+
+    it('should not warn when a custom key receives a defaultValue', () => {
+      clearWarningsCache();
+      render(
+        <EventDialogFormProvider {...sessionParameters} initialValues={{}}>
+          <FieldProbe fieldKey="priority" defaultValue="normal" />
         </EventDialogFormProvider>,
       );
     });
@@ -225,7 +253,7 @@ describe('EventDialogForm', () => {
         />
       );
       const { setProps } = render(
-        <EventDialogFormProvider initialValues={{ title: '' }}>
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '' }}>
           {grabber}
           <FieldProbe fieldKey="title" validate={() => 'Required'} />
         </EventDialogFormProvider>,
@@ -275,6 +303,7 @@ describe('EventDialogForm', () => {
       const changes: Array<[Record<string, unknown>, string[]]> = [];
       const { user } = render(
         <EventDialogFormProvider
+          {...sessionParameters}
           initialValues={{ title: '' }}
           onValuesChange={(values, changedKeys) => changes.push([values, changedKeys])}
         >
