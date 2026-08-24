@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, onTestFinished } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 describe('keyboard activation listeners', () => {
