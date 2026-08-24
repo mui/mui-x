@@ -1,5 +1,5 @@
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 
