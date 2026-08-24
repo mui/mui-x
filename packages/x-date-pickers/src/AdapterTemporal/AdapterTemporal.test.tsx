@@ -1,4 +1,4 @@
-import { onTestFinished } from 'vitest';
+import { onTestFinished, describe, it, expect } from 'vitest';
 // The Temporal API is not yet available in every runtime, so the tests install the polyfill globally.
 import 'temporal-polyfill/global';
 import { AdapterTemporal, setDefaultTimezone } from '@mui/x-date-pickers/AdapterTemporal';
