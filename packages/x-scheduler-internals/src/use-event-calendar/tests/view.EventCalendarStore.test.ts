@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarStore } from '../EventCalendarStore';
 import type { EventCalendarState } from '../EventCalendarStore.types';
 

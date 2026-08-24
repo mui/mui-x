@@ -6,7 +6,11 @@ import {
 } from 'test/utils/scheduler';
 import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { eventTimelinePremiumOccurrenceSelectors } from './eventTimelinePremiumOccurrenceSelectors';
+import { describe, it, expect } from 'vitest';
+import {
+  addTimelinePositionsToOccurrences,
+  eventTimelinePremiumOccurrenceSelectors,
+} from './eventTimelinePremiumOccurrenceSelectors';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 
 const VISIBLE_DATE = adapter.date('2025-07-03T00:00:00Z', 'default');
@@ -151,6 +155,55 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
         ...state,
       });
       expect(second).to.equal(first);
+    });
+  });
+
+  describe('addTimelinePositionsToOccurrences', () => {
+    it('should reuse the position computed while filtering a trimmed-hour window', () => {
+      const state = buildState({ presetConfig: PRESET_CONFIG });
+      const config = eventTimelinePremiumPresetSelectors.config(state);
+      const occurrence = eventTimelinePremiumOccurrenceSelectors.visibleResourceOccurrences(
+        state,
+        'r1',
+      )[0];
+      const positionByOccurrenceKey =
+        eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey(state)!;
+
+      const [layoutOccurrence] = addTimelinePositionsToOccurrences({
+        adapter,
+        config,
+        occurrences: [{ ...occurrence, position: { firstIndex: 1, lastIndex: 1 } }],
+        positionByOccurrenceKey,
+      });
+
+      expect(layoutOccurrence.timelinePosition).to.equal(
+        positionByOccurrenceKey.get(occurrence.key),
+      );
+    });
+
+    it('should derive the position on demand for a full-day window', () => {
+      const state = buildState();
+      const config = eventTimelinePremiumPresetSelectors.config(state);
+      const occurrence = eventTimelinePremiumOccurrenceSelectors.visibleResourceOccurrences(
+        state,
+        'r1',
+      )[0];
+
+      const [layoutOccurrence] = addTimelinePositionsToOccurrences({
+        adapter,
+        config,
+        occurrences: [{ ...occurrence, position: { firstIndex: 1, lastIndex: 1 } }],
+        positionByOccurrenceKey: null,
+      });
+
+      expect(layoutOccurrence.timelinePosition).to.deep.equal(
+        computeElementPositionInCollection(adapter, {
+          start: occurrence.displayTimezone.start,
+          end: occurrence.displayTimezone.end,
+          collection: config,
+          durationMs: config.durationMs,
+        }),
+      );
     });
   });
 });

@@ -12,7 +12,7 @@ import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import InputAdornment from '@mui/material/InputAdornment';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<DesktopDatePicker />', () => {
   const { render } = createPickerRenderer();

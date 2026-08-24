@@ -14,6 +14,7 @@ import type {
 import { spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPremium /> - Data source row grouping (loading state)', () => {
   const { render } = createRenderer();

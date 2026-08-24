@@ -8,6 +8,7 @@ import type {
   PresetHeaderUnit,
 } from '@mui/x-scheduler-internals-premium/models';
 import { clearWarningsCache } from '@mui/x-internals/warning';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 
 const VISIBLE_DATE = adapter.date('2025-07-03T00:00:00Z', 'default');

@@ -10,6 +10,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import type { DataGridProProps, GridApi, GridColDef, GridRowsProp } from '@mui/x-data-grid-pro';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

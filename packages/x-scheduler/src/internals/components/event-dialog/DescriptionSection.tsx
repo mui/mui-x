@@ -5,13 +5,12 @@ import TextField from '@mui/material/TextField';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventEditingStyledContext } from '../event-editing';
-import type { EventDialogSectionProps } from './EventDialog.types';
+import { useEventDialogFormContext } from './form/EventDialogFormContext';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
 
-export default function DescriptionSection(props: EventDialogSectionProps) {
-  const { occurrence } = props;
-
+export default function DescriptionSection() {
   // Context hooks
+  const { occurrence } = useEventDialogFormContext();
   const { localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 

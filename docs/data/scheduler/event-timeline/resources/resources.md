@@ -111,14 +111,44 @@ return (
 ## Require a resource
 
 Use the `shouldEventRequireResource` prop to control whether events must have a resource assigned.
-When `true`, the resource of an event cannot be cleared from the edit dialog and the form cannot be submitted with an empty resource.
+When `true`, the form cannot be submitted with an empty selection — deselecting every entry in the resource picker no longer saves.
 
 On the Event Timeline, `shouldEventRequireResource` defaults to `true` so that an event cannot be edited into a state where it would no longer be rendered.
-Set it to `false` to allow clearing the resource:
+Set it to `false` to allow saving with an empty selection:
 
 ```tsx
 <EventTimelinePremium shouldEventRequireResource={false} />
 ```
+
+## Multiple resources per event
+
+An event can be associated with more than one resource by passing an array to `resource`:
+
+```tsx
+const event = {
+  // ...
+  resource: ['team-a', 'team-b'],
+};
+```
+
+{{"demo": "MultipleResourcesPerEvent.js", "bg": "inline", "defaultCodeOpen": false}}
+
+A multi-resource event renders once per row, each instance taking that row's `eventColor` unless the event has its own `color` — in the demo above, "Cross-team sync" renders blue in the Team A row and pink in the Team B row.
+
+The resource picker in the edit dialog switches between a single-select and a multi-select depending on the event:
+
+- An event whose `resource` is a string is edited as single-resource — the picker shows one entry at a time.
+- An event whose `resource` is an array (including `[]`, meaning multi-resource with nothing selected yet) is edited as multi-resource.
+
+Saving an existing event never changes that shape: one that arrives as a string is always saved back as a string (or `undefined` once cleared), and one that arrives as an array is always saved back as an array (`[]` once cleared).
+
+For a new event, or an existing one whose `resource` is `null` or not set, there's no shape to preserve — `canHaveMultipleResources` on `eventCreation` decides the picker instead. When creating, the resource of the row you clicked in only pre-selects an entry: in multiple mode, a new event created in the "Team A" row starts as `['team-a']`, not `'team-a'`.
+
+```tsx
+<EventTimelinePremium eventCreation={{ canHaveMultipleResources: true }} />
+```
+
+When `canHaveMultipleResources` isn't set, it's inferred from the `events` prop: the first event with a `resource` value determines the mode for new events (a string means single, an array means multiple), and data with no resource at all defaults to multiple.
 
 ## Resource properties
 
@@ -133,13 +163,13 @@ The available color palettes are shown below:
 Event colors can also be defined on the event or at the component level.
 The effective color resolves in the following order:
 
-1. The `color` property assigned to the event
+1. The `color` property assigned to the event. This always wins, in every row of a multi-resource event.
 
 ```tsx
 <EventTimelinePremium events={[{ id: '1', title: 'Event 1', color: 'pink' }]} />
 ```
 
-2. The `eventColor` property assigned to the event's resource
+2. The `eventColor` property assigned to the resource of the row the event is rendered in. For a multi-resource event, this can differ from row to row.
 
 ```tsx
 <EventTimelinePremium
