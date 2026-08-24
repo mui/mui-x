@@ -2,7 +2,7 @@ import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<MonthCalendar />', () => {
   const { render } = createPickerRenderer();

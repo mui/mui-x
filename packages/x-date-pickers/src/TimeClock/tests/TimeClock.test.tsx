@@ -7,6 +7,7 @@ import {
   fireClockPointerEvent,
   timeClockHandler,
 } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<TimeClock />', () => {
   const { render } = createPickerRenderer();

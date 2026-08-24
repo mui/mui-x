@@ -4,6 +4,7 @@ import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { DataGrid, Toolbar, ToolbarButton, ToolbarRoot } from '@mui/x-data-grid';
 import type { GridColumnsManagementProps } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 declare module '@mui/x-data-grid' {
   interface GridToolbarProps {

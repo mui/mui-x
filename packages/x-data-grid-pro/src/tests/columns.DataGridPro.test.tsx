@@ -19,6 +19,7 @@ import type {
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Columns', () => {
   const { render } = createRenderer();
@@ -617,7 +618,7 @@ describe('<DataGridPro /> - Columns', () => {
     ];
     const columns = [
       { field: 'id', headerName: 'This is the ID column' },
-      { field: 'brand', headerName: 'This is the brand column' },
+      { field: 'brand', headerName: 'This is the brand column', rowHeader: true },
     ];
 
     const getWidths = () => {
