@@ -66,9 +66,7 @@ export function groupByEventId(
   return groups;
 }
 
-// Cached per lookup instance: `addDependency` needs the full retained set grouped by
-// source on every attempt, and regrouping tens of thousands of dependencies on each
-// drop would stall the interaction.
+// Cached per lookup instance so `addDependency` does not regroup everything on each attempt.
 const bySourceCache = new WeakMap<
   Map<SchedulerDependencyId, SchedulerDependency>,
   Map<SchedulerEventId, SchedulerDependency[]>
