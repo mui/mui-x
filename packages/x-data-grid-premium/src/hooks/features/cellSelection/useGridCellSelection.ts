@@ -8,15 +8,18 @@ import {
   getGridCellElement,
   getTotalHeaderHeight,
   getVisibleRows,
+  isEventTargetInPortal,
   isFillDownShortcut,
   isFillRightShortcut,
   isNavigationKey,
+  isSelectAllShortcut,
   serializeCellValue,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridPipeProcessor, GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import {
   useGridEvent,
+  useGridEventPriority,
   useGridApiMethod,
   GRID_ACTIONS_COLUMN_TYPE,
   GRID_CHECKBOX_SELECTION_COL_DEF,
@@ -34,9 +37,10 @@ import type {
   GridCellCoordinates,
   GridRowId,
   GridCellParams,
+  MuiEvent,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
-import type { GridCellSelectionApi } from './gridCellSelectionInterfaces';
+import type { GridCellSelectionApi, GridCellSelectionModel } from './gridCellSelectionInterfaces';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { CellValueUpdater } from '../clipboard/useGridClipboardImport';
@@ -270,24 +274,31 @@ export const useGridCellSelection = (
 
   useGridApiMethod(apiRef, cellSelectionApi, 'public');
 
+  const isSelectableField = React.useCallback(
+    (field: string) => {
+      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        return false;
+      }
+
+      if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+        return false;
+      }
+
+      const column = apiRef.current.getColumn(field);
+      return column?.type !== GRID_ACTIONS_COLUMN_TYPE;
+    },
+    [apiRef],
+  );
+
   const hasClickedValidCellForRangeSelection = React.useCallback(
     (params: GridCellParams) => {
-      if (params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
-        return false;
-      }
-
-      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
-        return false;
-      }
-
-      const column = apiRef.current.getColumn(params.field);
-      if (column?.type === GRID_ACTIONS_COLUMN_TYPE) {
+      if (!isSelectableField(params.field)) {
         return false;
       }
 
       return params.rowNode.type !== 'pinnedRow';
     },
-    [apiRef],
+    [isSelectableField],
   );
 
   const handleMouseUp = useEventCallback(() => {
@@ -480,6 +491,50 @@ export const useGridCellSelection = (
       // Clear the selection and keep only the clicked cell selected
       apiRef.current.setCellSelectionModel({ [id]: { [field]: true } });
     }
+  });
+
+  const handleSelectAllShortcut = useEventCallback<
+    [GridEventLookup['cellKeyDown']['params'], MuiEvent<GridEventLookup['cellKeyDown']['event']>],
+    void
+  >((params, event) => {
+    if (!isSelectAllShortcut(event)) {
+      return;
+    }
+
+    // Get the most recent cell mode because it may have been changed by another listener
+    if (apiRef.current.getCellMode(params.id, params.field) === GridCellModes.Edit) {
+      return;
+    }
+
+    // Do not apply the shortcut if the focus is not on the cell root component
+    if (isEventTargetInPortal(event)) {
+      return;
+    }
+
+    // Prevent the native select-all of the text on the page
+    event.preventDefault();
+    // Select all cells instead of all rows
+    event.defaultMuiPrevented = true;
+
+    const visibleRows = getVisibleRows(apiRef);
+    const selectableColumns = apiRef.current
+      .getVisibleColumns()
+      .filter((column) => isSelectableField(column.field));
+
+    if (visibleRows.rows.length === 0 || selectableColumns.length === 0) {
+      return;
+    }
+
+    const newModel: GridCellSelectionModel = {};
+    visibleRows.rows.forEach((row) => {
+      const rowModel: GridCellSelectionModel[GridRowId] = {};
+      selectableColumns.forEach((column) => {
+        rowModel[column.field] = true;
+      });
+      newModel[row.id] = rowModel;
+    });
+
+    apiRef.current.setCellSelectionModel(newModel);
   });
 
   const handleCellKeyDown = useEventCallback<
@@ -1472,6 +1527,9 @@ export const useGridCellSelection = (
   useGridEvent(apiRef, 'cellMouseDown', runIfCellSelectionIsEnabled(handleFillHandleMouseDown));
   useGridEvent(apiRef, 'cellClick', runIfCellSelectionIsEnabled(handleCellClick));
   useGridEvent(apiRef, 'cellFocusIn', runIfCellSelectionIsEnabled(handleCellFocusIn));
+  // The select-all shortcut must run before the `cellKeyDown` listener of the row selection
+  // feature, which is subscribed first and would select all rows instead
+  useGridEventPriority(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleSelectAllShortcut));
   useGridEvent(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleCellKeyDown));
   useGridEvent(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleFillKeyDown));
   useGridEvent(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleFillRightKeyDown));

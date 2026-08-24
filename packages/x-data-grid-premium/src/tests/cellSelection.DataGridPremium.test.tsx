@@ -123,6 +123,96 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
   });
 
+  // https://github.com/mui/mui-x/issues/23388
+  describe('Ctrl + A', () => {
+    const fullSelectionModel = {
+      '0': { id: true, currencyPair: true, price1M: true },
+      '1': { id: true, currencyPair: true, price1M: true },
+      '2': { id: true, currencyPair: true, price1M: true },
+      '3': { id: true, currencyPair: true, price1M: true },
+    };
+
+    it('should select all visible cells', async () => {
+      const { user } = render(<TestDataGridSelection />);
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(apiRef.current?.getCellSelectionModel()).to.deep.equal(fullSelectionModel);
+    });
+
+    it('should call onCellSelectionModelChange', async () => {
+      const onCellSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection onCellSelectionModelChange={onCellSelectionModelChange} />,
+      );
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      onCellSelectionModelChange.resetHistory();
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(onCellSelectionModelChange.callCount).to.equal(1);
+      expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal(fullSelectionModel);
+    });
+
+    it('should only select the cells of the current page', async () => {
+      const { user } = render(
+        <TestDataGridSelection
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 3 }, rowCount: 4 } }}
+          rowLength={30}
+          pagination
+          pageSizeOptions={[3]}
+          hideFooter={false}
+        />,
+      );
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(Object.keys(apiRef.current!.getCellSelectionModel())).to.deep.equal(['0', '1', '2']);
+    });
+
+    it('should select cells instead of rows when row selection is enabled', async () => {
+      const { user } = render(
+        <TestDataGridSelection rowSelection checkboxSelection disableRowSelectionOnClick />,
+      );
+      const cell = getCell(0, 1);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(apiRef.current?.getSelectedRows().size).to.equal(0);
+      const cellSelectionModel = apiRef.current!.getCellSelectionModel();
+      expect(Object.keys(cellSelectionModel)).to.have.length(4);
+      expect(cellSelectionModel['0']).to.deep.equal({
+        id: true,
+        currencyPair: true,
+        price1M: true,
+      });
+    });
+
+    it('should reset the selection when a cell is clicked afterwards', async () => {
+      const { user } = render(<TestDataGridSelection />);
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(apiRef.current?.getCellSelectionModel()).to.deep.equal(fullSelectionModel);
+      await user.click(getCell(1, 1));
+      expect(apiRef.current?.getCellSelectionModel()).to.deep.equal({
+        '1': { currencyPair: true },
+      });
+    });
+
+    it('should not change the selection when the cell is in edit mode', async () => {
+      const columns = [{ field: 'id' }, { field: 'name', editable: true }, { field: 'age' }];
+      const rows = [
+        { id: 0, name: 'Alice', age: 30 },
+        { id: 1, name: 'Bob', age: 25 },
+      ];
+      const { user } = render(<TestDataGridSelection columns={columns} rows={rows} />);
+      const cell = getCell(0, 1);
+      await user.dblClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(apiRef.current?.getCellSelectionModel()).to.deep.equal({ '0': { name: true } });
+    });
+  });
+
   describe('Shift + click', () => {
     it('should select all cells between two cells', async () => {
       const { user } = render(<TestDataGridSelection />);
