@@ -12,6 +12,12 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
+import {
+  CALENDAR_DAY_SIZE_VAR,
+  DAY_MARGIN,
+  DAY_MARGIN_VAR,
+  DAY_SIZE_VAR,
+} from '../internals/constants/dimensions';
 import type {
   DateRangePickerDayOwnerState,
   DateRangePickerDayProps,
@@ -85,8 +91,8 @@ const highlightStyles = (theme: Theme) => ({
     (theme.vars || theme).palette.action.focusOpacity,
   ),
   boxSizing: 'border-box',
-  left: 'calc(var(--PickerDay-horizontalMargin) * (-1))',
-  right: 'calc(var(--PickerDay-horizontalMargin) * (-1))',
+  left: `calc(${DAY_MARGIN_VAR} * (-1))`,
+  right: `calc(${DAY_MARGIN_VAR} * (-1))`,
 });
 const previewStyles = (theme: Theme) => ({
   content: '""' /* Creates an empty element */,
@@ -95,8 +101,8 @@ const previewStyles = (theme: Theme) => ({
   borderLeftColor: 'transparent',
   borderRightColor: 'transparent',
   boxSizing: 'border-box',
-  left: 'calc(-1 * var(--PickerDay-horizontalMargin))',
-  right: 'calc(-1 * var(--PickerDay-horizontalMargin))',
+  left: `calc(-1 * ${DAY_MARGIN_VAR})`,
+  right: `calc(-1 * ${DAY_MARGIN_VAR})`,
 });
 
 // Closes the highlight and the preview on the left, respectively on the right.
@@ -170,18 +176,18 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
     ];
   },
 })<{ ownerState: DateRangePickerDayOwnerState }>(({ theme }) => ({
-  '--PickerDay-horizontalMargin': '2px',
-  '--PickerDay-size': '36px',
+  '--PickerDay-horizontalMargin': `${DAY_MARGIN}px`,
+  '--PickerDay-size': CALENDAR_DAY_SIZE_VAR,
   ...theme.typography.caption,
   lineHeight: 1,
   display: 'flex',
-  width: 'var(--PickerDay-size)',
-  height: 'var(--PickerDay-size)',
-  borderRadius: 'calc(var(--PickerDay-size) / 2)',
+  width: DAY_SIZE_VAR,
+  height: DAY_SIZE_VAR,
+  borderRadius: `calc(${DAY_SIZE_VAR} / 2)`,
   padding: 0,
   position: 'relative',
-  marginLeft: 'var(--PickerDay-horizontalMargin)',
-  marginRight: 'var(--PickerDay-horizontalMargin)',
+  marginLeft: DAY_MARGIN_VAR,
+  marginRight: DAY_MARGIN_VAR,
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
   transition: theme.transitions.create('background-color', {

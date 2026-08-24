@@ -24,7 +24,7 @@ import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import type { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { CALENDAR_HEIGHT_VAR, CALENDAR_WIDTH_VAR } from '../internals/constants/dimensions';
 import type { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
@@ -68,7 +68,9 @@ const DateCalendarRoot = styled(PickerViewRoot, {
 })<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
-  height: VIEW_HEIGHT,
+  height: CALENDAR_HEIGHT_VAR,
+  maxHeight: CALENDAR_HEIGHT_VAR,
+  width: CALENDAR_WIDTH_VAR,
 });
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
