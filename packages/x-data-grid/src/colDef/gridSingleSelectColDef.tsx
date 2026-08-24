@@ -21,7 +21,7 @@ const defaultGetOptionLabel = (value: ValueOptions) => {
   return isObject(value) ? value.label : String(value);
 };
 
-export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> = {
+export const GRID_SINGLE_SELECT_COL_DEF = {
   ...GRID_STRING_COL_DEF,
   type: 'singleSelect',
   getOptionLabel: defaultGetOptionLabel,
@@ -68,4 +68,4 @@ export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> =
     // do not paste the value if it is not in the valueOptions
     return undefined;
   },
-};
+} as const satisfies Omit<GridSingleSelectColDef, 'field'>;

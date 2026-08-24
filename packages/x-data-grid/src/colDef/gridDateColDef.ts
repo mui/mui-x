@@ -55,7 +55,7 @@ export const gridDateTimeFormatter: GridValueFormatter = (
   return value.toLocaleString();
 };
 
-export const GRID_DATE_COL_DEF: GridColTypeDef<Date, string> = {
+export const GRID_DATE_COL_DEF = {
   ...GRID_STRING_COL_DEF,
   type: 'date',
   sortComparator: gridDateComparator,
@@ -64,9 +64,9 @@ export const GRID_DATE_COL_DEF: GridColTypeDef<Date, string> = {
   renderEditCell: renderEditDateCell,
   // @ts-ignore
   pastedValueParser: (value) => new Date(value),
-};
+} as const satisfies GridColTypeDef<Date, string>;
 
-export const GRID_DATETIME_COL_DEF: GridColTypeDef<Date, string> = {
+export const GRID_DATETIME_COL_DEF = {
   ...GRID_STRING_COL_DEF,
   type: 'dateTime',
   sortComparator: gridDateComparator,
@@ -75,4 +75,4 @@ export const GRID_DATETIME_COL_DEF: GridColTypeDef<Date, string> = {
   renderEditCell: renderEditDateCell,
   // @ts-ignore
   pastedValueParser: (value) => new Date(value),
-};
+} as const satisfies GridColTypeDef<Date, string>;

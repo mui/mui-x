@@ -28,7 +28,7 @@ function GridSparklineCell(
   );
 }
 
-const sparklineColumnType: GridColTypeDef<number[]> = {
+const sparklineColumnType: GridColTypeDef = {
   ...GRID_STRING_COL_DEF,
   type: 'custom',
   resizable: false,
