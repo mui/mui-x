@@ -2,6 +2,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { getCenter } from 'test/utils/charts/getCenter';
 import { RadarChart, radarClasses } from '@mui/x-charts/RadarChart';
+import { describe, it, expect } from 'vitest';
 
 // The radar area covers the plot, so the clicks need real coordinates.
 describe.skipIf(isJSDOM)('<RadarChart /> - click to focus', () => {
