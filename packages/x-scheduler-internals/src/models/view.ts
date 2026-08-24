@@ -25,14 +25,19 @@ interface SiblingVisibleDateGetterParameters {
  */
 export interface EventCalendarTimeGridViewConfig {
   /**
-   * The first hour displayed in the view.
-   * Must be a whole number between 0 and 24 (minutes are not supported).
+   * Inclusive start of the displayed hour range.
+   * Must be a whole hour between 0 and 24, lower than `endTime`; otherwise the
+   * full day is displayed and a warning is logged in development.
    * @default 0
    */
   startTime?: number;
   /**
-   * The last hour displayed in the view.
-   * Must be a whole number between 0 and 24 (minutes are not supported).
+   * Exclusive end of the displayed hour range: the last rendered hour cell is
+   * `endTime - 1`, so `{ startTime: 8, endTime: 20 }` renders the cells 8 AM through
+   * 7 PM and displays the 08:00–20:00 window (an event ending exactly at 20:00 is
+   * still fully visible).
+   * Must be a whole hour between 0 and 24, greater than `startTime`; otherwise the
+   * full day is displayed and a warning is logged in development.
    * @default 24
    */
   endTime?: number;

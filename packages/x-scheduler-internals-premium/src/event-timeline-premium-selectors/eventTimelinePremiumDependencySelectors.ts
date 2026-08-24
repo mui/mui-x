@@ -1,32 +1,13 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
-import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
-import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
-import type {
-  SchedulerDependency,
-  SchedulerDependencyId,
-  SchedulerDependenciesState,
-} from '../models';
-import { classifyDependencyEvent } from '../internals/utils/dependency-utils';
-
-type State = SchedulerState & SchedulerDependenciesState;
-
-function groupByEventId(
-  dependencies: readonly SchedulerDependency[],
-  property: 'source' | 'target',
-): Map<SchedulerEventId, SchedulerDependency[]> {
-  const groups = new Map<SchedulerEventId, SchedulerDependency[]>();
-  for (const dependency of dependencies) {
-    const eventId = dependency[property];
-    const group = groups.get(eventId);
-    if (group) {
-      group.push(dependency);
-    } else {
-      groups.set(eventId, [dependency]);
-    }
-  }
-  return groups;
-}
+import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerDependencyId } from '../models';
+import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
+import {
+  classifyDependencyEvent,
+  groupByEventId,
+  isDependencyReadOnly,
+} from '../internals/utils/dependency-utils';
 
 const activeModelListSelector = createSelectorMemoized(
   (state: State) => state.dependencyModelLookup,
@@ -60,6 +41,17 @@ const activeSourceTitlesByTargetSelector = createSelectorMemoized(
   },
 );
 
+const selectedIdSelector = createSelector(
+  (state: State) => state.selection,
+  (state: State) => state.dependencyModelLookup,
+  (selection, dependencyModelLookup) =>
+    selection?.type === 'dependency' && dependencyModelLookup.has(selection.id)
+      ? selection.id
+      : null,
+);
+
+const creationSelector = createSelector((state: State) => state.dependencyCreation);
+
 export const eventTimelinePremiumDependencySelectors = {
   modelList: createSelector((state: State) => state.dependencyModelList),
   modelLookup: createSelector((state: State) => state.dependencyModelLookup),
@@ -89,4 +81,49 @@ export const eventTimelinePremiumDependencySelectors = {
     (titlesByTarget, eventId: SchedulerEventId): readonly string[] =>
       titlesByTarget.get(eventId) ?? EMPTY_ARRAY,
   ),
+  /**
+   * Whether the dependencies feature is enabled (internal parameters provided).
+   */
+  enabled: createSelector((state: State) => state.areDependenciesEnabled),
+  /**
+   * The pending create-dependency drag gesture, or `null`.
+   */
+  creation: creationSelector,
+  // Keyed by occurrence *and* resource: an event appearing on several resources
+  // repeats the same occurrence key on each row, and only the row appearance the
+  // gesture actually involves must highlight.
+  isCreationSource: createSelector(
+    creationSelector,
+    (creation, occurrenceKey: string, resourceId: SchedulerResourceId) =>
+      creation !== null &&
+      creation.sourceOccurrenceKey === occurrenceKey &&
+      creation.sourceResourceId === resourceId,
+  ),
+  isCreationTarget: createSelector(
+    creationSelector,
+    (creation, occurrenceKey: string, resourceId: SchedulerResourceId) =>
+      creation !== null &&
+      creation.targetOccurrenceKey === occurrenceKey &&
+      creation.targetResourceId === resourceId,
+  ),
+  /**
+   * The id of the selected dependency, or `null`.
+   * The masking is membership-only: an id absent from the dependency lookup resolves
+   * to `null` for the same render (the store effect then clears the raw value), but a
+   * dependency deactivated by a recurring or unknown endpoint is still in the lookup
+   * and resolves normally.
+   */
+  selectedId: selectedIdSelector,
+  /**
+   * Whether the dependency cannot be deleted because one of its events is read-only.
+   * Unknown ids resolve to `false`.
+   */
+  isModelReadOnly: createSelector((state: State, dependencyId: SchedulerDependencyId | null) => {
+    const dependency =
+      dependencyId === null ? undefined : state.dependencyModelLookup.get(dependencyId);
+    if (!dependency) {
+      return false;
+    }
+    return isDependencyReadOnly(state, dependency);
+  }),
 };

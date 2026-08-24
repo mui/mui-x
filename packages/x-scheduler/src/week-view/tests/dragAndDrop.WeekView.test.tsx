@@ -9,6 +9,7 @@ import {
   getResizeHandle,
 } from 'test/utils/scheduler';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
+import { describe, it, expect } from 'vitest';
 
 /**
  * Returns all time grid column drop targets (`[data-drop-target-for-element]`)

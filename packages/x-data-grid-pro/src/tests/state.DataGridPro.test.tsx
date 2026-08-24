@@ -4,6 +4,7 @@ import { getColumnValues } from 'test/utils/helperFn';
 import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

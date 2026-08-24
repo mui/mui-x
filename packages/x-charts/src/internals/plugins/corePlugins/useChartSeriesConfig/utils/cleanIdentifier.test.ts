@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { cleanIdentifier } from './cleanIdentifier';
 import { lineSeriesConfig } from '../../../../../LineChart/seriesConfig';
 import type { ChartSeriesConfig } from '../types';

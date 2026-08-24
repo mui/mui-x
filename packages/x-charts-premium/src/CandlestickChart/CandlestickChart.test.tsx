@@ -1,5 +1,6 @@
 import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import { CandlestickChart } from './CandlestickChart';
 
 /**

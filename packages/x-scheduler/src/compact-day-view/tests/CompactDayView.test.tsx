@@ -4,8 +4,10 @@ import {
   EventBuilder,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { CompactDayView } from '@mui/x-scheduler/compact-day-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { describe, it, expect } from 'vitest';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 
@@ -118,6 +120,18 @@ describe('<CompactDayView />', () => {
       });
 
       expect(getTimeAxisCells()).to.have.length(24);
+    });
+
+    it('should name `viewConfig.day` when it receives an invalid range', () => {
+      // Same key, and therefore the same warning, as the regular day view: naming the
+      // surface instead of the key would warn twice for one mistake when the layout
+      // crosses the compact breakpoint.
+      clearWarningsCache();
+      expect(() => {
+        renderWithProviders(<CompactDayView />, [], {
+          viewConfig: { day: { startTime: 20, endTime: 8 } },
+        });
+      }).toWarnDev(['MUI X Scheduler: `viewConfig.day` received an invalid hour range']);
     });
   });
 });

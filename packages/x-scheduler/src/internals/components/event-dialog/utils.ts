@@ -21,7 +21,7 @@ export interface EventDialogBuiltInFormValues {
   startTime: string;
   endDate: string;
   endTime: string;
-  resourceId: SchedulerResourceId | null;
+  resourceIds: SchedulerResourceId[];
   allDay: boolean;
   color: SchedulerEventColor | null;
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
@@ -42,7 +42,7 @@ const BUILT_IN_FORM_KEYS_LOOKUP: { [P in keyof EventDialogBuiltInFormValues]-?: 
   startTime: true,
   endDate: true,
   endTime: true,
-  resourceId: true,
+  resourceIds: true,
   allDay: true,
   color: true,
   recurrenceSelection: true,

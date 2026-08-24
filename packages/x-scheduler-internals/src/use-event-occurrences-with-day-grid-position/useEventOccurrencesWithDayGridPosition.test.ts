@@ -1,5 +1,6 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWithDayGridPosition';
 import { processDate } from '../process-date';
 import type { SchedulerProcessedEvent } from '../models';
