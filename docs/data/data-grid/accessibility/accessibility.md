@@ -37,8 +37,11 @@ const columns: GridColDef[] = [
 Do not use an arbitrary index as a row header.
 A grid can have multiple row header columns when more than one value is needed to identify a row.
 
-The `rowHeader` property only changes the cell's semantic role.
-It does not change the column's position, visibility, styling, or behavior.
+The `rowHeader` property changes the cell's semantic role and how the column is virtualized.
+It does not change the column's position, visibility, or styling.
+
+Row header cells stay mounted when [column virtualization](/x/react-data-grid/virtualization/#column-virtualization) scrolls their column out of view, so screen readers can announce the row's identity from anywhere in the row.
+While outside the rendered columns, these cells take up no space.
 
 ## Density
 
