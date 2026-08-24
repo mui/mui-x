@@ -11,6 +11,7 @@ import {
   openPicker,
   PickerRangeComponentType,
 } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidValue, 'picker'> = (

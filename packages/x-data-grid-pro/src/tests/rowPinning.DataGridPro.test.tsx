@@ -17,6 +17,7 @@ import {
   microtasks,
 } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Row pinning', () => {
   const { render } = createRenderer();

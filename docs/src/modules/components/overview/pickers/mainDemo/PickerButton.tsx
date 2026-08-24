@@ -6,9 +6,14 @@ import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
 import { DatePicker, DatePickerFieldProps } from '@mui/x-date-pickers/DatePicker';
 import { useParsedFormat, usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
+import { DateFieldProps } from '@mui/x-date-pickers/DateField';
 
-function ButtonDateField(props: DatePickerFieldProps) {
+function ButtonDateField(
+  props: DatePickerFieldProps & Pick<DateFieldProps, 'slots' | 'slotProps' | 'inputRef'>,
+) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
+  // `slots`, `slotProps` and `inputRef` target the default text field, not a `<button>`.
+  const { slots, slotProps, inputRef, ...buttonProps } = forwardedProps;
 
   const pickerContext = usePickerContext();
 
@@ -27,7 +32,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
 
   return (
     <Button
-      {...forwardedProps}
+      {...buttonProps}
       variant="outlined"
       size="small"
       startIcon={<CalendarTodayRoundedIcon fontSize="small" />}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { createEvent, fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   expectFieldValue,
@@ -10,6 +10,7 @@ import {
   adapterToUse,
 } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DateField /> - Selection', () => {
   const { render } = createPickerRenderer();
@@ -167,6 +168,52 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('');
     });
 
+    it('should prevent the default mousedown behavior when clicking the field padding', () => {
+      // Without it the browser blurs the focused section. The blur is a default
+      // action, so only the e2e suite reproduces it; this locks the mechanism.
+      const view = renderWithProps({});
+      const fieldRoot = view.getSectionsContainer().parentElement!;
+
+      const event = createEvent.mouseDown(fieldRoot);
+      fireEvent(fieldRoot, event);
+
+      expect(event.defaultPrevented).to.equal(true);
+    });
+
+    it('should not prevent the default mousedown behavior when clicking an adornment button', () => {
+      // Preventing it would stop the button from taking the focus on click.
+      renderWithProps({
+        clearable: true,
+        defaultValue: adapterToUse.date('2022-04-11'),
+        // The ripple would start on mousedown and update state outside `act`.
+        slotProps: { clearButton: { disableRipple: true } },
+      });
+      const clearButton = screen.getByRole('button', { name: 'Clear' });
+
+      const event = createEvent.mouseDown(clearButton);
+      fireEvent(clearButton, event);
+
+      expect(event.defaultPrevented).to.equal(false);
+    });
+
+    it('should not prevent the default mousedown behavior when clicking a non-interactive adornment', () => {
+      // The blank space check is the field root itself, not "not a section", so
+      // an adornment stays untouched even when it renders nothing focusable.
+      renderWithProps({
+        slotProps: {
+          textField: {
+            slotProps: { input: { startAdornment: <span data-testid="adornment">@</span> } },
+          },
+        },
+      } as any);
+      const adornment = screen.getByTestId('adornment');
+
+      const event = createEvent.mouseDown(adornment);
+      fireEvent(adornment, event);
+
+      expect(event.defaultPrevented).to.equal(false);
+    });
+
     it('should forward mousedown to a userland `onMouseDown` consumer', () => {
       const consumer = spy();
       const view = renderWithProps({ onMouseDown: consumer });
@@ -275,6 +322,69 @@ describe('<DateField /> - Selection', () => {
       fireEvent.click(sectionsContainer, { clientX });
 
       expect(getCleanedSelectedContent()).to.equal('DD');
+    });
+  });
+
+  // Browser-only: JSDOM rects are 0x0, so no click point falls outside the
+  // sections. `test/e2e` covers what needs trusted input.
+  describe.skipIf(isJSDOM)('Click on the blank space after the last section', () => {
+    const getLastSectionRight = (sectionsContainer: HTMLElement) => {
+      const sections = sectionsContainer.querySelectorAll<HTMLElement>('[data-sectionindex]');
+      return sections[sections.length - 1].getBoundingClientRect().right;
+    };
+
+    const clickAt = (sectionsContainer: HTMLElement, clientX: number) => {
+      fireEvent.mouseDown(sectionsContainer, { clientX });
+      fireEvent.click(sectionsContainer, { clientX });
+    };
+
+    const clickBlankSpace = (sectionsContainer: HTMLElement) => {
+      const containerRight = sectionsContainer.getBoundingClientRect().right;
+      // Guards against a vacuous pass: clear of the tolerance band.
+      expect(containerRight).to.be.greaterThan(getLastSectionRight(sectionsContainer) + 16);
+
+      clickAt(sectionsContainer, containerRight - 2);
+    };
+
+    it('should select the first section when the field is not focused', () => {
+      const view = renderWithProps({});
+
+      clickBlankSpace(view.getSectionsContainer());
+
+      expect(getCleanedSelectedContent()).to.equal('MM');
+    });
+
+    it('should keep the selected section when the field is already focused', async () => {
+      const onSelectedSectionsChange = spy();
+      const view = renderWithProps({ onSelectedSectionsChange });
+      await view.selectSection('day');
+      onSelectedSectionsChange.resetHistory();
+
+      clickBlankSpace(view.getSectionsContainer());
+
+      expect(getCleanedSelectedContent()).to.equal('DD');
+      expect(onSelectedSectionsChange.callCount).to.equal(0);
+    });
+
+    it('should select the last section when clicking just inside its right edge', () => {
+      // Pins the boundary: the last rendered character still selects the year.
+      const view = renderWithProps({});
+      const sectionsContainer = view.getSectionsContainer();
+
+      clickAt(sectionsContainer, getLastSectionRight(sectionsContainer) - 1);
+
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
+    });
+
+    it('should select the last section when the click misses it by less than the tolerance', async () => {
+      // A sloppy click 2px past the year means the year, not blank space.
+      const view = renderWithProps({});
+      await view.selectSection('day');
+      const sectionsContainer = view.getSectionsContainer();
+
+      clickAt(sectionsContainer, getLastSectionRight(sectionsContainer) + 2);
+
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
   });
 

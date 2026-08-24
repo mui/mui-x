@@ -1,6 +1,7 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<DatePicker /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();

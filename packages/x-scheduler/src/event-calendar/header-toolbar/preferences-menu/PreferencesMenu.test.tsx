@@ -3,6 +3,7 @@ import { createSchedulerRenderer, SchedulerStoreRunner } from 'test/utils/schedu
 import { screen } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../../internals/components/EventCalendarProvider';
 import { PreferencesMenu } from './PreferencesMenu';
 import { getPreferencesMenu, openPreferencesMenu } from '../../../internals/utils/test-utils';

@@ -5,6 +5,7 @@ import type { GridApi, GridColDef } from '@mui/x-data-grid-pro';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Column spanning', () => {
   const { render } = createRenderer();

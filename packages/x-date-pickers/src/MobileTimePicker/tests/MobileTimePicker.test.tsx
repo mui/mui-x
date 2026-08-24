@@ -8,6 +8,7 @@ import {
   getClockTouchEvent,
 } from 'test/utils/pickers';
 import { hasTouchSupport } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer();

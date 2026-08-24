@@ -1,0 +1,58 @@
+// `V extends any` is the "force-distribution" idiom: it keeps `V` naked in the outer
+// conditional so the check distributes across union variants. That matters for slot
+// types shaped as `T | (T & DataAttributes)` (the `WithDataAttributes` widening) — the
+// assertion passes as soon as one branch exposes the marker key, while a non-widened
+// branch failing on its own is fine.
+//
+// `'data-x'` is used as the marker key: it matches the
+// ` [k: `data-${string}`]: ... ` template-literal index signature exposed by
+// `DataAttributes`, and is present only when the variant has been widened via
+// `DataAttributes`. `aria-*` is not checked here because this widener only adds
+// `data-*` keys (`DataAttributesOverrides` carries no aria keys); aria support,
+// where a slot's element or component base provides it, is unaffected and out of
+// scope for this check.
+type AcceptsDataAttributes<V> = V extends any ? ('data-x' extends keyof V ? true : false) : never;
+
+type CheckVariant<V> = V extends (...args: any[]) => infer R
+  ? AcceptsDataAttributes<R>
+  : AcceptsDataAttributes<V>;
+
+type SlotAcceptsDataAttributes<T> = true extends CheckVariant<NonNullable<T>> ? true : false;
+
+/**
+ * Maps each slot of a `*SlotProps` type to either `true` or a failure message
+ * identifying the slot that does not accept `data-*` attributes.
+ *
+ * The check probes each slot's value type for the
+ * `` [key: `data-${string}`]: ... `` index signature (covering arbitrary
+ * `data-*` keys). The check distributes across union variants and unwraps
+ * function variants to their return type; any variant providing the signature
+ * — typically via an intersection with `DataAttributes` — passes.
+ *
+ * `TExcluded` lists slots intentionally left un-widened because their default
+ * component does not forward arbitrary props to the DOM (e.g. a controller
+ * component that renders no element). Those slots are skipped so the assertion
+ * reflects the deliberate exclusion rather than flagging it as a regression.
+ */
+export type AssertAllSlotsAcceptDataAttributes<
+  T,
+  Name extends string = 'Component',
+  TExcluded extends string = never,
+> = {
+  [K in keyof Omit<T, TExcluded>]-?: SlotAcceptsDataAttributes<Omit<T, TExcluded>[K]> extends true
+    ? true
+    : `FAIL [${Name}.${Extract<K, string>}]: slot must accept data-* attributes. Use SlotComponentPropsFromProps.`;
+};
+
+/**
+ * Collapses a mapping into `true` if every value is `true`, or surfaces the
+ * first failure string. Used together with `AssertAllSlotsAcceptDataAttributes`.
+ */
+export type AllTrue<T> = { [K in keyof T]: T[K] extends true ? true : T[K] }[keyof T];
+
+/**
+ * Constrains to `true` — the assignment fails if any slot in the mapping
+ * surfaced a failure string. Gives a clear TS error pointing at the offending
+ * slot.
+ */
+export type Assert<T extends true> = T;

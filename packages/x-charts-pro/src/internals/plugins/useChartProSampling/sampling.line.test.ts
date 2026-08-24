@@ -1,4 +1,5 @@
 import type { SampledBucket } from '@mui/x-charts/internals';
+import { describe, it, expect } from 'vitest';
 import { buildSamplingPyramid, MIN_ELEMENT_SIZE_PX } from './sampling';
 import { sampleBuckets, largestTriangleThreeBuckets } from './sampling.line';
 

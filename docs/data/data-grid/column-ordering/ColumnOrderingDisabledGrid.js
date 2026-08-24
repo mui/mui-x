@@ -14,7 +14,7 @@ export default function ColumnOrderingDisabledGrid() {
       <DataGridPro
         columns={[
           { field: 'id' },
-          { field: 'username' },
+          { field: 'username', rowHeader: true },
           { field: 'age', disableReorder: true },
         ]}
         rows={rows}

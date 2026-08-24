@@ -1,6 +1,7 @@
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { Treemap, treemapClasses } from '@mui/x-charts-premium/Treemap';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<Treemap />', () => {
   const { render } = createRenderer();
