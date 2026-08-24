@@ -138,7 +138,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
           aria-controls={`${schedulerId}-side-panel`}
-          aria-expanded={isSidePanelOpen ? 'true' : undefined}
+          aria-expanded={isSidePanelOpen}
           onClick={(event) =>
             store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
           }
