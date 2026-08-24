@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
+import type { BarChartProps } from '@mui/x-charts/BarChart';
 import { useYAxis } from '@mui/x-charts/hooks';
+import { describe, it, expect } from 'vitest';
 
 describe('<BarChart /> - value domain', () => {
   const { render } = createRenderer();

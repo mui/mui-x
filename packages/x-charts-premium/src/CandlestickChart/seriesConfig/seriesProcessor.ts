@@ -1,7 +1,8 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import { type SeriesId } from '@mui/x-charts/models';
-import { incompleteDatasetKeysError, type SeriesProcessor } from '@mui/x-charts/internals';
-import { type DefaultizedOHLCSeriesType } from '../../models';
+import type { SeriesId } from '@mui/x-charts/models';
+import { incompleteDatasetKeysError } from '@mui/x-charts/internals';
+import type { SeriesProcessor } from '@mui/x-charts/internals';
+import type { DefaultizedOHLCSeriesType } from '../../models';
 
 const candlestickValueFormatter: DefaultizedOHLCSeriesType['valueFormatter'] = (v) =>
   v == null ? '' : v.toLocaleString();

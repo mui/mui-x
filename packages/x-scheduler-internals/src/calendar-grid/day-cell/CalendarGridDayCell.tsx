@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
-import { useCompositeListContext } from '../../base-ui-copy/composite/list/CompositeListContext';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
+import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import { useDayCellDropTarget } from './useDayCellDropTarget';
@@ -41,7 +41,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   } = useCalendarGridRootContext();
   const { rowIndex } = useCalendarGridDayRowContext();
   const { ref: listItemRef, index } = useCompositeListItem();
-  const { elementsRef } = useCompositeListContext();
+  const cellsRefs = useCalendarGridCellsRefsContext();
   const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, index);
 
@@ -71,7 +71,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const target = getNavigationTarget(event.key, 'day-grid', rowIndex, index, {
-      columnCount: elementsRef.current.length,
+      columnCount: cellsRefs.current.length,
       rowTypes,
       rowsPerType,
     });
@@ -83,7 +83,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
     if (event.key === 'Enter' && event.target === event.currentTarget && triggerKeyboardCreation) {
       event.preventDefault();
-      triggerKeyboardCreation();
+      triggerKeyboardCreation(event.nativeEvent);
     }
   };
 

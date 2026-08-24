@@ -64,6 +64,24 @@ A series can set both `colorAxisId` and `sizeAxisId` to style points by two valu
 
 {{"demo": "SizeScale.js"}}
 
+### Using zAxis in custom components
+
+The `zAxis` provides color and size scales that the default scatter plot uses internally.
+
+Custom markers receive `color` and `size` values that have already been mapped through these scales, making it easy to derive additional visual properties such as stroke color and stroke width.
+
+For more advanced use cases, custom components can access z-axis scales directly with the `useZAxis()` hook and series data with the `useScatterSeries()` hook.
+
+The example below renders the [Iris flower dataset](https://en.wikipedia.org/wiki/Iris_flower_data_set) with some classification prediction.
+It uses 4 z-axes to map:
+
+- The species to a fill color
+- The predicted species to a stroke color
+- The petal length to the size of the mark
+- The confidence to the stroke width
+
+{{"demo": "ScatterZAxis.js"}}
+
 ### Different size scales
 
 By default, a `sizeMap` with type `'continuous'` transforms values with a square root scale.

@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import {
-  MultiSectionDigitalClock,
-  MultiSectionDigitalClockProps,
-} from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import type { MultiSectionDigitalClockProps } from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import {
   createPickerRenderer,
   adapterToUse,
   multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
 import { screen, within } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 
 describe('<MultiSectionDigitalClock />', () => {
   const { render } = createPickerRenderer();

@@ -1,5 +1,5 @@
 import { config } from 'react-transition-group';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   microtasks,
@@ -12,16 +12,15 @@ import {
 } from 'test/utils/helperFn';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  type GridApi,
   GridPreferencePanelsValue,
-  type GridRowsProp,
   useGridApiRef,
   GridLogicOperator,
 } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -87,6 +86,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
         expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        expect(getCell(0, 0)).to.have.attribute('role', 'rowheader');
       });
 
       it('should not react to initial state updates', () => {

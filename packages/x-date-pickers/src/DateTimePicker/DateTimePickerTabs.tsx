@@ -7,16 +7,14 @@ import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { TimeIcon, DateRangeIcon } from '../icons';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import type { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import {
-  DateTimePickerTabsClasses,
-  getDateTimePickerTabsUtilityClass,
-} from './dateTimePickerTabsClasses';
-import { ExportedBaseTabsProps } from '../internals/models/props/tabs';
+import type { DateTimePickerTabsClasses } from './dateTimePickerTabsClasses';
+import { getDateTimePickerTabsUtilityClass } from './dateTimePickerTabsClasses';
+import type { ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { isDatePickerView } from '../internals/utils/date-utils';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { PickerOwnerState } from '../models/pickers';
+import type { PickerOwnerState } from '../models/pickers';
 import { usePickerContext } from '../hooks';
 
 type TabValue = 'date' | 'time';
@@ -102,6 +100,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     className,
     classes: classesProp,
     sx,
+    ...other
   } = props;
 
   const translations = usePickerTranslations();
@@ -119,6 +118,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
 
   return (
     <DateTimePickerTabsRoot
+      {...other}
       ownerState={ownerState}
       variant="fullWidth"
       value={viewToTab(view!)}

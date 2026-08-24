@@ -22,11 +22,8 @@ import {
   findRightPinnedHeadersBeforeCol,
   escapeOperandAttributeSelector,
 } from '../../../utils/domUtils';
-import {
-  type GridAutosizeOptions,
-  type GridColumnResizeApi,
-  DEFAULT_GRID_AUTOSIZE_OPTIONS,
-} from './gridColumnResizeApi';
+import { DEFAULT_GRID_AUTOSIZE_OPTIONS } from './gridColumnResizeApi';
+import type { GridAutosizeOptions, GridColumnResizeApi } from './gridColumnResizeApi';
 import type { CursorCoordinates } from '../../../models/cursorCoordinates';
 import type { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 import { gridClasses } from '../../../constants/gridClasses';
@@ -43,10 +40,8 @@ import {
   gridRenderContextSelector,
   gridVirtualizationColumnEnabledSelector,
 } from '../virtualization';
-import {
-  type ControllablePromise,
-  createControllablePromise,
-} from '../../../utils/createControllablePromise';
+import { createControllablePromise } from '../../../utils/createControllablePromise';
+import type { ControllablePromise } from '../../../utils/createControllablePromise';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { clamp } from '../../../utils/utils';
 import { useTimeout } from '../../utils/useTimeout';
@@ -682,6 +677,9 @@ export const useGridColumnResize = (
     ) as HTMLDivElement;
     const field = getFieldFromHeaderElem(columnHeaderElement);
     const colDef = apiRef.current.getColumn(field);
+    if (!colDef) {
+      return;
+    }
 
     logger.debug(`Start Resize on col ${colDef.field}`);
     apiRef.current.publishEvent('columnResizeStart', { field }, event);
@@ -814,6 +812,11 @@ export const useGridColumnResize = (
         if (!props.disableVirtualization && options.disableColumnVirtualization) {
           apiRef.current.unstable_setColumnVirtualization(false);
           await columnVirtualizationDisabled();
+
+          // The grid may have unmounted while awaiting, which nulls the root element ref.
+          if (!apiRef.current.rootElementRef?.current) {
+            return;
+          }
         }
 
         const widthByField = extractColumnWidths(apiRef, options, columns);

@@ -1,12 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  BarPlot,
-  type BarPlotProps,
-  type BarPlotSlotProps,
-  type BarPlotSlots,
-} from '@mui/x-charts/BarChart';
+import { BarPlot } from '@mui/x-charts/BarChart';
+import type { BarPlotProps, BarPlotSlotProps, BarPlotSlots } from '@mui/x-charts/BarChart';
 import type { RendererType } from '@mui/x-charts/ScatterChart';
 import { BarWebGLPlot } from './webgl/BarWebGLPlot';
 
@@ -69,7 +65,7 @@ BarPlotPremium.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {MouseEvent} event The event source of the callback.
+   * @param {ChartsActivationEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,

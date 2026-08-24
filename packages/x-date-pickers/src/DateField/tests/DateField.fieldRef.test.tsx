@@ -2,14 +2,15 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { act } from '@mui/internal-test-utils';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { FieldRef } from '@mui/x-date-pickers/models';
+import type { FieldRef } from '@mui/x-date-pickers/models';
 import {
   createPickerRenderer,
   adapterToUse,
   getFieldInputRoot,
   expectFieldValue,
 } from 'test/utils/pickers';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe, it, expect } from 'vitest';
 
 describe('<DateField /> - fieldRef', () => {
   const { render } = createPickerRenderer();

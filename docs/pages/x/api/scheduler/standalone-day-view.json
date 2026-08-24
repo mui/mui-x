@@ -47,7 +47,7 @@
     "eventCreation": {
       "type": {
         "name": "union",
-        "description": "{ duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
+        "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
       }
     },
     "eventModelStructure": { "type": { "name": "object" } },
@@ -55,6 +55,8 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
     },
+    "localeText": { "type": { "name": "object" } },
+    "onEventEditingStart": { "type": { "name": "func" } },
     "onEventsChange": { "type": { "name": "func" } },
     "onPreferencesChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
@@ -78,6 +80,12 @@
     "resources": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "shouldEventRequireResource": { "type": { "name": "bool" }, "default": "false" },
     "showCurrentTimeIndicator": { "type": { "name": "bool" }, "default": "true" },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -89,6 +97,12 @@
       "type": {
         "name": "enum",
         "description": "'agenda'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'week'"
+      }
+    },
+    "viewConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ day?: { endTime?: number, startTime?: number } }"
       }
     },
     "views": {
@@ -105,6 +119,14 @@
   "imports": [
     "import { StandaloneDayView } from '@mui/x-scheduler/day-view';",
     "import { StandaloneDayView } from '@mui/x-scheduler';"
+  ],
+  "slots": [
+    {
+      "name": "eventDialogGeneralTab",
+      "description": "The content of the \"General\" tab of the event editing surface:\nthe dialog on regular views, the compact editing drawer on compact views.\nIt is rendered inside the tab panel, so it must not render a tab panel of its own.\nReturn a fragment rather than a wrapper element to keep the spacing between the sections.",
+      "default": "EventDialogGeneralTabContent",
+      "class": null
+    }
   ],
   "classes": [],
   "spread": true,

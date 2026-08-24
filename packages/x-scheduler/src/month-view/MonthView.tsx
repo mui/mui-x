@@ -4,8 +4,8 @@ import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
-import {
-  EventCalendarViewConfig,
+import type {
+  EventCalendarViewDefinition,
   GridRowType,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
@@ -20,7 +20,7 @@ import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
-import { MonthViewProps } from './MonthView.types';
+import type { MonthViewProps } from './MonthView.types';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
@@ -116,7 +116,7 @@ const DAY_NUMBER_HEADER_HEIGHT = 22; // event height (18px) + gap (4px)
 const EVENT_HEIGHT = 18;
 const EVENT_GAP = 4; // theme.spacing(0.5) = 4px
 
-const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
+const MONTH_VIEW_DEFINITION: EventCalendarViewDefinition = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addMonths(
       state.adapter.startOfMonth(schedulerOtherSelectors.visibleDate(state)),
@@ -163,7 +163,7 @@ export const MonthView = React.memo(
     const [maxEvents, setMaxEvents] = React.useState<number>(2);
 
     // Feature hooks
-    const { days } = useEventCalendarView(MONTH_VIEW_CONFIG);
+    const { days } = useEventCalendarView(MONTH_VIEW_DEFINITION);
 
     const weeks = React.useMemo(() => {
       const chunkSize = showWeekends ? 7 : 5;

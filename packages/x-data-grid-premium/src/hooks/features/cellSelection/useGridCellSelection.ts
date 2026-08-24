@@ -5,8 +5,6 @@ import type { RefObject } from '@mui/x-internals/types';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
-  type GridPipeProcessor,
-  type GridStateInitializer,
   getGridCellElement,
   getTotalHeaderHeight,
   getVisibleRows,
@@ -16,23 +14,26 @@ import {
   serializeCellValue,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
+import type { GridPipeProcessor, GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import {
   useGridEvent,
   useGridApiMethod,
-  type GridEventListener,
-  type GridEventLookup,
   GRID_ACTIONS_COLUMN_TYPE,
   GRID_CHECKBOX_SELECTION_COL_DEF,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
-  type GridCellCoordinates,
-  type GridRowId,
   gridClasses,
   gridFocusCellSelector,
-  type GridCellParams,
   GRID_REORDER_COL_DEF,
   gridSortedRowIdsSelector,
   gridDimensionsSelector,
   GridCellModes,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridEventListener,
+  GridEventLookup,
+  GridCellCoordinates,
+  GridRowId,
+  GridCellParams,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
 import type { GridCellSelectionApi } from './gridCellSelectionInterfaces';
@@ -280,7 +281,7 @@ export const useGridCellSelection = (
       }
 
       const column = apiRef.current.getColumn(params.field);
-      if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+      if (column?.type === GRID_ACTIONS_COLUMN_TYPE) {
         return false;
       }
 
@@ -560,6 +561,22 @@ export const useGridCellSelection = (
     [serializeCellForClipboard],
   );
 
+  // Helper: the source cells for a field, in the same order as
+  // getSourceValuesForField — so sourceCells[i] is the origin of sourceValues[i]
+  // when adjusting a dragged formula's references for its target cell.
+  const getSourceCellsForField = React.useCallback(
+    (field: string): { id: GridRowId; field: string }[] => {
+      const sourceCells: { id: GridRowId; field: string }[] = [];
+      for (const cell of fillSource.current?.cells ?? []) {
+        if (cell.field === field) {
+          sourceCells.push({ id: cell.id, field: cell.field });
+        }
+      }
+      return sourceCells;
+    },
+    [],
+  );
+
   const getFillSourceData = React.useCallback((): string[][] => {
     const selectedCells = fillSource.current?.cells ?? [];
     if (selectedCells.length === 0) {
@@ -659,8 +676,17 @@ export const useGridCellSelection = (
         if (sourceValues.length === 0) {
           continue;
         }
+        const sourceCells = getSourceCellsForField(field);
         targetRowIds.forEach((rowId, i) => {
-          const pastedCellValue = sourceValues[i % sourceValues.length];
+          const sourceCell = sourceCells[i % sourceCells.length];
+          // A dragged formula is copied with its references adjusted for the
+          // target cell; otherwise (plain cell, or non-formula target column)
+          // the source's evaluated value is copied as before.
+          const filledFormula = apiRef.current.getFilledFormulaSource?.(sourceCell, {
+            id: rowId,
+            field,
+          });
+          const pastedCellValue = filledFormula ?? sourceValues[i % sourceValues.length];
           cellUpdater.updateCell({ rowId, field, pastedCellValue });
         });
       }
@@ -676,8 +702,14 @@ export const useGridCellSelection = (
         if (sourceValues.length === 0) {
           return;
         }
+        const sourceCells = getSourceCellsForField(sourceField);
         targetRowIds.forEach((rowId, rowIdx) => {
-          const pastedCellValue = sourceValues[rowIdx % sourceValues.length];
+          const sourceCell = sourceCells[rowIdx % sourceCells.length];
+          const filledFormula = apiRef.current.getFilledFormulaSource?.(sourceCell, {
+            id: rowId,
+            field: targetField,
+          });
+          const pastedCellValue = filledFormula ?? sourceValues[rowIdx % sourceValues.length];
           cellUpdater.updateCell({ rowId, field: targetField, pastedCellValue });
         });
       });
@@ -704,6 +736,7 @@ export const useGridCellSelection = (
     props.getRowId,
     getFillSourceData,
     getSourceValuesForField,
+    getSourceCellsForField,
   ]);
 
   // Helper: clear fill preview classes from previously decorated elements
@@ -1120,7 +1153,15 @@ export const useGridCellSelection = (
         getRowId: props.getRowId,
       });
 
-      cellUpdater.updateCell({ rowId: nextRowId, field: cell.field, pastedCellValue: sourceValue });
+      cellUpdater.updateCell({
+        rowId: nextRowId,
+        field: cell.field,
+        pastedCellValue:
+          apiRef.current.getFilledFormulaSource?.(
+            { id: cell.id, field: cell.field },
+            { id: nextRowId, field: cell.field },
+          ) ?? sourceValue,
+      });
       cellUpdater.applyUpdates();
 
       // Move selection and focus to the filled cell
@@ -1162,7 +1203,15 @@ export const useGridCellSelection = (
           continue;
         }
         const sourceValue = serializeCellForClipboard(cells[0].id, field);
-        cellUpdater.updateCell({ rowId: nextRowId, field, pastedCellValue: sourceValue });
+        cellUpdater.updateCell({
+          rowId: nextRowId,
+          field,
+          pastedCellValue:
+            apiRef.current.getFilledFormulaSource?.(
+              { id: cells[0].id, field },
+              { id: nextRowId, field },
+            ) ?? sourceValue,
+        });
         if (!newSelectionModel[nextRowId]) {
           newSelectionModel[nextRowId] = {};
         }
@@ -1227,7 +1276,11 @@ export const useGridCellSelection = (
         cellUpdater.updateCell({
           rowId: sortedCells[i].id,
           field,
-          pastedCellValue: sourceValue,
+          pastedCellValue:
+            apiRef.current.getFilledFormulaSource?.(
+              { id: sourceCell.id, field: sourceCell.field },
+              { id: sortedCells[i].id, field },
+            ) ?? sourceValue,
         });
       }
     }
@@ -1290,7 +1343,15 @@ export const useGridCellSelection = (
         getRowId: props.getRowId,
       });
 
-      cellUpdater.updateCell({ rowId: cell.id, field: nextField, pastedCellValue: sourceValue });
+      cellUpdater.updateCell({
+        rowId: cell.id,
+        field: nextField,
+        pastedCellValue:
+          apiRef.current.getFilledFormulaSource?.(
+            { id: cell.id, field: cell.field },
+            { id: cell.id, field: nextField },
+          ) ?? sourceValue,
+      });
       cellUpdater.applyUpdates();
 
       // Move selection and focus to the filled cell
@@ -1334,7 +1395,15 @@ export const useGridCellSelection = (
       const newSelectionModel: Record<GridRowId, Record<string, boolean>> = {};
       for (const [rowId, cells] of cellsByRow) {
         const sourceValue = serializeCellForClipboard(cells[0].id, cells[0].field);
-        cellUpdater.updateCell({ rowId, field: nextField, pastedCellValue: sourceValue });
+        cellUpdater.updateCell({
+          rowId,
+          field: nextField,
+          pastedCellValue:
+            apiRef.current.getFilledFormulaSource?.(
+              { id: cells[0].id, field: cells[0].field },
+              { id: rowId, field: nextField },
+            ) ?? sourceValue,
+        });
         if (!newSelectionModel[rowId]) {
           newSelectionModel[rowId] = {};
         }
@@ -1388,7 +1457,11 @@ export const useGridCellSelection = (
         cellUpdater.updateCell({
           rowId,
           field: sortedCells[i].field,
-          pastedCellValue: sourceValue,
+          pastedCellValue:
+            apiRef.current.getFilledFormulaSource?.(
+              { id: sourceCell.id, field: sourceCell.field },
+              { id: rowId, field: sortedCells[i].field },
+            ) ?? sourceValue,
         });
       }
     }

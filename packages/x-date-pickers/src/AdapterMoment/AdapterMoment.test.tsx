@@ -1,8 +1,9 @@
-import moment, { Moment } from 'moment';
+import type { Moment } from 'moment';
+import moment from 'moment';
 import momentTZ from 'moment-timezone';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
+import type { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import { spy } from 'sinon';
 import {
   createPickerRenderer,
@@ -15,6 +16,7 @@ import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';
 import 'moment/locale/ru';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<AdapterMoment />', () => {
   const commonParams = {

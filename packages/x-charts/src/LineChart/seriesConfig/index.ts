@@ -1,11 +1,11 @@
-import { type ChartSeriesTypeConfig } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { ChartSeriesTypeConfig } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { getExtremumX, getExtremumY } from './extremums';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import legendGetter from './legend';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
-import tooltipItemPositionGetter from './tooltipPosition';
+import { selectorTooltipItemPosition } from './tooltipPosition';
 import getItemAtPosition from './getItemAtPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
@@ -21,7 +21,7 @@ export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   seriesProcessor,
   legendGetter,
   tooltipGetter,
-  tooltipItemPositionGetter,
+  selectorTooltipItemPosition,
   axisTooltipGetter,
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,

@@ -1,34 +1,32 @@
 import {
   useChartZAxis,
-  type UseChartZAxisSignature,
   useChartCartesianAxis,
-  type UseChartCartesianAxisSignature,
   useChartTooltip,
-  type UseChartTooltipSignature,
   useChartInteraction,
-  type UseChartInteractionSignature,
   useChartHighlight,
-  type UseChartHighlightSignature,
   useChartClosestPoint,
-  type UseChartClosestPointSignature,
   useChartKeyboardNavigation,
-  type UseChartKeyboardNavigationSignature,
   useChartBrush,
-  type UseChartBrushSignature,
-  type ConvertSignaturesIntoPlugins,
   useChartVisibilityManager,
-  type UseChartVisibilityManagerSignature,
   useProgressiveRendering,
-  type UseProgressiveRenderingSignature,
 } from '@mui/x-charts/internals';
-import {
-  useChartProExport,
-  type UseChartProExportSignature,
-} from '../internals/plugins/useChartProExport';
-import {
-  useChartProZoom,
-  type UseChartProZoomSignature,
-} from '../internals/plugins/useChartProZoom';
+import type {
+  UseChartZAxisSignature,
+  UseChartCartesianAxisSignature,
+  UseChartTooltipSignature,
+  UseChartInteractionSignature,
+  UseChartHighlightSignature,
+  UseChartClosestPointSignature,
+  UseChartKeyboardNavigationSignature,
+  UseChartBrushSignature,
+  ConvertSignaturesIntoPlugins,
+  UseChartVisibilityManagerSignature,
+  UseProgressiveRenderingSignature,
+} from '@mui/x-charts/internals';
+import { useChartProExport } from '../internals/plugins/useChartProExport';
+import type { UseChartProExportSignature } from '../internals/plugins/useChartProExport';
+import { useChartProZoom } from '../internals/plugins/useChartProZoom';
+import type { UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 
 export type ScatterChartProPluginSignatures = [
   UseChartZAxisSignature,

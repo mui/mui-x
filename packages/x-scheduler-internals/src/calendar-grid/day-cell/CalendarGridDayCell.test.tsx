@@ -1,16 +1,18 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { spy } from 'sinon';
+import { act, screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
-import { GridRowType } from '@mui/x-scheduler-internals/models';
+import type { GridRowType } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
   describeConformance,
   SchedulerStoreRunner,
-  AnyEventCalendarStore,
 } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 
 describe('<CalendarGrid.DayCell />', () => {
   const { render } = createSchedulerRenderer();
@@ -46,9 +48,10 @@ describe('<CalendarGrid.DayCell />', () => {
   describe('keyboard interactions', () => {
     it('should create an all-day event placeholder on Enter keypress', async () => {
       let store: AnyEventCalendarStore | null = null;
+      const onEventEditingStart = spy();
 
       const { user } = render(
-        <DayCellWrapper>
+        <DayCellWrapper onEventEditingStart={onEventEditingStart}>
           <CalendarGrid.DayCell value={day} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
@@ -60,12 +63,22 @@ describe('<CalendarGrid.DayCell />', () => {
       );
 
       const cell = screen.getByRole('gridcell');
-      await user.click(cell);
+      // Focus without clicking, so the Enter keypress is the only creation trigger.
+      act(() => {
+        cell.focus();
+      });
       await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
       expect(store!.state.occurrencePlaceholder?.surfaceType).to.equal('day-grid');
+
+      // The initiating keydown is stashed with the placeholder and reaches `onEventEditingStart`.
+      act(() => {
+        store!.startEditing(store!.state.occurrencePlaceholder as any);
+      });
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
+      expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('keydown');
     });
 
     it('should not create event on Enter when pressed on a child element', async () => {

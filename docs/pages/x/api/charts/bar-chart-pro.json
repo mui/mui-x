@@ -32,7 +32,10 @@
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "{}" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
@@ -112,7 +115,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent, barItemIdentifier: BarItemIdentifier) => void",
+        "type": "function(event: ChartsActivationEvent, barItemIdentifier: BarItemIdentifier) => void",
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
@@ -141,6 +144,10 @@
     "renderer": {
       "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
       "default": "'svg-single'"
+    },
+    "sampling": {
+      "type": { "name": "enum", "description": "'minmax'<br>&#124;&nbsp;'none'" },
+      "default": "'none'"
     },
     "seriesConfig": {
       "type": {

@@ -1,9 +1,13 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
-import { useEventResizeHandler } from '@mui/x-scheduler-internals/internals';
-import { SchedulerEventSide } from '@mui/x-scheduler-internals/models';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import {
+  useEventResizeHandler,
+  isResizeHandlerEnabled,
+} from '@mui/x-scheduler-internals/internals';
+import type { SchedulerEventSide } from '@mui/x-scheduler-internals/models';
 import { useTimelineGridEventContext } from '../event/TimelineGridEventContext';
 import type { TimelineGridEvent } from '../event/TimelineGridEvent';
 
@@ -36,10 +40,16 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
       side,
     }));
 
-    const { state, enabled } = useEventResizeHandler({
+    const enabled = isResizeHandlerEnabled({
+      side,
+      isEventStartClipped: contextValue.isEventStartClipped,
+      isEventEndClipped: contextValue.isEventEndClipped,
+    });
+
+    const { state } = useEventResizeHandler({
       ref,
       side,
-      contextValue,
+      enabled,
       getDragData,
     });
 

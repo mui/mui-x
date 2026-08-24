@@ -12,12 +12,21 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { EventItemProps } from './EventItem.types';
+import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
-import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
+import type { PaletteName } from '../../../utils/tokens';
+import { getPaletteVariants } from '../../../utils/tokens';
+import {
+  ARROW_DEPTH,
+  LEFT_ARROW_CLIP,
+  RIGHT_ARROW_CLIP,
+  BOTH_ARROWS_CLIP,
+  getArrowFocusVisibleStyles,
+} from '../arrowClips';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -25,6 +34,7 @@ const EventItemCard = styled('div', {
 })<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
+  cursor: 'pointer',
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
@@ -34,7 +44,6 @@ const EventItemCard = styled('div', {
   },
   '&[data-variant="compact"], &[data-variant="regular"]': {
     containerType: 'inline-size',
-    cursor: 'pointer',
     height: 'fit-content',
   },
   '&[data-variant="filled"]': {
@@ -50,9 +59,22 @@ const EventItemCard = styled('div', {
         backgroundColor: 'var(--event-surface-selected-hover)',
       },
     },
-  },
-  '&[data-variant="regular"]': {
-    cursor: 'pointer',
+    '&[data-starting-before-edge]': {
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      clipPath: LEFT_ARROW_CLIP,
+      paddingLeft: ARROW_DEPTH,
+    },
+    '&[data-ending-after-edge]': {
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+      clipPath: RIGHT_ARROW_CLIP,
+      paddingRight: ARROW_DEPTH,
+    },
+    '&[data-starting-before-edge][data-ending-after-edge]': {
+      clipPath: BOTH_ARROWS_CLIP,
+    },
+    ...getArrowFocusVisibleStyles(theme.shape.borderRadius),
   },
   '&[data-editing]': {
     backgroundColor: 'var(--event-surface-selected)',
@@ -166,6 +188,7 @@ export const EventItem = React.forwardRef(function EventItem(
 ) {
   const {
     occurrence,
+    date,
     ariaLabelledBy,
     id: idProp,
     variant = 'regular',
@@ -186,12 +209,20 @@ export const EventItem = React.forwardRef(function EventItem(
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
-    occurrence.resource,
+    getPrimaryResourceId(occurrence.resource),
   );
-  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const formatTime = useFormatTime();
+
+  const adapter = useAdapterContext();
+  const startsBeforeDay =
+    !adapter.isSameDay(occurrence.displayTimezone.start.value, date.value) &&
+    adapter.isBefore(occurrence.displayTimezone.start.value, date.value);
+  const endsAfterDay =
+    !adapter.isSameDay(occurrence.displayTimezone.end.value, date.value) &&
+    adapter.isAfter(occurrence.displayTimezone.end.value, date.value);
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -301,6 +332,8 @@ export const EventItem = React.forwardRef(function EventItem(
           data-palette={color}
           data-editing={isEditing || undefined}
           aria-labelledby={`${ariaLabelledBy} ${id}`}
+          {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
+          {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}
           {...other}
           className={clsx(className, classes.eventItemCard, occurrence.className)}
         />

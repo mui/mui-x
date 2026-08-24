@@ -93,7 +93,7 @@
       "required": true
     },
     "getColumn": {
-      "type": { "description": "(field: string) =&gt; GridStateColDef" },
+      "type": { "description": "(field: string) =&gt; GridStateColDef | undefined" },
       "required": true
     },
     "getColumnGroupPath": {
@@ -567,7 +567,7 @@
     },
     "subscribeEvent": {
       "type": {
-        "description": "(event: E, handler: (params: GridEventLookup[E] extends { params: any; } ? GridEventLookup[E]['params'] : undefined, event: GridEventLookup[E] extends { event: MuiBaseEvent; } ? MuiEvent&lt;GridEventLookup[E]['event']&gt; : { defaultMuiPrevented?: boolean | undefined; }, details: { reason?: any, api: GridApiCommon&lt;GridStateCommunity, GridInitialStateCommunity&gt; }) =&gt; void, options?: undefined | { isFirst?: false | true | undefined }) =&gt; () =&gt; void"
+        "description": "(event: E, handler: (params: GridEventLookup[E] extends { params: any; } ? GridEventLookup[E]['params'] : undefined, event: GridEventLookup[E] extends { event: MuiBaseEvent; } ? MuiEvent&lt;GridEventLookup[E]['event']&gt; : { defaultMuiPrevented?: boolean | undefined; }, details: { reason?: any, api: GridApiCommon&lt;GridStateCommunity, GridInitialStateCommunity&gt;, apiRef: { current: GridApiCommon&lt;GridStateCommunity, GridInitialStateCommunity&gt; } }) =&gt; void, options?: undefined | { isFirst?: false | true | undefined }) =&gt; () =&gt; void"
       },
       "required": true
     },

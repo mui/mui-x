@@ -1,21 +1,20 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPro,
-  type DataGridProProps,
-  GRID_ROOT_GROUP_ID,
-  type GridApi,
-  type GridDataSource,
-  type GridGetRowsParams,
-  type GridGetRowsResponse,
-  type GridGroupNode,
-  useGridApiRef,
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPro, GRID_ROOT_GROUP_ID, useGridApiRef } from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridApi,
+  GridDataSource,
+  GridGetRowsParams,
+  GridGetRowsResponse,
+  GridGroupNode,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { getCell, getRow } from 'test/utils/helperFn';
+import { actSleep, getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 const dataSetOptions = {
   dataSet: 'Employee' as const,
@@ -140,6 +139,51 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+  });
+
+  describe('incomplete filter items', () => {
+    it('should not send a filter item without a value to the data source', async () => {
+      render(<TestDataSource dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      await act(async () => {
+        apiRef.current!.upsertFilterItem({
+          id: 1,
+          field: 'name',
+          operator: 'contains',
+          value: 'John',
+        });
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.upsertFilterItem({ id: 1, field: 'name', operator: 'contains' });
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      expect(JSON.parse(url.searchParams.get('filterModel')!).items).to.deep.equal([]);
+    });
+
+    it('should not re-fetch when the change only adds an incomplete item', async () => {
+      render(<TestDataSource dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      await act(async () => {
+        apiRef.current!.upsertFilterItem({ id: 1, field: 'name', operator: 'contains' });
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(1);
     });
   });
 
@@ -566,6 +610,90 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
         .children;
       expect(rootChildren).to.deep.equal(['A', 'B']);
     });
+
+    await user.click(within(getCell(0, 0)).getByRole('button'));
+
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.tree['A-1']).not.to.equal(undefined);
+    });
+
+    setProps({ sortModel: [{ field: 'name', sort: 'desc' }] });
+
+    await waitFor(() => {
+      const rootChildren = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+        .children;
+      expect(rootChildren).to.deep.equal(['B', 'A']);
+    });
+  });
+
+  // The `dataSourceKeepPreviousData` prop must be a no-op for tree-data, otherwise the
+  // existing tree is merged on top of the new response and rows render in stale order.
+  // Regression coverage for https://github.com/mui/mui-x/pull/21619 + the follow-up to
+  // https://github.com/mui/mui-x/pull/22465.
+  it('should still update root row order on params change with `dataSourceKeepPreviousData` enabled', async () => {
+    function TestComponent(props: { sortModel?: DataGridProProps['sortModel'] }) {
+      apiRef = useGridApiRef();
+      const { sortModel } = props;
+      const dataSource: GridDataSource = React.useMemo(() => {
+        const rootRows = [
+          { id: 'A', name: 'A', descendantCount: 1 },
+          { id: 'B', name: 'B', descendantCount: 0 },
+        ];
+        const childRows = [{ id: 'A-1', name: 'A1', descendantCount: 0 }];
+
+        return {
+          getRows: async (params: GridGetRowsParams) => {
+            if (params.groupKeys!.length === 0) {
+              const shouldReverse =
+                params.sortModel[0]?.field === 'name' && params.sortModel[0]?.sort === 'desc';
+              const rows = shouldReverse ? rootRows.toReversed() : rootRows;
+              return { rows, rowCount: rows.length };
+            }
+
+            if (params.groupKeys![0] === 'A') {
+              return { rows: childRows, rowCount: childRows.length };
+            }
+
+            return { rows: [], rowCount: 0 };
+          },
+          getGroupKey: (row) => row.name,
+          getChildrenCount: (row) => row.descendantCount,
+        };
+      }, []);
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }]}
+            dataSource={dataSource}
+            dataSourceKeepPreviousData
+            sortModel={sortModel}
+            treeData
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    // `dataSourceKeepPreviousData` is a no-op for tree data, so it also emits a dev warning.
+    let renderResult!: ReturnType<typeof render>;
+    await expect(async () => {
+      renderResult = render(<TestComponent />);
+      await waitFor(() => {
+        const rootChildren = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+          .children;
+        expect(rootChildren).to.deep.equal(['A', 'B']);
+      });
+    }).toWarnDev(
+      [
+        'MUI X: The `dataSourceKeepPreviousData` prop only applies to flat data.',
+        'It is ignored when tree data or row grouping is enabled, because the rows are always reset on refetch to keep their order consistent with the response.',
+        'For more details, see https://mui.com/x/react-data-grid/server-side-data/#keep-previous-data-while-fetching.',
+      ].join('\n'),
+    );
+
+    const { user, setProps } = renderResult;
 
     await user.click(within(getCell(0, 0)).getByRole('button'));
 

@@ -31,6 +31,9 @@
     "experimentalFeatures": {
       "description": "Options to enable features planned for the next major."
     },
+    "focusItemOnClick": {
+      "description": "If <code>true</code>, clicking an item immediately shows the keyboard focus indicator on it.\nBy default, clicking sets the item that keyboard navigation starts from, but the focus\nindicator stays hidden until the user presses a key."
+    },
     "grid": { "description": "Option to display a cartesian grid in the background." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
@@ -118,6 +121,9 @@
       }
     },
     "plugins": { "description": "Array of plugins used to add features to the chart." },
+    "sampling": {
+      "description": "Sampling method used to render large datasets when zoomed out.\n- <code>'none'</code>: render every point (no sampling).\n- <code>'minmax'</code>: keep the min and max per bucket.\n- <code>'m4'</code>: pixel-accurate—keep the first, min, max, and last per bucket.\n- <code>'lttb'</code>: Largest-Triangle-Three-Buckets, preserves the visual shape."
+    },
     "seriesConfig": {
       "description": "The configuration for the series types.\nThis is used to define how each series type should be processed, colored, and displayed."
     },

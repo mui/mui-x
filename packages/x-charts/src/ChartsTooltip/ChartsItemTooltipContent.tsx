@@ -3,8 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { type SxProps, type Theme } from '@mui/material/styles';
-import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import type { SxProps, Theme } from '@mui/material/styles';
+import { useUtilityClasses } from './chartsTooltipClasses';
+import type { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useInternalItemTooltip } from './useItemTooltip';
 import {
   ChartsTooltipCell,
@@ -14,13 +15,13 @@ import {
 } from './ChartsTooltipTable';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { useStore } from '../internals/store/useStore';
-import {
-  type ItemTooltip,
-  type ItemTooltipContentProps,
-  type ItemTooltipWithMultipleValues,
-  selectorChartSeriesConfig,
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type {
+  ItemTooltip,
+  ItemTooltipContentProps,
+  ItemTooltipWithMultipleValues,
 } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import { type ChartSeriesType } from '../models/seriesType/config';
+import type { ChartSeriesType } from '../models/seriesType/config';
 
 export interface ChartsItemTooltipContentClasses extends ChartsTooltipClasses {}
 
@@ -221,13 +222,13 @@ DefaultSingleValueContent.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  item: PropTypes.shape({
+  item: PropTypes /* @typescript-to-proptypes-ignore */.shape({
     color: PropTypes.string.isRequired,
     formattedValue: PropTypes.any.isRequired,
     identifier: PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
+      type: PropTypes.string.isRequired,
     }).isRequired,
     label: PropTypes.string,
     markShape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye']),

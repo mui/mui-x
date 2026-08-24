@@ -1,15 +1,10 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { spy, stub } from 'sinon';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  GridAiAssistantPanel,
-  type GridApi,
-  type GridRowsProp,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridAiAssistantPanel, useGridApiRef } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;

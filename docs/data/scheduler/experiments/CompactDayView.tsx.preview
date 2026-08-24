@@ -1,4 +1,4 @@
-<StandaloneCompactDayView
+<StandaloneCompactDayViewPremium
   events={events}
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}

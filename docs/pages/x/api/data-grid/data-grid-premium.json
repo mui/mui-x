@@ -74,6 +74,7 @@
     "dataSourceCache": {
       "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
     },
+    "dataSourceKeepPreviousData": { "type": { "name": "bool" }, "default": "false" },
     "dataSourceRevalidateMs": { "type": { "name": "number" }, "default": "0" },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
@@ -103,6 +104,8 @@
     "disableColumnSorting": { "type": { "name": "bool" }, "default": "false" },
     "disableDensitySelector": { "type": { "name": "bool" }, "default": "false" },
     "disableEval": { "type": { "name": "bool" }, "default": "false" },
+    "disableFormulaAutocomplete": { "type": { "name": "bool" }, "default": "false" },
+    "disableFormulas": { "type": { "name": "bool" }, "default": "false" },
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" }, "default": "false" },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" }, "default": "false" },
     "disableMultipleRowSelection": {
@@ -125,6 +128,12 @@
         "description": "{ virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
       }
     },
+    "featureDependencies": {
+      "type": {
+        "name": "shape",
+        "description": "{ formula?: { FormulaBar: func<br>&#124;&nbsp;{ contextType?: func, defaultProps?: {}, displayName?: string, getDerivedStateFromError?: func, getDerivedStateFromProps?: func, propTypes?: any }, ReferenceOverlay: func<br>&#124;&nbsp;{ contextType?: func, defaultProps?: {}, displayName?: string, getDerivedStateFromError?: func, getDerivedStateFromProps?: func, propTypes?: any }, stateInitializer: func, transformProps: func, useColumnHeaderAdornment: func, useFeature: func, usePreProcessors: func } }"
+      }
+    },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
@@ -135,6 +144,11 @@
         "name": "shape",
         "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: '!='<br>&#124;&nbsp;'<'<br>&#124;&nbsp;'<='<br>&#124;&nbsp;'='<br>&#124;&nbsp;'>'<br>&#124;&nbsp;'>='<br>&#124;&nbsp;'after'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'contains'<br>&#124;&nbsp;'doesNotContain'<br>&#124;&nbsp;'doesNotEqual'<br>&#124;&nbsp;'endsWith'<br>&#124;&nbsp;'equals'<br>&#124;&nbsp;'is'<br>&#124;&nbsp;'isAnyOf'<br>&#124;&nbsp;'isEmpty'<br>&#124;&nbsp;'isNotEmpty'<br>&#124;&nbsp;'not'<br>&#124;&nbsp;'onOrAfter'<br>&#124;&nbsp;'onOrBefore'<br>&#124;&nbsp;'startsWith'<br>&#124;&nbsp;{}, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: Array&lt;any&gt; }"
       }
+    },
+    "formulaA1Notation": { "type": { "name": "bool" }, "default": "false" },
+    "formulaFunctions": {
+      "type": { "name": "shape", "description": "Record<string, FormulaFunctionDefinition>" },
+      "default": "GRID_FORMULA_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided"
     },
     "getAggregationPosition": {
       "type": { "name": "func" },
@@ -241,7 +255,7 @@
     "historyValidationEvents": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'activeChartIdChange'<br>&#124;&nbsp;'activeStrategyProcessorChange'<br>&#124;&nbsp;'aggregationLookupSet'<br>&#124;&nbsp;'aggregationModelChange'<br>&#124;&nbsp;'aiAssistantActiveConversationIndexChange'<br>&#124;&nbsp;'aiAssistantConversationsChange'<br>&#124;&nbsp;'cellClick'<br>&#124;&nbsp;'cellDoubleClick'<br>&#124;&nbsp;'cellDragEnter'<br>&#124;&nbsp;'cellDragOver'<br>&#124;&nbsp;'cellEditStart'<br>&#124;&nbsp;'cellEditStop'<br>&#124;&nbsp;'cellFocusIn'<br>&#124;&nbsp;'cellFocusOut'<br>&#124;&nbsp;'cellKeyDown'<br>&#124;&nbsp;'cellKeyUp'<br>&#124;&nbsp;'cellModeChange'<br>&#124;&nbsp;'cellModesModelChange'<br>&#124;&nbsp;'cellMouseDown'<br>&#124;&nbsp;'cellMouseOver'<br>&#124;&nbsp;'cellMouseUp'<br>&#124;&nbsp;'cellSelectionChange'<br>&#124;&nbsp;'chartSynchronizationStateChange'<br>&#124;&nbsp;'clipboardCopy'<br>&#124;&nbsp;'clipboardPasteEnd'<br>&#124;&nbsp;'clipboardPasteStart'<br>&#124;&nbsp;'columnGroupHeaderBlur'<br>&#124;&nbsp;'columnGroupHeaderFocus'<br>&#124;&nbsp;'columnGroupHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderBlur'<br>&#124;&nbsp;'columnHeaderClick'<br>&#124;&nbsp;'columnHeaderContextMenu'<br>&#124;&nbsp;'columnHeaderDoubleClick'<br>&#124;&nbsp;'columnHeaderDragEnd'<br>&#124;&nbsp;'columnHeaderDragEndNative'<br>&#124;&nbsp;'columnHeaderDragEnter'<br>&#124;&nbsp;'columnHeaderDragOver'<br>&#124;&nbsp;'columnHeaderDragStart'<br>&#124;&nbsp;'columnHeaderEnter'<br>&#124;&nbsp;'columnHeaderFocus'<br>&#124;&nbsp;'columnHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderLeave'<br>&#124;&nbsp;'columnHeaderOut'<br>&#124;&nbsp;'columnHeaderOver'<br>&#124;&nbsp;'columnIndexChange'<br>&#124;&nbsp;'columnOrderChange'<br>&#124;&nbsp;'columnResize'<br>&#124;&nbsp;'columnResizeStart'<br>&#124;&nbsp;'columnResizeStop'<br>&#124;&nbsp;'columnSeparatorDoubleClick'<br>&#124;&nbsp;'columnSeparatorMouseDown'<br>&#124;&nbsp;'columnVisibilityModelChange'<br>&#124;&nbsp;'columnWidthChange'<br>&#124;&nbsp;'columnsChange'<br>&#124;&nbsp;'debouncedResize'<br>&#124;&nbsp;'densityChange'<br>&#124;&nbsp;'detailPanelsExpandedRowIdsChange'<br>&#124;&nbsp;'excelExportStateChange'<br>&#124;&nbsp;'fetchRows'<br>&#124;&nbsp;'filterModelChange'<br>&#124;&nbsp;'filteredRowsSet'<br>&#124;&nbsp;'headerFilterBlur'<br>&#124;&nbsp;'headerFilterClick'<br>&#124;&nbsp;'headerFilterKeyDown'<br>&#124;&nbsp;'headerFilterMouseDown'<br>&#124;&nbsp;'headerSelectionCheckboxChange'<br>&#124;&nbsp;'menuClose'<br>&#124;&nbsp;'menuOpen'<br>&#124;&nbsp;'paginationMetaChange'<br>&#124;&nbsp;'paginationModelChange'<br>&#124;&nbsp;'pinnedColumnsChange'<br>&#124;&nbsp;'pivotModeChange'<br>&#124;&nbsp;'pivotModelChange'<br>&#124;&nbsp;'pivotPanelOpenChange'<br>&#124;&nbsp;'preferencePanelClose'<br>&#124;&nbsp;'preferencePanelOpen'<br>&#124;&nbsp;'redo'<br>&#124;&nbsp;'renderedRowsIntervalChange'<br>&#124;&nbsp;'resize'<br>&#124;&nbsp;'rootMount'<br>&#124;&nbsp;'rowClick'<br>&#124;&nbsp;'rowCountChange'<br>&#124;&nbsp;'rowDoubleClick'<br>&#124;&nbsp;'rowDragEnd'<br>&#124;&nbsp;'rowDragOver'<br>&#124;&nbsp;'rowDragStart'<br>&#124;&nbsp;'rowEditStart'<br>&#124;&nbsp;'rowEditStop'<br>&#124;&nbsp;'rowExpansionChange'<br>&#124;&nbsp;'rowGroupingModelChange'<br>&#124;&nbsp;'rowModesModelChange'<br>&#124;&nbsp;'rowMouseEnter'<br>&#124;&nbsp;'rowMouseLeave'<br>&#124;&nbsp;'rowMouseOut'<br>&#124;&nbsp;'rowMouseOver'<br>&#124;&nbsp;'rowOrderChange'<br>&#124;&nbsp;'rowSelectionChange'<br>&#124;&nbsp;'rowSelectionCheckboxChange'<br>&#124;&nbsp;'rowsScrollEnd'<br>&#124;&nbsp;'rowsScrollEndIntersection'<br>&#124;&nbsp;'rowsSet'<br>&#124;&nbsp;'scrollPositionChange'<br>&#124;&nbsp;'sidebarClose'<br>&#124;&nbsp;'sidebarOpen'<br>&#124;&nbsp;'sortModelChange'<br>&#124;&nbsp;'sortedRowsSet'<br>&#124;&nbsp;'stateChange'<br>&#124;&nbsp;'strategyAvailabilityChange'<br>&#124;&nbsp;'undo'<br>&#124;&nbsp;'unmount'<br>&#124;&nbsp;'viewportInnerSizeChange'<br>&#124;&nbsp;'virtualScrollerContentSizeChange'<br>&#124;&nbsp;'virtualScrollerTouchMove'<br>&#124;&nbsp;'virtualScrollerWheel'&gt;"
+        "description": "Array&lt;'activeChartIdChange'<br>&#124;&nbsp;'activeStrategyProcessorChange'<br>&#124;&nbsp;'aggregationLookupSet'<br>&#124;&nbsp;'aggregationModelChange'<br>&#124;&nbsp;'aiAssistantActiveConversationIndexChange'<br>&#124;&nbsp;'aiAssistantConversationsChange'<br>&#124;&nbsp;'cellClick'<br>&#124;&nbsp;'cellDoubleClick'<br>&#124;&nbsp;'cellDragEnter'<br>&#124;&nbsp;'cellDragOver'<br>&#124;&nbsp;'cellEditStart'<br>&#124;&nbsp;'cellEditStop'<br>&#124;&nbsp;'cellFocusIn'<br>&#124;&nbsp;'cellFocusOut'<br>&#124;&nbsp;'cellKeyDown'<br>&#124;&nbsp;'cellKeyUp'<br>&#124;&nbsp;'cellModeChange'<br>&#124;&nbsp;'cellModesModelChange'<br>&#124;&nbsp;'cellMouseDown'<br>&#124;&nbsp;'cellMouseOver'<br>&#124;&nbsp;'cellMouseUp'<br>&#124;&nbsp;'cellSelectionChange'<br>&#124;&nbsp;'chartSynchronizationStateChange'<br>&#124;&nbsp;'clipboardCopy'<br>&#124;&nbsp;'clipboardPasteEnd'<br>&#124;&nbsp;'clipboardPasteStart'<br>&#124;&nbsp;'columnGroupHeaderBlur'<br>&#124;&nbsp;'columnGroupHeaderFocus'<br>&#124;&nbsp;'columnGroupHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderBlur'<br>&#124;&nbsp;'columnHeaderClick'<br>&#124;&nbsp;'columnHeaderContextMenu'<br>&#124;&nbsp;'columnHeaderDoubleClick'<br>&#124;&nbsp;'columnHeaderDragEnd'<br>&#124;&nbsp;'columnHeaderDragEndNative'<br>&#124;&nbsp;'columnHeaderDragEnter'<br>&#124;&nbsp;'columnHeaderDragOver'<br>&#124;&nbsp;'columnHeaderDragStart'<br>&#124;&nbsp;'columnHeaderEnter'<br>&#124;&nbsp;'columnHeaderFocus'<br>&#124;&nbsp;'columnHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderLeave'<br>&#124;&nbsp;'columnHeaderOut'<br>&#124;&nbsp;'columnHeaderOver'<br>&#124;&nbsp;'columnIndexChange'<br>&#124;&nbsp;'columnOrderChange'<br>&#124;&nbsp;'columnResize'<br>&#124;&nbsp;'columnResizeStart'<br>&#124;&nbsp;'columnResizeStop'<br>&#124;&nbsp;'columnSeparatorDoubleClick'<br>&#124;&nbsp;'columnSeparatorMouseDown'<br>&#124;&nbsp;'columnVisibilityModelChange'<br>&#124;&nbsp;'columnWidthChange'<br>&#124;&nbsp;'columnsChange'<br>&#124;&nbsp;'debouncedResize'<br>&#124;&nbsp;'densityChange'<br>&#124;&nbsp;'detailPanelsExpandedRowIdsChange'<br>&#124;&nbsp;'excelExportStateChange'<br>&#124;&nbsp;'fetchRows'<br>&#124;&nbsp;'filterModelChange'<br>&#124;&nbsp;'filteredRowsSet'<br>&#124;&nbsp;'formulaEvaluated'<br>&#124;&nbsp;'headerFilterBlur'<br>&#124;&nbsp;'headerFilterClick'<br>&#124;&nbsp;'headerFilterKeyDown'<br>&#124;&nbsp;'headerFilterMouseDown'<br>&#124;&nbsp;'headerSelectionCheckboxChange'<br>&#124;&nbsp;'menuClose'<br>&#124;&nbsp;'menuOpen'<br>&#124;&nbsp;'paginationMetaChange'<br>&#124;&nbsp;'paginationModelChange'<br>&#124;&nbsp;'pinnedColumnsChange'<br>&#124;&nbsp;'pivotModeChange'<br>&#124;&nbsp;'pivotModelChange'<br>&#124;&nbsp;'pivotPanelOpenChange'<br>&#124;&nbsp;'preferencePanelClose'<br>&#124;&nbsp;'preferencePanelOpen'<br>&#124;&nbsp;'redo'<br>&#124;&nbsp;'renderedRowsIntervalChange'<br>&#124;&nbsp;'resize'<br>&#124;&nbsp;'rootMount'<br>&#124;&nbsp;'rowClick'<br>&#124;&nbsp;'rowCountChange'<br>&#124;&nbsp;'rowDoubleClick'<br>&#124;&nbsp;'rowDragEnd'<br>&#124;&nbsp;'rowDragOver'<br>&#124;&nbsp;'rowDragStart'<br>&#124;&nbsp;'rowEditStart'<br>&#124;&nbsp;'rowEditStop'<br>&#124;&nbsp;'rowExpansionChange'<br>&#124;&nbsp;'rowGroupingModelChange'<br>&#124;&nbsp;'rowModesModelChange'<br>&#124;&nbsp;'rowMouseEnter'<br>&#124;&nbsp;'rowMouseLeave'<br>&#124;&nbsp;'rowMouseOut'<br>&#124;&nbsp;'rowMouseOver'<br>&#124;&nbsp;'rowOrderChange'<br>&#124;&nbsp;'rowSelectionChange'<br>&#124;&nbsp;'rowSelectionCheckboxChange'<br>&#124;&nbsp;'rowsScrollEnd'<br>&#124;&nbsp;'rowsScrollEndIntersection'<br>&#124;&nbsp;'rowsSet'<br>&#124;&nbsp;'scrollPositionChange'<br>&#124;&nbsp;'sidebarClose'<br>&#124;&nbsp;'sidebarOpen'<br>&#124;&nbsp;'sortModelChange'<br>&#124;&nbsp;'sortedRowsSet'<br>&#124;&nbsp;'stateChange'<br>&#124;&nbsp;'strategyAvailabilityChange'<br>&#124;&nbsp;'undo'<br>&#124;&nbsp;'unmount'<br>&#124;&nbsp;'viewportInnerSizeChange'<br>&#124;&nbsp;'virtualScrollerContentSizeChange'<br>&#124;&nbsp;'virtualScrollerTouchMove'<br>&#124;&nbsp;'virtualScrollerWheel'&gt;"
       },
       "default": "['columnsChange', 'rowsSet', 'sortedRowsSet', 'filteredRowsSet', 'paginationModelChange']"
     },
@@ -380,14 +394,14 @@
     "onCellEditStart": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridCellParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: GridCellParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>, details: GridCallbackDetails<any, GridApiPremium>) => void",
         "describedArgs": ["params", "event"]
       }
     },
     "onCellEditStop": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridCellParams, event: MuiEvent<MuiBaseEvent>, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: GridCellParams, event: MuiEvent<MuiBaseEvent>, details: GridCallbackDetails<any, GridApiPremium>) => void",
         "describedArgs": ["params", "event"]
       }
     },
@@ -415,21 +429,21 @@
     "onClipboardCopy": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: string, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: string, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any, GridApiPremium>) => void",
         "describedArgs": []
       }
     },
     "onClipboardPasteEnd": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: { oldRows: Map<GridRowId, GridValidRowModel>; newRows: Map<GridRowId, GridValidRowModel>; }, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: { oldRows: Map<GridRowId, GridValidRowModel>; newRows: Map<GridRowId, GridValidRowModel>; }, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any, GridApiPremium>) => void",
         "describedArgs": []
       }
     },
     "onClipboardPasteStart": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: { data: Array<Array<string>>; }, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: { data: Array<Array<string>>; }, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any, GridApiPremium>) => void",
         "describedArgs": []
       }
     },
@@ -443,7 +457,7 @@
     "onColumnHeaderContextMenu": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails<any, GridApiPremium>) => void",
         "describedArgs": ["params", "event"]
       }
     },
@@ -641,7 +655,7 @@
     "onRedo": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: { eventName: keyof GridEventLookup; data: any; }, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: { eventName: keyof GridEventLookup; data: any; }, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any, GridApiPremium>) => void",
         "describedArgs": []
       }
     },
@@ -673,14 +687,14 @@
     "onRowEditStart": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridRowParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: GridRowParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>, details: GridCallbackDetails<any, GridApiPremium>) => void",
         "describedArgs": ["params", "event"]
       }
     },
     "onRowEditStop": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridRowParams, event: MuiEvent<MuiBaseEvent>, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: GridRowParams, event: MuiEvent<MuiBaseEvent>, details: GridCallbackDetails<any, GridApiPremium>) => void",
         "describedArgs": ["params", "event"]
       }
     },
@@ -743,7 +757,7 @@
     "onUndo": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: { eventName: keyof GridEventLookup; data: any; }, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: { eventName: keyof GridEventLookup; data: any; }, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any, GridApiPremium>) => void",
         "describedArgs": []
       }
     },

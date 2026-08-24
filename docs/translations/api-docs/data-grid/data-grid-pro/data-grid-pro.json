@@ -48,6 +48,9 @@
     },
     "dataSource": { "description": "The data source of the Data Grid Pro." },
     "dataSourceCache": { "description": "Data source cache object." },
+    "dataSourceKeepPreviousData": {
+      "description": "If <code>true</code>, the previously displayed rows are kept visible while new rows are being fetched after pagination, sorting, or filtering changes.\nThe loading overlay is rendered on top of the previous rows.\nOnly applies to flat data; tree data and row grouping always reset the rows on refetch to keep the order consistent with the new response."
+    },
     "dataSourceRevalidateMs": {
       "description": "If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.\nIf the refetched rows are different from the current rows, the grid will update the rows.\nSet to <code>0</code> to disable polling."
     },

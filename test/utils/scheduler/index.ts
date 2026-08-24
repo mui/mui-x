@@ -12,5 +12,6 @@ export * from './resource-builder';
 export * from './storeClasses';
 export * from './dom-queries';
 export * from './dnd';
+export * from './pointer';
 
 export type AnyEventCalendarStore = EventCalendarStore<any, any>;

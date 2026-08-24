@@ -1,21 +1,21 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
-import {
+import type {
   InferFieldSection,
   MuiPickersAdapter,
   PickersTimezone,
   PickerValidDate,
 } from '../../../models';
-import {
+import type {
   FieldSectionsValueBoundaries,
   UseFieldDOMGetters,
   UseFieldInternalProps,
 } from './useField.types';
-import { UseFieldStateReturnValue } from './useFieldState';
+import type { UseFieldStateReturnValue } from './useFieldState';
 import { getActiveElement } from '../../utils/utils';
-import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
+import type { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
-import { PickerAnyManager, PickerValidValue } from '../../models';
+import type { PickerAnyManager, PickerValidValue } from '../../models';
 import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
 import {
   cleanDigitSectionValue,
@@ -240,18 +240,36 @@ export function useFieldRootProps(
       return;
     }
     const target = event.target as Element;
-    // `sectionListRoot` is the sections container (a descendant of the
-    // InputBase root that owns this handler). The guard rejects clicks on
-    // sibling adornments (open / clear buttons, etc.) which have their own
-    // behavior and must not get intercepted here.
     const sectionListRoot = domGetters.getRoot();
-    if (!sectionListRoot.contains(target)) {
+    const isInsideSectionList = sectionListRoot.contains(target);
+    // Only the field root is ours outside the sections container: it is the
+    // target of a padding click. The adornments keep their own behavior.
+    if (!isInsideSectionList && target !== event.currentTarget) {
       return;
     }
+    const sectionElement = isInsideSectionList
+      ? target.closest<HTMLElement>('[data-sectionindex]')
+      : null;
+
+    // Blank space is the field padding and the area past the sections. Mimic
+    // the native date input: first section on entry, keep it afterwards.
+    // `preventDefault` is what keeps it, by stopping both the browser blur and
+    // Chromium's focus delegation.
+    const isBlankSpaceClick =
+      sectionElement == null &&
+      (!isInsideSectionList || isPointOutsideSections(sectionListRoot, event.clientX));
+    if (isBlankSpaceClick) {
+      event.preventDefault();
+      if (!focused) {
+        setFocused(true);
+        setSelectedSections(sectionOrder.startIndex);
+      }
+      return;
+    }
+
     // Prefer the visually-containing section (matches Chromium's
     // delegation + section container `onClick`), fall back to the
-    // closest-by-distance section for padding / past-last-section clicks.
-    const sectionElement = target.closest<HTMLElement>('[data-sectionindex]');
+    // closest-by-distance section for clicks on the container padding.
     const parsedIndex = sectionElement
       ? Number(sectionElement.dataset.sectionindex)
       : findClosestSectionIndexToPoint(sectionListRoot, event.clientX);
@@ -360,6 +378,34 @@ export function useFieldRootProps(
     contentEditable: parsedSelectedSections === 'all',
     tabIndex: internalPropsWithDefaults.disabled || parsedSelectedSections === 0 ? -1 : 0, // TODO: Try to set to undefined when there is a section selected.
   };
+}
+
+/**
+ * Slop on each side of the sections, so a click that just misses the outermost
+ * one still selects it. Under half a digit at the default font size.
+ */
+const BLANK_SPACE_TOLERANCE = 4;
+
+/**
+ * Returns `true` when `clientX` sits past the sections on either side.
+ * Horizontal only: a click in the container's vertical padding still belongs to
+ * the section above or below it.
+ */
+function isPointOutsideSections(root: HTMLElement, clientX: number): boolean {
+  const sections = root.querySelectorAll<HTMLElement>('[data-sectionindex]');
+  if (sections.length === 0) {
+    return false;
+  }
+
+  let left = Infinity;
+  let right = -Infinity;
+  for (let i = 0; i < sections.length; i += 1) {
+    const rect = sections[i].getBoundingClientRect();
+    left = Math.min(left, rect.left);
+    right = Math.max(right, rect.right);
+  }
+
+  return clientX < left - BLANK_SPACE_TOLERANCE || clientX > right + BLANK_SPACE_TOLERANCE;
 }
 
 /**

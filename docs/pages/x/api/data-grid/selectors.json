@@ -13,6 +13,12 @@
   },
   { "name": "gridAggregationStateSelector", "returnType": "GridAggregationState" },
   {
+    "name": "gridCellFormulaResultSelector",
+    "returnType": "FormulaResult | null",
+    "category": "Formulas",
+    "description": "Get the evaluated result of one formula cell, or `null` when the cell does\nnot hold a formula. Presence in the lookup is the masking criterion — a\nformula evaluating to `null` still returns a result entry."
+  },
+  {
     "name": "gridColumnDefinitionsSelector",
     "returnType": "GridStateColDef[]",
     "category": "Columns",
@@ -160,6 +166,13 @@
   { "name": "gridFocusColumnHeaderFilterSelector", "returnType": "GridColumnIdentifier | null" },
   { "name": "gridFocusColumnHeaderSelector", "returnType": "GridColumnIdentifier | null" },
   { "name": "gridFocusStateSelector", "returnType": "GridFocusState" },
+  {
+    "name": "gridFormulaLookupSelector",
+    "returnType": "GridFormulaLookup",
+    "category": "Formulas",
+    "description": "Get the evaluated formula results as a lookup, keyed by row id and field."
+  },
+  { "name": "gridFormulaStateSelector", "returnType": "GridFormulaState" },
   { "name": "gridHeaderFilteringEditFieldSelector", "returnType": "string | null" },
   { "name": "gridHeaderFilteringEnabledSelector", "returnType": "boolean" },
   { "name": "gridHeaderFilteringMenuSelector", "returnType": "string | null" },

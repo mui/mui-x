@@ -2,7 +2,7 @@
   "props": {
     "color": { "type": { "name": "string" }, "required": true },
     "d": { "type": { "name": "string" }, "required": true },
-    "dataIndex": { "type": { "name": "number" }, "required": true },
+    "featureName": { "type": { "name": "string" }, "required": true },
     "seriesId": { "type": { "name": "string" }, "required": true }
   },
   "name": "MapShape",

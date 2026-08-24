@@ -8,7 +8,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;DatasetElementType<unknown>&gt;" }
     },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "ChartExperimentalFeatures<SeriesType>" }
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
     },
     "height": { "type": { "name": "number" } },
     "id": { "type": { "name": "string" } },

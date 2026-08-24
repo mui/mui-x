@@ -45,6 +45,7 @@
     "dataSourceCache": {
       "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
     },
+    "dataSourceKeepPreviousData": { "type": { "name": "bool" }, "default": "false" },
     "dataSourceRevalidateMs": { "type": { "name": "number" }, "default": "0" },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
@@ -278,14 +279,14 @@
     "onCellEditStart": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridCellParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: GridCellParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>, details: GridCallbackDetails<any, GridApiPro>) => void",
         "describedArgs": ["params", "event"]
       }
     },
     "onCellEditStop": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridCellParams, event: MuiEvent<MuiBaseEvent>, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: GridCellParams, event: MuiEvent<MuiBaseEvent>, details: GridCallbackDetails<any, GridApiPro>) => void",
         "describedArgs": ["params", "event"]
       }
     },
@@ -306,7 +307,7 @@
     "onClipboardCopy": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: string, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: string, event: { defaultMuiPrevented?: boolean | undefined; }, details: GridCallbackDetails<any, GridApiPro>) => void",
         "describedArgs": []
       }
     },
@@ -320,7 +321,7 @@
     "onColumnHeaderContextMenu": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails<any, GridApiPro>) => void",
         "describedArgs": ["params", "event"]
       }
     },
@@ -505,14 +506,14 @@
     "onRowEditStart": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridRowParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: GridRowParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>, details: GridCallbackDetails<any, GridApiPro>) => void",
         "describedArgs": ["params", "event"]
       }
     },
     "onRowEditStop": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridRowParams, event: MuiEvent<MuiBaseEvent>, details: GridCallbackDetails<any>) => void",
+        "type": "function(params: GridRowParams, event: MuiEvent<MuiBaseEvent>, details: GridCallbackDetails<any, GridApiPro>) => void",
         "describedArgs": ["params", "event"]
       }
     },

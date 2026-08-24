@@ -129,6 +129,11 @@ export default function AssistantWithDataSource() {
         slots={{
           aiAssistantPanel: GridAiAssistantPanel,
         }}
+        sx={{
+          '& [aria-label="AI Assistant"] .MuiSvgIcon-root': {
+            color: 'primary.main',
+          },
+        }}
         onPrompt={processPrompt}
         aggregationFunctions={aggregationFunctions}
         onDataSourceError={console.error}

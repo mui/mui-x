@@ -7,11 +7,11 @@ import IconButton from '@mui/material/IconButton';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { ChatBox } from '@mui/x-chat';
 import { useChatComposer } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const CustomComposerContent = React.forwardRef(function CustomComposerContent(
   props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: unknown },

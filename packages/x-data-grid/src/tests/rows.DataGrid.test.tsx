@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -16,16 +16,18 @@ import Portal from '@mui/material/Portal';
 import SvgIcon, { svgIconClasses } from '@mui/material/SvgIcon';
 import {
   DataGrid,
-  type DataGridProps,
   GridActionsCellItem,
-  type GridRowIdGetter,
-  type GridRowClassNameParams,
-  type GridRowModel,
-  type GridRenderCellParams,
   useGridApiRef,
-  type GridApi,
   gridClasses,
   GridActionsCell,
+} from '@mui/x-data-grid';
+import type {
+  DataGridProps,
+  GridRowIdGetter,
+  GridRowClassNameParams,
+  GridRowModel,
+  GridRenderCellParams,
+  GridApi,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
@@ -40,8 +42,9 @@ import {
 import Dialog from '@mui/material/Dialog';
 import { isJSDOM } from 'test/utils/skipIf';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
-import { type GridApiCommunity } from '../models/api/gridApiCommunity';
+import type { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
@@ -1577,6 +1580,75 @@ describe('<DataGrid /> - Rows', () => {
           'Please remove one of these two props.',
         ].join('\n'),
       );
+    });
+
+    describe('prototype preservation on updateRows', () => {
+      it('should preserve the prototype of a class instance when updated with a plain-object partial', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          constructor(id: number, brand: string) {
+            this.id = id;
+            this.brand = brand;
+          }
+          getBrand() {
+            return this.brand;
+          }
+        }
+
+        const classRows = [
+          new BrandRow(0, 'Nike'),
+          new BrandRow(1, 'Adidas'),
+          new BrandRow(2, 'Puma'),
+        ];
+        const { rerender } = render(<TestCase rows={classRows} />);
+        // Plain-object partial update — oldRow is a class instance, partialRow is plain
+        await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        expect(updatedRow instanceof BrandRow).to.equal(true);
+        expect(typeof updatedRow.getBrand).to.equal('function');
+        expect(updatedRow.getBrand()).to.equal('Fila');
+        rerender(<TestCase rows={classRows} />);
+      });
+
+      it('should use the partialRow prototype when partialRow is a class instance', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          constructor(id: number, brand: string) {
+            this.id = id;
+            this.brand = brand;
+          }
+          getBrand() {
+            return this.brand;
+          }
+        }
+
+        const plainRows = [
+          { id: 0, brand: 'Nike' },
+          { id: 1, brand: 'Adidas' },
+          { id: 2, brand: 'Puma' },
+        ];
+        const { rerender } = render(<TestCase rows={plainRows} />);
+        // Class-instance partial update — oldRow is plain, partialRow is a class instance
+        await act(async () => apiRef.current?.updateRows([new BrandRow(1, 'Fila')]));
+
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        expect(updatedRow instanceof BrandRow).to.equal(true);
+        expect(typeof updatedRow.getBrand).to.equal('function');
+        expect(updatedRow.getBrand()).to.equal('Fila');
+        rerender(<TestCase rows={plainRows} />);
+      });
+
+      it('should produce a plain object when both oldRow and partialRow are plain objects', async () => {
+        render(<TestCase />);
+        await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+
+        const updatedRow = apiRef.current?.getRow(1);
+        expect(Object.getPrototypeOf(updatedRow)).to.equal(Object.prototype);
+        expect((updatedRow as any).brand).to.equal('Fila');
+      });
     });
   });
 

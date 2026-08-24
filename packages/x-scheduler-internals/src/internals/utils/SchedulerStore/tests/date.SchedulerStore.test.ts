@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 
 const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
 

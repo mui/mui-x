@@ -34,8 +34,12 @@
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "disableLineItemHighlight": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ enablePositionBasedPointerInteraction?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ enablePositionBasedPointerInteraction?: bool, keyboardActivation?: bool }"
+      }
     },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
@@ -83,7 +87,7 @@
     "onAreaClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent<SVGElement, MouseEvent>, lineItemIdentifier: LineItemIdentifier) => void",
+        "type": "function(event: MouseEvent<SVGElement, MouseEvent>, lineItemIdentifier: LineItemClickIdentifier) => void",
         "describedArgs": []
       }
     },
@@ -118,14 +122,14 @@
     "onLineClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent<SVGElement, MouseEvent>, lineItemIdentifier: LineItemIdentifier) => void",
+        "type": "function(event: MouseEvent<SVGElement, MouseEvent>, lineItemIdentifier: LineItemClickIdentifier) => void",
         "describedArgs": []
       }
     },
     "onMarkClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent<SVGElement, MouseEvent>, lineItemIdentifier: LineItemIdentifier) => void",
+        "type": "function(event: MouseEvent<SVGElement, MouseEvent>, lineItemIdentifier: LineItemClickIdentifier) => void",
         "describedArgs": []
       }
     },
@@ -151,6 +155,13 @@
       }
     },
     "plugins": { "type": { "name": "{}" } },
+    "sampling": {
+      "type": {
+        "name": "enum",
+        "description": "'lttb'<br>&#124;&nbsp;'m4'<br>&#124;&nbsp;'minmax'<br>&#124;&nbsp;'none'"
+      },
+      "default": "'none'"
+    },
     "seriesConfig": {
       "type": {
         "name": "shape",

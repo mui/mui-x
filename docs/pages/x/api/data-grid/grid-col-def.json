@@ -21,6 +21,11 @@
       "isPremiumPlan": true
     },
     "align": { "type": { "description": "'center' | 'left' | 'right'" } },
+    "allowFormulas": {
+      "type": { "description": "boolean" },
+      "default": "false",
+      "isPremiumPlan": true
+    },
     "availableAggregationFunctions": {
       "type": { "description": "string[]" },
       "isPremiumPlan": true
@@ -110,6 +115,7 @@
       "isProPlan": true
     },
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
+    "rowHeader": { "type": { "description": "boolean" }, "default": "false" },
     "rowSpanValueGetter": {
       "type": {
         "description": "(value: never, row: R, column: GridActionsColDef&lt;R, V, F&gt; | GridBaseColDef&lt;R, V, F&gt; | GridMultiSelectColDef&lt;R, V, F&gt; | GridSingleSelectColDef&lt;R, V, F&gt;, apiRef: RefObject&lt;GridApiCommunity&gt;) =&gt; V"

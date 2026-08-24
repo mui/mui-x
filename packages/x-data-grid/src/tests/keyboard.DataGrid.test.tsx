@@ -9,17 +9,12 @@ import {
   getRow,
   openLongTextViewPopup,
 } from 'test/utils/helperFn';
-import {
-  DataGrid,
-  type DataGridProps,
-  GridActionsCellItem,
-  type GridColDef,
-  type GridColType,
-  type GridValueSetter,
-} from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import type { DataGridProps, GridColDef, GridColType, GridValueSetter } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 const PAGE_SIZE = 10;
 const ROW_HEIGHT = 52;

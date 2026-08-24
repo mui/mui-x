@@ -17,11 +17,17 @@
       "description": "Whether events can be dragged from inside of the calendar and dropped outside of it. If true, when the mouse leaves the calendar, the event won&#39;t be rendered inside the calendar anymore. If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "collapsedResources": {
+      "description": "The collapsed resources. A resource is expanded unless included here with a <code>true</code> value."
+    },
     "dataSource": {
       "description": "Data source for fetching events asynchronously. When provided, events are fetched through the data source instead of the <code>events</code> prop."
     },
     "dateLocale": {
       "description": "The locale object from <code>date-fns</code> used to format dates. This affects day names, month names, week start day, and other locale-dependent formatting. Import a locale from <code>date-fns/locale</code> and pass it to this prop."
+    },
+    "defaultCollapsedResources": {
+      "description": "The resources initially collapsed. To render a controlled scheduler, use the <code>collapsedResources</code> prop."
     },
     "defaultPreferences": {
       "description": "The default preferences for the timeline. To use controlled preferences, use the <code>preferences</code> prop."
@@ -47,9 +53,17 @@
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
-    "events": { "description": "The events currently available in the calendar." },
+    "events": {
+      "description": "The events currently available in the calendar.<br>Event models are compared by reference to avoid reprocessing unchanged events. Replace an event model with a new object when updating it instead of mutating it in place."
+    },
     "localeText": {
       "description": "Set the locale text of the Event Timeline. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts\">the source</a> in the GitHub repository."
+    },
+    "onCollapsedResourcesChange": {
+      "description": "Event handler called when the collapsed resources change."
+    },
+    "onEventEditingStart": {
+      "description": "Event handler called right before the built-in event dialog (or its mobile drawer variant) opens, regardless of what triggered it (pointer, keyboard, the armed toolbar&#39;s Edit action or event creation). <code>eventDetails.reason</code> is <code>&quot;creation&quot;</code> when the user is creating a new event, <code>&quot;view&quot;</code> when the occurrence is read-only (through the event, its resource or the <code>readOnly</code> prop) and the dialog opens in view-only mode, and <code>&quot;edit&quot;</code> otherwise. Call <code>eventDetails.cancel()</code> to keep it closed and handle the interaction in your own UI."
     },
     "onEventsChange": { "description": "Callback fired when some event of the calendar change." },
     "onPresetChange": { "description": "Event handler called when the preset changes." },
@@ -59,6 +73,9 @@
     },
     "preferences": { "description": "Preferences currently displayed in the timeline." },
     "preset": { "description": "The preset currently displayed in the timeline." },
+    "presetConfig": {
+      "description": "Configuration applied to each preset, keyed by the preset name. For the <code>dayAndHour</code> preset, <code>startTime</code> and <code>endTime</code> limit the hours displayed on each day: <code>startTime</code> is inclusive and <code>endTime</code> exclusive, so <code>{ startTime: 8, endTime: 20 }</code> renders the cells 8 AM through 7 PM and an event ending at 20:00 is still fully visible. Both must be whole hours between 0 and 24 with <code>startTime</code> lower than <code>endTime</code>; they default to 0 and 24, the full day, and an invalid range falls back to the full day with a warning in development. Presets that do not tick in hours ignore the configuration."
+    },
     "presets": {
       "description": "The presets available in the timeline. The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally, so a future zoom API (<code>zoomIn()</code> / <code>zoomOut()</code>) behaves consistently regardless of the order in which the presets are provided."
     },
@@ -76,6 +93,8 @@
     "showCurrentTimeIndicator": {
       "description": "Whether the component should display the current time indicator."
     },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
@@ -87,6 +106,38 @@
     }
   },
   "classDescriptions": {
+    "anchoredEventToolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the anchored (desktop) armed-event toolbar wrapper element"
+    },
+    "compactDayTimeGrid": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact (touch) day time grid root element"
+    },
+    "compactDayTimeGridContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact (touch) day time grid content element"
+    },
+    "compactEventDrawer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer root element"
+    },
+    "compactEventDrawerContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer content element"
+    },
+    "compactEventDrawerReadonlyHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer read-only header element"
+    },
+    "compactEventDrawerReadonlyTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer read-only title element"
+    },
+    "compactEventToolbarDock": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact (touch) armed-event toolbar dock element"
+    },
     "content": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the content section element"
@@ -112,6 +163,22 @@
       "nodeName": "the error message element"
     },
     "event": { "description": "Styles applied to {{nodeName}}.", "nodeName": "event elements" },
+    "eventContextMenu": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event context menu root element"
+    },
+    "eventContextMenuDeleteItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event context menu delete item element"
+    },
+    "eventContextMenuEditItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event context menu edit item element"
+    },
+    "eventContextMenuShowDetailsItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event context menu show details item element (read-only events)"
+    },
     "eventDialog": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog root element"
@@ -183,6 +250,10 @@
     "eventDialogHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog header element"
+    },
+    "eventDialogHeaderActions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog header actions container element"
     },
     "eventDialogInlineRow": {
       "description": "Styles applied to {{nodeName}}.",
@@ -340,6 +411,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event skeleton element"
     },
+    "eventToolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the armed-event toolbar root element"
+    },
+    "eventToolbarDeleteButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the armed-event toolbar delete button element"
+    },
+    "eventToolbarEditButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the armed-event toolbar edit button element"
+    },
     "grid": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the grid element" },
     "header": {
       "description": "Styles applied to {{nodeName}}.",
@@ -382,5 +465,8 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title header cell element"
     }
+  },
+  "slotDescriptions": {
+    "eventDialogGeneralTab": "The content of the &quot;General&quot; tab of the event editing surface: the dialog on regular views, the compact editing drawer on compact views. It is rendered inside the tab panel, so it must not render a tab panel of its own. Return a fragment rather than a wrapper element to keep the spacing between the sections."
   }
 }

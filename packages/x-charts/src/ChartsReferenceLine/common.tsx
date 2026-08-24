@@ -1,10 +1,8 @@
 import { styled } from '@mui/material/styles';
-import {
-  referenceLineClasses,
-  type ChartsReferenceLineClasses,
-} from './chartsReferenceLineClasses';
-import { type ChartsTextStyle } from '../ChartsText';
-import { type AxisId } from '../models/axis';
+import { referenceLineClasses } from './chartsReferenceLineClasses';
+import type { ChartsReferenceLineClasses } from './chartsReferenceLineClasses';
+import type { ChartsTextStyle } from '../ChartsText';
+import type { AxisId } from '../models/axis';
 
 export const DEFAULT_SPACING = 5;
 export const DEFAULT_SPACING_MIDDLE_OTHER_AXIS = 0;

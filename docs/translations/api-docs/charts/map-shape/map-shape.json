@@ -3,7 +3,7 @@
   "propDescriptions": {
     "color": { "description": "" },
     "d": { "description": "" },
-    "dataIndex": { "description": "" },
+    "featureName": { "description": "" },
     "seriesId": { "description": "" }
   },
   "classDescriptions": {},

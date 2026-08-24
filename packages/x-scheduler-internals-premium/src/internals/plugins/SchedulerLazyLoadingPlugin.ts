@@ -1,13 +1,13 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
-import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import {
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type {
   SchedulerState,
   SchedulerParameters,
   SchedulerStore,
-  buildEventsState,
   SchedulerEventParameters,
   SchedulerPersistEventsResult,
 } from '@mui/x-scheduler-internals/internals';
+import { buildEventsState } from '@mui/x-scheduler-internals/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { SchedulerDataManager } from '../utils/queue';
 
@@ -24,8 +24,7 @@ export class SchedulerLazyLoadingPlugin<
   private isFetchScheduled = false;
   private pendingIsInstantLoad = false;
   private pendingComputeRange:
-    | (() => { start: TemporalSupportedObject; end: TemporalSupportedObject })
-    | null = null;
+    (() => { start: TemporalSupportedObject; end: TemporalSupportedObject }) | null = null;
 
   /**
    * Range key of the most recently requested fetch. Used to skip stale fetches:
@@ -164,12 +163,13 @@ export class SchedulerLazyLoadingPlugin<
     ) {
       try {
         const allCachedEvents = cache.getAll();
-        const eventsState = buildEventsState(
-          { ...this.store.parameters, events: allCachedEvents } as Parameters,
+        const eventsState = buildEventsState({
+          events: allCachedEvents,
+          eventModelStructure: this.store.parameters.eventModelStructure,
           adapter,
           displayTimezone,
-          this.store.state.recurringEventsPlugin,
-        );
+          previousState: this.store.state,
+        });
 
         this.store.update({
           ...this.store.state,
@@ -203,12 +203,13 @@ export class SchedulerLazyLoadingPlugin<
       // Build from the full cache so disjoint already-cached ranges stay visible
       // when the visible range expands to cover them.
       const allCachedEvents = cache.getAll();
-      const eventsState = buildEventsState(
-        { ...this.store.parameters, events: allCachedEvents } as Parameters,
+      const eventsState = buildEventsState({
+        events: allCachedEvents,
+        eventModelStructure: this.store.parameters.eventModelStructure,
         adapter,
         displayTimezone,
-        this.store.state.recurringEventsPlugin,
-      );
+        previousState: this.store.state,
+      });
       this.store.update({
         ...this.store.state,
         ...eventsState,
@@ -291,12 +292,13 @@ export class SchedulerLazyLoadingPlugin<
       this.cache.upsert(event);
     }
 
-    const eventsState = buildEventsState(
-      { ...this.store.parameters, events: newEvents },
+    const eventsState = buildEventsState({
+      events: newEvents,
+      eventModelStructure: this.store.parameters.eventModelStructure,
       adapter,
       displayTimezone,
-      this.store.state.recurringEventsPlugin,
-    );
+      previousState: this.store.state,
+    });
 
     this.store.update({
       ...this.store.state,

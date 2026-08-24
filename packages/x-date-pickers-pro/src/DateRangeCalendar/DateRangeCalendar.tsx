@@ -10,31 +10,34 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import { Watermark } from '@mui/x-license/internals';
-import {
+import type {
   BaseDateValidationProps,
-  DayCalendar,
   DayCalendarSlots,
   DayCalendarSlotProps,
+  PickerSelectionState,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
+import {
+  DayCalendar,
   useReduceAnimations,
   useCalendarState,
-  PickerSelectionState,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   useControlledValue,
   useViews,
-  PickerRangeValue,
   usePickerPrivateContext,
+  PickerPrivateContext,
   areDatesEqual,
   useApplyDefaultValuesToDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
+import type { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import {
-  DateRangeCalendarClasses,
   dateRangeCalendarClasses,
   getDateRangeCalendarUtilityClass,
 } from './dateRangeCalendarClasses';
-import {
+import type {
   DateRangeCalendarProps,
   DateRangeCalendarDefaultizedProps,
   DateRangeCalendarOwnerState,
@@ -50,16 +53,14 @@ import {
   calculateRangePreview,
   resolveReferenceDate,
 } from '../internals/utils/date-range-manager';
-import { RangePosition } from '../models';
+import type { RangePosition } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
 import { useRangePosition } from '../internals/hooks/useRangePosition';
 import { DAY_RANGE_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
-import {
-  PickersRangeCalendarHeader,
-  PickersRangeCalendarHeaderProps,
-} from '../PickersRangeCalendarHeader';
+import type { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
+import { PickersRangeCalendarHeader } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 
 const packageInfo = {
@@ -304,7 +305,21 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     timezone,
   });
 
-  const { ownerState: pickersOwnerState } = usePickerPrivateContext();
+  const pickerPrivateContext = usePickerPrivateContext();
+
+  // The calendar can be rendered on its own, in which case the Picker context knows nothing about its `disabled` prop.
+  const privateContextValue = React.useMemo(
+    () =>
+      disabled && !pickerPrivateContext.ownerState.isPickerDisabled
+        ? {
+            ...pickerPrivateContext,
+            ownerState: { ...pickerPrivateContext.ownerState, isPickerDisabled: true },
+          }
+        : pickerPrivateContext,
+    [pickerPrivateContext, disabled],
+  );
+
+  const pickersOwnerState = privateContextValue.ownerState;
   const ownerState: DateRangeCalendarOwnerState = {
     ...pickersOwnerState,
     isDraggingDay: isDragging,
@@ -417,13 +432,22 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     }
 
     const displayingMonthRange = calendars - currentMonthCalendarPosition;
-    const currentMonthNumber = adapter.getMonth(calendarState.currentMonth);
-    const requestedMonthNumber = adapter.getMonth(date);
+
+    // Compare absolute month indices (year * 12 + month). This is time-insensitive (unlike a
+    // date range check) and stays correct across year boundaries. The visible window spans the
+    // `currentMonthCalendarPosition - 1` calendars rendered before the current month and the
+    // `calendars - currentMonthCalendarPosition` rendered after it.
+    // See https://github.com/mui/mui-x/issues/22980
+    const currentMonthIndex =
+      adapter.getYear(calendarState.currentMonth) * 12 +
+      adapter.getMonth(calendarState.currentMonth);
+    const requestedMonthIndex = adapter.getYear(date) * 12 + adapter.getMonth(date);
+    const firstVisibleMonthIndex = currentMonthIndex - (currentMonthCalendarPosition - 1);
+    const lastVisibleMonthIndex = currentMonthIndex + displayingMonthRange;
 
     if (
-      !adapter.isSameYear(calendarState.currentMonth, date) ||
-      requestedMonthNumber < currentMonthNumber ||
-      requestedMonthNumber > currentMonthNumber + displayingMonthRange
+      requestedMonthIndex < firstVisibleMonthIndex ||
+      requestedMonthIndex > lastVisibleMonthIndex
     ) {
       const newMonth =
         rangePosition === 'start'
@@ -447,6 +471,10 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     readOnly,
     disabled,
   };
+
+  // Days outside the current month are only rendered when a single calendar is displayed,
+  // otherwise the same day would be rendered in two calendars.
+  const shouldShowDaysOutsideCurrentMonth = calendars === 1 && showDaysOutsideCurrentMonth;
 
   const [rangePreviewDay, setRangePreviewDay] = React.useState<PickerValidDate | null>(null);
 
@@ -526,7 +554,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         'data-position': datePosition,
         ...dragEventHandlers,
         draggable: isElementDraggable ? true : undefined,
-        isDayFillerCell: isDayOutsideMonth && !showDaysOutsideCurrentMonth,
+        isDayFillerCell: isDayOutsideMonth && !shouldShowDaysOutsideCurrentMonth,
         ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
       };
     },
@@ -574,57 +602,59 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   }, [focusedView, setFocusedView, view]);
 
   return (
-    <DateRangeCalendarRoot
-      ref={ref}
-      className={clsx(classes.root, className)}
-      ownerState={ownerState}
-      {...other}
-    >
-      <Watermark packageInfo={packageInfo} />
-      {calendarMonths.map((monthIndex) => {
-        const month = visibleMonths[monthIndex];
-        const labelId = `${id}-grid-${monthIndex}-label`;
+    <PickerPrivateContext.Provider value={privateContextValue}>
+      <DateRangeCalendarRoot
+        ref={ref}
+        className={clsx(classes.root, className)}
+        ownerState={ownerState}
+        {...other}
+      >
+        <Watermark packageInfo={packageInfo} />
+        {calendarMonths.map((monthIndex) => {
+          const month = visibleMonths[monthIndex];
+          const labelId = `${id}-grid-${monthIndex}-label`;
 
-        return (
-          <DateRangeCalendarMonthContainer key={monthIndex} className={classes.monthContainer}>
-            <CalendarHeader
-              {...calendarHeaderProps}
-              month={month}
-              monthIndex={monthIndex}
-              labelId={labelId}
-            />
-            <DayCalendarForRange
-              className={classes.dayCalendar}
-              {...calendarState}
-              {...baseDateValidationProps}
-              {...commonViewProps}
-              onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
-              onFocusedDayChange={(focusedDate) =>
-                setVisibleDate({ target: focusedDate, reason: 'cell-interaction' })
-              }
-              reduceAnimations={reduceAnimations}
-              selectedDays={value}
-              onSelectedDaysChange={handleSelectedDayChange}
-              currentMonth={month}
-              TransitionProps={CalendarTransitionProps}
-              shouldDisableDate={wrappedShouldDisableDate}
-              hasFocus={hasFocus}
-              onFocusedViewChange={(isViewFocused) => setFocusedView('day', isViewFocused)}
-              showDaysOutsideCurrentMonth={calendars === 1 && showDaysOutsideCurrentMonth}
-              dayOfWeekFormatter={dayOfWeekFormatter}
-              loading={loading}
-              renderLoading={renderLoading}
-              slots={slotsForDayCalendar}
-              slotProps={slotPropsForDayCalendar}
-              fixedWeekNumber={fixedWeekNumber}
-              displayWeekNumber={displayWeekNumber}
-              timezone={timezone}
-              gridLabelId={labelId}
-            />
-          </DateRangeCalendarMonthContainer>
-        );
-      })}
-    </DateRangeCalendarRoot>
+          return (
+            <DateRangeCalendarMonthContainer key={monthIndex} className={classes.monthContainer}>
+              <CalendarHeader
+                {...calendarHeaderProps}
+                month={month}
+                monthIndex={monthIndex}
+                labelId={labelId}
+              />
+              <DayCalendarForRange
+                className={classes.dayCalendar}
+                {...calendarState}
+                {...baseDateValidationProps}
+                {...commonViewProps}
+                onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
+                onFocusedDayChange={(focusedDate) =>
+                  setVisibleDate({ target: focusedDate, reason: 'cell-interaction' })
+                }
+                reduceAnimations={reduceAnimations}
+                selectedDays={value}
+                onSelectedDaysChange={handleSelectedDayChange}
+                currentMonth={month}
+                TransitionProps={CalendarTransitionProps}
+                shouldDisableDate={wrappedShouldDisableDate}
+                hasFocus={hasFocus}
+                onFocusedViewChange={(isViewFocused) => setFocusedView('day', isViewFocused)}
+                showDaysOutsideCurrentMonth={shouldShowDaysOutsideCurrentMonth}
+                dayOfWeekFormatter={dayOfWeekFormatter}
+                loading={loading}
+                renderLoading={renderLoading}
+                slots={slotsForDayCalendar}
+                slotProps={slotPropsForDayCalendar}
+                fixedWeekNumber={fixedWeekNumber}
+                displayWeekNumber={displayWeekNumber}
+                timezone={timezone}
+                gridLabelId={labelId}
+              />
+            </DateRangeCalendarMonthContainer>
+          );
+        })}
+      </DateRangeCalendarRoot>
+    </PickerPrivateContext.Provider>
   );
 }) as DateRangeCalendarComponent;
 

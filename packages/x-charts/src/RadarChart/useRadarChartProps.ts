@@ -1,13 +1,14 @@
 'use client';
 import type { RadarChartProps } from './RadarChart';
-import { type ChartsOverlayProps } from '../ChartsOverlay';
-import { type ChartsLegendSlotExtension } from '../ChartsLegend';
+import type { ChartsOverlayProps } from '../ChartsOverlay';
+import type { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import { type RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
-import { type ChartsSurfaceProps } from '../ChartsSurface';
-import { type RadarGridProps } from './RadarGrid';
-import { RADAR_PLUGINS, type RadarChartPluginSignatures } from './RadarChart.plugins';
-import { type RadarSeriesAreaProps, type RadarSeriesMarksProps } from './RadarSeriesPlot';
+import type { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
+import type { ChartsSurfaceProps } from '../ChartsSurface';
+import type { RadarGridProps } from './RadarGrid';
+import { RADAR_PLUGINS } from './RadarChart.plugins';
+import type { RadarChartPluginSignatures } from './RadarChart.plugins';
+import type { RadarSeriesAreaProps, RadarSeriesMarksProps } from './RadarSeriesPlot';
 
 /**
  * A helper function that extracts RadarChartProps from the input props
@@ -43,6 +44,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     onAreaClick,
     onMarkClick,
     disableKeyboardNavigation,
+    focusItemOnClick,
+    experimentalFeatures,
     className,
     ...other
   } = props;
@@ -61,6 +64,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     skipAnimation,
     onAxisClick,
     disableKeyboardNavigation,
+    focusItemOnClick,
+    experimentalFeatures,
     plugins: RADAR_PLUGINS,
   };
 
@@ -77,6 +82,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
     hideLegend: props.hideLegend ?? false,
     className,
   };

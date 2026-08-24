@@ -4,12 +4,14 @@ import { GridColDef, DataGrid } from '@mui/x-data-grid';
 const columns: GridColDef[] = [
   {
     field: 'first',
+    rowHeader: true,
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
     width: 140,
   },
   {
     field: 'last',
+    rowHeader: true,
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
     width: 140,

@@ -1,4 +1,5 @@
 import type * as React from 'react';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { ToolbarPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface ChartsToolbarProps {}
@@ -14,5 +15,5 @@ export interface ChartsToolbarSlotProps {
   /**
    * Props for the toolbar component.
    */
-  toolbar?: Partial<ChartsToolbarProps> & ToolbarPropsOverrides;
+  toolbar?: WithDataAttributes<Partial<ChartsToolbarProps> & ToolbarPropsOverrides>;
 }

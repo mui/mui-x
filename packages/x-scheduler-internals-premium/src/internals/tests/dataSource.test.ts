@@ -1,6 +1,9 @@
 import { spy } from 'sinon';
 import { describe, expect, it, vi } from 'vitest';
-import { SchedulerEventId, SchedulerEventModelStructure } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventId,
+  SchedulerEventModelStructure,
+} from '@mui/x-scheduler-internals/models';
 import { adapter, premiumStoreClasses, ResourceBuilder } from 'test/utils/scheduler';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { DEBOUNCE_MS } from '../utils/queue';
@@ -88,6 +91,54 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(dataSource.getEvents.calledTwice).to.equal(true);
       expect(dataSource.getEvents.secondCall.args[0]).toEqual(start2);
       expect(dataSource.getEvents.secondCall.args[1]).toEqual(end2);
+    });
+
+    it('should reuse cached event processing until processing options change', async () => {
+      const firstEvent = buildTestEvent('1');
+      const secondEvent = buildTestEvent('2');
+      let fetchCount = 0;
+      const dataSource = {
+        getEvents: spy(async () => {
+          fetchCount += 1;
+          return fetchCount === 1 ? [firstEvent] : [secondEvent];
+        }),
+        persistEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      await store.lazyLoading?.queueDataFetchForRange(
+        {
+          start: adapter.date('2025-07-01T00:00:00Z', 'default'),
+          end: adapter.date('2025-07-07T00:00:00Z', 'default'),
+        },
+        true,
+      );
+      const firstProcessedEvent = store.state.processedEventLookup.get('1');
+
+      await store.lazyLoading?.queueDataFetchForRange(
+        {
+          start: adapter.date('2025-08-01T00:00:00Z', 'default'),
+          end: adapter.date('2025-08-07T00:00:00Z', 'default'),
+        },
+        true,
+      );
+
+      expect(store.state.processedEventLookup.get('1')).to.equal(firstProcessedEvent);
+      expect(store.state.processedEventLookup.get('2')).not.to.equal(undefined);
+
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, dataSource, displayTimezone: 'Europe/Paris' },
+        adapter,
+      );
+      await store.lazyLoading?.queueDataFetchForRange(
+        {
+          start: adapter.date('2025-09-01T00:00:00Z', 'default'),
+          end: adapter.date('2025-09-07T00:00:00Z', 'default'),
+        },
+        true,
+      );
+
+      expect(store.state.processedEventLookup.get('1')).not.to.equal(firstProcessedEvent);
     });
 
     it('should use cached data when fetching a range that is already covered', async () => {
@@ -363,6 +414,17 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(callArgs.deleted).toEqual(['1']);
       expect(callArgs.updated).toHaveLength(0);
       expect(callArgs.created).toHaveLength(0);
+
+      await vi.waitFor(() => {
+        expect(store.state.eventIdList).not.toContain('1');
+        expect(store.state.eventModelLookup.has('1')).to.equal(false);
+        expect(store.state.processedEventLookup.has('1')).to.equal(false);
+      });
+
+      // Re-reading a covered range uses the updated cache and must not restore the deleted event.
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      expect(dataSource.getEvents.calledOnce).to.equal(true);
+      expect(store.state.eventIdList).not.toContain('1');
     });
 
     it('should pass full event objects keyed by custom eventModelStructure to dataSource.persistEvents', async () => {

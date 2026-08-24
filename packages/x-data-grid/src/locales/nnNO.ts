@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('nn-NO');
 
@@ -59,6 +56,11 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI Assistent',
+
+  // Formula bar (Premium formulas)
+  // formulaBarLabel: 'Formula bar',
+  // formulaBarInputLabel: 'Formula',
+  // formulaBarAddressLabel: 'Active cell',
 
   // Columns management text
   columnsManagementSearchTitle: 'Søk',

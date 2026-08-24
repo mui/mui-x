@@ -333,17 +333,7 @@ const FullCustomRow = React.forwardRef(function FullCustomRow(
 ) {
   const { conversation, selected, unread } = ownerState ?? {};
   // ...derive initials, render Badge + Avatar + title + timestamp...
-  return (
-    <Box
-      ref={ref}
-      {...props}
-      sx={
-        {
-          /* row layout */
-        }
-      }
-    />
-  );
+  return <Box ref={ref} {...props} sx={{/* row layout */}} />;
 });
 ```
 

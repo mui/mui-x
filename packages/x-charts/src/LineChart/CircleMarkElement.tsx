@@ -7,7 +7,7 @@ import { selectorChartExperimentalFeaturesState } from '../internals/plugins/cor
 import { useStore } from '../internals/store/useStore';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { lineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
-import { type MarkElementOwnerState } from './MarkElement';
+import type { MarkElementOwnerState } from './MarkElement';
 
 type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
@@ -123,11 +123,6 @@ CircleMarkElement.propTypes = {
    */
   dataIndex: PropTypes.number.isRequired,
   seriesId: PropTypes.string.isRequired,
-  /**
-   * The shape of the marker.
-   */
-  shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
-    .isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

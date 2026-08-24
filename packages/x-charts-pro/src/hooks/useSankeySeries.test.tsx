@@ -1,7 +1,10 @@
-import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook } from '@mui/internal-test-utils';
+import type { RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import { useSankeySeries, useSankeySeriesContext } from './useSankeySeries';
-import { Unstable_SankeyChart as SankeyChart, type SankeySeriesType } from '../SankeyChart';
+import { Unstable_SankeyChart as SankeyChart } from '../SankeyChart';
+import type { SankeySeriesType } from '../SankeyChart';
 import type { DefaultizedSankeySeriesType } from '../SankeyChart/sankey.types';
 
 const mockSeries: SankeySeriesType = {

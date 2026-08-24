@@ -1,7 +1,5 @@
-import {
-  selectorBrushState,
-  type UseChartBrushSignature,
-} from '../internals/plugins/featurePlugins/useChartBrush';
+import { selectorBrushState } from '../internals/plugins/featurePlugins/useChartBrush';
+import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import { useStore } from '../internals/store/useStore';
 
 /**

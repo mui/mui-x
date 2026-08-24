@@ -17,7 +17,7 @@
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "Mouse event recorded on the <code><svg/></code> element."
+          "description": "Event recorded on the <code><svg/></code> element."
         },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",

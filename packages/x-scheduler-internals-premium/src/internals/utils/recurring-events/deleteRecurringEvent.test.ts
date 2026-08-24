@@ -1,5 +1,6 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
-import { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
+import { describe, it, expect } from 'vitest';
 import {
   deleteRecurringEvent,
   applyRecurringDeleteFollowing,

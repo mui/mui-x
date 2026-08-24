@@ -9,7 +9,8 @@ import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
-import MUIInputBase, { type InputBaseProps as MUIInputBaseProps } from '@mui/material/InputBase';
+import MUIInputBase from '@mui/material/InputBase';
+import type { InputBaseProps as MUIInputBaseProps } from '@mui/material/InputBase';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
@@ -29,7 +30,8 @@ import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
 import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPagination, { tablePaginationClasses } from '@mui/material/TablePagination';
-import MUIPopper, { type PopperProps as MUIPopperProps } from '@mui/material/Popper';
+import MUIPopper from '@mui/material/Popper';
+import type { PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
@@ -163,9 +165,7 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
   const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
   const computedSize = (size ?? textFieldDefaults.size) as 'small' | 'medium' | undefined;
   const computedVariant = (textFieldDefaults.variant ?? 'outlined') as
-    | 'standard'
-    | 'filled'
-    | 'outlined';
+    'standard' | 'filled' | 'outlined';
   const menuProps = {
     slotProps: { paper: { onKeyDown } },
   } as Partial<MUIMenuProps>;

@@ -1,11 +1,12 @@
 import { adapter, adapterFr, EventBuilder } from 'test/utils/scheduler';
-import {
+import type {
   SchedulerEventUpdatedProperties,
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { mergeDateAndTime } from '@mui/x-scheduler-internals/internals';
+import { describe, it, expect } from 'vitest';
 import {
   adjustRRuleForAllMove,
   applyRecurringUpdateAll,
@@ -791,6 +792,22 @@ describe('recurring-events/updateRecurringEvent', () => {
           description: defaultEvent.description,
         },
       ]);
+      expect(updatedEvents.updated).to.deep.equal([
+        { id: defaultEvent.id, exDates: [adapter.startOfDay(occurrenceStart)] },
+      ]);
+    });
+
+    it('should keep the occurrence date when changes omit start/end instead of using DTSTART', () => {
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
+
+      const updatedEvents = applyRecurringUpdateOnlyThis(adapter, defaultEvent, occurrenceStart, {
+        id: defaultEvent.id,
+        title: 'Edit only this',
+      });
+
+      const createdEvent = updatedEvents.created![0];
+      expect(createdEvent.start).to.equal(occurrenceStart.toISOString());
+      expect(createdEvent.end).to.equal(adapter.addMinutes(occurrenceStart, 60).toISOString());
       expect(updatedEvents.updated).to.deep.equal([
         { id: defaultEvent.id, exDates: [adapter.startOfDay(occurrenceStart)] },
       ]);

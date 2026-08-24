@@ -36,6 +36,9 @@
     "experimentalFeatures": {
       "description": "Options to enable features planned for the next major."
     },
+    "focusItemOnClick": {
+      "description": "If <code>true</code>, clicking an item immediately shows the keyboard focus indicator on it.\nBy default, clicking sets the item that keyboard navigation starts from, but the focus\nindicator stays hidden until the user presses a key."
+    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
@@ -101,7 +104,7 @@
     "onItemClick": {
       "description": "Callback fired when clicking close to an item.\nThis is only available for scatter plot for now.",
       "typeDescriptions": {
-        "event": { "name": "event", "description": "Mouse event caught at the svg level" },
+        "event": { "name": "event", "description": "Event caught at the svg level" },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",
           "description": "Identify which item got clicked"

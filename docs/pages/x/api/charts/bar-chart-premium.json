@@ -32,7 +32,10 @@
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "{}" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
@@ -144,6 +147,10 @@
         "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'<br>&#124;&nbsp;'webgl'"
       },
       "default": "'svg-single'"
+    },
+    "sampling": {
+      "type": { "name": "enum", "description": "'minmax'<br>&#124;&nbsp;'none'" },
+      "default": "'none'"
     },
     "seriesConfig": {
       "type": {

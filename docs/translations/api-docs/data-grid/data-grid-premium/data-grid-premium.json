@@ -71,6 +71,9 @@
     },
     "dataSource": { "description": "Data source object." },
     "dataSourceCache": { "description": "Data source cache object." },
+    "dataSourceKeepPreviousData": {
+      "description": "If <code>true</code>, the previously displayed rows are kept visible while new rows are being fetched after pagination, sorting, or filtering changes.\nThe loading overlay is rendered on top of the previous rows.\nOnly applies to flat data; tree data and row grouping always reset the rows on refetch to keep the order consistent with the new response."
+    },
     "dataSourceRevalidateMs": {
       "description": "If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.\nIf the refetched rows are different from the current rows, the grid will update the rows.\nSet to <code>0</code> to disable polling."
     },
@@ -113,6 +116,12 @@
     "disableEval": {
       "description": "If <code>true</code>, <code>eval()</code> is not used for performance optimization."
     },
+    "disableFormulaAutocomplete": {
+      "description": "If <code>true</code>, the suggestion dropdown shown while editing a formula cell is disabled.\nHas no effect when <code>disableFormulas</code> is <code>true</code> or a <code>dataSource</code> is set."
+    },
+    "disableFormulas": {
+      "description": "If <code>true</code>, the formula evaluation is disabled: <code>=</code> cell values render as raw strings."
+    },
     "disableMultipleColumnsFiltering": {
       "description": "If <code>true</code>, filtering with multiple columns is disabled."
     },
@@ -140,6 +149,9 @@
     "experimentalFeatures": {
       "description": "Unstable features, breaking changes might be introduced.\nFor each feature, if the flag is not explicitly set to <code>true</code>, then the feature is fully disabled, and neither property nor method calls will have any effect."
     },
+    "featureDependencies": {
+      "description": "Injectable feature implementations.\nImport the formula feature from <code>@mui/x-data-grid-premium/formula</code> and pass it here to\nenable formula evaluation — the feature is not bundled with the grid itself.\nThe value is read on the first render and must not change afterwards."
+    },
     "filterDebounceMs": {
       "description": "The milliseconds delay to wait after a keystroke before triggering filtering."
     },
@@ -147,6 +159,12 @@
       "description": "Filtering can be processed on the server or client-side.\nSet it to 'server' if you would like to handle filtering on the server-side."
     },
     "filterModel": { "description": "Set the filter model of the Data Grid." },
+    "formulaA1Notation": {
+      "description": "If <code>true</code>, formulas can be entered and are displayed using A1 notation\n(<code>=A1 + B2</code>) while still being stored in the canonical syntax.\nA leftmost row-number column and column-letter header adornments are shown.\nHas no effect when <code>disableFormulas</code> is <code>true</code> or a <code>dataSource</code> is set."
+    },
+    "formulaFunctions": {
+      "description": "Functions available to formulas, keyed by name.\nThe prop replaces the built-in set: spread <code>GRID_FORMULA_FUNCTIONS</code>\n(imported from <code>@mui/x-data-grid-premium/formula</code>) to extend it.\nHas no effect unless the formula feature is provided through <code>featureDependencies</code>."
+    },
     "getAggregationPosition": {
       "description": "Determines the position of an aggregated value.",
       "typeDescriptions": {

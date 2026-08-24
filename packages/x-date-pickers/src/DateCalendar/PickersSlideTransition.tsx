@@ -3,14 +3,14 @@ import clsx from 'clsx';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
-import { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
+import type { CSSTransitionProps } from 'react-transition-group/CSSTransition';
+import type { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
+import type { PickersSlideTransitionClasses } from './pickersSlideTransitionClasses';
 import {
   getPickersSlideTransitionUtilityClass,
   pickersSlideTransitionClasses,
-  PickersSlideTransitionClasses,
 } from './pickersSlideTransitionClasses';
-import { PickerOwnerState } from '../models/pickers';
+import type { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 export type SlideDirection = 'right' | 'left';
@@ -138,7 +138,12 @@ export function PickersSlideTransition(inProps: SlideTransitionProps) {
   const classes = useUtilityClasses(classesProp, ownerState);
   const theme = useTheme();
   if (reduceAnimations) {
-    return <div className={clsx(classes.root, className)}>{children}</div>;
+    // `role="none"` keeps the day rows owned by the calendar grid.
+    return (
+      <div role="none" className={clsx(classes.root, className)}>
+        {children}
+      </div>
+    );
   }
 
   const transitionClasses = {

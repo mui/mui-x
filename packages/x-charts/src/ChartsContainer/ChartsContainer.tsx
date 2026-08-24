@@ -1,17 +1,18 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type ChartSeriesType } from '../models/seriesType/config';
-import {
-  ChartsDataProvider,
-  type ChartsDataProviderProps,
-  type ChartsDataProviderSlotProps,
-  type ChartsDataProviderSlots,
+import type { ChartSeriesType } from '../models/seriesType/config';
+import { ChartsDataProvider } from '../ChartsDataProvider';
+import type {
+  ChartsDataProviderProps,
+  ChartsDataProviderSlotProps,
+  ChartsDataProviderSlots,
 } from '../ChartsDataProvider';
 import { useChartsContainerProps } from './useChartsContainerProps';
-import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
-import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { ChartsSurface } from '../ChartsSurface';
+import type { ChartsSurfaceProps } from '../ChartsSurface';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
 export interface ChartsContainerSlots extends ChartsDataProviderSlots {}
 
@@ -122,7 +123,16 @@ ChartsContainer.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.any,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -280,7 +290,7 @@ ChartsContainer.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when clicking close to an item.
    * This is only available for scatter plot for now.
-   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ChartsActivationEvent} event Event caught at the svg level
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,

@@ -1,14 +1,10 @@
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  type GridApi,
-  type DataGridProps,
-  useGridApiRef,
-  DataGrid,
-  renderEditLongTextCell,
-} from '@mui/x-data-grid';
+import type { RefObject } from '@mui/x-internals/types';
+import { useGridApiRef, DataGrid, renderEditLongTextCell } from '@mui/x-data-grid';
+import type { GridApi, DataGridProps } from '@mui/x-data-grid';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { getCell, openLongTextEditPopup, spyApi } from 'test/utils/helperFn';
 import { spy } from 'sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('<DataGrid /> - Edit components', () => {
   const { render } = createRenderer();

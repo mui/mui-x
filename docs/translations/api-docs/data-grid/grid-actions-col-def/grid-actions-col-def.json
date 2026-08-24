@@ -8,6 +8,9 @@
     "type": { "description": "The type of the column." },
     "aggregable": { "description": "If `true`, the cells of the column can be aggregated based." },
     "align": { "description": "Align cell content." },
+    "allowFormulas": {
+      "description": "If `true`, cell values that are strings starting with `=` are parsed and evaluated as formulas.\nThe evaluated value flows through rendering, sorting, filtering and export, while the formula\nsource remains the stored row-data value."
+    },
     "availableAggregationFunctions": {
       "description": "Limit the aggregation function usable on this column.\nBy default, the column will have all the aggregation functions that are compatible with its type."
     },
@@ -77,6 +80,9 @@
       "description": "Allows to render a component in the column header filter cell."
     },
     "resizable": { "description": "If `false`, disables resizing for this column." },
+    "rowHeader": {
+      "description": "If `true`, the cells in this column identify their respective rows and receive the `rowheader` ARIA role."
+    },
     "rowSpanValueGetter": {
       "description": "Function that returns a specific value to be used in row spanning."
     },

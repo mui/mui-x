@@ -77,13 +77,15 @@ import {
   listViewStateInitializer,
   propsStateInitializer,
   rowReorderStateInitializer,
-  type GridConfiguration,
   useFirstRender,
   registerMultiSelectColumnType,
 } from '@mui/x-data-grid-pro/internals';
+import type { GridConfiguration } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import type { GridFormulaFeature } from '../models/gridFeatureDependencies';
 import { useGridDataSourcePremium as useGridDataSource } from '../hooks/features/dataSource/useGridDataSourcePremium';
 // Premium-only features
 import {
@@ -91,6 +93,11 @@ import {
   aggregationStateInitializer,
 } from '../hooks/features/aggregation/useGridAggregation';
 import { useGridAggregationPreProcessors } from '../hooks/features/aggregation/useGridAggregationPreProcessors';
+// The formula feature is injectable: its runtime (engine, evaluation, editor
+// components) is only referenced through `props.featureDependencies.formula`,
+// imported by the user from `@mui/x-data-grid-premium/formula`. The grid itself
+// bundles nothing beyond the seams below and this dev-only diagnostic.
+import { useGridMissingFormulaFeatureWarning } from '../hooks/features/formula/useGridMissingFormulaFeatureWarning';
 import {
   useGridRowGrouping,
   rowGroupingStateInitializer,
@@ -122,6 +129,19 @@ import { historyStateInitializer, useGridHistory } from '../hooks/features/histo
 
 registerMultiSelectColumnType();
 
+const useNoopFormulaFeatureHook = (
+  _apiRef: RefObject<GridPrivateApiPremium>,
+  _props: DataGridPremiumProcessedProps,
+) => {};
+
+// Without the formula feature, the `formula` state slice still exists so the
+// bundled readers (params overlay, aggregation/filter configuration hooks, row
+// grouping) find an empty lookup instead of `undefined`.
+const formulaAbsentStateInitializer: GridFormulaFeature['stateInitializer'] = (state) => ({
+  ...state,
+  formula: { lookup: {}, activeEdit: null },
+});
+
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
   inProps: DataGridPremiumProcessedProps,
@@ -145,6 +165,24 @@ export const useDataGridPremiumComponent = (
 
   useGridInitialization<GridPrivateApiPremium>(apiRef, props);
 
+  // Captured on the first render: the injected feature provides hooks and a
+  // state initializer, so its presence must not change for the lifetime of the
+  // grid instance — the grid's hook order depends on it.
+  const formulaFeature = React.useRef(props.featureDependencies?.formula).current;
+  if (process.env.NODE_ENV !== 'production') {
+    if (props.featureDependencies?.formula !== formulaFeature) {
+      warnOnce([
+        'MUI X Data Grid: The `featureDependencies` prop changed after the first render.',
+        'Injected features are captured once when the grid mounts, so the change is ignored.',
+        'Provide a stable `featureDependencies` object, or remount the grid to apply the change.',
+      ]);
+    }
+  }
+  useGridMissingFormulaFeatureWarning(props, formulaFeature !== undefined);
+  const useFormulaPreProcessors = formulaFeature?.usePreProcessors ?? useNoopFormulaFeatureHook;
+  const useFormulaFeature = formulaFeature?.useFeature ?? useNoopFormulaFeatureHook;
+  const formulaStateInitializer = formulaFeature?.stateInitializer ?? formulaAbsentStateInitializer;
+
   const key = pivotPropsOverrides ? 'pivoting' : undefined;
 
   /**
@@ -165,6 +203,7 @@ export const useDataGridPremiumComponent = (
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridAggregationPreProcessors(apiRef, props);
+  useFormulaPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridColumnPinningPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
@@ -186,6 +225,9 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(pivotingStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
+  // After `rowsStateInitializer`: the initial formula evaluation reads the
+  // rows lookup, populated synchronously during rows state initialization.
+  useGridInitializeState(formulaStateInitializer, apiRef, props);
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
@@ -213,6 +255,9 @@ export const useDataGridPremiumComponent = (
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridAggregation(apiRef, props);
+  // Before `useGridFilter`/`useGridSorting`: the formula `rowsSet` handler must
+  // run before filtering and sorting read cell values in the same cascade.
+  useFormulaFeature(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridCellSelection(apiRef, props);

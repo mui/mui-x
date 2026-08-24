@@ -5,10 +5,8 @@ import { useTheme } from '@mui/material/styles';
 import { useTicks } from '../hooks/useTicks';
 import { useRadiusAxis, useRotationAxis } from '../hooks/useAxis';
 import { useChartsContext } from '../context/ChartsProvider';
-import {
-  selectorChartPolarCenter,
-  type UseChartPolarAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import { selectorChartPolarCenter } from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { UseChartPolarAxisSignature } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import type {
   ChartsRotationAxisProps,
   ChartsAxisSlots,

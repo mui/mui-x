@@ -1,22 +1,27 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const plPLDialog: Partial<EventDialogLocaleText> = {
+const plPLDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Kolor wydarzenia',
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Data i godzina',
   resourceColorSectionLabel: 'Zasób i kolor',
   allDayLabel: 'Cały dzień',
   closeButtonAriaLabel: 'Zamknij',
   closeButtonLabel: 'Zamknij',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Usuń wydarzenie',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Opis',
   endDateLabel: 'Data zakończenia',
   endTimeLabel: 'Godzina zakończenia',
@@ -66,9 +71,9 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   resourceLabel: 'Zasób',
   requiredResourceError: 'Należy wybrać zasób.',
   saveChanges: 'Zapisz',
-  startDateAfterEndDateError:
-    'Data/godzina rozpoczęcia musi być wcześniejsza niż data/godzina zakończenia.',
+  startDateAfterEndDateError: 'Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.',
   startDateLabel: 'Data rozpoczęcia',
+  startTimeAfterEndTimeError: 'Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia.',
   startTimeLabel: 'Godzina rozpoczęcia',
 
   // RecurringScopeDialog
@@ -81,7 +86,7 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   title: 'Zastosuj tę zmianę do:',
 };
 
-const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Zasoby',
 
@@ -101,6 +106,9 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // DateNavigator
   closeSidePanel: 'Zamknij panel boczny',
   openSidePanel: 'Otwórz panel boczny',
+
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
 
   // Preferences menu
   amPm12h: '12-godzinny (1:00PM)',
@@ -140,7 +148,7 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };
 
-const plPLTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const plPLTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };

@@ -1,9 +1,5 @@
-import {
-  GRID_STRING_COL_DEF,
-  type GridColDef,
-  gridRowIdSelector,
-  gridRowNodeSelector,
-} from '@mui/x-data-grid';
+import { GRID_STRING_COL_DEF, gridRowIdSelector, gridRowNodeSelector } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
 import { GRID_TREE_DATA_GROUPING_FIELD } from '@mui/x-data-grid/internals';
 
 /**
@@ -16,6 +12,7 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editab
   filterable: false,
   disableColumnMenu: true,
   disableReorder: true,
+  rowHeader: true,
   align: 'left',
   width: 200,
   valueGetter: (value, row, column, apiRef) => {

@@ -11,8 +11,9 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, expect } from 'vitest';
 
 describe('<MobileTimePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();

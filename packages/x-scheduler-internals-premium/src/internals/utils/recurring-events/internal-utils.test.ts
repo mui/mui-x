@@ -1,10 +1,11 @@
 import { adapter, adapterFr, EventBuilder } from 'test/utils/scheduler';
-import {
+import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
+import { describe, it, expect } from 'vitest';
 import {
   getRemainingMonthlyOccurrences,
   getRemainingWeeklyOccurrences,

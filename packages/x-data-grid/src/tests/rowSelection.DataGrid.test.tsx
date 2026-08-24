@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -11,14 +11,11 @@ import {
 } from '@mui/internal-test-utils';
 import {
   DataGrid,
-  type DataGridProps,
-  type GridRowId,
   GridEditModes,
   useGridApiRef,
-  type GridApi,
-  type GridRowSelectionModel,
   gridRowSelectionIdsSelector,
 } from '@mui/x-data-grid';
+import type { DataGridProps, GridRowId, GridApi, GridRowSelectionModel } from '@mui/x-data-grid';
 import {
   getCell,
   getRow,
@@ -32,6 +29,7 @@ import {
 } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');

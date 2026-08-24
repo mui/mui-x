@@ -2,21 +2,18 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps, CSSInterpolation } from '@mui/material/styles';
+import type { CSSInterpolation } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { MuiEvent } from '@mui/x-internals/types';
+import type { MuiEvent } from '@mui/x-internals/types';
 import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
-import {
-  pickerDayClasses,
-  PickerDayClassKey,
-  getPickerDayUtilityClass,
-  PickerDayClasses,
-} from './pickerDayClasses';
+import type { PickerDayClassKey, PickerDayClasses } from './pickerDayClasses';
+import { pickerDayClasses, getPickerDayUtilityClass } from './pickerDayClasses';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
-import { PickerDayOwnerState, PickerDayProps } from './PickerDay.types';
+import type { PickerDayOwnerState, PickerDayProps } from './PickerDay.types';
 import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
 
 const useUtilityClasses = (
@@ -110,6 +107,14 @@ const PickerDayRoot = styled(ButtonBase, {
       },
     },
     {
+      props: { isDayOutsideMonth: true },
+      style: {
+        color: (theme.vars || theme).palette.text.secondary,
+      },
+    },
+    // Must come after `isDayOutsideMonth` so that a disabled day outside the current month
+    // uses the disabled text color.
+    {
       props: { isDayDisabled: true },
       style: {
         color: (theme.vars || theme).palette.text.disabled,
@@ -122,12 +127,6 @@ const PickerDayRoot = styled(ButtonBase, {
         // and results in unexpected relationships between week day and day columns.
         opacity: 0,
         pointerEvents: 'none',
-      },
-    },
-    {
-      props: { isDayOutsideMonth: true },
-      style: {
-        color: (theme.vars || theme).palette.text.secondary,
       },
     },
     {
@@ -247,6 +246,7 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
       <PickerDayRoot
         ref={handleRef}
         role={other.role}
+        aria-colindex={other['aria-colindex']}
         ownerState={ownerState}
         className={clsx(classes.root, className)}
         as="div"

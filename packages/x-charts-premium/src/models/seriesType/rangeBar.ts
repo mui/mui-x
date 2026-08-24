@@ -1,11 +1,11 @@
-import {
-  type CartesianSeriesType,
-  type CommonDefaultizedProps,
-  type CommonSeriesType,
-  type SeriesId,
-  type DatasetElementType,
+import type {
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  SeriesId,
+  DatasetElementType,
 } from '@mui/x-charts/internals';
-import { type DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 
 /** [start, end] */
 export type RangeBarValueType = [number, number];

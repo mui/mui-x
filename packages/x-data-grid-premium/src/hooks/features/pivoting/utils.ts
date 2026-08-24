@@ -1,13 +1,12 @@
-import {
-  type GridColDef,
-  type GridColumnGroup,
-  type GridColumnNode,
-  type GridRowModel,
-  isLeaf,
-  type GridSingleSelectColDef,
-  gridStringOrNumberComparator,
-  type GridLocaleTextApi,
-  type GridGroupingColDefOverrideParams,
+import { isLeaf, gridStringOrNumberComparator } from '@mui/x-data-grid-pro';
+import type {
+  GridColDef,
+  GridColumnGroup,
+  GridColumnNode,
+  GridRowModel,
+  GridSingleSelectColDef,
+  GridLocaleTextApi,
+  GridGroupingColDefOverrideParams,
 } from '@mui/x-data-grid-pro';
 import { getDefaultColTypeDef } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';

@@ -43,7 +43,15 @@
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
-    "events": { "description": "The events currently available in the calendar." },
+    "events": {
+      "description": "The events currently available in the calendar.<br>Event models are compared by reference to avoid reprocessing unchanged events. Replace an event model with a new object when updating it instead of mutating it in place."
+    },
+    "localeText": {
+      "description": "Set the locale text of the view. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts\">the source</a> in the GitHub repository."
+    },
+    "onEventEditingStart": {
+      "description": "Event handler called right before the built-in event dialog (or its mobile drawer variant) opens, regardless of what triggered it (pointer, keyboard, the armed toolbar&#39;s Edit action or event creation). <code>eventDetails.reason</code> is <code>&quot;creation&quot;</code> when the user is creating a new event, <code>&quot;view&quot;</code> when the occurrence is read-only (through the event, its resource or the <code>readOnly</code> prop) and the dialog opens in view-only mode, and <code>&quot;edit&quot;</code> otherwise. Call <code>eventDetails.cancel()</code> to keep it closed and handle the interaction in your own UI."
+    },
     "onEventsChange": { "description": "Callback fired when some event of the calendar change." },
     "onPreferencesChange": { "description": "Event handler called when the preferences change." },
     "onViewChange": { "description": "Event handler called when the view changes." },
@@ -66,10 +74,15 @@
     "showCurrentTimeIndicator": {
       "description": "Whether the component should display the current time indicator."
     },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
     "view": { "description": "The view currently displayed in the calendar." },
+    "viewConfig": {
+      "description": "Configuration applied to the view, keyed by the view name. The <code>month</code> view does not support any configuration keys yet."
+    },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {
       "description": "The date currently used to determine the visible date range."
@@ -78,5 +91,8 @@
       "description": "The IDs of the resources currently visible. A resource is visible if it is not included in this object or if it is included with <code>true</code> value."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "eventDialogGeneralTab": "The content of the &quot;General&quot; tab of the event editing surface: the dialog on regular views, the compact editing drawer on compact views. It is rendered inside the tab panel, so it must not render a tab panel of its own. Return a fragment rather than a wrapper element to keep the spacing between the sections."
+  }
 }

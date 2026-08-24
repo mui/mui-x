@@ -1,22 +1,27 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const zhTWDialog: Partial<EventDialogLocaleText> = {
+const zhTWDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
+  // colorSectionLabel: 'Color',
   // dateTimeSectionLabel: 'Date & time',
   // resourceColorSectionLabel: 'Resource & color',
   // allDayLabel: 'All Day',
   // closeButtonAriaLabel: 'Close',
   // closeButtonLabel: 'Close',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   // deleteEvent: 'Delete event',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   // descriptionLabel: 'Description',
   // endDateLabel: 'End date',
   // endTimeLabel: 'End time',
@@ -57,8 +62,9 @@ const zhTWDialog: Partial<EventDialogLocaleText> = {
   // resourceLabel: 'Resource',
   // requiredResourceError: 'A resource is required.',
   // saveChanges: 'Save',
-  // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
+  // startDateAfterEndDateError: 'End date cannot be before start date.',
   // startDateLabel: 'Start date',
+  // startTimeAfterEndTimeError: 'End time must be after start time.',
   // startTimeLabel: 'Start time',
   // RecurringScopeDialog
   // all: 'All events',
@@ -70,7 +76,7 @@ const zhTWDialog: Partial<EventDialogLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const zhTWCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const zhTWCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -88,10 +94,12 @@ const zhTWCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // DateNavigator
   // closeSidePanel: 'Close side panel',
   // openSidePanel: 'Open side panel',
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
   // Preferences menu
   // amPm12h: '12-hour (1:00PM)',
   // hour24h: '24-hour (13:00)',
-  // preferencesMenu: 'Settings',
+  // preferencesMenu: 'Preferences',
   // showWeekends: 'Show weekends',
   // showEmptyDaysInAgenda: 'Show empty days',
   // showWeekNumber: 'Show week number',
@@ -121,7 +129,7 @@ const zhTWCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const zhTWTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const zhTWTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };
