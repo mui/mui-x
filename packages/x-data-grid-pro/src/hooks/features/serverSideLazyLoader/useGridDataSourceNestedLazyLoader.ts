@@ -102,10 +102,9 @@ const deleteRowAndDescendants = (
 };
 
 /**
- * Drops the children that sit beyond the row count the server just reported, together with
- * their subtrees. Mutates `children` and `childrenFromPath`. Ids in `skip` were re-added by the
- * current pass, so they keep their tree entry and only lose their stale trailing position.
- * Returns `true` when something was removed.
+ * Drops the children past `rowCount` and their subtrees. Mutates `children` and
+ * `childrenFromPath`. Ids in `skip` were re-added by the current pass, so they only lose their
+ * stale trailing position.
  */
 const trimChildrenToRowCount = (
   tree: GridRowTreeConfig,
@@ -116,7 +115,7 @@ const trimChildrenToRowCount = (
   skip?: Set<GridRowId>,
 ) => {
   if (rowCount === undefined || rowCount < 0 || children.length <= rowCount) {
-    return false;
+    return;
   }
 
   const removedIds = children.splice(rowCount);
@@ -133,8 +132,6 @@ const trimChildrenToRowCount = (
       });
     });
   }
-
-  return true;
 };
 
 /**
@@ -316,12 +313,66 @@ export const useGridDataSourceNestedLazyLoader = (
     }, props.dataSourceRevalidateMs);
   });
 
+  /**
+   * Drops a parent's children past `rowCount`, for the paths where `replaceNestedRows` has no
+   * row to replace with: an in-place update, or a response with no row at all.
+   */
+  const pruneRowsToRowCount = React.useCallback(
+    (parentId: GridRowId, rowCount: number | undefined) => {
+      if (rowCount === undefined || rowCount < 0) {
+        return;
+      }
+
+      const tree = { ...privateApiRef.current.state.rows.tree };
+      const parentNode = tree[parentId] as GridGroupNode | undefined;
+      if (parentNode?.type !== 'group' || parentNode.children.length <= rowCount) {
+        return;
+      }
+
+      const dataRowIdToModelLookup = { ...privateApiRef.current.state.rows.dataRowIdToModelLookup };
+      const children = [...parentNode.children];
+      const childrenFromPath = Object.assign(
+        Object.create(null),
+        (parentNode as GridDataSourceGroupNode).childrenFromPath,
+      );
+      trimChildrenToRowCount(tree, dataRowIdToModelLookup, children, childrenFromPath, rowCount);
+
+      const prunedNode = { ...parentNode, children, childrenFromPath } as GridDataSourceGroupNode;
+      if (parentId !== GRID_ROOT_GROUP_ID) {
+        prunedNode.serverChildrenCount = rowCount;
+      }
+      tree[parentId] = prunedNode;
+
+      privateApiRef.current.caches.rows.dataRowIdToModelLookup = dataRowIdToModelLookup;
+
+      privateApiRef.current.setState((state) => ({
+        ...state,
+        rows: {
+          ...state.rows,
+          dataRowIdToModelLookup,
+          dataRowIds: state.rows.dataRowIds.filter((id) => tree[id] !== undefined),
+          tree,
+          totalRowCount: parentId === GRID_ROOT_GROUP_ID ? rowCount : state.rows.totalRowCount,
+        },
+      }));
+      privateApiRef.current.publishEvent('rowsSet');
+    },
+    [privateApiRef],
+  );
+
   const addRootSkeletonRows = React.useCallback(() => {
+    const pageRowCount = privateApiRef.current.state.pagination.rowCount;
+
+    // A shrinking row count leaves rows and skeletons past the end. `> 0` guards against an
+    // unknown count wiping the loaded rows; a real drop to 0 comes from the response instead.
+    if (pageRowCount > 0) {
+      pruneRowsToRowCount(GRID_ROOT_GROUP_ID, pageRowCount);
+    }
+
     const tree = { ...privateApiRef.current.state.rows.tree };
     const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
     const rootGroupChildren = [...rootGroup.children];
 
-    const pageRowCount = privateApiRef.current.state.pagination.rowCount;
     const rootChildrenCount = rootGroupChildren.length;
 
     if (rootChildrenCount === 0) {
@@ -329,25 +380,6 @@ export const useGridDataSourceNestedLazyLoader = (
     }
 
     let hasChanged = false;
-    let trimmedLookup: Record<GridRowId, GridRowModel> | null = null;
-    let rootChildrenFromPath = (rootGroup as GridDataSourceGroupNode).childrenFromPath;
-
-    // The row count can also shrink (rows deleted server-side), leaving rows or skeletons past
-    // the end. `pageRowCount > 0` keeps an unknown/not-yet-known count from wiping loaded rows;
-    // a genuine drop to 0 is handled by `pruneRowsToRowCount` on the response itself.
-    if (pageRowCount > 0 && rootChildrenCount > pageRowCount) {
-      trimmedLookup = { ...privateApiRef.current.state.rows.dataRowIdToModelLookup };
-      rootChildrenFromPath = Object.assign(Object.create(null), rootChildrenFromPath);
-      trimChildrenToRowCount(
-        tree,
-        trimmedLookup,
-        rootGroupChildren,
-        rootChildrenFromPath,
-        pageRowCount,
-      );
-      privateApiRef.current.caches.rows.dataRowIdToModelLookup = trimmedLookup;
-      hasChanged = true;
-    }
 
     // Nested Lazy loading only support VIEWPORT loading trigger, no need for a specific check
     for (let i = 0; i < pageRowCount - rootChildrenCount; i += 1) {
@@ -369,11 +401,7 @@ export const useGridDataSourceNestedLazyLoader = (
       return;
     }
 
-    tree[GRID_ROOT_GROUP_ID] = {
-      ...rootGroup,
-      children: rootGroupChildren,
-      childrenFromPath: rootChildrenFromPath,
-    };
+    tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
 
     privateApiRef.current.setState(
       (state) => ({
@@ -381,18 +409,12 @@ export const useGridDataSourceNestedLazyLoader = (
         rows: {
           ...state.rows,
           tree,
-          ...(trimmedLookup
-            ? {
-                dataRowIdToModelLookup: trimmedLookup,
-                dataRowIds: state.rows.dataRowIds.filter((id) => tree[id] !== undefined),
-              }
-            : {}),
         },
       }),
       'addSkeletonRows',
     );
     privateApiRef.current.publishEvent('rowsSet');
-  }, [privateApiRef]);
+  }, [privateApiRef, pruneRowsToRowCount]);
 
   const findSkeletonSectionAndFetchRows = React.useCallback(
     (firstRowIndex: number, lastRowIndex: number, options: FetchSkeletonRowsOptions = {}) => {
@@ -727,9 +749,8 @@ export const useGridDataSourceNestedLazyLoader = (
       // The sort/filter reset path starts from an empty children list, so there are no
       // skeletons to preserve and `addRootSkeletonRows` pads normally.
 
-      // Rows can also leave the result set between two fetches. The positional replacement above
-      // only overwrites `response.rows.length` entries, so anything past the new row count is
-      // stale data or a skeleton that would never resolve. Prune it to match the server.
+      // The replacement above only overwrites `response.rows.length` entries, so anything past
+      // the new row count is a row the server dropped, or a skeleton that would never resolve.
       trimChildrenToRowCount(
         tree,
         dataRowIdToModelLookup,
@@ -739,16 +760,15 @@ export const useGridDataSourceNestedLazyLoader = (
         seenIds,
       );
 
-      tree[parentId] = {
+      const updatedGroup = {
         ...targetGroup,
         children: targetGroupChildren,
         childrenFromPath: targetGroupChildrenFromPath,
-        ...(parentId !== GRID_ROOT_GROUP_ID &&
-        response.rowCount !== undefined &&
-        response.rowCount >= 0
-          ? { serverChildrenCount: response.rowCount }
-          : {}),
-      };
+      } as GridDataSourceGroupNode;
+      if (parentId !== GRID_ROOT_GROUP_ID && response.rowCount !== undefined) {
+        updatedGroup.serverChildrenCount = response.rowCount;
+      }
+      tree[parentId] = updatedGroup;
 
       // Removes potential remaining skeleton rows from the dataRowIds.
       // For the root parent the targetGroupChildren list IS the full root row order,
@@ -847,63 +867,9 @@ export const useGridDataSourceNestedLazyLoader = (
     [privateApiRef],
   );
 
-  /**
-   * Prunes a parent's children down to `rowCount`. Used when the response carries no row to
-   * replace (the whole group was emptied server-side, or the fetched range now sits past the
-   * end), where `replaceNestedRows` has nothing to work with.
-   */
-  const pruneRowsToRowCount = React.useCallback(
-    (parentId: GridRowId, rowCount: number | undefined) => {
-      const tree = { ...privateApiRef.current.state.rows.tree };
-      const parentNode = tree[parentId] as GridGroupNode | undefined;
-      if (!parentNode || parentNode.type !== 'group') {
-        return;
-      }
-
-      const dataRowIdToModelLookup = { ...privateApiRef.current.state.rows.dataRowIdToModelLookup };
-      const children = [...parentNode.children];
-      const childrenFromPath = Object.assign(
-        Object.create(null),
-        (parentNode as GridDataSourceGroupNode).childrenFromPath,
-      );
-
-      if (
-        !trimChildrenToRowCount(tree, dataRowIdToModelLookup, children, childrenFromPath, rowCount)
-      ) {
-        return;
-      }
-
-      tree[parentId] = {
-        ...parentNode,
-        children,
-        childrenFromPath,
-        ...(parentId !== GRID_ROOT_GROUP_ID ? { serverChildrenCount: rowCount } : {}),
-      };
-
-      const dataRowIds = privateApiRef.current.state.rows.dataRowIds.filter(
-        (id) => tree[id] !== undefined && tree[id].type !== 'skeletonRow',
-      );
-
-      privateApiRef.current.caches.rows.dataRowIdToModelLookup = dataRowIdToModelLookup;
-
-      privateApiRef.current.setState((state) => ({
-        ...state,
-        rows: {
-          ...state.rows,
-          dataRowIdToModelLookup,
-          dataRowIds,
-          tree,
-          totalRowCount:
-            parentId === GRID_ROOT_GROUP_ID ? (rowCount ?? -1) : state.rows.totalRowCount,
-        },
-      }));
-      privateApiRef.current.publishEvent('rowsSet');
-    },
-    [privateApiRef],
-  );
-
   const updateLoadedRows = React.useCallback(
     (parentId: GridRowId, startIndex: number, rows: GridGetRowsResponse['rows']) => {
+      // Nothing to replace, so the caller prunes instead of rebuilding the range.
       if (rows.length === 0) {
         return true;
       }
@@ -987,10 +953,8 @@ export const useGridDataSourceNestedLazyLoader = (
             ? Math.max(filteredSortedRowIds.indexOf(fetchParams.start), 0)
             : fetchParams.start;
 
-        if (response.rows.length === 0) {
-          pruneRowsToRowCount(GRID_ROOT_GROUP_ID, response.rowCount);
-        } else if (updateLoadedRows(GRID_ROOT_GROUP_ID, startingIndex, response.rows)) {
-          // The in-place update leaves the rows past the new row count untouched.
+        if (updateLoadedRows(GRID_ROOT_GROUP_ID, startingIndex, response.rows)) {
+          // `updateLoadedRows` keeps the rows in place, so it never drops the ones the server did.
           pruneRowsToRowCount(GRID_ROOT_GROUP_ID, response.rowCount);
         } else {
           removeDuplicateRows(response.rows);
@@ -1042,10 +1006,7 @@ export const useGridDataSourceNestedLazyLoader = (
       // Get the relative start index from fetchParams
       const startIndex = typeof fetchParams.start === 'number' ? fetchParams.start : 0;
       let hasExpandedGroupToFetch = false;
-      if (response.rows.length === 0) {
-        pruneRowsToRowCount(parentId, response.rowCount);
-      } else if (updateLoadedRows(parentId, startIndex, response.rows)) {
-        // The in-place update leaves the children past the new row count untouched.
+      if (updateLoadedRows(parentId, startIndex, response.rows)) {
         pruneRowsToRowCount(parentId, response.rowCount);
       } else {
         removeDuplicateRows(response.rows, parentId);
