@@ -235,3 +235,33 @@ describe('week number badge', () => {
     expect(badge).to.have.text('Week 2');
   });
 });
+
+describe('side panel toggle', () => {
+  const { render } = createSchedulerRenderer();
+
+  // Rendering the full EventCalendar (rather than HeaderToolbar standalone) so the toggle
+  // button and the side panel it controls share the same generated `schedulerId`.
+  it('should expose aria-expanded and aria-controls reflecting the side panel state', () => {
+    render(<EventCalendar events={[]} resources={[]} />);
+
+    // isSidePanelOpen defaults to true
+    const toggleButton = screen.getByRole('button', { name: 'Close side panel' });
+    expect(toggleButton).to.have.attribute('aria-expanded', 'true');
+
+    const panelId = toggleButton.getAttribute('aria-controls');
+    if (!panelId) {
+      throw new Error('Expected the toggle button to have an aria-controls attribute');
+    }
+
+    const panel = document.getElementById(panelId);
+    expect(panel).not.to.equal(null);
+    expect(panel!.hasAttribute('aria-hidden')).to.equal(false);
+
+    fireEvent.click(toggleButton);
+
+    // Same button, now reflecting the collapsed state
+    expect(screen.getByRole('button', { name: 'Open side panel' })).to.equal(toggleButton);
+    expect(toggleButton).to.have.attribute('aria-expanded', 'false');
+    expect(toggleButton).to.have.attribute('aria-controls', panelId);
+  });
+});
