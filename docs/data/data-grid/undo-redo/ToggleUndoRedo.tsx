@@ -10,6 +10,7 @@ export default function ToggleUndoRedo() {
     dataSet: 'Commodity',
     rowLength: 200,
     editable: true,
+    multiSelect: true,
   });
 
   const [stackSize, setStackSize] = React.useState(0);

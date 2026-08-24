@@ -1,8 +1,36 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { SchedulerEvent, SchedulerEventId, SchedulerEventSide, SchedulerResource } from '../models';
-import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type {
+  SchedulerEvent,
+  SchedulerEventId,
+  SchedulerEventSide,
+  SchedulerResource,
+  SchedulerResourceId,
+} from '../models';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { resolveResourceProperty } from './schedulerResourceSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
+import { getPrimaryResourceId } from '../internals/utils/event-utils';
+
+/**
+ * Scans the events in order and returns whether the first one with a defined `resource`
+ * carries an array (multi-resource) or a string (single-resource). `undefined` when no
+ * event in the data has a resource at all, letting the caller fall back to "multiple".
+ */
+function inferCanHaveMultipleResourcesFromEvents(
+  eventIdList: State['eventIdList'],
+  processedEventLookup: State['processedEventLookup'],
+): boolean | undefined {
+  for (const id of eventIdList) {
+    const resource = processedEventLookup.get(id)?.resource;
+    if (Array.isArray(resource)) {
+      return true;
+    }
+    if (resource != null) {
+      return false;
+    }
+  }
+  return undefined;
+}
 
 const processedEventSelector = createSelector(
   (state: State) => state.processedEventLookup,
@@ -18,7 +46,7 @@ const isEventReadOnlySelector = createSelector((state: State, eventId: Scheduler
 
   return resolveEventProperty({
     state,
-    resourceId: processedEvent.resource,
+    resourceId: getPrimaryResourceId(processedEvent.resource),
     valueInEvent: processedEvent.modelInBuiltInFormat?.readOnly,
     getValueInResource: (r) => r.areEventsReadOnly,
     valueInState: state.readOnly ?? false,
@@ -59,6 +87,27 @@ export const schedulerEventSelectors = {
       return eventCreation?.duration ?? DEFAULT_EVENT_CREATION_CONFIG.duration;
     },
   ),
+  /**
+   * Whether an occurrence whose own `resource` carries no shape (`null`/`undefined`) should
+   * be edited/created as multi-resource. Reads `eventCreation.canHaveMultipleResources`
+   * directly off the raw prop — not through `creationConfig` — so it still resolves when
+   * creation is disabled (`eventCreation={false}` or a read-only scheduler), since editing
+   * needs it too. Falls back to inferring from the `events` data when the prop isn't set.
+   */
+  canHaveMultipleResources: createSelectorMemoized(
+    (state: State) => state.eventCreation,
+    (state: State) => state.eventIdList,
+    (state: State) => state.processedEventLookup,
+    (eventCreation, eventIdList, processedEventLookup) => {
+      const configured =
+        typeof eventCreation === 'boolean' ? undefined : eventCreation?.canHaveMultipleResources;
+      if (configured != null) {
+        return configured;
+      }
+
+      return inferCanHaveMultipleResourcesFromEvents(eventIdList, processedEventLookup) ?? true;
+    },
+  ),
   processedEvent: processedEventSelector,
   processedEventRequired: createSelector(
     processedEventSelector,
@@ -75,20 +124,35 @@ export const schedulerEventSelectors = {
     },
   ),
   isReadOnly: isEventReadOnlySelector,
-  color: createSelector((state: State, eventId: SchedulerEventId) => {
-    const event = processedEventSelector(state, eventId);
-    if (!event) {
-      return state.eventColor;
-    }
+  /**
+   * Resolves an event's color. `resourceId` picks which resource's `eventColor` counts when the
+   * event itself has none — pass the row's resource id on a resource-row surface (the Event
+   * Timeline) so the same multi-resource event can render a different color per row instead of
+   * always taking its primary resource's color. Pass `undefined` to fall back to the event's
+   * primary resource, which is the only sensible choice on a surface with no row identity (the
+   * Event Calendar). The argument can't be optional: the selector's memoization keys off
+   * `Function.length`, which requires every parameter to be explicitly passed.
+   */
+  color: createSelector(
+    (
+      state: State,
+      eventId: SchedulerEventId,
+      resourceId: SchedulerResourceId | null | undefined,
+    ) => {
+      const event = processedEventSelector(state, eventId);
+      if (!event) {
+        return state.eventColor;
+      }
 
-    return resolveEventProperty({
-      state,
-      resourceId: event.resource,
-      valueInEvent: event.color,
-      getValueInResource: (r) => r.eventColor,
-      valueInState: state.eventColor,
-    });
-  }),
+      return resolveEventProperty({
+        state,
+        resourceId: resourceId === undefined ? getPrimaryResourceId(event.resource) : resourceId,
+        valueInEvent: event.color,
+        getValueInResource: (r) => r.eventColor,
+        valueInState: state.eventColor,
+      });
+    },
+  ),
   isPropertyReadOnly: createSelectorMemoized(
     isEventReadOnlySelector,
     (state: State) => state.eventModelStructure,
@@ -141,7 +205,7 @@ export const schedulerEventSelectors = {
 
     return resolveEventProperty({
       state,
-      resourceId: processedEvent.resource,
+      resourceId: getPrimaryResourceId(processedEvent.resource),
       valueInEvent: processedEvent.draggable,
       getValueInResource: (r) => r.areEventsDraggable,
       valueInState: state.areEventsDraggable,
@@ -169,7 +233,7 @@ export const schedulerEventSelectors = {
 
       return resolveEventProperty({
         state,
-        resourceId: processedEvent.resource,
+        resourceId: getPrimaryResourceId(processedEvent.resource),
         valueInEvent: getIsResizableFromProperty(processedEvent.resizable, side) ?? undefined,
         getValueInResource: (r) =>
           getIsResizableFromProperty(r.areEventsResizable, side) ?? undefined,

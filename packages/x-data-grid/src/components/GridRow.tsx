@@ -6,6 +6,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
+import { vars } from '../constants/cssVariables';
 import type { GridRowEventLookup } from '../models/events';
 import type { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridCellModes } from '../models/gridEditRowModel';
@@ -61,6 +62,9 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   columnsTotalWidth: number;
   firstColumnIndex: number;
   lastColumnIndex: number;
+  // Visible column indexes whose cells must remain mounted outside the horizontal render context.
+  // The virtualizer currently populates this with every column marked as a row header.
+  retainedColumnIndexes: number[];
   visibleColumns: GridStateColDef[];
   pinnedColumns: GridPinnedColumns;
   /**
@@ -96,6 +100,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     columnsTotalWidth,
     firstColumnIndex,
     lastColumnIndex,
+    retainedColumnIndexes,
     focusedColumnIndex,
     isFirstVisible,
     isLastVisible,
@@ -336,7 +341,17 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       scrollbarWidth,
     );
 
+    // Virtual cells stay mounted for focus and accessibility relationships, but GridCell collapses
+    // them to zero size so they do not participate in the visible row layout.
+    const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
+
     if (rowNode.type === 'skeletonRow') {
+      // Skeleton cells have no value to expose and don't support the collapsed style, so a virtual
+      // one would only add a full-width placeholder that shifts the rest of the row.
+      if (cellIsNotVisible) {
+        return null;
+      }
+
       return (
         <slots.skeletonCell
           key={column.field}
@@ -345,6 +360,15 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
           height={rowHeight}
           field={column.field}
           align={column.align}
+          skeletonProps={{
+            style: {
+              marginLeft:
+                indexRelativeToAllColumns === 0 && rowNode.depth > 0
+                  ? // TODO: Make the factor configurable
+                    vars.spacing(rowNode.depth * 2)
+                  : '0px',
+            },
+          }}
         />
       );
     }
@@ -361,8 +385,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       (isReorderCell && canReorderRow) ||
       isRowDragActive
     );
-
-    const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
 
     const showLeftBorder = shouldCellShowLeftBorder(
       pinnedPosition,
@@ -426,13 +448,33 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const middleColumnsLength =
     visibleColumns.length - pinnedColumns.left.length - pinnedColumns.right.length;
 
+  // Build the middle section in visual column order:
+  // 1. retained or focused virtual cells before the render context;
+  // 2. the cells inside the render context;
+  // 3. retained or focused virtual cells after the render context.
   const cells = [] as React.ReactNode[];
-  if (hasVirtualFocusCellLeft) {
+  const firstUnpinnedColumnIndex = pinnedColumns.left.length;
+  const lastUnpinnedColumnIndex = visibleColumns.length - pinnedColumns.right.length;
+
+  // Select retained columns before the render context. The unpinned bounds exclude retained
+  // columns already rendered by `leftCells` or `rightCells`.
+  const virtualColumnIndexesLeft = retainedColumnIndexes.filter(
+    (columnIndex) => columnIndex >= firstUnpinnedColumnIndex && columnIndex < firstColumnIndex,
+  );
+
+  // The grid already retains a focused cell outside the render context. Add it to the same ordered
+  // list, unless the column is a retained row header and is therefore already present.
+  if (hasVirtualFocusCellLeft && !virtualColumnIndexesLeft.includes(focusedColumnIndex)) {
+    virtualColumnIndexesLeft.push(focusedColumnIndex);
+    virtualColumnIndexesLeft.sort((a, b) => a - b);
+  }
+
+  for (const columnIndex of virtualColumnIndexesLeft) {
     cells.push(
       getCell(
-        visibleColumns[focusedColumnIndex],
-        focusedColumnIndex - pinnedColumns.left.length,
-        focusedColumnIndex,
+        visibleColumns[columnIndex],
+        columnIndex - pinnedColumns.left.length,
+        columnIndex,
         middleColumnsLength,
         PinnedColumnPosition.VIRTUAL,
       ),
@@ -450,12 +492,21 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     cells.push(getCell(column, indexInSection, i, middleColumnsLength));
   }
 
-  if (hasVirtualFocusCellRight) {
+  // Repeat the retention step for unpinned columns after the render context.
+  const virtualColumnIndexesRight = retainedColumnIndexes.filter(
+    (columnIndex) => columnIndex >= lastColumnIndex && columnIndex < lastUnpinnedColumnIndex,
+  );
+  if (hasVirtualFocusCellRight && !virtualColumnIndexesRight.includes(focusedColumnIndex)) {
+    virtualColumnIndexesRight.push(focusedColumnIndex);
+    virtualColumnIndexesRight.sort((a, b) => a - b);
+  }
+
+  for (const columnIndex of virtualColumnIndexesRight) {
     cells.push(
       getCell(
-        visibleColumns[focusedColumnIndex],
-        focusedColumnIndex - pinnedColumns.left.length,
-        focusedColumnIndex,
+        visibleColumns[columnIndex],
+        columnIndex - pinnedColumns.left.length,
+        columnIndex,
         middleColumnsLength,
         PinnedColumnPosition.VIRTUAL,
       ),
@@ -495,7 +546,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   );
 });
 
-GridRow.propTypes = {
+GridRow.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -523,6 +574,7 @@ GridRow.propTypes = {
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
   pinnedColumns: PropTypes.object.isRequired,
+  retainedColumnIndexes: PropTypes.arrayOf(PropTypes.number).isRequired,
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

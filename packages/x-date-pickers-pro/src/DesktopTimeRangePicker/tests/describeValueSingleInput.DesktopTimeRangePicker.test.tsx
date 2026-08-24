@@ -1,5 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
-import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import type { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -8,6 +8,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopTimeRangePicker';
+import { describe } from 'vitest';
 
 describe('<DesktopTimeRangePicker /> - Describe Value Single Input', () => {
   const { render } = createPickerRenderer();

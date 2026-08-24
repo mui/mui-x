@@ -1,21 +1,21 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { EMPTY_ARRAY } from '@base-ui/utils/empty';
-import {
+import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
   SchedulerResource,
   TemporalSupportedObject,
 } from '../models';
-import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
-import { getOccurrencesFromEvents } from '../internals/utils/event-utils';
+import { getOccurrencesFromEvents, getEventResourceIds } from '../internals/utils/event-utils';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   (state: State) => state.adapter,
   schedulerEventSelectors.processedEventList,
   schedulerResourceSelectors.visibleMap,
+  (state: State) => state.collapsedResources,
   schedulerResourceSelectors.processedResourceList,
   schedulerResourceSelectors.processedResourceChildrenLookup,
   schedulerOtherSelectors.displayTimezone,
@@ -25,6 +25,7 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
     adapter,
     events,
     visibleResources,
+    collapsedResources,
     resources,
     resourcesChildrenMap,
     displayTimezone,
@@ -45,14 +46,14 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
     });
 
     for (const occurrence of occurrences) {
-      const resourceId = occurrence.resource;
+      const resourceIds = getEventResourceIds(occurrence.resource);
 
-      if (resourceId) {
-        if (!occurrencesGroupedByResource.has(resourceId)) {
-          occurrencesGroupedByResource.set(resourceId, []);
+      resourceIds.forEach((id) => {
+        if (!occurrencesGroupedByResource.has(id)) {
+          occurrencesGroupedByResource.set(id, []);
         }
-        occurrencesGroupedByResource.get(resourceId)!.push(occurrence);
-      }
+        occurrencesGroupedByResource.get(id)!.push(occurrence);
+      });
     }
 
     const processResources = (innerResources: readonly SchedulerResource[]) => {
@@ -72,9 +73,11 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
           occurrences: occurrencesGroupedByResource.get(resource.id) ?? [],
         });
 
-        const children = resourcesChildrenMap.get(resource.id) ?? [];
-        if (children.length > 0) {
-          result.push(...processResources(children));
+        if (collapsedResources[resource.id] !== true) {
+          const children = resourcesChildrenMap.get(resource.id) ?? [];
+          if (children.length > 0) {
+            result.push(...processResources(children));
+          }
         }
       }
 
@@ -82,17 +85,6 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
     };
 
     return processResources(resources);
-  },
-);
-
-const occurrencesGroupedByResourceMapSelector = createSelectorMemoized(
-  occurrencesGroupedByResourceListSelector,
-  (groupedByResourceList, _start: TemporalSupportedObject, _end: TemporalSupportedObject) => {
-    const map = new Map<string, SchedulerEventOccurrence[]>();
-    for (const { resource, occurrences } of groupedByResourceList) {
-      map.set(resource.id, occurrences);
-    }
-    return map;
   },
 );
 
@@ -112,13 +104,4 @@ export const schedulerOccurrenceSelectors = {
     },
   ),
   groupedByResourceList: occurrencesGroupedByResourceListSelector,
-  resourceOccurrences: createSelector(
-    occurrencesGroupedByResourceMapSelector,
-    (
-      map,
-      _start: TemporalSupportedObject,
-      end: TemporalSupportedObject,
-      resourceId: string,
-    ): readonly SchedulerEventOccurrence[] => map.get(resourceId) ?? EMPTY_ARRAY,
-  ),
 };

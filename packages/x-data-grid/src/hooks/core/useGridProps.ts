@@ -14,6 +14,7 @@ export const propsStateInitializer: GridStateInitializer<GridStateProps> = (stat
       isCellEditable: props.isCellEditable,
       isRowSelectable: props.isRowSelectable,
       dataSource: props.dataSource,
+      signature: props.signature,
     },
   };
 };
@@ -36,6 +37,7 @@ export const useGridProps = <PrivateApi extends GridPrivateApiCommon>(
         isCellEditable: props.isCellEditable,
         isRowSelectable: props.isRowSelectable,
         dataSource: props.dataSource,
+        signature: props.signature,
       },
     }));
   }, [
@@ -45,5 +47,6 @@ export const useGridProps = <PrivateApi extends GridPrivateApiCommon>(
     props.isCellEditable,
     props.isRowSelectable,
     props.dataSource,
+    props.signature,
   ]);
 };

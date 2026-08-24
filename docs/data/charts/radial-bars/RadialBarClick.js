@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import { Unstable_RadialBarChart as RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
+import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 
 import ToggleButton from '@mui/material/ToggleButton';
@@ -60,6 +60,7 @@ const getRadialChartParams = (layout) => ({
 });
 
 export default function RadialBarClick() {
+  const [itemData, setItemData] = React.useState();
   const [axisData, setAxisData] = React.useState();
   const [layout, setLayout] = React.useState('vertical');
 
@@ -90,6 +91,7 @@ export default function RadialBarClick() {
         <Box sx={{ flexGrow: 1 }}>
           <RadialBarChart
             {...getRadialChartParams(layout)}
+            onItemClick={(event, d) => setItemData(d)}
             onAxisClick={(event, d) => setAxisData(d)}
           />
         </Box>
@@ -107,13 +109,19 @@ export default function RadialBarClick() {
           <IconButton
             aria-label="reset"
             size="small"
-            onClick={() => setAxisData(null)}
+            onClick={() => {
+              setItemData(undefined);
+              setAxisData(null);
+            }}
           >
             <UndoOutlinedIcon fontSize="small" />
           </IconButton>
         </Box>
         <HighlightedCode
-          code={`// Data from axis click
+          code={`// Data from item click
+${itemData ? JSON.stringify(itemData, null, 2) : '// The data will appear here'}
+
+// Data from axis click
 ${axisData ? JSON.stringify(axisData, null, 2) : '// The data will appear here'}
 `}
           language="json"

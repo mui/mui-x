@@ -1,8 +1,14 @@
 import { spy } from 'sinon';
-import { screen, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
-import { getClockTouchEvent, getTimeClockValue, getDateOffset } from 'test/utils/pickers';
+import {
+  fireClockPointerEvent,
+  getClockTouchEvent,
+  getTimeClockValue,
+  getDateOffset,
+} from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import { describe, it, expect } from 'vitest';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
@@ -14,8 +20,8 @@ describe('<TimeClock /> - Timezone', () => {
         render(<TimeClock onChange={onChange} />);
 
         const hourClockEvent = getClockTouchEvent(8, '12hours');
-        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+        fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', hourClockEvent);
+        fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', hourClockEvent);
 
         const expectedDate = adapter.setHours(adapter.date(), 8);
 
@@ -37,8 +43,8 @@ describe('<TimeClock /> - Timezone', () => {
             render(<TimeClock onChange={onChange} timezone={timezone} />);
 
             const hourClockEvent = getClockTouchEvent(8, '12hours');
-            fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-            fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+            fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', hourClockEvent);
+            fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', hourClockEvent);
 
             const expectedDate = adapter.setHours(
               adapter.startOfDay(adapter.date(undefined, timezone)),
@@ -74,8 +80,8 @@ describe('<TimeClock /> - Timezone', () => {
             );
 
             const hourClockEvent = getClockTouchEvent(8, '12hours');
-            fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-            fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+            fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', hourClockEvent);
+            fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', hourClockEvent);
 
             const actualDate = onChange.lastCall.firstArg;
 

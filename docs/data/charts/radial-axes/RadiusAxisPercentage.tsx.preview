@@ -1,0 +1,12 @@
+<div>
+  <Typography align="center" gutterBottom>
+    {'minRadius: 50 — fixed pixels, the hole stays the same size'}
+  </Typography>
+  <Showcase minRadius={50} />
+</div>
+<div>
+  <Typography align="center" gutterBottom>
+    {"minRadius: '40%' — scales with the chart"}
+  </Typography>
+  <Showcase minRadius="40%" />
+</div>

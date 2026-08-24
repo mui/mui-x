@@ -1,12 +1,15 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import type { IteratedCell } from '../../models';
 import { iterate } from './iterate';
 
 export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
@@ -19,6 +22,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
     render,
     style,
     classNames,
+    tickRange,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -26,18 +30,50 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const { start, end, headers, timeResolution } = useStore(
+  const { start, end, headers, timeResolution, dayStartMinute, dayEndMinute } = useStore(
     store,
     eventTimelinePremiumPresetSelectors.config,
   );
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
 
+  // The header re-renders on every horizontal scroll (it subscribes to the
+  // virtualizer's render context): only recompute the cell walk when the range
+  // actually changes.
+  const cellsPerLevel = React.useMemo(
+    () =>
+      headers.map((level) =>
+        iterate(adapter, level.unit, timeResolution, start, end, weekStartsOn, {
+          dayStartMinute,
+          dayEndMinute,
+        }),
+      ),
+    [adapter, headers, timeResolution, start, end, weekStartsOn, dayStartMinute, dayEndMinute],
+  );
+
   const children = headers.map((level, levelIndex) => {
-    const cells = iterate(adapter, level.unit, timeResolution, start, end, weekStartsOn);
+    const allCells = cellsPerLevel[levelIndex];
+
+    let cells: ReturnType<typeof iterate>;
+    let offsetInTicks = 0;
+
+    if (tickRange) {
+      const filtered = filterCellsByTickRange(
+        allCells,
+        tickRange.firstTickIndex,
+        tickRange.lastTickIndex,
+      );
+      cells = filtered.visibleCells;
+      offsetInTicks = filtered.offsetInTicks;
+    } else {
+      cells = allCells;
+    }
 
     return (
       <div key={`${level.unit}:${levelIndex}`} className={classNames?.row} data-level={levelIndex}>
+        {offsetInTicks > 0 && (
+          <div role="none" style={{ width: `calc(var(--unit-width) * ${offsetInTicks})` }} />
+        )}
         {cells.map((cell) => (
           <div
             key={cell.key}
@@ -49,10 +85,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
             data-weekend={level.unit === 'day' && isWeekend(adapter, cell.date) ? '' : undefined}
             style={{ '--span': cell.spanInTicks } as React.CSSProperties}
           >
-            <time
-              className={classNames?.label}
-              dateTime={adapter.formatByString(cell.date, "yyyy-MM-dd'T'HH:mm")}
-            >
+            <time className={classNames?.label} dateTime={getCellDateTime(adapter, cell)}>
               {level.renderCell
                 ? level.renderCell({
                     adapter,
@@ -65,6 +98,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
                     level: levelIndex,
                     spanInTicks: cell.spanInTicks,
                     unit: level.unit,
+                    wallClockHour: cell.wallClockHour,
                   })
                 : level.formatDate(adapter, cell.date)}
             </time>
@@ -93,5 +127,68 @@ export namespace TimelineGridHeader {
       cell?: string;
       label?: string;
     };
+    /**
+     * When provided, only header cells overlapping this tick range are rendered.
+     * Tick indices are zero-based relative to the preset's tick grid (not the
+     * virtualizer's column model which includes the pinned title column).
+     */
+    tickRange?: {
+      firstTickIndex: number;
+      lastTickIndex: number;
+    };
   }
+}
+
+/**
+ * Machine-readable local date-time of a cell. Hour cells are built from `wallClockHour`
+ * rather than from `date`: the hour skipped by a spring-forward transition has no instant,
+ * so its `date` normalizes to the next hour and would repeat that cell's value.
+ */
+function getCellDateTime(adapter: TemporalAdapter, cell: IteratedCell) {
+  if (cell.wallClockHour === undefined) {
+    return adapter.formatByString(cell.date, "yyyy-MM-dd'T'HH:mm");
+  }
+  const day = adapter.formatByString(cell.date, 'yyyy-MM-dd');
+  return `${day}T${String(cell.wallClockHour).padStart(2, '0')}:00`;
+}
+
+/**
+ * Filters a level's cells to those overlapping a tick range and computes
+ * the tick offset of the first visible cell within that level.
+ */
+function filterCellsByTickRange(
+  cells: ReturnType<typeof iterate>,
+  firstTickIndex: number,
+  lastTickIndex: number,
+): { visibleCells: ReturnType<typeof iterate>; offsetInTicks: number } {
+  let tickCursor = 0;
+  let firstVisibleIdx = -1;
+  let lastVisibleIdx = -1;
+
+  for (let i = 0; i < cells.length; i += 1) {
+    const cellEnd = tickCursor + cells[i].spanInTicks;
+    // Cell overlaps [firstTickIndex, lastTickIndex) if cellEnd > first && tickCursor < last
+    if (cellEnd > firstTickIndex && tickCursor < lastTickIndex) {
+      if (firstVisibleIdx === -1) {
+        firstVisibleIdx = i;
+      }
+      lastVisibleIdx = i;
+    }
+    tickCursor = cellEnd;
+  }
+
+  if (firstVisibleIdx === -1) {
+    return { visibleCells: [], offsetInTicks: 0 };
+  }
+
+  // Offset = tick position of the first visible cell
+  let offsetInTicks = 0;
+  for (let i = 0; i < firstVisibleIdx; i += 1) {
+    offsetInTicks += cells[i].spanInTicks;
+  }
+
+  return {
+    visibleCells: cells.slice(firstVisibleIdx, lastVisibleIdx + 1),
+    offsetInTicks,
+  };
 }

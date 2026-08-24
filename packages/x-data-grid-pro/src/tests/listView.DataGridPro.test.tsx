@@ -1,11 +1,12 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import {
-  DataGridPro,
-  type DataGridProProps,
-  type GridColDef,
-  type GridListViewColDef,
-  type GridRowsProp,
+import { DataGridPro } from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridColDef,
+  GridListViewColDef,
+  GridRowsProp,
 } from '@mui/x-data-grid-pro';
+import { describe, it, expect } from 'vitest';
 
 const rows: GridRowsProp = [{ id: '123567', title: 'test' }];
 

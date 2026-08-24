@@ -1,12 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { type RadarSeriesMarksProps } from './RadarSeriesPlot.types';
-import { useUtilityClasses, type RadarClasses } from '../radarClasses';
+import type { RadarSeriesMarksProps } from './RadarSeriesPlot.types';
+import { useUtilityClasses } from '../radarClasses';
+import type { RadarClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
-import { type SeriesId } from '../../models/seriesType/common';
+import type { SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
+import {
+  RADAR_ACTIVATION_PRIORITY,
+  useRegisterRadarItemActivation,
+} from './useRegisterRadarItemActivation';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
@@ -43,6 +48,8 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
   const classes = useUtilityClasses(inClasses);
   const getHighlightState = useItemHighlightStateGetter();
 
+  useRegisterRadarItemActivation(seriesId, onItemClick, RADAR_ACTIVATION_PRIORITY.mark);
+
   return (
     <React.Fragment>
       {seriesCoordinates?.map(({ seriesId: id, points, hideMark, fillArea, hidden }) => {
@@ -78,7 +85,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
   );
 }
 
-RadarSeriesMarks.propTypes = {
+RadarSeriesMarks.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -88,8 +95,12 @@ RadarSeriesMarks.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
+  /**
    * Callback fired when a mark is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick: PropTypes.func,

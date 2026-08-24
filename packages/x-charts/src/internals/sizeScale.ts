@@ -2,15 +2,30 @@ import {
   scaleOrdinal,
   scaleThreshold,
   scaleSequential,
-  type ScaleOrdinal,
-  type ScaleThreshold,
-  type ScaleSequential,
+  scaleSequentialSqrt,
+  scaleSequentialLog,
 } from '@mui/x-charts-vendor/d3-scale';
-import {
-  type ContinuousSizeConfig,
-  type PiecewiseSizeConfig,
-  type OrdinalSizeConfig,
+import type { ScaleOrdinal, ScaleThreshold, ScaleSequential } from '@mui/x-charts-vendor/d3-scale';
+import type {
+  ContinuousSizeConfig,
+  PiecewiseSizeConfig,
+  OrdinalSizeConfig,
+  ContinuousSizeConfigWithFunctionInterpolator,
 } from '../models/sizeMapping';
+
+const isFunctionInterpolator = <Value extends number | Date>(
+  config: ContinuousSizeConfig<Value>,
+): config is ContinuousSizeConfigWithFunctionInterpolator<Value> => {
+  return typeof config.size === 'function';
+};
+
+function getClampedSize(sizes: readonly [number, number]) {
+  const [minSize, maxSize] = sizes;
+  return (t: number) => {
+    const clampedT = Math.max(Math.min(t, 1), 0);
+    return minSize + clampedT * (maxSize - minSize);
+  };
+}
 
 export function getSequentialSizeScale<Value extends number | Date>(
   config: ContinuousSizeConfig<Value> | PiecewiseSizeConfig<Value>,
@@ -19,7 +34,21 @@ export function getSequentialSizeScale<Value extends number | Date>(
     return scaleThreshold(config.thresholds, config.sizes);
   }
 
-  return scaleSequential([config.min ?? 0, config.max ?? 100], config.size);
+  if (isFunctionInterpolator(config)) {
+    return scaleSequential([config.min ?? 0, config.max ?? 100], config.size);
+  }
+
+  const interpolator = config.interpolator ?? 'sqrt';
+
+  switch (interpolator) {
+    case 'log':
+      return scaleSequentialLog([config.min ?? 0, config.max ?? 100], getClampedSize(config.size));
+    case 'linear':
+      return scaleSequential([config.min ?? 0, config.max ?? 100], getClampedSize(config.size));
+    case 'sqrt':
+    default:
+      return scaleSequentialSqrt([config.min ?? 0, config.max ?? 100], getClampedSize(config.size));
+  }
 }
 
 export function getOrdinalSizeScale(

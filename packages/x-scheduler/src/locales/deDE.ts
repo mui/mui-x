@@ -1,22 +1,27 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const deDEDialog: Partial<EventDialogLocaleText> = {
+const deDEDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Ereignisfarbe',
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Datum und Uhrzeit',
   resourceColorSectionLabel: 'Ressource und Farbe',
   allDayLabel: 'Ganztägig',
   closeButtonAriaLabel: 'Schließen',
   closeButtonLabel: 'Schließen',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Ereignis löschen',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Beschreibung',
   endDateLabel: 'Enddatum',
   endTimeLabel: 'Endzeit',
@@ -39,7 +44,7 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Wiederholung',
   recurrenceMainSelectCustomLabel: 'Wiederholung',
   recurrenceWeeklyFrequencyLabel: 'Wochen',
-  recurrenceWeeklyPresetLabel: (weekday) => `Wird wöchentlich am ${weekday} wiederholt`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Wird wöchentlich am ${weekdayName} wiederholt`,
   recurrenceMonthlyFrequencyLabel: 'Monate',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Tag ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} der letzten Woche des Monats`,
@@ -51,11 +56,13 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'Jahre',
   recurrenceYearlyPresetLabel: (date) => `Wird jährlich am ${date} wiederholt`,
   noResourceAriaLabel: 'Keine Ressource',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressource',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Speichern',
-  startDateAfterEndDateError: 'Startdatum/-zeit muss vor dem Enddatum/-zeit liegen.',
+  startDateAfterEndDateError: 'Das Enddatum darf nicht vor dem Startdatum liegen.',
   startDateLabel: 'Startdatum',
+  startTimeAfterEndTimeError: 'Die Endzeit muss nach der Startzeit liegen.',
   startTimeLabel: 'Startzeit',
 
   // RecurringScopeDialog
@@ -68,7 +75,7 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   title: 'Diese Änderung anwenden auf:',
 };
 
-const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Ressourcen',
 
@@ -89,6 +96,9 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Seitenpanel schließen',
   openSidePanel: 'Seitenpanel öffnen',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12-Stunden (1:00PM)',
   hour24h: '24-Stunden (13:00)',
@@ -105,8 +115,6 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Ganztägig',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} weitere..`,
   nextTimeSpan: (timeSpan) => `Nächste(r) ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Vorherige(r) ${timeSpan}`,
@@ -122,11 +130,14 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarGoToPreviousMonth: 'Vorherigen Monat im Kalender anzeigen',
   miniCalendarGoToNextMonth: 'Nächsten Monat im Kalender anzeigen',
 
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
+
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressourcentitel',
 };
 
-const deDETimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const deDETimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressourcentitel',
 };

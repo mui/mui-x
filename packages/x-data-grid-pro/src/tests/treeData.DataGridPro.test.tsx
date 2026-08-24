@@ -1,4 +1,4 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
 import {
   getCell,
@@ -12,16 +12,19 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import {
   DataGridPro,
-  type DataGridProProps,
   GRID_TREE_DATA_GROUPING_FIELD,
-  type GridApi,
-  type GridGroupNode,
   GridLogicOperator,
-  type GridRowsProp,
   useGridApiRef,
-  type GridPaginationModel,
-  type GridColDef,
 } from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridApi,
+  GridGroupNode,
+  GridRowsProp,
+  GridPaginationModel,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -421,6 +424,7 @@ describe('<DataGridPro /> - Tree data', () => {
       render(<Test />);
       const columnsHeader = getColumnHeadersTextContent();
       expect(columnsHeader).to.deep.equal(['Group', 'name']);
+      expect(getCell(0, 0)).to.have.attribute('role', 'rowheader');
     });
 
     it('should render a toggling icon only when a row has children', () => {

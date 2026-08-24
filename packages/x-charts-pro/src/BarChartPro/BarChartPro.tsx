@@ -2,12 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import {
-  type BarChartProps,
-  type BarChartSlotProps,
-  type BarChartSlots,
-  BarPlot,
-} from '@mui/x-charts/BarChart';
+import { BarPlot, FocusedBar } from '@mui/x-charts/BarChart';
+import type { BarChartProps, BarChartSlotProps, BarChartSlots } from '@mui/x-charts/BarChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -16,20 +12,22 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
+import type { BarSamplingMethod } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import {
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
-import { BAR_CHART_PRO_PLUGINS, type BarChartProPluginSignatures } from './BarChartPro.plugins';
+import { BAR_CHART_PRO_PLUGINS } from './BarChartPro.plugins';
+import type { BarChartProPluginSignatures } from './BarChartPro.plugins';
 
 export interface BarChartProSlots
   extends Omit<BarChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
@@ -44,8 +42,15 @@ export interface BarChartProProps
     Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'seriesConfig' | 'plugins'>,
     Omit<
       ChartsContainerProProps<'bar', BarChartProPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'sampling'
     > {
+  /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every bar (no sampling).
+   * - `'minmax'`: keep the min and max per bucket and draw one merged bar.
+   * @default 'none'
+   */
+  sampling?: BarSamplingMethod;
   /**
    * Overridable component slots.
    * @default {}
@@ -74,7 +79,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, sampling, ...other } = props;
   const {
     chartsWrapperProps,
     chartsContainerProps,
@@ -92,14 +97,17 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'bar',
     BarChartProPluginSignatures
-  >({
-    ...chartsContainerProps,
-    initialZoom,
-    zoomData,
-    onZoomChange,
-    apiRef,
-    plugins: BAR_CHART_PRO_PLUGINS,
-  });
+  >(
+    {
+      ...chartsContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: BAR_CHART_PRO_PLUGINS,
+    },
+    { seriesType: 'bar', method: sampling },
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -115,6 +123,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
             <BarPlot {...barPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
+            <FocusedBar />
           </g>
           <ChartsAxis {...chartsAxisProps} />
           <ChartsZoomSlider />
@@ -128,7 +137,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   );
 });
 
-BarChartPro.propTypes = {
+BarChartPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -197,7 +206,16 @@ BarChartPro.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -407,7 +425,7 @@ BarChartPro.propTypes = {
   onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {MouseEvent} event The event source of the callback.
+   * @param {ChartsActivationEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,
@@ -440,6 +458,13 @@ BarChartPro.propTypes = {
    * @default 'svg-single'
    */
   renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every bar (no sampling).
+   * - `'minmax'`: keep the min and max per bucket and draw one merged bar.
+   * @default 'none'
+   */
+  sampling: PropTypes.oneOf(['minmax', 'none']),
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] objects.
@@ -531,6 +556,7 @@ BarChartPro.propTypes = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -538,6 +564,7 @@ BarChartPro.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -556,12 +583,16 @@ BarChartPro.propTypes = {
       min: PropTypes.number,
       sizeMap: PropTypes.oneOfType([
         PropTypes.shape({
+          interpolator: PropTypes.oneOf(['linear', 'log', 'sqrt']),
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          size: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.number.isRequired),
-            PropTypes.func,
-          ]).isRequired,
+          size: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.func.isRequired,
           type: PropTypes.oneOf(['continuous']).isRequired,
         }),
         PropTypes.shape({

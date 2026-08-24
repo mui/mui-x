@@ -22,7 +22,10 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "grid": { "type": { "name": "shape", "description": "{ radius?: bool, rotation?: bool }" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
@@ -72,6 +75,13 @@
       "signature": {
         "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
         "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: ChartsActivationEvent<HTMLDivElement>, item: SeriesItemIdentifierWithType<SeriesType>) => void",
+        "describedArgs": ["event", "item"]
       }
     },
     "onTooltipItemChange": {
@@ -148,6 +158,5 @@
   "muiName": "MuiRadialBarChart",
   "filename": "/packages/x-charts-premium/src/RadialBarChart/RadialBarChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>"
 }

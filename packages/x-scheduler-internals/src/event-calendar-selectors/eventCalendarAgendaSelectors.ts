@@ -7,7 +7,7 @@ import {
 } from '../scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import { SchedulerProcessedDate } from '../models';
+import type { SchedulerProcessedDate } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayList } from '../get-day-list';
 

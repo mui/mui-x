@@ -1,7 +1,8 @@
 import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarStore } from '../EventCalendarStore';
-import { CalendarView } from '../../models';
+import type { CalendarView } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -195,7 +196,7 @@ describe('Date - EventCalendarStore', () => {
         adapter,
       );
 
-      store.setViewConfig({
+      store.setViewDefinition({
         siblingVisibleDateGetter,
         visibleDaysSelector: () => [],
       });
@@ -221,7 +222,7 @@ describe('Date - EventCalendarStore', () => {
         adapter,
       );
 
-      store.setViewConfig({
+      store.setViewDefinition({
         siblingVisibleDateGetter,
         visibleDaysSelector: () => [],
       });

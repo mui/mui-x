@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useTimelineGridRowKeyboard } from '../../internals/utils/useTimelineGridRowKeyboard';
 
 export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleRow(
@@ -16,18 +17,15 @@ export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleR
     ...elementProps
   } = componentProps;
 
-  const { rowRef, listItemRef, index, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
+  const { rowRef, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
     columnType: 'title',
   });
 
   return useRenderElement('div', componentProps, {
-    ref: [forwardedRef, listItemRef, rowRef],
+    ref: [forwardedRef, rowRef],
     props: [
       elementProps,
       {
-        role: 'row',
-        // Reserve aria-rowindex=1 for the grid header row.
-        'aria-rowindex': index + 2,
         tabIndex: 0,
         onKeyDown: handleKeyDown,
         onFocus: handleFocus,

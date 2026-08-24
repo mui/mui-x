@@ -5,12 +5,17 @@ import {
   eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
+  adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+import type {
+  EventTimelinePremiumPreset,
+  EventTimelinePremiumPresetConfig,
+} from '@mui/x-scheduler-internals-premium/models';
+import { describe, it, expect } from 'vitest';
 
 type PresetExpectations = {
   preset: EventTimelinePremiumPreset;
@@ -44,16 +49,24 @@ describe('<EventTimelinePremiumHeader />', () => {
     preset: EventTimelinePremiumPreset;
     presets?: EventTimelinePremiumPreset[];
     defaultPreferences?: { ampm: boolean };
+    visibleDate?: typeof DEFAULT_TESTING_VISIBLE_DATE;
+    presetConfig?: EventTimelinePremiumPresetConfig;
   }) {
+    // The grid is virtualized; sizing the host wide enough to fit the largest preset
+    // (1096 days × 6px = 6576px plus the title column) keeps every header cell mounted
+    // so the structural assertions can inspect them all without simulating scrolls.
     return render(
-      <EventTimelinePremium
-        resources={[engineering]}
-        events={[]}
-        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        preset={options.preset}
-        presets={options.presets ?? [options.preset]}
-        defaultPreferences={options.defaultPreferences}
-      />,
+      <div style={{ width: 10000, height: 2000 }}>
+        <EventTimelinePremium
+          resources={[engineering]}
+          events={[]}
+          visibleDate={options.visibleDate ?? DEFAULT_TESTING_VISIBLE_DATE}
+          preset={options.preset}
+          presets={options.presets ?? [options.preset]}
+          presetConfig={options.presetConfig}
+          defaultPreferences={options.defaultPreferences}
+        />
+      </div>,
     );
   }
 
@@ -70,7 +83,8 @@ describe('<EventTimelinePremiumHeader />', () => {
         renderHeader({ preset });
 
         const grid = screen.getByRole('grid');
-        expect(grid.style.getPropertyValue('--unit-width')).to.equal(`${tickWidth}px`);
+        const container = grid.closest('section')!;
+        expect(container.style.getPropertyValue('--unit-width')).to.equal(`${tickWidth}px`);
         // The grid root sets `--unit-count` from `presetConfig.tickCount`; assert it matches
         // the sum of header cell spans so a regression in either path is caught independently.
         expect(grid.style.getPropertyValue('--unit-count')).to.equal(String(totalTicks));
@@ -214,6 +228,82 @@ describe('<EventTimelinePremiumHeader />', () => {
       );
       expect(hourCell).not.to.equal(null);
       expect(hourCell!.textContent).to.not.match(/AM|PM/);
+    });
+  });
+
+  describe('`dayAndHour` hour row across a DST transition', () => {
+    // Mar 8 2026 in America/New_York skips the 02:00 wall-clock hour; Nov 2 2025 repeats
+    // the 01:00 one. The hour row is a wall-clock grid, so both days show the same columns
+    // as any other day, matching the Event Calendar's time axis.
+    const springForward = adapter.date('2026-03-08T00:00:00', 'America/New_York');
+    const fallBack = adapter.date('2025-11-02T00:00:00', 'America/New_York');
+
+    function getHourLabels(dayIndex: number, hoursPerDay: number) {
+      const cells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="hour"]`),
+      );
+      return cells
+        .slice(dayIndex * hoursPerDay, (dayIndex + 1) * hoursPerDay)
+        .map((cell) => cell.textContent);
+    }
+
+    it('should label the hour skipped by the spring-forward transition', () => {
+      renderHeader({
+        preset: 'dayAndHour',
+        visibleDate: springForward,
+        defaultPreferences: { ampm: true },
+      });
+
+      expect(getHourLabels(0, 24).slice(0, 5)).to.deep.equal([
+        '12:00 AM',
+        '1:00 AM',
+        '2:00 AM',
+        '3:00 AM',
+        '4:00 AM',
+      ]);
+    });
+
+    it('should label the hour repeated by the fall-back transition once', () => {
+      renderHeader({
+        preset: 'dayAndHour',
+        visibleDate: fallBack,
+        defaultPreferences: { ampm: true },
+      });
+
+      expect(getHourLabels(0, 24).slice(0, 5)).to.deep.equal([
+        '12:00 AM',
+        '1:00 AM',
+        '2:00 AM',
+        '3:00 AM',
+        '4:00 AM',
+      ]);
+    });
+
+    it('should build the dateTime of the skipped hour from its wall-clock hour', () => {
+      renderHeader({ preset: 'dayAndHour', visibleDate: springForward });
+
+      const hourCells = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="hour"]`,
+      );
+      expect(hourCells[2].querySelector('time')!.getAttribute('datetime')).to.equal(
+        '2026-03-08T02:00',
+      );
+    });
+
+    it('should keep the hour row aligned with the day row when the window starts on the skipped hour', () => {
+      renderHeader({
+        preset: 'dayAndHour',
+        visibleDate: springForward,
+        presetConfig: { dayAndHour: { startTime: 2, endTime: 20 } },
+        defaultPreferences: { ampm: true },
+      });
+
+      const dayCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
+      );
+      expect(Number(dayCells[0].style.getPropertyValue('--span'))).to.equal(18);
+      expect(getHourLabels(0, 18)[0]).to.equal('2:00 AM');
+      expect(getHourLabels(0, 18).length).to.equal(18);
     });
   });
 

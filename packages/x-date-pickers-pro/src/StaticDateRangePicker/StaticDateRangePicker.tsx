@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerRangeValue, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import type { PickerRangeValue, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { useStaticRangePicker } from '../internals/hooks/useStaticRangePicker';
-import { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
+import type { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -68,7 +68,7 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker(
   return renderPicker();
 }) as StaticDateRangePickerComponent;
 
-StaticDateRangePicker.propTypes = {
+StaticDateRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

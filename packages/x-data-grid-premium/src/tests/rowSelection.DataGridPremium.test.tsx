@@ -1,15 +1,14 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
   gridRowSelectionIdsSelector,
-  type GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

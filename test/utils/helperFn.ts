@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { act, screen } from '@mui/internal-test-utils';
+import { act, screen, waitFor } from '@mui/internal-test-utils';
 import { gridClasses, GridRowId } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
@@ -50,6 +50,13 @@ export function microtasks() {
   return act(() => Promise.resolve()) as unknown as Promise<void>;
 }
 
+// `sleep` inside `act`, so updates settling during the wait don't warn about missing `act`.
+export async function actSleep(duration: number) {
+  await act(async () => {
+    await sleep(duration);
+  });
+}
+
 export function spyApi(api: GridApiCommon, methodName: string) {
   const methodKey = methodName as keyof GridApiCommon;
   const privateApi = unwrapPrivateAPI(api);
@@ -85,10 +92,15 @@ export async function raf() {
  */
 export function getActiveCell(): string | null {
   let activeElement: Element | null;
-  if (document.activeElement && document.activeElement.getAttribute('role') === 'gridcell') {
+  if (
+    document.activeElement &&
+    ['gridcell', 'rowheader'].includes(document.activeElement.getAttribute('role') ?? '')
+  ) {
     activeElement = document.activeElement;
   } else {
-    activeElement = document.activeElement && document.activeElement.closest('[role="gridcell"]');
+    activeElement =
+      document.activeElement &&
+      document.activeElement.closest('[role="gridcell"], [role="rowheader"]');
   }
 
   if (!activeElement) {
@@ -119,15 +131,19 @@ export function getActiveColumnHeader() {
   return `${Number(activeElement.getAttribute('aria-colindex')) - 1}`;
 }
 
-export function getColumnValues(colIndex: number) {
+export function getColumnValues(colIndex: number, container: ParentNode = document) {
   return Array.from(
-    document.querySelectorAll(`[role="gridcell"][data-colindex="${colIndex}"]`),
+    container.querySelectorAll(
+      `:is([role="gridcell"], [role="rowheader"])[data-colindex="${colIndex}"]`,
+    ),
   ).map((node) => node!.textContent);
 }
 
 export function getRowValues(rowIndex: number) {
   return Array.from(
-    document.querySelectorAll(`[data-rowindex="${rowIndex}"] [role="gridcell"]`),
+    document.querySelectorAll(
+      `[data-rowindex="${rowIndex}"] :is([role="gridcell"], [role="rowheader"])`,
+    ),
   ).map((node) => node!.textContent);
 }
 
@@ -151,13 +167,15 @@ export function getColumnHeadersTextContent() {
 
 export function getRowsFieldContent(field: string) {
   return Array.from(document.querySelectorAll('[role="row"][data-rowindex]')).map(
-    (node) => node.querySelector(`[role="gridcell"][data-field="${field}"]`)?.textContent,
+    (node) =>
+      node.querySelector(`:is([role="gridcell"], [role="rowheader"])[data-field="${field}"]`)
+        ?.textContent,
   );
 }
 
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   const cell = document.querySelector<HTMLElement>(
-    `[role="row"][data-rowindex="${rowIndex}"] [role="gridcell"][data-colindex="${colIndex}"]`,
+    `[role="row"][data-rowindex="${rowIndex}"] :is([role="gridcell"], [role="rowheader"])[data-colindex="${colIndex}"]`,
   );
   if (cell == null) {
     throw new Error(`Cell ${rowIndex} ${colIndex} not found`);
@@ -235,4 +253,25 @@ export async function openLongTextEditPopup(
     await user.click(cell);
     await user.keyboard('{Enter}');
   }
+}
+
+export async function openMultiSelectPopup(
+  cell: HTMLElement,
+  user: UserEvent,
+  action: 'click' | 'spacebar' = 'spacebar',
+) {
+  await user.click(cell);
+  await waitFor(() => {
+    const chip = cell.querySelector('button[aria-haspopup="dialog"]');
+    if (!chip || document.activeElement !== chip) {
+      throw new Error('Overflow chip not focused');
+    }
+  });
+  const overflowChip = cell.querySelector('button[aria-haspopup="dialog"]') as HTMLButtonElement;
+  if (action === 'spacebar') {
+    await user.keyboard(' ');
+  } else {
+    await user.click(overflowChip);
+  }
+  return { overflowChip };
 }

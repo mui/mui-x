@@ -20,6 +20,8 @@ import { MessageContent } from '../MessageContent';
 import { MessageRoot } from '../MessageRoot';
 
 const { render } = createRenderer();
+// eslint-disable-next-line no-script-url
+const unsafeUrl = 'javascript:alert(document.domain)';
 
 function createAdapter(): ChatAdapter {
   return {
@@ -129,6 +131,63 @@ describe('ReasoningPart', () => {
   });
 });
 
+describe('ToolPart sectionSummary slot', () => {
+  it('passes summaryLabel and previewValue through ownerState to a custom sectionSummary', () => {
+    let receivedOwnerState: any = null;
+
+    function CustomSectionSummary(props: React.HTMLAttributes<HTMLElement> & { ownerState?: any }) {
+      const { ownerState, children, ...other } = props;
+      receivedOwnerState = ownerState;
+      return (
+        <strong data-testid="custom-section-summary" {...other}>
+          {children}
+        </strong>
+      );
+    }
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            parts: [
+              {
+                type: 'tool',
+                toolInvocation: {
+                  toolCallId: 'tc1',
+                  toolName: 'search',
+                  state: 'output-available',
+                  input: { query: 'hello' },
+                  output: { results: ['world'] },
+                },
+              },
+            ],
+          },
+        ]}
+      >
+        <MessageRoot messageId="m1">
+          <MessageContent
+            partProps={{
+              tool: {
+                slots: {
+                  sectionSummary: CustomSectionSummary,
+                },
+              },
+            }}
+          />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getAllByTestId('custom-section-summary').length).to.equal(2);
+    expect(receivedOwnerState).not.to.equal(null);
+    expect(receivedOwnerState.summaryLabel).to.be.a('string');
+    expect(receivedOwnerState.previewValue).to.be.a('string');
+  });
+});
+
 describe('FilePart', () => {
   it('renders <img> inside link for image mediaType', () => {
     renderWithMessage({
@@ -164,7 +223,29 @@ describe('FilePart', () => {
       ],
     });
 
-    expect(screen.getByText('doc.pdf')).not.to.equal(null);
+    expect(screen.getByText('doc.pdf').closest('a')).to.have.attribute(
+      'href',
+      'https://example.com/doc.pdf',
+    );
+  });
+
+  it('preserves a same-origin blob URL as the link target', () => {
+    const blobUrl = `blob:${window.location.origin}/attachment`;
+
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'file',
+          mediaType: 'application/pdf',
+          url: blobUrl,
+          filename: 'doc.pdf',
+        },
+      ],
+    });
+
+    expect(screen.getByText('doc.pdf').closest('a')).to.have.attribute('href', blobUrl);
   });
 
   it('falls back to URL when no filename', () => {
@@ -181,6 +262,43 @@ describe('FilePart', () => {
     });
 
     expect(screen.getByText('https://example.com/doc.pdf')).not.to.equal(null);
+  });
+
+  it('does not expose an unsafe URL as the link target', () => {
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'file',
+          mediaType: 'application/pdf',
+          url: unsafeUrl,
+          filename: 'doc.pdf',
+        },
+      ],
+    });
+
+    expect(screen.getByText('doc.pdf').closest('a')!.getAttribute('href')).to.equal(null);
+  });
+
+  it('does not expose an unsafe URL as the image source', () => {
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'file',
+          mediaType: 'image/png',
+          url: unsafeUrl,
+          filename: 'img.png',
+        },
+      ],
+    });
+
+    const img = screen.getByAltText('img.png');
+
+    expect(img.getAttribute('src')).to.equal(null);
+    expect(img.closest('a')!.getAttribute('href')).to.equal(null);
   });
 });
 
@@ -201,6 +319,7 @@ describe('SourceUrlPart', () => {
 
     const link = screen.getByText('MUI Docs');
 
+    expect(link.closest('a')).to.have.attribute('href', 'https://mui.com');
     expect(link.closest('a')).to.have.attribute('target', '_blank');
     expect(link.closest('a')).to.have.attribute('rel', 'noreferrer noopener');
   });
@@ -219,6 +338,23 @@ describe('SourceUrlPart', () => {
     });
 
     expect(screen.getByText('https://mui.com/x')).not.to.equal(null);
+  });
+
+  it('does not expose an unsafe URL as the link target', () => {
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'source-url',
+          sourceId: 's1',
+          url: unsafeUrl,
+          title: 'MUI Docs',
+        },
+      ],
+    });
+
+    expect(screen.getByText('MUI Docs').closest('a')!.getAttribute('href')).to.equal(null);
   });
 });
 
@@ -274,6 +410,65 @@ describe('SourceDocumentPart', () => {
 });
 
 describe('defaultMessagePartRenderers', () => {
+  it('renderDefaultFilePart preserves a same-origin blob URL as the link target', () => {
+    const blobUrl = `blob:${window.location.origin}/attachment`;
+    const part = {
+      type: 'file' as const,
+      mediaType: 'application/pdf',
+      url: blobUrl,
+      filename: 'doc.pdf',
+    };
+    const message: ChatMessage = { id: 'm1', role: 'assistant', parts: [part] };
+
+    render(<React.Fragment>{renderDefaultFilePart({ part, message, index: 0 })}</React.Fragment>);
+
+    expect(screen.getByText('doc.pdf').closest('a')).to.have.attribute('href', blobUrl);
+  });
+
+  it('renderDefaultFilePart does not expose an unsafe URL as the link target', () => {
+    const part = {
+      type: 'file' as const,
+      mediaType: 'application/pdf',
+      url: unsafeUrl,
+      filename: 'doc.pdf',
+    };
+    const message: ChatMessage = { id: 'm1', role: 'assistant', parts: [part] };
+
+    render(<React.Fragment>{renderDefaultFilePart({ part, message, index: 0 })}</React.Fragment>);
+
+    expect(screen.getByText('doc.pdf').closest('a')!.getAttribute('href')).to.equal(null);
+  });
+
+  it('renderDefaultFilePart does not expose an unsafe URL as the image source', () => {
+    const part = {
+      type: 'file' as const,
+      mediaType: 'image/png',
+      url: unsafeUrl,
+      filename: 'img.png',
+    };
+    const message: ChatMessage = { id: 'm1', role: 'assistant', parts: [part] };
+
+    render(<React.Fragment>{renderDefaultFilePart({ part, message, index: 0 })}</React.Fragment>);
+
+    expect(screen.getByAltText('img.png').getAttribute('src')).to.equal(null);
+  });
+
+  it('renderDefaultSourceUrlPart does not expose an unsafe URL as the link target', () => {
+    const part = {
+      type: 'source-url' as const,
+      sourceId: 's1',
+      url: unsafeUrl,
+      title: 'MUI Docs',
+    };
+    const message: ChatMessage = { id: 'm1', role: 'assistant', parts: [part] };
+
+    render(
+      <React.Fragment>{renderDefaultSourceUrlPart({ part, message, index: 0 })}</React.Fragment>,
+    );
+
+    expect(screen.getByText('MUI Docs').closest('a')!.getAttribute('href')).to.equal(null);
+  });
+
   it('getDefaultMessagePartRenderer returns correct renderer for text', () => {
     expect(getDefaultMessagePartRenderer({ type: 'text', text: 'hi' })).toBe(renderDefaultTextPart);
   });

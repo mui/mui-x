@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -16,16 +16,18 @@ import Portal from '@mui/material/Portal';
 import SvgIcon, { svgIconClasses } from '@mui/material/SvgIcon';
 import {
   DataGrid,
-  type DataGridProps,
   GridActionsCellItem,
-  type GridRowIdGetter,
-  type GridRowClassNameParams,
-  type GridRowModel,
-  type GridRenderCellParams,
   useGridApiRef,
-  type GridApi,
   gridClasses,
   GridActionsCell,
+} from '@mui/x-data-grid';
+import type {
+  DataGridProps,
+  GridRowIdGetter,
+  GridRowClassNameParams,
+  GridRowModel,
+  GridRenderCellParams,
+  GridApi,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
@@ -40,8 +42,9 @@ import {
 import Dialog from '@mui/material/Dialog';
 import { isJSDOM } from 'test/utils/skipIf';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
-import { type GridApiCommunity } from '../models/api/gridApiCommunity';
+import type { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
@@ -353,7 +356,9 @@ describe('<DataGrid /> - Rows', () => {
 
       it('should not select the row when clicking in an action', async () => {
         const { user } = render(
-          <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
+          <TestCase
+            getActions={() => [<GridActionsCellItem key={1} icon={<span />} label="print" />]}
+          />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
         await user.click(screen.getByRole('menuitem', { name: 'print' }));
@@ -363,7 +368,9 @@ describe('<DataGrid /> - Rows', () => {
       it('should not select the row when clicking in a menu action', async () => {
         const { user } = render(
           <TestCase
-            getActions={() => [<GridActionsCellItem icon={<span />} label="print" showInMenu />]}
+            getActions={() => [
+              <GridActionsCellItem key={1} icon={<span />} label="print" showInMenu />,
+            ]}
           />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
@@ -376,7 +383,9 @@ describe('<DataGrid /> - Rows', () => {
 
       it('should not select the row when opening the menu', async () => {
         const { user } = render(
-          <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
+          <TestCase
+            getActions={() => [<GridActionsCellItem key={1} label="print" showInMenu />]}
+          />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
         await user.click(screen.getByRole('menuitem', { name: 'more' }));
@@ -387,7 +396,7 @@ describe('<DataGrid /> - Rows', () => {
         const { user } = render(
           <TestCase
             rows={[{ id: 1 }, { id: 2 }]}
-            getActions={() => [<GridActionsCellItem label="print" showInMenu />]}
+            getActions={() => [<GridActionsCellItem key={1} label="print" showInMenu />]}
           />,
         );
         expect(screen.queryAllByRole('menu')).to.have.length(2);
@@ -407,7 +416,9 @@ describe('<DataGrid /> - Rows', () => {
 
       it('should allow to move focus to another cell with the arrow keys', async () => {
         const { user } = render(
-          <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
+          <TestCase
+            getActions={() => [<GridActionsCellItem key={1} icon={<span />} label="print" />]}
+          />,
         );
         await user.click(getCell(0, 0));
         expect(getActiveCell()).to.equal('0-0');
@@ -424,8 +435,8 @@ describe('<DataGrid /> - Rows', () => {
         const { user } = render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="print" showInMenu />,
-              <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
+              <GridActionsCellItem key={1} icon={<span />} label="print" showInMenu />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" showInMenu />,
             ]}
           />,
         );
@@ -440,8 +451,8 @@ describe('<DataGrid /> - Rows', () => {
         const { user } = render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="print" />,
-              <GridActionsCellItem icon={<span />} label="delete" />,
+              <GridActionsCellItem key={1} icon={<span />} label="print" />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" />,
             ]}
           />,
         );
@@ -468,8 +479,8 @@ describe('<DataGrid /> - Rows', () => {
         const { user } = render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="print" />,
-              <GridActionsCellItem icon={<span />} label="delete" />,
+              <GridActionsCellItem key={1} icon={<span />} label="print" />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" />,
             ]}
           />,
         );
@@ -482,8 +493,8 @@ describe('<DataGrid /> - Rows', () => {
         const { user } = render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="print" />,
-              <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
+              <GridActionsCellItem key={1} icon={<span />} label="print" />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" showInMenu />,
             ]}
           />,
         );
@@ -514,8 +525,9 @@ describe('<DataGrid /> - Rows', () => {
               getActions={() =>
                 canDelete
                   ? [
-                      <GridActionsCellItem icon={<span />} label="print" />,
+                      <GridActionsCellItem key={1} icon={<span />} label="print" />,
                       <GridActionsCellItem
+                        key={2}
                         icon={<span />}
                         label="delete"
                         onClick={() => {
@@ -523,7 +535,7 @@ describe('<DataGrid /> - Rows', () => {
                         }}
                       />,
                     ]
-                  : [<GridActionsCellItem icon={<span />} label="print" />]
+                  : [<GridActionsCellItem key={1} icon={<span />} label="print" />]
               }
             />
           );
@@ -537,15 +549,17 @@ describe('<DataGrid /> - Rows', () => {
         const { setProps, user } = render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="print" />,
-              <GridActionsCellItem icon={<span />} label="delete" />,
+              <GridActionsCellItem key={1} icon={<span />} label="print" />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" />,
             ]}
           />,
         );
         await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
         expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
         await act(async () => {
-          setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
+          setProps({
+            getActions: () => [<GridActionsCellItem key={1} icon={<span />} label="print" />],
+          }); // Sets focusedButtonIndex=0
         });
         expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
       });
@@ -1566,6 +1580,75 @@ describe('<DataGrid /> - Rows', () => {
           'Please remove one of these two props.',
         ].join('\n'),
       );
+    });
+
+    describe('prototype preservation on updateRows', () => {
+      it('should preserve the prototype of a class instance when updated with a plain-object partial', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          constructor(id: number, brand: string) {
+            this.id = id;
+            this.brand = brand;
+          }
+          getBrand() {
+            return this.brand;
+          }
+        }
+
+        const classRows = [
+          new BrandRow(0, 'Nike'),
+          new BrandRow(1, 'Adidas'),
+          new BrandRow(2, 'Puma'),
+        ];
+        const { rerender } = render(<TestCase rows={classRows} />);
+        // Plain-object partial update — oldRow is a class instance, partialRow is plain
+        await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        expect(updatedRow instanceof BrandRow).to.equal(true);
+        expect(typeof updatedRow.getBrand).to.equal('function');
+        expect(updatedRow.getBrand()).to.equal('Fila');
+        rerender(<TestCase rows={classRows} />);
+      });
+
+      it('should use the partialRow prototype when partialRow is a class instance', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          constructor(id: number, brand: string) {
+            this.id = id;
+            this.brand = brand;
+          }
+          getBrand() {
+            return this.brand;
+          }
+        }
+
+        const plainRows = [
+          { id: 0, brand: 'Nike' },
+          { id: 1, brand: 'Adidas' },
+          { id: 2, brand: 'Puma' },
+        ];
+        const { rerender } = render(<TestCase rows={plainRows} />);
+        // Class-instance partial update — oldRow is plain, partialRow is a class instance
+        await act(async () => apiRef.current?.updateRows([new BrandRow(1, 'Fila')]));
+
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        expect(updatedRow instanceof BrandRow).to.equal(true);
+        expect(typeof updatedRow.getBrand).to.equal('function');
+        expect(updatedRow.getBrand()).to.equal('Fila');
+        rerender(<TestCase rows={plainRows} />);
+      });
+
+      it('should produce a plain object when both oldRow and partialRow are plain objects', async () => {
+        render(<TestCase />);
+        await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+
+        const updatedRow = apiRef.current?.getRow(1);
+        expect(Object.getPrototypeOf(updatedRow)).to.equal(Object.prototype);
+        expect((updatedRow as any).brand).to.equal('Fila');
+      });
     });
   });
 

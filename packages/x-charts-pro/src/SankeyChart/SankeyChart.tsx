@@ -3,11 +3,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
+import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
-import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
+import { SankeyPlot } from './SankeyPlot';
+import type { SankeyPlotProps } from './SankeyPlot';
 import { useSankeyChartProps } from './useSankeyChartProps';
 import type { SankeySeriesType } from './sankey.types';
 import { SankeyTooltip } from './SankeyTooltip';
@@ -81,7 +83,7 @@ const SankeyChart = React.forwardRef(function SankeyChart(
   );
 });
 
-SankeyChart.propTypes = {
+SankeyChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -114,7 +116,16 @@ SankeyChart.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

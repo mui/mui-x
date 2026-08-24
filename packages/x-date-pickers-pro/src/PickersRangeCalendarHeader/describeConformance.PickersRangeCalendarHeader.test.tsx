@@ -1,9 +1,10 @@
 import { pickersCalendarHeaderClasses } from '@mui/x-date-pickers/PickersCalendarHeader';
 import { pickersArrowSwitcherClasses } from '@mui/x-date-pickers/internals';
 import { PickersRangeCalendarHeader } from '@mui/x-date-pickers-pro/PickersRangeCalendarHeader';
-import { ConformanceOptions } from '@mui/internal-test-utils';
+import type { ConformanceOptions } from '@mui/internal-test-utils';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 const CALENDARS_TO_CLASSES_MAP: Record<1 | 2, ConformanceOptions['classes']> = {
   1: pickersCalendarHeaderClasses,

@@ -1,18 +1,30 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import type { CSSObject, Theme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { useStore } from '@base-ui/utils/store';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { TimeGridEventProps } from './TimeGridEvent.types';
+import {
+  schedulerOccurrencePlaceholderSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
+import type { PaletteName } from '../../../utils/tokens';
+import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
+import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
+import { useTimeGridEvent } from './useTimeGridEvent';
+import { eventCalendarContentCompactQuery } from '../../../constants';
+
+// Visuals split via these media queries; resize follows the actual pointer (in the resize primitive).
+const HOVER_MEDIA = '@media (hover: hover)';
+const TOUCH_MEDIA = '@media (pointer: coarse)';
 
 const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
   display: '-webkit-box',
@@ -24,56 +36,155 @@ const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
   overflowWrap: 'break-word',
 });
 
-const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
-  name: 'MuiEventCalendar',
-  slot: 'TimeGridEvent',
-})<{ palette?: PaletteName }>(({ theme }) => ({
+// Visible dot diameter of the touch resize handle.
+const TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX = 14;
+// Hit-area size per WCAG 2.5.8 (24px min) and Apple HIG (44px).
+const TOUCH_RESIZE_HANDLE_HIT_SIZE_PX = 44;
+// How far the transparent hit area extends past the dot on each expanded side.
+const TOUCH_RESIZE_HANDLE_HIT_INSET_PX = -(
+  (TOUCH_RESIZE_HANDLE_HIT_SIZE_PX - TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX) /
+  2
+);
+// Keep only a sliver of the dot inside the event (matching the touch padding) so it sits on the edge
+// without covering the title/time text.
+const TOUCH_RESIZE_HANDLE_EDGE_INSET_PX = 4;
+
+/**
+ * Circular touch resize handle. A transparent `::before` expands the dot's hit area, biased outward
+ * (start up, end down) so the two handles don't overlap until the event is shorter than the dot.
+ */
+const getTouchResizeHandleStyles = (): CSSObject => ({
+  position: 'absolute',
+  width: TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX,
+  height: TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX,
+  // Reset the full-width base geometry: the dot is anchored by a single side (`left` for start,
+  // `right` for end), and keeping both set would over-constrain it and pin both dots to the left.
+  left: 'auto',
+  right: 'auto',
+  borderRadius: '50%',
+  backgroundColor: 'var(--event-main)',
+  border: '2px solid var(--event-on-surface-subtle-primary)',
+  zIndex: 3,
+  cursor: 'ns-resize',
+  // Block scroll/zoom during the resize gesture.
+  touchAction: 'none',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    insetInline: TOUCH_RESIZE_HANDLE_HIT_INSET_PX,
+  },
+  '&[data-start]': {
+    top: -(TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX - TOUCH_RESIZE_HANDLE_EDGE_INSET_PX),
+    left: 6,
+    // Grow the hit area up, away from the end handle.
+    '&::before': { top: TOUCH_RESIZE_HANDLE_HIT_INSET_PX, bottom: 0 },
+  },
+  '&[data-end]': {
+    bottom: -(TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX - TOUCH_RESIZE_HANDLE_EDGE_INSET_PX),
+    right: 6,
+    // Grow the hit area down, away from the start handle.
+    '&::before': { bottom: TOUCH_RESIZE_HANDLE_HIT_INSET_PX, top: 0 },
+  },
+});
+
+// The root is a `container-type: size` container; size queries use the content box, so the
+// thresholds below already exclude the root padding.
+
+// Fixed line box (px), driving both `line-height` and the clamp thresholds.
+const LINE_BOX_PX = 14;
+
+// Below this content width there's no room for the time, so only the title shows (wrapped).
+const NARROW_MAX_WIDTH_PX = 50;
+
+// Below this content height a single line barely fits, so the font is capped to avoid clipping.
+const SHORT_MAX_HEIGHT_PX = LINE_BOX_PX;
+
+const TITLE_MAX_LINES = 12;
+
+const titleFontSize = 'var(--EventCalendar-fontSize-eventTitle, 0.75rem)';
+const timeFontSize = 'var(--EventCalendar-fontSize-timeText, 0.75rem)';
+
+/**
+ * Container-query steps growing the title's line clamp with the available height. `reserveTimeLine`
+ * keeps a line free for the time row; `extraConditions` scopes the steps further (e.g. a max-width).
+ */
+function titleLineClampSteps(reserveTimeLine: boolean, extraConditions: string = ''): CSSObject {
+  const steps: CSSObject = {};
+  for (let lines = 2; lines <= TITLE_MAX_LINES; lines += 1) {
+    const linesNeeded = reserveTimeLine ? lines + 1 : lines;
+    steps[`@container (min-height: ${linesNeeded * LINE_BOX_PX}px)${extraConditions}`] = {
+      WebkitLineClamp: lines,
+    };
+  }
+  return steps;
+}
+
+// Caps the font on very short events so a single line fits; `min()` keeps the smaller responsive tier.
+function shortEventFontStyles(fontSize: string): CSSObject {
+  return {
+    [`@container (max-height: ${SHORT_MAX_HEIGHT_PX}px)`]: {
+      fontSize: `min(${fontSize}, 11px)`,
+      lineHeight: 1,
+    },
+  };
+}
+
+const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
+  '--time-grid-event-column-gap': '12px',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-surface-subtle)',
   position: 'absolute',
-  left: 'calc( ((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
+  left: 'calc( ((100% - var(--time-grid-event-column-gap)) / var(--columns-count)) * (var(--first-index) - 1))',
   right:
-    'calc(((100% - 12px) * (var(--columns-count) - var(--last-index))) / var(--columns-count) + 12px)',
+    'calc(((100% - var(--time-grid-event-column-gap)) * (var(--columns-count) - var(--last-index))) / var(--columns-count) + var(--time-grid-event-column-gap))',
   top: 'calc(var(--y-position) + 1px)',
   bottom: 'calc(100% - var(--y-position) - var(--height))',
   zIndex: 2,
-  padding: theme.spacing(0.5, 1, 0.5, 1),
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(0.25),
+  // Vertical-only gap between the stacked title and time (no effect on the single-child inline layout).
+  rowGap: theme.spacing(0.25),
   justifyContent: 'flex-start',
   alignContent: 'flex-start',
   minHeight: 11.5,
+  containerType: 'size',
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
-  '&[data-under-hour="true"]': {
-    flexDirection: 'row',
-  },
-  '&[data-under-fifteen-minutes="true"]': {
-    padding: theme.spacing(0, 1),
+  // Lift the armed/edited event — and the resize placeholder, which also carries `data-armed` — above
+  // neighboring events (`z-index: 2`) so its resize handles are never occluded by an overlapping column.
+  '&[data-armed], &[data-editing]': {
+    zIndex: 4,
   },
   '&:focus-visible': {
     outline: '2px solid var(--event-surface-accent)',
     outlineOffset: 2,
   },
-  '&:hover': {
-    backgroundColor: 'var(--event-surface-subtle-hover)',
+  variants: getPaletteVariants(theme),
+  [eventCalendarContentCompactQuery]: {
+    '--time-grid-event-column-gap': '0px',
   },
-  '&[data-editing]': {
-    backgroundColor: 'var(--event-surface-selected)',
-    color: 'var(--event-on-surface-selected)',
-    '&:hover': {
-      backgroundColor: 'var(--event-surface-selected-hover)',
-    },
-    '&::before': {
-      background: 'var(--event-surface-selected)',
-    },
+});
+
+const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
+  name: 'MuiEventCalendar',
+  slot: 'TimeGridEventRoot',
+})<{ palette?: PaletteName }>(({ theme }) => ({
+  ...getTimeGridEventRootStyles(theme),
+  padding: theme.spacing(0.5, 1, 0.5, 1),
+  // Shrink vertical padding on shorter events so the text isn't squeezed out.
+  '&[data-under-hour="true"]': {
+    paddingTop: theme.spacing(0.25),
+    paddingBottom: theme.spacing(0.25),
+  },
+  '&[data-under-fifteen-minutes="true"]': {
+    paddingTop: 0,
+    paddingBottom: 0,
   },
   '&[role="button"]': {
     cursor: 'pointer',
   },
-  containerType: 'size',
+  // Accent bar on the leading edge.
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -85,34 +196,44 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
   },
-  variants: getPaletteVariants(theme),
-}));
-
-const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
-  name: 'MuiEventCalendar',
-  slot: 'TimeGridEventPlaceholder',
-})<{ palette?: PaletteName }>(({ theme }) => ({
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-surface-subtle-hover)',
-  border: `1px dashed var(--event-on-surface-subtle-secondary)`,
-  color: 'var(--event-on-surface-subtle-primary)',
-  position: 'absolute',
-  left: 'calc(((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
-  right:
-    'calc(((100% - 12px) * (var(--columns-count) - var(--last-index))) / var(--columns-count) + 12px)',
-  top: 'var(--y-position)',
-  bottom: 'calc(100% - var(--y-position) - var(--height))',
-  zIndex: 2,
-  padding: theme.spacing(0.5, 2, 0.5, 1.5),
-  containerType: 'size',
-  minHeight: 11.5,
-  '&[data-under-fifteen-minutes="true"]': {
-    padding: theme.spacing(0, 1),
+  // Hover-capable devices: hover affordance and the filled "selected" look while editing.
+  [HOVER_MEDIA]: {
+    '&:hover': {
+      backgroundColor: 'var(--event-surface-subtle-hover)',
+    },
+    '&[data-editing]': {
+      backgroundColor: 'var(--event-surface-selected)',
+      color: 'var(--event-on-surface-selected)',
+      '&:hover': {
+        backgroundColor: 'var(--event-surface-selected-hover)',
+      },
+    },
+    '&[data-editing]::before': {
+      background: 'var(--event-surface-selected)',
+    },
   },
-  variants: getPaletteVariants(theme),
-  '&::before': {
-    content: '""',
-    position: 'absolute',
+  // Touch devices: tighter padding, a selection outline, and no accent bar.
+  [TOUCH_MEDIA]: {
+    // The armed outline is the only intended press feedback. Drop the native tap highlight so a tap
+    // that just dismisses another event's toolbar (two-tap contract) shows no misleading "tapped" flash.
+    WebkitTapHighlightColor: 'transparent',
+    padding: theme.spacing(0.5, 0.7, 0.5, 0.7),
+    '&[data-under-hour="true"]': {
+      paddingTop: theme.spacing(0.25),
+      paddingBottom: theme.spacing(0.25),
+    },
+    '&[data-under-fifteen-minutes="true"]': {
+      padding: theme.spacing(0, 0.5),
+    },
+    // Touch has no hover "selected" fill, so the outline is the only editing affordance: keep it for
+    // both the armed state (toolbar) and while the editing surface is open (`data-editing`).
+    '&[data-armed], &[data-editing]': {
+      outline: '2px solid var(--event-main)',
+      outlineOffset: '-2px',
+    },
+    '&::before': {
+      display: 'none',
+    },
   },
 }));
 
@@ -123,18 +244,35 @@ const TimeGridEventTitle = styled(Typography, {
   margin: 0,
   color: 'var(--event-on-surface-subtle-primary)',
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: theme.typography.caption.fontSize,
-  lineHeight: 1.43,
-  paddingRight: theme.spacing(1.5),
-  height: 'fit-content',
-  '@container (max-height: 20px)': {
-    fontSize: '11px',
-    lineHeight: '11px',
-  },
-  '[data-editing] &': {
-    color: 'var(--event-on-surface-selected)',
-  },
+  fontSize: titleFontSize,
+  // Fixed line box keeps the line count (and clamp thresholds) exact at every font tier.
+  lineHeight: `${LINE_BOX_PX}px`,
   ...linesClampStyles(1),
+  ...shortEventFontStyles(titleFontSize),
+  // Single-line titles share the line with the recurring icon, so reserve room while it's shown.
+  '[data-recurrent] &:not([data-stacked])': {
+    paddingRight: theme.spacing(1.5),
+    [`@container (max-width: ${NARROW_MAX_WIDTH_PX}px)`]: { paddingRight: 0 },
+    [TOUCH_MEDIA]: { paddingRight: 0 },
+  },
+  // Inline (short events): wrap the title into the available height; the start time rides at the end.
+  '&:not([data-stacked])': titleLineClampSteps(false),
+  // Stacked (tall events): wrap the title, reserving one line for the time — unless too narrow to
+  // show it, where the title uses the full height (narrow steps win, declared last).
+  '&[data-stacked]': {
+    ...titleLineClampSteps(true),
+    ...titleLineClampSteps(false, ` and (max-width: ${NARROW_MAX_WIDTH_PX}px)`),
+  },
+  // Touch shows the title only, so it always wraps into the full height (overriding the steps above).
+  [TOUCH_MEDIA]: {
+    ...titleLineClampSteps(false),
+    '&[data-stacked]': titleLineClampSteps(false),
+  },
+  [HOVER_MEDIA]: {
+    '[data-editing] &': {
+      color: 'var(--event-on-surface-selected)',
+    },
+  },
 }));
 
 const TimeGridEventTime = styled('time', {
@@ -143,21 +281,30 @@ const TimeGridEventTime = styled('time', {
 })(({ theme }) => ({
   color: 'var(--event-on-surface-subtle-secondary)',
   fontWeight: theme.typography.fontWeightRegular,
-  fontSize: theme.typography.caption.fontSize,
-  lineHeight: 1.43,
-  '[data-editing] &': {
-    color: 'var(--event-on-surface-selected)',
-  },
-  '&[data-lines-clamp]': {
+  fontSize: timeFontSize,
+  lineHeight: `${LINE_BOX_PX}px`,
+  // Inline variant rides at the end of the title line; block variant gets its own clamped line,
+  // hidden when too narrow.
+  '&[data-variant="block"]': {
     ...linesClampStyles(1),
+    [`@container (max-width: ${NARROW_MAX_WIDTH_PX}px)`]: {
+      display: 'none',
+    },
+  },
+  // Reserve room for the recurring icon on the time line only while the icon is shown.
+  '[data-recurrent] &[data-variant="block"]': {
     paddingInlineEnd: theme.spacing(1.5),
   },
-  '@container (max-width: 50px & max-height: 50px)': {
-    display: 'none',
+  ...shortEventFontStyles(timeFontSize),
+  // Touch shows the title only.
+  [TOUCH_MEDIA]: {
+    '&[data-variant="inline"]': { display: 'none' },
+    '&[data-variant="block"]': { display: 'none' },
   },
-  '@container (max-height: 20px)': {
-    fontSize: '11px',
-    lineHeight: '11px',
+  [HOVER_MEDIA]: {
+    '[data-editing] &': {
+      color: 'var(--event-on-surface-selected)',
+    },
   },
 }));
 
@@ -169,11 +316,9 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   right: 3,
   bottom: 3,
   padding: theme.spacing(0.25),
+  fontSize: 'var(--EventCalendar-fontSize-recurringIcon, 1.25rem)',
   color: 'var(--event-on-surface-subtle-secondary)',
-  '[data-editing] &': {
-    color: 'var(--event-on-surface-selected)',
-  },
-  '@container (max-width: 50px)': {
+  [`@container (max-width: ${NARROW_MAX_WIDTH_PX}px)`]: {
     display: 'none',
   },
   '@container (max-height: 12px)': {
@@ -182,6 +327,15 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
     padding: 0,
     bottom: 0,
   },
+  // Touch shows the title only.
+  [TOUCH_MEDIA]: {
+    display: 'none',
+  },
+  [HOVER_MEDIA]: {
+    '[data-editing] &': {
+      color: 'var(--event-on-surface-selected)',
+    },
+  },
 }));
 
 const TimeGridEventResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
@@ -189,123 +343,209 @@ const TimeGridEventResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
   slot: 'TimeGridEventResizeHandler',
 })({
   position: 'absolute',
+  zIndex: 3,
+  cursor: 'ns-resize',
+  // Outside the media queries, so devices matching neither (`hover: none` + `pointer: fine`) still
+  // get a sized handle instead of a 0x0 box.
   height: 4,
   left: 0,
   right: 0,
-  zIndex: 3,
-  cursor: 'ns-resize',
-  opacity: 0,
-  '*:hover > &': {
-    opacity: 1,
-  },
   '&[data-start]': {
     top: 0,
   },
   '&[data-end]': {
     bottom: 0,
   },
+  // Mouse: the bar is revealed only when the event is hovered.
+  [HOVER_MEDIA]: {
+    opacity: 0,
+    '*:hover > &': {
+      opacity: 1,
+    },
+  },
+  // Touch: a circular dot with a large hit area, shown only once the event is armed.
+  [TOUCH_MEDIA]: {
+    ...getTouchResizeHandleStyles(),
+    display: 'none',
+    '[data-armed] > &': {
+      display: 'block',
+    },
+  },
 });
 
-export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
-  props: TimeGridEventProps,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
-  const { occurrence, variant, className, ...other } = props;
+// Non-interactive, so it can host the touch resize handles without becoming a focusable button.
+// The desktop-vs-touch look is split in CSS, with no JS device flag.
+const TimeGridEventPlaceholderRoot = styled(CalendarGrid.TimeEvent, {
+  name: 'MuiEventCalendar',
+  slot: 'TimeGridEventPlaceholder',
+})<{ palette?: PaletteName }>(({ theme }) => ({
+  ...getTimeGridEventRootStyles(theme),
+  padding: theme.spacing(0.5, 2, 0.5, 1.5),
+  backgroundColor: 'var(--event-surface-subtle-hover)',
+  color: 'var(--event-on-surface-subtle-primary)',
+  // The placeholder fill is lighter than a real event, so bump the time label to the primary tone for
+  // enough contrast (the time is hidden on touch, so this only affects the desktop creation preview).
+  [`& .${eventCalendarClasses.timeGridEventTime}`]: {
+    color: 'var(--event-on-surface-subtle-primary)',
+  },
+  '&[data-under-fifteen-minutes="true"]': {
+    padding: theme.spacing(0, 1),
+  },
+  // Mouse: a dashed outline.
+  [HOVER_MEDIA]: {
+    border: `1px dashed var(--event-on-surface-subtle-secondary)`,
+  },
+  // Touch: a solid accent outline + tighter padding, ready to host sizing handles.
+  [TOUCH_MEDIA]: {
+    padding: theme.spacing(0.5, 0.7),
+    outline: '2px solid var(--event-main)',
+    outlineOffset: '-2px',
+  },
+}));
 
-  // Context hooks
-  const store = useEventCalendarStoreContext();
-  const { classes } = useEventCalendarStyledContext();
-  // Selector hooks
-  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
-  const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
-  const isStartResizable = useStore(
-    store,
-    schedulerEventSelectors.isResizable,
-    occurrence.id,
-    'start',
-  );
-  const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
-  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+type EventCalendarClasses = ReturnType<typeof useEventCalendarStyledContext>['classes'];
 
-  // Feature hooks
+type TimeGridEventVariantProps = Omit<TimeGridEventProps, 'variant'>;
+
+/**
+ * Title / time / recurring-icon body, shared by the regular and placeholder variants. Kept as its own
+ * memoized component so a store-driven re-render of a variant (arming, gesture start/end) skips
+ * re-rendering the content when its inputs are unchanged.
+ */
+const TimeGridEventContent = React.memo(function TimeGridEventContent(props: {
+  occurrence: TimeGridEventProps['occurrence'];
+  // Tall events stack the title over the full time range; shorter ones show the start time inline.
+  // Width-driven degradation (dropping the time, wrapping the title) is handled in CSS.
+  isStacked: boolean;
+  isRecurring: boolean;
+  classes: EventCalendarClasses;
+}) {
+  const { occurrence, isStacked, isRecurring, classes } = props;
   const formatTime = useFormatTime();
 
-  const durationMs =
-    occurrence.displayTimezone.end.timestamp - occurrence.displayTimezone.start.timestamp;
-  const durationMinutes = durationMs / 60000;
-  const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
-  const isLessThan30Minutes = durationMinutes < 30;
-  const isLessThan15Minutes = durationMinutes <= 15;
-
-  const content = React.useMemo(() => {
-    return (
-      <React.Fragment>
-        {isLessThan30Minutes || isBetween30and60Minutes ? (
-          <TimeGridEventTitle className={classes.timeGridEventTitle}>
-            {occurrence.title}{' '}
-            <TimeGridEventTime className={classes.timeGridEventTime}>
-              {formatTime(occurrence.displayTimezone.start.value)}
-            </TimeGridEventTime>
+  return (
+    <React.Fragment>
+      {isStacked ? (
+        <React.Fragment>
+          <TimeGridEventTitle className={classes.timeGridEventTitle} data-stacked>
+            {occurrence.title}
           </TimeGridEventTitle>
-        ) : (
-          <React.Fragment>
-            <TimeGridEventTitle className={classes.timeGridEventTitle}>
-              {occurrence.title}
-            </TimeGridEventTitle>
-            <TimeGridEventTime className={classes.timeGridEventTime} data-lines-clamp>
-              {formatTime(occurrence.displayTimezone.start.value)} -{' '}
-              {formatTime(occurrence.displayTimezone.end.value)}
-            </TimeGridEventTime>
-          </React.Fragment>
-        )}
+          <TimeGridEventTime className={classes.timeGridEventTime} data-variant="block">
+            {formatTime(occurrence.displayTimezone.start.value)} -{' '}
+            {formatTime(occurrence.displayTimezone.end.value)}
+          </TimeGridEventTime>
+        </React.Fragment>
+      ) : (
+        <TimeGridEventTitle className={classes.timeGridEventTitle}>
+          {occurrence.title}{' '}
+          <TimeGridEventTime className={classes.timeGridEventTime} data-variant="inline">
+            {formatTime(occurrence.displayTimezone.start.value)}
+          </TimeGridEventTime>
+        </TimeGridEventTitle>
+      )}
 
-        {isRecurring && (
-          <TimeGridEventRecurringIcon
-            className={classes.timeGridEventRecurringIcon}
-            aria-hidden="true"
-            fontSize="small"
-          />
-        )}
-      </React.Fragment>
-    );
-  }, [
-    isBetween30and60Minutes,
-    isLessThan30Minutes,
-    occurrence.title,
-    occurrence.displayTimezone.start.value,
-    occurrence.displayTimezone.end.value,
-    formatTime,
+      {isRecurring && (
+        <TimeGridEventRecurringIcon
+          className={classes.timeGridEventRecurringIcon}
+          aria-hidden="true"
+        />
+      )}
+    </React.Fragment>
+  );
+});
+
+/**
+ * The resize/creation preview. Split out from the regular event so its two *global* subscriptions
+ * (`editingMode`, placeholder `type`) — which flip at every gesture and arm/disarm — live only here,
+ * instead of forcing every on-screen event to re-render at each gesture boundary.
+ */
+const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlaceholder(
+  props: TimeGridEventVariantProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { occurrence, className, ...other } = props;
+
+  const { classes } = useEventCalendarStyledContext();
+  const store = useEventCalendarStoreContext();
+  const {
     isRecurring,
-    classes,
-  ]);
+    isLessThan30Minutes,
+    isBetween30and60Minutes,
+    rootDataAttributes,
+    rootPositionProps,
+  } = useTimeGridEvent(occurrence);
 
-  const sharedProps = {
-    start: occurrence.displayTimezone.start,
-    end: occurrence.displayTimezone.end,
-    ref: forwardedRef,
-    style: {
-      '--first-index': occurrence.position.firstIndex,
-      '--last-index': occurrence.position.lastIndex,
-    } as React.CSSProperties,
-    ...other,
-    className: clsx(className, occurrence.className),
-  };
+  // Creation / internal-resize placeholders host sizing handles; move placeholders don't. Suppressed
+  // in `edit` mode where the form owns the times — matching the regular event (see `useTimeGridEvent`).
+  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
+  const placeholderType = useStore(store, schedulerOccurrencePlaceholderSelectors.type);
+  const placeholderHasResizeHandles =
+    (placeholderType === 'creation' || placeholderType === 'internal-resize') &&
+    editingMode !== 'edit';
 
-  if (variant === 'placeholder') {
-    return (
-      <TimeGridEventPlaceholder
-        aria-hidden={true}
-        data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
-        data-recurrent={isRecurring || undefined}
-        data-under-fifteen-minutes={isLessThan15Minutes || undefined}
-        data-palette={color}
-        {...sharedProps}
-        className={clsx(classes.timeGridEventPlaceholder, sharedProps.className)}
-      >
-        {content}
-      </TimeGridEventPlaceholder>
-    );
-  }
+  const isStacked = !isLessThan30Minutes && !isBetween30and60Minutes;
+
+  return (
+    <TimeGridEventPlaceholderRoot
+      isDraggable={false}
+      eventId={occurrence.id}
+      occurrenceKey={occurrence.key}
+      renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
+      data-armed={placeholderHasResizeHandles || undefined}
+      // Non-interactive keeps the preview out of the tab order without `aria-hidden`, which would
+      // hide a focusable node from assistive tech.
+      interactive={false}
+      {...rootDataAttributes}
+      {...rootPositionProps}
+      ref={forwardedRef}
+      {...other}
+      className={clsx(classes.timeGridEventPlaceholder, className, occurrence.className)}
+    >
+      {placeholderHasResizeHandles && (
+        <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="start" />
+      )}
+      <TimeGridEventContent
+        occurrence={occurrence}
+        isStacked={isStacked}
+        isRecurring={isRecurring}
+        classes={classes}
+      />
+      {placeholderHasResizeHandles && (
+        <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="end" />
+      )}
+    </TimeGridEventPlaceholderRoot>
+  );
+});
+
+/**
+ * A regular, rendered event. Subscribes only to its keyed (stable-`false` for inactive events)
+ * arm/edit selectors, so arming or resizing another event doesn't re-render it.
+ */
+const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
+  props: TimeGridEventVariantProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { occurrence, className, ...other } = props;
+
+  const { classes } = useEventCalendarStyledContext();
+  const store = useEventCalendarStoreContext();
+  const {
+    isRecurring,
+    isDraggable,
+    isStartResizable,
+    isEndResizable,
+    isLessThan30Minutes,
+    isBetween30and60Minutes,
+    rootDataAttributes,
+    rootPositionProps,
+  } = useTimeGridEvent(occurrence);
+
+  // Armed = this occurrence shows its action toolbar (touch). Touch styles reveal the resize dots +
+  // outline; inert on a mouse. Editing = the surface is open for it (either mode), for the selected look.
+  const isArmed = useStore(store, schedulerOtherSelectors.isEditedOccurrenceArmed, occurrence.key);
+  const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
+
+  const isStacked = !isLessThan30Minutes && !isBetween30and60Minutes;
 
   return (
     <TimeGridEventRoot
@@ -313,20 +553,39 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
-      data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
-      data-under-fifteen-minutes={isLessThan15Minutes || undefined}
-      data-recurrent={isRecurring || undefined}
-      data-palette={color}
-      {...sharedProps}
-      className={clsx(classes.timeGridEvent, sharedProps.className)}
+      data-armed={isArmed || undefined}
+      data-editing={isEditing || undefined}
+      {...rootDataAttributes}
+      {...rootPositionProps}
+      ref={forwardedRef}
+      {...other}
+      className={clsx(classes.timeGridEvent, className, occurrence.className)}
     >
       {isStartResizable && (
         <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="start" />
       )}
-      {content}
+      <TimeGridEventContent
+        occurrence={occurrence}
+        isStacked={isStacked}
+        isRecurring={isRecurring}
+        classes={classes}
+      />
       {isEndResizable && (
         <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="end" />
       )}
     </TimeGridEventRoot>
   );
+});
+
+export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
+  props: TimeGridEventProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { variant, ...other } = props;
+
+  if (variant === 'placeholder') {
+    return <TimeGridEventPlaceholder {...other} ref={forwardedRef} />;
+  }
+
+  return <TimeGridEventRegular {...other} ref={forwardedRef} />;
 });

@@ -9,11 +9,13 @@ import {
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useId } from '@base-ui/utils/useId';
-import { EventCalendarProps } from './EventCalendar.types';
+import type { EventCalendarProps } from './EventCalendar.types';
 import { EventDialogProvider } from '../internals/components/event-dialog';
+import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
+import { SchedulerSlotsProvider } from '../internals/components/SchedulerSlotsContext';
 import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
 import { EventCalendarStyledContext } from './EventCalendarStyledContext';
-import { EventDialogStyledContext } from '../internals/components/event-dialog/EventDialogStyledContext';
+import { EventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../internals/constants/defaultLocaleText';
 import { EventCalendarRoot } from './EventCalendarRoot';
 
@@ -33,7 +35,7 @@ const EventCalendar = React.forwardRef(function EventCalendar<
   const store = useEventCalendar(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { localeText, apiRef, ...other } = forwardedProps;
+  const { localeText, apiRef, slots, slotProps, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
   const schedulerId = useId();
@@ -48,25 +50,31 @@ const EventCalendar = React.forwardRef(function EventCalendar<
     [schedulerId, classes, mergedLocaleText],
   );
 
-  const dialogStyledContextValue = React.useMemo(
+  const editingStyledContextValue = React.useMemo(
     () => ({ schedulerId, classes, localeText: mergedLocaleText }),
     [schedulerId, classes, mergedLocaleText],
   );
 
+  const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
+
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
-        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
-          <EventDialogProvider>
-            <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-          </EventDialogProvider>
-        </EventDialogStyledContext.Provider>
+        <EventEditingStyledContext.Provider value={editingStyledContextValue}>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              <EventDialogProvider>
+                <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+              </EventDialogProvider>
+            </SchedulerSlotsProvider>
+          </SharedComponentsStyledContext.Provider>
+        </EventEditingStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarComponent;
 
-EventCalendar.propTypes = {
+EventCalendar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -111,6 +119,10 @@ EventCalendar.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * The collapsed resources. A resource is expanded unless included here with a `true` value.
+   */
+  collapsedResources: PropTypes.object,
+  /**
    * Data source for fetching events asynchronously.
    * When provided, events are fetched through the data source instead of the `events` prop.
    */
@@ -125,6 +137,12 @@ EventCalendar.propTypes = {
    * @default enUS (English)
    */
   dateLocale: PropTypes.object,
+  /**
+   * The resources initially collapsed.
+   * To render a controlled scheduler, use the `collapsedResources` prop.
+   * @default {} - all resources are expanded
+   */
+  defaultCollapsedResources: PropTypes.object,
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
@@ -189,8 +207,15 @@ EventCalendar.propTypes = {
     'red',
     'teal',
   ]),
+  /**
+   * Configures how events are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
+      canHaveMultipleResources: PropTypes.bool,
       duration: PropTypes.number,
       interaction: PropTypes.oneOf(['click', 'double-click']),
     }),
@@ -204,6 +229,9 @@ EventCalendar.propTypes = {
   eventModelStructure: PropTypes.object,
   /**
    * The events currently available in the calendar.
+   *
+   * Event models are compared by reference to avoid reprocessing unchanged events.
+   * Replace an event model with a new object when updating it instead of mutating it in place.
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
@@ -213,6 +241,19 @@ EventCalendar.propTypes = {
    * in the GitHub repository.
    */
   localeText: PropTypes.object,
+  /**
+   * Event handler called when the collapsed resources change.
+   */
+  onCollapsedResourcesChange: PropTypes.func,
+  /**
+   * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
+   * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
+   * `eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the
+   * occurrence is read-only (through the event, its resource or the `readOnly` prop) and the dialog
+   * opens in view-only mode, and `"edit"` otherwise.
+   * Call `eventDetails.cancel()` to keep it closed and handle the interaction in your own UI.
+   */
+  onEventEditingStart: PropTypes.func,
   /**
    * Callback fired when some event of the calendar change.
    */
@@ -248,7 +289,7 @@ EventCalendar.propTypes = {
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig: PropTypes.oneOfType([
     PropTypes.oneOf([false]),
@@ -286,6 +327,16 @@ EventCalendar.propTypes = {
    */
   showCurrentTimeIndicator: PropTypes.bool,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -297,6 +348,22 @@ EventCalendar.propTypes = {
    * The view currently displayed in the calendar.
    */
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
+  /**
+   * Configuration applied to each view, keyed by the view name.
+   * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the time grid.
+   * @example { week: { startTime: 8, endTime: 20 } }
+   */
+  viewConfig: PropTypes.shape({
+    day: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+    week: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+  }),
   /**
    * The views available in the calendar.
    * @default ["day", "week", "month", "agenda"]

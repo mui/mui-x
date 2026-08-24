@@ -11,6 +11,13 @@ export default mergeConfig(
         enabled: true,
         instances: [{ browser: 'chromium' }],
       },
+      exclude: [
+        '**/*.spec.{js,ts,tsx}',
+        '**/node_modules/**',
+        '**/dist/**',
+        // Docs-correctness guard uses Node-only modules (fs, typescript)
+        '**/docsCorrectnessGuard/**',
+      ],
     },
   }),
 );

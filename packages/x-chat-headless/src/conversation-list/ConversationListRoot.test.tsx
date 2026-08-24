@@ -221,7 +221,7 @@ describe('ConversationListRoot', () => {
     });
   });
 
-  it('supports roving focus with arrow keys and selects on Enter', async () => {
+  it('supports roving focus with arrow keys and selects on Enter and Space', async () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
@@ -261,6 +261,16 @@ describe('ConversationListRoot', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('active-conversation-id')).to.have.text('c3');
+    });
+
+    fireEvent.keyDown(options[2], { key: 'Home' });
+    options = screen.getAllByRole('option');
+    expect(document.activeElement).toBe(options[0]);
+
+    fireEvent.keyDown(options[0], { key: ' ' });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('active-conversation-id')).to.have.text('c1');
     });
   });
 

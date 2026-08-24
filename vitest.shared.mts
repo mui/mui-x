@@ -17,6 +17,7 @@ export const alias = [
     { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
     { lib: 'x-scheduler', plans: ['premium'] },
     { lib: 'x-scheduler-internals', plans: ['premium'] },
+    { lib: 'x-agent-tools' },
     { lib: 'x-internals' },
     { lib: 'x-internal-gestures' },
     { lib: 'x-license' },
@@ -58,8 +59,15 @@ export default defineConfig({
     alias,
   },
   test: {
-    globals: true,
     setupFiles: [fileURLToPath(new URL('test/setupVitest.ts', import.meta.url))],
+    // Inline so Vite resolves @mui/material's `react-transition-group/TransitionGroupContext`
+    // directory import (legacy `main`/`module`, no `exports`), which native ESM rejects.
+    // @TODO: Remove once https://github.com/mui/material-ui/pull/48645 is merged.
+    server: {
+      deps: {
+        inline: [/@mui\/material/, /react-transition-group/],
+      },
+    },
     // Required for some tests that contain early returns or conditional tests.
     passWithNoTests: true,
     env: {
@@ -88,6 +96,11 @@ export default defineConfig({
       headless: true,
       screenshotFailures: false,
       commands: {
+        async resetMousePosition(ctx) {
+          // Move the pointer out of the page. A pointer left over the content
+          // makes components react to hover during unrelated tests.
+          await ctx.page.mouse.move(10_000, 10_000);
+        },
         async setupCrashHandler(ctx) {
           ctx.page.on('crash', (page) => {
             console.error(`Browser page crashed! URL: ${page.url()}`);

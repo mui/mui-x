@@ -7,6 +7,7 @@ import type { DividerProps } from '@mui/material/Divider';
 import type { LinearProgressProps } from '@mui/material/LinearProgress';
 import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps } from '@mui/material/MenuItem';
+import type { ModalProps } from '@mui/material/Modal';
 import type { TextFieldProps } from '@mui/material/TextField';
 import type { SwitchProps } from '@mui/material/Switch';
 import type { ButtonProps } from '@mui/material/Button';
@@ -51,6 +52,9 @@ declare module '@mui/x-data-grid' {
   }
   interface BaseMenuItemPropsOverrides {
     material?: Partial<MenuItemProps>;
+  }
+  interface BaseModalPropsOverrides {
+    material?: Partial<ModalProps>;
   }
   interface BaseTextFieldPropsOverrides {
     material?: Partial<TextFieldProps>;

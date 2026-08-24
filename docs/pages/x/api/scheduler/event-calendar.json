@@ -14,10 +14,15 @@
     "canDragEventsFromTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "canDropEventsToTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "collapsedResources": { "type": { "name": "object" } },
     "dataSource": {
       "type": { "name": "shape", "description": "{ getEvents: func, persistEvents: func }" }
     },
     "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
+    "defaultCollapsedResources": {
+      "type": { "name": "object" },
+      "default": "{} - all resources are expanded"
+    },
     "defaultPreferences": {
       "type": {
         "name": "shape",
@@ -48,12 +53,20 @@
       },
       "default": "\"teal\""
     },
+    "eventCreation": {
+      "type": {
+        "name": "union",
+        "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
+      }
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
     },
     "localeText": { "type": { "name": "object" } },
+    "onCollapsedResourcesChange": { "type": { "name": "func" } },
+    "onEventEditingStart": { "type": { "name": "func" } },
     "onEventsChange": { "type": { "name": "func" } },
     "onPreferencesChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
@@ -70,13 +83,19 @@
         "name": "union",
         "description": "false<br>&#124;&nbsp;{ toggleAmpm?: bool, toggleEmptyDaysInAgenda?: bool, toggleWeekendVisibility?: bool, toggleWeekNumberVisibility?: bool, toggleWeekStartsOn?: bool }"
       },
-      "default": "{ toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }"
+      "default": "{ toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }"
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "resourceModelStructure": { "type": { "name": "object" } },
     "resources": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "shouldEventRequireResource": { "type": { "name": "bool" }, "default": "false" },
     "showCurrentTimeIndicator": { "type": { "name": "bool" }, "default": "true" },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -88,6 +107,12 @@
       "type": {
         "name": "enum",
         "description": "'agenda'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'week'"
+      }
+    },
+    "viewConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ day?: { endTime?: number, startTime?: number }, week?: { endTime?: number, startTime?: number } }"
       }
     },
     "views": {
@@ -104,6 +129,14 @@
   "imports": [
     "import { EventCalendar } from '@mui/x-scheduler/event-calendar';",
     "import { EventCalendar } from '@mui/x-scheduler';"
+  ],
+  "slots": [
+    {
+      "name": "eventDialogGeneralTab",
+      "description": "The content of the \"General\" tab of the event editing surface:\nthe dialog on regular views, the compact editing drawer on compact views.\nIt is rendered inside the tab panel, so it must not render a tab panel of its own.\nReturn a fragment rather than a wrapper element to keep the spacing between the sections.",
+      "default": "EventDialogGeneralTabContent",
+      "class": null
+    }
   ],
   "classes": [
     {
@@ -155,9 +188,69 @@
       "isGlobal": false
     },
     {
+      "key": "agendaViewWeekNumberLabel",
+      "className": "MuiEventCalendar-agendaViewWeekNumberLabel",
+      "description": "Styles applied to agenda view week number label elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "agendaViewWeekNumberRow",
+      "className": "MuiEventCalendar-agendaViewWeekNumberRow",
+      "description": "Styles applied to agenda view week number row elements.",
+      "isGlobal": false
+    },
+    {
       "key": "agendaViewYearAndMonthLabel",
       "className": "MuiEventCalendar-agendaViewYearAndMonthLabel",
       "description": "Styles applied to agenda view year and month label elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "anchoredEventToolbar",
+      "className": "MuiEventCalendar-anchoredEventToolbar",
+      "description": "Styles applied to the anchored (desktop) armed-event toolbar wrapper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactDayTimeGrid",
+      "className": "MuiEventCalendar-compactDayTimeGrid",
+      "description": "Styles applied to the compact (touch) day time grid root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactDayTimeGridContent",
+      "className": "MuiEventCalendar-compactDayTimeGridContent",
+      "description": "Styles applied to the compact (touch) day time grid content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawer",
+      "className": "MuiEventCalendar-compactEventDrawer",
+      "description": "Styles applied to the compact editing drawer root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerContent",
+      "className": "MuiEventCalendar-compactEventDrawerContent",
+      "description": "Styles applied to the compact editing drawer content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerReadonlyHeader",
+      "className": "MuiEventCalendar-compactEventDrawerReadonlyHeader",
+      "description": "Styles applied to the compact editing drawer read-only header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerReadonlyTitle",
+      "className": "MuiEventCalendar-compactEventDrawerReadonlyTitle",
+      "description": "Styles applied to the compact editing drawer read-only title element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventToolbarDock",
+      "className": "MuiEventCalendar-compactEventToolbarDock",
+      "description": "Styles applied to the compact (touch) armed-event toolbar dock element.",
       "isGlobal": false
     },
     {
@@ -401,6 +494,30 @@
       "isGlobal": false
     },
     {
+      "key": "eventContextMenu",
+      "className": "MuiEventCalendar-eventContextMenu",
+      "description": "Styles applied to the event context menu root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenuDeleteItem",
+      "className": "MuiEventCalendar-eventContextMenuDeleteItem",
+      "description": "Styles applied to the event context menu delete item element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenuEditItem",
+      "className": "MuiEventCalendar-eventContextMenuEditItem",
+      "description": "Styles applied to the event context menu edit item element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenuShowDetailsItem",
+      "className": "MuiEventCalendar-eventContextMenuShowDetailsItem",
+      "description": "Styles applied to the event context menu show details item element (read-only events).",
+      "isGlobal": false
+    },
+    {
       "key": "eventDialog",
       "className": "MuiEventCalendar-eventDialog",
       "description": "Styles applied to the event dialog root element.",
@@ -506,6 +623,12 @@
       "key": "eventDialogHeader",
       "className": "MuiEventCalendar-eventDialogHeader",
       "description": "Styles applied to the event dialog header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDialogHeaderActions",
+      "className": "MuiEventCalendar-eventDialogHeaderActions",
+      "description": "Styles applied to the event dialog header actions container element.",
       "isGlobal": false
     },
     {
@@ -745,7 +868,25 @@
     {
       "key": "eventSkeleton",
       "className": "MuiEventCalendar-eventSkeleton",
-      "description": "Styles applied to event skeleton elements.",
+      "description": "Styles applied to the event skeleton element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbar",
+      "className": "MuiEventCalendar-eventToolbar",
+      "description": "Styles applied to the armed-event toolbar root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbarDeleteButton",
+      "className": "MuiEventCalendar-eventToolbarDeleteButton",
+      "description": "Styles applied to the armed-event toolbar delete button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbarEditButton",
+      "className": "MuiEventCalendar-eventToolbarEditButton",
+      "description": "Styles applied to the armed-event toolbar edit button element.",
       "isGlobal": false
     },
     {
@@ -758,6 +899,18 @@
       "key": "headerToolbarActions",
       "className": "MuiEventCalendar-headerToolbarActions",
       "description": "Styles applied to the header toolbar actions element.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarCompactMenuButton",
+      "className": "MuiEventCalendar-headerToolbarCompactMenuButton",
+      "description": "Styles applied to the header toolbar compact menu button element (compact layout).",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarCompactTodayButton",
+      "className": "MuiEventCalendar-headerToolbarCompactTodayButton",
+      "description": "Styles applied to the header toolbar compact today button element (compact layout).",
       "isGlobal": false
     },
     {
@@ -800,6 +953,12 @@
       "key": "headerToolbarTodayButton",
       "className": "MuiEventCalendar-headerToolbarTodayButton",
       "description": "Styles applied to the header toolbar today button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarWeekNumber",
+      "className": "MuiEventCalendar-headerToolbarWeekNumber",
+      "description": "Styles applied to the header toolbar week number element.",
       "isGlobal": false
     },
     {
@@ -1097,6 +1256,72 @@
       "isGlobal": false
     },
     {
+      "key": "sidePanelDrawer",
+      "className": "MuiEventCalendar-sidePanelDrawer",
+      "description": "Styles applied to the side panel drawer paper (popup) element (compact layout).",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerBackdrop",
+      "className": "MuiEventCalendar-sidePanelDrawerBackdrop",
+      "description": "Styles applied to the side panel drawer backdrop element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerCloseButton",
+      "className": "MuiEventCalendar-sidePanelDrawerCloseButton",
+      "description": "Styles applied to the side panel drawer close button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerHeader",
+      "className": "MuiEventCalendar-sidePanelDrawerHeader",
+      "description": "Styles applied to the side panel drawer header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerPreferences",
+      "className": "MuiEventCalendar-sidePanelDrawerPreferences",
+      "description": "Styles applied to the side panel drawer preferences entry list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerPreferencesButton",
+      "className": "MuiEventCalendar-sidePanelDrawerPreferencesButton",
+      "description": "Styles applied to the side panel drawer preferences button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerPreferencesList",
+      "className": "MuiEventCalendar-sidePanelDrawerPreferencesList",
+      "description": "Styles applied to the side panel drawer collapsible preferences options list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerTitle",
+      "className": "MuiEventCalendar-sidePanelDrawerTitle",
+      "description": "Styles applied to the side panel drawer title element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerViewItem",
+      "className": "MuiEventCalendar-sidePanelDrawerViewItem",
+      "description": "Styles applied to side panel drawer view list item elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerViewList",
+      "className": "MuiEventCalendar-sidePanelDrawerViewList",
+      "description": "Styles applied to the side panel drawer view list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerViewport",
+      "className": "MuiEventCalendar-sidePanelDrawerViewport",
+      "description": "Styles applied to the side panel drawer root (modal) element.",
+      "isGlobal": false
+    },
+    {
       "key": "standaloneEvent",
       "className": "MuiEventCalendar-standaloneEvent",
       "description": "Styles applied to the standalone event element.",
@@ -1169,6 +1394,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler/src/event-calendar/EventCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/drag-interactions/\">Event Calendar - Drag Interaction</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/editing/\">Event Calendar - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/events/\">Event Calendar - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/localization/\">Event Calendar - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/navigation/\">Event Calendar - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/preferences/\">Event Calendar - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/resources/\">Event Calendar - Resources</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/drag-interactions/\">Event Calendar - Drag Interactions</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/editing/\">Event Calendar - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/events/\">Event Calendar - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/localization/\">Event Calendar - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/navigation/\">Event Calendar - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/preferences/\">Event Calendar - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/resources/\">Event Calendar - Resources</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>"
 }

@@ -1,11 +1,11 @@
-import { type ScatterChartProProps } from '../ScatterChartPro';
-import { type BarChartProProps } from '../BarChartPro';
-import { type HeatmapProps } from '../Heatmap/Heatmap';
-import { type LineChartProProps } from '../LineChartPro';
-import { type FunnelChartProps } from '../FunnelChart';
-import { type FunnelSectionProps } from '../FunnelChart/FunnelSection';
-import { type FunnelSectionLabelProps } from '../FunnelChart/FunnelSectionLabel';
-import { type SankeyChartProps } from '../SankeyChart/SankeyChart';
+import type { ScatterChartProProps } from '../ScatterChartPro';
+import type { BarChartProProps } from '../BarChartPro';
+import type { HeatmapProps } from '../Heatmap/Heatmap';
+import type { LineChartProProps } from '../LineChartPro';
+import type { FunnelChartProps } from '../FunnelChart';
+import type { FunnelSectionProps } from '../FunnelChart/FunnelSection';
+import type { FunnelSectionLabelProps } from '../FunnelChart/FunnelSectionLabel';
+import type { SankeyChartProps } from '../SankeyChart/SankeyChart';
 
 export interface ChartsProComponentsPropsList {
   // BarChartPro components

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
-import { GridColumnSortButton, type GridColumnSortButtonProps } from '../GridColumnSortButton';
+import { GridColumnSortButton } from '../GridColumnSortButton';
+import type { GridColumnSortButtonProps } from '../GridColumnSortButton';
 
 export interface GridColumnHeaderSortIconProps extends GridColumnSortButtonProps {}
 
@@ -15,7 +16,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
 
 const GridColumnHeaderSortIcon = React.memo(GridColumnHeaderSortIconRaw);
 
-GridColumnHeaderSortIconRaw.propTypes = {
+GridColumnHeaderSortIconRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

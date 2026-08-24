@@ -238,6 +238,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/focused-map-shape',
+    title: 'FocusedMapShape',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/focused-radar-mark',
     title: 'FocusedRadarMark',
   },
@@ -342,6 +347,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/line-plot',
     title: 'LinePlot',
+  },
+  {
+    pathname: '/x/api/charts/map-image-plot',
+    title: 'MapImagePlot',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/map-shape',

@@ -20,7 +20,10 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
@@ -183,6 +186,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/RadarChart/RadarChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>"
 }

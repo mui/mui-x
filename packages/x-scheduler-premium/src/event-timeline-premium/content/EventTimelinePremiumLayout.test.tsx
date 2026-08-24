@@ -1,0 +1,273 @@
+import * as React from 'react';
+import { act, screen, waitFor } from '@mui/internal-test-utils';
+import {
+  EventTimelinePremium,
+  eventTimelinePremiumClasses as classes,
+} from '@mui/x-scheduler-premium/event-timeline-premium';
+import {
+  createSchedulerRenderer,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  DEFAULT_TESTING_VISIBLE_DATE_STR,
+  EventBuilder,
+  ResourceBuilder,
+} from 'test/utils/scheduler';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { EventTimelinePremiumPresetConfig } from '@mui/x-scheduler-internals-premium/models';
+import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
+
+function getTitleColumnWidth(): number {
+  const grid = screen.getByRole('grid');
+  const container = grid.closest('section')!;
+  return parseFloat(container.style.getPropertyValue('--title-column-width'));
+}
+
+// Title column width is driven by ResizeObserver measurements on the rendered
+// title cells; jsdom doesn't implement layout, so these assertions only work in
+// the browser project.
+describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
+  const { render } = createSchedulerRenderer({
+    clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
+  });
+
+  function renderTimeline(
+    resources: SchedulerResource[],
+    hostWidth: number = 1200,
+    options: {
+      events?: SchedulerEvent[];
+      presetConfig?: EventTimelinePremiumPresetConfig;
+    } = {},
+  ) {
+    return render(
+      <div style={{ width: hostWidth, height: 600 }}>
+        <EventTimelinePremium
+          resources={resources}
+          events={options.events ?? []}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          preset="dayAndHour"
+          presets={['dayAndHour']}
+          presetConfig={options.presetConfig}
+        />
+      </div>,
+    );
+  }
+
+  describe('title column auto-sizing', () => {
+    it('should grow the title column to fit a longer resource title', async () => {
+      const short = ResourceBuilder.new().title('A').build();
+
+      const { rerender } = renderTimeline([short]);
+
+      let shortWidth = 0;
+      await waitFor(() => {
+        shortWidth = getTitleColumnWidth();
+        // ResizeObserver has fired and reported a non-default width.
+        expect(shortWidth).to.be.greaterThan(0);
+      });
+
+      rerender(
+        <div style={{ width: 1200, height: 600 }}>
+          <EventTimelinePremium
+            resources={[
+              ResourceBuilder.new()
+                .title('A very long resource title that should expand the title column')
+                .build(),
+            ]}
+            events={[]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            preset="dayAndHour"
+            presets={['dayAndHour']}
+          />
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(getTitleColumnWidth()).to.be.greaterThan(shortWidth);
+      });
+    });
+
+    it('should cap the title column at one quarter of the container width', async () => {
+      // A deliberately huge title would otherwise push the column past containerWidth/4.
+      const huge = ResourceBuilder.new().title('X'.repeat(500)).build();
+
+      const hostWidth = 1200;
+      renderTimeline([huge], hostWidth);
+
+      await waitFor(() => {
+        // Cap is containerWidth / 4. Allow a small tolerance: containerWidth is the
+        // measured section width which can be slightly less than the host due to
+        // borders, and the title column may also fall short of the cap when the
+        // header title contributes a wider scrollWidth than the resource title.
+        const width = getTitleColumnWidth();
+        const expectedCap = hostWidth / 4;
+        expect(width).to.be.greaterThan(0);
+        expect(width).to.be.lessThanOrEqual(expectedCap + 1);
+      });
+    });
+
+    it('should keep the title column at the minimum width for empty/short titles', async () => {
+      const tiny = ResourceBuilder.new().title('A').build();
+
+      renderTimeline([tiny]);
+
+      await waitFor(() => {
+        // The minWidth wired into useTitleColumnWidth is 50; the header label
+        // ("Resource") may push slightly above that, but the column must never
+        // collapse below the floor.
+        expect(getTitleColumnWidth()).to.be.greaterThanOrEqual(50);
+      });
+    });
+  });
+
+  describe('grid narrower than the viewport', () => {
+    // 4 days × 4 visible hours = 16 ticks × 64px = 1024px, so the grid plus the title
+    // column fits inside the 1200px host. The virtualizer stretches its row width to
+    // fill the viewport in that case; the events layer must keep the tick width instead,
+    // or events drift away from the header they are labelled by.
+    const PRESET_CONFIG = { dayAndHour: { startTime: 8, endTime: 12 } };
+
+    it('should align an event with its own day when the ticks do not fill the viewport', async () => {
+      const resource = ResourceBuilder.new().id('r1').title('A').build();
+      // The second visible day (Jul 4), spanning exactly that day's visible window.
+      const fullDay = EventBuilder.new()
+        .title('Full day')
+        .resource(resource)
+        .span('2025-07-04T08:00:00', '2025-07-04T12:00:00')
+        .build();
+
+      renderTimeline([resource], 1200, { events: [fullDay], presetConfig: PRESET_CONFIG });
+
+      await waitFor(() => {
+        expect(getTitleColumnWidth()).to.be.greaterThan(0);
+      });
+
+      const dayCell = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="day"]`,
+      )[1];
+      const event = document.querySelector<HTMLElement>(`.${classes.event}`)!;
+
+      const dayRect = dayCell.getBoundingClientRect();
+      const eventRect = event.getBoundingClientRect();
+      expect(eventRect.left).to.be.closeTo(dayRect.left, 1);
+      expect(eventRect.width).to.be.closeTo(dayRect.width, 1);
+    });
+  });
+
+  describe('grid with a vertical scrollbar', () => {
+    // `--row-width` reserves the scrollbar width on top of the columns. The events layer
+    // must still measure exactly the ticks, or every event drifts right by a fraction of
+    // the scrollbar, growing along the axis.
+    it('should align an event with its own day when the rows reserve a scrollbar', async () => {
+      const resources = Array.from({ length: 20 }, (_, i) =>
+        ResourceBuilder.new().id(`r${i}`).title(`R${i}`).build(),
+      );
+      // Last visible day (Jul 6), filling the second half of that day's window.
+      const lateEvent = EventBuilder.new()
+        .title('Late')
+        .resource(resources[0])
+        .span('2025-07-06T14:00:00', '2025-07-06T20:00:00')
+        .build();
+
+      render(
+        <div style={{ width: 1200, height: 300 }}>
+          <EventTimelinePremium
+            resources={resources}
+            events={[lateEvent]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            preset="dayAndHour"
+            presets={['dayAndHour']}
+            presetConfig={{ dayAndHour: { startTime: 8, endTime: 20 } }}
+          />
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(getTitleColumnWidth()).to.be.greaterThan(0);
+      });
+
+      // Scroll to the end so both the event and its day header are mounted.
+      const scroller = screen.getByRole('grid');
+      act(() => {
+        scroller.scrollLeft = scroller.scrollWidth;
+      });
+
+      let event: HTMLElement | null = null;
+      await waitFor(() => {
+        event = document.querySelector<HTMLElement>(`.${classes.event}`);
+        expect(event).not.to.equal(null);
+      });
+
+      const dayCells = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="day"]`,
+      );
+      const lastDay = dayCells[dayCells.length - 1].getBoundingClientRect();
+      const eventRect = event!.getBoundingClientRect();
+      // The event ends on the window edge, so it ends where its day cell does.
+      expect(eventRect.right).to.be.closeTo(lastDay.right, 1);
+    });
+  });
+
+  describe('scrollbar rendering', () => {
+    // The three virtual scrollbars (vertical, horizontal events, horizontal title)
+    // are the only elements inside the content section that combine
+    // `aria-hidden="true"` with `tabindex="-1"`. Filler/indicator overlays use one
+    // attribute or the other, not both, so this selector cleanly counts scrollbars.
+    function getScrollbars(): HTMLElement[] {
+      const grid = screen.getByRole('grid');
+      const container = grid.closest('section')!;
+      return Array.from(
+        container.querySelectorAll<HTMLElement>('[aria-hidden="true"][tabindex="-1"]'),
+      );
+    }
+
+    it('should not render any scrollbar when a single resource fits the viewport', async () => {
+      // Single short-title resource + `year` preset (30 ticks × 200px = 6000px). The host
+      // is wider than the content (and one row easily fits vertically), so neither axis
+      // should overflow.
+      const only = ResourceBuilder.new().title('A').build();
+
+      render(
+        <div style={{ width: 8000, height: 600 }}>
+          <EventTimelinePremium
+            resources={[only]}
+            events={[]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            preset="year"
+            presets={['year']}
+          />
+        </div>,
+      );
+
+      // First wait for the grid to mount and dimensions to settle.
+      await waitFor(() => {
+        expect(getTitleColumnWidth()).to.be.greaterThan(0);
+      });
+      // Then assert there is no overflow on either axis.
+      expect(getScrollbars()).to.have.length(0);
+    });
+
+    it('should render scrollbars when content overflows', async () => {
+      // Many resources + a narrow host force both vertical and horizontal overflow,
+      // so the vertical scrollbar and at least one horizontal scrollbar must mount.
+      const many = Array.from({ length: 50 }, (_, i) =>
+        ResourceBuilder.new().title(`Resource ${i}`).build(),
+      );
+
+      render(
+        <div style={{ width: 600, height: 400 }}>
+          <EventTimelinePremium
+            resources={many}
+            events={[]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            preset="dayAndMonth"
+            presets={['dayAndMonth']}
+          />
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(getScrollbars().length).to.be.greaterThanOrEqual(2);
+      });
+    });
+  });
+});

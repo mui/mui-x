@@ -2,43 +2,37 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type MakeOptional } from '@mui/x-internals/types';
+import type { MakeOptional } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
-import { type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
-import {
-  type ChartsAxisSlots,
-  type ChartsAxisSlotProps,
-  type XAxis,
-  type YAxis,
-} from '@mui/x-charts/internals';
+import type { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import type { ChartsAxisSlots, ChartsAxisSlotProps, XAxis, YAxis } from '@mui/x-charts/internals';
 import type { TooltipPropsOverrides } from '@mui/x-charts/models';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
+import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
-import {
-  ChartsLegend,
-  type ChartsLegendSlotProps,
-  type ChartsLegendSlots,
-} from '@mui/x-charts/ChartsLegend';
+import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
-import { type ChartsContainerProProps } from '../ChartsContainerPro';
-import { type HeatmapSeriesType } from '../models/seriesType/heatmap';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
+import type { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
-import { HeatmapTooltip, type HeatmapTooltipProps } from './HeatmapTooltip';
-import { type HeatmapItemSlotProps, type HeatmapItemSlots } from './HeatmapItem';
-import { type HeatmapPluginSignatures } from './Heatmap.plugins';
+import { HeatmapTooltip } from './HeatmapTooltip';
+import type { HeatmapTooltipProps } from './HeatmapTooltip';
+import type { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
+import type { HeatmapPluginSignatures } from './Heatmap.plugins';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import {
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
 import { FocusedHeatmapCell } from './FocusedHeatmapCell';
 import { useHeatmapProps } from './useHeatmapProps';
@@ -70,7 +64,7 @@ export interface HeatmapSlotProps
     ChartsLegendSlotProps,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {
-  tooltip?: Partial<HeatmapTooltipProps> & TooltipPropsOverrides;
+  tooltip?: WithDataAttributes<Partial<HeatmapTooltipProps> & TooltipPropsOverrides>;
 }
 
 export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
@@ -186,7 +180,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   );
 });
 
-Heatmap.propTypes = {
+Heatmap.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -239,7 +233,16 @@ Heatmap.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -341,7 +344,7 @@ Heatmap.propTypes = {
   /**
    * The callback fired when an item is clicked.
    *
-   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
+   * @param {ChartsActivationEvent<HTMLDivElement>} event The click event.
    * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,
@@ -458,6 +461,7 @@ Heatmap.propTypes = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -465,6 +469,7 @@ Heatmap.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -483,12 +488,16 @@ Heatmap.propTypes = {
       min: PropTypes.number,
       sizeMap: PropTypes.oneOfType([
         PropTypes.shape({
+          interpolator: PropTypes.oneOf(['linear', 'log', 'sqrt']),
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          size: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.number.isRequired),
-            PropTypes.func,
-          ]).isRequired,
+          size: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.func.isRequired,
           type: PropTypes.oneOf(['continuous']).isRequired,
         }),
         PropTypes.shape({

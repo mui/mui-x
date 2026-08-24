@@ -1,5 +1,6 @@
+import { describe, it, expect } from 'vitest';
 import scatterProcessor from './seriesProcessor';
-import { type SeriesProcessorParams } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { SeriesProcessorParams } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const seriesOrder = ['id1'];
 

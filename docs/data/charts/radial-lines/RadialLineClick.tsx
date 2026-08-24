@@ -5,11 +5,12 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import {
-  Unstable_RadialLineChart as RadialLineChart,
+  RadialLineChart,
   RadialLineSeries,
 } from '@mui/x-charts-premium/RadialLineChart';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { ChartsAxisData } from '@mui/x-charts/models';
+import { RadialLineItemIdentifier } from '@mui/x-charts-premium/models';
 
 const highlightScope = { highlight: 'item' } as const;
 
@@ -52,6 +53,7 @@ const radialChartParams = {
 };
 
 export default function RadialLineClick() {
+  const [itemData, setItemData] = React.useState<RadialLineItemIdentifier>();
   const [axisData, setAxisData] = React.useState<ChartsAxisData | null>();
 
   return (
@@ -64,6 +66,7 @@ export default function RadialLineClick() {
         <Box sx={{ flexGrow: 1 }}>
           <RadialLineChart
             {...radialChartParams}
+            onItemClick={(event, d) => setItemData(d)}
             onAxisClick={(event, d) => setAxisData(d)}
           />
         </Box>
@@ -81,13 +84,19 @@ export default function RadialLineClick() {
           <IconButton
             aria-label="reset"
             size="small"
-            onClick={() => setAxisData(null)}
+            onClick={() => {
+              setItemData(undefined);
+              setAxisData(null);
+            }}
           >
             <UndoOutlinedIcon fontSize="small" />
           </IconButton>
         </Box>
         <HighlightedCode
-          code={`// Data from axis click
+          code={`// Data from item click
+${itemData ? JSON.stringify(itemData, null, 2) : '// The data will appear here'}
+
+// Data from axis click
 ${axisData ? JSON.stringify(axisData, null, 2) : '// The data will appear here'}
 `}
           language="json"

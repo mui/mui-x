@@ -1,7 +1,9 @@
 import { styled } from '@mui/material/styles';
+import PropTypes from 'prop-types';
 import { selectorChartPolarCenter, useChartsContext } from '@mui/x-charts/internals';
 import { useRadialLinePlotData } from './useRadialLinePlotData';
-import { type RadialLineClasses, useUtilityClasses } from './radialLineClasses';
+import { useUtilityClasses } from './radialLineClasses';
+import type { RadialLineClasses } from './radialLineClasses';
 import { RadialLine } from './RadialLine';
 
 const RadialLinePlotRoot = styled('g', {
@@ -13,7 +15,7 @@ export interface RadialLinePlotProps {
   classes?: Partial<Pick<RadialLineClasses, 'line' | 'linePlot'>>;
 }
 
-export function RadialLinePlot(props: RadialLinePlotProps) {
+function RadialLinePlot(props: RadialLinePlotProps) {
   const { classes: inClasses } = props;
   const completedData = useRadialLinePlotData();
 
@@ -39,3 +41,13 @@ export function RadialLinePlot(props: RadialLinePlotProps) {
     </RadialLinePlotRoot>
   );
 }
+
+RadialLinePlot.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+} as any;
+
+export { RadialLinePlot };

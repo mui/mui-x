@@ -75,6 +75,9 @@
     },
     "dataSource": { "description": "Data source object." },
     "dataSourceCache": { "description": "Data source cache object." },
+    "dataSourceKeepPreviousData": {
+      "description": "If <code>true</code>, the previously displayed rows are kept visible while new rows are being fetched after pagination, sorting, or filtering changes. The loading overlay is rendered on top of the previous rows. Only applies to flat data; tree data and row grouping always reset the rows on refetch to keep the order consistent with the new response."
+    },
     "dataSourceRevalidateMs": {
       "description": "If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired. If the refetched rows are different from the current rows, the grid will update the rows. Set to <code>0</code> to disable polling."
     },
@@ -117,6 +120,12 @@
     "disableEval": {
       "description": "If <code>true</code>, <code>eval()</code> is not used for performance optimization."
     },
+    "disableFormulaAutocomplete": {
+      "description": "If <code>true</code>, the suggestion dropdown shown while editing a formula cell is disabled. Has no effect when <code>disableFormulas</code> is <code>true</code> or a <code>dataSource</code> is set."
+    },
+    "disableFormulas": {
+      "description": "If <code>true</code>, the formula evaluation is disabled: <code>=</code> cell values render as raw strings."
+    },
     "disableMultipleColumnsFiltering": {
       "description": "If <code>true</code>, filtering with multiple columns is disabled."
     },
@@ -144,6 +153,9 @@
     "experimentalFeatures": {
       "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, then the feature is fully disabled, and neither property nor method calls will have any effect."
     },
+    "featureDependencies": {
+      "description": "Injectable feature implementations. Import the formula feature from <code>@mui/x-data-grid-premium/formula</code> and pass it here to enable formula evaluation — the feature is not bundled with the grid itself. The value is read on the first render and must not change afterwards."
+    },
     "filterDebounceMs": {
       "description": "The milliseconds delay to wait after a keystroke before triggering filtering."
     },
@@ -151,6 +163,12 @@
       "description": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side."
     },
     "filterModel": { "description": "Set the filter model of the Data Grid." },
+    "formulaA1Notation": {
+      "description": "If <code>true</code>, formulas can be entered and are displayed using A1 notation (<code>=A1 + B2</code>) while still being stored in the canonical syntax. A leftmost row-number column and column-letter header adornments are shown. Has no effect when <code>disableFormulas</code> is <code>true</code> or a <code>dataSource</code> is set."
+    },
+    "formulaFunctions": {
+      "description": "Functions available to formulas, keyed by name. The prop replaces the built-in set: spread <code>GRID_FORMULA_FUNCTIONS</code> (imported from <code>@mui/x-data-grid-premium/formula</code>) to extend it. Has no effect unless the formula feature is provided through <code>featureDependencies</code>."
+    },
     "getAggregationPosition": {
       "description": "Determines the position of an aggregated value.",
       "typeDescriptions": {
@@ -1471,6 +1489,26 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the edit long text cell value element"
     },
+    "editMultiSelectCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell root element"
+    },
+    "editMultiSelectCellChip": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each chip in the edit multi-select cell"
+    },
+    "editMultiSelectCellOverflow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overflow &quot;+N&quot; chip in the edit multi-select cell"
+    },
+    "editMultiSelectCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell popper content"
+    },
+    "editMultiSelectCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell popup"
+    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
@@ -1506,6 +1544,18 @@
     "footerContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer container element"
+    },
+    "formulaBar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the formula bar root element (Premium formulas)"
+    },
+    "formulaColumnHeaderLetter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the A1-notation column-letter adornment in the column header (Premium formulas)"
+    },
+    "formulaRowNumberCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the cells of the A1-notation row-number column (Premium formulas)"
     },
     "groupingCriteriaCell": {
       "description": "Styles applied to the root element of the grouping criteria cell"
@@ -1576,6 +1626,26 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the menu icon element",
       "conditions": "the menu is open"
+    },
+    "multiSelectCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell root element"
+    },
+    "multiSelectCellChip": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each chip in the multi-select cell"
+    },
+    "multiSelectCellOverflow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overflow &quot;+N&quot; chip in the multi-select cell"
+    },
+    "multiSelectCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell popper content"
+    },
+    "multiSelectCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell expand popup"
     },
     "overlay": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1962,6 +2032,7 @@
     "baseLinearProgress": "The custom LinearProgress component used in the grid.",
     "baseMenuItem": "The custom MenuItem component used in the grid.",
     "baseMenuList": "The custom MenuList component used in the grid.",
+    "baseModal": "The custom Modal component used in the grid.",
     "basePagination": "The custom Pagination component used in the grid.",
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",

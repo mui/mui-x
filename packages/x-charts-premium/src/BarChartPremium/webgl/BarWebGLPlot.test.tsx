@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import { BarChartPremium } from '../BarChartPremium';
 
 describe('<BarWebGLPlot />', () => {
@@ -55,6 +56,53 @@ describe('<BarWebGLPlot />', () => {
           layout="horizontal"
           series={[{ data: [1, 2, 3, 4, 5] }]}
           yAxis={[{ scaleType: 'band', data: ['a', 'b', 'c', 'd', 'e'] }]}
+        />,
+      ),
+    ).not.to.throw();
+  });
+
+  it.skipIf(isJSDOM)('should render range bar series with the webgl renderer', () => {
+    expect(() =>
+      render(
+        <BarChartPremium
+          width={400}
+          height={300}
+          renderer="webgl"
+          series={[
+            {
+              type: 'rangeBar',
+              data: [
+                [1, 4],
+                [2, 5],
+                [3, 6],
+              ],
+            },
+          ]}
+          xAxis={[{ scaleType: 'band', data: ['a', 'b', 'c'] }]}
+        />,
+      ),
+    ).not.to.throw();
+  });
+
+  it.skipIf(isJSDOM)('should render mixed bar and range bar series with the webgl renderer', () => {
+    expect(() =>
+      render(
+        <BarChartPremium
+          width={400}
+          height={300}
+          renderer="webgl"
+          series={[
+            { data: [1, 2, 3] },
+            {
+              type: 'rangeBar',
+              data: [
+                [2, 4],
+                [3, 5],
+                [1, 3],
+              ],
+            },
+          ]}
+          xAxis={[{ scaleType: 'band', data: ['a', 'b', 'c'] }]}
         />,
       ),
     ).not.to.throw();

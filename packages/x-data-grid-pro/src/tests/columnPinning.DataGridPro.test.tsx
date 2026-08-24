@@ -1,14 +1,16 @@
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
-  type GridApi,
   useGridApiRef,
-  type DataGridProProps,
   gridClasses,
   GridPinnedColumnPosition,
-  type GridColumnGroupingModel,
-  type GridColDef,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridApi,
+  DataGridProProps,
+  GridColumnGroupingModel,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import {
@@ -30,6 +32,7 @@ import {
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 // TODO Move to utils
 // Fix https://github.com/mui/mui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec

@@ -1,11 +1,13 @@
 import { createRenderer, act } from '@mui/internal-test-utils';
-import { DataGridPro, type GridColDef, type GridColumnGroupingModel } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid-pro';
 import {
   getActiveCell,
   getActiveColumnHeader,
   getCell,
   getColumnHeaderCell,
 } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 120 },

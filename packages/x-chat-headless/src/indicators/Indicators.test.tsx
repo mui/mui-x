@@ -114,6 +114,7 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
     items,
     overlay,
     onReachTop,
+    onReachBottom,
     renderItem,
     slotProps,
     slots,
@@ -125,6 +126,7 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
   void items;
   void overlay;
   void onReachTop;
+  void onReachBottom;
   void ownerState;
   void renderItem;
   void slotProps;

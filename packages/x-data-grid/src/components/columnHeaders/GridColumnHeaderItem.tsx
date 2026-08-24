@@ -7,10 +7,11 @@ import capitalize from '@mui/utils/capitalize';
 import useId from '@mui/utils/useId';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
-import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
+import { focusElement } from '../../utils/focusElement';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import type { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
 import { getColumnMenuItemKeys } from '../../hooks/features/columnMenu/getColumnMenuItemKeys';
 import type { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
@@ -122,8 +123,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     pinnedOffset,
   } = props;
   const apiRef = useGridPrivateApiContext();
+  const configuration = useGridConfiguration();
   const rootProps = useGridRootProps();
   const isRtl = useRtl();
+  const adornment = configuration.hooks.useColumnHeaderAdornment(colDef.field);
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const columnMenuId = useId();
   const columnMenuButtonId = useId();
@@ -311,13 +314,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       if (!elementToFocus) {
         return;
       }
-      if (doesSupportPreventScroll()) {
-        elementToFocus.focus({ preventScroll: true });
-      } else {
-        const scrollPosition = apiRef.current.getScrollPosition();
-        elementToFocus.focus();
-        apiRef.current.scroll(scrollPosition);
-      }
+      focusElement(elementToFocus, apiRef);
     }
   }, [apiRef, hasFocus]);
 
@@ -354,6 +351,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       separatorSide={separatorSide}
       isDraggable={isDraggable}
       headerComponent={headerComponent}
+      adornment={adornment}
       description={colDef.description}
       elementId={colDef.field}
       width={colDef.computedWidth}
@@ -372,7 +370,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 }
 
-GridColumnHeaderItem.propTypes = {
+GridColumnHeaderItem.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

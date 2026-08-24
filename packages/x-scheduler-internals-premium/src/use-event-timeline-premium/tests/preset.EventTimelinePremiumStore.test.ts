@@ -1,6 +1,8 @@
 import { spy } from 'sinon';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const DEFAULT_PARAMS = {
@@ -10,6 +12,74 @@ const DEFAULT_PARAMS = {
 };
 
 describe('Preset - EventTimelinePremiumStore', () => {
+  beforeEach(() => {
+    clearWarningsCache();
+  });
+
+  describe('presetConfig validation', () => {
+    it('should warn about an invalid hour range even when the preset is not active', () => {
+      // The selector only resolves the rendered preset, so without eager validation
+      // the typo would stay silent until an end user switches to dayAndHour.
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore(
+          {
+            ...DEFAULT_PARAMS,
+            defaultPreset: 'dayAndMonth',
+            presetConfig: { dayAndHour: { startTime: 9, endTime: 9 } },
+          },
+          adapter,
+        );
+      }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` received an invalid hour range']);
+    });
+
+    it('should not warn when a known preset is configured but currently not in presets', () => {
+      // A wrapper can configure `dayAndHour` once while a screen or a responsive mode
+      // narrows `presets`. The Event Calendar accepts `viewConfig` for absent views too.
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore(
+          {
+            ...DEFAULT_PARAMS,
+            defaultPreset: 'dayAndMonth',
+            presets: ['dayAndMonth', 'year'] as EventTimelinePremiumPreset[],
+            presetConfig: { dayAndHour: { startTime: 8, endTime: 20 } },
+          },
+          adapter,
+        );
+      }).not.toWarnDev();
+    });
+
+    it('should still validate the hour range of a preset that is not in presets', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore(
+          {
+            ...DEFAULT_PARAMS,
+            defaultPreset: 'dayAndMonth',
+            presets: ['dayAndMonth', 'year'] as EventTimelinePremiumPreset[],
+            presetConfig: { dayAndHour: { startTime: 20, endTime: 8 } },
+          },
+          adapter,
+        );
+      }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` received an invalid hour range']);
+    });
+
+    it('should warn when a presetConfig key is not a known preset', () => {
+      // Only reachable from JavaScript: the type has `dayAndHour` as its single key.
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore(
+          {
+            ...DEFAULT_PARAMS,
+            presetConfig: { dayAndHours: { startTime: 8, endTime: 20 } } as any,
+          },
+          adapter,
+        );
+      }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHours` is not a known preset']);
+    });
+  });
+
   describe('Method: setPreset', () => {
     it('should update preset and call onPresetChange when value changes and is uncontrolled', () => {
       const onPresetChange = spy();

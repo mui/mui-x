@@ -1,5 +1,11 @@
 export enum TimelineGridEventDataAttributes {
   /**
+   * Identifies the event occurrence; used by keyboard navigation to find an
+   * event in the DOM and to look it up in the row's full occurrence list when
+   * focus needs to move to a not-yet-rendered (virtualized-out) sibling.
+   */
+  occurrenceKey = 'data-occurrence-key',
+  /**
    * Present when the event start date is in the past.
    */
   started = 'data-started',
@@ -16,11 +22,18 @@ export enum TimelineGridEventDataAttributes {
    */
   resizing = 'data-resizing',
   /**
-   * Present when the event starts before the visible timeline range.
+   * Present when the event is hovered as a valid target of the pending
+   * create-dependency gesture.
+   */
+  dependencyDropTarget = 'data-dependency-drop-target',
+  /**
+   * Present when the event's start does not render at its real position: it is before
+   * the visible timeline range, or inside the hours the preset config hides.
    */
   startingBeforeEdge = 'data-starting-before-edge',
   /**
-   * Present when the event ends after the visible timeline range.
+   * Present when the event's end does not render at its real position: it is after the
+   * visible timeline range, or inside the hours the preset config hides.
    */
   endingAfterEdge = 'data-ending-after-edge',
 }

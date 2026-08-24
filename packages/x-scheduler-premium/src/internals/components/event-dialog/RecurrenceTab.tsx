@@ -14,11 +14,12 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
-import {
+import type {
   RecurringEventFrequency,
   RecurringEventPresetKey,
   RecurringEventByDayValue,
   RecurringEventWeekDayCode,
+  SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -29,14 +30,16 @@ import {
   schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
+import type { EndsSelection } from '@mui/x-scheduler/internals';
 import {
-  useEventDialogStyledContext,
-  ControlledValue,
-  EndsSelection,
+  useEventEditingStyledContext,
+  useEventDialogFormContext,
+  useEventDialogFormField,
   getEndsSelectionFromRRule,
   formatDayOfMonthAndMonthFullLetter,
   EventDialogTabPanel,
   EventDialogTabContent,
+  getWeekdayToken,
 } from '@mui/x-scheduler/internals';
 
 const SectionHeaderTitle = styled('legend', {
@@ -55,6 +58,8 @@ const RecurrenceSelectorContainer = styled('div', {
   slot: 'RecurrenceSelectorContainer',
 })(({ theme }) => ({
   display: 'inline-flex',
+  // Wrap day-of-week toggles instead of overflowing in a narrow surface (e.g. mobile drawer).
+  flexWrap: 'wrap',
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderRadius: theme.shape.borderRadius,
   width: 'fit-content',
@@ -115,6 +120,7 @@ const InlineRow = styled('div', {
 })({
   display: 'flex',
   alignItems: 'center',
+  flexWrap: 'wrap',
   gap: 8,
 });
 
@@ -175,23 +181,29 @@ const SmallNumberField = styled(TextField, {
 
 interface RecurrenceTabProps {
   occurrence: SchedulerRenderableEventOccurrence;
-  controlled: ControlledValue;
-  setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
   tabValue: string;
 }
 
 export function RecurrenceTab(props: RecurrenceTabProps) {
-  const { occurrence, controlled, setControlled, tabValue } = props;
+  const { occurrence, tabValue } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
+  const formStore = useEventDialogFormContext();
   const repeatEveryLabelId = `${schedulerId}-recurrence-repeat-every-label`;
   const repeatOnLabelId = `${schedulerId}-recurrence-repeat-on-label`;
   const endsAfterLabelId = `${schedulerId}-recurrence-ends-after-label`;
   const endsAfterDescriptionId = `${schedulerId}-recurrence-ends-after-description`;
   const endsUntilLabelId = `${schedulerId}-recurrence-ends-until-label`;
+
+  // Form fields
+  const { value: recurrenceSelection } = useEventDialogFormField<
+    RecurringEventPresetKey | null | 'custom'
+  >('recurrenceSelection');
+  const { value: rruleDraft } =
+    useEventDialogFormField<SchedulerProcessedEventRecurrenceRule>('rruleDraft');
 
   // Selector hooks
   const isPropertyReadOnly = useStore(
@@ -199,7 +211,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     schedulerEventSelectors.isPropertyReadOnly,
     occurrence.id,
   );
-  const inputsDisabled = controlled.recurrenceSelection === null || isPropertyReadOnly('rrule');
+  const inputsDisabled = recurrenceSelection === null || isPropertyReadOnly('rrule');
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
   const monthlyRef = React.useMemo(
@@ -212,7 +224,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   );
 
   // Form-state drafts: every preset carries both `byDay` and `byMonthDay` (empty when
-  // not used) so the controlled form keeps a consistent shape as the user switches presets.
+  // not used) so the `rruleDraft` value keeps a consistent shape as the user switches presets.
   // Differs from `computePresets`, which only includes the fields each preset actually serializes.
   const presetDraftMap = React.useMemo(
     () => ({
@@ -233,19 +245,18 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     newSelection: RecurringEventPresetKey | null | 'custom',
   ) => {
     if (newSelection === 'custom') {
-      setControlled((prev) => ({ ...prev, recurrenceSelection: 'custom' }));
+      formStore.setValue('recurrenceSelection', 'custom');
       return;
     }
-    const rruleDraft = newSelection
+    const newDraft = newSelection
       ? presetDraftMap[newSelection]
       : { freq: 'WEEKLY' as const, interval: 1, byDay: [], byMonthDay: [] };
-    setControlled((prev) => ({ ...prev, recurrenceSelection: newSelection, rruleDraft }));
+    formStore.setValues({ recurrenceSelection: newSelection, rruleDraft: newDraft });
   };
 
   const handleChangeInterval = (event: React.ChangeEvent<HTMLInputElement>) => {
     const intervalValue = Number(event.currentTarget.value || 1);
-    setControlled((prev) => ({
-      ...prev,
+    formStore.setValues((prev) => ({
       recurrenceSelection: 'custom',
       rruleDraft: { ...prev.rruleDraft, interval: intervalValue },
     }));
@@ -255,27 +266,23 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     if (newFrequency == null) {
       return;
     }
-    setControlled((prev) => {
-      // When switching frequency, clear byDay/byMonthDay to avoid stale values
-      // from a different frequency leaking (e.g. monthly ordinal "2TU" into weekly)
-      return {
-        ...prev,
-        recurrenceSelection: 'custom',
-        rruleDraft: {
-          ...prev.rruleDraft,
-          freq: newFrequency,
-          byDay: newFrequency === 'WEEKLY' ? [monthlyRef.code] : [],
-          byMonthDay: newFrequency === 'MONTHLY' ? [monthlyRef.dayOfMonth] : [],
-        },
-      };
-    });
+    // When switching frequency, clear byDay/byMonthDay to avoid stale values
+    // from a different frequency leaking (e.g. monthly ordinal "2TU" into weekly)
+    formStore.setValues((prev) => ({
+      recurrenceSelection: 'custom',
+      rruleDraft: {
+        ...prev.rruleDraft,
+        freq: newFrequency,
+        byDay: newFrequency === 'WEEKLY' ? [monthlyRef.code] : [],
+        byMonthDay: newFrequency === 'MONTHLY' ? [monthlyRef.dayOfMonth] : [],
+      },
+    }));
   };
 
   const handleEndsChange = (endsSelection: EndsSelection) => {
     switch (endsSelection) {
       case 'until': {
-        setControlled((prev) => ({
-          ...prev,
+        formStore.setValues((prev) => ({
           recurrenceSelection: 'custom',
           rruleDraft: {
             ...prev.rruleDraft,
@@ -286,8 +293,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         break;
       }
       case 'after': {
-        setControlled((prev) => ({
-          ...prev,
+        formStore.setValues((prev) => ({
           recurrenceSelection: 'custom',
           rruleDraft: {
             ...prev.rruleDraft,
@@ -299,9 +305,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       }
       case 'never':
       default: {
-        setControlled((prev) => {
+        formStore.setValues((prev) => {
           const { count, until, ...rest } = prev.rruleDraft;
-          return { ...prev, recurrenceSelection: 'custom', rruleDraft: rest };
+          return { recurrenceSelection: 'custom', rruleDraft: rest };
         });
         break;
       }
@@ -310,8 +316,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const handleChangeCount = (event: React.ChangeEvent<HTMLInputElement>) => {
     const countValue = Number(event.currentTarget.value || 1);
-    setControlled((prev) => ({
-      ...prev,
+    formStore.setValues((prev) => ({
       recurrenceSelection: 'custom',
       rruleDraft: { ...prev.rruleDraft, count: countValue },
     }));
@@ -319,23 +324,21 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const handleChangeUntil = (event: React.ChangeEvent<HTMLInputElement>) => {
     const untilValue = event.currentTarget.value;
-    setControlled((prev) => ({
-      ...prev,
+    formStore.setValues((prev) => ({
       recurrenceSelection: 'custom',
       rruleDraft: { ...prev.rruleDraft, until: adapter.date(untilValue, 'default') },
     }));
   };
 
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
-    setControlled((prev) => {
+    formStore.setValues((prev) => {
       const byDay = prev.rruleDraft.byDay ?? [];
       const isRemoving = byDay.includes(dayCode);
       if (isRemoving && byDay.length === 1) {
-        return prev;
+        return {};
       }
       const next = isRemoving ? byDay.filter((d) => d !== dayCode) : [...byDay, dayCode];
       return {
-        ...prev,
         recurrenceSelection: 'custom',
         rruleDraft: { ...prev.rruleDraft, byDay: next },
       };
@@ -345,30 +348,30 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const handleChangeMonthlyGroup = (next: string[]) => {
     const nextKey = next[0];
 
-    setControlled((prev) => {
-      if (nextKey === 'byDay') {
-        const byDayValue = `${monthlyRef.ord}${monthlyRef.code}` as RecurringEventByDayValue;
+    if (nextKey === 'byDay') {
+      const byDayValue = `${monthlyRef.ord}${monthlyRef.code}` as RecurringEventByDayValue;
+      formStore.setValues((prev) => {
         const { byMonthDay, ...rest } = prev.rruleDraft;
         return {
-          ...prev,
           recurrenceSelection: 'custom',
           rruleDraft: { ...rest, byDay: [byDayValue] },
         };
-      }
+      });
+      return;
+    }
+    formStore.setValues((prev) => {
       const { byDay, ...rest } = prev.rruleDraft;
       return {
-        ...prev,
         recurrenceSelection: 'custom',
         rruleDraft: { ...rest, byMonthDay: [monthlyRef.dayOfMonth] },
       };
     });
   };
 
-  const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(
-    controlled.rruleDraft,
-  );
+  const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(rruleDraft);
 
-  const weekday = adapter.format(occurrence.displayTimezone.start.value, 'weekday');
+  const weekday = getWeekdayToken(adapter, occurrence.displayTimezone.start.value);
+  const weekdayName = adapter.format(occurrence.displayTimezone.start.value, 'weekday');
   const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(
     occurrence.displayTimezone.start.value,
     adapter,
@@ -381,7 +384,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     { label: `${localeText.recurrenceNoRepeat}`, value: null },
     { label: `${localeText.recurrenceDailyPresetLabel}`, value: 'DAILY' },
     {
-      label: `${localeText.recurrenceWeeklyPresetLabel(weekday)}`,
+      label: `${localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName })}`,
       value: 'WEEKLY',
     },
     {
@@ -453,9 +456,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     ];
   }, [adapter, monthlyRef.date, monthlyRef.dayOfMonth, monthlyRef.ord, localeText, weekday]);
 
-  const monthlyMode: 'byMonthDay' | 'byDay' = controlled.rruleDraft.byDay?.length
-    ? 'byDay'
-    : 'byMonthDay';
+  const monthlyMode: 'byMonthDay' | 'byDay' = rruleDraft.byDay?.length ? 'byDay' : 'byMonthDay';
 
   return (
     <EventDialogTabPanel
@@ -474,7 +475,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
             labelId={`${schedulerId}-recurrence-preset-label`}
             name="recurrencePreset"
             label={localeText.recurrenceMainSelectCustomLabel}
-            value={controlled.recurrenceSelection ?? 'no-repeat'}
+            value={recurrenceSelection ?? 'no-repeat'}
             onChange={(event) => {
               const value = event.target.value;
               handleRecurrenceSelectionChange(
@@ -508,14 +509,14 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 className={classes.eventDialogSmallNumberField}
                 type="number"
                 slotProps={{ htmlInput: { min: 1, 'aria-labelledby': repeatEveryLabelId } }}
-                value={controlled.rruleDraft.interval}
+                value={rruleDraft.interval}
                 onChange={handleChangeInterval}
                 disabled={inputsDisabled}
                 size="small"
               />
               <FrequencySelect
                 className={classes.eventDialogFrequencySelect}
-                value={controlled.rruleDraft.freq}
+                value={rruleDraft.freq}
                 onChange={(event) =>
                   handleChangeFrequency(event.target.value as RecurringEventFrequency)
                 }
@@ -532,7 +533,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               </FrequencySelect>
             </InlineRow>
 
-            {controlled.rruleDraft.freq === 'WEEKLY' && (
+            {rruleDraft.freq === 'WEEKLY' && (
               <InlineRow className={classes.eventDialogInlineRow}>
                 <RepeatSectionLabel
                   id={repeatOnLabelId}
@@ -552,7 +553,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                       className={classes.eventDialogWeekDaySelectorCheckbox}
                       icon={<span>{label}</span>}
                       checkedIcon={<span>{label}</span>}
-                      checked={controlled.rruleDraft.byDay?.includes(dayValue) ?? false}
+                      checked={rruleDraft.byDay?.includes(dayValue) ?? false}
                       disabled={inputsDisabled}
                       onChange={() => handleChangeWeeklyDays(dayValue)}
                       slotProps={{ input: { 'aria-label': ariaLabel } }}
@@ -562,7 +563,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               </InlineRow>
             )}
 
-            {controlled.rruleDraft.freq === 'MONTHLY' && (
+            {rruleDraft.freq === 'MONTHLY' && (
               <InlineRow className={classes.eventDialogInlineRow}>
                 <RepeatSectionLabel
                   id={repeatOnLabelId}
@@ -631,7 +632,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                     'aria-describedby': endsAfterDescriptionId,
                   },
                 }}
-                value={customEndsValue === 'after' ? (controlled.rruleDraft.count ?? 1) : 1}
+                value={customEndsValue === 'after' ? (rruleDraft.count ?? 1) : 1}
                 onChange={handleChangeCount}
                 disabled={inputsDisabled || customEndsValue !== 'after'}
                 size="small"
@@ -655,9 +656,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               <TextField
                 type="date"
                 value={
-                  customEndsValue === 'until' &&
-                  adapter.isValid(controlled.rruleDraft.until ?? null)
-                    ? adapter.formatByString(controlled.rruleDraft.until!, 'yyyy-MM-dd')
+                  customEndsValue === 'until' && adapter.isValid(rruleDraft.until ?? null)
+                    ? adapter.formatByString(rruleDraft.until!, 'yyyy-MM-dd')
                     : ''
                 }
                 onChange={handleChangeUntil}

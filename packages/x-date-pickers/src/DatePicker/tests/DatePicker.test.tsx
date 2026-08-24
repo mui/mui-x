@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
+import type { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
 import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
+import { describe, it, expect } from 'vitest';
 
 describe('<DatePicker />', () => {
   const { render } = createPickerRenderer();

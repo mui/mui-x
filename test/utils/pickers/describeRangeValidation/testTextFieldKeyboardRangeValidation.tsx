@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { act } from '@mui/internal-test-utils/createRenderer';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (
@@ -27,7 +27,6 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
   const { componentFamily, render, fieldType, withDate, withTime, setValue } = getOptions();
 
   describe.skipIf(componentFamily !== 'field' || !setValue)('text field keyboard:', () => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     const setValue = getOptions().setValue!;
 
     it('should not accept end date prior to start state', () => {

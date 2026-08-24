@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-internals-premium",
-  "version": "9.0.0-alpha.7",
+  "version": "9.0.0-beta.10",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Scheduler internals.",
   "license": "SEE LICENSE IN LICENSE",
@@ -38,9 +38,10 @@
     "big-calendar"
   ],
   "scripts": {
-    "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
-    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+    "typescript": "tsgo -p tsconfig.json",
+    "build": "code-infra build --tsgo --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\" --ignore 'src/**/*.bench.ts'",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
+    "bench:jsdom": "pnpm vitest bench -c ./vitest.config.jsdom.mts"
   },
   "repository": {
     "type": "git",
@@ -48,6 +49,7 @@
     "directory": "packages/x-scheduler-internals-premium"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "catalog:",
     "@babel/runtime": "catalog:",
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",

@@ -4,9 +4,9 @@ import {
   addColumnGroupingHeaders,
   addSerializedRowToWorksheet,
   createValueOptionsSheetIfNeeded,
-  type ExcelExportInitEvent,
   getExcelJs,
 } from './utils';
+import type { ExcelExportInitEvent } from './utils';
 
 export function setupExcelExportWebWorker(
   workerOptions: Pick<GridExcelExportOptions, 'exceljsPostProcess' | 'exceljsPreProcess'> = {},

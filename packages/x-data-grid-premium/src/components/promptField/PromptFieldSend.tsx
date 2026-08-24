@@ -4,7 +4,8 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps, RenderProp } from '@mui/x-data-grid-pro';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { type PromptFieldState, usePromptFieldContext } from './PromptFieldContext';
+import { usePromptFieldContext } from './PromptFieldContext';
+import type { PromptFieldState } from './PromptFieldContext';
 
 export type PromptFieldSendProps = Omit<GridSlotProps['baseIconButton'], 'className'> & {
   /**
@@ -59,7 +60,7 @@ const PromptFieldSend = forwardRef<HTMLButtonElement, PromptFieldSendProps>(
   },
 );
 
-PromptFieldSend.propTypes = {
+PromptFieldSend.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

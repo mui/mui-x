@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { DataGrid } from '@mui/x-data-grid';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - rowCheckbox slot', () => {
   const { render } = createRenderer();

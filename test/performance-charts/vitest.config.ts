@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { mergeConfig, defineConfig } from 'vitest/config';
 import { createBenchmarkVitestConfig } from '@mui/internal-benchmark/vitest';
 
@@ -10,6 +11,14 @@ export default mergeConfig(
   defineConfig({
     test: {
       setupFiles: ['./setup.ts'],
+    },
+    resolve: {
+      alias: [
+        {
+          find: 'test/utils',
+          replacement: fileURLToPath(new URL('../utils', import.meta.url)),
+        },
+      ],
     },
   }),
 );

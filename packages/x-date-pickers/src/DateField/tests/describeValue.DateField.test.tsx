@@ -1,5 +1,5 @@
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
   expectFieldValue,
@@ -7,6 +7,7 @@ import {
   describeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
+import { describe } from 'vitest';
 
 describe('<DateField /> - Describe Value', () => {
   const { render } = createPickerRenderer();

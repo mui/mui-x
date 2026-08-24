@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { alpha } from '@mui/material/styles';
-import { Translate, useTranslate, useUserLanguage } from '@mui/internal-core-docs/i18n';
+import { Translate, useTranslate } from '@mui/internal-core-docs/i18n';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { MarkdownElement } from '@mui/internal-core-docs/MarkdownDocs';
 import {
@@ -51,11 +51,9 @@ Heading.propTypes = {
 };
 
 interface ApiPageProps {
-  descriptions: {
-    [lang: string]: InterfaceApiTranslation & {
-      // Table of Content added by the mapApiPageTranslations function
-      componentDescriptionToc: TableOfContentsEntry[];
-    };
+  descriptions: InterfaceApiTranslation & {
+    // Table of Content added by the mapApiPageTranslation function
+    componentDescriptionToc: TableOfContentsEntry[];
   };
   pageContent: InterfaceApiContent;
   defaultLayout?: ApiDisplayLayout;
@@ -113,11 +111,10 @@ export default function ApiPage(props: ApiPageProps) {
     layoutStorageKey = DEFAULT_API_LAYOUT_STORAGE_KEYS,
   } = props;
   const t = useTranslate();
-  const userLanguage = useUserLanguage();
 
   const { demos, properties } = pageContent;
 
-  const { propertiesDescriptions, interfaceDescription } = descriptions[userLanguage];
+  const { propertiesDescriptions, interfaceDescription } = descriptions;
   const description = t('api-docs.interfacePageDescription').replace(/{{name}}/, pageContent.name);
 
   return (

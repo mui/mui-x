@@ -8,17 +8,17 @@ components: EventCalendar, EventCalendarPremium
 
 # Event Calendar - Editing
 
-<p class="description">Configure how events are created and edited.</p>
+<p class="description">Configure event creation, editing interactions, and read-only behavior.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Event creation
 
-Use the `eventCreation` prop to customize how newly created events are defined:
+Use the `eventCreation` prop to customize event creation behavior:
 
 ### Disable event creation
 
-Pass `eventCreation={false}` to disable the event creation:
+Pass `eventCreation={false}` to disable event creation:
 
 ```tsx
 <EventCalendar eventCreation={false} />
@@ -26,7 +26,7 @@ Pass `eventCreation={false}` to disable the event creation:
 
 ### Custom default duration
 
-Pass a custom value to `eventCreation.duration` to change the default duration of newly created event:
+Pass a custom value to `eventCreation.duration` to change the default duration of newly created events:
 
 ```tsx
 <EventCalendar eventCreation={{ duration: 60 }} />
@@ -34,7 +34,7 @@ Pass a custom value to `eventCreation.duration` to change the default duration o
 
 {{"demo": "EventCreationDuration.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Create event on double click
+### Create event on double-click
 
 Set `eventCreation.interaction` to `"double-click"` to open the creation form when double-clicking a cell instead of clicking:
 
@@ -68,9 +68,47 @@ All other dialog features (editing title, dates, resources, colors, description,
 Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode.
 :::
 
+### Replace the dialog with your own UI
+
+Use the `onEventEditingStart` callback to intercept editing right before the built-in dialog opens.
+It fires for every entry point (pointer, keyboard, touch, and event creation).
+`eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the occurrence is read-only (through the event, its resource, or the `readOnly` prop) and the dialog opens in view-only mode, and `"edit"` otherwise.
+`eventDetails.occurrence` is typed by that reason, so narrowing on it gives you the persisted occurrence fields on `"edit"` and `"view"` and the draft on `"creation"`.
+`eventDetails.anchor` is an element that stays in the DOM after a cancellation, ready to anchor your own popover to; `eventDetails.trigger` identifies the exact activated element, but some flows unmount it right after a canceled activation (the armed toolbar's Edit button, an item inside the "+N more" popover, a creation placeholder), so don't position against it.
+Call `eventDetails.cancel()` to keep the built-in dialog closed and open your own editing UI instead:
+
+```tsx
+<EventCalendar
+  onEventEditingStart={(occurrence, eventDetails) => {
+    if (eventDetails.reason === 'view') {
+      // Read-only activation: keep the built-in view-only dialog.
+      // Cancel here only if you render your own read-only UI instead.
+      return;
+    }
+    eventDetails.cancel();
+    if (eventDetails.reason === 'creation') {
+      // Creation drafts have a synthetic `id` — use the proposed dates instead.
+      openYourCreationUI(eventDetails.occurrence.displayTimezone);
+    } else {
+      openYourEditingUI(eventDetails.occurrence.id);
+    }
+  }}
+/>
+```
+
+In the demo below, both clicking an event and clicking an empty cell open a custom dialog instead of the built-in one:
+
+{{"demo": "CustomEditingUI.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+Canceling `onEventEditingStart` replaces the built-in dialog (and its mobile drawer variant): your UI owns the editing form, the recurring event scope selection ("this event", "this and following events", "all events"), and persisting the changes (for example by updating your controlled `events` state).
+
+Everything else keeps the built-in behavior: drag and drop, resizing, the recurring scope dialog they trigger, and on touch devices the event toolbar with its edit, delete and resize affordances — there, the callback fires when the user taps the toolbar's Edit action, right before the dialog opens.
+:::
+
 ## Read-only
 
-Use the `readOnly` prop to disable all editing interactions (event creation, drag and drop, resizing, and popover editing):
+Use the `readOnly` prop to disable all editing interactions (event creation, drag-and-drop, resizing, and popover editing):
 
 ```tsx
 <EventCalendar readOnly />
@@ -104,7 +142,7 @@ const resource = {
 
 #### Priority order
 
-The priority order for determining if an event is read-only is:
+The priority order for read-only behavior is:
 
 1. The `readOnly` property assigned to the event
 
@@ -126,8 +164,8 @@ The priority order for determining if an event is read-only is:
 />
 ```
 
-:::success
-If one of the properties is not defined on the resource, it checks for the closest ancestor with this property defined.
+:::info
+If a property isn't defined on the resource, the closest ancestor resource with that property defined takes precedence.
 :::
 
 3. The `readOnly` prop assigned to the Event Calendar
@@ -136,7 +174,7 @@ If one of the properties is not defined on the resource, it checks for the close
 <EventCalendar readOnly />
 ```
 
-For example, with the following code, all "work" events are read-only except `"event-3"`:
+For example, with the following code, all work events are read-only except `"event-3"`:
 
 ```tsx
 function App() {
@@ -155,7 +193,7 @@ function App() {
 }
 ```
 
-## Copy & paste events 🚧
+## Copy and paste events 🚧
 
 :::warning
 This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/19986) to help us prioritize it.
@@ -164,7 +202,7 @@ Please don't hesitate to leave a comment there to describe your needs, especiall
 
 With this feature, users would be able to copy and paste events within the calendar.
 
-## Undo / Redo 🚧
+## Undo and redo 🚧
 
 :::warning
 This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21583) to help us prioritize it.

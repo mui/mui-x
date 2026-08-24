@@ -2,34 +2,35 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type MakeOptional } from '@mui/x-internals/types';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
-import { type ChartsSlots, type ChartsSlotProps } from '../internals/material';
-import {
-  ScatterPlot,
-  type ScatterPlotProps,
-  type ScatterPlotSlotProps,
-  type ScatterPlotSlots,
-} from './ScatterPlot';
-import { type ChartsContainerProps } from '../ChartsContainer';
+import type { MakeOptional } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
+import type { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
+import type { ChartsSlots, ChartsSlotProps } from '../internals/material';
+import { ScatterPlot } from './ScatterPlot';
+import type { ScatterPlotProps, ScatterPlotSlotProps, ScatterPlotSlots } from './ScatterPlot';
+import type { ChartsContainerProps } from '../ChartsContainer';
 import { ChartsAxis } from '../ChartsAxis';
-import { type ScatterSeriesType } from '../models/seriesType/scatter';
-import { ChartsTooltip, type ChartsTooltipProps } from '../ChartsTooltip';
-import {
-  type ChartsTooltipSlots,
-  type ChartsTooltipSlotProps,
+import type { ScatterSeriesType } from '../models/seriesType/scatter';
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsTooltipProps } from '../ChartsTooltip';
+import type {
+  ChartsTooltipSlots,
+  ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
 import type { TooltipPropsOverrides } from '../models/chartsSlotsComponentsProps';
-import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { ChartsOverlay } from '../ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
 } from '../ChartsOverlay';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { type ChartsAxisSlots, type ChartsAxisSlotProps } from '../models/axis';
-import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import type { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import { ChartsGrid } from '../ChartsGrid';
+import type { ChartsGridProps } from '../ChartsGrid';
 import { useScatterChartProps } from './useScatterChartProps';
 import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
 import { ChartsDataProvider } from '../ChartsDataProvider';
@@ -61,7 +62,9 @@ export interface ScatterChartSlotProps
    * Slot props for the tooltip component.
    * @default {}
    */
-  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides;
+  tooltip?: WithDataAttributes<
+    Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides
+  >;
 }
 
 export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
@@ -130,8 +133,7 @@ export interface ScatterChartProps
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?:
-    | ScatterPlotProps['onItemClick']
-    | UseChartClosestPointSignature['params']['onItemClick'];
+    ScatterPlotProps['onItemClick'] | UseChartClosestPointSignature['params']['onItemClick'];
 }
 
 /**
@@ -189,7 +191,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   );
 });
 
-ScatterChart.propTypes = {
+ScatterChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -265,7 +267,17 @@ ScatterChart.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+    progressiveRendering: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -440,13 +452,15 @@ ScatterChart.propTypes = {
   onTooltipItemChange: PropTypes.func,
   /**
    * The type of renderer to use for the scatter plot.
-   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element, synchronously.
+   * - `svg-progressive`: Renders every scatter item in a `<circle />` element, in progressive batches that paint over several animation frames to keep the main thread responsive.
    * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
    *                Read more: https://mui.com/x/react-charts/scatter/#performance
    *
+   * When not set, defaults to `svg-single`. Enable the `progressiveRendering` experimental feature to auto-select `svg-progressive` above an internal point-count threshold; this will become the default in the next major version.
    * @default 'svg-single'
    */
-  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-progressive', 'svg-single']),
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.
@@ -538,6 +552,7 @@ ScatterChart.propTypes = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -545,6 +560,7 @@ ScatterChart.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -563,12 +579,16 @@ ScatterChart.propTypes = {
       min: PropTypes.number,
       sizeMap: PropTypes.oneOfType([
         PropTypes.shape({
+          interpolator: PropTypes.oneOf(['linear', 'log', 'sqrt']),
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          size: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.number.isRequired),
-            PropTypes.func,
-          ]).isRequired,
+          size: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.func.isRequired,
           type: PropTypes.oneOf(['continuous']).isRequired,
         }),
         PropTypes.shape({

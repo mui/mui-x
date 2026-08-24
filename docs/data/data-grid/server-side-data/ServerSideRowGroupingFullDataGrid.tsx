@@ -22,6 +22,7 @@ export default function ServerSideRowGroupingFullDataGrid() {
     dataSet: 'Commodity',
     maxColumns: 20,
     editable: true,
+    multiSelect: true,
   });
 
   const dataSource: GridDataSource = React.useMemo(() => {

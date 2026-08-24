@@ -11,10 +11,14 @@ import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
-import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
+import {
+  DateRangePickerDay,
+  dateRangePickerDayClasses as dayClasses,
+} from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { RangePosition } from '../models';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
+import { describe, it, expect } from 'vitest';
+import type { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
@@ -645,6 +649,31 @@ describe('<DateRangeCalendar />', () => {
       });
     });
 
+    it('should not switch the visible months when the requested month is already visible across a year boundary', async () => {
+      const { setProps } = render(
+        <DateRangeCalendar
+          value={[adapterToUse.date('2023-12-01'), adapterToUse.date('2023-12-01')]}
+        />,
+      );
+
+      // The two calendars initially show December 2023 and January 2024.
+      expect(screen.getByRole('grid', { name: 'December 2023' })).not.to.equal(null);
+      expect(screen.getByRole('grid', { name: 'January 2024' })).not.to.equal(null);
+
+      // Move the start to a day already visible in the second calendar (January 2024).
+      setProps({
+        value: [adapterToUse.date('2024-01-15'), adapterToUse.date('2024-01-15')],
+      });
+
+      // The new start is now selected, confirming the auto month-switch effect ran.
+      await screen.findByRole('gridcell', { name: '15', selected: true });
+
+      // The visible months must not jump: December 2023 and January 2024 stay, February 2024 does not appear.
+      expect(screen.getByRole('grid', { name: 'December 2023' })).not.to.equal(null);
+      expect(screen.getByRole('grid', { name: 'January 2024' })).not.to.equal(null);
+      expect(screen.queryByRole('grid', { name: 'February 2024' })).to.equal(null);
+    });
+
     describe('prop: currentMonthCalendarPosition', () => {
       it('should switch to the selected month when changing value from the outside', async () => {
         const { setProps } = render(
@@ -661,6 +690,66 @@ describe('<DateRangeCalendar />', () => {
         await waitFor(() => {
           expect(getPickerDay('1', 'February 2018')).not.to.equal(null);
         });
+      });
+
+      it('should not switch the visible months when the requested month is already visible in an earlier calendar', async () => {
+        const { setProps } = render(
+          <DateRangeCalendar
+            calendars={2}
+            currentMonthCalendarPosition={2}
+            value={[adapterToUse.date('2024-02-10'), adapterToUse.date('2024-02-10')]}
+          />,
+        );
+
+        // With the current month in the second calendar, the window is January 2024 + February 2024.
+        expect(screen.getByRole('grid', { name: 'January 2024' })).not.to.equal(null);
+        expect(screen.getByRole('grid', { name: 'February 2024' })).not.to.equal(null);
+
+        // Move the start to a day already visible in the first calendar (January 2024).
+        setProps({
+          value: [adapterToUse.date('2024-01-15'), adapterToUse.date('2024-01-15')],
+        });
+
+        await screen.findByRole('gridcell', { name: '15', selected: true });
+
+        // The window must not scroll back: December 2023 must not appear.
+        expect(screen.queryByRole('grid', { name: 'December 2023' })).to.equal(null);
+        expect(screen.getByRole('grid', { name: 'January 2024' })).not.to.equal(null);
+        expect(screen.getByRole('grid', { name: 'February 2024' })).not.to.equal(null);
+      });
+
+      it('should not switch the visible months when the value is on the first visible day but earlier in the day than the reference time', async () => {
+        // The value carries a time, so `currentMonth` keeps it (March 1 at 12:34).
+        const { setProps } = render(
+          <DateRangeCalendar
+            reduceAnimations
+            calendars={2}
+            currentMonthCalendarPosition={2}
+            value={[
+              adapterToUse.date('2024-03-15T12:34:00'),
+              adapterToUse.date('2024-03-15T12:34:00'),
+            ]}
+          />,
+        );
+
+        // With the current month in the second calendar, the window is February 2024 + March 2024.
+        expect(screen.getByRole('grid', { name: 'February 2024' })).not.to.equal(null);
+        expect(screen.getByRole('grid', { name: 'March 2024' })).not.to.equal(null);
+
+        // Move the value to the first visible day at midnight, i.e. earlier in the day than 12:34.
+        setProps({
+          value: [
+            adapterToUse.date('2024-02-01T00:00:00'),
+            adapterToUse.date('2024-02-01T00:00:00'),
+          ],
+        });
+
+        await screen.findByRole('gridcell', { name: '1', selected: true });
+
+        // The window must stay month-based and not scroll: January 2024 must not appear.
+        expect(screen.queryByRole('grid', { name: 'January 2024' })).to.equal(null);
+        expect(screen.getByRole('grid', { name: 'February 2024' })).not.to.equal(null);
+        expect(screen.getByRole('grid', { name: 'March 2024' })).not.to.equal(null);
       });
     });
   });
@@ -695,10 +784,119 @@ describe('<DateRangeCalendar />', () => {
     });
   });
 
+  describe('disabled days styling', () => {
+    const value: [PickerValidDate, PickerValidDate] = [
+      adapterToUse.date('2018-01-01'),
+      adapterToUse.date('2018-01-10'),
+    ];
+
+    it('should not dim the days when only some dates of the range are disabled', () => {
+      render(
+        <DateRangeCalendar
+          value={value}
+          shouldDisableDate={(date) => [5, 10].includes(adapterToUse.getDate(date))}
+        />,
+      );
+
+      // Inside the range.
+      const disabledDay = getPickerDay('5');
+      expect(disabledDay).to.have.attribute('disabled');
+      expect(disabledDay).to.have.style('opacity', '1');
+      // End of the range.
+      expect(getPickerDay('10')).to.have.style('opacity', '1');
+    });
+
+    it('should dim the days when the whole calendar is disabled', () => {
+      render(<DateRangeCalendar value={value} disabled />);
+
+      expect(getPickerDay('5')).to.have.style('opacity', '0.6');
+      expect(getPickerDay('10')).to.have.style('opacity', '0.6');
+    });
+  });
+
   it('prop: calendars - should render the provided amount of calendars', () => {
     render(<DateRangeCalendar calendars={3} />);
 
     expect(screen.getAllByTestId('pickers-calendar')).to.have.length(3);
+  });
+
+  describe('prop: showDaysOutsideCurrentMonth', () => {
+    const props = {
+      referenceDate: adapterToUse.date('2018-01-01'),
+      showDaysOutsideCurrentMonth: true,
+    } as const;
+
+    // January 2018 starts on a Monday and ends on a Wednesday, its grid is 5 weeks long:
+    // 31 days of January, one day of December and three days of February.
+    const getJanuaryCells = () => {
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const cells = grid.querySelectorAll(`.${dayClasses.root}`);
+      return {
+        cells,
+        fillerCells: grid.querySelectorAll(`.${dayClasses.fillerCell}`),
+      };
+    };
+
+    it('should render the days outside the current month with a single calendar', () => {
+      render(<DateRangeCalendar {...props} calendars={1} />);
+
+      const { cells, fillerCells } = getJanuaryCells();
+      expect(cells).to.have.length(35);
+      expect(fillerCells).to.have.length(0);
+    });
+
+    it('should be ignored with several calendars', () => {
+      render(<DateRangeCalendar {...props} calendars={2} />);
+
+      const { cells, fillerCells } = getJanuaryCells();
+      expect(cells).to.have.length(35);
+      expect(fillerCells).to.have.length(4);
+    });
+  });
+
+  describe('filler cells', () => {
+    const referenceDate = adapterToUse.date('2018-01-01');
+
+    it('should be exposed as grid cells', () => {
+      render(<DateRangeCalendar calendars={1} referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+
+      expect(within(grid).getAllByRole('gridcell')).to.have.length(35);
+      expect(grid.querySelectorAll(`.${dayClasses.fillerCell}`)).to.have.length(4);
+    });
+
+    // The week number is a `rowheader` taking the first column, so a cell without an explicit
+    // column index would be off by one.
+    it('should keep the column index of the day they replace', () => {
+      render(<DateRangeCalendar calendars={1} displayWeekNumber referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const weeks = within(within(grid).getByRole('rowgroup')).getAllByRole('row');
+
+      expect(weeks).to.have.length(5);
+      weeks.forEach((week) => {
+        const columnIndexes = within(week)
+          .getAllByRole('gridcell')
+          .map((cell) => cell.getAttribute('aria-colindex'));
+
+        expect(columnIndexes).to.deep.equal(['2', '3', '4', '5', '6', '7', '8']);
+      });
+    });
+  });
+
+  it('should give every calendar its own week day headers', () => {
+    render(<DateRangeCalendar calendars={2} referenceDate={adapterToUse.date('2018-01-01')} />);
+
+    ['January 2018', 'February 2018'].forEach((month) => {
+      const headers = within(screen.getByRole('grid', { name: month })).getAllByRole(
+        'columnheader',
+      );
+
+      expect(headers).to.have.length(7);
+      expect(headers[0]).toHaveAccessibleName('Sunday');
+      expect(headers[0]).to.have.attribute('aria-colindex', '1');
+    });
   });
 
   describe('Performance', () => {

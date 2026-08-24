@@ -7,7 +7,8 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe } from 'vitest';
 
 describe('<DesktopDatePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();

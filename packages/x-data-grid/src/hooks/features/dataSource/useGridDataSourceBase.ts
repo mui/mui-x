@@ -16,9 +16,13 @@ import {
   gridVisibleRowsSelector,
 } from '../pagination/gridPaginationSelector';
 import { gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { gridColumnLookupSelector } from '../columns';
+import { removeIncompleteFilterItems } from '../filter/gridFilterUtils';
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
+import { useGridDataSourceFilterModelChange } from './useGridDataSourceFilterModelChange';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
-import { GridDataSourceCacheDefault, type GridDataSourceCacheDefaultConfig } from './cache';
+import { GridDataSourceCacheDefault } from './cache';
+import type { GridDataSourceCacheDefaultConfig } from './cache';
 import { GridGetRowsError, GridUpdateRowError } from './gridDataSourceError';
 
 import type { GridDataSourceApi, GridDataSourceApiBase, GridDataSourceBaseOptions } from './models';
@@ -50,6 +54,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     DataGridProcessedProps,
     | 'dataSource'
     | 'dataSourceCache'
+    | 'dataSourceKeepPreviousData'
     | 'onDataSourceError'
     | 'pageSizeOptions'
     | 'pagination'
@@ -79,6 +84,11 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
+  // `false` while a request is in flight, and for any request that errors or is discarded as
+  // stale. Lets the mount effect tell "rows are already displayed" from "the fetch never landed".
+  const rowsAreUpToDate = React.useRef(false);
+  // Requests that are still running and will apply their response when they settle.
+  const pendingRequestCount = React.useRef(0);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
   const onDataSourceErrorProp = props.onDataSourceError;
@@ -107,20 +117,27 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         return;
       }
 
-      if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
-        options.fetchRowChildren?.([parentId]);
-        return;
-      }
-
-      options.clearDataSourceState?.();
-
-      const { skipCache, keepChildrenExpanded, ...getRowsParams } = params || {};
+      const { skipCache, keepChildrenExpanded, showChildrenLoading, ...getRowsParams } =
+        params || {};
 
       const fetchParams = {
         ...gridGetRowsParamsSelector(apiRef),
         ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
         ...getRowsParams,
       };
+      // The selector prunes the incomplete items, but a caller passing its own `filterModel`
+      // overrides it, so prune again on the merged params.
+      fetchParams.filterModel = removeIncompleteFilterItems(
+        fetchParams.filterModel,
+        gridColumnLookupSelector(apiRef),
+      );
+
+      if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
+        options.fetchRowChildren?.([parentId], [fetchParams], showChildrenLoading);
+        return;
+      }
+
+      options.clearDataSourceState?.();
 
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
@@ -129,11 +146,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         // Bump the request id so any cache-miss request still in flight is treated as
         // stale and won't override the cached data we're about to apply.
         lastRequestId.current += 1;
-        apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+        apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
           options: { skipCache, keepChildrenExpanded },
         });
+        rowsAreUpToDate.current = true;
         if (standardRowsUpdateStrategyActive) {
           apiRef.current.setLoading(false);
         }
@@ -147,6 +165,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       const requestId = lastRequestId.current + 1;
       lastRequestId.current = requestId;
+      rowsAreUpToDate.current = false;
+      pendingRequestCount.current += 1;
 
       try {
         const getRowsResponse = await getRows(fetchParams);
@@ -155,15 +175,16 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         cacheResponses.forEach((response, key) => cache.set(key, response));
 
         if (lastRequestId.current === requestId) {
-          apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+          apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             response: getRowsResponse,
             fetchParams,
             options: { skipCache, keepChildrenExpanded },
           });
+          rowsAreUpToDate.current = true;
         }
       } catch (originalError) {
         if (lastRequestId.current === requestId) {
-          apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+          apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             error: originalError as Error,
             fetchParams,
             options: { skipCache, keepChildrenExpanded },
@@ -176,7 +197,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
                 cause: originalError as Error,
               }),
             );
-          } else {
+          } else if (process.env.NODE_ENV !== 'production') {
             warnOnce(
               [
                 'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',
@@ -188,6 +209,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           }
         }
       } finally {
+        pendingRequestCount.current -= 1;
         if (standardRowsUpdateStrategyActive && lastRequestId.current === requestId) {
           apiRef.current.setLoading(false);
         }
@@ -243,7 +265,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       }, [] as GridRowId[]);
 
       if (expandedGroupIds.length > 0) {
-        fetchRowChildrenOption(expandedGroupIds, { showChildrenLoading: false });
+        fetchRowChildrenOption(expandedGroupIds, [], false);
       }
     };
 
@@ -273,7 +295,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       const cacheResponses = cacheChunkManager.splitResponse(fetchParams, response);
       cacheResponses.forEach((cacheResponse, key) => cache.set(key, cacheResponse));
 
-      apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+      apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
         response,
         fetchParams,
         options: {},
@@ -299,9 +321,14 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     pollingIntervalRef.current = setInterval(revalidate, revalidateMs);
   });
 
-  const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
+  const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRootRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
+        // Reset the rows on error, even with `dataSourceKeepPreviousData`. The previous
+        // rows belong to the previous query while the pagination/sorting/filtering controls
+        // already reflect the failed request, so keeping them would present stale data as if
+        // it satisfied the new query. This matches TanStack Query, where `keepPreviousData`
+        // clears the placeholder once the query settles with an error.
         apiRef.current.setRows([]);
         return;
       }
@@ -351,7 +378,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
               cause: errorThrown as Error,
             }),
           );
-        } else {
+        } else if (process.env.NODE_ENV !== 'production') {
           warnOnce(
             [
               'MUI X: A call to `dataSource.updateRow()` threw an error which was not handled because `onDataSourceError()` is missing.',
@@ -377,17 +404,40 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
   const handleFetchRowsOnParamsChange = React.useCallback(() => {
-    // Clear the rows first and immediately mark the grid as loading so the overlay
-    // selector never observes the intermediate `rows=[] && loading=false` state that
-    // would otherwise pick `noRowsOverlay`. Order matters: `setRows([])` rebuilds
-    // `state.rows` from `props.loading`, so the `setLoading(true)` call must come after
-    // it to survive the rebuild. This handler is only wired up when a standard strategy
-    // is active via the `runIf` guards on the returned `events` object.
-    apiRef.current.setRows([]);
+    // `dataSourceKeepPreviousData` only applies to the flat `Default` strategy. For
+    // `GroupedData` (tree data / row grouping), skipping the synchronous `setRows([])`
+    // would leave the existing tree merged on top of the new response and render rows
+    // in stale sort order (https://github.com/mui/mui-x/pull/21619).
+    // This handler is only wired up when a standard strategy is active via the `runIf`
+    // guards on the returned `events` object.
+    const activeStrategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
+    const keepPreviousData =
+      props.dataSourceKeepPreviousData && activeStrategy === DataSourceRowsUpdateStrategy.Default;
+    if (!keepPreviousData) {
+      // Clear the rows first and immediately mark the grid as loading so the overlay
+      // selector never observes the intermediate `rows=[] && loading=false` state that
+      // would otherwise pick `noRowsOverlay`. Order matters: `setRows([])` rebuilds
+      // `state.rows` from `props.loading`, so the `setLoading(true)` call must come after
+      // it to survive the rebuild.
+      apiRef.current.setRows([]);
+    }
     apiRef.current.setLoading(true);
     stopPolling();
     debouncedFetchRows();
-  }, [apiRef, stopPolling, debouncedFetchRows]);
+  }, [apiRef, props.dataSourceKeepPreviousData, stopPolling, debouncedFetchRows]);
+
+  const hasFilterModelChanged = useGridDataSourceFilterModelChange(apiRef);
+  const handleFetchRowsOnFilterModelChange = React.useCallback<
+    GridEventListener<'filterModelChange'>
+  >(
+    (newFilterModel) => {
+      if (!hasFilterModelChanged(newFilterModel)) {
+        return;
+      }
+      handleFetchRowsOnParamsChange();
+    },
+    [hasFilterModelChanged, handleFetchRowsOnParamsChange],
+  );
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -416,35 +466,90 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   React.useEffect(() => stopPolling, [stopPolling]);
 
+  const lastApiRef = React.useRef(apiRef);
+  const lastStrategy = React.useRef(currentStrategy);
+  const lastDataSource = React.useRef(props.dataSource);
+
   React.useEffect(() => {
+    // `<Activity mode="hidden">` leaves the root element in the document, a real unmount does not.
+    // Only discard the in-flight response in the latter case, so hiding lets the request land.
+    const rootElement = apiRef.current?.rootElementRef?.current ?? null;
+    const ignoreInFlightRequest = () => {
+      if (!rootElement?.isConnected) {
+        lastRequestId.current += 1;
+      }
+    };
+
     // Return early if the proper strategy isn't set yet
     // Context: https://github.com/mui/mui-x/issues/19650
     if (
       currentStrategy !== DataSourceRowsUpdateStrategy.Default &&
       currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoading &&
-      currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData
+      currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData &&
+      currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoadedGroupedData
     ) {
       return undefined;
     }
+
+    const dependenciesChanged =
+      lastApiRef.current !== apiRef ||
+      lastStrategy.current !== currentStrategy ||
+      lastDataSource.current !== props.dataSource;
+
+    lastApiRef.current = apiRef;
+    lastStrategy.current = currentStrategy;
+    lastDataSource.current = props.dataSource;
+
+    // Re-mounting the effect (`<Activity />` becoming visible again, for instance) must not
+    // re-fetch data that is already displayed.
+    if (!dependenciesChanged && (rowsAreUpToDate.current || pendingRequestCount.current > 0)) {
+      return ignoreInFlightRequest;
+    }
+
     if (props.dataSource) {
       stopPolling();
-      apiRef.current.setRows([]);
+      // `dataSourceKeepPreviousData` only applies to the flat `Default` strategy (mirroring
+      // `handleFetchRowsOnParamsChange`). Keep the previous rows visible when the `dataSource`
+      // reference changes so the feature isn't silently defeated for a non-memoized
+      // `dataSource`. Other strategies must still reset the rows to keep their order consistent
+      // with the new response (https://github.com/mui/mui-x/pull/21619).
+      if (
+        !props.dataSourceKeepPreviousData ||
+        currentStrategy !== DataSourceRowsUpdateStrategy.Default
+      ) {
+        apiRef.current.setRows([]);
+      }
       apiRef.current.dataSource.cache.clear();
       apiRef.current.dataSource.fetchRows();
     }
 
-    return () => {
-      // ignore the current request on unmount
-      lastRequestId.current += 1;
-    };
-  }, [apiRef, props.dataSource, currentStrategy, stopPolling]);
+    return ignoreInFlightRequest;
+  }, [apiRef, props.dataSource, props.dataSourceKeepPreviousData, currentStrategy, stopPolling]);
+
+  React.useEffect(() => {
+    // `dataSourceKeepPreviousData` is a no-op for tree data and row grouping: those
+    // strategies always reset the rows on refetch to keep their order consistent with the
+    // response. Warn so the limitation is discoverable at runtime, not only in the docs.
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      props.dataSourceKeepPreviousData &&
+      (currentStrategy === DataSourceRowsUpdateStrategy.GroupedData ||
+        currentStrategy === DataSourceRowsUpdateStrategy.LazyLoadedGroupedData)
+    ) {
+      warnOnce([
+        'MUI X: The `dataSourceKeepPreviousData` prop only applies to flat data.',
+        'It is ignored when tree data or row grouping is enabled, because the rows are always reset on refetch to keep their order consistent with the response.',
+        'For more details, see https://mui.com/x/react-data-grid/server-side-data/#keep-previous-data-while-fetching.',
+      ]);
+    }
+  }, [props.dataSourceKeepPreviousData, currentStrategy]);
 
   return {
     api: { public: dataSourceApi },
     debouncedFetchRows,
     strategyProcessor: {
       strategyName: DataSourceRowsUpdateStrategy.Default,
-      group: 'dataSourceRowsUpdate' as const,
+      group: 'dataSourceRootRowsUpdate' as const,
       processor: handleDataUpdate,
     },
     setStrategyAvailability,
@@ -455,7 +560,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
       sortModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
-      filterModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
+      filterModelChange: runIf(
+        standardRowsUpdateStrategyActive,
+        handleFetchRowsOnFilterModelChange,
+      ),
       paginationModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
     },
   };

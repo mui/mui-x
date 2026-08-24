@@ -9,7 +9,7 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import setupVitest from '@mui/internal-test-utils/setupVitest';
 import { configure, isJsdom } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
-import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/test-keys';
+import { TEST_LICENSE_KEY_PREMIUM } from './utils/licenseKeys';
 
 (globalThis as any).MUI_TEST_ENV = true;
 
@@ -24,6 +24,7 @@ beforeAll(async () => {
   if (!isJsdom()) {
     const { server } = await import('vitest/browser');
     await server.commands.setupCrashHandler();
+    await server.commands.resetMousePosition();
   }
 });
 

@@ -3,6 +3,9 @@ export type {
   GridStateColDef,
   GridSingleSelectColDef,
 } from '../models/colDef/gridColDef';
+export { GRID_STRING_COL_DEF } from '../colDef/gridStringColDef';
+export { registerGridColumnTypes } from '../colDef/gridColumnTypesRegistry';
+export { gridRowIdSelector } from '../hooks/core/gridPropsSelectors';
 export { GridVirtualScroller } from '../components/virtualization/GridVirtualScroller';
 export { GridVirtualScrollerContent } from '../components/virtualization/GridVirtualScrollerContent';
 export { GridVirtualScrollerRenderZone } from '../components/virtualization/GridVirtualScrollerRenderZone';
@@ -21,7 +24,11 @@ export { vars } from '../constants/cssVariables';
 export { useGridVirtualizer } from '../hooks/core/useGridVirtualizer';
 export { propsStateInitializer } from '../hooks/core/useGridProps';
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
-export { getValueOptions } from '../components/panel/filterPanel/filterPanelUtils';
+export {
+  getValueOptions,
+  getValueFromValueOptions,
+  isMultiSelectColDef,
+} from '../components/panel/filterPanel/filterPanelUtils';
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
 export {
@@ -71,11 +78,12 @@ export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 export { defaultGridFilterLookup } from '../hooks/features/filter/gridFilterState';
-export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
+export { passFilterLogic, removeDiacritics } from '../hooks/features/filter/gridFilterUtils';
 export {
   gridFilteredChildrenCountLookupSelector,
   gridExpandedSortedRowTreeLevelPositionLookupSelector,
   gridFilteredSortedDepthRowEntriesSelector,
+  gridFilterModelSelector,
 } from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type {
@@ -172,6 +180,7 @@ export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState
 export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
 
 export type * as BaseSlots from '../models/gridBaseSlots';
+export type { TextFieldProps, AutocompleteProps, SelectProps } from '../models/gridBaseSlots';
 
 export type * from '../models/props/DataGridProps';
 export type { GridAggregationPosition, GridAggregationCellMeta } from '../models/gridAggregation';
@@ -185,9 +194,11 @@ export { DataSourceRowsUpdateStrategy } from '../hooks/features/dataSource/utils
 export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataSourceBase';
 export { CacheChunkManager } from '../hooks/features/dataSource/utils';
 export { gridGetRowsParamsSelector } from '../hooks/features/dataSource/gridDataSourceSelector';
+export { useGridDataSourceFilterModelChange } from '../hooks/features/dataSource/useGridDataSourceFilterModelChange';
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
+export * from '../utils/focusElement';
 export * from '../utils/rtlFlipSide';
 export { NotRendered } from '../utils/assert';
 export {
@@ -243,3 +254,5 @@ export { createSvgIcon } from '../material/icons/createSvgIcon';
 export { useGridPanelContext } from '../components/panel/GridPanelContext';
 
 export type { RowReorderDropPosition, RowReorderDragDirection } from '../models/api/gridRowApi';
+
+export { useSyncExternalStore } from 'use-sync-external-store/shim';

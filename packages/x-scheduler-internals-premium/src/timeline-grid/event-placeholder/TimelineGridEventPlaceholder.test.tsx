@@ -7,6 +7,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { describe } from 'vitest';
 
 describe('<TimelineGrid.EventPlaceholder />', () => {
   const { render } = createSchedulerRenderer();
@@ -20,9 +21,9 @@ describe('<TimelineGrid.EventPlaceholder />', () => {
       return render(
         <EventTimelinePremiumProvider events={[]} resources={[ResourceBuilder.new().build()]}>
           <TimelineGrid.Root>
-            <TimelineGrid.SubGrid>
+            <TimelineGrid.BodyRow index={0}>
               <TimelineGrid.EventRow resourceId="r1">{() => node}</TimelineGrid.EventRow>
-            </TimelineGrid.SubGrid>
+            </TimelineGrid.BodyRow>
           </TimelineGrid.Root>
         </EventTimelinePremiumProvider>,
       );

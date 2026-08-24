@@ -1,25 +1,30 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const nbNODialog: Partial<EventDialogLocaleText> = {
+const nbNODialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Hendelsesfarge',
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Dato og tid',
   resourceColorSectionLabel: 'Ressurs og farge',
   allDayLabel: 'Hele dagen',
   closeButtonAriaLabel: 'Lukk',
   closeButtonLabel: 'Lukk',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Slett hendelse',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Beskrivelse',
   endDateLabel: 'Sluttdato',
-  endTimeLabel: 'Slutttidspunkt',
+  endTimeLabel: 'Sluttidspunkt',
   eventTitleAriaLabel: 'Hendelsestittel',
   generalTabLabel: 'Generelt',
   labelNoResource: 'Ingen ressurs',
@@ -39,7 +44,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Gjentakelse',
   recurrenceMainSelectCustomLabel: 'Gjentakelse',
   recurrenceWeeklyFrequencyLabel: 'uker',
-  recurrenceWeeklyPresetLabel: (weekday) => `Gjentas ukentlig på ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Gjentas ukentlig på ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'måneder',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Dag ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} i siste uke av måneden`,
@@ -51,11 +56,13 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'år',
   recurrenceYearlyPresetLabel: (date) => `Gjentas årlig den ${date}`,
   noResourceAriaLabel: 'Ingen spesifikk ressurs',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressurs',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Lagre',
-  startDateAfterEndDateError: 'Startdato/-tid må være før sluttdato/-tid.',
+  startDateAfterEndDateError: 'Sluttdato kan ikke være før startdato.',
   startDateLabel: 'Startdato',
+  startTimeAfterEndTimeError: 'Sluttidspunkt må være etter starttidspunkt.',
   startTimeLabel: 'Starttidspunkt',
 
   // RecurringScopeDialog
@@ -68,7 +75,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   title: 'Bruk denne endringen på:',
 };
 
-const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Ressurser',
 
@@ -89,6 +96,9 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Lukk sidepanel',
   openSidePanel: 'Åpne sidepanel',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12-timer (1:00PM)',
   hour24h: '24-timer (13:00)',
@@ -105,8 +115,6 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Hele dagen',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} til..`,
   nextTimeSpan: (timeSpan) => `Neste ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Forrige ${timeSpan}`,
@@ -122,11 +130,14 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarGoToPreviousMonth: 'Vis forrige måned i kalender',
   miniCalendarGoToNextMonth: 'Vis neste måned i kalender',
 
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
+
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressurstittel',
 };
 
-const nbNOTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const nbNOTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressurstittel',
 };

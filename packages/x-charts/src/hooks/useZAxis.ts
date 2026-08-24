@@ -1,9 +1,7 @@
 'use client';
 import { useStore } from '../internals/store/useStore';
-import {
-  selectorChartZAxis,
-  type UseChartZAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartZAxis';
+import { selectorChartZAxis } from '../internals/plugins/featurePlugins/useChartZAxis';
+import type { UseChartZAxisSignature } from '../internals/plugins/featurePlugins/useChartZAxis';
 
 export function useZAxes() {
   const store = useStore<[UseChartZAxisSignature]>();

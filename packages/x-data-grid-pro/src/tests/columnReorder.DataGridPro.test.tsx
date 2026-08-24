@@ -1,4 +1,4 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, createEvent, act } from '@mui/internal-test-utils';
 import {
   getColumnHeadersTextContent,
@@ -6,9 +6,11 @@ import {
   getCell,
   raf,
 } from 'test/utils/helperFn';
-import { useGridApiRef, DataGridPro, gridClasses, type GridApi } from '@mui/x-data-grid-pro';
+import { useGridApiRef, DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import type { GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { spy } from 'sinon';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

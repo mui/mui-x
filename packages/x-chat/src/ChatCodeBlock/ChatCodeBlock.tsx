@@ -2,7 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { SxProps, Theme } from '@mui/system';
+import { useMessageContentTabIndex } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { useCopyToClipboard } from '../internals/useCopyToClipboard';
+import { DefaultDoneIcon } from '../icons/icons';
 import { useChatCodeBlockUtilityClasses, type ChatCodeBlockClasses } from './chatCodeBlockClasses';
 
 export interface ChatCodeBlockProps {
@@ -23,24 +27,17 @@ export interface ChatCodeBlockProps {
    */
   highlighter?: (code: string, language: string) => React.ReactNode;
   className?: string;
+  sx?: SxProps<Theme>;
   classes?: Partial<ChatCodeBlockClasses>;
 }
 
 const useThemeProps = createUseThemeProps('MuiChatCodeBlock');
 
-// Inline SVGs — avoids @mui/icons-material dependency
+// Inline SVG — avoids @mui/icons-material dependency
 function CopyIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" width="1em" height="1em" aria-hidden="true">
       <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" width="1em" height="1em" aria-hidden="true">
-      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
     </svg>
   );
 }
@@ -136,38 +133,33 @@ const ChatCodeBlockCode = styled('code', {
 const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
   function ChatCodeBlock(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatCodeBlock' });
-    const { children, language, highlighter, className, classes: classesProp, ...other } = props;
+    const {
+      children,
+      language,
+      highlighter,
+      className,
+      classes: classesProp,
+      sx,
+      ...other
+    } = props;
 
     const classes = useChatCodeBlockUtilityClasses(classesProp);
 
-    const [copyState, setCopyState] = React.useState<'idle' | 'copied'>('idle');
-    const resetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+    const { copyState, copy } = useCopyToClipboard();
+    // Inside a roving message list the copy button leaves the tab order until
+    // the user drills into the message (Enter); it stays mouse-clickable.
+    const contentTabIndex = useMessageContentTabIndex();
 
-    React.useEffect(() => {
-      return () => {
-        if (resetTimerRef.current !== null) {
-          clearTimeout(resetTimerRef.current);
-        }
-      };
-    }, []);
-
-    const handleCopy = () => {
-      navigator.clipboard.writeText(children).then(
-        () => {
-          setCopyState('copied');
-          if (resetTimerRef.current !== null) {
-            clearTimeout(resetTimerRef.current);
-          }
-          resetTimerRef.current = setTimeout(() => setCopyState('idle'), 2000);
-        },
-        () => {
-          // Clipboard write failed (e.g. permissions denied) — no-op
-        },
-      );
-    };
+    const handleCopy = () => copy(children);
+    let copyButtonLabel = 'Copy';
+    if (copyState === 'copied') {
+      copyButtonLabel = 'Copied!';
+    } else if (copyState === 'error') {
+      copyButtonLabel = 'Copy failed';
+    }
 
     return (
-      <ChatCodeBlockRoot ref={ref} className={clsx(classes.root, className)} {...other}>
+      <ChatCodeBlockRoot ref={ref} className={clsx(classes.root, className)} sx={sx} {...other}>
         <ChatCodeBlockHeader className={classes.header}>
           <ChatCodeBlockLanguageLabel className={classes.languageLabel}>
             {language ?? ''}
@@ -176,9 +168,11 @@ const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
             type="button"
             className={classes.copyButton}
             onClick={handleCopy}
-            title={copyState === 'copied' ? 'Copied!' : 'Copy'}
+            aria-label={copyButtonLabel}
+            title={copyButtonLabel}
+            tabIndex={contentTabIndex}
           >
-            {copyState === 'copied' ? <CheckIcon /> : <CopyIcon />}
+            {copyState === 'copied' ? <DefaultDoneIcon fontSize="inherit" /> : <CopyIcon />}
           </ChatCodeBlockCopyButton>
         </ChatCodeBlockHeader>
         <ChatCodeBlockPre className={classes.pre}>
@@ -191,7 +185,7 @@ const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
   },
 );
 
-ChatCodeBlock.propTypes = {
+ChatCodeBlock.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -214,6 +208,11 @@ ChatCodeBlock.propTypes = {
    * Language identifier shown in the header (e.g. "typescript", "python").
    */
   language: PropTypes.string,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChatCodeBlock };

@@ -5,6 +5,7 @@ import {
   describeConformance,
   ResourceBuilder,
 } from 'test/utils/scheduler';
+import { describe } from 'vitest';
 
 describe('<TimelineGrid.EventRow />', () => {
   const { render } = createSchedulerRenderer();
@@ -17,7 +18,7 @@ describe('<TimelineGrid.EventRow />', () => {
         return render(
           <EventTimelinePremiumProvider events={[]} resources={[ResourceBuilder.new().build()]}>
             <TimelineGrid.Root>
-              <TimelineGrid.SubGrid>{node}</TimelineGrid.SubGrid>
+              <TimelineGrid.BodyRow index={0}>{node}</TimelineGrid.BodyRow>
             </TimelineGrid.Root>
           </EventTimelinePremiumProvider>,
         );

@@ -1,5 +1,7 @@
 import { screen, within, fireEvent } from '@mui/internal-test-utils';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { HeaderToolbar } from './HeaderToolbar';
 
@@ -20,7 +22,7 @@ describe('<ViewSwitcher />', () => {
     );
 
     // ViewSwitcher renders a button showing the current view
-    const viewSwitcherButton = screen.getByRole('button', { name: 'Switch View' });
+    const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     expect(viewSwitcherButton).to.have.text('Week');
 
     // Open the menu
@@ -47,7 +49,7 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const viewSwitcherButton = screen.getByRole('button', { name: 'Switch View' });
+    const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     expect(viewSwitcherButton).to.have.text('Week');
 
     // Open the menu
@@ -74,7 +76,7 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const viewSwitcherButton = screen.getByRole('button', { name: 'Switch View' });
+    const viewSwitcherButton = screen.getByRole('button', { name: 'Day' });
     expect(viewSwitcherButton).to.have.text('Day');
 
     // Open the menu
@@ -94,7 +96,7 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const viewSwitcherButton = screen.getByRole('button', { name: 'Switch View' });
+    const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     fireEvent.click(viewSwitcherButton);
 
     const menu = screen.getByRole('listbox');
@@ -113,7 +115,7 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const viewSwitcherButton = screen.getByRole('button', { name: 'Switch View' });
+    const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     fireEvent.click(viewSwitcherButton);
 
     const menu = screen.getByRole('listbox');
@@ -122,5 +124,145 @@ describe('<ViewSwitcher />', () => {
     expect(menuItems).toHaveLength(2);
     expect(menuItems[0]).to.have.text('Agenda');
     expect(menuItems[1]).to.have.text('Week');
+  });
+});
+
+describe('week number badge', () => {
+  const { render } = createSchedulerRenderer();
+
+  const standaloneDefaults = {
+    events: [],
+    resources: [],
+  };
+
+  it('does not render the week number badge by default in week view', () => {
+    render(
+      <EventCalendarProvider {...standaloneDefaults}>
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).to.equal(null);
+  });
+
+  it('renders the week number badge in week view when showWeekNumber is enabled', () => {
+    render(
+      <EventCalendarProvider {...standaloneDefaults} preferences={{ showWeekNumber: true }}>
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).not.to.equal(null);
+  });
+
+  it('renders the week number badge in day view when showWeekNumber is enabled', () => {
+    render(
+      <EventCalendarProvider
+        {...standaloneDefaults}
+        view="day"
+        preferences={{ showWeekNumber: true }}
+      >
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).not.to.equal(null);
+  });
+
+  it('does not render the week number badge in month view even when showWeekNumber is enabled', () => {
+    render(
+      <EventCalendarProvider
+        {...standaloneDefaults}
+        view="month"
+        preferences={{ showWeekNumber: true }}
+      >
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).to.equal(null);
+  });
+
+  it('does not render the week number badge in agenda view even when showWeekNumber is enabled', () => {
+    render(
+      <EventCalendarProvider
+        {...standaloneDefaults}
+        view="agenda"
+        preferences={{ showWeekNumber: true }}
+      >
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).to.equal(null);
+  });
+
+  it('shows "Week 1" for Jan 5 2025 when weekStartsOn=1', () => {
+    const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={visibleDate}
+        view="week"
+        preferences={{ showWeekNumber: true, weekStartsOn: 1 }}
+      />,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).not.to.equal(null);
+    expect(badge).to.have.text('Week 1');
+  });
+
+  it('shows "Week 2" for Jan 5 2025 when weekStartsOn=0 (regression)', () => {
+    const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={visibleDate}
+        view="week"
+        preferences={{ showWeekNumber: true, weekStartsOn: 0 }}
+      />,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).not.to.equal(null);
+    expect(badge).to.have.text('Week 2');
+  });
+});
+
+describe('side panel toggle', () => {
+  const { render } = createSchedulerRenderer();
+
+  // Rendering the full EventCalendar (rather than HeaderToolbar standalone) so the toggle
+  // button and the side panel it controls share the same generated `schedulerId`.
+  it('should expose aria-expanded and aria-controls reflecting the side panel state', () => {
+    render(<EventCalendar events={[]} resources={[]} />);
+
+    // isSidePanelOpen defaults to true
+    const toggleButton = screen.getByRole('button', { name: 'Close side panel' });
+    expect(toggleButton).to.have.attribute('aria-expanded', 'true');
+
+    const panelId = toggleButton.getAttribute('aria-controls');
+    if (!panelId) {
+      throw new Error('Expected the toggle button to have an aria-controls attribute');
+    }
+
+    const panel = document.getElementById(panelId);
+    expect(panel).not.to.equal(null);
+    expect(panel!.hasAttribute('aria-hidden')).to.equal(false);
+
+    fireEvent.click(toggleButton);
+
+    // Same button, now reflecting the collapsed state
+    expect(screen.getByRole('button', { name: 'Open side panel' })).to.equal(toggleButton);
+    expect(toggleButton).to.have.attribute('aria-expanded', 'false');
+    expect(toggleButton).to.have.attribute('aria-controls', panelId);
   });
 });

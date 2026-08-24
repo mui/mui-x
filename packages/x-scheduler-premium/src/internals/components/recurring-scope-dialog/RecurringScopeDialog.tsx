@@ -10,43 +10,34 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import { RecurringEventUpdateScope } from '@mui/x-scheduler-internals/models';
+import type { RecurringEventScope } from '@mui/x-scheduler-internals/models';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { useEventDialogStyledContext } from '@mui/x-scheduler/internals';
-import { RecurringScopeDialogProps } from './RecurringScopeDialog.types';
+import { useEventEditingStyledContext } from '@mui/x-scheduler/internals';
+import type { RecurringScopeDialogProps } from './RecurringScopeDialog.types';
 
+/** Asks which occurrences a change to a recurring event should apply to. */
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringScopeDialogProps>(
   function RecurringScopeDialog(props, ref) {
     // Context hooks
-    const { schedulerId, localeText } = useEventDialogStyledContext();
+    const { schedulerId, localeText } = useEventEditingStyledContext();
     const store = useSchedulerStoreContext();
 
     // Selector hooks
     const open = useStore(store, schedulerOtherSelectors.isRecurringScopeDialogOpen);
 
-    // Feature hooks
-    const handleOpenChange = React.useCallback(
-      (next: boolean) => {
-        if (!next) {
-          store.selectRecurringEventUpdateScope(null);
-        }
-      },
-      [store],
-    );
-
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const form = new FormData(event.currentTarget);
-      const recurrenceScopeValue = form.get('recurrenceScope') as RecurringEventUpdateScope;
-      store.selectRecurringEventUpdateScope(recurrenceScopeValue);
+      const recurrenceScopeValue = form.get('recurrenceScope') as RecurringEventScope;
+      store.selectRecurringEventScope(recurrenceScopeValue);
     };
 
     return (
       <Dialog
         open={open}
         ref={ref}
-        onClose={() => handleOpenChange(false)}
+        onClose={() => store.selectRecurringEventScope(null)}
         aria-labelledby={`${schedulerId}-scope-dialog-title`}
         {...props}
       >
@@ -74,7 +65,7 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringSc
             </FormControl>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => store.selectRecurringEventUpdateScope(null)} type="button">
+            <Button onClick={() => store.selectRecurringEventScope(null)} type="button">
               {localeText.cancel}
             </Button>
             <Button variant="contained" type="submit">

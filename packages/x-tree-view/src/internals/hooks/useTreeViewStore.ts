@@ -1,9 +1,9 @@
 'use client';
-import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useOnMount } from '@base-ui/utils/useOnMount';
+import { useDisposable } from '@mui/x-internals/useDisposable';
 import { useRtl } from '@mui/system/RtlProvider';
-import { TreeViewAnyStore } from '../models';
+import type { TreeViewAnyStore } from '../models';
 
 interface ValidTreeViewStoreConstructor<TStore extends TreeViewAnyStore> {
   new (parameters: TStore['parameters']): TStore;
@@ -22,14 +22,16 @@ export function useTreeViewStore<TStore extends TreeViewAnyStore>(
   parameters: UseTreeViewStoreParameters<TStore>,
 ): TStore {
   const isRtl = useRtl();
-  const store = useRefWithInit(() => new StoreClass({ ...parameters, isRtl })).current;
+  const store = useDisposable(() => new StoreClass({ ...parameters, isRtl }));
 
   useIsoLayoutEffect(
     () => store.updateStateFromParameters({ ...parameters, isRtl }),
     [store, isRtl, parameters],
   );
 
-  useOnMount(store.disposeEffect);
+  // Mount-time side effects (e.g. kicking off lazy-loading fetches). The store is
+  // created during render by `useDisposable`, so these can't run in the factory.
+  useOnMount(store.mountEffect);
 
   return store;
 }
