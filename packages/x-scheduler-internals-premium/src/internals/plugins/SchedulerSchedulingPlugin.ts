@@ -21,7 +21,7 @@ import type {
 } from '../../models';
 import {
   classifyDependencyEvent,
-  groupByEventId,
+  groupRetainedDependenciesBySource,
   isDependencyReadOnly,
 } from '../utils/dependency-utils';
 
@@ -136,9 +136,8 @@ export class SchedulerSchedulingPlugin<
 
     // Grouped from the lookup, not the raw list: with duplicate ids only the last
     // entry per id exists for the feature, so a shadowed edge must not reject an add.
-    const dependenciesBySource = groupByEventId(
-      Array.from(this.store.state.dependencyModelLookup.values()),
-      'source',
+    const dependenciesBySource = groupRetainedDependenciesBySource(
+      this.store.state.dependencyModelLookup,
     );
 
     // Duplicate before cycle: on data that already contains a cycle, re-adding an

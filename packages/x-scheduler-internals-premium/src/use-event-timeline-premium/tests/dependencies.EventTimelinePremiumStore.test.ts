@@ -304,6 +304,36 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect(onDependenciesChange.called).to.equal(false);
     });
 
+    it('should reject a dependency whose cycle closes through a middle outgoing branch', () => {
+      // `event-a` has three outgoing edges and only the middle one reaches the proposed
+      // source: a grouping that retained a single branch per event — whether the first
+      // or the last — would admit the cycle.
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        {
+          events: [eventA, eventB, eventC, eventD, eventE],
+          resources: TEST_RESOURCES,
+          dependencies: [
+            DEP_AB,
+            { id: 'dep-2', source: 'event-a', target: 'event-c', type: 'FinishToStart' },
+            { id: 'dep-3', source: 'event-c', target: 'event-d', type: 'FinishToStart' },
+            { id: 'dep-4', source: 'event-a', target: 'event-e', type: 'FinishToStart' },
+          ],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      const result = store.addDependency({
+        source: 'event-d',
+        target: 'event-a',
+        type: 'FinishToStart',
+      });
+
+      expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
+      expect(onDependenciesChange.called).to.equal(false);
+    });
+
     it('should accept a dependency whose walk traverses a diamond', () => {
       // Reconvergence is not a cycle: the walk from `event-a` reaches `event-d` through
       // both branches (revisit, not cycle) and must still accept the new edge.
