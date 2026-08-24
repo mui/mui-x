@@ -188,6 +188,9 @@ StandaloneAgendaViewPremium.propTypes /* remove-proptypes */ = {
   eventModelStructure: PropTypes.object,
   /**
    * The events currently available in the calendar.
+   *
+   * Event models are compared by reference to avoid reprocessing unchanged events.
+   * Replace an event model with a new object when updating it instead of mutating it in place.
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
