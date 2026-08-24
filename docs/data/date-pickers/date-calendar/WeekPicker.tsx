@@ -17,7 +17,7 @@ interface CustomPickerDayProps extends PickerDayProps {
 const CustomPickerDay = styled(PickerDay, {
   shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'isHovered',
 })<CustomPickerDayProps>(({ theme, isSelected, isHovered, day }) => ({
-  '--PickerDay-horizontalMargin': 0,
+  '--PickerDay-horizontalMargin': '0px',
   // Ensures the day increases width, accounting for the padding, matching the width of the week number cell
   boxSizing: 'content-box',
   paddingLeft: '2px',

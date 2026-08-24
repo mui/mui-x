@@ -7,7 +7,7 @@ import type { Theme } from '@mui/material/styles';
 import { styled, useThemeProps } from '@mui/material/styles';
 import type { SxProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
-import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
+import { DAY_SIZE_VAR, DAY_MARGIN_VAR } from '../internals/constants/dimensions';
 import type { DayCalendarSkeletonClasses } from './dayCalendarSkeletonClasses';
 import { getDayCalendarSkeletonUtilityClass } from './dayCalendarSkeletonClasses';
 
@@ -46,7 +46,7 @@ const DayCalendarSkeletonWeek = styled('div', {
   name: 'MuiDayCalendarSkeleton',
   slot: 'Week',
 })({
-  margin: `${DAY_MARGIN}px 0`,
+  margin: `${DAY_MARGIN_VAR} 0`,
   display: 'flex',
   justifyContent: 'center',
 });
@@ -55,7 +55,9 @@ const DayCalendarSkeletonDay = styled(Skeleton, {
   name: 'MuiDayCalendarSkeleton',
   slot: 'DaySkeleton',
 })({
-  margin: `0 ${DAY_MARGIN}px`,
+  margin: `0 ${DAY_MARGIN_VAR}`,
+  width: DAY_SIZE_VAR,
+  height: DAY_SIZE_VAR,
   '&[data-day-in-month="0"]': {
     visibility: 'hidden',
   },
@@ -100,8 +102,6 @@ function DayCalendarSkeleton(inProps: DayCalendarSkeletonProps) {
             <DayCalendarSkeletonDay
               key={index2}
               variant="circular"
-              width={DAY_SIZE}
-              height={DAY_SIZE}
               className={classes.daySkeleton}
               data-day-in-month={dayInMonth}
             />

@@ -18,7 +18,7 @@ import type { YearCalendarProps } from './YearCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
-import { DIALOG_WIDTH, MAX_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
+import { CALENDAR_WIDTH_VAR, MAX_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
 import type { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
@@ -62,7 +62,7 @@ const YearCalendarRoot = styled('div', {
   padding: '6px 0',
   overflowY: 'auto',
   height: '100%',
-  width: DIALOG_WIDTH,
+  width: CALENDAR_WIDTH_VAR,
   maxHeight: MAX_CALENDAR_HEIGHT,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
