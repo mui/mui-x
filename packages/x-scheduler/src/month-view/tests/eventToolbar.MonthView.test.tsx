@@ -1,14 +1,7 @@
 import { spy } from 'sinon';
 import { screen, fireEvent } from '@mui/internal-test-utils';
-import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
-
-const createMatchMedia = (matches: boolean) => () =>
-  ({
-    matches,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-  }) as any;
 
 /**
  * On a coarse pointer, tapping an event arms it (toolbar) rather than opening the dialog; an outside

@@ -24,13 +24,12 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
-import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import { useStore } from '@base-ui/utils/store';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
 import { useEventEditingStyledContext } from '../event-editing';
-import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
+import { useEventDialogFormContext } from './form/EventDialogFormContext';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
 
 // Only meaningful in single-select mode: the sentinel value backing the "no resource"
@@ -139,19 +138,9 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
   );
 }
 
-interface ResourceAndColorSectionProps extends EventDialogSectionProps {
-  /**
-   * Whether the picker is single- or multi-select. Derived once by `FormContent`, alongside
-   * the form's `initialValues` — the same value also decides what `handleSubmit` writes, so
-   * both must read the exact same "captured at mount" answer. See `getResourceSelectionMode`.
-   */
-  resourceSelectionMode: ResourceSelectionMode;
-}
-
-export default function ResourceAndColorSection(props: ResourceAndColorSectionProps) {
-  const { occurrence, resourceSelectionMode: mode } = props;
-
+export default function ResourceAndColorSection() {
   // Context hooks
+  const { occurrence, resourceSelectionMode: mode } = useEventDialogFormContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 

@@ -1,26 +1,13 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
-import type { SchedulerDependency, SchedulerDependencyId } from '../models';
+import type { SchedulerDependencyId } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
-import { classifyDependencyEvent, isDependencyReadOnly } from '../internals/utils/dependency-utils';
-
-function groupByEventId(
-  dependencies: readonly SchedulerDependency[],
-  property: 'source' | 'target',
-): Map<SchedulerEventId, SchedulerDependency[]> {
-  const groups = new Map<SchedulerEventId, SchedulerDependency[]>();
-  for (const dependency of dependencies) {
-    const eventId = dependency[property];
-    const group = groups.get(eventId);
-    if (group) {
-      group.push(dependency);
-    } else {
-      groups.set(eventId, [dependency]);
-    }
-  }
-  return groups;
-}
+import {
+  classifyDependencyEvent,
+  groupByEventId,
+  isDependencyReadOnly,
+} from '../internals/utils/dependency-utils';
 
 const activeModelListSelector = createSelectorMemoized(
   (state: State) => state.dependencyModelLookup,

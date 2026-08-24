@@ -14,7 +14,6 @@ import {
 import { useEventEditingStyledContext } from '../event-editing';
 import type { EventDialogFormValues } from './utils';
 import { computeRange, validateRange } from './utils';
-import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
 import { useEventDialogFormContext } from './form/EventDialogFormContext';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
@@ -56,14 +55,13 @@ const AllDayFormControlLabel = styled(FormControlLabel, {
   },
 });
 
-export default function DateTimeSection(props: EventDialogSectionProps) {
-  const { occurrence } = props;
-
+export default function DateTimeSection() {
   // Context hooks
   const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
+  const { occurrence } = formStore;
 
   // Selector hooks
   const isPropertyReadOnly = useStore(
