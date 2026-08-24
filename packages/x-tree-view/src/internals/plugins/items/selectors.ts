@@ -66,7 +66,13 @@ export const itemsSelectors = {
 
     const parentIndexes =
       state.itemChildrenIndexesLookup[itemMeta.parentId ?? TREE_VIEW_ROOT_PARENT_ID];
-    return parentIndexes[itemMeta.id];
+    // `itemMetaLookup` and `itemChildrenIndexesLookup` are populated in separate
+    // store updates during item registration (item meta from a layout effect,
+    // the parent's children-index bucket from a later passive effect), so there
+    // is a transient window where an item's meta exists while its parent's index
+    // bucket does not. Return the same `-1` "not found" sentinel used above
+    // instead of throwing on the missing bucket.
+    return parentIndexes?.[itemMeta.id] ?? -1;
   }),
   /**
    * Gets the id of an item's parent.
