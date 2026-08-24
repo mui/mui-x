@@ -188,6 +188,14 @@ async function main() {
   });
 
   async function navigateToTest(page: Page, route: string) {
+    // Screenshots taken with fallback faces look like a repo-wide text rendering
+    // change. Wait here rather than at page creation: every caller is inside a
+    // test or hook, so vitest's timeouts cover it, and nothing that does not need
+    // fonts (route discovery, page setup) is blocked. It has to happen before the
+    // fixture mounts -- components that measure text at mount would otherwise
+    // bake in fallback metrics that the later font swap does not recompute.
+    await page.evaluate(() => window.muiFixture.fontsReady);
+
     // Use client-side routing which is much faster than full page navigation via page.goto().
     return page.evaluate((_route) => {
       window.muiFixture.navigate(_route);
@@ -820,8 +828,8 @@ async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}
   });
 
   const baseUrl = 'http://localhost:5001';
-  // Wait for all requests to finish.
-  // This should load shared resources such as fonts.
+  // Wait for all requests to finish. Fonts are awaited per navigation in
+  // `navigateToTest`, not here.
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
 
   await page.waitForFunction(() => window.muiFixture?.isReady);
