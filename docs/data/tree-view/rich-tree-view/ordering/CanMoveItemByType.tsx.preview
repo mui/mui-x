@@ -1,0 +1,12 @@
+<RichTreeViewPro
+  apiRef={apiRef}
+  items={ITEMS}
+  itemsReordering
+  defaultExpandedItems={['documents']}
+  // Only allow drops where the new parent is a folder.
+  // `newPosition.parentId` is `null` when the item is dropped at the root.
+  canMoveItemToNewPosition={(params) =>
+    params.newPosition.parentId !== null &&
+    apiRef.current!.getItem(params.newPosition.parentId).fileType === 'folder'
+  }
+/>

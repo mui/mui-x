@@ -1,10 +1,17 @@
 import { spy } from 'sinon';
-import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import {
+  adapter,
+  adapterFr,
+  EventBuilder,
+  ResourceBuilder,
+  storeClasses,
+} from 'test/utils/scheduler';
 import type {
   SchedulerEvent,
   SchedulerEventModelStructure,
 } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { describe, it, expect } from 'vitest';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
 const TEST_RESOURCES = [ResourceBuilder.new().build()];
@@ -180,7 +187,7 @@ storeClasses.forEach((storeClass) => {
         expect(duplicated.priority).to.equal('high');
       });
 
-      it('should only re-compute the processed events when updating events or eventModelStructure parameters', () => {
+      it('should only re-compute event models affected by updated processing parameters', () => {
         interface MyEvent2 {
           myId: string;
           title: string;
@@ -221,6 +228,10 @@ storeClasses.forEach((storeClass) => {
 
         // Called to convert Event 1 on mount.
         expect(idGetter.callCount).to.equal(1);
+        const processedEvent1 = schedulerEventSelectors.processedEvent(store.state, '1');
+        const initialEventIdList = store.state.eventIdList;
+        const initialEventModelLookup = store.state.eventModelLookup;
+        const initialProcessedEventLookup = store.state.processedEventLookup;
 
         store.updateStateFromParameters(
           {
@@ -235,13 +246,23 @@ storeClasses.forEach((storeClass) => {
         // Not called again when updating a non-related parameter.
         expect(idGetter.callCount).to.equal(1);
 
-        const events2: MyEvent2[] = [
+        store.updateStateFromParameters(
           {
-            myId: '1',
-            title: 'Event 1',
-            start: '2025-07-01T09:00:00.000Z',
-            end: '2025-07-01T10:00:00.000Z',
+            resources: TEST_RESOURCES,
+            events: [...events],
+            eventModelStructure: eventModelStructure2,
+            showCurrentTimeIndicator: true,
           },
+          adapter,
+        );
+
+        expect(idGetter.callCount).to.equal(1);
+        expect(store.state.eventIdList).to.equal(initialEventIdList);
+        expect(store.state.eventModelLookup).to.equal(initialEventModelLookup);
+        expect(store.state.processedEventLookup).to.equal(initialProcessedEventLookup);
+
+        const events2: MyEvent2[] = [
+          events[0],
           {
             myId: '2',
             title: 'Event 2',
@@ -260,21 +281,101 @@ storeClasses.forEach((storeClass) => {
           adapter,
         );
 
-        // Called again to convert Event 1 and Event 2 because props.events changed.
-        expect(idGetter.callCount).to.equal(3);
+        // Only the new model is processed.
+        expect(idGetter.callCount).to.equal(2);
+        expect(schedulerEventSelectors.processedEvent(store.state, '1')).to.equal(processedEvent1);
+        const processedEvent2 = schedulerEventSelectors.processedEvent(store.state, '2');
 
+        const events3 = [events2[0], { ...events2[1], title: 'Event 2 updated' }];
         store.updateStateFromParameters(
           {
             resources: TEST_RESOURCES,
-            events: events2,
-            eventModelStructure: { ...eventModelStructure2 },
+            events: events3,
+            eventModelStructure: eventModelStructure2,
             showCurrentTimeIndicator: true,
           },
           adapter,
         );
 
-        // Called again to convert Event 1 and Event 2 because props.eventModelStructure changed.
+        expect(idGetter.callCount).to.equal(3);
+        expect(schedulerEventSelectors.processedEvent(store.state, '1')).to.equal(processedEvent1);
+        expect(schedulerEventSelectors.processedEvent(store.state, '2')).not.to.equal(
+          processedEvent2,
+        );
+
+        const event2BeforeTimezoneChange = schedulerEventSelectors.processedEvent(store.state, '2');
+        store.updateStateFromParameters(
+          {
+            resources: TEST_RESOURCES,
+            events: events3,
+            eventModelStructure: eventModelStructure2,
+            displayTimezone: 'Europe/Paris',
+            showCurrentTimeIndicator: true,
+          },
+          adapter,
+        );
+
+        // The display timezone affects every processed event.
         expect(idGetter.callCount).to.equal(5);
+        expect(schedulerEventSelectors.processedEvent(store.state, '1')).not.to.equal(
+          processedEvent1,
+        );
+        expect(schedulerEventSelectors.processedEvent(store.state, '2')).not.to.equal(
+          event2BeforeTimezoneChange,
+        );
+
+        const event2BeforeAdapterChange = schedulerEventSelectors.processedEvent(store.state, '2');
+        store.updateStateFromParameters(
+          {
+            resources: TEST_RESOURCES,
+            events: events3,
+            eventModelStructure: eventModelStructure2,
+            displayTimezone: 'Europe/Paris',
+            showCurrentTimeIndicator: true,
+          },
+          adapterFr,
+        );
+
+        expect(idGetter.callCount).to.equal(7);
+        expect(schedulerEventSelectors.processedEvent(store.state, '2')).not.to.equal(
+          event2BeforeAdapterChange,
+        );
+
+        const updatedEventModelStructure = { ...eventModelStructure2 };
+        store.updateStateFromParameters(
+          {
+            resources: TEST_RESOURCES,
+            events: events3,
+            eventModelStructure: updatedEventModelStructure,
+            displayTimezone: 'Europe/Paris',
+            showCurrentTimeIndicator: true,
+          },
+          adapterFr,
+        );
+
+        // Called again to convert Event 1 and Event 2 because props.eventModelStructure changed.
+        expect(idGetter.callCount).to.equal(9);
+
+        const processedEventsBeforeReorder = store.state.processedEventLookup;
+        store.updateStateFromParameters(
+          {
+            resources: TEST_RESOURCES,
+            events: [events3[1], events3[0]],
+            eventModelStructure: updatedEventModelStructure,
+            displayTimezone: 'Europe/Paris',
+            showCurrentTimeIndicator: true,
+          },
+          adapterFr,
+        );
+
+        expect(idGetter.callCount).to.equal(9);
+        expect(store.state.eventIdList).to.deep.equal(['2', '1']);
+        expect(store.state.processedEventLookup.get('1')).to.equal(
+          processedEventsBeforeReorder.get('1'),
+        );
+        expect(store.state.processedEventLookup.get('2')).to.equal(
+          processedEventsBeforeReorder.get('2'),
+        );
       });
     });
 
@@ -311,6 +412,19 @@ storeClasses.forEach((storeClass) => {
         expect(schedulerEventSelectors.processedEvent(store.state, second.id)!.title).to.equal(
           second.title,
         );
+
+        const initialEventIdList = store.state.eventIdList;
+        const initialEventModelLookup = store.state.eventModelLookup;
+        const initialProcessedEventLookup = store.state.processedEventLookup;
+
+        store.updateStateFromParameters(
+          { resources: TEST_RESOURCES, events: [first, second] },
+          adapter,
+        );
+
+        expect(store.state.eventIdList).to.equal(initialEventIdList);
+        expect(store.state.eventModelLookup).to.equal(initialEventModelLookup);
+        expect(store.state.processedEventLookup).to.equal(initialProcessedEventLookup);
       });
     });
 

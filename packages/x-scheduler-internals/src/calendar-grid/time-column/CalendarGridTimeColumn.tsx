@@ -48,7 +48,11 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     focusedCell?.rowIndex === 0 &&
     focusedCell?.columnIndex === index;
 
-  const { getCursorPositionInElementMs, ref: dropTargetRef } = useTimeDropTarget({
+  const {
+    getCursorPositionInElementMs,
+    getDateAtPointer,
+    ref: dropTargetRef,
+  } = useTimeDropTarget({
     start,
     end,
     addPropertiesToDroppedEvent,
@@ -105,7 +109,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
     if (event.key === 'Enter' && event.target === event.currentTarget && triggerKeyboardCreation) {
       event.preventDefault();
-      triggerKeyboardCreation();
+      triggerKeyboardCreation(event.nativeEvent);
     }
   };
 
@@ -131,8 +135,18 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       index,
       hasFocus,
       getCursorPositionInElementMs,
+      getDateAtPointer,
     }),
-    [start, end, dayStartMinute, dayEndMinute, index, hasFocus, getCursorPositionInElementMs],
+    [
+      start,
+      end,
+      dayStartMinute,
+      dayEndMinute,
+      index,
+      hasFocus,
+      getCursorPositionInElementMs,
+      getDateAtPointer,
+    ],
   );
 
   const keyboardProps = {
@@ -176,7 +190,7 @@ export namespace CalendarGridTimeColumn {
      */
     dayStartMinute?: number;
     /**
-     * Last displayed minute of the day, as an offset from midnight.
+     * End of the displayed window of the day, as an exclusive offset from midnight (1440 for the full day).
      * Derived from the view's whole-hour window so it stays aligned with the
      * grid rows even on DST-transition days.
      * @default 1440

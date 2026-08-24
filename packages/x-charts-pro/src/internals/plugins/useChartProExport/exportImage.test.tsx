@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { act, createRenderer } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, onTestFinished } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import type { ChartProApi } from '@mui/x-charts-pro/context';
 import { isJSDOM } from 'test/utils/skipIf';

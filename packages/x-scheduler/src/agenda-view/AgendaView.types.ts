@@ -7,6 +7,7 @@ import type {
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarLocaleText } from '../models/translations';
+import type { SchedulerSlotsAndSlotProps } from '../models/slots';
 
 export interface AgendaViewProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -19,7 +20,8 @@ export interface StandaloneAgendaViewProps<TEvent extends object, TResource exte
       | keyof EventCalendarSchedulerParametersOverrides
       | CollapsibleResourcesParameterKeys
     >,
-    EventCalendarSchedulerParametersOverrides {
+    EventCalendarSchedulerParametersOverrides,
+    SchedulerSlotsAndSlotProps {
   /**
    * Configuration applied to the view, keyed by the view name.
    * The `agenda` view does not support any configuration keys yet.

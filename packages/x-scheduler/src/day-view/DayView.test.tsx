@@ -10,6 +10,7 @@ import {
 import { DayView } from '@mui/x-scheduler/day-view';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerResource } from '@mui/x-scheduler/models';
+import { describe, it, expect } from 'vitest';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 
@@ -40,10 +41,8 @@ describe('<DayView />', () => {
     return document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridContainer}`)!;
   }
 
-  // DayView no longer wraps the grid in a renderer provider — the desktop variant comes from the
-  // default value of DayTimeGridInternalRenderersContext. This is the mirror of the touch test in
-  // CompactDayView and guards that default.
-  it('renders the desktop event variant (with a time element) without a renderer provider', () => {
+  // The event component always renders the time element (only hidden by CSS on touch), so it is in the DOM.
+  it('should render the event with a time element', () => {
     const event = EventBuilder.new()
       .title('Desktop Event')
       .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')

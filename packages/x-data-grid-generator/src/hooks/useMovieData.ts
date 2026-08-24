@@ -21,7 +21,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 });
 
 const COLUMNS: GridColDef[] = [
-  { field: 'title', headerName: 'Title', width: 200, groupable: false },
+  { field: 'title', headerName: 'Title', width: 200, groupable: false, rowHeader: true },
   {
     field: 'gross',
     headerName: 'Gross',

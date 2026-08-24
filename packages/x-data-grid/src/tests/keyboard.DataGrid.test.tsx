@@ -14,6 +14,7 @@ import type { DataGridProps, GridColDef, GridColType, GridValueSetter } from '@m
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 const PAGE_SIZE = 10;
 const ROW_HEIGHT = 52;

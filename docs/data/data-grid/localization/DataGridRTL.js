@@ -22,6 +22,7 @@ const columns = [
   {
     field: 'name',
     headerName: 'اسم',
+    rowHeader: true,
     width: 150,
   },
   {

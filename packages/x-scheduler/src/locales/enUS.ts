@@ -1,20 +1,27 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const enUSDialog: EventDialogLocaleText = {
+const enUSDialog: EventEditingLocaleText = {
   // EventDialog
   colorPickerLabel: 'Event color',
+  colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Date & time',
   resourceColorSectionLabel: 'Resource & color',
   allDayLabel: 'All Day',
   closeButtonAriaLabel: 'Close',
   closeButtonLabel: 'Close',
+  editEventButtonAriaLabel: 'Edit event',
+  deleteEventButtonAriaLabel: 'Delete event',
+  eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Delete event',
+  editEvent: 'Edit event',
+  showEventDetails: 'Show details',
+  eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Description',
   endDateLabel: 'End date',
   endTimeLabel: 'End time',
@@ -53,8 +60,9 @@ const enUSDialog: EventDialogLocaleText = {
   resourceLabel: 'Resource',
   requiredResourceError: 'A resource is required.',
   saveChanges: 'Save',
-  startDateAfterEndDateError: 'Start date/time must be before end date/time.',
+  startDateAfterEndDateError: 'End date cannot be before start date.',
   startDateLabel: 'Start date',
+  startTimeAfterEndTimeError: 'End time must be after start time.',
   startTimeLabel: 'Start time',
 
   // RecurringScopeDialog
@@ -67,7 +75,7 @@ const enUSDialog: EventDialogLocaleText = {
   title: 'Apply this change to:',
 };
 
-const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> = {
+const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> = {
   // ResourcesTree
   resourcesLabel: 'Resources',
 
@@ -130,7 +138,7 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> =
   timelineResourceTitleHeader: 'Resource title',
 };
 
-const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventDialogLocaleText> = {
+const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventEditingLocaleText> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Resource title',
 };

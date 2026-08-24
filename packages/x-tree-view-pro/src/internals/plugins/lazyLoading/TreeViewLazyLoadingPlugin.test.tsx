@@ -2,6 +2,7 @@ import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { spy } from 'sinon';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
+import { describe, it, expect } from 'vitest';
 import type { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 interface ItemType {
@@ -380,6 +381,99 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         await awaitMockFetch();
         await screen.findByText('2-1');
         expect(view.getAllTreeItemIds()).to.deep.equal(['2', '2-1']);
+      });
+
+      it('should not apply a stale expand response over a newer forced refresh', async () => {
+        const resolvers: Array<(items: ItemType[]) => void> = [];
+        const getTreeItems = spy(
+          () =>
+            new Promise<ItemType[]>((resolve) => {
+              resolvers.push(resolve);
+            }),
+        );
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems,
+          },
+        });
+
+        // expanding item '1' starts the first (expand) fetch
+        fireEvent.click(view.getItemContent('1'));
+        expect(getTreeItems.callCount).to.equal(1);
+
+        // a forced refresh starts before the expand fetch resolves, starting a second fetch
+        await act(async () => {
+          view.apiRef.current.updateItemChildren('1');
+        });
+        expect(getTreeItems.callCount).to.equal(2);
+
+        // the newer (forced refresh) request resolves first with the fresh children
+        await act(async () => {
+          resolvers[1]([{ id: 'fresh', childrenCount: 0 }]);
+        });
+
+        // the older (expand) request resolves last with stale children
+        await act(async () => {
+          resolvers[0]([{ id: 'stale', childrenCount: 0 }]);
+        });
+
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', 'fresh']);
+
+        // the cache also holds fresh children: re-expanding serves them with no extra fetch
+        fireEvent.click(view.getItemContent('1'));
+        expect(view.isItemExpanded('1')).to.equal(false);
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+        expect(getTreeItems.callCount).to.equal(2);
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', 'fresh']);
+      });
+
+      it('should still propagate selection to children when an expand fetch resolves before a racing refresh', async () => {
+        const resolvers: Array<(items: ItemType[]) => void> = [];
+        const getTreeItems = spy(
+          () =>
+            new Promise<ItemType[]>((resolve) => {
+              resolvers.push(resolve);
+            }),
+        );
+        const onSelectedItemsChange = spy();
+
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          multiSelect: true,
+          defaultSelectedItems: ['1'],
+          selectionPropagation: { descendants: true },
+          onSelectedItemsChange,
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems,
+          },
+        });
+
+        // expanding the already-selected item '1' starts the expand fetch
+        fireEvent.click(view.getItemContent('1'));
+        expect(getTreeItems.callCount).to.equal(1);
+
+        // a forced refresh starts before the expand fetch resolves
+        await act(async () => {
+          view.apiRef.current.updateItemChildren('1');
+        });
+        expect(getTreeItems.callCount).to.equal(2);
+
+        // the expand fetch resolves first, then the refresh resolves with the same children
+        await act(async () => {
+          resolvers[0]([{ id: '1-1', childrenCount: 0 }]);
+        });
+        await act(async () => {
+          resolvers[1]([{ id: '1-1', childrenCount: 0 }]);
+        });
+
+        // the child loaded for the selected parent must be selected through descendant propagation
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
+        expect(onSelectedItemsChange.lastCall.args[1]).to.include('1-1');
       });
 
       it('should use the data from props.items on mount', () => {

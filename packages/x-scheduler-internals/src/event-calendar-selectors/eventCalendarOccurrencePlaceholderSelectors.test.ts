@@ -1,4 +1,5 @@
 import { adapter, DEFAULT_EVENT_CALENDAR_STATE, EventBuilder } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import type { EventCalendarState } from '../use-event-calendar';
 
@@ -48,6 +49,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           resourceId: null,
+          sourceResourceId: null,
           originalOccurrence: EventBuilder.new().id('event-id').toOccurrence(),
         },
       };
@@ -129,6 +131,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           resourceId: null,
+          sourceResourceId: null,
           originalOccurrence: EventBuilder.new().id('event-id').toOccurrence(),
         },
       };

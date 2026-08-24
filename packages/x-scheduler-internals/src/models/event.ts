@@ -364,6 +364,12 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends Sche
    * The data of the event to use when dropping the event outside of the Event Calendar or the Event Timeline Premium.
    */
   originalOccurrence: SchedulerEventOccurrence;
+  /**
+   * The id of the resource row the occurrence was dragged from, if the drag source exposes it.
+   * Used to replace only that entry in a multi-resource event's `resource` array on drop,
+   * instead of overwriting the whole array with the destination resource.
+   */
+  sourceResourceId: SchedulerResourceId | null;
 }
 
 export interface SchedulerOccurrencePlaceholderExternalDrag extends SchedulerOccurrencePlaceholderBase {
@@ -482,4 +488,17 @@ export interface SchedulerEventCreationConfig {
    * @default 30
    */
   duration: number;
+  /**
+   * Whether newly created events can be assigned more than one resource.
+   * Decides the picker for every newly created event — even one whose creation placeholder
+   * already carries a resource, e.g. the Event Timeline pre-selecting the row it was created
+   * in, which only seeds an entry and doesn't get to pick the mode — and for existing events
+   * only when their own `resource` is `null` or not set. An existing event whose `resource`
+   * is already a string or an array always keeps that shape regardless of this setting.
+   *
+   * When not set, the mode is inferred from the `events` prop: the first event with a
+   * `resource` value determines it (a string means single, an array means multiple), and
+   * data with no resource at all defaults to multiple.
+   */
+  canHaveMultipleResources?: boolean;
 }

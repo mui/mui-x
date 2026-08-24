@@ -2,6 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { fireEvent, screen, createDescribe } from '@mui/internal-test-utils';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
+import { describe, it, expect } from 'vitest';
 import { DescribePickerOptions } from './describePicker.types';
 
 function innerDescribePicker(ElementToTest: React.ElementType, options: DescribePickerOptions) {

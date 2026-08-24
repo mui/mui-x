@@ -7,9 +7,12 @@ import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
+import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
+import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
+  SchedulerResourceId,
   TemporalSupportedObject,
 } from '../../models';
 import { useAdapterContext } from '../../use-adapter-context';
@@ -116,6 +119,13 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     draggedDay: getDraggedDay(input),
   }));
 
+  // The all-day row spans whole days, so its window is never trimmed.
+  const elementPosition = useElementPositionInCollection({
+    start,
+    end,
+    collection: { start: rowStart, end: rowEnd, dayStartMinute: 0, dayEndMinute: FULL_DAY_MINUTES },
+  });
+
   const {
     state,
     preview,
@@ -129,12 +139,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     isDraggable,
     renderDragPreview,
     getDragData,
-    collectionStart: rowStart,
-    collectionEnd: rowEnd,
+    position: elementPosition,
   });
 
-  const startingBeforeEdge = draggableEventContextValue.doesEventStartBeforeCollectionStart;
-  const endingAfterEdge = draggableEventContextValue.doesEventEndAfterCollectionEnd;
+  const startingBeforeEdge = draggableEventContextValue.isEventStartClipped;
+  const endingAfterEdge = draggableEventContextValue.isEventEndClipped;
 
   const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
 
@@ -194,6 +203,7 @@ export namespace CalendarGridDayEvent {
     originalOccurrence: SchedulerEventOccurrence;
     start: TemporalSupportedObject;
     end: TemporalSupportedObject;
+    sourceResourceId?: SchedulerResourceId;
   }
 
   export interface DragData extends SharedDragData {
