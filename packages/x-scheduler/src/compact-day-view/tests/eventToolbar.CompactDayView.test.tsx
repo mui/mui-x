@@ -2,6 +2,7 @@ import { spy } from 'sinon';
 import { screen, within, fireEvent } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
+import { describe, it, expect } from 'vitest';
 
 /**
  * The compact (touch) layout arms an event on tap, docking an Edit/Delete toolbar at the bottom of

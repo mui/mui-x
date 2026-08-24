@@ -14,6 +14,7 @@ import {
 } from '@playwright/test';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersOutlinedInputClasses } from '@mui/x-date-pickers/PickersTextField';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {

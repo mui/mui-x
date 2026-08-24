@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { EventBuilder } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import type { EventDialogFormParameters } from './EventDialogFormStore';
 import { EventDialogFormStore } from './EventDialogFormStore';
 

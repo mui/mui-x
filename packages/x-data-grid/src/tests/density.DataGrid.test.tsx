@@ -4,6 +4,7 @@ import { grid } from 'test/utils/helperFn';
 import { DataGrid, gridClasses, GridToolbar } from '@mui/x-data-grid';
 import type { DataGridProps } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,

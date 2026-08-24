@@ -11,6 +11,7 @@ import {
   EventContextMenuProvider,
   EventContextMenuTrigger,
 } from '@mui/x-scheduler/internals';
+import { describe, it, expect } from 'vitest';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
 
 /**

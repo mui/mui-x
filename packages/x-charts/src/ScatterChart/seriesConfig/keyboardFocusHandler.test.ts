@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import type { FocusedItemIdentifier } from '../../models';
 import { scatterSeriesConfig } from './index';
 import keyboardFocusHandler from './keyboardFocusHandler';

@@ -17,6 +17,7 @@ import type {
   GridApiPremium,
   GridValidRowModel,
 } from '@mui/x-data-grid-premium';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../constants/columnGroups';
 import type { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
 

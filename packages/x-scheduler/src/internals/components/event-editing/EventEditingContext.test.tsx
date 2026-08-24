@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { EventDialogProvider } from '../event-dialog';
 import { EventEditingProvider, EventEditingTrigger, useEventEditingContext } from './index';

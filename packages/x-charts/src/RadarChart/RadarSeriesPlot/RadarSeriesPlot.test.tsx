@@ -1,5 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { RadarChart, RadarSeriesPlot, radarClasses } from '@mui/x-charts/RadarChart';
+import { describe, it, expect } from 'vitest';
 
 describe('<RadarSeriesPlot />', () => {
   const { render } = createRenderer();

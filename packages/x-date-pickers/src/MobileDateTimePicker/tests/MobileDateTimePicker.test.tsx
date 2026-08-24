@@ -3,6 +3,7 @@ import { screen } from '@mui/internal-test-utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
 import { hasTouchSupport } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<MobileDateTimePicker />', () => {
   const { render } = createPickerRenderer();

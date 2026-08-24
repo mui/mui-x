@@ -13,6 +13,7 @@ import {
   getResizeHandle,
 } from 'test/utils/scheduler';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import { describe, it, expect } from 'vitest';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();

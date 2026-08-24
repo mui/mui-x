@@ -10,6 +10,7 @@ import {
   simulatePointerResize,
 } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 /**
  * Arming and pointer resize are device-adaptive, so they work in the normal Day View too. Driven via

@@ -6,6 +6,7 @@ import type { GridApi, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Cells', () => {
   const { render } = createRenderer();

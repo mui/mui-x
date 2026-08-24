@@ -2,6 +2,7 @@ import { spy } from 'sinon';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const DEFAULT_PARAMS = {

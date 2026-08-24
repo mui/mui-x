@@ -4,6 +4,7 @@ import { screen, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('EventContextMenu', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
