@@ -16,6 +16,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { StandaloneDayViewPremium } from '@mui/x-scheduler-premium/day-view-premium';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 /**
  * On a large touch screen the armed-event toolbar is anchored next to the event and follows it on

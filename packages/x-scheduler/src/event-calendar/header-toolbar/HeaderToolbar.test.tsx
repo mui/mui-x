@@ -1,6 +1,7 @@
 import { screen, within, fireEvent } from '@mui/internal-test-utils';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { HeaderToolbar } from './HeaderToolbar';
 

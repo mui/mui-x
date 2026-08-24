@@ -19,6 +19,7 @@ import type {
 } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { RowReorderDropPosition } from '@mui/x-data-grid/internals';
+import { describe, it, expect } from 'vitest';
 
 function createDragOverEvent(target: ChildNode, dropPosition: RowReorderDropPosition = 'above') {
   const dragOverEvent = createEvent.dragOver(target);

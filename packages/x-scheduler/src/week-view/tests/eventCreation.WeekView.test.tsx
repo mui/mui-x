@@ -4,6 +4,7 @@ import { createSchedulerRenderer, SchedulerStoreRunner } from 'test/utils/schedu
 import { act, screen } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { WeekView } from '@mui/x-scheduler/week-view';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { eventCalendarClasses } from '../../event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';

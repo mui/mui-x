@@ -11,6 +11,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { describe } from 'vitest';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
   const { render } = createPickerRenderer();

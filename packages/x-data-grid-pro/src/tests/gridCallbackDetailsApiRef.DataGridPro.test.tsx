@@ -8,6 +8,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import type { DataGridProProps, GridApiPro, GridRowId } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - GridCallbackDetails apiRef', () => {
   const { render } = createRenderer();

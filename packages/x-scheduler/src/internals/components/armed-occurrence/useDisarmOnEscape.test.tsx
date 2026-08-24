@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { renderHook } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 import { useDisarmOnEscape } from './useDisarmOnEscape';
 
 describe('useDisarmOnEscape', () => {

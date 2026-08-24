@@ -9,6 +9,7 @@ import {
   openLongTextViewPopup,
 } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Accessibility', () => {
   const { render } = createRenderer();
