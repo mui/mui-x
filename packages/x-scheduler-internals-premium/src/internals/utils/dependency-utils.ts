@@ -66,6 +66,26 @@ export function groupByEventId(
   return groups;
 }
 
+// Cached per lookup instance so `addDependency` does not regroup everything on each attempt.
+const bySourceCache = new WeakMap<
+  Map<SchedulerDependencyId, SchedulerDependency>,
+  Map<SchedulerEventId, SchedulerDependency[]>
+>();
+
+/**
+ * Groups the retained (deduplicated) dependencies by their `source` event id.
+ */
+export function groupRetainedDependenciesBySource(
+  dependencyModelLookup: Map<SchedulerDependencyId, SchedulerDependency>,
+): Map<SchedulerEventId, SchedulerDependency[]> {
+  let groups = bySourceCache.get(dependencyModelLookup);
+  if (groups == null) {
+    groups = groupByEventId(Array.from(dependencyModelLookup.values()), 'source');
+    bySourceCache.set(dependencyModelLookup, groups);
+  }
+  return groups;
+}
+
 /**
  * Whether the dependency cannot be created or deleted because one of its endpoint
  * events is read-only. The single definition shared by the store guard and the

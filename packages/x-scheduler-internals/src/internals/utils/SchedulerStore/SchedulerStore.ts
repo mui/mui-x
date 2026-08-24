@@ -124,12 +124,13 @@ export class SchedulerStore<
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...(parameters.dataSource
         ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
-        : buildEventsState(
-            parameters,
+        : buildEventsState({
+            events: parameters.events,
+            eventModelStructure: parameters.eventModelStructure,
             adapter,
-            stateFromParameters.displayTimezone,
+            displayTimezone: stateFromParameters.displayTimezone,
             recurringEventsPlugin,
-          )),
+          })),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
@@ -254,16 +255,18 @@ export class SchedulerStore<
       !parameters.dataSource &&
       (parameters.events !== this.parameters.events ||
         parameters.eventModelStructure !== this.parameters.eventModelStructure ||
-        adapter !== this.state.adapter)
+        adapter !== this.state.adapter ||
+        newSchedulerState.displayTimezone !== this.state.displayTimezone)
     ) {
       Object.assign(
         newSchedulerState,
-        buildEventsState(
-          parameters,
+        buildEventsState({
+          events: parameters.events,
+          eventModelStructure: parameters.eventModelStructure,
           adapter,
-          newSchedulerState.displayTimezone!,
-          this.state.recurringEventsPlugin,
-        ),
+          displayTimezone: newSchedulerState.displayTimezone!,
+          previousState: this.state,
+        }),
       );
     }
     // Recompute "now" only when the display timezone changes; the minute timer maintains it otherwise.
