@@ -20,6 +20,12 @@ export interface EventEditingLocaleText {
   deleteEventButtonAriaLabel: string;
   eventActionsToolbarAriaLabel: string;
   deleteEvent: string;
+  // EventContextMenu (shown on right-click of an event, or on Space while it is focused)
+  editEvent: string;
+  // Replaces `editEvent` on a read-only event: opens the same non-editable view, so the label
+  // says so instead of promising an edit that can't happen.
+  showEventDetails: string;
+  eventContextMenuAriaLabel: string;
   descriptionLabel: string;
   endDateLabel: string;
   endTimeLabel: string;

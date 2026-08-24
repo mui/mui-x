@@ -6,7 +6,7 @@ import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
 import { spy } from 'sinon';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<DateCalendar />', () => {
   const { render } = createPickerRenderer();
@@ -103,21 +103,89 @@ describe('<DateCalendar />', () => {
     expect(disabledDays.length).to.equal(31);
   });
 
-  // The week number is a `rowheader` taking the first position of the row, so a cell without
-  // an explicit column index would be off by one.
-  it('should keep the column index of the days replaced by a filler cell', () => {
-    render(<DateCalendar displayWeekNumber referenceDate={adapterToUse.date('2018-01-01')} />);
+  describe('grid semantics', () => {
+    const referenceDate = adapterToUse.date('2018-01-01');
 
-    const grid = screen.getByRole('grid', { name: 'January 2018' });
-    const weeks = within(within(grid).getByRole('rowgroup')).getAllByRole('row');
-
-    expect(weeks).to.have.length(5);
-    weeks.forEach((week) => {
-      const columnIndexes = within(week)
-        .getAllByRole('gridcell')
+    const getColumnIndexes = (container: HTMLElement, role: 'columnheader' | 'gridcell') =>
+      within(container)
+        .getAllByRole(role)
         .map((cell) => cell.getAttribute('aria-colindex'));
 
-      expect(columnIndexes).to.deep.equal(['1', '2', '3', '4', '5', '6', '7']);
+    it('should give the day cells the column index of their week day header', () => {
+      render(<DateCalendar referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const headers = within(grid).getAllByRole('columnheader');
+      const headerIndexes = getColumnIndexes(grid, 'columnheader');
+
+      expect(grid).to.have.attribute('aria-colcount', '7');
+      expect(headerIndexes).to.deep.equal(['1', '2', '3', '4', '5', '6', '7']);
+      // The header carries the week day a screen reader announces on a column change.
+      expect(headers[0]).toHaveAccessibleName('Sunday');
+      expect(headers[6]).toHaveAccessibleName('Saturday');
+
+      const weeks = within(within(grid).getByRole('rowgroup')).getAllByRole('row');
+      expect(weeks).to.have.length(5);
+      weeks.forEach((week) => {
+        expect(getColumnIndexes(week, 'gridcell')).to.deep.equal(headerIndexes);
+      });
+    });
+
+    // The week number is a `rowheader` taking the first column, so the days start on the second one.
+    it('should offset the column indexes when the week number is displayed', () => {
+      render(<DateCalendar displayWeekNumber referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+
+      expect(grid).to.have.attribute('aria-colcount', '8');
+      expect(getColumnIndexes(grid, 'columnheader')).to.deep.equal([
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+      ]);
+
+      const weeks = within(within(grid).getByRole('rowgroup')).getAllByRole('row');
+      expect(weeks).to.have.length(5);
+      weeks.forEach((week) => {
+        expect(within(week).getByRole('rowheader')).to.have.attribute('aria-colindex', '1');
+        // The filler cells keep the column index of the day they replace.
+        expect(getColumnIndexes(week, 'gridcell')).to.deep.equal([
+          '2',
+          '3',
+          '4',
+          '5',
+          '6',
+          '7',
+          '8',
+        ]);
+      });
+    });
+
+    it('should number the week rows after the week day header row', () => {
+      render(<DateCalendar referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const rowIndexes = within(grid)
+        .getAllByRole('row')
+        .map((row) => row.getAttribute('aria-rowindex'));
+
+      expect(grid).to.have.attribute('aria-rowcount', '6');
+      expect(rowIndexes).to.deep.equal(['1', '2', '3', '4', '5', '6']);
+    });
+
+    // `aria-rowcount` describes the whole grid, including the rows absent from the DOM.
+    it('should keep the row count while loading', () => {
+      render(<DateCalendar loading referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+
+      expect(grid).to.have.attribute('aria-rowcount', '6');
+      expect(within(grid).queryByRole('rowgroup')).to.equal(null);
     });
   });
 

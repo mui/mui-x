@@ -90,7 +90,7 @@ function ActionsCell(props: GridRenderCellParams) {
 }
 
 const columns: GridColDef<Row>[] = [
-  { field: 'name', type: 'string' },
+  { field: 'name', type: 'string', rowHeader: true },
   {
     field: 'bio',
     type: 'longText',

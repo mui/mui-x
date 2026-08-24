@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { PickerDay, pickerDayClasses as classes } from '@mui/x-date-pickers/PickerDay';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe, it, expect } from 'vitest';
 
 describe('<PickerDay />', () => {
   const { render } = createPickerRenderer();

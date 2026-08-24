@@ -301,7 +301,7 @@ function DependencyTerminalsLayerImpl() {
           occurrenceKey={occurrence.key}
           resourceId={rowResourceId}
           side="end"
-          data-palette={schedulerEventSelectors.color(store.state, occurrence.id)}
+          data-palette={schedulerEventSelectors.color(store.state, occurrence.id, rowResourceId)}
           data-visible={visible ? '' : undefined}
           // Clamped at the collection end: the outside circle would overflow the
           // events area and be clipped by the viewport, so it slides back over the

@@ -2,6 +2,7 @@ import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { buildFieldInteractions, createPickerRenderer, expectFieldValue } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import { describe, it, expect } from 'vitest';
 
 describe('<DateField /> - Editing Keyboard', () => {
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {

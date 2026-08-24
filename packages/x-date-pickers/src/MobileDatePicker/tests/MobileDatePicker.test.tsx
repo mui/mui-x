@@ -11,6 +11,7 @@ import {
   buildFieldInteractions,
   openPicker,
 } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<MobileDatePicker />', () => {
   const { render } = createPickerRenderer();

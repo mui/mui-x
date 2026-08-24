@@ -136,7 +136,17 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   props: EventTimelinePremiumEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, ariaLabelledBy, className, variant, id: idProp, style, ...other } = props;
+  const {
+    occurrence,
+    ariaLabelledBy,
+    className,
+    variant,
+    id: idProp,
+    style,
+    resourceId,
+    elementPosition,
+    ...other
+  } = props;
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
@@ -150,7 +160,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     'start',
   );
   const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
-  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id, resourceId);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
   const dependsOnTitles = useStore(
     store,
@@ -203,6 +213,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
+      elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
       aria-describedby={dependsOnTitles.length > 0 ? `${id}-dependencies` : undefined}

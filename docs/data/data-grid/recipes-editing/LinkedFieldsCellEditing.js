@@ -51,7 +51,13 @@ export default function LinkedFieldsCellEditing() {
   const [rows, setRows] = React.useState(initialRows);
 
   const columns = [
-    { field: 'description', headerName: 'Description', width: 160, editable: true },
+    {
+      field: 'description',
+      headerName: 'Description',
+      width: 160,
+      editable: true,
+      rowHeader: true,
+    },
     {
       field: 'value',
       headerName: 'Value',

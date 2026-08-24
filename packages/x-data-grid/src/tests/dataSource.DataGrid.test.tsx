@@ -13,7 +13,8 @@ import type {
   GridGetRowsResponse,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
-import { getCell, sleep } from 'test/utils/helperFn';
+import { actSleep, getCell } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 import { TestCache } from '../internals/utils';
 
@@ -235,7 +236,7 @@ describe('<DataGrid /> - Data source', () => {
       await renderAndWaitForInitialFetch();
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
-      await sleep(50);
+      await actSleep(50);
 
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
@@ -244,7 +245,7 @@ describe('<DataGrid /> - Data source', () => {
       await renderAndWaitForInitialFetch();
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
-      await sleep(50);
+      await actSleep(50);
       expect(fetchRowsSpy.callCount).to.equal(1);
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
@@ -280,7 +281,7 @@ describe('<DataGrid /> - Data source', () => {
       await act(async () => {
         apiRef.current!.setFilterLogicOperator('or' as GridLogicOperator);
       });
-      await sleep(50);
+      await actSleep(50);
 
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
@@ -291,7 +292,7 @@ describe('<DataGrid /> - Data source', () => {
       await act(async () => {
         apiRef.current!.setQuickFilterValues(['']);
       });
-      await sleep(50);
+      await actSleep(50);
 
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
@@ -312,7 +313,7 @@ describe('<DataGrid /> - Data source', () => {
           quickFilterLogicOperator: 'or' as GridLogicOperator,
         });
       });
-      await sleep(50);
+      await actSleep(50);
 
       expect(fetchRowsSpy.callCount).to.equal(2);
     });

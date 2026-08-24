@@ -9,6 +9,7 @@ import {
   ResourceBuilder,
   simulateDragAndDrop,
 } from 'test/utils/scheduler';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   buildDependency,
   createDependencyTimelineRenderer,
@@ -746,6 +747,22 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(
         document.querySelector('[data-dependency-id="dep-1"]')!.hasAttribute('data-selected'),
       ).to.equal(true);
+    });
+
+    it('should surface an error without selecting anything when the drop would create a cycle', () => {
+      const handleDependenciesChange = spy();
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event B', getEventElement('Event A'));
+
+      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(store.state.selection).to.equal(null);
+      expect(store.state.errors).to.have.length(1);
+      expect(store.state.errors[0].error.message).to.include('cycle');
     });
   });
 

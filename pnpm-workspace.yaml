@@ -21,7 +21,7 @@ catalog:
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.3.1
-  '@mui/internal-test-utils': 2.0.18-canary.31
+  '@mui/internal-test-utils': 2.0.18-canary.32
   '@mui/internal-core-docs': 9.1.2-canary.3
   '@mui/material': 9.3.1
   '@mui/stylis-plugin-rtl': 9.3.0
@@ -29,17 +29,17 @@ catalog:
   '@mui/types': 9.3.0
   '@mui/utils': ^9.3.0
   '@mui/x-internal-exceljs-fork': 5.0.0
-  '@playwright/test': 1.61.1
+  '@playwright/test': 1.62.1
   '@react-spring/web': ^10.1.2
   '@types/chance': ^1.1.8
-  '@types/luxon': ^3.7.2
+  '@types/luxon': ^3.7.4
   '@types/moment-hijri': ^2.1.4
   '@types/moment-jalaali': ^0.7.9
   '@types/prop-types': ^15.7.15
   '@types/react': 19.2.18
   '@types/react-dom': 19.2.4
   '@types/react-transition-group': ^4.4.12
-  '@types/semver': ^7.7.1
+  '@types/semver': ^7.8.0
   '@types/use-sync-external-store': ^1.5.0
   '@typescript-eslint/parser': ^8.65.0
   '@vitejs/plugin-react': ^6.0.5
@@ -56,7 +56,7 @@ catalog:
   date-fns: ^4.4.0
   date-fns-jalali: ^4.1.0-0
   dayjs: ^1.11.21
-  es-toolkit: ^1.50.0
+  es-toolkit: ^1.51.0
   execa: 9.6.1
   jscodeshift: 17.4.0
   jsdom: 30.0.1
@@ -66,7 +66,7 @@ catalog:
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.3
   motion: ^12.43.0
-  playwright: 1.61.1
+  playwright: 1.62.1
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
   react: 19.2.8

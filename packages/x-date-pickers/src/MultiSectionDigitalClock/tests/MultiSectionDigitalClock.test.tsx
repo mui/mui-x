@@ -8,6 +8,7 @@ import {
   multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
 import { screen, within } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 
 describe('<MultiSectionDigitalClock />', () => {
   const { render } = createPickerRenderer();

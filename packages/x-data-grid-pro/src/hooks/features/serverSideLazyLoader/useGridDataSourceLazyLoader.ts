@@ -3,6 +3,7 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { useStoreEffect } from '@mui/x-internals/store';
 import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
 import {
@@ -13,6 +14,7 @@ import {
   gridPaginationModelSelector,
   gridFilteredSortedRowIdsSelector,
   gridRowIdSelector,
+  gridPaginationMetaSelector,
   useGridSelector,
 } from '@mui/x-data-grid';
 import type {
@@ -64,6 +66,8 @@ export const useGridDataSourceLazyLoader = (
     | 'lazyLoadingRequestThrottleMs'
     | 'dataSourceRevalidateMs'
     | 'treeData'
+    | 'paginationMeta'
+    | 'initialState'
   >,
 ): void => {
   const isNestedLazyLoadingEnabled = useGridSelector(privateApiRef, () =>
@@ -93,6 +97,15 @@ export const useGridDataSourceLazyLoader = (
   const previousLastRowIndex = React.useRef(0);
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
   const rowsStale = React.useRef<boolean>(false);
+  // Whether more pages are available, used to skip the scroll-end fetch in infinite loading
+  // mode. Seeded like the pagination meta state itself, then updated by each response's
+  // `pageInfo.hasNextPage` (a missing value keeps the previous signal) and by any later
+  // pagination meta update in the store. Defaults to `true`, so data sources that don't
+  // provide `hasNextPage` keep fetching until an empty response. A controlled
+  // `paginationMeta` prop takes precedence over this ref (see `handleIntersection`).
+  const hasNextPage = React.useRef<boolean>(
+    props.paginationMeta?.hasNextPage ?? props.initialState?.pagination?.meta?.hasNextPage ?? true,
+  );
   const draggedRowId = React.useRef<GridRowId | null>(null);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -148,6 +161,7 @@ export const useGridDataSourceLazyLoader = (
     privateApiRef.current.dataSource.cache.clear();
     rowsStale.current = true;
     previousLastRowIndex.current = 0;
+    hasNextPage.current = true; // re-evaluate end-of-data for the new query
     const paginationModel = gridPaginationModelSelector(privateApiRef);
     const sortModel = gridSortModelSelector(privateApiRef);
     const filterModel = gridFilterModelSelector(privateApiRef);
@@ -270,6 +284,11 @@ export const useGridDataSourceLazyLoader = (
       }
 
       const { response, fetchParams } = params;
+      // A data source can signal end-of-data via `pageInfo.hasNextPage` when the row count
+      // is unknown (infinite loading). A missing value keeps the previous signal, so an
+      // explicit `false` is not undone by a later response that omits `pageInfo`.
+      hasNextPage.current = response.pageInfo?.hasNextPage ?? hasNextPage.current;
+
       const pageRowCount = privateApiRef.current.state.pagination.rowCount;
       const tree = privateApiRef.current.state.rows.tree;
       const dataRowIdToModelLookup = privateApiRef.current.state.rows.dataRowIdToModelLookup;
@@ -457,7 +476,15 @@ export const useGridDataSourceLazyLoader = (
 
   const handleIntersection: GridEventListener<'rowsScrollEndIntersection'> = useEventCallback(
     () => {
-      if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.SCROLL_END) {
+      // A controlled `paginationMeta.hasNextPage` prop wins over the signal reported by the
+      // data source response.
+      const hasNextPageValue = props.paginationMeta?.hasNextPage ?? hasNextPage.current;
+      if (
+        rowsStale.current ||
+        // No more pages available — don't fetch again.
+        !hasNextPageValue ||
+        loadingTrigger.current !== LoadingTrigger.SCROLL_END
+      ) {
         return;
       }
 
@@ -575,12 +602,37 @@ export const useGridDataSourceLazyLoader = (
 
   React.useEffect(() => stopPolling, [stopPolling]);
 
+  // A new `dataSource` reference is a full restart in `useGridDataSourceBase` (rows and cache
+  // cleared, first page refetched), so end-of-data must be re-evaluated like on a re-query.
+  const previousDataSource = React.useRef(props.dataSource);
+  React.useEffect(() => {
+    if (previousDataSource.current !== props.dataSource) {
+      previousDataSource.current = props.dataSource;
+      hasNextPage.current = true;
+    }
+  }, [props.dataSource]);
+
+  // An explicit pagination meta update (`setPaginationMeta`, restored state, changed
+  // `paginationMeta` prop) overrides what the last response reported. Transitions only, so
+  // the initial value stays a seed and `initialState` does not survive a re-query reset.
+  useStoreEffect(
+    // typings not supported currently, but methods work
+    privateApiRef.current.store as any,
+    () => gridPaginationMetaSelector(privateApiRef).hasNextPage,
+    (_, hasNextPageValue) => {
+      if (hasNextPageValue !== undefined) {
+        hasNextPage.current = hasNextPageValue;
+      }
+    },
+  );
+
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
       rowsStale.current = true;
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
       previousLastRowIndex.current = 0;
+      hasNextPage.current = true; // re-evaluate end-of-data for the new query
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
 
@@ -607,6 +659,7 @@ export const useGridDataSourceLazyLoader = (
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
       previousLastRowIndex.current = 0;
+      hasNextPage.current = true; // re-evaluate end-of-data for the new query
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const sortModel = gridSortModelSelector(privateApiRef);

@@ -7,6 +7,7 @@ import {
   adapterToUse,
 } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import { describe, it } from 'vitest';
 
 describe('<DesktopDatePicker /> - Field', () => {
   describe('Basic behaviors', () => {
