@@ -19,6 +19,9 @@ const roRODialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Șterge evenimentul',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Descriere',
   endDateLabel: 'Data de sfârșit',
   endTimeLabel: 'Ora de sfârșit',
@@ -57,8 +60,9 @@ const roRODialog: Partial<EventEditingLocaleText> = {
   resourceLabel: 'Resursă',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salvează',
-  startDateAfterEndDateError: 'Data/ora de început trebuie să fie înainte de data/ora de sfârșit.',
+  startDateAfterEndDateError: 'Data de sfârșit nu poate fi înainte de data de început.',
   startDateLabel: 'Data de început',
+  startTimeAfterEndTimeError: 'Ora de sfârșit trebuie să fie după ora de început.',
   startTimeLabel: 'Ora de început',
 
   // RecurringScopeDialog

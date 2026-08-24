@@ -21,7 +21,7 @@ export interface EventDialogBuiltInFormValues {
   startTime: string;
   endDate: string;
   endTime: string;
-  resourceId: SchedulerResourceId | null;
+  resourceIds: SchedulerResourceId[];
   allDay: boolean;
   color: SchedulerEventColor | null;
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
@@ -42,7 +42,7 @@ const BUILT_IN_FORM_KEYS_LOOKUP: { [P in keyof EventDialogBuiltInFormValues]-?: 
   startTime: true,
   endDate: true,
   endTime: true,
-  resourceId: true,
+  resourceIds: true,
   allDay: true,
   color: true,
   recurrenceSelection: true,
@@ -110,18 +110,18 @@ export function validateRange(
   start: TemporalSupportedObject,
   end: TemporalSupportedObject,
   allDay: boolean,
-): null | { field: 'startDate' | 'startTime' } {
+): null | { field: 'endDate' | 'endTime' } {
   const startDay = adapter.startOfDay(start);
   const endDay = adapter.startOfDay(end);
-  // endDay <= startDay → date error
+  // endDay < startDay → date error
   if (adapter.isAfter(startDay, endDay)) {
-    return { field: 'startDate' };
+    return { field: 'endDate' };
   }
 
   if (adapter.isEqual(startDay, endDay)) {
     if (!allDay && !adapter.isAfter(end, start)) {
       // end <= start → hour error
-      return { field: 'startTime' };
+      return { field: 'endTime' };
     }
   }
   return null;

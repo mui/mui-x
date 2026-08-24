@@ -2,6 +2,7 @@ import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { spy } from 'sinon';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
+import { describe, it, expect } from 'vitest';
 import type { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 interface ItemType {

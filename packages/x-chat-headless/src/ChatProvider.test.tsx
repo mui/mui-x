@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { act, renderHook } from '@mui/internal-test-utils';
 import { useStore } from '@mui/x-internals/store';
 import { clearWarningsCache } from '@mui/x-internals/warning';

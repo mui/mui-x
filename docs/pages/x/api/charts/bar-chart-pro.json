@@ -33,6 +33,7 @@
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
     },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },

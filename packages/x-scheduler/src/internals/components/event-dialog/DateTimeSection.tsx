@@ -14,7 +14,6 @@ import {
 import { useEventEditingStyledContext } from '../event-editing';
 import type { EventDialogFormValues } from './utils';
 import { computeRange, validateRange } from './utils';
-import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
 import { useEventDialogFormContext } from './form/EventDialogFormContext';
 import { useEventDialogFormField } from './form/useEventDialogFormField';
@@ -43,7 +42,7 @@ const DateTimeFieldsRow = styled('div', {
 }));
 
 // The only keys with range validators, so clearing them covers edits to any of the four date/time fields.
-const RANGE_ERROR_KEYS = ['startDate', 'startTime'];
+const RANGE_ERROR_KEYS = ['endDate', 'endTime'];
 
 const AllDayFormControlLabel = styled(FormControlLabel, {
   name: 'MuiEventDialog',
@@ -56,14 +55,13 @@ const AllDayFormControlLabel = styled(FormControlLabel, {
   },
 });
 
-export default function DateTimeSection(props: EventDialogSectionProps) {
-  const { occurrence } = props;
-
+export default function DateTimeSection() {
   // Context hooks
   const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
+  const { occurrence } = formStore;
 
   // Selector hooks
   const isPropertyReadOnly = useStore(
@@ -74,22 +72,25 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   const createRangeValidator =
-    (field: 'startDate' | 'startTime') =>
+    (field: 'endDate' | 'endTime') =>
     (value: string, allValues: EventDialogFormValues): string | null => {
       const { start, end } = computeRange(adapter, allValues, displayTimezone);
-      return validateRange(adapter, start, end, allValues.allDay)?.field === field
+      if (validateRange(adapter, start, end, allValues.allDay)?.field !== field) {
+        return null;
+      }
+      return field === 'endDate'
         ? localeText.startDateAfterEndDateError
-        : null;
+        : localeText.startTimeAfterEndTimeError;
     };
 
-  const startDate = useEventDialogFormField<string>('startDate', {
-    validate: createRangeValidator('startDate'),
+  const startDate = useEventDialogFormField<string>('startDate');
+  const startTime = useEventDialogFormField<string>('startTime');
+  const endDate = useEventDialogFormField<string>('endDate', {
+    validate: createRangeValidator('endDate'),
   });
-  const startTime = useEventDialogFormField<string>('startTime', {
-    validate: createRangeValidator('startTime'),
+  const endTime = useEventDialogFormField<string>('endTime', {
+    validate: createRangeValidator('endTime'),
   });
-  const endDate = useEventDialogFormField<string>('endDate');
-  const endTime = useEventDialogFormField<string>('endTime');
   const allDay = useEventDialogFormField<boolean>('allDay');
 
   const createHandleChangeDateOrTimeField =
@@ -117,10 +118,7 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
             slotProps={{
               inputLabel: { shrink: true },
               input: { readOnly: isPropertyReadOnly('start') },
-              formHelperText: { role: 'alert' },
             }}
-            error={!!startDate.error}
-            helperText={startDate.error}
             size="small"
           />
           {!allDay.value && (
@@ -150,7 +148,10 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
             slotProps={{
               inputLabel: { shrink: true },
               input: { readOnly: isPropertyReadOnly('end') },
+              formHelperText: { role: 'alert' },
             }}
+            error={!!endDate.error}
+            helperText={endDate.error}
             size="small"
           />
           {!allDay.value && (
@@ -164,7 +165,10 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
               slotProps={{
                 inputLabel: { shrink: true },
                 input: { readOnly: isPropertyReadOnly('end') },
+                formHelperText: { role: 'alert' },
               }}
+              error={!!endTime.error}
+              helperText={endTime.error}
               size="small"
             />
           )}

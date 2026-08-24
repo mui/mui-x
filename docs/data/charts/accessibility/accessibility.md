@@ -56,7 +56,7 @@ You can also disable it globally using [theme default props](/material-ui/custom
 
 ```js
 components: {
-  MuiChartDataProvider: {
+  MuiChartsDataProvider: {
     defaultProps: {
       disableKeyboardNavigation: true
     },
@@ -66,7 +66,7 @@ components: {
 
 {{"demo": "KeyboardNavigation.js"}}
 
-This feature is currently supported by the following charts: line, bar, pie, scatter, sparkline, funnel, radar, heatmap, sankey, and range bar.
+This feature is currently supported by the following charts: line, bar, pie, scatter, sparkline, funnel, radar, heatmap, sankey, map, radial bar, radial line, and range bar.
 
 This makes the SVG component focusable thanks to [`tabIndex`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex).
 When focused, the chart highlights a value item that can be modified with arrow navigation.
@@ -75,6 +75,38 @@ When focused, the chart highlights a value item that can be modified with arrow 
 | --------------------------------------------------------------------: | :---------------------------- |
 | <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series |
 |    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series     |
+
+### Start from a clicked item
+
+Clicking an item makes it the item keyboard navigation resumes from, so users can jump straight to a distant data point instead of tabbing into the chart and pressing an arrow key repeatedly.
+Screen readers announce the clicked item right away.
+
+A click that lands on no item is resolved from the axis under the pointer, so clicking the empty space above a bar still focuses that bar's column.
+The item is taken from the series being navigated, or from the first series when none is focused yet.
+Clicks that resolve to no item at all are ignored, so clicking next to a pie leaves the focus where it was.
+
+How the focus indicator behaves depends on how the user got there:
+
+- If the chart was not being navigated with the keyboard, the click gives the chart focus but the indicator stays hidden. It appears on the next key press, on the item next to the one clicked.
+- If the focus indicator is already visible, the click moves it to the clicked item and keeps it visible.
+
+Set `focusItemOnClick` to show the indicator immediately on every click:
+
+```jsx
+<BarChart focusItemOnClick series={series} />
+```
+
+It can also be set globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props):
+
+```js
+components: {
+  MuiChartsDataProvider: {
+    defaultProps: {
+      focusItemOnClick: true
+    },
+  },
+}
+```
 
 ### Activating the focused item
 
@@ -107,6 +139,9 @@ Both become the default in v10.
 
 When a chart exposes several item callbacks, activation fires the one a pointer would reach first on the focused data point: line charts try `onMarkClick`, then `onLineClick`, then `onAreaClick`; radar charts try `onMarkClick`, then `onAreaClick`; and Sankey charts call `onNodeClick` or `onLinkClick` depending on the focused element. Only one of them fires.
 
+Activation acts on the visible focus indicator.
+A click sets the item keyboard navigation resumes from without revealing it, so <kbd class="key">Enter</kbd> and <kbd class="key">Space</kbd> do nothing until a key press makes the focus visible.
+
 ## Screen reader compatibility
 
 Charts use a proxy strategy to support screen reader when user navigate with keyboard navigation.
@@ -132,4 +167,37 @@ import { FocusedRadarMark } from '@mui/x-charts/RadarChart';
 import { FocusedHeatmapCell } from '@mui/x-charts-pro/Heatmap';
 import { FocusedFunnelSection } from '@mui/x-charts-pro/FunnelChart';
 import { FocusedSankeyLink, FocusedSankeyNode } from '@mui/x-charts-pro/SankeyChart';
+```
+
+### Custom components
+
+Click-to-focus reads the item the pointer is over, which every series already reports for the tooltip and the highlight.
+A custom component rendered through a slot inherits that for free, as long as it forwards the interaction props to the rendered element:
+
+```jsx
+function CustomMarker({
+  x,
+  y,
+  color,
+  seriesId,
+  dataIndex,
+  isHighlighted,
+  isFaded,
+  ...other
+}) {
+  // `other` carries the pointer handlers that report the item.
+  return (
+    <path d={shape} transform={`translate(${x}, ${y})`} fill={color} {...other} />
+  );
+}
+```
+
+When building a plot from scratch rather than through a slot, `useInteractionItemProps` returns those handlers for an item:
+
+```jsx
+import { useInteractionItemProps } from '@mui/x-charts/internals';
+
+function CustomPlotItem({ seriesId, dataIndex }) {
+  return <rect {...useInteractionItemProps({ type: 'bar', seriesId, dataIndex })} />;
+}
 ```

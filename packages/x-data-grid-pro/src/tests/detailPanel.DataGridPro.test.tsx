@@ -12,6 +12,7 @@ import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, waitFor, act, reactMajor } from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Detail panel', () => {
   const { render } = createRenderer();

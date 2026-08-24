@@ -19,6 +19,9 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Eliminar evento',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Descripción',
   endDateLabel: 'Fecha de fin',
   endTimeLabel: 'Hora de fin',
@@ -57,8 +60,9 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   resourceLabel: 'Recurso',
   requiredResourceError: 'Debes seleccionar un recurso.',
   saveChanges: 'Guardar',
-  startDateAfterEndDateError: 'La fecha/hora de inicio debe ser anterior a la fecha/hora de fin.',
+  startDateAfterEndDateError: 'La fecha de fin no puede ser anterior a la fecha de inicio.',
   startDateLabel: 'Fecha de inicio',
+  startTimeAfterEndTimeError: 'La hora de fin debe ser posterior a la hora de inicio.',
   startTimeLabel: 'Hora de inicio',
 
   // RecurringScopeDialog

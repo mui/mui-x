@@ -19,6 +19,9 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Usuń wydarzenie',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Opis',
   endDateLabel: 'Data zakończenia',
   endTimeLabel: 'Godzina zakończenia',
@@ -68,9 +71,9 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   resourceLabel: 'Zasób',
   requiredResourceError: 'Należy wybrać zasób.',
   saveChanges: 'Zapisz',
-  startDateAfterEndDateError:
-    'Data/godzina rozpoczęcia musi być wcześniejsza niż data/godzina zakończenia.',
+  startDateAfterEndDateError: 'Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.',
   startDateLabel: 'Data rozpoczęcia',
+  startTimeAfterEndTimeError: 'Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia.',
   startTimeLabel: 'Godzina rozpoczęcia',
 
   // RecurringScopeDialog

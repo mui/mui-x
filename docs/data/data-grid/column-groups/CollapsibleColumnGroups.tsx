@@ -96,8 +96,8 @@ const columnGroupingModel: GridColumnGroupingModel = [
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 150 },
-  { field: 'firstName', headerName: 'First name', width: 150 },
-  { field: 'lastName', headerName: 'Last name', width: 150 },
+  { field: 'firstName', headerName: 'First name', width: 150, rowHeader: true },
+  { field: 'lastName', headerName: 'Last name', width: 150, rowHeader: true },
   { field: 'age', headerName: 'Age', type: 'number', width: 110 },
 ];
 

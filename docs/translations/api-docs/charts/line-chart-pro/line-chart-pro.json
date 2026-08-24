@@ -28,6 +28,9 @@
     "experimentalFeatures": {
       "description": "Options to enable features planned for the next major."
     },
+    "focusItemOnClick": {
+      "description": "If <code>true</code>, clicking an item immediately shows the keyboard focus indicator on it. By default, clicking sets the item that keyboard navigation starts from, but the focus indicator stays hidden until the user presses a key."
+    },
     "grid": { "description": "Option to display a cartesian grid in the background." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."

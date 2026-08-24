@@ -19,6 +19,9 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Ereignis löschen',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Beschreibung',
   endDateLabel: 'Enddatum',
   endTimeLabel: 'Endzeit',
@@ -57,8 +60,9 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
   resourceLabel: 'Ressource',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Speichern',
-  startDateAfterEndDateError: 'Startdatum/-zeit muss vor dem Enddatum/-zeit liegen.',
+  startDateAfterEndDateError: 'Das Enddatum darf nicht vor dem Startdatum liegen.',
   startDateLabel: 'Startdatum',
+  startTimeAfterEndTimeError: 'Die Endzeit muss nach der Startzeit liegen.',
   startTimeLabel: 'Startzeit',
 
   // RecurringScopeDialog

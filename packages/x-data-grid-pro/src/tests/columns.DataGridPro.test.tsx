@@ -19,6 +19,7 @@ import type {
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Columns', () => {
   const { render } = createRenderer();
@@ -617,7 +618,7 @@ describe('<DataGridPro /> - Columns', () => {
     ];
     const columns = [
       { field: 'id', headerName: 'This is the ID column' },
-      { field: 'brand', headerName: 'This is the brand column' },
+      { field: 'brand', headerName: 'This is the brand column', rowHeader: true },
     ];
 
     const getWidths = () => {
@@ -646,6 +647,24 @@ describe('<DataGridPro /> - Columns', () => {
       await waitFor(() => {
         expect(getWidths()).to.deep.equal([152, 174]);
       });
+    });
+
+    // Regression test for https://github.com/mui/mui-x/issues/23298
+    it('should not reject when the grid unmounts while autosizing', async () => {
+      const { unmount } = render(<Test rows={rows} columns={columns} />);
+
+      let error: unknown;
+      await act(async () => {
+        // Not awaited on purpose: the grid unmounts while `autosizeColumns` is suspended on
+        // its internal `await`, which nulls the root element ref.
+        const promise = apiRef.current!.autosizeColumns().catch((err) => {
+          error = err;
+        });
+        unmount();
+        await promise;
+      });
+
+      expect(error).to.equal(undefined);
     });
 
     // Regression test for https://github.com/mui/mui-x/issues/22505

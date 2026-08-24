@@ -19,6 +19,9 @@ const ptPTDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Eliminar evento',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Descrição',
   endDateLabel: 'Data de fim',
   endTimeLabel: 'Hora de fim',
@@ -57,8 +60,9 @@ const ptPTDialog: Partial<EventEditingLocaleText> = {
   resourceLabel: 'Recurso',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Guardar',
-  startDateAfterEndDateError: 'A data/hora de início deve ser anterior à data/hora de fim.',
+  startDateAfterEndDateError: 'A data de fim não pode ser anterior à data de início.',
   startDateLabel: 'Data de início',
+  startTimeAfterEndTimeError: 'A hora de fim deve ser posterior à hora de início.',
   startTimeLabel: 'Hora de início',
 
   // RecurringScopeDialog
