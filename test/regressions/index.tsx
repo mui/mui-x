@@ -37,8 +37,7 @@ const allTests = Object.values(testsBySuite).flatMap((suite) =>
 
 window.muiFixture = {
   allTests,
-  // `index.test.ts` awaits this before it screenshots anything, and races it
-  // against a real timer -- see the comment there for why nothing else guards it.
+  // `index.test.ts` awaits this in `navigateToTest`, before any fixture mounts.
   // `display=swap` is dropped on purpose: it paints fallback text first, and the
   // font files Google serves are identical without it.
   fontsReady: loadFonts({
