@@ -12,8 +12,9 @@ import type {
   GridGroupNode,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { getCell, getRow, sleep } from 'test/utils/helperFn';
+import { actSleep, getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 const dataSetOptions = {
   dataSet: 'Employee' as const,
@@ -180,7 +181,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       await act(async () => {
         apiRef.current!.upsertFilterItem({ id: 1, field: 'name', operator: 'contains' });
       });
-      await sleep(50);
+      await actSleep(50);
 
       expect(fetchRowsSpy.callCount).to.equal(1);
     });

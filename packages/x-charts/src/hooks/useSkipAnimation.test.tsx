@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { ChartsProvider } from '../context/ChartsProvider';
 import { useSkipAnimation } from './useSkipAnimation';
 

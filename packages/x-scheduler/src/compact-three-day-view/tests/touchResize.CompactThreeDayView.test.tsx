@@ -9,6 +9,7 @@ import {
   simulatePointerResize,
 } from 'test/utils/scheduler';
 import { StandaloneCompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
+import { describe, it, expect } from 'vitest';
 
 /**
  * The compact three-day view renders several day columns, so it exercises the multi-column paths the

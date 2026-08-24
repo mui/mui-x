@@ -1,8 +1,9 @@
 import type * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import type {
-  GridEventListener,
+  GridApiCommon,
   GridCallbackDetails,
+  GridEventListener,
   GridRowParams,
   GridRowId,
   GridValidRowModel,
@@ -69,12 +70,17 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing extends Omit<
 
 /**
  * The props of the Data Grid Pro component after the pre-processing phase.
+ * `Api` defaults to `any` so that the internals, which are shared with the Premium package,
+ * accept props typed with either API type.
  */
-export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
+export interface DataGridProProcessedProps<
+  R extends GridValidRowModel = any,
+  Api extends GridApiCommon = any,
+>
   extends
     DataGridProPropsWithDefaultValue<R>,
     DataGridProPropsWithComplexDefaultValueAfterProcessing,
-    Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'> {}
+    Omit<DataGridProPropsWithoutDefaultValue<R, Api>, 'componentsProps'> {}
 
 export type DataGridProForcedPropsKey = 'signature';
 
@@ -189,10 +195,13 @@ interface DataGridProRegularProps<R extends GridValidRowModel> {
   setTreeDataPath?: (path: string[], row: R) => R;
 }
 
-export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
+export interface DataGridProPropsWithoutDefaultValue<
+  R extends GridValidRowModel = any,
+  Api extends GridApiCommon = GridApiPro,
+>
   extends
     Omit<
-      DataGridPropsWithoutDefaultValue<R>,
+      DataGridPropsWithoutDefaultValue<R, Api>,
       'initialState' | 'componentsProps' | 'slotProps' | 'dataSource' | 'onDataSourceError'
     >,
     DataGridProRegularProps<R>,
@@ -219,7 +228,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridCallbackDetails} details Additional details for this callback.
    * Prefer to use {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} unless it doesn't fulfill your needs.
    */
-  onRowsScrollEnd?: GridEventListener<'rowsScrollEnd'>;
+  onRowsScrollEnd?: GridEventListener<'rowsScrollEnd', Api>;
   /**
    * The column fields to display pinned to left or right.
    */
@@ -231,7 +240,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   onPinnedColumnsChange?: (
     pinnedColumns: GridPinnedColumnFields,
-    details: GridCallbackDetails,
+    details: GridCallbackDetails<any, Api>,
   ) => void;
   /**
    * The grouping column used by the tree data.
@@ -250,7 +259,10 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onDetailPanelExpandedRowIdsChange?: (ids: Set<GridRowId>, details: GridCallbackDetails) => void;
+  onDetailPanelExpandedRowIdsChange?: (
+    ids: Set<GridRowId>,
+    details: GridCallbackDetails<any, Api>,
+  ) => void;
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -263,7 +275,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowOrderChange?: GridEventListener<'rowOrderChange'>;
+  onRowOrderChange?: GridEventListener<'rowOrderChange', Api>;
   /**
    * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
@@ -271,7 +283,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
-  onFetchRows?: GridEventListener<'fetchRows'>;
+  onFetchRows?: GridEventListener<'fetchRows', Api>;
   /**
    * Rows data to pin on top or bottom.
    */

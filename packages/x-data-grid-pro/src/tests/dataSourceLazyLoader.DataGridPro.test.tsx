@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
-import { getCell, getRow, sleep } from 'test/utils/helperFn';
+import { actSleep, getCell, getRow } from 'test/utils/helperFn';
 import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, useGridApiRef, GRID_ROOT_GROUP_ID } from '@mui/x-data-grid-pro';
 import type {
@@ -17,6 +17,7 @@ import type {
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { TestCache } from '@mui/x-data-grid/internals';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Needs layout
 describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
@@ -170,7 +171,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
-      await sleep(50);
+      await actSleep(50);
 
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
