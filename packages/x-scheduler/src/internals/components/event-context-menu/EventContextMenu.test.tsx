@@ -181,6 +181,9 @@ describe('EventContextMenu', () => {
       fireEvent.keyDown(event, { key: ' ' });
       fireEvent.keyUp(event, { key: ' ' });
 
+      // Asserted first: without it, a regression that stops Space from opening the menu at all
+      // would leave Delete absent for the wrong reason and this test would pass vacuously.
+      expect(screen.getByRole('menuitem', { name: /show details/i })).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: /delete/i })).to.equal(null);
     });
   });

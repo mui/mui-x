@@ -178,7 +178,7 @@ Right-clicking an event, or pressing <kbd class="key">Space</kbd> while it is fo
 - **Delete** removes the event immediately. For a recurring event it opens the recurring scope confirmation dialog instead, the same as the Delete action in the event dialog and the armed-event toolbar.
 - For a read-only event, **Edit** is replaced by **Show details** — it opens the same read-only view a click would, and **Delete** is omitted, matching every other surface's mutation gate (the dialog swaps to its read-only content, and the armed toolbar never appears for one).
 
-The menu is only available where activating an event opens the dialog directly: a mouse or trackpad on the desktop views. On a coarse pointer (touch), and on the compact (mobile) layout, activating an event arms its toolbar instead — which already exposes Edit and Delete — so right-click and <kbd class="key">Space</kbd> fall through to that same behavior rather than opening a redundant menu.
+The menu is suppressed on a coarse pointer (touch): activating an event there arms its toolbar instead of opening the dialog directly — which already exposes Edit and Delete — so right-click and <kbd class="key">Space</kbd> fall through to that same behavior rather than opening a redundant menu. This check is on pointer type alone; it doesn't depend on which view or layout is rendering the event.
 
 ## Localization of ARIA labels
 
