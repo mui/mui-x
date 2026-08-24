@@ -123,7 +123,7 @@
     "execa": "catalog:",
     "globby": "16.2.3",
     "jsdom": "catalog:",
-    "lerna": "10.0.0",
+    "lerna": "10.0.1",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "picomatch": "4.0.5",
@@ -150,11 +150,11 @@
     "zod": "4.4.3"
   },
   "config": {
-    "valeVersion": "3.17.0"
+    "valeVersion": "3.18.0"
   },
-  "packageManager": "pnpm@11.20.0",
+  "packageManager": "pnpm@11.22.0",
   "engines": {
-    "pnpm": "11.20.0",
+    "pnpm": "11.22.0",
     "node": ">=22.23.2"
   }
 }
