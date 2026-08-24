@@ -118,13 +118,7 @@ Render the built-in sections in any order and leave out the ones you do not need
 ### Omitting the resource section with a required resource
 
 Omitting a section removes its editors, not the form contract.
-With `shouldEventRequireResource` enabled, saving without a resource stays blocked even when the resource section is not rendered — the end user just has no visible field to fix it, and the following warning is logged in development:
-
-```text
-MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.
-Saving without a resource is still blocked, but the end user has no visible field to fix it.
-Render the resource section in the General tab, or register a validator for the "resourceIds" field.
-```
+With `shouldEventRequireResource` enabled, saving without a resource stays blocked even when the resource section is not rendered — the end user just has no visible field to fix it, and a warning pointing to this is logged in development.
 
 If your custom tab replaces the built-in resource picker, register your own field for the `resourceIds` key so the requirement stays fixable.
 
