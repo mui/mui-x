@@ -92,6 +92,18 @@ export function useGridVirtualizer() {
   const apiRef = useGridPrivateApiContext();
   const { listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  // Convert visible row-header columns to their indexes once per column-model change. Each GridRow
+  // uses this ordered list to render those cells even when they fall outside its horizontal render
+  // context. This keeps the row-identifying cells available to assistive technology while scrolling.
+  const retainedColumnIndexes = React.useMemo(() => {
+    const indexes: number[] = [];
+    visibleColumns.forEach((column, index) => {
+      if (column.rowHeader) {
+        indexes.push(index);
+      }
+    });
+    return indexes;
+  }, [visibleColumns]);
 
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
@@ -303,6 +315,7 @@ export function useGridVirtualizer() {
           rowHeight={params.baseRowHeight}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
+          retainedColumnIndexes={retainedColumnIndexes}
           firstColumnIndex={params.firstColumnIndex}
           lastColumnIndex={params.lastColumnIndex}
           focusedColumnIndex={params.focusedColumnIndex}
@@ -320,6 +333,7 @@ export function useGridVirtualizer() {
         hasFiller,
         isRowSelected,
         pinnedColumns,
+        retainedColumnIndexes,
         RowSlot,
         rowSlotProps,
         verticalScrollbarWidth,

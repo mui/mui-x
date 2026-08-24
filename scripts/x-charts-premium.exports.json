@@ -735,6 +735,7 @@
   { "name": "useAnimateBar", "kind": "Function" },
   { "name": "useAnimateBarLabel", "kind": "Function" },
   { "name": "useAnimateLine", "kind": "Function" },
+  { "name": "useAnimateMark", "kind": "Function" },
   { "name": "UseAnimateParams", "kind": "Interface" },
   { "name": "useAnimatePieArc", "kind": "Function" },
   { "name": "useAnimatePieArcLabel", "kind": "Function" },

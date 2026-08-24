@@ -2,6 +2,7 @@ import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { disposeSymbol } from '@mui/x-internals/disposable';
+import { describe, it, expect } from 'vitest';
 import { schedulerRecurringEventsPlugin } from '../../internals/plugins/schedulerRecurringEventsPlugin';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
@@ -17,11 +18,14 @@ describe('Core - EventTimelinePremiumStore', () => {
 
       const expectedState = {
         adapter,
+        areDependenciesEnabled: false,
         areEventsDraggable: true,
         areEventsResizable: true,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         copiedEvent: null,
+        selection: null,
+        dependencyCreation: null,
         dependencyModelList: [],
         dependencyModelLookup: new Map(),
         eventColor: 'teal',

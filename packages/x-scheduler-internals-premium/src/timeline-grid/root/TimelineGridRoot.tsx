@@ -8,6 +8,7 @@ import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import { useDependencyCreationMonitor } from '../../internals/utils/useDependencyCreationMonitor';
 import { TimelineGridRootCssVars } from './TimelineGridRootCssVars';
 import type {
   TimelineGridCellCoordinates,
@@ -58,6 +59,8 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   );
 
   const rootRef = React.useRef<HTMLDivElement>(null);
+
+  useDependencyCreationMonitor();
 
   const [focusedCell, setFocusedCellState] = React.useState<TimelineGridCellCoordinates | null>(
     null,

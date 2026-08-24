@@ -1,5 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { spy } from 'sinon';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarStore } from '../EventCalendarStore';
 
 const DEFAULT_PARAMS = { events: [] };

@@ -9,6 +9,7 @@ import {
   simulatePointerResize,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
+import { describe, it, expect } from 'vitest';
 
 /**
  * Touch resize uses pointer events, not native drag-and-drop, so it is driven here via

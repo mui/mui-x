@@ -1,4 +1,5 @@
 import type { GridColDef, GridFilterItem } from '@mui/x-data-grid';
+import { describe, it, expect } from 'vitest';
 import { getGridMultiSelectOperators } from './gridMultiSelectOperators';
 
 const operators = getGridMultiSelectOperators();
