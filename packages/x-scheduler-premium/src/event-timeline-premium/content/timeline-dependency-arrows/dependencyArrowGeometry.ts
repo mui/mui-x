@@ -260,7 +260,7 @@ export function createDependencyAnchorResolver(
   const getLaneLookup = (rowIndex: number): { [occurrenceKey: string]: number } => {
     let laneLookup = laneLookupByRow.get(rowIndex);
     if (laneLookup == null) {
-      laneLookup = computeOccurrencesFirstIndexLookup(adapter, resources[rowIndex].occurrences);
+      laneLookup = computeOccurrencesFirstIndexLookup(resources[rowIndex].occurrences);
       laneLookupByRow.set(rowIndex, laneLookup);
     }
     return laneLookup;
