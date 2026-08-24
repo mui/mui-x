@@ -1,6 +1,7 @@
 import { spy } from 'sinon';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
+  createMatchMedia,
   createSchedulerRenderer,
   EventBuilder,
   mockElementBounds,
@@ -14,12 +15,6 @@ import { StandaloneDayView } from '@mui/x-scheduler/day-view';
  * Arming and pointer resize are device-adaptive, so they work in the normal Day View too. Driven via
  * {@link simulatePointerResize}, whose non-`mouse` events take the pointer-resize path.
  */
-const createMatchMedia = (matches: boolean) => () =>
-  ({
-    matches,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-  }) as any;
 
 describe('DayView - touch resize', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
