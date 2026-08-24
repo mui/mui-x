@@ -9,6 +9,7 @@ import type {
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   SchedulerAddDependencyResult,
@@ -18,7 +19,11 @@ import type {
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
 } from '../../models';
-import { classifyDependencyEvent, isDependencyReadOnly } from '../utils/dependency-utils';
+import {
+  classifyDependencyEvent,
+  groupRetainedDependenciesBySource,
+  isDependencyReadOnly,
+} from '../utils/dependency-utils';
 
 /**
  * Plugin that provides event-scheduling support (dependencies).
@@ -109,8 +114,10 @@ export class SchedulerSchedulingPlugin<
 
   /**
    * Adds a dependency between two events.
-   * Rejects dependencies referencing an unknown, recurring or read-only event, or
-   * duplicating an existing dependency.
+   * Rejects dependencies referencing an unknown, recurring or read-only event,
+   * duplicating an existing dependency, or closing a cycle.
+   * The guards read the controlled `dependencies` value, so two adds in the same
+   * tick are not validated against each other.
    * Implementation of the store's `addDependency()` — call it through the store.
    */
   public addDependency = (
@@ -127,20 +134,59 @@ export class SchedulerSchedulingPlugin<
       }
     }
 
+    // Grouped from the lookup, not the raw list: with duplicate ids only the last
+    // entry per id exists for the feature, so a shadowed edge must not reject an add.
+    const dependenciesBySource = groupRetainedDependenciesBySource(
+      this.store.state.dependencyModelLookup,
+    );
+
+    // Duplicate before cycle: on data that already contains a cycle, re-adding an
+    // existing pair must report the duplicate (and select its arrow), not the cycle.
     // Only `source`/`target` define identity while the type union has a single member;
     // TODO(#22853): include `type` in the identity when the type union widens.
-    const duplicate = this.store.state.dependencyModelList.find(
-      (dependency) =>
-        dependency.source === properties.source && dependency.target === properties.target,
-    );
+    const duplicate = dependenciesBySource
+      .get(properties.source)
+      ?.find((dependency) => dependency.target === properties.target);
     if (duplicate) {
       return { status: 'rejected', reason: 'duplicateDependency', dependencyId: duplicate.id };
+    }
+
+    if (this.isCreatingCycle(dependenciesBySource, properties.source, properties.target)) {
+      return { status: 'rejected', reason: 'cyclicDependency' };
     }
 
     const dependency: SchedulerDependency = { ...properties, id: generateId('dependency') };
     this.updateDependencies([...this.store.state.dependencyModelList, dependency]);
     return { status: 'added', id: dependency.id };
   };
+
+  /**
+   * Whether adding `source → target` would close a cycle: `target` already reaches
+   * `source` (a self-loop is the zero-length path). Walks every dependency, not only
+   * the active ones — a dormant cycle becomes live when its endpoint reactivates.
+   */
+  private isCreatingCycle(
+    dependenciesBySource: Map<SchedulerEventId, SchedulerDependency[]>,
+    source: SchedulerEventId,
+    target: SchedulerEventId,
+  ): boolean {
+    const stack: SchedulerEventId[] = [target];
+    const visited = new Set<SchedulerEventId>();
+    while (stack.length > 0) {
+      const eventId = stack.pop()!;
+      if (eventId === source) {
+        return true;
+      }
+      if (visited.has(eventId)) {
+        continue;
+      }
+      visited.add(eventId);
+      for (const dependency of dependenciesBySource.get(eventId) ?? []) {
+        stack.push(dependency.target);
+      }
+    }
+    return false;
+  }
 
   /**
    * Deletes a dependency, returning whether it was deleted. Refused (`false`) for an
