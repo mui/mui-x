@@ -49,19 +49,32 @@ The radial line interaction uses the [pointer based interaction](/x/react-charts
 
 {{"demo": "ElementHighlights.js", "bg": "outline"}}
 
-## Axis Click
+## Click events
 
-The `RadialLineChart` provides an `onAxisClick` handler that fires when the user clicks anywhere in the chart area.
-Its signature matches the bar chart:
+The `RadialLineChart` provides two click handlers:
+
+- `onItemClick` for clicks on a specific line
+- `onAxisClick` for clicks anywhere in the chart area
+
+They both provide the following signature:
 
 ```js
 const clickHandler = (
-  event, // The native mouse event emitted by the SVG component.
-  params, // An object that identifies the clicked rotation axis item and its series values.
+  event, // The mouse event.
+  params, // An object that identifies the clicked elements.
 ) => {};
 ```
 
 {{"demo": "RadialLineClick.js", "bg": "outline"}}
+
+:::info
+There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
+
+- For `onItemClick` the event is a React synthetic mouse event emitted by the chart container.
+  Radial lines have no per-element click handler, so the clicked line is resolved from the pointer position.
+- For `onAxisClick` the event is a native mouse event emitted by the SVG component.
+
+:::
 
 ## Composition
 

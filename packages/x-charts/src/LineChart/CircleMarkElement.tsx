@@ -124,11 +124,6 @@ CircleMarkElement.propTypes = {
   dataIndex: PropTypes.number.isRequired,
   seriesId: PropTypes.string.isRequired,
   /**
-   * The shape of the marker.
-   */
-  shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
-    .isRequired,
-  /**
    * If `true`, animations are skipped.
    * @default false
    */

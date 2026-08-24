@@ -24,6 +24,7 @@ import type {
   GridValidRowModel,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 // Helper function to create drag over event with coordinates
 function createDragOverEvent(target: ChildNode, dropPosition: 'above' | 'below' = 'above') {

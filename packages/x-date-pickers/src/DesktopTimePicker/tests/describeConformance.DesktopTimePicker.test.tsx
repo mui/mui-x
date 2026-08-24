@@ -1,6 +1,7 @@
 import { createPickerRenderer, describePicker } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<DesktopTimePicker /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();

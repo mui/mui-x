@@ -16,6 +16,7 @@ import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';
 import 'moment/locale/ru';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<AdapterMoment />', () => {
   const commonParams = {

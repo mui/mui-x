@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-internal-gestures",
-  "version": "9.9.0",
+  "version": "9.12.0",
   "author": "MUI Team",
   "description": "The core engine of GestureEvents, a modern and robust multi-pointer gesture detection library for JavaScript.",
   "license": "MIT",
@@ -41,6 +41,10 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@base-ui/utils": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "sideEffects": false,
   "exports": {

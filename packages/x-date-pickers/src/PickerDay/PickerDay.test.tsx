@@ -1,9 +1,12 @@
+import * as React from 'react';
 import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import ButtonBase from '@mui/material/ButtonBase';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { PickerDay, pickerDayClasses as classes } from '@mui/x-date-pickers/PickerDay';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe, it, expect } from 'vitest';
 
 describe('<PickerDay />', () => {
   const { render } = createPickerRenderer();
@@ -71,6 +74,24 @@ describe('<PickerDay />', () => {
     expect(day).toHaveAccessibleName('2');
   });
 
+  it('should keep the role and the column index a filler cell received', () => {
+    const { container } = render(
+      <PickerDay
+        day={adapterToUse.date('2018-02-01')}
+        onDaySelect={() => {}}
+        outsideCurrentMonth
+        role="gridcell"
+        aria-colindex={5}
+        isFirstVisibleCell={false}
+        isLastVisibleCell={false}
+      />,
+    );
+
+    expect(container.firstChild).to.have.class(classes.fillerCell);
+    expect(container.firstChild).to.have.attribute('role', 'gridcell');
+    expect(container.firstChild).to.have.attribute('aria-colindex', '5');
+  });
+
   it('should render children instead of the day of the month when children prop is present', () => {
     render(
       <PickerDay
@@ -87,5 +108,27 @@ describe('<PickerDay />', () => {
     const day = screen.getByRole('button');
     expect(day).to.have.text('2 (free)');
     expect(day).toHaveAccessibleName('2 (free)');
+  });
+
+  it('should use the disabled text color for a disabled day outside the current month', () => {
+    const theme = createTheme({
+      palette: { text: { disabled: 'rgb(1, 2, 3)', secondary: 'rgb(4, 5, 6)' } },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <PickerDay
+          day={adapterToUse.date('2020-02-02')}
+          onDaySelect={() => {}}
+          outsideCurrentMonth
+          showDaysOutsideCurrentMonth
+          isFirstVisibleCell={false}
+          isLastVisibleCell={false}
+          disabled
+        />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('button')).to.have.style('color', 'rgb(1, 2, 3)');
   });
 });

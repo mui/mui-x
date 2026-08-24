@@ -12,10 +12,11 @@ import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-intern
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { EventSkeleton } from '../event-skeleton';
-import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
+import { useEventEditingContext } from '../event-editing';
+import { EventContextMenuTrigger } from '../event-context-menu';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
-import { useDayTimeGridInternalRenderers } from './DayTimeGridInternalRenderersContext';
+import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
@@ -151,9 +152,8 @@ function ColumnInteractiveLayer({
 }) {
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { onOpen: startEditing } = useEventDialogContext();
+  const { startEditing } = useEventEditingContext();
   const { classes } = useEventCalendarStyledContext();
-  const { timeGridEvent: TimeGridEvent } = useDayTimeGridInternalRenderers();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);
@@ -169,6 +169,7 @@ function ColumnInteractiveLayer({
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   React.useEffect(() => {
+    // `startEditing` is a no-op once the surface is open, so placeholder churn doesn't re-fire it.
     if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
       return;
     }
@@ -183,9 +184,9 @@ function ColumnInteractiveLayer({
       {isLoading && <EventSkeleton data-variant="time-column" />}
       {!isLoading &&
         occurrences.map((occurrence) => (
-          <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+          <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
             <TimeGridEvent occurrence={occurrence} variant="regular" />
-          </EventDialogTrigger>
+          </EventContextMenuTrigger>
         ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
@@ -209,11 +210,11 @@ interface TimeGridColumnProps {
   index: number;
   colIndex: number;
   /**
-   * The first hour displayed in the column (whole hour between 0 and 24).
+   * Inclusive start of the hour range displayed in the column (whole hour between 0 and 24).
    */
   startTime: number;
   /**
-   * The last hour displayed in the column (whole hour between 0 and 24).
+   * Exclusive end of the hour range displayed in the column (whole hour between 0 and 24).
    */
   endTime: number;
   showCurrentTimeIndicator: boolean;

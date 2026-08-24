@@ -4,6 +4,7 @@ import { DataGrid, GridLogicOperator, getGridStringQuickFilterFn } from '@mui/x-
 import type { DataGridProps, GetApplyQuickFilterFn, GridFilterModel } from '@mui/x-data-grid';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Quick filter', () => {
   const { render } = createRenderer();
@@ -196,6 +197,9 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
         'true',
       );
+
+      // Expanding moves focus to the input in a `requestAnimationFrame`
+      await waitFor(() => expect(screen.getByRole('searchbox')).toHaveFocus());
 
       await user.keyboard('[Escape]');
 

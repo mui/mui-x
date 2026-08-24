@@ -31,6 +31,7 @@ import {
   sleep,
 } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Filter', () => {
   const { render } = createRenderer();

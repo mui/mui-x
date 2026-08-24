@@ -1,18 +1,22 @@
 import type { BaseUIChangeEventDetails } from '@base-ui/react';
-import type { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
   SchedulerEventCreationProperties,
   SchedulerEventId,
+  SchedulerEventOccurrence,
+  SchedulerEventOccurrencePlaceholder,
   SchedulerEventModelStructure,
   SchedulerEventUpdatedProperties,
   SchedulerOccurrencePlaceholder,
   SchedulerPreferences,
   SchedulerProcessedEvent,
+  SchedulerRenderableEventOccurrence,
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
+  SchedulerSelection,
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
@@ -29,6 +33,26 @@ export interface StoredError {
    * argument to `store.dismissError(key)`.
    */
   key: string;
+}
+
+/**
+ * Which face the edited occurrence is in:
+ * - `'armed'`: no surface is shown; the event displays its resize handles and an action toolbar
+ *   (Edit / Delete). A resize commits immediately. The drawer surface always arms; the dialog
+ *   surface arms only on a coarse pointer.
+ * - `'edit'`: the editing surface (dialog or drawer) is shown; the event is not resizable while open.
+ */
+export type SchedulerEditingMode = 'armed' | 'edit';
+
+export interface SchedulerEditingState {
+  /** The occurrence being edited — existing or a creation draft. */
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * Whether the occurrence is armed (toolbar + resize handles, no surface) or being edited (surface open).
+   * The toolbar's Edit switches `'armed'` to `'edit'`. The drawer surface always opens in `'armed'`;
+   * the dialog surface opens in `'armed'` on a coarse pointer and directly in `'edit'` otherwise.
+   */
+  mode: SchedulerEditingMode;
 }
 
 export interface SchedulerState<TEvent extends object = any> {
@@ -168,20 +192,27 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
-   * The key of the occurrence currently active (e.g. open in the event dialog).
-   * `null` when no occurrence is active.
+   * The occurrence currently being edited (existing or a creation draft), or `null`.
+   * Single source of truth for *what* is edited, decoupled from *which* surface is open; surfaces
+   * and the highlight read from here.
    */
-  editedOccurrenceKey: string | null;
+  editingOccurrence: SchedulerEditingState | null;
   /**
    * The event that has been copied or cut, if any.
    */
   copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
   /**
+   * The selected entity (a dependency arrow, later an event...), or `null`.
+   * See `SchedulerSelectionTypeLookup` for how features register their type.
+   */
+  selection: SchedulerSelection | null;
+  /**
    * Whether the store is currently loading events from the data source.
    */
   isLoading: boolean;
   /**
-   * The errors that occurred during data fetching.
+   * The scheduler errors surfaced through the error container: persistent data-source
+   * failures, and transient interaction feedback that dismisses itself.
    * Each entry carries a stable `key` assigned at push time so the UI can use it
    * directly as a React key and as the argument to `store.dismissError(key)`.
    */
@@ -217,6 +248,9 @@ export interface SchedulerDataSource<TEvent extends object> {
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
   /**
    * The events currently available in the calendar.
+   *
+   * Event models are compared by reference to avoid reprocessing unchanged events.
+   * Replace an event model with a new object when updating it instead of mutating it in place.
    * @default []
    */
   events?: readonly TEvent[];
@@ -352,6 +386,18 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
   /**
+   * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
+   * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
+   * `eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the
+   * occurrence is read-only (through the event, its resource or the `readOnly` prop) and the dialog
+   * opens in view-only mode, and `"edit"` otherwise.
+   * Call `eventDetails.cancel()` to keep it closed and handle the interaction in your own UI.
+   */
+  onEventEditingStart?: (
+    occurrence: SchedulerRenderableEventOccurrence,
+    eventDetails: SchedulerEventEditingStartEventDetails,
+  ) => void;
+  /**
    * The timezone used to display events in the scheduler.
    *
    * Accepts any valid IANA timezone name
@@ -461,6 +507,34 @@ export interface UpdateEventsParameters {
 }
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
+
+/**
+ * Properties shared by every `onEventEditingStart` reason on top of the Base UI change details.
+ */
+interface SchedulerEventEditingStartCustomProperties {
+  /**
+   * An element that stays in the DOM after the callback returns, even when it cancels.
+   * Position custom UI against it rather than `trigger`, which some flows unmount right
+   * after a canceled activation.
+   */
+  anchor: HTMLElement | undefined;
+}
+
+export type SchedulerEventEditingStartEventDetails =
+  | BaseUIChangeEventDetails<
+      'edit',
+      SchedulerEventEditingStartCustomProperties & { occurrence: SchedulerEventOccurrence }
+    >
+  | BaseUIChangeEventDetails<
+      'view',
+      SchedulerEventEditingStartCustomProperties & { occurrence: SchedulerEventOccurrence }
+    >
+  | BaseUIChangeEventDetails<
+      'creation',
+      SchedulerEventEditingStartCustomProperties & {
+        occurrence: SchedulerEventOccurrencePlaceholder;
+      }
+    >;
 
 /**
  * The unique identifier for each scheduler store type.

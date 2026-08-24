@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { FocusedItemIdentifier } from '@mui/x-charts/models';
+import { describe, it, expect } from 'vitest';
 import keyboardFocusHandler from './keyboardFocusHandler';
 
 const state = {

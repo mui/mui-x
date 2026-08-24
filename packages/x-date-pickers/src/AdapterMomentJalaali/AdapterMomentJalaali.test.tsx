@@ -11,6 +11,7 @@ import {
 } from 'test/utils/pickers';
 import type { AdapterFormats } from '@mui/x-date-pickers/models';
 import 'moment/locale/fa';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 describe('<AdapterMomentJalaali />', () => {
   describeJalaliAdapter(AdapterMomentJalaali, {

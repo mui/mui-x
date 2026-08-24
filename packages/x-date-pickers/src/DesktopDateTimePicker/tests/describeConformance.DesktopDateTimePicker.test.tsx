@@ -2,6 +2,7 @@ import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, describePicker } from 'test/utils/pickers';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe, it, expect } from 'vitest';
 
 describe('<DesktopDateTimePicker /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();

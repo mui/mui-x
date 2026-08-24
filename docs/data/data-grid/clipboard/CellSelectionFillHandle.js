@@ -9,7 +9,13 @@ const numberPastedValueParser = (value, _, column) => {
 };
 
 const columns = [
-  { field: 'product', headerName: 'Product', width: 150, editable: true },
+  {
+    field: 'product',
+    headerName: 'Product',
+    width: 150,
+    editable: true,
+    rowHeader: true,
+  },
   {
     field: 'region',
     headerName: 'Region',

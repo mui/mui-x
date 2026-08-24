@@ -4,6 +4,7 @@ import { waitFor } from '@mui/internal-test-utils';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { createSchedulerRenderer, ResourceBuilder } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { describe, it, expect } from 'vitest';
 
 describe('ResourcesTree', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26') });

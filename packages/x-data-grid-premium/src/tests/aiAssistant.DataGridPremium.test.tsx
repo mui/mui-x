@@ -4,6 +4,7 @@ import { spy, stub } from 'sinon';
 import { DataGridPremium, GridAiAssistantPanel, useGridApiRef } from '@mui/x-data-grid-premium';
 import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
