@@ -308,6 +308,16 @@ The next example shows how to apply a dashed stroke to the chart line, legend ma
 
 {{"demo": "StyledLineChart.js"}}
 
+#### Mark size
+
+Neither the line series nor the `mark` slot accepts a size property, so you set the mark size with CSS on the `lineClasses.mark` class.
+
+The default `'circle'` shape renders an SVG `circle` element, so use the `r` (radius) property, which defaults to `5`.
+The other shapes render an SVG `path` element that `r` does not affect.
+For those, use the `scale` property, which resizes the mark around its own center.
+
+{{"demo": "MarkSize.js"}}
+
 ## Animation
 
 Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.

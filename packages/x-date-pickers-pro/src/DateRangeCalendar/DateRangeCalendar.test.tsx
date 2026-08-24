@@ -17,6 +17,7 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
+import { describe, it, expect } from 'vitest';
 import type { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>

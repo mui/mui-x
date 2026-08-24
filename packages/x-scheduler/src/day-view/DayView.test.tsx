@@ -10,6 +10,7 @@ import {
 import { DayView } from '@mui/x-scheduler/day-view';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerResource } from '@mui/x-scheduler/models';
+import { describe, it, expect } from 'vitest';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 

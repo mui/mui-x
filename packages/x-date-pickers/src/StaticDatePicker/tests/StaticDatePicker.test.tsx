@@ -1,6 +1,7 @@
 import { screen } from '@mui/internal-test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<StaticDatePicker />', () => {
   const { render } = createPickerRenderer();

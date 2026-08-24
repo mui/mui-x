@@ -12,6 +12,7 @@ import {
 import { pickerPopperClasses } from '@mui/x-date-pickers/internals';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 
 describe('<DateRangePicker />', () => {

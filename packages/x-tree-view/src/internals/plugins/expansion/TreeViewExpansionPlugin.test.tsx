@@ -7,6 +7,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import type { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 import { clearWarningsCache } from '@mui/x-internals/warning';
+import { describe, it, expect, beforeEach } from 'vitest';
 import type { TreeViewAnyStore } from '../../models';
 
 /**

@@ -9,6 +9,7 @@ import type {
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Filter', () => {
   const { render } = createRenderer();
