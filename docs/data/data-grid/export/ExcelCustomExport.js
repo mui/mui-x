@@ -222,6 +222,7 @@ const rows = [
 const columns = [
   {
     field: 'plan',
+    rowHeader: true,
     type: 'singleSelect',
     valueOptions: ['Community', 'Pro', 'Premium'],
   },

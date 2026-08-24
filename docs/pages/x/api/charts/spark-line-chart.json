@@ -41,6 +41,7 @@
         "description": "{ enablePositionBasedPointerInteraction?: bool, keyboardActivation?: bool, progressiveRendering?: bool }"
       }
     },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {

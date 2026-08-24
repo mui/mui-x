@@ -14,22 +14,30 @@ import type {
 import {
   useDraggableEvent,
   generateOccurrenceFromEvent,
-  useElementPositionInCollection,
+  computeElementPositionInCollection,
+  dateToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
+import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
-import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import {
+  eventTimelinePremiumDependencySelectors,
+  eventTimelinePremiumPresetSelectors,
+} from '../../event-timeline-premium-selectors';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
+import { useEventDependencyDropTarget } from './useEventDependencyDropTarget';
 
-const overflowStateAttributesMapping = {
+const extraStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) =>
     value ? { [TimelineGridEventDataAttributes.startingBeforeEdge]: '' } : null,
   endingAfterEdge: (value: boolean) =>
     value ? { [TimelineGridEventDataAttributes.endingAfterEdge]: '' } : null,
+  dependencyDropTarget: (value: boolean) =>
+    value ? { [TimelineGridEventDataAttributes.dependencyDropTarget]: '' } : null,
 };
 
 export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
@@ -48,6 +56,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     occurrenceKey,
     renderDragPreview,
     isDraggable,
+    elementPosition: elementPositionProp,
     nativeButton = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -70,13 +79,21 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const dependencyDropTarget = useStore(
+    store,
+    eventTimelinePremiumDependencySelectors.isCreationTarget,
+    occurrenceKey,
+    rowResourceId,
+  );
 
   // Feature hooks
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
+      // Measured on the axis so it stays consistent with the cursor offsets when a
+      // trimmed hour window compresses the days.
       const offsetBeforeRowStart = Math.max(
-        adapter.getTime(presetConfig.start) - start.timestamp,
+        -dateToTimelineAxisOffsetMs(adapter, config, start.value),
         0,
       );
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
@@ -107,6 +124,19 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     source: 'TimelineGridEvent',
   }));
 
+  const elementPosition = React.useMemo(
+    () =>
+      elementPositionProp ??
+      computeElementPositionInCollection(adapter, {
+        start,
+        end,
+        collection: config,
+        durationMs: config.durationMs,
+      }),
+    [adapter, config, elementPositionProp, end, start],
+  );
+  const { position, duration, startingBeforeEdge, endingAfterEdge } = elementPosition;
+
   const {
     state,
     preview,
@@ -120,8 +150,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     isDraggable,
     renderDragPreview,
     getDragData,
-    collectionStart: presetConfig.start,
-    collectionEnd: presetConfig.end,
+    position: elementPosition,
   });
 
   const { getButtonProps, buttonRef } = useButton({
@@ -130,15 +159,14 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     tabIndex: rowHasFocus ? 0 : -1,
   });
 
-  const { position, duration, startingBeforeEdge, endingAfterEdge } =
-    useElementPositionInCollection({
-      start,
-      end,
-      collectionStart: presetConfig.start,
-      collectionEnd: presetConfig.end,
-    });
+  useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId: rowResourceId });
 
-  const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
+  const mergedState = {
+    ...state,
+    startingBeforeEdge,
+    endingAfterEdge,
+    dependencyDropTarget,
+  };
 
   const contextValue: TimelineGridEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
@@ -159,7 +187,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       { [TimelineGridEventDataAttributes.occurrenceKey]: occurrenceKey } as Record<string, string>,
       getButtonProps,
     ],
-    stateAttributesMapping: overflowStateAttributesMapping,
+    stateAttributesMapping: extraStateAttributesMapping,
   });
 
   return (
@@ -174,13 +202,16 @@ export namespace TimelineGridEvent {
   export interface State extends useDraggableEvent.State {
     startingBeforeEdge: boolean;
     endingAfterEdge: boolean;
+    dependencyDropTarget: boolean;
   }
 
   export interface Props
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {}
+      useDraggableEvent.PublicParameters {
+    elementPosition?: useElementPositionInCollection.ReturnValue;
+  }
 
   export interface SharedDragData {
     eventId: SchedulerEventId;
@@ -188,6 +219,9 @@ export namespace TimelineGridEvent {
     originalOccurrence: SchedulerEventOccurrence;
     start: TemporalSupportedObject;
     end: TemporalSupportedObject;
+    /**
+     * Cursor offset from the event start, in axis milliseconds.
+     */
     initialCursorPositionInEventMs: number;
     /**
      * The id of the resource row the occurrence was dragged from.

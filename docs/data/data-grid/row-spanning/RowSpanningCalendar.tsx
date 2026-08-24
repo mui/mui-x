@@ -74,6 +74,7 @@ const columns: GridColDef<Row>[] = [
   {
     field: 'time',
     headerName: 'Time',
+    rowHeader: true,
     width: 120,
   },
   {

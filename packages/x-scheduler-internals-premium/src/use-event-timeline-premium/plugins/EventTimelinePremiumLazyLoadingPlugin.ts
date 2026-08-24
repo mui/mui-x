@@ -28,8 +28,8 @@ export class EventTimelinePremiumLazyLoadingPlugin<
           if (!state.hasInitialized) {
             return null;
           }
-          const viewConfig = eventTimelinePremiumPresetSelectors.config(state);
-          return `${state.adapter.getTime(viewConfig.start)}|${state.adapter.getTime(viewConfig.end)}`;
+          const config = eventTimelinePremiumPresetSelectors.config(state);
+          return `${state.adapter.getTime(config.start)}|${state.adapter.getTime(config.end)}`;
         },
 
         (previousKey, nextKey) => {
@@ -38,8 +38,8 @@ export class EventTimelinePremiumLazyLoadingPlugin<
           }
 
           this.scheduleFetch(() => {
-            const viewConfig = eventTimelinePremiumPresetSelectors.config(store.state);
-            return { start: viewConfig.start, end: viewConfig.end };
+            const config = eventTimelinePremiumPresetSelectors.config(store.state);
+            return { start: config.start, end: config.end };
           }, previousKey === null);
         },
       ),

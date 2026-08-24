@@ -330,11 +330,41 @@ ${JSON.stringify(event)}`,
   }
 }
 
-export function buildEventsState<TEvent extends object, TResource extends object>(
-  parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
+type ProcessedEventLookupContext = [
   adapter: Adapter,
   displayTimezone: TemporalTimezone,
-  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
+  eventModelStructure: SchedulerEventModelStructure<any> | undefined,
+  processedEventByModel: WeakMap<object, SchedulerProcessedEvent>,
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null,
+];
+
+const processedEventLookupContext = new WeakMap<
+  Map<SchedulerEventId, SchedulerProcessedEvent>,
+  ProcessedEventLookupContext
+>();
+
+type BuildEventsStateParameters<TEvent extends object, TResource extends object> = Pick<
+  SchedulerParameters<TEvent, TResource>,
+  'events' | 'eventModelStructure'
+> & {
+  adapter: Adapter;
+  displayTimezone: TemporalTimezone;
+} & (
+    | {
+        recurringEventsPlugin?: SchedulerRecurringEventsPluginInterface | null;
+        previousState?: never;
+      }
+    | {
+        recurringEventsPlugin?: never;
+        previousState: Pick<
+          SchedulerState<TEvent>,
+          'eventIdList' | 'eventModelLookup' | 'processedEventLookup' | 'recurringEventsPlugin'
+        >;
+      }
+  );
+
+export function buildEventsState<TEvent extends object, TResource extends object>(
+  options: BuildEventsStateParameters<TEvent, TResource>,
 ): Pick<
   SchedulerState<TEvent>,
   | 'eventIdList'
@@ -343,24 +373,67 @@ export function buildEventsState<TEvent extends object, TResource extends object
   | 'eventModelStructure'
   | 'eventModelList'
 > {
-  const { events = EMPTY_ARRAY, eventModelStructure } = parameters;
+  const { adapter, displayTimezone, previousState, eventModelStructure } = options;
+  const events = options.events ?? EMPTY_ARRAY;
+  const recurringEventsPlugin =
+    options.recurringEventsPlugin ?? previousState?.recurringEventsPlugin ?? null;
 
   const eventIdList: SchedulerEventId[] = [];
   const eventModelLookup = new Map<SchedulerEventId, TEvent>();
   const processedEventLookup = new Map<SchedulerEventId, SchedulerProcessedEvent>();
+  const previousContext = previousState
+    ? processedEventLookupContext.get(previousState.processedEventLookup)
+    : undefined;
+  const canReusePrevious =
+    previousState !== undefined &&
+    previousContext !== undefined &&
+    previousContext[0] === adapter &&
+    previousContext[1] === displayTimezone &&
+    previousContext[2] === eventModelStructure &&
+    previousContext[4] === recurringEventsPlugin;
+  const previousProcessedEventByModel = canReusePrevious ? previousContext[3] : null;
+  const processedEventByModel = new WeakMap<object, SchedulerProcessedEvent>();
+  let hasSameEventIds = canReusePrevious;
+  let eventModelMismatchCount = 0;
+  let processedEventMismatchCount = 0;
 
   for (const event of events) {
-    const processedEvent = getProcessedEventFromModel(
-      event,
-      adapter,
-      eventModelStructure,
-      displayTimezone,
-      recurringEventsPlugin,
-    );
+    const processedEvent =
+      previousProcessedEventByModel?.get(event) ??
+      getProcessedEventFromModel(
+        event,
+        adapter,
+        eventModelStructure,
+        displayTimezone,
+        recurringEventsPlugin,
+      );
+    processedEventByModel.set(event, processedEvent);
     const { id } = processedEvent;
     checkSchedulerEventIdIsValid(id, event);
 
-    if (eventModelLookup.has(id)) {
+    const alreadySeen = eventModelLookup.has(id);
+    if (canReusePrevious) {
+      const previousEventModel = previousState.eventModelLookup.get(id);
+      const previousProcessedEvent = previousState.processedEventLookup.get(id);
+
+      // For duplicate ids, keep one mismatch per id based on the latest occurrence.
+      if (alreadySeen) {
+        if (eventModelLookup.get(id) !== previousEventModel) {
+          eventModelMismatchCount -= 1;
+        }
+        if (processedEventLookup.get(id) !== previousProcessedEvent) {
+          processedEventMismatchCount -= 1;
+        }
+      }
+      if (event !== previousEventModel) {
+        eventModelMismatchCount += 1;
+      }
+      if (processedEvent !== previousProcessedEvent) {
+        processedEventMismatchCount += 1;
+      }
+    }
+
+    if (alreadySeen) {
       if (process.env.NODE_ENV !== 'production') {
         warnOnce([
           `MUI X Scheduler: Two or more events share the same id "${String(id)}".`,
@@ -368,6 +441,13 @@ export function buildEventsState<TEvent extends object, TResource extends object
         ]);
       }
     } else {
+      if (
+        hasSameEventIds &&
+        canReusePrevious &&
+        previousState.eventIdList[eventIdList.length] !== id
+      ) {
+        hasSameEventIds = false;
+      }
       eventIdList.push(id);
     }
 
@@ -375,11 +455,26 @@ export function buildEventsState<TEvent extends object, TResource extends object
     processedEventLookup.set(id, processedEvent);
   }
 
-  return {
-    eventIdList,
-    eventModelLookup,
+  hasSameEventIds &&= canReusePrevious && eventIdList.length === previousState.eventIdList.length;
+  const hasSameEventModels = hasSameEventIds && eventModelMismatchCount === 0;
+  const hasSameProcessedEvents = hasSameEventIds && processedEventMismatchCount === 0;
+  const nextProcessedEventLookup = hasSameProcessedEvents
+    ? previousState!.processedEventLookup
+    : processedEventLookup;
+
+  processedEventLookupContext.set(nextProcessedEventLookup, [
+    adapter,
+    displayTimezone,
     eventModelStructure,
-    processedEventLookup,
+    processedEventByModel,
+    recurringEventsPlugin,
+  ]);
+
+  return {
+    eventIdList: hasSameEventIds ? previousState!.eventIdList : eventIdList,
+    eventModelLookup: hasSameEventModels ? previousState!.eventModelLookup : eventModelLookup,
+    eventModelStructure,
+    processedEventLookup: nextProcessedEventLookup,
     eventModelList: events,
   };
 }

@@ -35,6 +35,7 @@ const configuration: GridConfiguration<GridPrivateApiPro, DataGridProProcessedPr
     useIsCellEditable,
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
+    useColumnHeaderAdornment: () => null,
   },
 };
 const packageInfo = {
@@ -199,6 +200,7 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
     renderHeader: PropTypes.func,
     renderHeaderFilter: PropTypes.func,
     resizable: PropTypes.bool,
+    rowHeader: PropTypes.bool,
     rowSpanValueGetter: PropTypes.func,
     sortable: PropTypes.bool,
     sortComparator: PropTypes.func,
