@@ -123,7 +123,7 @@ export default defineConfig(
   // it changes. Embedding the imported value in a setting puts its content
   // into the resolved-config hash, forcing cache invalidation on edits.
   { settings: { remarkConfig } },
-  // Changeset entry files are not prose documents — they start with a YAML
+  // Changeset entry files are not prose documents: they start with a YAML
   // frontmatter block instead of a heading, which trips the Markdown rules.
   { ignores: ['**/.changeset/**/*.md'] },
   {

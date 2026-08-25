@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * PROTOTYPE — changeset-sourced changelog generator for MUI X.
+ * PROTOTYPE: changeset-sourced changelog generator for MUI X.
  *
  * Reads `.changeset/*.md` files and renders the product sections of the
  * changelog in the existing MUI X format (per product, per tier, with the
@@ -8,7 +8,7 @@
  * original `[tag]`-prefixed bullets and within-section ordering.
  *
  * Out of scope for the prototype (kept by the real release script):
- * - Docs / Core / Miscellaneous sections (commit-scraped — hybrid model).
+ * - Docs / Core / Miscellaneous sections (commit-scraped, hybrid model).
  * - Contributors thank-you + highlights (GitHub API).
  * - Version computation (`changeset version`).
  *
@@ -163,7 +163,7 @@ function main() {
   for (const changeset of changesets) {
     const target = resolveTarget(changeset, index);
     if (!target) {
-      continue; // non-product package (e.g. x-internals) — handled elsewhere
+      continue; // non-product package (e.g. x-internals), handled elsewhere
     }
     if (!buckets.has(target.product.name)) {
       buckets.set(target.product.name, { base: [], pro: [], premium: [] });
@@ -211,7 +211,7 @@ function main() {
     }
     console.error(`Consumed ${changesets.length} changeset file(s) from "${changesetDir}".`);
   } else if (isSample) {
-    console.error('Sample directory — changeset files kept.');
+    console.error('Sample directory, changeset files kept.');
   }
 }
 

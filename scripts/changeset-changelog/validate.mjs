@@ -65,7 +65,7 @@ function validateFile(filePath, index) {
     const hit = index.get(name);
     if (!hit) {
       // Non-product packages (x-internals, x-virtualizer, ...) are allowed but
-      // won't render in product sections — surface as info, not error.
+      // won't render in product sections, so surface as info, not error.
       continue;
     }
     const list = productTiers.get(hit.product.name) ?? [];
@@ -77,7 +77,7 @@ function validateFile(filePath, index) {
       errors.push(
         `lists ${list.length} tiers of "${product}" (${list
           .map((t) => t.name)
-          .join(', ')}); list only the lowest tier — higher tiers inherit`,
+          .join(', ')}); list only the lowest tier; higher tiers inherit`,
       );
     }
   }
@@ -97,7 +97,7 @@ function main() {
   const dir = process.argv[2] ?? '.changeset';
   if (!fs.existsSync(dir)) {
     // eslint-disable-next-line no-console
-    console.log(`No changeset directory at "${dir}" — nothing to validate.`);
+    console.log(`No changeset directory at "${dir}", nothing to validate.`);
     return;
   }
   const index = buildPackageIndex();

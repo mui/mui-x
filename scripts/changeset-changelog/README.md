@@ -14,7 +14,7 @@ each PR's intended semver impact.
 ## Goal
 
 Declare the semver bump **intentionally at the PR level** so the release version
-is computed deterministically — no guesswork at release time — while keeping the
+is computed deterministically, with no guesswork at release time, while keeping the
 current changelog output essentially unchanged.
 
 ## Approach
@@ -25,7 +25,7 @@ files too, rendered in the existing MUI X format.
 
 - Each PR that changes published `packages/x-*` source adds a `.changeset/*.md`
   file declaring the affected package(s), the bump, and a human-readable
-  summary (which becomes the changelog entry — multi-line allowed).
+  summary (which becomes the changelog entry, multi-line allowed).
 - At release time, `changeset version` computes versions; this tooling renders
   the changelog.
 
@@ -37,7 +37,7 @@ files too, rendered in the existing MUI X format.
 | Docs / Core / Miscellaneous                                                  | commit scrape (unchanged) |
 | Contributors + highlights                                                    | GitHub API (unchanged)    |
 
-A changeset is required **only** when published source changes — docs/test/
+A changeset is required **only** when published source changes. Docs/test/
 internal PRs are exempt. Renovate PRs are exempt.
 
 ## Conventions
