@@ -99,15 +99,13 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     adapter,
     start,
     end,
-    events,
     eventRangeIndex,
     visibleResources,
     displayTimezone,
     recurringEventsPlugin,
   } = parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
-  const eventsInRange =
-    eventRangeIndex == null ? events : eventRangeIndex.getEventsForRange(start, end);
+  const eventsInRange = eventRangeIndex.getEventsForRange(start, end);
 
   for (const event of eventsInRange) {
     // STEP 1: Skip events from resources that are not visible
@@ -123,12 +121,6 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       // Without the premium recurring-events plugin attached, recurring events
       // are not expanded into occurrences — they are treated as single non-recurring events.
       if (recurringEventsPlugin == null) {
-        if (
-          adapter.isAfter(event.displayTimezone.start.value, end) ||
-          adapter.isBefore(event.displayTimezone.end.value, start)
-        ) {
-          continue;
-        }
         occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
         continue;
       }
@@ -144,16 +136,6 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
         ),
       );
       continue;
-    }
-
-    // The index already excludes non-recurring events outside the visible range.
-    if (eventRangeIndex == null) {
-      if (
-        adapter.isAfter(event.displayTimezone.start.value, end) ||
-        adapter.isBefore(event.displayTimezone.end.value, start)
-      ) {
-        continue;
-      }
     }
 
     occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
@@ -225,17 +207,12 @@ export function getResourceSelectionMode(
   return canHaveMultipleResources ? 'multiple' : 'single';
 }
 
-interface GetOccurrencesFromEventsBaseParameters {
+export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
+  eventRangeIndex: SchedulerEventRangeIndex;
   visibleResources: Record<string, boolean>;
   displayTimezone: TemporalTimezone;
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
 }
-
-export type GetOccurrencesFromEventsParameters = GetOccurrencesFromEventsBaseParameters &
-  (
-    | { events: SchedulerProcessedEvent[]; eventRangeIndex?: never }
-    | { events?: never; eventRangeIndex: SchedulerEventRangeIndex }
-  );

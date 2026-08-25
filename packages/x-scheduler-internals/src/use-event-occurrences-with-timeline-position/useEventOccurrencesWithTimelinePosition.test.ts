@@ -9,6 +9,7 @@ import {
   computeOccurrencesFirstIndexLookup,
   useEventOccurrencesWithTimelinePosition,
 } from './useEventOccurrencesWithTimelinePosition';
+import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const collectionStart = adapter.date('2024-01-15', 'default');
@@ -20,7 +21,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         adapter,
         start: collectionStart,
         end: collectionEnd,
-        events,
+        eventRangeIndex: createEventRangeIndex(events, adapter, false),
         displayTimezone: 'default',
         visibleResources: {},
         recurringEventsPlugin: null,
@@ -235,7 +236,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         adapter,
         start: collectionStart,
         end: collectionEnd,
-        events,
+        eventRangeIndex: createEventRangeIndex(events, adapter, false),
         displayTimezone: 'default',
         visibleResources: {},
         recurringEventsPlugin: null,

@@ -91,6 +91,11 @@ function queryMaxEndIndex(
   );
 }
 
+/**
+ * Creates an index that returns events whose range intersects the requested range, including both
+ * boundaries. Results preserve the input order. When recurring events are expanded, the index
+ * always returns them as candidates regardless of their original range.
+ */
 export function createEventRangeIndex(
   events: SchedulerProcessedEvent[],
   adapter: Adapter,

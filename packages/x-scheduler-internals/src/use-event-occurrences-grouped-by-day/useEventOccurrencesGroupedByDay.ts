@@ -60,14 +60,19 @@ export namespace useEventOccurrencesGroupedByDay {
  * Do not use directly, use the `useEventOccurrencesGroupedByDay` hook instead.
  * This is only exported for testing purposes.
  */
-type GroupedByDayParameters<T> = T extends unknown ? Omit<T, 'start' | 'end'> : never;
-
 export function innerGetEventOccurrencesGroupedByDay(
-  parameters: GroupedByDayParameters<GetOccurrencesFromEventsParameters> & {
+  parameters: Omit<GetOccurrencesFromEventsParameters, 'start' | 'end'> & {
     days: SchedulerProcessedDate[];
   },
 ): Map<string, SchedulerEventOccurrence[]> {
-  const { adapter, days, visibleResources, displayTimezone, recurringEventsPlugin } = parameters;
+  const {
+    adapter,
+    days,
+    eventRangeIndex,
+    visibleResources,
+    displayTimezone,
+    recurringEventsPlugin,
+  } = parameters;
 
   const occurrenceMap = new Map<string, SchedulerEventOccurrence[]>(
     days.map((day) => [day.key, []]),
@@ -75,21 +80,15 @@ export function innerGetEventOccurrencesGroupedByDay(
 
   const start = adapter.startOfDay(days[0].value);
   const end = adapter.endOfDay(days[days.length - 1].value);
-  const occurrenceParameters = {
+  const occurrences = getOccurrencesFromEvents({
     adapter,
     start,
     end,
+    eventRangeIndex,
     visibleResources,
     displayTimezone,
     recurringEventsPlugin,
-  };
-  const occurrences =
-    parameters.eventRangeIndex == null
-      ? getOccurrencesFromEvents({ ...occurrenceParameters, events: parameters.events })
-      : getOccurrencesFromEvents({
-          ...occurrenceParameters,
-          eventRangeIndex: parameters.eventRangeIndex,
-        });
+  });
 
   for (const occurrence of occurrences) {
     const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter);
