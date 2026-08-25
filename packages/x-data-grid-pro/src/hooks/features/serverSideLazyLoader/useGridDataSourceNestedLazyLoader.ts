@@ -126,11 +126,16 @@ const trimChildrenToRowCount = (
     const removedIdSet = new Set(removedIds.filter((rowId) => !skip?.has(rowId)));
     Object.keys(childrenFromPath).forEach((groupingField) => {
       const rowIdByGroupingKey = childrenFromPath[groupingField];
-      Object.keys(rowIdByGroupingKey).forEach((groupingKey) => {
-        if (removedIdSet.has(rowIdByGroupingKey[groupingKey])) {
-          delete rowIdByGroupingKey[groupingKey];
-        }
-      });
+      const staleKeys = Object.keys(rowIdByGroupingKey).filter((groupingKey) =>
+        removedIdSet.has(rowIdByGroupingKey[groupingKey]),
+      );
+      if (staleKeys.length === 0) {
+        return;
+      }
+      // The per-field records are shared with the previous tree, so replace instead of mutating.
+      const nextRowIdByGroupingKey = { ...rowIdByGroupingKey };
+      staleKeys.forEach((groupingKey) => delete nextRowIdByGroupingKey[groupingKey]);
+      childrenFromPath[groupingField] = nextRowIdByGroupingKey;
     });
   }
 };
@@ -326,12 +331,14 @@ export const useGridDataSourceNestedLazyLoader = (
         return;
       }
 
-      const tree = { ...privateApiRef.current.state.rows.tree };
-      const parentNode = tree[parentId] as GridGroupNode | undefined;
+      // Guard before cloning: this runs on every poll response, and most of them prune nothing.
+      const currentTree = privateApiRef.current.state.rows.tree;
+      const parentNode = currentTree[parentId] as GridGroupNode | undefined;
       if (parentNode?.type !== 'group' || parentNode.children.length <= rowCount) {
         return;
       }
 
+      const tree = { ...currentTree };
       const dataRowIdToModelLookup = { ...privateApiRef.current.state.rows.dataRowIdToModelLookup };
       const children = [...parentNode.children];
       const childrenFromPath = Object.assign(

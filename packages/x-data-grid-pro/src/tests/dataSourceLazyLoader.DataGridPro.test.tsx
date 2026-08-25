@@ -11,6 +11,7 @@ import type {
   GridGetRowsParams,
   GridFilterItem,
   GridGetRowsResponse,
+  GridDataSourceGroupNode,
   GridGroupNode,
   GridRowSelectionModel,
 } from '@mui/x-data-grid-pro';
@@ -1075,6 +1076,35 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
       const parentNode = apiRef.current!.getRowNode<GridGroupNode>('A')!;
       expect(parentNode.children.length).to.equal(1);
+    });
+
+    it('should remove every child when the server empties an expanded group', async () => {
+      let emptyGroup = false;
+      const transformRows = (rows: TreeRow[], params: GridGetRowsParams) =>
+        (params.groupKeys?.length ?? 0) === 1 && emptyGroup ? [] : rows;
+      const { user } = render(
+        <TestNestedDataSourceLazyLoader
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={spy()}
+          transformRows={transformRows}
+        />,
+      );
+
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      await user.click(within(getCell(0, 0)).getByRole('button'));
+      await waitFor(() => expect(apiRef.current!.getRow('A-0')).not.to.equal(null));
+
+      emptyGroup = true;
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRowNode<GridGroupNode>('A')!.children.length).to.equal(0);
+      });
+      expect(apiRef.current!.getRow('A-0')).to.equal(null);
+      expect(apiRef.current!.getRow('A-1')).to.equal(null);
+      expect(
+        apiRef.current!.getRowNode<GridDataSourceGroupNode>('A')!.serverChildrenCount,
+      ).to.equal(0);
     });
 
     it('should not leave orphaned descendants when a changed id replaces an expanded group', async () => {
