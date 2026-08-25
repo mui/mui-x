@@ -33,15 +33,19 @@ const SectionHeaderTitleRoot = styled('legend', {
  * Layout wrapper for one section of the event dialog form.
  * Applies the section spacing and the theme classes, so custom sections look native.
  */
-function SectionFieldset(props: React.ComponentProps<typeof SectionFieldsetRoot>) {
+const SectionFieldset = React.forwardRef<
+  HTMLFieldSetElement,
+  React.ComponentPropsWithoutRef<typeof SectionFieldsetRoot>
+>(function SectionFieldset(props, forwardedRef) {
   const { classes } = useEventEditingStyledContext();
   return (
     <SectionFieldsetRoot
       {...props}
+      ref={forwardedRef}
       className={clsx(classes.eventDialogSectionFieldset, props.className)}
     />
   );
-}
+});
 
 SectionFieldset.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
@@ -61,15 +65,19 @@ export { SectionFieldset };
 /**
  * Section title of the event dialog form, rendered as the fieldset's legend.
  */
-function SectionHeaderTitle(props: React.ComponentProps<typeof SectionHeaderTitleRoot>) {
+const SectionHeaderTitle = React.forwardRef<
+  HTMLLegendElement,
+  React.ComponentPropsWithoutRef<typeof SectionHeaderTitleRoot>
+>(function SectionHeaderTitle(props, forwardedRef) {
   const { classes } = useEventEditingStyledContext();
   return (
     <SectionHeaderTitleRoot
       {...props}
+      ref={forwardedRef}
       className={clsx(classes.eventDialogSectionHeaderTitle, props.className)}
     />
   );
-}
+});
 
 SectionHeaderTitle.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------

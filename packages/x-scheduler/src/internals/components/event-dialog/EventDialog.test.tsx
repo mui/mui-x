@@ -421,6 +421,24 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(legend!.classList.contains('custom-title')).to.equal(true);
     });
 
+    it('should forward the refs of SectionFieldset and SectionHeaderTitle to their DOM nodes', () => {
+      const fieldsetRef = React.createRef<HTMLFieldSetElement>();
+      const legendRef = React.createRef<HTMLLegendElement>();
+      function RefSection() {
+        return (
+          <SectionFieldset ref={fieldsetRef}>
+            <SectionHeaderTitle ref={legendRef}>Priority</SectionHeaderTitle>
+          </SectionFieldset>
+        );
+      }
+      renderWithSlot({ eventDialogGeneralTab: RefSection });
+
+      expect(fieldsetRef.current).not.to.equal(null);
+      expect(fieldsetRef.current!.tagName).to.equal('FIELDSET');
+      expect(legendRef.current).not.to.equal(null);
+      expect(legendRef.current!.tagName).to.equal('LEGEND');
+    });
+
     it('should render the built-in sections in the order the slot returns them', () => {
       function ReorderedSections() {
         return (
