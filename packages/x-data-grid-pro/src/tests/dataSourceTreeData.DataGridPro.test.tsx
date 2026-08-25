@@ -14,6 +14,7 @@ import type {
 import { spy } from 'sinon';
 import { actSleep, getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 const dataSetOptions = {
   dataSet: 'Employee' as const,

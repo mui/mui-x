@@ -1,6 +1,7 @@
 import { renderHook } from '@mui/internal-test-utils';
 import type { RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import { useSankeySeries, useSankeySeriesContext } from './useSankeySeries';
 import { Unstable_SankeyChart as SankeyChart } from '../SankeyChart';
 import type { SankeySeriesType } from '../SankeyChart';

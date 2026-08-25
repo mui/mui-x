@@ -1,5 +1,6 @@
 import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
+import { afterAll } from 'vitest';
 import { testDayViewValidation } from './testDayViewValidation';
 import { testMonthViewValidation } from './testMonthViewValidation';
 import { testTextFieldValidation } from './testTextFieldValidation';

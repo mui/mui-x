@@ -10,6 +10,7 @@ import {
   expectFieldValue,
 } from 'test/utils/pickers';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe, it, expect } from 'vitest';
 
 describe('<DateField /> - fieldRef', () => {
   const { render } = createPickerRenderer();

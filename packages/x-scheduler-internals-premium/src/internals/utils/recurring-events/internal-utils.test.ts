@@ -5,6 +5,7 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
+import { describe, it, expect } from 'vitest';
 import {
   getRemainingMonthlyOccurrences,
   getRemainingWeeklyOccurrences,

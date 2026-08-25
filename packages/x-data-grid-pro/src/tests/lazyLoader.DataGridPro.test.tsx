@@ -12,6 +12,7 @@ import type {
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Lazy loader', () => {
   const { render } = createRenderer();

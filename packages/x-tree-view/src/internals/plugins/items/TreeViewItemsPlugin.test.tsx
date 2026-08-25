@@ -2,6 +2,7 @@ import { spy } from 'sinon';
 import { act, fireEvent, reactMajor, waitFor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
+import { describe, it, expect } from 'vitest';
 import type { TreeViewAnyStore } from '../../models';
 
 // This suite covers the items API shared by every Tree View variant.

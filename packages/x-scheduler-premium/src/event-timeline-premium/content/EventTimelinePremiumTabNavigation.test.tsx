@@ -11,6 +11,7 @@ import {
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPresetConfig } from '@mui/x-scheduler-internals-premium/models';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 // Tab between events only works on top of real layout (the handler reads
 // `clientWidth`/`scrollLeft` and the virtualizer only mounts a subset of events

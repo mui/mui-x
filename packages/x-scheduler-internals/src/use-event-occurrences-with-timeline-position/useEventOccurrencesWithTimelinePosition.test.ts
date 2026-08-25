@@ -3,6 +3,7 @@ import { renderHook } from '@mui/internal-test-utils';
 import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import { getOccurrencesFromEvents } from '@mui/x-scheduler-internals/internals';
 import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
+import { describe, it, expect } from 'vitest';
 import {
   computeOccurrencesWithTimelinePosition,
   computeOccurrencesFirstIndexLookup,

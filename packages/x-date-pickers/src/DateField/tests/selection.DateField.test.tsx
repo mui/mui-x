@@ -10,6 +10,7 @@ import {
   adapterToUse,
 } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DateField /> - Selection', () => {
   const { render } = createPickerRenderer();

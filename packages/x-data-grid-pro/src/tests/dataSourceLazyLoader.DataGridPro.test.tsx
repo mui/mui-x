@@ -17,6 +17,7 @@ import type {
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { TestCache } from '@mui/x-data-grid/internals';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Needs layout
 describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {

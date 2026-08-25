@@ -15,6 +15,7 @@ import {
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';

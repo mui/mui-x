@@ -2,6 +2,7 @@ import { spy } from 'sinon';
 import { screen, fireEvent } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
+import { describe, it, expect, afterEach } from 'vitest';
 
 /**
  * On a coarse pointer, tapping an event arms it (toolbar) rather than opening the dialog; an outside

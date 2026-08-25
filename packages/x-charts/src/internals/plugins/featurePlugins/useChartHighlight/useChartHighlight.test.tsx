@@ -3,6 +3,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { getCenter } from 'test/utils/charts/getCenter';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('highlight', () => {
   const { render } = createRenderer();

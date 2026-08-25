@@ -2,6 +2,7 @@ import { spy } from 'sinon';
 import { screen, fireEvent } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
+import { describe, it, expect, afterEach } from 'vitest';
 
 /**
  * A coarse pointer arms the event (toolbar); a fine pointer opens the dialog directly. The pointer
