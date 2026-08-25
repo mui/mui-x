@@ -62,10 +62,14 @@ export interface EventDialogFormParameters<
   onValuesChange?: (values: TValues, changedKeys: string[]) => void;
 }
 
+// Own-property checks everywhere: the field key is an arbitrary consumer string, and a
+// plain `in` or unguarded read would resolve `Object.prototype` names such as "constructor".
 export const eventDialogFormSelectors = {
-  value: (state: EventDialogFormState, key: string) => state.values[key],
-  hasValue: (state: EventDialogFormState, key: string) => key in state.values,
-  error: (state: EventDialogFormState, key: string) => state.errors[key],
+  value: (state: EventDialogFormState, key: string) =>
+    Object.hasOwn(state.values, key) ? state.values[key] : undefined,
+  hasValue: (state: EventDialogFormState, key: string) => Object.hasOwn(state.values, key),
+  error: (state: EventDialogFormState, key: string) =>
+    Object.hasOwn(state.errors, key) ? state.errors[key] : undefined,
 };
 
 /**
@@ -136,7 +140,7 @@ export class EventDialogFormStore<
 
     let errors = this.state.errors;
     for (const key of changedKeys) {
-      if (key in errors) {
+      if (Object.hasOwn(errors, key)) {
         if (errors === this.state.errors) {
           errors = { ...errors };
         }
@@ -172,7 +176,7 @@ export class EventDialogFormStore<
       }
       return;
     }
-    if (keys.some((key) => key in errors)) {
+    if (keys.some((key) => Object.hasOwn(errors, key))) {
       const nextErrors = { ...errors };
       for (const key of keys) {
         delete nextErrors[key];
@@ -212,7 +216,7 @@ export class EventDialogFormStore<
    * or notifying `onValuesChange`. No-op when the key is already present.
    */
   public seedDefault = (key: string, value: unknown) => {
-    if (key in this.state.values) {
+    if (Object.hasOwn(this.state.values, key)) {
       return;
     }
     (this.initialValues as Record<string, unknown>)[key] = value;
@@ -236,8 +240,9 @@ export class EventDialogFormStore<
       // eslint-disable-next-line no-await-in-loop
       await Promise.all(
         Array.from(this.validators, async ([key, validators]) => {
+          const fieldValue = Object.hasOwn(values, key) ? values[key] : undefined;
           const results = await Promise.all(
-            Array.from(validators, (validator) => validator(values[key], values)),
+            Array.from(validators, (validator) => validator(fieldValue, values)),
           );
           for (const result of results) {
             const messages = normalizeValidatorResult(result);

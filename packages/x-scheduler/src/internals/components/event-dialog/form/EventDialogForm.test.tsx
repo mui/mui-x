@@ -69,6 +69,21 @@ describe('EventDialogForm', () => {
       expect(screen.getByLabelText('title')).to.have.value('Standup');
     });
 
+    it('should treat a field named after an Object.prototype member as a regular custom field', async () => {
+      const { user } = render(
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '' }}>
+          <FieldProbe fieldKey="constructor" defaultValue="" />
+        </EventDialogFormProvider>,
+      );
+
+      // Without own-property checks, `'constructor' in values` is true and the inherited
+      // `Object` constructor leaks as the field value instead of the seeded default.
+      expect(screen.getByLabelText('constructor')).to.have.value('');
+
+      await user.type(screen.getByLabelText('constructor'), 'custom');
+      expect(screen.getByLabelText('constructor')).to.have.value('custom');
+    });
+
     it('should expose the field error after a failed validateAll', async () => {
       let formStore: EventDialogFormStore | null = null;
       render(
