@@ -8,6 +8,7 @@ import {
   getDateOffset,
 } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import { describe, it, expect } from 'vitest';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 

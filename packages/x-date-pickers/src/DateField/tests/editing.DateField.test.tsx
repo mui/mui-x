@@ -3,6 +3,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { expectFieldValue, getCleanedSelectedContent } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import { describe, it, expect } from 'vitest';
 
 describe('<DateField /> - Editing', () => {
   describeAdapters(

@@ -1,6 +1,7 @@
 import { createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
+import { describe } from 'vitest';
 
 describe('<TimeRangePicker /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();

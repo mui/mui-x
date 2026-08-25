@@ -2,16 +2,19 @@ import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import type { RefObject } from '@mui/x-internals/types';
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, gridFilterModelSelector, useGridApiRef } from '@mui/x-data-grid';
 import type {
   DataGridProps,
   GridApi,
   GridDataSource,
+  GridFilterItem,
   GridGetRowsParams,
+  GridLogicOperator,
   GridGetRowsResponse,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
-import { getCell } from 'test/utils/helperFn';
+import { actSleep, getCell } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 import { TestCache } from '../internals/utils';
 
@@ -160,6 +163,196 @@ describe('<DataGrid /> - Data source', () => {
     });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+  });
+
+  describe('incomplete filter items', () => {
+    const getSentFilterItems = () => {
+      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      return JSON.parse(url.searchParams.get('filterModel')!).items;
+    };
+
+    const renderAndWaitForInitialFetch = async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+    };
+
+    const upsertFilterItem = async (item: GridFilterItem) => {
+      await act(async () => {
+        apiRef.current!.upsertFilterItem(item);
+      });
+    };
+
+    // See https://github.com/mui/mui-x/issues/23243
+    it('should not send a filter item without a value to the data source', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+      expect(getSentFilterItems()).to.deep.equal([]);
+    });
+
+    it('should not send a filter item whose array value is empty', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isAnyOf', value: ['1'] });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isAnyOf', value: [] });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+      expect(getSentFilterItems()).to.deep.equal([]);
+    });
+
+    // Operators like `isEmpty` are complete without a value.
+    // See https://github.com/mui/mui-x/issues/5402
+    it('should send a valueless filter item whose operator requires no value', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isEmpty' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      expect(getSentFilterItems()).to.deep.equal([{ id: 1, field: 'id', operator: 'isEmpty' }]);
+    });
+
+    // Adding a filter row asks the data source for what the previous call already returned.
+    it('should not re-fetch when the change only adds an incomplete item', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    it('should re-fetch when an incomplete item becomes complete', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+      await actSleep(50);
+      expect(fetchRowsSpy.callCount).to.equal(1);
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      expect(getSentFilterItems()).to.deep.equal([
+        { id: 1, field: 'id', operator: 'contains', value: '1' },
+      ]);
+    });
+  });
+
+  describe('inapplicable filter model changes', () => {
+    const renderAndWaitForInitialFetch = async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+    };
+
+    // A logic operator needs two operands to change anything.
+    it('should not re-fetch when the logic operator changes without two complete items', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterLogicOperator('or' as GridLogicOperator);
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    it('should not re-fetch when the quick filter values only contain falsy entries', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['']);
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    it('should not re-fetch when the quick filter logic operator changes below two values', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterModel({
+          ...gridFilterModelSelector(apiRef),
+          quickFilterLogicOperator: 'or' as GridLogicOperator,
+        });
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    // `passFilterLogic` runs every value through the logic operator, so a falsy one added
+    // next to an applying value does change the matched rows.
+    it('should re-fetch when a falsy value joins an applying quick filter value', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc', '']);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+    });
+
+    it('should re-fetch when a quick filter value is added', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      expect(JSON.parse(url.searchParams.get('filterModel')!).quickFilterValues).to.deep.equal([
+        'abc',
+      ]);
     });
   });
 

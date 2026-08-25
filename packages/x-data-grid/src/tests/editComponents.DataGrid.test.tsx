@@ -4,6 +4,7 @@ import type { GridApi, DataGridProps } from '@mui/x-data-grid';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { getCell, openLongTextEditPopup, spyApi } from 'test/utils/helperFn';
 import { spy } from 'sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('<DataGrid /> - Edit components', () => {
   const { render } = createRenderer();

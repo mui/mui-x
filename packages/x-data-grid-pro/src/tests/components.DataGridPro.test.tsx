@@ -6,6 +6,7 @@ import { DataGridPro, gridClasses, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { DataGridProProps, GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getRow } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();

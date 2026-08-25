@@ -1,3 +1,4 @@
+import { spy } from 'sinon';
 import {
   adapter,
   EventBuilder,
@@ -8,6 +9,7 @@ import {
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
+import { describe, it, expect } from 'vitest';
 import { schedulerOtherSelectors } from '../../../../scheduler-selectors';
 import { processDate } from '../../../../process-date';
 import { getOccurrenceKey, getRecurringOccurrenceKey } from '../../event-utils';
@@ -181,6 +183,104 @@ storeClasses.forEach((storeClass) => {
         );
 
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).not.to.equal(null);
+      });
+    });
+
+    describe('startEditing one-shot invariant', () => {
+      function buildOccurrence() {
+        return {
+          id: 'standup',
+          key: 'standup::2025-07-07',
+          displayTimezone: {
+            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
+            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
+          },
+        } as any;
+      }
+
+      it('should not re-run `onEventEditingStart` when the occurrence is already open in the surface', () => {
+        const onEventEditingStart = spy();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const occurrence = buildOccurrence();
+
+        expect(store.startEditing(occurrence)).to.equal(true);
+        expect(store.startEditing(occurrence)).to.equal(true);
+
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+      });
+
+      it('should run `onEventEditingStart` again when the previous start was canceled', () => {
+        const onEventEditingStart = spy((_occurrence: any, eventDetails: any) =>
+          eventDetails.cancel(),
+        );
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const occurrence = buildOccurrence();
+
+        expect(store.startEditing(occurrence)).to.equal(false);
+        expect(store.startEditing(occurrence)).to.equal(false);
+
+        expect(onEventEditingStart.callCount).to.equal(2);
+      });
+
+      it('should run `onEventEditingStart` when the armed occurrence opens the surface', () => {
+        const onEventEditingStart = spy();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const occurrence = buildOccurrence();
+
+        store.startEditing(occurrence, 'armed');
+        expect(onEventEditingStart.callCount).to.equal(0);
+
+        store.setEditingMode('edit');
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+      });
+    });
+
+    describe('`onEventEditingStart` positioning anchor', () => {
+      function buildOccurrence() {
+        return {
+          id: 'standup',
+          key: 'standup::2025-07-07',
+          displayTimezone: {
+            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
+            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
+          },
+        } as any;
+      }
+
+      it('should expose the trigger as `anchor` when no dedicated anchor is provided', () => {
+        const onEventEditingStart = spy();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const trigger = document.createElement('button');
+
+        store.startEditing(buildOccurrence(), 'edit', undefined, trigger);
+
+        expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(trigger);
+        expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(trigger);
+      });
+
+      it('should expose the dedicated anchor without replacing the trigger', () => {
+        const onEventEditingStart = spy();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const trigger = document.createElement('button');
+        const anchor = document.createElement('div');
+
+        store.startEditing(buildOccurrence(), 'edit', undefined, trigger, anchor);
+
+        expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(trigger);
+        expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(anchor);
+      });
+
+      it('should forward the dedicated anchor when the armed occurrence opens the surface', () => {
+        const onEventEditingStart = spy();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const trigger = document.createElement('button');
+        const anchor = document.createElement('div');
+
+        store.startEditing(buildOccurrence(), 'armed');
+        store.setEditingMode('edit', undefined, trigger, anchor);
+
+        expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(trigger);
+        expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(anchor);
       });
     });
   });

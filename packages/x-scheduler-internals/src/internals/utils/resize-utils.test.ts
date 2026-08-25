@@ -1,4 +1,5 @@
 import { adapter } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import type { SchedulerEventSide } from '../../models';
 import { clampResizedEventEdge, isResizeHandlerEnabled } from './resize-utils';
 
@@ -6,37 +7,35 @@ describe('isResizeHandlerEnabled', () => {
   // A handle is enabled only when its own edge is inside the collection (a clipped edge can't resize).
   const cases: {
     side: SchedulerEventSide;
-    doesEventStartBeforeCollectionStart: boolean;
-    doesEventEndAfterCollectionEnd: boolean;
+    isEventStartClipped: boolean;
+    isEventEndClipped: boolean;
     expected: boolean;
   }[] = [
     // The start handle only cares about the start edge being clipped.
-    { side: 'start', doesEventStartBeforeCollectionStart: false, doesEventEndAfterCollectionEnd: false, expected: true }, // prettier-ignore
-    { side: 'start', doesEventStartBeforeCollectionStart: true, doesEventEndAfterCollectionEnd: false, expected: false }, // prettier-ignore
+    { side: 'start', isEventStartClipped: false, isEventEndClipped: false, expected: true }, // prettier-ignore
+    { side: 'start', isEventStartClipped: true, isEventEndClipped: false, expected: false }, // prettier-ignore
     // ...and ignores whether the end edge is clipped.
-    { side: 'start', doesEventStartBeforeCollectionStart: false, doesEventEndAfterCollectionEnd: true, expected: true }, // prettier-ignore
-    { side: 'start', doesEventStartBeforeCollectionStart: true, doesEventEndAfterCollectionEnd: true, expected: false }, // prettier-ignore
+    { side: 'start', isEventStartClipped: false, isEventEndClipped: true, expected: true }, // prettier-ignore
+    { side: 'start', isEventStartClipped: true, isEventEndClipped: true, expected: false }, // prettier-ignore
     // The end handle only cares about the end edge being clipped.
-    { side: 'end', doesEventStartBeforeCollectionStart: false, doesEventEndAfterCollectionEnd: false, expected: true }, // prettier-ignore
-    { side: 'end', doesEventStartBeforeCollectionStart: false, doesEventEndAfterCollectionEnd: true, expected: false }, // prettier-ignore
+    { side: 'end', isEventStartClipped: false, isEventEndClipped: false, expected: true }, // prettier-ignore
+    { side: 'end', isEventStartClipped: false, isEventEndClipped: true, expected: false }, // prettier-ignore
     // ...and ignores whether the start edge is clipped.
-    { side: 'end', doesEventStartBeforeCollectionStart: true, doesEventEndAfterCollectionEnd: false, expected: true }, // prettier-ignore
-    { side: 'end', doesEventStartBeforeCollectionStart: true, doesEventEndAfterCollectionEnd: true, expected: false }, // prettier-ignore
+    { side: 'end', isEventStartClipped: true, isEventEndClipped: false, expected: true }, // prettier-ignore
+    { side: 'end', isEventStartClipped: true, isEventEndClipped: true, expected: false }, // prettier-ignore
   ];
 
-  cases.forEach(
-    ({ side, doesEventStartBeforeCollectionStart, doesEventEndAfterCollectionEnd, expected }) => {
-      it(`should return ${expected} for side="${side}" (startClipped=${doesEventStartBeforeCollectionStart}, endClipped=${doesEventEndAfterCollectionEnd})`, () => {
-        expect(
-          isResizeHandlerEnabled({
-            side,
-            doesEventStartBeforeCollectionStart,
-            doesEventEndAfterCollectionEnd,
-          }),
-        ).to.equal(expected);
-      });
-    },
-  );
+  cases.forEach(({ side, isEventStartClipped, isEventEndClipped, expected }) => {
+    it(`should return ${expected} for side="${side}" (startClipped=${isEventStartClipped}, endClipped=${isEventEndClipped})`, () => {
+      expect(
+        isResizeHandlerEnabled({
+          side,
+          isEventStartClipped,
+          isEventEndClipped,
+        }),
+      ).to.equal(expected);
+    });
+  });
 });
 
 describe('clampResizedEventEdge', () => {

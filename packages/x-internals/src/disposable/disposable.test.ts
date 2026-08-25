@@ -1,4 +1,4 @@
-import { afterEach, expect, vi } from 'vitest';
+import { afterEach, expect, vi, describe, it } from 'vitest';
 import {
   AsyncDisposableStack,
   DisposableStack,

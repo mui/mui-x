@@ -2,7 +2,7 @@ import { spy } from 'sinon';
 import { act, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<YearCalendar />', () => {
   const { render } = createPickerRenderer();

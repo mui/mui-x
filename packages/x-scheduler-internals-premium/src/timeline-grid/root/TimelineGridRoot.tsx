@@ -8,6 +8,7 @@ import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import { useDependencyCreationMonitor } from '../../internals/utils/useDependencyCreationMonitor';
 import { TimelineGridRootCssVars } from './TimelineGridRootCssVars';
 import type {
   TimelineGridCellCoordinates,
@@ -49,15 +50,17 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const resources = useStore(
     store,
     schedulerOccurrenceSelectors.groupedByResourceList,
-    presetConfig.start,
-    presetConfig.end,
+    config.start,
+    config.end,
   );
 
   const rootRef = React.useRef<HTMLDivElement>(null);
+
+  useDependencyCreationMonitor();
 
   const [focusedCell, setFocusedCellState] = React.useState<TimelineGridCellCoordinates | null>(
     null,
@@ -182,7 +185,7 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
         role: 'grid',
         onBlur: handleBlur,
         style: {
-          [TimelineGridRootCssVars.unitCount]: presetConfig.tickCount,
+          [TimelineGridRootCssVars.unitCount]: config.tickCount,
           [TimelineGridRootCssVars.rowCount]: resources.length,
         } as React.CSSProperties,
       },

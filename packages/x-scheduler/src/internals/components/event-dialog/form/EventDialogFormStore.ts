@@ -1,5 +1,7 @@
 import type * as React from 'react';
-import { createSelector, Store } from '@base-ui/utils/store';
+import { Store } from '@base-ui/utils/store';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import type { EventDialogFormValues } from '../utils';
 
 export interface EventDialogFormState<
@@ -42,9 +44,18 @@ function normalizeValidatorResult(
   return [result];
 }
 
-export interface EventDialogFormStoreOptions<
+export interface EventDialogFormParameters<
   TValues extends Record<string, unknown> = EventDialogFormValues,
 > {
+  /**
+   * The occurrence the editing session targets. Captured when the dialog opens.
+   */
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * Whether the resource picker of the editing session is single- or multi-select.
+   * Captured when the dialog opens.
+   */
+  resourceSelectionMode: ResourceSelectionMode;
   /**
    * Called synchronously after each write with the new values and the written keys.
    */
@@ -52,15 +63,16 @@ export interface EventDialogFormStoreOptions<
 }
 
 export const eventDialogFormSelectors = {
-  value: createSelector((state: EventDialogFormState, key: string) => state.values[key]),
-  hasValue: createSelector((state: EventDialogFormState, key: string) => key in state.values),
-  error: createSelector((state: EventDialogFormState, key: string) => state.errors[key]),
+  value: (state: EventDialogFormState, key: string) => state.values[key],
+  hasValue: (state: EventDialogFormState, key: string) => key in state.values,
+  error: (state: EventDialogFormState, key: string) => state.errors[key],
 };
 
 /**
  * Ephemeral draft store backing the event dialog form.
  * Seeded from the event when the dialog opens and discarded when it closes,
- * it holds the edited values until they are committed to the scheduler store on save.
+ * it holds the edited values until they are committed to the scheduler store on save,
+ * along with the constants of the editing session (`occurrence`, `resourceSelectionMode`).
  *
  * Deliberately not built on Base UI's `Form`/`Field`: every input in the dialog is
  * MUI Material, and the store holds non-DOM values (`rruleDraft`, `recurrenceSelection`)
@@ -71,17 +83,36 @@ export class EventDialogFormStore<
 > extends Store<EventDialogFormState<TValues>> {
   private validators = new Map<string, Set<EventDialogFormValidator<TValues>>>();
 
-  private options: EventDialogFormStoreOptions<TValues>;
+  /**
+   * Bumped on every registration change so a pending `validateAll` can detect it.
+   */
+  private validatorsRevision = 0;
+
+  private parameters: EventDialogFormParameters<TValues>;
 
   /**
    * Values the form was seeded with, used to detect edited fields.
    */
   private readonly initialValues: TValues;
 
-  constructor(initialValues: TValues, options: EventDialogFormStoreOptions<TValues> = {}) {
+  /**
+   * The occurrence the editing session targets. Constant for the lifetime of the store.
+   */
+  public readonly occurrence: SchedulerRenderableEventOccurrence;
+
+  /**
+   * Whether the resource picker of the editing session is single- or multi-select.
+   * Constant for the lifetime of the store: the resource Select and the submit
+   * logic must read the same value.
+   */
+  public readonly resourceSelectionMode: ResourceSelectionMode;
+
+  constructor(initialValues: TValues, parameters: EventDialogFormParameters<TValues>) {
     super({ values: { ...initialValues }, errors: {} });
     this.initialValues = { ...initialValues };
-    this.options = options;
+    this.parameters = parameters;
+    this.occurrence = parameters.occurrence;
+    this.resourceSelectionMode = parameters.resourceSelectionMode;
   }
 
   /**
@@ -114,7 +145,20 @@ export class EventDialogFormStore<
     }
 
     this.update({ values, errors });
-    this.options.onValuesChange?.(values, changedKeys);
+    this.parameters.onValuesChange?.(values, changedKeys);
+  };
+
+  /**
+   * Writes the error message(s) of a single field, replacing any existing ones.
+   * Clears the field's error when the messages normalize to none.
+   */
+  public setError = (key: string, error: EventDialogFormValidatorResult) => {
+    const messages = normalizeValidatorResult(error);
+    if (messages === null) {
+      this.clearErrors([key]);
+      return;
+    }
+    this.set('errors', { ...this.state.errors, [key]: messages });
   };
 
   /**
@@ -146,6 +190,7 @@ export class EventDialogFormStore<
       this.validators.set(key, validators);
     }
     validators.add(validator);
+    this.validatorsRevision += 1;
   };
 
   public unregisterValidator = (key: string, validator: EventDialogFormValidator<TValues>) => {
@@ -154,7 +199,13 @@ export class EventDialogFormStore<
     if (validators?.size === 0) {
       this.validators.delete(key);
     }
+    this.validatorsRevision += 1;
   };
+
+  /**
+   * Whether at least one validator is currently registered for `key`.
+   */
+  public hasValidator = (key: string): boolean => this.validators.has(key);
 
   /**
    * Seeds a key that is not present in the values yet, without marking it dirty
@@ -170,27 +221,38 @@ export class EventDialogFormStore<
 
   /**
    * Runs every registered validator and stores the failures (first error per field wins).
+   * Restarts when a value is written or a validator is (un)registered while an async
+   * validator is pending, so the stored errors and the resolved verdict always describe
+   * the values and validators current at resolution time.
    * Resolves with whether the form is valid.
    */
   public validateAll = async (): Promise<boolean> => {
-    const { values } = this.state;
-    const errors: Record<string, React.ReactNode[]> = {};
-    await Promise.all(
-      Array.from(this.validators, async ([key, validators]) => {
-        const results = await Promise.all(
-          Array.from(validators, (validator) => validator(values[key], values)),
-        );
-        for (const result of results) {
-          const messages = normalizeValidatorResult(result);
-          if (messages !== null) {
-            errors[key] = messages;
-            break;
+    while (true) {
+      // `setValues` replaces the values object on every write, so its identity
+      // doubles as a revision check.
+      const { values } = this.state;
+      const { validatorsRevision } = this;
+      const errors: Record<string, React.ReactNode[]> = {};
+      // eslint-disable-next-line no-await-in-loop
+      await Promise.all(
+        Array.from(this.validators, async ([key, validators]) => {
+          const results = await Promise.all(
+            Array.from(validators, (validator) => validator(values[key], values)),
+          );
+          for (const result of results) {
+            const messages = normalizeValidatorResult(result);
+            if (messages !== null) {
+              errors[key] = messages;
+              break;
+            }
           }
-        }
-      }),
-    );
-    this.set('errors', errors);
-    return Object.keys(errors).length === 0;
+        }),
+      );
+      if (this.state.values === values && this.validatorsRevision === validatorsRevision) {
+        this.set('errors', errors);
+        return Object.keys(errors).length === 0;
+      }
+    }
   };
 
   /**

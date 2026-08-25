@@ -5,6 +5,7 @@ import { FieldRef, FieldSectionType } from '@mui/x-date-pickers/models';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { PickerValue } from '@mui/x-date-pickers/internals';
+import { expect } from 'vitest';
 import { expectFieldValue } from './assertions';
 
 interface BuildFieldInteractionsParams<P extends {}> {
