@@ -103,7 +103,7 @@ export interface TreemapSeriesType {
 }
 
 // ---------------------------------------------------------------------------------------
-// Layout — mirrors the Sankey `WithPosition` pattern. d3-hierarchy types never leak here.
+// Layout: mirrors the Sankey `WithPosition` pattern. d3-hierarchy types never leak here.
 
 export interface TreemapLayoutNodeProperties {
   /**
