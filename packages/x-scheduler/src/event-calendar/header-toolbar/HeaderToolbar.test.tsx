@@ -264,5 +264,6 @@ describe('side panel toggle', () => {
     expect(screen.getByRole('button', { name: 'Open side panel' })).to.equal(toggleButton);
     expect(toggleButton).to.have.attribute('aria-expanded', 'false');
     expect(toggleButton).to.have.attribute('aria-controls', panelId);
+    expect(panel).to.have.attribute('aria-hidden', 'true');
   });
 });

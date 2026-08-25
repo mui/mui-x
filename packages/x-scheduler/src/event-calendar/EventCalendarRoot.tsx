@@ -79,7 +79,7 @@ const EventCalendarRootStyled = styled('div', {
   },
 }));
 
-const EventCalendarSidePanel = styled('aside', {
+const EventCalendarSidePanel = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'SidePanel',
 })(({ theme }) => ({
@@ -206,11 +206,14 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
 
         <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
           <EventCalendarSidePanelCollapse
+            component="aside"
+            id={`${schedulerId}-side-panel`}
             in={isSidePanelOpen}
+            aria-hidden={isSidePanelOpen}
             orientation="horizontal"
             className={classes.sidePanelCollapse}
           >
-            <EventCalendarSidePanel id={`${schedulerId}-side-panel`} className={classes.sidePanel}>
+            <EventCalendarSidePanel className={classes.sidePanel}>
               <MiniCalendar />
               <Divider className={classes.sidePanelDivider} />
               <ResourcesTree />
