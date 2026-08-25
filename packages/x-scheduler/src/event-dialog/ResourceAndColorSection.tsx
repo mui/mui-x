@@ -26,6 +26,7 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useStore } from '@base-ui/utils/store';
+import { useId } from '@base-ui/utils/useId';
 import type { PaletteName } from '../internals/utils/tokens';
 import { getPaletteVariants } from '../internals/utils/tokens';
 import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
@@ -180,6 +181,10 @@ export function ResourceAndColorSection() {
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 
+  // Per-instance suffix: the same section can be rendered several times by a custom
+  // General tab, and the ids must stay unique.
+  const sectionId = useId();
+
   // Selector hooks
   const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
   const resourceDepthLookup = useStore(store, schedulerResourceSelectors.resourceDepthLookup);
@@ -281,7 +286,8 @@ export function ResourceAndColorSection() {
     );
   };
 
-  const errorId = `${schedulerId}-resource-error`;
+  const labelId = `${schedulerId}-resource-select-label-${sectionId}`;
+  const errorId = `${schedulerId}-resource-error-${sectionId}`;
 
   return (
     <SectionFieldset>
@@ -291,11 +297,9 @@ export function ResourceAndColorSection() {
       {/* Resources are optional; skip the picker entirely when none are configured. */}
       {resources.length > 0 && (
         <FormControl size="small" fullWidth error={!!error}>
-          <InputLabel id={`${schedulerId}-resource-select-label`}>
-            {localeText.resourceLabel}
-          </InputLabel>
+          <InputLabel id={labelId}>{localeText.resourceLabel}</InputLabel>
           <Select
-            labelId={`${schedulerId}-resource-select-label`}
+            labelId={labelId}
             label={localeText.resourceLabel}
             value={mode === 'multiple' ? resourceIds : (resourceIds[0] ?? NO_RESOURCE_VALUE)}
             multiple={mode === 'multiple'}

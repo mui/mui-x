@@ -766,22 +766,29 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(second).to.have.value('Evening run');
     });
 
-    it('should produce duplicate DOM ids when a section with a static id is rendered twice', () => {
+    it('should keep the DOM ids unique when a section is rendered twice', () => {
       function DuplicatedSections() {
         return (
           <React.Fragment>
             <DateTimeSection />
             <DateTimeSection />
+            <ResourceAndColorSection />
+            <ResourceAndColorSection />
           </React.Fragment>
         );
       }
       renderWithSlot({ eventDialogGeneralTab: DuplicatedSections });
 
-      // The all-day switch id is built from the scheduler id, not from the section instance,
-      // so duplicating the section duplicates the id. Pinned as a documented limitation.
-      const switches = document.querySelectorAll('[id$="-enable-all-day-switch"]');
+      const switches = screen.getAllByRole('switch', { name: /all day/i });
       expect(switches.length).to.equal(2);
-      expect(switches[0].id).to.equal(switches[1].id);
+      expect(switches[0].id).not.to.equal(switches[1].id);
+
+      // Each resource select must be labelled by its own label element, not the other
+      // instance's — duplicate label ids would make both resolve to the first one.
+      const selects = screen.getAllByRole('combobox', { name: 'Resource' });
+      expect(selects.length).to.equal(2);
+      const labelIds = selects.map((select) => select.getAttribute('aria-labelledby'));
+      expect(labelIds[0]).not.to.equal(labelIds[1]);
     });
 
     it('should keep the draft when the slot component identity changes', async () => {

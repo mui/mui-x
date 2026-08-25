@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
+import { useId } from '@base-ui/utils/useId';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
@@ -62,6 +63,10 @@ export function DateTimeSection() {
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
   const { occurrence } = formStore;
+
+  // Per-instance suffix: the same section can be rendered several times by a custom
+  // General tab, and the ids must stay unique.
+  const sectionId = useId();
 
   // Selector hooks
   const isPropertyReadOnly = useStore(
@@ -174,7 +179,7 @@ export function DateTimeSection() {
         <AllDayFormControlLabel
           control={
             <Switch
-              id={`${schedulerId}-enable-all-day-switch`}
+              id={`${schedulerId}-enable-all-day-switch-${sectionId}`}
               checked={allDay.value}
               onChange={(event) => {
                 formStore.clearErrors(RANGE_ERROR_KEYS);
