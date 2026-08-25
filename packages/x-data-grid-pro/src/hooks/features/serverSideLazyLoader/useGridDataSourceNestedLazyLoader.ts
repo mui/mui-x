@@ -352,6 +352,10 @@ export const useGridDataSourceNestedLazyLoader = (
 
   const findSkeletonSectionAndFetchRows = React.useCallback(
     (firstRowIndex: number, lastRowIndex: number, options: FetchSkeletonRowsOptions = {}) => {
+      // The tree is about to be rebuilt, any fetch scheduled from it would be for stale indexes.
+      if (rowsStale.current) {
+        return false;
+      }
       const sortModel = gridSortModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
       const currentVisibleRows = getVisibleRows(privateApiRef);
@@ -1021,7 +1025,10 @@ export const useGridDataSourceNestedLazyLoader = (
     rowsStale.current = true;
     renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
     throttledHandleRenderedRowsIntervalChange.clear();
-  }, [throttledHandleRenderedRowsIntervalChange]);
+    // A queued incremental fetch would run after the invalidation, take the latest request id
+    // and make the response that rebuilds the tree be discarded as stale.
+    debouncedFetchRootRowsIncremental.clear();
+  }, [throttledHandleRenderedRowsIntervalChange, debouncedFetchRootRowsIncremental]);
 
   const invalidateNestedRows = React.useCallback<
     GridDataSourceNestedLazyLoaderPrivateApi['invalidateNestedRows']
@@ -1039,9 +1046,10 @@ export const useGridDataSourceNestedLazyLoader = (
   React.useEffect(() => {
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
+      debouncedFetchRootRowsIncremental.clear();
       stopPolling();
     };
-  }, [throttledHandleRenderedRowsIntervalChange, stopPolling]);
+  }, [throttledHandleRenderedRowsIntervalChange, debouncedFetchRootRowsIncremental, stopPolling]);
 
   React.useEffect(() => {
     if (!isStrategyActive || props.dataSourceRevalidateMs <= 0) {

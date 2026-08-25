@@ -1290,6 +1290,72 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           });
         });
       });
+
+      const deferChildrenAndSortedRootRequests = (params: GridGetRowsParams) =>
+        !isRootRequest(params) || (params.sortModel ?? []).length > 0;
+
+      it('should drop the children response of a group aborted more than once', async () => {
+        render(<TestConcurrentRequests deferRequest={deferChildrenAndSortedRootRequests} />);
+
+        // Settle the children once, so the group is registered as settled
+        await waitForPendingChildrenRequests(['["P1"]']);
+        resolveDeferredRequests();
+        await waitFor(() => expect(apiRef.current!.getRow('P1-0')).not.to.equal(null));
+
+        // First invalidation, released so that the tree is rebuilt and the children re-requested
+        await act(async () => apiRef.current!.sortColumn('name', 'desc'));
+        await waitFor(() => {
+          expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(true);
+        });
+        resolveDeferredRequests((params) => isRootRequest(params));
+        await waitForPendingChildrenRequests(['["P1"]']);
+        const twiceAbortedRequests = deferredRequests.splice(0);
+
+        // Second invalidation aborts the same group again
+        await act(async () => apiRef.current!.sortColumn('name', 'asc'));
+        await waitFor(() => {
+          expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(true);
+        });
+
+        twiceAbortedRequests.forEach((request) => request.resolve());
+        await act(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+          });
+        });
+
+        expect(apiRef.current!.getRow('P1-0')).to.equal(null);
+      });
+
+      it('should not fetch skeleton rows while the tree is being rebuilt', async () => {
+        const localFetchRowsSpy = spy();
+        const { user } = render(
+          <TestConcurrentRequests
+            deferRequest={deferChildrenAndSortedRootRequests}
+            onFetchRows={localFetchRowsSpy}
+            defaultGroupingExpansionDepth={0}
+          />,
+        );
+
+        await waitFor(() => expect(apiRef.current!.getRow('P1')).not.to.equal(null));
+
+        // The tree is invalidated and the rebuilding root response is held back
+        await act(async () => apiRef.current!.sortColumn('name', 'desc'));
+        await waitFor(() => {
+          expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(true);
+        });
+
+        const requestsBeforeExpansion = localFetchRowsSpy.callCount;
+        await user.click(within(getCell(0, 0)).getByRole('button'));
+        await act(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+          });
+        });
+
+        // Any fetch scheduled from the stale tree would target indexes of the tree being replaced
+        expect(localFetchRowsSpy.callCount).to.equal(requestsBeforeExpansion);
+      });
     });
   });
 

@@ -120,8 +120,14 @@ export const useGridDataSourcePremium = (
       }
       const groupKeys = getGroupKeys(rowTree, params.rowId) as string[];
       apiRef.current.updateNestedRows([updatedRow], groupKeys);
-      // To refresh the aggregation values of all parent rows and the footer row, recursively re-fetch all parent levels
-      fetchParents(rowTree, params.rowId, apiRef.current.dataSource.fetchRows);
+      // To refresh the aggregation values of all parent rows and the footer row, recursively re-fetch all parent levels.
+      // The tree shape is unchanged, so the root level refresh must not invalidate it: `fetchRows()`
+      // would rebuild the tree and scroll back to the top on every edit.
+      fetchParents(rowTree, params.rowId, (id) =>
+        id === GRID_ROOT_GROUP_ID
+          ? apiRef.current.fetchRootRowsIncremental()
+          : apiRef.current.dataSource.fetchRows(id),
+      );
     },
     [apiRef],
   );

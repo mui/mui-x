@@ -101,6 +101,9 @@ export class NestedDataManager {
   public clear = () => {
     this.queuedRequests.clear();
     Array.from(this.pendingRequests).forEach((id) => this.clearPendingRequest(id));
+    // Without this, a group aborted twice reads as `SETTLED` on the second abort and its stale
+    // response passes the `UNKNOWN` guard in `fetchRowChildren`.
+    this.settledRequests.clear();
   };
 
   public clearPendingRequest = (id: GridRowId) => {
