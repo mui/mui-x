@@ -372,7 +372,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       fetchRowsSpy.resetHistory();
 
       // Call fetchRows without explicit params
-      act(() => {
+      await act(() => {
         apiRef.current?.dataSource.fetchRows();
       });
 
@@ -671,6 +671,61 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(rootRequest).not.to.equal(undefined);
       expect(rootRequest?.start).to.equal(0);
       expect(rootRequest?.end).to.equal(9);
+    });
+
+    // Context: https://github.com/mui/mui-x/issues/22730
+    describe('row selection', () => {
+      it('should keep a selected parent selected when its children load', async () => {
+        render(<TestNestedDataSourceLazyLoader dataSourceCache={null} onFetchRows={spy()} />);
+        await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+        // Select the collapsed parent row A. Its children are skeleton rows.
+        await act(async () => apiRef.current?.selectRow('A', true, true));
+        expect(apiRef.current!.state.rowSelection.ids.has('A')).to.equal(true);
+
+        // Expand A so that its children load.
+        await act(async () => apiRef.current?.setRowChildrenExpansion('A', true));
+        await waitFor(() => expect(apiRef.current!.getRow('A-1')).not.to.equal(null));
+
+        // The parent must stay selected. The loaded children inherit the selection.
+        await waitFor(() => {
+          expect(apiRef.current!.state.rowSelection.ids.has('A')).to.equal(true);
+        });
+        expect(apiRef.current!.state.rowSelection.ids.has('A-0')).to.equal(true);
+        expect(apiRef.current!.state.rowSelection.ids.has('A-1')).to.equal(true);
+      });
+
+      it('should not add skeleton rows to the selection model when selecting a collapsed parent', async () => {
+        render(<TestNestedDataSourceLazyLoader dataSourceCache={null} onFetchRows={spy()} />);
+        await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+        await act(async () => apiRef.current?.selectRow('A', true, true));
+
+        const selectionModel = apiRef.current!.state.rowSelection;
+        expect(selectionModel.type).to.equal('include');
+        expect(Array.from(selectionModel.ids)).to.deep.equal(['A']);
+      });
+
+      it('should keep a selected parent selected when children load with propagation disabled', async () => {
+        render(
+          <TestNestedDataSourceLazyLoader
+            dataSourceCache={null}
+            onFetchRows={spy()}
+            rowSelectionPropagation={{ parents: false, descendants: false }}
+          />,
+        );
+        await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+        await act(async () => apiRef.current?.selectRow('A', true, true));
+        await act(async () => apiRef.current?.setRowChildrenExpansion('A', true));
+        await waitFor(() => expect(apiRef.current!.getRow('A-1')).not.to.equal(null));
+
+        await waitFor(() => {
+          expect(apiRef.current!.state.rowSelection.ids.has('A')).to.equal(true);
+        });
+        // Without descendants propagation the children stay unselected.
+        expect(apiRef.current!.state.rowSelection.ids.has('A-0')).to.equal(false);
+      });
     });
 
     it('should lazy load children for default-expanded tree data groups', async () => {
