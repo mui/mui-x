@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import type {
   SchedulerEvent,
   SchedulerEventId,
@@ -33,11 +33,8 @@ function inferCanHaveMultipleResourcesFromEvents(
   return undefined;
 }
 
-const processedEventSelector = createSelector(
-  (state: State) => state.processedEventLookup,
-  (processedEventLookup, eventId: SchedulerEventId | null | undefined) =>
-    eventId == null ? null : processedEventLookup.get(eventId),
-);
+const processedEventSelector = (state: State, eventId: SchedulerEventId | null | undefined) =>
+  eventId == null ? null : state.processedEventLookup.get(eventId);
 
 const processedEventListSelector = createSelectorMemoized(
   (state: State) => state.eventIdList,
@@ -45,7 +42,7 @@ const processedEventListSelector = createSelectorMemoized(
   (eventIds, processedEventLookup) => eventIds.map((id) => processedEventLookup.get(id)!),
 );
 
-const isEventReadOnlySelector = createSelector((state: State, eventId: SchedulerEventId) => {
+const isEventReadOnlySelector = (state: State, eventId: SchedulerEventId) => {
   const processedEvent = processedEventSelector(state, eventId);
   if (!processedEvent) {
     return false;
@@ -58,7 +55,7 @@ const isEventReadOnlySelector = createSelector((state: State, eventId: Scheduler
     getValueInResource: (r) => r.areEventsReadOnly,
     valueInState: state.readOnly ?? false,
   });
-});
+};
 
 export const schedulerEventSelectors = {
   creationConfig: createSelectorMemoized(
@@ -84,16 +81,14 @@ export const schedulerEventSelectors = {
    * Gets the default duration (in minutes) for newly created events.
    * This can be used when you need the value event on read-only calendar.
    */
-  defaultEventDuration: createSelector(
-    (state: State) => state.eventCreation,
-    (eventCreation) => {
-      if (typeof eventCreation === 'boolean') {
-        return DEFAULT_EVENT_CREATION_CONFIG.duration;
-      }
+  defaultEventDuration: (state: State) => {
+    const eventCreation = state.eventCreation;
+    if (typeof eventCreation === 'boolean') {
+      return DEFAULT_EVENT_CREATION_CONFIG.duration;
+    }
 
-      return eventCreation?.duration ?? DEFAULT_EVENT_CREATION_CONFIG.duration;
-    },
-  ),
+    return eventCreation?.duration ?? DEFAULT_EVENT_CREATION_CONFIG.duration;
+  },
   /**
    * Whether an occurrence whose own `resource` carries no shape (`null`/`undefined`) should
    * be edited/created as multi-resource. Reads `eventCreation.canHaveMultipleResources`
@@ -116,20 +111,18 @@ export const schedulerEventSelectors = {
     },
   ),
   processedEvent: processedEventSelector,
-  processedEventRequired: createSelector(
-    processedEventSelector,
-    (event, eventId: SchedulerEventId) => {
-      if (!event) {
-        throw new Error(
-          `MUI X Scheduler: Event with id="${eventId}" was not found. ` +
-            'The requested event does not exist in the scheduler state. ' +
-            'Verify the event id is correct and the event has been added.',
-        );
-      }
+  processedEventRequired: (state: State, eventId: SchedulerEventId) => {
+    const event = processedEventSelector(state, eventId);
+    if (!event) {
+      throw new Error(
+        `MUI X Scheduler: Event with id="${eventId}" was not found. ` +
+          'The requested event does not exist in the scheduler state. ' +
+          'Verify the event id is correct and the event has been added.',
+      );
+    }
 
-      return event;
-    },
-  ),
+    return event;
+  },
   isReadOnly: isEventReadOnlySelector,
   /**
    * Resolves an event's color. `resourceId` picks which resource's `eventColor` counts when the
@@ -140,26 +133,24 @@ export const schedulerEventSelectors = {
    * Event Calendar). The argument can't be optional: the selector's memoization keys off
    * `Function.length`, which requires every parameter to be explicitly passed.
    */
-  color: createSelector(
-    (
-      state: State,
-      eventId: SchedulerEventId,
-      resourceId: SchedulerResourceId | null | undefined,
-    ) => {
-      const event = processedEventSelector(state, eventId);
-      if (!event) {
-        return state.eventColor;
-      }
+  color: (
+    state: State,
+    eventId: SchedulerEventId,
+    resourceId: SchedulerResourceId | null | undefined,
+  ) => {
+    const event = processedEventSelector(state, eventId);
+    if (!event) {
+      return state.eventColor;
+    }
 
-      return resolveEventProperty({
-        state,
-        resourceId: resourceId === undefined ? getPrimaryResourceId(event.resource) : resourceId,
-        valueInEvent: event.color,
-        getValueInResource: (r) => r.eventColor,
-        valueInState: state.eventColor,
-      });
-    },
-  ),
+    return resolveEventProperty({
+      state,
+      resourceId: resourceId === undefined ? getPrimaryResourceId(event.resource) : resourceId,
+      valueInEvent: event.color,
+      getValueInResource: (r) => r.eventColor,
+      valueInState: state.eventColor,
+    });
+  },
   isPropertyReadOnly: createSelectorMemoized(
     isEventReadOnlySelector,
     (state: State) => state.eventModelStructure,
@@ -185,16 +176,13 @@ export const schedulerEventSelectors = {
     (adapter, events, recurringEventsPlugin) =>
       createEventRangeIndex(events, adapter, recurringEventsPlugin != null),
   ),
-  idList: createSelector((state: State) => state.eventIdList),
-  modelList: createSelector((state: State) => state.eventModelList),
-  modelLookup: createSelector((state: State) => state.eventModelLookup),
-  canDragEventsFromTheOutside: createSelector(
-    (state: State) => state.canDragEventsFromTheOutside && !state.readOnly,
-  ),
-  canDropEventsToTheOutside: createSelector(
-    (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
-  ),
-  isDraggable: createSelector((state: State, eventId: SchedulerEventId) => {
+  idList: (state: State) => state.eventIdList,
+  modelList: (state: State) => state.eventModelList,
+  modelLookup: (state: State) => state.eventModelLookup,
+  canDragEventsFromTheOutside: (state: State) =>
+    state.canDragEventsFromTheOutside && !state.readOnly,
+  canDropEventsToTheOutside: (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
+  isDraggable: (state: State, eventId: SchedulerEventId) => {
     if (isEventReadOnlySelector(state, eventId)) {
       return false;
     }
@@ -220,43 +208,38 @@ export const schedulerEventSelectors = {
       getValueInResource: (r) => r.areEventsDraggable,
       valueInState: state.areEventsDraggable,
     });
-  }),
-  isResizable: createSelector(
-    (state: State, eventId: SchedulerEventId, side: SchedulerEventSide) => {
-      if (isEventReadOnlySelector(state, eventId)) {
-        return false;
-      }
+  },
+  isResizable: (state: State, eventId: SchedulerEventId, side: SchedulerEventSide) => {
+    if (isEventReadOnlySelector(state, eventId)) {
+      return false;
+    }
 
-      const eventModelStructure = state.eventModelStructure;
-      if (side === 'start' && eventModelStructure?.start && !eventModelStructure?.start.setter) {
-        return false;
-      }
+    const eventModelStructure = state.eventModelStructure;
+    if (side === 'start' && eventModelStructure?.start && !eventModelStructure?.start.setter) {
+      return false;
+    }
 
-      if (side === 'end' && eventModelStructure?.end && !eventModelStructure?.end.setter) {
-        return false;
-      }
+    if (side === 'end' && eventModelStructure?.end && !eventModelStructure?.end.setter) {
+      return false;
+    }
 
-      const processedEvent = processedEventSelector(state, eventId);
-      if (!processedEvent) {
-        return false;
-      }
+    const processedEvent = processedEventSelector(state, eventId);
+    if (!processedEvent) {
+      return false;
+    }
 
-      return resolveEventProperty({
-        state,
-        resourceId: getPrimaryResourceId(processedEvent.resource),
-        valueInEvent: getIsResizableFromProperty(processedEvent.resizable, side) ?? undefined,
-        getValueInResource: (r) =>
-          getIsResizableFromProperty(r.areEventsResizable, side) ?? undefined,
-        valueInState: getIsResizableFromProperty(state.areEventsResizable, side) ?? false,
-      });
-    },
-  ),
-  isRecurring: createSelector(
-    processedEventSelector,
-    (state: State) => state.recurringEventsPlugin,
-    (event, recurringEventsPlugin, _eventId: SchedulerEventId) =>
-      recurringEventsPlugin != null && Boolean(event?.dataTimezone.rrule),
-  ),
+    return resolveEventProperty({
+      state,
+      resourceId: getPrimaryResourceId(processedEvent.resource),
+      valueInEvent: getIsResizableFromProperty(processedEvent.resizable, side) ?? undefined,
+      getValueInResource: (r) =>
+        getIsResizableFromProperty(r.areEventsResizable, side) ?? undefined,
+      valueInState: getIsResizableFromProperty(state.areEventsResizable, side) ?? false,
+    });
+  },
+  isRecurring: (state: State, eventId: SchedulerEventId) =>
+    state.recurringEventsPlugin != null &&
+    Boolean(processedEventSelector(state, eventId)?.dataTimezone.rrule),
 };
 
 function getIsResizableFromProperty(
