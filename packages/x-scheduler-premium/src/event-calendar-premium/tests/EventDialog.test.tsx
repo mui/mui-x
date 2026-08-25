@@ -3056,93 +3056,57 @@ describe('<EventDialogContent open />', () => {
           expect(updated.untouchedField).to.equal('keep-me');
         });
 
-        it("should save a custom field edited through the slot with scope 'all'", async () => {
-          const onEventsChange = spy();
-          let updateEventSpy;
-          const { user } = renderWithCustomFieldSlot(
-            recurringEventWithUntouchedData,
-            recurringEventWithUntouchedDataOccurrence,
-            onEventsChange,
-            (sp) => {
-              updateEventSpy = sp;
-            },
-            'updateRecurringEvent',
-          );
+        const scopeScenarios = [
+          {
+            scope: 'all',
+            optionText: /All events/i,
+            // Scope 'all' updates the original event in place...
+            findSavedEvent: (events: any[]) =>
+              events.find((event) => event.id === recurringEventWithUntouchedData.id),
+          },
+          {
+            scope: 'only-this',
+            optionText: /Only this event/i,
+            // ...while the other scopes extract a new event from the series.
+            findSavedEvent: (events: any[]) =>
+              events.find((event) => event.extractedFromId === recurringEventWithUntouchedData.id),
+          },
+          {
+            scope: 'this-and-following',
+            optionText: /This and following events/i,
+            findSavedEvent: (events: any[]) =>
+              events.find((event) => event.extractedFromId === recurringEventWithUntouchedData.id),
+          },
+        ];
 
-          await editCustomFieldAndSave(user);
+        scopeScenarios.forEach(({ scope, optionText, findSavedEvent }) => {
+          it(`should save a custom field edited through the slot with scope '${scope}'`, async () => {
+            const onEventsChange = spy();
+            let updateEventSpy;
+            const { user } = renderWithCustomFieldSlot(
+              recurringEventWithUntouchedData,
+              recurringEventWithUntouchedDataOccurrence,
+              onEventsChange,
+              (sp) => {
+                updateEventSpy = sp;
+              },
+              'updateRecurringEvent',
+            );
 
-          await screen.findByText(/Apply this change to:/i);
-          await user.click(screen.getByText(/All events/i));
-          await user.click(screen.getByRole('button', { name: /Confirm/i }));
+            await editCustomFieldAndSave(user);
 
-          const updated = onEventsChange.lastCall.firstArg.find(
-            (event) => event.id === recurringEventWithUntouchedData.id,
-          );
-          expect(updated.customField).to.equal('edited');
-          expect(updated.untouchedField).to.equal('keep-me');
-          const { changes } = updateEventSpy!.lastCall.firstArg;
-          expect(changes.customField).to.equal('edited');
-          expect(changes).not.to.have.property('untouchedField');
-        });
+            await screen.findByText(/Apply this change to:/i);
+            await user.click(screen.getByText(optionText));
+            await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        it("should save a custom field edited through the slot with scope 'only-this'", async () => {
-          const onEventsChange = spy();
-          let updateEventSpy;
-          const { user } = renderWithCustomFieldSlot(
-            recurringEventWithUntouchedData,
-            recurringEventWithUntouchedDataOccurrence,
-            onEventsChange,
-            (sp) => {
-              updateEventSpy = sp;
-            },
-            'updateRecurringEvent',
-          );
-
-          await editCustomFieldAndSave(user);
-
-          await screen.findByText(/Apply this change to:/i);
-          await user.click(screen.getByText(/Only this event/i));
-          await user.click(screen.getByRole('button', { name: /Confirm/i }));
-
-          const created = onEventsChange.lastCall.firstArg.find(
-            (event) => event.extractedFromId === recurringEventWithUntouchedData.id,
-          );
-          expect(created).to.not.equal(undefined);
-          expect(created.customField).to.equal('edited');
-          expect(created.untouchedField).to.equal('keep-me');
-          const { changes } = updateEventSpy!.lastCall.firstArg;
-          expect(changes.customField).to.equal('edited');
-          expect(changes).not.to.have.property('untouchedField');
-        });
-
-        it("should save a custom field edited through the slot with scope 'this-and-following'", async () => {
-          const onEventsChange = spy();
-          let updateEventSpy;
-          const { user } = renderWithCustomFieldSlot(
-            recurringEventWithUntouchedData,
-            recurringEventWithUntouchedDataOccurrence,
-            onEventsChange,
-            (sp) => {
-              updateEventSpy = sp;
-            },
-            'updateRecurringEvent',
-          );
-
-          await editCustomFieldAndSave(user);
-
-          await screen.findByText(/Apply this change to:/i);
-          await user.click(screen.getByText(/This and following events/i));
-          await user.click(screen.getByRole('button', { name: /Confirm/i }));
-
-          const created = onEventsChange.lastCall.firstArg.find(
-            (event) => event.extractedFromId === recurringEventWithUntouchedData.id,
-          );
-          expect(created).to.not.equal(undefined);
-          expect(created.customField).to.equal('edited');
-          expect(created.untouchedField).to.equal('keep-me');
-          const { changes } = updateEventSpy!.lastCall.firstArg;
-          expect(changes.customField).to.equal('edited');
-          expect(changes).not.to.have.property('untouchedField');
+            const saved = findSavedEvent(onEventsChange.lastCall.firstArg);
+            expect(saved).to.not.equal(undefined);
+            expect(saved.customField).to.equal('edited');
+            expect(saved.untouchedField).to.equal('keep-me');
+            const { changes } = updateEventSpy!.lastCall.firstArg;
+            expect(changes.customField).to.equal('edited');
+            expect(changes).not.to.have.property('untouchedField');
+          });
         });
       });
 
