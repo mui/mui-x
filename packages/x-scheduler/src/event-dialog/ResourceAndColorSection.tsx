@@ -201,7 +201,8 @@ export function ResourceAndColorSection() {
   });
   const colorField = useEventDialogFormField<SchedulerEventColor | null>('color');
 
-  const readOnly = isPropertyReadOnly('resource');
+  const resourceReadOnly = isPropertyReadOnly('resource');
+  const colorReadOnly = isPropertyReadOnly('color');
   const { value: resourceIds } = resourceField;
   const { value: color } = colorField;
   const error = shouldEventRequireResource ? resourceField.error : undefined;
@@ -300,7 +301,7 @@ export function ResourceAndColorSection() {
             multiple={mode === 'multiple'}
             displayEmpty
             onChange={handleChange}
-            readOnly={readOnly}
+            readOnly={resourceReadOnly}
             aria-describedby={error ? errorId : undefined}
             startAdornment={
               <InputAdornment position="start">
@@ -384,7 +385,7 @@ export function ResourceAndColorSection() {
           colorField.setValue(next ?? null);
         }}
         aria-label={localeText.colorPickerLabel}
-        disabled={readOnly}
+        disabled={colorReadOnly}
         className={classes.eventDialogResourceMenuColorToggleGroup}
       >
         {EVENT_COLORS.map((colorOption) => (

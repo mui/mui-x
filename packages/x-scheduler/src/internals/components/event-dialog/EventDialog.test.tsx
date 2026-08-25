@@ -938,7 +938,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByRole('switch', { name: /all day/i })).to.have.attribute('disabled');
     });
 
-    it('should disable the color picker when the resource property has no setter', () => {
+    it('should mark the resource select read-only but keep the color picker enabled when only the resource property has no setter', () => {
       render(
         <EventCalendarProvider
           events={[DEFAULT_EVENT]}
@@ -949,7 +949,30 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
 
+      expect(screen.getByRole('combobox', { name: 'Resource' })).to.have.attribute(
+        'aria-readonly',
+        'true',
+      );
+      expect(screen.getByRole('group', { name: 'Event color' })).not.to.have.attribute(
+        'data-disabled',
+      );
+    });
+
+    it('should disable the color picker but keep the resource select writable when only the color property has no setter', () => {
+      render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          eventModelStructure={{ color: { getter: (event) => event.color } }}
+        >
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
       expect(screen.getByRole('group', { name: 'Event color' })).to.have.attribute('data-disabled');
+      expect(screen.getByRole('combobox', { name: 'Resource' })).not.to.have.attribute(
+        'aria-readonly',
+      );
     });
   });
 
