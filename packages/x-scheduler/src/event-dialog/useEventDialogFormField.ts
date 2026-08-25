@@ -64,10 +64,24 @@ const NO_ERRORS: React.ReactNode[] = [];
  * Binds a component to one field of the event dialog form.
  * Writing the field through `setValue` is all it takes for the value to be saved on submit.
  */
+export function useEventDialogFormField<K extends keyof EventDialogBuiltInFormValues>(
+  key: K,
+  parameters?: UseEventDialogFormFieldParameters<EventDialogBuiltInFormValues[K]>,
+): UseEventDialogFormFieldReturnValue<EventDialogBuiltInFormValues[K]>;
+// A custom field with a `defaultValue` always has a value.
+export function useEventDialogFormField<T>(
+  key: string,
+  parameters: UseEventDialogFormFieldParameters<T> & { defaultValue: T },
+): UseEventDialogFormFieldReturnValue<T>;
+// A custom field without a `defaultValue` is `undefined` when the event does not have it.
 export function useEventDialogFormField<T = unknown>(
+  key: string,
+  parameters?: UseEventDialogFormFieldParameters<T>,
+): UseEventDialogFormFieldReturnValue<T | undefined>;
+export function useEventDialogFormField(
   key: EventDialogFormFieldKey,
-  parameters: UseEventDialogFormFieldParameters<T> = {},
-): UseEventDialogFormFieldReturnValue<T> {
+  parameters: UseEventDialogFormFieldParameters<unknown> = {},
+): UseEventDialogFormFieldReturnValue<unknown> {
   if (process.env.NODE_ENV !== 'production') {
     if (!BUILT_IN_FORM_KEYS.has(key) && isBuiltInEventProperty(key)) {
       warnOnce([
@@ -88,18 +102,18 @@ export function useEventDialogFormField<T = unknown>(
   const store = useEventDialogFormContext();
   const { defaultValue } = parameters;
 
-  const storedValue = useStore(store, eventDialogFormSelectors.value, key) as T | undefined;
+  const storedValue = useStore(store, eventDialogFormSelectors.value, key);
   const isSeeded = useStore(store, eventDialogFormSelectors.hasValue, key);
   // The store is only seeded in an effect, so fall back until the key exists.
   // Once seeded, an explicit `undefined` write must not resurrect the default.
-  const value = (storedValue === undefined && !isSeeded ? defaultValue : storedValue) as T;
+  const value = storedValue === undefined && !isSeeded ? defaultValue : storedValue;
   const errorList = useStore(store, eventDialogFormSelectors.error, key);
 
-  const setValue = useStableCallback((newValue: T) => store.setValue(key, newValue));
+  const setValue = useStableCallback((newValue: unknown) => store.setValue(key, newValue));
 
   const hasValidator = parameters.validate != null;
   const validate: EventDialogFormValidator = useStableCallback((fieldValue, allValues) =>
-    parameters.validate ? parameters.validate(fieldValue as T, allValues) : null,
+    parameters.validate ? parameters.validate(fieldValue, allValues) : null,
   );
 
   React.useEffect(() => {

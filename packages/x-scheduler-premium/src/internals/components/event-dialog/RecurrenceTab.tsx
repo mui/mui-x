@@ -19,7 +19,6 @@ import type {
   RecurringEventPresetKey,
   RecurringEventByDayValue,
   RecurringEventWeekDayCode,
-  SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -189,11 +188,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const endsUntilLabelId = `${schedulerId}-recurrence-ends-until-label`;
 
   // Form fields
-  const { value: recurrenceSelection } = useEventDialogFormField<
-    RecurringEventPresetKey | null | 'custom'
-  >('recurrenceSelection');
-  const { value: rruleDraft } =
-    useEventDialogFormField<SchedulerProcessedEventRecurrenceRule>('rruleDraft');
+  const { value: recurrenceSelection } = useEventDialogFormField('recurrenceSelection');
+  const { value: rruleDraft } = useEventDialogFormField('rruleDraft');
 
   // Selector hooks
   const isPropertyReadOnly = useStore(

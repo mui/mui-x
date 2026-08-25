@@ -37,7 +37,7 @@ export default function TitleSection() {
     occurrence.id,
   );
 
-  const title = useEventDialogFormField<string>('title');
+  const title = useEventDialogFormField('title');
   // `preventScroll` so focusing the title doesn't scroll a still-off-screen drawer into view
   // (the compact drawer slides up from the bottom, which would otherwise shove the grid).
   const titleInputRef = React.useCallback(

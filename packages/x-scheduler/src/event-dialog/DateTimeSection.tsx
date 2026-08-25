@@ -83,15 +83,15 @@ export function DateTimeSection() {
         : localeText.startTimeAfterEndTimeError;
     };
 
-  const startDate = useEventDialogFormField<string>('startDate');
-  const startTime = useEventDialogFormField<string>('startTime');
-  const endDate = useEventDialogFormField<string>('endDate', {
+  const startDate = useEventDialogFormField('startDate');
+  const startTime = useEventDialogFormField('startTime');
+  const endDate = useEventDialogFormField('endDate', {
     validate: createRangeValidator('endDate'),
   });
-  const endTime = useEventDialogFormField<string>('endTime', {
+  const endTime = useEventDialogFormField('endTime', {
     validate: createRangeValidator('endTime'),
   });
-  const allDay = useEventDialogFormField<boolean>('allDay');
+  const allDay = useEventDialogFormField('allDay');
 
   const createHandleChangeDateOrTimeField =
     (field: { setValue: (value: string) => void }) =>

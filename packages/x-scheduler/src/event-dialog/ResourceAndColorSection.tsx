@@ -195,11 +195,11 @@ export function ResourceAndColorSection() {
     occurrence.id,
   );
 
-  const resourceField = useEventDialogFormField<SchedulerResourceId[]>('resourceIds', {
+  const resourceField = useEventDialogFormField('resourceIds', {
     validate: (value) =>
       shouldEventRequireResource && value.length === 0 ? localeText.requiredResourceError : null,
   });
-  const colorField = useEventDialogFormField<SchedulerEventColor | null>('color');
+  const colorField = useEventDialogFormField('color');
 
   const resourceReadOnly = isPropertyReadOnly('resource');
   const colorReadOnly = isPropertyReadOnly('color');

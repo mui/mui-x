@@ -21,7 +21,7 @@ export function DescriptionSection() {
     occurrence.id,
   );
 
-  const description = useEventDialogFormField<string>('description');
+  const description = useEventDialogFormField('description');
 
   return (
     <TextField

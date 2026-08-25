@@ -621,7 +621,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     it('should not warn when a section rendered by the slot validates the resource itself', async () => {
       clearWarningsCache();
       function CustomResourceSection() {
-        useEventDialogFormField<string[]>('resourceIds', {
+        useEventDialogFormField('resourceIds', {
           validate: (value) => (value.length > 0 ? null : 'Required'),
         });
         return null;
@@ -677,7 +677,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       // No validator registered, so the message can only come from the submit-level check.
       function CustomResourceField() {
-        const resourceField = useEventDialogFormField<string[]>('resourceIds');
+        const resourceField = useEventDialogFormField('resourceIds');
         return resourceField.error ? <p role="alert">{resourceField.error}</p> : null;
       }
 
