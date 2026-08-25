@@ -1053,9 +1053,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       vi.useRealTimers();
     });
 
-    // Root fetches of this strategy are either incremental viewport loads, which run
-    // concurrently with the children requests, or invalidations, which abort them and rebuild
-    // the tree (https://github.com/mui/mui-x/issues/22715)
+    // https://github.com/mui/mui-x/issues/22715
     describe('concurrent root and children requests', () => {
       type DeferredRequest = { params: GridGetRowsParams; resolve: () => void };
       let deferredRequests: DeferredRequest[] = [];
@@ -1125,8 +1123,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
               }));
               const start = typeof params.start === 'number' ? params.start : 0;
               const end = typeof params.end === 'number' ? params.end : allRows.length - 1;
-              // Snapshot the response before deferring so that it carries the data
-              // from the time the request was made
               const response = {
                 rows: allRows.slice(start, end + 1),
                 rowCount: allRows.length,
@@ -1198,15 +1194,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         await waitFor(() => {
           expect(countRootRequests()).to.be.greaterThan(rootRequestsBeforeRevalidation);
         });
-        // Let the revalidated root response settle, and a few more polls run
         await act(async () => {
           await new Promise((resolve) => {
             setTimeout(resolve, 150);
           });
         });
 
-        // The children requests are still the ones started on mount: an aborted request
-        // would have been re-issued by the rebuilt tree
+        // An aborted request would have been re-issued by the rebuilt tree
         expect(countRequestsFor('["P1"]')).to.equal(1);
         expect(countRequestsFor('["P2"]')).to.equal(1);
 
@@ -1229,7 +1223,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
         await act(async () => apiRef.current?.dataSource.fetchRows());
 
-        // The responses of the aborted requests must not be applied to the rebuilt tree
         abortedRequests.forEach((request) => request.resolve());
 
         await waitFor(() => {
@@ -1264,8 +1257,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           await waitForPendingChildrenRequests(['["P1"]', '["P2"]']);
           const staleRequests = deferredRequests.splice(0);
 
-          // The invalidated root request is held back so that the stale children responses
-          // resolve before the tree is rebuilt
+          // Held back so the stale children responses resolve before the tree is rebuilt
           await act(async () => updateModel());
           await waitFor(() => {
             expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(
@@ -1297,12 +1289,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       it('should drop the children response of a group aborted more than once', async () => {
         render(<TestConcurrentRequests deferRequest={deferChildrenAndSortedRootRequests} />);
 
-        // Settle the children once, so the group is registered as settled
+        // Settle once so the group is registered as settled
         await waitForPendingChildrenRequests(['["P1"]']);
         resolveDeferredRequests();
         await waitFor(() => expect(apiRef.current!.getRow('P1-0')).not.to.equal(null));
 
-        // First invalidation, released so that the tree is rebuilt and the children re-requested
+        // Released so the tree is rebuilt and the children re-requested
         await act(async () => apiRef.current!.sortColumn('name', 'desc'));
         await waitFor(() => {
           expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(true);
@@ -1311,7 +1303,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         await waitForPendingChildrenRequests(['["P1"]']);
         const twiceAbortedRequests = deferredRequests.splice(0);
 
-        // Second invalidation aborts the same group again
         await act(async () => apiRef.current!.sortColumn('name', 'asc'));
         await waitFor(() => {
           expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(true);
@@ -1339,7 +1330,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
         await waitFor(() => expect(apiRef.current!.getRow('P1')).not.to.equal(null));
 
-        // The tree is invalidated and the rebuilding root response is held back
+        // The rebuilding root response is held back
         await act(async () => apiRef.current!.sortColumn('name', 'desc'));
         await waitFor(() => {
           expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(true);
@@ -1353,7 +1344,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           });
         });
 
-        // Any fetch scheduled from the stale tree would target indexes of the tree being replaced
         expect(localFetchRowsSpy.callCount).to.equal(requestsBeforeExpansion);
       });
     });

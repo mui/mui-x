@@ -161,8 +161,8 @@ export const useGridDataSourceNestedLazyLoader = (
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
 
-  // Viewport loads and revalidations of the root rows run concurrently with the child
-  // requests of the expanded groups, so they must not invalidate the data source state.
+  // Viewport loads and revalidations run concurrently with the child requests, so they must
+  // not invalidate the data source state.
   const fetchRootRowsIncremental = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
       privateApiRef.current.fetchRootRowsIncremental(params);
@@ -352,7 +352,7 @@ export const useGridDataSourceNestedLazyLoader = (
 
   const findSkeletonSectionAndFetchRows = React.useCallback(
     (firstRowIndex: number, lastRowIndex: number, options: FetchSkeletonRowsOptions = {}) => {
-      // The tree is about to be rebuilt, any fetch scheduled from it would be for stale indexes.
+      // A fetch scheduled from a stale tree would target indexes of the tree being replaced.
       if (rowsStale.current) {
         return false;
       }
@@ -1025,16 +1025,15 @@ export const useGridDataSourceNestedLazyLoader = (
     rowsStale.current = true;
     renderedRowsIntervalCache.current = INTERVAL_CACHE_INITIAL_STATE;
     throttledHandleRenderedRowsIntervalChange.clear();
-    // A queued incremental fetch would run after the invalidation, take the latest request id
-    // and make the response that rebuilds the tree be discarded as stale.
+    // A queued incremental fetch would otherwise take the latest request id and strand the rebuild.
     debouncedFetchRootRowsIncremental.clear();
   }, [throttledHandleRenderedRowsIntervalChange, debouncedFetchRootRowsIncremental]);
 
   const invalidateNestedRows = React.useCallback<
     GridDataSourceNestedLazyLoaderPrivateApi['invalidateNestedRows']
   >(() => {
-    // On the initial load there is no tree to rebuild, and marking the rows stale would
-    // route the first response through the reset branch of `handleDataUpdate`.
+    // Nothing to rebuild on the initial load, and it would route the first response through
+    // the reset branch of `handleDataUpdate`.
     if (!isStrategyActive || privateApiRef.current.getRowsCount() === 0) {
       return;
     }

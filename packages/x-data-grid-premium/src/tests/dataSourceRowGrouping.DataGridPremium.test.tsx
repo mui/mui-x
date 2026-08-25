@@ -518,9 +518,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       });
     });
 
-    // Root fetches of this strategy are either incremental viewport loads, which run
-    // concurrently with the children requests, or invalidations, which abort them and rebuild
-    // the tree (https://github.com/mui/mui-x/issues/22715)
+    // https://github.com/mui/mui-x/issues/22715
     describe('concurrent root and children requests', () => {
       type DeferredRequest = { params: GridGetRowsParams; resolve: () => void };
       let deferredRequests: DeferredRequest[] = [];
@@ -627,15 +625,13 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
         await waitFor(() => {
           expect(countRootRequests()).to.be.greaterThan(rootRequestsBeforeRevalidation);
         });
-        // Let the revalidated root response settle, and a few more polls run
         await act(async () => {
           await new Promise((resolve) => {
             setTimeout(resolve, 150);
           });
         });
 
-        // The children requests are still the ones started on mount: an aborted request
-        // would have been re-issued by the rebuilt tree
+        // An aborted request would have been re-issued by the rebuilt tree
         expect(countRequestsFor('["Technology"]')).to.equal(1);
         expect(countRequestsFor('["Finance"]')).to.equal(1);
 
@@ -664,8 +660,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
         });
         const staleRequests = deferredRequests.splice(0);
 
-        // The regrouped root request is held back so that the stale children responses
-        // resolve before the tree is rebuilt
+        // Held back so the stale children responses resolve before the tree is rebuilt
         deferRootRequests = true;
         setProps({ rowGroupingModel: ['sector'] });
         await waitFor(() => {

@@ -65,8 +65,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     if (dataSourceState !== INITIAL_STATE) {
       apiRef.current.resetDataSourceState();
     }
-    // The aborted child requests are only re-issued if the tree is rebuilt from the
-    // response of the root fetch that follows this clear.
+    // The aborted child requests are only re-issued if the following root fetch rebuilds the tree.
     apiRef.current.invalidateNestedRows();
     return null;
   }, [apiRef, nestedDataManager]);

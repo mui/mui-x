@@ -86,9 +86,8 @@ export interface GridDataSourceApiPro {
 
 export interface GridDataSourceNestedLazyLoaderPrivateApi {
   /**
-   * Marks the loaded rows as stale so that the tree is rebuilt from the response of the next
-   * root fetch, which re-issues the child requests aborted by the invalidation.
-   * No-op unless the nested lazy loading strategy is active.
+   * Marks the loaded rows as stale so the next root response rebuilds the tree and re-issues the
+   * aborted child requests. No-op unless the nested lazy loading strategy is active.
    */
   invalidateNestedRows: () => void;
 }
@@ -101,9 +100,8 @@ export interface GridDataSourcePrivateApiPro {
    */
   fetchRowChildren: (id: GridRowId, fetchParams?: GridGetRowsParamsPro) => void;
   /**
-   * Fetches the root rows without invalidating the data source state, leaving the in-flight
-   * child requests running. Used for the incremental viewport loads of the nested lazy
-   * loading strategy.
+   * Fetches the root rows without invalidating the data source state, leaving the in-flight child
+   * requests running.
    * @param {GridDataSourceFetchRowsParams<GridGetRowsParamsPro>} params Request parameters override.
    * @returns {Promise<void>} A promise that resolves when the rows are fetched.
    */
