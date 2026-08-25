@@ -14,6 +14,7 @@ import type {
 import { spy } from 'sinon';
 import { actSleep, getRow } from 'test/utils/helperFn';
 import { TestCache } from '@mui/x-data-grid/internals';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();

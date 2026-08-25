@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { screen } from '@mui/internal-test-utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';

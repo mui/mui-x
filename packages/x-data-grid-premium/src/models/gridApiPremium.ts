@@ -21,6 +21,7 @@ import type {
   GridDataSourceApiPremium,
 } from '../hooks/features/dataSource/models';
 import type { GridAggregationPrivateApi } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import type { GridFormulaPrivateApi } from '../hooks/features/formula/gridFormulaInterfaces';
 import type {
   GridPivotingApi,
   GridPivotingPrivateApi,
@@ -64,6 +65,9 @@ export interface GridPrivateApiPremium
     GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium, DataGridPremiumProcessedProps>,
     GridDataSourcePremiumPrivateApi,
     GridAggregationPrivateApi,
+    // The formula feature is injectable — its private API methods only exist
+    // when the feature is provided through `featureDependencies`.
+    Partial<GridFormulaPrivateApi>,
     GridDetailPanelPrivateApi,
     GridRowReorderPrivateApi,
     GridPivotingPrivateApi,

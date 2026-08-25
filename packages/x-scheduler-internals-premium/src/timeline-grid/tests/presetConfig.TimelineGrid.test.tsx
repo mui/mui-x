@@ -14,6 +14,7 @@ import {
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 
 describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
   const resource = ResourceBuilder.new().id('r1').build();

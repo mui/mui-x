@@ -44,7 +44,7 @@ const groupedOccurrences = resources.map((resource, resourceIndex) => ({
 }));
 
 function addLanePositionsToOccurrences(occurrences: SchedulerEventOccurrence[]) {
-  const firstIndexLookup = computeOccurrencesFirstIndexLookup(adapter, occurrences);
+  const firstIndexLookup = computeOccurrencesFirstIndexLookup(occurrences);
 
   return sortEventOccurrences(occurrences).map((occurrence) => {
     const firstIndex = firstIndexLookup[occurrence.key];
@@ -60,7 +60,7 @@ describe('event timeline resource layout', () => {
 
     // The virtualizer needs every resource's lane count.
     for (const { occurrences } of groupedOccurrences) {
-      result += computeOccurrencesMaxIndex(adapter, occurrences);
+      result += computeOccurrencesMaxIndex(occurrences);
     }
 
     // Mounted rows derive lanes once, while the list and event independently derive geometry.
@@ -80,7 +80,7 @@ describe('event timeline resource layout', () => {
 
     // Dependency geometry only derives lanes for involved resources.
     for (const { occurrences } of groupedOccurrences.slice(0, 2)) {
-      result += Object.keys(computeOccurrencesFirstIndexLookup(adapter, occurrences)).length;
+      result += Object.keys(computeOccurrencesFirstIndexLookup(occurrences)).length;
     }
 
     benchmarkResult.value = result;
@@ -91,7 +91,7 @@ describe('event timeline resource layout', () => {
 
     // The virtualizer needs every resource's lane count.
     for (const { occurrences } of groupedOccurrences) {
-      result += computeOccurrencesMaxIndex(adapter, occurrences);
+      result += computeOccurrencesMaxIndex(occurrences);
     }
 
     // Mounted rows derive lanes and geometry once, then share both with their children.
@@ -107,7 +107,7 @@ describe('event timeline resource layout', () => {
 
     // Dependency geometry only derives lanes for involved resources.
     for (const { occurrences } of groupedOccurrences.slice(0, 2)) {
-      result += Object.keys(computeOccurrencesFirstIndexLookup(adapter, occurrences)).length;
+      result += Object.keys(computeOccurrencesFirstIndexLookup(occurrences)).length;
     }
 
     benchmarkResult.value = result;

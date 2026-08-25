@@ -12,7 +12,8 @@ import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-intern
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { EventSkeleton } from '../event-skeleton';
-import { EventEditingTrigger, useEventEditingContext } from '../event-editing';
+import { useEventEditingContext } from '../event-editing';
+import { EventContextMenuTrigger } from '../event-context-menu';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
@@ -183,9 +184,9 @@ function ColumnInteractiveLayer({
       {isLoading && <EventSkeleton data-variant="time-column" />}
       {!isLoading &&
         occurrences.map((occurrence) => (
-          <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
+          <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
             <TimeGridEvent occurrence={occurrence} variant="regular" />
-          </EventEditingTrigger>
+          </EventContextMenuTrigger>
         ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (

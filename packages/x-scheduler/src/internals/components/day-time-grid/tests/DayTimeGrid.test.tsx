@@ -4,6 +4,7 @@ import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../EventCalendarProvider';
 import { EventDialogProvider } from '../../event-dialog';
 

@@ -2,6 +2,7 @@ import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 import { eventCalendarClasses as classes } from '@mui/x-scheduler/event-calendar';
 import { createSchedulerRenderer, DEFAULT_TESTING_VISIBLE_DATE_STR } from 'test/utils/scheduler';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<StandaloneEvent /> - Describe Conformance', () => {
   const { render } = createSchedulerRenderer({

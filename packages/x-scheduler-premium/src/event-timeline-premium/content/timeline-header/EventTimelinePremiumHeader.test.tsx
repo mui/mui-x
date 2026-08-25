@@ -15,6 +15,7 @@ import type {
   EventTimelinePremiumPreset,
   EventTimelinePremiumPresetConfig,
 } from '@mui/x-scheduler-internals-premium/models';
+import { describe, it, expect } from 'vitest';
 
 type PresetExpectations = {
   preset: EventTimelinePremiumPreset;

@@ -15,6 +15,7 @@ import { getCell, getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPremium /> - History', () => {
   const { render } = createRenderer();

@@ -18,6 +18,7 @@ import {
 } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 const ROWS = [
   {
