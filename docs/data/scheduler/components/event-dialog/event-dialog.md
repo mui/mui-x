@@ -3,7 +3,7 @@ productId: x-scheduler
 title: React Scheduler - Event dialog component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
-components: EventCalendar, EventCalendarPremium
+components: EventCalendar, EventCalendarPremium, EventTimelinePremium, StandaloneAgendaView, StandaloneAgendaViewPremium, StandaloneDayView, StandaloneDayViewPremium, StandaloneWeekView, StandaloneWeekViewPremium, StandaloneMonthView, StandaloneMonthViewPremium
 ---
 
 # Scheduler - Event dialog
@@ -29,12 +29,14 @@ The custom field is written through `useEventDialogFormField()`, so it is part o
 
 :::warning
 Define the slot component at **module scope**, never inline in a render.
-An inline arrow function is a new component type on every render, so React unmounts and remounts every section on each keystroke during event creation — focus loss, caret jumps, and validators re-registering.
+An inline arrow function is a new component type on every render of the component that owns the calendar, so each of those renders unmounts and remounts every section — focus loss, caret jumps, and validators re-registering.
 :::
 
 ## Anatomy
 
 ```tsx
+import * as React from 'react';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   EventDialogGeneralTabContent,
   EventDialogDateTimeSection,
@@ -72,7 +74,8 @@ It takes no props: it reads the edited occurrence and its form fields from conte
 ### Event Dialog Resource And Color Section
 
 `<EventDialogResourceAndColorSection />` edits the resource the event belongs to and its color.
-The resource picker follows the calendar's `eventCreation.canHaveMultipleResources` setting.
+When creating an event, the resource picker follows the calendar's `eventCreation.canHaveMultipleResources` setting.
+When editing an existing event, the shape of its `resource` decides instead: an array gets a multi-select picker and a single id a single-select one — the setting is only the fallback for an event without a resource.
 
 ### Event Dialog Description Section
 
@@ -80,7 +83,7 @@ The resource picker follows the calendar's `eventCreation.canHaveMultipleResourc
 
 ### Event Dialog Section Fieldset and Section Header Title
 
-`<EventDialogSectionFieldset />` and `<EventDialogSectionHeaderTitle />` are the layout primitives the built-in sections are made of.
+`<EventDialogSectionFieldset />` and `<EventDialogSectionHeaderTitle />` are the layout primitives the date and time and the resource and color sections are made of (the description section is a bare text field).
 Use them around your own fields so custom sections get the same spacing, typography, and theme classes as the built-in ones.
 
 Return a **fragment** from the slot: the tab content is a flex column with a gap, so wrapping your composition in a `<div>` collapses it into one flex item and loses the vertical spacing between sections.
@@ -105,7 +108,7 @@ It is constant for the lifetime of the editing session and throws when called ou
 
 ## Validation
 
-The demo below adds a "Meeting link" section whose validator blocks the save until the value is a valid link.
+The demo below adds a "Meeting link" section: its validator lets an empty value through, but blocks the save when a provided value does not start with `http://` or `https://`.
 
 {{"demo": "CustomValidation.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -120,7 +123,7 @@ Render the built-in sections in any order and leave out the ones you do not need
 Omitting a section removes its editors, not the form contract.
 With `shouldEventRequireResource` enabled, saving without a resource stays blocked even when the resource section is not rendered — the end user just has no visible field to fix it, and a warning pointing to this is logged in development.
 
-If your custom tab replaces the built-in resource picker, register your own field for the `resourceIds` key so the requirement stays fixable.
+If your custom tab replaces the built-in resource picker, bind your field to the `resourceIds` key, register a `validate` callback for it (the development warning checks for a registered validator, so binding the field alone does not silence it), and render its `error` so the requirement stays fixable.
 
 ## Typing custom slot props
 
