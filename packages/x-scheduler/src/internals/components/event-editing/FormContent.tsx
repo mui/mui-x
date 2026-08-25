@@ -33,7 +33,7 @@ import {
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
 import type { EventDialogFormValues } from '../event-dialog/utils';
-import { computeRange, hasProp, BUILT_IN_FORM_KEYS } from '../event-dialog/utils';
+import { computeRange, validateRange, hasProp, BUILT_IN_FORM_KEYS } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
 import TitleSection from '../event-dialog/TitleSection';
 import { GeneralTab } from '../event-dialog/GeneralTab';
@@ -259,18 +259,32 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         return;
       }
 
+      const values = formStore.state.values;
+
       // Checked here so a custom General tab without the resource section cannot bypass the requirement.
       const isMissingRequiredResource =
-        shouldEventRequireResource && formStore.state.values.resourceIds.length === 0;
+        shouldEventRequireResource && values.resourceIds.length === 0;
       if (isMissingRequiredResource) {
         formStore.setError('resourceIds', localeText.requiredResourceError);
       }
-      if (!isValid || isMissingRequiredResource) {
-        return;
+
+      const { start, end } = computeRange(adapter, values, displayTimezone);
+
+      // Checked here so the range stays valid even when the date/time section
+      // (which owns the range validators) is not rendered by a custom General tab.
+      const rangeError = validateRange(adapter, start, end, values.allDay);
+      if (rangeError) {
+        formStore.setError(
+          rangeError.field,
+          rangeError.field === 'endDate'
+            ? localeText.startDateAfterEndDateError
+            : localeText.startTimeAfterEndTimeError,
+        );
       }
 
-      const values = formStore.state.values;
-      const { start, end } = computeRange(adapter, values, displayTimezone);
+      if (!isValid || isMissingRequiredResource || rangeError) {
+        return;
+      }
 
       // Only the custom fields the user actually edited enter the changes payload,
       // so untouched fields keep resolving against the live model on the recurring paths.

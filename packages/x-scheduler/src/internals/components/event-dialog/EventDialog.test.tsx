@@ -696,6 +696,39 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByRole('alert')).to.have.text('A resource is required.');
     });
 
+    it('should block the submit of an invalid date range when the slot omits the date and time section', async () => {
+      const onEventsChange = spy();
+
+      // No validator registered (the date and time section owns them), so blocking
+      // and the message can only come from the submit-level range check.
+      function CustomEndDateField() {
+        const endDate = useEventDialogFormField('endDate');
+        return (
+          <React.Fragment>
+            <input
+              aria-label="End date"
+              value={endDate.value}
+              onChange={(event) => endDate.setValue(event.target.value)}
+            />
+            {endDate.error && <p role="alert">{endDate.error}</p>}
+          </React.Fragment>
+        );
+      }
+
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: CustomEndDateField },
+        { onEventsChange },
+      );
+
+      const endDateInput = screen.getByRole('textbox', { name: 'End date' });
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-05-20');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(0);
+      expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
+    });
+
     it('should keep a section rendered twice in sync through the shared form store', async () => {
       function DuplicatedSections() {
         return (
