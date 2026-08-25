@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import type { TreeViewItemId, TreeViewItemSelectionStatus } from '../../../models';
 import type { MinimalTreeViewState } from '../../MinimalTreeViewStore';
 import { itemsSelectors } from '../items/selectors';
@@ -26,83 +26,76 @@ const selectedItemsMapSelector = createSelectorMemoized(selectedItemsSelector, (
   return selectedItemsMap;
 });
 
-const isItemSelectableSelector = createSelector(
-  (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
-    state.itemMetaLookup[itemId]?.selectable ?? true,
-);
+const isItemSelectableSelector = (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
+  state.itemMetaLookup[itemId]?.selectable ?? true;
 
-const isItemSelectedSelector = createSelector(
-  selectedItemsMapSelector,
-  (selectedItemsMap, itemId: TreeViewItemId) => selectedItemsMap.has(itemId),
-);
+const isItemSelectedSelector = (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
+  selectedItemsMapSelector(state).has(itemId);
 
-const canItemBeSelectedSelector = createSelector(
-  itemsSelectors.isItemDisabled,
-  isItemSelectableSelector,
-  (state: MinimalTreeViewState<any, any>) => !state.disableSelection,
-  (isItemDisabled, isItemSelectable, isSelectionEnabled, _itemId: TreeViewItemId) =>
-    isSelectionEnabled && !isItemDisabled && isItemSelectable,
-);
+const canItemBeSelectedSelector = (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
+  !state.disableSelection &&
+  !itemsSelectors.isItemDisabled(state, itemId) &&
+  isItemSelectableSelector(state, itemId);
 
-const propagationRulesSelector = createSelector(
-  (state: MinimalTreeViewState<any, any>) => state.selectionPropagation,
-);
+const propagationRulesSelector = (state: MinimalTreeViewState<any, any>) =>
+  state.selectionPropagation;
 
-const itemSelectionStatusSelector = createSelector(
-  (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId): TreeViewItemSelectionStatus => {
-    if (isItemSelectedSelector(state, itemId)) {
-      return 'selected';
-    }
+const itemSelectionStatusSelector = (
+  state: MinimalTreeViewState<any, any>,
+  itemId: TreeViewItemId,
+): TreeViewItemSelectionStatus => {
+  if (isItemSelectedSelector(state, itemId)) {
+    return 'selected';
+  }
 
-    // Only the descendants can make an unselected item `indeterminate`, so leaves can be resolved
-    // without traversing the tree.
-    if (itemsSelectors.itemOrderedChildrenIds(state, itemId).length === 0) {
-      return 'unselected';
-    }
+  // Only the descendants can make an unselected item `indeterminate`, so leaves can be resolved
+  // without traversing the tree.
+  if (itemsSelectors.itemOrderedChildrenIds(state, itemId).length === 0) {
+    return 'unselected';
+  }
 
-    let hasSelectedDescendant = false;
-    let hasUnSelectedDescendant = false;
+  let hasSelectedDescendant = false;
+  let hasUnSelectedDescendant = false;
 
-    const traverseDescendants = (itemToTraverseId: TreeViewItemId) => {
-      if (itemToTraverseId !== itemId) {
-        if (canItemBeSelectedSelector(state, itemToTraverseId)) {
-          if (isItemSelectedSelector(state, itemToTraverseId)) {
-            hasSelectedDescendant = true;
-          } else {
-            hasUnSelectedDescendant = true;
-          }
+  const traverseDescendants = (itemToTraverseId: TreeViewItemId) => {
+    if (itemToTraverseId !== itemId) {
+      if (canItemBeSelectedSelector(state, itemToTraverseId)) {
+        if (isItemSelectedSelector(state, itemToTraverseId)) {
+          hasSelectedDescendant = true;
+        } else {
+          hasUnSelectedDescendant = true;
         }
       }
-
-      itemsSelectors.itemOrderedChildrenIds(state, itemToTraverseId).forEach(traverseDescendants);
-    };
-
-    traverseDescendants(itemId);
-
-    const shouldSelectBasedOnDescendants = propagationRulesSelector(state).parents;
-    if (shouldSelectBasedOnDescendants) {
-      if (hasSelectedDescendant && hasUnSelectedDescendant) {
-        return 'indeterminate';
-      }
-      if (hasSelectedDescendant && !hasUnSelectedDescendant) {
-        return 'selected';
-      }
-      return 'unselected';
     }
 
-    if (hasSelectedDescendant) {
+    itemsSelectors.itemOrderedChildrenIds(state, itemToTraverseId).forEach(traverseDescendants);
+  };
+
+  traverseDescendants(itemId);
+
+  const shouldSelectBasedOnDescendants = propagationRulesSelector(state).parents;
+  if (shouldSelectBasedOnDescendants) {
+    if (hasSelectedDescendant && hasUnSelectedDescendant) {
       return 'indeterminate';
     }
-
+    if (hasSelectedDescendant && !hasUnSelectedDescendant) {
+      return 'selected';
+    }
     return 'unselected';
-  },
-);
+  }
+
+  if (hasSelectedDescendant) {
+    return 'indeterminate';
+  }
+
+  return 'unselected';
+};
 
 export const selectionSelectors = {
   /**
    * Gets the selected items as provided to the component.
    */
-  selectedItemsRaw: createSelector((state: MinimalTreeViewState<any, any>) => state.selectedItems),
+  selectedItemsRaw: (state: MinimalTreeViewState<any, any>) => state.selectedItems,
   /**
    * Gets the selected items as an array.
    */
@@ -114,19 +107,15 @@ export const selectionSelectors = {
   /**
    * Checks whether selection is enabled.
    */
-  enabled: createSelector((state: MinimalTreeViewState<any, any>) => !state.disableSelection),
+  enabled: (state: MinimalTreeViewState<any, any>) => !state.disableSelection,
   /**
    * Checks whether multi selection is enabled.
    */
-  isMultiSelectEnabled: createSelector(
-    (state: MinimalTreeViewState<any, any>) => state.multiSelect,
-  ),
+  isMultiSelectEnabled: (state: MinimalTreeViewState<any, any>) => state.multiSelect,
   /**
    * Checks whether checkbox selection is enabled.
    */
-  isCheckboxSelectionEnabled: createSelector(
-    (state: MinimalTreeViewState<any, any>) => state.checkboxSelection,
-  ),
+  isCheckboxSelectionEnabled: (state: MinimalTreeViewState<any, any>) => state.checkboxSelection,
   /**
    * Gets the selection propagation rules.
    */
@@ -144,20 +133,14 @@ export const selectionSelectors = {
   /**
    * Checks whether an item is indeterminate (it is not selected but some of its selectable descendants are).
    */
-  isItemIndeterminate: createSelector(
-    itemSelectionStatusSelector,
-    (selectionStatus, _itemId: TreeViewItemId) => selectionStatus === 'indeterminate',
-  ),
+  isItemIndeterminate: (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
+    itemSelectionStatusSelector(state, itemId) === 'indeterminate',
   /**
    * Checks whether the selection feature is enabled for an item.
    * Returns `true` when selection is enabled on the Tree View and the item is selectable (even if the item is disabled).
    */
-  isFeatureEnabledForItem: createSelector(
-    isItemSelectableSelector,
-    (state: MinimalTreeViewState<any, any>) => !state.disableSelection,
-    (isItemSelectable, isSelectionEnabled, _itemId: TreeViewItemId) =>
-      isSelectionEnabled && isItemSelectable,
-  ),
+  isFeatureEnabledForItem: (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
+    !state.disableSelection && isItemSelectableSelector(state, itemId),
   /**
    * Checks whether an item can be selected (if selection is enabled, if the item is not disabled, and if the item is selectable).
    */
