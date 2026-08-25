@@ -23,7 +23,7 @@ describe('EventDialogForm', () => {
 
   function FieldProbe(props: FieldProbeProps) {
     const { fieldKey, validate, defaultValue, onRender } = props;
-    const { value, setValue, error } = useEventDialogFormField<string>(fieldKey, {
+    const { value, setValue, error, errors } = useEventDialogFormField<string>(fieldKey, {
       validate,
       defaultValue,
     });
@@ -36,6 +36,11 @@ describe('EventDialogForm', () => {
           onChange={(event) => setValue(event.target.value)}
         />
         {error && <p role="alert">{error}</p>}
+        <ul aria-label={`${fieldKey} errors`}>
+          {errors.map((message, index) => (
+            <li key={index}>{message}</li>
+          ))}
+        </ul>
       </React.Fragment>
     );
   }
@@ -101,6 +106,35 @@ describe('EventDialogForm', () => {
         expect(await formStore!.validateAll()).to.equal(false);
       });
       expect(screen.getByRole('alert')).to.have.text('Required');
+    });
+
+    it('should expose every message through the errors array and clear them on setValue', async () => {
+      let formStore: EventDialogFormStore | null = null;
+      const { user } = render(
+        <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '' }}>
+          <FieldProbe fieldKey="title" validate={() => ['Too short', 'Missing a number']} />
+          <StoreGrabber
+            onMount={(store) => {
+              formStore = store;
+            }}
+          />
+        </EventDialogFormProvider>,
+      );
+
+      const list = screen.getByRole('list', { name: 'title errors' });
+      expect(list.children).to.have.length(0);
+
+      await React.act(async () => {
+        expect(await formStore!.validateAll()).to.equal(false);
+      });
+      expect(Array.from(list.children, (item) => item.textContent)).to.deep.equal([
+        'Too short',
+        'Missing a number',
+      ]);
+
+      // Writing the field clears its errors as a whole, not just the first message.
+      await user.type(screen.getByLabelText('title'), 'x');
+      expect(list.children).to.have.length(0);
     });
 
     it('should clear the field error when the field is written', async () => {
