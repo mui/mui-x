@@ -2,16 +2,19 @@ import * as React from 'react';
 import Divider from '@mui/material/Divider';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { DateTimeSection, DescriptionSection } from '@mui/x-scheduler/event-dialog';
+import {
+  EventDialogDateTimeSection,
+  EventDialogDescriptionSection,
+} from '@mui/x-scheduler/event-dialog';
 
 // The description is rendered first and the resource section is omitted entirely.
 // Defined at module scope: an inline component would remount on every form render.
 function ReorderedGeneralTab() {
   return (
     <React.Fragment>
-      <DescriptionSection />
+      <EventDialogDescriptionSection />
       <Divider />
-      <DateTimeSection />
+      <EventDialogDateTimeSection />
     </React.Fragment>
   );
 }

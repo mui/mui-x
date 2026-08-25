@@ -37,11 +37,11 @@ An inline arrow function is a new component type on every render, so React unmou
 ```tsx
 import {
   EventDialogGeneralTabContent,
-  DateTimeSection,
-  ResourceAndColorSection,
-  DescriptionSection,
-  SectionFieldset,
-  SectionHeaderTitle,
+  EventDialogDateTimeSection,
+  EventDialogResourceAndColorSection,
+  EventDialogDescriptionSection,
+  EventDialogSectionFieldset,
+  EventDialogSectionHeaderTitle,
   useEventDialogFormField,
   useEventDialogOccurrence,
 } from '@mui/x-scheduler/event-dialog';
@@ -49,9 +49,9 @@ import {
 function CustomGeneralTab() {
   return (
     <React.Fragment>
-      <DateTimeSection />
-      <ResourceAndColorSection />
-      <DescriptionSection />
+      <EventDialogDateTimeSection />
+      <EventDialogResourceAndColorSection />
+      <EventDialogDescriptionSection />
     </React.Fragment>
   );
 }
@@ -64,23 +64,23 @@ function CustomGeneralTab() {
 `<EventDialogGeneralTabContent />` is the default composition: the date and time section, the resource and color section, and the description section, separated by dividers.
 It is what renders when the slot is not provided, and you can render it from your own slot to append content after the built-in sections.
 
-### Date Time Section
+### Event Dialog Date Time Section
 
-`<DateTimeSection />` edits the start and end date and time and the all-day switch.
+`<EventDialogDateTimeSection />` edits the start and end date and time and the all-day switch.
 It takes no props: it reads the edited occurrence and its form fields from context.
 
-### Resource And Color Section
+### Event Dialog Resource And Color Section
 
-`<ResourceAndColorSection />` edits the resource the event belongs to and its color.
+`<EventDialogResourceAndColorSection />` edits the resource the event belongs to and its color.
 The resource picker follows the calendar's `eventCreation.canHaveMultipleResources` setting.
 
-### Description Section
+### Event Dialog Description Section
 
-`<DescriptionSection />` edits the event description.
+`<EventDialogDescriptionSection />` edits the event description.
 
-### Section Fieldset and Section Header Title
+### Event Dialog Section Fieldset and Section Header Title
 
-`<SectionFieldset />` and `<SectionHeaderTitle />` are the layout primitives the built-in sections are made of.
+`<EventDialogSectionFieldset />` and `<EventDialogSectionHeaderTitle />` are the layout primitives the built-in sections are made of.
 Use them around your own fields so custom sections get the same spacing, typography, and theme classes as the built-in ones.
 
 Return a **fragment** from the slot: the tab content is a flex column with a gap, so wrapping your composition in a `<div>` collapses it into one flex item and loses the vertical spacing between sections.

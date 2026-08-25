@@ -5,11 +5,11 @@ import Divider from '@mui/material/Divider';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
-  DateTimeSection,
-  ResourceAndColorSection,
-  DescriptionSection,
-  SectionFieldset,
-  SectionHeaderTitle,
+  EventDialogDateTimeSection,
+  EventDialogResourceAndColorSection,
+  EventDialogDescriptionSection,
+  EventDialogSectionFieldset,
+  EventDialogSectionHeaderTitle,
   useEventDialogFormField,
 } from '@mui/x-scheduler/event-dialog';
 
@@ -18,8 +18,8 @@ function PrioritySection() {
     defaultValue: 'medium',
   });
   return (
-    <SectionFieldset>
-      <SectionHeaderTitle>Priority</SectionHeaderTitle>
+    <EventDialogSectionFieldset>
+      <EventDialogSectionHeaderTitle>Priority</EventDialogSectionHeaderTitle>
       <TextField
         select
         label="Priority"
@@ -30,7 +30,7 @@ function PrioritySection() {
         <MenuItem value="medium">Medium</MenuItem>
         <MenuItem value="high">High</MenuItem>
       </TextField>
-    </SectionFieldset>
+    </EventDialogSectionFieldset>
   );
 }
 
@@ -38,13 +38,13 @@ function PrioritySection() {
 function CustomGeneralTabContent() {
   return (
     <React.Fragment>
-      <DateTimeSection />
+      <EventDialogDateTimeSection />
       <Divider />
       <PrioritySection />
       <Divider />
-      <ResourceAndColorSection />
+      <EventDialogResourceAndColorSection />
       <Divider />
-      <DescriptionSection />
+      <EventDialogDescriptionSection />
     </React.Fragment>
   );
 }

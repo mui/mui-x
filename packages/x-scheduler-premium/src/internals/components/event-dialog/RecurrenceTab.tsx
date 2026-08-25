@@ -40,7 +40,7 @@ import {
   EventDialogTabContent,
   getWeekdayToken,
 } from '@mui/x-scheduler/internals';
-import { SectionHeaderTitle } from '@mui/x-scheduler/event-dialog';
+import { EventDialogSectionHeaderTitle } from '@mui/x-scheduler/event-dialog';
 
 const RecurrenceSelectorContainer = styled('div', {
   name: 'MuiEventDialog',
@@ -480,7 +480,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         </FormControl>
 
         <RepeatSectionFieldset className={classes.eventDialogRepeatSectionFieldset}>
-          <SectionHeaderTitle>{localeText.recurrenceRepeatLabel}</SectionHeaderTitle>
+          <EventDialogSectionHeaderTitle>{localeText.recurrenceRepeatLabel}</EventDialogSectionHeaderTitle>
           <RepeatSectionContent className={classes.eventDialogRepeatSectionContent}>
             <InlineRow className={classes.eventDialogInlineRow}>
               <RepeatSectionLabel
@@ -585,7 +585,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         </RepeatSectionFieldset>
 
         <FormControl component="fieldset">
-          <SectionHeaderTitle>{localeText.recurrenceEndsLabel}</SectionHeaderTitle>
+          <EventDialogSectionHeaderTitle>{localeText.recurrenceEndsLabel}</EventDialogSectionHeaderTitle>
           <EndsRadioGroup
             className={classes.eventDialogEndsRadioGroup}
             value={customEndsValue}

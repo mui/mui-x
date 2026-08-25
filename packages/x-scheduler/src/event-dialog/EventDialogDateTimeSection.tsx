@@ -15,7 +15,8 @@ import {
 import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
 import type { EventDialogFormValues } from '../internals/components/event-dialog/utils';
 import { computeRange, validateRange } from '../internals/components/event-dialog/utils';
-import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
+import { EventDialogSectionFieldset } from './EventDialogSectionFieldset';
+import { EventDialogSectionHeaderTitle } from './EventDialogSectionHeaderTitle';
 import { useEventDialogFormContext } from '../internals/components/event-dialog/form/EventDialogFormContext';
 import { useEventDialogFormField } from './useEventDialogFormField';
 
@@ -56,7 +57,7 @@ const AllDayFormControlLabel = styled(FormControlLabel, {
   },
 });
 
-export function DateTimeSection() {
+export function EventDialogDateTimeSection() {
   // Context hooks
   const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -107,8 +108,8 @@ export function DateTimeSection() {
     };
 
   return (
-    <SectionFieldset>
-      <SectionHeaderTitle>{localeText.dateTimeSectionLabel}</SectionHeaderTitle>
+    <EventDialogSectionFieldset>
+      <EventDialogSectionHeaderTitle>{localeText.dateTimeSectionLabel}</EventDialogSectionHeaderTitle>
       <DateTimeFieldsContainer className={classes.eventDialogDateTimeFieldsContainer}>
         <DateTimeFieldsRow className={classes.eventDialogDateTimeFieldsRow}>
           <TextField
@@ -192,6 +193,6 @@ export function DateTimeSection() {
           labelPlacement="start"
         />
       </DateTimeFieldsContainer>
-    </SectionFieldset>
+    </EventDialogSectionFieldset>
   );
 }

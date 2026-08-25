@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
-import { DateTimeSection } from './DateTimeSection';
-import { ResourceAndColorSection } from './ResourceAndColorSection';
-import { DescriptionSection } from './DescriptionSection';
+import { EventDialogDateTimeSection } from './EventDialogDateTimeSection';
+import { EventDialogResourceAndColorSection } from './EventDialogResourceAndColorSection';
+import { EventDialogDescriptionSection } from './EventDialogDescriptionSection';
 
 /**
  * Default content of the General tab.
@@ -12,11 +12,11 @@ import { DescriptionSection } from './DescriptionSection';
 export function EventDialogGeneralTabContent() {
   return (
     <React.Fragment>
-      <DateTimeSection />
+      <EventDialogDateTimeSection />
       <Divider />
-      <ResourceAndColorSection />
+      <EventDialogResourceAndColorSection />
       <Divider />
-      <DescriptionSection />
+      <EventDialogDescriptionSection />
     </React.Fragment>
   );
 }

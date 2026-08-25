@@ -5,8 +5,8 @@ import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   EventDialogGeneralTabContent,
-  SectionFieldset,
-  SectionHeaderTitle,
+  EventDialogSectionFieldset,
+  EventDialogSectionHeaderTitle,
   useEventDialogFormField,
 } from '@mui/x-scheduler/event-dialog';
 
@@ -23,8 +23,8 @@ function MeetingLinkSection() {
         : null,
   });
   return (
-    <SectionFieldset>
-      <SectionHeaderTitle>Meeting link</SectionHeaderTitle>
+    <EventDialogSectionFieldset>
+      <EventDialogSectionHeaderTitle>Meeting link</EventDialogSectionHeaderTitle>
       <TextField
         label="Link"
         value={link.value}
@@ -32,7 +32,7 @@ function MeetingLinkSection() {
         error={link.error != null}
         helperText={link.error}
       />
-    </SectionFieldset>
+    </EventDialogSectionFieldset>
   );
 }
 

@@ -30,7 +30,8 @@ import { useId } from '@base-ui/utils/useId';
 import type { PaletteName } from '../internals/utils/tokens';
 import { getPaletteVariants } from '../internals/utils/tokens';
 import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
-import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
+import { EventDialogSectionFieldset } from './EventDialogSectionFieldset';
+import { EventDialogSectionHeaderTitle } from './EventDialogSectionHeaderTitle';
 import { useEventDialogFormContext } from '../internals/components/event-dialog/form/EventDialogFormContext';
 import { useEventDialogFormField } from './useEventDialogFormField';
 
@@ -175,7 +176,7 @@ ResourceSelectAdornment.propTypes /* remove-proptypes */ = {
   }),
 } as any;
 
-export function ResourceAndColorSection() {
+export function EventDialogResourceAndColorSection() {
   // Context hooks
   const { occurrence, resourceSelectionMode: mode } = useEventDialogFormContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -290,10 +291,10 @@ export function ResourceAndColorSection() {
   const errorId = `${schedulerId}-resource-error-${sectionId}`;
 
   return (
-    <SectionFieldset>
-      <SectionHeaderTitle>
+    <EventDialogSectionFieldset>
+      <EventDialogSectionHeaderTitle>
         {resources.length > 0 ? localeText.resourceColorSectionLabel : localeText.colorSectionLabel}
-      </SectionHeaderTitle>
+      </EventDialogSectionHeaderTitle>
       {/* Resources are optional; skip the picker entirely when none are configured. */}
       {resources.length > 0 && (
         <FormControl size="small" fullWidth error={!!error}>
@@ -404,6 +405,6 @@ export function ResourceAndColorSection() {
           </ResourceMenuColorToggle>
         ))}
       </ResourceMenuColorToggleGroup>
-    </SectionFieldset>
+    </EventDialogSectionFieldset>
   );
 }

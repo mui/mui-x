@@ -15,11 +15,11 @@ import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
-  DateTimeSection,
-  DescriptionSection,
-  ResourceAndColorSection,
-  SectionFieldset,
-  SectionHeaderTitle,
+  EventDialogDateTimeSection,
+  EventDialogDescriptionSection,
+  EventDialogResourceAndColorSection,
+  EventDialogSectionFieldset,
+  EventDialogSectionHeaderTitle,
   useEventDialogFormField,
   useEventDialogOccurrence,
 } from '@mui/x-scheduler/event-dialog';
@@ -399,12 +399,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
     });
 
-    it('should apply the theme classes to SectionFieldset and SectionHeaderTitle in a custom section', () => {
+    it('should apply the theme classes to EventDialogSectionFieldset and EventDialogSectionHeaderTitle in a custom section', () => {
       function CustomFieldsetSection() {
         return (
-          <SectionFieldset className="custom-fieldset">
-            <SectionHeaderTitle className="custom-title">Priority</SectionHeaderTitle>
-          </SectionFieldset>
+          <EventDialogSectionFieldset className="custom-fieldset">
+            <EventDialogSectionHeaderTitle className="custom-title">Priority</EventDialogSectionHeaderTitle>
+          </EventDialogSectionFieldset>
         );
       }
       renderWithSlot({ eventDialogGeneralTab: CustomFieldsetSection });
@@ -421,14 +421,14 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(legend!.classList.contains('custom-title')).to.equal(true);
     });
 
-    it('should forward the refs of SectionFieldset and SectionHeaderTitle to their DOM nodes', () => {
+    it('should forward the refs of EventDialogSectionFieldset and EventDialogSectionHeaderTitle to their DOM nodes', () => {
       const fieldsetRef = React.createRef<HTMLFieldSetElement>();
       const legendRef = React.createRef<HTMLLegendElement>();
       function RefSection() {
         return (
-          <SectionFieldset ref={fieldsetRef}>
-            <SectionHeaderTitle ref={legendRef}>Priority</SectionHeaderTitle>
-          </SectionFieldset>
+          <EventDialogSectionFieldset ref={fieldsetRef}>
+            <EventDialogSectionHeaderTitle ref={legendRef}>Priority</EventDialogSectionHeaderTitle>
+          </EventDialogSectionFieldset>
         );
       }
       renderWithSlot({ eventDialogGeneralTab: RefSection });
@@ -443,8 +443,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       function ReorderedSections() {
         return (
           <React.Fragment>
-            <DescriptionSection />
-            <DateTimeSection />
+            <EventDialogDescriptionSection />
+            <EventDialogDateTimeSection />
           </React.Fragment>
         );
       }
@@ -464,9 +464,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       function MixedSections() {
         return (
           <React.Fragment>
-            <DateTimeSection />
+            <EventDialogDateTimeSection />
             <CustomSection />
-            <DescriptionSection />
+            <EventDialogDescriptionSection />
           </React.Fragment>
         );
       }
@@ -485,7 +485,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       function WrappedSections() {
         return (
           <section aria-label="More options">
-            <DescriptionSection />
+            <EventDialogDescriptionSection />
           </section>
         );
       }
@@ -626,7 +626,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       clearWarningsCache();
       const onEventsChange = spy();
       const { user } = renderWithSlot(
-        { eventDialogGeneralTab: () => <ResourceAndColorSection /> },
+        { eventDialogGeneralTab: () => <EventDialogResourceAndColorSection /> },
         { shouldEventRequireResource: true, onEventsChange },
       );
 
@@ -751,8 +751,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       function DuplicatedSections() {
         return (
           <React.Fragment>
-            <DescriptionSection />
-            <DescriptionSection />
+            <EventDialogDescriptionSection />
+            <EventDialogDescriptionSection />
           </React.Fragment>
         );
       }
@@ -770,10 +770,10 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       function DuplicatedSections() {
         return (
           <React.Fragment>
-            <DateTimeSection />
-            <DateTimeSection />
-            <ResourceAndColorSection />
-            <ResourceAndColorSection />
+            <EventDialogDateTimeSection />
+            <EventDialogDateTimeSection />
+            <EventDialogResourceAndColorSection />
+            <EventDialogResourceAndColorSection />
           </React.Fragment>
         );
       }

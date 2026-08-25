@@ -8,7 +8,7 @@ import { useEventEditingStyledContext } from '../internals/components/event-edit
 import { useEventDialogFormContext } from '../internals/components/event-dialog/form/EventDialogFormContext';
 import { useEventDialogFormField } from './useEventDialogFormField';
 
-export function DescriptionSection() {
+export function EventDialogDescriptionSection() {
   // Context hooks
   const { occurrence } = useEventDialogFormContext();
   const { localeText } = useEventEditingStyledContext();
