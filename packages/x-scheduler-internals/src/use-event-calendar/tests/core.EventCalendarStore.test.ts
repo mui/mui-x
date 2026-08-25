@@ -1,6 +1,8 @@
 import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { spy } from 'sinon';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { describe, it, expect } from 'vitest';
 import {
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
@@ -112,6 +114,95 @@ describe('Core - EventCalendarStore', () => {
         store.startEditing(occurrence('event-1'), 'armed');
 
         expect(store.state.editingOccurrence?.mode).to.equal('armed');
+      });
+
+      it('should call `onEventEditingStart` with the occurrence before recording the editing state', () => {
+        const onEventEditingStart = spy();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const edited = occurrence('event-1');
+
+        store.startEditing(edited);
+
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+        expect(onEventEditingStart.lastCall.firstArg).to.equal(edited);
+        expect(onEventEditingStart.lastCall.args[1].reason).to.equal('edit');
+        expect(onEventEditingStart.lastCall.args[1].occurrence).to.equal(edited);
+        expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
+      });
+
+      it('should not call `onEventEditingStart` when arming, then call it on the armed → edit transition', () => {
+        const onEventEditingStart = spy();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const edited = occurrence('event-1');
+
+        store.startEditing(edited, 'armed');
+        expect(onEventEditingStart.callCount).to.equal(0);
+
+        const nativeEvent = new Event('click');
+        store.setEditingMode('edit', nativeEvent);
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+        expect(onEventEditingStart.lastCall.firstArg).to.equal(edited);
+        expect(onEventEditingStart.lastCall.args[1].event).to.equal(nativeEvent);
+      });
+
+      it('should disarm when `onEventEditingStart` cancels the armed → edit transition', () => {
+        const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        store.startEditing(occurrence('event-1'), 'armed');
+
+        store.setEditingMode('edit');
+
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+        // The armed state keeps document-wide guards active, so a canceled edit fully disarms.
+        expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should not record the editing state when `onEventEditingStart` cancels', () => {
+        const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(onEventEditingStart.calledOnce).to.equal(true);
+        expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should clear the creation placeholder when `onEventEditingStart` cancels a creation', () => {
+        const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const placeholder = {
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T10:30:00', 'default'),
+        } as any;
+        store.setOccurrencePlaceholder(placeholder);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
+        expect(onEventEditingStart.lastCall.args[1].occurrence).to.equal(
+          onEventEditingStart.lastCall.firstArg,
+        );
+        expect(store.state.editingOccurrence).to.equal(null);
+        expect(store.state.occurrencePlaceholder).to.equal(null);
+      });
+
+      it('should forward the native event that initiated the creation placeholder', () => {
+        const onEventEditingStart = spy();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const nativeEvent = new Event('click');
+        const placeholder = {
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T10:30:00', 'default'),
+        } as any;
+        store.setOccurrencePlaceholder(placeholder, nativeEvent);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(onEventEditingStart.lastCall.args[1].event).to.equal(nativeEvent);
       });
     });
 

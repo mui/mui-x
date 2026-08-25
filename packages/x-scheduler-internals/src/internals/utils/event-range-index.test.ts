@@ -1,4 +1,5 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { describe, expect, it } from 'vitest';
 import { createEventRangeIndex } from './event-range-index';
 
 describe('createEventRangeIndex', () => {

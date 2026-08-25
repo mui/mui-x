@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import { screen, within, act, ErrorBoundary, reactMajor } from '@mui/internal-test-utils';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
@@ -17,6 +18,7 @@ import {
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { useTimelineGridRootContext } from '../root/TimelineGridRootContext';
 
 describe('TimelineGrid keyboard navigation', () => {
@@ -34,12 +36,14 @@ describe('TimelineGrid keyboard navigation', () => {
     onStoreMount,
     columnTypes,
     eventCreation,
+    onEventEditingStart,
     resources: resourcesProp = resources,
     children,
   }: {
     onStoreMount?: (store: AnyEventCalendarStore) => void;
     columnTypes?: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
     eventCreation?: boolean;
+    onEventEditingStart?: (occurrence: any, eventDetails: any) => void;
     resources?: typeof resources;
     children?: React.ReactNode;
   } = {}) {
@@ -49,6 +53,7 @@ describe('TimelineGrid keyboard navigation', () => {
         resources={resourcesProp}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         eventCreation={eventCreation}
+        onEventEditingStart={onEventEditingStart}
       >
         <TimelineGrid.Root columnTypes={columnTypes}>
           <TimelineGrid.Row data-testid="header-row" aria-rowindex={1}>
@@ -235,11 +240,13 @@ describe('TimelineGrid keyboard navigation', () => {
   describe('event creation', () => {
     it('should create a timeline event placeholder on Enter keypress', async () => {
       let store: AnyEventCalendarStore | null = null;
+      const onEventEditingStart = spy();
       const { user } = render(
         <Grid
           onStoreMount={(s) => {
             store = s;
           }}
+          onEventEditingStart={onEventEditingStart}
         />,
       );
 
@@ -252,6 +259,13 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
       expect(store!.state.occurrencePlaceholder?.surfaceType).to.equal('timeline');
+
+      // The initiating keydown is stashed with the placeholder and reaches `onEventEditingStart`.
+      act(() => {
+        store!.startEditing(store!.state.occurrencePlaceholder as any);
+      });
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
+      expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('keydown');
     });
 
     it('should not create a placeholder on Enter from a title cell', async () => {

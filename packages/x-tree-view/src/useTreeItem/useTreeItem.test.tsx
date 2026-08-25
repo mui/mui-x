@@ -4,6 +4,7 @@ import { act, createEvent, fireEvent, screen } from '@mui/internal-test-utils';
 import type { DescribeTreeViewRendererUtils } from 'test/utils/tree-view/describeTreeView';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { describe, it, expect } from 'vitest';
 import type { TreeViewAnyStore } from '../internals/models';
 
 describeTreeView<TreeViewAnyStore>(

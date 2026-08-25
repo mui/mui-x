@@ -4,6 +4,7 @@ import {
   ResourceBuilder,
   getEventCalendarStateFromParameters,
 } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 

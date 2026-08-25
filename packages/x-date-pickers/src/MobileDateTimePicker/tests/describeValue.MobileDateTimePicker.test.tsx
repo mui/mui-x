@@ -9,6 +9,7 @@ import {
 } from 'test/utils/pickers';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe } from 'vitest';
 
 describe('<MobileDateTimePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();

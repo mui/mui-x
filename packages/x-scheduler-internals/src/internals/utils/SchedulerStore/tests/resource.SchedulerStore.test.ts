@@ -4,6 +4,7 @@ import type {
   SchedulerResourceModelStructure,
 } from '@mui/x-scheduler-internals/models';
 import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { schedulerResourceSelectors } from '../../../../scheduler-selectors';
 
 const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };

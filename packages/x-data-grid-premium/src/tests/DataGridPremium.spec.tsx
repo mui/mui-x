@@ -1,5 +1,8 @@
 import * as React from 'react';
+import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import type { GridApiPremium } from '@mui/x-data-grid-premium';
+import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 
 function ColumnPropTest() {
   return (
@@ -115,6 +118,23 @@ function ApiRefPublicMethods() {
   apiRef.current!.unstable_applyPipeProcessors('exportMenu', [], {});
 }
 
+function CallbackDetailsApiRef() {
+  return (
+    <DataGridPremium
+      rows={[]}
+      columns={[]}
+      onRowGroupingModelChange={(model, details) => {
+        // @ts-expect-error `current` is read-only on the details' apiRef
+        details.apiRef.current = null;
+      }}
+      onCellModesModelChange={(model, details) => {
+        // The editing hook path must expose a Premium-typed apiRef.
+        const premiumApiRef: RefObject<GridApiPremium> = details.apiRef;
+      }}
+    />
+  );
+}
+
 function ApiRefProMethods() {
   const apiRef = useGridApiRef();
 
@@ -129,4 +149,18 @@ function ApiRefProMethods() {
   });
 
   return null;
+}
+
+function FormulaFeatureInjectionTest() {
+  return (
+    <div>
+      {/* The formula feature object from the `/formula` entry point fits the prop */}
+      <DataGridPremium rows={[]} columns={[]} featureDependencies={{ formula: formulaFeature }} />
+      {/* No feature dependencies at all is valid */}
+      <DataGridPremium rows={[]} columns={[]} featureDependencies={{}} />
+      {/* An arbitrary object is not a formula feature */}
+      {/* @ts-expect-error */}
+      <DataGridPremium rows={[]} columns={[]} featureDependencies={{ formula: {} }} />
+    </div>
+  );
 }
