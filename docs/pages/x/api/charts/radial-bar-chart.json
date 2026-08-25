@@ -77,6 +77,13 @@
         "describedArgs": ["highlightedItem"]
       }
     },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: ChartsActivationEvent<HTMLDivElement>, item: SeriesItemIdentifierWithType<SeriesType>) => void",
+        "describedArgs": ["event", "item"]
+      }
+    },
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {

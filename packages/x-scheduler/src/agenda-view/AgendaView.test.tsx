@@ -10,6 +10,7 @@ import {
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
+import { describe, it, expect } from 'vitest';
 
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();

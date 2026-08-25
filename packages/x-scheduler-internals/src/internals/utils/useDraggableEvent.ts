@@ -8,10 +8,10 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
-import type { SchedulerEventId, TemporalSupportedObject } from '../../models';
+import type { SchedulerEventId } from '../../models';
+import type { useElementPositionInCollection } from './useElementPositionInCollection';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
-import { useAdapterContext } from '../../use-adapter-context';
 
 export function useDraggableEvent(
   parameters: useDraggableEvent.Parameters,
@@ -24,13 +24,11 @@ export function useDraggableEvent(
     eventId,
     renderDragPreview,
     getDragData,
-    collectionStart,
-    collectionEnd,
+    position,
     isDraggable = false,
   } = parameters;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -82,12 +80,18 @@ export function useDraggableEvent(
     });
   }, [ref, getDragData, isDraggable, store, preview.actions]);
 
+  // A bound clipped by the collection range or hidden by the daily hour window does not
+  // render at its real position, so it must not expose a resize handle: the drop math
+  // reconstructs positions from the rendered edges. Taken from the position the caller
+  // already rendered with, so "clipped" and "rendered somewhere else" cannot drift apart
+  // — notably an end at the exact midnight closing the collection renders at its real
+  // position.
   const contextValue: useDraggableEvent.ContextValue = React.useMemo(
     () => ({
-      doesEventStartBeforeCollectionStart: adapter.isBefore(start.value, collectionStart),
-      doesEventEndAfterCollectionEnd: adapter.isAfter(end.value, collectionEnd),
+      isEventStartClipped: position.startingBeforeEdge,
+      isEventEndClipped: position.endingAfterEdge,
     }),
-    [adapter, start, end, collectionStart, collectionEnd],
+    [position.startingBeforeEdge, position.endingAfterEdge],
   );
 
   return { state, preview, contextValue };
@@ -134,13 +138,10 @@ export namespace useDraggableEvent {
      */
     ref: React.RefObject<HTMLDivElement | null>;
     /**
-     * The start date of the collection the event belongs to.
+     * The position the caller renders the event at. The clipping flags come from it, so a
+     * single pass of the positioning arithmetic serves both rendering and resizing.
      */
-    collectionStart: TemporalSupportedObject;
-    /**
-     * The end date of the collection the event belongs to.
-     */
-    collectionEnd: TemporalSupportedObject;
+    position: useElementPositionInCollection.ReturnValue;
   }
 
   export interface ReturnValue {
@@ -160,12 +161,14 @@ export namespace useDraggableEvent {
 
   export interface ContextValue {
     /**
-     * Whether the event starts before the collection starts.
+     * Whether the event's start does not render at its real position: it is before the
+     * collection start or hidden by the daily hour window.
      */
-    doesEventStartBeforeCollectionStart: boolean;
+    isEventStartClipped: boolean;
     /**
-     * Whether the event ends after the collection ends.
+     * Whether the event's end does not render at its real position: it is after the
+     * collection end or hidden by the daily hour window.
      */
-    doesEventEndAfterCollectionEnd: boolean;
+    isEventEndClipped: boolean;
   }
 }

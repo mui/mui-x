@@ -2,19 +2,16 @@ import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { SchedulerEventSide, TemporalSupportedObject } from '../../models';
 
 /**
- * Whether a resize handler for the given side may run: its edge must be inside the collection
+ * Whether a resize handler for the given side may run: its edge must render at its real position
  * (an event clipped at the collection start can't have its start resized).
  */
 export function isResizeHandlerEnabled(parameters: {
   side: SchedulerEventSide;
-  doesEventStartBeforeCollectionStart: boolean;
-  doesEventEndAfterCollectionEnd: boolean;
+  isEventStartClipped: boolean;
+  isEventEndClipped: boolean;
 }): boolean {
-  const { side, doesEventStartBeforeCollectionStart, doesEventEndAfterCollectionEnd } = parameters;
-  return (
-    (side === 'start' && !doesEventStartBeforeCollectionStart) ||
-    (side === 'end' && !doesEventEndAfterCollectionEnd)
-  );
+  const { side, isEventStartClipped, isEventEndClipped } = parameters;
+  return (side === 'start' && !isEventStartClipped) || (side === 'end' && !isEventEndClipped);
 }
 
 /**

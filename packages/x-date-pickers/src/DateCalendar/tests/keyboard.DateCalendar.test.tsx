@@ -1,6 +1,7 @@
 import { act, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<DateCalendar /> keyboard interactions', () => {
   const { render } = createPickerRenderer();

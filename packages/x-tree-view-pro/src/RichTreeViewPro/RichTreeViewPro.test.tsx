@@ -5,6 +5,7 @@ import {
   richTreeViewProClasses as classes,
 } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe, it, expect } from 'vitest';
 
 interface ItemType {
   id: string;
