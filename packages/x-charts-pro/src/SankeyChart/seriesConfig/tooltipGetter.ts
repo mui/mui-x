@@ -17,7 +17,7 @@ export const tooltipGetter: TooltipGetter<'sankey'> = (params) => {
     return {
       identifier,
       color: node.color,
-      label: `${node.label}:`,
+      label: node.label,
       value: node.value,
       formattedValue: series.valueFormatter(node.value, {
         type: 'node',

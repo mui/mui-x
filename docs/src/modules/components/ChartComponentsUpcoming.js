@@ -22,11 +22,6 @@ function getComponents() {
       premium: true,
     },
     {
-      title: 'Treemap',
-      href: '/x/react-charts/treemap/',
-      pro: true,
-    },
-    {
       title: 'Maps',
       href: 'https://github.com/mui/mui-x/issues/12690',
       pro: true,
