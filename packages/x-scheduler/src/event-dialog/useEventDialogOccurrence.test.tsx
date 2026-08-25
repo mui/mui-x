@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import { ErrorBoundary, reactMajor } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { useEventDialogOccurrence } from './useEventDialogOccurrence';
