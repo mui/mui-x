@@ -24,6 +24,7 @@ beforeAll(async () => {
   if (!isJsdom()) {
     const { server } = await import('vitest/browser');
     await server.commands.setupCrashHandler();
+    await server.commands.resetMousePosition();
   }
 });
 

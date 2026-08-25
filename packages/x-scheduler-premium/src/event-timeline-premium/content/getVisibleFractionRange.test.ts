@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { getVisibleFractionRange } from './getVisibleFractionRange';
 
 describe('getVisibleFractionRange', () => {

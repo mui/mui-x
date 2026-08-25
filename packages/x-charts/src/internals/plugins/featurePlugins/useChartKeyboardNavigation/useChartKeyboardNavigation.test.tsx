@@ -4,6 +4,7 @@ import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { describe, it, expect } from 'vitest';
 
 describe('useChartKeyboardNavigation', () => {
   const { render } = createRenderer();

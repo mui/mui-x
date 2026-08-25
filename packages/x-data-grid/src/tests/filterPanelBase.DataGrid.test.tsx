@@ -10,6 +10,7 @@ import {
 import type { DataGridProps, GridFilterModel, GridFilterPanelProps } from '@mui/x-data-grid';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnValues, getSelectByName } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
