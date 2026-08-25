@@ -11,7 +11,10 @@ export type GridRowsProp<R extends GridValidRowModel = GridValidRowModel> = Read
  */
 export type GridRowModel<R extends GridValidRowModel = GridValidRowModel> = R;
 
-export type GridUpdateAction = 'delete' | 'replace';
+/**
+ * @deprecated Use `GridRowModelUpdate` or `GridRowModelReplace` instead.
+ */
+export type GridUpdateAction = 'delete';
 
 export interface GridRowModelUpdate extends GridRowModel {
   /**
