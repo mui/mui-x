@@ -1,6 +1,7 @@
 import { describeConformance } from '@mui/internal-test-utils';
 import { createPickerRenderer, describePicker } from 'test/utils/pickers';
 import { MobileTimeRangePicker } from '@mui/x-date-pickers-pro/MobileTimeRangePicker';
+import { describe } from 'vitest';
 
 describe('<MobileTimeRangePicker /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();

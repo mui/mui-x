@@ -1,5 +1,6 @@
 import { createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 import { PickersArrowSwitcher } from './PickersArrowSwitcher';
 import { pickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
 

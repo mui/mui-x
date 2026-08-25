@@ -12,6 +12,7 @@ import {
   describeConformance,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 
 describe('<CalendarGrid.DayCell />', () => {
   const { render } = createSchedulerRenderer();

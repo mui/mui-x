@@ -9,6 +9,7 @@ import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect, afterEach } from 'vitest';
 
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();

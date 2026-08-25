@@ -9,6 +9,7 @@ import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect, afterEach } from 'vitest';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 import type { GridFormulaPrivateApi } from '../hooks/features/formula/gridFormulaInterfaces';
 

@@ -10,7 +10,8 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-eve
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { DayGridEvent } from '../event';
-import { EventEditingTrigger, useEventEditingContext } from '../event-editing';
+import { useEventEditingContext } from '../event-editing';
+import { EventContextMenuTrigger } from '../event-context-menu';
 import { EventSkeleton } from '../event-skeleton';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
@@ -111,9 +112,9 @@ export function DayGridCell(props: DayGridCellProps) {
           }
 
           return (
-            <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
+            <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
               <DayGridEvent occurrence={occurrence} variant="filled" />
-            </EventEditingTrigger>
+            </EventContextMenuTrigger>
           );
         })}
         {placeholder != null && (

@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { createSelector, Store } from '@base-ui/utils/store';
+import { Store } from '@base-ui/utils/store';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import type { EventDialogFormValues } from '../utils';
@@ -63,9 +63,9 @@ export interface EventDialogFormParameters<
 }
 
 export const eventDialogFormSelectors = {
-  value: createSelector((state: EventDialogFormState, key: string) => state.values[key]),
-  hasValue: createSelector((state: EventDialogFormState, key: string) => key in state.values),
-  error: createSelector((state: EventDialogFormState, key: string) => state.errors[key]),
+  value: (state: EventDialogFormState, key: string) => state.values[key],
+  hasValue: (state: EventDialogFormState, key: string) => key in state.values,
+  error: (state: EventDialogFormState, key: string) => state.errors[key],
 };
 
 /**

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { chartsSvgLayerClasses } from '../../../ChartsSvgLayer';

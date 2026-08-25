@@ -4,6 +4,7 @@ import {
   multiSectionDigitalClockClasses as classes,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<MultiSectionDigitalClock /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();

@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
+  createMatchMedia,
   createSchedulerRenderer,
   EventBuilder,
   ResourceBuilder,
@@ -22,6 +23,7 @@ import {
   useEventDialogFormField,
   useEventDialogOccurrence,
 } from '@mui/x-scheduler/event-dialog';
+import { describe, it, expect, afterEach } from 'vitest';
 import type {
   EventDialogGeneralTabProps,
   EventDialogGeneralTabPropsOverrides,
@@ -44,14 +46,6 @@ const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
   .build();
 
 const resources: SchedulerResource[] = [personalResource];
-
-// Minimal `matchMedia` stub to drive the coarse-vs-fine pointer branch of `useDraggableDialog`.
-const createMatchMedia = (matches: boolean) => () =>
-  ({
-    matches,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-  }) as any;
 
 describe('<EventDialogContent /> — community (no recurring-events plugin)', () => {
   const anchor = document.createElement('button');

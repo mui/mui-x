@@ -107,11 +107,15 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
 }
 
 /**
- * Wraps an element so activating it edits its occurrence and opens the editing surface. Works for
- * both the desktop dialog and the compact drawer.
+ * Ref, anchoring, and `startEditing` wiring shared by every trigger that edits an occurrence
+ * (`EventEditingTrigger` below and `EventContextMenuTrigger`), so they stay in lockstep instead of
+ * duplicating the re-anchoring effect.
  */
-export function EventEditingTrigger(props: EventEditingTriggerProps) {
-  const { occurrence, onClick, onEditingCanceled, stableAnchor, children } = props;
+export function useEventEditingTriggerProps(
+  occurrence: SchedulerRenderableEventOccurrence,
+  options: { onEditingCanceled?: () => void; stableAnchor?: HTMLElement | null } = {},
+) {
+  const { onEditingCanceled, stableAnchor } = options;
   const ref = React.useRef<HTMLElement | null>(null);
   const store = useSchedulerStoreContext();
   const { startEditing, registerAnchor } = useEventEditingContext();
@@ -128,14 +132,30 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
     return registerAnchor(node);
   }, [isEdited, registerAnchor]);
 
-  return React.cloneElement(children as React.ReactElement<any>, {
+  return {
     ref,
     onClick: (event: React.MouseEvent<HTMLElement>) => {
-      onClick?.(event);
       const started = startEditing(ref, occurrence, event.nativeEvent, stableAnchor);
       if (!started) {
         onEditingCanceled?.();
       }
+    },
+  };
+}
+
+/**
+ * Wraps an element so activating it edits its occurrence and opens the editing surface. Works for
+ * both the desktop dialog and the compact drawer.
+ */
+export function EventEditingTrigger(props: EventEditingTriggerProps) {
+  const { occurrence, onClick, onEditingCanceled, stableAnchor, children } = props;
+  const editing = useEventEditingTriggerProps(occurrence, { onEditingCanceled, stableAnchor });
+
+  return React.cloneElement(children as React.ReactElement<any>, {
+    ref: editing.ref,
+    onClick: (event: React.MouseEvent<HTMLElement>) => {
+      onClick?.(event);
+      editing.onClick(event);
     },
   });
 }

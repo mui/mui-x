@@ -1,4 +1,5 @@
 import type { FocusedItemIdentifier } from '@mui/x-charts/models';
+import { describe, it, expect } from 'vitest';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 import keyboardFocusHandler from './keyboardFocusHandler';
 

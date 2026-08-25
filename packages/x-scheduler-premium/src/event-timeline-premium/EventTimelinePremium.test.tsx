@@ -23,6 +23,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import { describe, it, expect } from 'vitest';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();

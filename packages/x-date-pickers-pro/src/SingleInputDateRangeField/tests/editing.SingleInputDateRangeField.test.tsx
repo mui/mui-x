@@ -3,6 +3,7 @@ import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDa
 import { waitFor } from '@mui/internal-test-utils';
 import { expectFieldValue } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import { describe, it, expect } from 'vitest';
 
 describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(

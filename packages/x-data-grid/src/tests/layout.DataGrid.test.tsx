@@ -25,6 +25,7 @@ import {
   sleep,
 } from 'test/utils/helperFn';
 import { isJSDOM, isOSX } from 'test/utils/skipIf';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
