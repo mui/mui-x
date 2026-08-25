@@ -480,7 +480,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         </FormControl>
 
         <RepeatSectionFieldset className={classes.eventDialogRepeatSectionFieldset}>
-          <EventDialogSectionHeaderTitle>{localeText.recurrenceRepeatLabel}</EventDialogSectionHeaderTitle>
+          <EventDialogSectionHeaderTitle>
+            {localeText.recurrenceRepeatLabel}
+          </EventDialogSectionHeaderTitle>
           <RepeatSectionContent className={classes.eventDialogRepeatSectionContent}>
             <InlineRow className={classes.eventDialogInlineRow}>
               <RepeatSectionLabel
@@ -585,7 +587,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         </RepeatSectionFieldset>
 
         <FormControl component="fieldset">
-          <EventDialogSectionHeaderTitle>{localeText.recurrenceEndsLabel}</EventDialogSectionHeaderTitle>
+          <EventDialogSectionHeaderTitle>
+            {localeText.recurrenceEndsLabel}
+          </EventDialogSectionHeaderTitle>
           <EndsRadioGroup
             className={classes.eventDialogEndsRadioGroup}
             value={customEndsValue}

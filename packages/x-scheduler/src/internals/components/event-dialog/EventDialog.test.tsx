@@ -403,7 +403,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       function CustomFieldsetSection() {
         return (
           <EventDialogSectionFieldset className="custom-fieldset">
-            <EventDialogSectionHeaderTitle className="custom-title">Priority</EventDialogSectionHeaderTitle>
+            <EventDialogSectionHeaderTitle className="custom-title">
+              Priority
+            </EventDialogSectionHeaderTitle>
           </EventDialogSectionFieldset>
         );
       }
