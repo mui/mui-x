@@ -23,7 +23,7 @@ Render the built-in sections you want to keep — anything you leave out is gone
 ## Basic usage
 
 The demo below inserts a custom "Priority" section between the built-in sections.
-The custom field is written through `useEventDialogFormField()`, so it is part of the draft and is saved with the event.
+The custom field is bound through `useEventDialogFormField()`: once the user edits it, the value is part of the draft and is saved with the event.
 
 {{"demo": "CustomGeneralTab.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -38,14 +38,9 @@ An inline arrow function is a new component type on every render of the componen
 import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
-  EventDialogGeneralTabContent,
   EventDialogDateTimeSection,
   EventDialogResourceAndColorSection,
   EventDialogDescriptionSection,
-  EventDialogSectionFieldset,
-  EventDialogSectionHeaderTitle,
-  useEventDialogFormField,
-  useEventDialogOccurrence,
 } from '@mui/x-scheduler/event-dialog';
 
 function CustomGeneralTab() {
@@ -90,7 +85,7 @@ Return a **fragment** from the slot: the tab content is a flex column with a gap
 
 ## Custom fields
 
-`useEventDialogFormField(key, options)` binds a component to one field of the event draft:
+`useEventDialogFormField(key, parameters)` binds a component to one field of the event draft:
 
 - `value` / `setValue` — read and write the field. A written field is part of the draft and is merged into the event on save.
 - `defaultValue` — seeds the field when the event does not have it yet. An untouched default is not saved.
