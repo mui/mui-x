@@ -76,12 +76,15 @@ export function EventDialogDateTimeSection() {
   const createDateTimeValidator =
     (field: 'startDate' | 'startTime' | 'endDate' | 'endTime') =>
     (value: string, allValues: EventDialogFormValues): string | null => {
-      if (findInvalidRangeField(adapter, allValues, displayTimezone) === field) {
+      const invalidField = findInvalidRangeField(adapter, allValues, displayTimezone);
+      if (invalidField === field) {
         return field === 'startDate' || field === 'endDate'
           ? localeText.invalidDateError
           : localeText.invalidTimeError;
       }
-      if (field === 'startDate' || field === 'startTime') {
+      // While any field is invalid, the ordering verdict would compare against
+      // the computeRange fallback and blame a healthy field.
+      if (invalidField !== null || field === 'startDate' || field === 'startTime') {
         return null;
       }
       const { start, end } = computeRange(adapter, allValues, displayTimezone);

@@ -287,7 +287,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       }
     }
 
-    const rangeError = validateRange(adapter, start, end, values.allDay);
+    // An invalid field already blocks; the ordering verdict would compare
+    // against the computeRange fallback and blame a healthy field.
+    const rangeError = invalidRangeField ? null : validateRange(adapter, start, end, values.allDay);
     if (rangeError) {
       warnUnvalidatedField(rangeError.field, 'The date range is invalid');
       // A validator on the same field may have stored a more specific message.
@@ -325,11 +327,17 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       try {
         isValid = await formStore.validateAll();
       } catch (error) {
-        // A consumer validator threw or rejected; surface it instead of dying silently.
-        if (process.env.NODE_ENV !== 'production') {
-          console.error('MUI X Scheduler: A form field validator threw during the submit.', error);
+        // Recover the dialog and warn, like the grid does for processRowUpdate errors.
+        if (isSessionAliveRef.current) {
+          setTabValue('general');
         }
-        setTabValue('general');
+        if (process.env.NODE_ENV !== 'production') {
+          warnOnce([
+            'MUI X Scheduler: A form field validator threw or rejected during the submit.',
+            'The submit was aborted and no error was stored on the form.',
+            'Handle failures inside the validator and return the error message instead.',
+          ]);
+        }
         return;
       }
 
@@ -445,7 +453,13 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
   return (
     <DialogContent className={classes.eventDialogContent}>
-      <EventDialogForm onSubmit={handleSubmit} className={classes.eventDialogForm}>
+      <EventDialogForm
+        onSubmit={handleSubmit}
+        // The browser blocks a native submit over a required field hidden in an
+        // inactive tab; showing the tab lets the next attempt focus the field.
+        onInvalidCapture={() => setTabValue('general')}
+        className={classes.eventDialogForm}
+      >
         <EventDialogHeader
           onClose={onClose}
           dragHandlerRef={dragHandlerRef}

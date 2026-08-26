@@ -1058,7 +1058,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       expect(onEventsChange.callCount).to.equal(0);
       const alerts = screen.getAllByRole('alert').map((alert) => alert.textContent);
-      expect(alerts).to.include('Enter a valid date.');
+      expect(alerts).to.deep.equal(['Enter a valid date.']);
     });
 
     it('should ignore the time fields of an all-day event when validating', async () => {
@@ -1114,7 +1114,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByRole('alert')).to.have.text('Pick at least one room');
     });
 
-    it('should surface a validator that throws instead of dying silently', async () => {
+    it('should recover the dialog when a validator throws', async () => {
+      clearWarningsCache();
       const onEventsChange = spy();
       function ThrowingSection() {
         useEventDialogFormField('client', {
@@ -1131,9 +1132,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
 
       const saveButton = screen.getByRole('button', { name: 'Save' });
-      await expect(async () => {
-        await user.click(saveButton);
-      }).toErrorDev(['MUI X Scheduler: A form field validator threw during the submit.']);
+      await expect(() => user.click(saveButton)).toWarnDev([
+        'MUI X Scheduler: A form field validator threw or rejected during the submit.',
+      ]);
 
       expect(onEventsChange.callCount).to.equal(0);
       // The dialog stays usable: the pending state is released.
