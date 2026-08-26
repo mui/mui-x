@@ -127,6 +127,15 @@ export function validateRange(
   return null;
 }
 
+export function getRangeErrorMessage(
+  field: 'endDate' | 'endTime',
+  localeText: EventEditingLocaleText,
+): string {
+  return field === 'endDate'
+    ? localeText.startDateAfterEndDateError
+    : localeText.startTimeAfterEndTimeError;
+}
+
 export function getRecurrenceLabel(
   adapter: Adapter,
   start: SchedulerProcessedDate,

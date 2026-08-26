@@ -14,7 +14,11 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
 import type { EventDialogFormValues } from '../internals/components/event-dialog/utils';
-import { computeRange, validateRange } from '../internals/components/event-dialog/utils';
+import {
+  computeRange,
+  getRangeErrorMessage,
+  validateRange,
+} from '../internals/components/event-dialog/utils';
 import { EventDialogSectionFieldset } from './EventDialogSectionFieldset';
 import { EventDialogSectionHeaderTitle } from './EventDialogSectionHeaderTitle';
 import { useEventDialogFormContext } from '../internals/components/event-dialog/form/EventDialogFormContext';
@@ -84,9 +88,7 @@ export function EventDialogDateTimeSection() {
       if (validateRange(adapter, start, end, allValues.allDay)?.field !== field) {
         return null;
       }
-      return field === 'endDate'
-        ? localeText.startDateAfterEndDateError
-        : localeText.startTimeAfterEndTimeError;
+      return getRangeErrorMessage(field, localeText);
     };
 
   const startDate = useEventDialogFormField('startDate');

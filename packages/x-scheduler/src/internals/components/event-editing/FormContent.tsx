@@ -34,7 +34,13 @@ import {
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
 import type { EventDialogFormValues } from '../event-dialog/utils';
-import { computeRange, validateRange, hasProp, BUILT_IN_FORM_KEYS } from '../event-dialog/utils';
+import {
+  computeRange,
+  getRangeErrorMessage,
+  validateRange,
+  hasProp,
+  BUILT_IN_FORM_KEYS,
+} from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
 import TitleSection from '../event-dialog/TitleSection';
 import { GeneralTab } from '../event-dialog/GeneralTab';
@@ -293,12 +299,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         }
         // A validator on the same field may have stored a more specific message.
         if (!Object.hasOwn(formStore.state.errors, rangeError.field)) {
-          formStore.setError(
-            rangeError.field,
-            rangeError.field === 'endDate'
-              ? localeText.startDateAfterEndDateError
-              : localeText.startTimeAfterEndTimeError,
-          );
+          formStore.setError(rangeError.field, getRangeErrorMessage(rangeError.field, localeText));
         }
       }
 
