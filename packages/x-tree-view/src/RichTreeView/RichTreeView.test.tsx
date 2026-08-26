@@ -166,6 +166,40 @@ describe('<RichTreeView />', () => {
       });
     });
 
+    it('should render the skeleton rows with the `skeletonItem` slot', () => {
+      function CustomSkeletonItem(props: React.HTMLAttributes<HTMLLIElement> & { ownerState?: unknown }) {
+        const { ownerState, ...other } = props;
+        return <li {...other} data-testid="custom-skeleton-item" />;
+      }
+
+      render(<RichTreeView items={[]} loading slots={{ skeletonItem: CustomSkeletonItem }} />);
+
+      expect(screen.getAllByTestId('custom-skeleton-item')).to.have.length(5);
+    });
+
+    it('should apply `slotProps.skeletonItem` to each skeleton row', () => {
+      render(
+        <RichTreeView
+          items={[]}
+          loading
+          slotProps={{
+            skeletonItem: (ownerState) => ({
+              'data-index': ownerState.index,
+              style: { opacity: 1 - ownerState.index * 0.1 },
+            }),
+          }}
+        />,
+      );
+
+      const skeletonItems = screen.getAllByRole('treeitem');
+      skeletonItems.forEach((item, index) => {
+        expect(item).to.have.attribute('data-index', `${index}`);
+        expect(item.style.opacity).to.equal(`${1 - index * 0.1}`);
+        // The slot props style must merge with the internal style, not replace it.
+        expect(item.style.getPropertyValue('--TreeView-itemDepth')).to.equal('0');
+      });
+    });
+
     it('should not forward `loading` and `loadingItemsCount` to the DOM', () => {
       render(<RichTreeView items={ITEMS} loading={false} loadingItemsCount={3} />);
 

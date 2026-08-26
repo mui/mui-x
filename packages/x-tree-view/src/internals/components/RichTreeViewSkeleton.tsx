@@ -13,8 +13,8 @@ import type { TreeViewAnyStore } from '../models';
 import type { TreeViewStoreInContext } from '../TreeViewProvider';
 
 const SKELETON_LABEL_WIDTHS = ['40%', '70%', '55%', '50%', '65%'];
-const DEFAULT_SKELETON_ITEMS_COUNT = 5;
-const MAX_SKELETON_ITEMS_COUNT = 100;
+export const DEFAULT_SKELETON_ITEMS_COUNT = 5;
+export const MAX_SKELETON_ITEMS_COUNT = 100;
 
 export function getSkeletonItemsCount(loadingItemsCount: number | undefined): number {
   if (process.env.NODE_ENV !== 'production') {
@@ -40,10 +40,45 @@ export interface RichTreeViewSkeletonSlots {
    * Element rendered at the root.
    */
   root: React.ElementType;
+  /**
+   * Component rendered instead of the default skeleton rows while the tree is loading.
+   * It renders inside the tree root, which keeps its `role="tree"` and `aria-busy` attributes.
+   */
+  loading?: React.ElementType;
+  /**
+   * Component rendered for each row of the loading skeleton.
+   */
+  skeletonItem: React.ElementType;
+  /**
+   * Component rendered inside each skeleton row, wrapping the icon gutter and the label placeholder.
+   */
+  skeletonContent: React.ElementType;
+}
+
+export interface RichTreeViewSkeletonItemOwnerState {
+  /**
+   * Index of the skeleton row inside its group.
+   */
+  index: number;
+  /**
+   * Number of skeleton rows rendered in the group.
+   */
+  itemsCount: number;
+  /**
+   * Depth of the skeleton rows.
+   */
+  itemDepth: number;
+  /**
+   * Whether each row renders a checkbox placeholder.
+   */
+  isCheckboxSelectionEnabled: boolean;
 }
 
 export interface RichTreeViewSkeletonSlotProps<TOwnerState extends object> {
   root?: SlotComponentProps<'ul', {}, TOwnerState>;
+  loading?: SlotComponentProps<'div', Record<string, any>, TOwnerState>;
+  skeletonItem?: SlotComponentProps<'li', {}, RichTreeViewSkeletonItemOwnerState>;
+  skeletonContent?: SlotComponentProps<'div', {}, RichTreeViewSkeletonItemOwnerState>;
 }
 
 export interface RichTreeViewSkeletonClasses {
@@ -64,14 +99,108 @@ export interface RichTreeViewSkeletonProps<
   rootRef: React.Ref<HTMLUListElement>;
   classes: RichTreeViewSkeletonClasses;
   loadingItemsCount?: number;
+}
+
+export interface RichTreeViewSkeletonItemsProps<TStore extends TreeViewAnyStore> {
+  store: TreeViewStoreInContext<TStore>;
+  classes: Pick<RichTreeViewSkeletonClasses, 'skeletonItem' | 'skeletonContent'>;
+  slots: Pick<RichTreeViewSkeletonSlots, 'skeletonItem' | 'skeletonContent'>;
+  slotProps?: Pick<RichTreeViewSkeletonSlotProps<object>, 'skeletonItem' | 'skeletonContent'>;
+  itemsCount: number;
   /**
-   * Component rendered for each skeleton row.
+   * The depth of the skeleton rows.
+   * Pass the depth of the loading items when the skeleton renders inside a parent item.
+   * @default 0
    */
-  SkeletonItemComponent: React.ElementType;
-  /**
-   * Component rendered inside each skeleton row, wrapping the icon gutter and the label placeholder.
-   */
-  SkeletonContentComponent: React.ElementType;
+  itemDepth?: number;
+}
+
+interface RichTreeViewSkeletonRowProps {
+  classes: Pick<RichTreeViewSkeletonClasses, 'skeletonItem' | 'skeletonContent'>;
+  slots: Pick<RichTreeViewSkeletonSlots, 'skeletonItem' | 'skeletonContent'>;
+  slotProps?: Pick<RichTreeViewSkeletonSlotProps<object>, 'skeletonItem' | 'skeletonContent'>;
+  ownerState: RichTreeViewSkeletonItemOwnerState;
+  style: React.CSSProperties;
+  labelWidth: string;
+}
+
+function RichTreeViewSkeletonRow(props: RichTreeViewSkeletonRowProps) {
+  const { classes, slots, slotProps, ownerState, style, labelWidth } = props;
+
+  const SkeletonItem = slots.skeletonItem;
+  const SkeletonContent = slots.skeletonContent;
+
+  const skeletonItemProps = useSlotProps({
+    elementType: SkeletonItem,
+    externalSlotProps: slotProps?.skeletonItem,
+    className: classes.skeletonItem,
+    additionalProps: {
+      role: 'treeitem',
+      'aria-disabled': true,
+      style,
+    },
+    ownerState,
+  });
+
+  const skeletonContentProps = useSlotProps({
+    elementType: SkeletonContent,
+    externalSlotProps: slotProps?.skeletonContent,
+    className: classes.skeletonContent,
+    ownerState,
+  });
+
+  return (
+    <SkeletonItem {...skeletonItemProps}>
+      <SkeletonContent {...skeletonContentProps}>
+        <span
+          style={{
+            width: TREE_ITEM_ICON_CONTAINER_WIDTH_PX,
+            flexShrink: 0,
+            display: 'inline-block',
+          }}
+        />
+        {ownerState.isCheckboxSelectionEnabled && (
+          // Same size as the checkbox rendered by the tree item, to keep the labels aligned.
+          <Skeleton variant="circular" width={24} height={24} style={{ flexShrink: 0 }} />
+        )}
+        <Skeleton width={labelWidth} />
+      </SkeletonContent>
+    </SkeletonItem>
+  );
+}
+
+/**
+ * Renders the skeleton rows without any wrapper.
+ * Used by `RichTreeViewSkeleton` for the whole-tree loading state and by
+ * `RichTreeViewItem` for the children of an item that lazily loads them.
+ */
+export function RichTreeViewSkeletonItems<TStore extends TreeViewAnyStore>(
+  props: RichTreeViewSkeletonItemsProps<TStore>,
+) {
+  const { store, classes, slots, slotProps, itemsCount, itemDepth = 0 } = props;
+
+  const itemHeight = useStore(store, itemsSelectors.itemHeight);
+  const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
+  const skeletonItemStyle = {
+    '--TreeView-itemDepth': itemDepth,
+    ...(itemHeight == null ? {} : { '--TreeView-itemHeight': `${itemHeight}px` }),
+  } as React.CSSProperties;
+
+  return (
+    <React.Fragment>
+      {Array.from({ length: itemsCount }, (_, index) => (
+        <RichTreeViewSkeletonRow
+          key={index}
+          classes={classes}
+          slots={slots}
+          slotProps={slotProps}
+          ownerState={{ index, itemsCount, itemDepth, isCheckboxSelectionEnabled }}
+          style={skeletonItemStyle}
+          labelWidth={SKELETON_LABEL_WIDTHS[index % SKELETON_LABEL_WIDTHS.length]}
+        />
+      ))}
+    </React.Fragment>
+  );
 }
 
 /**
@@ -82,29 +211,19 @@ export interface RichTreeViewSkeletonProps<
 export function RichTreeViewSkeleton<TStore extends TreeViewAnyStore, TOwnerState extends object>(
   props: RichTreeViewSkeletonProps<TStore, TOwnerState>,
 ) {
-  const {
-    store,
-    slots,
-    slotProps,
-    ownerState,
-    forwardedProps,
-    rootRef,
-    classes,
-    loadingItemsCount,
-    SkeletonItemComponent,
-    SkeletonContentComponent,
-  } = props;
+  const { store, slots, slotProps, ownerState, forwardedProps, rootRef, classes, loadingItemsCount } =
+    props;
 
   const getRootProps = useTreeViewRootProps(store, forwardedProps, rootRef);
   const skeletonItemsCount = getSkeletonItemsCount(loadingItemsCount);
-  const itemHeight = useStore(store, itemsSelectors.itemHeight);
-  const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
-  const skeletonItemStyle =
-    itemHeight == null
-      ? undefined
-      : ({ '--TreeView-itemHeight': `${itemHeight}px` } as React.CSSProperties);
 
   const Root = slots.root;
+  const Loading = slots.loading;
+  const loadingProps = useSlotProps({
+    elementType: Loading ?? 'div',
+    externalSlotProps: slotProps?.loading,
+    ownerState,
+  });
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
@@ -122,30 +241,17 @@ export function RichTreeViewSkeleton<TStore extends TreeViewAnyStore, TOwnerStat
 
   return (
     <Root {...rootProps}>
-      {Array.from({ length: skeletonItemsCount }, (_, index) => (
-        <SkeletonItemComponent
-          key={index}
-          role="treeitem"
-          aria-disabled
-          className={classes.skeletonItem}
-          style={skeletonItemStyle}
-        >
-          <SkeletonContentComponent className={classes.skeletonContent}>
-            <span
-              style={{
-                width: TREE_ITEM_ICON_CONTAINER_WIDTH_PX,
-                flexShrink: 0,
-                display: 'inline-block',
-              }}
-            />
-            {isCheckboxSelectionEnabled && (
-              // Same size as the checkbox rendered by the tree item, to keep the labels aligned.
-              <Skeleton variant="circular" width={24} height={24} style={{ flexShrink: 0 }} />
-            )}
-            <Skeleton width={SKELETON_LABEL_WIDTHS[index % SKELETON_LABEL_WIDTHS.length]} />
-          </SkeletonContentComponent>
-        </SkeletonItemComponent>
-      ))}
+      {Loading ? (
+        <Loading {...loadingProps} />
+      ) : (
+        <RichTreeViewSkeletonItems
+          store={store}
+          classes={classes}
+          slots={slots}
+          slotProps={slotProps}
+          itemsCount={skeletonItemsCount}
+        />
+      )}
     </Root>
   );
 }

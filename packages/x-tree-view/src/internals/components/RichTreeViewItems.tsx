@@ -11,6 +11,12 @@ import type { TreeViewItemId } from '../../models';
 import { itemsSelectors } from '../plugins/items';
 import { useTreeViewContext, useTreeViewStyleContext } from '../TreeViewProvider';
 import { expansionSelectors } from '../plugins/expansion';
+import { lazyLoadingSelectors } from '../plugins/lazyLoading';
+import {
+  RichTreeViewSkeletonItems,
+  DEFAULT_SKELETON_ITEMS_COUNT,
+  MAX_SKELETON_ITEMS_COUNT,
+} from './RichTreeViewSkeleton';
 import type { RichTreeViewStore } from '../RichTreeViewStore';
 import type { MinimalTreeViewState } from '../MinimalTreeViewStore';
 import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
@@ -31,6 +37,7 @@ export const RichTreeViewItem = React.memo(function RichTreeViewItem({
 }: RichTreeViewItemProps) {
   const renderItemForRichTreeView = React.useContext(RichTreeViewItemsContext);
   const { store } = useTreeViewContext<RichTreeViewStore<any, any>>();
+  const { classes, slots: styleSlots, slotProps: styleSlotProps } = useTreeViewStyleContext();
 
   const itemMeta = useStore(store, itemsSelectors.itemMeta, itemId);
   const children = useStore(
@@ -38,6 +45,13 @@ export const RichTreeViewItem = React.memo(function RichTreeViewItem({
     skipChildren ? selectorNoChildren : itemsSelectors.itemOrderedChildrenIds,
     itemId,
   );
+  const isLoadingChildren = useStore(store, lazyLoadingSelectors.isItemLoading, itemId);
+  const loadingChildrenCount = useStore(
+    store,
+    lazyLoadingSelectors.itemLoadingChildrenCount,
+    itemId,
+  );
+  const itemDepth = useStore(store, itemsSelectors.itemDepth, itemId);
   const Item = (itemSlot ?? TreeItem) as React.JSXElementConstructor<TreeItemProps>;
 
   const { ownerState, ...itemProps } = useSlotProps({
@@ -47,11 +61,38 @@ export const RichTreeViewItem = React.memo(function RichTreeViewItem({
     ownerState: { itemId, label: itemMeta?.label as string },
   });
 
-  return (
-    <Item {...itemProps}>
-      {renderItemForRichTreeView ? children?.map(renderItemForRichTreeView) : null}
-    </Item>
-  );
+  let renderedChildren: React.ReactNode = renderItemForRichTreeView
+    ? children?.map(renderItemForRichTreeView)
+    : null;
+
+  const { skeletonItem, skeletonContent } = styleSlots;
+  if (
+    isLoadingChildren &&
+    !skipChildren &&
+    (children == null || children.length === 0) &&
+    skeletonItem &&
+    skeletonContent
+  ) {
+    renderedChildren = (
+      <RichTreeViewSkeletonItems
+        store={store}
+        classes={classes}
+        slots={{ skeletonItem, skeletonContent }}
+        slotProps={{
+          skeletonItem: styleSlotProps.skeletonItem,
+          skeletonContent: styleSlotProps.skeletonContent,
+        }}
+        itemsCount={
+          loadingChildrenCount > 0
+            ? Math.min(loadingChildrenCount, MAX_SKELETON_ITEMS_COUNT)
+            : DEFAULT_SKELETON_ITEMS_COUNT
+        }
+        itemDepth={itemDepth + 1}
+      />
+    );
+  }
+
+  return <Item {...itemProps}>{renderedChildren}</Item>;
 }, fastObjectShallowCompare);
 
 export function RichTreeViewItems<TProps extends object>(props: RichTreeViewItemsProps<TProps>) {

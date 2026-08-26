@@ -74,6 +74,8 @@ const RichTreeViewSkeletonContent = styled('div', {
   // Same typography as the tree item label, so the skeleton line box has the same height.
   ...theme.typography.body1,
   padding: theme.spacing(0.5, 1),
+  // Same indentation formula as the tree item content.
+  paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth, 0))`,
   width: '100%',
   height: 'var(--TreeView-itemHeight, unset)',
   boxSizing: 'border-box',
@@ -134,7 +136,15 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 
   // Feature hooks
   const classes = useUtilityClasses(props);
-  const slots = React.useMemo(() => ({ root: RichTreeViewRoot, ...inSlots }), [inSlots]);
+  const slots = React.useMemo(
+    () => ({
+      root: RichTreeViewRoot,
+      skeletonItem: RichTreeViewSkeletonItem,
+      skeletonContent: RichTreeViewSkeletonContent,
+      ...inSlots,
+    }),
+    [inSlots],
+  );
 
   const isLoading = loading || lazyLoadingRootIsLoading;
 
@@ -153,8 +163,6 @@ const RichTreeView = React.forwardRef(function RichTreeView<
         rootRef={handleRef}
         classes={classes}
         loadingItemsCount={loadingItemsCount}
-        SkeletonItemComponent={RichTreeViewSkeletonItem}
-        SkeletonContentComponent={RichTreeViewSkeletonContent}
       />
     );
   }

@@ -150,10 +150,16 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
 
     const itemIdWithDefault = itemId ?? TREE_VIEW_ROOT_PARENT_ID;
     const loading = { ...this.store.state.lazyLoadedItems.loading };
-    if (isLoading === false) {
+    if (!isLoading) {
       delete loading[itemIdWithDefault];
     } else {
-      loading[itemIdWithDefault] = isLoading;
+      // Store the expected children count, so the loading UI can render a matching number
+      // of skeleton rows. `-1` when the count is unknown.
+      const itemModel = itemId == null ? null : this.store.state.itemModelLookup[itemId];
+      loading[itemIdWithDefault] =
+        itemModel == null
+          ? -1
+          : (this.store.parameters.dataSource.getChildrenCount(itemModel) ?? -1);
     }
 
     this.store.set('lazyLoadedItems', { ...this.store.state.lazyLoadedItems, loading });

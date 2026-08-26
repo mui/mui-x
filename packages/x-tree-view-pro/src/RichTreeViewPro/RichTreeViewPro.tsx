@@ -82,6 +82,8 @@ const RichTreeViewProSkeletonContent = styled('div', {
   // Same typography as the tree item label, so the skeleton line box has the same height.
   ...theme.typography.body1,
   padding: theme.spacing(0.5, 1),
+  // Same indentation formula as the tree item content.
+  paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth, 0))`,
   width: '100%',
   height: 'var(--TreeView-itemHeight, unset)',
   boxSizing: 'border-box',
@@ -161,7 +163,15 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 
   // Feature hooks
   const classes = useUtilityClasses(props);
-  const slots = React.useMemo(() => ({ root: RichTreeViewProRoot, ...inSlots }), [inSlots]);
+  const slots = React.useMemo(
+    () => ({
+      root: RichTreeViewProRoot,
+      skeletonItem: RichTreeViewProSkeletonItem,
+      skeletonContent: RichTreeViewProSkeletonContent,
+      ...inSlots,
+    }),
+    [inSlots],
+  );
 
   const isLoading = lazyLoadingRootIsLoading || loading;
 
@@ -181,8 +191,6 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
           rootRef={handleRef}
           classes={classes}
           loadingItemsCount={loadingItemsCount}
-          SkeletonItemComponent={RichTreeViewProSkeletonItem}
-          SkeletonContentComponent={RichTreeViewProSkeletonContent}
         />
         <Watermark packageInfo={packageInfo} />
       </React.Fragment>
