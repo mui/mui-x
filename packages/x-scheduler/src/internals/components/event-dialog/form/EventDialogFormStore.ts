@@ -62,8 +62,7 @@ export interface EventDialogFormParameters<
   onValuesChange?: (values: TValues, changedKeys: string[]) => void;
 }
 
-// Own-property checks everywhere: the field key is an arbitrary consumer string, and a
-// plain `in` or unguarded read would resolve `Object.prototype` names such as "constructor".
+// The key is an arbitrary consumer string, so guard against `Object.prototype` names.
 export const eventDialogFormSelectors = {
   value: (state: EventDialogFormState, key: string) =>
     Object.hasOwn(state.values, key) ? state.values[key] : undefined,
