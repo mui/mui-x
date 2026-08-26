@@ -13,9 +13,9 @@ export function useEventDialogFormContext(): EventDialogFormStore {
   const context = React.useContext(EventDialogFormContext);
   if (context == null) {
     throw new Error(
-      'MUI X Scheduler: useEventDialogFormContext must be used within an <EventDialogFormProvider />. ' +
-        'The component requires access to the draft form values. ' +
-        'Ensure the component is rendered inside the event dialog form.',
+      'MUI X Scheduler: useEventDialogFormContext must be used within the event dialog form. ' +
+        'The component reads the draft form values, which only exist while the dialog is open. ' +
+        'Render the component through the `eventDialogGeneralTab` slot.',
     );
   }
   return context;
