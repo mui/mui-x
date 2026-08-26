@@ -375,6 +375,68 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.queryByRole('textbox', { name: 'Description' })).to.equal(null);
     });
 
+    function renderCreation(onEventsChange: ReturnType<typeof spy>) {
+      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
+      const end = adapter.date('2025-05-26T08:15:00Z', 'default');
+      const creationOccurrence = EventBuilder.new()
+        .id('placeholder-id')
+        .title('')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .toOccurrence();
+
+      return render(
+        <EventCalendarProvider events={[]} resources={resources} onEventsChange={onEventsChange}>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'time-grid',
+                start,
+                end,
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+          <SchedulerSlotsProvider
+            slots={{ eventDialogGeneralTab: CustomSection }}
+            slotProps={undefined}
+          >
+            <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          </SchedulerSlotsProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    it('should save an edited custom field when creating an event', async () => {
+      const onEventsChange = spy();
+      const { user } = renderCreation(onEventsChange);
+
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), 'Meeting');
+      const priority = screen.getByRole('textbox', { name: 'Priority' });
+      await user.clear(priority);
+      await user.type(priority, 'high');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(1);
+      const [created] = onEventsChange.lastCall.firstArg;
+      expect(created.priority).to.equal('high');
+    });
+
+    it('should omit an untouched default when creating an event', async () => {
+      const onEventsChange = spy();
+      const { user } = renderCreation(onEventsChange);
+
+      expect(screen.getByRole('textbox', { name: 'Priority' })).to.have.value('normal');
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), 'Meeting');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(1);
+      const [created] = onEventsChange.lastCall.firstArg;
+      expect(created).not.to.have.property('priority');
+    });
+
     it('should not re-render the slot content when a creation keystroke pushes the placeholder', () => {
       const onRender = spy();
       function RenderProbe() {

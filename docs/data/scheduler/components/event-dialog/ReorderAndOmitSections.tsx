@@ -8,7 +8,7 @@ import {
 } from '@mui/x-scheduler/event-dialog';
 
 // The description is rendered first and the resource section is omitted entirely.
-// Defined at module scope: an inline component would remount on every form render.
+// Defined at module scope: an inline slot component remounts whenever the calendar's owner rerenders.
 function ReorderedGeneralTab() {
   return (
     <React.Fragment>

@@ -34,7 +34,7 @@ function PrioritySection() {
   );
 }
 
-// Defined at module scope: an inline component would remount on every form render.
+// Defined at module scope: an inline slot component remounts whenever the calendar's owner rerenders.
 function CustomGeneralTabContent() {
   return (
     <React.Fragment>
