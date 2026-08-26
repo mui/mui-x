@@ -902,6 +902,28 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         expect(onEventsChange.callCount).to.equal(0);
       });
 
+      it('should disable the Save button while the submission is pending', async () => {
+        const deferred = createDeferred();
+        function AsyncValidatedSection() {
+          useEventDialogFormField<string>('client', {
+            defaultValue: 'Acme',
+            validate: () => deferred.promise,
+          });
+          return null;
+        }
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: AsyncValidatedSection },
+          { onEventsChange: () => {} },
+        );
+
+        const saveButton = screen.getByRole('button', { name: 'Save' });
+        await user.click(saveButton);
+        expect(saveButton).to.have.attribute('disabled');
+
+        await act(async () => deferred.resolve(null));
+        expect(saveButton).not.to.have.attribute('disabled');
+      });
+
       it('should submit only once when Save is pressed twice while the validation is pending', async () => {
         const onEventsChange = spy();
         const deferred = createDeferred();
@@ -919,7 +941,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
         const saveButton = screen.getByRole('button', { name: 'Save' });
         await user.click(saveButton);
-        await user.click(saveButton);
+        // The pending submit disables the button, so a second press can only come
+        // from another submit path; the ref still guards that re-entry.
+        fireEvent.submit(saveButton.closest('form')!);
         await act(async () => deferred.resolve(null));
 
         expect(onEventsChange.callCount).to.equal(1);

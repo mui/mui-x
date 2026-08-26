@@ -238,6 +238,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     };
   }, []);
   const isSubmittingRef = React.useRef(false);
+  // The ref guards synchronous re-entry, the state drives the Save button.
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -259,6 +261,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     }
 
     isSubmittingRef.current = true;
+    setIsSubmitting(true);
     try {
       const isValid = await formStore.validateAll();
 
@@ -354,6 +357,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       onClose();
     } finally {
       isSubmittingRef.current = false;
+      setIsSubmitting(false);
     }
   };
 
@@ -419,7 +423,12 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           >
             {localeText.deleteEvent}
           </Button>
-          <Button className={classes.eventDialogSaveButton} variant="contained" type="submit">
+          <Button
+            className={classes.eventDialogSaveButton}
+            variant="contained"
+            type="submit"
+            disabled={isSubmitting}
+          >
             {localeText.saveChanges}
           </Button>
         </FormActions>
