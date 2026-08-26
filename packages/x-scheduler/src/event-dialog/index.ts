@@ -11,4 +11,7 @@ export type {
   UseEventDialogFormFieldParameters,
   UseEventDialogFormFieldReturnValue,
 } from './useEventDialogFormField';
-export type { EventDialogFormValidatorResult } from '../internals/components/event-dialog/form/EventDialogFormStore';
+export type {
+  EventDialogFormErrorMessage,
+  EventDialogFormValidatorResult,
+} from '../internals/components/event-dialog/form/EventDialogFormStore';

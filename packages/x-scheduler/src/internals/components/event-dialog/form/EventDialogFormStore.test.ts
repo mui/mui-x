@@ -1,4 +1,5 @@
 import { spy } from 'sinon';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { EventBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { EventDialogFormParameters } from './EventDialogFormStore';
@@ -360,17 +361,29 @@ describe('EventDialogFormStore', () => {
       expect(store.state.errors).to.deep.equal({});
     });
 
-    it('should treat a boolean result as valid, so `condition && message` validators work', async () => {
+    it('should treat a boolean result as valid and warn, so a JS `condition && message` validator cannot block the save', async () => {
+      clearWarningsCache();
       const store = createFormStore({ title: 'Meeting' });
-      store.registerValidator('title', (value) => (value as string).length === 0 && 'Required');
-      expect(await store.validateAll()).to.equal(true);
+      store.registerValidator(
+        'title',
+        // @ts-expect-error booleans are excluded from the validator result type; the runtime still guards JS consumers.
+        (value) => (value as string).length === 0 && 'Required',
+      );
+      await expect(async () => {
+        expect(await store.validateAll()).to.equal(true);
+      }).toWarnDev(['MUI X Scheduler: A form field validator returned a boolean.']);
       expect(store.state.errors).to.deep.equal({});
     });
 
     it('should drop booleans from an error array', async () => {
+      clearWarningsCache();
       const store = createFormStore({ title: '' });
+      // An array with booleans still type-checks (arrays are `Iterable<ReactNode>`),
+      // so the runtime filter is the only guard for this shape.
       store.registerValidator('title', () => [false, 'Required', true]);
-      expect(await store.validateAll()).to.equal(false);
+      await expect(async () => {
+        expect(await store.validateAll()).to.equal(false);
+      }).toWarnDev(['MUI X Scheduler: A form field validator returned a boolean.']);
       expect(store.state.errors).to.deep.equal({ title: ['Required'] });
     });
   });

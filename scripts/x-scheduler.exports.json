@@ -17,6 +17,7 @@
   { "name": "EventCalendarProps", "kind": "Interface" },
   { "name": "EventDialogDateTimeSection", "kind": "Function" },
   { "name": "EventDialogDescriptionSection", "kind": "Function" },
+  { "name": "EventDialogFormErrorMessage", "kind": "TypeAlias" },
   { "name": "EventDialogFormFieldKey", "kind": "TypeAlias" },
   { "name": "EventDialogFormValidatorResult", "kind": "TypeAlias" },
   { "name": "EventDialogGeneralTabContent", "kind": "Function" },

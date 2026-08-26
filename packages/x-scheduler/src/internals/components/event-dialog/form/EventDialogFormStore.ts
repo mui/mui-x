@@ -1,5 +1,6 @@
 import type * as React from 'react';
 import { Store } from '@base-ui/utils/store';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import type { EventDialogFormValues } from '../utils';
@@ -18,12 +19,19 @@ export interface EventDialogFormState<
 }
 
 /**
- * Error message(s) for a field, or `null` when the value is valid.
- * Empty strings, booleans, and empty arrays also count as valid, so
- * `condition && 'message'` validators work as expected. An array is
- * a list of messages, not a single node.
+ * Message(s) that can be rendered for a failing field: any React node except
+ * booleans, which are excluded so a `condition && 'message'` shorthand is a
+ * type error instead of a silently stored `false`.
  */
-export type EventDialogFormValidatorResult = React.ReactNode | React.ReactNode[] | null;
+export type EventDialogFormErrorMessage = Exclude<React.ReactNode, boolean>;
+
+/**
+ * Error message(s) for a field, or `null` when the value is valid
+ * (an empty string or array also counts as valid). An array is a list
+ * of messages, not a single node.
+ */
+export type EventDialogFormValidatorResult =
+  EventDialogFormErrorMessage | EventDialogFormErrorMessage[] | null;
 
 export type EventDialogFormValidator<
   TValues extends Record<string, unknown> = EventDialogFormValues,
@@ -32,9 +40,25 @@ export type EventDialogFormValidator<
   allValues: TValues,
 ) => EventDialogFormValidatorResult | Promise<EventDialogFormValidatorResult>;
 
+// Wider than `EventDialogFormValidatorResult` on purpose: this is the runtime net
+// for what JS consumers (and awaited results) can actually pass.
 function normalizeValidatorResult(
-  result: EventDialogFormValidatorResult,
+  result: React.ReactNode | React.ReactNode[] | null,
 ): React.ReactNode[] | null {
+  // Booleans are excluded from the type, but a JS consumer can still return them
+  // (e.g. the `condition && 'message'` shorthand); ignore them instead of storing
+  // `false` as an error message.
+  if (process.env.NODE_ENV !== 'production') {
+    const hasBoolean = Array.isArray(result)
+      ? result.some((message) => typeof message === 'boolean')
+      : typeof result === 'boolean';
+    if (hasBoolean) {
+      warnOnce([
+        'MUI X Scheduler: A form field validator returned a boolean.',
+        'Booleans are ignored: return the error message(s) when the value is invalid, or `null` when it is valid.',
+      ]);
+    }
+  }
   if (result == null || result === '' || typeof result === 'boolean') {
     return null;
   }
