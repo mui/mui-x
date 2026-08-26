@@ -79,6 +79,8 @@ const RichTreeViewProSkeletonContent = styled('div', {
   name: 'MuiRichTreeViewPro',
   slot: 'SkeletonContent',
 })(({ theme }) => ({
+  // Same typography as the tree item label, so the skeleton line box has the same height.
+  ...theme.typography.body1,
   padding: theme.spacing(0.5, 1),
   width: '100%',
   height: 'var(--TreeView-itemHeight, unset)',
