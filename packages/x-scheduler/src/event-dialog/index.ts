@@ -15,3 +15,7 @@ export type {
   EventDialogFormErrorMessage,
   EventDialogFormValidatorResult,
 } from '../internals/components/event-dialog/form/EventDialogFormStore';
+export type {
+  EventDialogBuiltInFormValues,
+  EventDialogFormValues,
+} from '../internals/components/event-dialog/utils';

@@ -100,6 +100,9 @@ Return a **fragment** from the slot: the tab content is a flex column with a gap
 Keep **all draft state** in the form through this hook, never in component `useState`: the form store lives above the slot and survives a slot remount — component state does not.
 
 A value written to a field is submitted even if the section that wrote it is later unmounted (only its validator is removed with it).
+If the value must not outlive a conditionally rendered section, reset it from the section's effect cleanup with `setValue(undefined)`.
+
+When binding a built-in key, match its value shape (`EventDialogBuiltInFormValues`): the dates are `yyyy-MM-dd` strings, the times `HH:mm` strings, `resourceIds` is always an array, and `color: null` inherits from the resource.
 
 ## Reading the edited occurrence
 

@@ -17,12 +17,30 @@ import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 export interface EventDialogBuiltInFormValues {
   title: string;
   description: string;
+  /**
+   * Start date in the `yyyy-MM-dd` format.
+   */
   startDate: string;
+  /**
+   * Start time in the `HH:mm` format.
+   */
   startTime: string;
+  /**
+   * End date in the `yyyy-MM-dd` format.
+   */
   endDate: string;
+  /**
+   * End time in the `HH:mm` format.
+   */
   endTime: string;
+  /**
+   * Always an array, also when the resource picker is single-select.
+   */
   resourceIds: SchedulerResourceId[];
   allDay: boolean;
+  /**
+   * `null` inherits the color from the resource or the calendar.
+   */
   color: SchedulerEventColor | null;
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
   rruleDraft: SchedulerProcessedEventRecurrenceRule;
