@@ -95,8 +95,9 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
     store.set('cartesianAxis', {
       axesGap,
-      x: defaultizeXAxis(xAxis, dataset, axesGap, defaultTickLabelStyle),
-      y: defaultizeYAxis(yAxis, dataset, axesGap, defaultTickLabelStyle),
+      x: defaultizeXAxis(xAxis, dataset, axesGap),
+      y: defaultizeYAxis(yAxis, dataset, axesGap),
+      defaultTickLabelStyle,
     });
   }, [xAxis, yAxis, dataset, axesGap, defaultTickLabelStyle, store]);
 
@@ -277,18 +278,8 @@ useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
     axesGap: params.axesGap ?? 0,
     colors: params.colors ?? rainbowSurgePalette,
     theme: params.theme ?? 'light',
-    defaultizedXAxis: defaultizeXAxis(
-      params.xAxis,
-      params.dataset,
-      params.axesGap ?? 0,
-      params.defaultTickLabelStyle,
-    ),
-    defaultizedYAxis: defaultizeYAxis(
-      params.yAxis,
-      params.dataset,
-      params.axesGap ?? 0,
-      params.defaultTickLabelStyle,
-    ),
+    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset, params.axesGap ?? 0),
+    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset, params.axesGap ?? 0),
   };
 };
 
@@ -297,6 +288,7 @@ useChartCartesianAxis.getInitialState = (params) => ({
     axesGap: params.axesGap,
     x: params.defaultizedXAxis,
     y: params.defaultizedYAxis,
+    defaultTickLabelStyle: params.defaultTickLabelStyle,
   },
   ...(params.highlightedAxis === undefined
     ? {}
