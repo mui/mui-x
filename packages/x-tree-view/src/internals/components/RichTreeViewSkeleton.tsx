@@ -7,6 +7,7 @@ import { useStore } from '@mui/x-internals/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
 import { itemsSelectors } from '../plugins/items';
+import { selectionSelectors } from '../plugins/selection';
 import { TREE_ITEM_ICON_CONTAINER_WIDTH_PX } from '../constants';
 import type { TreeViewAnyStore } from '../models';
 import type { TreeViewStoreInContext } from '../TreeViewProvider';
@@ -97,6 +98,7 @@ export function RichTreeViewSkeleton<TStore extends TreeViewAnyStore, TOwnerStat
   const getRootProps = useTreeViewRootProps(store, forwardedProps, rootRef);
   const skeletonItemsCount = getSkeletonItemsCount(loadingItemsCount);
   const itemHeight = useStore(store, itemsSelectors.itemHeight);
+  const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
   const skeletonItemStyle =
     itemHeight == null
       ? undefined
@@ -136,6 +138,10 @@ export function RichTreeViewSkeleton<TStore extends TreeViewAnyStore, TOwnerStat
                 display: 'inline-block',
               }}
             />
+            {isCheckboxSelectionEnabled && (
+              // Same size as the checkbox rendered by the tree item, to keep the labels aligned.
+              <Skeleton variant="circular" width={24} height={24} style={{ flexShrink: 0 }} />
+            )}
             <Skeleton width={SKELETON_LABEL_WIDTHS[index % SKELETON_LABEL_WIDTHS.length]} />
           </SkeletonContentComponent>
         </SkeletonItemComponent>

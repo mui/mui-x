@@ -148,6 +148,24 @@ describe('<RichTreeView />', () => {
       expect(tree).not.to.have.attribute('aria-label');
     });
 
+    it('should render a checkbox placeholder in each skeleton item when checkboxSelection is enabled', () => {
+      render(<RichTreeView items={[]} loading checkboxSelection />);
+
+      const skeletonItems = screen.getAllByRole('treeitem');
+      skeletonItems.forEach((item) => {
+        expect(item.querySelector('.MuiSkeleton-circular')).not.to.equal(null);
+      });
+    });
+
+    it('should not render a checkbox placeholder when checkboxSelection is disabled', () => {
+      render(<RichTreeView items={[]} loading />);
+
+      const skeletonItems = screen.getAllByRole('treeitem');
+      skeletonItems.forEach((item) => {
+        expect(item.querySelector('.MuiSkeleton-circular')).to.equal(null);
+      });
+    });
+
     it('should not forward `loading` and `loadingItemsCount` to the DOM', () => {
       render(<RichTreeView items={ITEMS} loading={false} loadingItemsCount={3} />);
 
