@@ -62,6 +62,11 @@ export interface UseEventDialogFormFieldReturnValue<T, TWrite = T> {
 
 const NO_ERRORS: EventDialogFormErrorMessage[] = [];
 
+// Rejects built-in key literals so a mistyped parameter cannot silently fall
+// through from the built-in overload to the custom-key ones.
+type CustomFieldKey<K extends string> = K &
+  (K extends keyof EventDialogBuiltInFormValues ? never : unknown);
+
 /**
  * Binds a component to one field of the event dialog form.
  * Writing the field through `setValue` is all it takes for the value to be saved on submit.
@@ -70,17 +75,14 @@ export function useEventDialogFormField<K extends keyof EventDialogBuiltInFormVa
   key: K,
   parameters?: UseEventDialogFormFieldParameters<EventDialogBuiltInFormValues[K]>,
 ): UseEventDialogFormFieldReturnValue<EventDialogBuiltInFormValues[K]>;
-// The custom-key overloads reject built-in key literals: without the guard, a call
-// with a mistyped parameter (e.g. a wrong `defaultValue` on a built-in key) would
-// silently fall through to them instead of erroring on the built-in overload.
 // A custom field with a `defaultValue` always has a value.
 export function useEventDialogFormField<T, K extends string = string>(
-  key: K & (K extends keyof EventDialogBuiltInFormValues ? never : unknown),
+  key: CustomFieldKey<K>,
   parameters: UseEventDialogFormFieldParameters<T> & { defaultValue: T },
 ): UseEventDialogFormFieldReturnValue<T, T | undefined>;
 // A custom field without a `defaultValue` is `undefined` when the event does not have it.
 export function useEventDialogFormField<T = unknown, K extends string = string>(
-  key: K & (K extends keyof EventDialogBuiltInFormValues ? never : unknown),
+  key: CustomFieldKey<K>,
   parameters?: UseEventDialogFormFieldParameters<T>,
 ): UseEventDialogFormFieldReturnValue<T | undefined>;
 export function useEventDialogFormField(

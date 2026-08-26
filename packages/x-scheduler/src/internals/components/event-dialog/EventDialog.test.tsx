@@ -861,58 +861,56 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       };
     }
 
-    it('should block the submit of an invalid date range when the slot omits the date and time section', async () => {
-      clearWarningsCache();
-      const onEventsChange = spy();
+    const invertedRangeScenarios = [
+      {
+        key: 'endDate' as const,
+        label: 'End date',
+        typed: '2025-05-20',
+        alert: 'End date cannot be before start date.',
+      },
+      {
+        key: 'endTime' as const,
+        label: 'End time',
+        typed: '07:00',
+        alert: 'End time must be after start time.',
+      },
+    ];
 
-      await expect(async () => {
-        const { user } = renderWithSlot(
-          { eventDialogGeneralTab: createRangeField('endDate', 'End date') },
-          { onEventsChange },
-        );
+    invertedRangeScenarios.forEach(({ key, label, typed, alert }) => {
+      it(`should block the submit of an inverted ${key} when the slot omits the date and time section`, async () => {
+        clearWarningsCache();
+        const onEventsChange = spy();
 
-        const endDateInput = screen.getByRole('textbox', { name: 'End date' });
-        await user.clear(endDateInput);
-        await user.type(endDateInput, '2025-05-20');
-        await user.click(screen.getByRole('button', { name: 'Save' }));
-      }).toWarnDev([
-        'MUI X Scheduler: The date range is invalid but no field of the event dialog validates the "endDate" field.',
-      ]);
+        await expect(async () => {
+          const { user } = renderWithSlot(
+            { eventDialogGeneralTab: createRangeField(key, label) },
+            { onEventsChange },
+          );
 
-      expect(onEventsChange.callCount).to.equal(0);
-      expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
+          const input = screen.getByRole('textbox', { name: label });
+          await user.clear(input);
+          await user.type(input, typed);
+          await user.click(screen.getByRole('button', { name: 'Save' }));
+        }).toWarnDev([
+          `MUI X Scheduler: The date range is invalid but no field of the event dialog validates the "${key}" field.`,
+        ]);
+
+        expect(onEventsChange.callCount).to.equal(0);
+        expect(screen.getByRole('alert')).to.have.text(alert);
+      });
     });
 
-    it('should block the submit of an invalid end time when the slot omits the date and time section', async () => {
-      clearWarningsCache();
-      const onEventsChange = spy();
-
-      await expect(async () => {
-        const { user } = renderWithSlot(
-          { eventDialogGeneralTab: createRangeField('endTime', 'End time') },
-          { onEventsChange },
-        );
-
-        const endTimeInput = screen.getByRole('textbox', { name: 'End time' });
-        await user.clear(endTimeInput);
-        await user.type(endTimeInput, '07:00');
-        await user.click(screen.getByRole('button', { name: 'Save' }));
-      }).toWarnDev([
-        'MUI X Scheduler: The date range is invalid but no field of the event dialog validates the "endTime" field.',
-      ]);
-
-      expect(onEventsChange.callCount).to.equal(0);
-      expect(screen.getByRole('alert')).to.have.text('End time must be after start time.');
-    });
-
-    it('should clear the range error when the range is fixed through the start date', async () => {
-      const { user } = renderWithSlot({}, { onEventsChange: () => {} });
-
+    async function submitInvertedRange(user: ReturnType<typeof render>['user']) {
       const endDateInput = screen.getByLabelText(/end date/i);
       await user.clear(endDateInput);
       await user.type(endDateInput, '2025-05-20');
       await user.click(screen.getByRole('button', { name: 'Save' }));
       expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
+    }
+
+    it('should clear the range error when the range is fixed through the start date', async () => {
+      const { user } = renderWithSlot({}, { onEventsChange: () => {} });
+      await submitInvertedRange(user);
 
       // Fixing the range through the other field must also clear the error.
       const startDateInput = screen.getByLabelText(/start date/i);
@@ -923,12 +921,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should clear the range error when the all-day switch is toggled', async () => {
       const { user } = renderWithSlot({}, { onEventsChange: () => {} });
-
-      const endDateInput = screen.getByLabelText(/end date/i);
-      await user.clear(endDateInput);
-      await user.type(endDateInput, '2025-05-20');
-      await user.click(screen.getByRole('button', { name: 'Save' }));
-      expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
+      await submitInvertedRange(user);
 
       await user.click(screen.getByRole('switch', { name: /all day/i }));
       expect(screen.queryByRole('alert')).to.equal(null);
@@ -948,7 +941,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         await user.type(endDateInput, 'tomorrow');
         await user.click(screen.getByRole('button', { name: 'Save' }));
       }).toWarnDev([
-        'MUI X Scheduler: The "endDate" value cannot be parsed into a date but no field of the event dialog validates it.',
+        'MUI X Scheduler: The value cannot be parsed into a date but no field of the event dialog validates the "endDate" field.',
       ]);
 
       expect(onEventsChange.callCount).to.equal(0);
@@ -967,7 +960,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         await user.clear(screen.getByRole('textbox', { name: 'End time' }));
         await user.click(screen.getByRole('button', { name: 'Save' }));
       }).toWarnDev([
-        'MUI X Scheduler: The "endTime" value cannot be parsed into a date but no field of the event dialog validates it.',
+        'MUI X Scheduler: The value cannot be parsed into a date but no field of the event dialog validates the "endTime" field.',
       ]);
 
       expect(onEventsChange.callCount).to.equal(0);

@@ -45,30 +45,20 @@ export type EventDialogFormValidator<
 function normalizeValidatorResult(
   result: React.ReactNode | React.ReactNode[] | null,
 ): EventDialogFormErrorMessage[] | null {
-  // Booleans are excluded from the type, but a JS consumer can still return them
-  // (e.g. the `condition && 'message'` shorthand); ignore them instead of storing
-  // `false` as an error message.
+  const list = Array.isArray(result) ? result : [result];
+  // Booleans are excluded from the type but reachable from JS (`condition && 'message'`).
   if (process.env.NODE_ENV !== 'production') {
-    const hasBoolean = Array.isArray(result)
-      ? result.some((message) => typeof message === 'boolean')
-      : typeof result === 'boolean';
-    if (hasBoolean) {
+    if (list.some((message) => typeof message === 'boolean')) {
       warnOnce([
         'MUI X Scheduler: A form field validator returned a boolean.',
         'Booleans are ignored: return the error message(s) when the value is invalid, or `null` when it is valid.',
       ]);
     }
   }
-  if (result == null || result === '' || typeof result === 'boolean') {
-    return null;
-  }
-  if (Array.isArray(result)) {
-    const messages = result.filter(
-      (message) => message != null && message !== '' && typeof message !== 'boolean',
-    ) as EventDialogFormErrorMessage[];
-    return messages.length > 0 ? messages : null;
-  }
-  return [result as EventDialogFormErrorMessage];
+  const messages = list.filter(
+    (message) => message != null && message !== '' && typeof message !== 'boolean',
+  ) as EventDialogFormErrorMessage[];
+  return messages.length > 0 ? messages : null;
 }
 
 export interface EventDialogFormParameters<

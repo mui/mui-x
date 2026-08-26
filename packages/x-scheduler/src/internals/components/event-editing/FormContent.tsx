@@ -16,6 +16,7 @@ import type {
   RecurringEventFrequency,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
+  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -146,14 +147,13 @@ export function FormContent(props: FormContentProps) {
     // The occurrence only carries the built-in event properties — custom fields
     // come from the raw model. When creating an event there is no model yet.
     const model = schedulerEventSelectors.modelLookup(store.state).get(occurrence.id);
-    const customProperties = model ? getCustomEventProperties(model) : {};
-    // A model key holding an explicit `undefined` (e.g. from a spread) would otherwise
+    // Keys holding an explicit `undefined` (e.g. from a spread) would otherwise
     // count as seeded and shadow the field's `defaultValue`.
-    for (const [key, value] of Object.entries(customProperties)) {
-      if (value === undefined) {
-        delete (customProperties as Record<string, unknown>)[key];
-      }
-    }
+    const customProperties = Object.fromEntries(
+      Object.entries(model ? getCustomEventProperties(model) : {}).filter(
+        ([, value]) => value !== undefined,
+      ),
+    );
 
     if (process.env.NODE_ENV !== 'production') {
       for (const key of Object.keys(customProperties)) {
@@ -246,6 +246,55 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   // The ref guards synchronous re-entry, the state drives the Save button.
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+  // Blocks a submit that stores an error on a field no mounted section validates,
+  // warning in dev — a custom General tab can omit any built-in section.
+  const warnUnvalidatedField = (field: string, problem: string) => {
+    if (process.env.NODE_ENV !== 'production' && !formStore.hasValidator(field)) {
+      warnOnce([
+        `MUI X Scheduler: ${problem} but no field of the event dialog validates the "${field}" field.`,
+        'Saving is still blocked, but the end user may have no visible field to fix it.',
+        'Render the missing section in the General tab, or register a validator for the field.',
+      ]);
+    }
+  };
+
+  // Submit-level checks that hold regardless of which sections are mounted.
+  const runSubmitChecks = (
+    values: EventDialogFormValues,
+    start: TemporalSupportedObject,
+    end: TemporalSupportedObject,
+  ): boolean => {
+    const isMissingRequiredResource = shouldEventRequireResource && values.resourceIds.length === 0;
+    if (isMissingRequiredResource) {
+      formStore.setError('resourceIds', localeText.requiredResourceError);
+    }
+
+    // Only custom fields can produce unparseable or empty date values.
+    const invalidRangeField = findInvalidRangeField(adapter, values, displayTimezone);
+    if (invalidRangeField) {
+      warnUnvalidatedField(invalidRangeField, 'The value cannot be parsed into a date');
+      if (!Object.hasOwn(formStore.state.errors, invalidRangeField)) {
+        formStore.setError(
+          invalidRangeField,
+          invalidRangeField === 'startDate' || invalidRangeField === 'endDate'
+            ? localeText.invalidDateError
+            : localeText.invalidTimeError,
+        );
+      }
+    }
+
+    const rangeError = validateRange(adapter, start, end, values.allDay);
+    if (rangeError) {
+      warnUnvalidatedField(rangeError.field, 'The date range is invalid');
+      // A validator on the same field may have stored a more specific message.
+      if (!Object.hasOwn(formStore.state.errors, rangeError.field)) {
+        formStore.setError(rangeError.field, getRangeErrorMessage(rangeError.field, localeText));
+      }
+    }
+
+    return !isMissingRequiredResource && !invalidRangeField && !rangeError;
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -275,58 +324,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       }
 
       const values = formStore.state.values;
-
-      // Checked here so a custom General tab without the resource section cannot bypass the requirement.
-      const isMissingRequiredResource =
-        shouldEventRequireResource && values.resourceIds.length === 0;
-      if (isMissingRequiredResource) {
-        formStore.setError('resourceIds', localeText.requiredResourceError);
-      }
-
-      // Only custom fields can produce unparseable or empty date values.
-      const invalidRangeField = findInvalidRangeField(adapter, values, displayTimezone);
-      if (invalidRangeField) {
-        if (process.env.NODE_ENV !== 'production') {
-          if (!formStore.hasValidator(invalidRangeField)) {
-            warnOnce([
-              `MUI X Scheduler: The "${invalidRangeField}" value cannot be parsed into a date but no field of the event dialog validates it.`,
-              'Saving is still blocked, but the end user may have no visible field to fix it.',
-              'Render the date and time section in the General tab, or register a validator for the field.',
-            ]);
-          }
-        }
-        if (!Object.hasOwn(formStore.state.errors, invalidRangeField)) {
-          formStore.setError(
-            invalidRangeField,
-            invalidRangeField === 'startDate' || invalidRangeField === 'endDate'
-              ? localeText.invalidDateError
-              : localeText.invalidTimeError,
-          );
-        }
-      }
-
       const { start, end } = computeRange(adapter, values, displayTimezone);
 
-      // Checked here so the range stays valid even when the date/time section
-      // (which owns the range validators) is not rendered by a custom General tab.
-      const rangeError = validateRange(adapter, start, end, values.allDay);
-      if (rangeError) {
-        if (process.env.NODE_ENV !== 'production') {
-          if (!formStore.hasValidator(rangeError.field)) {
-            warnOnce([
-              `MUI X Scheduler: The date range is invalid but no field of the event dialog validates the "${rangeError.field}" field.`,
-              'Saving with an invalid range is still blocked, but the end user has no visible field to fix it.',
-              'Render the date and time section in the General tab, or register a validator for the field.',
-            ]);
-          }
-        }
-        // A validator on the same field may have stored a more specific message.
-        if (!Object.hasOwn(formStore.state.errors, rangeError.field)) {
-          formStore.setError(rangeError.field, getRangeErrorMessage(rangeError.field, localeText));
-        }
-      }
-
-      if (!isValid || isMissingRequiredResource || invalidRangeField || rangeError) {
+      if (!runSubmitChecks(values, start, end) || !isValid) {
         return;
       }
 

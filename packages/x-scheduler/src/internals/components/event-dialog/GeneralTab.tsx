@@ -28,13 +28,9 @@ export function GeneralTab(props: GeneralTabProps) {
 
   return (
     <EventDialogTabPanel
-      {...(hasTabs
-        ? {
-            role: 'tabpanel',
-            id: `${schedulerId}-general-tabpanel`,
-            'aria-labelledby': `${schedulerId}-general-tab`,
-          }
-        : {})}
+      role={hasTabs ? 'tabpanel' : undefined}
+      id={hasTabs ? `${schedulerId}-general-tabpanel` : undefined}
+      aria-labelledby={hasTabs ? `${schedulerId}-general-tab` : undefined}
       className={classes.eventDialogTabPanel}
       hidden={value !== 'general'}
     >
