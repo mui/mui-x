@@ -89,13 +89,25 @@ export interface EventDialogFormParameters<
   onValuesChange?: (values: TValues, changedKeys: string[]) => void;
 }
 
-// The key is an arbitrary consumer string, so guard against `Object.prototype` names.
+// The key is an arbitrary consumer string, so reads and writes must stay on own
+// properties: a plain access on a key like `__proto__` would hit the prototype accessor.
+function getOwn<T>(record: Record<string, T>, key: string): T | undefined {
+  return Object.hasOwn(record, key) ? record[key] : undefined;
+}
+
+function setOwn<T>(record: Record<string, T>, key: string, value: T) {
+  Object.defineProperty(record, key, {
+    value,
+    writable: true,
+    enumerable: true,
+    configurable: true,
+  });
+}
+
 export const eventDialogFormSelectors = {
-  value: (state: EventDialogFormState, key: string) =>
-    Object.hasOwn(state.values, key) ? state.values[key] : undefined,
+  value: (state: EventDialogFormState, key: string) => getOwn(state.values, key),
   hasValue: (state: EventDialogFormState, key: string) => Object.hasOwn(state.values, key),
-  error: (state: EventDialogFormState, key: string) =>
-    Object.hasOwn(state.errors, key) ? state.errors[key] : undefined,
+  error: (state: EventDialogFormState, key: string) => getOwn(state.errors, key),
 };
 
 /**
@@ -245,7 +257,7 @@ export class EventDialogFormStore<
     if (Object.hasOwn(this.state.values, key)) {
       return;
     }
-    (this.initialValues as Record<string, unknown>)[key] = value;
+    setOwn(this.initialValues as Record<string, unknown>, key, value);
     this.set('values', { ...this.state.values, [key]: value });
   };
 
@@ -266,14 +278,14 @@ export class EventDialogFormStore<
       // eslint-disable-next-line no-await-in-loop
       await Promise.all(
         Array.from(this.validators, async ([key, validators]) => {
-          const fieldValue = Object.hasOwn(values, key) ? values[key] : undefined;
+          const fieldValue = getOwn(values, key);
           const results = await Promise.all(
             Array.from(validators, (validator) => validator(fieldValue, values)),
           );
           for (const result of results) {
             const messages = normalizeValidatorResult(result);
             if (messages !== null) {
-              errors[key] = messages;
+              setOwn(errors, key, messages);
               break;
             }
           }
@@ -293,9 +305,8 @@ export class EventDialogFormStore<
     const { values } = this.state;
     const dirty: Record<string, unknown> = {};
     for (const key of Object.keys(values)) {
-      const initial = Object.hasOwn(this.initialValues, key) ? this.initialValues[key] : undefined;
-      if (!excludeKeys?.has(key) && !Object.is(values[key], initial)) {
-        dirty[key] = values[key];
+      if (!excludeKeys?.has(key) && !Object.is(values[key], getOwn(this.initialValues, key))) {
+        setOwn(dirty, key, values[key]);
       }
     }
     return dirty;

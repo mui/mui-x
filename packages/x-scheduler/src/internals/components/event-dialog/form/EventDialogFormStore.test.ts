@@ -3,7 +3,7 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import { EventBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { EventDialogFormParameters } from './EventDialogFormStore';
-import { EventDialogFormStore } from './EventDialogFormStore';
+import { EventDialogFormStore, eventDialogFormSelectors } from './EventDialogFormStore';
 
 const occurrence = EventBuilder.new().toOccurrence();
 
@@ -141,6 +141,20 @@ describe('EventDialogFormStore', () => {
       expect(store.state.values).to.deep.equal({ notes: 'from-model' });
     });
 
+    it('should seed and edit a field named __proto__ as a plain own key', () => {
+      const store = createFormStore({ title: '' });
+      store.seedDefault('__proto__', 'seeded');
+      expect(eventDialogFormSelectors.value(store.state, '__proto__')).to.equal('seeded');
+      expect(Object.keys(store.getDirtyValues())).to.deep.equal([]);
+
+      store.setValue('__proto__', 'edited');
+      const dirty = store.getDirtyValues();
+      expect(Object.hasOwn(dirty, '__proto__')).to.equal(true);
+      expect(eventDialogFormSelectors.value(store.state, '__proto__')).to.equal('edited');
+      // The store's own prototype must stay untouched.
+      expect(Object.getPrototypeOf(store.state.values)).to.equal(Object.prototype);
+    });
+
     it('should seed a default for a key named after an Object.prototype member', () => {
       const store = createFormStore({ title: '' });
       store.seedDefault('constructor', 'seeded');
@@ -269,6 +283,14 @@ describe('EventDialogFormStore', () => {
       store.registerValidator('title', () => 'Second');
       await store.validateAll();
       expect(store.state.errors).to.deep.equal({ title: ['First'] });
+    });
+
+    it('should keep a failing validator error for a field named __proto__', async () => {
+      const store = createFormStore({ title: '' });
+      store.registerValidator('__proto__', () => 'Required');
+      expect(await store.validateAll()).to.equal(false);
+      expect(eventDialogFormSelectors.error(store.state, '__proto__')).to.deep.equal(['Required']);
+      expect(Object.getPrototypeOf(store.state.errors)).to.equal(Object.prototype);
     });
 
     it('should pass undefined to a validator on an unseeded Object.prototype-named key', async () => {
