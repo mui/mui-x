@@ -6,6 +6,8 @@ import type {
   DataGridPremiumProps,
   GridHistoryEventHandler,
   GridEvents,
+  GridDataSource,
+  GridUpdateRowParams,
 } from '@mui/x-data-grid-premium';
 import { createRenderer, waitFor, act, fireEvent, screen } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
@@ -44,6 +46,18 @@ describe('<DataGridPremium /> - History', () => {
         />
       </div>
     );
+  }
+
+  function paste(cell: HTMLElement, pasteText: string) {
+    const pasteEvent = new Event('paste');
+
+    // @ts-ignore
+    pasteEvent.clipboardData = {
+      getData: () => pasteText,
+    };
+
+    fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
+    act(() => document.activeElement!.dispatchEvent(pasteEvent));
   }
 
   describe('API', () => {
@@ -753,18 +767,6 @@ describe('<DataGridPremium /> - History', () => {
 
   // These tests are flaky in JSDOM
   describe.skipIf(isJSDOM)('Clipboard paste history', () => {
-    function paste(cell: HTMLElement, pasteText: string) {
-      const pasteEvent = new Event('paste');
-
-      // @ts-ignore
-      pasteEvent.clipboardData = {
-        getData: () => pasteText,
-      };
-
-      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
-      act(() => document.activeElement!.dispatchEvent(pasteEvent));
-    }
-
     it('should undo clipboard paste and restore original values', async () => {
       const { user } = render(<Test />);
 
@@ -879,6 +881,203 @@ describe('<DataGridPremium /> - History', () => {
       });
 
       expect(apiRef.current!.history.canUndo()).to.equal(false);
+    });
+  });
+
+  describe('Restoring rows that a merge cannot rebuild', () => {
+    class Commodity {
+      id: number;
+
+      commodity: string;
+
+      #revision: number;
+
+      constructor(id: number, commodity: string, revision = 0) {
+        this.id = id;
+        this.commodity = commodity;
+        this.#revision = revision;
+      }
+
+      get revision() {
+        return this.#revision;
+      }
+
+      withCommodity(commodity: string) {
+        return new Commodity(this.id, commodity, this.#revision + 1);
+      }
+    }
+
+    function ReplaceTest(props: Partial<DataGridPremiumProps>) {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium
+            rows={[new Commodity(0, 'Nickel'), new Commodity(1, 'Cobalt')]}
+            columns={[{ field: 'commodity', editable: true }]}
+            apiRef={apiRef}
+            processRowUpdate={(newRow, oldRow) => ({
+              _action: 'replace',
+              row: (oldRow as Commodity).withCommodity(newRow.commodity),
+            })}
+            disableVirtualization
+            cellSelection
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    // Editing through the API would not publish `cellEditStop`, which is what the history
+    // feature listens to.
+    async function editFirstCommodityCell(user: MuiRenderResult['user'], value: string) {
+      await user.dblClick(getCell(0, 0));
+      await user.keyboard(`{Control>}a{/Control}${value}`);
+      await user.click(getCell(1, 0));
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).commodity).to.equal(value);
+      });
+    }
+
+    it('should restore the stored rows rather than merged copies on paste', async () => {
+      const { user } = render(<ReplaceTest />);
+
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      paste(cell, 'Silver');
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).commodity).to.equal('Silver');
+      });
+      // `processRowUpdate()` replaced the row, so the paste kept the instance.
+      expect(apiRef.current!.getRow(0).revision).to.equal(1);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      // Merging the snapshot back in would build a copy without the `#revision` state,
+      // and reading it would throw.
+      expect(apiRef.current!.getRow(0).commodity).to.equal('Nickel');
+      expect(apiRef.current!.getRow(0).revision).to.equal(0);
+
+      await act(async () => {
+        await apiRef.current!.history.redo();
+      });
+
+      expect(apiRef.current!.getRow(0).commodity).to.equal('Silver');
+      expect(apiRef.current!.getRow(0).revision).to.equal(1);
+    });
+
+    it('should restore the stored rows rather than merged copies on cell edit', async () => {
+      const { user } = render(<ReplaceTest />);
+
+      await editFirstCommodityCell(user, 'Silver');
+      expect(apiRef.current!.getRow(0).revision).to.equal(1);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      expect(apiRef.current!.getRow(0).commodity).to.equal('Nickel');
+      expect(apiRef.current!.getRow(0).revision).to.equal(0);
+
+      // `processRowUpdate()` resolves after `cellEditStop`, so the row it stored is only
+      // available to the redo because the undo captured it on the way past.
+      await act(async () => {
+        await apiRef.current!.history.redo();
+      });
+
+      expect(apiRef.current!.getRow(0).commodity).to.equal('Silver');
+      expect(apiRef.current!.getRow(0).revision).to.equal(1);
+    });
+
+    it('should restore the stored rows rather than merged copies on row edit', async () => {
+      const { user } = render(<ReplaceTest editMode="row" />);
+
+      await user.dblClick(getCell(0, 0));
+      await user.keyboard('{Control>}a{/Control}Silver{Enter}');
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).commodity).to.equal('Silver');
+      });
+      expect(apiRef.current!.getRow(0).revision).to.equal(1);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      expect(apiRef.current!.getRow(0).commodity).to.equal('Nickel');
+      expect(apiRef.current!.getRow(0).revision).to.equal(0);
+
+      await act(async () => {
+        await apiRef.current!.history.redo();
+      });
+
+      expect(apiRef.current!.getRow(0).commodity).to.equal('Silver');
+      expect(apiRef.current!.getRow(0).revision).to.equal(1);
+    });
+
+    it('should hand the stored row to `dataSource.updateRow()` when undoing', async () => {
+      const rows = [new Commodity(0, 'Nickel'), new Commodity(1, 'Cobalt')];
+      const updateRow = spy(async (params: GridUpdateRowParams) => ({
+        _action: 'replace' as const,
+        row: (params.previousRow as Commodity).withCommodity(params.updatedRow.commodity),
+      }));
+      const dataSource: GridDataSource = {
+        getRows: async () => ({ rows, rowCount: rows.length }),
+        updateRow,
+      };
+
+      const { user } = render(<ReplaceTest rows={undefined} dataSource={dataSource} />);
+
+      // The rows arrive in the API before they are rendered, and the edit goes through
+      // the cell.
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Nickel', 'Cobalt']);
+      });
+
+      await editFirstCommodityCell(user, 'Silver');
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      const undoParams = updateRow.lastCall.args[0];
+      // Rebuilding the request as `{ ...row, commodity: oldValue }` would send a plain
+      // object, so the server would never see the row it stored.
+      expect(undoParams.updatedRow).to.be.instanceOf(Commodity);
+      expect((undoParams.updatedRow as Commodity).revision).to.equal(0);
+      expect(undoParams.previousRow).to.be.instanceOf(Commodity);
+      expect((undoParams.previousRow as Commodity).revision).to.equal(1);
+    });
+
+    it('should still restore a single field when the row is a plain object', async () => {
+      const { user } = render(
+        <ReplaceTest
+          rows={[
+            { id: 0, commodity: 'Nickel', region: 'EU' },
+            { id: 1, commodity: 'Cobalt', region: 'EU' },
+          ]}
+          processRowUpdate={(newRow) => newRow}
+        />,
+      );
+
+      await editFirstCommodityCell(user, 'Silver');
+
+      // Something else updates a field the edit never touched.
+      await act(async () => {
+        apiRef.current!.updateRows([{ id: 0, region: 'APAC' }]);
+      });
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      expect(apiRef.current!.getRow(0).commodity).to.equal('Nickel');
+      // Restoring the whole row would have rolled `region` back to `EU` as well.
+      expect(apiRef.current!.getRow(0).region).to.equal('APAC');
     });
   });
 });
