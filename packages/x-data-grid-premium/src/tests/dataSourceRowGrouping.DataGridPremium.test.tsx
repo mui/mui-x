@@ -14,7 +14,7 @@ import type {
 import { spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('<DataGridPremium /> - Data source row grouping (loading state)', () => {
   const { render } = createRenderer();
@@ -515,6 +515,166 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       expect(techNode.children).to.have.length(2);
       techNode.children.forEach((childId) => {
         expect(apiRef.current!.state.rows.tree[childId].type).to.equal('skeletonRow');
+      });
+    });
+
+    // https://github.com/mui/mui-x/issues/22715
+    describe('concurrent root and children requests', () => {
+      type DeferredRequest = { params: GridGetRowsParams; resolve: () => void };
+      let deferredRequests: DeferredRequest[] = [];
+
+      beforeEach(() => {
+        deferredRequests = [];
+      });
+
+      const isRootRequest = (params: GridGetRowsParams) => (params.groupKeys ?? []).length === 0;
+
+      function TestConcurrentRequests(
+        props: Partial<DataGridPremiumProps> & {
+          deferRequest?: (params: GridGetRowsParams) => boolean;
+          onGetRows?: (params: GridGetRowsParams) => void;
+        },
+      ) {
+        const {
+          deferRequest = (params: GridGetRowsParams) => !isRootRequest(params),
+          onGetRows,
+          ...other
+        } = props;
+        apiRef = useGridApiRef();
+
+        const dataSource: GridDataSource = React.useMemo(
+          () => ({
+            getRows: async (params: GridGetRowsParams) => {
+              onGetRows?.(params);
+              const groupKeys = params.groupKeys ?? [];
+              const rows = rowsByGroupKeys[JSON.stringify(groupKeys)] ?? [];
+              const start = typeof params.start === 'number' ? params.start : 0;
+              const end = typeof params.end === 'number' ? params.end : rows.length - 1;
+              const response = {
+                rows: rows.slice(start, end + 1),
+                rowCount: rows.length,
+              };
+
+              if (deferRequest(params)) {
+                await new Promise<void>((resolve) => {
+                  deferredRequests.push({ params, resolve });
+                });
+              }
+
+              return response;
+            },
+            getGroupKey: (row) => row.group,
+            getChildrenCount: (row) => row.childrenCount,
+          }),
+          [deferRequest, onGetRows],
+        );
+
+        return (
+          <div style={{ width: 400, height: 10 * rowHeight + columnHeaderHeight + 2 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[
+                { field: 'sector', width: 120 },
+                { field: 'industry', width: 120 },
+                { field: 'company', width: 120 },
+                { field: 'value', width: 80 },
+              ]}
+              dataSource={dataSource}
+              dataSourceCache={null}
+              lazyLoading
+              rowGroupingModel={['sector', 'industry']}
+              defaultGroupingExpansionDepth={1}
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+              }}
+              rowHeight={rowHeight}
+              columnHeaderHeight={columnHeaderHeight}
+              {...other}
+            />
+          </div>
+        );
+      }
+
+      it('should apply the children responses that are in flight when the root rows are revalidated', async () => {
+        const getRowsSpy = spy();
+        render(<TestConcurrentRequests dataSourceRevalidateMs={50} onGetRows={getRowsSpy} />);
+
+        await waitFor(() => {
+          const pendingGroupKeys = deferredRequests.map((request) =>
+            JSON.stringify(request.params.groupKeys),
+          );
+          expect(pendingGroupKeys).to.include('["Technology"]');
+          expect(pendingGroupKeys).to.include('["Finance"]');
+        });
+
+        const countRootRequests = () =>
+          getRowsSpy.getCalls().filter((call) => isRootRequest(call.firstArg as GridGetRowsParams))
+            .length;
+        const countRequestsFor = (groupKeys: string) =>
+          getRowsSpy
+            .getCalls()
+            .filter(
+              (call) =>
+                JSON.stringify((call.firstArg as GridGetRowsParams).groupKeys) === groupKeys,
+            ).length;
+        const rootRequestsBeforeRevalidation = countRootRequests();
+        const inFlightChildrenRequests = deferredRequests.filter(
+          (request) => !isRootRequest(request.params),
+        );
+
+        await waitFor(() => {
+          expect(countRootRequests()).to.be.greaterThan(rootRequestsBeforeRevalidation);
+        });
+        await act(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 150);
+          });
+        });
+
+        // An aborted request would have been re-issued by the rebuilt tree
+        expect(countRequestsFor('["Technology"]')).to.equal(1);
+        expect(countRequestsFor('["Finance"]')).to.equal(1);
+
+        inFlightChildrenRequests.forEach((request) => request.resolve());
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow('industry-software')).not.to.equal(null);
+          expect(apiRef.current!.getRow('industry-hardware')).not.to.equal(null);
+          expect(apiRef.current!.getRow('industry-banking')).not.to.equal(null);
+        });
+      });
+
+      it('should drop the children responses computed for the previous row grouping model', async () => {
+        let deferRootRequests = false;
+        const deferRequest = (params: GridGetRowsParams) =>
+          !isRootRequest(params) || deferRootRequests;
+
+        const { setProps } = render(<TestConcurrentRequests deferRequest={deferRequest} />);
+
+        await waitFor(() => {
+          const pendingGroupKeys = deferredRequests.map((request) =>
+            JSON.stringify(request.params.groupKeys),
+          );
+          expect(pendingGroupKeys).to.include('["Technology"]');
+          expect(pendingGroupKeys).to.include('["Finance"]');
+        });
+        const staleRequests = deferredRequests.splice(0);
+
+        // Held back so the stale children responses resolve before the tree is rebuilt
+        deferRootRequests = true;
+        setProps({ rowGroupingModel: ['sector'] });
+        await waitFor(() => {
+          expect(deferredRequests.some((request) => isRootRequest(request.params))).to.equal(true);
+        });
+
+        staleRequests.forEach((request) => request.resolve());
+        await act(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+          });
+        });
+        expect(apiRef.current!.getRow('industry-software')).to.equal(null);
+        expect(apiRef.current!.getRow('industry-banking')).to.equal(null);
       });
     });
   });

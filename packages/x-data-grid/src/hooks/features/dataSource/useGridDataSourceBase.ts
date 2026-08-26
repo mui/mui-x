@@ -7,7 +7,11 @@ import debounce from '@mui/utils/debounce';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
-import type { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
+import type {
+  GridGetRowsResponse,
+  GridDataSourceCache,
+  GridGetRowsParams,
+} from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -25,7 +29,13 @@ import { GridDataSourceCacheDefault } from './cache';
 import type { GridDataSourceCacheDefaultConfig } from './cache';
 import { GridGetRowsError, GridUpdateRowError } from './gridDataSourceError';
 
-import type { GridDataSourceApi, GridDataSourceApiBase, GridDataSourceBaseOptions } from './models';
+import type {
+  GridDataSourceApi,
+  GridDataSourceApiBase,
+  GridDataSourceBaseOptions,
+  GridDataSourceFetchRootRowsIncremental,
+  GridDataSourceFetchRowsParams,
+} from './models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridStrategyProcessor } from '../../core/strategyProcessing';
@@ -110,8 +120,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     getCache(props.dataSourceCache, options.cacheOptions),
   );
 
-  const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
-    async (parentId, params) => {
+  const fetchRowsInternal = React.useCallback(
+    async (
+      parentId: GridRowId | undefined,
+      params: GridDataSourceFetchRowsParams<GridGetRowsParams> | undefined,
+      invalidates: boolean,
+    ) => {
       const getRows = props.dataSource?.getRows;
       if (!getRows) {
         return;
@@ -137,7 +151,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         return;
       }
 
-      options.clearDataSourceState?.();
+      if (invalidates) {
+        options.clearDataSourceState?.();
+      }
 
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
@@ -225,6 +241,16 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       options,
       props.signature,
     ],
+  );
+
+  const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
+    (parentId, params) => fetchRowsInternal(parentId, params, true),
+    [fetchRowsInternal],
+  );
+
+  const fetchRootRowsIncremental = React.useCallback<GridDataSourceFetchRootRowsIncremental>(
+    (params) => fetchRowsInternal(GRID_ROOT_GROUP_ID, params, false),
+    [fetchRowsInternal],
   );
 
   const handleStrategyActivityChange = React.useCallback<
@@ -547,6 +573,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   return {
     api: { public: dataSourceApi },
     debouncedFetchRows,
+    fetchRootRowsIncremental,
     strategyProcessor: {
       strategyName: DataSourceRowsUpdateStrategy.Default,
       group: 'dataSourceRootRowsUpdate' as const,
