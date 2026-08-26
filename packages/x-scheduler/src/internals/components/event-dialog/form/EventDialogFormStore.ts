@@ -18,9 +18,10 @@ export interface EventDialogFormState<
 }
 
 /**
- * Error message(s) for a field, or `null` when the value is valid
- * (an empty string or array also counts as valid). An array is a list
- * of messages, not a single node.
+ * Error message(s) for a field, or `null` when the value is valid.
+ * Empty strings, booleans, and empty arrays also count as valid, so
+ * `condition && 'message'` validators work as expected. An array is
+ * a list of messages, not a single node.
  */
 export type EventDialogFormValidatorResult = React.ReactNode | React.ReactNode[] | null;
 
@@ -34,11 +35,13 @@ export type EventDialogFormValidator<
 function normalizeValidatorResult(
   result: EventDialogFormValidatorResult,
 ): React.ReactNode[] | null {
-  if (result == null || result === '') {
+  if (result == null || result === '' || typeof result === 'boolean') {
     return null;
   }
   if (Array.isArray(result)) {
-    const messages = result.filter((message) => message != null && message !== '');
+    const messages = result.filter(
+      (message) => message != null && message !== '' && typeof message !== 'boolean',
+    );
     return messages.length > 0 ? messages : null;
   }
   return [result];

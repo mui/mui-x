@@ -359,6 +359,20 @@ describe('EventDialogFormStore', () => {
       expect(await store.validateAll()).to.equal(true);
       expect(store.state.errors).to.deep.equal({});
     });
+
+    it('should treat a boolean result as valid, so `condition && message` validators work', async () => {
+      const store = createFormStore({ title: 'Meeting' });
+      store.registerValidator('title', (value) => (value as string).length === 0 && 'Required');
+      expect(await store.validateAll()).to.equal(true);
+      expect(store.state.errors).to.deep.equal({});
+    });
+
+    it('should drop booleans from an error array', async () => {
+      const store = createFormStore({ title: '' });
+      store.registerValidator('title', () => [false, 'Required', true]);
+      expect(await store.validateAll()).to.equal(false);
+      expect(store.state.errors).to.deep.equal({ title: ['Required'] });
+    });
   });
 
   describe('getDirtyValues', () => {

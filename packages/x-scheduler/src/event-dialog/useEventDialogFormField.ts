@@ -25,7 +25,7 @@ export interface UseEventDialogFormFieldParameters<T> {
   /**
    * Runs during submit while the calling component is mounted.
    * Returns the error message(s) for the field, or `null` when the value is valid
-   * (an empty string or array also counts as valid). Can be async.
+   * (an empty string, a boolean, or an empty array also counts as valid). Can be async.
    */
   validate?: (
     value: T,
