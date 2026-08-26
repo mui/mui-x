@@ -42,7 +42,13 @@ export interface EventDialogBuiltInFormValues {
    * `null` inherits the color from the resource or the calendar.
    */
   color: SchedulerEventColor | null;
+  /**
+   * Managed by the Recurrence tab; treat as read-only from custom sections.
+   */
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
+  /**
+   * Managed by the Recurrence tab; treat as read-only from custom sections.
+   */
   rruleDraft: SchedulerProcessedEventRecurrenceRule;
 }
 

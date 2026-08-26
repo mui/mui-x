@@ -12,6 +12,10 @@ components: EventCalendar, EventCalendarPremium, EventTimelinePremium, Standalon
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
+:::info
+The building blocks on this page are imported from `@mui/x-scheduler/event-dialog`, also when the dialog belongs to a premium component. Add `@mui/x-scheduler` to your dependencies when importing them in a premium-only app.
+:::
+
 The event dialog opens when the user clicks an event or creates a new one.
 Its General tab is built from self-contained section components, and the `eventDialogGeneralTab` slot lets you replace the tab content with your own composition: reorder the built-in sections, omit some of them, and insert sections of your own that read and write the event draft.
 
@@ -56,27 +60,27 @@ function CustomGeneralTab() {
 <EventCalendar slots={{ eventDialogGeneralTab: CustomGeneralTab }} />;
 ```
 
-### Event Dialog General Tab Content
+### Event dialog general tab content
 
 `<EventDialogGeneralTabContent />` is the default composition: the date and time section, the resource and color section, and the description section, separated by dividers.
 It is what renders when the slot is not provided, and you can render it from your own slot to append content after the built-in sections.
 
-### Event Dialog Date Time Section
+### Event dialog date time section
 
 `<EventDialogDateTimeSection />` edits the start and end date and time and the all-day switch.
 It takes no props: it reads the edited occurrence and its form fields from context.
 
-### Event Dialog Resource And Color Section
+### Event dialog resource and color section
 
 `<EventDialogResourceAndColorSection />` edits the resource the event belongs to and its color.
-When creating an event, the resource picker follows the calendar's `eventCreation.canHaveMultipleResources` setting.
+When creating an event, the resource picker follows the calendar's `eventCreation.canHaveMultipleResources` setting; when the setting is not provided, the mode is inferred from the events data (multi-select by default).
 When editing an existing event, the shape of its `resource` decides instead: an array gets a multi-select picker and a single id a single-select one — the setting is only the fallback for an event without a resource.
 
-### Event Dialog Description Section
+### Event dialog description section
 
 `<EventDialogDescriptionSection />` edits the event description.
 
-### Event Dialog Section Fieldset and Section Header Title
+### Event dialog section fieldset and section header title
 
 `<EventDialogSectionFieldset />` and `<EventDialogSectionHeaderTitle />` are the layout primitives the date and time and the resource and color sections are made of (the description section is a bare text field).
 Use them around your own fields so custom sections get the same spacing, typography, and theme classes as the built-in ones.
@@ -97,7 +101,7 @@ Keep **all draft state** in the form through this hook, never in component `useS
 A value written to a field is submitted even if the section that wrote it is later unmounted (only its validator is removed with it).
 There is no way to remove a key from the draft: writing `undefined` marks the field dirty and submits `undefined`, which clears the stored property on save.
 
-When binding a built-in key, match its value shape (`EventDialogBuiltInFormValues`): the dates are `yyyy-MM-dd` strings, the times `HH:mm` strings, `resourceIds` is always an array, and `color: null` inherits from the resource.
+When binding a built-in key, match its value shape (`EventDialogBuiltInFormValues`): the dates are `yyyy-MM-dd` strings, the times `HH:mm` strings, `resourceIds` is always an array, and `color: null` inherits from the resource or the calendar's default event color.
 
 ## Reading the edited occurrence
 
@@ -119,9 +123,11 @@ Render the built-in sections in any order and leave out the ones you do not need
 ### Omitting the resource section with a required resource
 
 Omitting a section removes its editors, not the form contract.
-With `shouldEventRequireResource` enabled, saving without a resource stays blocked even when the resource section is not rendered — the end user just has no visible field to fix it, and a warning pointing to this is logged in development.
+With `shouldEventRequireResource` enabled, saving without a resource stays blocked even when the resource section is not rendered — the end user just has no visible field to fix it. In development, a warning is logged on every save attempt while no validator is registered for the field.
 
 If your custom tab replaces the built-in resource picker, bind your field to the `resourceIds` key, register a `validate` callback for it (the development warning checks for a registered validator, so binding the field alone does not silence it), and render its `error` so the requirement stays fixable.
+
+The date range works the same way: an invalid, unparseable, or inverted range blocks the save even without the date and time section, with an equivalent development warning. A replacement for that section should register a validator for the `endDate` and `endTime` keys and render their errors.
 
 ## Typing custom slot props
 
