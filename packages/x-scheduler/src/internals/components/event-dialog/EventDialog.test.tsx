@@ -25,11 +25,7 @@ import {
   useEventDialogOccurrence,
 } from '@mui/x-scheduler/event-dialog';
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
-import type {
-  EventDialogGeneralTabPropsOverrides,
-  SchedulerSlotProps,
-  SchedulerSlots,
-} from '../../../models/slots';
+import type { SchedulerSlotProps, SchedulerSlots } from '../../../models/slots';
 import { MonthView } from '../../../month-view';
 import { EventDialogContent, EventDialogProvider } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
