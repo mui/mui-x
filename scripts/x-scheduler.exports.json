@@ -23,7 +23,6 @@
   { "name": "EventDialogFormValidatorResult", "kind": "TypeAlias" },
   { "name": "EventDialogFormValues", "kind": "TypeAlias" },
   { "name": "EventDialogGeneralTabContent", "kind": "Function" },
-  { "name": "EventDialogGeneralTabProps", "kind": "Interface" },
   { "name": "EventDialogGeneralTabPropsOverrides", "kind": "Interface" },
   { "name": "EventDialogResourceAndColorSection", "kind": "Function" },
   { "name": "EventDialogSectionFieldset", "kind": "Variable" },

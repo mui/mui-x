@@ -26,7 +26,6 @@ import {
 } from '@mui/x-scheduler/event-dialog';
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import type {
-  EventDialogGeneralTabProps,
   EventDialogGeneralTabPropsOverrides,
   SchedulerSlotProps,
   SchedulerSlots,
@@ -699,34 +698,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(onEventsChange.callCount).to.equal(1);
     });
 
-    it('should pass the occurrence to the slot', () => {
-      const occurrences: string[] = [];
-      function OccurrenceProbe(props: EventDialogGeneralTabProps) {
-        occurrences.push(props.occurrence.title);
-        return null;
-      }
-      renderWithSlot({ eventDialogGeneralTab: OccurrenceProbe });
-
-      expect(occurrences[0]).to.equal(DEFAULT_EVENT.title);
-    });
-
-    it('should keep the scheduler-owned occurrence over one supplied through slotProps', () => {
-      const occurrences: string[] = [];
-      function OccurrenceProbe(props: EventDialogGeneralTabProps) {
-        occurrences.push(props.occurrence.title);
-        return null;
-      }
-      // Bypasses the compile-time protection the way a consumer's wider spread object can.
-      const overridingProps = {
-        occurrence: EventBuilder.new().title('Other event').toOccurrence(),
-      } as EventDialogGeneralTabPropsOverrides;
-      renderWithSlot({ eventDialogGeneralTab: OccurrenceProbe }, undefined, undefined, {
-        eventDialogGeneralTab: overridingProps,
-      });
-
-      expect(occurrences[0]).to.equal(DEFAULT_EVENT.title);
-    });
-
     it('should save a custom field edited from a section rendered by the slot', async () => {
       const onEventsChange = spy();
       const { user } = renderWithSlot({ eventDialogGeneralTab: CustomSection }, { onEventsChange });
@@ -1268,7 +1239,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       function SlotB() {
         return <CustomSection />;
       }
-      function Harness(harnessProps: { slot: React.ComponentType<EventDialogGeneralTabProps> }) {
+      function Harness(harnessProps: { slot: React.ComponentType }) {
         return (
           <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
             <SchedulerSlotsProvider

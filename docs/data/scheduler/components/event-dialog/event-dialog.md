@@ -147,8 +147,6 @@ declare module '@mui/x-scheduler/models' {
 />;
 ```
 
-The `occurrence` prop is always supplied by the scheduler and cannot be overridden through `slotProps`.
-
 ## Where the slot renders
 
 - The slot is the General tab content of the event **editing surface**: it renders in the desktop dialog and in the narrow editing drawer of the compact views alike, so keep custom content responsive.
