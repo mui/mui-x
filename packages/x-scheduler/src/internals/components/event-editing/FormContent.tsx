@@ -50,6 +50,7 @@ import {
   EventDialogFormProvider,
   useEventDialogFormContext,
 } from '../event-dialog/form/EventDialogFormContext';
+import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormStore';
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 
 const FormActions = styled(DialogActions, {
@@ -246,8 +247,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   // The ref guards synchronous re-entry, the state drives the Save button.
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  // Blocks a submit that stores an error on a field no mounted section validates,
-  // warning in dev — a custom General tab can omit any built-in section.
+  // Dev companion to the submit-level blocks: a custom General tab can omit any
+  // built-in section, leaving the stored error with no visible field.
   const warnUnvalidatedField = (field: string, problem: string) => {
     if (process.env.NODE_ENV !== 'production' && !formStore.hasValidator(field)) {
       warnOnce([
@@ -267,7 +268,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     const isMissingRequiredResource = shouldEventRequireResource && values.resourceIds.length === 0;
     if (
       isMissingRequiredResource &&
-      !Object.prototype.hasOwnProperty.call(formStore.state.errors, 'resourceIds')
+      eventDialogFormSelectors.error(formStore.state, 'resourceIds') === undefined
     ) {
       formStore.setError('resourceIds', localeText.requiredResourceError);
     }
@@ -276,7 +277,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     const invalidRangeField = findInvalidRangeField(adapter, values, displayTimezone);
     if (invalidRangeField) {
       warnUnvalidatedField(invalidRangeField, 'The value cannot be parsed into a date');
-      if (!Object.prototype.hasOwnProperty.call(formStore.state.errors, invalidRangeField)) {
+      if (eventDialogFormSelectors.error(formStore.state, invalidRangeField) === undefined) {
         formStore.setError(
           invalidRangeField,
           invalidRangeField === 'startDate' || invalidRangeField === 'endDate'
@@ -290,7 +291,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     if (rangeError) {
       warnUnvalidatedField(rangeError.field, 'The date range is invalid');
       // A validator on the same field may have stored a more specific message.
-      if (!Object.prototype.hasOwnProperty.call(formStore.state.errors, rangeError.field)) {
+      if (eventDialogFormSelectors.error(formStore.state, rangeError.field) === undefined) {
         formStore.setError(rangeError.field, getRangeErrorMessage(rangeError.field, localeText));
       }
     }

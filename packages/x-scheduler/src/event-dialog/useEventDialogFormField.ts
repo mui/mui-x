@@ -6,7 +6,6 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { isBuiltInEventProperty } from '@mui/x-scheduler-internals/internals';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import type {
   EventDialogBuiltInFormValues,
   EventDialogFormValues,
@@ -53,7 +52,7 @@ export interface UseEventDialogFormFieldReturnValue<T, TWrite = T> {
   value: T;
   /**
    * Writes the field and clears its error.
-   * Custom fields also accept `undefined`; the write is submitted as-is.
+   * On a seeded custom field, writing `undefined` submits the removal of the stored property.
    */
   setValue: (value: TWrite) => void;
   /**
@@ -66,7 +65,8 @@ export interface UseEventDialogFormFieldReturnValue<T, TWrite = T> {
   errors: EventDialogFormErrorMessage[];
   /**
    * Whether the event property backing the key is read-only
-   * (a getter without a setter in `eventModelStructure`, or a read-only event).
+   * (a getter without a setter in `eventModelStructure`).
+   * Always `false` for custom keys.
    */
   readOnly: boolean;
 }
@@ -104,7 +104,7 @@ export function useEventDialogFormField(
     if (!BUILT_IN_FORM_KEYS.has(key) && isBuiltInEventProperty(key)) {
       warnOnce([
         `MUI X Scheduler: useEventDialogFormField() received the key "${key}", which is a built-in event property.`,
-        'Writing it from the form would silently overwrite the property managed by the built-in submit logic.',
+        'The edit is dropped on save, so the field cannot be persisted.',
         'Use a custom key that does not collide with the event model.',
       ]);
     }
@@ -126,10 +126,9 @@ export function useEventDialogFormField(
     schedulerEventSelectors.isPropertyReadOnly,
     store.occurrence.id,
   );
-  const eventProperty =
-    (FORM_KEY_TO_EVENT_PROPERTY as Record<string, keyof SchedulerEvent>)[key] ??
-    (key as keyof SchedulerEvent);
-  const readOnly = isPropertyReadOnly(eventProperty);
+  const readOnly = BUILT_IN_FORM_KEYS.has(key)
+    ? isPropertyReadOnly(FORM_KEY_TO_EVENT_PROPERTY[key as keyof EventDialogBuiltInFormValues])
+    : false;
 
   const storedValue = useStore(store, eventDialogFormSelectors.value, key);
   const isSeeded = useStore(store, eventDialogFormSelectors.hasValue, key);

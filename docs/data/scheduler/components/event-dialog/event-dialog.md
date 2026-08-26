@@ -68,7 +68,7 @@ It is what renders when the slot is not provided, and you can render it from you
 ### Event dialog date time section
 
 `<EventDialogDateTimeSection />` edits the start and end date and time and the all-day switch.
-It takes no props: it reads the edited occurrence and its form fields from context.
+It takes no props: it reads its form fields from context.
 
 ### Event dialog resource and color section
 
@@ -95,12 +95,12 @@ Return a **fragment** from the slot: the tab content is a flex column with a gap
 - `defaultValue` — seeds the field when the event does not have it yet. An untouched default is not saved.
 - `validate` — runs on save. Return the error message(s), or `null` when the value is valid. Async validators are supported.
 - `error` / `errors` — the current validation message(s) for the field.
-- `readOnly` — whether the event property backing the key is read-only (a getter without a setter in `eventModelStructure`). Mirror it on your input.
+- `readOnly` — whether the event property backing a built-in key is read-only (a getter without a setter in `eventModelStructure`); always `false` for custom keys. Mirror it on your input.
 
 Keep **all draft state** in the form through this hook, never in component `useState`: the form store lives above the slot and survives a slot remount — component state does not.
 
 A value written to a field is submitted even if the section that wrote it is later unmounted (only its validator is removed with it).
-There is no way to remove a key from the draft: writing `undefined` marks the field dirty and submits `undefined`, which clears the stored property on save.
+There is no way to remove a key from the draft: on a seeded field, writing `undefined` submits the removal of the stored property; on a key the event never had, the write is a no-op.
 
 When binding a built-in key, match its value shape (`EventDialogBuiltInFormValues`): the dates are `yyyy-MM-dd` strings, the times `HH:mm` strings, `resourceIds` is always an array, and `color: null` inherits from the resource or the calendar's default event color.
 
@@ -124,11 +124,11 @@ Render the built-in sections in any order and leave out the ones you do not need
 ### Omitting the resource section with a required resource
 
 Omitting a section removes its editors, not the form contract.
-With `shouldEventRequireResource` enabled, saving without a resource stays blocked even when the resource section is not rendered — the end user just has no visible field to fix it. In development, a warning is logged on every save attempt while no validator is registered for the field.
+With `shouldEventRequireResource` enabled, saving without a resource stays blocked even when the resource section is not rendered — the end user just has no visible field to fix it. In development, a warning is logged on the first save attempt made while no validator is registered for the field.
 
 If your custom tab replaces the built-in resource picker, bind your field to the `resourceIds` key, register a `validate` callback for it (the development warning checks for a registered validator, so binding the field alone does not silence it), and render its `error` so the requirement stays fixable.
 
-The date range works the same way: an invalid, unparseable, or inverted range blocks the save even without the date and time section, with an equivalent development warning. A replacement for that section should register a validator for the `endDate` and `endTime` keys and render their errors.
+The date range works the same way: an invalid, unparseable, or inverted range blocks the save even without the date and time section, with an equivalent development warning. A replacement for that section should register a validator for the four date and time keys and render their errors.
 
 ## Typing custom slot props
 
