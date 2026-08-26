@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useLocation } from 'react-router';
 import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
-import { clearStringMeasurementCache } from '@mui/x-charts/internals';
 // eslint-disable-next-line import/no-relative-packages
 import { fakeClock, setupFakeClock } from '../utils/setupFakeClock';
 
@@ -32,26 +31,8 @@ const StyledBox = styled('div', {
   }),
 );
 
-/**
- * The charts string measurement cache lives at module level, and every test shares a single page.
- * A demo would otherwise reuse sizes measured by an earlier one, including the ones measured before
- * the fonts finished loading, which makes axis label truncation depend on the order tests ran in.
- * This runs during render because the children measure their text before any effect fires.
- */
-function useResetMeasurementCache() {
-  const { pathname } = useLocation();
-  const measuredPathname = React.useRef<string | null>(null);
-
-  if (measuredPathname.current !== pathname) {
-    measuredPathname.current = pathname;
-    clearStringMeasurementCache();
-  }
-}
-
 function TestViewer(props: any) {
   const { children, isDataGridTest, isDataGridPivotTest, shouldAdvanceTime, path } = props;
-
-  useResetMeasurementCache();
 
   return (
     <React.Fragment>
