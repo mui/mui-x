@@ -100,7 +100,7 @@ Return a **fragment** from the slot: the tab content is a flex column with a gap
 Keep **all draft state** in the form through this hook, never in component `useState`: the form store lives above the slot and survives a slot remount — component state does not.
 
 A value written to a field is submitted even if the section that wrote it is later unmounted (only its validator is removed with it).
-There is no way to remove a key from the draft: on a seeded field, writing `undefined` submits the removal of the stored property; on a key the event never had, the write is a no-op.
+There is no way to remove a key from the draft: writing `undefined` into a field that is part of the draft submits the removal of the stored property; writing it into a key absent from the draft is a no-op.
 
 When binding a built-in key, match its value shape (`EventDialogBuiltInFormValues`): the dates are `yyyy-MM-dd` strings, the times `HH:mm` strings, `resourceIds` is always an array, and `color: null` inherits from the resource or the calendar's default event color.
 

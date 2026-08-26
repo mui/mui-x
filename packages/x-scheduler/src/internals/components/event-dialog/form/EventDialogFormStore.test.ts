@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { EventBuilder } from 'test/utils/scheduler';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import type { EventDialogFormParameters } from './EventDialogFormStore';
 import { EventDialogFormStore, eventDialogFormSelectors } from './EventDialogFormStore';
 
@@ -19,6 +19,8 @@ function createFormStore<TValues extends Record<string, unknown>>(
 }
 
 describe('EventDialogFormStore', () => {
+  beforeEach(() => clearWarningsCache());
+
   describe('constructor', () => {
     it('should seed the values from the provided object', () => {
       const store = createFormStore({ title: 'Meeting', priority: 'high' });
@@ -303,7 +305,6 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should settle instead of looping when a validator writes a value', async () => {
-      clearWarningsCache();
       const store = createFormStore({ title: 'Meeting' });
       store.registerValidator('title', (value) => {
         store.setValue('title', value as string);
@@ -312,12 +313,11 @@ describe('EventDialogFormStore', () => {
       await expect(async () => {
         expect(await store.validateAll()).to.equal(true);
       }).toWarnDev([
-        'MUI X Scheduler: A form field validator kept writing values while the validation was running.',
+        'MUI X Scheduler: The form values or validators kept changing while the validation was running (for example a validator calling setValue).',
       ]);
     });
 
     it('should keep the last computed errors when the restart cap trips', async () => {
-      clearWarningsCache();
       const store = createFormStore({ title: 'Meeting' });
       store.registerValidator('title', (value) => {
         store.setValue('title', value as string);
@@ -326,7 +326,7 @@ describe('EventDialogFormStore', () => {
       await expect(async () => {
         expect(await store.validateAll()).to.equal(false);
       }).toWarnDev([
-        'MUI X Scheduler: A form field validator kept writing values while the validation was running.',
+        'MUI X Scheduler: The form values or validators kept changing while the validation was running (for example a validator calling setValue).',
       ]);
       expect(store.state.errors).to.deep.equal({ title: ['Still wrong'] });
     });
@@ -448,7 +448,6 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should treat a boolean result as valid and warn, so a JS `condition && message` validator cannot block the save', async () => {
-      clearWarningsCache();
       const store = createFormStore({ title: 'Meeting' });
       store.registerValidator(
         'title',
@@ -462,7 +461,6 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should drop booleans from an error array', async () => {
-      clearWarningsCache();
       const store = createFormStore({ title: '' });
       // An array with booleans still type-checks (arrays are `Iterable<ReactNode>`),
       // so the runtime filter is the only guard for this shape.

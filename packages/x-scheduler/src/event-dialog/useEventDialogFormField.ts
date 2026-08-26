@@ -31,7 +31,9 @@ export interface UseEventDialogFormFieldParameters<T> {
   /**
    * Runs during submit while the calling component is mounted.
    * Returns the error message(s) for the field, or `null` when the value is valid
-   * (an empty string or an empty array also counts as valid; booleans are ignored). Can be async.
+   * (an empty string or an empty array also counts as valid; booleans are ignored
+   * with a dev warning). When several components validate the same key, the first
+   * registered failing validator provides the message. Can be async.
    */
   validate?: (
     value: T,
@@ -40,7 +42,8 @@ export interface UseEventDialogFormFieldParameters<T> {
   /**
    * Seeds the field when the key is not present in the form values
    * (e.g. a custom field absent from the event model). Seeding does not
-   * mark the field dirty, so an untouched default is not submitted.
+   * mark the field dirty, so an untouched default is not submitted — but any
+   * written value is, including the default itself when explicitly re-picked.
    */
   defaultValue?: T;
 }

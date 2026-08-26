@@ -200,6 +200,15 @@ export function findInvalidRangeField(
   return null;
 }
 
+export function getInvalidValueErrorMessage(
+  field: 'startDate' | 'startTime' | 'endDate' | 'endTime',
+  localeText: EventEditingLocaleText,
+): string {
+  return field === 'startDate' || field === 'endDate'
+    ? localeText.invalidDateError
+    : localeText.invalidTimeError;
+}
+
 export function getRangeErrorMessage(
   field: 'endDate' | 'endTime',
   localeText: EventEditingLocaleText,

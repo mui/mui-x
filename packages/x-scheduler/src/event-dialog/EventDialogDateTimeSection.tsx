@@ -14,6 +14,7 @@ import type { EventDialogFormValues } from '../internals/components/event-dialog
 import {
   computeRange,
   findInvalidRangeField,
+  getInvalidValueErrorMessage,
   getRangeErrorMessage,
   validateRange,
 } from '../internals/components/event-dialog/utils';
@@ -78,9 +79,7 @@ export function EventDialogDateTimeSection() {
     (value: string, allValues: EventDialogFormValues): string | null => {
       const invalidField = findInvalidRangeField(adapter, allValues, displayTimezone);
       if (invalidField === field) {
-        return field === 'startDate' || field === 'endDate'
-          ? localeText.invalidDateError
-          : localeText.invalidTimeError;
+        return getInvalidValueErrorMessage(field, localeText);
       }
       // While any field is invalid, the ordering verdict would compare against
       // the computeRange fallback and blame a healthy field.

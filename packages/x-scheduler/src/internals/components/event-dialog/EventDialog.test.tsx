@@ -24,7 +24,7 @@ import {
   useEventDialogFormField,
   useEventDialogOccurrence,
 } from '@mui/x-scheduler/event-dialog';
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import type {
   EventDialogGeneralTabProps,
   EventDialogGeneralTabPropsOverrides,
@@ -65,6 +65,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   };
 
   const { render } = createSchedulerRenderer();
+
+  beforeEach(() => clearWarningsCache());
 
   it('should render the general tab sections in the default order', () => {
     render(
@@ -504,6 +506,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(adapter.formatByString(placeholder.start, 'yyyy-MM-dd')).to.equal('2025-05-27');
     });
 
+    it('should open the dialog for an event with a property named hasOwnProperty', () => {
+      const shadowingEvent = { ...DEFAULT_EVENT, hasOwnProperty: 'shadowed' } as SchedulerEvent;
+      renderWithSlot({ eventDialogGeneralTab: CustomSection }, { events: [shadowingEvent] });
+
+      expect(screen.getByRole('textbox', { name: 'Priority' })).not.to.equal(null);
+    });
+
     it('should apply the default value when the model carries the key with an explicit undefined', () => {
       // e.g. `{ ...event, priority: maybeValue }` with an undefined `maybeValue`
       const eventWithExplicitUndefined = {
@@ -519,7 +528,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should not let an edited custom field rewrite a built-in event property', async () => {
-      clearWarningsCache();
       const onEventsChange = spy();
       function CollidingSection() {
         const readOnlyField = useEventDialogFormField('readOnly');
@@ -797,7 +805,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should warn when the resource section is omitted while shouldEventRequireResource is enabled', async () => {
-      clearWarningsCache();
       await expect(async () => {
         const { user } = renderWithSlot(
           { eventDialogGeneralTab: CustomSection },
@@ -810,7 +817,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should not warn and save the assigned resource when the slot keeps the resource section', async () => {
-      clearWarningsCache();
       const onEventsChange = spy();
       const { user } = renderWithSlot(
         { eventDialogGeneralTab: () => <EventDialogResourceAndColorSection /> },
@@ -824,7 +830,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should not warn when a section rendered by the slot validates the resource itself', async () => {
-      clearWarningsCache();
       function CustomResourceSection() {
         useEventDialogFormField('resourceIds', {
           validate: (value) => (value.length > 0 ? null : 'Required'),
@@ -841,7 +846,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should block the submit of an event without resource when the slot omits the resource section', async () => {
-      clearWarningsCache();
       const onEventsChange = spy();
       const noResourceEvent: SchedulerEvent = EventBuilder.new()
         .title('Running')
@@ -868,7 +872,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should surface the required-resource error on a custom field bound to resourceIds', async () => {
-      clearWarningsCache();
       const onEventsChange = spy();
       const noResourceEvent: SchedulerEvent = EventBuilder.new()
         .title('Running')
@@ -940,7 +943,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     invertedRangeScenarios.forEach(({ key, label, typed, alert }) => {
       it(`should block the submit of an inverted ${key} when the slot omits the date and time section`, async () => {
-        clearWarningsCache();
         const onEventsChange = spy();
 
         await expect(async () => {
@@ -990,7 +992,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should block the submit of an unparseable date from a custom field', async () => {
-      clearWarningsCache();
       const onEventsChange = spy();
 
       await expect(async () => {
@@ -1011,7 +1012,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should block the submit of an emptied time from a custom field', async () => {
-      clearWarningsCache();
       const onEventsChange = spy();
 
       await expect(async () => {
@@ -1030,7 +1030,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should show the invalid-date error on the mounted start field without warning', async () => {
-      clearWarningsCache();
       const onEventsChange = spy();
       // A sibling section empties the built-in key; the mounted date and time
       // section must surface the error itself.
@@ -1084,7 +1083,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should keep a custom required-resource message over the generic one', async () => {
-      clearWarningsCache();
       const onEventsChange = spy();
       const noResourceEvent: SchedulerEvent = EventBuilder.new()
         .title('Running')
@@ -1115,7 +1113,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should recover the dialog when a validator throws', async () => {
-      clearWarningsCache();
       const onEventsChange = spy();
       function ThrowingSection() {
         useEventDialogFormField('client', {
@@ -1142,7 +1139,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should store the generic range error when a registered validator passes', async () => {
-      clearWarningsCache();
       const onEventsChange = spy();
       const { user } = renderWithSlot(
         { eventDialogGeneralTab: createRangeField('endDate', 'End date', () => null) },
@@ -1158,8 +1154,48 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
     });
 
+    it('should keep the first registered failing validator message for a shared key', async () => {
+      const onEventsChange = spy();
+      function CustomEndDateValidator() {
+        useEventDialogFormField('endDate', {
+          validate: () => 'Must stay within the project period',
+        });
+        return null;
+      }
+      function SectionPlusCustomValidator() {
+        return (
+          <React.Fragment>
+            <CustomEndDateValidator />
+            <EventDialogDateTimeSection />
+          </React.Fragment>
+        );
+      }
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: SectionPlusCustomValidator },
+        { onEventsChange },
+      );
+
+      const endDateInput = screen.getByLabelText(/end date/i);
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-05-20');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(0);
+      // Effects register in tree order, so the earlier sibling's validator wins.
+      expect(screen.getByRole('alert')).to.have.text('Must stay within the project period');
+    });
+
+    it('should mark the date and time inputs required', () => {
+      renderWithSlot({});
+
+      // The native semantics back the empty-field contract for UI submits.
+      expect(screen.getByLabelText(/start date/i)).to.have.attribute('required');
+      expect(screen.getByLabelText(/start time/i)).to.have.attribute('required');
+      expect(screen.getByLabelText(/end date/i)).to.have.attribute('required');
+      expect(screen.getByLabelText(/end time/i)).to.have.attribute('required');
+    });
+
     it('should keep a more specific validator message over the generic range error', async () => {
-      clearWarningsCache();
       const onEventsChange = spy();
       const { user } = renderWithSlot(
         {

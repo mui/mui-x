@@ -311,9 +311,9 @@ export class EventDialogFormStore<
       if (isSettled || restarts >= maxRestarts) {
         if (process.env.NODE_ENV !== 'production' && !isSettled) {
           warnOnce([
-            'MUI X Scheduler: A form field validator kept writing values while the validation was running.',
+            'MUI X Scheduler: The form values or validators kept changing while the validation was running (for example a validator calling setValue).',
             'The validation settled with the last computed errors, which may not reflect the newest values.',
-            'Avoid calling setValue from a validator.',
+            'Avoid writing values or (un)registering validators from a validator.',
           ]);
         }
         this.set('errors', errors);

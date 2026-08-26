@@ -3,13 +3,15 @@ import { spy } from 'sinon';
 import { ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { EventCalendarProvider } from '../../EventCalendarProvider';
 import { EventDialogFormProvider, useEventDialogFormContext } from './EventDialogFormContext';
 import { useEventDialogFormField } from '../../../../event-dialog/useEventDialogFormField';
 import type { EventDialogFormStore } from './EventDialogFormStore';
 
 describe('EventDialogForm', () => {
+  beforeEach(() => clearWarningsCache());
+
   const { render: renderBase } = createSchedulerRenderer();
 
   // The field hook reads the scheduler store (per-property read-only state).
@@ -256,7 +258,6 @@ describe('EventDialogForm', () => {
     });
 
     it('should warn when the key is a built-in event property not handled by the form', () => {
-      clearWarningsCache();
       expect(() => {
         render(
           <EventDialogFormProvider {...sessionParameters} initialValues={{}}>
@@ -267,7 +268,6 @@ describe('EventDialogForm', () => {
     });
 
     it('should not warn for a built-in form key or a custom key', () => {
-      clearWarningsCache();
       render(
         <EventDialogFormProvider
           {...sessionParameters}
@@ -280,7 +280,6 @@ describe('EventDialogForm', () => {
     });
 
     it('should warn when a built-in form key receives a defaultValue', () => {
-      clearWarningsCache();
       expect(() => {
         render(
           <EventDialogFormProvider {...sessionParameters} initialValues={{ title: 'Meeting' }}>
@@ -293,7 +292,6 @@ describe('EventDialogForm', () => {
     });
 
     it('should not warn when a custom key receives a defaultValue', () => {
-      clearWarningsCache();
       render(
         <EventDialogFormProvider {...sessionParameters} initialValues={{}}>
           <FieldProbe fieldKey="priority" defaultValue="normal" />

@@ -38,6 +38,7 @@ import type { EventDialogFormValues } from '../event-dialog/utils';
 import {
   computeRange,
   findInvalidRangeField,
+  getInvalidValueErrorMessage,
   getRangeErrorMessage,
   validateRange,
   hasProp,
@@ -280,9 +281,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       if (eventDialogFormSelectors.error(formStore.state, invalidRangeField) === undefined) {
         formStore.setError(
           invalidRangeField,
-          invalidRangeField === 'startDate' || invalidRangeField === 'endDate'
-            ? localeText.invalidDateError
-            : localeText.invalidTimeError,
+          getInvalidValueErrorMessage(invalidRangeField, localeText),
         );
       }
     }

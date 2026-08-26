@@ -162,6 +162,88 @@ describe('<EventDialogContent open />', () => {
     expect(screen.getByRole('alert')).to.have.text('Nope');
   });
 
+  it('should return to the General tab when a validator throws', async () => {
+    const onEventsChange = spy();
+    function ThrowingSection() {
+      useEventDialogFormField('client', {
+        defaultValue: '',
+        validate: () => {
+          throw new Error('validator exploded');
+        },
+      });
+      return null;
+    }
+
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
+        <SchedulerSlotsProvider
+          slots={{ eventDialogGeneralTab: ThrowingSection }}
+          slotProps={undefined}
+        >
+          <TestEventDialogContent open {...defaultProps} />
+        </SchedulerSlotsProvider>
+      </EventCalendarProvider>,
+    );
+
+    const generalPanel = screen.getByRole('tabpanel', { name: /general/i });
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+
+    await expect(() => user.click(screen.getByRole('button', { name: /save/i }))).toWarnDev([
+      'MUI X Scheduler: A form field validator threw or rejected during the submit.',
+    ]);
+
+    expect(onEventsChange.called).to.equal(false);
+    expect(generalPanel).not.to.have.attribute('hidden');
+  });
+
+  it('should return to the General tab when the native validation blocks the submit', async () => {
+    const onEventsChange = spy();
+    function EndDateClearer() {
+      const endDate = useEventDialogFormField('endDate');
+      return (
+        <React.Fragment>
+          <EventDialogGeneralTabContent />
+          <button type="button" onClick={() => endDate.setValue('')}>
+            Clear end date
+          </button>
+        </React.Fragment>
+      );
+    }
+
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
+        <SchedulerSlotsProvider
+          slots={{ eventDialogGeneralTab: EndDateClearer }}
+          slotProps={undefined}
+        >
+          <TestEventDialogContent open {...defaultProps} />
+        </SchedulerSlotsProvider>
+      </EventCalendarProvider>,
+    );
+
+    const generalPanel = screen.getByRole('tabpanel', { name: /general/i });
+    await user.click(screen.getByRole('button', { name: 'Clear end date' }));
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+    expect(generalPanel).to.have.attribute('hidden');
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    // The browser refuses the submit over the hidden invalid control; the form
+    // must at least bring the failing field back into view.
+    expect(onEventsChange.called).to.equal(false);
+    expect(generalPanel).not.to.have.attribute('hidden');
+  });
+
   it('should render the event data in the form fields', async () => {
     const { user } = render(
       <EventCalendarProvider
