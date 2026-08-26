@@ -13,6 +13,7 @@ import { spy } from 'sinon';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
   EventDialogDateTimeSection,
@@ -403,11 +404,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
         .toOccurrence();
 
+      let schedulerStore!: AnyEventCalendarStore;
       render(
         <EventCalendarProvider events={[]} resources={resources} onEventsChange={() => {}}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
-            onMount={(store) =>
+            onMount={(store) => {
+              schedulerStore = store;
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
@@ -415,8 +418,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
                 end,
                 lockSurfaceType: false,
                 resourceId: null,
-              })
-            }
+              });
+            }}
           />
           <SchedulerSlotsProvider
             slots={{ eventDialogGeneralTab: CreationSections }}
@@ -434,6 +437,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       // re-render wholesale for it, only the fields bound to the written keys.
       expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-27');
       expect(onRender.callCount).to.equal(rendersBefore);
+
+      const placeholder = schedulerOccurrencePlaceholderSelectors.value(schedulerStore.state)!;
+      expect(adapter.formatByString(placeholder.start, 'yyyy-MM-dd')).to.equal('2025-05-27');
     });
 
     it('should apply the default value when the model carries the key with an explicit undefined', () => {
