@@ -834,9 +834,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     // No validator registered in these fields (the date and time section owns them), so
     // blocking, the message, and the dev warning can only come from the submit-level check.
-    function createRangeField(key: 'endDate' | 'endTime', label: string) {
+    function createRangeField(
+      key: 'endDate' | 'endTime',
+      label: string,
+      validate?: (value: string) => string | null,
+    ) {
       return function CustomRangeField() {
-        const field = useEventDialogFormField(key);
+        const field = useEventDialogFormField(key, { validate });
         return (
           <React.Fragment>
             <input
@@ -892,6 +896,28 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       expect(onEventsChange.callCount).to.equal(0);
       expect(screen.getByRole('alert')).to.have.text('End time must be after start time.');
+    });
+
+    it('should keep a more specific validator message over the generic range error', async () => {
+      const onEventsChange = spy();
+      const { user } = renderWithSlot(
+        {
+          eventDialogGeneralTab: createRangeField(
+            'endDate',
+            'End date',
+            () => 'Must stay within the project period',
+          ),
+        },
+        { onEventsChange },
+      );
+
+      const endDateInput = screen.getByRole('textbox', { name: 'End date' });
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-05-20');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(0);
+      expect(screen.getByRole('alert')).to.have.text('Must stay within the project period');
     });
 
     it('should keep a section rendered twice in sync through the shared form store', async () => {

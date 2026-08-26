@@ -291,12 +291,15 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
             ]);
           }
         }
-        formStore.setError(
-          rangeError.field,
-          rangeError.field === 'endDate'
-            ? localeText.startDateAfterEndDateError
-            : localeText.startTimeAfterEndTimeError,
-        );
+        // A validator on the same field may have stored a more specific message.
+        if (!Object.hasOwn(formStore.state.errors, rangeError.field)) {
+          formStore.setError(
+            rangeError.field,
+            rangeError.field === 'endDate'
+              ? localeText.startDateAfterEndDateError
+              : localeText.startTimeAfterEndTimeError,
+          );
+        }
       }
 
       if (!isValid || isMissingRequiredResource || rangeError) {
