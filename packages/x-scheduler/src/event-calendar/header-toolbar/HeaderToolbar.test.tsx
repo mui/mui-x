@@ -42,6 +42,21 @@ describe('<ViewSwitcher />', () => {
     expect(menuItems[1]).to.have.attribute('aria-selected', 'true');
   });
 
+  it('should expose aria-expanded reflecting the menu open state', async () => {
+    render(
+      <EventCalendarProvider {...standaloneDefaults}>
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
+    expect(viewSwitcherButton).to.have.attribute('aria-expanded', 'false');
+
+    fireEvent.click(viewSwitcherButton);
+
+    expect(viewSwitcherButton).to.have.attribute('aria-expanded', 'true');
+  });
+
   it('should render all views in the menu for a custom set of views (with more than 3 views)', async () => {
     render(
       <EventCalendarProvider {...standaloneDefaults} views={['agenda', 'week', 'day', 'month']}>
