@@ -1106,9 +1106,38 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         const saveButton = screen.getByRole('button', { name: 'Save' });
         await user.click(saveButton);
         expect(saveButton).to.have.attribute('disabled');
+        // A delete during the pending submit would race the resolving update.
+        expect(screen.getByRole('button', { name: 'Delete event' })).to.have.attribute('disabled');
 
         await act(async () => deferred.resolve(null));
         expect(saveButton).not.to.have.attribute('disabled');
+      });
+
+      it('should re-enable the buttons when the async validation fails', async () => {
+        const deferred = createDeferred();
+        function AsyncValidatedSection() {
+          const client = useEventDialogFormField<string>('client', {
+            defaultValue: 'Acme',
+            validate: () => deferred.promise,
+          });
+          return client.error ? <p role="alert">{client.error}</p> : null;
+        }
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: AsyncValidatedSection },
+          { onEventsChange: () => {} },
+        );
+
+        const saveButton = screen.getByRole('button', { name: 'Save' });
+        await user.click(saveButton);
+        expect(saveButton).to.have.attribute('disabled');
+
+        await act(async () => deferred.resolve('Nope' as never));
+
+        expect(screen.getByRole('alert')).to.have.text('Nope');
+        expect(saveButton).not.to.have.attribute('disabled');
+        expect(screen.getByRole('button', { name: 'Delete event' })).not.to.have.attribute(
+          'disabled',
+        );
       });
 
       it('should submit only once when Save is pressed twice while the validation is pending', async () => {

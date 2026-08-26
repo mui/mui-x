@@ -443,6 +443,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
             color="error"
             type="button"
             onClick={handleDelete}
+            // A delete during a pending recurring submit would get its scope
+            // operation overwritten by the resolving update.
+            disabled={isSubmitting}
           >
             {localeText.deleteEvent}
           </Button>
