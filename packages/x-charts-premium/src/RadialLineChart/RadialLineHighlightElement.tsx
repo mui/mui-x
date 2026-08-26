@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import reactMajor from '@mui/x-internals/reactMajor';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import type { SeriesId } from '@mui/x-charts/models';
 import { getSymbol } from '@mui/x-charts/internals';
@@ -36,8 +36,9 @@ function RadialLineHighlightElement(props: RadialLineHighlightElementProps) {
           d: d3Symbol(d3SymbolsFill[getSymbol(shape)])()!,
         };
 
-  const transformOrigin =
-    reactMajor > 18 ? { transformOrigin: `${x} ${y}` } : { 'transform-origin': `${x} ${y}` };
+  const transformOrigin = isReactVersionAtLeast(19)
+    ? { transformOrigin: `${x} ${y}` }
+    : { 'transform-origin': `${x} ${y}` };
 
   return (
     <Element
