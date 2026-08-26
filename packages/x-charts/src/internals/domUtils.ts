@@ -16,7 +16,35 @@ export function clearStringMeasurementCache() {
   stringCache.clear();
 }
 
+/** CSS properties written to the shared container by the last measurement. */
+const appliedContainerStyleKeys: string[] = [];
+
+function resetContainerStyle(container: SVGSVGElement) {
+  for (const cssKey of appliedContainerStyleKeys) {
+    container.style.removeProperty(cssKey);
+  }
+  appliedContainerStyleKeys.length = 0;
+}
+
 const MAX_CACHE_NUM = 2000;
+
+/**
+ * Drop the oldest entries once the cache is full.
+ * A `Map` iterates in insertion order, so the first keys are the least recently added.
+ * Wiping the whole cache instead would make a measurement depend on how many strings were measured
+ * before it, which is not stable across renders.
+ */
+function evictOldestEntries() {
+  if (stringCache.size <= MAX_CACHE_NUM) {
+    return;
+  }
+
+  const keys = stringCache.keys();
+  for (let i = stringCache.size - MAX_CACHE_NUM; i > 0; i -= 1) {
+    stringCache.delete(keys.next().value!);
+  }
+}
+
 const PIXEL_STYLES = new Set([
   'minWidth',
   'maxWidth',
@@ -107,6 +135,9 @@ export const getStringSize = (text: string | number, style: SVGCSSProperties = {
 
   try {
     const measurementSpanContainer = getMeasurementContainer();
+    // The element inherits any style left on the container by a previous `batchMeasureStrings` call.
+    resetContainerStyle(measurementSpanContainer);
+
     const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
     // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
@@ -125,9 +156,7 @@ export const getStringSize = (text: string | number, style: SVGCSSProperties = {
 
     stringCache.set(cacheKey, result);
 
-    if (stringCache.size + 1 > MAX_CACHE_NUM) {
-      stringCache.clear();
-    }
+    evictOldestEntries();
 
     if (process.env.NODE_ENV === 'test') {
       // In test environment, we clean the measurement span immediately
@@ -170,9 +199,17 @@ export function batchMeasureStrings(
   // https://en.wikipedia.org/wiki/Content_Security_Policy
   const measurementSpanStyle: Record<string, any> = { ...style };
 
+  // Styles set here stay on the shared container. Drop the previous call's ones first, otherwise a
+  // property this call omits keeps the earlier value and the text is measured with the wrong font.
+  resetContainerStyle(measurementContainer);
+
   Object.keys(measurementSpanStyle).map((styleKey) => {
-    (measurementContainer!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
-      convertPixelValue(styleKey, measurementSpanStyle[styleKey]);
+    const cssKey = camelCaseToDashCase(styleKey);
+    appliedContainerStyleKeys.push(cssKey);
+    (measurementContainer!.style as Record<string, any>)[cssKey] = convertPixelValue(
+      styleKey,
+      measurementSpanStyle[styleKey],
+    );
     return styleKey;
   });
 
@@ -196,9 +233,7 @@ export function batchMeasureStrings(
     sizeMap.set(text, result);
   }
 
-  if (stringCache.size + 1 > MAX_CACHE_NUM) {
-    stringCache.clear();
-  }
+  evictOldestEntries();
 
   if (process.env.NODE_ENV === 'test') {
     // In test environment, we clean the measurement span immediately
@@ -229,6 +264,18 @@ function measureSVGTextElement(element: SVGTextElement): { width: number; height
 let measurementContainer: SVGSVGElement | null = null;
 
 /**
+ * Text measured before its web font is available is measured with the fallback font.
+ * Without this the wrong size stays cached for the lifetime of the page.
+ */
+function watchFontLoading() {
+  if (typeof document === 'undefined' || !document.fonts) {
+    return;
+  }
+
+  document.fonts.addEventListener('loadingdone', clearStringMeasurementCache);
+}
+
+/**
  * Get (or create) a hidden span element to measure text size.
  */
 function getMeasurementContainer() {
@@ -247,6 +294,8 @@ function getMeasurementContainer() {
     measurementContainer.style.contain = 'strict';
 
     document.body.appendChild(measurementContainer);
+
+    watchFontLoading();
   }
 
   return measurementContainer;
