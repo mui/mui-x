@@ -14,7 +14,7 @@ import {
 } from '@mui/x-scheduler/event-dialog';
 
 function PrioritySection() {
-  const priority = useEventDialogFormField<string>('priority', {
+  const priority = useEventDialogFormField('priority', {
     defaultValue: 'medium',
   });
   return (

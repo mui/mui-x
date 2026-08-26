@@ -11,7 +11,7 @@ describe('useEventDialogOccurrence', () => {
     const errorRef = React.createRef<any>();
 
     const errorMessage1 =
-      'MUI X Scheduler: useEventDialogFormContext must be used within the event dialog form.';
+      'MUI X Scheduler: The component must be rendered inside the event dialog form.';
     const errorMessage2 = 'The above error occurred in the <Consumer> component';
     const expectedError = reactMajor < 19 ? [errorMessage2] : [errorMessage1];
 

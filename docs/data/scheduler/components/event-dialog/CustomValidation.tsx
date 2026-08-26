@@ -15,7 +15,7 @@ interface DemoEvent extends SchedulerEvent {
 }
 
 function MeetingLinkSection() {
-  const link = useEventDialogFormField<string>('meetingLink', {
+  const link = useEventDialogFormField('meetingLink', {
     defaultValue: '',
     validate: (value) =>
       value && !/^https?:\/\//.test(value)

@@ -39,6 +39,16 @@ export function CustomKeys() {
   return { seededValue, explicitValue, unseededValue };
 }
 
+// Known limitations of the built-in-key guard, kept compiling on purpose:
+// an explicit type argument defaults K to string, and a union key distributes
+// past the conditional. If these lines ever error, the guard got stronger.
+export function KnownLimitations(condition: boolean) {
+  const bypassed = useEventDialogFormField<number>('title', { defaultValue: 123 });
+  const unionKey: 'title' | 'room' = condition ? 'title' : 'room';
+  const union = useEventDialogFormField(unionKey, { defaultValue: 42 });
+  return { bypassed, union };
+}
+
 // A mistyped parameter on a built-in key must error instead of silently
 // falling through to the custom-key overloads.
 export function RejectedCalls() {
