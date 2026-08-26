@@ -20,6 +20,8 @@ export type TreeViewStoreInContext<TStore extends TreeViewAnyStore> = Omit<
   | 'update'
   | 'set'
   | 'updateStateFromParameters'
+  | 'applyParametersDuringRender'
+  | 'flushRenderUpdate'
   | 'disposables'
   | typeof disposeSymbol
   | 'mountEffect'
