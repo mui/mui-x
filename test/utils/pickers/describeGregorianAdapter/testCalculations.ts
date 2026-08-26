@@ -113,7 +113,8 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
 
     it('should work without args', () => {
-      const date = adapter.date().valueOf();
+      // `Temporal` forbids `valueOf`, so the comparison goes through the JS date.
+      const date = adapter.toJsDate(adapter.date()).valueOf();
 
       expect(Math.abs(date - Date.now())).to.be.lessThan(5);
     });

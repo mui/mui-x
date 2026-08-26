@@ -13,7 +13,7 @@ packageName: '@mui/x-date-pickers'
 :::warning
 UTC and timezones support is an ongoing effort.
 
-Only `AdapterDayjs`, `AdapterLuxon` and `AdapterMoment` are currently compatible with UTC dates and timezones.
+Only `AdapterDayjs`, `AdapterLuxon`, `AdapterMoment` and `AdapterTemporal` are currently compatible with UTC dates and timezones.
 :::
 
 ## Overview
@@ -30,13 +30,13 @@ This will be needed if the component has no `value` or `defaultValue` to deduce 
 
 ## Supported timezones
 
-|            Timezone | Description                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|             `"UTC"` | Will use the [Coordinated Universal Time](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)                                                                                                                                                                                                                                                                                                            |
-|         `"default"` | Will use the default timezone of your date library, this value can be set using<br/>- [`dayjs.tz.setDefault`](https://day.js.org/docs/en/timezone/set-default-timezone) on dayjs<br/>- [`Settings.defaultZone`](https://moment.github.io/luxon/#/zones?id=changing-the-default-zone) on luxon<br/>- [`moment.tz.setDefault`](https://momentjs.com/timezone/docs/#/using-timezones/default-timezone/) on moment |
-|          `"system"` | Will use the system's local timezone                                                                                                                                                                                                                                                                                                                                                                           |
-| IANA standard zones | Example: `"Europe/Paris"`, `"America/New_York"`<br/>[List of all the IANA zones](https://timezonedb.com/time-zones)                                                                                                                                                                                                                                                                                            |
-|        Fixed offset | Example: `"UTC+7"`<br/>**Only available with Luxon**                                                                                                                                                                                                                                                                                                                                                           |
+|            Timezone | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|             `"UTC"` | Will use the [Coordinated Universal Time](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)                                                                                                                                                                                                                                                                                                                                                                                                       |
+|         `"default"` | Will use the default timezone of your date library, this value can be set using<br/>- [`dayjs.tz.setDefault`](https://day.js.org/docs/en/timezone/set-default-timezone) on dayjs<br/>- [`Settings.defaultZone`](https://moment.github.io/luxon/#/zones?id=changing-the-default-zone) on luxon<br/>- [`moment.tz.setDefault`](https://momentjs.com/timezone/docs/#/using-timezones/default-timezone/) on moment<br/>- `setDefaultTimezone` exported from `@mui/x-date-pickers/AdapterTemporal` on Temporal |
+|          `"system"` | Will use the system's local timezone                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| IANA standard zones | Example: `"Europe/Paris"`, `"America/New_York"`<br/>[List of all the IANA zones](https://timezonedb.com/time-zones)                                                                                                                                                                                                                                                                                                                                                                                       |
+|        Fixed offset | Example: `"UTC+7"`<br/>**Only available with Luxon**                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
 {{"demo": "TimezonePlayground.js", "defaultCodeOpen": false}}
 
@@ -361,6 +361,87 @@ function App() {
 ```
 
 {{"demo": "MomentTimezone.js", "defaultCodeOpen": false}}
+
+## Usage with Temporal
+
+`Temporal` supports UTC and timezones natively, with no plugin or extra date library required.
+You only need to make sure the global `Temporal` object is available (see [Temporal setup](/x/react-date-pickers/adapters-locale/#with-temporal)).
+
+Pass the adapter to `LocalizationProvider`, then pass a `Temporal.ZonedDateTime` as the value:
+
+```tsx
+import 'temporal-polyfill/global';
+
+import { AdapterTemporal } from '@mui/x-date-pickers/AdapterTemporal';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+
+function App() {
+  return (
+    <LocalizationProvider dateAdapter={AdapterTemporal}>
+      <DateTimePicker
+        defaultValue={Temporal.ZonedDateTime.from(
+          '2022-04-17T15:30[America/New_York]',
+        )}
+      />
+    </LocalizationProvider>
+  );
+}
+```
+
+You can also let the picker create the value in a given timezone through the `timezone` prop.
+
+:::info
+`Temporal` has no global default timezone.
+To configure the zone used by the `"default"` timezone, call `setDefaultTimezone` exported from `@mui/x-date-pickers/AdapterTemporal`:
+
+```tsx
+import { setDefaultTimezone } from '@mui/x-date-pickers/AdapterTemporal';
+
+setDefaultTimezone('America/New_York');
+```
+
+:::
+
+### Working with plain types
+
+Every picker under a `LocalizationProvider` shares one value type.
+With `AdapterTemporal` that type is always `Temporal.ZonedDateTime`, so a `DatePicker` cannot return a `Temporal.PlainDate` and a `TimePicker` cannot return a `Temporal.PlainTime`.
+
+If your application stores plain types, convert them at the picker boundary using the methods `Temporal` already provides:
+
+|               Plain type | From the picker value     | Back to a picker value                                          |
+| -----------------------: | :------------------------ | :-------------------------------------------------------------- |
+|     `Temporal.PlainDate` | `value.toPlainDate()`     | `date.toZonedDateTime(timezone)`                                |
+| `Temporal.PlainDateTime` | `value.toPlainDateTime()` | `date.toZonedDateTime(timezone)`                                |
+|     `Temporal.PlainTime` | `value.toPlainTime()`     | `date.toZonedDateTime({ timeZone: timezone, plainTime: time })` |
+
+A `Temporal.PlainTime` carries no date, so it needs a reference day to become a `Temporal.ZonedDateTime`:
+
+```tsx
+const timezone = 'America/New_York';
+
+function ClockOut() {
+  const [clockOut, setClockOut] = React.useState<Temporal.PlainTime | null>(null);
+  const today = Temporal.Now.plainDateISO(timezone);
+
+  return (
+    <TimePicker
+      value={
+        clockOut
+          ? today.toZonedDateTime({ timeZone: timezone, plainTime: clockOut })
+          : null
+      }
+      onChange={(newValue) => setClockOut(newValue?.toPlainTime() ?? null)}
+    />
+  );
+}
+```
+
+:::info
+Keep the timezone used for the conversion in sync with the `timezone` prop of your pickers.
+The picker preserves the timezone of the value it receives.
+:::
 
 ## More advanced examples
 
