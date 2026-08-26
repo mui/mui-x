@@ -928,6 +928,62 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.queryByRole('alert')).to.equal(null);
     });
 
+    it('should block the submit of an unparseable date from a custom field', async () => {
+      clearWarningsCache();
+      const onEventsChange = spy();
+
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: createRangeField('endDate', 'End date') },
+          { onEventsChange },
+        );
+        const endDateInput = screen.getByRole('textbox', { name: 'End date' });
+        await user.clear(endDateInput);
+        await user.type(endDateInput, 'tomorrow');
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev([
+        'MUI X Scheduler: The "endDate" value cannot be parsed into a date but no field of the event dialog validates it.',
+      ]);
+
+      expect(onEventsChange.callCount).to.equal(0);
+      expect(screen.getByRole('alert')).to.have.text('Enter a valid date.');
+    });
+
+    it('should block the submit of an emptied time from a custom field', async () => {
+      clearWarningsCache();
+      const onEventsChange = spy();
+
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: createRangeField('endTime', 'End time') },
+          { onEventsChange },
+        );
+        await user.clear(screen.getByRole('textbox', { name: 'End time' }));
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev([
+        'MUI X Scheduler: The "endTime" value cannot be parsed into a date but no field of the event dialog validates it.',
+      ]);
+
+      expect(onEventsChange.callCount).to.equal(0);
+      expect(screen.getByRole('alert')).to.have.text('Enter a valid time.');
+    });
+
+    it('should store the generic range error when a registered validator passes', async () => {
+      const onEventsChange = spy();
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: createRangeField('endDate', 'End date', () => null) },
+        { onEventsChange },
+      );
+
+      const endDateInput = screen.getByRole('textbox', { name: 'End date' });
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-05-20');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(0);
+      expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
+    });
+
     it('should keep a more specific validator message over the generic range error', async () => {
       const onEventsChange = spy();
       const { user } = renderWithSlot(

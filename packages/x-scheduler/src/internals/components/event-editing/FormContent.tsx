@@ -36,6 +36,7 @@ import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderer
 import type { EventDialogFormValues } from '../event-dialog/utils';
 import {
   computeRange,
+  findInvalidRangeField,
   getRangeErrorMessage,
   validateRange,
   hasProp,
@@ -282,6 +283,28 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         formStore.setError('resourceIds', localeText.requiredResourceError);
       }
 
+      // Only custom fields can produce unparseable or empty date values.
+      const invalidRangeField = findInvalidRangeField(adapter, values, displayTimezone);
+      if (invalidRangeField) {
+        if (process.env.NODE_ENV !== 'production') {
+          if (!formStore.hasValidator(invalidRangeField)) {
+            warnOnce([
+              `MUI X Scheduler: The "${invalidRangeField}" value cannot be parsed into a date but no field of the event dialog validates it.`,
+              'Saving is still blocked, but the end user may have no visible field to fix it.',
+              'Render the date and time section in the General tab, or register a validator for the field.',
+            ]);
+          }
+        }
+        if (!Object.hasOwn(formStore.state.errors, invalidRangeField)) {
+          formStore.setError(
+            invalidRangeField,
+            invalidRangeField === 'startDate' || invalidRangeField === 'endDate'
+              ? localeText.invalidDateError
+              : localeText.invalidTimeError,
+          );
+        }
+      }
+
       const { start, end } = computeRange(adapter, values, displayTimezone);
 
       // Checked here so the range stays valid even when the date/time section
@@ -303,7 +326,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         }
       }
 
-      if (!isValid || isMissingRequiredResource || rangeError) {
+      if (!isValid || isMissingRequiredResource || invalidRangeField || rangeError) {
         return;
       }
 

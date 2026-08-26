@@ -105,9 +105,12 @@ function setOwn<T>(record: Record<string, T>, key: string, value: T) {
 }
 
 export const eventDialogFormSelectors = {
-  value: (state: EventDialogFormState, key: string) => getOwn(state.values, key),
-  hasValue: (state: EventDialogFormState, key: string) => Object.hasOwn(state.values, key),
-  error: (state: EventDialogFormState, key: string) => getOwn(state.errors, key),
+  value: (state: EventDialogFormState<Record<string, unknown>>, key: string) =>
+    getOwn(state.values, key),
+  hasValue: (state: EventDialogFormState<Record<string, unknown>>, key: string) =>
+    Object.hasOwn(state.values, key),
+  error: (state: EventDialogFormState<Record<string, unknown>>, key: string) =>
+    getOwn(state.errors, key),
 };
 
 /**

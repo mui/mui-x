@@ -145,6 +145,35 @@ export function validateRange(
   return null;
 }
 
+/**
+ * Returns the first date/time field whose value cannot produce a valid date
+ * (empty included), or `null` when they all parse.
+ */
+export function findInvalidRangeField(
+  adapter: Adapter,
+  values: Pick<EventDialogFormValues, 'startDate' | 'startTime' | 'endDate' | 'endTime' | 'allDay'>,
+  displayTimezone: TemporalTimezone,
+): 'startDate' | 'startTime' | 'endDate' | 'endTime' | null {
+  const parsesAsDate = (raw: string) =>
+    raw !== '' && adapter.isValid(adapter.date(raw, displayTimezone));
+  const parsesAsDateTime = (rawDate: string, rawTime: string) =>
+    rawTime !== '' && adapter.isValid(adapter.date(`${rawDate}T${rawTime}`, displayTimezone));
+
+  if (!parsesAsDate(values.startDate)) {
+    return 'startDate';
+  }
+  if (!values.allDay && !parsesAsDateTime(values.startDate, values.startTime)) {
+    return 'startTime';
+  }
+  if (!parsesAsDate(values.endDate)) {
+    return 'endDate';
+  }
+  if (!values.allDay && !parsesAsDateTime(values.endDate, values.endTime)) {
+    return 'endTime';
+  }
+  return null;
+}
+
 export function getRangeErrorMessage(
   field: 'endDate' | 'endTime',
   localeText: EventEditingLocaleText,
