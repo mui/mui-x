@@ -141,6 +141,13 @@ export function FormContent(props: FormContentProps) {
     // come from the raw model. When creating an event there is no model yet.
     const model = schedulerEventSelectors.modelLookup(store.state).get(occurrence.id);
     const customProperties = model ? getCustomEventProperties(model) : {};
+    // A model key holding an explicit `undefined` (e.g. from a spread) would otherwise
+    // count as seeded and shadow the field's `defaultValue`.
+    for (const key of Object.keys(customProperties)) {
+      if (customProperties[key as keyof typeof customProperties] === undefined) {
+        delete customProperties[key as keyof typeof customProperties];
+      }
+    }
 
     if (process.env.NODE_ENV !== 'production') {
       for (const key of Object.keys(customProperties)) {

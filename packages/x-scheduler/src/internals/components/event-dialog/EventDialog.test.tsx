@@ -374,6 +374,20 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.queryByRole('textbox', { name: 'Description' })).to.equal(null);
     });
 
+    it('should apply the default value when the model carries the key with an explicit undefined', () => {
+      // e.g. `{ ...event, priority: maybeValue }` with an undefined `maybeValue`
+      const eventWithExplicitUndefined = {
+        ...DEFAULT_EVENT,
+        priority: undefined,
+      } as SchedulerEvent;
+      renderWithSlot(
+        { eventDialogGeneralTab: CustomSection },
+        { events: [eventWithExplicitUndefined] },
+      );
+
+      expect(screen.getByRole('textbox', { name: 'Priority' })).to.have.value('normal');
+    });
+
     it('should keep the tab panel attributes when the slot is provided', () => {
       renderWithSlot({ eventDialogGeneralTab: CustomSection });
 
