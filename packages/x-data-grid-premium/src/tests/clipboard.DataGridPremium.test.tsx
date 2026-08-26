@@ -959,6 +959,45 @@ describe('<DataGridPremium /> - Clipboard', () => {
       ]);
     });
 
+    it('should store the row verbatim when `processRowUpdate` returns a replace update', async () => {
+      class CurrencyRow {
+        id: number;
+        currencyPair: string;
+        price1M: string | number;
+        constructor(id: number, currencyPair: string, price1M: string | number) {
+          this.id = id;
+          this.currencyPair = currencyPair;
+          this.price1M = price1M;
+        }
+      }
+
+      let replacement: CurrencyRow | undefined;
+      const onClipboardPasteEnd = spy();
+      const { user } = render(
+        <Test
+          onClipboardPasteEnd={onClipboardPasteEnd}
+          processRowUpdate={(newRow) => {
+            replacement = new CurrencyRow(newRow.id, newRow.currencyPair, newRow.price1M);
+            return { _action: 'replace' as const, row: replacement };
+          }}
+        />,
+      );
+
+      const cell = getCell(0, 1);
+      await act(() => cell.focus());
+      await user.click(cell);
+
+      paste(cell, '12');
+
+      await waitFor(() => {
+        expect(getCell(0, 1).textContent).to.equal('12');
+      });
+      // The instance returned in the envelope is stored verbatim.
+      expect(apiRef.current?.getRow(0)).to.equal(replacement);
+      // The `clipboardPasteEnd` event exposes the stored row, not the envelope.
+      expect(onClipboardPasteEnd.lastCall.args[0].newRows.get(0)).to.equal(replacement);
+    });
+
     describe('should copy and paste cell value', () => {
       let clipboardData = '';
       const writeText = (data: string) => {
