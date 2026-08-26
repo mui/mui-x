@@ -327,6 +327,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       const { start, end } = computeRange(adapter, values, displayTimezone);
 
       if (!runSubmitChecks(values, start, end) || !isValid) {
+        // The failing fields render in the General tab.
+        setTabValue('general');
         return;
       }
 

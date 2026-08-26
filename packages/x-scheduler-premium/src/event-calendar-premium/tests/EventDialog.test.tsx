@@ -89,6 +89,42 @@ describe('<EventDialogContent open />', () => {
 
   const { render } = createSchedulerRenderer();
 
+  it('should return to the General tab when the submit fails from the Recurrence tab', async () => {
+    const onEventsChange = spy();
+    const noResourceEvent = EventBuilder.new()
+      .title('Running')
+      .singleDay('2025-05-26T07:30:00Z', 45)
+      .build();
+    const noResourceOccurrence = EventBuilder.new()
+      .id(noResourceEvent.id)
+      .title(noResourceEvent.title)
+      .span(noResourceEvent.start, noResourceEvent.end)
+      .toOccurrence();
+
+    const { user } = render(
+      <EventCalendarProvider
+        events={[noResourceEvent]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+        shouldEventRequireResource
+        storeClass={PremiumTestStore}
+      >
+        <TestEventDialogContent open {...defaultProps} occurrence={noResourceOccurrence} />
+      </EventCalendarProvider>,
+    );
+
+    const generalPanel = screen.getByRole('tabpanel', { name: /general/i });
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+    expect(generalPanel).to.have.attribute('hidden');
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    expect(onEventsChange.called).to.equal(false);
+    // The failing field lives in the General tab, so the dialog switches back to it.
+    expect(generalPanel).not.to.have.attribute('hidden');
+    expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+  });
+
   it('should render the event data in the form fields', async () => {
     const { user } = render(
       <EventCalendarProvider
