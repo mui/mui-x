@@ -129,9 +129,7 @@ export function FormContent(props: FormContentProps) {
     getResourceSelectionMode(occurrence.resource, canHaveMultipleResources, isCreating),
   ).current;
 
-  // Built once: the provider ignores later values anyway, and this component
-  // re-renders on every placeholder push during creation (`usePushPlaceholder`
-  // subscribes it to the placeholder).
+  // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
     const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
@@ -207,7 +205,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   const { occurrence, resourceSelectionMode } = formStore;
 
   // Selector hooks
-  const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
@@ -320,6 +317,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
+      // Read directly instead of subscribing: the placeholder changes on every
+      // creation keystroke and would re-render the whole dialog.
+      const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
       if (rawPlaceholder?.type === 'creation') {
         store.createEvent({
           ...metaChanges,

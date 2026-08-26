@@ -374,6 +374,68 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.queryByRole('textbox', { name: 'Description' })).to.equal(null);
     });
 
+    it('should not re-render the slot content when a creation keystroke pushes the placeholder', () => {
+      const onRender = spy();
+      function RenderProbe() {
+        const priority = useEventDialogFormField('priority', { defaultValue: 'normal' });
+        onRender();
+        return (
+          <input
+            aria-label="Priority"
+            value={priority.value}
+            onChange={(event) => priority.setValue(event.target.value)}
+          />
+        );
+      }
+      function CreationSections() {
+        return (
+          <React.Fragment>
+            <EventDialogDateTimeSection />
+            <RenderProbe />
+          </React.Fragment>
+        );
+      }
+      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
+      const end = adapter.date('2025-05-26T08:15:00Z', 'default');
+      const creationOccurrence = EventBuilder.new()
+        .id('placeholder-id')
+        .title('')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .toOccurrence();
+
+      render(
+        <EventCalendarProvider events={[]} resources={resources} onEventsChange={() => {}}>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'time-grid',
+                start,
+                end,
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+          <SchedulerSlotsProvider
+            slots={{ eventDialogGeneralTab: CreationSections }}
+            slotProps={undefined}
+          >
+            <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          </SchedulerSlotsProvider>
+        </EventCalendarProvider>,
+      );
+
+      const rendersBefore = onRender.callCount;
+      fireEvent.change(screen.getByLabelText(/start date/i), { target: { value: '2025-05-27' } });
+
+      // The write pushes a placeholder into the scheduler store; the dialog must not
+      // re-render wholesale for it, only the fields bound to the written keys.
+      expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-27');
+      expect(onRender.callCount).to.equal(rendersBefore);
+    });
+
     it('should apply the default value when the model carries the key with an explicit undefined', () => {
       // e.g. `{ ...event, priority: maybeValue }` with an undefined `maybeValue`
       const eventWithExplicitUndefined = {
