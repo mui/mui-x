@@ -293,7 +293,8 @@ export class EventDialogFormStore<
     const { values } = this.state;
     const dirty: Record<string, unknown> = {};
     for (const key of Object.keys(values)) {
-      if (!excludeKeys?.has(key) && !Object.is(values[key], this.initialValues[key])) {
+      const initial = Object.hasOwn(this.initialValues, key) ? this.initialValues[key] : undefined;
+      if (!excludeKeys?.has(key) && !Object.is(values[key], initial)) {
         dirty[key] = values[key];
       }
     }

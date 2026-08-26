@@ -898,6 +898,35 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByRole('alert')).to.have.text('End time must be after start time.');
     });
 
+    it('should clear the range error when the range is fixed through the start date', async () => {
+      const { user } = renderWithSlot({}, { onEventsChange: () => {} });
+
+      const endDateInput = screen.getByLabelText(/end date/i);
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-05-20');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+      expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
+
+      // Fixing the range through the other field must also clear the error.
+      const startDateInput = screen.getByLabelText(/start date/i);
+      await user.clear(startDateInput);
+      await user.type(startDateInput, '2025-05-19');
+      expect(screen.queryByRole('alert')).to.equal(null);
+    });
+
+    it('should clear the range error when the all-day switch is toggled', async () => {
+      const { user } = renderWithSlot({}, { onEventsChange: () => {} });
+
+      const endDateInput = screen.getByLabelText(/end date/i);
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-05-20');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+      expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
+
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
+      expect(screen.queryByRole('alert')).to.equal(null);
+    });
+
     it('should keep a more specific validator message over the generic range error', async () => {
       const onEventsChange = spy();
       const { user } = renderWithSlot(

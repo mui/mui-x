@@ -141,6 +141,13 @@ describe('EventDialogFormStore', () => {
       expect(store.state.values).to.deep.equal({ notes: 'from-model' });
     });
 
+    it('should seed a default for a key named after an Object.prototype member', () => {
+      const store = createFormStore({ title: '' });
+      store.seedDefault('constructor', 'seeded');
+      expect(store.state.values.constructor).to.equal('seeded');
+      expect(store.getDirtyValues()).to.deep.equal({});
+    });
+
     it('should report a seeded key as dirty once edited, including a reset to undefined', () => {
       const store = createFormStore({ title: '' });
       store.seedDefault('notes', 'default');
@@ -262,6 +269,17 @@ describe('EventDialogFormStore', () => {
       store.registerValidator('title', () => 'Second');
       await store.validateAll();
       expect(store.state.errors).to.deep.equal({ title: ['First'] });
+    });
+
+    it('should pass undefined to a validator on an unseeded Object.prototype-named key', async () => {
+      const store = createFormStore({ title: '' });
+      const seen: unknown[] = [];
+      store.registerValidator('constructor', (value) => {
+        seen.push(value);
+        return null;
+      });
+      expect(await store.validateAll()).to.equal(true);
+      expect(seen).to.deep.equal([undefined]);
     });
 
     it('should pass all the values to the validator', async () => {
