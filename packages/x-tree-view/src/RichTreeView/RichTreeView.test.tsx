@@ -123,6 +123,31 @@ describe('<RichTreeView />', () => {
       });
     });
 
+    it('should use "Loading" as the accessible name when the tree has no label', () => {
+      render(<RichTreeView items={[]} loading />);
+
+      expect(screen.getByRole('tree')).to.have.attribute('aria-label', 'Loading');
+    });
+
+    it('should keep the aria-label provided by the consumer while loading', () => {
+      render(<RichTreeView items={[]} loading aria-label="Files" />);
+
+      expect(screen.getByRole('tree')).to.have.attribute('aria-label', 'Files');
+    });
+
+    it('should not add an aria-label when the consumer provides aria-labelledby', () => {
+      render(
+        <React.Fragment>
+          <span id="tree-label">Files</span>
+          <RichTreeView items={[]} loading aria-labelledby="tree-label" />
+        </React.Fragment>,
+      );
+
+      const tree = screen.getByRole('tree');
+      expect(tree).to.have.attribute('aria-labelledby', 'tree-label');
+      expect(tree).not.to.have.attribute('aria-label');
+    });
+
     it('should not forward `loading` and `loadingItemsCount` to the DOM', () => {
       render(<RichTreeView items={ITEMS} loading={false} loadingItemsCount={3} />);
 

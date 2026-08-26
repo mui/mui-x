@@ -109,7 +109,10 @@ export function RichTreeViewSkeleton<TStore extends TreeViewAnyStore, TOwnerStat
     getSlotProps: getRootProps,
     additionalProps: {
       'aria-busy': true,
-      'aria-label': 'Loading',
+      // Fallback name only: a label provided by the consumer must win in both loading states.
+      ...(forwardedProps['aria-label'] == null && forwardedProps['aria-labelledby'] == null
+        ? { 'aria-label': 'Loading' }
+        : {}),
     },
     ownerState,
   });
