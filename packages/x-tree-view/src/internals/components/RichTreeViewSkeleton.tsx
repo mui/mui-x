@@ -29,7 +29,7 @@ export function getSkeletonItemsCount(loadingItemsCount: number | undefined): nu
 
   const rawCount = loadingItemsCount ?? DEFAULT_SKELETON_ITEMS_COUNT;
   return Number.isFinite(rawCount)
-    ? Math.max(0, Math.min(MAX_SKELETON_ITEMS_COUNT, Math.floor(rawCount)))
+    ? Math.max(1, Math.min(MAX_SKELETON_ITEMS_COUNT, Math.floor(rawCount)))
     : DEFAULT_SKELETON_ITEMS_COUNT;
 }
 
