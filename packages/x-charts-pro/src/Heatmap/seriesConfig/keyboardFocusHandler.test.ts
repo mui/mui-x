@@ -70,7 +70,7 @@ const cell_11 = {
   yIndex: 1,
 } as const;
 
-function test(
+function moveFocus(
   direction: 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown',
   initialFocus: FocusedItemIdentifier<'heatmap'> | null,
 ) {
@@ -81,23 +81,23 @@ function test(
 
 describe('<Heatmap /> - keyboard navigation', () => {
   it('should move to the first node if no current focus', async () => {
-    expect(test('ArrowRight', null)).to.deep.equal(cell_00);
-    expect(test('ArrowLeft', null)).to.deep.equal(cell_00);
-    expect(test('ArrowUp', null)).to.deep.equal(cell_00);
-    expect(test('ArrowDown', null)).to.deep.equal(cell_00);
+    expect(moveFocus('ArrowRight', null)).to.deep.equal(cell_00);
+    expect(moveFocus('ArrowLeft', null)).to.deep.equal(cell_00);
+    expect(moveFocus('ArrowUp', null)).to.deep.equal(cell_00);
+    expect(moveFocus('ArrowDown', null)).to.deep.equal(cell_00);
   });
 
   it('should move to different cell', () => {
-    expect(test('ArrowRight', cell_00)).to.deep.equal(cell_01);
-    expect(test('ArrowLeft', cell_11)).to.deep.equal(cell_10);
-    expect(test('ArrowUp', cell_10)).to.deep.equal(cell_00);
-    expect(test('ArrowDown', cell_01)).to.deep.equal(cell_11);
+    expect(moveFocus('ArrowRight', cell_00)).to.deep.equal(cell_01);
+    expect(moveFocus('ArrowLeft', cell_11)).to.deep.equal(cell_10);
+    expect(moveFocus('ArrowUp', cell_10)).to.deep.equal(cell_00);
+    expect(moveFocus('ArrowDown', cell_01)).to.deep.equal(cell_11);
   });
 
   it('should try to go outside of the range', () => {
-    expect(test('ArrowRight', cell_01)).to.deep.equal(cell_01);
-    expect(test('ArrowLeft', cell_10)).to.deep.equal(cell_10);
-    expect(test('ArrowUp', cell_00)).to.deep.equal(cell_00);
-    expect(test('ArrowDown', cell_11)).to.deep.equal(cell_11);
+    expect(moveFocus('ArrowRight', cell_01)).to.deep.equal(cell_01);
+    expect(moveFocus('ArrowLeft', cell_10)).to.deep.equal(cell_10);
+    expect(moveFocus('ArrowUp', cell_00)).to.deep.equal(cell_00);
+    expect(moveFocus('ArrowDown', cell_11)).to.deep.equal(cell_11);
   });
 });
