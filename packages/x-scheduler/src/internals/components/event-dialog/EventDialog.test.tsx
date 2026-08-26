@@ -1029,6 +1029,63 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByRole('alert')).to.have.text('Enter a valid time.');
     });
 
+    it('should keep a custom required-resource message over the generic one', async () => {
+      clearWarningsCache();
+      const onEventsChange = spy();
+      const noResourceEvent: SchedulerEvent = EventBuilder.new()
+        .title('Running')
+        .singleDay('2025-05-26T07:30:00Z', 45)
+        .build();
+      const noResourceOccurrence = EventBuilder.new()
+        .id(noResourceEvent.id)
+        .title(noResourceEvent.title)
+        .span(noResourceEvent.start, noResourceEvent.end)
+        .toOccurrence();
+
+      function CustomResourceField() {
+        const resourceField = useEventDialogFormField('resourceIds', {
+          validate: (value) => (value.length > 0 ? null : 'Pick at least one room'),
+        });
+        return resourceField.error ? <p role="alert">{resourceField.error}</p> : null;
+      }
+
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: CustomResourceField },
+        { events: [noResourceEvent], shouldEventRequireResource: true, onEventsChange },
+        noResourceOccurrence,
+      );
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(0);
+      expect(screen.getByRole('alert')).to.have.text('Pick at least one room');
+    });
+
+    it('should surface a validator that throws instead of dying silently', async () => {
+      const onEventsChange = spy();
+      function ThrowingSection() {
+        useEventDialogFormField('client', {
+          defaultValue: '',
+          validate: () => {
+            throw new Error('validator exploded');
+          },
+        });
+        return null;
+      }
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: ThrowingSection },
+        { onEventsChange },
+      );
+
+      const saveButton = screen.getByRole('button', { name: 'Save' });
+      await expect(async () => {
+        await user.click(saveButton);
+      }).toErrorDev(['MUI X Scheduler: A form field validator threw during the submit.']);
+
+      expect(onEventsChange.callCount).to.equal(0);
+      // The dialog stays usable: the pending state is released.
+      expect(saveButton).not.to.have.attribute('disabled');
+    });
+
     it('should store the generic range error when a registered validator passes', async () => {
       const onEventsChange = spy();
       const { user } = renderWithSlot(

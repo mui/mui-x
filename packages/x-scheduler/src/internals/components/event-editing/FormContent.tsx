@@ -265,7 +265,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     end: TemporalSupportedObject,
   ): boolean => {
     const isMissingRequiredResource = shouldEventRequireResource && values.resourceIds.length === 0;
-    if (isMissingRequiredResource) {
+    if (
+      isMissingRequiredResource &&
+      !Object.prototype.hasOwnProperty.call(formStore.state.errors, 'resourceIds')
+    ) {
       formStore.setError('resourceIds', localeText.requiredResourceError);
     }
 
@@ -317,7 +320,17 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     isSubmittingRef.current = true;
     setIsSubmitting(true);
     try {
-      const isValid = await formStore.validateAll();
+      let isValid: boolean;
+      try {
+        isValid = await formStore.validateAll();
+      } catch (error) {
+        // A consumer validator threw or rejected; surface it instead of dying silently.
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('MUI X Scheduler: A form field validator threw during the submit.', error);
+        }
+        setTabValue('general');
+        return;
+      }
 
       if (!isSessionAliveRef.current) {
         return;
