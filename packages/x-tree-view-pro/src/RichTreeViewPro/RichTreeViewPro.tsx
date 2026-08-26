@@ -161,7 +161,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   const classes = useUtilityClasses(props);
   const slots = React.useMemo(() => ({ root: RichTreeViewProRoot, ...inSlots }), [inSlots]);
 
-  const isLoading = loading || lazyLoadingRootIsLoading;
+  const isLoading = lazyLoadingRootIsLoading || loading;
 
   if (error) {
     return <Alert severity="error">{error.message}</Alert>;
