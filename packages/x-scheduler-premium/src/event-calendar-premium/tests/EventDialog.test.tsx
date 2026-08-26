@@ -27,9 +27,11 @@ import {
   EventDialogContent,
   EventEditingOptionalRenderersContext,
   SchedulerSlotsProvider,
-  useEventDialogFormField,
 } from '@mui/x-scheduler/internals';
-import { EventDialogGeneralTabContent } from '@mui/x-scheduler/event-dialog';
+import {
+  EventDialogGeneralTabContent,
+  useEventDialogFormField,
+} from '@mui/x-scheduler/event-dialog';
 import { describe, it, expect, vi } from 'vitest';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';

@@ -33,14 +33,16 @@ import type { EndsSelection } from '@mui/x-scheduler/internals';
 import {
   useEventEditingStyledContext,
   useEventDialogFormContext,
-  useEventDialogFormField,
   getEndsSelectionFromRRule,
   formatDayOfMonthAndMonthFullLetter,
   EventDialogTabPanel,
   EventDialogTabContent,
   getWeekdayToken,
 } from '@mui/x-scheduler/internals';
-import { EventDialogSectionHeaderTitle } from '@mui/x-scheduler/event-dialog';
+import {
+  EventDialogSectionHeaderTitle,
+  useEventDialogFormField,
+} from '@mui/x-scheduler/event-dialog';
 
 const RecurrenceSelectorContainer = styled('div', {
   name: 'MuiEventDialog',
