@@ -312,12 +312,13 @@ export class EventDialogFormStore<
         if (process.env.NODE_ENV !== 'production' && !isSettled) {
           warnOnce([
             'MUI X Scheduler: The form values or validators kept changing while the validation was running (for example a validator calling setValue).',
-            'The validation settled with the last computed errors, which may not reflect the newest values.',
+            'The submit stays blocked; the stored errors describe the last completed pass.',
             'Avoid writing values or (un)registering validators from a validator.',
           ]);
         }
         this.set('errors', errors);
-        return Object.keys(errors).length === 0;
+        // Failing closed on the cap: never resolve valid over values no validator saw.
+        return isSettled && Object.keys(errors).length === 0;
       }
     }
   };

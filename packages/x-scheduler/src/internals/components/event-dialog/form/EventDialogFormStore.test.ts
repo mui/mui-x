@@ -304,14 +304,15 @@ describe('EventDialogFormStore', () => {
       expect(store.state.errors).to.deep.equal({ title: ['First'] });
     });
 
-    it('should settle instead of looping when a validator writes a value', async () => {
+    it('should settle as invalid instead of looping when a validator writes a value', async () => {
       const store = createFormStore({ title: 'Meeting' });
       store.registerValidator('title', (value) => {
         store.setValue('title', value as string);
         return null;
       });
       await expect(async () => {
-        expect(await store.validateAll()).to.equal(true);
+        // Failing closed: the cap never resolves valid over values no validator saw.
+        expect(await store.validateAll()).to.equal(false);
       }).toWarnDev([
         'MUI X Scheduler: The form values or validators kept changing while the validation was running (for example a validator calling setValue).',
       ]);
