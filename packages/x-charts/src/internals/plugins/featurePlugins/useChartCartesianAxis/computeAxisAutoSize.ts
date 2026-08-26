@@ -10,7 +10,7 @@ import { deg2rad } from '../../../angleConversion';
 import { getGraphemeCount } from '../../../getGraphemeCount';
 import { getScale } from '../../../getScale';
 import { scaleBand, scalePoint } from '../../../scales';
-import { AXIS_LABEL_DEFAULT_HEIGHT, DEFAULT_TICK_LABEL_FONT_SIZE } from '../../../../constants';
+import { AXIS_LABEL_DEFAULT_HEIGHT } from '../../../../constants';
 import {
   AXIS_AUTO_SIZE_PADDING,
   AXIS_AUTO_SIZE_MIN,
@@ -258,15 +258,6 @@ function getRotatedDimension(
 }
 
 /**
- * The ticks render with an explicit font size, so measure with the same one.
- * Without it the measurement element inherits the document font and the axis is sized for text that
- * is never drawn.
- */
-function withDefaultFontSize(style: ChartsTextStyle | undefined): ChartsTextStyle {
-  return { fontSize: DEFAULT_TICK_LABEL_FONT_SIZE, ...style };
-}
-
-/**
  * Computes the auto-size dimension for a grouped axis.
  * For grouped axes, we compute cumulative tick sizes so that each group's labels
  * are positioned after the previous group's labels (no overlap).
@@ -292,10 +283,10 @@ function computeGroupedAxisAutoSize(
     const group = groups[groupIndex];
     const groupLabels = selectLargestCandidates(getGroupLabels(data, group));
 
-    const groupTickLabelStyle = withDefaultFontSize({
+    const groupTickLabelStyle = {
       ...axisTickLabelStyle,
       ...group.tickLabelStyle,
-    } as ChartsTextStyle);
+    } as ChartsTextStyle | undefined;
 
     const angle = groupTickLabelStyle?.angle;
     const { maxWidth, maxHeight } = measureTickLabels(groupLabels, groupTickLabelStyle);
@@ -357,7 +348,7 @@ export function computeAxisAutoSize(
     return computeGroupedAxisAutoSize(axis, direction);
   }
 
-  const tickLabelStyle = withDefaultFontSize(axis.tickLabelStyle as ChartsTextStyle | undefined);
+  const tickLabelStyle = axis.tickLabelStyle as ChartsTextStyle | undefined;
   const tickSize = axis.tickSize ?? AXIS_AUTO_SIZE_TICK_SIZE;
   const hasLabel = Boolean(axis.label);
   const angle = tickLabelStyle?.angle;

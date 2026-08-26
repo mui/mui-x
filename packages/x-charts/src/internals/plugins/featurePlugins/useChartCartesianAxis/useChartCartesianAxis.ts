@@ -24,7 +24,15 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   instance,
 }) => {
   const { chartsLayerContainerRef } = instance;
-  const { xAxis, yAxis, dataset, onHighlightedAxisChange, onTooltipAxisChange, axesGap } = params;
+  const {
+    xAxis,
+    yAxis,
+    dataset,
+    onHighlightedAxisChange,
+    onTooltipAxisChange,
+    axesGap,
+    defaultTickLabelStyle,
+  } = params;
 
   if (process.env.NODE_ENV !== 'production') {
     const ids = [...(xAxis ?? []), ...(yAxis ?? [])]
@@ -87,10 +95,10 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
     store.set('cartesianAxis', {
       axesGap,
-      x: defaultizeXAxis(xAxis, dataset, axesGap),
-      y: defaultizeYAxis(yAxis, dataset, axesGap),
+      x: defaultizeXAxis(xAxis, dataset, axesGap, defaultTickLabelStyle),
+      y: defaultizeYAxis(yAxis, dataset, axesGap, defaultTickLabelStyle),
     });
-  }, [xAxis, yAxis, dataset, axesGap, store]);
+  }, [xAxis, yAxis, dataset, axesGap, defaultTickLabelStyle, store]);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
@@ -260,6 +268,7 @@ useChartCartesianAxis.params = {
   onTooltipAxisChange: true,
   tooltipAxis: true,
   axesGap: true,
+  defaultTickLabelStyle: true,
 };
 
 useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
@@ -268,8 +277,18 @@ useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
     axesGap: params.axesGap ?? 0,
     colors: params.colors ?? rainbowSurgePalette,
     theme: params.theme ?? 'light',
-    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset, params.axesGap ?? 0),
-    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset, params.axesGap ?? 0),
+    defaultizedXAxis: defaultizeXAxis(
+      params.xAxis,
+      params.dataset,
+      params.axesGap ?? 0,
+      params.defaultTickLabelStyle,
+    ),
+    defaultizedYAxis: defaultizeYAxis(
+      params.yAxis,
+      params.dataset,
+      params.axesGap ?? 0,
+      params.defaultTickLabelStyle,
+    ),
   };
 };
 

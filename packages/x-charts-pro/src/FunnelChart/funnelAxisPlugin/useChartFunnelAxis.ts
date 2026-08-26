@@ -56,11 +56,11 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       },
       cartesianAxis: {
         axesGap: 0,
-        x: defaultizeXAxis(xAxis, dataset, 0),
-        y: defaultizeYAxis(yAxis, dataset, 0),
+        x: defaultizeXAxis(xAxis, dataset, 0, params.defaultTickLabelStyle),
+        y: defaultizeYAxis(yAxis, dataset, 0, params.defaultTickLabelStyle),
       },
     });
-  }, [drawingArea, xAxis, yAxis, dataset, store, gap]);
+  }, [drawingArea, xAxis, yAxis, dataset, store, gap, params.defaultTickLabelStyle]);
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
@@ -183,14 +183,25 @@ useChartFunnelAxis.params = {
   dataset: true,
   onAxisClick: true,
   disableAxisListener: true,
+  defaultTickLabelStyle: true,
 };
 
 useChartFunnelAxis.getDefaultizedParams = ({ params }) => {
   return {
     ...params,
     gap: params.gap ?? 0,
-    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset, 0),
-    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset, 0),
+    defaultizedXAxis: defaultizeXAxis(
+      params.xAxis,
+      params.dataset,
+      0,
+      params.defaultTickLabelStyle,
+    ),
+    defaultizedYAxis: defaultizeYAxis(
+      params.yAxis,
+      params.dataset,
+      0,
+      params.defaultTickLabelStyle,
+    ),
   };
 };
 

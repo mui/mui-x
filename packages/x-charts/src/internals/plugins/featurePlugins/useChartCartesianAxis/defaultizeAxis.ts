@@ -10,6 +10,7 @@ import {
 import type { XAxis, YAxis } from '../../../../models';
 import type { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
 import type { DatasetType } from '../../../../models/seriesType/config';
+import type { ChartsTextStyle } from '../../../getWordsByLines';
 
 type InXAxis = XAxis & { zoom?: boolean | ZoomOptions };
 
@@ -17,6 +18,7 @@ export function defaultizeXAxis(
   inAxes: readonly InXAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
   axesGap: number,
+  defaultTickLabelStyle?: ChartsTextStyle,
 ): DefaultedXAxis[] {
   const offsets = {
     top: 0,
@@ -43,6 +45,7 @@ export function defaultizeXAxis(
     const sharedConfig = {
       offset: offsets[position],
       ...axisConfig,
+      tickLabelStyle: { ...defaultTickLabelStyle, ...axisConfig.tickLabelStyle },
       id,
       position,
       height,
@@ -96,6 +99,7 @@ export function defaultizeYAxis(
   inAxes: readonly InYAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
   axesGap: number,
+  defaultTickLabelStyle?: ChartsTextStyle,
 ): DefaultedYAxis[] {
   const offsets = { right: 0, left: 0, none: 0 };
 
@@ -118,6 +122,7 @@ export function defaultizeYAxis(
     const sharedConfig = {
       offset: offsets[position],
       ...axisConfig,
+      tickLabelStyle: { ...defaultTickLabelStyle, ...axisConfig.tickLabelStyle },
       id,
       position,
       width,

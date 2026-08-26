@@ -22,6 +22,7 @@ import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
 import type { UseChartBrushSignature } from '../useChartBrush';
 import type { SamplingState } from './sampling.types';
+import type { ChartsTextStyle } from '../../../getWordsByLines';
 
 /**
  * The axes' configuration after computing.
@@ -92,6 +93,12 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    * @default 0
    */
   axesGap?: number;
+  /**
+   * Style the axes measure their tick labels with, before the axis merges its own `tickLabelStyle`.
+   * Resolved from the theme by the provider, since the measurement runs outside React.
+   * @ignore - internal prop.
+   */
+  defaultTickLabelStyle?: ChartsTextStyle;
 }
 
 export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = ScaleName> =
