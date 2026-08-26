@@ -196,7 +196,7 @@ export default function ChartDemoPropsForm<
         borderColor: theme.palette.grey[200],
         background: alpha(theme.palette.grey[50], 0.5),
         minWidth: '250px',
-        [`:where(${theme.vars ? '[data-mui-color-scheme="dark"]' : '.mode-dark'}) &`]: {
+        [`*:where(${theme.vars ? '[data-mui-color-scheme="dark"]' : '.mode-dark'}) &`]: {
           borderColor: alpha(theme.palette.grey[900], 0.8),
           backgroundColor: alpha(theme.palette.grey[900], 0.3),
         },
