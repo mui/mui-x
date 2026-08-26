@@ -6,6 +6,7 @@ import {
   createPickerRenderer,
   expectFieldValue,
 } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
   const { render } = createPickerRenderer();

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { isFormulaErrorValue } from './formulaErrors';
 import {
   compareFormulaScalars,

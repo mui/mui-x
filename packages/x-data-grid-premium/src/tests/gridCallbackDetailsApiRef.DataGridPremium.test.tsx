@@ -13,6 +13,7 @@ import type {
   GridRowsProp,
 } from '@mui/x-data-grid-premium';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPremium /> - GridCallbackDetails apiRef', () => {
   const { render } = createRenderer();

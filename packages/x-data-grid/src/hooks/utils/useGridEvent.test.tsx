@@ -2,6 +2,7 @@ import { spy } from 'sinon';
 import { createRenderer, reactMajor } from '@mui/internal-test-utils';
 import { sleep } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import { useGridEvent, internal_registryContainer } from './useGridEvent';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';

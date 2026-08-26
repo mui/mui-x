@@ -4,6 +4,7 @@ import {
   PickerComponentType,
   PickerRangeComponentType,
 } from 'test/utils/pickers';
+import { expect } from 'vitest';
 
 export const expectFieldValue = (
   fieldSectionsContainer: HTMLDivElement,

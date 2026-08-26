@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { RichTreeView, richTreeViewClasses as classes } from '@mui/x-tree-view/RichTreeView';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe, it, expect } from 'vitest';
 
 describe('<RichTreeView />', () => {
   const { render } = createRenderer();

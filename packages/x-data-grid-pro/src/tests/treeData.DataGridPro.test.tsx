@@ -24,6 +24,7 @@ import type {
   GridPaginationModel,
   GridColDef,
 } from '@mui/x-data-grid-pro';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

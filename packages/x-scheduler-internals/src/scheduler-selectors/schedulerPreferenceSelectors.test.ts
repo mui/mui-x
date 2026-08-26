@@ -1,4 +1,5 @@
 import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { schedulerPreferenceSelectors } from './schedulerPreferenceSelectors';
 import { DEFAULT_SCHEDULER_PREFERENCES } from '../internals/utils/SchedulerStore';
 

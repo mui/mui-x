@@ -8,6 +8,7 @@ import {
   getResizeHandle,
 } from 'test/utils/scheduler';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
+import { describe, it, expect } from 'vitest';
 
 /**
  * Returns the MonthView grid cell for a given day-of-month number.

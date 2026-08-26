@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { createSelector, useStore } from '@base-ui/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
@@ -14,13 +14,11 @@ import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
 import type { EventCalendarState } from '../../use-event-calendar';
 
-const selectorIsCurrentDate = createSelector(
-  (
-    state: EventCalendarState,
-    date: TemporalSupportedObject,
-    skipDataCurrent: boolean | undefined,
-  ) => !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, date),
-);
+const selectorIsCurrentDate = (
+  state: EventCalendarState,
+  date: TemporalSupportedObject,
+  skipDataCurrent: boolean | undefined,
+) => !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, date);
 
 export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHeaderCell(
   componentProps: CalendarGridHeaderCell.Props,

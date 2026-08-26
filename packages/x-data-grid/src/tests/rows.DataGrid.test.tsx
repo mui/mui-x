@@ -42,6 +42,7 @@ import {
 import Dialog from '@mui/material/Dialog';
 import { isJSDOM } from 'test/utils/skipIf';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
 import type { GridApiCommunity } from '../models/api/gridApiCommunity';
 

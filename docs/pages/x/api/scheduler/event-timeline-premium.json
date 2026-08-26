@@ -226,6 +226,30 @@
       "isGlobal": false
     },
     {
+      "key": "eventContextMenu",
+      "className": "MuiEventTimelinePremium-eventContextMenu",
+      "description": "Styles applied to the event context menu root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenuDeleteItem",
+      "className": "MuiEventTimelinePremium-eventContextMenuDeleteItem",
+      "description": "Styles applied to the event context menu delete item element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenuEditItem",
+      "className": "MuiEventTimelinePremium-eventContextMenuEditItem",
+      "description": "Styles applied to the event context menu edit item element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenuShowDetailsItem",
+      "className": "MuiEventTimelinePremium-eventContextMenuShowDetailsItem",
+      "description": "Styles applied to the event context menu show details item element (read-only events).",
+      "isGlobal": false
+    },
+    {
       "key": "eventDialog",
       "className": "MuiEventTimelinePremium-eventDialog",
       "description": "Styles applied to the event dialog root element.",

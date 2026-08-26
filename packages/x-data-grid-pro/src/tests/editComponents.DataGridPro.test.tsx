@@ -17,6 +17,7 @@ import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test
 import { getCell, getRow, spyApi, sleep } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import type { SinonSpy } from 'sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 /**
  * Creates a date that is compatible with years before 1901

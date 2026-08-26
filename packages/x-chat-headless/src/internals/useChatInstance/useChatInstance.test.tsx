@@ -2,6 +2,7 @@ import * as React from 'react';
 import { act, renderHook } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { spy } from 'sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
 import type { ChatConversation, ChatMessage } from '../../types/chat-entities';
 import { useChatInstance } from './useChatInstance';
 

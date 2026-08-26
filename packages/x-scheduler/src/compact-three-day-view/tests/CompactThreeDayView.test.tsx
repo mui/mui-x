@@ -6,6 +6,7 @@ import {
 import { within } from '@mui/internal-test-utils';
 import { CompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { describe, it, expect } from 'vitest';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 

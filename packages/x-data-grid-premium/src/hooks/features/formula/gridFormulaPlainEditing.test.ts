@@ -1,4 +1,5 @@
 import type { GridColDef } from '@mui/x-data-grid-pro';
+import { describe, it, expect } from 'vitest';
 import { getPlainEditParserInput, shouldIgnorePlainEditInput } from './gridFormulaPlainEditing';
 
 const numberColumn = { field: 'n', type: 'number', allowFormulas: true } as GridColDef;

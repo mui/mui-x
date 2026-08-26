@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   TEST_LICENSE_KEY_PRO,
