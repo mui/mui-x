@@ -3,8 +3,10 @@ import * as React from 'react';
 import Skeleton from '@mui/material/Skeleton';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
+import { useStore } from '@mui/x-internals/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
+import { itemsSelectors } from '../plugins/items';
 import type { TreeViewAnyStore } from '../models';
 import type { TreeViewStoreInContext } from '../TreeViewProvider';
 
@@ -93,6 +95,11 @@ export function RichTreeViewSkeleton<TStore extends TreeViewAnyStore, TOwnerStat
 
   const getRootProps = useTreeViewRootProps(store, forwardedProps, rootRef);
   const skeletonItemsCount = getSkeletonItemsCount(loadingItemsCount);
+  const itemHeight = useStore(store, itemsSelectors.itemHeight);
+  const skeletonItemStyle =
+    itemHeight == null
+      ? undefined
+      : ({ '--TreeView-itemHeight': `${itemHeight}px` } as React.CSSProperties);
 
   const Root = slots.root;
   const rootProps = useSlotProps({
@@ -115,6 +122,7 @@ export function RichTreeViewSkeleton<TStore extends TreeViewAnyStore, TOwnerStat
           role="treeitem"
           aria-disabled
           className={classes.skeletonItem}
+          style={skeletonItemStyle}
         >
           <SkeletonContentComponent className={classes.skeletonContent}>
             <span style={{ width: 16, flexShrink: 0, display: 'inline-block' }} />

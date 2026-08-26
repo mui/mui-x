@@ -81,6 +81,7 @@ const RichTreeViewProSkeletonContent = styled('div', {
 })(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
   width: '100%',
+  height: 'var(--TreeView-itemHeight, unset)',
   boxSizing: 'border-box',
   display: 'flex',
   alignItems: 'center',

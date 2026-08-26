@@ -105,6 +105,24 @@ describe('<RichTreeView />', () => {
       expect(screen.queryAllByRole('treeitem')).to.have.length(0);
     });
 
+    it('should apply itemHeight to the skeleton items', () => {
+      render(<RichTreeView items={[]} loading itemHeight={40} />);
+
+      const skeletonItems = screen.getAllByRole('treeitem');
+      skeletonItems.forEach((item) => {
+        expect(item.style.getPropertyValue('--TreeView-itemHeight')).to.equal('40px');
+      });
+    });
+
+    it('should not set the item height variable on the skeleton items when itemHeight is not set', () => {
+      render(<RichTreeView items={[]} loading />);
+
+      const skeletonItems = screen.getAllByRole('treeitem');
+      skeletonItems.forEach((item) => {
+        expect(item.style.getPropertyValue('--TreeView-itemHeight')).to.equal('');
+      });
+    });
+
     it('should not forward `loading` and `loadingItemsCount` to the DOM', () => {
       render(<RichTreeView items={ITEMS} loading={false} loadingItemsCount={3} />);
 
