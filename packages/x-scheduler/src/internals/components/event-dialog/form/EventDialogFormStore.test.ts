@@ -285,6 +285,20 @@ describe('EventDialogFormStore', () => {
       expect(store.state.errors).to.deep.equal({ title: ['First'] });
     });
 
+    it('should settle instead of looping when a validator writes a value', async () => {
+      clearWarningsCache();
+      const store = createFormStore({ title: 'Meeting' });
+      store.registerValidator('title', (value) => {
+        store.setValue('title', value as string);
+        return null;
+      });
+      await expect(async () => {
+        expect(await store.validateAll()).to.equal(true);
+      }).toWarnDev([
+        'MUI X Scheduler: A form field validator kept writing values while the validation was running.',
+      ]);
+    });
+
     it('should keep a failing validator error for a field named __proto__', async () => {
       const store = createFormStore({ title: '' });
       store.registerValidator('__proto__', () => 'Required');

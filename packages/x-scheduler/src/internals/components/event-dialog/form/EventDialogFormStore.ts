@@ -269,7 +269,10 @@ export class EventDialogFormStore<
    * Resolves with whether the form is valid.
    */
   public validateAll = async (): Promise<boolean> => {
-    while (true) {
+    // Safety valve for a validator that writes values while validating: without
+    // the cap the loop restarts forever and the submit never settles.
+    const maxRestarts = 20;
+    for (let restarts = 0; ; restarts += 1) {
       // `setValues` replaces the values object on every write, so its identity
       // doubles as a revision check.
       const { values } = this.state;
@@ -291,7 +294,16 @@ export class EventDialogFormStore<
           }
         }),
       );
-      if (this.state.values === values && this.validatorsRevision === validatorsRevision) {
+      const isSettled =
+        this.state.values === values && this.validatorsRevision === validatorsRevision;
+      if (isSettled || restarts >= maxRestarts) {
+        if (process.env.NODE_ENV !== 'production' && !isSettled) {
+          warnOnce([
+            'MUI X Scheduler: A form field validator kept writing values while the validation was running.',
+            'The validation settled with the last computed errors, which may not reflect the newest values.',
+            'Avoid calling setValue from a validator.',
+          ]);
+        }
         this.set('errors', errors);
         return Object.keys(errors).length === 0;
       }
