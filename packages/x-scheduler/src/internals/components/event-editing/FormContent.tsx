@@ -273,7 +273,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     const invalidRangeField = findInvalidRangeField(adapter, values, displayTimezone);
     if (invalidRangeField) {
       warnUnvalidatedField(invalidRangeField, 'The value cannot be parsed into a date');
-      if (!Object.hasOwn(formStore.state.errors, invalidRangeField)) {
+      if (!Object.prototype.hasOwnProperty.call(formStore.state.errors, invalidRangeField)) {
         formStore.setError(
           invalidRangeField,
           invalidRangeField === 'startDate' || invalidRangeField === 'endDate'
@@ -287,7 +287,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     if (rangeError) {
       warnUnvalidatedField(rangeError.field, 'The date range is invalid');
       // A validator on the same field may have stored a more specific message.
-      if (!Object.hasOwn(formStore.state.errors, rangeError.field)) {
+      if (!Object.prototype.hasOwnProperty.call(formStore.state.errors, rangeError.field)) {
         formStore.setError(rangeError.field, getRangeErrorMessage(rangeError.field, localeText));
       }
     }

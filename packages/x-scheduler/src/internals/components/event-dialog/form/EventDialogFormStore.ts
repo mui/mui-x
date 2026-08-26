@@ -81,8 +81,13 @@ export interface EventDialogFormParameters<
 
 // The key is an arbitrary consumer string, so reads and writes must stay on own
 // properties: a plain access on a key like `__proto__` would hit the prototype accessor.
+// The `call` form keeps the package's Node 14 support.
+function hasOwn(record: object, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(record, key);
+}
+
 function getOwn<T>(record: Record<string, T>, key: string): T | undefined {
-  return Object.hasOwn(record, key) ? record[key] : undefined;
+  return hasOwn(record, key) ? record[key] : undefined;
 }
 
 function setOwn<T>(record: Record<string, T>, key: string, value: T) {
@@ -98,7 +103,7 @@ export const eventDialogFormSelectors = {
   value: (state: EventDialogFormState<Record<string, unknown>>, key: string) =>
     getOwn(state.values, key),
   hasValue: (state: EventDialogFormState<Record<string, unknown>>, key: string) =>
-    Object.hasOwn(state.values, key),
+    hasOwn(state.values, key),
   error: (state: EventDialogFormState<Record<string, unknown>>, key: string) =>
     getOwn(state.errors, key),
 };
@@ -171,7 +176,7 @@ export class EventDialogFormStore<
 
     let errors = this.state.errors;
     for (const key of changedKeys) {
-      if (Object.hasOwn(errors, key)) {
+      if (hasOwn(errors, key)) {
         if (errors === this.state.errors) {
           errors = { ...errors };
         }
@@ -207,7 +212,7 @@ export class EventDialogFormStore<
       }
       return;
     }
-    if (keys.some((key) => Object.hasOwn(errors, key))) {
+    if (keys.some((key) => hasOwn(errors, key))) {
       const nextErrors = { ...errors };
       for (const key of keys) {
         delete nextErrors[key];
@@ -247,7 +252,7 @@ export class EventDialogFormStore<
    * or notifying `onValuesChange`. No-op when the key is already present.
    */
   public seedDefault = (key: string, value: unknown) => {
-    if (Object.hasOwn(this.state.values, key)) {
+    if (hasOwn(this.state.values, key)) {
       return;
     }
     setOwn(this.initialValues as Record<string, unknown>, key, value);

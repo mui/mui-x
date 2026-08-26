@@ -92,7 +92,11 @@ export function isBuiltInEventProperty(key: string): boolean {
 export function getCustomEventProperties<TEvent extends object>(model: TEvent): Partial<TEvent> {
   const customProperties: Record<string, unknown> = {};
   for (const key in model) {
-    if (model.hasOwnProperty(key) && !EVENT_PROPERTIES_LOOKUP.hasOwnProperty(key)) {
+    // `call` form: a custom event property named `hasOwnProperty` would shadow the method.
+    if (
+      Object.prototype.hasOwnProperty.call(model, key) &&
+      !EVENT_PROPERTIES_LOOKUP.hasOwnProperty(key)
+    ) {
       customProperties[key] = model[key as keyof TEvent];
     }
   }
@@ -250,7 +254,7 @@ function createOrUpdateEventModelFromBuiltInEventModel<
   const propertiesWithSetter: [AnyEventSetter<TEvent>, any][] = [];
 
   for (const key in changes) {
-    if (changes.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(changes, key)) {
       const typedKey = key as keyof SchedulerEvent;
       const setter = eventModelStructure?.[typedKey]?.setter;
       if (setter) {
