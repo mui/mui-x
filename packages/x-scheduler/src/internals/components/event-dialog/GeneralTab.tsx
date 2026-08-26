@@ -8,10 +8,15 @@ import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPane
 
 interface GeneralTabProps {
   value: string;
+  /**
+   * Whether the dialog renders a tablist. Without one the panel must not
+   * claim tab semantics — an orphaned tabpanel is an ARIA violation.
+   */
+  hasTabs: boolean;
 }
 
 export function GeneralTab(props: GeneralTabProps) {
-  const { value } = props;
+  const { value, hasTabs } = props;
 
   const { schedulerId, classes } = useEventEditingStyledContext();
   const { slots, slotProps } = useSchedulerSlots();
@@ -23,9 +28,13 @@ export function GeneralTab(props: GeneralTabProps) {
 
   return (
     <EventDialogTabPanel
-      role="tabpanel"
-      id={`${schedulerId}-general-tabpanel`}
-      aria-labelledby={`${schedulerId}-general-tab`}
+      {...(hasTabs
+        ? {
+            role: 'tabpanel',
+            id: `${schedulerId}-general-tabpanel`,
+            'aria-labelledby': `${schedulerId}-general-tab`,
+          }
+        : {})}
       className={classes.eventDialogTabPanel}
       hidden={value !== 'general'}
     >

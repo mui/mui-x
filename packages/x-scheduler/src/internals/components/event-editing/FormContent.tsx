@@ -402,6 +402,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     setTabValue(newValue);
   };
 
+  const hasTabs = Boolean(showRecurrence && RecurrenceTabRenderer);
+
   return (
     <DialogContent className={classes.eventDialogContent}>
       <EventDialogForm onSubmit={handleSubmit} className={classes.eventDialogForm}>
@@ -430,7 +432,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
             </EventDialogTabs>
           </EventDialogTabsContainer>
         )}
-        <GeneralTab value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'} />
+        <GeneralTab value={hasTabs ? tabValue : 'general'} hasTabs={hasTabs} />
         {showRecurrence && RecurrenceTabRenderer && (
           <RecurrenceTabRenderer occurrence={occurrence} tabValue={tabValue} />
         )}

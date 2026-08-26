@@ -490,13 +490,14 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(saved.notes).to.equal('kept');
     });
 
-    it('should keep the tab panel attributes when the slot is provided', () => {
+    it('should not claim tab semantics when the dialog renders no tabs', () => {
       renderWithSlot({ eventDialogGeneralTab: CustomSection });
 
+      // The community dialog has no Recurrence tab, so a tabpanel would be
+      // orphaned: no role, no dangling aria-labelledby.
       const panel = document.querySelector(`.${eventCalendarClasses.eventDialogTabPanel}`)!;
-      expect(panel).to.have.attribute('role', 'tabpanel');
-      expect(panel.getAttribute('id')).to.match(/-general-tabpanel$/);
-      expect(panel.getAttribute('aria-labelledby')).to.match(/-general-tab$/);
+      expect(panel).not.to.have.attribute('role');
+      expect(panel).not.to.have.attribute('aria-labelledby');
       // The slot owns the content, not the panel, so the content wrapper is still there.
       expect(panel.querySelector(`.${eventCalendarClasses.eventDialogTabContent}`)).not.to.equal(
         null,
