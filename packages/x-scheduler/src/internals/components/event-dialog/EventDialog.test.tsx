@@ -1294,6 +1294,30 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
     });
 
+    it('should expose the resolved read-only state on the public field hook', () => {
+      function ReadOnlyProbe() {
+        const color = useEventDialogFormField('color');
+        const custom = useEventDialogFormField('room');
+        return <span data-testid="read-only-probe">{`${color.readOnly}:${custom.readOnly}`}</span>;
+      }
+      render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          eventModelStructure={{ color: { getter: (event) => event.color } }}
+        >
+          <SchedulerSlotsProvider
+            slots={{ eventDialogGeneralTab: ReadOnlyProbe }}
+            slotProps={undefined}
+          >
+            <EventDialogContent open {...defaultProps} />
+          </SchedulerSlotsProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.getByTestId('read-only-probe').textContent).to.equal('true:false');
+    });
+
     it('should disable the color picker but keep the resource select writable when only the color property has no setter', () => {
       render(
         <EventCalendarProvider

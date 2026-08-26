@@ -8,10 +8,7 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import {
-  schedulerEventSelectors,
-  schedulerOtherSelectors,
-} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
 import type { EventDialogFormValues } from '../internals/components/event-dialog/utils';
 import {
@@ -67,18 +64,12 @@ export function EventDialogDateTimeSection() {
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
-  const { occurrence } = formStore;
 
   // Per-instance suffix: the same section can be rendered several times by a custom
   // General tab, and the ids must stay unique.
   const sectionId = useId();
 
   // Selector hooks
-  const isPropertyReadOnly = useStore(
-    store,
-    schedulerEventSelectors.isPropertyReadOnly,
-    occurrence.id,
-  );
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   const createRangeValidator =
@@ -125,7 +116,7 @@ export function EventDialogDateTimeSection() {
             required
             slotProps={{
               inputLabel: { shrink: true },
-              input: { readOnly: isPropertyReadOnly('start') },
+              input: { readOnly: startDate.readOnly },
             }}
             size="small"
           />
@@ -139,7 +130,7 @@ export function EventDialogDateTimeSection() {
               required
               slotProps={{
                 inputLabel: { shrink: true },
-                input: { readOnly: isPropertyReadOnly('start') },
+                input: { readOnly: startTime.readOnly },
               }}
               size="small"
             />
@@ -155,7 +146,7 @@ export function EventDialogDateTimeSection() {
             required
             slotProps={{
               inputLabel: { shrink: true },
-              input: { readOnly: isPropertyReadOnly('end') },
+              input: { readOnly: endDate.readOnly },
               formHelperText: { role: 'alert' },
             }}
             error={!!endDate.error}
@@ -172,7 +163,7 @@ export function EventDialogDateTimeSection() {
               required
               slotProps={{
                 inputLabel: { shrink: true },
-                input: { readOnly: isPropertyReadOnly('end') },
+                input: { readOnly: endTime.readOnly },
                 formHelperText: { role: 'alert' },
               }}
               error={!!endTime.error}
@@ -190,7 +181,7 @@ export function EventDialogDateTimeSection() {
                 formStore.clearErrors(RANGE_ERROR_KEYS);
                 allDay.setValue(event.target.checked);
               }}
-              disabled={isPropertyReadOnly('allDay')}
+              disabled={allDay.readOnly}
             />
           }
           label={localeText.allDayLabel}

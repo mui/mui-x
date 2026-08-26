@@ -1,4 +1,5 @@
 import type {
+  SchedulerEvent,
   SchedulerEventColor,
   SchedulerResourceId,
   RecurringEventPresetKey,
@@ -57,6 +58,25 @@ export interface EventDialogBuiltInFormValues {
  * live alongside the built-in keys.
  */
 export type EventDialogFormValues = EventDialogBuiltInFormValues & Record<string, unknown>;
+
+/**
+ * Event property backing each built-in form key, for per-property read-only checks.
+ */
+export const FORM_KEY_TO_EVENT_PROPERTY: {
+  [P in keyof EventDialogBuiltInFormValues]-?: keyof SchedulerEvent;
+} = {
+  title: 'title',
+  description: 'description',
+  startDate: 'start',
+  startTime: 'start',
+  endDate: 'end',
+  endTime: 'end',
+  resourceIds: 'resource',
+  allDay: 'allDay',
+  color: 'color',
+  recurrenceSelection: 'rrule',
+  rruleDraft: 'rrule',
+};
 
 // The `-?` mapped type makes a key added to the interface but missing here a compile error.
 const BUILT_IN_FORM_KEYS_LOOKUP: { [P in keyof EventDialogBuiltInFormValues]-?: true } = {

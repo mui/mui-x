@@ -3,13 +3,21 @@ import { spy } from 'sinon';
 import { ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import { EventCalendarProvider } from '../../EventCalendarProvider';
 import { describe, it, expect } from 'vitest';
 import { EventDialogFormProvider, useEventDialogFormContext } from './EventDialogFormContext';
 import { useEventDialogFormField } from '../../../../event-dialog/useEventDialogFormField';
 import type { EventDialogFormStore } from './EventDialogFormStore';
 
 describe('EventDialogForm', () => {
-  const { render } = createSchedulerRenderer();
+  const { render: renderBase } = createSchedulerRenderer();
+
+  // The field hook reads the scheduler store (per-property read-only state).
+  function StoreWrapper(props: { children?: React.ReactNode }) {
+    return <EventCalendarProvider events={[]}>{props.children}</EventCalendarProvider>;
+  }
+  const render: typeof renderBase = (element, options) =>
+    renderBase(element, { ...options, wrapper: StoreWrapper });
 
   const occurrence = EventBuilder.new().toOccurrence();
   const sessionParameters = { occurrence, resourceSelectionMode: 'single' } as const;

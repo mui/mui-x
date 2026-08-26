@@ -1,11 +1,8 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import TextField from '@mui/material/TextField';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventEditingStyledContext } from '../event-editing';
 import { useEventDialogFormContext } from './form/EventDialogFormContext';
 import { useEventDialogFormField } from '../../../event-dialog/useEventDialogFormField';
@@ -28,14 +25,6 @@ export default function TitleSection() {
   // Context hooks
   const { occurrence } = useEventDialogFormContext();
   const { schedulerId, localeText } = useEventEditingStyledContext();
-  const store = useSchedulerStoreContext();
-
-  // Selector hooks
-  const isPropertyReadOnly = useStore(
-    store,
-    schedulerEventSelectors.isPropertyReadOnly,
-    occurrence.id,
-  );
 
   const title = useEventDialogFormField('title');
   // `preventScroll` so focusing the title doesn't scroll a still-off-screen drawer into view
@@ -61,7 +50,7 @@ export default function TitleSection() {
         inputRef={titleInputRef}
         slotProps={{
           input: {
-            readOnly: isPropertyReadOnly('title'),
+            readOnly: title.readOnly,
             'aria-label': localeText.eventTitleAriaLabel,
           },
           formHelperText: { role: 'alert' },

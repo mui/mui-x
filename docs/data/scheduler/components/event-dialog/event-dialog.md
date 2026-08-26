@@ -95,6 +95,7 @@ Return a **fragment** from the slot: the tab content is a flex column with a gap
 - `defaultValue` — seeds the field when the event does not have it yet. An untouched default is not saved.
 - `validate` — runs on save. Return the error message(s), or `null` when the value is valid. Async validators are supported.
 - `error` / `errors` — the current validation message(s) for the field.
+- `readOnly` — whether the event property backing the key is read-only (a getter without a setter in `eventModelStructure`). Mirror it on your input.
 
 Keep **all draft state** in the form through this hook, never in component `useState`: the form store lives above the slot and survives a slot remount — component state does not.
 

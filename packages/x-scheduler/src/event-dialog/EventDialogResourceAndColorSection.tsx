@@ -20,7 +20,6 @@ import { ToggleGroup } from '@base-ui/react/toggle-group';
 import { EVENT_COLORS } from '@mui/x-scheduler-internals/constants';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
-  schedulerEventSelectors,
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -178,7 +177,7 @@ ResourceSelectAdornment.propTypes /* remove-proptypes */ = {
 
 export function EventDialogResourceAndColorSection() {
   // Context hooks
-  const { occurrence, resourceSelectionMode: mode } = useEventDialogFormContext();
+  const { resourceSelectionMode: mode } = useEventDialogFormContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 
@@ -195,20 +194,14 @@ export function EventDialogResourceAndColorSection() {
     store,
     schedulerOtherSelectors.shouldEventRequireResource,
   );
-  const isPropertyReadOnly = useStore(
-    store,
-    schedulerEventSelectors.isPropertyReadOnly,
-    occurrence.id,
-  );
-
   const resourceField = useEventDialogFormField('resourceIds', {
     validate: (value) =>
       shouldEventRequireResource && value.length === 0 ? localeText.requiredResourceError : null,
   });
   const colorField = useEventDialogFormField('color');
 
-  const resourceReadOnly = isPropertyReadOnly('resource');
-  const colorReadOnly = isPropertyReadOnly('color');
+  const resourceReadOnly = resourceField.readOnly;
+  const colorReadOnly = colorField.readOnly;
   const { value: resourceIds } = resourceField;
   const { value: color } = colorField;
   const error = shouldEventRequireResource ? resourceField.error : undefined;

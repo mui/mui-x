@@ -4,11 +4,17 @@ import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isBuiltInEventProperty } from '@mui/x-scheduler-internals/internals';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import type {
   EventDialogBuiltInFormValues,
   EventDialogFormValues,
 } from '../internals/components/event-dialog/utils';
-import { BUILT_IN_FORM_KEYS } from '../internals/components/event-dialog/utils';
+import {
+  BUILT_IN_FORM_KEYS,
+  FORM_KEY_TO_EVENT_PROPERTY,
+} from '../internals/components/event-dialog/utils';
 import { eventDialogFormSelectors } from '../internals/components/event-dialog/form/EventDialogFormStore';
 import type {
   EventDialogFormErrorMessage,
@@ -58,6 +64,11 @@ export interface UseEventDialogFormFieldReturnValue<T, TWrite = T> {
    * All the error messages of the field, empty when it has none.
    */
   errors: EventDialogFormErrorMessage[];
+  /**
+   * Whether the event property backing the key is read-only
+   * (a getter without a setter in `eventModelStructure`, or a read-only event).
+   */
+  readOnly: boolean;
 }
 
 const NO_ERRORS: EventDialogFormErrorMessage[] = [];
@@ -107,7 +118,18 @@ export function useEventDialogFormField(
   }
 
   const store = useEventDialogFormContext();
+  const schedulerStore = useSchedulerStoreContext();
   const { defaultValue } = parameters;
+
+  const isPropertyReadOnly = useStore(
+    schedulerStore,
+    schedulerEventSelectors.isPropertyReadOnly,
+    store.occurrence.id,
+  );
+  const eventProperty =
+    (FORM_KEY_TO_EVENT_PROPERTY as Record<string, keyof SchedulerEvent>)[key] ??
+    (key as keyof SchedulerEvent);
+  const readOnly = isPropertyReadOnly(eventProperty);
 
   const storedValue = useStore(store, eventDialogFormSelectors.value, key);
   const isSeeded = useStore(store, eventDialogFormSelectors.hasValue, key);
@@ -137,5 +159,5 @@ export function useEventDialogFormField(
     return () => store.unregisterValidator(key, validate);
   }, [store, key, hasValidator, validate]);
 
-  return { value, setValue, error: errorList?.[0], errors: errorList ?? NO_ERRORS };
+  return { value, setValue, error: errorList?.[0], errors: errorList ?? NO_ERRORS, readOnly };
 }
