@@ -29,6 +29,7 @@ import {
   getCustomEventProperties,
   getEventResourceIds,
   getResourceSelectionMode,
+  isBuiltInEventProperty,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -305,6 +306,13 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // Only the custom fields the user actually edited enter the changes payload,
       // so untouched fields keep resolving against the live model on the recurring paths.
       const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
+      // A custom field named after a built-in event property (`id`, `readOnly`, ...)
+      // must not rewrite it; the hook already warns about these keys in dev.
+      for (const key of Object.keys(editedCustomValues)) {
+        if (isBuiltInEventProperty(key)) {
+          delete editedCustomValues[key];
+        }
+      }
 
       const metaChanges = {
         ...editedCustomValues,

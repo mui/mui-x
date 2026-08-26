@@ -450,6 +450,46 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByRole('textbox', { name: 'Priority' })).to.have.value('normal');
     });
 
+    it('should not let an edited custom field rewrite a built-in event property', async () => {
+      clearWarningsCache();
+      const onEventsChange = spy();
+      function CollidingSection() {
+        const readOnlyField = useEventDialogFormField('readOnly');
+        const notes = useEventDialogFormField('notes', { defaultValue: '' });
+        return (
+          <React.Fragment>
+            <input
+              aria-label="Read only"
+              value={(readOnlyField.value as string) ?? ''}
+              onChange={(event) => readOnlyField.setValue(event.target.value)}
+            />
+            <input
+              aria-label="Notes"
+              value={notes.value}
+              onChange={(event) => notes.setValue(event.target.value)}
+            />
+          </React.Fragment>
+        );
+      }
+
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: CollidingSection },
+          { onEventsChange },
+        );
+        await user.type(screen.getByRole('textbox', { name: 'Read only' }), 'x');
+        await user.type(screen.getByRole('textbox', { name: 'Notes' }), 'kept');
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev(['MUI X Scheduler: useEventDialogFormField() received the key "readOnly"']);
+
+      expect(onEventsChange.callCount).to.equal(1);
+      const saved = onEventsChange.lastCall.firstArg.find(
+        (event: SchedulerEvent) => event.id === DEFAULT_EVENT.id,
+      );
+      expect(saved).not.to.have.property('readOnly');
+      expect(saved.notes).to.equal('kept');
+    });
+
     it('should keep the tab panel attributes when the slot is provided', () => {
       renderWithSlot({ eventDialogGeneralTab: CustomSection });
 
