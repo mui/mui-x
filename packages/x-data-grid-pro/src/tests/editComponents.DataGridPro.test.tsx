@@ -404,7 +404,8 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionEnd: 10,
       });
 
-      expect(spiedSetEditCellValue.calledBefore(onValueChange)).to.equal(true);
+      expect(onValueChange.callCount).to.equal(1);
+      expect(spiedSetEditCellValue.firstCall.calledBefore(onValueChange.firstCall)).to.equal(true);
     });
   });
 
@@ -678,7 +679,8 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.dblClick(cell);
       await user.click(screen.queryAllByRole('option')[1]);
 
-      expect(spiedSetEditCellValue.calledBefore(onValueChange)).to.equal(true);
+      expect(onValueChange.callCount).to.equal(1);
+      expect(spiedSetEditCellValue.firstCall.calledBefore(onValueChange.firstCall)).to.equal(true);
     });
 
     it('should call onCellEditStop', async () => {
@@ -773,7 +775,8 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('checkbox');
       await user.click(input);
 
-      expect(spiedSetEditCellValue.calledBefore(onValueChange)).to.equal(true);
+      expect(onValueChange.callCount).to.equal(1);
+      expect(spiedSetEditCellValue.firstCall.calledBefore(onValueChange.firstCall)).to.equal(true);
     });
   });
 
@@ -949,7 +952,8 @@ describe('<DataGridPro /> - Edit components', () => {
       const option2 = within(listbox).getByRole('option', { name: 'Option 2' });
       await user.click(option2);
 
-      expect(spiedSetEditCellValue.calledBefore(onValueChange)).to.equal(true);
+      expect(onValueChange.callCount).to.equal(1);
+      expect(spiedSetEditCellValue.firstCall.calledBefore(onValueChange.firstCall)).to.equal(true);
     });
 
     it('should work with null initial value', async () => {
