@@ -7,6 +7,7 @@ import { useStore } from '@mui/x-internals/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
 import { itemsSelectors } from '../plugins/items';
+import { TREE_ITEM_ICON_CONTAINER_WIDTH_PX } from '../constants';
 import type { TreeViewAnyStore } from '../models';
 import type { TreeViewStoreInContext } from '../TreeViewProvider';
 
@@ -128,7 +129,13 @@ export function RichTreeViewSkeleton<TStore extends TreeViewAnyStore, TOwnerStat
           style={skeletonItemStyle}
         >
           <SkeletonContentComponent className={classes.skeletonContent}>
-            <span style={{ width: 16, flexShrink: 0, display: 'inline-block' }} />
+            <span
+              style={{
+                width: TREE_ITEM_ICON_CONTAINER_WIDTH_PX,
+                flexShrink: 0,
+                display: 'inline-block',
+              }}
+            />
             <Skeleton width={SKELETON_LABEL_WIDTHS[index % SKELETON_LABEL_WIDTHS.length]} />
           </SkeletonContentComponent>
         </SkeletonItemComponent>
