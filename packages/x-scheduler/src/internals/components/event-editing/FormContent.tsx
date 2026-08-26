@@ -143,9 +143,9 @@ export function FormContent(props: FormContentProps) {
     const customProperties = model ? getCustomEventProperties(model) : {};
     // A model key holding an explicit `undefined` (e.g. from a spread) would otherwise
     // count as seeded and shadow the field's `defaultValue`.
-    for (const key of Object.keys(customProperties)) {
-      if (customProperties[key as keyof typeof customProperties] === undefined) {
-        delete customProperties[key as keyof typeof customProperties];
+    for (const [key, value] of Object.entries(customProperties)) {
+      if (value === undefined) {
+        delete (customProperties as Record<string, unknown>)[key];
       }
     }
 
