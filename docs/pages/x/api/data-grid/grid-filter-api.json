@@ -1,10 +1,10 @@
 {
   "name": "GridFilterApi",
-  "description": "The filter API interface that is available in the grid apiRef.",
+  "description": "The filter API interface that is available in the grid [[apiRef]].",
   "properties": [
     {
       "name": "deleteFilterItem",
-      "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>.",
+      "description": "Deletes a [[GridFilterItem]].",
       "type": "(item: GridFilterItem) => void"
     },
     {
@@ -15,37 +15,37 @@
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
     {
       "name": "ignoreDiacritics",
-      "description": "Returns the value of the <code>ignoreDiacritics</code> prop.",
-      "type": "DataGridProcessedProps['ignoreDiacritics']"
+      "description": "Returns the value of the `ignoreDiacritics` prop.",
+      "type": "boolean"
     },
     {
       "name": "setFilterLogicOperator",
-      "description": "Changes the GridLogicOperator used to connect the filters.",
-      "type": "(operator: GridLogicOperator) => void"
+      "description": "Changes the [[GridLogicOperator]] used to connect the filters.",
+      "type": "(operator: 'and' | 'or') => void"
     },
     {
       "name": "setFilterModel",
-      "description": "Sets the filter model to the one given by <code>model</code>.",
-      "type": "(model: GridFilterModel, reason?: GridControlledStateReasonLookup['filter']) => void"
+      "description": "Sets the filter model to the one given by `model`.",
+      "type": "(model: { items: GridFilterItem[], logicOperator?: 'and' | 'or' | undefined, quickFilterValues?: any[] | undefined, quickFilterLogicOperator?: 'and' | 'or' | undefined, quickFilterExcludeHiddenColumns?: boolean | undefined }, reason?: 'changeLogicOperator' | 'deleteFilterItem' | 'removeAllFilterItems' | 'restoreState' | 'upsertFilterItem' | 'upsertFilterItems' | undefined) => void"
     },
     {
       "name": "setQuickFilterValues",
-      "description": "Set the quick filter values to the one given by <code>values</code>",
+      "description": "Set the quick filter values to the one given by `values`",
       "type": "(values: any[]) => void"
     },
     {
       "name": "showFilterPanel",
-      "description": "Shows the filter panel. If <code>targetColumnField</code> is given, a filter for this field is also added.",
-      "type": "(targetColumnField?: string, panelId?: string, labelId?: string) => void"
+      "description": "Shows the filter panel. If `targetColumnField` is given, a filter for this field is also added.",
+      "type": "(targetColumnField?: string | undefined, panelId?: string | undefined, labelId?: string | undefined) => void"
     },
     {
       "name": "upsertFilterItem",
-      "description": "Updates or inserts a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>.",
+      "description": "Updates or inserts a [[GridFilterItem]].",
       "type": "(item: GridFilterItem) => void"
     },
     {
       "name": "upsertFilterItems",
-      "description": "Updates or inserts many <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>.",
+      "description": "Updates or inserts many [[GridFilterItem]].",
       "type": "(items: GridFilterItem[]) => void"
     }
   ]

@@ -1,15 +1,16 @@
 {
-  "componentDescription": "A button that sets the chart zoom to a predefined range.\nIt renders the `baseToggleButton` slot.",
+  "componentDescription": "",
   "propDescriptions": {
-    "axisId": {
-      "description": "The axis ID to apply the range to. Defaults to the first x-axis with zoom enabled."
-    },
     "label": { "description": "The label used to identify the button for active-state tracking." },
-    "render": { "description": "A function to customize the rendering of the component." },
-    "size": { "description": "The size of the button." },
     "value": {
-      "description": "<p>The range value. Specifies how far back from the end of the data to zoom.</p>\n<ul>\n<li><code>{ unit, step }</code> — A calendar interval from the end of the data (e.g., <code>{ unit: &#39;month&#39;, step: 3 }</code> for 3 months).</li>\n<li><code>[start, end]</code> — An absolute date range, or a range between two ordinal (band/point) axis values.</li>\n<li><code>(params) =&gt; { start, end }</code> — A function that receives axis context (<code>scaleType</code>, <code>data</code>, <code>domain</code>) and returns zoom percentages (0-100).</li>\n<li><code>null</code> — Resets zoom to show all data.</li>\n</ul>\n"
-    }
+      "description": "The range value. Specifies how far back from the end of the data to zoom.<br><br>- <code>{ unit, step }</code> — A calendar interval from the end of the data (e.g., <code>{ unit: 'month', step: 3 }</code> for 3 months).\n- <code>[start, end]</code> — An absolute date range, or a range between two ordinal (band/point) axis values.\n- <code>(params) => { start, end }</code> — A function that receives axis context (<code>scaleType</code>, <code>data</code>, <code>domain</code>) and returns zoom percentages (0-100).\n- <code>null</code> — Resets zoom to show all data."
+    },
+    "axisId": {
+      "description": "The axis ID to apply the range to.\nDefaults to the first x-axis with zoom enabled."
+    },
+    "render": { "description": "A function to customize the rendering of the component." },
+    "size": { "description": "The size of the button." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

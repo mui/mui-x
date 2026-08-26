@@ -1,1 +1,11 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "color": { "description": "" },
+    "d": { "description": "" },
+    "featureName": { "description": "" },
+    "seriesId": { "description": "" }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {}
+}

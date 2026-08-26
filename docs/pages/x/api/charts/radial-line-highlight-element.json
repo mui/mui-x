@@ -1,0 +1,27 @@
+{
+  "props": {
+    "color": { "type": { "name": "string" }, "required": true },
+    "seriesId": { "type": { "name": "string" }, "required": true },
+    "shape": {
+      "type": {
+        "name": "enum",
+        "description": "'circle'<br>&#124;&nbsp;'cross'<br>&#124;&nbsp;'diamond'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'star'<br>&#124;&nbsp;'triangle'<br>&#124;&nbsp;'wye'"
+      },
+      "required": true
+    },
+    "x": { "type": { "name": "number" }, "required": true },
+    "y": { "type": { "name": "number" }, "required": true }
+  },
+  "name": "RadialLineHighlightElement",
+  "imports": [
+    "import { RadialLineHighlightElement } from '@mui/x-charts-premium/RadialLineChart';",
+    "import { RadialLineHighlightElement } from '@mui/x-charts-premium';"
+  ],
+  "slots": [],
+  "classes": [],
+  "muiName": "MuiRadialLineHighlightElement",
+  "filename": "/packages/x-charts-premium/src/RadialLineChart/RadialLineHighlightElement.tsx",
+  "inheritance": null,
+  "demos": "",
+  "cssComponent": false
+}

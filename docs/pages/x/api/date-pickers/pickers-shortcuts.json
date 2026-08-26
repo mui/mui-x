@@ -4,22 +4,12 @@
       "type": { "name": "enum", "description": "'accept'<br>&#124;&nbsp;'set'" },
       "default": "\"accept\""
     },
-    "dense": { "type": { "name": "bool" }, "default": "false" },
-    "disablePadding": { "type": { "name": "bool" }, "default": "false" },
     "items": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;{ getValue: func, id?: string, label: string }&gt;"
       },
       "default": "[]"
-    },
-    "subheader": { "type": { "name": "node" } },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
     }
   },
   "name": "PickersShortcuts",
@@ -28,34 +18,11 @@
     "import { PickersShortcuts } from '@mui/x-date-pickers';",
     "import { PickersShortcuts } from '@mui/x-date-pickers-pro';"
   ],
-  "classes": [
-    {
-      "key": "dense",
-      "className": "MuiList-dense",
-      "description": "Styles applied to the root element if dense.",
-      "isGlobal": false
-    },
-    {
-      "key": "padding",
-      "className": "MuiList-padding",
-      "description": "Styles applied to the root element unless `disablePadding={true}`.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiList-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "subheader",
-      "className": "MuiList-subheader",
-      "description": "Styles applied to the root element if a `subheader` is provided.",
-      "isGlobal": false
-    }
-  ],
+  "slots": [],
+  "classes": [],
   "muiName": "MuiPickersShortcuts",
   "filename": "/packages/x-date-pickers/src/PickersShortcuts/PickersShortcuts.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/shortcuts/\">Shortcuts</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/shortcuts/\">Shortcuts</a></li></ul>",
+  "cssComponent": false
 }

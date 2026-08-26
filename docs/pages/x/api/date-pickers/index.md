@@ -88,5 +88,5 @@
 - [DateTimeRangePickerTabs [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')](/x/api/date-pickers/date-time-range-picker-tabs/)
 - [DayCalendarSkeleton](/x/api/date-pickers/day-calendar-skeleton/)
 - [LocalizationProvider](/x/api/date-pickers/localization-provider/)
-- [PickersCalendarHeader](/x/api/date-pickers/pickers-calendar-header/)
 - [PickerDay](/x/api/date-pickers/picker-day/)
+- [PickersCalendarHeader](/x/api/date-pickers/pickers-calendar-header/)

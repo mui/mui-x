@@ -1,13 +1,24 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "MessageAvatarSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageAvatarSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatMessageAvatar",
   "imports": [
     "import { ChatMessageAvatar } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageAvatar } from '@mui/x-chat';"
   ],
+  "slots": [
+    { "name": "avatar", "description": "", "class": "MuiChatMessage-avatar" },
+    { "name": "image", "description": "", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiChatMessageAvatar",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageAvatar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>",
+  "cssComponent": false
 }

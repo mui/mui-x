@@ -7,15 +7,16 @@
     "rotation": { "description": "Displays rotation (spoke) grid." }
   },
   "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
     "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "every line element" },
-    "radiusLine": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "radius (circular) lines"
-    },
-    "root": { "description": "Styles applied to the root element." },
     "rotationLine": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "rotation (spoke) lines"
+    },
+    "radiusLine": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "radius (circular) lines"
     }
-  }
+  },
+  "slotDescriptions": {}
 }

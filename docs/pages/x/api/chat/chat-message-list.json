@@ -1,33 +1,126 @@
 {
   "props": {
     "autoScroll": {
-      "type": { "name": "union", "description": "{ buffer?: number }<br>&#124;&nbsp;bool" },
+      "type": {
+        "name": "union",
+        "description": "bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;{ buffer?: number }"
+      },
       "default": "true"
     },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatMessageListClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "enableRovingFocus": { "type": { "name": "bool" }, "default": "true" },
+    "estimatedItemSize": { "type": { "name": "number" } },
     "features": {
       "type": {
         "name": "shape",
-        "description": "{ dateDivider?: bool, streamingIndicator?: 'auto'<br>&#124;&nbsp;bool, unreadMarker?: bool }"
+        "description": "{ dateDivider?: bool, streamingIndicator?: 'auto'<br>&#124;&nbsp;bool<br>&#124;&nbsp;bool, unreadMarker?: bool }"
       }
     },
-    "onReachBottom": { "type": { "name": "func" } },
-    "onReachTop": { "type": { "name": "func" } },
+    "getItemKey": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(id: string, index: number) => Key", "describedArgs": [] }
+    },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "onReachBottom": {
+      "type": { "name": "func" },
+      "signature": { "type": "function() => void", "describedArgs": [] }
+    },
+    "onReachTop": {
+      "type": { "name": "func" },
+      "signature": { "type": "function() => void", "describedArgs": [] }
+    },
     "overlay": { "type": { "name": "node" }, "default": "null" },
-    "renderItem": { "type": { "name": "func" } }
+    "renderItem": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: { id: string; index: number; }) => ReactNode",
+        "describedArgs": []
+      }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "ChatMessageListSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ChatMessageListSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
   },
   "name": "ChatMessageList",
   "imports": [
     "import { ChatMessageList } from '@mui/x-chat/ChatMessageList';",
     "import { ChatMessageList } from '@mui/x-chat';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "content",
-      "className": "MuiChatMessageList-content",
-      "description": "Styles applied to the message list content element.",
-      "isGlobal": false
+      "name": "dateDivider",
+      "description": "The date separator rendered between message groups. Only rendered when\n`features.dateDivider` is enabled. Pass `null` to hide it.",
+      "class": null
     },
+    {
+      "name": "messageActions",
+      "description": "Actions row component (receives `{ messageId }`). Pass `null` to hide\nactions entirely; omit to render only the declarative `extraActions` from\n`slotProps.messageActions` if provided.",
+      "class": null
+    },
+    {
+      "name": "messageAuthorName",
+      "description": "Author name label rendered by the group wrapper (default variant: above the\nbubble; compact variant: inside the message grid). Pass `null` to hide.",
+      "class": null
+    },
+    {
+      "name": "messageAvatar",
+      "description": "Avatar component. Pass `null` to hide the avatar entirely and drop the\nreserved avatar grid track.",
+      "class": null
+    },
+    { "name": "messageContent", "description": "The message bubble component.", "class": null },
+    {
+      "name": "messageError",
+      "description": "Error card shown under the bubble when the message status is `error`.\nPass `null` to hide the error surface entirely (no component is mounted).",
+      "class": null
+    },
+    {
+      "name": "messageGroup",
+      "description": "The per-author group wrapper around consecutive messages.",
+      "class": null
+    },
+    {
+      "name": "messageInlineMeta",
+      "description": "Inline meta rendered inside the bubble (default variant). Pass `null` to hide.",
+      "class": null
+    },
+    { "name": "messageList", "description": "", "class": null },
+    { "name": "messageListContent", "description": "", "class": null },
+    { "name": "messageListOverlay", "description": "", "class": null },
+    { "name": "messageListScrollbar", "description": "", "class": null },
+    { "name": "messageListScrollbarThumb", "description": "", "class": null },
+    { "name": "messageListScroller", "description": "", "class": null },
+    {
+      "name": "messageListStatus",
+      "description": "The visually-hidden `role=\"status\"` element announcing streaming\ntransitions (\"Assistant is responding\" / \"Response complete\") to screen\nreaders. Pass `null`-rendering component to silence the announcements.",
+      "class": null
+    },
+    {
+      "name": "messageMeta",
+      "description": "External meta (compact variant). Pass `null` to hide.",
+      "class": null
+    },
+    {
+      "name": "messageRoot",
+      "description": "Styled root of `<ChatMessage>` (wrapper-only); the default avatar/content/meta\ntree still renders inside it.",
+      "class": null
+    },
+    {
+      "name": "streamingIndicator",
+      "description": "The animated dots shown while an assistant response is in flight: as a\ntrailing row while waiting for the response to start, then inside the\nassistant bubble while it streams. Controlled by\n`features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.",
+      "class": null
+    },
+    {
+      "name": "unreadMarker",
+      "description": "The \"new messages\" marker. Only rendered when `features.unreadMarker` is\nenabled. Pass `null` to hide it.",
+      "class": null
+    }
+  ],
+  "classes": [
     {
       "key": "root",
       "className": "MuiChatMessageList-root",
@@ -39,12 +132,17 @@
       "className": "MuiChatMessageList-scroller",
       "description": "Styles applied to the message list scroller element.",
       "isGlobal": false
+    },
+    {
+      "key": "content",
+      "className": "MuiChatMessageList-content",
+      "description": "Styles applied to the message list content element.",
+      "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatMessageList",
   "filename": "/packages/x-chat/src/ChatMessageList/ChatMessageList.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/behavior/scrolling/\">Chat - Scrolling</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/history-and-pagination/\">Chat - History and pagination</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/behavior/scrolling/\">Chat - Scrolling</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/history-and-pagination/\">Chat - History and pagination</a></li></ul>",
+  "cssComponent": false
 }

@@ -1,0 +1,14 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "value": {
+      "description": "The value to pre-fill into the composer when the suggestion is clicked."
+    },
+    "index": { "description": "The index of this item within the suggestions list." },
+    "label": { "description": "Display label. Falls back to <code>value</code>." },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "root": "" }
+}

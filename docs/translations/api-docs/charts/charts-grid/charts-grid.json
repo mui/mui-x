@@ -7,9 +7,10 @@
     "vertical": { "description": "Displays vertical grid." }
   },
   "classDescriptions": {
-    "horizontalLine": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
     "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "every line element" },
-    "root": { "description": "Styles applied to the root element." },
+    "horizontalLine": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
     "verticalLine": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" }
-  }
+  },
+  "slotDescriptions": {}
 }

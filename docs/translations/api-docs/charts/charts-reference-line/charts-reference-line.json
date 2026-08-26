@@ -8,31 +8,27 @@
     "labelStyle": { "description": "The style applied to the label." },
     "lineStyle": { "description": "The style applied to the line." },
     "spacing": {
-      "description": "Additional space around the label in px. Can be a number or an object <code>{ x, y }</code> to distinguish space with the reference line and space with axes."
+      "description": "Additional space around the label in px.\nCan be a number or an object <code>{ x, y }</code> to distinguish space with the reference line and space with axes."
     },
     "x": {
-      "description": "The x value associated with the reference line. If defined the reference line will be vertical."
+      "description": "The x value associated with the reference line.\nIf defined the reference line will be vertical."
     },
     "y": {
-      "description": "The y value associated with the reference line. If defined the reference line will be horizontal."
+      "description": "The y value associated with the reference line.\nIf defined the reference line will be horizontal."
     }
   },
   "classDescriptions": {
-    "horizontal": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "the reference line is horizontal"
-    },
-    "label": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "vertical": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the reference label"
+      "nodeName": "the root element if the reference line is vertical"
+    },
+    "horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element if the reference line is horizontal"
     },
     "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the reference line" },
-    "root": { "description": "Styles applied to the root element." },
-    "vertical": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "the reference line is vertical"
-    }
-  }
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the reference label" }
+  },
+  "slotDescriptions": {}
 }

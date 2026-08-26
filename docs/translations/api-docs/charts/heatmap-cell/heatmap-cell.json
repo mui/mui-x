@@ -1,1 +1,12 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "height": { "description": "" },
+    "ownerState": { "description": "" },
+    "width": { "description": "" },
+    "x": { "description": "" },
+    "y": { "description": "" }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {}
+}

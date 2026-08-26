@@ -1,10 +1,12 @@
 {
   "props": {
     "borderRadius": { "type": { "name": "number" } },
-    "className": { "type": { "name": "string" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "HeatmapPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "HeatmapPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -12,21 +14,22 @@
   "name": "HeatmapPlot",
   "imports": [
     "import { HeatmapPlot } from '@mui/x-charts-pro/Heatmap';",
-    "import { HeatmapPlot } from '@mui/x-charts-pro';"
+    "import { HeatmapPlot } from '@mui/x-charts-pro';",
+    "import { HeatmapPlot } from '@mui/x-charts-premium/Heatmap';",
+    "import { HeatmapPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
       "name": "cell",
       "description": "The component that renders the heatmap cell.",
       "default": "HeatmapCell",
-      "class": null
+      "class": "MuiHeatmap-cell"
     }
   ],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiHeatmapPlot",
   "filename": "/packages/x-charts-pro/src/Heatmap/HeatmapPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
 }

@@ -1,11 +1,22 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "ComposerTextAreaSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ComposerTextAreaSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ComposerTextArea",
-  "imports": ["import { ComposerTextArea } from '@mui/x-chat/headless';"],
+  "imports": [
+    "import { ComposerTextArea } from '@mui/x-chat-headless/composer';",
+    "import { ComposerTextArea } from '@mui/x-chat-headless';",
+    "import { ComposerTextArea } from '@mui/x-chat';"
+  ],
   "slots": [{ "name": "input", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiComposerTextArea",
   "filename": "/packages/x-chat-headless/src/composer/ComposerTextArea.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/composer/\">Chat - Headless composer</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/composer/\">Chat - Headless composer</a></li></ul>",
+  "cssComponent": false
 }

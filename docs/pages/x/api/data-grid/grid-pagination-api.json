@@ -4,27 +4,27 @@
   "properties": [
     {
       "name": "setPage",
-      "description": "Sets the displayed page to the value given by <code>page</code>.",
+      "description": "Sets the displayed page to the value given by `page`.",
       "type": "(page: number) => void"
     },
     {
       "name": "setPageSize",
-      "description": "Sets the number of displayed rows to the value given by <code>pageSize</code>.",
+      "description": "Sets the number of displayed rows to the value given by `pageSize`.",
       "type": "(pageSize: number) => void"
     },
     {
       "name": "setPaginationMeta",
-      "description": "Sets the <code>paginationMeta</code> to a new value.",
-      "type": "(paginationMeta: GridPaginationMeta) => void"
+      "description": "Sets the `paginationMeta` to a new value.",
+      "type": "(paginationMeta: { hasNextPage?: boolean | undefined }) => void"
     },
     {
       "name": "setPaginationModel",
-      "description": "Sets the <code>paginationModel</code> to a new value.",
-      "type": "(model: GridPaginationModel) => void"
+      "description": "Sets the `paginationModel` to a new value.",
+      "type": "(model: { pageSize: number, page: number }) => void"
     },
     {
       "name": "setRowCount",
-      "description": "Sets the <code>rowCount</code> to a new value.",
+      "description": "Sets the `rowCount` to a new value.",
       "type": "(rowCount: number) => void"
     }
   ]

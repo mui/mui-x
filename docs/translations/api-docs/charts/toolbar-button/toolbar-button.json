@@ -1,7 +1,13 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "render": { "description": "A function to customize the rendering of the component." }
+    "disabled": { "description": "" },
+    "id": { "description": "" },
+    "render": { "description": "A function to customize the rendering of the component." },
+    "size": { "description": "" },
+    "style": { "description": "" },
+    "tabIndex": { "description": "" }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

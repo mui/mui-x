@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "columnsSort": {
-      "description": "Changes how the options in the columns selector should be ordered. If not specified, the order is derived from the <code>columns</code> prop."
+      "description": "Changes how the options in the columns selector should be ordered.\nIf not specified, the order is derived from the <code>columns</code> prop."
     },
     "disableAddFilterButton": {
       "description": "If <code>true</code>, the <code>Add filter</code> button will not be displayed."
@@ -14,7 +14,11 @@
     "getColumnForNewFilter": {
       "description": "Function that returns the next filter item to be picked as default filter.",
       "typeDescriptions": {
-        "args": { "name": "args", "description": "Currently configured filters and columns." }
+        "args": { "name": "args", "description": "Currently configured filters and columns." },
+        "string | null": {
+          "name": "string | null",
+          "description": "The field to be used for the next filter or <code>null</code> to prevent adding a filter."
+        }
       }
     },
     "logicOperators": { "description": "Sets the available logic operators." },
@@ -22,5 +26,6 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

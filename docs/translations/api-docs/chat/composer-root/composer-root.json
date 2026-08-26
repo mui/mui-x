@@ -2,11 +2,14 @@
   "componentDescription": "",
   "propDescriptions": {
     "attachmentConfig": {
-      "description": "Configuration for attachment validation constraints. When provided, file attachments are validated against these rules."
+      "description": "Configuration for attachment validation constraints.\nWhen provided, file attachments are validated against these rules."
     },
+    "disabled": { "description": "" },
     "onSubmit": {
-      "description": "Handler invoked when the form is submitted.<br>Native form submission is always prevented before this handler runs. Call <code>event.preventDefault()</code> from inside the handler to also suppress the composer&#39;s own <code>submit()</code> action; otherwise the composer submits as usual after the handler returns."
-    }
+      "description": "Handler invoked when the form is submitted.<br><br>Native form submission is always prevented before this handler runs.\nCall <code>event.preventDefault()</code> from inside the handler to also suppress the\ncomposer's own <code>submit()</code> action; otherwise the composer submits as usual\nafter the handler returns."
+    },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
   },
   "classDescriptions": {},
   "slotDescriptions": { "root": "" }

@@ -1,7 +1,16 @@
 {
   "componentDescription": "",
-  "propDescriptions": { "label": { "description": "Label displayed above the list of sources." } },
-  "classDescriptions": {},
+  "propDescriptions": {
+    "classes": { "description": "" },
+    "label": { "description": "Label displayed above the list of sources." },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
+  },
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },
+    "list": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the list element" }
+  },
   "slotDescriptions": {
     "label": "The label element shown above the list.",
     "list": "The ordered list wrapping source items.",

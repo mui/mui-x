@@ -1,0 +1,8 @@
+{
+  "interfaceDescription": "Object passed as parameter in the row callbacks.",
+  "propertiesDescriptions": {
+    "columns": { "description": "All grid columns." },
+    "id": { "description": "The grid row id." },
+    "row": { "description": "The row model of the row that the current cell belongs to." }
+  }
+}

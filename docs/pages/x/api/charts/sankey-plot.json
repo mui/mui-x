@@ -1,6 +1,9 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<SankeyClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "className": { "type": { "name": "string" } },
     "onLinkClick": {
       "type": { "name": "func" },
@@ -20,68 +23,15 @@
   "name": "SankeyPlot",
   "imports": [
     "import { SankeyPlot } from '@mui/x-charts-pro/SankeyChart';",
-    "import { SankeyPlot } from '@mui/x-charts-pro';"
+    "import { SankeyPlot } from '@mui/x-charts-pro';",
+    "import { SankeyPlot } from '@mui/x-charts-premium/SankeyChart';",
+    "import { SankeyPlot } from '@mui/x-charts-premium';"
   ],
-  "classes": [
-    {
-      "key": "link",
-      "className": "MuiSankeyChart-link",
-      "description": "Styles applied to an individual link element.",
-      "isGlobal": false
-    },
-    {
-      "key": "linkLabel",
-      "className": "MuiSankeyChart-linkLabel",
-      "description": "Styles applied to an individual link label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "linkLabels",
-      "className": "MuiSankeyChart-linkLabels",
-      "description": "Styles applied to the link label container.",
-      "isGlobal": false
-    },
-    {
-      "key": "links",
-      "className": "MuiSankeyChart-links",
-      "description": "Styles applied to the links container.",
-      "isGlobal": false
-    },
-    {
-      "key": "node",
-      "className": "MuiSankeyChart-node",
-      "description": "Styles applied to an individual node element.",
-      "isGlobal": false
-    },
-    {
-      "key": "nodeLabel",
-      "className": "MuiSankeyChart-nodeLabel",
-      "description": "Styles applied to an individual node label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "nodeLabels",
-      "className": "MuiSankeyChart-nodeLabels",
-      "description": "Styles applied to the node label container.",
-      "isGlobal": false
-    },
-    {
-      "key": "nodes",
-      "className": "MuiSankeyChart-nodes",
-      "description": "Styles applied to the nodes container.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiSankeyChart-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    }
-  ],
-  "spread": true,
-  "themeDefaultProps": null,
+  "slots": [],
+  "classes": [],
   "muiName": "MuiSankeyPlot",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
 }

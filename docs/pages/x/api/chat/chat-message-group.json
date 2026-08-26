@@ -1,8 +1,20 @@
 {
   "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
     "groupKey": {
       "type": { "name": "func" },
-      "default": "(message) => message.author?.id ?? message.role ?? ''"
+      "default": "(message) => message.author?.id ?? message.role ?? ''",
+      "signature": {
+        "type": "function(message: ChatMessage) => string | number",
+        "describedArgs": []
+      }
+    },
+    "index": { "type": { "name": "number" } },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "slotProps": { "type": { "name": "shape", "description": "ChatMessageGroupSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "ChatMessageGroupSlots" },
+      "additionalInfo": { "slotsApi": true }
     }
   },
   "name": "ChatMessageGroup",
@@ -10,11 +22,58 @@
     "import { ChatMessageGroup } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageGroup } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "messageActions",
+      "description": "Actions row component (receives `{ messageId }`). Pass `null` to hide\nactions entirely; omit to render only the declarative `extraActions` from\n`slotProps.messageActions` if provided.",
+      "class": null
+    },
+    {
+      "name": "messageAuthorName",
+      "description": "Author name label rendered by the group wrapper (default variant: above the\nbubble; compact variant: inside the message grid). Pass `null` to hide.",
+      "class": null
+    },
+    {
+      "name": "messageAvatar",
+      "description": "Avatar component. Pass `null` to hide the avatar entirely and drop the\nreserved avatar grid track.",
+      "class": null
+    },
+    { "name": "messageContent", "description": "The message bubble component.", "class": null },
+    {
+      "name": "messageError",
+      "description": "Error card shown under the bubble when the message status is `error`.\nPass `null` to hide the error surface entirely (no component is mounted).",
+      "class": null
+    },
+    {
+      "name": "messageGroup",
+      "description": "The per-author group wrapper around consecutive messages.",
+      "class": null
+    },
+    {
+      "name": "messageInlineMeta",
+      "description": "Inline meta rendered inside the bubble (default variant). Pass `null` to hide.",
+      "class": null
+    },
+    {
+      "name": "messageMeta",
+      "description": "External meta (compact variant). Pass `null` to hide.",
+      "class": null
+    },
+    {
+      "name": "messageRoot",
+      "description": "Styled root of `<ChatMessage>` (wrapper-only); the default avatar/content/meta\ntree still renders inside it.",
+      "class": null
+    },
+    {
+      "name": "streamingIndicator",
+      "description": "The animated dots shown while an assistant response is in flight: as a\ntrailing row while waiting for the response to start, then inside the\nassistant bubble while it streams. Controlled by\n`features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.",
+      "class": null
+    }
+  ],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatMessageGroup",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageGroup.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>",
+  "cssComponent": false
 }

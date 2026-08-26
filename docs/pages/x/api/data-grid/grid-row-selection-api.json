@@ -1,31 +1,31 @@
 {
   "name": "GridRowSelectionApi",
-  "description": "The selection API interface that is available in the grid apiRef.",
+  "description": "The selection API interface that is available in the grid [[apiRef]].",
   "properties": [
     {
       "name": "getSelectedRows",
       "description": "Returns an array of the selected rows.",
-      "type": "() => Map<GridRowId, GridRowModel>"
+      "type": "() => Map<GridRowId, GridValidRowModel>"
     },
     {
       "name": "isRowSelectable",
       "description": "Determines if a row can be selected or not.",
-      "type": "(id: GridRowId) => boolean"
+      "type": "(id: number | string) => boolean"
     },
     {
       "name": "isRowSelected",
       "description": "Determines if a row is selected or not.",
-      "type": "(id: GridRowId) => boolean"
+      "type": "(id: number | string) => boolean"
     },
     {
       "name": "selectRow",
       "description": "Change the selection state of a row.",
-      "type": "(id: GridRowId, isSelected?: boolean, resetSelection?: boolean) => void"
+      "type": "(id: number | string, isSelected?: boolean | undefined, resetSelection?: boolean | undefined) => void"
     },
     {
       "name": "setRowSelectionModel",
-      "description": "Sets the new row selection model.<br>⚠️ Caution: <code>setRowSelectionModel</code> doesn&#39;t apply the selection propagation automatically. Pass model returned by API method <code>getPropagatedRowSelectionModel</code> instead to apply the selection propagation.",
-      "type": "(rowSelectionModel: GridRowSelectionModel, reason?: GridControlledStateReasonLookup['rowSelection']) => void"
+      "description": "Sets the new row selection model.\n\n⚠️ Caution: `setRowSelectionModel` doesn't apply the selection propagation automatically.\nPass model returned by API method `getPropagatedRowSelectionModel` instead to apply the selection propagation.",
+      "type": "(rowSelectionModel: { type: 'exclude' | 'include', ids: Set<GridRowId> }, reason?: 'multipleRowsSelection' | 'singleRowSelection' | undefined) => void"
     }
   ]
 }

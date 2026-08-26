@@ -8,22 +8,12 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {
-    "contentWrapper": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the contentWrapper element (which contains the tabs and the view itself)"
-    },
-    "landscape": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element in landscape orientation"
-    },
-    "root": { "description": "Styles applied to the root element." }
-  },
+  "classDescriptions": {},
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
-    "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
+    "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
     "shortcuts": "Custom component for the shortcuts.",
     "tabs": "Tabs enabling toggling between views.",
-    "toolbar": "Custom component for the toolbar. It is placed above the Picker views."
+    "toolbar": "Custom component for the toolbar.\nIt is placed above the Picker views."
   }
 }

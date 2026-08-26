@@ -1,7 +1,8 @@
 {
-  "componentDescription": "A button that zooms the chart in.\nIt renders the `baseButton` slot.",
+  "componentDescription": "",
   "propDescriptions": {
     "render": { "description": "A function to customize the rendering of the component." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

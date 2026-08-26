@@ -1,26 +1,23 @@
 {
-  "props": {},
+  "props": {
+    "classes": {
+      "type": {
+        "name": "shape",
+        "description": "Partial<Pick<RadialLineClasses, 'line' | 'linePlot'>>"
+      },
+      "additionalInfo": { "cssApi": true }
+    }
+  },
   "name": "RadialLinePlot",
   "imports": [
     "import { RadialLinePlot } from '@mui/x-charts-premium/RadialLineChart';",
     "import { RadialLinePlot } from '@mui/x-charts-premium';"
   ],
-  "classes": [
-    {
-      "key": "line",
-      "className": "MuiRadialLineChart-line",
-      "description": "Styles applied to the line element.",
-      "isGlobal": false
-    },
-    {
-      "key": "linePlot",
-      "className": "MuiRadialLineChart-linePlot",
-      "description": "Styles applied to the LinePlot root element.",
-      "isGlobal": false
-    }
-  ],
+  "slots": [],
+  "classes": [],
   "muiName": "MuiRadialLinePlot",
   "filename": "/packages/x-charts-premium/src/RadialLineChart/RadialLinePlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "cssComponent": false
 }

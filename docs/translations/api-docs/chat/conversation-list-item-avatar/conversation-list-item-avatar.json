@@ -1,6 +1,13 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "conversation": { "description": "" },
+    "focused": { "description": "" },
+    "selected": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" },
+    "unread": { "description": "" }
+  },
   "classDescriptions": {},
   "slotDescriptions": { "image": "", "root": "" }
 }

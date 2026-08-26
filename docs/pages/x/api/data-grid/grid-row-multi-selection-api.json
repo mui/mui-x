@@ -4,18 +4,18 @@
   "properties": [
     {
       "name": "getPropagatedRowSelectionModel",
-      "description": "Returns the modified selection model after applying row selection propagation.<br>Use this to achieve proper <code>rowSelectionPropagation</code> behavior when setting the selection model using <code>setRowSelectionModel</code>.",
-      "type": "(inputSelectionModel: GridRowSelectionModel) => GridRowSelectionModel"
+      "description": "Returns the modified selection model after applying row selection propagation.\n\nUse this to achieve proper `rowSelectionPropagation` behavior when setting the selection model using `setRowSelectionModel`.",
+      "type": "(inputSelectionModel: { type: 'exclude' | 'include', ids: Set<GridRowId> }) => { type: 'exclude' | 'include', ids: Set<GridRowId> }"
     },
     {
       "name": "selectRowRange",
       "description": "Change the selection state of all the selectable rows in a range.",
-      "type": "(range: { startId: GridRowId; endId: GridRowId }, isSelected?: boolean, resetSelection?: boolean) => void"
+      "type": "(range: { startId: number | string, endId: number | string }, isSelected?: boolean | undefined, resetSelection?: boolean | undefined) => void"
     },
     {
       "name": "selectRows",
       "description": "Change the selection state of multiple rows.",
-      "type": "(ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void"
+      "type": "(ids: GridRowId[], isSelected?: boolean | undefined, resetSelection?: boolean | undefined) => void"
     }
   ]
 }

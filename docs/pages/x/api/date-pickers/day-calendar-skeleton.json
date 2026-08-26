@@ -1,6 +1,10 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<DayCalendarSkeletonClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "ref": { "type": { "name": "custom", "description": "ref" } },
     "sx": {
       "type": {
         "name": "union",
@@ -15,13 +19,8 @@
     "import { DayCalendarSkeleton } from '@mui/x-date-pickers';",
     "import { DayCalendarSkeleton } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
-    {
-      "key": "daySkeleton",
-      "className": "MuiDayCalendarSkeleton-daySkeleton",
-      "description": "Styles applied to the day element.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiDayCalendarSkeleton-root",
@@ -33,6 +32,12 @@
       "className": "MuiDayCalendarSkeleton-week",
       "description": "Styles applied to the week element.",
       "isGlobal": false
+    },
+    {
+      "key": "daySkeleton",
+      "className": "MuiDayCalendarSkeleton-daySkeleton",
+      "description": "Styles applied to the day element.",
+      "isGlobal": false
     }
   ],
   "spread": true,
@@ -41,5 +46,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DayCalendarSkeleton/DayCalendarSkeleton.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
+  "cssComponent": false
 }

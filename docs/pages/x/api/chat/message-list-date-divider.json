@@ -1,17 +1,42 @@
 {
-  "props": {},
+  "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
+    "formatDate": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(date: Date) => ReactNode", "describedArgs": [] }
+    },
+    "index": { "type": { "name": "number" } },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "shouldShowDivider": {
+      "type": { "name": "func" },
+      "default": "Renders when `message.createdAt` falls on a different UTC\ncalendar day than the previous message's.",
+      "signature": {
+        "type": "function(params: @param {ChatMessage} params.message The message the divider would render above.\n   * @param {ChatMessage | null} params.previousMessage The previous message, or `null` for the first message in the list.\n   * @param {number} params.index The index of the message in the list.\n   * @param {Date | null} params.date The parsed `createdAt` of the message, or `null` when missing or invalid.\n   * @param {Date | null} params.previousDate The parsed `createdAt` of the previous message, or `null` when missing or invalid.\n   * ) => boolean",
+        "describedArgs": ["params"],
+        "returned": "boolean"
+      }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "MessageListDateDividerSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageListDateDividerSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "MessageListDateDivider",
-  "imports": ["import { MessageListDateDivider } from '@mui/x-chat/headless';"],
+  "imports": [
+    "import { MessageListDateDivider } from '@mui/x-chat-headless/message-list';",
+    "import { MessageListDateDivider } from '@mui/x-chat-headless';",
+    "import { MessageListDateDivider } from '@mui/x-chat';"
+  ],
   "slots": [
     { "name": "divider", "description": "", "class": null },
-    { "name": "line", "description": "", "class": null },
-    { "name": "label", "description": "", "class": null }
+    { "name": "label", "description": "", "class": null },
+    { "name": "line", "description": "", "class": null }
   ],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiMessageListDateDivider",
   "filename": "/packages/x-chat-headless/src/message-list/MessageListDateDivider.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/messages/\">Chat - Headless messages</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/messages/\">Chat - Headless messages</a></li></ul>",
+  "cssComponent": false
 }

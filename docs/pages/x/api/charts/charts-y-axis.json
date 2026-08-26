@@ -1,21 +1,34 @@
 {
   "props": {
+    "axis": { "type": { "name": "shape", "description": "'y'" } },
     "axisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "className": { "type": { "name": "string" } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChartsAxisClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "disableLine": { "type": { "name": "bool" }, "default": "false" },
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "string" } },
-    "labelStyle": { "type": { "name": "object" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "labelStyle": { "type": { "name": "shape", "description": "ChartsTextStyle" } },
+    "slotProps": {
+      "type": { "name": "shape", "description": "Partial<ChartsAxisSlotProps>" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "Partial<ChartsAxisSlots>" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
     "tickInterval": {
-      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
-      "default": "'auto'"
+      "type": {
+        "name": "union",
+        "description": "'auto'<br>&#124;&nbsp;Array&lt;any&gt;<br>&#124;&nbsp;func"
+      },
+      "default": "'auto'",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-charts/axis/#fixed-tick-positions",
+        "text": ""
+      }
     },
     "tickLabelInterval": {
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;func" },
@@ -25,7 +38,7 @@
       "type": { "name": "enum", "description": "'middle'<br>&#124;&nbsp;'tick'" },
       "default": "'middle'"
     },
-    "tickLabelStyle": { "type": { "name": "object" } },
+    "tickLabelStyle": { "type": { "name": "shape", "description": "ChartsTextStyle" } },
     "tickMaxStep": { "type": { "name": "number" } },
     "tickMinStep": { "type": { "name": "number" } },
     "tickNumber": { "type": { "name": "number" } },
@@ -43,7 +56,9 @@
   "imports": [
     "import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';",
     "import { ChartsYAxis } from '@mui/x-charts';",
+    "import { ChartsYAxis } from '@mui/x-charts-pro/ChartsYAxis';",
     "import { ChartsYAxis } from '@mui/x-charts-pro';",
+    "import { ChartsYAxis } from '@mui/x-charts-premium/ChartsYAxis';",
     "import { ChartsYAxis } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -84,84 +99,10 @@
       "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "bottom",
-      "className": "MuiChartsAxis-bottom",
-      "description": "Styles applied to the bottom axis.",
-      "isGlobal": false
-    },
-    {
-      "key": "directionX",
-      "className": "MuiChartsAxis-directionX",
-      "description": "Styles applied to x-axes.",
-      "isGlobal": false
-    },
-    {
-      "key": "directionY",
-      "className": "MuiChartsAxis-directionY",
-      "description": "Styles applied to y-axes.",
-      "isGlobal": false
-    },
-    {
-      "key": "label",
-      "className": "MuiChartsAxis-label",
-      "description": "Styles applied to the group containing the axis label.",
-      "isGlobal": false
-    },
-    {
-      "key": "left",
-      "className": "MuiChartsAxis-left",
-      "description": "Styles applied to the left axis.",
-      "isGlobal": false
-    },
-    {
-      "key": "line",
-      "className": "MuiChartsAxis-line",
-      "description": "Styles applied to the main line element.",
-      "isGlobal": false
-    },
-    {
-      "key": "right",
-      "className": "MuiChartsAxis-right",
-      "description": "Styles applied to the right axis.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChartsAxis-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "tick",
-      "className": "MuiChartsAxis-tick",
-      "description": "Styles applied to ticks.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickContainer",
-      "className": "MuiChartsAxis-tickContainer",
-      "description": "Styles applied to group including the tick and its label.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickLabel",
-      "className": "MuiChartsAxis-tickLabel",
-      "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.",
-      "isGlobal": false
-    },
-    {
-      "key": "top",
-      "className": "MuiChartsAxis-top",
-      "description": "Styles applied to the top axis.",
-      "isGlobal": false
-    }
-  ],
-  "spread": true,
-  "themeDefaultProps": null,
+  "classes": [],
   "muiName": "MuiChartsYAxis",
   "filename": "/packages/x-charts/src/ChartsYAxis/ChartsYAxis.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li>\n<li><a href=\"/x/react-charts/axis-customization/\">Charts - Axis customization</a></li>\n<li><a href=\"/x/react-charts/axis-ticks/\">Charts - Axis ticks and grid</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li>\n<li><a href=\"/x/react-charts/axis-customization/\">Charts - Axis customization</a></li>\n<li><a href=\"/x/react-charts/axis-ticks/\">Charts - Axis ticks and grid</a></li></ul>",
+  "cssComponent": false
 }

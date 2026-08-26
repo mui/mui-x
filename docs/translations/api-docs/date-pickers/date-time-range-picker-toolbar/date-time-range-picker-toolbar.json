@@ -1,25 +1,25 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "ampm": { "description": "" },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "hidden": { "description": "If <code>true</code>, show the toolbar even in desktop mode." },
-    "sx": {
-      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
-    },
+    "titleId": { "description": "" },
     "toolbarFormat": { "description": "Toolbar date format." },
     "toolbarPlaceholder": {
       "description": "Toolbar value placeholder—it is displayed when the value is empty."
     }
   },
   "classDescriptions": {
-    "endToolbar": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the end toolbar element"
-    },
-    "root": { "description": "Styles applied to the root element." },
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
     "startToolbar": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the start toolbar element"
+    },
+    "endToolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the end toolbar element"
     }
-  }
+  },
+  "slotDescriptions": {}
 }

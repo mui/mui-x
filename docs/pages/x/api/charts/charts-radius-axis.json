@@ -1,13 +1,16 @@
 {
   "props": {
+    "axis": { "type": { "name": "shape", "description": "'radius'" } },
     "axisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "className": { "type": { "name": "string" } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChartsRadialAxisClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "disableLine": { "type": { "name": "bool" }, "default": "false" },
     "disableTickLabel": { "type": { "name": "bool" }, "default": "false" },
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "string" } },
-    "labelStyle": { "type": { "name": "object" } },
+    "labelStyle": { "type": { "name": "shape", "description": "ChartsTextStyle" } },
     "maxRadius": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "'100%'"
@@ -24,8 +27,15 @@
       "default": "'start'"
     },
     "tickInterval": {
-      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
-      "default": "'auto'"
+      "type": {
+        "name": "union",
+        "description": "'auto'<br>&#124;&nbsp;Array&lt;any&gt;<br>&#124;&nbsp;func"
+      },
+      "default": "'auto'",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-charts/axis/#fixed-tick-positions",
+        "text": ""
+      }
     },
     "tickLabelInterval": {
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;func" },
@@ -42,7 +52,7 @@
       },
       "default": "'auto'"
     },
-    "tickLabelStyle": { "type": { "name": "object" } },
+    "tickLabelStyle": { "type": { "name": "shape", "description": "ChartsTextStyle" } },
     "tickMaxStep": { "type": { "name": "number" } },
     "tickMinStep": { "type": { "name": "number" } },
     "tickNumber": { "type": { "name": "number" } },
@@ -64,61 +74,16 @@
   "imports": [
     "import { ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';",
     "import { ChartsRadiusAxis } from '@mui/x-charts';",
+    "import { ChartsRadiusAxis } from '@mui/x-charts-pro/ChartsRadiusAxis';",
     "import { ChartsRadiusAxis } from '@mui/x-charts-pro';",
+    "import { ChartsRadiusAxis } from '@mui/x-charts-premium/ChartsRadiusAxis';",
     "import { ChartsRadiusAxis } from '@mui/x-charts-premium';"
   ],
-  "classes": [
-    {
-      "key": "centered",
-      "className": "MuiChartsRadialAxis-centered",
-      "description": "Styles applied to the tick label when centered.",
-      "isGlobal": false
-    },
-    {
-      "key": "line",
-      "className": "MuiChartsRadialAxis-line",
-      "description": "Styles applied to the main line element.",
-      "isGlobal": false
-    },
-    {
-      "key": "radius",
-      "className": "MuiChartsRadialAxis-radius",
-      "description": "Styles applied to the root element of radius axis.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChartsRadialAxis-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "rotation",
-      "className": "MuiChartsRadialAxis-rotation",
-      "description": "Styles applied to the root element of rotation axis.",
-      "isGlobal": false
-    },
-    {
-      "key": "tick",
-      "className": "MuiChartsRadialAxis-tick",
-      "description": "Styles applied to ticks.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickContainer",
-      "className": "MuiChartsRadialAxis-tickContainer",
-      "description": "Styles applied to the group including the tick and its label.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickLabel",
-      "className": "MuiChartsRadialAxis-tickLabel",
-      "description": "Styles applied to the tick label.",
-      "isGlobal": false
-    }
-  ],
+  "slots": [],
+  "classes": [],
   "muiName": "MuiChartsRadiusAxis",
   "filename": "/packages/x-charts/src/ChartsRadiusAxis/ChartsRadiusAxis.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radial-axes/\">Charts - Radial axes</a></li>\n<li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-axes/\">Charts - Radial axes</a></li>\n<li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "cssComponent": false
 }

@@ -24,57 +24,9 @@
       }
     },
     "seriesId": {
-      "description": "The id of the series to display. If undefined all series are displayed."
+      "description": "The id of the series to display.\nIf undefined all series are displayed."
     }
   },
-  "classDescriptions": {
-    "axisHighlightDot": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every axis highlight dot element"
-    },
-    "axisHighlightLine": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the axis highlight line element"
-    },
-    "axisHighlightRoot": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the axis highlight root element"
-    },
-    "axisLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every radar axis label element"
-    },
-    "axisLine": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the radar axis line element"
-    },
-    "axisRoot": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the radar axis root element"
-    },
-    "gridDivider": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every divider element of the grid"
-    },
-    "gridRadial": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every radial line element of the grid"
-    },
-    "gridStripe": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every stripe element of the grid"
-    },
-    "seriesArea": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the series area element"
-    },
-    "seriesMark": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the series mark element"
-    },
-    "seriesRoot": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the series plot root element"
-    }
-  }
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

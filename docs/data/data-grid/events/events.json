@@ -32,40 +32,35 @@
     "name": "cellClick",
     "description": "Fired when a cell is clicked.",
     "params": "GridCellParams<any>",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
-    "componentProp": "onCellClick"
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellDoubleClick",
     "description": "Fired when a cell is double-clicked.",
     "params": "GridCellParams<any>",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
-    "componentProp": "onCellDoubleClick"
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellEditStart",
     "description": "Fired when the cell turns to edit mode.",
     "params": "GridCellEditStartParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>",
-    "componentProp": "onCellEditStart"
+    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellEditStop",
     "description": "Fired when the cell turns back to view mode.",
     "params": "GridCellEditStopParams",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onCellEditStop"
+    "event": "MuiEvent<MuiBaseEvent>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellKeyDown",
     "description": "Fired when a <code>keydown</code> event happens in a cell.",
     "params": "GridCellParams<any>",
-    "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>",
-    "componentProp": "onCellKeyDown"
+    "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -121,24 +116,21 @@
     "name": "clipboardCopy",
     "description": "Fired when the data is copied to the clipboard.",
     "params": "string",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onClipboardCopy"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid-premium"],
     "name": "clipboardPasteEnd",
     "description": "Fired when the clipboard paste operation ends.",
     "params": "{\n  oldRows: Map<GridRowId, GridValidRowModel>\n  newRows: Map<GridRowId, GridValidRowModel>\n}",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onClipboardPasteEnd"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid-premium"],
     "name": "clipboardPasteStart",
     "description": "Fired when the clipboard paste operation starts.",
     "params": "{ data: string[][] }",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onClipboardPasteStart"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -152,24 +144,21 @@
     "name": "columnHeaderClick",
     "description": "Fired when a column header is clicked",
     "params": "GridColumnHeaderParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
-    "componentProp": "onColumnHeaderClick"
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnHeaderContextMenu",
     "description": "Fired when the user attempts to open a context menu in the column header.",
     "params": "GridColumnHeaderParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
-    "componentProp": "onColumnHeaderContextMenu"
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnHeaderDoubleClick",
     "description": "Fired when a column header is double-clicked.",
     "params": "GridColumnHeaderParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
-    "componentProp": "onColumnHeaderDoubleClick"
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -183,16 +172,14 @@
     "name": "columnOrderChange",
     "description": "Fired when the user ends reordering a column.",
     "params": "GridColumnOrderChangeParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onColumnOrderChange"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnResize",
     "description": "Fired during the resizing of a column.",
     "params": "GridColumnResizeParams",
-    "event": "MuiEvent<MouseEvent>",
-    "componentProp": "onColumnResize"
+    "event": "MuiEvent<MouseEvent>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -227,16 +214,14 @@
     "name": "columnWidthChange",
     "description": "Fired when the width of a column is changed.",
     "params": "GridColumnResizeParams",
-    "event": "MuiEvent<MouseEvent | {}>",
-    "componentProp": "onColumnWidthChange"
+    "event": "MuiEvent<MouseEvent | {}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "debouncedResize",
     "description": "Fired when the grid is resized with a debounced time of 60ms.",
     "params": "ElementSize",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onResize"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -257,8 +242,7 @@
     "name": "fetchRows",
     "description": "Fired when a new batch of rows is requested to be loaded. Called with a GridFetchRowsParams object. Used to trigger <code>onFetchRows</code>.",
     "params": "GridFetchRowsParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onFetchRows"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -286,16 +270,14 @@
     "name": "menuClose",
     "description": "Fired when the grid menu is closed.",
     "params": "GridMenuParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onMenuClose"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "menuOpen",
     "description": "Fired when the menu is opened.",
     "params": "GridMenuParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onMenuOpen"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -337,24 +319,21 @@
     "name": "preferencePanelClose",
     "description": "Fired when the preference panel is closed.",
     "params": "GridPreferencePanelParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onPreferencePanelClose"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "preferencePanelOpen",
     "description": "Fired when the preference panel is opened.",
     "params": "GridPreferencePanelParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onPreferencePanelOpen"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid-premium"],
     "name": "redo",
     "description": "Fired when a redo operation is executed.",
     "params": "{ eventName: keyof GridEventLookup; data: any }",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onRedo"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -382,8 +361,7 @@
     "name": "rowClick",
     "description": "Fired when a row is clicked. Not fired if the cell clicked is from an interactive column (actions, checkbox, etc).",
     "params": "GridRowParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
-    "componentProp": "onRowClick"
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -397,24 +375,21 @@
     "name": "rowDoubleClick",
     "description": "Fired when a row is double-clicked.",
     "params": "GridRowParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
-    "componentProp": "onRowDoubleClick"
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowEditStart",
     "description": "Fired when the row turns to edit mode.",
     "params": "GridRowEditStartParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>",
-    "componentProp": "onRowEditStart"
+    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowEditStop",
     "description": "Fired when the row turns back to view mode.",
     "params": "GridRowEditStopParams",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onRowEditStop"
+    "event": "MuiEvent<MuiBaseEvent>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -456,8 +431,7 @@
     "name": "rowOrderChange",
     "description": "Fired when the user ends reordering a row.",
     "params": "GridRowOrderChangeParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onRowOrderChange"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -478,8 +452,7 @@
     "name": "rowsScrollEnd",
     "description": "Fired when scrolling to the bottom of the grid viewport.",
     "params": "GridRowScrollEndParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onRowsScrollEnd"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -493,16 +466,14 @@
     "name": "sidebarClose",
     "description": "Fired when the sidebar is closed.",
     "params": "{ value: GridSidebarValue }",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onSidebarClose"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid-premium"],
     "name": "sidebarOpen",
     "description": "Fired when the sidebar is opened.",
     "params": "{ value: GridSidebarValue }",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onSidebarOpen"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -523,8 +494,7 @@
     "name": "undo",
     "description": "Fired when an undo operation is executed.",
     "params": "{ eventName: keyof GridEventLookup; data: any }",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onUndo"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

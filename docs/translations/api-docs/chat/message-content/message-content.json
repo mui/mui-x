@@ -2,11 +2,24 @@
   "componentDescription": "",
   "propDescriptions": {
     "afterContent": {
-      "description": "Content rendered inside the bubble after the message parts. Useful for placing inline metadata (e.g. timestamp, status) inside the bubble."
+      "description": "Content rendered inside the bubble after the message parts.\nUseful for placing inline metadata (e.g. timestamp, status) inside the bubble."
     },
     "partProps": {
-      "description": "Props forwarded to the built-in unstyled part renderer components. Use this to pass <code>slots</code> and <code>slotProps</code> to individual part type renderers."
-    }
+      "description": "Props forwarded to the built-in unstyled part renderer components.\nUse this to pass <code>slots</code> and <code>slotProps</code> to individual part type renderers."
+    },
+    "resolveBuiltInPartRenderer": {
+      "description": "",
+      "typeDescriptions": {
+        "part": { "name": "part", "description": "The message part to resolve a renderer for." },
+        "localeText": { "name": "localeText", "description": "The locale text for the chat." },
+        "ChatPartRenderer<ChatMessagePart> | null": {
+          "name": "ChatPartRenderer<ChatMessagePart> | null",
+          "description": "A renderer or null."
+        }
+      }
+    },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
   },
   "classDescriptions": {},
   "slotDescriptions": { "bubble": "", "content": "" }

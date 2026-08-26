@@ -1,8 +1,11 @@
 {
   "props": {
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "LineHighlightPlotSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "LineHighlightPlotSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -11,7 +14,9 @@
   "imports": [
     "import { LineHighlightPlot } from '@mui/x-charts/LineChart';",
     "import { LineHighlightPlot } from '@mui/x-charts';",
+    "import { LineHighlightPlot } from '@mui/x-charts-pro/LineChart';",
     "import { LineHighlightPlot } from '@mui/x-charts-pro';",
+    "import { LineHighlightPlot } from '@mui/x-charts-premium/LineChart';",
     "import { LineHighlightPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [{ "name": "lineHighlight", "description": "", "class": null }],
@@ -19,5 +24,6 @@
   "muiName": "MuiLineHighlightPlot",
   "filename": "/packages/x-charts/src/LineChart/LineHighlightPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
 }

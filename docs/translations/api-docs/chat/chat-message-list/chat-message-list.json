@@ -2,32 +2,34 @@
   "componentDescription": "",
   "propDescriptions": {
     "autoScroll": {
-      "description": "<p>Controls automatic scrolling to the bottom when new messages arrive or\nstreaming content grows, as long as the user is within <code>buffer</code> pixels of\nthe bottom.</p>\n<ul>\n<li><code>true</code> – enable with the default buffer (150 px).</li>\n<li><code>{ buffer: number }</code> – enable with a custom threshold.</li>\n<li><code>false</code> – disable (the scroll-to-bottom affordance is still available).</li>\n</ul>\n<p>Scrolling when the <em>user</em> sends a message is always active.</p>\n"
+      "description": "Controls automatic scrolling to the bottom when new messages arrive or\nstreaming content grows, as long as the user is within <code>buffer</code> pixels of\nthe bottom.<br><br>- <code>true</code> – enable with the default buffer (150 px).\n- <code>{ buffer: number }</code> – enable with a custom threshold.\n- <code>false</code> – disable (the scroll-to-bottom affordance is still available).<br><br>Scrolling when the *user* sends a message is always active."
     },
+    "classes": { "description": "" },
     "enableRovingFocus": {
-      "description": "Whether the message list manages a roving tabindex over its messages: the list is a single Tab stop, ArrowUp/ArrowDown (plus Home/End) move focus between messages, Enter drills into a message&#39;s interior controls and Escape returns to the message.<br>Disable when rendering fully custom rows that manage focus themselves."
+      "description": "Whether the message list manages a roving tabindex over its messages:\nthe list is a single Tab stop, ArrowUp/ArrowDown (plus Home/End) move\nfocus between messages, Enter drills into a message's interior controls\nand Escape returns to the message.<br><br>Disable when rendering fully custom rows that manage focus themselves."
     },
+    "estimatedItemSize": { "description": "" },
     "features": {
-      "description": "Feature flags for the row extras rendered by the default row: the opt-in dividers (<code>dateDivider</code> / <code>unreadMarker</code>, disabled by default) and the streaming indicator (<code>streamingIndicator</code>, <code>&#39;auto&#39;</code> by default). Ignored when a custom <code>renderItem</code> replaces the default row."
+      "description": "Feature flags for the row extras rendered by the default row: the opt-in\ndividers (<code>dateDivider</code> / <code>unreadMarker</code>, disabled by default) and the\nstreaming indicator (<code>streamingIndicator</code>, <code>'auto'</code> by default). Ignored\nwhen a custom <code>renderItem</code> replaces the default row."
     },
+    "getItemKey": { "description": "" },
+    "items": { "description": "" },
     "onReachBottom": {
-      "description": "Callback fired when the viewport enters the bottom zone of the list — within <code>autoScroll.buffer</code> pixels (150 by default; <code>estimatedItemSize</code> when <code>autoScroll</code> is disabled) of the bottom edge. Fires once per entry: it does not fire again until the user scrolls away from the bottom and back. Entries caused by programmatic scrolls (<code>scrollToBottom()</code>, the scroll-to-bottom affordance, the forced scroll after the user sends a message) count. It does not fire on mount, while the list stays pinned to the bottom during streaming, when new messages arrive while already at the bottom, or when the conversation (item set) is switched. Growing the buffer so that it newly encloses the current position counts as entering the zone."
+      "description": "Callback fired when the viewport enters the bottom zone of the list — within\n<code>autoScroll.buffer</code> pixels (150 by default; <code>estimatedItemSize</code> when <code>autoScroll</code>\nis disabled) of the bottom edge. Fires once per entry: it does not fire again until\nthe user scrolls away from the bottom and back. Entries caused by programmatic\nscrolls (<code>scrollToBottom()</code>, the scroll-to-bottom affordance, the forced scroll\nafter the user sends a message) count. It does not fire on mount, while the list\nstays pinned to the bottom during streaming, when new messages arrive while already\nat the bottom, or when the conversation (item set) is switched. Growing the buffer\nso that it newly encloses the current position counts as entering the zone."
     },
     "onReachTop": {
-      "description": "Callback fired when the viewport enters the top zone of the list — within <code>estimatedItemSize</code> pixels (84 by default) of the top edge. Fires once per entry: it does not fire again until the user scrolls away from the top, past the threshold, and back. It is coupled to history loading: it only fires when more history is available and no history page load is in flight, right before the next page is requested."
+      "description": "Callback fired when the viewport enters the top zone of the list — within\n<code>estimatedItemSize</code> pixels (84 by default) of the top edge. Fires once per\nentry: it does not fire again until the user scrolls away from the top,\npast the threshold, and back. It is coupled to history loading: it only\nfires when more history is available and no history page load is in\nflight, right before the next page is requested."
     },
     "overlay": {
       "description": "Floating layer rendered above the message list, anchored to its bottom edge; pointer-transparent."
     },
     "renderItem": {
-      "description": "Render a custom row for each message. When omitted, the default row used by <code>ChatBox</code> is rendered (group → message → avatar → content, with conditional inline meta, external meta in compact variant, and message actions slot). Provide a function to fully replace the row; use slot overrides to tweak individual sub-components without losing the default chrome."
-    }
+      "description": "Render a custom row for each message. When omitted, the default row used by\n<code>ChatBox</code> is rendered (group → message → avatar → content, with conditional\ninline meta, external meta in compact variant, and message actions slot).\nProvide a function to fully replace the row; use slot overrides to tweak\nindividual sub-components without losing the default chrome."
+    },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
   },
   "classDescriptions": {
-    "content": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message list content element"
-    },
     "root": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the message list root element"
@@ -35,6 +37,31 @@
     "scroller": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the message list scroller element"
+    },
+    "content": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the message list content element"
     }
+  },
+  "slotDescriptions": {
+    "dateDivider": "The date separator rendered between message groups. Only rendered when\n`features.dateDivider` is enabled. Pass `null` to hide it.",
+    "messageActions": "Actions row component (receives `{ messageId }`). Pass `null` to hide\nactions entirely; omit to render only the declarative `extraActions` from\n`slotProps.messageActions` if provided.",
+    "messageAuthorName": "Author name label rendered by the group wrapper (default variant: above the\nbubble; compact variant: inside the message grid). Pass `null` to hide.",
+    "messageAvatar": "Avatar component. Pass `null` to hide the avatar entirely and drop the\nreserved avatar grid track.",
+    "messageContent": "The message bubble component.",
+    "messageError": "Error card shown under the bubble when the message status is `error`.\nPass `null` to hide the error surface entirely (no component is mounted).",
+    "messageGroup": "The per-author group wrapper around consecutive messages.",
+    "messageInlineMeta": "Inline meta rendered inside the bubble (default variant). Pass `null` to hide.",
+    "messageList": "",
+    "messageListContent": "",
+    "messageListOverlay": "",
+    "messageListScrollbar": "",
+    "messageListScrollbarThumb": "",
+    "messageListScroller": "",
+    "messageListStatus": "The visually-hidden `role=\"status\"` element announcing streaming\ntransitions (\"Assistant is responding\" / \"Response complete\") to screen\nreaders. Pass `null`-rendering component to silence the announcements.",
+    "messageMeta": "External meta (compact variant). Pass `null` to hide.",
+    "messageRoot": "Styled root of `<ChatMessage>` (wrapper-only); the default avatar/content/meta\ntree still renders inside it.",
+    "streamingIndicator": "The animated dots shown while an assistant response is in flight: as a\ntrailing row while waiting for the response to start, then inside the\nassistant bubble while it streams. Controlled by\n`features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.",
+    "unreadMarker": "The \"new messages\" marker. Only rendered when `features.unreadMarker` is\nenabled. Pass `null` to hide it."
   }
 }

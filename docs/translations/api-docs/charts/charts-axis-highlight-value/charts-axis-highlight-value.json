@@ -1,21 +1,42 @@
 {
-  "componentDescription": "A component that displays the axis value at the edge of the drawing area,\naligned with the current axis highlight position.\n\nRenders as a portal into the ChartsLayerContainer, appearing as the last child.",
+  "componentDescription": "",
   "propDescriptions": {
     "axisDirection": { "description": "The axis direction." },
-    "axisId": { "description": "The id of the axis. If not provided, defaults to the first axis." },
+    "axisId": {
+      "description": "The id of the axis.\nIf not provided, defaults to the first axis."
+    },
     "labelPosition": {
-      "description": "The position of the label relative to the drawing area. - <code>&#39;start&#39;</code>: at the beginning of the drawing area (top for x-axis, left for y-axis). - <code>&#39;end&#39;</code>: at the end of the drawing area (bottom for x-axis, right for y-axis). - <code>&#39;both&#39;</code>: at both positions. - <code>&#39;none&#39;</code>: no label is displayed."
+      "description": "The position of the label relative to the drawing area.\n- <code>'start'</code>: at the beginning of the drawing area (top for x-axis, left for y-axis).\n- <code>'end'</code>: at the end of the drawing area (bottom for x-axis, right for y-axis).\n- <code>'both'</code>: at both positions.\n- <code>'none'</code>: no label is displayed."
     },
     "value": {
-      "description": "The value to display. If not defined, tracks the axis highlight value from user interaction."
+      "description": "The value to display.\nIf not defined, tracks the axis highlight value from user interaction."
     },
     "valueFormatter": {
-      "description": "A function to format the displayed value. If not provided, uses the axis <code>valueFormatter</code>, or falls back to a default formatter.",
+      "description": "A function to format the displayed value.\nIf not provided, uses the axis <code>valueFormatter</code>, or falls back to a default formatter.",
       "typeDescriptions": {
         "value": { "name": "value", "description": "The value to format." },
         "string": { "name": "string", "description": "The formatted string." }
       }
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "top": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the top axis highlight"
+    },
+    "bottom": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the bottom axis highlight"
+    },
+    "left": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the left axis highlight"
+    },
+    "right": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the right axis highlight"
+    }
+  },
+  "slotDescriptions": {}
 }

@@ -1,8 +1,8 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": { "slotProps": { "description": "" }, "slots": { "description": "" } },
   "classDescriptions": {},
   "slotDescriptions": {
-    "root": "The root element of the per-message error primitive. Rendered with <code>role=&quot;alert&quot;</code> so screen readers announce the error."
+    "root": "The root element of the per-message error primitive.\nRendered with `role=\"alert\"` so screen readers announce the error."
   }
 }

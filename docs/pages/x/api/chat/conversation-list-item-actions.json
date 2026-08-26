@@ -1,0 +1,28 @@
+{
+  "props": {
+    "conversation": { "type": { "name": "{}" }, "required": true },
+    "focused": { "type": { "name": "bool" } },
+    "selected": { "type": { "name": "bool" } },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ConversationListItemActionsSlotProps" }
+    },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationListItemActionsSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    },
+    "unread": { "type": { "name": "bool" } }
+  },
+  "name": "ConversationListItemActions",
+  "imports": [
+    "import { ConversationListItemActions } from '@mui/x-chat-headless/conversation-list';",
+    "import { ConversationListItemActions } from '@mui/x-chat-headless';",
+    "import { ConversationListItemActions } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationListItemActions",
+  "filename": "/packages/x-chat-headless/src/conversation-list/ConversationListItemActions.tsx",
+  "inheritance": null,
+  "demos": "",
+  "cssComponent": false
+}

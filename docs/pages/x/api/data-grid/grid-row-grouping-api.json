@@ -5,7 +5,7 @@
     {
       "name": "addRowGroupingCriteria",
       "description": "Adds the field to the row grouping model.",
-      "type": "(groupingCriteriaField: string, groupingIndex?: number) => void"
+      "type": "(groupingCriteriaField: string, groupingIndex?: number | undefined) => void"
     },
     {
       "name": "removeRowGroupingCriteria",

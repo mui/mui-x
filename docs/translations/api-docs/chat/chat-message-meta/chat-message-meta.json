@@ -1,1 +1,14 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": { "slotProps": { "description": "" }, "slots": { "description": "" } },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "edited": "",
+    "meta": "",
+    "status": "",
+    "streamingProgress": "The root element of the streaming progress indicator.\nRendered by Base UI `Progress.Root` when `message.status === 'streaming'`.\nProvides `role=\"progressbar\"` and `aria-valuetext` for screen readers.",
+    "streamingProgressIndicator": "The animated indicator bar inside the streaming progress track.",
+    "streamingProgressTrack": "The track element wrapping the streaming progress indicator.",
+    "timestamp": ""
+  }
+}

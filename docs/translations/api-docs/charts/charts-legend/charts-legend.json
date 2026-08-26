@@ -3,7 +3,7 @@
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
     "direction": {
-      "description": "The direction of the legend layout. The default depends on the chart."
+      "description": "The direction of the legend layout.\nThe default depends on the chart."
     },
     "onItemClick": {
       "description": "Callback fired when a legend item is clicked.",
@@ -15,27 +15,28 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "tabIndex": { "description": "" },
     "toggleVisibilityOnClick": {
       "description": "If <code>true</code>, clicking on a legend item will toggle the visibility of the corresponding series."
     }
   },
   "classDescriptions": {
-    "hidden": { "description": "Styles applied to {{nodeName}}.", "nodeName": "hidden items" },
-    "horizontal": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend in row layout"
-    },
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
     "item": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the list item around each series in the legend"
     },
-    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
-    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },
-    "root": { "description": "Styles applied to the root element." },
     "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" },
+    "hidden": { "description": "Styles applied to {{nodeName}}.", "nodeName": "hidden items" },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
     "vertical": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the legend in column layout"
+    },
+    "horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend in row layout"
     }
   },
   "slotDescriptions": { "legend": "Custom rendering of the legend." }

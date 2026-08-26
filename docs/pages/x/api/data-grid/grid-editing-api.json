@@ -5,47 +5,47 @@
     {
       "name": "getCellMode",
       "description": "Gets the mode of a cell.",
-      "type": "(id: GridRowId, field: string) => GridCellMode"
+      "type": "(id: number | string, field: string) => 'edit' | 'view'"
     },
     {
       "name": "getRowMode",
       "description": "Gets the mode of a row.",
-      "type": "(id: GridRowId) => GridRowMode"
+      "type": "(id: number | string) => 'edit' | 'view'"
     },
     {
       "name": "getRowWithUpdatedValues",
-      "description": "Returns the row with the values that were set by editing the cells. In row editing, <code>field</code> is ignored and all fields are considered.",
-      "type": "(id: GridRowId, field: string) => GridRowModel"
+      "description": "Returns the row with the values that were set by editing the cells.\nIn row editing, `field` is ignored and all fields are considered.",
+      "type": "(id: number | string, field: string) => GridValidRowModel"
     },
     {
       "name": "isCellEditable",
       "description": "Controls if a cell is editable.",
-      "type": "(params: GridCellParams) => boolean"
+      "type": "(params: GridCellParams<any, unknown, unknown, GridTreeNode>) => boolean"
     },
     {
       "name": "setEditCellValue",
-      "description": "Sets the value of the edit cell. Commonly used inside the edit cell component.",
-      "type": "(params: GridEditCellValueParams, event?: MuiBaseEvent) => Promise<boolean> | void"
+      "description": "Sets the value of the edit cell.\nCommonly used inside the edit cell component.",
+      "type": "(params: { id: number | string, field: string, value: any, debounceMs?: number | undefined, unstable_skipValueParser?: boolean | undefined }, event?: AnimationEvent | ClipboardEvent | CompositionEvent | DragEvent | ErrorEvent | Event | FocusEvent | FormDataEvent | InputEvent | KeyboardEvent | MouseEvent | PointerEvent | ProgressEvent<EventTarget> | SecurityPolicyViolationEvent | SubmitEvent | SyntheticEvent<HTMLElement, Event> | ToggleEvent | TouchEvent | TransitionEvent | UIEvent | WheelEvent | undefined | {}) => Promise<boolean> | void"
     },
     {
       "name": "startCellEditMode",
       "description": "Puts the cell corresponding to the given row id and field into edit mode.",
-      "type": "(params: GridStartCellEditModeParams) => void"
+      "type": "(params: { id: number | string, field: string, deleteValue?: boolean | undefined, initialValue?: any }) => void"
     },
     {
       "name": "startRowEditMode",
       "description": "Puts the row corresponding to the given id into edit mode.",
-      "type": "(params: GridStartRowEditModeParams) => void"
+      "type": "(params: { id: number | string, fieldToFocus?: string | undefined, deleteValue?: boolean | undefined, initialValue?: string | undefined }) => void"
     },
     {
       "name": "stopCellEditMode",
-      "description": "Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored. If <code>params.ignoreModifications</code> is <code>true</code> it will discard the modifications made.",
-      "type": "(params: GridStopCellEditModeParams) => void"
+      "description": "Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.\nIf `params.ignoreModifications` is `true` it will discard the modifications made.",
+      "type": "(params: { id: number | string, field: string, ignoreModifications?: boolean | undefined, cellToFocusAfter?: 'below' | 'left' | 'none' | 'right' | undefined }) => void"
     },
     {
       "name": "stopRowEditMode",
-      "description": "Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored. If <code>params.ignoreModifications</code> is <code>true</code> it will discard the modifications made.",
-      "type": "(params: GridStopRowEditModeParams) => void"
+      "description": "Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.\nIf `params.ignoreModifications` is `true` it will discard the modifications made.",
+      "type": "(params: { id: number | string, ignoreModifications?: boolean | undefined, field?: string | undefined, cellToFocusAfter?: 'below' | 'left' | 'none' | 'right' | undefined }) => void"
     }
   ]
 }
