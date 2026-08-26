@@ -36,6 +36,11 @@ export function CustomKeys() {
   // @ts-expect-error without a defaultValue the value can be undefined
   const unseededValue: string = unseeded.value;
 
+  // Without a defaultValue the validator can also receive undefined.
+  useEventDialogFormField<string>('room', {
+    validate: (value) => (value === undefined ? 'Missing' : null),
+  });
+
   return { seededValue, explicitValue, unseededValue };
 }
 

@@ -162,6 +162,14 @@ describe('EventDialogFormStore', () => {
       expect(store.getDirtyValues()).to.deep.equal({});
     });
 
+    it('should submit a written value equal to the seeded default', () => {
+      const store = createFormStore({ title: '' });
+      store.seedDefault('priority', 'medium');
+      store.setValue('priority', 'high');
+      store.setValue('priority', 'medium');
+      expect(store.getDirtyValues()).to.deep.equal({ priority: 'medium' });
+    });
+
     it('should report a seeded key as dirty once edited, including a reset to undefined', () => {
       const store = createFormStore({ title: '' });
       store.seedDefault('notes', 'default');

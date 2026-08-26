@@ -124,6 +124,14 @@ export class EventDialogFormStore<
   private validators = new Map<string, Set<EventDialogFormValidator<TValues>>>();
 
   /**
+   * Keys seeded from a `defaultValue` and written afterwards: an explicit pick of
+   * the default must submit, unlike a model value reverted to its seed.
+   */
+  private writtenDefaultKeys = new Set<string>();
+
+  private defaultSeededKeys = new Set<string>();
+
+  /**
    * Bumped on every registration change so a pending `validateAll` can detect it.
    */
   private validatorsRevision = 0;
@@ -184,6 +192,11 @@ export class EventDialogFormStore<
       }
     }
 
+    for (const key of changedKeys) {
+      if (this.defaultSeededKeys.has(key)) {
+        this.writtenDefaultKeys.add(key);
+      }
+    }
     this.update({ values, errors });
     this.parameters.onValuesChange?.(values, changedKeys);
   };
@@ -255,6 +268,7 @@ export class EventDialogFormStore<
     if (hasOwn(this.state.values, key)) {
       return;
     }
+    this.defaultSeededKeys.add(key);
     setOwn(this.initialValues as Record<string, unknown>, key, value);
     this.set('values', { ...this.state.values, [key]: value });
   };
@@ -309,13 +323,16 @@ export class EventDialogFormStore<
   };
 
   /**
-   * Returns the values that changed since seeding, minus `excludeKeys`.
+   * Returns the values written or changed since seeding, minus `excludeKeys`.
    */
   public getDirtyValues = (excludeKeys?: ReadonlySet<string>): Record<string, unknown> => {
     const { values } = this.state;
     const dirty: Record<string, unknown> = {};
     for (const key of Object.keys(values)) {
-      if (!excludeKeys?.has(key) && !Object.is(values[key], getOwn(this.initialValues, key))) {
+      const isDirty =
+        this.writtenDefaultKeys.has(key) ||
+        !Object.is(values[key], getOwn(this.initialValues, key));
+      if (!excludeKeys?.has(key) && isDirty) {
         setOwn(dirty, key, values[key]);
       }
     }

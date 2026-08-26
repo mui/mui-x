@@ -83,7 +83,7 @@ export function useEventDialogFormField<T, K extends string = string>(
 // A custom field without a `defaultValue` is `undefined` when the event does not have it.
 export function useEventDialogFormField<T = unknown, K extends string = string>(
   key: CustomFieldKey<K>,
-  parameters?: UseEventDialogFormFieldParameters<T>,
+  parameters?: UseEventDialogFormFieldParameters<T | undefined>,
 ): UseEventDialogFormFieldReturnValue<T | undefined>;
 export function useEventDialogFormField(
   key: EventDialogFormFieldKey,
