@@ -17,6 +17,7 @@ import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 import { getAxisClickPayload } from './getAxisClickPayload';
+import { useDefaultTickLabelStyle } from '../../../useDefaultTickLabelStyle';
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -24,15 +25,13 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   instance,
 }) => {
   const { chartsLayerContainerRef } = instance;
-  const {
-    xAxis,
-    yAxis,
-    dataset,
-    onHighlightedAxisChange,
-    onTooltipAxisChange,
-    axesGap,
-    defaultTickLabelStyle,
-  } = params;
+  const { xAxis, yAxis, dataset, onHighlightedAxisChange, onTooltipAxisChange, axesGap } = params;
+
+  const defaultTickLabelStyle = useDefaultTickLabelStyle();
+
+  useEnhancedEffect(() => {
+    store.set('cartesianAxis', { ...store.state.cartesianAxis, defaultTickLabelStyle });
+  }, [defaultTickLabelStyle, store]);
 
   if (process.env.NODE_ENV !== 'production') {
     const ids = [...(xAxis ?? []), ...(yAxis ?? [])]
@@ -269,7 +268,6 @@ useChartCartesianAxis.params = {
   onTooltipAxisChange: true,
   tooltipAxis: true,
   axesGap: true,
-  defaultTickLabelStyle: true,
 };
 
 useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
@@ -288,7 +286,6 @@ useChartCartesianAxis.getInitialState = (params) => ({
     axesGap: params.axesGap,
     x: params.defaultizedXAxis,
     y: params.defaultizedYAxis,
-    defaultTickLabelStyle: params.defaultTickLabelStyle,
   },
   ...(params.highlightedAxis === undefined
     ? {}
