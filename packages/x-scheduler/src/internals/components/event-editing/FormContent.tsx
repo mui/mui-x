@@ -281,6 +281,15 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // (which owns the range validators) is not rendered by a custom General tab.
       const rangeError = validateRange(adapter, start, end, values.allDay);
       if (rangeError) {
+        if (process.env.NODE_ENV !== 'production') {
+          if (!formStore.hasValidator(rangeError.field)) {
+            warnOnce([
+              `MUI X Scheduler: The date range is invalid but no field of the event dialog validates the "${rangeError.field}" field.`,
+              'Saving with an invalid range is still blocked, but the end user has no visible field to fix it.',
+              'Render the date and time section in the General tab, or register a validator for the field.',
+            ]);
+          }
+        }
         formStore.setError(
           rangeError.field,
           rangeError.field === 'endDate'

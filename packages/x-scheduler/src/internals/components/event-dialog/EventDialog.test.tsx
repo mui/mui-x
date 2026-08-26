@@ -792,37 +792,66 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByRole('alert')).to.have.text('A resource is required.');
     });
 
-    it('should block the submit of an invalid date range when the slot omits the date and time section', async () => {
-      const onEventsChange = spy();
-
-      // No validator registered (the date and time section owns them), so blocking
-      // and the message can only come from the submit-level range check.
-      function CustomEndDateField() {
-        const endDate = useEventDialogFormField('endDate');
+    // No validator registered in these fields (the date and time section owns them), so
+    // blocking, the message, and the dev warning can only come from the submit-level check.
+    function createRangeField(key: 'endDate' | 'endTime', label: string) {
+      return function CustomRangeField() {
+        const field = useEventDialogFormField(key);
         return (
           <React.Fragment>
             <input
-              aria-label="End date"
-              value={endDate.value}
-              onChange={(event) => endDate.setValue(event.target.value)}
+              aria-label={label}
+              value={field.value}
+              onChange={(event) => field.setValue(event.target.value)}
             />
-            {endDate.error && <p role="alert">{endDate.error}</p>}
+            {field.error && <p role="alert">{field.error}</p>}
           </React.Fragment>
         );
-      }
+      };
+    }
 
-      const { user } = renderWithSlot(
-        { eventDialogGeneralTab: CustomEndDateField },
-        { onEventsChange },
-      );
+    it('should block the submit of an invalid date range when the slot omits the date and time section', async () => {
+      clearWarningsCache();
+      const onEventsChange = spy();
 
-      const endDateInput = screen.getByRole('textbox', { name: 'End date' });
-      await user.clear(endDateInput);
-      await user.type(endDateInput, '2025-05-20');
-      await user.click(screen.getByRole('button', { name: 'Save' }));
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: createRangeField('endDate', 'End date') },
+          { onEventsChange },
+        );
+
+        const endDateInput = screen.getByRole('textbox', { name: 'End date' });
+        await user.clear(endDateInput);
+        await user.type(endDateInput, '2025-05-20');
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev([
+        'MUI X Scheduler: The date range is invalid but no field of the event dialog validates the "endDate" field.',
+      ]);
 
       expect(onEventsChange.callCount).to.equal(0);
       expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
+    });
+
+    it('should block the submit of an invalid end time when the slot omits the date and time section', async () => {
+      clearWarningsCache();
+      const onEventsChange = spy();
+
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: createRangeField('endTime', 'End time') },
+          { onEventsChange },
+        );
+
+        const endTimeInput = screen.getByRole('textbox', { name: 'End time' });
+        await user.clear(endTimeInput);
+        await user.type(endTimeInput, '07:00');
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev([
+        'MUI X Scheduler: The date range is invalid but no field of the event dialog validates the "endTime" field.',
+      ]);
+
+      expect(onEventsChange.callCount).to.equal(0);
+      expect(screen.getByRole('alert')).to.have.text('End time must be after start time.');
     });
 
     it('should keep a section rendered twice in sync through the shared form store', async () => {
