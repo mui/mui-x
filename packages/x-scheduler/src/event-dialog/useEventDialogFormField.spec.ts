@@ -29,6 +29,9 @@ export function CustomKeys() {
   const explicit = useEventDialogFormField<string>('room', { defaultValue: '' });
   const explicitValue: string = explicit.value;
 
+  // A custom field accepts an explicit undefined write (submitted as-is).
+  seeded.setValue(undefined);
+
   const unseeded = useEventDialogFormField<string>('room');
   // @ts-expect-error without a defaultValue the value can be undefined
   const unseededValue: string = unseeded.value;

@@ -11,6 +11,7 @@ import type {
 import { BUILT_IN_FORM_KEYS } from '../internals/components/event-dialog/utils';
 import { eventDialogFormSelectors } from '../internals/components/event-dialog/form/EventDialogFormStore';
 import type {
+  EventDialogFormErrorMessage,
   EventDialogFormValidator,
   EventDialogFormValidatorResult,
 } from '../internals/components/event-dialog/form/EventDialogFormStore';
@@ -25,7 +26,7 @@ export interface UseEventDialogFormFieldParameters<T> {
   /**
    * Runs during submit while the calling component is mounted.
    * Returns the error message(s) for the field, or `null` when the value is valid
-   * (an empty string, a boolean, or an empty array also counts as valid). Can be async.
+   * (an empty string or an empty array also counts as valid; booleans are ignored). Can be async.
    */
   validate?: (
     value: T,
@@ -39,26 +40,27 @@ export interface UseEventDialogFormFieldParameters<T> {
   defaultValue?: T;
 }
 
-export interface UseEventDialogFormFieldReturnValue<T> {
+export interface UseEventDialogFormFieldReturnValue<T, TWrite = T> {
   /**
    * Current value of the field.
    */
   value: T;
   /**
    * Writes the field and clears its error.
+   * Custom fields also accept `undefined`; the write is submitted as-is.
    */
-  setValue: (value: T) => void;
+  setValue: (value: TWrite) => void;
   /**
    * First error message of the field, or `undefined` when it has none.
    */
-  error: React.ReactNode | undefined;
+  error: EventDialogFormErrorMessage | undefined;
   /**
    * All the error messages of the field, empty when it has none.
    */
-  errors: React.ReactNode[];
+  errors: EventDialogFormErrorMessage[];
 }
 
-const NO_ERRORS: React.ReactNode[] = [];
+const NO_ERRORS: EventDialogFormErrorMessage[] = [];
 
 /**
  * Binds a component to one field of the event dialog form.
@@ -75,7 +77,7 @@ export function useEventDialogFormField<K extends keyof EventDialogBuiltInFormVa
 export function useEventDialogFormField<T, K extends string = string>(
   key: K & (K extends keyof EventDialogBuiltInFormValues ? never : unknown),
   parameters: UseEventDialogFormFieldParameters<T> & { defaultValue: T },
-): UseEventDialogFormFieldReturnValue<T>;
+): UseEventDialogFormFieldReturnValue<T, T | undefined>;
 // A custom field without a `defaultValue` is `undefined` when the event does not have it.
 export function useEventDialogFormField<T = unknown, K extends string = string>(
   key: K & (K extends keyof EventDialogBuiltInFormValues ? never : unknown),

@@ -15,7 +15,7 @@ export interface EventDialogFormState<
   /**
    * Validation errors, keyed by field name. Always non-empty arrays.
    */
-  errors: Record<string, React.ReactNode[]>;
+  errors: Record<string, EventDialogFormErrorMessage[]>;
 }
 
 /**
@@ -44,7 +44,7 @@ export type EventDialogFormValidator<
 // for what JS consumers (and awaited results) can actually pass.
 function normalizeValidatorResult(
   result: React.ReactNode | React.ReactNode[] | null,
-): React.ReactNode[] | null {
+): EventDialogFormErrorMessage[] | null {
   // Booleans are excluded from the type, but a JS consumer can still return them
   // (e.g. the `condition && 'message'` shorthand); ignore them instead of storing
   // `false` as an error message.
@@ -65,10 +65,10 @@ function normalizeValidatorResult(
   if (Array.isArray(result)) {
     const messages = result.filter(
       (message) => message != null && message !== '' && typeof message !== 'boolean',
-    );
+    ) as EventDialogFormErrorMessage[];
     return messages.length > 0 ? messages : null;
   }
-  return [result];
+  return [result as EventDialogFormErrorMessage];
 }
 
 export interface EventDialogFormParameters<
@@ -262,7 +262,7 @@ export class EventDialogFormStore<
       // doubles as a revision check.
       const { values } = this.state;
       const { validatorsRevision } = this;
-      const errors: Record<string, React.ReactNode[]> = {};
+      const errors: Record<string, EventDialogFormErrorMessage[]> = {};
       // eslint-disable-next-line no-await-in-loop
       await Promise.all(
         Array.from(this.validators, async ([key, validators]) => {
