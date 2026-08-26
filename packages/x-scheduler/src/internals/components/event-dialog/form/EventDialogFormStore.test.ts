@@ -162,6 +162,15 @@ describe('EventDialogFormStore', () => {
       expect(store.getDirtyValues()).to.deep.equal({});
     });
 
+    it('should not track a model-backed key as default-seeded', () => {
+      const store = createFormStore({ notes: 'from-model' });
+      store.seedDefault('notes', 'default');
+      store.setValue('notes', 'edited');
+      store.setValue('notes', 'from-model');
+      // Reverting to the model value stays clean, unlike a true seeded default.
+      expect(store.getDirtyValues()).to.deep.equal({});
+    });
+
     it('should submit a written value equal to the seeded default', () => {
       const store = createFormStore({ title: '' });
       store.seedDefault('priority', 'medium');
@@ -305,6 +314,21 @@ describe('EventDialogFormStore', () => {
       }).toWarnDev([
         'MUI X Scheduler: A form field validator kept writing values while the validation was running.',
       ]);
+    });
+
+    it('should keep the last computed errors when the restart cap trips', async () => {
+      clearWarningsCache();
+      const store = createFormStore({ title: 'Meeting' });
+      store.registerValidator('title', (value) => {
+        store.setValue('title', value as string);
+        return 'Still wrong';
+      });
+      await expect(async () => {
+        expect(await store.validateAll()).to.equal(false);
+      }).toWarnDev([
+        'MUI X Scheduler: A form field validator kept writing values while the validation was running.',
+      ]);
+      expect(store.state.errors).to.deep.equal({ title: ['Still wrong'] });
     });
 
     it('should keep a failing validator error for a field named __proto__', async () => {

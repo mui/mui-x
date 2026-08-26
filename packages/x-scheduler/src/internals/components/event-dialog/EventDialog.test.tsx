@@ -1141,6 +1141,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should store the generic range error when a registered validator passes', async () => {
+      clearWarningsCache();
       const onEventsChange = spy();
       const { user } = renderWithSlot(
         { eventDialogGeneralTab: createRangeField('endDate', 'End date', () => null) },
@@ -1157,6 +1158,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should keep a more specific validator message over the generic range error', async () => {
+      clearWarningsCache();
       const onEventsChange = spy();
       const { user } = renderWithSlot(
         {
@@ -1411,6 +1413,23 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
 
       expect(screen.getByRole('textbox', { name: 'Description' })).to.have.attribute('readonly');
+    });
+
+    it('should map the start fields and the end fields to their own event property', () => {
+      render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          eventModelStructure={{ start: { getter: (event) => event.start } }}
+        >
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.getByLabelText(/start date/i)).to.have.attribute('readonly');
+      expect(screen.getByLabelText(/start time/i)).to.have.attribute('readonly');
+      expect(screen.getByLabelText(/end date/i)).not.to.have.attribute('readonly');
+      expect(screen.getByLabelText(/end time/i)).not.to.have.attribute('readonly');
     });
 
     it('should mark the date and time fields read-only when the start and end properties have no setter', () => {

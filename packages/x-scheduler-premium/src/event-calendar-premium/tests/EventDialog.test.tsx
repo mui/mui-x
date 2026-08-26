@@ -125,6 +125,43 @@ describe('<EventDialogContent open />', () => {
     expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
   });
 
+  it('should return to the General tab when only a custom validator fails', async () => {
+    const onEventsChange = spy();
+    function FailingSection() {
+      const client = useEventDialogFormField('client', {
+        defaultValue: '',
+        validate: () => 'Nope',
+      });
+      return client.error ? <p role="alert">{client.error}</p> : null;
+    }
+
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
+        <SchedulerSlotsProvider
+          slots={{ eventDialogGeneralTab: FailingSection }}
+          slotProps={undefined}
+        >
+          <TestEventDialogContent open {...defaultProps} />
+        </SchedulerSlotsProvider>
+      </EventCalendarProvider>,
+    );
+
+    const generalPanel = screen.getByRole('tabpanel', { name: /general/i });
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+    expect(generalPanel).to.have.attribute('hidden');
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    expect(onEventsChange.called).to.equal(false);
+    expect(generalPanel).not.to.have.attribute('hidden');
+    expect(screen.getByRole('alert')).to.have.text('Nope');
+  });
+
   it('should render the event data in the form fields', async () => {
     const { user } = render(
       <EventCalendarProvider
