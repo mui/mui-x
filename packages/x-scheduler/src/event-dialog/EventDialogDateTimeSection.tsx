@@ -13,6 +13,7 @@ import { useEventEditingStyledContext } from '../internals/components/event-edit
 import type { EventDialogFormValues } from '../internals/components/event-dialog/utils';
 import {
   computeRange,
+  findInvalidRangeField,
   getRangeErrorMessage,
   validateRange,
 } from '../internals/components/event-dialog/utils';
@@ -44,8 +45,8 @@ const DateTimeFieldsRow = styled('div', {
   },
 }));
 
-// The only keys with range validators, so clearing them covers edits to any of the four date/time fields.
-const RANGE_ERROR_KEYS = ['endDate', 'endTime'];
+// Editing any of the four fields invalidates the stored range errors as a whole.
+const RANGE_ERROR_KEYS = ['startDate', 'startTime', 'endDate', 'endTime'];
 
 const AllDayFormControlLabel = styled(FormControlLabel, {
   name: 'MuiEventDialog',
@@ -72,9 +73,17 @@ export function EventDialogDateTimeSection() {
   // Selector hooks
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
-  const createRangeValidator =
-    (field: 'endDate' | 'endTime') =>
+  const createDateTimeValidator =
+    (field: 'startDate' | 'startTime' | 'endDate' | 'endTime') =>
     (value: string, allValues: EventDialogFormValues): string | null => {
+      if (findInvalidRangeField(adapter, allValues, displayTimezone) === field) {
+        return field === 'startDate' || field === 'endDate'
+          ? localeText.invalidDateError
+          : localeText.invalidTimeError;
+      }
+      if (field === 'startDate' || field === 'startTime') {
+        return null;
+      }
       const { start, end } = computeRange(adapter, allValues, displayTimezone);
       if (validateRange(adapter, start, end, allValues.allDay)?.field !== field) {
         return null;
@@ -82,13 +91,17 @@ export function EventDialogDateTimeSection() {
       return getRangeErrorMessage(field, localeText);
     };
 
-  const startDate = useEventDialogFormField('startDate');
-  const startTime = useEventDialogFormField('startTime');
+  const startDate = useEventDialogFormField('startDate', {
+    validate: createDateTimeValidator('startDate'),
+  });
+  const startTime = useEventDialogFormField('startTime', {
+    validate: createDateTimeValidator('startTime'),
+  });
   const endDate = useEventDialogFormField('endDate', {
-    validate: createRangeValidator('endDate'),
+    validate: createDateTimeValidator('endDate'),
   });
   const endTime = useEventDialogFormField('endTime', {
-    validate: createRangeValidator('endTime'),
+    validate: createDateTimeValidator('endTime'),
   });
   const allDay = useEventDialogFormField('allDay');
 
@@ -117,7 +130,10 @@ export function EventDialogDateTimeSection() {
             slotProps={{
               inputLabel: { shrink: true },
               input: { readOnly: startDate.readOnly },
+              formHelperText: { role: 'alert' },
             }}
+            error={!!startDate.error}
+            helperText={startDate.error}
             size="small"
           />
           {!allDay.value && (
@@ -131,7 +147,10 @@ export function EventDialogDateTimeSection() {
               slotProps={{
                 inputLabel: { shrink: true },
                 input: { readOnly: startTime.readOnly },
+                formHelperText: { role: 'alert' },
               }}
+              error={!!startTime.error}
+              helperText={startTime.error}
               size="small"
             />
           )}

@@ -1029,6 +1029,60 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByRole('alert')).to.have.text('Enter a valid time.');
     });
 
+    it('should show the invalid-date error on the mounted start field without warning', async () => {
+      clearWarningsCache();
+      const onEventsChange = spy();
+      // A sibling section empties the built-in key; the mounted date and time
+      // section must surface the error itself.
+      function StartDateClearer() {
+        const startDate = useEventDialogFormField('startDate');
+        return (
+          <React.Fragment>
+            <EventDialogDateTimeSection />
+            <button type="button" onClick={() => startDate.setValue('')}>
+              Clear start date
+            </button>
+          </React.Fragment>
+        );
+      }
+      const { user } = renderWithSlot(
+        { eventDialogGeneralTab: StartDateClearer },
+        { onEventsChange },
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Clear start date' }));
+      // The native `required` on the section's input already blocks a UI submit,
+      // so exercise the programmatic path that reaches the form contract.
+      fireEvent.submit(screen.getByRole('button', { name: 'Save' }).closest('form')!);
+      await screen.findAllByRole('alert');
+
+      expect(onEventsChange.callCount).to.equal(0);
+      const alerts = screen.getAllByRole('alert').map((alert) => alert.textContent);
+      expect(alerts).to.include('Enter a valid date.');
+    });
+
+    it('should ignore the time fields of an all-day event when validating', async () => {
+      const onEventsChange = spy();
+      function TimeClearer() {
+        const startTime = useEventDialogFormField('startTime');
+        return (
+          <React.Fragment>
+            <EventDialogDateTimeSection />
+            <button type="button" onClick={() => startTime.setValue('')}>
+              Clear start time
+            </button>
+          </React.Fragment>
+        );
+      }
+      const { user } = renderWithSlot({ eventDialogGeneralTab: TimeClearer }, { onEventsChange });
+
+      await user.click(screen.getByRole('button', { name: 'Clear start time' }));
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.callCount).to.equal(1);
+    });
+
     it('should keep a custom required-resource message over the generic one', async () => {
       clearWarningsCache();
       const onEventsChange = spy();
