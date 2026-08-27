@@ -50,7 +50,7 @@ export interface UseEventDialogFormFieldParameters<T> {
   defaultValue?: T;
 }
 
-export interface UseEventDialogFormFieldReturnValue<T, TWrite = T> {
+export interface UseEventDialogFormFieldReturnValue<T> {
   /**
    * Current value of the field.
    */
@@ -59,7 +59,7 @@ export interface UseEventDialogFormFieldReturnValue<T, TWrite = T> {
    * Writes the field and clears its error.
    * On a seeded custom field, writing `undefined` submits the removal of the stored property.
    */
-  setValue: (value: TWrite) => void;
+  setValue: (value: T) => void;
   /**
    * First error message of the field, or `undefined` when it has none.
    */
@@ -102,7 +102,9 @@ export function useEventDialogFormField<K extends keyof EventDialogBuiltInFormVa
 ): UseEventDialogFormFieldReturnValue<EventDialogBuiltInFormValues[K]>;
 // A custom field can always be `undefined`: when the event does not have it and no
 // `defaultValue` seeds it, or after a `setValue(undefined)` submitting its removal.
-export function useEventDialogFormField<T = unknown, K extends string = string>(
+// The key generic comes first so an explicit value type cannot bypass the key
+// guard: supplying one argument fills the key slot, keeping the literal visible.
+export function useEventDialogFormField<K extends string = string, T = unknown>(
   key: CustomFieldKey<K>,
   parameters?: UseEventDialogFormFieldParameters<T | undefined> & { defaultValue?: T },
 ): UseEventDialogFormFieldReturnValue<T | undefined>;

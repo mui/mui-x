@@ -29,18 +29,19 @@ export function CustomKeys() {
   // @ts-expect-error the value can be undefined again after setValue(undefined)
   const seededUnsound: string = seeded.value;
 
-  const explicit = useEventDialogFormField<string>('room', { defaultValue: '' });
+  // Explicit typing supplies the key literal first, so the guard still sees it.
+  const explicit = useEventDialogFormField<'room', string>('room', { defaultValue: '' });
   const explicitValue: string | undefined = explicit.value;
 
   // A custom field accepts an explicit undefined write (submitted as the removal).
   seeded.setValue(undefined);
 
-  const unseeded = useEventDialogFormField<string>('room');
+  const unseeded = useEventDialogFormField<'room', string>('room');
   // @ts-expect-error without a defaultValue the value can be undefined
   const unseededValue: string = unseeded.value;
 
   // The validator can receive undefined, with or without a defaultValue.
-  useEventDialogFormField<string>('room', {
+  useEventDialogFormField<'room', string>('room', {
     validate: (value) => (value === undefined ? 'Missing' : null),
   });
   useEventDialogFormField('room', {
@@ -51,13 +52,14 @@ export function CustomKeys() {
   return { seededValue, seededUnsound, explicitValue, unseededValue };
 }
 
-// Known limitation of the built-in-key guard, kept compiling on purpose: an
-// explicit type argument defaults K to string, bypassing the key check, and
-// TypeScript has no partial type-argument inference to close the hole.
-// If this line ever errors, the guard got stronger.
+// Known limitation, kept compiling on purpose: a single explicit type argument
+// supplies the KEY type, so a wide string compiles and leaves the value
+// `unknown`. If this line ever errors, the guard got stronger.
 export function KnownLimitations() {
-  const bypassed = useEventDialogFormField<number>('title', { defaultValue: 123 });
-  return { bypassed };
+  const wideKey = useEventDialogFormField<string>('room');
+  // @ts-expect-error the value stays unknown without a key literal or a value type
+  const wideValue: string = wideKey.value;
+  return { wideKey, wideValue };
 }
 
 // A mistyped parameter on a built-in key must error instead of silently
@@ -78,4 +80,8 @@ export function RejectedCalls(condition: boolean) {
   useEventDialogFormField('timezone', { defaultValue: 'UTC' });
   // @ts-expect-error `readOnly` is a reserved event property, dropped on save
   useEventDialogFormField('readOnly');
+  // @ts-expect-error an explicit value type cannot retype a built-in field
+  useEventDialogFormField<number>('title', { defaultValue: 123 });
+  // @ts-expect-error an explicit value type cannot bypass the key guard
+  useEventDialogFormField<number, string>('title');
 }

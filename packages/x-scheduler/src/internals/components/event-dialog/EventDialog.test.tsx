@@ -331,7 +331,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       .toOccurrence();
 
     function CustomSection() {
-      const priority = useEventDialogFormField<string>('priority', { defaultValue: 'normal' });
+      const priority = useEventDialogFormField('priority', { defaultValue: 'normal' });
       return (
         <input
           aria-label="Priority"
@@ -742,7 +742,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     it('should block the submit when a validator of a section rendered by the slot fails', async () => {
       const onEventsChange = spy();
       function RequiredCustomSection() {
-        const client = useEventDialogFormField<string>('client', {
+        const client = useEventDialogFormField('client', {
           defaultValue: '',
           validate: (value) => (value ? null : 'Client is required'),
         });
@@ -1293,7 +1293,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         const onEventsChange = spy();
         const deferred = createDeferred();
         function AsyncValidatedSection() {
-          const client = useEventDialogFormField<string>('client', {
+          const client = useEventDialogFormField('client', {
             defaultValue: 'Acme',
             validate: (value) => (value === '' ? 'Client is required' : deferred.promise),
           });
@@ -1326,7 +1326,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         const onEventsChange = spy();
         const deferred = createDeferred();
         function AsyncValidatedSection() {
-          useEventDialogFormField<string>('client', {
+          useEventDialogFormField('client', {
             defaultValue: 'Acme',
             validate: () => deferred.promise,
           });
@@ -1348,7 +1348,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       it('should disable the Save button while the submission is pending', async () => {
         const deferred = createDeferred();
         function AsyncValidatedSection() {
-          useEventDialogFormField<string>('client', {
+          useEventDialogFormField('client', {
             defaultValue: 'Acme',
             validate: () => deferred.promise,
           });
@@ -1372,7 +1372,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       it('should re-enable the buttons when the async validation fails', async () => {
         const deferred = createDeferred();
         function AsyncValidatedSection() {
-          const client = useEventDialogFormField<string>('client', {
+          const client = useEventDialogFormField('client', {
             defaultValue: 'Acme',
             validate: () => deferred.promise,
           });
@@ -1400,7 +1400,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         const onEventsChange = spy();
         const deferred = createDeferred();
         function AsyncValidatedSection() {
-          useEventDialogFormField<string>('client', {
+          useEventDialogFormField('client', {
             defaultValue: 'Acme',
             validate: () => deferred.promise,
           });

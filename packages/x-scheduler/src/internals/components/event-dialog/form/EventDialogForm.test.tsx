@@ -33,7 +33,7 @@ describe('EventDialogForm', () => {
 
   function FieldProbe(props: FieldProbeProps) {
     const { fieldKey, validate, defaultValue, onRender } = props;
-    const { value, setValue, error, errors } = useEventDialogFormField<string>(fieldKey, {
+    const { value, setValue, error, errors } = useEventDialogFormField(fieldKey, {
       validate,
       defaultValue,
     });

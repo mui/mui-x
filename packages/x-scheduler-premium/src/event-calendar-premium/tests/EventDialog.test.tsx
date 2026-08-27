@@ -11,7 +11,7 @@ import {
   StateWatcher,
   StoreSpy,
 } from 'test/utils/scheduler';
-import { act, screen, waitFor, within } from '@mui/internal-test-utils';
+import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import type {
   SchedulerResource,
   SchedulerEventOccurrence,
@@ -2562,6 +2562,39 @@ describe('<EventDialogContent open />', () => {
           );
         });
 
+        it('should block a programmatic submit when the Ends until date is invalid', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+          const dateInput = endsFieldset.querySelector('input[type="date"]') as HTMLInputElement;
+          await user.clear(dateInput);
+
+          // Bypass the native `required` so the form-store validator is what blocks.
+          fireEvent.submit(screen.getByRole('button', { name: /save/i }).closest('form')!);
+          await waitFor(() => expect(dateInput).to.have.attribute('aria-invalid', 'true'));
+
+          expect(onEventsChange.called).to.equal(false);
+          expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
+            'hidden',
+          );
+        });
+
         it('should keep the Recurrence tab visible when a recurrence control is natively invalid', async () => {
           const onEventsChange = spy();
 
@@ -3175,7 +3208,7 @@ describe('<EventDialogContent open />', () => {
 
       describe('custom fields through the eventDialogGeneralTab slot', () => {
         function CustomFieldSection() {
-          const { value, setValue } = useEventDialogFormField<string>('customField');
+          const { value, setValue } = useEventDialogFormField<'customField', string>('customField');
           return (
             <input
               aria-label="custom field"
