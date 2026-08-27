@@ -251,17 +251,15 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
     }
   };
 
-  // role="menu" requires at least one child element
-  const attributes =
-    numberOfButtons > 0
-      ? {
-          role: 'menu',
-          onKeyDown: handleRootKeyDown,
-        }
-      : undefined;
-
   return (
-    <div ref={rootRef} tabIndex={-1} className={gridClasses.actionsCell} {...attributes} {...other}>
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    <div
+      ref={rootRef}
+      tabIndex={-1}
+      className={gridClasses.actionsCell}
+      onKeyDown={handleRootKeyDown}
+      {...other}
+    >
       {iconButtons.map((button, index) =>
         React.cloneElement(button, {
           key: index,
@@ -279,7 +277,6 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
           aria-haspopup="menu"
           aria-expanded={open}
           aria-controls={open ? menuId : undefined}
-          role="menuitem"
           size="small"
           onClick={toggleMenu}
           touchRippleRef={handleTouchRippleRef(buttonId)}

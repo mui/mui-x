@@ -291,7 +291,7 @@ describe('<DataGridPro /> - Events params', () => {
           ]}
         />,
       );
-      await user.click(screen.getByRole('menuitem', { name: 'print' }));
+      await user.click(screen.getByRole('button', { name: 'print' }));
       expect(eventStack).to.deep.equal([]);
     });
 
