@@ -7,7 +7,8 @@ import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect, afterEach, vi, type Mock } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import type { Mock } from 'vitest';
 
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
@@ -58,7 +59,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     let writeText: Mock | undefined;
 
     afterEach(function afterEachHook() {
-      writeText?.restore();
+      writeText?.mockRestore();
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {

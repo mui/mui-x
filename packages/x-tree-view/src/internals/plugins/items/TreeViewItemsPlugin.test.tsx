@@ -231,7 +231,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
 
         await view.user.click(view.getItemContent('1'));
         expect(onItemClick.mock.calls.length).to.equal(1);
-        expect(onItemClick.mock.mock.lastCall?.at(-1)).to.equal('1');
+        expect(onItemClick.mock.lastCall?.at(-1)).to.equal('1');
       });
 
       it('should not call onItemClick for the ancestors on the clicked item', async () => {
@@ -245,7 +245,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
 
         await view.user.click(view.getItemContent('1.1'));
         expect(onItemClick.mock.calls.length).to.equal(1);
-        expect(onItemClick.mock.mock.lastCall?.at(-1)).to.equal('1.1');
+        expect(onItemClick.mock.lastCall?.at(-1)).to.equal('1.1');
       });
     });
 
@@ -263,7 +263,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
 
           view.setProps({ onClick: () => {} });
 
-          const renders = spyLabel.mock.calls.map((call) => call.mock.calls[0].children);
+          const renders = spyLabel.mock.calls.map((call) => call[0].children);
           expect(renders).to.deep.equal([]);
         },
       );
@@ -282,7 +282,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
 
           view.setProps({ selectedItems: ['1'] });
 
-          const renders = spyLabel.mock.calls.map((call) => call.mock.calls[0].children);
+          const renders = spyLabel.mock.calls.map((call) => call[0].children);
 
           // 2 renders of the 1st item to remove to tabIndex={0}
           // 2 renders of the selected item to change its visual state
@@ -306,7 +306,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
 
           view.setProps({ onClick: () => {} });
 
-          const renders = spyLabel.mock.calls.map((call) => call.mock.calls[0].children);
+          const renders = spyLabel.mock.calls.map((call) => call[0].children);
           expect(renders).to.deep.equal([]);
         },
       );
@@ -329,7 +329,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
 
           view.setProps({ selectedItems: ['1'] });
 
-          const renders = spyLabel.mock.calls.map((call) => call.mock.calls[0].children);
+          const renders = spyLabel.mock.calls.map((call) => call[0].children);
 
           // 2 renders of the 1st item to remove to tabIndex={0}
           // 2 renders of the selected item to change its visual state

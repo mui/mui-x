@@ -27,7 +27,8 @@ import {
   EventEditingOptionalRenderersContext,
   useEventDialogFormField,
 } from '@mui/x-scheduler/internals';
-import { describe, it, expect, vi, type Mock } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import type { MockInstance } from 'vitest';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
 
@@ -694,7 +695,7 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should show "No resource" in the combobox after picking the "No resource" option (single-select mode)', async () => {
-      let updateEventSpy: Mock | undefined;
+      let updateEventSpy: MockInstance | undefined;
 
       const { user } = render(
         <EventCalendarProvider
@@ -1588,7 +1589,7 @@ describe('<EventDialogContent open />', () => {
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(createEventSpy?.mock.calls.length).to.equal(1);
-      const payload = createEventSpy.mock.lastCall?.[0];
+      const payload = createEventSpy.mock.lastCall![0];
 
       expect(payload.title).to.equal('New title');
       expect(payload.description).to.equal('Some details');
@@ -1661,7 +1662,7 @@ describe('<EventDialogContent open />', () => {
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(createEventSpy?.mock.calls.length).to.equal(1);
-      const payload = createEventSpy.mock.lastCall?.[0];
+      const payload = createEventSpy.mock.lastCall![0];
 
       // Form inputs are wall-time values.
       // They must be interpreted in displayTimezone, not in 'default'.
@@ -1793,7 +1794,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
-        const openPayload = updateRecurringEventSpy.mock.lastCall?.[0];
+        const openPayload = updateRecurringEventSpy.mock.lastCall![0];
 
         expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.title).to.equal('Daily standup');
@@ -1860,7 +1861,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
-        const openPayload = updateRecurringEventSpy.mock.lastCall?.[0];
+        const openPayload = updateRecurringEventSpy.mock.lastCall![0];
 
         expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.title).to.equal(originalRecurringEventOccurrence.title);
@@ -1926,7 +1927,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
-        const openPayload = updateRecurringEventSpy.mock.lastCall?.[0];
+        const openPayload = updateRecurringEventSpy.mock.lastCall![0];
 
         expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.rrule).to.equal(undefined);
@@ -2073,7 +2074,7 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
           expect(onEventsChange.mock.calls.length).to.equal(1);
-          const updatedEvents = onEventsChange.mock.lastCall?.[0];
+          const updatedEvents = onEventsChange.mock.lastCall![0];
           expect(updatedEvents).to.have.length(1);
           expect(updatedEvents[0].exDates).to.have.length(1);
         });
@@ -2107,7 +2108,7 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
           expect(onEventsChange.mock.calls.length).to.equal(1);
-          const updatedEvents = onEventsChange.mock.lastCall?.[0];
+          const updatedEvents = onEventsChange.mock.lastCall![0];
           expect(updatedEvents).to.have.length(1);
           expect(updatedEvents[0].rrule.until).not.to.equal(undefined);
         });
@@ -2739,7 +2740,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('button', { name: /save/i }));
 
         expect(updateEventSpy?.mock.calls.length).to.equal(1);
-        const payload = updateEventSpy.mock.lastCall?.[0];
+        const payload = updateEventSpy.mock.lastCall![0];
 
         expect(payload.id).to.equal(nonRecurringEvent.id);
         expect(payload.title).to.equal('Task updated');
@@ -2782,7 +2783,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('button', { name: /save/i }));
 
         expect(updateEventSpy?.mock.calls.length).to.equal(1);
-        const payload = updateEventSpy.mock.lastCall?.[0];
+        const payload = updateEventSpy.mock.lastCall![0];
 
         expect(payload.id).to.equal(nonRecurringEvent.id);
         expect(payload.rrule).to.deep.equal({
@@ -2847,7 +2848,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('button', { name: /save/i }));
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
-        const updated = onEventsChange.mock.lastCall?.[0].find(
+        const updated = onEventsChange.mock.lastCall![0].find(
           (event) => event.id === nonRecurringEventWithCustomData.id,
         );
         expect(updated.title).to.equal('Task updated');
@@ -2879,7 +2880,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const updated = onEventsChange.mock.lastCall?.[0].find(
+        const updated = onEventsChange.mock.lastCall![0].find(
           (event) => event.id === recurringEventWithCustomData.id,
         );
         expect(updated.customField).to.equal('preserve-me');
@@ -2910,7 +2911,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/Only this event/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const created = onEventsChange.mock.lastCall?.[0].find(
+        const created = onEventsChange.mock.lastCall![0].find(
           (event) => event.extractedFromId === recurringEventWithCustomData.id,
         );
         expect(created).to.not.equal(undefined);
@@ -2942,7 +2943,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/This and following events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const created = onEventsChange.mock.lastCall?.[0].find(
+        const created = onEventsChange.mock.lastCall![0].find(
           (event) => event.extractedFromId === recurringEventWithCustomData.id,
         );
         expect(created).to.not.equal(undefined);
@@ -3016,14 +3017,14 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByRole('button', { name: /save/i }));
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
-        const updated = onEventsChange.mock.lastCall?.[0].find(
+        const updated = onEventsChange.mock.lastCall![0].find(
           (event) => event.id === nonRecurringEventWithCustomData.id,
         );
         expect(updated.customField).to.equal('edited');
 
         // Only the edited custom field enters the changes payload — an untouched
         // seeded field keeps resolving against the live model instead.
-        const changes = updateEventSpy!.mock.lastCall?.[0];
+        const changes = updateEventSpy!.mock.lastCall![0];
         expect(changes.customField).to.equal('edited');
         expect(changes).not.to.have.property('untouchedField');
         expect(updated.untouchedField).to.equal('keep-me');
@@ -3069,7 +3070,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const updated = onEventsChange.mock.lastCall?.[0].find(
+        const updated = onEventsChange.mock.lastCall![0].find(
           (event) => event.id === recurringEventWithCustomData.id,
         );
         expect(updated.customField).to.equal('after');
@@ -3115,7 +3116,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/Only this event/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const created = onEventsChange.mock.lastCall?.[0].find(
+        const created = onEventsChange.mock.lastCall![0].find(
           (event) => event.extractedFromId === recurringEventWithCustomData.id,
         );
         expect(created.customField).to.equal('after');

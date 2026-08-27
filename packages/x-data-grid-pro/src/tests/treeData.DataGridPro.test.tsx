@@ -308,9 +308,9 @@ describe('<DataGridPro /> - Tree data', () => {
       const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current?.state.rows
         .tree.A as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault.mock.calls.find(
-        (call) => call.firstArg.id === node.id,
+        (call) => call[0].id === node.id,
       )!;
-      expect(callForNodeA.firstArg).to.deep.includes(node);
+      expect(callForNodeA[0]).to.deep.includes(node);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
     });
 

@@ -484,7 +484,7 @@ describe('<DesktopDatePicker />', () => {
 
       const { user } = render(
         <DesktopDatePicker
-          slots={{ actionBar: React.memo(RenderCount) as unknown as React.ElementType }}
+          slots={{ actionBar: React.memo(RenderCount) as any }}
           closeOnSelect={false}
           open
         />,
@@ -503,7 +503,7 @@ describe('<DesktopDatePicker />', () => {
       const { setProps, user } = render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-01-01')}
-          slots={{ actionBar: React.memo(RenderCount) as unknown as React.ElementType }}
+          slots={{ actionBar: React.memo(RenderCount) as any }}
           slotProps={{ actionBar: () => ({ actions }) }}
           closeOnSelect={false}
           open

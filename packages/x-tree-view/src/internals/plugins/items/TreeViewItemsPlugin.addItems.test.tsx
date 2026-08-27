@@ -161,7 +161,7 @@ describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
         });
       });
 
-      const toggled = onItemSelectionToggle.mock.calls.map((call) => call.mock.calls[1]);
+      const toggled = onItemSelectionToggle.mock.calls.map((call) => call[1]);
       expect(toggled).to.deep.equal(['1.2', '1.2.1']);
     });
 

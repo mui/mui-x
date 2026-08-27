@@ -412,7 +412,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushDebounce();
 
     expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
-    const arg = dataSource.persistEvents.mock.calls[0][0];
+    const arg = (dataSource.persistEvents.mock.calls[0] as any[])[0];
     expect(arg.deleted).to.deep.equal([]);
     expect(arg.created).to.deep.equal([]);
     expect(arg.updated).to.deep.equal([updatedEvent]);

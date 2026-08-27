@@ -10,7 +10,8 @@ import type {
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import Excel from '@mui/x-internal-exceljs-fork';
 import { spyApi } from 'test/utils/helperFn';
-import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import type { Mock } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -772,7 +773,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           escapeFormulas: false,
         }),
       );
-      const { serializedRows } = workerMock.postMessage.mock.lastCall?.[0];
+      const { serializedRows } = workerMock.postMessage.mock.lastCall![0];
       expect(serializedRows[0].formulas).to.deep.equal({
         total: { formula: 'A2*B2', result: 20 },
       });

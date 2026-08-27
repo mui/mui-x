@@ -192,7 +192,7 @@ describe('<DataGridPro /> - Cell editing', () => {
             value: 'USD GBP',
           }),
         );
-        const args = preProcessEditCellProps.mock.lastCall?.[0];
+        const args = preProcessEditCellProps.mock.lastCall![0];
         expect(args.id).to.equal(0);
         expect(args.row).to.deep.equal(defaultData.rows[0]);
         expect(args.hasChanged).to.equal(true);
@@ -658,14 +658,14 @@ describe('<DataGridPro /> - Cell editing', () => {
           ...row,
           _currencyPair: value,
         }));
-        const processRowUpdate = vi.fn(() => new Promise(() => {}));
+        const processRowUpdate = vi.fn((..._args: any[]) => new Promise(() => {}));
         render(<TestCase processRowUpdate={processRowUpdate} columnProps={{ valueSetter }} />);
         act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() =>
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect((processRowUpdate.lastCall as any).mock.calls[0]).to.deep.equal({
+        expect(processRowUpdate.mock.lastCall![0]).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'USDGBP',
           _currencyPair: 'USD GBP',
@@ -749,7 +749,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should run all pending value mutations before calling processRowUpdate', async () => {
-        const processRowUpdate = vi.fn(() => new Promise(() => {}));
+        const processRowUpdate = vi.fn((..._args: any[]) => new Promise(() => {}));
         const renderEditCell = vi.fn(defaultRenderEditCell);
 
         render(<TestCase processRowUpdate={processRowUpdate} columnProps={{ renderEditCell }} />);
@@ -768,7 +768,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         );
         act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.mock.lastCall?.[0].value).to.equal('USD GBP');
-        expect((processRowUpdate.lastCall as any).mock.calls[0].currencyPair).to.equal('USD GBP');
+        expect(processRowUpdate.mock.lastCall![0].currencyPair).to.equal('USD GBP');
       });
 
       it('should keep in edit mode the cells that entered edit mode while processRowUpdate is called', async () => {

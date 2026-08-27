@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
@@ -167,7 +168,7 @@ describe('<DataGrid /> - Data source', () => {
 
   describe('incomplete filter items', () => {
     const getSentFilterItems = () => {
-      const url = new URL(fetchRowsSpy.mock.lastCall?.[0]);
+      const url = new URL(fetchRowsSpy.mock.lastCall![0]);
       return JSON.parse(url.searchParams.get('filterModel')!).items;
     };
 
@@ -348,7 +349,7 @@ describe('<DataGrid /> - Data source', () => {
       await waitFor(() => {
         expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
-      const url = new URL(fetchRowsSpy.mock.lastCall?.[0]);
+      const url = new URL(fetchRowsSpy.mock.lastCall![0]);
       expect(JSON.parse(url.searchParams.get('filterModel')!).quickFilterValues).to.deep.equal([
         'abc',
       ]);
@@ -933,7 +934,7 @@ describe('<DataGrid /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect((secondDataSource.getRows as ReturnType<typeof spy>).mock.calls.length).to.equal(1);
+        expect((secondDataSource.getRows as Mock).mock.calls.length).to.equal(1);
       });
       // Previous row remains visible while the new dataSource is fetched.
       expect(localApiRef.current?.getRowsCount()).to.equal(1);

@@ -16,7 +16,8 @@ import type {
   GridColDef,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect, vi, type Mock } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import type { Mock } from 'vitest';
 
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
@@ -885,7 +886,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
 
     it('should pass aggregation meta with `hasCellUnit: true` if the aggregation function have no hasCellUnit property', async () => {
-      const renderCell: Mock<[GridRenderCellParams]> = vi.fn((params) => `- ${params.value}`);
+      const renderCell: Mock<(...args: [GridRenderCellParams]) => any> = vi.fn(
+        (params) => `- ${params.value}`,
+      );
 
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
@@ -906,13 +909,15 @@ describe('<DataGridPremium /> - Aggregation', () => {
       );
 
       const callForAggCell = renderCell.mock.calls.find(
-        (call) => call.firstArg.rowNode.type === 'pinnedRow' && call.firstArg.aggregation,
+        (call) => call[0].rowNode.type === 'pinnedRow' && call[0].aggregation,
       );
-      expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(true);
+      expect(callForAggCell?.[0]?.aggregation?.hasCellUnit).to.equal(true);
     });
 
     it('should pass aggregation meta with `hasCellUnit: false` if the aggregation function have `hasCellUnit: false`', async () => {
-      const renderCell: Mock<[GridRenderCellParams]> = vi.fn((params) => `- ${params.value}`);
+      const renderCell: Mock<(...args: [GridRenderCellParams]) => any> = vi.fn(
+        (params) => `- ${params.value}`,
+      );
 
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
@@ -934,9 +939,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
       );
 
       const callForAggCell = renderCell.mock.calls.find(
-        (call) => call.firstArg.rowNode.type === 'pinnedRow' && call.firstArg.aggregation,
+        (call) => call[0].rowNode.type === 'pinnedRow' && call[0].aggregation,
       );
-      expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(false);
+      expect(callForAggCell?.[0]?.aggregation?.hasCellUnit).to.equal(false);
     });
   });
 

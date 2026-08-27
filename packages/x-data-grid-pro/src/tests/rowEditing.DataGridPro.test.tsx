@@ -256,7 +256,7 @@ describe('<DataGridPro /> - Row editing', () => {
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
 
-        const args1 = preProcessEditCellProps1.mock.lastCall?.[0];
+        const args1 = preProcessEditCellProps1.mock.lastCall![0];
         expect(args1.id).to.equal(0);
         expect(args1.row).to.deep.equal(defaultData.rows[0]);
         expect(args1.hasChanged).to.equal(true);
@@ -267,7 +267,7 @@ describe('<DataGridPro /> - Row editing', () => {
           changeReason: 'setEditCellValue',
         });
 
-        const args2 = preProcessEditCellProps2.mock.lastCall?.[0];
+        const args2 = preProcessEditCellProps2.mock.lastCall![0];
         expect(args2.id).to.equal(0);
         expect(args2.row).to.deep.equal(defaultData.rows[0]);
         expect(args2.hasChanged).to.equal(false);

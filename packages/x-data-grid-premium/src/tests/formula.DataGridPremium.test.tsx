@@ -1018,7 +1018,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(1)).to.deep.equal(['3', '700']);
       expect(
         warnSpy.mock.calls.some((call) =>
-          call.mock.calls.some(
+          call.some(
             (arg) => typeof arg === 'string' && arg.includes('`allowFormulas` and `valueGetter`'),
           ),
         ),

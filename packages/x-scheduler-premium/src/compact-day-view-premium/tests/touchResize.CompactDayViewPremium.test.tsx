@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import * as React from 'react';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
@@ -80,8 +81,8 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
 
   // Whatever the scope, some resulting event must carry the resized 16:00 end — else the re-key/detach
   // dropped it.
-  function expectResizedEndCommitted(onEventsChange: ReturnType<typeof spy>) {
-    const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall?.[0];
+  function expectResizedEndCommitted(onEventsChange: Mock) {
+    const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
     const committedResizedEnd = updatedEvents.some(
       (item) => new Date(item.end).getUTCHours() === 16,
     );

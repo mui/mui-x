@@ -201,7 +201,7 @@ describe('Date - EventCalendarStore', () => {
       });
       store.goToPreviousVisibleDate({} as any);
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(targetDate);
-      expect(siblingVisibleDateGetter.mock.lastCall?.[0].delta).toEqual(-1);
+      expect((siblingVisibleDateGetter.mock.lastCall as any[])[0].delta).toEqual(-1);
     });
   });
 
@@ -227,7 +227,7 @@ describe('Date - EventCalendarStore', () => {
       });
       store.goToNextVisibleDate({} as any);
       expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(targetDate);
-      expect(siblingVisibleDateGetter.mock.lastCall?.[0].delta).toEqual(1);
+      expect((siblingVisibleDateGetter.mock.lastCall as any[])[0].delta).toEqual(1);
     });
   });
 });

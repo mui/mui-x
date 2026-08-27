@@ -499,7 +499,7 @@ describe('EventCalendar', () => {
       expect(onEventEditingStart.mock.calls.length).to.equal(1);
       expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('creation');
       expect(onEventEditingStart.mock.lastCall?.[1].event.type).to.equal('click');
-      const draft = onEventEditingStart.mock.lastCall?.[1].occurrence;
+      const draft = onEventEditingStart.mock.lastCall![1].occurrence;
       expect(draft.allDay).to.equal(true);
       expect(draft.displayTimezone.start.timestamp).to.be.lessThan(
         draft.displayTimezone.end.timestamp,

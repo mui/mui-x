@@ -23,7 +23,7 @@ import type {
   GridValidRowModel,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect, vi, type Mock } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 // Helper function to create drag over event with coordinates
 function createDragOverEvent(target: ChildNode, dropPosition: 'above' | 'below' = 'above') {
@@ -3356,7 +3356,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(jamesCameronGroup).to.equal(undefined, 'James Cameron group should be removed');
 
         // Verify Avatar was moved successfully
-        const updatedAvatarRow = processRowUpdate.mock.lastCall[0];
+        const updatedAvatarRow = processRowUpdate.mock.lastCall![0];
         expect(updatedAvatarRow?.company).to.equal(
           'Warner Bros',
           'Avatar should be moved to Warner Bros',
@@ -3449,7 +3449,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(dataCorpGroup).to.equal(undefined, 'DataCorp group should be removed');
 
         // Verify David was moved successfully
-        const updatedRows = processRowUpdate.mock.calls.map((call) => call.mock.calls[0]);
+        const updatedRows = processRowUpdate.mock.calls.map((call) => call[0]);
         const davidRow = updatedRows.find((row: any) => row.name === 'David');
         expect(davidRow?.company).to.equal('TechCorp', 'David should be moved to TechCorp');
       });

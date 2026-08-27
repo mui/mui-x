@@ -10,7 +10,8 @@ import {
   EventContextMenuProvider,
   EventContextMenuTrigger,
 } from '@mui/x-scheduler/internals';
-import { describe, it, expect, type Mock } from 'vitest';
+import { describe, it, expect } from 'vitest';
+import type { MockInstance } from 'vitest';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
 
 /**
@@ -33,8 +34,8 @@ describe('EventContextMenu - recurring events (Premium)', () => {
       .recurrent('WEEKLY');
     const occurrence = weeklyEventBuilder.toOccurrence();
 
-    let deleteEventSpy: Mock | undefined;
-    let deleteRecurringEventSpy: Mock | undefined;
+    let deleteEventSpy: MockInstance | undefined;
+    let deleteRecurringEventSpy: MockInstance | undefined;
 
     render(
       <EventCalendarProvider

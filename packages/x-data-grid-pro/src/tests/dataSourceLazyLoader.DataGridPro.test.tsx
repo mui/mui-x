@@ -160,7 +160,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => {
         expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
-      const url = new URL(fetchRowsSpy.mock.lastCall?.[0]);
+      const url = new URL(fetchRowsSpy.mock.lastCall![0]);
       expect(JSON.parse(url.searchParams.get('filterModel')!).items).to.deep.equal([]);
     });
 
@@ -244,7 +244,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-      const initialSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const initialSearchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       expect(initialSearchParams.get('end')).to.equal('9');
 
       await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
@@ -253,7 +253,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
 
-      const beforeSortSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const beforeSortSearchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       expect(beforeSortSearchParams.get('end')).not.to.equal('9');
 
       await act(async () => apiRef.current?.sortColumn(mockServer.columns[0].field, 'asc'));
@@ -262,7 +262,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
 
-      const afterSortSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const afterSortSearchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       expect(afterSortSearchParams.get('end')).to.equal('9');
     });
 
@@ -276,7 +276,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       // wait until the rows are rendered
       await waitFor(() => expect(fetchRowsSpy.mock.calls.length).to.equal(2));
 
-      const beforeFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const beforeFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       // first row is not the first page anymore
       expect(beforeFilteringSearchParams.get('start')).to.equal('10');
 
@@ -296,7 +296,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
 
-      const afterFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const afterFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       // first row is the start of the first page
       expect(afterFilteringSearchParams.get('start')).to.equal('0');
     });
@@ -361,7 +361,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
       // Wait for the scroll-triggered fetches to complete
       await waitFor(() => {
-        const lastUrl = fetchRowsSpy.mock.lastCall[0];
+        const lastUrl = fetchRowsSpy.mock.lastCall![0];
         if (!lastUrl) {
           return;
         }
@@ -381,7 +381,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       // The request should use viewport-based start, not the default page 0
-      const searchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const searchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       const start = Number(searchParams.get('start'));
       expect(start).to.be.greaterThan(0);
     });
@@ -694,9 +694,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
       });
       const rootRequest = localFetchRowsSpy.mock.calls.find((call) => {
-        const params = call.firstArg as GridGetRowsParams;
+        const params = call[0] as GridGetRowsParams;
         return params.groupKeys?.length === 0;
-      })?.firstArg as GridGetRowsParams | undefined;
+      })?.[0] as GridGetRowsParams | undefined;
       expect(rootRequest).not.to.equal(undefined);
       expect(rootRequest?.start).to.equal(0);
       expect(rootRequest?.end).to.equal(9);
@@ -719,9 +719,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(parentNode.childrenExpanded).to.equal(true);
 
       const nestedRequest = localFetchRowsSpy.mock.calls.find((call) => {
-        const params = call.firstArg as GridGetRowsParams;
+        const params = call[0] as GridGetRowsParams;
         return JSON.stringify(params.groupKeys) === JSON.stringify(['A']);
-      })?.firstArg as GridGetRowsParams | undefined;
+      })?.[0] as GridGetRowsParams | undefined;
       expect(nestedRequest).not.to.equal(undefined);
     });
 
@@ -745,9 +745,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(scrolledParentNode.childrenExpanded).to.equal(true);
 
       const scrolledNestedRequest = localFetchRowsSpy.mock.calls.find((call) => {
-        const params = call.firstArg as GridGetRowsParams;
+        const params = call[0] as GridGetRowsParams;
         return JSON.stringify(params.groupKeys) === JSON.stringify(['K']);
-      })?.firstArg as GridGetRowsParams | undefined;
+      })?.[0] as GridGetRowsParams | undefined;
       expect(scrolledNestedRequest).not.to.equal(undefined);
     });
 
@@ -814,7 +814,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
         await waitFor(() => {
           const nestedRequest = localFetchRowsSpy.mock.calls.find((call) => {
-            const params = call.firstArg as GridGetRowsParams;
+            const params = call[0] as GridGetRowsParams;
             return (
               JSON.stringify(params.groupKeys) === JSON.stringify(['A']) &&
               isMatchingRequest(params)
@@ -849,20 +849,20 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await user.click(within(getCell(0, 0)).getByRole('button'));
       await waitFor(() => expect(apiRef.current!.getRow('A-0')).not.to.equal(null));
 
-      const setChildrenLoadingSpy = vi.fn(apiRef.current!.dataSource, 'setChildrenLoading');
+      const setChildrenLoadingSpy = vi.spyOn(apiRef.current!.dataSource, 'setChildrenLoading');
       localFetchRowsSpy.mockClear();
       setChildrenLoadingSpy.mockClear();
 
       await waitFor(() => {
         const hasNestedRequest = localFetchRowsSpy.mock.calls.some((call) => {
-          const params = call.firstArg as GridGetRowsParams;
+          const params = call[0] as GridGetRowsParams;
           return (params.groupKeys?.length ?? 0) > 0;
         });
         expect(hasNestedRequest).to.equal(true);
       });
 
       const hasLoadingTrueCall = setChildrenLoadingSpy.mock.calls.some(
-        (call) => call.mock.calls[0] === 'A' && call.mock.calls[1] === true,
+        (call) => call[0] === 'A' && call[1] === true,
       );
       setChildrenLoadingSpy.mockRestore();
       expect(hasLoadingTrueCall).to.equal(false);
@@ -1289,7 +1289,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => {
         expect(fetchRowsSpy.mock.calls.length).to.equal(3); // grid is 4 rows high and the threshold is 60px, so 3 pages are loaded
       });
-      const lastSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const lastSearchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       expect(lastSearchParams.get('end')).to.equal('5'); // 6th row
     });
 
@@ -1305,7 +1305,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => {
         expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
-      const lastSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const lastSearchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       // 3rd and 4th row were requested but not added
       expect(lastSearchParams.get('start')).to.equal('2');
       expect(lastSearchParams.get('end')).to.equal('3');
@@ -1321,13 +1321,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(10)).not.to.be.undefined);
 
-      const beforeSortingSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const beforeSortingSearchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       // last row is not the first page anymore
       expect(beforeSortingSearchParams.get('end')).not.to.equal('9');
 
       await act(async () => apiRef.current?.sortColumn(mockServer.columns[0].field, 'asc'));
 
-      const afterSortingSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const afterSortingSearchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       // last row is the end of the first page
       expect(afterSortingSearchParams.get('end')).to.equal('9');
     });
@@ -1342,7 +1342,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(10)).not.to.be.undefined);
 
-      const beforeFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const beforeFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       // last row is not the first page anymore
       expect(beforeFilteringSearchParams.get('end')).not.to.equal('9');
 
@@ -1358,7 +1358,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         });
       });
 
-      const afterFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      const afterFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall![0]).searchParams;
       // last row is the end of the first page
       expect(afterFilteringSearchParams.get('end')).to.equal('9');
     });

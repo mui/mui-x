@@ -347,9 +347,9 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       expect(updatedTechNode.childrenFromPath.industry.Software).to.equal('industry-software');
 
       const technologyRequest = getRowsSpy.mock.calls.find((call) => {
-        const params = call.firstArg as GridGetRowsParams;
+        const params = call[0] as GridGetRowsParams;
         return JSON.stringify(params.groupKeys) === JSON.stringify(['Technology']);
-      })?.firstArg as GridGetRowsParams | undefined;
+      })?.[0] as GridGetRowsParams | undefined;
 
       expect(technologyRequest?.groupFields).to.deep.equal(['sector', 'industry']);
     });
@@ -368,9 +368,9 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       expect(sectorNode.childrenExpanded).to.equal(true);
 
       const technologyRequest = getRowsSpy.mock.calls.find((call) => {
-        const params = call.firstArg as GridGetRowsParams;
+        const params = call[0] as GridGetRowsParams;
         return JSON.stringify(params.groupKeys) === JSON.stringify(['Technology']);
-      })?.firstArg as GridGetRowsParams | undefined;
+      })?.[0] as GridGetRowsParams | undefined;
       expect(technologyRequest?.groupFields).to.deep.equal(['sector', 'industry']);
     });
 
@@ -432,12 +432,12 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
 
         await waitFor(() => {
           const nestedRequest = getRowsSpy.mock.calls.find((call) => {
-            const params = call.firstArg as GridGetRowsParams;
+            const params = call[0] as GridGetRowsParams;
             return (
               JSON.stringify(params.groupKeys) === JSON.stringify(['Technology']) &&
               isMatchingRequest(params)
             );
-          })?.firstArg as GridGetRowsParams | undefined;
+          })?.[0] as GridGetRowsParams | undefined;
 
           expect(nestedRequest?.groupFields).to.deep.equal(['sector', 'industry']);
         });
@@ -445,12 +445,12 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
         // Deeper expanded levels must also be re-fetched, not only the first.
         await waitFor(() => {
           const deepRequest = getRowsSpy.mock.calls.find((call) => {
-            const params = call.firstArg as GridGetRowsParams;
+            const params = call[0] as GridGetRowsParams;
             return (
               JSON.stringify(params.groupKeys) === JSON.stringify(['Technology', 'Software']) &&
               isMatchingRequest(params)
             );
-          })?.firstArg as GridGetRowsParams | undefined;
+          })?.[0] as GridGetRowsParams | undefined;
 
           expect(deepRequest?.groupFields).to.deep.equal(['sector', 'industry']);
         });
@@ -486,9 +486,9 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       expect(softwareNode.childrenFromPath[noGroupingField].Microsoft).to.equal('stock-msft');
 
       const softwareRequest = getRowsSpy.mock.calls.find((call) => {
-        const params = call.firstArg as GridGetRowsParams;
+        const params = call[0] as GridGetRowsParams;
         return JSON.stringify(params.groupKeys) === JSON.stringify(['Technology', 'Software']);
-      })?.firstArg as GridGetRowsParams | undefined;
+      })?.[0] as GridGetRowsParams | undefined;
 
       expect(softwareRequest?.groupFields).to.deep.equal(['sector', 'industry']);
     });

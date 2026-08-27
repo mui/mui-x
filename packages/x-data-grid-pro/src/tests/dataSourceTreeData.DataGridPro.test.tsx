@@ -169,7 +169,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       await waitFor(() => {
         expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
-      const url = new URL(fetchRowsSpy.mock.lastCall?.[0]);
+      const url = new URL(fetchRowsSpy.mock.lastCall![0]);
       expect(JSON.parse(url.searchParams.get('filterModel')!).items).to.deep.equal([]);
     });
 
@@ -266,7 +266,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     // background nested requests (a call carrying `groupKeys`) to be issued.
     await waitFor(() => {
       const hasNestedGroupRequest = localFetchRowsSpy.mock.calls.some((call) => {
-        const url = new URL(call.firstArg as string);
+        const url = new URL(call[0] as string);
         const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
         return groupKeys.length > 0;
       });
@@ -310,7 +310,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     // Wait for a background nested revalidation (a call carrying `groupKeys`).
     await waitFor(() => {
       const hasNestedGroupRequest = fetchRowsSpy.mock.calls.some((call) => {
-        const url = new URL(call.firstArg as string);
+        const url = new URL(call[0] as string);
         const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
         return groupKeys.length > 0;
       });
@@ -347,7 +347,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
     });
 
-    const setChildrenLoadingSpy = vi.fn(apiRef.current!.dataSource, 'setChildrenLoading');
+    const setChildrenLoadingSpy = vi.spyOn(apiRef.current!.dataSource, 'setChildrenLoading');
 
     localFetchRowsSpy.mockClear();
     setChildrenLoadingSpy.mockClear();
@@ -355,7 +355,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     // Wait for a background nested revalidation (a call carrying `groupKeys`)...
     await waitFor(() => {
       const hasNestedGroupRequest = localFetchRowsSpy.mock.calls.some((call) => {
-        const url = new URL(call.firstArg as string);
+        const url = new URL(call[0] as string);
         const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
         return groupKeys.length > 0;
       });
@@ -364,7 +364,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     // ...and confirm it never put the expanded group into a loading state.
     const hasLoadingTrueCall = setChildrenLoadingSpy.mock.calls.some(
-      (call) => call.mock.calls[0] === expandedRowId && call.mock.calls[1] === true,
+      (call) => call[0] === expandedRowId && call[1] === true,
     );
     setChildrenLoadingSpy.mockRestore();
     expect(hasLoadingTrueCall).to.equal(false);

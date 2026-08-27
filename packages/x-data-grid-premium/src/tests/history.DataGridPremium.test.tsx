@@ -758,9 +758,9 @@ describe('<DataGridPremium /> - History', () => {
 
       // one additional call to `updateRow` should have been made
       expect(updateRowSpy.mock.calls.length).to.equal(1);
-      const undoCall = updateRowSpy.lastCall;
-      expect(undoCall.mock.calls[0]).to.have.property('rowId', 0);
-      expect(undoCall.mock.calls[0].updatedRow).to.have.property('currencyPair', originalValue);
+      const undoCall = updateRowSpy.mock.lastCall;
+      expect(undoCall![0]).to.have.property('rowId', 0);
+      expect(undoCall![0].updatedRow).to.have.property('currencyPair', originalValue);
     });
   });
 
@@ -1043,7 +1043,7 @@ describe('<DataGridPremium /> - History', () => {
         await apiRef.current!.history.undo();
       });
 
-      const undoParams = updateRow.mock.lastCall?.[0];
+      const undoParams = updateRow.mock.lastCall![0];
       // Rebuilding the request as `{ ...row, commodity: oldValue }` would send a plain
       // object, so the server would never see the row it stored.
       expect(undoParams.updatedRow).to.be.instanceOf(Commodity);

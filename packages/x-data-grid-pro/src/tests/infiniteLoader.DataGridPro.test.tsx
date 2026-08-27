@@ -134,10 +134,9 @@ describe('<DataGridPro /> - Infinite loader', () => {
         expect(getRow.mock.calls.length).to.equal(5 * multiplier);
       });
 
-      const getRowCalls = getRow.mock.calls;
-      for (let callIndex = 0; callIndex < getRowCalls.length; callIndex += multiplier) {
-        const call = getRowCalls[callIndex];
-        expect(call.returnValue?.id).to.equal(callIndex / multiplier + 1);
+      const getRowResults = getRow.mock.results;
+      for (let callIndex = 0; callIndex < getRowResults.length; callIndex += multiplier) {
+        expect(getRowResults[callIndex].value?.id).to.equal(callIndex / multiplier + 1);
       }
 
       await waitFor(() => {

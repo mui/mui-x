@@ -73,7 +73,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
 
     // The series survives: `onEventsChange` still carries the recurring event, not a wiped series.
     expect(onEventsChange.mock.calls.length).to.equal(1);
-    const updatedEvents = onEventsChange.mock.lastCall?.[0];
+    const updatedEvents = onEventsChange.mock.lastCall![0];
     expect(updatedEvents.some((item: SchedulerEvent) => item.id === 'event-1')).to.equal(true);
   });
 });

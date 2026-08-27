@@ -71,7 +71,7 @@ describe('<DateRangeCalendar />', () => {
       expect(rangeOn1stCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
       expect(rangeOn1stCall[1]).to.equal(null);
 
-      const rangeOn2ndCall = onChange.mock.lastCall?.[0];
+      const rangeOn2ndCall = onChange.mock.lastCall![0];
       expect(rangeOn2ndCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
       expect(rangeOn2ndCall[1]).to.toEqualDateTime(new Date(2019, 2, 19));
     });
@@ -91,7 +91,7 @@ describe('<DateRangeCalendar />', () => {
       await user.click(getPickerDay('30', 'January 2019'));
 
       expect(onChange.mock.calls.length).to.equal(3);
-      const range = onChange.mock.lastCall?.[0];
+      const range = onChange.mock.lastCall![0];
       expect(range[0]).to.toEqualDateTime(new Date(2019, 0, 19));
       expect(range[1]).to.toEqualDateTime(new Date(2019, 0, 30));
     });
@@ -906,7 +906,7 @@ describe('<DateRangeCalendar />', () => {
         <DateRangeCalendar
           referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
-            day: React.memo(RenderCount),
+            day: React.memo(RenderCount) as any,
           }}
         />,
       );
@@ -924,7 +924,7 @@ describe('<DateRangeCalendar />', () => {
         <DateRangeCalendar
           referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
-            day: React.memo(RenderCount),
+            day: React.memo(RenderCount) as any,
           }}
         />,
       );

@@ -110,7 +110,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       expect(result.status).to.equal('added');
       expect(onDependenciesChange.mock.calls.length).to.equal(1);
-      const newDependencies = onDependenciesChange.mock.lastCall?.[0];
+      const newDependencies = onDependenciesChange.mock.lastCall![0];
       expect(newDependencies).to.have.length(2);
       expect(newDependencies[1]).to.deep.include({
         source: 'event-b',

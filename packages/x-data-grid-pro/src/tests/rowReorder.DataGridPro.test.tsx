@@ -10,7 +10,7 @@ import {
 import type { GridApi } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { describe, it, expect, vi, type Mock } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 function createDragOverEvent(target: ChildNode, dropPosition: 'above' | 'below' = 'above') {
   const dragOverEvent = createEvent.dragOver(target);

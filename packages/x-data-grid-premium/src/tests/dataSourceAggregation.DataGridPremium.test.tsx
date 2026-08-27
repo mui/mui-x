@@ -265,21 +265,21 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
     });
 
-    const setChildrenLoadingSpy = vi.fn(apiRef.current!.dataSource, 'setChildrenLoading');
+    const setChildrenLoadingSpy = vi.spyOn(apiRef.current!.dataSource, 'setChildrenLoading');
 
     fetchRowsSpy.mockClear();
     setChildrenLoadingSpy.mockClear();
 
     await waitFor(() => {
       const hasNestedGroupRequest = fetchRowsSpy.mock.calls.some((call) => {
-        const groupKeys = call.mock.calls[0].groupKeys || [];
+        const groupKeys = call[0].groupKeys || [];
         return groupKeys.length > 0;
       });
       expect(hasNestedGroupRequest).to.equal(true);
     });
 
     const hasLoadingTrueCall = setChildrenLoadingSpy.mock.calls.some(
-      (call) => call.mock.calls[0] === expandedRowId && call.mock.calls[1] === true,
+      (call) => call[0] === expandedRowId && call[1] === true,
     );
     setChildrenLoadingSpy.mockRestore();
     expect(hasLoadingTrueCall).to.equal(false);

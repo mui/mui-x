@@ -18,7 +18,7 @@ export const expectFieldValue = (
 /**
  * Asserts that a picker change-handler value deep-equals the expected one.
  *
- * Pass the raw value (e.g. `onChange.lastCall.firstArg`) rather than the
+ * Pass the raw value (e.g. `onChange.mock.lastCall[0]`) rather than the
  * spy, so the helper stays agnostic of the spy library.
  */
 export function expectPickerChangeHandlerValue(

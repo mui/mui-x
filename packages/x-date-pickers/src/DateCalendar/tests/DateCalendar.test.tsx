@@ -769,7 +769,7 @@ describe('<DateCalendar />', () => {
         <DateCalendar
           referenceDate={adapterToUse.date('2019-01-02')}
           slots={{
-            day: React.memo(RenderCount) as unknown as React.ElementType,
+            day: React.memo(RenderCount) as any,
           }}
         />,
       );
@@ -787,7 +787,7 @@ describe('<DateCalendar />', () => {
         <DateCalendar
           defaultValue={adapterToUse.date('2019-04-29')}
           slots={{
-            day: React.memo(RenderCount) as unknown as React.ElementType,
+            day: React.memo(RenderCount) as any,
           }}
         />,
       );

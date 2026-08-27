@@ -234,7 +234,7 @@ describe('ChatProvider', () => {
     });
 
     expect(onMessagesChange.mock.calls.length).toBe(2);
-    expect(onMessagesChange.mock.calls[0].mock.calls[0]).toEqual([message1]);
+    expect(onMessagesChange.mock.calls[0][0]).toEqual([message1]);
     expect(onMessagesChange.mock.lastCall?.[0]).toEqual([]);
     expect(onConversationsChange.mock.calls.length).toBe(1);
     expect(onConversationsChange.mock.lastCall?.[0]).toEqual([conversation1]);

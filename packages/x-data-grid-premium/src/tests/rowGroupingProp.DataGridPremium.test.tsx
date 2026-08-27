@@ -526,10 +526,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'auto-generated-row-category1/Cat A'
       ] as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault.mock.calls.find(
-        (call) =>
-          call.firstArg.groupingKey === 'Cat A' && call.firstArg.groupingField === 'category1',
+        (call) => call[0].groupingKey === 'Cat A' && call[0].groupingField === 'category1',
       )!;
-      expect(callForNodeA.firstArg).to.deep.includes(node);
+      expect(callForNodeA[0]).to.deep.includes(node);
       expect(getColumnValues(0)).to.deep.equal([
         'Cat A (3)',
         'Cat 1 (1)',

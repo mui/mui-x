@@ -184,7 +184,7 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         expect(onItemFocus.mock.calls.length).to.equal(1);
-        expect(onItemFocus.mock.mock.lastCall?.at(-1)).to.equal('1');
+        expect(onItemFocus.mock.lastCall?.at(-1)).to.equal('1');
       });
     });
 

@@ -7,7 +7,8 @@ import { DataGridPremium, useGridApiRef, gridClasses } from '@mui/x-data-grid-pr
 import type { DataGridPremiumProps, GridApi, GridColDef } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM, isOSX } from 'test/utils/skipIf';
-import { describe, it, expect, beforeEach, afterEach, vi, type Mock } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import type { MockInstance } from 'vitest';
 
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
@@ -520,7 +521,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
 
     afterEach(() => {
-      (window.requestAnimationFrame as Mock).restore();
+      (window.requestAnimationFrame as unknown as MockInstance).mockRestore();
     });
 
     it('should auto-scroll when the mouse approaches the bottom edge', async () => {

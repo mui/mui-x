@@ -171,7 +171,7 @@ describe('<DataGridPro /> - Data source', () => {
       await waitFor(() => {
         expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
-      const { filterModel } = fetchRowsSpy.mock.lastCall?.[0];
+      const { filterModel } = fetchRowsSpy.mock.lastCall![0];
       expect(filterModel.logicOperator).to.equal('or');
       expect(filterModel.items).to.have.length(2);
     });

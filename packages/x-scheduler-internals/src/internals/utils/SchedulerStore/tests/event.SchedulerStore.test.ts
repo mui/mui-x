@@ -178,7 +178,7 @@ storeClasses.forEach((storeClass) => {
         const end = adapter.date('2025-07-01T12:00:00.000Z', 'default');
         const duplicatedId = store.duplicateEventOccurrence('1', start, end);
 
-        const duplicated = onEventsChange.mock.lastCall?.[0].find(
+        const duplicated = onEventsChange.mock.lastCall![0].find(
           (event) => event.myId === duplicatedId,
         );
         // The mapped start comes from the setter, not the stale key carried by the custom-data merge.
@@ -448,7 +448,7 @@ storeClasses.forEach((storeClass) => {
         });
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
-        const updatedEvents = onEventsChange.mock.lastCall?.[0];
+        const updatedEvents = onEventsChange.mock.lastCall![0];
 
         expect(updatedEvents).to.have.length(2);
         expect(updatedEvents[0].title).to.equal(event1.title);
@@ -487,7 +487,7 @@ storeClasses.forEach((storeClass) => {
           end: newEnd,
         });
 
-        const updated = onEventsChange.mock.lastCall?.[0][0];
+        const updated = onEventsChange.mock.lastCall![0][0];
 
         expect(updated.title).to.equal('Updated title');
         expect(updated.description).to.equal(event.description);
@@ -513,7 +513,7 @@ storeClasses.forEach((storeClass) => {
 
         store.updateEvent({ id: event.id, title: 'Updated title' });
 
-        const updated = onEventsChange.mock.lastCall?.[0][0];
+        const updated = onEventsChange.mock.lastCall![0][0];
         expect(updated.title).to.equal('Updated title');
         expect(updated.priority).to.equal('high');
       });
@@ -575,7 +575,7 @@ storeClasses.forEach((storeClass) => {
         store.deleteEvent(event2.id);
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
-        const updatedEvents = onEventsChange.mock.lastCall?.[0];
+        const updatedEvents = onEventsChange.mock.lastCall![0];
         expect(updatedEvents).to.deep.equal([event1, event3]);
       });
     });
@@ -698,7 +698,7 @@ storeClasses.forEach((storeClass) => {
         const end = adapter.date('2025-07-01T10:00:00Z', 'default');
         const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
-        const duplicated = onEventsChange.mock.lastCall?.[0].find(
+        const duplicated = onEventsChange.mock.lastCall![0].find(
           (event) => event.id === duplicatedId,
         );
         expect(duplicated.priority).to.equal('high');
@@ -784,7 +784,7 @@ storeClasses.forEach((storeClass) => {
           start: adapter.date('2025-07-01T09:00:00Z', 'default'),
         });
 
-        const pasted = onEventsChange.mock.lastCall?.[0].find(
+        const pasted = onEventsChange.mock.lastCall![0].find(
           (event) => event.id === createdEventId,
         );
         expect(pasted.priority).to.equal('high');

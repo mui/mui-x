@@ -15,7 +15,8 @@ import { unwrapPrivateAPI } from '@mui/x-data-grid-pro/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, getRow, spyApi, sleep } from 'test/utils/helperFn';
-import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import type { Mock } from 'vitest';
 
 /**
  * Creates a date that is compatible with years before 1901
@@ -296,7 +297,7 @@ describe('<DataGridPro /> - Edit components', () => {
     it('should handle correctly dates with partial years', async () => {
       const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as Mock<
-        [GridEditCellValueParams & { value: Date }]
+        (...args: [GridEditCellValueParams & { value: Date }]) => any
       >;
 
       const cell = getCell(0, 0);
@@ -446,7 +447,7 @@ describe('<DataGridPro /> - Edit components', () => {
     it('should handle correctly dates with partial years', async () => {
       const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as Mock<
-        [GridEditCellValueParams & { value: Date }]
+        (...args: [GridEditCellValueParams & { value: Date }]) => any
       >;
 
       const cell = getCell(0, 0);

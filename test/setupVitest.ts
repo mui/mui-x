@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, afterEach } from 'vitest';
+import { beforeAll, beforeEach, afterEach, vi } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/licenseRelease';
 import { config } from 'react-transition-group';
@@ -38,5 +38,9 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  // Replaces the `sinon.restore()` this file used to run: it restored the default sandbox,
+  // so a `stub(obj, 'method')` left behind by a test did not leak. With `isolate` off the
+  // page is shared, so an unrestored spy would follow into every later file.
+  vi.restoreAllMocks();
   config.disabled = false;
 });

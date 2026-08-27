@@ -64,9 +64,7 @@ describe('<SankeyPlot />', () => {
 
       const wasNotifiedAboutControlledNode = handleHighlight.mock.calls.some(
         (call) =>
-          call.mock.calls[0]?.type === 'sankey' &&
-          call.mock.calls[0]?.subType === 'node' &&
-          call.mock.calls[0]?.nodeId === 'X',
+          call[0]?.type === 'sankey' && call[0]?.subType === 'node' && call[0]?.nodeId === 'X',
       );
       expect(wasNotifiedAboutControlledNode).to.equal(false);
     },

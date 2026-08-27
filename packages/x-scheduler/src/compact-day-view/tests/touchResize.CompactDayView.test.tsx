@@ -108,7 +108,7 @@ describe('CompactDayView - touch resize', () => {
     // The form validates asynchronously before submitting, so let the submit settle.
     await user.click(screen.getByRole('button', { name: 'Save' }));
 
-    const updatedEvents = onEventsChange.mock.lastCall?.[0];
+    const updatedEvents = onEventsChange.mock.lastCall![0];
     // Saving the form must preserve the resized end time, not revert it to the pre-resize value.
     expect(updatedEvents[0].title).to.equal('Renamed Meeting');
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);

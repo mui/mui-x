@@ -29,7 +29,7 @@ describe('<ChartsRadialDataProvider />', () => {
       </ChartsRadialDataProvider>,
     );
 
-    const localeText: ChartsLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
+    const localeText: ChartsLocaleText = handleContextChange.mock.lastCall![0].localeText;
     expect(localeText.noData).to.equal('Aucune donnée');
     // Default values should still be available
     expect(localeText.loading).to.equal('Loading data…');

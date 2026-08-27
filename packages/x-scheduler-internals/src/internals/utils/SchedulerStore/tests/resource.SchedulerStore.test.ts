@@ -397,7 +397,7 @@ storeClasses.forEach((storeClass) => {
         const event = new Event('click');
         store.setCollapsedResources({ r1: true }, event);
 
-        const eventDetails = onCollapsedResourcesChange.mock.lastCall?.[1];
+        const eventDetails = onCollapsedResourcesChange.mock.lastCall![1];
         expect(eventDetails.event).to.equal(event);
         expect(eventDetails.reason).to.equal('none');
       });

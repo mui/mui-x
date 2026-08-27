@@ -42,7 +42,7 @@ describe('TurnWheelUserGesture', () => {
     await turnWheel(pointerManager, options);
 
     expect(wheel).toHaveBeenCalledTimes(1);
-    const wheelEvent = wheel.mock.lastCall?.[0];
+    const wheelEvent = wheel.mock.lastCall![0];
     expect(wheelEvent).toBeInstanceOf(WheelEvent);
     expect(wheelEvent?.deltaX).toBe(0);
     expect(wheelEvent?.deltaY).toBe(100);
@@ -64,7 +64,7 @@ describe('TurnWheelUserGesture', () => {
     await turnWheel(pointerManager, options);
 
     expect(wheel).toHaveBeenCalledTimes(1);
-    const wheelEvent = wheel.mock.lastCall?.[0];
+    const wheelEvent = wheel.mock.lastCall![0];
     expect(wheelEvent?.deltaX).toBe(50);
     expect(wheelEvent?.deltaY).toBe(-100);
     expect(wheelEvent?.deltaZ).toBe(25);
@@ -113,7 +113,7 @@ describe('TurnWheelUserGesture', () => {
     await turnWheel(pointerManager, options);
 
     expect(wheel).toHaveBeenCalledTimes(1);
-    const wheelEvent = wheel.mock.lastCall?.[0];
+    const wheelEvent = wheel.mock.lastCall![0];
     expect(wheelEvent?.clientX).toBe(75);
     expect(wheelEvent?.clientY).toBe(25);
   });

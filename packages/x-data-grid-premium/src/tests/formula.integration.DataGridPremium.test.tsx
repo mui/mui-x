@@ -7,7 +7,8 @@ import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect, afterEach, vi, type Mock } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import type { Mock } from 'vitest';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 import type { GridFormulaPrivateApi } from '../hooks/features/formula/gridFormulaInterfaces';
 
@@ -106,7 +107,7 @@ describe('<DataGridPremium /> - Formulas feature integration', () => {
     let writeText: Mock | undefined;
 
     afterEach(function afterEachHook() {
-      writeText?.restore();
+      writeText?.mockRestore();
       writeText = undefined;
     });
 

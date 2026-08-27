@@ -41,7 +41,7 @@ describe('MoveUserGesture', () => {
     await move(pointerManager, options);
 
     expect(pointerMove).toHaveBeenCalledTimes(10); // Default steps
-    const lastMoveEvent = pointerMove.mock.lastCall?.[0];
+    const lastMoveEvent = pointerMove.mock.lastCall![0];
     expect(lastMoveEvent).toBeInstanceOf(PointerEvent);
     expect(lastMoveEvent?.clientX).toBe(150); // 50 (center) + 100 (distance)
     expect(lastMoveEvent?.clientY).toBe(50); // center Y unchanged for 0 degree angle
@@ -69,7 +69,7 @@ describe('MoveUserGesture', () => {
 
     await move(pointerManager, options);
 
-    const lastMoveEvent = pointerMove.mock.lastCall?.[0];
+    const lastMoveEvent = pointerMove.mock.lastCall![0];
     expect(lastMoveEvent?.clientX).toBeCloseTo(50); // X unchanged for 90 degree angle
     expect(lastMoveEvent?.clientY).toBeCloseTo(150); // 50 (center) + 100 (distance)
   });
@@ -83,7 +83,7 @@ describe('MoveUserGesture', () => {
 
     await move(pointerManager, options);
 
-    const lastMoveEvent = pointerMove.mock.lastCall?.[0];
+    const lastMoveEvent = pointerMove.mock.lastCall![0];
     const expectedDelta = 100 / Math.sqrt(2); // 45 degree movement
     expect(lastMoveEvent?.clientX).toBeCloseTo(50 + expectedDelta);
     expect(lastMoveEvent?.clientY).toBeCloseTo(50 + expectedDelta);
@@ -103,7 +103,7 @@ describe('MoveUserGesture', () => {
 
     await move(pointerManager, options);
 
-    const lastMoveEvent = pointerMove.mock.lastCall?.[0];
+    const lastMoveEvent = pointerMove.mock.lastCall![0];
     expect(lastMoveEvent?.clientX).toBe(75); // 25 + 50
     expect(lastMoveEvent?.clientY).toBe(25); // Y unchanged for 0 degree angle
   });
@@ -164,7 +164,7 @@ describe('MoveUserGesture', () => {
       // eslint-disable-next-line no-await-in-loop
       await move(new PointerManager('mouse'), options);
 
-      const lastMoveEvent = pointerMove.mock.lastCall?.[0];
+      const lastMoveEvent = pointerMove.mock.lastCall![0];
       // Webkit does not support fractional pixels
       // So it seems we lose some precision here
       expect(lastMoveEvent?.clientX, `for angle ${testCase.angle}`).toBeCloseTo(testCase.expectedX);

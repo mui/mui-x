@@ -54,7 +54,7 @@ describe('<DateTimeField /> - Timezone', () => {
         expectFieldValue(view.getSectionsContainer(), '12/31/2022 23');
 
         // Check the `onChange` value (uses default timezone, for example: UTC, see TZ env variable)
-        const actualDate = onChange.mock.lastCall?.[0];
+        const actualDate = onChange.mock.lastCall![0];
 
         // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.
         // In a real world scenario, this should probably never occur.
@@ -79,7 +79,7 @@ describe('<DateTimeField /> - Timezone', () => {
             expectFieldValue(view.getSectionsContainer(), '12/31/2022 23');
 
             // Check the `onChange` value (uses timezone prop)
-            const actualDate = onChange.mock.lastCall?.[0];
+            const actualDate = onChange.mock.lastCall![0];
             expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });
@@ -101,7 +101,7 @@ describe('<DateTimeField /> - Timezone', () => {
 
             // Check the `onChange` value (uses timezone prop)
             const expectedDate = adapter.addMonths(adapter.date(undefined, timezone), -1);
-            const actualDate = onChange.mock.lastCall?.[0];
+            const actualDate = onChange.mock.lastCall![0];
             expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });

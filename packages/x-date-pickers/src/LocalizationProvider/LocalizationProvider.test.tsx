@@ -45,7 +45,7 @@ describe('<LocalizationProvider />', () => {
       </ThemeProvider>,
     );
 
-    const localeText: PickersLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.mock.lastCall![0].localeText;
     expect(localeText.start).to.equal('Debut');
     expect(localeText.end).to.equal('End');
   });
@@ -71,7 +71,7 @@ describe('<LocalizationProvider />', () => {
       </ThemeProvider>,
     );
 
-    const localeText: PickersLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.mock.lastCall![0].localeText;
     expect(localeText.start).to.equal('Start');
   });
 
@@ -86,7 +86,7 @@ describe('<LocalizationProvider />', () => {
       </LocalizationProvider>,
     );
 
-    const localeText: PickersLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.mock.lastCall![0].localeText;
     expect(localeText.start).to.equal('Début');
   });
 
@@ -101,7 +101,7 @@ describe('<LocalizationProvider />', () => {
       </LocalizationProvider>,
     );
 
-    const localeText: PickersLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.mock.lastCall![0].localeText;
     expect(localeText.start).to.equal('Empezar');
   });
 });

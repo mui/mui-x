@@ -14,7 +14,8 @@ import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect, vi, type Mock } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import type { Mock } from 'vitest';
 
 describe('<DataGrid /> - Pagination', () => {
   const { render } = createRenderer();

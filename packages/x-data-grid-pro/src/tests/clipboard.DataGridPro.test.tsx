@@ -4,7 +4,8 @@ import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { getCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { describe, it, expect, afterEach, vi, type Mock } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import type { Mock } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -43,7 +44,7 @@ describe('<DataGridPro /> - Clipboard', () => {
     let writeText: Mock | undefined;
 
     afterEach(function afterEachHook() {
-      writeText?.restore();
+      writeText?.mockRestore();
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {

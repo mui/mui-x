@@ -1056,9 +1056,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         await waitFor(() => {
           const warningCalls = warnSpy.mock.calls;
           const hasSetTreeDataPathWarning = warningCalls.some((call) =>
-            call.mock.calls.some(
-              (arg) => typeof arg === 'string' && arg.includes('setTreeDataPath'),
-            ),
+            call.some((arg) => typeof arg === 'string' && arg.includes('setTreeDataPath')),
           );
           expect(hasSetTreeDataPathWarning).to.equal(true);
         });

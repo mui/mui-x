@@ -16,7 +16,7 @@ import type {
   GridPivotModel,
 } from '@mui/x-data-grid-premium';
 import { getColumnHeadersTextContent, getRowValues } from 'test/utils/helperFn';
-import { describe, it, expect, vi, type Mock } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import type { PivotingColDefCallback } from '../hooks/features/pivoting/gridPivotingInterfaces';
 
 describe('<DataGridPremium /> - Data source pivoting', () => {

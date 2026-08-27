@@ -1214,7 +1214,7 @@ describe('<DataGrid /> - Row selection', () => {
       await user.click(selectAllCheckbox);
 
       expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
-      const selectionModel = onRowSelectionModelChange.mock.lastCall?.[0];
+      const selectionModel = onRowSelectionModelChange.mock.lastCall![0];
       // With disableRowSelectionExcludeModel=true, it should use include model with all IDs
       expect(selectionModel.type).to.equal('include');
       expect(selectionModel.ids.size).to.equal(4); // 4 rows in defaultData
@@ -1235,7 +1235,7 @@ describe('<DataGrid /> - Row selection', () => {
       await user.click(selectAllCheckbox);
 
       expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
-      const selectionModel = onRowSelectionModelChange.mock.lastCall?.[0];
+      const selectionModel = onRowSelectionModelChange.mock.lastCall![0];
       // By default (disableRowSelectionExcludeModel=false), it should use exclude model with empty IDs
       expect(selectionModel.type).to.equal('exclude');
       expect(selectionModel.ids.size).to.equal(0);
