@@ -14,6 +14,9 @@ import {
   useGridRegisterPipeProcessor,
   useGridSelector,
   gridPivotInitialColumnsSelector,
+  isReplaceUpdate,
+  getReplaceRow,
+  warnIfReplaceLosesPrototype,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridStateInitializer, GridPipeProcessor } from '@mui/x-data-grid-pro/internals';
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
@@ -500,13 +503,20 @@ export const useGridPivoting = (
         nonPivotDataRef.current.rows.forEach((row) => {
           rowsMap.set(gridRowIdSelector(apiRef, row), row);
         });
-        rows.forEach((row) => {
-          const rowId = gridRowIdSelector(apiRef, row);
+        rows.forEach((update) => {
+          if (isReplaceUpdate(update)) {
+            const row = getReplaceRow(update);
+            const rowId = gridRowIdSelector(apiRef, row);
+            warnIfReplaceLosesPrototype(rowsMap.get(rowId), row);
+            rowsMap.set(rowId, row);
+            return;
+          }
+          const rowId = gridRowIdSelector(apiRef, update);
           // eslint-disable-next-line no-underscore-dangle
-          if (row._action === 'delete') {
+          if (update._action === 'delete') {
             rowsMap.delete(rowId);
           } else {
-            rowsMap.set(rowId, row);
+            rowsMap.set(rowId, update);
           }
         });
 

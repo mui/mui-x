@@ -1,5 +1,6 @@
 export * from './event-drag-preview';
 export * from './event-editing';
+export * from './event-context-menu';
 export * from './event-dialog';
 export * from './error-container';
 export * from './event-skeleton';

@@ -9,6 +9,7 @@ import {
   describeConformance,
   ResourceBuilder,
 } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 
 describe('<TimelineGrid.EventDependencyTerminal />', () => {
   const { render } = createSchedulerRenderer();

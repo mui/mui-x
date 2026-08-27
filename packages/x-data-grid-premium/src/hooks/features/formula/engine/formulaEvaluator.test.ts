@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { createFormulaError } from './formulaErrors';
 import { evaluateFormula } from './formulaEvaluator';
 import { parseFormula } from './formulaParser';

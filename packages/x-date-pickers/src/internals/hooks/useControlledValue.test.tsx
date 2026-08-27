@@ -1,6 +1,7 @@
 import { screen } from '@mui/internal-test-utils';
 import type { PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 import { useControlledValue } from './useControlledValue';
 import { singleItemValueManager } from '../utils/valueManagers';
 

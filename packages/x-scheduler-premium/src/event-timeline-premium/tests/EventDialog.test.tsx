@@ -21,6 +21,7 @@ import {
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
 import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { describe, it, expect } from 'vitest';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 
 const editingStyledContextValue = {

@@ -8,6 +8,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { createTheme } from '@mui/material/styles';
+import { describe, it, expect } from 'vitest';
 import { getEventsCellLaneMetrics, getRowHeightForLaneCount } from '../content/rowGeometry';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 import {

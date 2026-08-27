@@ -13,6 +13,7 @@ import {
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { describe, it, expect } from 'vitest';
 import { ErrorContainer } from '../internals/components/error-container';
 import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import {

@@ -1,4 +1,5 @@
 import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const BASE_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };

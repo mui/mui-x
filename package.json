@@ -89,7 +89,7 @@
     "@mui/material": "catalog:",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "16.3.1",
-    "@octokit/plugin-retry": "8.1.0",
+    "@octokit/plugin-retry": "8.1.1",
     "@octokit/rest": "22.0.1",
     "@playwright/test": "catalog:",
     "@types/babel__core": "7.20.5",
@@ -110,7 +110,7 @@
     "babel-plugin-react-remove-properties": "catalog:",
     "babel-plugin-search-and-replace": "1.1.1",
     "babel-plugin-transform-replace-expressions": "0.2.0",
-    "concurrently": "10.0.4",
+    "concurrently": "10.0.5",
     "cross-env": "catalog:",
     "date-fns": "catalog:",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
@@ -121,13 +121,13 @@
     "eslint-plugin-jsdoc": "63.3.2",
     "eslint-plugin-mui-x": "workspace:^",
     "execa": "catalog:",
-    "globby": "16.2.3",
+    "globby": "16.2.4",
     "jsdom": "catalog:",
-    "lerna": "10.0.0",
+    "lerna": "10.0.1",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "picomatch": "4.0.5",
-    "pkg-pr-new": "0.0.87",
+    "pkg-pr-new": "0.0.88",
     "playwright": "catalog:",
     "prettier": "3.9.6",
     "pretty-quick": "4.2.2",
@@ -150,11 +150,11 @@
     "zod": "4.4.3"
   },
   "config": {
-    "valeVersion": "3.17.0"
+    "valeVersion": "3.18.0"
   },
-  "packageManager": "pnpm@11.20.0",
+  "packageManager": "pnpm@11.22.0",
   "engines": {
-    "pnpm": "11.20.0",
+    "pnpm": "11.22.0",
     "node": ">=22.23.2"
   }
 }

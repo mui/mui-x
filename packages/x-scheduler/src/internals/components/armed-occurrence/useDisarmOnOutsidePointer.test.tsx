@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { renderHook } from '@mui/internal-test-utils';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { useDisarmOnOutsidePointer } from './useDisarmOnOutsidePointer';
 
 const IGNORE_SELECTOR = '.resize-handle';

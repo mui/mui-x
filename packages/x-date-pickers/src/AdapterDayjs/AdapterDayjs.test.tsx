@@ -16,6 +16,7 @@ import 'dayjs/locale/de';
 // We import the plugins here just to have the typing
 import 'dayjs/plugin/utc';
 import 'dayjs/plugin/timezone';
+import { describe, it, expect } from 'vitest';
 
 describe('<AdapterDayjs />', () => {
   const commonParams = {

@@ -15,6 +15,7 @@ import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
 import { StandaloneCompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
 import { StandaloneCompactWeekView } from '@mui/x-scheduler/compact-week-view';
+import { describe, it, expect } from 'vitest';
 
 const visibleDate = new Date('2025-07-03T00:00:00Z');
 

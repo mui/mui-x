@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import type { TreeViewItemId } from '../../../models';
 import type { MinimalTreeViewState } from '../../MinimalTreeViewStore';
 import { itemsSelectors } from '../items/selectors';
@@ -20,7 +20,7 @@ export const expansionSelectors = {
   /**
    * Gets the expanded items as provided to the component.
    */
-  expandedItemsRaw: createSelector((state: MinimalTreeViewState<any, any>) => state.expandedItems),
+  expandedItemsRaw: (state: MinimalTreeViewState<any, any>) => state.expandedItems,
   /**
    * Gets the expanded items as a Map.
    */
@@ -52,19 +52,15 @@ export const expansionSelectors = {
   /**
    * Gets the slot that triggers the item's expansion when clicked.
    */
-  triggerSlot: createSelector((state: MinimalTreeViewState<any, any>) => state.expansionTrigger),
+  triggerSlot: (state: MinimalTreeViewState<any, any>) => state.expansionTrigger,
   /**
    * Checks whether an item is expanded.
    */
-  isItemExpanded: createSelector(
-    expandedItemMapSelector,
-    (expandedItemsMap, itemId: TreeViewItemId) => expandedItemsMap.has(itemId),
-  ),
+  isItemExpanded: (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
+    expandedItemMapSelector(state).has(itemId),
   /**
    * Checks whether an item is expandable.
    */
-  isItemExpandable: createSelector(
-    itemsSelectors.itemMeta,
-    (itemMeta, _itemId: TreeViewItemId) => itemMeta?.expandable ?? false,
-  ),
+  isItemExpandable: (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
+    itemsSelectors.itemMeta(state, itemId)?.expandable ?? false,
 };

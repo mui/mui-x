@@ -1,4 +1,5 @@
 import { adapter } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS, getPresetPxPerDay } from './preset-utils';
 import type { EventTimelinePremiumPreset } from '../../models';
 

@@ -1,5 +1,6 @@
 import { renderHook } from '@mui/internal-test-utils';
 import { ResourceBuilder } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { useExtractEventTimelinePremiumParameters } from '../useExtractEventTimelinePremiumParameters';
 
 describe('useExtractEventTimelinePremiumParameters', () => {

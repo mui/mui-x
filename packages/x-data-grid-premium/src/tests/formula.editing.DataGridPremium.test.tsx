@@ -3,7 +3,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-import { onTestFinished } from 'vitest';
+import { onTestFinished, describe, it, expect } from 'vitest';
 import { DataGridPremium, useGridApiContext, useGridApiRef } from '@mui/x-data-grid-premium';
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type {

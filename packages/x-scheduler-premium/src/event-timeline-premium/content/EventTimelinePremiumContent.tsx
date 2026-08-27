@@ -29,7 +29,7 @@ import {
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
-  EventEditingTrigger,
+  EventContextMenuTrigger,
   EventSkeleton,
   useEventEditingContext,
   getCellFocusBackground,
@@ -532,7 +532,7 @@ function EventList({
         return (
           position + duration > visibleStart &&
           position < visibleEnd && (
-            <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
+            <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
               <EventTimelinePremiumEvent
                 occurrence={occurrence}
                 elementPosition={occurrence.timelinePosition}
@@ -540,7 +540,7 @@ function EventList({
                 variant="regular"
                 resourceId={resourceId}
               />
-            </EventEditingTrigger>
+            </EventContextMenuTrigger>
           )
         );
       })}
@@ -739,10 +739,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const laneCountByResource = React.useMemo(() => {
     const map = new Map<SchedulerResourceId, number>();
     for (const { resource, occurrences } of visibleResources) {
-      map.set(resource.id, computeOccurrencesMaxIndex(adapter, occurrences));
+      map.set(resource.id, computeOccurrencesMaxIndex(occurrences));
     }
     return map;
-  }, [visibleResources, adapter]);
+  }, [visibleResources]);
 
   const getRowHeight = React.useCallback(
     (row: { id: SchedulerResourceId }) =>

@@ -3,6 +3,7 @@ import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/sched
 import { isJSDOM } from 'test/utils/skipIf';
 import { screen } from '@mui/internal-test-utils';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
+import { describe, it, expect } from 'vitest';
 import { MonthView } from '../../../../month-view';
 import { EventCalendarProvider } from '../../EventCalendarProvider';
 import { EventDialogProvider } from '../../event-dialog';
