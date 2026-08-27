@@ -460,13 +460,30 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       return document.querySelector<HTMLElement>(`.${eventTimelinePremiumClasses.grid}`)!;
     }
 
+    function getHitPath() {
+      return document.querySelector<SVGPathElement>('[data-dependency-hit]')!;
+    }
+
+    // Far apart, so the middle of the arrow rides over plain lane space.
+    const farPredecessor = EventBuilder.new()
+      .id('event-far-a')
+      .title('Far A')
+      .singleDay('2025-07-03T08:00:00Z')
+      .resource(resource1)
+      .build();
+    const farSuccessor = EventBuilder.new()
+      .id('event-far-b')
+      .title('Far B')
+      .singleDay('2025-07-03T16:00:00Z')
+      .resource(resource1)
+      .build();
+
     it('should keep the pinned title column above the arrow hit-areas on horizontal scroll', async () => {
       renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
       });
 
-      const getHitPath = () => document.querySelector<SVGPathElement>('[data-dependency-hit]')!;
       await waitFor(() => {
         expect(getHitPath()).not.to.equal(null);
       });
@@ -504,25 +521,11 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     });
 
     it('should let an event drag reach the drop targets under the arrow hit-areas', async () => {
-      // Far apart, so the middle of the arrow rides over plain lane space.
-      const farPredecessor = EventBuilder.new()
-        .id('event-far-a')
-        .title('Far A')
-        .singleDay('2025-07-03T08:00:00Z')
-        .resource(resource1)
-        .build();
-      const farSuccessor = EventBuilder.new()
-        .id('event-far-b')
-        .title('Far B')
-        .singleDay('2025-07-03T16:00:00Z')
-        .resource(resource1)
-        .build();
       renderTimeline({
         events: [farPredecessor, farSuccessor],
         dependencies: [buildDependency('dep-1', 'event-far-a', 'event-far-b')],
       });
 
-      const getHitPath = () => document.querySelector<SVGPathElement>('[data-dependency-hit]')!;
       await waitFor(() => {
         expect(getHitPath()).not.to.equal(null);
       });
@@ -534,17 +537,62 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       const probe = () => document.elementFromPoint(probeX, probeY)!;
       expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
 
-      // While a drag is in progress the hit-areas must not intercept the pointer: the
-      // overlay is not an ancestor of any drop target, so a dragover landing on it
-      // would refuse the drop right over the arrow.
-      fireEvent.dragStart(getEventElement('Far B'), { dataTransfer: new DataTransfer() });
-      await waitFor(() => {
-        expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
+      // Mid-drag, the hit-areas must not intercept the pointer (see the overlay's CSS).
+      fireEvent.dragStart(getEventElement(farSuccessor.title), {
+        dataTransfer: new DataTransfer(),
       });
+      try {
+        await waitFor(() => {
+          expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
+        });
+        // Present but inert: the overlay stays mounted, only its pointer-events mute.
+        expect(getHitPath()).not.to.equal(null);
+      } finally {
+        fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+      }
 
-      fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
       await waitFor(() => {
         expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
+      });
+    });
+
+    it('should mute the delete button of a selected arrow during a drag', async () => {
+      renderTimeline({
+        events: [farPredecessor, farSuccessor],
+        dependencies: [buildDependency('dep-1', 'event-far-a', 'event-far-b')],
+      });
+
+      await waitFor(() => {
+        expect(getHitPath()).not.to.equal(null);
+      });
+
+      fireEvent.click(getHitPath());
+      const getButton = () =>
+        document.querySelector<SVGGElement>('[data-dependency-delete-button]')!;
+      await waitFor(() => {
+        expect(getButton()).not.to.equal(null);
+      });
+
+      const buttonRect = getButton().getBoundingClientRect();
+      const probeX = buttonRect.left + buttonRect.width / 2;
+      const probeY = buttonRect.top + buttonRect.height / 2;
+      const probe = () => document.elementFromPoint(probeX, probeY)!;
+      expect(probe().closest('[data-dependency-delete-button]')).not.to.equal(null);
+
+      fireEvent.dragStart(getEventElement(farPredecessor.title), {
+        dataTransfer: new DataTransfer(),
+      });
+      try {
+        await waitFor(() => {
+          expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
+        });
+        expect(getButton()).not.to.equal(null);
+      } finally {
+        fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+      }
+
+      await waitFor(() => {
+        expect(probe().closest('[data-dependency-delete-button]')).not.to.equal(null);
       });
     });
   });
