@@ -24,7 +24,6 @@ import type {
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
-  schedulerEventSelectors,
   schedulerOtherSelectors,
   schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -190,16 +189,22 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const endsUntilLabelId = `${schedulerId}-recurrence-ends-until-label`;
 
   // Form fields
-  const { value: recurrenceSelection } = useEventDialogFormField('recurrenceSelection');
-  const { value: rruleDraft } = useEventDialogFormField('rruleDraft');
+  // Both recurrence fields back the `rrule` property, so one `readOnly` covers them.
+  const { value: recurrenceSelection, readOnly: rruleReadOnly } =
+    useEventDialogFormField('recurrenceSelection');
+  const { value: rruleDraft, error: rruleDraftError } = useEventDialogFormField('rruleDraft', {
+    // Clearing the "Ends until" date stores an invalid date to keep the mode on
+    // `until`; the submit must not serialize it.
+    validate: (value, allValues) =>
+      allValues.recurrenceSelection === 'custom' &&
+      value.until != null &&
+      !adapter.isValid(value.until)
+        ? localeText.invalidDateError
+        : null,
+  });
 
   // Selector hooks
-  const isPropertyReadOnly = useStore(
-    store,
-    schedulerEventSelectors.isPropertyReadOnly,
-    occurrence.id,
-  );
-  const inputsDisabled = recurrenceSelection === null || isPropertyReadOnly('rrule');
+  const inputsDisabled = recurrenceSelection === null || rruleReadOnly;
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
   const monthlyRef = React.useMemo(
@@ -470,7 +475,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 value === 'no-repeat' ? null : (value as RecurringEventPresetKey | 'custom'),
               );
             }}
-            readOnly={isPropertyReadOnly('rrule')}
+            readOnly={rruleReadOnly}
             aria-label={localeText.recurrenceLabel}
           >
             {recurrenceOptions.map(({ label, value: optionValue }) => (
@@ -650,6 +655,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 }
                 onChange={handleChangeUntil}
                 disabled={inputsDisabled || customEndsValue !== 'until'}
+                required={customEndsValue === 'until'}
+                error={rruleDraftError !== undefined}
                 size="small"
                 slotProps={{
                   inputLabel: { shrink: true },

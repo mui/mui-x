@@ -2530,6 +2530,70 @@ describe('<EventDialogContent open />', () => {
           expect(updated.rrule?.until).to.equal('2025-07-20T00:00:00.000Z');
         });
 
+        it('should block saving a custom recurrence with Ends: until and no date', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+          const dateInput = endsFieldset.querySelector('input[type="date"]') as HTMLInputElement;
+          await user.clear(dateInput);
+
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.called).to.equal(false);
+          // The failing field lives in the Recurrence tab, so it must stay visible.
+          expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
+            'hidden',
+          );
+        });
+
+        it('should keep the Recurrence tab visible when a recurrence control is natively invalid', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          // `min: 1` makes the value 0 natively invalid, but the change handler keeps it.
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const intervalInput = within(repeatGroup).getByRole('spinbutton');
+          await user.click(intervalInput);
+          await user.keyboard('{Control>}a{/Control}0');
+
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.called).to.equal(false);
+          expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
+            'hidden',
+          );
+        });
+
         it('should submit custom weekly with selected weekdays', async () => {
           const onEventsChange = spy();
 

@@ -103,6 +103,9 @@ const EventDialogTabs = styled(Tabs, {
   padding: theme.spacing(0, 3),
 }));
 
+// Fields owned by the Recurrence tab; their submit failures must surface there.
+const RECURRENCE_FORM_KEYS = new Set(['recurrenceSelection', 'rruleDraft']);
+
 interface FormContentProps {
   occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
@@ -348,8 +351,11 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       const { start, end } = computeRange(adapter, values, displayTimezone);
 
       if (!runSubmitChecks(values, start, end) || !isValid) {
-        // The failing fields render in the General tab.
-        setTabValue('general');
+        // Show the tab owning a failing field; General wins when both tabs fail.
+        const failingKeys = Object.keys(formStore.state.errors);
+        const onlyRecurrenceFails =
+          failingKeys.length > 0 && failingKeys.every((key) => RECURRENCE_FORM_KEYS.has(key));
+        setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general');
         return;
       }
 
@@ -448,15 +454,31 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     setTabValue(newValue);
   };
 
+  // The browser blocks a native submit over an invalid control and tries to focus
+  // it, which fails when the control is hidden in an inactive tab; showing its
+  // panel lets the next attempt reach the field. Only the first invalid control of
+  // a submit attempt decides, matching the one the browser focuses.
+  const invalidTabHandledRef = React.useRef(false);
+  const handleFormInvalid = (event: React.FormEvent<HTMLFormElement>) => {
+    if (invalidTabHandledRef.current) {
+      return;
+    }
+    invalidTabHandledRef.current = true;
+    // The invalid events of one validation run fire synchronously.
+    queueMicrotask(() => {
+      invalidTabHandledRef.current = false;
+    });
+    const panel = (event.target as HTMLElement).closest('[role="tabpanel"]');
+    setTabValue(panel?.id === `${schedulerId}-recurrence-tabpanel` ? 'recurrence' : 'general');
+  };
+
   const hasTabs = Boolean(showRecurrence && RecurrenceTabRenderer);
 
   return (
     <DialogContent className={classes.eventDialogContent}>
       <EventDialogForm
         onSubmit={handleSubmit}
-        // The browser blocks a native submit over a required field hidden in an
-        // inactive tab; showing the tab lets the next attempt focus the field.
-        onInvalidCapture={() => setTabValue('general')}
+        onInvalidCapture={handleFormInvalid}
         className={classes.eventDialogForm}
       >
         <EventDialogHeader
