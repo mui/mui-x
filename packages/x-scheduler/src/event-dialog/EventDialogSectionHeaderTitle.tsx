@@ -21,7 +21,8 @@ const SectionHeaderTitleRoot = styled('legend', {
  */
 const EventDialogSectionHeaderTitle = React.forwardRef<
   HTMLLegendElement,
-  React.ComponentPropsWithoutRef<typeof SectionHeaderTitleRoot>
+  // No `as`: the wrapper is semantically a legend and its ref is typed to match.
+  Omit<React.ComponentPropsWithoutRef<typeof SectionHeaderTitleRoot>, 'as'>
 >(function EventDialogSectionHeaderTitle(props, forwardedRef) {
   const { classes } = useEventEditingStyledContext();
   return (
@@ -38,7 +39,6 @@ EventDialogSectionHeaderTitle.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

@@ -21,44 +21,61 @@ export function BuiltInKeys() {
   return { titleValue, allDayValue, ids, colorValue };
 }
 
-// A custom key with a `defaultValue` always has a value; without one it can be `undefined`.
+// A custom field can always be `undefined`: `setValue(undefined)` submits the
+// removal of the stored property, also when a `defaultValue` seeded the field.
 export function CustomKeys() {
   const seeded = useEventDialogFormField('room', { defaultValue: '' });
-  const seededValue: string = seeded.value;
+  const seededValue: string | undefined = seeded.value;
+  // @ts-expect-error the value can be undefined again after setValue(undefined)
+  const seededUnsound: string = seeded.value;
 
   const explicit = useEventDialogFormField<string>('room', { defaultValue: '' });
-  const explicitValue: string = explicit.value;
+  const explicitValue: string | undefined = explicit.value;
 
-  // A custom field accepts an explicit undefined write (submitted as-is).
+  // A custom field accepts an explicit undefined write (submitted as the removal).
   seeded.setValue(undefined);
 
   const unseeded = useEventDialogFormField<string>('room');
   // @ts-expect-error without a defaultValue the value can be undefined
   const unseededValue: string = unseeded.value;
 
-  // Without a defaultValue the validator can also receive undefined.
+  // The validator can receive undefined, with or without a defaultValue.
   useEventDialogFormField<string>('room', {
     validate: (value) => (value === undefined ? 'Missing' : null),
   });
+  useEventDialogFormField('room', {
+    defaultValue: '',
+    validate: (value) => (value === undefined ? 'Missing' : null),
+  });
 
-  return { seededValue, explicitValue, unseededValue };
+  return { seededValue, seededUnsound, explicitValue, unseededValue };
 }
 
-// Known limitations of the built-in-key guard, kept compiling on purpose:
-// an explicit type argument defaults K to string, and a union key distributes
-// past the conditional. If these lines ever error, the guard got stronger.
-export function KnownLimitations(condition: boolean) {
+// Known limitation of the built-in-key guard, kept compiling on purpose: an
+// explicit type argument defaults K to string, bypassing the key check, and
+// TypeScript has no partial type-argument inference to close the hole.
+// If this line ever errors, the guard got stronger.
+export function KnownLimitations() {
   const bypassed = useEventDialogFormField<number>('title', { defaultValue: 123 });
-  const unionKey: 'title' | 'room' = condition ? 'title' : 'room';
-  const union = useEventDialogFormField(unionKey, { defaultValue: 42 });
-  return { bypassed, union };
+  return { bypassed };
 }
 
 // A mistyped parameter on a built-in key must error instead of silently
-// falling through to the custom-key overloads.
-export function RejectedCalls() {
+// falling through to the custom-key overload, and the reserved event
+// properties must not type-check as custom keys.
+export function RejectedCalls(condition: boolean) {
   // @ts-expect-error the title defaultValue cannot retype the field
   useEventDialogFormField('title', { defaultValue: 123 });
   // @ts-expect-error a built-in key rejects a defaultValue-driven generic
   useEventDialogFormField('allDay', { defaultValue: 'yes' });
+  // @ts-expect-error built-in keys are seeded from the event, a defaultValue is never applied
+  useEventDialogFormField('title', { defaultValue: 'x' });
+  // @ts-expect-error a union mixing built-in and custom keys is rejected
+  useEventDialogFormField(condition ? 'title' : 'room', { defaultValue: 42 });
+  // @ts-expect-error `id` is a reserved event property, dropped on save
+  useEventDialogFormField('id');
+  // @ts-expect-error `timezone` is a reserved event property, dropped on save
+  useEventDialogFormField('timezone', { defaultValue: 'UTC' });
+  // @ts-expect-error `readOnly` is a reserved event property, dropped on save
+  useEventDialogFormField('readOnly');
 }

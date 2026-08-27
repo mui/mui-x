@@ -24,7 +24,8 @@ const SectionFieldsetRoot = styled('fieldset', {
  */
 const EventDialogSectionFieldset = React.forwardRef<
   HTMLFieldSetElement,
-  React.ComponentPropsWithoutRef<typeof SectionFieldsetRoot>
+  // No `as`: the wrapper is semantically a fieldset and its ref is typed to match.
+  Omit<React.ComponentPropsWithoutRef<typeof SectionFieldsetRoot>, 'as'>
 >(function EventDialogSectionFieldset(props, forwardedRef) {
   const { classes } = useEventEditingStyledContext();
   return (
@@ -41,7 +42,6 @@ EventDialogSectionFieldset.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

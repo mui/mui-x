@@ -4,6 +4,7 @@ import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isBuiltInEventProperty } from '@mui/x-scheduler-internals/internals';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
@@ -32,8 +33,9 @@ export interface UseEventDialogFormFieldParameters<T> {
    * Runs during submit while the calling component is mounted.
    * Returns the error message(s) for the field, or `null` when the value is valid
    * (an empty string or an empty array also counts as valid; booleans are ignored
-   * with a dev warning). When several components validate the same key, the first
-   * registered failing validator provides the message. Can be async.
+   * with a dev warning). When several components validate the same key, they run
+   * in registration order and the first failure provides the message — the later
+   * validators of the key do not run. Can be async.
    */
   validate?: (
     value: T,
@@ -76,10 +78,15 @@ export interface UseEventDialogFormFieldReturnValue<T, TWrite = T> {
 
 const NO_ERRORS: EventDialogFormErrorMessage[] = [];
 
-// Rejects built-in key literals so a mistyped parameter cannot silently fall
-// through from the built-in overload to the custom-key ones.
+// Rejects built-in form keys, so a mistyped parameter cannot silently fall
+// through from the built-in overload to the custom-key one, and the reserved
+// `SchedulerEvent` properties, whose writes are dropped on save. `Extract`
+// catches any overlapping member of a union key, while the wide `string` stays
+// accepted for dynamic keys.
 type CustomFieldKey<K extends string> = K &
-  (K extends keyof EventDialogBuiltInFormValues ? never : unknown);
+  (Extract<K, keyof EventDialogBuiltInFormValues | keyof SchedulerEvent> extends never
+    ? unknown
+    : never);
 
 /**
  * Binds a component to one field of the event dialog form.
@@ -87,17 +94,17 @@ type CustomFieldKey<K extends string> = K &
  */
 export function useEventDialogFormField<K extends keyof EventDialogBuiltInFormValues>(
   key: K,
-  parameters?: UseEventDialogFormFieldParameters<EventDialogBuiltInFormValues[K]>,
+  // Built-in keys are always seeded from the event, so a `defaultValue` would never apply.
+  parameters?: Omit<
+    UseEventDialogFormFieldParameters<EventDialogBuiltInFormValues[K]>,
+    'defaultValue'
+  >,
 ): UseEventDialogFormFieldReturnValue<EventDialogBuiltInFormValues[K]>;
-// A custom field with a `defaultValue` always has a value.
-export function useEventDialogFormField<T, K extends string = string>(
-  key: CustomFieldKey<K>,
-  parameters: UseEventDialogFormFieldParameters<T> & { defaultValue: T },
-): UseEventDialogFormFieldReturnValue<T, T | undefined>;
-// A custom field without a `defaultValue` is `undefined` when the event does not have it.
+// A custom field can always be `undefined`: when the event does not have it and no
+// `defaultValue` seeds it, or after a `setValue(undefined)` submitting its removal.
 export function useEventDialogFormField<T = unknown, K extends string = string>(
   key: CustomFieldKey<K>,
-  parameters?: UseEventDialogFormFieldParameters<T | undefined>,
+  parameters?: UseEventDialogFormFieldParameters<T | undefined> & { defaultValue?: T },
 ): UseEventDialogFormFieldReturnValue<T | undefined>;
 export function useEventDialogFormField(
   key: EventDialogFormFieldKey,

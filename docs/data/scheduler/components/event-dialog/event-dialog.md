@@ -93,7 +93,7 @@ Return a **fragment** from the slot: the tab content is a flex column with a gap
 
 - `value` / `setValue` — read and write the field. A written field is part of the draft and is merged into the event on save.
 - `defaultValue` — seeds the field when the event does not have it yet. An untouched default is not saved.
-- `validate` — runs on save. Return the error message(s), or `null` when the value is valid. Async validators are supported.
+- `validate` — runs on save. Return the error message(s), or `null` when the value is valid. Async validators are supported. Several validators on the same key run in registration order, and the first failure wins — the later ones do not run.
 - `error` / `errors` — the current validation message(s) for the field.
 - `readOnly` — whether the event property backing a built-in key is read-only (a getter without a setter in `eventModelStructure`); always `false` for custom keys. Mirror it on your input.
 
@@ -103,6 +103,8 @@ A value written to a field is submitted even if the section that wrote it is lat
 There is no way to remove a key from the draft: writing `undefined` into a field that is part of the draft submits the removal of the stored property; writing it into a key absent from the draft is a no-op.
 
 When binding a built-in key, match its value shape (`EventDialogBuiltInFormValues`): the dates are `yyyy-MM-dd` strings, the times `HH:mm` strings, `resourceIds` is always an array, and `color: null` inherits from the resource or the calendar's default event color.
+
+The names of the `SchedulerEvent` properties that have no form key (`id`, `start`, `end`, `rrule`, `readOnly`, `timezone`, `className`, and the other built-in event properties) are **reserved**: a custom field cannot rewrite them, so a write to such a key is dropped on save. They are rejected at the type level and warned about in development.
 
 ## Reading the edited occurrence
 

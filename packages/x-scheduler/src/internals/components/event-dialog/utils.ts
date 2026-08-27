@@ -78,27 +78,12 @@ export const FORM_KEY_TO_EVENT_PROPERTY: {
   rruleDraft: 'rrule',
 };
 
-// The `-?` mapped type makes a key added to the interface but missing here a compile error.
-const BUILT_IN_FORM_KEYS_LOOKUP: { [P in keyof EventDialogBuiltInFormValues]-?: true } = {
-  title: true,
-  description: true,
-  startDate: true,
-  startTime: true,
-  endDate: true,
-  endTime: true,
-  resourceIds: true,
-  allDay: true,
-  color: true,
-  recurrenceSelection: true,
-  rruleDraft: true,
-};
-
 /**
  * Form keys handled by the built-in submit logic. Every other key in the values
  * bag is a custom field; the ones the user edited are spread onto the event as-is.
  */
 export const BUILT_IN_FORM_KEYS: ReadonlySet<string> = new Set(
-  Object.keys(BUILT_IN_FORM_KEYS_LOOKUP),
+  Object.keys(FORM_KEY_TO_EVENT_PROPERTY),
 );
 
 const WEEKDAYS: SchedulerWeekday[] = [
@@ -171,9 +156,30 @@ export function validateRange(
   return null;
 }
 
+// Structural checks on the documented `yyyy-MM-dd` / `HH:mm` formats: date parsing
+// can roll overflowing components over (2025-06-31 → July 1) instead of rejecting them.
+const DATE_VALUE_REGEX = /^(\d{4})-(\d{2})-(\d{2})$/;
+const TIME_VALUE_REGEX = /^([01]\d|2[0-3]):([0-5]\d)$/;
+
+function isWellFormedDate(raw: string): boolean {
+  const match = DATE_VALUE_REGEX.exec(raw);
+  if (!match) {
+    return false;
+  }
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  if (month < 1 || month > 12 || day < 1) {
+    return false;
+  }
+  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  const daysInMonth = [31, isLeapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  return day <= daysInMonth[month - 1];
+}
+
 /**
  * Returns the first date/time field whose value cannot produce a valid date
- * (empty included), or `null` when they all parse.
+ * (empty and malformed included), or `null` when they all parse.
  */
 export function findInvalidRangeField(
   adapter: Adapter,
@@ -181,9 +187,10 @@ export function findInvalidRangeField(
   displayTimezone: TemporalTimezone,
 ): 'startDate' | 'startTime' | 'endDate' | 'endTime' | null {
   const parsesAsDate = (raw: string) =>
-    raw !== '' && adapter.isValid(adapter.date(raw, displayTimezone));
+    isWellFormedDate(raw) && adapter.isValid(adapter.date(raw, displayTimezone));
   const parsesAsDateTime = (rawDate: string, rawTime: string) =>
-    rawTime !== '' && adapter.isValid(adapter.date(`${rawDate}T${rawTime}`, displayTimezone));
+    TIME_VALUE_REGEX.test(rawTime) &&
+    adapter.isValid(adapter.date(`${rawDate}T${rawTime}`, displayTimezone));
 
   if (!parsesAsDate(values.startDate)) {
     return 'startDate';

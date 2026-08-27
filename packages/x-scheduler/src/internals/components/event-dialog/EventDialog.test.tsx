@@ -525,7 +525,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     it('should not let an edited custom field rewrite a built-in event property', async () => {
       const onEventsChange = spy();
       function CollidingSection() {
-        const readOnlyField = useEventDialogFormField('readOnly');
+        // The wide `string` models a JS consumer: the literal is a type error.
+        const readOnlyField = useEventDialogFormField('readOnly' as string);
         const notes = useEventDialogFormField('notes', { defaultValue: '' });
         return (
           <React.Fragment>
@@ -969,6 +970,27 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         const endDateInput = screen.getByRole('textbox', { name: 'End date' });
         await user.clear(endDateInput);
         await user.type(endDateInput, 'tomorrow');
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }).toWarnDev([
+        'MUI X Scheduler: The value cannot be parsed into a date but no field of the event dialog validates the "endDate" field.',
+      ]);
+
+      expect(onEventsChange.callCount).to.equal(0);
+      expect(screen.getByRole('alert')).to.have.text('Enter a valid date.');
+    });
+
+    it('should block the submit of an overflowing date from a custom field', async () => {
+      const onEventsChange = spy();
+
+      await expect(async () => {
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: createRangeField('endDate', 'End date') },
+          { onEventsChange },
+        );
+        const endDateInput = screen.getByRole('textbox', { name: 'End date' });
+        await user.clear(endDateInput);
+        // `new Date` would roll June 31 over to July 1 instead of rejecting it.
+        await user.type(endDateInput, '2025-06-31');
         await user.click(screen.getByRole('button', { name: 'Save' }));
       }).toWarnDev([
         'MUI X Scheduler: The value cannot be parsed into a date but no field of the event dialog validates the "endDate" field.',
