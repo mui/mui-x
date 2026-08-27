@@ -304,6 +304,16 @@ describe('EventDialogFormStore', () => {
       expect(store.state.errors).to.deep.equal({ title: ['First'] });
     });
 
+    it('should not run the later validators of a field after one fails', async () => {
+      const store = createFormStore({ title: '' });
+      const later = spy(() => null);
+      store.registerValidator('title', () => 'Required');
+      store.registerValidator('title', later);
+      await store.validateAll();
+      expect(later.called).to.equal(false);
+      expect(store.state.errors).to.deep.equal({ title: ['Required'] });
+    });
+
     it('should settle as invalid instead of looping when a validator writes a value', async () => {
       const store = createFormStore({ title: 'Meeting' });
       store.registerValidator('title', (value) => {

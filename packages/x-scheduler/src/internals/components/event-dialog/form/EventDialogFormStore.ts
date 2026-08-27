@@ -274,7 +274,8 @@ export class EventDialogFormStore<
   };
 
   /**
-   * Runs every registered validator and stores the failures (first error per field wins).
+   * Runs the validators of every field in registration order, stopping at the
+   * field's first failure and storing it.
    * Restarts when a value is written or a validator is (un)registered while an async
    * validator is pending, so the stored errors and the resolved verdict always describe
    * the values and validators current at resolution time.
@@ -294,11 +295,11 @@ export class EventDialogFormStore<
       await Promise.all(
         Array.from(this.validators, async ([key, validators]) => {
           const fieldValue = getOwn(values, key);
-          const results = await Promise.all(
-            Array.from(validators, (validator) => validator(fieldValue, values)),
-          );
-          for (const result of results) {
-            const messages = normalizeValidatorResult(result);
+          // Registration order, stopping at the first failure: a later (possibly
+          // slow) validator must not delay or override an already-known verdict.
+          for (const validator of validators) {
+            // eslint-disable-next-line no-await-in-loop
+            const messages = normalizeValidatorResult(await validator(fieldValue, values));
             if (messages !== null) {
               setOwn(errors, key, messages);
               break;
