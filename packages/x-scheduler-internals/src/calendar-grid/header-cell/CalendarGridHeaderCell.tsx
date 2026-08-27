@@ -1,26 +1,24 @@
 'use client';
 import * as React from 'react';
-import { createSelector, useStore } from '@base-ui/utils/store';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
-import { useCompositeListContext } from '../../base-ui-copy/composite/list/CompositeListContext';
+import { useStore } from '@base-ui/utils/store';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
+import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
 import type { EventCalendarState } from '../../use-event-calendar';
 
-const selectorIsCurrentDate = createSelector(
-  (
-    state: EventCalendarState,
-    date: TemporalSupportedObject,
-    skipDataCurrent: boolean | undefined,
-  ) => !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, date),
-);
+const selectorIsCurrentDate = (
+  state: EventCalendarState,
+  date: TemporalSupportedObject,
+  skipDataCurrent: boolean | undefined,
+) => !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, date);
 
 export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHeaderCell(
   componentProps: CalendarGridHeaderCell.Props,
@@ -52,7 +50,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   const isCurrentDay = useStore(store, selectorIsCurrentDate, date.value, skipDataCurrent);
 
   const { ref: listItemRef, index } = useCompositeListItem();
-  const { elementsRef } = useCompositeListContext();
+  const cellsRefs = useCalendarGridCellsRefsContext();
   const id = getCalendarGridHeaderCellId(rootId, index);
 
   const cellRef = React.useRef<HTMLDivElement>(null);
@@ -70,7 +68,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const target = getNavigationTarget(event.key, 'header', 0, index, {
-      columnCount: elementsRef.current.length,
+      columnCount: cellsRefs.current.length,
       rowTypes,
       rowsPerType,
     });

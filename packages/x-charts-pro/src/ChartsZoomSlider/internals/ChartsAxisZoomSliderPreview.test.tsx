@@ -3,6 +3,7 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { createRenderer } from '@mui/internal-test-utils';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
+import { describe, it, expect } from 'vitest';
 
 describe('ChartsAxisZoomSliderPreview', () => {
   const { render } = createRenderer();

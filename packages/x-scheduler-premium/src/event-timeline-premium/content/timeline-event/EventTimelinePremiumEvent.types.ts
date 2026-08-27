@@ -1,4 +1,6 @@
 import type * as React from 'react';
+import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 
 export interface EventTimelinePremiumEventProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -14,4 +16,14 @@ export interface EventTimelinePremiumEventProps extends React.HTMLAttributes<HTM
    * ID of the header this event is associated with (for aria-labelledby).
    */
   ariaLabelledBy: string;
+  /**
+   * The id of the resource row this event is rendered in.
+   * Used to resolve the event's color against that row's resource instead of the event's
+   * primary resource, so a multi-resource event can render a different color per row.
+   */
+  resourceId: SchedulerResourceId;
+  /**
+   * Position already derived by the timeline layout model.
+   */
+  elementPosition?: useElementPositionInCollection.ReturnValue;
 }

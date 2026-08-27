@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { lineClasses } from '@mui/x-charts/LineChart';
 import { LineChartPro } from './LineChartPro';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';

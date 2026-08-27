@@ -8,11 +8,13 @@ export enum TimelineGridEventPlaceholderDataAttributes {
    */
   ended = 'data-ended',
   /**
-   * Present when the event starts before the visible timeline range.
+   * Present when the placeholder's start does not render at its real position: it is
+   * before the visible timeline range, or inside the hours the preset config hides.
    */
   startingBeforeEdge = 'data-starting-before-edge',
   /**
-   * Present when the event ends after the visible timeline range.
+   * Present when the placeholder's end does not render at its real position: it is after
+   * the visible timeline range, or inside the hours the preset config hides.
    */
   endingAfterEdge = 'data-ending-after-edge',
 }

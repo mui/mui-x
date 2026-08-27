@@ -1,8 +1,7 @@
 import type * as React from 'react';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { DialogProps } from '@mui/material/Dialog';
-import type { EventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
-import type { ControlledValue } from './utils';
+import type { EventEditingOptionalRenderers } from '../event-editing';
 
 export interface EventDialogProps extends DialogProps {
   /**
@@ -10,9 +9,9 @@ export interface EventDialogProps extends DialogProps {
    */
   occurrence: SchedulerRenderableEventOccurrence;
   /**
-   * The anchor element for the popover positioning.
+   * The element the dialog is positioned against.
    */
-  anchorRef: React.RefObject<HTMLElement | null>;
+  anchor: HTMLElement | null;
   /**
    * Handles the close action of the popover.
    */
@@ -22,24 +21,7 @@ export interface EventDialogProps extends DialogProps {
 export interface EventDialogProviderProps {
   children: React.ReactNode;
   /**
-   * Optional components rendered inside the dialog (recurrence tab, recurring scope dialog).
+   * Optional components rendered during editing (recurrence tab, recurring scope confirmation).
    */
-  optionalRenderers?: EventDialogOptionalRenderers;
-}
-
-export interface EventDialogTriggerProps extends React.HTMLAttributes<HTMLElement> {
-  occurrence: SchedulerRenderableEventOccurrence;
-  children: React.ReactNode;
-}
-
-/**
- * Props shared by the General tab section components.
- * Temporary contract until the form context replaces the prop plumbing (#22868).
- */
-export interface EventDialogSectionProps {
-  occurrence: SchedulerRenderableEventOccurrence;
-  controlled: ControlledValue;
-  setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
-  errors: Record<string, string | string[]>;
-  setErrors: (errors: Record<string, string | string[]>) => void;
+  optionalRenderers?: EventEditingOptionalRenderers;
 }

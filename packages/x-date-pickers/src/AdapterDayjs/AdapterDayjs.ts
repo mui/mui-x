@@ -283,6 +283,38 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     return value;
   };
 
+  /**
+   * On dates predating the timezone standardization, IANA falls back on the Local Mean Time of the
+   * location, whose offset is not a round number of minutes (`Asia/Kolkata` is `GMT+05:53:28`).
+   * `dayjs` then moves the day of the month when only the year or the month was meant to change.
+   * `daysInMonth()` is unusable on such a value because it derives from the equally broken
+   * `endOf('month')`, hence computing it on a plain UTC value instead.
+   * See https://github.com/mui/mui-x/issues/23163
+   */
+  private restoreDayOfMonth = (value: Dayjs, reference: Dayjs) => {
+    const timezone = this.getTimezone(value);
+    // `system` and `UTC` values keep an offset that matches their instant, so they are never affected.
+    if (!this.hasUTCPlugin() || timezone === 'system' || timezone === 'UTC') {
+      return value;
+    }
+
+    const wallClock = dayjs.utc(value.format('YYYY-MM-DDTHH:mm:ss.SSS'));
+
+    // Years above 9999 don't round-trip through the ISO format, and an invalid value formats to
+    // `Invalid Date`. Both would make the comparison below `NaN`.
+    if (!wallClock.isValid()) {
+      return value;
+    }
+
+    // A shorter target month legitimately clamps the day (`Jan 31` + 1 month is `Feb 28`).
+    const expectedDayOfMonth = Math.min(reference.date(), wallClock.daysInMonth());
+    if (value.date() === expectedDayOfMonth) {
+      return value;
+    }
+
+    return value.set('date', expectedDayOfMonth);
+  };
+
   public date = <T extends string | null | undefined>(
     value?: T,
     timezone: PickersTimezone = 'default',
@@ -522,11 +554,11 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public addYears = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'year'));
+    return this.adjustOffset(this.restoreDayOfMonth(value.add(amount, 'year'), value));
   };
 
   public addMonths = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'month'));
+    return this.adjustOffset(this.restoreDayOfMonth(value.add(amount, 'month'), value));
   };
 
   public addWeeks = (value: Dayjs, amount: number) => {
@@ -578,11 +610,11 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public setYear = (value: Dayjs, year: number) => {
-    return this.adjustOffset(value.set('year', year));
+    return this.adjustOffset(this.restoreDayOfMonth(value.set('year', year), value));
   };
 
   public setMonth = (value: Dayjs, month: number) => {
-    return this.adjustOffset(value.set('month', month));
+    return this.adjustOffset(this.restoreDayOfMonth(value.set('month', month), value));
   };
 
   public setDate = (value: Dayjs, date: number) => {

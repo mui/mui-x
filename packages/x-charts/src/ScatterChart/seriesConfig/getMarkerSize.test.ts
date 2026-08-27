@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import getMarkerSize from './getMarkerSize';
 import { getSizeScale } from '../../internals/sizeScale';
 import type {

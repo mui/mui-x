@@ -1,6 +1,7 @@
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { getFieldInputRoot } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import { it, expect } from 'vitest';
 
 // Tests that on blur, partially filled fields are considered invalid
 // while completely empty or fully valid fields remain not invalid.

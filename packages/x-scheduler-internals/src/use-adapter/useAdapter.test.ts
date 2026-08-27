@@ -1,4 +1,5 @@
 import { adapter, adapterFr } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { isWeekend } from './useAdapter';
 
 describe('date-utils', () => {

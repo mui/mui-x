@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { sortEventOccurrences } from '../sort-event-occurrences';
 import type { SchedulerEventOccurrence, SchedulerEventOccurrencePlaceholder } from '../models';
-import type { Adapter } from '../use-adapter';
-import { useAdapterContext } from '../use-adapter-context';
 
 /**
  * Places event occurrences for a timeline UI.
@@ -11,26 +9,32 @@ export function useEventOccurrencesWithTimelinePosition(
   parameters: useEventOccurrencesWithTimelinePosition.Parameters,
 ): useEventOccurrencesWithTimelinePosition.ReturnValue {
   const { occurrences, maxSpan } = parameters;
-  const adapter = useAdapterContext();
 
-  return React.useMemo(() => {
-    const sortedOccurrences = sortEventOccurrences(occurrences);
-    const conflicts = buildOccurrenceConflicts(adapter, sortedOccurrences);
+  return React.useMemo(
+    () => computeOccurrencesWithTimelinePosition(occurrences, maxSpan),
+    [occurrences, maxSpan],
+  );
+}
 
-    const { firstIndexLookup, maxIndex } = buildFirstIndexLookup(conflicts);
+export function computeOccurrencesWithTimelinePosition(
+  occurrences: readonly SchedulerEventOccurrence[],
+  maxSpan: number,
+): useEventOccurrencesWithTimelinePosition.ReturnValue {
+  const sortedOccurrences = sortEventOccurrences(occurrences);
+  const { firstIndexLookup, lastIndexLookup, maxIndex } = buildOccurrenceIndexLookups(
+    sortedOccurrences,
+    maxSpan,
+  );
 
-    const lastIndexLookup = buildLastIndexLookup(conflicts, firstIndexLookup, maxIndex, maxSpan);
+  const occurrencesWithPosition = sortedOccurrences.map((occurrence) => ({
+    ...occurrence,
+    position: {
+      firstIndex: firstIndexLookup[occurrence.key],
+      lastIndex: lastIndexLookup[occurrence.key],
+    },
+  }));
 
-    const occurrencesWithPosition = sortedOccurrences.map((occurrence) => ({
-      ...occurrence,
-      position: {
-        firstIndex: firstIndexLookup[occurrence.key],
-        lastIndex: lastIndexLookup[occurrence.key],
-      },
-    }));
-
-    return { occurrences: occurrencesWithPosition, maxIndex };
-  }, [adapter, occurrences, maxSpan]);
+  return { occurrences: occurrencesWithPosition, maxIndex };
 }
 
 /**
@@ -39,12 +43,10 @@ export function useEventOccurrencesWithTimelinePosition(
  * but callable outside React (e.g. inside a `useMemo`).
  */
 export function computeOccurrencesMaxIndex(
-  adapter: Adapter,
   occurrences: readonly SchedulerEventOccurrence[],
 ): number {
   const sortedOccurrences = sortEventOccurrences(occurrences);
-  const conflicts = buildOccurrenceConflicts(adapter, sortedOccurrences);
-  return buildFirstIndexLookup(conflicts).maxIndex;
+  return buildOccurrenceIndexLookups(sortedOccurrences, 1).maxIndex;
 }
 
 /**
@@ -53,12 +55,10 @@ export function computeOccurrencesMaxIndex(
  * to locate occurrences in rows that are not mounted.
  */
 export function computeOccurrencesFirstIndexLookup(
-  adapter: Adapter,
   occurrences: readonly SchedulerEventOccurrence[],
 ): { [occurrenceKey: string]: number } {
   const sortedOccurrences = sortEventOccurrences(occurrences);
-  const conflicts = buildOccurrenceConflicts(adapter, sortedOccurrences);
-  return buildFirstIndexLookup(conflicts).firstIndexLookup;
+  return buildOccurrenceIndexLookups(sortedOccurrences, 1).firstIndexLookup;
 }
 
 export namespace useEventOccurrencesWithTimelinePosition {
@@ -107,168 +107,171 @@ export namespace useEventOccurrencesWithTimelinePosition {
   }
 }
 
-/**
- * Looks for conflicts between occurrences and build a list of conflicts for each occurrence.
- * The provided occurrences need to be sorted by starting date-time.
- */
-function buildOccurrenceConflicts(
-  adapter: Adapter,
-  occurrences: SchedulerEventOccurrence[],
-): OccurrenceConflicts[] {
-  const getEmptyBlock = (): OccurrenceBlock => ({ occurrences: [], longestDurationMs: 0 });
+class BinaryIndexedTree {
+  private readonly values: number[];
 
-  const occurrencesBlocks: OccurrenceBlock[] = [];
-  let currentBlock: OccurrenceBlock = getEmptyBlock();
-  let lastEndTimestamp = 0;
+  constructor(size: number) {
+    this.values = new Array(size + 1).fill(0);
+  }
 
-  // Group occurrences in non-overlapping blocks to reduce the number of comparisons when looking for conflicts.
-  // Computes the properties needed for each occurrence.
-  for (const occurrence of occurrences) {
-    const startTimestamp = occurrence.displayTimezone.start.timestamp;
-    const endTimestamp = occurrence.displayTimezone.end.timestamp;
-    const occurrenceDurationMs = endTimestamp - startTimestamp;
-
-    if (startTimestamp >= lastEndTimestamp) {
-      if (currentBlock.occurrences.length > 0) {
-        occurrencesBlocks.push(currentBlock);
-      }
-      currentBlock = getEmptyBlock();
-      lastEndTimestamp = 0;
-    }
-
-    currentBlock.occurrences.push({
-      key: occurrence.key,
-      startTimestamp,
-      endTimestamp,
-    });
-
-    if (occurrenceDurationMs > currentBlock.longestDurationMs) {
-      currentBlock.longestDurationMs = occurrenceDurationMs;
-    }
-
-    if (endTimestamp > lastEndTimestamp) {
-      lastEndTimestamp = endTimestamp;
+  add(index: number, value: number) {
+    // eslint-disable-next-line no-bitwise
+    for (let i = index; i < this.values.length; i += i & -i) {
+      this.values[i] += value;
     }
   }
 
-  if (currentBlock.occurrences.length > 0) {
-    occurrencesBlocks.push(currentBlock);
-  }
-
-  // For each block, looks for conflicts between occurrences to build the conflicts list.
-  const conflicts: OccurrenceConflicts[] = [];
-  for (const block of occurrencesBlocks) {
-    for (let i = 0; i < block.occurrences.length; i += 1) {
-      const occurrence = block.occurrences[i];
-      const conflictsBefore = new Set<string>();
-      const conflictsAfter = new Set<string>();
-
-      for (let j = i + 1; j < block.occurrences.length; j += 1) {
-        const occurrenceA = block.occurrences[j];
-        if (occurrenceA.startTimestamp < occurrence.endTimestamp) {
-          conflictsAfter.add(occurrenceA.key);
-        } else {
-          // We know that all the next occurrences will start even later, so we can stop here.
-          break;
-        }
-      }
-
-      for (let j = i - 1; j >= 0; j -= 1) {
-        const occurrenceB = block.occurrences[j];
-        const diffBetweenOccurrencesStart = occurrence.startTimestamp - occurrenceB.startTimestamp;
-        if (diffBetweenOccurrencesStart > block.longestDurationMs) {
-          // We know that all the previous occurrences won't end after the start of the occurrence we are getting conflicts for, so we can stop here.
-          break;
-        }
-
-        if (occurrenceB.endTimestamp > occurrence.startTimestamp) {
-          conflictsBefore.add(occurrenceB.key);
-        }
-      }
-
-      conflicts.push({ key: occurrence.key, before: conflictsBefore, after: conflictsAfter });
+  sum(index: number) {
+    let result = 0;
+    // eslint-disable-next-line no-bitwise
+    for (let i = index; i > 0; i -= i & -i) {
+      result += this.values[i];
     }
+    return result;
   }
 
-  return conflicts;
+  findByOrder(order: number) {
+    let index = 0;
+    let bit = 2 ** Math.floor(Math.log2(this.values.length - 1));
+    let remaining = order;
+
+    while (bit > 0) {
+      const nextIndex = index + bit;
+      if (nextIndex < this.values.length && this.values[nextIndex] < remaining) {
+        index = nextIndex;
+        remaining -= this.values[nextIndex];
+      }
+      // eslint-disable-next-line no-bitwise
+      bit >>= 1;
+    }
+
+    return index + 1;
+  }
 }
 
-function buildFirstIndexLookup(conflicts: OccurrenceConflicts[]) {
-  let maxIndex: number = 1;
+function buildOccurrenceIndexLookups(occurrences: SchedulerEventOccurrence[], maxSpan: number) {
+  const activeOccurrences: ActiveOccurrence[] = [];
+  const availableIndexes: number[] = [];
+  const activeOccurrenceByIndex: Array<number | undefined> = [];
+  const activeIndexes = maxSpan >= 2 ? new BinaryIndexedTree(occurrences.length) : null;
   const firstIndexLookup: OccurrenceIndexLookup = {};
+  const nextConflictingIndexLookup: OccurrenceIndexLookup = {};
+  let nextIndex = 1;
 
-  for (const occurrence of conflicts) {
-    if (occurrence.before.size === 0) {
-      firstIndexLookup[occurrence.key] = 1;
-    } else {
-      const usedIndexes = new Set(
-        Array.from(occurrence.before).map(
-          (conflictingOccurrence) => firstIndexLookup[conflictingOccurrence],
-        ),
-      );
-      let i = 1;
-      while (usedIndexes.has(i)) {
-        i += 1;
-      }
-      firstIndexLookup[occurrence.key] = i;
-      if (i > maxIndex) {
-        maxIndex = i;
+  for (let occurrenceIndex = 0; occurrenceIndex < occurrences.length; occurrenceIndex += 1) {
+    const occurrence = occurrences[occurrenceIndex];
+    const startTimestamp = occurrence.displayTimezone.start.timestamp;
+
+    while (activeOccurrences[0]?.endTimestamp <= startTimestamp) {
+      const endedOccurrence = popHeap(activeOccurrences)!;
+      pushHeap(availableIndexes, endedOccurrence.index);
+      if (activeIndexes) {
+        activeOccurrenceByIndex[endedOccurrence.index] = undefined;
+        activeIndexes.add(endedOccurrence.index, -1);
       }
     }
+
+    const index = popHeap(availableIndexes) ?? nextIndex;
+    if (index === nextIndex) {
+      nextIndex += 1;
+    }
+
+    firstIndexLookup[occurrence.key] = index;
+
+    if (activeIndexes) {
+      if (index > 1) {
+        // All lower indexes are active because this is the first available index.
+        const previousOccurrenceIndex = activeOccurrenceByIndex[index - 1]!;
+        const previousOccurrenceKey = occurrences[previousOccurrenceIndex].key;
+        nextConflictingIndexLookup[previousOccurrenceKey] = Math.min(
+          nextConflictingIndexLookup[previousOccurrenceKey] ?? Infinity,
+          index,
+        );
+      }
+
+      const activeIndexCount = activeIndexes.sum(index);
+      if (activeIndexCount < activeOccurrences.length) {
+        nextConflictingIndexLookup[occurrence.key] = activeIndexes.findByOrder(
+          activeIndexCount + 1,
+        );
+      }
+
+      activeIndexes.add(index, 1);
+      activeOccurrenceByIndex[index] = occurrenceIndex;
+    }
+
+    pushHeap(activeOccurrences, {
+      endTimestamp: occurrence.displayTimezone.end.timestamp,
+      index,
+    });
   }
 
-  return { firstIndexLookup, maxIndex };
-}
-
-function buildLastIndexLookup(
-  conflicts: OccurrenceConflicts[],
-  firstIndexLookup: OccurrenceIndexLookup,
-  maxIndex: number,
-  maxSpan: number,
-) {
+  const maxIndex = Math.max(1, nextIndex - 1);
   if (maxSpan < 2) {
-    return firstIndexLookup;
+    return { firstIndexLookup, lastIndexLookup: firstIndexLookup, maxIndex };
   }
 
   const lastIndexLookup: OccurrenceIndexLookup = {};
-  for (const occurrence of conflicts) {
-    const usedIndexes = new Set(
-      [...Array.from(occurrence.before), ...Array.from(occurrence.after)].map(
-        (conflictingOccurrence) => firstIndexLookup[conflictingOccurrence],
-      ),
-    );
+  for (const occurrence of occurrences) {
     const firstIndex = firstIndexLookup[occurrence.key];
-    let lastIndex = firstIndex;
-    while (
-      !usedIndexes.has(lastIndex + 1) &&
-      lastIndex < maxIndex &&
-      lastIndex - firstIndex < maxSpan - 1
-    ) {
-      lastIndex += 1;
-    }
-    lastIndexLookup[occurrence.key] = lastIndex;
+    const nextConflictingIndex = nextConflictingIndexLookup[occurrence.key] ?? maxIndex + 1;
+    lastIndexLookup[occurrence.key] = Math.min(
+      nextConflictingIndex - 1,
+      maxIndex,
+      firstIndex + maxSpan - 1,
+    );
   }
 
-  return lastIndexLookup;
+  return { firstIndexLookup, lastIndexLookup, maxIndex };
 }
 
-/**
- * A block of occurrences that overlap in time.
- * The occurrences of two distinct blocks never overlap in time, their conflicts can thus be computed independently.
- */
-interface OccurrenceBlock {
-  occurrences: {
-    key: string;
-    startTimestamp: number;
-    endTimestamp: number;
-  }[];
-  longestDurationMs: number;
+function pushHeap<T extends number | ActiveOccurrence>(heap: T[], value: T) {
+  heap.push(value);
+  let index = heap.length - 1;
+  while (index > 0) {
+    const parentIndex = Math.floor((index - 1) / 2);
+    if (getHeapValue(heap[parentIndex]) <= getHeapValue(value)) {
+      break;
+    }
+    heap[index] = heap[parentIndex];
+    index = parentIndex;
+  }
+  heap[index] = value;
 }
 
-interface OccurrenceConflicts {
-  key: string;
-  before: Set<string>;
-  after: Set<string>;
+function popHeap<T extends number | ActiveOccurrence>(heap: T[]): T | undefined {
+  const first = heap[0];
+  const last = heap.pop();
+  if (heap.length === 0 || last === undefined) {
+    return first;
+  }
+
+  let index = 0;
+  while (index * 2 + 1 < heap.length) {
+    let childIndex = index * 2 + 1;
+    if (
+      childIndex + 1 < heap.length &&
+      getHeapValue(heap[childIndex + 1]) < getHeapValue(heap[childIndex])
+    ) {
+      childIndex += 1;
+    }
+    if (getHeapValue(heap[childIndex]) >= getHeapValue(last)) {
+      break;
+    }
+    heap[index] = heap[childIndex];
+    index = childIndex;
+  }
+  heap[index] = last;
+  return first;
+}
+
+function getHeapValue(value: number | ActiveOccurrence) {
+  return typeof value === 'number' ? value : value.endTimestamp;
+}
+
+interface ActiveOccurrence {
+  endTimestamp: number;
+  index: number;
 }
 
 type OccurrenceIndexLookup = { [occurrenceKey: string]: number };

@@ -1,8 +1,5 @@
 import type * as React from 'react';
-import type {
-  TemporalAdapter,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-internals/base-ui-copy';
+import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 
 export type EventTimelinePremiumPreset =
@@ -33,6 +30,12 @@ export interface IteratedCell {
   key: string;
   /** Index within the row. */
   index: number;
+  /**
+   * Wall-clock hour the cell stands for, set on `hour` cells only. Labels must be built
+   * from it rather than from `date`: the hour skipped by a spring-forward transition has
+   * no instant, so its `date` normalizes to the next existing hour.
+   */
+  wallClockHour?: number;
 }
 
 /**
@@ -78,10 +81,10 @@ export type PresetHeaderLevelConfig = PresetHeaderLevelConfigBase &
   );
 
 /**
- * Full configuration of a preset. Bundles header definitions with grid-sizing,
+ * Full definition of a preset. Bundles header definitions with grid-sizing,
  * range computation, and navigation behavior.
  */
-export interface PresetConfig {
+export interface PresetDefinition {
   /**
    * Header rows to render, ordered top → bottom. At least one row is required.
    * The last row's `unit` does not need to match the preset's `timeResolution`:
@@ -113,12 +116,13 @@ export interface PresetConfig {
     weekStartsOn: WeekStartsOn | undefined,
   ) => TemporalSupportedObject;
   /**
-   * Returns the exact number of CSS ticks for the visible range. Override
-   * `unitCount` whenever the grid width must differ from the navigation step:
-   * either because the count varies (e.g. `monthAndYear`, where days per
-   * month differ) or because it has to stay stable against runtime drift
-   * (e.g. `dayAndHour` pins it to `4 × 24` so the grid width does not shrink
-   * on DST days).
+   * Returns the exact number of CSS ticks for the visible range, sized for the
+   * full day. Override `unitCount` whenever the grid width must differ from the
+   * navigation step: either because the count varies (e.g. `monthAndYear`, where
+   * days per month differ) or because it has to stay stable against runtime
+   * drift (e.g. `dayAndHour` pins it to `4 × 24` so the grid width does not
+   * shrink on DST days). The displayed hour window scales the result in the
+   * preset selector, so presets never see it.
    */
   getCssUnitCount?: (
     adapter: TemporalAdapter,
@@ -134,4 +138,37 @@ export interface PresetConfig {
     date: TemporalSupportedObject,
     amount: number,
   ) => TemporalSupportedObject;
+}
+
+/**
+ * Per-preset user configuration for the hour-resolution presets.
+ */
+export interface EventTimelinePremiumHourPresetConfig {
+  /**
+   * Inclusive start of the displayed hour range.
+   * Must be a whole hour between 0 and 24, lower than `endTime`; otherwise the
+   * full day is displayed and a warning is logged in development.
+   * @default 0
+   */
+  startTime?: number;
+  /**
+   * Exclusive end of the displayed hour range: the last rendered hour cell is
+   * `endTime - 1`, so `{ startTime: 8, endTime: 20 }` renders the cells 8 AM through
+   * 7 PM and displays the 08:00–20:00 window (an event ending exactly at 20:00 is
+   * still fully visible).
+   * Must be a whole hour between 0 and 24, greater than `startTime`; otherwise the
+   * full day is displayed and a warning is logged in development.
+   * @default 24
+   */
+  endTime?: number;
+}
+
+/**
+ * User configuration applied to each preset, keyed by the preset name.
+ */
+export interface EventTimelinePremiumPresetConfig {
+  /**
+   * Configuration applied to the `dayAndHour` preset.
+   */
+  dayAndHour?: EventTimelinePremiumHourPresetConfig;
 }

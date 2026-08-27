@@ -1,21 +1,25 @@
 'use client';
 import * as React from 'react';
-import Divider from '@mui/material/Divider';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import type { EventDialogSectionProps } from './EventDialog.types';
-import DateTimeSection from './DateTimeSection';
-import ResourceAndColorSection from './ResourceAndColorSection';
-import DescriptionSection from './DescriptionSection';
+import { useEventEditingStyledContext } from '../event-editing';
+import { useSchedulerSlots } from '../SchedulerSlotsContext';
+import { useEventDialogFormContext } from './form/EventDialogFormContext';
+import { EventDialogGeneralTabContent } from './EventDialogGeneralTabContent';
 import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 
-interface GeneralTabProps extends EventDialogSectionProps {
+interface GeneralTabProps {
   value: string;
 }
 
 export function GeneralTab(props: GeneralTabProps) {
-  const { occurrence, errors, setErrors, controlled, setControlled, value } = props;
+  const { value } = props;
 
-  const { schedulerId, classes } = useEventDialogStyledContext();
+  const { schedulerId, classes } = useEventEditingStyledContext();
+  const { slots, slotProps } = useSchedulerSlots();
+  const { occurrence } = useEventDialogFormContext();
+
+  // The tab panel stays owned by the dialog: its `hidden` state and its `aria-labelledby`
+  // pairing with the tab are not reachable from the slot.
+  const GeneralTabContent = slots.eventDialogGeneralTab ?? EventDialogGeneralTabContent;
 
   return (
     <EventDialogTabPanel
@@ -26,23 +30,7 @@ export function GeneralTab(props: GeneralTabProps) {
       hidden={value !== 'general'}
     >
       <EventDialogTabContent className={classes.eventDialogTabContent}>
-        <DateTimeSection
-          occurrence={occurrence}
-          controlled={controlled}
-          setControlled={setControlled}
-          errors={errors}
-          setErrors={setErrors}
-        />
-        <Divider />
-        <ResourceAndColorSection
-          occurrence={occurrence}
-          controlled={controlled}
-          setControlled={setControlled}
-          errors={errors}
-          setErrors={setErrors}
-        />
-        <Divider />
-        <DescriptionSection occurrence={occurrence} />
+        <GeneralTabContent {...slotProps.eventDialogGeneralTab} occurrence={occurrence} />
       </EventDialogTabContent>
     </EventDialogTabPanel>
   );

@@ -10,6 +10,7 @@ import { useGridApiRef, DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
 import type { GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { spy } from 'sinon';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
