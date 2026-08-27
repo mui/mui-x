@@ -3,6 +3,7 @@ import { SankeyPlot, sankeyClasses, SankeyChart } from '@mui/x-charts-pro/Sankey
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCenter } from 'test/utils/charts/getCenter';
+import { describe, it, expect } from 'vitest';
 
 describe('<SankeyPlot />', () => {
   const { render } = createRenderer();

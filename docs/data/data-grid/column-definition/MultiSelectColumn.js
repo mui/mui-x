@@ -29,7 +29,7 @@ const rows = [
 ];
 
 const columns = [
-  { field: 'name', headerName: 'Project', width: 130 },
+  { field: 'name', headerName: 'Project', width: 130, rowHeader: true },
   {
     field: 'tags',
     headerName: 'Tags',

@@ -12,6 +12,7 @@ import { useId } from '@base-ui/utils/useId';
 import type { EventCalendarProps } from './EventCalendar.types';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
+import { SchedulerSlotsProvider } from '../internals/components/SchedulerSlotsContext';
 import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
 import { EventCalendarStyledContext } from './EventCalendarStyledContext';
 import { EventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
@@ -34,7 +35,7 @@ const EventCalendar = React.forwardRef(function EventCalendar<
   const store = useEventCalendar(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { localeText, apiRef, ...other } = forwardedProps;
+  const { localeText, apiRef, slots, slotProps, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
   const schedulerId = useId();
@@ -61,9 +62,11 @@ const EventCalendar = React.forwardRef(function EventCalendar<
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-            <EventDialogProvider>
-              <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-            </EventDialogProvider>
+            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              <EventDialogProvider>
+                <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+              </EventDialogProvider>
+            </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
@@ -212,6 +215,7 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
+      canHaveMultipleResources: PropTypes.bool,
       duration: PropTypes.number,
       interaction: PropTypes.oneOf(['click', 'double-click']),
     }),
@@ -225,6 +229,9 @@ EventCalendar.propTypes /* remove-proptypes */ = {
   eventModelStructure: PropTypes.object,
   /**
    * The events currently available in the calendar.
+   *
+   * Event models are compared by reference to avoid reprocessing unchanged events.
+   * Replace an event model with a new object when updating it instead of mutating it in place.
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
@@ -238,6 +245,15 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    * Event handler called when the collapsed resources change.
    */
   onCollapsedResourcesChange: PropTypes.func,
+  /**
+   * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
+   * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
+   * `eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the
+   * occurrence is read-only (through the event, its resource or the `readOnly` prop) and the dialog
+   * opens in view-only mode, and `"edit"` otherwise.
+   * Call `eventDetails.cancel()` to keep it closed and handle the interaction in your own UI.
+   */
+  onEventEditingStart: PropTypes.func,
   /**
    * Callback fired when some event of the calendar change.
    */
@@ -310,6 +326,16 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    * @default true
    */
   showCurrentTimeIndicator: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

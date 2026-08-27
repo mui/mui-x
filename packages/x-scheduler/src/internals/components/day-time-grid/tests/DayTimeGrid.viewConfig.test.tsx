@@ -3,6 +3,7 @@ import { screen } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('<DayTimeGrid /> - viewConfig (startTime / endTime)', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03') });

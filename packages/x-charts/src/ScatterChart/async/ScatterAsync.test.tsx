@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import { getInteractionStep } from './ScatterAsync';
 
 describe('getInteractionStep', () => {

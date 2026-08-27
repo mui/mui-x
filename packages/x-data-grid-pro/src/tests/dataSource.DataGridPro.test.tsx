@@ -12,8 +12,9 @@ import type {
   GridLogicOperator,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { getRow, sleep } from 'test/utils/helperFn';
+import { actSleep, getRow } from 'test/utils/helperFn';
 import { TestCache } from '@mui/x-data-grid/internals';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
@@ -99,7 +100,7 @@ describe('<DataGridPro /> - Data source', () => {
       });
 
       await upsertFilterItem({ id: 2, field: 'id', operator: 'contains' });
-      await sleep(50);
+      await actSleep(50);
 
       expect(fetchRowsSpy.callCount).to.equal(2);
       expect(fetchRowsSpy.lastCall.args[0].filterModel.items).to.have.length(1);
@@ -143,7 +144,7 @@ describe('<DataGridPro /> - Data source', () => {
       await act(async () => {
         apiRef.current!.setFilterLogicOperator('or' as GridLogicOperator);
       });
-      await sleep(50);
+      await actSleep(50);
 
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
@@ -163,7 +164,7 @@ describe('<DataGridPro /> - Data source', () => {
       await act(async () => {
         apiRef.current!.setFilterLogicOperator('or' as GridLogicOperator);
       });
-      await sleep(50);
+      await actSleep(50);
       expect(fetchRowsSpy.callCount).to.equal(2);
 
       await upsertFilterItem({ id: 2, field: 'id', operator: 'contains', value: '2' });
@@ -235,6 +236,49 @@ describe('<DataGridPro /> - Data source', () => {
       await waitFor(() => {
         expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
       });
+    });
+  });
+  // Data source rows live in the state, but a new `getRowId` must still re-key them.
+  it('should re-key the rows when `getRowId` changes', async () => {
+    const rows = [
+      { id: 'a', alt: 'alt-a', name: 'Row A' },
+      { id: 'b', alt: 'alt-b', name: 'Row B' },
+    ];
+
+    function TestGetRowId(props: { useAltId?: boolean }) {
+      const { useAltId = false } = props;
+      apiRef = useGridApiRef();
+
+      const dataSource: GridDataSource = React.useMemo(
+        () => ({ getRows: async () => ({ rows, rowCount: rows.length }) }),
+        [],
+      );
+
+      const getRowId = React.useCallback((row: any) => (useAltId ? row.alt : row.id), [useAltId]);
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }]}
+            dataSource={dataSource}
+            getRowId={getRowId}
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestGetRowId />);
+
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.dataRowIds).to.deep.equal(['a', 'b']);
+    });
+
+    setProps({ useAltId: true });
+
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.dataRowIds).to.deep.equal(['alt-a', 'alt-b']);
     });
   });
 });
