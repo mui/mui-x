@@ -304,8 +304,8 @@ importers:
         specifier: 16.3.1
         version: 16.3.1(eslint@10.8.0(jiti@2.7.0)(supports-color@10.2.2))
       '@octokit/plugin-retry':
-        specifier: 8.1.0
-        version: 8.1.0(@octokit/core@7.0.6)
+        specifier: 8.1.1
+        version: 8.1.1(@octokit/core@7.0.6)
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -5093,6 +5093,9 @@ packages:
   '@octokit/openapi-types@27.0.0':
     resolution: {integrity: sha512-whrdktVs1h6gtR+09+QsNk2+FO+49j6ga1c55YZudfEG+oKJVvJLQi3zkOm5JjiUXAagWK2tI2kTGKJ2Ys7MGA==}
 
+  '@octokit/openapi-types@28.0.0':
+    resolution: {integrity: sha512-0rFyLuyHvIj6uuZWuDslxkowFYdPXoNIkeAv4b27dzm2Tf4vGWXnPsMcxs7d65kLdMERgP3wc1AEPlqMz8e1cQ==}
+
   '@octokit/plugin-enterprise-rest@6.0.1':
     resolution: {integrity: sha512-93uGjlhUD+iNg1iWhUENAtJata6w5nE+V4urXOAlIXdco6xNZtUSfYY8dzp3Udy74aqO/B5UZL80x/YMa5PKRw==}
 
@@ -5132,8 +5135,8 @@ packages:
     peerDependencies:
       '@octokit/core': '>=6'
 
-  '@octokit/plugin-retry@8.1.0':
-    resolution: {integrity: sha512-O1FZgXeiGb2sowEr/hYTr6YunGdSAFWnr2fyW39Ah85H8O33ELASQxcvOFF5LE6Tjekcyu2ms4qAzJVhSaJxTw==}
+  '@octokit/plugin-retry@8.1.1':
+    resolution: {integrity: sha512-VCVvZ/R1+u3WuiBWpNavZ0mY4aaJNAsENrpBP9aLSR2QyOpQgd7DhM5j4AW7z4MQpnJYgwBPf0XqPQoNBRdQwg==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@octokit/core': '>=7'
@@ -5142,8 +5145,8 @@ packages:
     resolution: {integrity: sha512-v9iyEQJH6ZntoENr9/yXxjuezh4My67CBSu9r6Ve/05Iu5gNgnisNWOsoJHTP6k0Rr0+HQIpnH+kyammu90q/g==}
     engines: {node: '>= 18'}
 
-  '@octokit/request-error@7.0.2':
-    resolution: {integrity: sha512-U8piOROoQQUyExw5c6dTkU3GKxts5/ERRThIauNL7yaRoeXW0q/5bgHWT7JfWBw1UyrbK8ERId2wVkcB32n0uQ==}
+  '@octokit/request-error@7.1.1':
+    resolution: {integrity: sha512-+eaY7G2VVpSf2pc5Gn1+mph837V/d/TYTJAgWL9Tb0ogGYcpN3IlAVFgjL+Vv93F/sevrxkvsYCedtpLdcFLzA==}
     engines: {node: '>= 20'}
 
   '@octokit/request@10.0.6':
@@ -5167,6 +5170,9 @@ packages:
 
   '@octokit/types@16.0.0':
     resolution: {integrity: sha512-sKq+9r1Mm4efXW1FCk7hFSeJo4QKreL/tTbR0rz/qx/r1Oa2VV83LTA/H/MuCOX7uCIJmQVRKBcbmWoySjAnSg==}
+
+  '@octokit/types@17.0.0':
+    resolution: {integrity: sha512-ByP1v7YL5SMveFPP7+sj0/ZuWCOOg/Chs4NafOMpq6WNIM/hdGY0S7C0TCGDBWu1aGmOxmUIhMx3cO+IdwYZ1Q==}
 
   '@orama/orama@3.1.18':
     resolution: {integrity: sha512-a61ljmRVVyG5MC/698C8/FfFDw5a8LOIvyOLW5fztgUXqUpc1jOfQzOitSCbge657OgXXThmY3Tk8fpiDb4UcA==}
@@ -14219,7 +14225,7 @@ snapshots:
       '@octokit/auth-token': 6.0.0
       '@octokit/graphql': 9.0.3
       '@octokit/request': 10.0.6
-      '@octokit/request-error': 7.0.2
+      '@octokit/request-error': 7.1.1
       '@octokit/types': 16.0.0
       before-after-hook: 4.0.0
       universal-user-agent: 7.0.3
@@ -14252,12 +14258,14 @@ snapshots:
     dependencies:
       '@octokit/oauth-authorization-url': 8.0.0
       '@octokit/request': 10.0.6
-      '@octokit/request-error': 7.0.2
+      '@octokit/request-error': 7.1.1
       '@octokit/types': 16.0.0
 
   '@octokit/openapi-types@24.2.0': {}
 
   '@octokit/openapi-types@27.0.0': {}
+
+  '@octokit/openapi-types@28.0.0': {}
 
   '@octokit/plugin-enterprise-rest@6.0.1': {}
 
@@ -14289,11 +14297,11 @@ snapshots:
       '@octokit/core': 7.0.6
       '@octokit/types': 16.0.0
 
-  '@octokit/plugin-retry@8.1.0(@octokit/core@7.0.6)':
+  '@octokit/plugin-retry@8.1.1(@octokit/core@7.0.6)':
     dependencies:
       '@octokit/core': 7.0.6
-      '@octokit/request-error': 7.0.2
-      '@octokit/types': 16.0.0
+      '@octokit/request-error': 7.1.1
+      '@octokit/types': 17.0.0
       bottleneck: 2.19.5
 
   '@octokit/request-error@5.1.1':
@@ -14302,14 +14310,14 @@ snapshots:
       deprecation: 2.3.1
       once: 1.4.0
 
-  '@octokit/request-error@7.0.2':
+  '@octokit/request-error@7.1.1':
     dependencies:
-      '@octokit/types': 16.0.0
+      '@octokit/types': 17.0.0
 
   '@octokit/request@10.0.6':
     dependencies:
       '@octokit/endpoint': 11.0.2
-      '@octokit/request-error': 7.0.2
+      '@octokit/request-error': 7.1.1
       '@octokit/types': 16.0.0
       fast-content-type-parse: 3.0.0
       universal-user-agent: 7.0.3
@@ -14342,6 +14350,10 @@ snapshots:
   '@octokit/types@16.0.0':
     dependencies:
       '@octokit/openapi-types': 27.0.0
+
+  '@octokit/types@17.0.0':
+    dependencies:
+      '@octokit/openapi-types': 28.0.0
 
   '@orama/orama@3.1.18': {}
 
