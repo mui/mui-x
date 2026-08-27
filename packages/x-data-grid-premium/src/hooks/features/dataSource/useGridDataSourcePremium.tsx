@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   useGridEvent as addEventHandler,
   useGridApiMethod,
@@ -13,7 +12,8 @@ import type {
   GridEventLookup,
   GridValidRowModel,
   GridUpdateRowParams,
-  GridRowModel,
+  GridRowModelReplace,
+  GridRowModelUpdate,
 } from '@mui/x-data-grid-pro';
 import {
   useGridDataSourceBasePro,
@@ -112,14 +112,10 @@ export const useGridDataSourcePremium = (
   ]);
 
   const handleEditRowWithAggregation = React.useCallback(
-    (params: GridUpdateRowParams, updatedRow: GridRowModel) => {
+    (params: GridUpdateRowParams, rowUpdate: GridRowModelUpdate | GridRowModelReplace) => {
       const rowTree = gridRowTreeSelector(apiRef);
-      if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
-        // Reset the outdated cache, only if the row is _actually_ updated
-        apiRef.current.dataSource.cache.clear();
-      }
       const groupKeys = getGroupKeys(rowTree, params.rowId) as string[];
-      apiRef.current.updateNestedRows([updatedRow], groupKeys);
+      apiRef.current.updateNestedRows([rowUpdate], groupKeys);
       // To refresh the aggregation values of all parent rows and the footer row, recursively re-fetch all parent levels
       fetchParents(rowTree, params.rowId, apiRef.current.dataSource.fetchRows);
     },
