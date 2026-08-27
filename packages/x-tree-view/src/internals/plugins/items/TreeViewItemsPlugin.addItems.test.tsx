@@ -2,6 +2,7 @@ import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import type { ExtendableRichTreeViewStore } from '@mui/x-tree-view/internals';
+import { it, expect } from 'vitest';
 
 // `addItems` is a Rich Tree View only API. The Simple Tree View derives its items from JSX
 // and does not expose it, so this suite is typed with the Rich store and skips the Simple variant.

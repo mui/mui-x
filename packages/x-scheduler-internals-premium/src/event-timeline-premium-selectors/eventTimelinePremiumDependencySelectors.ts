@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
@@ -48,25 +48,20 @@ const activeSourceTitlesByTargetSelector = createSelectorMemoized(
   },
 );
 
-const selectedIdSelector = createSelector(
-  (state: State) => state.selection,
-  (state: State) => state.dependencyModelLookup,
-  (selection, dependencyModelLookup) =>
-    selection?.type === 'dependency' && dependencyModelLookup.has(selection.id)
-      ? selection.id
-      : null,
-);
+const selectedIdSelector = (state: State) => {
+  const selection = state.selection;
+  return selection?.type === 'dependency' && state.dependencyModelLookup.has(selection.id)
+    ? selection.id
+    : null;
+};
 
-const creationSelector = createSelector((state: State) => state.dependencyCreation);
+const creationSelector = (state: State) => state.dependencyCreation;
 
 export const eventTimelinePremiumDependencySelectors = {
-  modelList: createSelector((state: State) => state.dependencyModelList),
-  modelLookup: createSelector((state: State) => state.dependencyModelLookup),
-  model: createSelector(
-    (state: State) => state.dependencyModelLookup,
-    (dependencyModelLookup, dependencyId: SchedulerDependencyId) =>
-      dependencyModelLookup.get(dependencyId) ?? null,
-  ),
+  modelList: (state: State) => state.dependencyModelList,
+  modelLookup: (state: State) => state.dependencyModelLookup,
+  model: (state: State, dependencyId: SchedulerDependencyId) =>
+    state.dependencyModelLookup.get(dependencyId) ?? null,
   /**
    * Dependencies whose two events exist and are not recurring.
    * Rendering and the scheduling engine must only consume these.
@@ -83,15 +78,12 @@ export const eventTimelinePremiumDependencySelectors = {
    * Used to describe an event with the events it depends on.
    */
   activeSourceTitlesByTarget: activeSourceTitlesByTargetSelector,
-  activeSourceTitlesForTarget: createSelector(
-    activeSourceTitlesByTargetSelector,
-    (titlesByTarget, eventId: SchedulerEventId): readonly string[] =>
-      titlesByTarget.get(eventId) ?? EMPTY_ARRAY,
-  ),
+  activeSourceTitlesForTarget: (state: State, eventId: SchedulerEventId): readonly string[] =>
+    activeSourceTitlesByTargetSelector(state).get(eventId) ?? EMPTY_ARRAY,
   /**
    * Whether the dependencies feature is enabled (internal parameters provided).
    */
-  enabled: createSelector((state: State) => state.areDependenciesEnabled),
+  enabled: (state: State) => state.areDependenciesEnabled,
   /**
    * The pending create-dependency drag gesture, or `null`.
    */
@@ -99,20 +91,22 @@ export const eventTimelinePremiumDependencySelectors = {
   // Keyed by occurrence *and* resource: an event appearing on several resources
   // repeats the same occurrence key on each row, and only the row appearance the
   // gesture actually involves must highlight.
-  isCreationSource: createSelector(
-    creationSelector,
-    (creation, occurrenceKey: string, resourceId: SchedulerResourceId) =>
+  isCreationSource: (state: State, occurrenceKey: string, resourceId: SchedulerResourceId) => {
+    const creation = creationSelector(state);
+    return (
       creation !== null &&
       creation.sourceOccurrenceKey === occurrenceKey &&
-      creation.sourceResourceId === resourceId,
-  ),
-  isCreationTarget: createSelector(
-    creationSelector,
-    (creation, occurrenceKey: string, resourceId: SchedulerResourceId) =>
+      creation.sourceResourceId === resourceId
+    );
+  },
+  isCreationTarget: (state: State, occurrenceKey: string, resourceId: SchedulerResourceId) => {
+    const creation = creationSelector(state);
+    return (
       creation !== null &&
       creation.targetOccurrenceKey === occurrenceKey &&
-      creation.targetResourceId === resourceId,
-  ),
+      creation.targetResourceId === resourceId
+    );
+  },
   /**
    * The id of the selected dependency, or `null`.
    * The masking is membership-only: an id absent from the dependency lookup resolves
@@ -125,12 +119,12 @@ export const eventTimelinePremiumDependencySelectors = {
    * Whether the dependency cannot be deleted because one of its events is read-only.
    * Unknown ids resolve to `false`.
    */
-  isModelReadOnly: createSelector((state: State, dependencyId: SchedulerDependencyId | null) => {
+  isModelReadOnly: (state: State, dependencyId: SchedulerDependencyId | null) => {
     const dependency =
       dependencyId === null ? undefined : state.dependencyModelLookup.get(dependencyId);
     if (!dependency) {
       return false;
     }
     return isDependencyReadOnly(state, dependency);
-  }),
+  },
 };

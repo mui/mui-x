@@ -6,6 +6,7 @@ import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi, GridColDef } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 /**
  * The formula feature is injectable (`featureDependencies={{ formula: formulaFeature }}`).

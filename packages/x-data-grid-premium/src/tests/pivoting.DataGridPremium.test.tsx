@@ -18,6 +18,7 @@ import {
 } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 const ROWS = [
   {
@@ -698,6 +699,47 @@ describe('<DataGridPremium /> - Pivoting', () => {
         '3,200',
         'stock',
       ]);
+    });
+  });
+
+  it('should store the row provided in a replace update verbatim while in pivot mode', async () => {
+    const apiRef = { current: null } as React.RefObject<GridApi | null>;
+
+    const { setProps } = render(
+      <Test
+        apiRef={apiRef}
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200']);
+    });
+
+    const replacement = { ...ROWS[0], volume: 6000 };
+    act(() => {
+      apiRef.current?.updateRows([{ _action: 'replace', row: replacement }]);
+    });
+
+    // The envelope is unwrapped before the row reaches the non-pivot rows.
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,700']);
+    });
+
+    setProps({ pivotActive: false });
+
+    // The object provided in the envelope is the one stored, not a copy of it.
+    await waitFor(() => {
+      expect(apiRef.current?.getRow(1)).to.equal(replacement);
     });
   });
 

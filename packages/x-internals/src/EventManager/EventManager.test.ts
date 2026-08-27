@@ -1,4 +1,5 @@
 import { spy, assert as sinonAssert } from 'sinon';
+import { describe, it } from 'vitest';
 import { EventManager } from './EventManager';
 
 describe('EventManager', () => {

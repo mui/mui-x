@@ -6,6 +6,7 @@ import {
 } from 'test/utils/scheduler';
 import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { describe, it, expect } from 'vitest';
 import {
   addTimelinePositionsToOccurrences,
   eventTimelinePremiumOccurrenceSelectors,

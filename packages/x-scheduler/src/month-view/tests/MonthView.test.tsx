@@ -15,6 +15,7 @@ import {
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
@@ -172,7 +173,7 @@ describe('<MonthView />', () => {
       });
     });
 
-    it('should allow Space key to activate events in the popover', async () => {
+    it('should open the event context menu on Space, and Edit from there activates the event', async () => {
       const { user, popover } = await renderAndOpenPopover();
 
       const firstEventButton = within(popover).getAllByRole('button')[0];
@@ -180,6 +181,13 @@ describe('<MonthView />', () => {
       expect(firstEventButton).to.equal(document.activeElement);
 
       await user.keyboard(' ');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+      });
+      expect(screen.queryByRole('dialog')).to.equal(null);
+
+      await user.click(screen.getByRole('menuitem', { name: /edit/i }));
 
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);

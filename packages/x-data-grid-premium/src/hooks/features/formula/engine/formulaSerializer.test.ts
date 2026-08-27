@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { parseFormula } from './formulaParser';
 import { serializeFormulaAst } from './formulaSerializer';
 import type { FormulaAstNode } from './formulaAst';

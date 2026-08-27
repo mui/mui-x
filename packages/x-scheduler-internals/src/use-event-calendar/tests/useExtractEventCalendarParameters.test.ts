@@ -1,4 +1,5 @@
 import { renderHook } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 import { useExtractEventCalendarParameters } from '../useExtractEventCalendarParameters';
 
 describe('useExtractEventCalendarParameters', () => {

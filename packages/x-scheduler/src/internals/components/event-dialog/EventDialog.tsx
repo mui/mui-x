@@ -23,6 +23,7 @@ import {
   useEventEditingStyledContext,
   FormContent,
 } from '../event-editing';
+import { EventContextMenuProvider } from '../event-context-menu';
 import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
 import { AnchoredEventToolbar } from '../event-toolbar';
 import ReadonlyContent from './ReadonlyContent';
@@ -193,7 +194,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
       value={optionalRenderers ?? (EMPTY_OBJECT as EventEditingOptionalRenderers)}
     >
       <EventEditingProvider surface="dialog">
-        {children}
+        <EventContextMenuProvider>{children}</EventContextMenuProvider>
         <AnchoredEventToolbarSurface />
         <EventDialogSurface />
         {RecurringScopeDialogRenderer && <RecurringScopeDialogRenderer />}

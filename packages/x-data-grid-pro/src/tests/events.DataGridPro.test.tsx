@@ -14,6 +14,7 @@ import type {
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('<DataGridPro /> - Events params', () => {
   const { render } = createRenderer();

@@ -6,7 +6,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
+import { GRID_ROOT_GROUP_ID, getReplaceRow, isReplaceUpdate } from '../rows/gridRowsUtils';
 import type { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
@@ -359,16 +359,26 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       try {
         const finalRowUpdate = await dataSourceUpdateRow(params);
-        if (typeof handleEditRowOption === 'function') {
-          handleEditRowOption(params, finalRowUpdate);
-          return finalRowUpdate;
-        }
-        if (finalRowUpdate && !isDeepEqual(finalRowUpdate, params.previousRow)) {
+        // `dataSource.updateRow()` can resolve with a `{ _action: 'replace', row }` update.
+        // The row update methods unwrap it themselves, everything else works with the row it
+        // holds: comparing the envelope with the previous row would never match.
+        const updatedRow =
+          finalRowUpdate && isReplaceUpdate(finalRowUpdate)
+            ? getReplaceRow(finalRowUpdate)
+            : finalRowUpdate;
+
+        if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
           // Reset the outdated cache, only if the row is _actually_ updated
           apiRef.current.dataSource.cache.clear();
         }
-        apiRef.current.updateNestedRows([finalRowUpdate], []);
-        return finalRowUpdate;
+
+        if (typeof handleEditRowOption === 'function') {
+          handleEditRowOption(params, finalRowUpdate);
+        } else {
+          apiRef.current.updateNestedRows([finalRowUpdate], []);
+        }
+
+        return updatedRow;
       } catch (errorThrown) {
         if (typeof onDataSourceErrorProp === 'function') {
           onDataSourceErrorProp(

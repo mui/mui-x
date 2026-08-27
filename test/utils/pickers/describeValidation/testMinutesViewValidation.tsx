@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 const toMinutesLabel = (minutes: number | string) => `${String(minutes).padStart(2, '0')} minutes`;

@@ -3,6 +3,7 @@ import { spy } from 'sinon';
 import { screen, waitFor } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<DesktopTimePicker />', () => {
   const { render } = createPickerRenderer();

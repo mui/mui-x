@@ -2,6 +2,7 @@ import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { spy } from 'sinon';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { describe, it, expect } from 'vitest';
 import {
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
