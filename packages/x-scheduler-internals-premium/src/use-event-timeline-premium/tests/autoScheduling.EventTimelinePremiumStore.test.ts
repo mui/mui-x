@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';

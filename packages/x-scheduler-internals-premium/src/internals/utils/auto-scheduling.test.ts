@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';

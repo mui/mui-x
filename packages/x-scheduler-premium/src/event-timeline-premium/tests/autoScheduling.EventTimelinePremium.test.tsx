@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { act, screen } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
