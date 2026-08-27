@@ -32,6 +32,12 @@ const getProjects = () => {
 
   const fill = getFill();
 
+  if (fill === 'browser') {
+    // A single parent project with one instance per package, so the whole browser run
+    // shares one pair of Vite servers. See https://github.com/vitest-dev/vitest/issues/9696.
+    return ['vitest.config.browser.mts'];
+  }
+
   return [
     `packages/*/vitest.config.${fill}.mts`,
     ...(fill === 'jsdom'
