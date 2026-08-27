@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
@@ -344,7 +343,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
   describe('create gesture', () => {
     it('should create a FinishToStart dependency when dropping a terminal on another event', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       renderTimeline({
         events: [eventA, eventB],
         dependencies: [],
@@ -353,8 +352,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       simulateTerminalDrag('Event A', getEventElement('Event B'));
 
-      expect(handleDependenciesChange.callCount).to.equal(1);
-      const dependencies = handleDependenciesChange.firstCall.firstArg;
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+      const dependencies = handleDependenciesChange.mock.calls[0][0];
       expect(dependencies).to.have.length(1);
       expect(dependencies[0].source).to.equal('event-a');
       expect(dependencies[0].target).to.equal('event-b');
@@ -364,7 +363,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     it('should ignore dropping a terminal on its own event', async () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       const { store } = renderTimeline({
         events: [eventA, eventB],
         dependencies: [],
@@ -396,7 +395,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.drop(ownEvent, { dataTransfer: new DataTransfer() });
       fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(0);
     });
 
@@ -425,7 +424,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
           .resource(manyResources[29])
           .build();
 
-        const handleDependenciesChange = spy();
+        const handleDependenciesChange = vi.fn();
         const { store } = renderTimeline({
           events: [firstRowEvent, lastRowEvent],
           resources: manyResources,
@@ -467,8 +466,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         fireEvent.drop(target, { dataTransfer: new DataTransfer() });
         fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
 
-        expect(handleDependenciesChange.callCount).to.equal(1);
-        const [dependency] = handleDependenciesChange.firstCall.firstArg;
+        expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+        const [dependency] = handleDependenciesChange.mock.calls[0][0];
         expect(dependency.source).to.equal('event-first-row');
         expect(dependency.target).to.equal('event-last-row');
         await waitFor(() => {
@@ -478,7 +477,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     );
 
     it('should dissolve the gesture when dropping on empty space', async () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       const { store } = renderTimeline({
         events: [eventA, eventB],
         dependencies: [],
@@ -502,12 +501,12 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       await waitFor(() => {
         expect(store.state.dependencyCreation).to.equal(null);
       });
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(0);
     });
 
     it('should discard the gesture on a cancel without creating anything', async () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       const { store } = renderTimeline({
         events: [eventA, eventB],
         dependencies: [],
@@ -530,7 +529,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       await waitFor(() => {
         expect(store.state.dependencyCreation).to.equal(null);
       });
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(target.hasAttribute('data-dependency-drop-target')).to.equal(false);
     });
 
@@ -565,7 +564,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     it('should surface an error when dropping a terminal on a recurring event', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       const { store } = renderTimeline({
         events: [eventA, recurringEvent],
         dependencies: [],
@@ -574,7 +573,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       simulateTerminalDrag('Event A', getRecurringEventElement('Recurring event'));
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(1);
       expect(store.state.errors[0].error.message).to.contain('recurring');
     });
@@ -732,7 +731,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     it('should surface an error and select the existing arrow when the drop duplicates a dependency', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       const { store } = renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -741,7 +740,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       simulateTerminalDrag('Event A', getEventElement('Event B'));
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
       expect(store.state.errors).to.have.length(1);
       expect(
@@ -750,7 +749,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     it('should surface an error without selecting anything when the drop would create a cycle', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       const { store } = renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -759,7 +758,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       simulateTerminalDrag('Event B', getEventElement('Event A'));
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.selection).to.equal(null);
       expect(store.state.errors).to.have.length(1);
       expect(store.state.errors[0].error.message).to.include('cycle');
@@ -768,7 +767,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
   describe('selection and deletion', () => {
     it('should select an arrow on click and delete it with the arrowhead button', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -782,13 +781,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       fireEvent.click(document.querySelector('[data-dependency-delete-button]')!);
 
-      expect(handleDependenciesChange.callCount).to.equal(1);
-      expect(handleDependenciesChange.firstCall.firstArg).to.deep.equal([]);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+      expect(handleDependenciesChange.mock.calls[0][0]).to.deep.equal([]);
       expect(getArrowPaths()).to.have.length(0);
     });
 
     it('should delete the selected arrow with the Delete key', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       const { store } = renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -798,13 +797,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
       fireEvent.keyDown(document.body, { key: 'Delete' });
 
-      expect(handleDependenciesChange.callCount).to.equal(1);
-      expect(handleDependenciesChange.firstCall.firstArg).to.deep.equal([]);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+      expect(handleDependenciesChange.mock.calls[0][0]).to.deep.equal([]);
       expect(store.state.selection).to.equal(null);
     });
 
     it('should survive the pointerdown of a real click on the delete button', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -820,12 +819,12 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(document.querySelector('[data-dependency-delete-button]')).not.to.equal(null);
 
       fireEvent.click(deleteButton);
-      expect(handleDependenciesChange.callCount).to.equal(1);
-      expect(handleDependenciesChange.firstCall.firstArg).to.deep.equal([]);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+      expect(handleDependenciesChange.mock.calls[0][0]).to.deep.equal([]);
     });
 
     it('should delete the selected arrow with the Backspace key', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -835,7 +834,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
       fireEvent.keyDown(document.body, { key: 'Backspace' });
 
-      expect(handleDependenciesChange.callCount).to.equal(1);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
     });
 
     it('should deselect with the Escape key', () => {
@@ -906,7 +905,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     function setupSelectedArrow() {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -1049,12 +1048,12 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       const appButton = document.createElement('button');
       document.body.appendChild(appButton);
-      const handleClick = spy();
+      const handleClick = vi.fn();
       appButton.addEventListener('click', handleClick);
       fireEvent.click(appButton);
       appButton.remove();
 
-      expect(handleClick.callCount).to.equal(1);
+      expect(handleClick.mock.calls.length).to.equal(1);
     });
 
     it('should not swallow the click of a press outside the timeline', () => {
@@ -1070,14 +1069,14 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       // belongs to the app: a button elsewhere on the page must not need two clicks.
       const appButton = document.createElement('button');
       document.body.appendChild(appButton);
-      const handleClick = spy();
+      const handleClick = vi.fn();
       appButton.addEventListener('click', handleClick);
       fireEvent.pointerDown(appButton);
       fireEvent.click(appButton);
       appButton.remove();
 
       expect(store.state.selection).to.equal(null);
-      expect(handleClick.callCount).to.equal(1);
+      expect(handleClick.mock.calls.length).to.equal(1);
     });
 
     it('should not delete the arrow when typing Backspace in an editable element', () => {
@@ -1085,7 +1084,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       pressBackspaceIn(document.createElement('input'));
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should not delete the arrow when typing Backspace in another document', () => {
@@ -1100,7 +1099,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       Object.defineProperty(event, 'composedPath', { value: () => [foreignInput] });
       document.dispatchEvent(event);
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should not delete the arrow when typing Backspace in a select', () => {
@@ -1108,7 +1107,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       pressBackspaceIn(document.createElement('select'));
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should not delete the arrow when typing Backspace in a non-native combobox', () => {
@@ -1121,7 +1120,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       combobox.tabIndex = 0;
       pressBackspaceIn(combobox);
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should not delete the arrow when typing Backspace in a contenteditable element', () => {
@@ -1132,7 +1131,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       editable.tabIndex = 0;
       pressBackspaceIn(editable);
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should not delete the arrow when typing Backspace in an input inside a shadow root', () => {
@@ -1150,7 +1149,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       );
       host.remove();
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should not deselect the arrow with Escape pressed inside a dialog', () => {
@@ -1269,7 +1268,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     it('should reject the drop on a read-only event and surface an error', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       const { store } = renderTimeline({
         events: [eventA, readOnlyEvent],
         dependencies: [],
@@ -1278,13 +1277,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       simulateTerminalDrag('Event A', getEventElement('Read-only event'));
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(1);
       expect(store.state.errors[0].error.message).to.contain('read-only');
     });
 
     it('should reject addDependency when the component is read-only', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       const { store } = renderTimeline({
         events: [eventA, eventB],
         dependencies: [],
@@ -1306,11 +1305,11 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         reason: 'readOnlyEvent',
         eventId: 'event-a',
       });
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should ignore deleteDependency when an event of the dependency is read-only', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       const { store } = renderTimeline({
         events: [eventA, readOnlyEvent],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-ro')],
@@ -1321,7 +1320,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         store.deleteDependency('dep-1');
       });
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(getArrowPaths()).to.have.length(1);
     });
 
@@ -1344,7 +1343,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     it('should select a read-only dependency without offering the delete button', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -1361,7 +1360,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       fireEvent.keyDown(document.body, { key: 'Delete' });
 
-      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(getArrowPaths()).to.have.length(1);
     });
   });
@@ -1431,7 +1430,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     it('should delete the dependency from any appearance button', () => {
-      const handleDependenciesChange = spy();
+      const handleDependenciesChange = vi.fn();
       const { store } = renderTimeline({
         events: [eventA, sharedEvent],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-shared')],
@@ -1442,7 +1441,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       // The second appearance's button deletes the same selected dependency.
       fireEvent.click(document.querySelectorAll('[data-dependency-delete-button]')[1]);
 
-      expect(handleDependenciesChange.lastCall.firstArg).to.deep.equal([]);
+      expect(handleDependenciesChange.mock.lastCall?.[0]).to.deep.equal([]);
       expect(store.state.selection).to.equal(null);
     });
 
@@ -1598,7 +1597,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     it('should not react to a creation gesture started in another timeline', async () => {
-      const handleDependenciesChangeB = spy();
+      const handleDependenciesChangeB = vi.fn();
       const { storeA, storeB } = renderTwoTimelines({
         onDependenciesChangeB: handleDependenciesChangeB,
       });
@@ -1620,12 +1619,12 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       await waitFor(() => {
         expect(storeA.state.dependencyCreation).to.equal(null);
       });
-      expect(handleDependenciesChangeB.callCount).to.equal(0);
+      expect(handleDependenciesChangeB.mock.calls.length).to.equal(0);
       expect(storeB.state.errors).to.have.length(0);
     });
 
     it('should not accept a terminal dropped from another timeline', async () => {
-      const handleDependenciesChangeB = spy();
+      const handleDependenciesChangeB = vi.fn();
       const { storeA, storeB } = renderTwoTimelines({
         onDependenciesChangeB: handleDependenciesChangeB,
       });
@@ -1658,7 +1657,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       await waitFor(() => {
         expect(storeA.state.dependencyCreation).to.equal(null);
       });
-      expect(handleDependenciesChangeB.callCount).to.equal(0);
+      expect(handleDependenciesChangeB.mock.calls.length).to.equal(0);
       expect(storeA.state.errors).to.have.length(0);
       expect(storeB.state.errors).to.have.length(0);
     });

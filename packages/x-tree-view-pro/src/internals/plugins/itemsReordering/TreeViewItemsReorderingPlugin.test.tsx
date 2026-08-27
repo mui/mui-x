@@ -1,10 +1,9 @@
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { spy } from 'sinon';
 import { fireEvent, createEvent } from '@mui/internal-test-utils';
 import type { DragEventTypes } from 'test/utils/dragAndDrop';
 import { MockedDataTransfer } from 'test/utils/dragAndDrop';
 import {} from '@mui/x-tree-view/internals';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { chooseActionToApply } from './utils';
 import type { TreeViewItemItemReorderingValidActions } from './types';
 import type { RichTreeViewProStore } from '../../RichTreeViewProStore';
@@ -142,7 +141,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
       describe('onItemPositionChange prop', () => {
         it('should call onItemPositionChange when an item is moved', () => {
-          const onItemPositionChange = spy();
+          const onItemPositionChange = vi.fn();
           const view = render({
             items: [{ id: '1' }, { id: '2' }, { id: '3' }],
             itemsReordering: true,
@@ -150,8 +149,8 @@ describeTreeView<RichTreeViewProStore<any, any>>(
           });
 
           dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-          expect(onItemPositionChange.callCount).to.equal(1);
-          expect(onItemPositionChange.lastCall.firstArg).to.deep.equal({
+          expect(onItemPositionChange.mock.calls.length).to.equal(1);
+          expect(onItemPositionChange.mock.lastCall?.[0]).to.deep.equal({
             itemId: '1',
             oldPosition: { parentId: null, index: 0 },
             newPosition: { parentId: '2', index: 0 },
@@ -188,7 +187,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
       describe('canMoveItemToNewPosition prop', () => {
         it('should call canMoveItemToNewPosition with the correct parameters', () => {
-          const canMoveItemToNewPosition = spy();
+          const canMoveItemToNewPosition = vi.fn();
           const view = render({
             items: [{ id: '1' }, { id: '2' }, { id: '3' }],
             itemsReordering: true,
@@ -196,7 +195,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
           });
 
           dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-          expect(canMoveItemToNewPosition.lastCall.firstArg).to.deep.equal({
+          expect(canMoveItemToNewPosition.mock.lastCall?.[0]).to.deep.equal({
             itemId: '1',
             oldPosition: { parentId: null, index: 0 },
             newPosition: { parentId: null, index: 1 },

@@ -1,9 +1,8 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { SankeyPlot, sankeyClasses, SankeyChart } from '@mui/x-charts-pro/SankeyChart';
-import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCenter } from 'test/utils/charts/getCenter';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<SankeyPlot />', () => {
   const { render } = createRenderer();
@@ -35,7 +34,7 @@ describe('<SankeyPlot />', () => {
   it.skipIf(isJSDOM)(
     'should not call onHighlightChange when re-entering the controlled sankey node',
     async () => {
-      const handleHighlight = spy();
+      const handleHighlight = vi.fn();
       const { container, user } = render(
         <SankeyChart
           height={400}
@@ -63,14 +62,12 @@ describe('<SankeyPlot />', () => {
       const nodeX = container.querySelector('[data-node="X"]') as Element;
       await user.pointer({ target: nodeX, coords: getCenter(nodeX) });
 
-      const wasNotifiedAboutControlledNode = handleHighlight
-        .getCalls()
-        .some(
-          (call) =>
-            call.args[0]?.type === 'sankey' &&
-            call.args[0]?.subType === 'node' &&
-            call.args[0]?.nodeId === 'X',
-        );
+      const wasNotifiedAboutControlledNode = handleHighlight.mock.calls.some(
+        (call) =>
+          call.mock.calls[0]?.type === 'sankey' &&
+          call.mock.calls[0]?.subType === 'node' &&
+          call.mock.calls[0]?.nodeId === 'X',
+      );
       expect(wasNotifiedAboutControlledNode).to.equal(false);
     },
   );

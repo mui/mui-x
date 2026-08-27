@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { screen, fireEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
@@ -11,7 +10,7 @@ import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<MobileDateRangePicker />', () => {
   const { render } = createPickerRenderer();
@@ -25,7 +24,7 @@ describe('<MobileDateRangePicker />', () => {
 
   describe('picker state', () => {
     it('should open when focusing the start input (multi input field)', async () => {
-      const onOpen = spy();
+      const onOpen = vi.fn();
 
       const { user } = render(
         <MobileDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
@@ -37,12 +36,12 @@ describe('<MobileDateRangePicker />', () => {
         fieldType: 'multi-input',
       });
 
-      expect(onOpen.callCount).to.equal(1);
+      expect(onOpen.mock.calls.length).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
     it('should open when focusing the end input (multi input field)', async () => {
-      const onOpen = spy();
+      const onOpen = vi.fn();
 
       const { user } = render(
         <MobileDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
@@ -54,14 +53,14 @@ describe('<MobileDateRangePicker />', () => {
         fieldType: 'multi-input',
       });
 
-      expect(onOpen.callCount).to.equal(1);
+      expect(onOpen.mock.calls.length).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
     it('should call onChange with updated start date then call onChange with updated end date when opening from start input', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -82,30 +81,30 @@ describe('<MobileDateRangePicker />', () => {
         initialFocus: 'start',
         fieldType: 'single-input',
       });
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       // Change the start date
       await user.click(screen.getByRole('gridcell', { name: '3' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(defaultValue[1]);
 
       // Change the end date
       await user.click(screen.getByRole('gridcell', { name: '5' }));
-      expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
+      expect(onChange.mock.calls.length).to.equal(2);
+      expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2018, 0, 5));
 
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
     });
 
     it('should call onChange with updated end date when opening from end input (multi input field)', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -127,22 +126,22 @@ describe('<MobileDateRangePicker />', () => {
         initialFocus: 'end',
         fieldType: 'multi-input',
       });
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       // Change the end date
       await user.click(screen.getByRole('gridcell', { name: '3' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(defaultValue[0]);
+      expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
     });
 
     it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true (multi input field)', async () => {
-      const onAccept = spy();
-      const onClose = spy();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -167,16 +166,16 @@ describe('<MobileDateRangePicker />', () => {
       // Change the end date
       await user.click(screen.getByRole('gridcell', { name: '3' }));
 
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.mock.calls.length).to.equal(1);
+      expect(onAccept.mock.lastCall?.[0][0]).toEqualDateTime(defaultValue[0]);
+      expect(onAccept.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     it('should call onClose and onChange with the initial value when clicking "Cancel" button', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -203,17 +202,17 @@ describe('<MobileDateRangePicker />', () => {
 
       // Cancel the modifications
       await user.click(screen.getByText(/cancel/i));
-      expect(onChange.callCount).to.equal(2); // Start date change + reset
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(2); // Start date change + reset
+      expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(defaultValue[0]);
+      expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(defaultValue[1]);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     it('should call onClose and onAccept with the live value and onAccept with the live value when clicking the "OK"', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -239,17 +238,17 @@ describe('<MobileDateRangePicker />', () => {
 
       // Accept the modifications
       await user.click(screen.getByText(/ok/i));
-      expect(onChange.callCount).to.equal(1); // Start date change
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
-      expect(onClose.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1); // Start date change
+      expect(onAccept.mock.calls.length).to.equal(1);
+      expect(onAccept.mock.lastCall?.[0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onAccept.mock.lastCall?.[0][1]).toEqualDateTime(defaultValue[1]);
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -273,17 +272,17 @@ describe('<MobileDateRangePicker />', () => {
 
       // Clear the date
       await user.click(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(1); // Start date change
-      expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).to.deep.equal([null, null]);
-      expect(onClose.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1); // Start date change
+      expect(onChange.mock.lastCall?.[0]).to.deep.equal([null, null]);
+      expect(onAccept.mock.calls.length).to.equal(1);
+      expect(onAccept.mock.lastCall?.[0]).to.deep.equal([null, null]);
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     it('should not call onChange or onAccept when pressing "Clear" button with an already null value', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <MobileDateRangePicker
@@ -303,9 +302,9 @@ describe('<MobileDateRangePicker />', () => {
 
       // Clear the date
       await user.click(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     it('should correctly set focused styles when input is focused', () => {

@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
@@ -9,7 +8,7 @@ import {
   simulatePointerResize,
 } from 'test/utils/scheduler';
 import { StandaloneCompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 /**
  * The compact three-day view renders several day columns, so it exercises the multi-column paths the
@@ -18,7 +17,7 @@ import { describe, it, expect } from 'vitest';
 describe('CompactThreeDayView - touch resize & arming', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
 
-  function renderEvents(onEventsChange = spy()) {
+  function renderEvents(onEventsChange = vi.fn()) {
     const morning = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -70,8 +69,8 @@ describe('CompactThreeDayView - touch resize & arming', () => {
       simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
     });
 
-    expect(onEventsChange.callCount).to.equal(1);
-    const updated = onEventsChange.firstCall.args[0];
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const updated = onEventsChange.mock.calls[0][0];
     expect(updated[0].id).to.equal('event-1');
     expect(new Date(updated[0].start).getUTCHours()).to.equal(10);
     expect(new Date(updated[0].end).getUTCHours()).to.equal(16);

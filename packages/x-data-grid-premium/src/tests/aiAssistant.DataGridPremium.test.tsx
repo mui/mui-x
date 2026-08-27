@@ -1,10 +1,9 @@
 import type { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
-import { spy, stub } from 'sinon';
 import { DataGridPremium, GridAiAssistantPanel, useGridApiRef } from '@mui/x-data-grid-premium';
 import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -41,7 +40,7 @@ describe('<DataGridPremium /> - AI Assistant', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
-  const promptSpy = stub().resolves({});
+  const promptSpy = vi.fn().mockResolvedValue({});
 
   function Test(props: Partial<DataGridPremiumProps & { allowAiAssistantDataSampling: boolean }>) {
     apiRef = useGridApiRef();
@@ -64,7 +63,7 @@ describe('<DataGridPremium /> - AI Assistant', () => {
   }
 
   beforeEach(() => {
-    promptSpy.reset();
+    promptSpy.mockReset();
   });
 
   describe.skipIf(isJSDOM)('data sampling', () => {
@@ -83,9 +82,9 @@ describe('<DataGridPremium /> - AI Assistant', () => {
       await user.type(input, 'Do something with the data');
       await user.keyboard('{Enter}');
 
-      expect(promptSpy.callCount).to.equal(1);
-      expect(promptSpy.firstCall.args[1]).contains('Example1');
-      expect(promptSpy.firstCall.args[1]).not.contains('CatA');
+      expect(promptSpy.mock.calls.length).to.equal(1);
+      expect(promptSpy.mock.calls[0][1]).contains('Example1');
+      expect(promptSpy.mock.calls[0][1]).not.contains('CatA');
     });
 
     it('should sample rows to generate the prompt context', async () => {
@@ -98,17 +97,17 @@ describe('<DataGridPremium /> - AI Assistant', () => {
       await user.type(input, 'Do something with the data');
       await user.keyboard('{Enter}');
 
-      expect(promptSpy.callCount).to.equal(1);
-      expect(promptSpy.firstCall.args[1]).not.contains('Example1');
-      expect(promptSpy.firstCall.args[1]).contains('CatA');
+      expect(promptSpy.mock.calls.length).to.equal(1);
+      expect(promptSpy.mock.calls[0][1]).not.contains('Example1');
+      expect(promptSpy.mock.calls[0][1]).contains('CatA');
     });
   });
 
   describe('API', () => {
     it('should not do anything if the feature is disabled', async () => {
-      const sortChangeSpy = spy();
+      const sortChangeSpy = vi.fn();
 
-      promptSpy.resolves({
+      promptSpy.mockResolvedValue({
         select: -1,
         filters: [],
         aggregation: {},
@@ -126,17 +125,17 @@ describe('<DataGridPremium /> - AI Assistant', () => {
 
       await act(() => apiRef.current?.aiAssistant.processPrompt('Do something with the data'));
 
-      expect(sortChangeSpy.callCount).to.equal(0);
+      expect(sortChangeSpy.mock.calls.length).to.equal(0);
     });
 
     it('should apply the prompt result', async () => {
-      const sortChangeSpy = spy();
-      const filterChangeSpy = spy();
-      const aggregationChangeSpy = spy();
-      const rowSelectionChangeSpy = spy();
-      const rowGroupingChangeSpy = spy();
+      const sortChangeSpy = vi.fn();
+      const filterChangeSpy = vi.fn();
+      const aggregationChangeSpy = vi.fn();
+      const rowSelectionChangeSpy = vi.fn();
+      const rowGroupingChangeSpy = vi.fn();
 
-      promptSpy.resolves({
+      promptSpy.mockResolvedValue({
         select: 1,
         filters: [
           {
@@ -174,16 +173,16 @@ describe('<DataGridPremium /> - AI Assistant', () => {
 
       await act(() => apiRef.current?.aiAssistant.processPrompt('Do something with the data'));
 
-      expect(sortChangeSpy.callCount).to.equal(1);
-      expect(filterChangeSpy.callCount).to.equal(1);
-      expect(aggregationChangeSpy.callCount).to.equal(1);
-      expect(rowSelectionChangeSpy.callCount).to.equal(1);
-      expect(rowGroupingChangeSpy.callCount).to.equal(1);
+      expect(sortChangeSpy.mock.calls.length).to.equal(1);
+      expect(filterChangeSpy.mock.calls.length).to.equal(1);
+      expect(aggregationChangeSpy.mock.calls.length).to.equal(1);
+      expect(rowSelectionChangeSpy.mock.calls.length).to.equal(1);
+      expect(rowGroupingChangeSpy.mock.calls.length).to.equal(1);
     });
 
     it('should return the prompt processing error', async () => {
       const errorMsg = 'Prompt processing error';
-      promptSpy.rejects(new Error(errorMsg));
+      promptSpy.mockRejectedValue(new Error(errorMsg));
 
       render(<Test />);
       const response = (await act(() =>

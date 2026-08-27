@@ -1,8 +1,7 @@
-import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { expectFieldValue } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<TimeField /> - Timezone', () => {
   describeAdapters('DST meridiem toggling', TimeField, ({ adapter, renderWithProps }) => {
@@ -15,7 +14,7 @@ describe('<TimeField /> - Timezone', () => {
       // Regression tests for https://github.com/mui/mui-x/issues/21687
 
       it('should correctly toggle meridiem from PM to AM on a DST spring-forward date', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         // noon PDT (UTC-7) = 2024-03-10T19:00:00Z
         const initialValue = adapter.date('2024-03-10T12:00:00', timezone);
 
@@ -37,11 +36,11 @@ describe('<TimeField /> - Timezone', () => {
         // Verify the onChange value is midnight on March 10 (2024-03-10T08:00:00Z),
         // not 11:00 PM on March 9 (2024-03-09T07:00:00Z).
         const expectedDate = adapter.setHours(initialValue, 0);
-        expect(onChange.lastCall.firstArg).toEqualDateTime(expectedDate);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(expectedDate);
       });
 
       it('should correctly toggle meridiem from AM to PM on a DST spring-forward date', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         // midnight PST (UTC-8) = 2024-03-10T08:00:00Z
         const initialValue = adapter.date('2024-03-10T00:00:00', timezone);
 
@@ -63,7 +62,7 @@ describe('<TimeField /> - Timezone', () => {
         // Verify the onChange value is noon on March 10 (2024-03-10T19:00:00Z),
         // not 1:00 PM (2024-03-10T20:00:00Z).
         const expectedDate = adapter.setHours(initialValue, 12);
-        expect(onChange.lastCall.firstArg).toEqualDateTime(expectedDate);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(expectedDate);
       });
     });
   });

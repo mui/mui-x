@@ -1,6 +1,5 @@
-import { spy } from 'sinon';
 import { renderHook } from '@mui/internal-test-utils';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { useDisarmOnOutsidePointer } from './useDisarmOnOutsidePointer';
 
 const IGNORE_SELECTOR = '.resize-handle';
@@ -31,7 +30,7 @@ describe('useDisarmOnOutsidePointer', () => {
   }
 
   it('should swallow an outside click and call onDisarm while active', () => {
-    const onDisarm = spy();
+    const onDisarm = vi.fn();
     renderUseDisarm({
       ref: { current: container },
       active: true,
@@ -42,13 +41,13 @@ describe('useDisarmOnOutsidePointer', () => {
     const event = new MouseEvent('click', { bubbles: true, cancelable: true });
     inside.dispatchEvent(event);
 
-    expect(onDisarm.callCount).to.equal(1);
+    expect(onDisarm.mock.calls.length).to.equal(1);
     // Swallowed: reaches neither a create handler nor an event's open trigger.
     expect(event.defaultPrevented).to.equal(true);
   });
 
   it('should ignore a click on an element matching ignoreSelector (the resize handle)', () => {
-    const onDisarm = spy();
+    const onDisarm = vi.fn();
     renderUseDisarm({
       ref: { current: container },
       active: true,
@@ -59,7 +58,7 @@ describe('useDisarmOnOutsidePointer', () => {
     const event = new MouseEvent('click', { bubbles: true, cancelable: true });
     handle.dispatchEvent(event);
 
-    expect(onDisarm.callCount).to.equal(0);
+    expect(onDisarm.mock.calls.length).to.equal(0);
     expect(event.defaultPrevented).to.equal(false);
   });
 
@@ -76,7 +75,7 @@ describe('useDisarmOnOutsidePointer', () => {
     });
 
     it('should disarm on a tap anywhere outside the surface, even out of its subtree', () => {
-      const onDisarm = spy();
+      const onDisarm = vi.fn();
       renderUseDisarm({
         ref: { current: container },
         active: true,
@@ -88,12 +87,12 @@ describe('useDisarmOnOutsidePointer', () => {
       const event = new MouseEvent('click', { bubbles: true, cancelable: true });
       outside.dispatchEvent(event);
 
-      expect(onDisarm.callCount).to.equal(1);
+      expect(onDisarm.mock.calls.length).to.equal(1);
       expect(event.defaultPrevented).to.equal(true);
     });
 
     it('should never disarm on a click inside the surface itself', () => {
-      const onDisarm = spy();
+      const onDisarm = vi.fn();
       renderUseDisarm({
         ref: { current: container },
         active: true,
@@ -105,12 +104,12 @@ describe('useDisarmOnOutsidePointer', () => {
       const event = new MouseEvent('click', { bubbles: true, cancelable: true });
       inside.dispatchEvent(event);
 
-      expect(onDisarm.callCount).to.equal(0);
+      expect(onDisarm.mock.calls.length).to.equal(0);
       expect(event.defaultPrevented).to.equal(false);
     });
 
     it('should still ignore clicks on the resize handle so a resize gesture keeps the surface armed', () => {
-      const onDisarm = spy();
+      const onDisarm = vi.fn();
       renderUseDisarm({
         ref: { current: container },
         active: true,
@@ -127,7 +126,7 @@ describe('useDisarmOnOutsidePointer', () => {
       const event = new MouseEvent('click', { bubbles: true, cancelable: true });
       detachedHandle.dispatchEvent(event);
 
-      expect(onDisarm.callCount).to.equal(0);
+      expect(onDisarm.mock.calls.length).to.equal(0);
       expect(event.defaultPrevented).to.equal(false);
 
       document.body.removeChild(detachedHandle);
@@ -135,7 +134,7 @@ describe('useDisarmOnOutsidePointer', () => {
   });
 
   it('should not disarm when the composed target is not an Element (e.g. a scrollbar/native-UI click)', () => {
-    const onDisarm = spy();
+    const onDisarm = vi.fn();
     renderUseDisarm({
       ref: { current: container },
       active: true,
@@ -148,12 +147,12 @@ describe('useDisarmOnOutsidePointer', () => {
     const event = new MouseEvent('click', { bubbles: true, cancelable: true });
     document.dispatchEvent(event);
 
-    expect(onDisarm.callCount).to.equal(0);
+    expect(onDisarm.mock.calls.length).to.equal(0);
     expect(event.defaultPrevented).to.equal(false);
   });
 
   it('should remove the listener when active becomes false', () => {
-    const onDisarm = spy();
+    const onDisarm = vi.fn();
     const { rerender } = renderUseDisarm({
       ref: { current: container },
       active: true,
@@ -170,6 +169,6 @@ describe('useDisarmOnOutsidePointer', () => {
 
     inside.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
 
-    expect(onDisarm.callCount).to.equal(0);
+    expect(onDisarm.mock.calls.length).to.equal(0);
   });
 });

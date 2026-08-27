@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import type { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { act, screen, waitFor } from '@mui/internal-test-utils';
@@ -19,7 +18,7 @@ describe('<DesktopDatePicker />', () => {
 
   describe('Views', () => {
     it('should switch between views uncontrolled', async () => {
-      const handleViewChange = spy();
+      const handleViewChange = vi.fn();
       const { user } = render(
         <DesktopDatePicker
           open
@@ -31,13 +30,13 @@ describe('<DesktopDatePicker />', () => {
 
       // Parent element is used to avoid the ripple effect triggering act warnings.
       await user.click(screen.getByLabelText(/switch to year view/i).parentElement!);
-      expect(handleViewChange.callCount).to.equal(1);
+      expect(handleViewChange.mock.calls.length).to.equal(1);
       expect(screen.queryByLabelText(/switch to year view/i)).to.equal(null);
       expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
     });
 
     it('should go to the first view when re-opening the picker', async () => {
-      const handleViewChange = spy();
+      const handleViewChange = vi.fn();
       const { user } = render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-01-01')}
@@ -49,18 +48,18 @@ describe('<DesktopDatePicker />', () => {
       await openPicker(user, { type: 'date' });
 
       await user.click(screen.getByLabelText(/switch to year view/i));
-      expect(handleViewChange.callCount).to.equal(1);
+      expect(handleViewChange.mock.calls.length).to.equal(1);
 
       // Dismiss the picker
       await user.keyboard('[Escape]');
 
       await openPicker(user, { type: 'date' });
-      expect(handleViewChange.callCount).to.equal(2);
-      expect(handleViewChange.lastCall.firstArg).to.equal('day');
+      expect(handleViewChange.mock.calls.length).to.equal(2);
+      expect(handleViewChange.mock.lastCall?.[0]).to.equal('day');
     });
 
     it('should go to the `openTo` view when re-opening the picker', async () => {
-      const handleViewChange = spy();
+      const handleViewChange = vi.fn();
       const { user } = render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-01-01')}
@@ -74,14 +73,14 @@ describe('<DesktopDatePicker />', () => {
       await openPicker(user, { type: 'date' });
 
       await user.click(screen.getByLabelText(/switch to year view/i));
-      expect(handleViewChange.callCount).to.equal(1);
+      expect(handleViewChange.mock.calls.length).to.equal(1);
 
       // Dismiss the picker
       await user.keyboard('[Escape]');
 
       await openPicker(user, { type: 'date' });
-      expect(handleViewChange.callCount).to.equal(2);
-      expect(handleViewChange.lastCall.firstArg).to.equal('month');
+      expect(handleViewChange.mock.calls.length).to.equal(2);
+      expect(handleViewChange.mock.lastCall?.[0]).to.equal('month');
     });
 
     it('should go to the relevant `view` when `views` prop changes', async () => {
@@ -185,8 +184,8 @@ describe('<DesktopDatePicker />', () => {
     });
 
     it('does not scroll when opened', () => {
-      const handleClose = spy();
-      const handleOpen = spy();
+      const handleClose = vi.fn();
+      const handleOpen = vi.fn();
       function BottomAnchoredDesktopTimePicker() {
         const [anchorEl, anchorElRef] = React.useState<HTMLElement | null>(null);
 
@@ -223,28 +222,28 @@ describe('<DesktopDatePicker />', () => {
         screen.getByLabelText(/choose date/i).click();
       });
 
-      expect(handleClose.callCount).to.equal(0);
-      expect(handleOpen.callCount).to.equal(1);
+      expect(handleClose.mock.calls.length).to.equal(0);
+      expect(handleOpen.mock.calls.length).to.equal(1);
       expect(window.scrollY, 'focus caused scroll').to.equal(scrollYBeforeOpen);
     });
   });
 
   describe('picker state', () => {
     it('should open when clicking "Choose date"', async () => {
-      const onOpen = spy();
+      const onOpen = vi.fn();
 
       const { user } = render(<DesktopDatePicker onOpen={onOpen} />);
 
       await user.click(screen.getByLabelText(/Choose date/));
 
-      expect(onOpen.callCount).to.equal(1);
+      expect(onOpen.mock.calls.length).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
     it('should call onAccept when selecting the same date after changing the year', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <DesktopDatePicker
@@ -260,17 +259,17 @@ describe('<DesktopDatePicker />', () => {
 
       // Select year
       await user.click(screen.getByRole('radio', { name: '2025' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2025, 0, 1));
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       // Change the date (same value)
       await user.click(screen.getByRole('gridcell', { name: '1' }));
-      expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
-      expect(onClose.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1); // Don't call onChange again since the value did not change
+      expect(onAccept.mock.calls.length).to.equal(1);
+      expect(onAccept.mock.lastCall?.[0]).toEqualDateTime(new Date(2025, 0, 1));
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     // Ensures the case in https://github.com/mui/mui-x/issues/18491 works correctly
@@ -292,9 +291,9 @@ describe('<DesktopDatePicker />', () => {
         );
       }
 
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <TestCase onChange={onChange} onAccept={onAccept} onClose={onClose} />,
@@ -304,18 +303,18 @@ describe('<DesktopDatePicker />', () => {
 
       // Change the day
       await user.click(screen.getByRole('gridcell', { name: '2' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2));
-      expect(onClose.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onAccept.mock.calls.length).to.equal(1);
+      expect(onAccept.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 0, 2));
+      expect(onClose.mock.calls.length).to.equal(1);
       await openPicker(user, { type: 'date' });
 
       // Change to the initial day
       await user.click(screen.getByRole('gridcell', { name: '1' }));
-      expect(onChange.callCount).to.equal(2);
-      expect(onAccept.callCount).to.equal(2);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1));
-      expect(onClose.callCount).to.equal(2);
+      expect(onChange.mock.calls.length).to.equal(2);
+      expect(onAccept.mock.calls.length).to.equal(2);
+      expect(onAccept.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 0, 1));
+      expect(onClose.mock.calls.length).to.equal(2);
     });
   });
 
@@ -481,37 +480,37 @@ describe('<DesktopDatePicker />', () => {
 
   describe('performance', () => {
     it('should not re-render the `PickersActionBar` on date change', async () => {
-      const RenderCount = spy((props) => <PickersActionBar {...props} />);
+      const RenderCount = vi.fn((props) => <PickersActionBar {...props} />);
 
       const { user } = render(
         <DesktopDatePicker
-          slots={{ actionBar: React.memo(RenderCount) }}
+          slots={{ actionBar: React.memo(RenderCount) as unknown as React.ElementType }}
           closeOnSelect={false}
           open
         />,
       );
 
-      const renderCountBeforeChange = RenderCount.callCount;
+      const renderCountBeforeChange = RenderCount.mock.calls.length;
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       await user.click(screen.getByRole('gridcell', { name: '3' }));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values
+      expect(RenderCount.mock.calls.length - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values
     });
 
     it('should not re-render the `PickersActionBar` on date change with custom callback actions with root component updates', async () => {
-      const RenderCount = spy((props) => <PickersActionBar {...props} />);
+      const RenderCount = vi.fn((props) => <PickersActionBar {...props} />);
       const actions: PickersActionBarAction[] = ['clear', 'today'];
 
       const { setProps, user } = render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-01-01')}
-          slots={{ actionBar: React.memo(RenderCount) }}
+          slots={{ actionBar: React.memo(RenderCount) as unknown as React.ElementType }}
           slotProps={{ actionBar: () => ({ actions }) }}
           closeOnSelect={false}
           open
         />,
       );
 
-      const renderCountBeforeChange = RenderCount.callCount;
+      const renderCountBeforeChange = RenderCount.mock.calls.length;
 
       await act(async () => {
         setProps({ defaultValue: adapterToUse.date('2018-01-04') });
@@ -519,7 +518,7 @@ describe('<DesktopDatePicker />', () => {
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       await user.click(screen.getByRole('gridcell', { name: '3' }));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values and causing a root component re-render
+      expect(RenderCount.mock.calls.length - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values and causing a root component re-render
     });
   });
 

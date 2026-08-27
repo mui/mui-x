@@ -2,12 +2,11 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
-import { spy } from 'sinon';
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
@@ -417,14 +416,14 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
         // item is colindex 1, posVal colindex 3 (row-number column at 0).
         expect(getColumnValues(3)).to.deep.equal(['20', '10', '30']);
 
-        const sortListener = spy();
+        const sortListener = vi.fn();
         apiRef.current!.subscribeEvent('sortedRowsSet', sortListener);
 
         await act(async () => apiRef.current!.setSortModel([{ field: 'posVal', sort: 'asc' }]));
 
         expect(getColumnValues(1)).to.deep.equal(['b', 'a', 'c']);
         expect(getColumnValues(3)).to.deep.equal(['30', '20', '10']);
-        expect(sortListener.callCount).to.equal(1);
+        expect(sortListener.mock.calls.length).to.equal(1);
       });
     });
   });

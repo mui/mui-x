@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { config } from 'react-transition-group';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
@@ -15,7 +14,7 @@ import {
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
@@ -76,8 +75,8 @@ describe('<MonthView />', () => {
   });
 
   it('should move to the day view when a day is clicked', async () => {
-    const handleViewChange = spy();
-    const handleVisibleDateChange = spy();
+    const handleViewChange = vi.fn();
+    const handleVisibleDateChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
         {...standaloneDefaults}
@@ -92,10 +91,10 @@ describe('<MonthView />', () => {
     const button = screen.getByRole('button', { name: '15' });
     await user.click(button);
 
-    expect(handleViewChange.calledOnce).to.equal(true);
-    expect(handleViewChange.firstCall.firstArg).to.equal('day');
-    expect(handleVisibleDateChange.calledOnce).to.equal(true);
-    expect(handleVisibleDateChange.firstCall.firstArg).toEqualDateTime(
+    expect(handleViewChange.mock.calls.length).to.equal(1);
+    expect(handleViewChange.mock.calls[0][0]).to.equal('day');
+    expect(handleVisibleDateChange.mock.calls.length).to.equal(1);
+    expect(handleVisibleDateChange.mock.calls[0][0]).toEqualDateTime(
       adapter.date('2025-05-15T00:00:00Z', 'default'),
     );
   });
@@ -212,7 +211,7 @@ describe('<MonthView />', () => {
     });
 
     it('should close the popover when `onEventEditingStart` cancels an activation from it', async () => {
-      const onEventEditingStart = spy((_occurrence: any, eventDetails: any) =>
+      const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
         eventDetails.cancel(),
       );
       const { user, popover } = await renderAndOpenPopover({ onEventEditingStart });
@@ -220,7 +219,7 @@ describe('<MonthView />', () => {
       const firstEventButton = within(popover).getAllByRole('button')[0];
       await user.click(firstEventButton);
 
-      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
       expect(screen.queryByRole('dialog')).to.equal(null);
       await waitFor(() => {
         expect(document.body.contains(popover)).to.equal(false);
@@ -228,8 +227,8 @@ describe('<MonthView />', () => {
 
       expect(firstEventButton.isConnected).to.equal(false);
       const moreButton = screen.getByRole('button', { name: /more/i });
-      expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(firstEventButton);
-      expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(moreButton);
+      expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(firstEventButton);
+      expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(moreButton);
       expect(moreButton.isConnected).to.equal(true);
     });
 
@@ -244,27 +243,27 @@ describe('<MonthView />', () => {
           removeEventListener: () => {},
         }) as any) as any;
       try {
-        const onEventEditingStart = spy((_occurrence: any, eventDetails: any) =>
+        const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
           eventDetails.cancel(),
         );
         const { user, popover } = await renderAndOpenPopover({ onEventEditingStart });
 
         const firstEventButton = within(popover).getAllByRole('button')[0];
         await user.click(firstEventButton);
-        expect(onEventEditingStart.callCount).to.equal(0);
+        expect(onEventEditingStart.mock.calls.length).to.equal(0);
 
         const editButton = screen.getByRole('button', { name: 'Edit event' });
         await user.click(editButton);
 
-        expect(onEventEditingStart.calledOnce).to.equal(true);
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
         await waitFor(() => {
           expect(document.body.contains(popover)).to.equal(false);
         });
 
         expect(firstEventButton.isConnected).to.equal(false);
         const moreButton = screen.getByRole('button', { name: /more/i });
-        expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(editButton);
-        expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(moreButton);
+        expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(editButton);
+        expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(moreButton);
         expect(moreButton.isConnected).to.equal(true);
       } finally {
         window.matchMedia = originalMatchMedia;
@@ -296,7 +295,7 @@ describe('<MonthView />', () => {
     });
 
     it('should return focus to the trigger when the editing dialog is submitted', async () => {
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       const { user, popover } = await renderAndOpenPopover({ onEventsChange });
 
       const firstEventButton = within(popover).getAllByRole('button')[0];
@@ -310,7 +309,7 @@ describe('<MonthView />', () => {
 
       // The dialog closing is only meaningful if the form actually submitted.
       await waitFor(() => {
-        expect(onEventsChange.callCount).to.equal(1);
+        expect(onEventsChange.mock.calls.length).to.equal(1);
       });
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).to.equal(null);
@@ -402,7 +401,7 @@ describe('<MonthView />', () => {
   describe('creation placeholder updates', () => {
     it('should not re-fire `onEventEditingStart` when the built-in form updates the creation placeholder', async () => {
       let store: AnyEventCalendarStore | null = null;
-      const onEventEditingStart = spy();
+      const onEventEditingStart = vi.fn();
       const { user } = render(
         <EventCalendarProvider events={[]} resources={[]} onEventEditingStart={onEventEditingStart}>
           <EventDialogProvider>
@@ -421,7 +420,7 @@ describe('<MonthView />', () => {
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);
       });
-      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
 
       // Mirrors the built-in form pushing a date change into the draft while the dialog is open.
       const placeholder = store!.state.occurrencePlaceholder!;
@@ -432,7 +431,7 @@ describe('<MonthView />', () => {
         });
       });
 
-      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
       expect(screen.queryByRole('dialog')).not.to.equal(null);
     });
   });
@@ -670,7 +669,7 @@ describe('<MonthView />', () => {
 
   describe('time navigation', () => {
     it('should go to start of previous month when clicking on the Previous Month button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -684,13 +683,13 @@ describe('<MonthView />', () => {
       const toolbar = withinEventCalendarToolbar();
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /previous month/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
     it('should go to start of next month when clicking on the Next Month button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -704,7 +703,7 @@ describe('<MonthView />', () => {
       const toolbar = withinEventCalendarToolbar();
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /next month/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });

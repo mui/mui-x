@@ -1,9 +1,8 @@
-import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
 import { hasTouchSupport } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<MobileDateTimePicker />', () => {
   const { render } = createPickerRenderer();
@@ -78,9 +77,9 @@ describe('<MobileDateTimePicker />', () => {
 
   describe('picker state', () => {
     it.skipIf(!hasTouchSupport)('should call onChange when selecting each view', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue = adapterToUse.date('2018-01-01');
 
       const { user } = render(
@@ -94,34 +93,34 @@ describe('<MobileDateTimePicker />', () => {
       );
 
       await openPicker(user, { type: 'date-time' });
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       // Change the year view
       await user.click(screen.getByLabelText(/switch to year view/));
       await user.click(screen.getByText('2010', { selector: 'button' }));
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2010, 0, 1));
 
       // Change the date
       await user.click(screen.getByRole('gridcell', { name: '15' }));
-      expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
+      expect(onChange.mock.calls.length).to.equal(2);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2010, 0, 15));
 
       // Change the hours
       await user.click(screen.getByRole('button', { name: 'Next' }));
       await user.click(screen.getByRole('option', { name: '11 hours' }));
-      expect(onChange.callCount).to.equal(3);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:00:00'));
+      expect(onChange.mock.calls.length).to.equal(3);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:00:00'));
 
       // Change the minutes
       await user.click(screen.getByRole('option', { name: '55 minutes' }));
-      expect(onChange.callCount).to.equal(4);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:55:00'));
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(4);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:55:00'));
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
     });
   });
 });

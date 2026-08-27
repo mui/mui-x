@@ -10,9 +10,8 @@ import type {
   GridRowModel,
   GridRowsProp,
 } from '@mui/x-data-grid-pro';
-import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<DataGridPro /> - Lazy loader', () => {
   const { render } = createRenderer();
@@ -56,7 +55,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
 
   // Needs layout
   it.skipIf(isJSDOM)('should not call onFetchRows if the viewport is fully loaded', () => {
-    const handleFetchRows = spy();
+    const handleFetchRows = vi.fn();
     // The virtualizer renders one row past the visible viewport + buffer (see
     // `getIndexesToRender`), so the loaded section must cover that extra row
     // to keep the rendered range skeleton-free.
@@ -71,18 +70,18 @@ describe('<DataGridPro /> - Lazy loader', () => {
       { id: 8 },
     ];
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} rows={rows} />);
-    expect(handleFetchRows.callCount).to.equal(0);
+    expect(handleFetchRows.mock.calls.length).to.equal(0);
   });
 
   // Needs layout
   it.skipIf(isJSDOM)('should call onFetchRows when sorting is applied', () => {
-    const handleFetchRows = spy();
+    const handleFetchRows = vi.fn();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
-    expect(handleFetchRows.callCount).to.equal(1);
+    expect(handleFetchRows.mock.calls.length).to.equal(1);
     // Should be 1. When tested in the browser it's called only 2 time
     fireEvent.click(getColumnHeaderCell(0));
-    expect(handleFetchRows.callCount).to.equal(2);
+    expect(handleFetchRows.mock.calls.length).to.equal(2);
   });
 
   // Needs layout

@@ -8,11 +8,9 @@ import type {
   GridFormulaFunctionDefinition,
 } from '@mui/x-data-grid-premium';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
-import type { SinonSpy } from 'sinon';
 import Excel from '@mui/x-internal-exceljs-fork';
 import { spyApi } from 'test/utils/helperFn';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -699,11 +697,11 @@ describe('<DataGridPremium /> - Export Excel', () => {
   });
 
   describe('web worker', () => {
-    let workerMock: { postMessage: SinonSpy };
+    let workerMock: { postMessage: Mock };
 
     beforeEach(() => {
       workerMock = {
-        postMessage: spy(),
+        postMessage: vi.fn(),
       };
     });
 
@@ -711,13 +709,13 @@ describe('<DataGridPremium /> - Export Excel', () => {
       render(<TestCaseExcelExport />);
       const getDataAsExcelSpy = spyApi(apiRef.current!, 'getDataAsExcel');
       await act(() => apiRef.current?.exportDataAsExcel({ worker: () => workerMock as any }));
-      expect(getDataAsExcelSpy.calledOnce).to.equal(false);
+      expect(getDataAsExcelSpy.mock.calls.length === 1).to.equal(false);
     });
 
     it('should post a message to the web worker with the serialized columns', async () => {
       render(<TestCaseExcelExport />);
       await act(() => apiRef.current?.exportDataAsExcel({ worker: () => workerMock as any }));
-      expect(workerMock.postMessage.lastCall.args[0].serializedColumns).to.deep.equal([
+      expect(workerMock.postMessage.mock.lastCall?.[0].serializedColumns).to.deep.equal([
         { key: 'id', headerText: 'id', style: {}, width: 100 / 7.5 },
         { key: 'brand', headerText: 'Brand', style: {}, width: 100 / 7.5 },
       ]);
@@ -726,7 +724,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     it('should post a message to the web worker with the serialized rows', async () => {
       render(<TestCaseExcelExport />);
       await act(() => apiRef.current?.exportDataAsExcel({ worker: () => workerMock as any }));
-      expect(workerMock.postMessage.lastCall.args[0].serializedRows).to.deep.equal([
+      expect(workerMock.postMessage.mock.lastCall?.[0].serializedRows).to.deep.equal([
         {
           dataValidation: {},
           mergedCells: [],
@@ -774,7 +772,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           escapeFormulas: false,
         }),
       );
-      const { serializedRows } = workerMock.postMessage.lastCall.args[0];
+      const { serializedRows } = workerMock.postMessage.mock.lastCall?.[0];
       expect(serializedRows[0].formulas).to.deep.equal({
         total: { formula: 'A2*B2', result: 20 },
       });

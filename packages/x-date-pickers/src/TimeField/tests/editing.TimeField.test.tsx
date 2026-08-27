@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import {
   expectFieldValue,
@@ -7,7 +6,7 @@ import {
   buildFieldInteractions,
 } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<TimeField /> - Editing', () => {
   describeAdapters('key: ArrowDown', TimeField, ({ adapter, testFieldKeyPress }) => {
@@ -593,7 +592,7 @@ describe('<TimeField /> - Editing', () => {
     TimeField,
     ({ adapter, renderWithProps }) => {
       it('should not loose date information when a value is provided', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
@@ -603,11 +602,11 @@ describe('<TimeField /> - Editing', () => {
         await view.selectSection('hours');
         await view.user.keyboard('{ArrowDown}');
 
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });
 
       it('should not loose date information when cleaning the date then filling it again', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
@@ -625,11 +624,11 @@ describe('<TimeField /> - Editing', () => {
 
         await view.pressKey('4');
         expectFieldValue(view.getSectionsContainer(), '03:04');
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
       });
 
       it('should not loose time information when using the hour format and value is provided', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
@@ -640,7 +639,7 @@ describe('<TimeField /> - Editing', () => {
         await view.selectSection('hours');
         await view.user.keyboard('{ArrowDown}');
 
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });
     },
   );
@@ -739,7 +738,7 @@ describe('<TimeField /> - Editing', () => {
     });
 
     it('should produce noon (12:xx) when wrapping K from 11 to 0 with PM meridiem', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         format: 'K:mm aa',
@@ -751,7 +750,7 @@ describe('<TimeField /> - Editing', () => {
       await view.user.keyboard('{ArrowUp}');
 
       // K=0 + PM = noon (12:xx), not midnight (00:xx)
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 5, 15, 12, 12, 0));
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 5, 15, 12, 12, 0));
     });
 
     it('should wrap from 0 to 11 when pressing ArrowDown at the minimum', async () => {

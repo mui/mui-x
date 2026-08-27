@@ -12,10 +12,9 @@ import type {
 import { createRenderer, waitFor, act, fireEvent, screen } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
-import { spy } from 'sinon';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<DataGridPremium /> - History', () => {
   const { render } = createRenderer();
@@ -580,7 +579,7 @@ describe('<DataGridPremium /> - History', () => {
 
   describe('Events', () => {
     it('should fire `onUndo` callback', async () => {
-      const onUndo = spy();
+      const onUndo = vi.fn();
 
       const customHandler: GridHistoryEventHandler = {
         store: () => ({ data: 'test' }),
@@ -606,12 +605,12 @@ describe('<DataGridPremium /> - History', () => {
         await apiRef.current!.history.undo();
       });
 
-      expect(onUndo.callCount).to.equal(1);
-      expect(onUndo.firstCall.args[0]).to.have.property('eventName', 'cellClick');
+      expect(onUndo.mock.calls.length).to.equal(1);
+      expect(onUndo.mock.calls[0][0]).to.have.property('eventName', 'cellClick');
     });
 
     it('should fire `onRedo` callback', async () => {
-      const onRedo = spy();
+      const onRedo = vi.fn();
 
       const customHandler: GridHistoryEventHandler = {
         store: () => ({ data: 'test' }),
@@ -642,8 +641,8 @@ describe('<DataGridPremium /> - History', () => {
         await apiRef.current!.history.redo();
       });
 
-      expect(onRedo.callCount).to.equal(1);
-      expect(onRedo.firstCall.args[0]).to.have.property('eventName', 'cellClick');
+      expect(onRedo.mock.calls.length).to.equal(1);
+      expect(onRedo.mock.calls[0][0]).to.have.property('eventName', 'cellClick');
     });
   });
 
@@ -706,7 +705,7 @@ describe('<DataGridPremium /> - History', () => {
     });
 
     it('should call `dataSource.updateRow` when undoing with data source', async () => {
-      const updateRowSpy = spy();
+      const updateRowSpy = vi.fn();
 
       function TestWithDataSource() {
         const dataSource = React.useMemo(
@@ -750,7 +749,7 @@ describe('<DataGridPremium /> - History', () => {
       });
 
       // Reset the call count
-      updateRowSpy.resetHistory();
+      updateRowSpy.mockClear();
 
       // Perform undo
       await act(async () => {
@@ -758,10 +757,10 @@ describe('<DataGridPremium /> - History', () => {
       });
 
       // one additional call to `updateRow` should have been made
-      expect(updateRowSpy.callCount).to.equal(1);
+      expect(updateRowSpy.mock.calls.length).to.equal(1);
       const undoCall = updateRowSpy.lastCall;
-      expect(undoCall.args[0]).to.have.property('rowId', 0);
-      expect(undoCall.args[0].updatedRow).to.have.property('currencyPair', originalValue);
+      expect(undoCall.mock.calls[0]).to.have.property('rowId', 0);
+      expect(undoCall.mock.calls[0].updatedRow).to.have.property('currencyPair', originalValue);
     });
   });
 
@@ -1021,7 +1020,7 @@ describe('<DataGridPremium /> - History', () => {
 
     it('should hand the stored row to `dataSource.updateRow()` when undoing', async () => {
       const rows = [new Commodity(0, 'Nickel'), new Commodity(1, 'Cobalt')];
-      const updateRow = spy(async (params: GridUpdateRowParams) => ({
+      const updateRow = vi.fn(async (params: GridUpdateRowParams) => ({
         _action: 'replace' as const,
         row: (params.previousRow as Commodity).withCommodity(params.updatedRow.commodity),
       }));
@@ -1044,7 +1043,7 @@ describe('<DataGridPremium /> - History', () => {
         await apiRef.current!.history.undo();
       });
 
-      const undoParams = updateRow.lastCall.args[0];
+      const undoParams = updateRow.mock.lastCall?.[0];
       // Rebuilding the request as `{ ...row, commodity: oldValue }` would send a plain
       // object, so the server would never see the row it stored.
       expect(undoParams.updatedRow).to.be.instanceOf(Commodity);

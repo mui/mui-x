@@ -1,8 +1,7 @@
-import { spy } from 'sinon';
 import { screen, fireEvent } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 
 /**
  * A coarse pointer arms the event (toolbar); a fine pointer opens the dialog directly. The pointer
@@ -16,7 +15,7 @@ describe('DayView - event toolbar', () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  function renderEvent(onEventsChange = spy()) {
+  function renderEvent(onEventsChange = vi.fn()) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -46,7 +45,7 @@ describe('DayView - event toolbar', () => {
       <StandaloneDayView
         events={events}
         resources={[]}
-        onEventsChange={spy()}
+        onEventsChange={vi.fn()}
         visibleDate={new Date('2025-07-03T00:00:00Z')}
       />,
     );
@@ -68,7 +67,7 @@ describe('DayView - event toolbar', () => {
         .build(),
     ];
 
-    render(<StandaloneDayView events={events} resources={[]} onEventsChange={spy()} />);
+    render(<StandaloneDayView events={events} resources={[]} onEventsChange={vi.fn()} />);
   }
 
   function getEvent(name: RegExp | string = /Morning Meeting/i): HTMLElement {
@@ -107,8 +106,8 @@ describe('DayView - event toolbar', () => {
     fireEvent.click(getEvent());
     fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
 
-    expect(onEventsChange.callCount).to.equal(1);
-    expect(onEventsChange.firstCall.args[0]).to.have.length(0);
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
     // The delete and edit flows are independent: deleting must not open the editing dialog.
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);

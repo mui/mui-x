@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { screen, act } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
@@ -9,7 +8,7 @@ import {
   getResizeHandle,
 } from 'test/utils/scheduler';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 /**
  * Returns all time grid column drop targets (`[data-drop-target-for-element]`)
@@ -66,7 +65,7 @@ describe('WeekView - Drag and Drop', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
 
   it('should move a time event to the day grid on the same day', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -87,13 +86,13 @@ describe('WeekView - Drag and Drop', () => {
       simulateDragAndDrop({ source: eventElement, target: dayGridCell });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.equal(true);
   });
 
   it('should move a time event to the day grid on a different day', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -114,15 +113,15 @@ describe('WeekView - Drag and Drop', () => {
       simulateDragAndDrop({ source: eventElement, target: dayGridCell });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.equal(true);
     // The event should have moved to the next day
     expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(4);
   });
 
   it('should move a time event to a different time on the same day', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -151,8 +150,8 @@ describe('WeekView - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.not.equal(true);
     // The event should have moved to around 14:00 (the exact time depends on
     // the drag precision and the initialCursorPositionInEventMs calculation)
@@ -161,7 +160,7 @@ describe('WeekView - Drag and Drop', () => {
   });
 
   it('should move a time event to a different day in the time grid', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -190,14 +189,14 @@ describe('WeekView - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.not.equal(true);
     expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(4);
   });
 
   it('should move an all-day event to a different day in the day grid', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('All Day Event')
@@ -219,14 +218,14 @@ describe('WeekView - Drag and Drop', () => {
       simulateDragAndDrop({ source: eventElement, target: dayGridCell, sourceClientX: 50 });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.equal(true);
     expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(4);
   });
 
   it('should move an all-day event to the time grid on the same day', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('All Day Event')
@@ -256,13 +255,13 @@ describe('WeekView - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.not.equal(true);
   });
 
   it('should move an all-day event to the time grid on a different day', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('All Day Event')
@@ -292,14 +291,14 @@ describe('WeekView - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.not.equal(true);
     expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(4);
   });
 
   it('should resize a time event end to a later time', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -328,8 +327,8 @@ describe('WeekView - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     // Start should remain at 10:00
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
     // End should have moved later
@@ -338,7 +337,7 @@ describe('WeekView - Drag and Drop', () => {
   });
 
   it('should resize a time event start to an earlier time', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -367,8 +366,8 @@ describe('WeekView - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     // Start should have moved earlier
     const newStartHour = new Date(updatedEvents[0].start).getUTCHours();
     expect(newStartHour).to.not.equal(10);
@@ -377,7 +376,7 @@ describe('WeekView - Drag and Drop', () => {
   });
 
   it('should resize an all-day event end to a different day', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Multi Day Event')
@@ -400,8 +399,8 @@ describe('WeekView - Drag and Drop', () => {
       simulateDragAndDrop({ source: endHandle, target: dayGridCell });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     // Start should remain on July 3
     expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(3);
     // End should have moved
@@ -409,7 +408,7 @@ describe('WeekView - Drag and Drop', () => {
   });
 
   it('should resize an all-day event start to a different day', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Multi Day Event')
@@ -432,8 +431,8 @@ describe('WeekView - Drag and Drop', () => {
       simulateDragAndDrop({ source: startHandle, target: dayGridCell });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     // Start should have moved
     expect(new Date(updatedEvents[0].start).getUTCDate()).to.not.equal(2);
     // End should remain on July 4

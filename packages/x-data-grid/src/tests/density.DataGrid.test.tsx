@@ -1,10 +1,9 @@
-import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { grid } from 'test/utils/helperFn';
 import { DataGrid, gridClasses, GridToolbar } from '@mui/x-data-grid';
 import type { DataGridProps } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
@@ -108,7 +107,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Density', () => {
 
     // TODO: Remove when we remove the legacy GridToolbar
     it('should call `onDensityChange` prop when density gets updated', () => {
-      const onDensityChange = spy();
+      const onDensityChange = vi.fn();
       function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -126,8 +125,8 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Density', () => {
       render(<Test />);
       fireEvent.click(screen.getByText('Density'));
       fireEvent.click(screen.getByText('Comfortable'));
-      expect(onDensityChange.callCount).to.equal(1);
-      expect(onDensityChange.firstCall.args[0]).to.equal('comfortable');
+      expect(onDensityChange.mock.calls.length).to.equal(1);
+      expect(onDensityChange.mock.calls[0][0]).to.equal('comfortable');
     });
   });
 

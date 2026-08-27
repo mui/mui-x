@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, gridClasses, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { GridApi, GridRowsProp, DataGridProProps, GridColDef } from '@mui/x-data-grid-pro';
@@ -17,7 +16,7 @@ import {
   microtasks,
 } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<DataGridPro /> - Row pinning', () => {
   const { render } = createRenderer();
@@ -722,7 +721,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   // flaky in JSDOM
   it.skipIf(isJSDOM)('should support cell editing', async () => {
-    const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
+    const processRowUpdate = vi.fn((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     const { user } = render(
       <div style={{ width: 400, height: 400 }}>
@@ -753,13 +752,13 @@ describe('<DataGridPro /> - Row pinning', () => {
     await user.keyboard('{Enter}');
 
     expect(cell.textContent).to.equal('Marcus');
-    expect(processRowUpdate.callCount).to.equal(1);
-    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+    expect(processRowUpdate.mock.calls.length).to.equal(1);
+    expect(processRowUpdate.mock.lastCall?.[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
 
   // flaky in JSDOM
   it.skipIf(isJSDOM)('should support row editing', async () => {
-    const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
+    const processRowUpdate = vi.fn((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     const { user } = render(
       <div style={{ width: 400, height: 400 }}>
@@ -791,8 +790,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     await user.keyboard('{Enter}');
 
     expect(cell.textContent).to.equal('Marcus');
-    expect(processRowUpdate.callCount).to.equal(1);
-    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+    expect(processRowUpdate.mock.calls.length).to.equal(1);
+    expect(processRowUpdate.mock.lastCall?.[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
 
   it('should support `updateRows`', async () => {

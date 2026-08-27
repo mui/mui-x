@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import {
   adapter,
   adapterFr,
@@ -11,7 +10,7 @@ import type {
   SchedulerEventModelStructure,
 } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
 const TEST_RESOURCES = [ResourceBuilder.new().build()];
@@ -91,7 +90,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should use the provided event model structure to write event properties', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
 
         const events: MyEvent[] = [
           {
@@ -116,8 +115,8 @@ storeClasses.forEach((storeClass) => {
         });
 
         // Should call onEventsChange with the updated event using the custom model structure
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           {
             myId: '1',
             myTitle: 'Event 1 updated',
@@ -129,7 +128,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should use the provided event model structure to create an event', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
 
         const events: MyEvent[] = [];
 
@@ -145,8 +144,8 @@ storeClasses.forEach((storeClass) => {
         });
 
         // Should call onEventsChange with the created event using the custom model structure
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           {
             myId: createdId,
             myTitle: 'Event 1',
@@ -158,7 +157,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should carry custom fields without resurrecting stale mapped keys on a duplicate', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const events: MyEvent[] = [
           {
             myId: '1',
@@ -179,7 +178,7 @@ storeClasses.forEach((storeClass) => {
         const end = adapter.date('2025-07-01T12:00:00.000Z', 'default');
         const duplicatedId = store.duplicateEventOccurrence('1', start, end);
 
-        const duplicated = onEventsChange.lastCall.firstArg.find(
+        const duplicated = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.myId === duplicatedId,
         );
         // The mapped start comes from the setter, not the stale key carried by the custom-data merge.
@@ -195,7 +194,7 @@ storeClasses.forEach((storeClass) => {
           end: string;
         }
 
-        const idGetter = spy((event: MyEvent2) => event.myId);
+        const idGetter = vi.fn((event: MyEvent2) => event.myId);
 
         const eventModelStructure2: SchedulerEventModelStructure<MyEvent2> = {
           id: {
@@ -227,7 +226,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Called to convert Event 1 on mount.
-        expect(idGetter.callCount).to.equal(1);
+        expect(idGetter.mock.calls.length).to.equal(1);
         const processedEvent1 = schedulerEventSelectors.processedEvent(store.state, '1');
         const initialEventIdList = store.state.eventIdList;
         const initialEventModelLookup = store.state.eventModelLookup;
@@ -244,7 +243,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Not called again when updating a non-related parameter.
-        expect(idGetter.callCount).to.equal(1);
+        expect(idGetter.mock.calls.length).to.equal(1);
 
         store.updateStateFromParameters(
           {
@@ -256,7 +255,7 @@ storeClasses.forEach((storeClass) => {
           adapter,
         );
 
-        expect(idGetter.callCount).to.equal(1);
+        expect(idGetter.mock.calls.length).to.equal(1);
         expect(store.state.eventIdList).to.equal(initialEventIdList);
         expect(store.state.eventModelLookup).to.equal(initialEventModelLookup);
         expect(store.state.processedEventLookup).to.equal(initialProcessedEventLookup);
@@ -282,7 +281,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Only the new model is processed.
-        expect(idGetter.callCount).to.equal(2);
+        expect(idGetter.mock.calls.length).to.equal(2);
         expect(schedulerEventSelectors.processedEvent(store.state, '1')).to.equal(processedEvent1);
         const processedEvent2 = schedulerEventSelectors.processedEvent(store.state, '2');
 
@@ -297,7 +296,7 @@ storeClasses.forEach((storeClass) => {
           adapter,
         );
 
-        expect(idGetter.callCount).to.equal(3);
+        expect(idGetter.mock.calls.length).to.equal(3);
         expect(schedulerEventSelectors.processedEvent(store.state, '1')).to.equal(processedEvent1);
         expect(schedulerEventSelectors.processedEvent(store.state, '2')).not.to.equal(
           processedEvent2,
@@ -316,7 +315,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // The display timezone affects every processed event.
-        expect(idGetter.callCount).to.equal(5);
+        expect(idGetter.mock.calls.length).to.equal(5);
         expect(schedulerEventSelectors.processedEvent(store.state, '1')).not.to.equal(
           processedEvent1,
         );
@@ -336,7 +335,7 @@ storeClasses.forEach((storeClass) => {
           adapterFr,
         );
 
-        expect(idGetter.callCount).to.equal(7);
+        expect(idGetter.mock.calls.length).to.equal(7);
         expect(schedulerEventSelectors.processedEvent(store.state, '2')).not.to.equal(
           event2BeforeAdapterChange,
         );
@@ -354,7 +353,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Called again to convert Event 1 and Event 2 because props.eventModelStructure changed.
-        expect(idGetter.callCount).to.equal(9);
+        expect(idGetter.mock.calls.length).to.equal(9);
 
         const processedEventsBeforeReorder = store.state.processedEventLookup;
         store.updateStateFromParameters(
@@ -368,7 +367,7 @@ storeClasses.forEach((storeClass) => {
           adapterFr,
         );
 
-        expect(idGetter.callCount).to.equal(9);
+        expect(idGetter.mock.calls.length).to.equal(9);
         expect(store.state.eventIdList).to.deep.equal(['2', '1']);
         expect(store.state.processedEventLookup.get('1')).to.equal(
           processedEventsBeforeReorder.get('1'),
@@ -430,7 +429,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('Method: updateEvent', () => {
       it('should replace matching id and emit onEventsChange with the updated events', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event1 = EventBuilder.new().build();
         const event2 = EventBuilder.new().build();
 
@@ -448,8 +447,8 @@ storeClasses.forEach((storeClass) => {
           end: adapter.date('2025-07-01T12:30:00Z', 'default'),
         });
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        const updatedEvents = onEventsChange.lastCall.firstArg;
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        const updatedEvents = onEventsChange.mock.lastCall?.[0];
 
         expect(updatedEvents).to.have.length(2);
         expect(updatedEvents[0].title).to.equal(event1.title);
@@ -460,7 +459,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should update start/end as instants, preserve unrelated properties, and keep event.timezone', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
 
         const dataTimezone = 'America/New_York';
         const displayTimezone = 'Europe/Paris';
@@ -488,7 +487,7 @@ storeClasses.forEach((storeClass) => {
           end: newEnd,
         });
 
-        const updated = onEventsChange.lastCall.firstArg[0];
+        const updated = onEventsChange.mock.lastCall?.[0][0];
 
         expect(updated.title).to.equal('Updated title');
         expect(updated.description).to.equal(event.description);
@@ -501,7 +500,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should preserve unknown custom properties on the event model', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event = {
           ...EventBuilder.new().title('Original title').build(),
           priority: 'high',
@@ -514,7 +513,7 @@ storeClasses.forEach((storeClass) => {
 
         store.updateEvent({ id: event.id, title: 'Updated title' });
 
-        const updated = onEventsChange.lastCall.firstArg[0];
+        const updated = onEventsChange.mock.lastCall?.[0][0];
         expect(updated.title).to.equal('Updated title');
         expect(updated.priority).to.equal('high');
       });
@@ -560,7 +559,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('Method: deleteEvent', () => {
       it('should remove by id and call onEventsChange with the updated events', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event1 = EventBuilder.new().build();
         const event2 = EventBuilder.new().build();
         const event3 = EventBuilder.new().build();
@@ -575,15 +574,15 @@ storeClasses.forEach((storeClass) => {
         );
         store.deleteEvent(event2.id);
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        const updatedEvents = onEventsChange.lastCall.firstArg;
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        const updatedEvents = onEventsChange.mock.lastCall?.[0];
         expect(updatedEvents).to.deep.equal([event1, event3]);
       });
     });
 
     describe('Method: createEvent', () => {
       it('should append the new event and emit onEventsChange with the updated list', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event1 = EventBuilder.new().build();
 
         const store = new storeClass.Value(
@@ -595,15 +594,15 @@ storeClasses.forEach((storeClass) => {
 
         const createdId = store.createEvent(newEvent);
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           event1,
           { ...newEvent, id: createdId },
         ]);
       });
 
       it('should not inject timezone into the created event model', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
 
         const store = new storeClass.Value(
           {
@@ -618,14 +617,14 @@ storeClasses.forEach((storeClass) => {
         const newEvent = EventBuilder.new().toCreationProperties();
         const createdId = store.createEvent(newEvent);
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([{ ...newEvent, id: createdId }]);
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([{ ...newEvent, id: createdId }]);
       });
     });
 
     describe('Method: duplicateEventOccurrence', () => {
       it('should duplicate the event occurrence and emit onEventsChange with the updated list', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
         const store = new storeClass.Value(
@@ -637,8 +636,8 @@ storeClasses.forEach((storeClass) => {
         const end = adapter.date('2025-07-01T10:00:00Z', 'default');
         const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           event,
           {
             ...event,
@@ -653,7 +652,7 @@ storeClasses.forEach((storeClass) => {
       it.skipIf(storeClass.name === 'EventCalendarStore')(
         'should remove rrule and exDates from the original event',
         () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
           const event = EventBuilder.new().recurrent('DAILY').exDates(['2025-07-14Z']).build();
 
           const store = new storeClass.Value(
@@ -669,8 +668,8 @@ storeClasses.forEach((storeClass) => {
           delete originalEventWithoutRecurrence.rrule;
           delete originalEventWithoutRecurrence.exDates;
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
             event,
             {
               ...originalEventWithoutRecurrence,
@@ -684,7 +683,7 @@ storeClasses.forEach((storeClass) => {
       );
 
       it('should carry unknown custom properties onto the duplicated event', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event = {
           ...EventBuilder.new().build(),
           priority: 'high',
@@ -699,7 +698,7 @@ storeClasses.forEach((storeClass) => {
         const end = adapter.date('2025-07-01T10:00:00Z', 'default');
         const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
-        const duplicated = onEventsChange.lastCall.firstArg.find(
+        const duplicated = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.id === duplicatedId,
         );
         expect(duplicated.priority).to.equal('high');
@@ -742,7 +741,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should paste a copied event and emit onEventsChange with the updated list (only changes start date)', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
         const store = new storeClass.Value(
@@ -755,8 +754,8 @@ storeClasses.forEach((storeClass) => {
           start: adapter.date('2025-07-01T09:00:00Z', 'default'),
         });
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           event,
           {
             ...event,
@@ -769,7 +768,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should carry unknown custom properties onto the pasted event (copy)', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event = {
           ...EventBuilder.new().build(),
           priority: 'high',
@@ -785,14 +784,14 @@ storeClasses.forEach((storeClass) => {
           start: adapter.date('2025-07-01T09:00:00Z', 'default'),
         });
 
-        const pasted = onEventsChange.lastCall.firstArg.find(
+        const pasted = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.id === createdEventId,
         );
         expect(pasted.priority).to.equal('high');
       });
 
       it('should paste a copied event and emit onEventsChange with the updated list (only changes resource)', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const resource1 = ResourceBuilder.new().build();
         const resource2 = ResourceBuilder.new().build();
         const event = EventBuilder.new().resource(resource1).build();
@@ -807,8 +806,8 @@ storeClasses.forEach((storeClass) => {
           resource: resource2.id,
         });
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           event,
           {
             ...event,
@@ -820,7 +819,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should paste a copied event and emit onEventsChange with the updated list (only changes allDay)', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
         const store = new storeClass.Value(
@@ -833,8 +832,8 @@ storeClasses.forEach((storeClass) => {
           allDay: true,
         });
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           event,
           {
             ...event,
@@ -846,7 +845,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should paste a cut event and emit onEventsChange with the updated list (only changes start date)', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
         const store = new storeClass.Value(
@@ -859,8 +858,8 @@ storeClasses.forEach((storeClass) => {
           start: adapter.date('2025-07-01T09:00:00Z', 'default'),
         });
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           {
             ...event,
             id: createdEventId,
@@ -871,7 +870,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should paste a cut event and emit onEventsChange with the updated list (only changes resource)', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const resource1 = ResourceBuilder.new().build();
         const resource2 = ResourceBuilder.new().build();
         const event = EventBuilder.new().resource(resource1).build();
@@ -886,8 +885,8 @@ storeClasses.forEach((storeClass) => {
           resource: resource2.id,
         });
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           {
             ...event,
             id: createdEventId,
@@ -897,7 +896,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should paste a cut event and emit onEventsChange with the updated list (only changes allDay)', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
         const store = new storeClass.Value(
@@ -910,8 +909,8 @@ storeClasses.forEach((storeClass) => {
           allDay: true,
         });
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
           {
             ...event,
             id: createdEventId,
@@ -921,7 +920,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should clear the clipboard after pasting a cut event so a second paste is a no-op', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
         const store = new storeClass.Value(
@@ -933,18 +932,18 @@ storeClasses.forEach((storeClass) => {
         store.pasteEvent({ start: adapter.date('2025-07-01T09:00:00Z', 'default') });
 
         expect(store.state.copiedEvent).to.equal(null);
-        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.mock.calls.length).to.equal(1);
 
         const result = store.pasteEvent({
           start: adapter.date('2025-07-02T09:00:00Z', 'default'),
         });
 
         expect(result).to.equal(null);
-        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.mock.calls.length).to.equal(1);
       });
 
       it('should keep the clipboard after pasting a copied event so it can be pasted again', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
 
         const store = new storeClass.Value(
@@ -964,7 +963,7 @@ storeClasses.forEach((storeClass) => {
         expect(firstPastedId).not.to.equal(null);
         expect(secondPastedId).not.to.equal(null);
         expect(firstPastedId).not.to.equal(secondPastedId);
-        expect(onEventsChange.calledTwice).to.equal(true);
+        expect(onEventsChange.mock.calls.length).to.equal(2);
       });
     });
 

@@ -1,6 +1,5 @@
-import { spy } from 'sinon';
 import { EventBuilder } from 'test/utils/scheduler';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import type { EventDialogFormParameters } from './EventDialogFormStore';
 import { EventDialogFormStore } from './EventDialogFormStore';
 
@@ -69,23 +68,23 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should call onValuesChange with the new values and the changed keys', () => {
-      const onValuesChange = spy();
+      const onValuesChange = vi.fn();
       const store = createFormStore({ title: 'Meeting' }, { onValuesChange });
       store.setValue('title', 'Updated');
-      expect(onValuesChange.calledOnce).to.equal(true);
-      expect(onValuesChange.lastCall.args[0]).to.deep.equal({ title: 'Updated' });
-      expect(onValuesChange.lastCall.args[1]).to.deep.equal(['title']);
+      expect(onValuesChange.mock.calls.length).to.equal(1);
+      expect(onValuesChange.mock.lastCall?.[0]).to.deep.equal({ title: 'Updated' });
+      expect(onValuesChange.mock.lastCall?.[1]).to.deep.equal(['title']);
     });
   });
 
   describe('setValues', () => {
     it('should merge several keys in a single update', () => {
       const store = createFormStore({ a: 1, b: 2, c: 3 });
-      const listener = spy();
+      const listener = vi.fn();
       store.subscribe(listener);
       store.setValues({ a: 10, b: 20 });
       expect(store.state.values).to.deep.equal({ a: 10, b: 20, c: 3 });
-      expect(listener.callCount).to.equal(1);
+      expect(listener.mock.calls.length).to.equal(1);
     });
 
     it('should accept a functional updater receiving the current values', () => {
@@ -95,16 +94,16 @@ describe('EventDialogFormStore', () => {
     });
 
     it('should notify nobody when the changes object is empty', () => {
-      const onValuesChange = spy();
+      const onValuesChange = vi.fn();
       const store = createFormStore({ title: 'Meeting' }, { onValuesChange });
-      const listener = spy();
+      const listener = vi.fn();
       store.subscribe(listener);
 
       store.setValues({});
       store.setValues(() => ({}));
 
-      expect(listener.callCount).to.equal(0);
-      expect(onValuesChange.called).to.equal(false);
+      expect(listener.mock.calls.length).to.equal(0);
+      expect(onValuesChange.mock.calls.length).to.equal(0);
     });
 
     it('should clear the errors of all the written keys', async () => {
@@ -125,13 +124,13 @@ describe('EventDialogFormStore', () => {
 
   describe('seedDefault', () => {
     it('should seed a missing key without marking it dirty or notifying onValuesChange', () => {
-      const onValuesChange = spy();
+      const onValuesChange = vi.fn();
       const store = createFormStore({ title: '' }, { onValuesChange });
       store.seedDefault('notes', 'default');
 
       expect(store.state.values).to.deep.equal({ title: '', notes: 'default' });
       expect(store.getDirtyValues()).to.deep.equal({});
-      expect(onValuesChange.called).to.equal(false);
+      expect(onValuesChange.mock.calls.length).to.equal(0);
     });
 
     it('should not overwrite a key already present in the values', () => {
@@ -203,10 +202,10 @@ describe('EventDialogFormStore', () => {
       store.registerValidator('priority', () => 'Priority required');
       await store.validateAll();
 
-      const listener = spy();
+      const listener = vi.fn();
       store.subscribe(listener);
       store.clearErrors(['title']);
-      expect(listener.callCount).to.equal(0);
+      expect(listener.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.deep.equal({ priority: ['Priority required'] });
     });
   });

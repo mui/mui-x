@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import type { DateTime } from 'luxon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
@@ -43,7 +42,7 @@ describe('<DateTimeField /> - Timezone', () => {
       };
 
       it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const view = renderWithProps({
           onChange,
           format,
@@ -55,7 +54,7 @@ describe('<DateTimeField /> - Timezone', () => {
         expectFieldValue(view.getSectionsContainer(), '12/31/2022 23');
 
         // Check the `onChange` value (uses default timezone, for example: UTC, see TZ env variable)
-        const actualDate = onChange.lastCall.firstArg;
+        const actualDate = onChange.mock.lastCall?.[0];
 
         // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.
         // In a real world scenario, this should probably never occur.
@@ -68,7 +67,7 @@ describe('<DateTimeField /> - Timezone', () => {
       TIMEZONE_TO_TEST.forEach((timezone) => {
         describe(`Timezone: ${timezone}`, () => {
           it('should use timezone prop for onChange and rendering when no value is provided', async () => {
-            const onChange = spy();
+            const onChange = vi.fn();
             const view = renderWithProps({
               onChange,
               format,
@@ -80,13 +79,13 @@ describe('<DateTimeField /> - Timezone', () => {
             expectFieldValue(view.getSectionsContainer(), '12/31/2022 23');
 
             // Check the `onChange` value (uses timezone prop)
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.lastCall?.[0];
             expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });
 
           it('should use timezone prop for rendering and value timezone for onChange when a value is provided', async () => {
-            const onChange = spy();
+            const onChange = vi.fn();
             const view = renderWithProps({
               defaultValue: adapter.date(undefined, timezone),
               onChange,
@@ -102,7 +101,7 @@ describe('<DateTimeField /> - Timezone', () => {
 
             // Check the `onChange` value (uses timezone prop)
             const expectedDate = adapter.addMonths(adapter.date(undefined, timezone), -1);
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.lastCall?.[0];
             expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });

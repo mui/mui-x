@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import {
   adapterToUse,
@@ -7,14 +6,14 @@ import {
   formatFullTimeValue,
 } from 'test/utils/pickers';
 import { screen } from '@mui/internal-test-utils';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<DigitalClock />', () => {
   const { render } = createPickerRenderer();
 
   describe('Reference date', () => {
     it('should use `referenceDate` when no value defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const referenceDate = '2018-01-01T12:30:00';
 
       const { user } = render(
@@ -39,8 +38,8 @@ describe('<DigitalClock />', () => {
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
     });
 
     it('should fallback to making the first entry focusable when `referenceDate` does not map to any option', () => {
@@ -56,7 +55,7 @@ describe('<DigitalClock />', () => {
     });
 
     it('should not use `referenceDate` when a value is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DigitalClock
@@ -71,12 +70,12 @@ describe('<DigitalClock />', () => {
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
     });
 
     it('should not use `referenceDate` when a defaultValue is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DigitalClock
@@ -91,14 +90,14 @@ describe('<DigitalClock />', () => {
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
     });
   });
 
   describe('Keyboard support', () => {
     it('should move focus up by 5 on PageUp press', async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(<DigitalClock autoFocus onChange={handleChange} />);
       const options = screen.getAllByRole('option');
       const lastOptionIndex = options.length - 1;
@@ -106,16 +105,16 @@ describe('<DigitalClock />', () => {
       await user.keyboard('{End}'); // moves focus to last element
       await user.keyboard('{PageUp}');
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(options[lastOptionIndex - 5]);
 
       await user.keyboard('{PageUp}');
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(options[lastOptionIndex - 10]);
     });
 
     it('should move focus to first item on PageUp press when current focused item index is among the first 5 items', async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(<DigitalClock autoFocus onChange={handleChange} />);
       const options = screen.getAllByRole('option');
 
@@ -123,28 +122,28 @@ describe('<DigitalClock />', () => {
       await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
 
       await user.keyboard('{PageUp}');
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(options[0]);
     });
 
     it('should move focus down by 5 on PageDown press', async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(<DigitalClock autoFocus onChange={handleChange} />);
       const options = screen.getAllByRole('option');
 
       await user.keyboard('{PageDown}');
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(options[5]);
 
       await user.keyboard('{PageDown}');
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(options[10]);
     });
 
     it('should move focus to last item on PageDown press when current focused item index is among the last 5 items', async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(<DigitalClock autoFocus onChange={handleChange} />);
       const options = screen.getAllByRole('option');
       const lastOptionIndex = options.length - 1;
@@ -156,7 +155,7 @@ describe('<DigitalClock />', () => {
       await user.keyboard('{ArrowUp}{ArrowUp}{ArrowUp}');
       await user.keyboard('{PageDown}');
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(lastElement);
     });
   });

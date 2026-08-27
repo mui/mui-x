@@ -9,12 +9,11 @@ import {
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import type {
   EventDialogGeneralTabProps,
   EventDialogGeneralTabPropsOverrides,
@@ -120,8 +119,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   });
 
   it('should allow saving when shouldEventRequireResource is true but no resources are configured', async () => {
-    const onClose = spy();
-    const onEventsChange = spy();
+    const onClose = vi.fn();
+    const onEventsChange = vi.fn();
     const noResourceEvent: SchedulerEvent = EventBuilder.new()
       .title('Running')
       .description('Morning run')
@@ -156,8 +155,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
     ]);
 
-    expect(onClose.callCount).to.equal(1);
-    expect(onEventsChange.callCount).to.equal(1);
+    expect(onClose.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.calls.length).to.equal(1);
     expect(screen.queryByRole('alert')).to.equal(null);
   });
 
@@ -439,12 +438,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should keep the form usable when the slot renders no section at all', async () => {
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       const { user } = renderWithSlot({ eventDialogGeneralTab: () => null }, { onEventsChange });
 
       expect(screen.getByLabelText(/event title/i)).not.to.equal(null);
       await user.click(screen.getByRole('button', { name: 'Save' }));
-      expect(onEventsChange.callCount).to.equal(1);
+      expect(onEventsChange.mock.calls.length).to.equal(1);
     });
 
     it('should pass the occurrence to the slot', () => {
@@ -476,19 +475,19 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should save a custom field edited from a section rendered by the slot', async () => {
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       const { user } = renderWithSlot({ eventDialogGeneralTab: CustomSection }, { onEventsChange });
 
       await user.clear(screen.getByRole('textbox', { name: 'Priority' }));
       await user.type(screen.getByRole('textbox', { name: 'Priority' }), 'high');
       await user.click(screen.getByRole('button', { name: 'Save' }));
 
-      expect(onEventsChange.callCount).to.equal(1);
-      expect(onEventsChange.lastCall.firstArg[0]).to.have.property('priority', 'high');
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.lastCall?.[0][0]).to.have.property('priority', 'high');
     });
 
     it('should block the submit when a validator of a section rendered by the slot fails', async () => {
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       function RequiredCustomSection() {
         const client = useEventDialogFormField<string>('client', {
           defaultValue: '',
@@ -512,12 +511,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
 
       await user.click(screen.getByRole('button', { name: 'Save' }));
-      expect(onEventsChange.callCount).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(screen.getByRole('alert')).to.have.text('Client is required');
 
       await user.type(screen.getByRole('textbox', { name: 'Client' }), 'Acme');
       await user.click(screen.getByRole('button', { name: 'Save' }));
-      expect(onEventsChange.callCount).to.equal(1);
+      expect(onEventsChange.mock.calls.length).to.equal(1);
     });
 
     it('should warn when the resource section is omitted while shouldEventRequireResource is enabled', async () => {
@@ -535,7 +534,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should not warn and save the assigned resource when the slot keeps the resource section', async () => {
       clearWarningsCache();
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       const { user } = renderWithSlot(
         { eventDialogGeneralTab: () => <ResourceAndColorSection /> },
         { shouldEventRequireResource: true, onEventsChange },
@@ -543,8 +542,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       await user.click(screen.getByRole('button', { name: 'Save' }));
 
-      expect(onEventsChange.callCount).to.equal(1);
-      expect(onEventsChange.lastCall.firstArg[0]).to.have.property('resource', personalResource.id);
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.lastCall?.[0][0]).to.have.property(
+        'resource',
+        personalResource.id,
+      );
     });
 
     it('should not warn when a section rendered by the slot validates the resource itself', async () => {
@@ -566,7 +568,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should block the submit of an event without resource when the slot omits the resource section', async () => {
       clearWarningsCache();
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       const noResourceEvent: SchedulerEvent = EventBuilder.new()
         .title('Running')
         .singleDay('2025-05-26T07:30:00Z', 45)
@@ -588,12 +590,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
       ]);
 
-      expect(onEventsChange.callCount).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
     });
 
     it('should surface the required-resource error on a custom field bound to resourceIds', async () => {
       clearWarningsCache();
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       const noResourceEvent: SchedulerEvent = EventBuilder.new()
         .title('Running')
         .singleDay('2025-05-26T07:30:00Z', 45)
@@ -621,7 +623,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
       ]);
 
-      expect(onEventsChange.callCount).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(screen.getByRole('alert')).to.have.text('A resource is required.');
     });
 
@@ -702,7 +704,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       }
 
       it('should validate the values as they are when the async validation settles, not as they were on submit', async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const deferred = createDeferred();
         function AsyncValidatedSection() {
           const client = useEventDialogFormField<string>('client', {
@@ -730,12 +732,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         await user.clear(screen.getByRole('textbox', { name: 'Client' }));
         await act(async () => deferred.resolve(null));
 
-        expect(onEventsChange.callCount).to.equal(0);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
         expect(screen.getByRole('alert')).to.have.text('Client is required');
       });
 
       it('should ignore a submission that settles after its editing session ended', async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const deferred = createDeferred();
         function AsyncValidatedSection() {
           useEventDialogFormField<string>('client', {
@@ -754,11 +756,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         unmount();
         await act(async () => deferred.resolve(null));
 
-        expect(onEventsChange.callCount).to.equal(0);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
       });
 
       it('should submit only once when Save is pressed twice while the validation is pending', async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const deferred = createDeferred();
         function AsyncValidatedSection() {
           useEventDialogFormField<string>('client', {
@@ -777,7 +779,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         await user.click(saveButton);
         await act(async () => deferred.resolve(null));
 
-        expect(onEventsChange.callCount).to.equal(1);
+        expect(onEventsChange.mock.calls.length).to.equal(1);
       });
     });
   });

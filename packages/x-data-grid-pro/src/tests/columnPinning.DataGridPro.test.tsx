@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import type { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
@@ -32,7 +31,7 @@ import {
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // TODO Move to utils
 // Fix https://github.com/mui/mui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
@@ -174,7 +173,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   it('should not allow to drop a column on top of a pinned column', () => {
-    const onPinnedColumnsChange = spy();
+    const onPinnedColumnsChange = vi.fn();
     render(
       <TestCase
         nbCols={3}
@@ -190,7 +189,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
 
-    expect(onPinnedColumnsChange.callCount).to.equal(0);
+    expect(onPinnedColumnsChange.mock.calls.length).to.equal(0);
   });
 
   it('should filter out invalid columns when blocking a column from being dropped', () => {
@@ -264,22 +263,22 @@ describe('<DataGridPro /> - Column pinning', () => {
 
   describe('props: onPinnedColumnsChange', () => {
     it('should call when a column is pinned', async () => {
-      const handlePinnedColumnsChange = spy();
+      const handlePinnedColumnsChange = vi.fn();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);
       await act(() => apiRef.current?.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
-      expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
+      expect(handlePinnedColumnsChange.mock.lastCall?.[0]).to.deep.equal({
         left: ['currencyPair'],
         right: [],
       });
       await act(() => apiRef.current?.pinColumn('price17M', GridPinnedColumnPosition.RIGHT));
-      expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
+      expect(handlePinnedColumnsChange.mock.lastCall?.[0]).to.deep.equal({
         left: ['currencyPair'],
         right: ['price17M'],
       });
     });
 
     it('should not change the pinned columns when it is called', async () => {
-      const handlePinnedColumnsChange = spy();
+      const handlePinnedColumnsChange = vi.fn();
       render(
         <TestCase
           pinnedColumns={{ left: ['currencyPair'] }}
@@ -290,7 +289,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       await act(() => apiRef.current?.pinColumn('price17M', GridPinnedColumnPosition.LEFT));
       await microtasks();
       expect($$(`[role="gridcell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
-      expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
+      expect(handlePinnedColumnsChange.mock.lastCall?.[0]).to.deep.equal({
         left: ['currencyPair', 'price17M'],
         right: [],
       });

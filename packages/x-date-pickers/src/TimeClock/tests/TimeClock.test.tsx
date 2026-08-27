@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { fireEvent, screen, within } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import {
@@ -7,7 +6,7 @@ import {
   fireClockPointerEvent,
   timeClockHandler,
 } from 'test/utils/pickers';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<TimeClock />', () => {
   const { render } = createPickerRenderer();
@@ -61,7 +60,7 @@ describe('<TimeClock />', () => {
   });
 
   it('selects the first hour on Home press', async () => {
-    const handleChange = spy();
+    const handleChange = vi.fn();
     const { user } = render(
       <TimeClock
         autoFocus
@@ -72,8 +71,8 @@ describe('<TimeClock />', () => {
 
     await user.keyboard('{Home}');
 
-    expect(handleChange.callCount).to.equal(1);
-    const [newDate, reason] = handleChange.firstCall.args;
+    expect(handleChange.mock.calls.length).to.equal(1);
+    const [newDate, reason] = handleChange.mock.calls[0];
     // TODO: Can't find the GH issue regarding this
     // expect(newDate).toEqualDateTime(new Date(2019, 0, 1, 0, 20));
     // but the year, mont, day is different
@@ -83,7 +82,7 @@ describe('<TimeClock />', () => {
   });
 
   it('selects the last hour on End press', async () => {
-    const handleChange = spy();
+    const handleChange = vi.fn();
     const { user } = render(
       <TimeClock
         autoFocus
@@ -94,15 +93,15 @@ describe('<TimeClock />', () => {
 
     await user.keyboard('{End}');
 
-    expect(handleChange.callCount).to.equal(1);
-    const [newDate, reason] = handleChange.firstCall.args;
+    expect(handleChange.mock.calls.length).to.equal(1);
+    const [newDate, reason] = handleChange.mock.calls[0];
     expect(adapterToUse.getHours(newDate)).to.equal(11);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
 
   it('selects the next hour on ArrowUp press', async () => {
-    const handleChange = spy();
+    const handleChange = vi.fn();
     const { user } = render(
       <TimeClock
         autoFocus
@@ -113,15 +112,15 @@ describe('<TimeClock />', () => {
 
     await user.keyboard('{ArrowUp}');
 
-    expect(handleChange.callCount).to.equal(1);
-    const [newDate, reason] = handleChange.firstCall.args;
+    expect(handleChange.mock.calls.length).to.equal(1);
+    const [newDate, reason] = handleChange.mock.calls[0];
     expect(adapterToUse.getHours(newDate)).to.equal(5);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
 
   it('selects the previous hour on ArrowDown press', async () => {
-    const handleChange = spy();
+    const handleChange = vi.fn();
     const { user } = render(
       <TimeClock
         autoFocus
@@ -132,15 +131,15 @@ describe('<TimeClock />', () => {
 
     await user.keyboard('{ArrowDown}');
 
-    expect(handleChange.callCount).to.equal(1);
-    const [newDate, reason] = handleChange.firstCall.args;
+    expect(handleChange.mock.calls.length).to.equal(1);
+    const [newDate, reason] = handleChange.mock.calls[0];
     expect(adapterToUse.getHours(newDate)).to.equal(3);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
 
   it('should increase hour selection by 5 on PageUp press', async () => {
-    const handleChange = spy();
+    const handleChange = vi.fn();
     const { user } = render(
       <TimeClock
         autoFocus
@@ -151,15 +150,15 @@ describe('<TimeClock />', () => {
 
     await user.keyboard('{PageUp}');
 
-    expect(handleChange.callCount).to.equal(1);
-    const [newDate, reason] = handleChange.firstCall.args;
+    expect(handleChange.mock.calls.length).to.equal(1);
+    const [newDate, reason] = handleChange.mock.calls[0];
     expect(adapterToUse.getHours(newDate)).to.equal(23);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
 
   it('should decrease hour selection by 5 on PageDown press', async () => {
-    const handleChange = spy();
+    const handleChange = vi.fn();
     const { user } = render(
       <TimeClock
         autoFocus
@@ -170,8 +169,8 @@ describe('<TimeClock />', () => {
 
     await user.keyboard('{PageDown}');
 
-    expect(handleChange.callCount).to.equal(1);
-    const [newDate, reason] = handleChange.firstCall.args;
+    expect(handleChange.mock.calls.length).to.equal(1);
+    const [newDate, reason] = handleChange.mock.calls[0];
     expect(adapterToUse.getHours(newDate)).to.equal(0);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
@@ -188,7 +187,7 @@ describe('<TimeClock />', () => {
     },
   ].forEach(({ keyName, keySequence }) => {
     it(`sets value on ${keyName} press`, async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(
         <TimeClock
           autoFocus
@@ -200,8 +199,8 @@ describe('<TimeClock />', () => {
       await user.keyboard('{ArrowDown}');
       await user.keyboard(keySequence);
 
-      expect(handleChange.callCount).to.equal(2);
-      let [newDate, reason] = handleChange.lastCall.args;
+      expect(handleChange.mock.calls.length).to.equal(2);
+      let [newDate, reason] = handleChange.mock.lastCall ?? [];
 
       expect(adapterToUse.getHours(newDate)).to.equal(3);
       expect(reason).to.equal('partial');
@@ -209,8 +208,8 @@ describe('<TimeClock />', () => {
       await user.keyboard('{ArrowUp}');
       await user.keyboard(keySequence);
 
-      expect(handleChange.callCount).to.equal(4);
-      [newDate, reason] = handleChange.lastCall.args;
+      expect(handleChange.mock.calls.length).to.equal(4);
+      [newDate, reason] = handleChange.mock.lastCall ?? [];
 
       expect(adapterToUse.getMinutes(newDate)).to.equal(21);
       expect(reason).to.equal('finish');
@@ -226,11 +225,11 @@ describe('<TimeClock />', () => {
         },
       ],
     };
-    const onChangeMock = spy();
+    const onChangeMock = vi.fn();
     render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} readOnly />);
 
     fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', selectEvent);
-    expect(onChangeMock.callCount).to.equal(0);
+    expect(onChangeMock.mock.calls.length).to.equal(0);
 
     // hours are not disabled
     const hoursContainer = screen.getByRole('listbox');
@@ -250,11 +249,11 @@ describe('<TimeClock />', () => {
         },
       ],
     };
-    const onChangeMock = spy();
+    const onChangeMock = vi.fn();
     render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} disabled />);
 
     fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', selectEvent);
-    expect(onChangeMock.callCount).to.equal(0);
+    expect(onChangeMock.mock.calls.length).to.equal(0);
 
     // hours are disabled
     const hoursContainer = screen.getByRole('listbox');
@@ -302,8 +301,8 @@ describe('<TimeClock />', () => {
     };
 
     it('should select enabled hour', () => {
-      const handleChange = spy();
-      const handleViewChange = spy();
+      const handleChange = vi.fn();
+      const handleViewChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -317,16 +316,16 @@ describe('<TimeClock />', () => {
 
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', clockTouchEvent['13:--']);
 
-      expect(handleChange.callCount).to.equal(1);
-      const [date, selectionState] = handleChange.firstCall.args;
+      expect(handleChange.mock.calls.length).to.equal(1);
+      const [date, selectionState] = handleChange.mock.calls[0];
       expect(date).toEqualDateTime(new Date(2018, 0, 1, 13));
       expect(selectionState).to.equal('shallow');
-      expect(handleViewChange.callCount).to.equal(0);
+      expect(handleViewChange.mock.calls.length).to.equal(0);
     });
 
     it('should select enabled minute', () => {
-      const handleChange = spy();
-      const handleViewChange = spy();
+      const handleChange = vi.fn();
+      const handleViewChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -341,15 +340,15 @@ describe('<TimeClock />', () => {
 
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', clockTouchEvent['--:20']);
 
-      expect(handleChange.callCount).to.equal(1);
-      const [date, selectionState] = handleChange.firstCall.args;
+      expect(handleChange.mock.calls.length).to.equal(1);
+      const [date, selectionState] = handleChange.mock.calls[0];
       expect(date).toEqualDateTime(new Date(2018, 0, 1, 13, 20));
       expect(selectionState).to.equal('shallow');
-      expect(handleViewChange.callCount).to.equal(0);
+      expect(handleViewChange.mock.calls.length).to.equal(0);
     });
 
     it('should not select minute when time is disabled', () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -363,11 +362,11 @@ describe('<TimeClock />', () => {
 
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', clockTouchEvent['--:20']);
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
     });
 
     it('should not select minute when time is disabled (no current value)', () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -381,11 +380,11 @@ describe('<TimeClock />', () => {
 
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', clockTouchEvent['--:20']);
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
     });
 
     it('should not select disabled hour', () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -399,11 +398,11 @@ describe('<TimeClock />', () => {
 
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', clockTouchEvent['19:--']);
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
     });
 
     it('should not select disabled hour (no current value)', () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -417,7 +416,7 @@ describe('<TimeClock />', () => {
 
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', clockTouchEvent['19:--']);
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
     });
 
     it('should visually disable the dates not matching minutesStep', () => {
@@ -436,8 +435,8 @@ describe('<TimeClock />', () => {
     });
 
     it('should select enabled second', () => {
-      const handleChange = spy();
-      const handleViewChange = spy();
+      const handleChange = vi.fn();
+      const handleViewChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -452,15 +451,15 @@ describe('<TimeClock />', () => {
 
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', clockTouchEvent['--:10']);
 
-      expect(handleChange.callCount).to.equal(1);
-      const [date, selectionState] = handleChange.firstCall.args;
+      expect(handleChange.mock.calls.length).to.equal(1);
+      const [date, selectionState] = handleChange.mock.calls[0];
       expect(date).toEqualDateTime(new Date(2018, 0, 1, 13, 20, 10));
       expect(selectionState).to.equal('shallow');
-      expect(handleViewChange.callCount).to.equal(0);
+      expect(handleViewChange.mock.calls.length).to.equal(0);
     });
 
     it('should not select second when time is disabled', () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -474,11 +473,11 @@ describe('<TimeClock />', () => {
 
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', clockTouchEvent['--:20']);
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
     });
 
     it('should not select second when time is disabled (no current value)', () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -492,12 +491,12 @@ describe('<TimeClock />', () => {
 
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', clockTouchEvent['--:20']);
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
     });
 
     it('should select enabled hour on touch and drag', () => {
-      const handleChange = spy();
-      const handleViewChange = spy();
+      const handleChange = vi.fn();
+      const handleViewChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -510,16 +509,16 @@ describe('<TimeClock />', () => {
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', clockTouchEvent['13:--']);
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerMove', clockTouchEvent['19:--']);
 
-      expect(handleChange.callCount).to.equal(2);
-      const [date, selectionState] = handleChange.lastCall.args;
+      expect(handleChange.mock.calls.length).to.equal(2);
+      const [date, selectionState] = handleChange.mock.lastCall ?? [];
       expect(date).toEqualDateTime(new Date(2018, 0, 1, 19));
       expect(selectionState).to.equal('shallow');
-      expect(handleViewChange.callCount).to.equal(0);
+      expect(handleViewChange.mock.calls.length).to.equal(0);
     });
 
     it('should select enabled hour and move to next view on touch end', () => {
-      const handleChange = spy();
-      const handleViewChange = spy();
+      const handleChange = vi.fn();
+      const handleViewChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -532,11 +531,11 @@ describe('<TimeClock />', () => {
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', clockTouchEvent['13:--']);
       fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', clockTouchEvent['13:--']);
 
-      expect(handleChange.callCount).to.equal(2);
-      const [date, selectionState] = handleChange.lastCall.args;
+      expect(handleChange.mock.calls.length).to.equal(2);
+      const [date, selectionState] = handleChange.mock.lastCall ?? [];
       expect(date).toEqualDateTime(new Date(2018, 0, 1, 13));
       expect(selectionState).to.equal('partial');
-      expect(handleViewChange.callCount).to.equal(1);
+      expect(handleViewChange.mock.calls.length).to.equal(1);
     });
   });
 
@@ -550,8 +549,8 @@ describe('<TimeClock />', () => {
     };
 
     it('should keep tracking the drag and commit the value when released outside the clock', () => {
-      const handleChange = spy();
-      const handleViewChange = spy();
+      const handleChange = vi.fn();
+      const handleViewChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -583,15 +582,15 @@ describe('<TimeClock />', () => {
       });
       fireEvent.pointerUp(document.body, { pointerId: 1, ...toClientCoords(hourOffset['19:--']) });
 
-      const [date, selectionState] = handleChange.lastCall.args;
+      const [date, selectionState] = handleChange.mock.lastCall ?? [];
       expect(date).toEqualDateTime(new Date(2018, 0, 1, 19));
       expect(selectionState).to.equal('partial');
-      expect(handleViewChange.callCount).to.equal(1);
+      expect(handleViewChange.mock.calls.length).to.equal(1);
     });
 
     it('should drop the gesture without committing when the pointer is cancelled', () => {
-      const handleChange = spy();
-      const handleViewChange = spy();
+      const handleChange = vi.fn();
+      const handleViewChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -625,13 +624,13 @@ describe('<TimeClock />', () => {
       });
 
       // The interrupted gesture must not commit (no `finish`) nor advance the view.
-      expect(handleChange.lastCall.args[1]).to.equal('shallow');
-      expect(handleViewChange.callCount).to.equal(0);
+      expect(handleChange.mock.lastCall?.[1]).to.equal('shallow');
+      expect(handleViewChange.mock.calls.length).to.equal(0);
     });
 
     it('should recover and commit when a new pointerdown supersedes a gesture whose pointerup was lost', () => {
-      const handleChange = spy();
-      const handleViewChange = spy();
+      const handleChange = vi.fn();
+      const handleViewChange = vi.fn();
       render(
         <TimeClock
           ampm={false}
@@ -664,16 +663,16 @@ describe('<TimeClock />', () => {
       });
       fireEvent.pointerUp(document.body, { pointerId: 2, ...toClientCoords(hourOffset['19:--']) });
 
-      const [date, selectionState] = handleChange.lastCall.args;
+      const [date, selectionState] = handleChange.mock.lastCall ?? [];
       expect(date).toEqualDateTime(new Date(2018, 0, 1, 19));
       expect(selectionState).to.equal('partial');
-      expect(handleViewChange.callCount).to.equal(1);
+      expect(handleViewChange.mock.calls.length).to.equal(1);
     });
   });
 
   describe('default value', () => {
     it('if value is provided, keeps minutes and seconds when changing hour', async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(
         <TimeClock
           autoFocus
@@ -684,21 +683,21 @@ describe('<TimeClock />', () => {
 
       await user.keyboard('{ArrowUp}');
 
-      expect(handleChange.callCount).to.equal(1);
-      const [newDate] = handleChange.firstCall.args;
+      expect(handleChange.mock.calls.length).to.equal(1);
+      const [newDate] = handleChange.mock.calls[0];
       expect(adapterToUse.getHours(newDate)).to.equal(5);
       expect(adapterToUse.getMinutes(newDate)).to.equal(19);
       expect(adapterToUse.getSeconds(newDate)).to.equal(47);
     });
 
     it('if value is not provided, uses zero as default for minutes and seconds when selecting hour', async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(<TimeClock autoFocus value={null} onChange={handleChange} />);
 
       await user.keyboard('{ArrowUp}');
 
-      expect(handleChange.callCount).to.equal(1);
-      const [newDate] = handleChange.firstCall.args;
+      expect(handleChange.mock.calls.length).to.equal(1);
+      const [newDate] = handleChange.mock.calls[0];
       expect(adapterToUse.getHours(newDate)).to.equal(1);
       expect(adapterToUse.getMinutes(newDate)).to.equal(0);
       expect(adapterToUse.getSeconds(newDate)).to.equal(0);
@@ -707,7 +706,7 @@ describe('<TimeClock />', () => {
 
   describe('Reference date', () => {
     it('should use `referenceDate` when no value defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <TimeClock onChange={onChange} referenceDate={adapterToUse.date('2018-01-01T12:30:00')} />,
@@ -719,12 +718,12 @@ describe('<TimeClock />', () => {
         adapterToUse.setHours(adapterToUse.date(), 3),
         'hours',
       );
-      expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
+      expect(onChange.mock.calls.length).to.equal(2);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
     });
 
     it('should not use `referenceDate` when a value is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <TimeClock
@@ -740,12 +739,12 @@ describe('<TimeClock />', () => {
         adapterToUse.setHours(adapterToUse.date(), 3),
         'hours',
       );
-      expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
+      expect(onChange.mock.calls.length).to.equal(2);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
     });
 
     it('should not use `referenceDate` when a defaultValue is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <TimeClock
@@ -761,8 +760,8 @@ describe('<TimeClock />', () => {
         adapterToUse.setHours(adapterToUse.date(), 3),
         'hours',
       );
-      expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
+      expect(onChange.mock.calls.length).to.equal(2);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
     });
   });
 });

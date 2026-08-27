@@ -11,10 +11,9 @@ import type {
   GridGetRowsResponse,
   GridGroupNode,
 } from '@mui/x-data-grid-premium';
-import { spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<DataGridPremium /> - Data source row grouping (loading state)', () => {
   const { render } = createRenderer();
@@ -23,7 +22,7 @@ describe('<DataGridPremium /> - Data source row grouping (loading state)', () =>
     let resolveSecond: (response: GridGetRowsResponse) => void = () => {};
     const responses: GridGetRowsResponse[] = [{ rows: [{ id: 'A', group: 'A' }], rowCount: 1 }];
     let callIndex = 0;
-    const getRows = spy(() => {
+    const getRows = vi.fn(() => {
       const index = callIndex;
       callIndex += 1;
       if (index === 0) {
@@ -59,7 +58,7 @@ describe('<DataGridPremium /> - Data source row grouping (loading state)', () =>
     const { setProps } = render(<Test />);
 
     await waitFor(() => {
-      expect(getRows.callCount).to.equal(1);
+      expect(getRows.mock.calls.length).to.equal(1);
     });
     await waitFor(() => {
       expect(apiRef.current?.state.rows.loading).to.equal(false);
@@ -68,7 +67,7 @@ describe('<DataGridPremium /> - Data source row grouping (loading state)', () =>
     setProps({ rowGroupingModel: ['group', 'category'] });
 
     await waitFor(() => {
-      expect(getRows.callCount).to.equal(2);
+      expect(getRows.mock.calls.length).to.equal(2);
     });
     expect(apiRef.current?.state.rows.loading).to.equal(true);
 
@@ -82,7 +81,7 @@ describe('<DataGridPremium /> - Data source row grouping (loading state)', () =>
   });
 
   it('should warn when `dataSourceKeepPreviousData` is used with row grouping', async () => {
-    const getRows = spy(() => Promise.resolve({ rows: [{ id: 'A', group: 'A' }], rowCount: 1 }));
+    const getRows = vi.fn(() => Promise.resolve({ rows: [{ id: 'A', group: 'A' }], rowCount: 1 }));
     const dataSource: GridDataSource = {
       getRows: getRows as unknown as GridDataSource['getRows'],
       getGroupKey: (row) => row.group,
@@ -106,7 +105,7 @@ describe('<DataGridPremium /> - Data source row grouping (loading state)', () =>
     await expect(async () => {
       render(<Test />);
       await waitFor(() => {
-        expect(getRows.callCount).to.be.greaterThan(0);
+        expect(getRows.mock.calls.length).to.be.greaterThan(0);
       });
     }).toWarnDev(
       [
@@ -127,7 +126,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
   const gridHeight = 4 * rowHeight + columnHeaderHeight + 2;
 
   it('should reset the rows after row grouping model change when children are expanded', async () => {
-    const getRowsSpy = spy();
+    const getRowsSpy = vi.fn();
 
     function TestComponent(props: { rowGroupingModel: DataGridPremiumProps['rowGroupingModel'] }) {
       apiRef = useGridApiRef();
@@ -187,7 +186,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
     setProps({ rowGroupingModel: ['company', 'trader'] });
 
     await waitFor(() => {
-      expect(getRowsSpy.lastCall.args[0].groupFields).to.deep.equal(['company', 'trader']);
+      expect(getRowsSpy.mock.lastCall?.[0].groupFields).to.deep.equal(['company', 'trader']);
     });
 
     await waitFor(() => {
@@ -317,7 +316,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
     }
 
     it('should create row grouping nodes with the grouping field for each lazy-loaded level', async () => {
-      const getRowsSpy = spy();
+      const getRowsSpy = vi.fn();
       const { user } = render(<TestNestedLazyRowGrouping onFetchRows={getRowsSpy} />);
 
       await waitFor(() => {
@@ -347,7 +346,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       const updatedTechNode = apiRef.current!.getRowNode<GridGroupNode>('sector-tech')!;
       expect(updatedTechNode.childrenFromPath.industry.Software).to.equal('industry-software');
 
-      const technologyRequest = getRowsSpy.getCalls().find((call) => {
+      const technologyRequest = getRowsSpy.mock.calls.find((call) => {
         const params = call.firstArg as GridGetRowsParams;
         return JSON.stringify(params.groupKeys) === JSON.stringify(['Technology']);
       })?.firstArg as GridGetRowsParams | undefined;
@@ -356,7 +355,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
     });
 
     it('should lazy load children for default-expanded row grouping groups', async () => {
-      const getRowsSpy = spy();
+      const getRowsSpy = vi.fn();
       render(
         <TestNestedLazyRowGrouping defaultGroupingExpansionDepth={1} onFetchRows={getRowsSpy} />,
       );
@@ -368,7 +367,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       const sectorNode = apiRef.current!.getRowNode<GridGroupNode>('sector-tech')!;
       expect(sectorNode.childrenExpanded).to.equal(true);
 
-      const technologyRequest = getRowsSpy.getCalls().find((call) => {
+      const technologyRequest = getRowsSpy.mock.calls.find((call) => {
         const params = call.firstArg as GridGetRowsParams;
         return JSON.stringify(params.groupKeys) === JSON.stringify(['Technology']);
       })?.firstArg as GridGetRowsParams | undefined;
@@ -376,8 +375,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
     });
 
     it('should use isGroupExpandedByDefault for lazy-loaded row grouping groups', async () => {
-      const getRowsSpy = spy();
-      const isGroupExpandedByDefault = spy(
+      const getRowsSpy = vi.fn();
+      const isGroupExpandedByDefault = vi.fn(
         (node: GridGroupNode) => node.groupingField === 'sector' && node.groupingKey === 'Finance',
       );
       render(
@@ -396,7 +395,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       expect(technologyNode.childrenExpanded).to.equal(false);
       expect(financeNode.childrenExpanded).to.equal(true);
       expect(apiRef.current!.getRow('industry-software')).to.equal(null);
-      expect(isGroupExpandedByDefault.called).to.equal(true);
+      expect(isGroupExpandedByDefault.mock.calls.length).to.be.greaterThan(0);
     });
 
     [
@@ -418,7 +417,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       },
     ].forEach(({ label, updateModel, isMatchingRequest }) => {
       it(`should preserve expanded row grouping groups and fetch children after ${label}`, async () => {
-        const getRowsSpy = spy();
+        const getRowsSpy = vi.fn();
         const { user } = render(<TestNestedLazyRowGrouping onFetchRows={getRowsSpy} />);
 
         await waitFor(() => expect(apiRef.current!.getRow('sector-tech')).not.to.equal(null));
@@ -427,12 +426,12 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
         await user.click(within(getCell(1, 0)).getByRole('button'));
         await waitFor(() => expect(apiRef.current!.getRow('stock-msft')).not.to.equal(null));
 
-        getRowsSpy.resetHistory();
+        getRowsSpy.mockClear();
 
         act(() => updateModel());
 
         await waitFor(() => {
-          const nestedRequest = getRowsSpy.getCalls().find((call) => {
+          const nestedRequest = getRowsSpy.mock.calls.find((call) => {
             const params = call.firstArg as GridGetRowsParams;
             return (
               JSON.stringify(params.groupKeys) === JSON.stringify(['Technology']) &&
@@ -445,7 +444,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
 
         // Deeper expanded levels must also be re-fetched, not only the first.
         await waitFor(() => {
-          const deepRequest = getRowsSpy.getCalls().find((call) => {
+          const deepRequest = getRowsSpy.mock.calls.find((call) => {
             const params = call.firstArg as GridGetRowsParams;
             return (
               JSON.stringify(params.groupKeys) === JSON.stringify(['Technology', 'Software']) &&
@@ -465,7 +464,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
     });
 
     it('should lazy load leaves under the final row grouping level', async () => {
-      const getRowsSpy = spy();
+      const getRowsSpy = vi.fn();
       const { user } = render(<TestNestedLazyRowGrouping onFetchRows={getRowsSpy} />);
 
       await waitFor(() => expect(apiRef.current!.getRow('sector-tech')).not.to.equal(null));
@@ -486,7 +485,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       const noGroupingField = '__no_field__';
       expect(softwareNode.childrenFromPath[noGroupingField].Microsoft).to.equal('stock-msft');
 
-      const softwareRequest = getRowsSpy.getCalls().find((call) => {
+      const softwareRequest = getRowsSpy.mock.calls.find((call) => {
         const params = call.firstArg as GridGetRowsParams;
         return JSON.stringify(params.groupKeys) === JSON.stringify(['Technology', 'Software']);
       })?.firstArg as GridGetRowsParams | undefined;
@@ -495,7 +494,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
     });
 
     it('should collapse expanded row grouping parents without removing skeleton rows through row updates', async () => {
-      const getRowsSpy = spy();
+      const getRowsSpy = vi.fn();
       const { user } = render(<TestNestedLazyRowGrouping onFetchRows={getRowsSpy} />);
 
       await waitFor(() => expect(apiRef.current!.getRow('sector-tech')).not.to.equal(null));

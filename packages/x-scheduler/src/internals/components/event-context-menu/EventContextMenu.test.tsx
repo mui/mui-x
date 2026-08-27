@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { screen, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('EventContextMenu', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
@@ -19,7 +18,7 @@ describe('EventContextMenu', () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  function renderEvent(onEventsChange = spy()) {
+  function renderEvent(onEventsChange = vi.fn()) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -117,8 +116,8 @@ describe('EventContextMenu', () => {
     fireEvent.contextMenu(getEvent());
     fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
 
-    expect(onEventsChange.callCount).to.equal(1);
-    expect(onEventsChange.firstCall.args[0]).to.have.length(0);
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
     expect(screen.queryByRole('menu')).to.equal(null);
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
   });
@@ -140,7 +139,7 @@ describe('EventContextMenu', () => {
   });
 
   describe('read-only events', () => {
-    function renderReadOnlyEvent(onEventsChange = spy()) {
+    function renderReadOnlyEvent(onEventsChange = vi.fn()) {
       const event = EventBuilder.new()
         .id('event-1')
         .title('Read-only event')

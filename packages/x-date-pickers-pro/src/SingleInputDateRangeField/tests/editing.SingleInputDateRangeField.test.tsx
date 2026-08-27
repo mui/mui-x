@@ -1,9 +1,8 @@
-import { spy } from 'sinon';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { waitFor } from '@mui/internal-test-utils';
 import { expectFieldValue } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(
@@ -82,7 +81,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const view = renderWithProps({
           value: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
           onChange,
@@ -93,13 +92,13 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         await view.pressKey('ArrowUp');
         expectFieldValue(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.firstArg[0]).toEqualDateTime(new Date(2023, 5, 4));
-        expect(onChange.lastCall.firstArg[1]).toEqualDateTime(new Date(2022, 5, 5));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2022, 5, 5));
       });
 
       it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const view = renderWithProps({
           defaultValue: [adapter.date('2022-06-04'), adapter.date('2022-06-05')],
           onChange,
@@ -110,13 +109,13 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         await view.pressKey('ArrowUp');
         expectFieldValue(view.getSectionsContainer(), '06/04/2023 – 06/05/2022');
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.firstArg[0]).toEqualDateTime(new Date(2023, 5, 4));
-        expect(onChange.lastCall.firstArg[1]).toEqualDateTime(new Date(2022, 5, 5));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2022, 5, 5));
       });
 
       it('should not call the onChange callback before filling the last section of the active date when starting from a null value', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const view = renderWithProps({
           value: [null, null],
           onChange,
@@ -126,14 +125,14 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         await view.selectSection('day');
 
         await view.pressKey('4');
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
         expectFieldValue(view.getSectionsContainer(), '04 MMMM – DD MMMM');
 
         await view.pressKey('S');
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.firstArg[0]).toEqualDateTime(new Date(2022, 8, 4));
-        expect(onChange.lastCall.firstArg[1]).to.equal(null);
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(new Date(2022, 8, 4));
+        expect(onChange.mock.lastCall?.[0][1]).to.equal(null);
         await waitFor(() => {
           expectFieldValue(view.getSectionsContainer(), 'DD MMMM – DD MMMM');
         });
@@ -176,7 +175,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     });
 
     it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -189,11 +188,11 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       await view.user.keyboard('{Control>}a{/Control}');
 
       await view.user.keyboard('{Delete}');
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
     });
 
     it('should call `onChange` when clearing the first section of each date', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
@@ -204,36 +203,36 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       // Start date
       await view.user.keyboard('{Delete}');
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg[0]).to.equal(null);
-      expect(onChange.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0][0]).to.equal(null);
+      expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
 
       await view.user.keyboard('{ArrowRight}');
       await view.user.keyboard('{Delete}');
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
 
       await view.user.keyboard('{ArrowRight}');
       await view.user.keyboard('{Delete}');
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
 
       // End date
       await view.user.keyboard('{ArrowRight}');
       await view.user.keyboard('{Delete}');
-      expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.firstArg[0]).to.equal(null);
-      expect(onChange.lastCall.firstArg[1]).to.equal(null);
+      expect(onChange.mock.calls.length).to.equal(2);
+      expect(onChange.mock.lastCall?.[0][0]).to.equal(null);
+      expect(onChange.mock.lastCall?.[0][1]).to.equal(null);
 
       await view.user.keyboard('{ArrowRight}');
       await view.user.keyboard('{Delete}');
-      expect(onChange.callCount).to.equal(2);
+      expect(onChange.mock.calls.length).to.equal(2);
 
       await view.user.keyboard('{ArrowRight}');
       await view.user.keyboard('{Delete}');
-      expect(onChange.callCount).to.equal(2);
+      expect(onChange.mock.calls.length).to.equal(2);
     });
 
     it('should not call `onChange` if the section is already empty', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -244,10 +243,10 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       await view.selectSection('month');
 
       await view.user.keyboard('{Delete}');
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
 
       await view.user.keyboard('{Delete}');
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
     });
   });
 
@@ -289,7 +288,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -302,11 +301,11 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         await view.user.keyboard('{Control>}a{/Control}');
 
         await view.user.keyboard('{Backspace}');
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
       });
 
       it('should call `onChange` when clearing the first section of each date (Backspace)', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const view = renderWithProps({
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
@@ -317,36 +316,36 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         // Start date
         await view.user.keyboard('{Backspace}');
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.firstArg[0]).to.equal(null);
-        expect(onChange.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0][0]).to.equal(null);
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
 
         await view.user.keyboard('{ArrowRight}');
         await view.user.keyboard('{Backspace}');
-        expect(onChange.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(1);
 
         await view.user.keyboard('{ArrowRight}');
         await view.user.keyboard('{Backspace}');
-        expect(onChange.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(1);
 
         // End date
         await view.user.keyboard('{ArrowRight}');
         await view.user.keyboard('{Backspace}');
-        expect(onChange.callCount).to.equal(2);
-        expect(onChange.lastCall.firstArg[0]).to.equal(null);
-        expect(onChange.lastCall.firstArg[1]).to.equal(null);
+        expect(onChange.mock.calls.length).to.equal(2);
+        expect(onChange.mock.lastCall?.[0][0]).to.equal(null);
+        expect(onChange.mock.lastCall?.[0][1]).to.equal(null);
 
         await view.user.keyboard('{ArrowRight}');
         await view.user.keyboard('{Backspace}');
-        expect(onChange.callCount).to.equal(2);
+        expect(onChange.mock.calls.length).to.equal(2);
 
         await view.user.keyboard('{ArrowRight}');
         await view.user.keyboard('{Backspace}');
-        expect(onChange.callCount).to.equal(2);
+        expect(onChange.mock.calls.length).to.equal(2);
       });
 
       it('should not call `onChange` if the section is already empty (Backspace)', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -357,10 +356,10 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         await view.selectSection('month');
 
         await view.user.keyboard('{Backspace}');
-        expect(onChange.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(1);
 
         await view.user.keyboard('{Backspace}');
-        expect(onChange.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(1);
       });
     },
   );

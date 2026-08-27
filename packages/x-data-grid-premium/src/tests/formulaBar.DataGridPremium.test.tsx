@@ -3,7 +3,6 @@ import * as ReactDOM from 'react-dom';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, microtasks } from 'test/utils/helperFn';
-import { spy } from 'sinon';
 import {
   DataGridPremium,
   Toolbar,
@@ -14,7 +13,7 @@ import { FormulaBar, formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 import { setCaretOffset } from '../components/formulaEditorCaret';
 
@@ -216,7 +215,7 @@ describe('<DataGridPremium /> - Formula bar', () => {
     });
 
     it('commits on Enter through processRowUpdate and moves the focus below', async () => {
-      const processRowUpdate = spy((newRow) => newRow);
+      const processRowUpdate = vi.fn((newRow) => newRow);
       render(<Test processRowUpdate={processRowUpdate} />);
       await microtasks();
       focusCell(0, 'total');
@@ -226,8 +225,8 @@ describe('<DataGridPremium /> - Formula bar', () => {
       await waitFor(() => {
         expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity * 2');
       });
-      expect(processRowUpdate.callCount).to.equal(1);
-      expect(processRowUpdate.lastCall.args[0].total).to.equal('=price * quantity * 2');
+      expect(processRowUpdate.mock.calls.length).to.equal(1);
+      expect(processRowUpdate.mock.lastCall?.[0].total).to.equal('=price * quantity * 2');
       expect(getCell(0, 3).textContent).to.equal('12');
       expect(gridFocusCellSelector(privateApi())).to.deep.equal({ id: 1, field: 'total' });
       // The draft is gone — the bar shows the next focused cell.

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import {
@@ -8,7 +7,7 @@ import {
   getFieldInputRoot,
   isPickerSingleInput,
 } from 'test/utils/pickers';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
@@ -109,7 +108,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       });
 
       it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const response = renderWithProps({
           defaultValue: values[0],
@@ -124,18 +123,18 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
         assertRenderedValue(newValue);
         // // TODO: Clean this exception or change the clock behavior
-        // expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
+        // expect(onChange.mock.calls.length).to.equal(getExpectedOnChangeCount(componentFamily, params));
         // if (Array.isArray(newValue)) {
         //   newValue.forEach((value, index) => {
-        //     expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        //     expect(onChange.mock.lastCall?.[0][index]).toEqualDateTime(value);
         //   });
         // } else {
-        //   expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+        //   expect(onChange.mock.lastCall?.[0]).toEqualDateTime(newValue as any);
         // }
       });
 
       it('should call onChange when updating a value defined with `props.value`', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const useControlledElement = (props: any) => {
           const [value, setValue] = React.useState(props?.value || null);
@@ -160,13 +159,15 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           closeMobilePicker: true,
         });
 
-        expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
+        expect(onChange.mock.calls.length).to.equal(
+          getExpectedOnChangeCount(componentFamily, params),
+        );
         if (Array.isArray(newValue)) {
           newValue.forEach((value, index) => {
-            expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+            expect(onChange.mock.lastCall?.[0][index]).toEqualDateTime(value);
           });
         } else {
-          expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+          expect(onChange.mock.lastCall?.[0]).toEqualDateTime(newValue as any);
         }
       });
     });
@@ -209,7 +210,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           return;
         }
 
-        const handleChange = spy();
+        const handleChange = vi.fn();
 
         const response = renderWithProps({
           onChange: handleChange,
@@ -217,7 +218,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         });
         await response.selectSection(undefined);
         await response.pressKey('ArrowUp');
-        expect(handleChange.callCount).to.equal(isPickerSingleInput(params) ? 1 : 0);
+        expect(handleChange.mock.calls.length).to.equal(isPickerSingleInput(params) ? 1 : 0);
       });
 
       it('should have correct labelledby relationship when toolbar is shown', () => {

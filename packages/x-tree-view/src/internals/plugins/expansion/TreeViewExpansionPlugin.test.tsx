@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { act } from '@mui/internal-test-utils';
 import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
@@ -7,7 +6,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import type { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { TreeViewAnyStore } from '../../models';
 
 /**
@@ -72,7 +71,7 @@ describeTreeView<TreeViewAnyStore>(
       });
 
       it('should call the onExpandedItemsChange callback when the model is updated (add expanded item to empty list)', async () => {
-        const onExpandedItemsChange = spy();
+        const onExpandedItemsChange = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -81,12 +80,12 @@ describeTreeView<TreeViewAnyStore>(
 
         await view.user.click(view.getItemContent('1'));
 
-        expect(onExpandedItemsChange.callCount).to.equal(1);
-        expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
+        expect(onExpandedItemsChange.mock.calls.length).to.equal(1);
+        expect(onExpandedItemsChange.mock.lastCall?.[1]).to.deep.equal(['1']);
       });
 
       it('should call the onExpandedItemsChange callback when the model is updated (add expanded item to non-empty list)', async () => {
-        const onExpandedItemsChange = spy();
+        const onExpandedItemsChange = vi.fn();
 
         const view = render({
           items: [
@@ -99,12 +98,12 @@ describeTreeView<TreeViewAnyStore>(
 
         await view.user.click(view.getItemContent('2'));
 
-        expect(onExpandedItemsChange.callCount).to.equal(1);
-        expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['2', '1']);
+        expect(onExpandedItemsChange.mock.calls.length).to.equal(1);
+        expect(onExpandedItemsChange.mock.lastCall?.[1]).to.deep.equal(['2', '1']);
       });
 
       it('should call the onExpandedItemsChange callback when the model is updated (remove expanded item)', async () => {
-        const onExpandedItemsChange = spy();
+        const onExpandedItemsChange = vi.fn();
 
         const view = render({
           items: [
@@ -117,8 +116,8 @@ describeTreeView<TreeViewAnyStore>(
 
         await view.user.click(view.getItemContent('1'));
 
-        expect(onExpandedItemsChange.callCount).to.equal(1);
-        expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal([]);
+        expect(onExpandedItemsChange.mock.calls.length).to.equal(1);
+        expect(onExpandedItemsChange.mock.lastCall?.[1]).to.deep.equal([]);
       });
 
       it('should warn when switching from controlled to uncontrolled', () => {
@@ -288,7 +287,7 @@ describeTreeView<TreeViewAnyStore>(
 
     describe('onItemExpansionToggle prop', () => {
       it('should call the onItemExpansionToggle callback when expanding an item', async () => {
-        const onItemExpansionToggle = spy();
+        const onItemExpansionToggle = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -296,13 +295,13 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         await view.user.click(view.getItemContent('1'));
-        expect(onItemExpansionToggle.callCount).to.equal(1);
-        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(true);
+        expect(onItemExpansionToggle.mock.calls.length).to.equal(1);
+        expect(onItemExpansionToggle.mock.lastCall?.[1]).to.equal('1');
+        expect(onItemExpansionToggle.mock.lastCall?.[2]).to.equal(true);
       });
 
       it('should call the onItemExpansionToggle callback when collapsing an item', async () => {
-        const onItemExpansionToggle = spy();
+        const onItemExpansionToggle = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -311,15 +310,15 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         await view.user.click(view.getItemContent('1'));
-        expect(onItemExpansionToggle.callCount).to.equal(1);
-        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(false);
+        expect(onItemExpansionToggle.mock.calls.length).to.equal(1);
+        expect(onItemExpansionToggle.mock.lastCall?.[1]).to.equal('1');
+        expect(onItemExpansionToggle.mock.lastCall?.[2]).to.equal(false);
       });
     });
 
     describe('setItemExpansion() api method', () => {
       it('should expand a collapsed item when calling the setItemExpansion method with `shouldBeExpanded=true`', () => {
-        const onItemExpansionToggle = spy();
+        const onItemExpansionToggle = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -335,13 +334,13 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         expect(view.isItemExpanded('1')).to.equal(true);
-        expect(onItemExpansionToggle.callCount).to.equal(1);
-        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(true);
+        expect(onItemExpansionToggle.mock.calls.length).to.equal(1);
+        expect(onItemExpansionToggle.mock.lastCall?.[1]).to.equal('1');
+        expect(onItemExpansionToggle.mock.lastCall?.[2]).to.equal(true);
       });
 
       it('should collapse an expanded item when calling the setItemExpansion method with `shouldBeExpanded=false`', () => {
-        const onItemExpansionToggle = spy();
+        const onItemExpansionToggle = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -358,13 +357,13 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         expect(view.isItemExpanded('1')).to.equal(false);
-        expect(onItemExpansionToggle.callCount).to.equal(1);
-        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(false);
+        expect(onItemExpansionToggle.mock.calls.length).to.equal(1);
+        expect(onItemExpansionToggle.mock.lastCall?.[1]).to.equal('1');
+        expect(onItemExpansionToggle.mock.lastCall?.[2]).to.equal(false);
       });
 
       it('should do nothing when calling the setItemExpansion method with `shouldBeExpanded=true` on an already expanded item', () => {
-        const onItemExpansionToggle = spy();
+        const onItemExpansionToggle = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -381,11 +380,11 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         expect(view.isItemExpanded('1')).to.equal(true);
-        expect(onItemExpansionToggle.callCount).to.equal(0);
+        expect(onItemExpansionToggle.mock.calls.length).to.equal(0);
       });
 
       it('should do nothing when calling the setItemExpansion method with `shouldBeExpanded=false` on an already collapsed item', () => {
-        const onItemExpansionToggle = spy();
+        const onItemExpansionToggle = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -401,11 +400,11 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         expect(view.isItemExpanded('1')).to.equal(false);
-        expect(onItemExpansionToggle.callCount).to.equal(0);
+        expect(onItemExpansionToggle.mock.calls.length).to.equal(0);
       });
 
       it('should expand a collapsed item when shouldBeExpanded is not defined', () => {
-        const onItemExpansionToggle = spy();
+        const onItemExpansionToggle = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -420,11 +419,11 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         expect(view.isItemExpanded('1')).to.equal(true);
-        expect(onItemExpansionToggle.callCount).to.equal(1);
+        expect(onItemExpansionToggle.mock.calls.length).to.equal(1);
       });
 
       it('should collapse an expanded item when shouldBeExpanded is not defined', () => {
-        const onItemExpansionToggle = spy();
+        const onItemExpansionToggle = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -440,11 +439,11 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         expect(view.isItemExpanded('1')).to.equal(false);
-        expect(onItemExpansionToggle.callCount).to.equal(1);
+        expect(onItemExpansionToggle.mock.calls.length).to.equal(1);
       });
 
       it('should work without event`', () => {
-        const onItemExpansionToggle = spy();
+        const onItemExpansionToggle = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -460,9 +459,9 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         expect(view.isItemExpanded('1')).to.equal(true);
-        expect(onItemExpansionToggle.callCount).to.equal(1);
-        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(true);
+        expect(onItemExpansionToggle.mock.calls.length).to.equal(1);
+        expect(onItemExpansionToggle.mock.lastCall?.[1]).to.equal('1');
+        expect(onItemExpansionToggle.mock.lastCall?.[2]).to.equal(true);
       });
     });
   },

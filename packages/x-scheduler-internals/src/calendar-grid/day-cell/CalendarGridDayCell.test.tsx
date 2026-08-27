@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { act, screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
@@ -12,7 +11,7 @@ import {
   describeConformance,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<CalendarGrid.DayCell />', () => {
   const { render } = createSchedulerRenderer();
@@ -48,7 +47,7 @@ describe('<CalendarGrid.DayCell />', () => {
   describe('keyboard interactions', () => {
     it('should create an all-day event placeholder on Enter keypress', async () => {
       let store: AnyEventCalendarStore | null = null;
-      const onEventEditingStart = spy();
+      const onEventEditingStart = vi.fn();
 
       const { user } = render(
         <DayCellWrapper onEventEditingStart={onEventEditingStart}>
@@ -77,8 +76,8 @@ describe('<CalendarGrid.DayCell />', () => {
       act(() => {
         store!.startEditing(store!.state.occurrencePlaceholder as any);
       });
-      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
-      expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('keydown');
+      expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('creation');
+      expect(onEventEditingStart.mock.lastCall?.[1].event.type).to.equal('keydown');
     });
 
     it('should not create event on Enter when pressed on a child element', async () => {

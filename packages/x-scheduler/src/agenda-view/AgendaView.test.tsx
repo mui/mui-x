@@ -1,5 +1,4 @@
 import { screen, waitFor, within } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
 import {
   adapter,
   createSchedulerRenderer,
@@ -10,7 +9,7 @@ import {
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();
@@ -93,7 +92,7 @@ describe('<AgendaView />', () => {
 
   describe('time navigation', () => {
     it('should go to previous agenda period (12 days) when clicking on the Previous Agenda button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -105,13 +104,13 @@ describe('<AgendaView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /previous agenda/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -12),
       );
     });
 
     it('should go to next agenda period (12 days) when clicking on the Next Agenda button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -123,7 +122,7 @@ describe('<AgendaView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /next agenda/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 12),
       );
     });
