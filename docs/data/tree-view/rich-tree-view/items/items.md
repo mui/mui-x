@@ -120,8 +120,8 @@ function getItemChildren(item) {
 
 ## Loading state
 
-Use the `loading` prop to display a skeleton placeholder instead of the tree items, for example while you fetch the `items` prop yourself.
-The tree renders animated skeleton rows in place of the real items.
+Use the `loading` prop to display a loading placeholder instead of the tree items, for example while you fetch the `items` prop yourself.
+By default, the tree renders animated skeleton rows in place of the real items.
 
 ```tsx
 <RichTreeView items={[]} loading />
@@ -129,13 +129,33 @@ The tree renders animated skeleton rows in place of the real items.
 
 {{"demo": "LoadingRichTreeView.js"}}
 
-Use the `loadingItemsCount` prop to control how many skeleton rows are shown (default is `5`):
+Use the `loadingItemsCount` prop to control how many loading rows are shown (default is `5`):
 
 ```tsx
 <RichTreeView items={[]} loading loadingItemsCount={8} />
 ```
 
-On `RichTreeViewPro`, the same skeleton is also shown automatically while the [`dataSource`](/x/react-tree-view/rich-tree-view/lazy-loading/) is fetching the root items, even if `loading` is not set.
+On `RichTreeViewPro`, the same loading UI is also shown automatically while the [`dataSource`](/x/react-tree-view/rich-tree-view/lazy-loading/) is fetching the root items, even if `loading` is not set.
+
+### Customize the loading UI
+
+You can customize the loading UI at several levels:
+
+- Style the default rows with the `itemLoader` and `itemLoaderContent` classes.
+- Configure each row with `slotProps.itemLoader` and `slotProps.itemLoaderContent`.
+  The callback form receives the row's `ownerState` with its `index`, `itemsCount`, `itemDepth`, and `isCheckboxSelectionEnabled`.
+- Replace each row with the `itemLoader` or `itemLoaderContent` slots.
+  Custom row components also render for the children of items that [load lazily](/x/react-tree-view/rich-tree-view/lazy-loading/).
+- Replace the whole loading UI with the `loading` slot.
+  The tree root keeps its `role="tree"` and `aria-busy` attributes.
+
+The demo below styles each loading row with the `itemLoaderContent` slot and fades the rows out with the `slotProps.itemLoader` callback:
+
+{{"demo": "LoadingCustomRows.js"}}
+
+The demo below replaces the whole loading UI with a spinner through the `loading` slot:
+
+{{"demo": "LoadingCustomIndicator.js"}}
 
 ## Disabled items
 

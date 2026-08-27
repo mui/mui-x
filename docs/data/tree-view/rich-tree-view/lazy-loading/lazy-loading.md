@@ -33,6 +33,21 @@ The following demo uses `fetchQuery` from `react-query` to load data.
 
 {{"demo": "FetchingWithReactQuery.js"}}
 
+## Loading indicators
+
+While `getTreeItems()` fetches the root items, the tree displays the same loading rows as the [`loading` prop](/x/react-tree-view/rich-tree-view/items/#loading-state).
+Use the `loadingItemsCount` prop to control the number of rows.
+
+While an item fetches its children, the loading UI depends on the DOM structure:
+
+- With `domStructure="nested"` and `disableVirtualization`, the item opens and displays loading rows in place of its children.
+  The number of rows matches `getChildrenCount()` when the count is known.
+- With the default flat structure, a circular progress indicator replaces the expansion icon.
+
+You can customize the loading rows with the same [slots and classes](/x/react-tree-view/rich-tree-view/items/#customize-the-loading-ui) as the `loading` prop.
+
+{{"demo": "ChildrenLoadingRows.js"}}
+
 ## Data caching
 
 ### Custom cache
@@ -63,6 +78,8 @@ Because those children are pre-cached by the tree view, expanding them requires 
 {{"demo": "AutoExpandLazyLoadedItems.js"}}
 
 ## Error management
+
+When the fetch of an item's children fails, the item closes again and displays an error indicator in its icon container.
 
 {{"demo": "ErrorManagement.js"}}
 
