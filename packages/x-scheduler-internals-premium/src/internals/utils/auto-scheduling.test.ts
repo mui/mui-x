@@ -14,17 +14,17 @@ function buildLookup(events: SchedulerProcessedEvent[]) {
   return new Map(events.map((event) => [event.id, event]));
 }
 
-function groupBySource(dependencies: SchedulerDependency[]) {
-  const bySource = new Map<SchedulerEventId, SchedulerDependency[]>();
+function groupByEndpoint(dependencies: SchedulerDependency[], endpoint: 'source' | 'target') {
+  const grouped = new Map<SchedulerEventId, SchedulerDependency[]>();
   for (const dependency of dependencies) {
-    const group = bySource.get(dependency.source);
+    const group = grouped.get(dependency[endpoint]);
     if (group) {
       group.push(dependency);
     } else {
-      bySource.set(dependency.source, [dependency]);
+      grouped.set(dependency[endpoint], [dependency]);
     }
   }
-  return bySource;
+  return grouped;
 }
 
 let dependencyCount = 0;
@@ -47,7 +47,8 @@ function runCascade(
   return computeAutoSchedulingCascade({
     adapter,
     processedEventLookup: buildLookup(events),
-    activeDependenciesBySource: groupBySource(dependencies),
+    activeDependenciesBySource: groupByEndpoint(dependencies, 'source'),
+    activeDependenciesByTarget: groupByEndpoint(dependencies, 'target'),
     isEventReadOnly: overrides.isEventReadOnly ?? (() => false),
     updated,
     deleted: overrides.deleted ?? new Set(),
@@ -401,7 +402,7 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result).to.deep.equal([]);
   });
 
-  it('should not re-emit a successor that is itself updated in the batch', () => {
+  it("should clamp an updated successor dropped before a moved predecessor's new end", () => {
     const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
     const eventB = EventBuilder.new()
       .id('b')
@@ -413,8 +414,198 @@ describe('computeAutoSchedulingCascade', () => {
       [fsDependency('a', 'b')],
       [
         { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
-        // The user also placed b themselves, still violating: their placement wins.
+        // The user also placed b themselves, still violating: b is clamped forward.
         { id: 'b', start: date('2025-07-03T11:30:00Z'), end: date('2025-07-03T12:30:00Z') },
+      ],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
+  });
+
+  it('should clamp an updated successor dropped before the end of an unmoved predecessor', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'b', start: date('2025-07-03T09:30:00Z'), end: date('2025-07-03T10:30:00Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expectDates(result[0], '2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z');
+  });
+
+  it('should not clamp an updated successor dropped at a valid position', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'b', start: date('2025-07-03T10:00:00Z'), end: date('2025-07-03T11:00:00Z') }],
+    );
+
+    expect(result).to.deep.equal([]);
+  });
+
+  it('should cascade from the clamped position of a dropped successor', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
+      .toProcessed();
+    const eventC = EventBuilder.new()
+      .id('c')
+      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB, eventC],
+      [fsDependency('a', 'b'), fsDependency('b', 'c')],
+      [{ id: 'b', start: date('2025-07-03T09:00:00Z'), end: date('2025-07-03T10:00:00Z') }],
+    );
+
+    expect(result).to.have.length(2);
+    const byId = new Map(result.map((entry) => [entry.id, entry]));
+    // b clamps to a's end, and c is pushed from b's clamped end, not its dropped one.
+    expectDates(byId.get('b')!, '2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z');
+    expectDates(byId.get('c')!, '2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z');
+  });
+
+  it("should clamp a dropped successor against a cascaded predecessor's new end", () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+      .toProcessed();
+    const eventC = EventBuilder.new()
+      .id('c')
+      .span('2025-07-03T13:00:00Z', '2025-07-03T14:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB, eventC],
+      [fsDependency('a', 'b'), fsDependency('b', 'c')],
+      [
+        { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
+        // c is dropped where b's *pushed* position (12:00–13:00) still overlaps it.
+        { id: 'c', start: date('2025-07-03T10:00:00Z'), end: date('2025-07-03T11:00:00Z') },
+      ],
+    );
+
+    expect(result).to.have.length(2);
+    const byId = new Map(result.map((entry) => [entry.id, entry]));
+    expectDates(byId.get('b')!, '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
+    expectDates(byId.get('c')!, '2025-07-03T13:00:00Z', '2025-07-03T14:00:00Z');
+  });
+
+  it('should not clamp an updated event whose start is unchanged', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    // b arrived already violating; resizing its end does not re-position it.
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T08:00:00Z', '2025-07-03T09:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'b', end: date('2025-07-03T09:30:00Z') }],
+    );
+
+    expect(result).to.deep.equal([]);
+  });
+
+  it('should clamp an all-day successor dropped before its predecessor by whole days', () => {
+    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-04T09:00:00Z').toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('UTC')
+      .span('2025-07-10T00:00:00', '2025-07-10T23:59:59.999', { allDay: true })
+      .toProcessed();
+
+    const result = runCascade(
+      [predecessor, successor],
+      [fsDependency('a', 'b')],
+      [
+        {
+          id: 'b',
+          start: utcDate('2025-07-04T00:00:00'),
+          end: utcDate('2025-07-04T23:59:59.999'),
+          allDay: true,
+        },
+      ],
+    );
+
+    expect(result).to.have.length(1);
+    // The dropped day starts before the predecessor's 10:00 end: minimal whole-day
+    // clamp from the dropped position is one day.
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(utcDate('2025-07-05T00:00:00')),
+    );
+    expect(adapter.getTime(result[0].end!)).to.equal(
+      adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
+    );
+  });
+
+  it('should not clamp a read-only updated event', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .readOnly()
+      .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'b', start: date('2025-07-03T09:00:00Z'), end: date('2025-07-03T10:00:00Z') }],
+      { isEventReadOnly: (eventId) => eventId === 'b' },
+    );
+
+    expect(result).to.deep.equal([]);
+  });
+
+  it('should not clamp against a predecessor deleted in the same batch', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'b', start: date('2025-07-03T09:00:00Z'), end: date('2025-07-03T10:00:00Z') }],
+      { deleted: new Set(['a']) },
+    );
+
+    expect(result).to.deep.equal([]);
+  });
+
+  it('should not clamp against a predecessor turning recurring in the same batch', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [
+        { id: 'a', rrule: { freq: 'DAILY', interval: 1 } },
+        { id: 'b', start: date('2025-07-03T09:00:00Z'), end: date('2025-07-03T10:00:00Z') },
       ],
     );
 

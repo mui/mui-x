@@ -123,6 +123,9 @@ export class SchedulerSchedulingPlugin<
       activeDependenciesBySource: eventTimelinePremiumDependencySelectors.activeModelListBySource(
         this.store.state,
       ),
+      activeDependenciesByTarget: eventTimelinePremiumDependencySelectors.activeModelListByTarget(
+        this.store.state,
+      ),
       isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
       updated,
       deleted: new Set(deleted),

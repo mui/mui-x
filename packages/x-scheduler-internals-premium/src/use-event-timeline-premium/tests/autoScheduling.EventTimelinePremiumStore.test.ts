@@ -56,6 +56,26 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T13:00:00Z')));
   });
 
+  it('should clamp a successor dropped before its predecessor within the same emission', () => {
+    const onEventsChange = spy();
+    const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);
+
+    store.updateEvent({
+      id: 'b',
+      start: date('2025-07-03T09:30:00Z'),
+      end: date('2025-07-03T10:30:00Z'),
+      title: 'Moved b',
+    });
+
+    expect(onEventsChange.calledOnce).to.equal(true);
+    const newEvents: SchedulerEvent[] = onEventsChange.lastCall.firstArg;
+    const emittedB = newEvents.find((event) => event.id === 'b')!;
+    // Clamped to the predecessor's end, keeping the rest of the user's entry.
+    expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+    expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+    expect(emittedB.title).to.equal('Moved b');
+  });
+
   it('should cascade on an end-only update', () => {
     const onEventsChange = spy();
     const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);

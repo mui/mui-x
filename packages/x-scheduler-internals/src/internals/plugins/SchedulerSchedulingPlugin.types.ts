@@ -10,7 +10,8 @@ export interface SchedulerSchedulingPluginInterface {
    * Reacts to event mutations.
    * Called inside `updateEvents` before the batch is merged, so the returned entries
    * (the auto-scheduling cascade, `{ id, start, end }` only) fold into the same update
-   * and the same `onEventsChange` emission.
+   * and the same `onEventsChange` emission. An entry for an id already in the batch
+   * overrides that entry's dates (a dropped event clamped forward).
    */
   handleEventsUpdate: (
     parameters: UpdateEventsParameters,
