@@ -27,6 +27,8 @@ function MeetingLinkSection() {
         onChange={(event) => link.setValue(event.target.value)}
         error={link.error != null}
         helperText={link.error}
+        // Announce the error inserted on save to screen readers, like the built-in fields do.
+        slotProps={{ formHelperText: { role: 'alert' } }}
       />
     </EventDialogSectionFieldset>
   );

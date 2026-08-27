@@ -430,7 +430,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       onClose();
     } finally {
       isSubmittingRef.current = false;
-      setIsSubmitting(false);
+      // React 17 (still supported) warns on a state update after unmount.
+      if (isSessionAliveRef.current) {
+        setIsSubmitting(false);
+      }
     }
   };
 

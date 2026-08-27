@@ -97,7 +97,7 @@ export default schedulerApiPages;
       'x-scheduler-premium/src/compact-three-day-view-premium/StandaloneCompactThreeDayViewPremium.tsx',
       'x-scheduler-premium/src/compact-week-view-premium/StandaloneCompactWeekViewPremium.tsx',
       // Event-dialog building blocks: documented in the guide's Anatomy section instead of
-      // API pages (the sections take zero props; the primitives take DOM and `sx`/`as` props)
+      // API pages (the sections take zero props; the primitives take DOM and `sx` props)
       'x-scheduler/src/event-dialog/EventDialogDateTimeSection.tsx',
       'x-scheduler/src/event-dialog/EventDialogResourceAndColorSection.tsx',
       'x-scheduler/src/event-dialog/EventDialogDescriptionSection.tsx',

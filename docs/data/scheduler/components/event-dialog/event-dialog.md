@@ -104,7 +104,10 @@ There is no way to remove a key from the draft: writing `undefined` into a field
 
 When binding a built-in key, match its value shape (`EventDialogBuiltInFormValues`): the dates are `yyyy-MM-dd` strings, the times `HH:mm` strings, `resourceIds` is always an array, and `color: null` inherits from the resource or the calendar's default event color.
 
-The names of the `SchedulerEvent` properties that have no form key (`id`, `start`, `end`, `rrule`, `readOnly`, `timezone`, `className`, and the other built-in event properties) are **reserved**: a custom field cannot rewrite them, so a write to such a key is dropped on save. They are rejected at the type level and warned about in development.
+Two groups of names are **reserved** and cannot back custom model data:
+
+- The `EventDialogBuiltInFormValues` keys (`title`, `startDate`, `resourceIds`, and the rest): the form always seeds them from the event being edited, so a custom model property with one of these names cannot be read or written through the form (a development warning points it out).
+- The `SchedulerEvent` properties that have no form key (`id`, `start`, `end`, `rrule`, `readOnly`, `timezone`, `className`, and the other built-in event properties): a custom field cannot rewrite them, so a write to such a key is dropped on save. They are rejected at the type level and warned about in development.
 
 ## Reading the edited occurrence
 
