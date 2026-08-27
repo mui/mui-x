@@ -1,20 +1,35 @@
 'use client';
 import * as React from 'react';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 
 /**
- * Toggles `data-dragging` on the element while a pragmatic element drag is in progress,
- * letting an overlay mute its pointer-enabled children through CSS without re-rendering.
- * Watched from drag start — the store placeholder only exists after a drop target's
- * first dragover, too late for a gesture starting over the overlay. A drag already
- * running when the element mounts is not observed.
+ * Toggles `data-drag-active` on the element while a pragmatic element drag runs, so an
+ * overlay can mute its pointer-enabled children through CSS without re-rendering.
+ * Re-applied on every render, so an element remounting mid-drag keeps the mark; a drag
+ * already running when the hook mounts is never marked — its `onDragStart` predates
+ * the monitor.
  */
 export function useElementDragMarker(ref: React.RefObject<Element | null>): void {
+  const draggingRef = React.useRef(false);
+
+  useIsoLayoutEffect(() => {
+    if (draggingRef.current) {
+      ref.current?.setAttribute('data-drag-active', '');
+    }
+  });
+
   React.useEffect(
     () =>
       monitorForElements({
-        onDragStart: () => ref.current?.setAttribute('data-dragging', ''),
-        onDrop: () => ref.current?.removeAttribute('data-dragging'),
+        onDragStart: () => {
+          draggingRef.current = true;
+          ref.current?.setAttribute('data-drag-active', '');
+        },
+        onDrop: () => {
+          draggingRef.current = false;
+          ref.current?.removeAttribute('data-drag-active');
+        },
       }),
     [ref],
   );

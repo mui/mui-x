@@ -52,10 +52,9 @@ const DependencyInteractionsSvg = styled('svg', {
     cursor: 'pointer',
     color: (theme.vars || theme).palette.error.main,
   },
-  // The overlay is not an ancestor of any drop target, so a dragover landing on a
-  // hit-area would refuse the drop right over an arrow crossing empty lane space.
-  // Children opt into pointer events individually, so one rule mutes them all.
-  '&[data-dragging] *': {
+  // The overlay is no drop target's ancestor: a dragover landing on a hit-area would
+  // refuse the drop right over an arrow, so any drag mutes every opted-in child.
+  '&[data-drag-active] *': {
     pointerEvents: 'none',
   },
 }));
