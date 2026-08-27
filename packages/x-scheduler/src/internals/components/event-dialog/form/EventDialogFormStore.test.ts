@@ -314,10 +314,24 @@ describe('EventDialogFormStore', () => {
       expect(store.state.errors).to.deep.equal({ title: ['Required'] });
     });
 
-    it('should settle as invalid instead of looping when a validator writes a value', async () => {
+    it('should settle in one pass when a validator writes back the same value', async () => {
       const store = createFormStore({ title: 'Meeting' });
-      store.registerValidator('title', (value) => {
+      const validator = spy((value: unknown) => {
         store.setValue('title', value as string);
+        return null;
+      });
+      store.registerValidator('title', validator);
+      expect(await store.validateAll()).to.equal(true);
+      expect(validator.callCount).to.equal(1);
+      expect(store.state.errors).to.deep.equal({});
+    });
+
+    it('should settle as invalid instead of looping when a validator changes a value', async () => {
+      const store = createFormStore({ title: 'Meeting' });
+      let counter = 0;
+      store.registerValidator('title', () => {
+        counter += 1;
+        store.setValue('title', `Meeting ${counter}`);
         return null;
       });
       await expect(async () => {
@@ -330,8 +344,10 @@ describe('EventDialogFormStore', () => {
 
     it('should keep the last computed errors when the restart cap trips', async () => {
       const store = createFormStore({ title: 'Meeting' });
-      store.registerValidator('title', (value) => {
-        store.setValue('title', value as string);
+      let counter = 0;
+      store.registerValidator('title', () => {
+        counter += 1;
+        store.setValue('title', `Meeting ${counter}`);
         return 'Still wrong';
       });
       await expect(async () => {

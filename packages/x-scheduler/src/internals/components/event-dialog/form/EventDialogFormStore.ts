@@ -180,7 +180,20 @@ export class EventDialogFormStore<
     if (changedKeys.length === 0) {
       return;
     }
-    const values = { ...this.state.values, ...resolvedChanges };
+    // The values identity doubles as the revision `validateAll` restarts on, so a
+    // same-value write (e.g. an idempotent normalizer) must keep the object. Error
+    // clearing and dirty marking below still apply to it.
+    const hasValueChange = changedKeys.some(
+      (key) =>
+        !hasOwn(this.state.values, key) ||
+        !Object.is(
+          getOwn(resolvedChanges as Record<string, unknown>, key),
+          getOwn(this.state.values, key),
+        ),
+    );
+    const values = hasValueChange
+      ? { ...this.state.values, ...resolvedChanges }
+      : this.state.values;
 
     let errors = this.state.errors;
     for (const key of changedKeys) {
