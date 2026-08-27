@@ -90,6 +90,10 @@ export default mergeConfig(
     optimizeDeps: {
       entries: SUITES.map((suite) => `packages/${suite.name}/src/**/*.test.{ts,tsx}`),
       exclude: ['execa', 'npm-run-path', 'unicorn-magic'],
+      // The dependency scanner does not reach the setup files, so this one is only found
+      // once a Pickers suite loads `test/utils/setupPickers.js`. Discovering it mid-run
+      // re-optimizes and reloads every instance at once, which fails the whole run.
+      include: ['dayjs/locale/ru'],
     },
     resolve: {
       alias: [
@@ -105,6 +109,18 @@ export default mergeConfig(
       // glob drags Node-only tests (`child_process`, `execa`) into the browser optimizer.
       // Each instance narrows this further to its own package.
       include: SUITES.map((suite) => `packages/${suite.name}/src/**/*.test.{ts,tsx}`),
+      // Vitest seeds the dependency scanner with one arbitrary project's test and setup
+      // files, assuming every project shares them. Instances do not, so the parent has to
+      // list every setup file or the scanner misses their imports, finds them mid-run and
+      // re-optimizes, which reloads and fails every instance at once. Each instance sets
+      // its own `setupFiles`, so this list is only ever used for the scan.
+      setupFiles: [
+        SETUP_SHARED,
+        SETUP_SINON,
+        SETUP_DATA_GRID,
+        SETUP_PICKERS,
+        url('./packages/x-internal-gestures/src/matchers/index.ts'),
+      ],
       browser: {
         enabled: true,
         // A single parent project keeps one pair of Vite servers for the whole run instead
