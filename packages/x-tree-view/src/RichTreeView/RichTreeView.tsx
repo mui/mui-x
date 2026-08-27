@@ -120,7 +120,6 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     parameters,
     forwardedProps,
     loading,
-    loadingItemsCount,
   } = useExtractRichTreeViewParameters(props);
 
   // Context hooks
@@ -162,7 +161,6 @@ const RichTreeView = React.forwardRef(function RichTreeView<
         forwardedProps={forwardedProps}
         rootRef={handleRef}
         classes={classes}
-        loadingItemsCount={loadingItemsCount}
       />
     );
   }
@@ -336,12 +334,6 @@ RichTreeView.propTypes /* remove-proptypes */ = {
    * @default false
    */
   loading: PropTypes.bool,
-  /**
-   * The number of item loaders to display when `loading` is `true`.
-   * @default 5
-   * @deprecated Use the `itemsCount` value in `slotProps.loading` instead.
-   */
-  loadingItemsCount: PropTypes.number,
   /**
    * Whether multiple items can be selected.
    * @default false

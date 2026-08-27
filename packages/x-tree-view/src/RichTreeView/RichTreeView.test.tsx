@@ -50,27 +50,6 @@ describe('<RichTreeView />', () => {
       expect(itemLoaders).to.have.length(3);
     });
 
-    // TODO v10: Remove together with the deprecated `loadingItemsCount` prop.
-    it('should render the number of item loaders specified by the deprecated `loadingItemsCount` prop', () => {
-      render(<RichTreeView items={[]} loading loadingItemsCount={4} />);
-
-      expect(screen.getAllByRole('treeitem')).to.have.length(4);
-    });
-
-    // TODO v10: Remove together with the deprecated `loadingItemsCount` prop.
-    it('should give `slotProps.loading.itemsCount` precedence over the deprecated `loadingItemsCount` prop', () => {
-      render(
-        <RichTreeView
-          items={[]}
-          loading
-          loadingItemsCount={4}
-          slotProps={{ loading: { itemsCount: 2 } }}
-        />,
-      );
-
-      expect(screen.getAllByRole('treeitem')).to.have.length(2);
-    });
-
     it('should render tree items when loading changes to false', () => {
       const { setProps } = render(<RichTreeView items={ITEMS} loading />);
 

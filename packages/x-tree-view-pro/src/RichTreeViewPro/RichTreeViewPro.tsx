@@ -137,7 +137,6 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     parameters,
     forwardedProps,
     loading,
-    loadingItemsCount,
   } = useExtractRichTreeViewProParameters(props);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -190,7 +189,6 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
           forwardedProps={forwardedProps}
           rootRef={handleRef}
           classes={classes}
-          loadingItemsCount={loadingItemsCount}
         />
         <Watermark packageInfo={packageInfo} />
       </React.Fragment>
@@ -414,12 +412,6 @@ RichTreeViewPro.propTypes /* remove-proptypes */ = {
    * @default false
    */
   loading: PropTypes.bool,
-  /**
-   * The number of item loaders to display when `loading` is `true` or while `dataSource` fetches root items.
-   * @default 5
-   * @deprecated Use the `itemsCount` value in `slotProps.loading` instead.
-   */
-  loadingItemsCount: PropTypes.number,
   /**
    * Whether multiple items can be selected.
    * @default false

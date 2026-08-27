@@ -78,12 +78,6 @@
     },
     "itemHeight": { "type": { "name": "number" }, "default": "null" },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "loadingItemsCount": {
-      "type": { "name": "number" },
-      "default": "5",
-      "deprecated": true,
-      "deprecationInfo": "Use the <code>itemsCount</code> value in <code>slotProps.loading</code> instead."
-    },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },

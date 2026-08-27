@@ -48,8 +48,6 @@ export function useExtractRichTreeViewParameters<
 
     // Render-only props
     loading,
-    // TODO v10: Remove the deprecated `loadingItemsCount` prop.
-    loadingItemsCount,
 
     // Forwarded props
     ...forwardedProps
@@ -131,6 +129,5 @@ export function useExtractRichTreeViewParameters<
     parameters,
     forwardedProps,
     loading,
-    loadingItemsCount,
   };
 }

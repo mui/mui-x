@@ -73,13 +73,6 @@ export interface RichTreeViewProPropsBase extends React.HTMLAttributes<HTMLUList
    * @default false
    */
   loading?: boolean;
-  /**
-   * The number of item loaders to display when `loading` is `true` or while `dataSource` fetches root items.
-   * @default 5
-   * @deprecated Use the `itemsCount` value in `slotProps.loading` instead.
-   */
-  // TODO v10: Remove the deprecated `loadingItemsCount` prop.
-  loadingItemsCount?: number;
 }
 
 export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | undefined>

@@ -20,7 +20,7 @@ export function getLoadingItemsCount(itemsCount: number | undefined): number {
   if (process.env.NODE_ENV !== 'production') {
     if (itemsCount != null && (!Number.isFinite(itemsCount) || itemsCount < 0)) {
       warnOnce([
-        `MUI X: The \`itemsCount\` value in \`slotProps.loading\` (or the deprecated \`loadingItemsCount\` prop) received an invalid value (${itemsCount}).`,
+        `MUI X: The \`itemsCount\` value in \`slotProps.loading\` received an invalid value (${itemsCount}).`,
         'It must be a non-negative finite number.',
       ]);
     }
@@ -111,12 +111,6 @@ export interface RichTreeViewLoadingProps<
   forwardedProps: React.HTMLAttributes<HTMLUListElement>;
   rootRef: React.Ref<HTMLUListElement>;
   classes: RichTreeViewLoadingClasses;
-  /**
-   * The number of loading rows to render.
-   * @deprecated Use the `itemsCount` value in `slotProps.loading` instead.
-   */
-  // TODO v10: Remove the deprecated `loadingItemsCount` prop.
-  loadingItemsCount?: number;
 }
 
 export interface RichTreeViewItemLoadersProps<TStore extends TreeViewAnyStore> {
@@ -229,8 +223,7 @@ export function RichTreeViewItemLoaders<TStore extends TreeViewAnyStore>(
 export function RichTreeViewLoading<TStore extends TreeViewAnyStore, TOwnerState extends object>(
   props: RichTreeViewLoadingProps<TStore, TOwnerState>,
 ) {
-  const { store, slots, slotProps, ownerState, forwardedProps, rootRef, classes, loadingItemsCount } =
-    props;
+  const { store, slots, slotProps, ownerState, forwardedProps, rootRef, classes } = props;
 
   const getRootProps = useTreeViewRootProps(store, forwardedProps, rootRef);
 
@@ -241,8 +234,7 @@ export function RichTreeViewLoading<TStore extends TreeViewAnyStore, TOwnerState
     externalSlotProps: slotProps?.loading,
     ownerState,
   }) as RichTreeViewLoadingSlotOwnProps & Record<string, any>;
-  // TODO v10: Remove the fallback to the deprecated `loadingItemsCount` prop.
-  const itemsCount = getLoadingItemsCount(loadingProps.itemsCount ?? loadingItemsCount);
+  const itemsCount = getLoadingItemsCount(loadingProps.itemsCount);
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,

@@ -122,9 +122,6 @@
     "loading": {
       "description": "If <code>true</code>, a loading UI is displayed instead of the tree items. The loading UI is also shown automatically while <code>dataSource</code> is fetching root items. Setting <code>loading={false}</code> does not suppress the loading UI during an active <code>dataSource</code> root fetch."
     },
-    "loadingItemsCount": {
-      "description": "The number of item loaders to display when <code>loading</code> is <code>true</code> or while <code>dataSource</code> fetches root items."
-    },
     "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {
       "description": "Callback fired when Tree Items are expanded/collapsed.",
