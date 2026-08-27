@@ -7,7 +7,11 @@ import {
   mockElementBounds,
   simulateDragAndDrop,
 } from 'test/utils/scheduler';
-import { buildDependency, createDependencyTimelineRenderer, resource1 } from './dependencyTestUtils';
+import {
+  buildDependency,
+  createDependencyTimelineRenderer,
+  resource1,
+} from './dependencyTestUtils';
 
 const eventA = EventBuilder.new()
   .id('event-a')
@@ -36,8 +40,8 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
       dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
     });
 
-    const originalSuccessorStart = store.state.processedEventLookup.get('event-b')!.dataTimezone
-      .start.timestamp;
+    const originalSuccessorStart =
+      store.state.processedEventLookup.get('event-b')!.dataTimezone.start.timestamp;
 
     const rows = document.querySelectorAll<HTMLElement>(
       '.MuiEventTimeline-eventsCell[data-drop-target-for-element]',

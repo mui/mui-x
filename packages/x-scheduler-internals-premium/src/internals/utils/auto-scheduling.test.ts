@@ -210,7 +210,13 @@ describe('computeAutoSchedulingCascade', () => {
     const result = runCascade(
       [predecessor, successor],
       [fsDependency('a', 'b')],
-      [{ id: 'a', start: newYorkDate('2025-03-09T00:30:00'), end: newYorkDate('2025-03-09T01:30:00') }],
+      [
+        {
+          id: 'a',
+          start: newYorkDate('2025-03-09T00:30:00'),
+          end: newYorkDate('2025-03-09T01:30:00'),
+        },
+      ],
     );
 
     expect(result).to.have.length(1);
@@ -241,8 +247,12 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result).to.have.length(1);
     // One day forward would still start before the required 07-04T10:00: the minimal
     // whole-day shift is two days.
-    expect(adapter.getTime(result[0].start!)).to.equal(adapter.getTime(utcDate('2025-07-05T00:00:00')));
-    expect(adapter.getTime(result[0].end!)).to.equal(adapter.getTime(utcDate('2025-07-05T23:59:59.999')));
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(utcDate('2025-07-05T00:00:00')),
+    );
+    expect(adapter.getTime(result[0].end!)).to.equal(
+      adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
+    );
   });
 
   it('should start a timed successor at the normalized end of an all-day predecessor', () => {
@@ -271,8 +281,12 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     // Lands on the predecessor's end-of-day instant — intended, not a rounding artifact.
-    expect(adapter.getTime(result[0].start!)).to.equal(adapter.getTime(utcDate('2025-07-04T23:59:59.999')));
-    expect(adapter.getTime(result[0].end!)).to.equal(adapter.getTime(utcDate('2025-07-05T00:59:59.999')));
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(utcDate('2025-07-04T23:59:59.999')),
+    );
+    expect(adapter.getTime(result[0].end!)).to.equal(
+      adapter.getTime(utcDate('2025-07-05T00:59:59.999')),
+    );
   });
 
   it('should preserve the day span of an all-day successor pushed by an all-day predecessor', () => {
@@ -302,8 +316,12 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     // Pushed by one day, still spanning two days.
-    expect(adapter.getTime(result[0].start!)).to.equal(adapter.getTime(utcDate('2025-07-04T00:00:00')));
-    expect(adapter.getTime(result[0].end!)).to.equal(adapter.getTime(utcDate('2025-07-05T23:59:59.999')));
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(utcDate('2025-07-04T00:00:00')),
+    );
+    expect(adapter.getTime(result[0].end!)).to.equal(
+      adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
+    );
   });
 
   it('should shift an all-day successor by whole days across a DST transition', () => {

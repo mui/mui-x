@@ -122,9 +122,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         },
         adapter,
       );
-    }).toWarnDev([
-      'MUI X Scheduler: The dependency "dep-r" references the recurring event "r".',
-    ]);
+    }).toWarnDev(['MUI X Scheduler: The dependency "dep-r" references the recurring event "r".']);
 
     store.updateEvent({
       id: 'a',
