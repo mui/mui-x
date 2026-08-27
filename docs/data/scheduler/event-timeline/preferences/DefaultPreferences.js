@@ -1,7 +1,11 @@
 import * as React from 'react';
 
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { initialEvents, resources } from '../../datasets/company-roadmap';
+import {
+  initialEvents,
+  resources,
+  defaultVisibleDate,
+} from '../../datasets/company-roadmap';
 
 const defaultPreferences = {
   ampm: false,
@@ -17,6 +21,7 @@ export default function DefaultPreferences() {
         events={events}
         resources={resources}
         defaultPreferences={defaultPreferences}
+        defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         defaultPreset="dayAndWeek"
       />
