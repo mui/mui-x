@@ -7,8 +7,7 @@ import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/ad
  * Toggles `data-drag-active` on the element while a pragmatic element drag runs, so an
  * overlay can mute its pointer-enabled children through CSS without re-rendering.
  * Re-applied on every render, so an element remounting mid-drag keeps the mark; a drag
- * already running when the hook mounts is never marked — its `onDragStart` predates
- * the monitor.
+ * already running when the hook mounts is never marked.
  */
 export function useElementDragMarker(ref: React.RefObject<Element | null>): void {
   const draggingRef = React.useRef(false);
