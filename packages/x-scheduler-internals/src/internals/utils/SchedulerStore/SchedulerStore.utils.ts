@@ -86,6 +86,18 @@ export function isBuiltInEventProperty(key: string): boolean {
   return EVENT_PROPERTIES_LOOKUP.hasOwnProperty(key);
 }
 
+// Custom model keys are arbitrary consumer strings: a plain assignment of a key
+// like `__proto__` would hit the legacy prototype setter instead of creating an
+// own property.
+function setOwnProperty(target: object, key: string, value: unknown) {
+  Object.defineProperty(target, key, {
+    value,
+    writable: true,
+    enumerable: true,
+    configurable: true,
+  });
+}
+
 /**
  * Returns the properties of an event model that are not part of the built-in `SchedulerEvent` shape.
  */
@@ -97,7 +109,7 @@ export function getCustomEventProperties<TEvent extends object>(model: TEvent): 
       Object.prototype.hasOwnProperty.call(model, key) &&
       !EVENT_PROPERTIES_LOOKUP.hasOwnProperty(key)
     ) {
-      customProperties[key] = model[key as keyof TEvent];
+      setOwnProperty(customProperties, key, model[key as keyof TEvent]);
     }
   }
   return customProperties as Partial<TEvent>;
@@ -269,8 +281,7 @@ function createOrUpdateEventModelFromBuiltInEventModel<
         // @ts-ignore
         delete eventModel[key];
       } else {
-        // @ts-ignore
-        eventModel[key] = changes[key];
+        setOwnProperty(eventModel, key, changes[key]);
       }
     }
   }
