@@ -1,7 +1,7 @@
 'use client';
 import type { SlotComponentProps } from '@mui/utils/types';
 import * as React from 'react';
-import type { RichTreeViewItemLoaderOwnerState } from '../components/RichTreeViewSkeleton';
+import type { RichTreeViewItemLoaderOwnerState } from '../components/RichTreeViewLoading';
 
 export interface TreeViewClasses {
   /** Styles applied to the root element. */

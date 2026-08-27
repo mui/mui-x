@@ -7,7 +7,7 @@ import type {
   RichTreeViewItemsSlotProps,
   RichTreeViewItemsSlots,
 } from '../internals/components/RichTreeViewItems';
-import type { RichTreeViewItemLoaderOwnerState } from '../internals/components/RichTreeViewSkeleton';
+import type { RichTreeViewItemLoaderOwnerState } from '../internals/components/RichTreeViewLoading';
 import type {
   TreeViewSlotProps,
   TreeViewSlots,
@@ -24,7 +24,7 @@ export interface RichTreeViewSlots extends TreeViewSlots, Omit<RichTreeViewItems
    */
   root?: React.ElementType;
   /**
-   * Component rendered instead of the default skeleton rows while the tree is loading.
+   * Component rendered instead of the default loading rows while the tree is loading.
    * It renders inside the tree root, which keeps its `role="tree"` and `aria-busy` attributes.
    */
   loading?: React.ElementType;
@@ -64,12 +64,12 @@ export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListEle
    */
   sx?: SxProps<Theme>;
   /**
-   * If `true`, a skeleton loading UI is displayed instead of the tree items.
+   * If `true`, a loading UI is displayed instead of the tree items.
    * @default false
    */
   loading?: boolean;
   /**
-   * The number of skeleton items to display when `loading` is `true`.
+   * The number of item loaders to display when `loading` is `true`.
    * @default 5
    */
   loadingItemsCount?: number;

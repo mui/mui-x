@@ -154,7 +154,7 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       delete loading[itemIdWithDefault];
     } else {
       // Store the expected children count, so the loading UI can render a matching number
-      // of skeleton rows. `-1` when the count is unknown.
+      // of loading rows. `-1` when the count is unknown.
       const itemModel = itemId == null ? null : this.store.state.itemModelLookup[itemId];
       loading[itemIdWithDefault] =
         itemModel == null

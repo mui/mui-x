@@ -9,7 +9,7 @@ import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import {
   TreeViewProvider,
   RichTreeViewItems,
-  RichTreeViewSkeleton,
+  RichTreeViewLoading,
   TreeViewItemDepthContext,
   itemsSelectors,
   useTreeViewStore,
@@ -79,7 +79,7 @@ const RichTreeViewProItemLoaderContent = styled('div', {
   name: 'MuiRichTreeViewPro',
   slot: 'ItemLoaderContent',
 })(({ theme }) => ({
-  // Same typography as the tree item label, so the skeleton line box has the same height.
+  // Same typography as the tree item label, so the loading row line box has the same height.
   ...theme.typography.body1,
   padding: theme.spacing(0.5, 1),
   // Same indentation formula as the tree item content.
@@ -182,7 +182,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   if (isLoading) {
     return (
       <React.Fragment>
-        <RichTreeViewSkeleton
+        <RichTreeViewLoading
           store={store}
           slots={slots}
           slotProps={slotProps}
@@ -408,14 +408,14 @@ RichTreeViewPro.propTypes /* remove-proptypes */ = {
    */
   itemsReordering: PropTypes.bool,
   /**
-   * If `true`, a skeleton loading UI is displayed instead of the tree items.
-   * The skeleton is also shown automatically while `dataSource` is fetching root items.
-   * Setting `loading={false}` does not suppress the skeleton during an active `dataSource` root fetch.
+   * If `true`, a loading UI is displayed instead of the tree items.
+   * The loading UI is also shown automatically while `dataSource` is fetching root items.
+   * Setting `loading={false}` does not suppress the loading UI during an active `dataSource` root fetch.
    * @default false
    */
   loading: PropTypes.bool,
   /**
-   * The number of skeleton items to display when `loading` is `true` or while `dataSource` fetches root items.
+   * The number of item loaders to display when `loading` is `true` or while `dataSource` fetches root items.
    * @default 5
    */
   loadingItemsCount: PropTypes.number,

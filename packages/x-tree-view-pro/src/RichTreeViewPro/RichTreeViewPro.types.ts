@@ -22,7 +22,7 @@ export interface RichTreeViewProSlots extends TreeViewSlots, Omit<RichTreeViewIt
    */
   root?: React.ElementType;
   /**
-   * Component rendered instead of the default skeleton rows while the tree is loading.
+   * Component rendered instead of the default loading rows while the tree is loading.
    * It renders inside the tree root, which keeps its `role="tree"` and `aria-busy` attributes.
    */
   loading?: React.ElementType;
@@ -62,14 +62,14 @@ export interface RichTreeViewProPropsBase extends React.HTMLAttributes<HTMLUList
    */
   sx?: SxProps<Theme>;
   /**
-   * If `true`, a skeleton loading UI is displayed instead of the tree items.
-   * The skeleton is also shown automatically while `dataSource` is fetching root items.
-   * Setting `loading={false}` does not suppress the skeleton during an active `dataSource` root fetch.
+   * If `true`, a loading UI is displayed instead of the tree items.
+   * The loading UI is also shown automatically while `dataSource` is fetching root items.
+   * Setting `loading={false}` does not suppress the loading UI during an active `dataSource` root fetch.
    * @default false
    */
   loading?: boolean;
   /**
-   * The number of skeleton items to display when `loading` is `true` or while `dataSource` fetches root items.
+   * The number of item loaders to display when `loading` is `true` or while `dataSource` fetches root items.
    * @default 5
    */
   loadingItemsCount?: number;

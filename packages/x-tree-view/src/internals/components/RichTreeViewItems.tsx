@@ -13,10 +13,10 @@ import { useTreeViewContext, useTreeViewStyleContext } from '../TreeViewProvider
 import { expansionSelectors } from '../plugins/expansion';
 import { lazyLoadingSelectors } from '../plugins/lazyLoading';
 import {
-  RichTreeViewSkeletonItems,
-  DEFAULT_SKELETON_ITEMS_COUNT,
-  MAX_SKELETON_ITEMS_COUNT,
-} from './RichTreeViewSkeleton';
+  RichTreeViewItemLoaders,
+  DEFAULT_LOADING_ITEMS_COUNT,
+  MAX_LOADING_ITEMS_COUNT,
+} from './RichTreeViewLoading';
 import type { RichTreeViewStore } from '../RichTreeViewStore';
 import type { MinimalTreeViewState } from '../MinimalTreeViewStore';
 import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
@@ -74,7 +74,7 @@ export const RichTreeViewItem = React.memo(function RichTreeViewItem({
     itemLoaderContent
   ) {
     renderedChildren = (
-      <RichTreeViewSkeletonItems
+      <RichTreeViewItemLoaders
         store={store}
         classes={classes}
         slots={{ itemLoader, itemLoaderContent }}
@@ -84,8 +84,8 @@ export const RichTreeViewItem = React.memo(function RichTreeViewItem({
         }}
         itemsCount={
           loadingChildrenCount > 0
-            ? Math.min(loadingChildrenCount, MAX_SKELETON_ITEMS_COUNT)
-            : DEFAULT_SKELETON_ITEMS_COUNT
+            ? Math.min(loadingChildrenCount, MAX_LOADING_ITEMS_COUNT)
+            : DEFAULT_LOADING_ITEMS_COUNT
         }
         itemDepth={itemDepth + 1}
       />

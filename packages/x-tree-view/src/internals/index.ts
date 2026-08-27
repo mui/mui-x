@@ -7,14 +7,14 @@ export type {
   RichTreeViewItemsSlotProps,
 } from './components/RichTreeViewItems';
 
-export { RichTreeViewSkeleton, getSkeletonItemsCount } from './components/RichTreeViewSkeleton';
+export { RichTreeViewLoading, getLoadingItemsCount } from './components/RichTreeViewLoading';
 export type {
-  RichTreeViewSkeletonProps,
-  RichTreeViewSkeletonSlots,
-  RichTreeViewSkeletonSlotProps,
-  RichTreeViewSkeletonClasses,
+  RichTreeViewLoadingProps,
+  RichTreeViewLoadingSlots,
+  RichTreeViewLoadingSlotProps,
+  RichTreeViewLoadingClasses,
   RichTreeViewItemLoaderOwnerState,
-} from './components/RichTreeViewSkeleton';
+} from './components/RichTreeViewLoading';
 
 export { useTreeViewRootProps } from './hooks/useTreeViewRootProps';
 export { useTreeViewStore } from './hooks/useTreeViewStore';

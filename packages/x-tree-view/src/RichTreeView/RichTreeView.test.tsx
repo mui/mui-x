@@ -36,18 +36,18 @@ describe('<RichTreeView />', () => {
       expect(screen.queryByRole('treeitem', { name: 'Item 1' })).to.equal(null);
     });
 
-    it('should render 5 skeleton items by default', () => {
+    it('should render 5 item loaders by default', () => {
       render(<RichTreeView items={[]} loading />);
 
-      const skeletonItems = screen.getAllByRole('treeitem');
-      expect(skeletonItems).to.have.length(5);
+      const itemLoaders = screen.getAllByRole('treeitem');
+      expect(itemLoaders).to.have.length(5);
     });
 
-    it('should render the number of skeleton items specified by loadingItemsCount', () => {
+    it('should render the number of item loaders specified by loadingItemsCount', () => {
       render(<RichTreeView items={[]} loading loadingItemsCount={3} />);
 
-      const skeletonItems = screen.getAllByRole('treeitem');
-      expect(skeletonItems).to.have.length(3);
+      const itemLoaders = screen.getAllByRole('treeitem');
+      expect(itemLoaders).to.have.length(3);
     });
 
     it('should render tree items when loading changes to false', () => {
@@ -63,22 +63,22 @@ describe('<RichTreeView />', () => {
       expect(screen.getAllByRole('treeitem')).to.have.length(ITEMS.length);
     });
 
-    it('should mark skeleton items as disabled via aria-disabled', () => {
+    it('should mark item loaders as disabled via aria-disabled', () => {
       render(<RichTreeView items={[]} loading />);
 
-      const skeletonItems = screen.getAllByRole('treeitem');
-      skeletonItems.forEach((item) => {
+      const itemLoaders = screen.getAllByRole('treeitem');
+      itemLoaders.forEach((item) => {
         expect(item).to.have.attribute('aria-disabled', 'true');
       });
     });
 
-    it('should preserve the id prop on the skeleton root', () => {
+    it('should preserve the id prop on the loading root', () => {
       render(<RichTreeView items={[]} loading id="my-tree" />);
 
       expect(screen.getByRole('tree')).to.have.attribute('id', 'my-tree');
     });
 
-    it('should preserve the className prop on the skeleton root', () => {
+    it('should preserve the className prop on the loading root', () => {
       render(<RichTreeView items={[]} loading className="my-tree" />);
 
       expect(screen.getByRole('tree')).to.have.class('my-tree');
@@ -105,20 +105,20 @@ describe('<RichTreeView />', () => {
       expect(screen.queryAllByRole('treeitem')).to.have.length(0);
     });
 
-    it('should apply itemHeight to the skeleton items', () => {
+    it('should apply itemHeight to the item loaders', () => {
       render(<RichTreeView items={[]} loading itemHeight={40} />);
 
-      const skeletonItems = screen.getAllByRole('treeitem');
-      skeletonItems.forEach((item) => {
+      const itemLoaders = screen.getAllByRole('treeitem');
+      itemLoaders.forEach((item) => {
         expect(item.style.getPropertyValue('--TreeView-itemHeight')).to.equal('40px');
       });
     });
 
-    it('should not set the item height variable on the skeleton items when itemHeight is not set', () => {
+    it('should not set the item height variable on the item loaders when itemHeight is not set', () => {
       render(<RichTreeView items={[]} loading />);
 
-      const skeletonItems = screen.getAllByRole('treeitem');
-      skeletonItems.forEach((item) => {
+      const itemLoaders = screen.getAllByRole('treeitem');
+      itemLoaders.forEach((item) => {
         expect(item.style.getPropertyValue('--TreeView-itemHeight')).to.equal('');
       });
     });
@@ -148,11 +148,11 @@ describe('<RichTreeView />', () => {
       expect(tree).not.to.have.attribute('aria-label');
     });
 
-    it('should render a checkbox placeholder in each skeleton item when checkboxSelection is enabled', () => {
+    it('should render a checkbox placeholder in each item loader when checkboxSelection is enabled', () => {
       render(<RichTreeView items={[]} loading checkboxSelection />);
 
-      const skeletonItems = screen.getAllByRole('treeitem');
-      skeletonItems.forEach((item) => {
+      const itemLoaders = screen.getAllByRole('treeitem');
+      itemLoaders.forEach((item) => {
         expect(item.querySelector('.MuiSkeleton-circular')).not.to.equal(null);
       });
     });
@@ -160,24 +160,24 @@ describe('<RichTreeView />', () => {
     it('should not render a checkbox placeholder when checkboxSelection is disabled', () => {
       render(<RichTreeView items={[]} loading />);
 
-      const skeletonItems = screen.getAllByRole('treeitem');
-      skeletonItems.forEach((item) => {
+      const itemLoaders = screen.getAllByRole('treeitem');
+      itemLoaders.forEach((item) => {
         expect(item.querySelector('.MuiSkeleton-circular')).to.equal(null);
       });
     });
 
-    it('should render the skeleton rows with the `itemLoader` slot', () => {
-      function CustomSkeletonItem(props: React.HTMLAttributes<HTMLLIElement> & { ownerState?: unknown }) {
+    it('should render the loading rows with the `itemLoader` slot', () => {
+      function CustomItemLoader(props: React.HTMLAttributes<HTMLLIElement> & { ownerState?: unknown }) {
         const { ownerState, ...other } = props;
-        return <li {...other} data-testid="custom-skeleton-item" />;
+        return <li {...other} data-testid="custom-item-loader" />;
       }
 
-      render(<RichTreeView items={[]} loading slots={{ itemLoader: CustomSkeletonItem }} />);
+      render(<RichTreeView items={[]} loading slots={{ itemLoader: CustomItemLoader }} />);
 
-      expect(screen.getAllByTestId('custom-skeleton-item')).to.have.length(5);
+      expect(screen.getAllByTestId('custom-item-loader')).to.have.length(5);
     });
 
-    it('should apply `slotProps.itemLoader` to each skeleton row', () => {
+    it('should apply `slotProps.itemLoader` to each loading row', () => {
       render(
         <RichTreeView
           items={[]}
@@ -191,8 +191,8 @@ describe('<RichTreeView />', () => {
         />,
       );
 
-      const skeletonItems = screen.getAllByRole('treeitem');
-      skeletonItems.forEach((item, index) => {
+      const itemLoaders = screen.getAllByRole('treeitem');
+      itemLoaders.forEach((item, index) => {
         expect(item).to.have.attribute('data-index', `${index}`);
         expect(item.style.opacity).to.equal(`${1 - index * 0.1}`);
         // The slot props style must merge with the internal style, not replace it.

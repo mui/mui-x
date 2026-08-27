@@ -386,7 +386,7 @@ export const useTreeItem = <TStore extends TreeViewAnyStore = DefaultStore>(
       unmountOnExit: true,
       component: 'ul',
       role: 'group',
-      // The group also opens while the children load lazily, to show the skeleton rows.
+      // The group also opens while the children load lazily, to show the loading rows.
       in: status.expanded || status.loading,
       children,
       ...externalProps,

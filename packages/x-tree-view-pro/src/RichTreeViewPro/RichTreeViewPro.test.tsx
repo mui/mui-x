@@ -34,19 +34,19 @@ describe('<RichTreeViewPro />', () => {
   });
 
   describe('loading prop', () => {
-    it('should render 5 skeleton items by default', () => {
+    it('should render 5 item loaders by default', () => {
       render(<RichTreeViewPro items={[]} loading disableVirtualization />);
 
       expect(screen.getAllByRole('treeitem')).to.have.length(5);
     });
 
-    it('should render the number of skeleton items specified by loadingItemsCount', () => {
+    it('should render the number of item loaders specified by loadingItemsCount', () => {
       render(<RichTreeViewPro items={[]} loading loadingItemsCount={3} disableVirtualization />);
 
       expect(screen.getAllByRole('treeitem')).to.have.length(3);
     });
 
-    it('should mark skeleton items as disabled via aria-disabled', () => {
+    it('should mark item loaders as disabled via aria-disabled', () => {
       render(<RichTreeViewPro items={[]} loading disableVirtualization />);
 
       screen.getAllByRole('treeitem').forEach((item) => {
@@ -71,7 +71,7 @@ describe('<RichTreeViewPro />', () => {
   });
 
   describe('loading prop + lazy loading (dataSource)', () => {
-    it('should show the skeleton while the root items are being fetched by dataSource', async () => {
+    it('should show the loading UI while the root items are being fetched by dataSource', async () => {
       let resolveRootFetch!: (items: ItemType[]) => void;
       const getTreeItems = () =>
         new Promise<ItemType[]>((resolve) => {
@@ -89,7 +89,7 @@ describe('<RichTreeViewPro />', () => {
         />,
       );
 
-      // Root fetch is in-flight — expect the default 5-row skeleton, not a real tree
+      // Root fetch is in-flight — expect the default 5 loading rows, not a real tree
       expect(screen.getByRole('tree')).to.have.attribute('aria-busy', 'true');
       expect(screen.getAllByRole('treeitem')).to.have.length(5);
 
@@ -105,7 +105,7 @@ describe('<RichTreeViewPro />', () => {
       expect(screen.getByRole('tree')).not.to.have.attribute('aria-busy');
     });
 
-    it('should keep the skeleton visible when both loading and dataSource root fetch are active', async () => {
+    it('should keep the loading UI visible when both loading and dataSource root fetch are active', async () => {
       let resolveRootFetch!: (items: ItemType[]) => void;
       const getTreeItems = () =>
         new Promise<ItemType[]>((resolve) => {
@@ -124,7 +124,7 @@ describe('<RichTreeViewPro />', () => {
         />,
       );
 
-      // Both `loading` and the in-flight fetch indicate loading — skeleton shown
+      // Both `loading` and the in-flight fetch indicate loading — loading UI shown
       expect(screen.getByRole('tree')).to.have.attribute('aria-busy', 'true');
 
       // Resolve the fetch — but `loading` prop is still true
@@ -145,7 +145,7 @@ describe('<RichTreeViewPro />', () => {
       expect(screen.getByRole('treeitem', { name: 'Item 1' })).not.to.equal(null);
     });
 
-    it('should render an error Alert instead of the skeleton when the root dataSource fetch fails', async () => {
+    it('should render an error Alert instead of the loading UI when the root dataSource fetch fails', async () => {
       const getTreeItems = () =>
         new Promise<ItemType[]>((resolve, reject) => {
           reject(new Error('Failed to fetch root items'));

@@ -11,7 +11,7 @@ import type { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
-import { RichTreeViewSkeleton } from '../internals/components/RichTreeViewSkeleton';
+import { RichTreeViewLoading } from '../internals/components/RichTreeViewLoading';
 import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
 import type { TreeViewValidItem } from '../models';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
@@ -71,7 +71,7 @@ const RichTreeViewItemLoaderContent = styled('div', {
   name: 'MuiRichTreeView',
   slot: 'ItemLoaderContent',
 })(({ theme }) => ({
-  // Same typography as the tree item label, so the skeleton line box has the same height.
+  // Same typography as the tree item label, so the loading row line box has the same height.
   ...theme.typography.body1,
   padding: theme.spacing(0.5, 1),
   // Same indentation formula as the tree item content.
@@ -154,7 +154,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 
   if (isLoading) {
     return (
-      <RichTreeViewSkeleton
+      <RichTreeViewLoading
         store={store}
         slots={slots}
         slotProps={slotProps}
@@ -332,12 +332,12 @@ RichTreeView.propTypes /* remove-proptypes */ = {
   itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
   /**
-   * If `true`, a skeleton loading UI is displayed instead of the tree items.
+   * If `true`, a loading UI is displayed instead of the tree items.
    * @default false
    */
   loading: PropTypes.bool,
   /**
-   * The number of skeleton items to display when `loading` is `true`.
+   * The number of item loaders to display when `loading` is `true`.
    * @default 5
    */
   loadingItemsCount: PropTypes.number,
