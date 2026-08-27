@@ -428,6 +428,32 @@ describe('EventDialogFormStore', () => {
       expect(store.state.errors).to.deep.equal({ priority: ['Priority required'] });
     });
 
+    it('should restart when the validators are touched while an async validation is pending', async () => {
+      const store = createFormStore({ title: 'Meeting' });
+      let release!: () => void;
+      const gate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      let titleCalls = 0;
+      // Models a validator whose rule changed behind a stable identity: only the
+      // pass running after the touch sees the new behavior.
+      store.registerValidator('title', async () => {
+        titleCalls += 1;
+        if (titleCalls === 1) {
+          await gate;
+          return null;
+        }
+        return 'Blocked by the new rule';
+      });
+
+      const validation = store.validateAll();
+      store.touchValidators();
+      release();
+
+      expect(await validation).to.equal(false);
+      expect(store.state.errors).to.deep.equal({ title: ['Blocked by the new rule'] });
+    });
+
     it('should drop the error of a validator unregistered while an async validation is pending', async () => {
       const store = createFormStore({ title: 'Meeting', priority: null });
       let release!: () => void;

@@ -16,6 +16,12 @@ export interface EventDialogFormState<
    * Validation errors, keyed by field name. Always non-empty arrays.
    */
   errors: Record<string, EventDialogFormErrorMessage[]>;
+  /**
+   * Whether a submission is pending. Lives in the store so only its subscribers
+   * (the action buttons) re-render on submit: re-rendering the sections would
+   * churn their inline validator identities mid-validation.
+   */
+  isSubmitting: boolean;
 }
 
 /**
@@ -106,6 +112,7 @@ export const eventDialogFormSelectors = {
     hasOwn(state.values, key),
   error: (state: EventDialogFormState<Record<string, unknown>>, key: string) =>
     getOwn(state.errors, key),
+  isSubmitting: (state: EventDialogFormState<Record<string, unknown>>) => state.isSubmitting,
 };
 
 /**
@@ -156,7 +163,7 @@ export class EventDialogFormStore<
   public readonly resourceSelectionMode: ResourceSelectionMode;
 
   constructor(initialValues: TValues, parameters: EventDialogFormParameters<TValues>) {
-    super({ values: { ...initialValues }, errors: {} });
+    super({ values: { ...initialValues }, errors: {}, isSubmitting: false });
     this.initialValues = { ...initialValues };
     this.parameters = parameters;
     this.occurrence = parameters.occurrence;
@@ -272,6 +279,22 @@ export class EventDialogFormStore<
    * Whether at least one validator is currently registered for `key`.
    */
   public hasValidator = (key: string): boolean => this.validators.has(key);
+
+  /**
+   * Signals that the behavior of a registered validator changed behind a stable
+   * identity (e.g. a new closure over new props), so a pending `validateAll`
+   * restarts and resolves against the current rules.
+   */
+  public touchValidators = () => {
+    this.validatorsRevision += 1;
+  };
+
+  /**
+   * Marks a submission as pending or settled, for the action buttons.
+   */
+  public setSubmitting = (value: boolean) => {
+    this.set('isSubmitting', value);
+  };
 
   /**
    * Seeds a key that is not present in the values yet, without marking it dirty

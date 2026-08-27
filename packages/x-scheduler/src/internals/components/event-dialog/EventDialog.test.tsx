@@ -1322,6 +1322,62 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         expect(screen.getByRole('alert')).to.have.text('Client is required');
       });
 
+      it('should re-validate with the rule current when the async validation settles, not the one on submit', async () => {
+        const onEventsChange = spy();
+        const deferred = createDeferred();
+        function TighteningSection() {
+          const [strict, setStrict] = React.useState(false);
+          const client = useEventDialogFormField('client', {
+            defaultValue: 'Acme',
+            validate: strict ? () => 'Blocked by the new rule' : () => deferred.promise,
+          });
+          return (
+            <React.Fragment>
+              <button type="button" onClick={() => setStrict(true)}>
+                Tighten
+              </button>
+              {client.error && <p role="alert">{client.error}</p>}
+            </React.Fragment>
+          );
+        }
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: TighteningSection },
+          { onEventsChange },
+        );
+
+        // The validation of the old rule is now pending on the deferred promise.
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+        await user.click(screen.getByRole('button', { name: 'Tighten' }));
+        await act(async () => deferred.resolve(null));
+
+        expect(onEventsChange.callCount).to.equal(0);
+        expect(screen.getByRole('alert')).to.have.text('Blocked by the new rule');
+      });
+
+      it('should only run an async validator once for an uneventful submit', async () => {
+        const deferred = createDeferred();
+        const validator = spy(() => deferred.promise);
+        function AsyncValidatedSection() {
+          useEventDialogFormField('client', {
+            defaultValue: 'Acme',
+            // Inline on purpose: the closure gets a new identity on every render.
+            validate: () => validator(),
+          });
+          return null;
+        }
+        const { user } = renderWithSlot(
+          { eventDialogGeneralTab: AsyncValidatedSection },
+          { onEventsChange: () => {} },
+        );
+
+        // The isSubmitting re-render must not count as a rule change: the inline
+        // closure has a new identity but the same behavior.
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+        await act(async () => deferred.resolve(null));
+
+        expect(validator.callCount).to.equal(1);
+      });
+
       it('should ignore a submission that settles after its editing session ended', async () => {
         const onEventsChange = spy();
         const deferred = createDeferred();

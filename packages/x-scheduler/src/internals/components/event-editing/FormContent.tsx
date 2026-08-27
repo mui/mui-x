@@ -247,9 +247,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       isSessionAliveRef.current = false;
     };
   }, []);
+  // The ref guards synchronous re-entry; the store's isSubmitting drives the
+  // action buttons without re-rendering the sections (a section re-render would
+  // churn its inline validator identities mid-validation).
   const isSubmittingRef = React.useRef(false);
-  // The ref guards synchronous re-entry, the state drives the Save button.
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   // Dev companion to the submit-level blocks: a custom General tab can omit any
   // built-in section, leaving the stored error with no visible field.
@@ -323,7 +324,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     }
 
     isSubmittingRef.current = true;
-    setIsSubmitting(true);
+    formStore.setSubmitting(true);
     try {
       let isValid: boolean;
       try {
@@ -430,10 +431,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       onClose();
     } finally {
       isSubmittingRef.current = false;
-      // React 17 (still supported) warns on a state update after unmount.
-      if (isSessionAliveRef.current) {
-        setIsSubmitting(false);
-      }
+      // A store write is safe after unmount, unlike the React state update it
+      // replaced (React 17, still supported, warns on those).
+      formStore.setSubmitting(false);
     }
   };
 
@@ -514,28 +514,39 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           <RecurrenceTabRenderer occurrence={occurrence} tabValue={tabValue} />
         )}
         <Divider className={classes.eventDialogFormDivider} />
-        <FormActions className={classes.eventDialogFormActions}>
-          <Button
-            className={classes.eventDialogDeleteButton}
-            color="error"
-            type="button"
-            onClick={handleDelete}
-            // A delete during a pending recurring submit would get its scope
-            // operation overwritten by the resolving update.
-            disabled={isSubmitting}
-          >
-            {localeText.deleteEvent}
-          </Button>
-          <Button
-            className={classes.eventDialogSaveButton}
-            variant="contained"
-            type="submit"
-            disabled={isSubmitting}
-          >
-            {localeText.saveChanges}
-          </Button>
-        </FormActions>
+        <FormActionButtons onDelete={handleDelete} />
       </EventDialogForm>
     </DialogContent>
+  );
+}
+
+// Subscribes to isSubmitting on its own so a submit only re-renders the buttons.
+function FormActionButtons(props: { onDelete: () => void }) {
+  const { classes, localeText } = useEventEditingStyledContext();
+  const formStore = useEventDialogFormContext();
+  const isSubmitting = useStore(formStore, eventDialogFormSelectors.isSubmitting);
+
+  return (
+    <FormActions className={classes.eventDialogFormActions}>
+      <Button
+        className={classes.eventDialogDeleteButton}
+        color="error"
+        type="button"
+        onClick={props.onDelete}
+        // A delete during a pending recurring submit would get its scope
+        // operation overwritten by the resolving update.
+        disabled={isSubmitting}
+      >
+        {localeText.deleteEvent}
+      </Button>
+      <Button
+        className={classes.eventDialogSaveButton}
+        variant="contained"
+        type="submit"
+        disabled={isSubmitting}
+      >
+        {localeText.saveChanges}
+      </Button>
+    </FormActions>
   );
 }

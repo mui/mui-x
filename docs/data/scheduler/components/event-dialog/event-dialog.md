@@ -93,7 +93,7 @@ Return a **fragment** from the slot: the tab content is a flex column with a gap
 
 - `value` / `setValue` — read and write the field. A written field is part of the draft and is merged into the event on save.
 - `defaultValue` — seeds the field when the event does not have it yet. An untouched default is not saved.
-- `validate` — runs on save. Return the error message(s), or `null` when the value is valid. Async validators are supported. Several validators on the same key run in registration order, and the first failure wins — the later ones do not run.
+- `validate` — runs on save. Return the error message(s), or `null` when the value is valid. Async validators are supported, and the verdict reflects the values and validation rules current when the validation settles, not the ones when Save was pressed. Several validators on the same key run in registration order, and the first failure wins — the later ones do not run.
 - `error` / `errors` — the current validation message(s) for the field.
 - `readOnly` — whether the event property backing a built-in key is read-only (a getter without a setter in `eventModelStructure`); always `false` for custom keys. Mirror it on your input.
 

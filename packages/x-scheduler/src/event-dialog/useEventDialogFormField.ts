@@ -170,5 +170,15 @@ export function useEventDialogFormField(
     return () => store.unregisterValidator(key, validate);
   }, [store, key, hasValidator, validate]);
 
+  // A new closure over new props changes the rule behind the stable wrapper's
+  // identity, so a pending validateAll must restart to resolve against it.
+  const lastValidateRef = React.useRef(parameters.validate);
+  React.useEffect(() => {
+    if (lastValidateRef.current !== parameters.validate) {
+      lastValidateRef.current = parameters.validate;
+      store.touchValidators();
+    }
+  });
+
   return { value, setValue, error: errorList?.[0], errors: errorList ?? NO_ERRORS, readOnly };
 }
