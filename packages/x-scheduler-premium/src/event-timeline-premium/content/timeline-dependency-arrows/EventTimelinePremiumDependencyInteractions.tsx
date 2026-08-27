@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import { useElementDragInProgress } from '@mui/x-scheduler-internals-premium/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyId } from '@mui/x-scheduler-internals-premium/models';
@@ -51,6 +52,11 @@ const DependencyInteractionsSvg = styled('svg', {
     cursor: 'pointer',
     color: (theme.vars || theme).palette.error.main,
   },
+  // The overlay is not an ancestor of any drop target, so a dragover landing on a
+  // hit-area would refuse the drop right over an arrow crossing empty lane space.
+  '&[data-dragging] [data-dependency-hit], &[data-dragging] [data-dependency-delete-button]': {
+    pointerEvents: 'none',
+  },
 }));
 
 /**
@@ -86,6 +92,7 @@ function DependencyInteractionsLayer() {
   );
 
   useDependencySelectionInteraction(svgRef);
+  const dragging = useElementDragInProgress();
 
   if (visibleArrows.length === 0 || eventsWidth <= 0 || height <= 0) {
     return null;
@@ -106,6 +113,7 @@ function DependencyInteractionsLayer() {
       ref={svgRef}
       aria-hidden
       data-dependency-interactions=""
+      {...(dragging ? { 'data-dragging': '' } : null)}
       width={eventsWidth}
       height={height}
       viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}

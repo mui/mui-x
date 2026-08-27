@@ -1,4 +1,4 @@
-import { act, waitFor } from '@mui/internal-test-utils';
+import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   adapter,
@@ -501,6 +501,51 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
 
       expect(probed.closest('[data-dependency-interactions]')).to.equal(null);
       expect(probed.closest(`.${eventTimelinePremiumClasses.titleCell}`)).not.to.equal(null);
+    });
+
+    it('should let an event drag reach the drop targets under the arrow hit-areas', async () => {
+      // Far apart, so the middle of the arrow rides over plain lane space.
+      const farPredecessor = EventBuilder.new()
+        .id('event-far-a')
+        .title('Far A')
+        .singleDay('2025-07-03T08:00:00Z')
+        .resource(resource1)
+        .build();
+      const farSuccessor = EventBuilder.new()
+        .id('event-far-b')
+        .title('Far B')
+        .singleDay('2025-07-03T16:00:00Z')
+        .resource(resource1)
+        .build();
+      renderTimeline({
+        events: [farPredecessor, farSuccessor],
+        dependencies: [buildDependency('dep-1', 'event-far-a', 'event-far-b')],
+      });
+
+      const getHitPath = () => document.querySelector<SVGPathElement>('[data-dependency-hit]')!;
+      await waitFor(() => {
+        expect(getHitPath()).not.to.equal(null);
+      });
+
+      // A point on the hit stroke over the empty lane space between the two events.
+      const hitRect = getHitPath().getBoundingClientRect();
+      const probeX = hitRect.left + hitRect.width / 2;
+      const probeY = hitRect.top + hitRect.height / 2;
+      const probe = () => document.elementFromPoint(probeX, probeY)!;
+      expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
+
+      // While a drag is in progress the hit-areas must not intercept the pointer: the
+      // overlay is not an ancestor of any drop target, so a dragover landing on it
+      // would refuse the drop right over the arrow.
+      fireEvent.dragStart(getEventElement('Far B'), { dataTransfer: new DataTransfer() });
+      await waitFor(() => {
+        expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
+      });
+
+      fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+      await waitFor(() => {
+        expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
+      });
     });
   });
 });
