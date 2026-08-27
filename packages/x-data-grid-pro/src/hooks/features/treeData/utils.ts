@@ -3,7 +3,8 @@ import type {
   GridRowId,
   GridTreeNode,
   GridGroupNode,
-  GridValidRowModel,
+  GridRowModelUpdate,
+  GridRowModelReplace,
   GridLeafNode,
   GridRowTreeConfig,
 } from '@mui/x-data-grid';
@@ -64,7 +65,7 @@ export async function updateLeafPath(
   sourceNode: GridTreeNode,
   targetPath: string[],
   ctx: ReorderExecutionContext,
-): Promise<GridValidRowModel | null> {
+): Promise<GridRowModelUpdate | GridRowModelReplace | null> {
   const { apiRef, setTreeDataPath, processRowUpdate, onProcessRowUpdateError } = ctx;
   const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
 
@@ -91,7 +92,7 @@ export async function updateGroupHierarchyPaths(
   sourceBasePath: string[],
   targetPath: string[],
   ctx: ReorderExecutionContext,
-): Promise<GridValidRowModel[]> {
+): Promise<Array<GridRowModelUpdate | GridRowModelReplace>> {
   const { apiRef, setTreeDataPath, processRowUpdate, onProcessRowUpdateError } = ctx;
   const rowTree = gridRowTreeSelector(apiRef);
   const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
