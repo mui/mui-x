@@ -65,22 +65,22 @@ export const RichTreeViewItem = React.memo(function RichTreeViewItem({
     ? children?.map(renderItemForRichTreeView)
     : null;
 
-  const { skeletonItem, skeletonContent } = styleSlots;
+  const { itemLoader, itemLoaderContent } = styleSlots;
   if (
     isLoadingChildren &&
     !skipChildren &&
     (children == null || children.length === 0) &&
-    skeletonItem &&
-    skeletonContent
+    itemLoader &&
+    itemLoaderContent
   ) {
     renderedChildren = (
       <RichTreeViewSkeletonItems
         store={store}
         classes={classes}
-        slots={{ skeletonItem, skeletonContent }}
+        slots={{ itemLoader, itemLoaderContent }}
         slotProps={{
-          skeletonItem: styleSlotProps.skeletonItem,
-          skeletonContent: styleSlotProps.skeletonContent,
+          itemLoader: styleSlotProps.itemLoader,
+          itemLoaderContent: styleSlotProps.itemLoaderContent,
         }}
         itemsCount={
           loadingChildrenCount > 0

@@ -13,7 +13,7 @@ export type {
   RichTreeViewSkeletonSlots,
   RichTreeViewSkeletonSlotProps,
   RichTreeViewSkeletonClasses,
-  RichTreeViewSkeletonItemOwnerState,
+  RichTreeViewItemLoaderOwnerState,
 } from './components/RichTreeViewSkeleton';
 
 export { useTreeViewRootProps } from './hooks/useTreeViewRootProps';

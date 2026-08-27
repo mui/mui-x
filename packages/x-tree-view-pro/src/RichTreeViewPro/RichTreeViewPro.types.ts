@@ -6,7 +6,7 @@ import type { TreeViewValidItem } from '@mui/x-tree-view/models';
 import type {
   RichTreeViewItemsSlots,
   RichTreeViewItemsSlotProps,
-  RichTreeViewSkeletonItemOwnerState,
+  RichTreeViewItemLoaderOwnerState,
   TreeViewSlots,
   TreeViewSlotProps,
   UseTreeViewStoreParameters,
@@ -27,23 +27,23 @@ export interface RichTreeViewProSlots extends TreeViewSlots, Omit<RichTreeViewIt
    */
   loading?: React.ElementType;
   /**
-   * Component rendered for each row of the loading skeleton.
+   * Component rendered for each loading row. The default renders a skeleton row.
    * It also renders for the children of an item while they load lazily.
-   * @default RichTreeViewProSkeletonItem
+   * @default RichTreeViewProItemLoader
    */
-  skeletonItem?: React.ElementType;
+  itemLoader?: React.ElementType;
   /**
-   * Component rendered inside each skeleton row, wrapping the placeholders.
-   * @default RichTreeViewProSkeletonContent
+   * Component rendered inside each loading row, wrapping the placeholders.
+   * @default RichTreeViewProItemLoaderContent
    */
-  skeletonContent?: React.ElementType;
+  itemLoaderContent?: React.ElementType;
 }
 
 export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean | undefined>
   extends TreeViewSlotProps, RichTreeViewItemsSlotProps<RichTreeViewProProps<R, Multiple>> {
   loading?: SlotComponentProps<'div', Record<string, any>, RichTreeViewProProps<R, Multiple>>;
-  skeletonItem?: SlotComponentProps<'li', {}, RichTreeViewSkeletonItemOwnerState>;
-  skeletonContent?: SlotComponentProps<'div', {}, RichTreeViewSkeletonItemOwnerState>;
+  itemLoader?: SlotComponentProps<'li', {}, RichTreeViewItemLoaderOwnerState>;
+  itemLoaderContent?: SlotComponentProps<'div', {}, RichTreeViewItemLoaderOwnerState>;
 }
 
 export type RichTreeViewProApiRef<

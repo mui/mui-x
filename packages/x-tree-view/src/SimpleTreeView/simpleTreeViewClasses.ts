@@ -8,8 +8,8 @@ export interface SimpleTreeViewClasses extends Omit<
   | 'itemLabelInput'
   | 'itemErrorIcon'
   | 'itemLoadingIcon'
-  | 'skeletonItem'
-  | 'skeletonContent'
+  | 'itemLoader'
+  | 'itemLoaderContent'
 > {}
 
 export type SimpleTreeViewClassKey = keyof SimpleTreeViewClasses;

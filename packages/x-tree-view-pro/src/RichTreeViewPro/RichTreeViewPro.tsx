@@ -43,8 +43,8 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
       itemCheckbox: ['itemCheckbox'],
       itemDragAndDropOverlay: ['itemDragAndDropOverlay'],
       itemErrorIcon: ['itemErrorIcon'],
-      skeletonItem: ['skeletonItem'],
-      skeletonContent: ['skeletonContent'],
+      itemLoader: ['itemLoader'],
+      itemLoaderContent: ['itemLoaderContent'],
     };
 
     return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
@@ -66,18 +66,18 @@ export const RichTreeViewProRoot = styled('ul', {
   },
 });
 
-const RichTreeViewProSkeletonItem = styled('li', {
+const RichTreeViewProItemLoader = styled('li', {
   name: 'MuiRichTreeViewPro',
-  slot: 'SkeletonItem',
+  slot: 'ItemLoader',
 })({
   listStyle: 'none',
   margin: 0,
   padding: 0,
 });
 
-const RichTreeViewProSkeletonContent = styled('div', {
+const RichTreeViewProItemLoaderContent = styled('div', {
   name: 'MuiRichTreeViewPro',
-  slot: 'SkeletonContent',
+  slot: 'ItemLoaderContent',
 })(({ theme }) => ({
   // Same typography as the tree item label, so the skeleton line box has the same height.
   ...theme.typography.body1,
@@ -166,8 +166,8 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   const slots = React.useMemo(
     () => ({
       root: RichTreeViewProRoot,
-      skeletonItem: RichTreeViewProSkeletonItem,
-      skeletonContent: RichTreeViewProSkeletonContent,
+      itemLoader: RichTreeViewProItemLoader,
+      itemLoaderContent: RichTreeViewProItemLoaderContent,
       ...inSlots,
     }),
     [inSlots],

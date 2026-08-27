@@ -46,16 +46,16 @@ export interface RichTreeViewSkeletonSlots {
    */
   loading?: React.ElementType;
   /**
-   * Component rendered for each row of the loading skeleton.
+   * Component rendered for each loading row. The default renders a skeleton row.
    */
-  skeletonItem: React.ElementType;
+  itemLoader: React.ElementType;
   /**
-   * Component rendered inside each skeleton row, wrapping the icon gutter and the label placeholder.
+   * Component rendered inside each loading row, wrapping the icon gutter and the label placeholder.
    */
-  skeletonContent: React.ElementType;
+  itemLoaderContent: React.ElementType;
 }
 
-export interface RichTreeViewSkeletonItemOwnerState {
+export interface RichTreeViewItemLoaderOwnerState {
   /**
    * Index of the skeleton row inside its group.
    */
@@ -77,14 +77,14 @@ export interface RichTreeViewSkeletonItemOwnerState {
 export interface RichTreeViewSkeletonSlotProps<TOwnerState extends object> {
   root?: SlotComponentProps<'ul', {}, TOwnerState>;
   loading?: SlotComponentProps<'div', Record<string, any>, TOwnerState>;
-  skeletonItem?: SlotComponentProps<'li', {}, RichTreeViewSkeletonItemOwnerState>;
-  skeletonContent?: SlotComponentProps<'div', {}, RichTreeViewSkeletonItemOwnerState>;
+  itemLoader?: SlotComponentProps<'li', {}, RichTreeViewItemLoaderOwnerState>;
+  itemLoaderContent?: SlotComponentProps<'div', {}, RichTreeViewItemLoaderOwnerState>;
 }
 
 export interface RichTreeViewSkeletonClasses {
   root?: string;
-  skeletonItem?: string;
-  skeletonContent?: string;
+  itemLoader?: string;
+  itemLoaderContent?: string;
 }
 
 export interface RichTreeViewSkeletonProps<
@@ -103,9 +103,9 @@ export interface RichTreeViewSkeletonProps<
 
 export interface RichTreeViewSkeletonItemsProps<TStore extends TreeViewAnyStore> {
   store: TreeViewStoreInContext<TStore>;
-  classes: Pick<RichTreeViewSkeletonClasses, 'skeletonItem' | 'skeletonContent'>;
-  slots: Pick<RichTreeViewSkeletonSlots, 'skeletonItem' | 'skeletonContent'>;
-  slotProps?: Pick<RichTreeViewSkeletonSlotProps<object>, 'skeletonItem' | 'skeletonContent'>;
+  classes: Pick<RichTreeViewSkeletonClasses, 'itemLoader' | 'itemLoaderContent'>;
+  slots: Pick<RichTreeViewSkeletonSlots, 'itemLoader' | 'itemLoaderContent'>;
+  slotProps?: Pick<RichTreeViewSkeletonSlotProps<object>, 'itemLoader' | 'itemLoaderContent'>;
   itemsCount: number;
   /**
    * The depth of the skeleton rows.
@@ -116,10 +116,10 @@ export interface RichTreeViewSkeletonItemsProps<TStore extends TreeViewAnyStore>
 }
 
 interface RichTreeViewSkeletonRowProps {
-  classes: Pick<RichTreeViewSkeletonClasses, 'skeletonItem' | 'skeletonContent'>;
-  slots: Pick<RichTreeViewSkeletonSlots, 'skeletonItem' | 'skeletonContent'>;
-  slotProps?: Pick<RichTreeViewSkeletonSlotProps<object>, 'skeletonItem' | 'skeletonContent'>;
-  ownerState: RichTreeViewSkeletonItemOwnerState;
+  classes: Pick<RichTreeViewSkeletonClasses, 'itemLoader' | 'itemLoaderContent'>;
+  slots: Pick<RichTreeViewSkeletonSlots, 'itemLoader' | 'itemLoaderContent'>;
+  slotProps?: Pick<RichTreeViewSkeletonSlotProps<object>, 'itemLoader' | 'itemLoaderContent'>;
+  ownerState: RichTreeViewItemLoaderOwnerState;
   style: React.CSSProperties;
   labelWidth: string;
 }
@@ -127,13 +127,13 @@ interface RichTreeViewSkeletonRowProps {
 function RichTreeViewSkeletonRow(props: RichTreeViewSkeletonRowProps) {
   const { classes, slots, slotProps, ownerState, style, labelWidth } = props;
 
-  const SkeletonItem = slots.skeletonItem;
-  const SkeletonContent = slots.skeletonContent;
+  const ItemLoader = slots.itemLoader;
+  const ItemLoaderContent = slots.itemLoaderContent;
 
-  const skeletonItemProps = useSlotProps({
-    elementType: SkeletonItem,
-    externalSlotProps: slotProps?.skeletonItem,
-    className: classes.skeletonItem,
+  const itemLoaderProps = useSlotProps({
+    elementType: ItemLoader,
+    externalSlotProps: slotProps?.itemLoader,
+    className: classes.itemLoader,
     additionalProps: {
       role: 'treeitem',
       'aria-disabled': true,
@@ -142,16 +142,16 @@ function RichTreeViewSkeletonRow(props: RichTreeViewSkeletonRowProps) {
     ownerState,
   });
 
-  const skeletonContentProps = useSlotProps({
-    elementType: SkeletonContent,
-    externalSlotProps: slotProps?.skeletonContent,
-    className: classes.skeletonContent,
+  const itemLoaderContentProps = useSlotProps({
+    elementType: ItemLoaderContent,
+    externalSlotProps: slotProps?.itemLoaderContent,
+    className: classes.itemLoaderContent,
     ownerState,
   });
 
   return (
-    <SkeletonItem {...skeletonItemProps}>
-      <SkeletonContent {...skeletonContentProps}>
+    <ItemLoader {...itemLoaderProps}>
+      <ItemLoaderContent {...itemLoaderContentProps}>
         <span
           style={{
             width: TREE_ITEM_ICON_CONTAINER_WIDTH_PX,
@@ -164,8 +164,8 @@ function RichTreeViewSkeletonRow(props: RichTreeViewSkeletonRowProps) {
           <Skeleton variant="circular" width={24} height={24} style={{ flexShrink: 0 }} />
         )}
         <Skeleton width={labelWidth} />
-      </SkeletonContent>
-    </SkeletonItem>
+      </ItemLoaderContent>
+    </ItemLoader>
   );
 }
 
@@ -181,7 +181,7 @@ export function RichTreeViewSkeletonItems<TStore extends TreeViewAnyStore>(
 
   const itemHeight = useStore(store, itemsSelectors.itemHeight);
   const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
-  const skeletonItemStyle = {
+  const itemLoaderStyle = {
     '--TreeView-itemDepth': itemDepth,
     ...(itemHeight == null ? {} : { '--TreeView-itemHeight': `${itemHeight}px` }),
   } as React.CSSProperties;
@@ -195,7 +195,7 @@ export function RichTreeViewSkeletonItems<TStore extends TreeViewAnyStore>(
           slots={slots}
           slotProps={slotProps}
           ownerState={{ index, itemsCount, itemDepth, isCheckboxSelectionEnabled }}
-          style={skeletonItemStyle}
+          style={itemLoaderStyle}
           labelWidth={SKELETON_LABEL_WIDTHS[index % SKELETON_LABEL_WIDTHS.length]}
         />
       ))}

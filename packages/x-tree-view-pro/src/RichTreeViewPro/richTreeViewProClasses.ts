@@ -3,10 +3,10 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import type { TreeViewClasses } from '@mui/x-tree-view/internals';
 
 export interface RichTreeViewProClasses extends TreeViewClasses {
-  /** Styles applied to each skeleton item element. */
-  skeletonItem: string;
-  /** Styles applied to the skeleton item's content element. */
-  skeletonContent: string;
+  /** Styles applied to each item loader element. */
+  itemLoader: string;
+  /** Styles applied to the item loader's content element. */
+  itemLoaderContent: string;
 }
 
 export type RichTreeViewProClassKey = keyof RichTreeViewProClasses;
@@ -29,7 +29,7 @@ export const richTreeViewProClasses: RichTreeViewProClasses = generateUtilityCla
     'itemDragAndDropOverlay',
     'itemErrorIcon',
     'itemLoadingIcon',
-    'skeletonItem',
-    'skeletonContent',
+    'itemLoader',
+    'itemLoaderContent',
   ],
 );

@@ -6,10 +6,10 @@ export interface RichTreeViewClasses extends Omit<
   TreeViewClasses,
   'itemDragAndDropOverlay' | 'itemErrorIcon' | 'itemLoadingIcon'
 > {
-  /** Styles applied to each skeleton item element. */
-  skeletonItem: string;
-  /** Styles applied to the skeleton item's content element. */
-  skeletonContent: string;
+  /** Styles applied to each item loader element. */
+  itemLoader: string;
+  /** Styles applied to the item loader's content element. */
+  itemLoaderContent: string;
 }
 
 export type RichTreeViewClassKey = keyof RichTreeViewClasses;
@@ -27,6 +27,6 @@ export const richTreeViewClasses: RichTreeViewClasses = generateUtilityClasses('
   'itemLabel',
   'itemCheckbox',
   'itemLabelInput',
-  'skeletonItem',
-  'skeletonContent',
+  'itemLoader',
+  'itemLoaderContent',
 ]);

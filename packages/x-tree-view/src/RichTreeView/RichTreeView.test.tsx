@@ -166,24 +166,24 @@ describe('<RichTreeView />', () => {
       });
     });
 
-    it('should render the skeleton rows with the `skeletonItem` slot', () => {
+    it('should render the skeleton rows with the `itemLoader` slot', () => {
       function CustomSkeletonItem(props: React.HTMLAttributes<HTMLLIElement> & { ownerState?: unknown }) {
         const { ownerState, ...other } = props;
         return <li {...other} data-testid="custom-skeleton-item" />;
       }
 
-      render(<RichTreeView items={[]} loading slots={{ skeletonItem: CustomSkeletonItem }} />);
+      render(<RichTreeView items={[]} loading slots={{ itemLoader: CustomSkeletonItem }} />);
 
       expect(screen.getAllByTestId('custom-skeleton-item')).to.have.length(5);
     });
 
-    it('should apply `slotProps.skeletonItem` to each skeleton row', () => {
+    it('should apply `slotProps.itemLoader` to each skeleton row', () => {
       render(
         <RichTreeView
           items={[]}
           loading
           slotProps={{
-            skeletonItem: (ownerState) => ({
+            itemLoader: (ownerState) => ({
               'data-index': ownerState.index,
               style: { opacity: 1 - ownerState.index * 0.1 },
             }),
