@@ -108,7 +108,12 @@
     "itemHeight": { "type": { "name": "number" }, "default": "32" },
     "itemsReordering": { "type": { "name": "bool" }, "default": "false" },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "loadingItemsCount": { "type": { "name": "number" }, "default": "5" },
+    "loadingItemsCount": {
+      "type": { "name": "number" },
+      "default": "5",
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>itemsCount</code> value in <code>slotProps.loading</code> instead."
+    },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
@@ -215,6 +220,23 @@
       "class": "MuiRichTreeViewPro-root"
     },
     {
+      "name": "loading",
+      "description": "Component rendered instead of the default loading rows while the tree is loading.\nIt renders inside the tree root, which keeps its `role=\"tree\"` and `aria-busy` attributes.",
+      "class": null
+    },
+    {
+      "name": "itemLoader",
+      "description": "Component rendered for each loading row. The default renders a skeleton row.\nIt also renders for the children of an item while they load lazily.",
+      "default": "RichTreeViewProItemLoader",
+      "class": "MuiRichTreeViewPro-itemLoader"
+    },
+    {
+      "name": "itemLoaderContent",
+      "description": "Component rendered inside each loading row, wrapping the placeholders.",
+      "default": "RichTreeViewProItemLoaderContent",
+      "class": "MuiRichTreeViewPro-itemLoaderContent"
+    },
+    {
       "name": "collapseIcon",
       "description": "The default icon used to collapse the item.",
       "class": null
@@ -289,18 +311,6 @@
       "key": "itemLoadingIcon",
       "className": "MuiRichTreeViewPro-itemLoadingIcon",
       "description": "Styles applied to the item's loading icon element",
-      "isGlobal": false
-    },
-    {
-      "key": "skeletonContent",
-      "className": "MuiRichTreeViewPro-skeletonContent",
-      "description": "Styles applied to the skeleton item's content element.",
-      "isGlobal": false
-    },
-    {
-      "key": "skeletonItem",
-      "className": "MuiRichTreeViewPro-skeletonItem",
-      "description": "Styles applied to each skeleton item element.",
       "isGlobal": false
     }
   ],

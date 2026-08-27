@@ -40,8 +40,15 @@ describe('<RichTreeViewPro />', () => {
       expect(screen.getAllByRole('treeitem')).to.have.length(5);
     });
 
-    it('should render the number of item loaders specified by loadingItemsCount', () => {
-      render(<RichTreeViewPro items={[]} loading loadingItemsCount={3} disableVirtualization />);
+    it('should render the number of item loaders specified by `slotProps.loading.itemsCount`', () => {
+      render(
+        <RichTreeViewPro
+          items={[]}
+          loading
+          slotProps={{ loading: { itemsCount: 3 } }}
+          disableVirtualization
+        />,
+      );
 
       expect(screen.getAllByRole('treeitem')).to.have.length(3);
     });
@@ -54,19 +61,17 @@ describe('<RichTreeViewPro />', () => {
       });
     });
 
-    it('should not forward `loading` and `loadingItemsCount` to the DOM', () => {
+    it('should not forward `loading` to the DOM', () => {
       render(
         <RichTreeViewPro
           items={[{ id: '1', label: 'Item 1' }]}
           loading={false}
-          loadingItemsCount={3}
           disableVirtualization
         />,
       );
 
       const tree = screen.getByRole('tree');
       expect(tree).not.to.have.attribute('loading');
-      expect(tree).not.to.have.attribute('loadingitemscount');
     });
   });
 

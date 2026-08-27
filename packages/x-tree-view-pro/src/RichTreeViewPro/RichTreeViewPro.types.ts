@@ -7,6 +7,7 @@ import type {
   RichTreeViewItemsSlots,
   RichTreeViewItemsSlotProps,
   RichTreeViewItemLoaderOwnerState,
+  RichTreeViewLoadingSlotOwnProps,
   TreeViewSlots,
   TreeViewSlotProps,
   UseTreeViewStoreParameters,
@@ -41,7 +42,11 @@ export interface RichTreeViewProSlots extends TreeViewSlots, Omit<RichTreeViewIt
 
 export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean | undefined>
   extends TreeViewSlotProps, RichTreeViewItemsSlotProps<RichTreeViewProProps<R, Multiple>> {
-  loading?: SlotComponentProps<'div', Record<string, any>, RichTreeViewProProps<R, Multiple>>;
+  loading?: SlotComponentProps<
+    'div',
+    RichTreeViewLoadingSlotOwnProps,
+    RichTreeViewProProps<R, Multiple>
+  >;
   itemLoader?: SlotComponentProps<'li', {}, RichTreeViewItemLoaderOwnerState>;
   itemLoaderContent?: SlotComponentProps<'div', {}, RichTreeViewItemLoaderOwnerState>;
 }
@@ -71,7 +76,9 @@ export interface RichTreeViewProPropsBase extends React.HTMLAttributes<HTMLUList
   /**
    * The number of item loaders to display when `loading` is `true` or while `dataSource` fetches root items.
    * @default 5
+   * @deprecated Use the `itemsCount` value in `slotProps.loading` instead.
    */
+  // TODO v10: Remove the deprecated `loadingItemsCount` prop.
   loadingItemsCount?: number;
 }
 

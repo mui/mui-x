@@ -120,10 +120,10 @@
       "description": "If <code>true</code>, the reordering of items is enabled."
     },
     "loading": {
-      "description": "If <code>true</code>, a skeleton loading UI is displayed instead of the tree items. The skeleton is also shown automatically while <code>dataSource</code> is fetching root items. Setting <code>loading={false}</code> does not suppress the skeleton during an active <code>dataSource</code> root fetch."
+      "description": "If <code>true</code>, a loading UI is displayed instead of the tree items. The loading UI is also shown automatically while <code>dataSource</code> is fetching root items. Setting <code>loading={false}</code> does not suppress the loading UI during an active <code>dataSource</code> root fetch."
     },
     "loadingItemsCount": {
-      "description": "The number of skeleton items to display when <code>loading</code> is <code>true</code> or while <code>dataSource</code> fetches root items."
+      "description": "The number of item loaders to display when <code>loading</code> is <code>true</code> or while <code>dataSource</code> fetches root items."
     },
     "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {
@@ -283,21 +283,16 @@
       "nodeName": "the item&#39;s label input element (visible only",
       "conditions": "editing is enabled)"
     },
-    "itemLoadingIcon": { "description": "Styles applied to the item&#39;s loading icon element" },
-    "skeletonContent": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the skeleton item&#39;s content element"
-    },
-    "skeletonItem": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "each skeleton item element"
-    }
+    "itemLoadingIcon": { "description": "Styles applied to the item&#39;s loading icon element" }
   },
   "slotDescriptions": {
     "collapseIcon": "The default icon used to collapse the item.",
     "endIcon": "The default icon displayed next to an end item. This is applied to all Tree Items and can be overridden by the TreeItem <code>icon</code> slot prop.",
     "expandIcon": "The default icon used to expand the item.",
     "item": "Custom component to render a Tree Item.",
+    "itemLoader": "Component rendered for each loading row. The default renders a skeleton row. It also renders for the children of an item while they load lazily.",
+    "itemLoaderContent": "Component rendered inside each loading row, wrapping the placeholders.",
+    "loading": "Component rendered instead of the default loading rows while the tree is loading. It renders inside the tree root, which keeps its <code>role=&quot;tree&quot;</code> and <code>aria-busy</code> attributes.",
     "root": "Element rendered at the root."
   }
 }

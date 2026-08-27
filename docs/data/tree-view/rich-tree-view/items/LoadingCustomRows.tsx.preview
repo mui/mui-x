@@ -1,9 +1,9 @@
 <RichTreeView
   items={[]}
   loading
-  loadingItemsCount={4}
   slots={{ itemLoaderContent: CustomItemLoaderContent }}
   slotProps={{
+    loading: { itemsCount: 4 },
     itemLoader: (ownerState) => ({
       style: { opacity: 1 - ownerState.index * 0.2 },
     }),

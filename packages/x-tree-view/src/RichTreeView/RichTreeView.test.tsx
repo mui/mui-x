@@ -43,11 +43,32 @@ describe('<RichTreeView />', () => {
       expect(itemLoaders).to.have.length(5);
     });
 
-    it('should render the number of item loaders specified by loadingItemsCount', () => {
-      render(<RichTreeView items={[]} loading loadingItemsCount={3} />);
+    it('should render the number of item loaders specified by `slotProps.loading.itemsCount`', () => {
+      render(<RichTreeView items={[]} loading slotProps={{ loading: { itemsCount: 3 } }} />);
 
       const itemLoaders = screen.getAllByRole('treeitem');
       expect(itemLoaders).to.have.length(3);
+    });
+
+    // TODO v10: Remove together with the deprecated `loadingItemsCount` prop.
+    it('should render the number of item loaders specified by the deprecated `loadingItemsCount` prop', () => {
+      render(<RichTreeView items={[]} loading loadingItemsCount={4} />);
+
+      expect(screen.getAllByRole('treeitem')).to.have.length(4);
+    });
+
+    // TODO v10: Remove together with the deprecated `loadingItemsCount` prop.
+    it('should give `slotProps.loading.itemsCount` precedence over the deprecated `loadingItemsCount` prop', () => {
+      render(
+        <RichTreeView
+          items={[]}
+          loading
+          loadingItemsCount={4}
+          slotProps={{ loading: { itemsCount: 2 } }}
+        />,
+      );
+
+      expect(screen.getAllByRole('treeitem')).to.have.length(2);
     });
 
     it('should render tree items when loading changes to false', () => {
@@ -200,12 +221,11 @@ describe('<RichTreeView />', () => {
       });
     });
 
-    it('should not forward `loading` and `loadingItemsCount` to the DOM', () => {
-      render(<RichTreeView items={ITEMS} loading={false} loadingItemsCount={3} />);
+    it('should not forward `loading` to the DOM', () => {
+      render(<RichTreeView items={ITEMS} loading={false} />);
 
       const tree = screen.getByRole('tree');
       expect(tree).not.to.have.attribute('loading');
-      expect(tree).not.to.have.attribute('loadingitemscount');
     });
   });
 });

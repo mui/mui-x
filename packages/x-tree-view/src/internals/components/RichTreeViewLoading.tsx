@@ -16,20 +16,17 @@ const ITEM_LOADER_LABEL_WIDTHS = ['40%', '70%', '55%', '50%', '65%'];
 export const DEFAULT_LOADING_ITEMS_COUNT = 5;
 export const MAX_LOADING_ITEMS_COUNT = 100;
 
-export function getLoadingItemsCount(loadingItemsCount: number | undefined): number {
+export function getLoadingItemsCount(itemsCount: number | undefined): number {
   if (process.env.NODE_ENV !== 'production') {
-    if (
-      loadingItemsCount != null &&
-      (!Number.isFinite(loadingItemsCount) || loadingItemsCount < 0)
-    ) {
+    if (itemsCount != null && (!Number.isFinite(itemsCount) || itemsCount < 0)) {
       warnOnce([
-        `MUI X: The \`loadingItemsCount\` prop received an invalid value (${loadingItemsCount}).`,
+        `MUI X: The \`itemsCount\` value in \`slotProps.loading\` (or the deprecated \`loadingItemsCount\` prop) received an invalid value (${itemsCount}).`,
         'It must be a non-negative finite number.',
       ]);
     }
   }
 
-  const rawCount = loadingItemsCount ?? DEFAULT_LOADING_ITEMS_COUNT;
+  const rawCount = itemsCount ?? DEFAULT_LOADING_ITEMS_COUNT;
   return Number.isFinite(rawCount)
     ? Math.max(1, Math.min(MAX_LOADING_ITEMS_COUNT, Math.floor(rawCount)))
     : DEFAULT_LOADING_ITEMS_COUNT;
@@ -74,9 +71,25 @@ export interface RichTreeViewItemLoaderOwnerState {
   isCheckboxSelectionEnabled: boolean;
 }
 
+export interface RichTreeViewLoadingSlotOwnProps {
+  /**
+   * The number of loading rows to render.
+   * Only applies to the whole-tree loading UI.
+   * The children of a lazily loading item derive their row count from `getChildrenCount()`.
+   * @default 5
+   */
+  itemsCount?: number;
+  /**
+   * A message describing the loading state.
+   * The default loading rows do not render it.
+   * It is forwarded to a custom `loading` slot component.
+   */
+  message?: React.ReactNode;
+}
+
 export interface RichTreeViewLoadingSlotProps<TOwnerState extends object> {
   root?: SlotComponentProps<'ul', {}, TOwnerState>;
-  loading?: SlotComponentProps<'div', Record<string, any>, TOwnerState>;
+  loading?: SlotComponentProps<'div', RichTreeViewLoadingSlotOwnProps, TOwnerState>;
   itemLoader?: SlotComponentProps<'li', {}, RichTreeViewItemLoaderOwnerState>;
   itemLoaderContent?: SlotComponentProps<'div', {}, RichTreeViewItemLoaderOwnerState>;
 }
@@ -98,6 +111,11 @@ export interface RichTreeViewLoadingProps<
   forwardedProps: React.HTMLAttributes<HTMLUListElement>;
   rootRef: React.Ref<HTMLUListElement>;
   classes: RichTreeViewLoadingClasses;
+  /**
+   * The number of loading rows to render.
+   * @deprecated Use the `itemsCount` value in `slotProps.loading` instead.
+   */
+  // TODO v10: Remove the deprecated `loadingItemsCount` prop.
   loadingItemsCount?: number;
 }
 
@@ -215,7 +233,6 @@ export function RichTreeViewLoading<TStore extends TreeViewAnyStore, TOwnerState
     props;
 
   const getRootProps = useTreeViewRootProps(store, forwardedProps, rootRef);
-  const itemsCount = getLoadingItemsCount(loadingItemsCount);
 
   const Root = slots.root;
   const Loading = slots.loading;
@@ -223,7 +240,9 @@ export function RichTreeViewLoading<TStore extends TreeViewAnyStore, TOwnerState
     elementType: Loading ?? 'div',
     externalSlotProps: slotProps?.loading,
     ownerState,
-  });
+  }) as RichTreeViewLoadingSlotOwnProps & Record<string, any>;
+  // TODO v10: Remove the fallback to the deprecated `loadingItemsCount` prop.
+  const itemsCount = getLoadingItemsCount(loadingProps.itemsCount ?? loadingItemsCount);
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,

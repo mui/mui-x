@@ -36,7 +36,7 @@ The following demo uses `fetchQuery` from `react-query` to load data.
 ## Loading indicators
 
 While `getTreeItems()` fetches the root items, the tree displays the same loading rows as the [`loading` prop](/x/react-tree-view/rich-tree-view/items/#loading-state).
-Use the `loadingItemsCount` prop to control the number of rows.
+Use the `itemsCount` value in `slotProps.loading` to control the number of rows.
 
 While an item fetches its children, the loading UI depends on the DOM structure:
 

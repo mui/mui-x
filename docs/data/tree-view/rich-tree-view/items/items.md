@@ -129,10 +129,10 @@ By default, the tree renders animated skeleton rows in place of the real items.
 
 {{"demo": "LoadingRichTreeView.js"}}
 
-Use the `loadingItemsCount` prop to control how many loading rows are shown (default is `5`):
+Use the `itemsCount` value in `slotProps.loading` to control how many loading rows are shown (default is `5`):
 
 ```tsx
-<RichTreeView items={[]} loading loadingItemsCount={8} />
+<RichTreeView items={[]} loading slotProps={{ loading: { itemsCount: 8 } }} />
 ```
 
 On `RichTreeViewPro`, the same loading UI is also shown automatically while the [`dataSource`](/x/react-tree-view/rich-tree-view/lazy-loading/) is fetching the root items, even if `loading` is not set.
@@ -153,7 +153,7 @@ The demo below styles each loading row with the `itemLoaderContent` slot and fad
 
 {{"demo": "LoadingCustomRows.js"}}
 
-The demo below replaces the whole loading UI with a spinner through the `loading` slot:
+The demo below replaces the whole loading UI with a spinner through the `loading` slot and configures its message with `slotProps.loading`:
 
 {{"demo": "LoadingCustomIndicator.js"}}
 

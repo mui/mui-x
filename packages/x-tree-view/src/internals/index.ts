@@ -13,6 +13,7 @@ export type {
   RichTreeViewLoadingSlots,
   RichTreeViewLoadingSlotProps,
   RichTreeViewLoadingClasses,
+  RichTreeViewLoadingSlotOwnProps,
   RichTreeViewItemLoaderOwnerState,
 } from './components/RichTreeViewLoading';
 

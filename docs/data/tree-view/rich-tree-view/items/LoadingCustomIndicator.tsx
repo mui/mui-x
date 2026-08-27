@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 interface CustomLoadingProps extends React.HTMLAttributes<HTMLDivElement> {
-  message?: string;
+  message?: React.ReactNode;
   ownerState?: unknown;
 }
 

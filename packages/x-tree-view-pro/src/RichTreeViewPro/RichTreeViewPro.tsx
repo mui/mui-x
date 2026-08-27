@@ -417,6 +417,7 @@ RichTreeViewPro.propTypes /* remove-proptypes */ = {
   /**
    * The number of item loaders to display when `loading` is `true` or while `dataSource` fetches root items.
    * @default 5
+   * @deprecated Use the `itemsCount` value in `slotProps.loading` instead.
    */
   loadingItemsCount: PropTypes.number,
   /**
