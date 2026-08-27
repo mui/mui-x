@@ -167,7 +167,9 @@ describe('<RichTreeView />', () => {
     });
 
     it('should render the loading rows with the `itemLoader` slot', () => {
-      function CustomItemLoader(props: React.HTMLAttributes<HTMLLIElement> & { ownerState?: unknown }) {
+      function CustomItemLoader(
+        props: React.HTMLAttributes<HTMLLIElement> & { ownerState?: unknown },
+      ) {
         const { ownerState, ...other } = props;
         return <li {...other} data-testid="custom-item-loader" />;
       }
