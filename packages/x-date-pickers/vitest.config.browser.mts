@@ -19,7 +19,10 @@ export default mergeConfig(
     },
     test: {
       name: getTestName(import.meta.url),
-      setupFiles: [fileURLToPath(new URL('../../test/utils/setupPickers.js', import.meta.url))],
+      setupFiles: [
+        fileURLToPath(new URL('../../test/utils/setupPickers.js', import.meta.url)),
+        fileURLToPath(new URL('../../test/utils/setupSinon.ts', import.meta.url)),
+      ],
       exclude: ['**/materialVersion.test.tsx'],
       browser: {
         enabled: true,

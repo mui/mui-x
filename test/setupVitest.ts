@@ -2,7 +2,6 @@ import { beforeAll, beforeEach, afterEach } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/licenseRelease';
 import { config } from 'react-transition-group';
-import sinon from 'sinon';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import setupVitest from '@mui/internal-test-utils/setupVitest';
 import { isJsdom } from '@mui/internal-test-utils/env';
@@ -38,9 +37,14 @@ beforeEach(() => {
   config.disabled = true;
 });
 
-afterEach(() => {
-  // Restore Sinon default sandbox to avoid memory leak
-  // See https://github.com/sinonjs/sinon/issues/1866
-  sinon.restore();
+afterEach(async () => {
+  if (isJsdom()) {
+    // The browser suites register this through `test/utils/setupSinon.ts` instead, so that
+    // the pages of the packages that never use Sinon do not load it.
+    const { default: sinon } = await import('sinon');
+    // Restore the Sinon default sandbox to avoid a memory leak.
+    // See https://github.com/sinonjs/sinon/issues/1866
+    sinon.restore();
+  }
   config.disabled = false;
 });

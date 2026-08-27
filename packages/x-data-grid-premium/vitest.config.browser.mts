@@ -8,7 +8,10 @@ export default mergeConfig(
   defineConfig({
     test: {
       name: getTestName(import.meta.url),
-      setupFiles: [fileURLToPath(new URL('../../test/utils/setupDataGrid.ts', import.meta.url))],
+      setupFiles: [
+        fileURLToPath(new URL('../../test/utils/setupDataGrid.ts', import.meta.url)),
+        fileURLToPath(new URL('../../test/utils/setupSinon.ts', import.meta.url)),
+      ],
       exclude: [
         '**/materialVersion.test.tsx',
         // The formula engine is DOM-free by design (no React/grid imports) —
