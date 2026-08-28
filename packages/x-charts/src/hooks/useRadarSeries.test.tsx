@@ -1,6 +1,7 @@
 import { renderHook } from '@mui/internal-test-utils';
 import type { RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import { useRadarSeries, useRadarSeriesContext } from './useRadarSeries';
 import type { DefaultizedRadarSeriesType, RadarSeriesType } from '../models';
 import { RadarChart } from '../RadarChart';

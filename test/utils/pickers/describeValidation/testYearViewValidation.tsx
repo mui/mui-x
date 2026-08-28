@@ -2,6 +2,7 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { SinonFakeTimers, useFakeTimers } from 'sinon';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 const queryByTextInView = (text: string) => {

@@ -8,6 +8,7 @@ import {
 } from 'test/utils/pickers';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe, expect } from 'vitest';
 
 describe('<DigitalClock /> - Describe Value', () => {
   const { render } = createPickerRenderer();

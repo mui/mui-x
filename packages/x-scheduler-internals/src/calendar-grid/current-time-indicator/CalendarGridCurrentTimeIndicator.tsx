@@ -50,10 +50,7 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
     const { position } = useElementPositionInCollection({
       start: nowForColumn,
       end: endForCalc,
-      collectionStart: columnStart,
-      collectionEnd: columnEnd,
-      dayStartMinute,
-      dayEndMinute,
+      collection: { start: columnStart, end: columnEnd, dayStartMinute, dayEndMinute },
     });
 
     const isOutOfRange =

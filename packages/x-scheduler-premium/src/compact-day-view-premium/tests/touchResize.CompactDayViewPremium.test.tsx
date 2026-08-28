@@ -16,6 +16,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 /**
  * Resizing a recurring event commits through the recurring scope dialog. Whichever scope is chosen,

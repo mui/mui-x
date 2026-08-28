@@ -13,6 +13,8 @@ import {
   type Locator,
 } from '@playwright/test';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
+import { pickersOutlinedInputClasses } from '@mui/x-date-pickers/PickersTextField';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
@@ -360,6 +362,30 @@ async function initializeEnvironment(
           await page.keyboard.press('Enter');
 
           await page.getByText('1/31/2025, 4:05:00 PM').waitFor();
+        },
+      );
+
+      // https://github.com/mui/mui-x/issues/23414
+      // Chromium clears the typing buffer of a date section whenever the value of the input
+      // is written programmatically. Applying the new value after `onValueChange` deferred the
+      // state update past the change event, so React reverted the input and rewrote it on the
+      // next render, and every keystroke started a new buffer instead of extending the previous
+      // one. Only the year is asserted, because the order of the day and month sections follows
+      // the system locale on Chromium.
+      it.skipIf(browserType.name() !== 'chromium')(
+        'should keep the typing buffer of a date section between keystrokes',
+        async () => {
+          await renderFixture('DataGrid/KeyboardEditDateWithValueChange');
+
+          await page.dblclick('[role="gridcell"][data-field="birthday"]');
+          const input = page.locator('[role="gridcell"][data-field="birthday"] input');
+
+          // Fill the first two sections to move the focus to the year section.
+          await page.keyboard.type('0611');
+          // Each of these keystrokes fires a change event and must extend the year buffer.
+          await page.keyboard.type('1986');
+
+          expect(await input.inputValue()).to.match(/^1986-/);
         },
       );
 
@@ -748,6 +774,47 @@ async function initializeEnvironment(
           await page.getByRole('button', { name: 'Clear' }).click();
 
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
+        });
+
+        it('should keep the selected section when clicking the blank space after the last section', async () => {
+          // Needs trusted input: Chromium delegates the focus to the nearest
+          // section without the `preventDefault` on mousedown.
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+          await page.getByRole('spinbutton', { name: 'Day' }).click();
+
+          const container = (await page
+            .locator(`.${pickersSectionListClasses.root}`)
+            .boundingBox())!;
+          const year = (await page.getByRole('spinbutton', { name: 'Year' }).boundingBox())!;
+          // Without blank space to click, the assertion below would pass vacuously.
+          expect(container.x + container.width).to.be.greaterThan(year.x + year.width + 16);
+
+          await page.mouse.click(
+            container.x + container.width - 2,
+            container.y + container.height / 2,
+          );
+
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('DD');
+        });
+
+        it('should keep the selected section when clicking the padding of the field', async () => {
+          // Needs trusted input: the browser blurs the section without the
+          // `preventDefault` on mousedown, so the field flashes.
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+          await page.getByRole('spinbutton', { name: 'Day' }).click();
+
+          const root = (await page.locator(`.${pickersOutlinedInputClasses.root}`).boundingBox())!;
+          const container = (await page
+            .locator(`.${pickersSectionListClasses.root}`)
+            .boundingBox())!;
+          // Without padding to click, the assertion below would pass vacuously.
+          expect(container.x).to.be.greaterThan(root.x + 8);
+
+          await page.mouse.click(root.x + 4, root.y + root.height / 2);
+
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('DD');
         });
 
         it('should correctly select a day in a calendar with "AdapterMomentJalaali"', async () => {

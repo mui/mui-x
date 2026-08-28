@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 import { GridPanelContextProvider, useGridPanelContext } from './GridPanelContext';
 
 function PanelTargetReader() {

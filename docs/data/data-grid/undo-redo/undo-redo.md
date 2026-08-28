@@ -104,6 +104,25 @@ Remove the `updateRow` method to see the toolbar adjustment.
 
 {{"demo": "DataSourceUndoRedo.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Restoring rows that can't be merged
+
+Undoing a change normally writes the stored values back into the row, which produces a new object.
+That is lossless for a plain object, but a class instance would come back without its prototype chain and without its `#private` fields.
+
+When the row is a class instance, the default handlers put the captured object back with a [row replacement](/x/react-data-grid/row-updates/#replacing-a-row-instead-of-merging-it) instead.
+Undoing restores the instance the Data Grid held before the change, and redoing restores the instance that [`processRowUpdate()`](/x/react-data-grid/editing/persistence/#replacing-the-row-instead-of-merging-it) stored, so `apiRef.current.getRow(id)` keeps returning a usable instance in both directions.
+
+There is no way to rebuild an instance with a single field changed, so undoing a cell edit on a class instance restores the whole row rather than only the edited field.
+Rows that are plain objects keep the field-level restore.
+
+With a Data Source, the captured row is also what the default handlers pass to `updateRow()` as `updatedRow`, so the server receives the object the Data Grid stored rather than a plain copy of it.
+
+:::warning
+The default handlers for cell and row editing record the values the Data Grid computes while the cell is in edit mode, before `processRowUpdate()` or `updateRow()` resolves.
+If what you return changes a value the user can see [validation](#validation-events) treats the row as modified outside of the Data Grid and discards the pending undo history.
+Return a row whose visible values match what the user entered to keep the change undoable.
+:::
+
 ## Custom history event handlers
 
 Provide your own map of the history event handlers via the `historyEventHandlers` prop to change the default handlers or to track more events and add them to the undo/redo stack.

@@ -1,33 +1,24 @@
-import * as React from 'react';
-import { act, screen, waitFor } from '@mui/internal-test-utils';
+import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import type {
-  EventTimelinePremiumStore,
-  EventTimelinePremiumStoreParameters,
-} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
-import {
-  EventEditingStyledContext,
-  EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-  SharedComponentsStyledContext,
-} from '@mui/x-scheduler/internals';
 import {
   adapter,
   createSchedulerRenderer,
-  DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import { EventTimelinePremiumContent } from '../content';
-import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
+import { createTheme } from '@mui/material/styles';
+import { describe, it, expect } from 'vitest';
+import { getEventsCellLaneMetrics, getRowHeightForLaneCount } from '../content/rowGeometry';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
-
-const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
-const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
+import {
+  buildDependency,
+  createDependencyTimelineRenderer,
+  getArrowPaths,
+  getEventElement,
+  resource1,
+  resource2,
+} from './dependencyTestUtils';
 
 const eventA = EventBuilder.new()
   .id('event-a')
@@ -48,117 +39,11 @@ const eventC = EventBuilder.new()
   .resource(resource2)
   .build();
 
-function buildDependency(id: string, source: string, target: string): SchedulerDependency {
-  return { id, source, target, type: 'FinishToStart' };
-}
-
-const styledContextValue = {
-  schedulerId: 'test-timeline',
-  classes: eventTimelinePremiumClasses,
-  localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-};
-
-const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
-
 describe('<EventTimelinePremium /> dependency arrows', () => {
   const { render } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
-
-  // `dependencies` is not a public prop yet, so the harness feeds the internal store
-  // parameters to the same hook the component uses, and closes the controlled loop
-  // (`onEventsChange` / `onDependenciesChange` → new parameter values) like a consumer.
-  function TestTimeline({
-    events: initialEvents,
-    resources,
-    dependencies: initialDependencies,
-    onStoreReady,
-  }: {
-    events: SchedulerEvent[];
-    resources: SchedulerResource[];
-    dependencies?: SchedulerDependency[];
-    onStoreReady: (store: EventTimelinePremiumStore<any, any>) => void;
-  }) {
-    const [events, setEvents] = React.useState(initialEvents);
-    const [dependencies, setDependencies] = React.useState(initialDependencies);
-
-    const parameters: EventTimelinePremiumStoreParameters<SchedulerEvent, SchedulerResource> = {
-      events,
-      resources,
-      dependencies,
-      onEventsChange: setEvents,
-      onDependenciesChange: setDependencies,
-      visibleDate: DEFAULT_TESTING_VISIBLE_DATE,
-      preset: 'dayAndHour',
-      presets: ['dayAndHour'],
-    };
-    const store = useEventTimelinePremium(parameters);
-    React.useEffect(() => {
-      onStoreReady(store);
-    }, [onStoreReady, store]);
-    // The context is typed on the base scheduler state and the store generic is
-    // invariant, so the premium store (extra state slices) needs the cast.
-    const storeContextValue = store as any;
-
-    return (
-      <SchedulerStoreContext.Provider value={storeContextValue}>
-        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-          <EventEditingStyledContext.Provider value={styledContextValue}>
-            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-              <EventTimelinePremiumContent />
-            </SharedComponentsStyledContext.Provider>
-          </EventEditingStyledContext.Provider>
-        </EventTimelinePremiumStyledContext.Provider>
-      </SchedulerStoreContext.Provider>
-    );
-  }
-
-  function renderTimeline({
-    events,
-    resources = [resource1, resource2],
-    dependencies,
-  }: {
-    events: SchedulerEvent[];
-    resources?: SchedulerResource[];
-    dependencies?: SchedulerDependency[];
-  }) {
-    let store!: EventTimelinePremiumStore<any, any>;
-
-    const view = render(
-      // Mimics the layout, font-size and box-sizing reset the `EventTimelinePremium`
-      // root provides to the content (the row-height CSS resolves against them).
-      <div
-        className="test-timeline-host"
-        style={{
-          width: 1200,
-          height: 600,
-          display: 'flex',
-          flexDirection: 'column',
-          fontSize: '0.875rem',
-        }}
-      >
-        <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
-        <TestTimeline
-          events={events}
-          resources={resources}
-          dependencies={dependencies}
-          onStoreReady={(mountedStore) => {
-            store = mountedStore;
-          }}
-        />
-      </div>,
-    );
-
-    return { store, ...view };
-  }
-
-  function getArrowPaths() {
-    return Array.from(document.querySelectorAll<SVGPathElement>('[data-dependency-id]'));
-  }
-
-  function getEventElement(title: string) {
-    return screen.getByText(title).closest('[data-occurrence-key]')!;
-  }
+  const { renderTimeline } = createDependencyTimelineRenderer(render);
 
   it('should render one arrow per active dependency', () => {
     renderTimeline({
@@ -223,6 +108,82 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
 
     // S route: four softened corners.
     expect(d.match(/Q /g)).to.have.length(4);
+  });
+
+  describe('virtualized row heights with a trimmed hour window', () => {
+    const PRESET_CONFIG = { dayAndHour: { startTime: 8, endTime: 20 } };
+    const theme = createTheme();
+
+    const sourceEvent = EventBuilder.new()
+      .id('event-source')
+      .title('Source')
+      .span('2025-07-03T18:00:00Z', '2025-07-03T22:00:00Z')
+      .resource(resource1)
+      .build();
+    const targetEvent = EventBuilder.new()
+      .id('event-target')
+      .title('Target')
+      .singleDay('2025-07-04T10:00:00Z')
+      .resource(resource2)
+      .build();
+    const dependency = buildDependency('dep-1', 'event-source', 'event-target');
+
+    function getArrowEndY() {
+      const coordinates = getArrowPaths()[0]
+        .getAttribute('d')!
+        .match(/-?[\d.]+/g)!
+        .map(parseFloat);
+      return coordinates[coordinates.length - 1];
+    }
+
+    // The arrow enters the target at lane 1 of the second row, so its end Y measures
+    // the virtualized height the first row got from `getRowHeight`.
+    function getTargetAnchorY(firstRowLaneCount: number) {
+      const metrics = getEventsCellLaneMetrics(theme);
+      return (
+        getRowHeightForLaneCount(theme, firstRowLaneCount) +
+        metrics.topPadding +
+        metrics.laneMinHeight / 2
+      );
+    }
+
+    it('should not reserve a lane for an occurrence hidden by the hour window', () => {
+      // 21:00 → 22:00 overlaps the source in real time but is fully hidden: the
+      // virtualized first row must keep its one-lane height.
+      const hiddenOverlap = EventBuilder.new()
+        .id('event-hidden')
+        .title('Hidden')
+        .span('2025-07-03T21:00:00Z', '2025-07-03T22:00:00Z')
+        .resource(resource1)
+        .build();
+
+      renderTimeline({
+        events: [sourceEvent, hiddenOverlap, targetEvent],
+        dependencies: [dependency],
+        presetConfig: PRESET_CONFIG,
+      });
+
+      expect(getArrowEndY()).to.be.closeTo(getTargetAnchorY(1), 0.01);
+    });
+
+    it('should reserve a second lane for a visible overlapping occurrence', () => {
+      // Sensitivity control for the previous test: a visible overlap must grow the
+      // first row, proving the anchor really tracks its virtualized height.
+      const visibleOverlap = EventBuilder.new()
+        .id('event-overlap')
+        .title('Overlap')
+        .span('2025-07-03T19:00:00Z', '2025-07-03T21:00:00Z')
+        .resource(resource1)
+        .build();
+
+      renderTimeline({
+        events: [sourceEvent, visibleOverlap, targetEvent],
+        dependencies: [dependency],
+        presetConfig: PRESET_CONFIG,
+      });
+
+      expect(getArrowEndY()).to.be.closeTo(getTargetAnchorY(2), 0.01);
+    });
   });
 
   // TODO(multi-resource rendering): add an integration test rendering one arrow per
@@ -491,6 +452,188 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       expect(
         getComputedStyle(document.querySelector('[data-dependency-arrows]')!).pointerEvents,
       ).to.equal('none');
+    });
+  });
+
+  describe.skipIf(isJSDOM)('layering', () => {
+    function getGrid() {
+      return document.querySelector<HTMLElement>(`.${eventTimelinePremiumClasses.grid}`)!;
+    }
+
+    function getHitPath() {
+      return document.querySelector<SVGPathElement>('[data-dependency-hit]')!;
+    }
+
+    // Far apart, so the middle of the arrow rides over plain lane space.
+    const farPredecessor = EventBuilder.new()
+      .id('event-far-a')
+      .title('Far A')
+      .singleDay('2025-07-03T08:00:00Z')
+      .resource(resource1)
+      .build();
+    const farSuccessor = EventBuilder.new()
+      .id('event-far-b')
+      .title('Far B')
+      .singleDay('2025-07-03T16:00:00Z')
+      .resource(resource1)
+      .build();
+
+    async function renderFarTimelineWithArrow() {
+      renderTimeline({
+        events: [farPredecessor, farSuccessor],
+        dependencies: [buildDependency('dep-1', 'event-far-a', 'event-far-b')],
+      });
+      await waitFor(() => {
+        expect(getHitPath()).not.to.equal(null);
+      });
+    }
+
+    function probeAt(rect: DOMRect) {
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      return () => document.elementFromPoint(x, y)!;
+    }
+
+    async function withDrag(source: Element, during: () => Promise<void>) {
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      try {
+        await during();
+      } finally {
+        fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+      }
+    }
+
+    it('should keep the pinned title column above the arrow hit-areas on horizontal scroll', async () => {
+      renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      await waitFor(() => {
+        expect(getHitPath()).not.to.equal(null);
+      });
+
+      const getTitleRect = () =>
+        document
+          .querySelector(`.${eventTimelinePremiumClasses.titleCell}`)!
+          .getBoundingClientRect();
+
+      // Scroll right so the hit stroke slides under the pinned title column. Rects are
+      // re-measured after the scroll settles: the pinned column and the overlays both
+      // shift on screen when the virtualizer processes the scroll.
+      const initialHitRect = getHitPath().getBoundingClientRect();
+      act(() => {
+        getGrid().scrollLeft =
+          initialHitRect.left + initialHitRect.width / 2 - getTitleRect().right + 20;
+      });
+      await waitFor(() => {
+        const hitRect = getHitPath().getBoundingClientRect();
+        const titleRect = getTitleRect();
+        expect(hitRect.left).to.be.lessThan(titleRect.right - 4);
+        expect(hitRect.right).to.be.greaterThan(titleRect.left + 4);
+      });
+
+      // A point on the hit stroke inside the pinned column must reach the title cell,
+      // not the arrow's hit-area riding underneath it.
+      const hitRect = getHitPath().getBoundingClientRect();
+      const titleRect = getTitleRect();
+      const probeX =
+        (Math.max(hitRect.left, titleRect.left) + Math.min(hitRect.right, titleRect.right)) / 2;
+      const probed = document.elementFromPoint(probeX, hitRect.top + hitRect.height / 2)!;
+
+      expect(probed.closest('[data-dependency-interactions]')).to.equal(null);
+      expect(probed.closest(`.${eventTimelinePremiumClasses.titleCell}`)).not.to.equal(null);
+    });
+
+    it('should let an event drag reach the drop targets under the arrow hit-areas', async () => {
+      await renderFarTimelineWithArrow();
+
+      // A point on the hit stroke over the empty lane space between the two events.
+      const probe = probeAt(getHitPath().getBoundingClientRect());
+      expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
+
+      // Mid-drag, the hit-areas must not intercept the pointer (see the overlay's CSS).
+      await withDrag(getEventElement(farSuccessor.title), async () => {
+        await waitFor(() => {
+          expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
+        });
+        // Present but inert, and the pointer reaches the drop-target surface below.
+        expect(getHitPath()).not.to.equal(null);
+        expect(probe().closest(`.${eventTimelinePremiumClasses.eventsCell}`)).not.to.equal(null);
+      });
+
+      await waitFor(() => {
+        expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
+      });
+    });
+
+    it('should keep the hit-areas muted when the overlay remounts mid-drag', async () => {
+      await renderFarTimelineWithArrow();
+      const probe = probeAt(getHitPath().getBoundingClientRect());
+
+      await withDrag(getEventElement(farSuccessor.title), async () => {
+        // Cull the arrow out of the render window and back: the remounted svg must
+        // come back muted, not with re-armed hit-areas.
+        act(() => {
+          getGrid().scrollLeft = 2 * 24 * 64;
+        });
+        await waitFor(() => {
+          expect(document.querySelector('[data-dependency-hit]')).to.equal(null);
+        });
+        act(() => {
+          getGrid().scrollLeft = 0;
+        });
+        await waitFor(() => {
+          expect(getHitPath()).not.to.equal(null);
+        });
+        expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
+      });
+    });
+
+    it('should mute the hit-areas during a create-dependency terminal drag', async () => {
+      await renderFarTimelineWithArrow();
+      const probe = probeAt(getHitPath().getBoundingClientRect());
+
+      const terminal = document
+        .querySelector('[data-dependency-terminal]')!
+        .closest('[draggable="true"]')!;
+      await withDrag(terminal, async () => {
+        await waitFor(() => {
+          expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
+        });
+      });
+
+      await waitFor(() => {
+        expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
+      });
+    });
+
+    it('should mute the delete button of a selected arrow during a drag', async () => {
+      await renderFarTimelineWithArrow();
+
+      fireEvent.click(getHitPath());
+      const getButton = () =>
+        document.querySelector<SVGGElement>('[data-dependency-delete-button]')!;
+      await waitFor(() => {
+        expect(getButton()).not.to.equal(null);
+      });
+
+      // Probed at its live rect: the button settles its position asynchronously, and
+      // the 14px circle is less forgiving than the hit stroke.
+      const probeButton = () => probeAt(getButton().getBoundingClientRect())();
+      expect(probeButton().closest('[data-dependency-delete-button]')).not.to.equal(null);
+
+      // External-drag shaped: a pointer drag's own pointerdown would deselect first.
+      await withDrag(getEventElement(farPredecessor.title), async () => {
+        await waitFor(() => {
+          expect(probeButton().closest('[data-dependency-interactions]')).to.equal(null);
+        });
+        expect(getButton()).not.to.equal(null);
+      });
+
+      await waitFor(() => {
+        expect(probeButton().closest('[data-dependency-delete-button]')).not.to.equal(null);
+      });
     });
   });
 });

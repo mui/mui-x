@@ -5,7 +5,8 @@ import type {
   EventCalendarSchedulerParametersOverrides,
   CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
-import type { EventCalendarLocaleText } from '@mui/x-scheduler/models';
+import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
+import type { EventCalendarLocaleText, SchedulerSlotsAndSlotProps } from '@mui/x-scheduler/models';
 import type { CompactDayViewProps } from '@mui/x-scheduler/compact-day-view';
 
 export interface StandaloneCompactDayViewPremiumProps<
@@ -20,7 +21,15 @@ export interface StandaloneCompactDayViewPremiumProps<
       | keyof EventCalendarSchedulerParametersOverrides
       | CollapsibleResourcesParameterKeys
     >,
-    EventCalendarSchedulerParametersOverrides {
+    EventCalendarSchedulerParametersOverrides,
+    SchedulerSlotsAndSlotProps {
+  /**
+   * Configuration applied to the view, keyed by the view name.
+   * For the `day` view, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the time grid.
+   * @example { day: { startTime: 8, endTime: 20 } }
+   */
+  viewConfig?: Pick<EventCalendarViewConfig, 'day'>;
   /**
    * Set the locale text of the view.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
