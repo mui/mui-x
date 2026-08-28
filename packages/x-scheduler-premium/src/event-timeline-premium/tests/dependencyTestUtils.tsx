@@ -14,7 +14,11 @@ import {
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
   SharedComponentsStyledContext,
 } from '@mui/x-scheduler/internals';
-import { DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  absorbObserverFrames,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  ResourceBuilder,
+} from 'test/utils/scheduler';
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
@@ -177,7 +181,7 @@ function TimelineHost({
  * `createSchedulerRenderer` inside the suite.
  */
 export function createDependencyTimelineRenderer(render: (element: React.ReactElement) => any) {
-  function renderTimeline(parameters: RenderTimelineParameters) {
+  async function renderTimeline(parameters: RenderTimelineParameters) {
     let store!: EventTimelinePremiumStore<any, any>;
 
     const view = render(
@@ -188,6 +192,9 @@ export function createDependencyTimelineRenderer(render: (element: React.ReactEl
         }}
       />,
     );
+
+    // Absorb the post-render ResizeObserver deliveries so they land as acted updates.
+    await absorbObserverFrames();
 
     return { store, ...view };
   }
