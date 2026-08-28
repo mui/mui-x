@@ -35,7 +35,7 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
   const { renderTimeline } = createDependencyTimelineRenderer(render);
 
   it('should push the successor when the predecessor is dropped past it', async () => {
-    const { store } = renderTimeline({
+    const { store } = await renderTimeline({
       events: [eventA, eventB],
       dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
     });

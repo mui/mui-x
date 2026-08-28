@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type {
@@ -18,6 +18,11 @@ import { DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/schedu
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
+
+// Captured at module load, before any test can install fake timers: the frame
+// wait below must ride the real rendering pipeline, like ResizeObserver does.
+const nativeRequestAnimationFrame =
+  typeof requestAnimationFrame === 'function' ? requestAnimationFrame.bind(globalThis) : null;
 
 export const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
 export const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
@@ -177,7 +182,7 @@ function TimelineHost({
  * `createSchedulerRenderer` inside the suite.
  */
 export function createDependencyTimelineRenderer(render: (element: React.ReactElement) => any) {
-  function renderTimeline(parameters: RenderTimelineParameters) {
+  async function renderTimeline(parameters: RenderTimelineParameters) {
     let store!: EventTimelinePremiumStore<any, any>;
 
     const view = render(
@@ -188,6 +193,18 @@ export function createDependencyTimelineRenderer(render: (element: React.ReactEl
         }}
       />,
     );
+
+    // The initial ResizeObserver batch (title-column widths, viewport size)
+    // delivers on the frames after the render; absorb it inside act so it
+    // cannot land between test steps as an un-acted update. jsdom has no
+    // ResizeObserver, so there is nothing to wait for there.
+    if (typeof ResizeObserver !== 'undefined' && nativeRequestAnimationFrame) {
+      await act(async () => {
+        await new Promise<void>((resolve) => {
+          nativeRequestAnimationFrame(() => nativeRequestAnimationFrame(() => resolve()));
+        });
+      });
+    }
 
     return { store, ...view };
   }
