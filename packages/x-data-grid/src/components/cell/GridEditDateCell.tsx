@@ -128,7 +128,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       const newParsedDate = parseValueToDate(newFormattedDate);
 
       setValueState({ parsed: newParsedDate, formatted: newFormattedDate });
-      apiRef.current.setEditCellValue({ id, field, value: newParsedDate }, event);
+      await apiRef.current.setEditCellValue({ id, field, value: newParsedDate }, event);
 
       if (onValueChange) {
         await onValueChange(event, newParsedDate);
