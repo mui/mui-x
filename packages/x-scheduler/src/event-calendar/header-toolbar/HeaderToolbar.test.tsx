@@ -1,4 +1,4 @@
-import { screen, within, fireEvent } from '@mui/internal-test-utils';
+import { screen, within, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
@@ -242,7 +242,7 @@ describe('side panel toggle', () => {
 
   // Rendering the full EventCalendar (rather than HeaderToolbar standalone) so the toggle
   // button and the side panel it controls share the same generated `schedulerId`.
-  it('should expose aria-expanded and aria-controls reflecting the side panel state', () => {
+  it('should expose aria-expanded and aria-controls reflecting the side panel state', async () => {
     render(<EventCalendar events={[]} resources={[]} />);
 
     // isSidePanelOpen defaults to true
@@ -260,10 +260,32 @@ describe('side panel toggle', () => {
 
     fireEvent.click(toggleButton);
 
-    // Same button, now reflecting the collapsed state
+    // The label/aria-expanded/aria-controls follow `isSidePanelOpen` directly, so they
+    // update synchronously with the click.
     expect(screen.getByRole('button', { name: 'Open side panel' })).to.equal(toggleButton);
     expect(toggleButton).to.have.attribute('aria-expanded', 'false');
     expect(toggleButton).to.have.attribute('aria-controls', panelId);
-    expect(panel).to.have.attribute('aria-hidden', 'true');
+
+    // `aria-hidden` only lands once the Collapse's exit transition has actually finished
+    // (see the `onExited` comment in EventCalendarRoot), so it needs a `waitFor`.
+    await waitFor(() => expect(panel).to.have.attribute('aria-hidden', 'true'));
+
+    // Re-opening should clear aria-hidden again, immediately (via `onEnter`, before the
+    // expand transition even starts) rather than needing to wait for it to finish.
+    fireEvent.click(toggleButton);
+
+    expect(screen.getByRole('button', { name: 'Close side panel' })).to.equal(toggleButton);
+    expect(toggleButton).to.have.attribute('aria-expanded', 'true');
+    expect(panel!.hasAttribute('aria-hidden')).to.equal(false);
+  });
+
+  it('should render the panel as the complementary landmark, with no nested landmark inside', () => {
+    render(<EventCalendar events={[]} resources={[]} />);
+
+    // Getting it by role (rather than by id, like the test above) pins the point of the
+    // refactor: the Collapse itself is the `aside`, not a wrapper around a nested one.
+    const panel = screen.getByRole('complementary');
+    expect(panel.tagName).to.equal('ASIDE');
+    expect(panel.querySelector('aside')).to.equal(null);
   });
 });

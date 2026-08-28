@@ -159,6 +159,11 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
     // `isSidePanelOpen` (default open), so it never covers the calendar on load.
     const [isCompactDrawerOpen, setIsCompactDrawerOpen] = React.useState(false);
 
+    // Tied to the Collapse transition, not `isSidePanelOpen` directly: setting aria-hidden
+    // eagerly would hide still-focusable content mid-animation (axe aria-hidden-focus,
+    // Chromium focus warning). Do not simplify this back to `!isSidePanelOpen`.
+    const [isSidePanelHidden, setIsSidePanelHidden] = React.useState(!isSidePanelOpen);
+
     let content: React.ReactNode;
 
     switch (view) {
@@ -209,7 +214,9 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             component="aside"
             id={`${schedulerId}-side-panel`}
             in={isSidePanelOpen}
-            aria-hidden={isSidePanelOpen ? undefined : true}
+            aria-hidden={isSidePanelHidden ? true : undefined}
+            onEnter={() => setIsSidePanelHidden(false)}
+            onExited={() => setIsSidePanelHidden(true)}
             orientation="horizontal"
             className={classes.sidePanelCollapse}
           >
