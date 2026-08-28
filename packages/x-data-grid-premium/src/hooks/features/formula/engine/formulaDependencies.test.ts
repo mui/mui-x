@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { bindFormulaDependencies, extractFormulaDependencies } from './formulaDependencies';
 import type { FormulaStaticDependencies } from './formulaDependencies';
 import { parseFormula } from './formulaParser';

@@ -1,6 +1,7 @@
 import { renderHook } from '@mui/internal-test-utils';
 import type { RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import { usePieSeries, usePieSeriesContext } from './usePieSeries';
 import type { DefaultizedPieSeriesType, PieSeriesType } from '../models';
 import { PieChart } from '../PieChart';

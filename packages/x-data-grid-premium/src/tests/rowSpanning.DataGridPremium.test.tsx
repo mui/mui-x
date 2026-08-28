@@ -2,6 +2,7 @@ import { act, createRenderer } from '@mui/internal-test-utils';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 import type { DataGridPremiumProps } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPremium /> - Row spanning', () => {
   const { render } = createRenderer();

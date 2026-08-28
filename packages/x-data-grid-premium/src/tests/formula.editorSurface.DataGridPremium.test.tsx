@@ -13,6 +13,7 @@ import type {
 } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 import type { GridFormulaPrivateApi } from '../hooks/features/formula/gridFormulaInterfaces';
 import { getCaretOffset, setCaretOffset } from '../components/formulaEditorCaret';

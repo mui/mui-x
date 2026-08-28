@@ -12,6 +12,7 @@ import { spy } from 'sinon';
 import type { SinonSpy } from 'sinon';
 import Excel from '@mui/x-internal-exceljs-fork';
 import { spyApi } from 'test/utils/helperFn';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

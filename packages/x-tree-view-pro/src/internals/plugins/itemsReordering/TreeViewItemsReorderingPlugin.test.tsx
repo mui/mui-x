@@ -4,6 +4,7 @@ import { fireEvent, createEvent } from '@mui/internal-test-utils';
 import type { DragEventTypes } from 'test/utils/dragAndDrop';
 import { MockedDataTransfer } from 'test/utils/dragAndDrop';
 import {} from '@mui/x-tree-view/internals';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { chooseActionToApply } from './utils';
 import type { TreeViewItemItemReorderingValidActions } from './types';
 import type { RichTreeViewProStore } from '../../RichTreeViewProStore';

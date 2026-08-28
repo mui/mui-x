@@ -9,6 +9,7 @@ import { DataGridPremium, useGridApiRef, gridClasses } from '@mui/x-data-grid-pr
 import type { DataGridPremiumProps, GridApi, GridColDef } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM, isOSX } from 'test/utils/skipIf';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();

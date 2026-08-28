@@ -6,6 +6,7 @@ import { useGridApiRef, DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
 import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnValues } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Column type: multiSelect', () => {
   const { render } = createRenderer();

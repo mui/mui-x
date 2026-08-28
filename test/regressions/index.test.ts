@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as childProcess from 'child_process';
 import { type Browser, chromium, type ConsoleMessage, type Page } from '@playwright/test';
 import fs from 'node:fs/promises';
-import { test as base } from 'vitest';
+import { describe, expect, it, test as base, afterAll, beforeEach, afterEach } from 'vitest';
 import { minimatch } from 'minimatch';
 
 declare global {
@@ -100,7 +100,12 @@ const TEST_RULES: RouteRule[] = [
     // `aria-rowindex` is the absolute dataset position, so a mid-viewport row for
     // the restored scroll (top:2000, 52px rows => row ~41 => aria-rowindex 43)
     // only enters the DOM once the virtualizer has rendered the scrolled window.
-    waitForSelector: '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell',
+    // `rowheader` cells are kept mounted outside the horizontal render context at
+    // zero size, and the Commodity dataset marks one as such. Playwright only
+    // checks the first match for visibility, so exclude them to land on a cell
+    // that the virtualizer actually laid out.
+    waitForSelector:
+      '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell:not([role="rowheader"])',
   },
   {
     test: '/docs-data-grid-components-toolbar/GridToolbarCustom',

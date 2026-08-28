@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { createFormulaFunctionRegistry } from './formulaFunctions';
 import { validateFormulaExpression } from './formulaValidation';
 

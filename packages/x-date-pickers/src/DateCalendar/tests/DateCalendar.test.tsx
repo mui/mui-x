@@ -6,7 +6,7 @@ import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
 import { spy } from 'sinon';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<DateCalendar />', () => {
   const { render } = createPickerRenderer();

@@ -6,6 +6,7 @@ import { DataGridPremium, useGridApiRef, gridClasses } from '@mui/x-data-grid-pr
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi, GridColDef } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 /**
  * Fill-handle formula reference adjustment (I7). The fill handle and the

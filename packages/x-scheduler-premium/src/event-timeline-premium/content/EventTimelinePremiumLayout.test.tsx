@@ -14,6 +14,7 @@ import {
 import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPresetConfig } from '@mui/x-scheduler-internals-premium/models';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 function getTitleColumnWidth(): number {
   const grid = screen.getByRole('grid');

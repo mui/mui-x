@@ -160,6 +160,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const cellMode: GridCellModes = editCellState ? GridCellModes.Edit : GridCellModes.View;
 
   const { value: forcedValue, formattedValue: forcedFormattedValue } = cellAggregationResult || {};
+  const stateTabIndex = useGridSelector(apiRef, () => {
+    const cellTabIndex = gridTabIndexCellSelector(apiRef);
+    return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
+  });
+
   const cellParams: GridCellParams<any, any, any, any> = apiRef.current.getCellParamsForRow<
     any,
     any,
@@ -169,10 +174,9 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     colDef: column,
     cellMode,
     rowNode: rowNode as GridTreeNodeWithRender,
-    tabIndex: useGridSelector(apiRef, () => {
-      const cellTabIndex = gridTabIndexCellSelector(apiRef);
-      return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
-    }),
+    // A cell kept mounted outside the render context is collapsed to zero size, so it must not
+    // become the grid's tab stop: tabbing in would move focus to something the user can't see.
+    tabIndex: isNotVisible ? -1 : stateTabIndex,
     hasFocus: useGridSelector(apiRef, () => {
       const focus = gridFocusCellSelector(apiRef);
       return focus?.id === rowId && focus.field === field;
