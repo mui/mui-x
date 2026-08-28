@@ -58,6 +58,8 @@ const ptPTDialog: Partial<EventEditingLocaleText> = {
   noResourceAriaLabel: 'Sem recurso',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Recurso',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Guardar',
   startDateAfterEndDateError: 'A data de fim não pode ser anterior à data de início.',

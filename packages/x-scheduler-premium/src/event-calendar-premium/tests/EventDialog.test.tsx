@@ -11,7 +11,7 @@ import {
   StateWatcher,
   StoreSpy,
 } from 'test/utils/scheduler';
-import { act, screen, waitFor, within } from '@mui/internal-test-utils';
+import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import type {
   SchedulerResource,
   SchedulerEventOccurrence,
@@ -26,8 +26,12 @@ import {
   EventCalendarProvider,
   EventDialogContent,
   EventEditingOptionalRenderersContext,
-  useEventDialogFormField,
+  SchedulerSlotsProvider,
 } from '@mui/x-scheduler/internals';
+import {
+  EventDialogGeneralTabContent,
+  useEventDialogFormField,
+} from '@mui/x-scheduler/event-dialog';
 import { describe, it, expect, vi } from 'vitest';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
@@ -84,6 +88,161 @@ describe('<EventDialogContent open />', () => {
   };
 
   const { render } = createSchedulerRenderer();
+
+  it('should return to the General tab when the submit fails from the Recurrence tab', async () => {
+    const onEventsChange = spy();
+    const noResourceEvent = EventBuilder.new()
+      .title('Running')
+      .singleDay('2025-05-26T07:30:00Z', 45)
+      .build();
+    const noResourceOccurrence = EventBuilder.new()
+      .id(noResourceEvent.id)
+      .title(noResourceEvent.title)
+      .span(noResourceEvent.start, noResourceEvent.end)
+      .toOccurrence();
+
+    const { user } = render(
+      <EventCalendarProvider
+        events={[noResourceEvent]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+        shouldEventRequireResource
+        storeClass={PremiumTestStore}
+      >
+        <TestEventDialogContent open {...defaultProps} occurrence={noResourceOccurrence} />
+      </EventCalendarProvider>,
+    );
+
+    const generalPanel = screen.getByRole('tabpanel', { name: /general/i });
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+    expect(generalPanel).to.have.attribute('hidden');
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    expect(onEventsChange.called).to.equal(false);
+    // The failing field lives in the General tab, so the dialog switches back to it.
+    expect(generalPanel).not.to.have.attribute('hidden');
+    expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+  });
+
+  it('should return to the General tab when only a custom validator fails', async () => {
+    const onEventsChange = spy();
+    function FailingSection() {
+      const client = useEventDialogFormField('client', {
+        defaultValue: '',
+        validate: () => 'Nope',
+      });
+      return client.error ? <p role="alert">{client.error}</p> : null;
+    }
+
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
+        <SchedulerSlotsProvider
+          slots={{ eventDialogGeneralTab: FailingSection }}
+          slotProps={undefined}
+        >
+          <TestEventDialogContent open {...defaultProps} />
+        </SchedulerSlotsProvider>
+      </EventCalendarProvider>,
+    );
+
+    const generalPanel = screen.getByRole('tabpanel', { name: /general/i });
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+    expect(generalPanel).to.have.attribute('hidden');
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    expect(onEventsChange.called).to.equal(false);
+    expect(generalPanel).not.to.have.attribute('hidden');
+    expect(screen.getByRole('alert')).to.have.text('Nope');
+  });
+
+  it('should return to the General tab when a validator throws', async () => {
+    const onEventsChange = spy();
+    function ThrowingSection() {
+      useEventDialogFormField('client', {
+        defaultValue: '',
+        validate: () => {
+          throw new Error('validator exploded');
+        },
+      });
+      return null;
+    }
+
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
+        <SchedulerSlotsProvider
+          slots={{ eventDialogGeneralTab: ThrowingSection }}
+          slotProps={undefined}
+        >
+          <TestEventDialogContent open {...defaultProps} />
+        </SchedulerSlotsProvider>
+      </EventCalendarProvider>,
+    );
+
+    const generalPanel = screen.getByRole('tabpanel', { name: /general/i });
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+
+    await expect(() => user.click(screen.getByRole('button', { name: /save/i }))).toWarnDev([
+      'MUI X Scheduler: A form field validator threw or rejected during the submit.',
+    ]);
+
+    expect(onEventsChange.called).to.equal(false);
+    expect(generalPanel).not.to.have.attribute('hidden');
+  });
+
+  it('should return to the General tab when the native validation blocks the submit', async () => {
+    const onEventsChange = spy();
+    function EndDateClearer() {
+      const endDate = useEventDialogFormField('endDate');
+      return (
+        <React.Fragment>
+          <EventDialogGeneralTabContent />
+          <button type="button" onClick={() => endDate.setValue('')}>
+            Clear end date
+          </button>
+        </React.Fragment>
+      );
+    }
+
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
+        <SchedulerSlotsProvider
+          slots={{ eventDialogGeneralTab: EndDateClearer }}
+          slotProps={undefined}
+        >
+          <TestEventDialogContent open {...defaultProps} />
+        </SchedulerSlotsProvider>
+      </EventCalendarProvider>,
+    );
+
+    const generalPanel = screen.getByRole('tabpanel', { name: /general/i });
+    await user.click(screen.getByRole('button', { name: 'Clear end date' }));
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+    expect(generalPanel).to.have.attribute('hidden');
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    // The browser refuses the submit over the hidden invalid control; the form
+    // must at least bring the failing field back into view.
+    expect(onEventsChange.called).to.equal(false);
+    expect(generalPanel).not.to.have.attribute('hidden');
+  });
 
   it('should render the event data in the form fields', async () => {
     const { user } = render(
@@ -2371,6 +2530,103 @@ describe('<EventDialogContent open />', () => {
           expect(updated.rrule?.until).to.equal('2025-07-20T00:00:00.000Z');
         });
 
+        it('should block saving a custom recurrence with Ends: until and no date', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+          const dateInput = endsFieldset.querySelector('input[type="date"]') as HTMLInputElement;
+          await user.clear(dateInput);
+
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.called).to.equal(false);
+          // The failing field lives in the Recurrence tab, so it must stay visible.
+          expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
+            'hidden',
+          );
+        });
+
+        it('should block a programmatic submit when the Ends until date is invalid', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+          const dateInput = endsFieldset.querySelector('input[type="date"]') as HTMLInputElement;
+          await user.clear(dateInput);
+
+          // Bypass the native `required` so the form-store validator is what blocks.
+          fireEvent.submit(screen.getByRole('button', { name: /save/i }).closest('form')!);
+          await waitFor(() => expect(dateInput).to.have.attribute('aria-invalid', 'true'));
+
+          expect(onEventsChange.called).to.equal(false);
+          expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
+            'hidden',
+          );
+        });
+
+        it('should keep the Recurrence tab visible when a recurrence control is natively invalid', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          // `min: 1` makes the value 0 natively invalid, but the change handler keeps it.
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const intervalInput = within(repeatGroup).getByRole('spinbutton');
+          await user.click(intervalInput);
+          await user.keyboard('{Control>}a{/Control}0');
+
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.called).to.equal(false);
+          expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
+            'hidden',
+          );
+        });
+
         it('should submit custom weekly with selected weekdays', async () => {
           const onEventsChange = spy();
 
@@ -2950,9 +3206,9 @@ describe('<EventDialogContent open />', () => {
         expect(created.customField).to.equal('preserve-me');
       });
 
-      it('should save a custom field edited through useEventDialogFormField', async () => {
+      describe('custom fields through the eventDialogGeneralTab slot', () => {
         function CustomFieldSection() {
-          const { value, setValue } = useEventDialogFormField<string>('customField');
+          const { value, setValue } = useEventDialogFormField<'customField', string>('customField');
           return (
             <input
               aria-label="custom field"
@@ -2961,73 +3217,151 @@ describe('<EventDialogContent open />', () => {
             />
           );
         }
-        // The recurrence-tab renderer is only used here as a seam to mount the probe
-        // inside the form until the General-tab slot (#22871) lands — it renders the
-        // real tab untouched and is not a customization surface.
-        function FormProbeInjector(
-          props: React.ComponentProps<
-            NonNullable<typeof PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS.recurrenceTab>
-          >,
-        ) {
-          const RecurrenceTabRenderer = PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS.recurrenceTab!;
+        function CustomGeneralTab() {
           return (
             <React.Fragment>
-              <RecurrenceTabRenderer {...props} />
+              <EventDialogGeneralTabContent />
               <CustomFieldSection />
             </React.Fragment>
           );
         }
 
-        const onEventsChange = spy();
-        let updateEventSpy;
-        const { user } = render(
-          <EventCalendarProvider
-            events={[nonRecurringEventWithCustomData]}
-            onEventsChange={onEventsChange}
-            resources={resources}
-            storeClass={PremiumTestStore}
-          >
-            <StoreSpy
-              Context={SchedulerStoreContext}
-              method="updateEvent"
-              onSpyReady={(sp) => {
-                updateEventSpy = sp;
-              }}
-            />
-            <EventEditingOptionalRenderersContext.Provider
-              value={{
-                ...PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS,
-                recurrenceTab: FormProbeInjector,
-              }}
+        const recurringEventWithUntouchedData = {
+          ...EventBuilder.new()
+            .id('recurring-custom-2')
+            .title('Daily standup')
+            .description('sync')
+            .singleDay('2025-06-11T10:00:00Z', 30)
+            .resource(personalResource)
+            .recurrent('DAILY')
+            .build(),
+          customField: 'preserve-me',
+          untouchedField: 'keep-me',
+        } as SchedulerEvent;
+        const recurringEventWithUntouchedDataOccurrence = EventBuilder.new(adapter)
+          .id(recurringEventWithUntouchedData.id)
+          .title(recurringEventWithUntouchedData.title)
+          .description(recurringEventWithUntouchedData.description)
+          .span(recurringEventWithUntouchedData.start, recurringEventWithUntouchedData.end)
+          .recurrent('DAILY')
+          .toOccurrence();
+
+        function renderWithCustomFieldSlot(
+          event: SchedulerEvent,
+          occurrence: ReturnType<typeof EventBuilder.prototype.toOccurrence>,
+          onEventsChange: ReturnType<typeof spy>,
+          onSpyReady: (sp: any) => void,
+          // Recurring saves go through `updateRecurringEvent`, non-recurring through `updateEvent`.
+          method: 'updateEvent' | 'updateRecurringEvent' = 'updateEvent',
+        ) {
+          return render(
+            <EventCalendarProvider
+              events={[event]}
+              onEventsChange={onEventsChange}
+              resources={resources}
+              storeClass={PremiumTestStore}
             >
-              <EventDialogContent
-                open
-                {...defaultProps}
-                occurrence={nonRecurringEventWithCustomDataOccurrence}
-              />
-            </EventEditingOptionalRenderersContext.Provider>
-          </EventCalendarProvider>,
-        );
+              <StoreSpy Context={SchedulerStoreContext} method={method} onSpyReady={onSpyReady} />
+              <SchedulerSlotsProvider
+                slots={{ eventDialogGeneralTab: CustomGeneralTab }}
+                slotProps={undefined}
+              >
+                <TestEventDialogContent open {...defaultProps} occurrence={occurrence} />
+              </SchedulerSlotsProvider>
+              <RecurringScopeDialog />
+            </EventCalendarProvider>,
+          );
+        }
 
-        // The custom field is seeded from the event model.
-        expect(screen.getByLabelText('custom field')).to.have.value('preserve-me');
+        async function editCustomFieldAndSave(user: any) {
+          await user.clear(screen.getByLabelText('custom field'));
+          await user.type(screen.getByLabelText('custom field'), 'edited');
+          await user.click(screen.getByRole('button', { name: /save/i }));
+        }
 
-        await user.clear(screen.getByLabelText('custom field'));
-        await user.type(screen.getByLabelText('custom field'), 'edited');
-        await user.click(screen.getByRole('button', { name: /save/i }));
+        it('should save a custom field edited through useEventDialogFormField', async () => {
+          const onEventsChange = spy();
+          let updateEventSpy;
+          const { user } = renderWithCustomFieldSlot(
+            nonRecurringEventWithCustomData,
+            nonRecurringEventWithCustomDataOccurrence,
+            onEventsChange,
+            (sp) => {
+              updateEventSpy = sp;
+            },
+          );
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        const updated = onEventsChange.lastCall.firstArg.find(
-          (event) => event.id === nonRecurringEventWithCustomData.id,
-        );
-        expect(updated.customField).to.equal('edited');
+          // The custom field is seeded from the event model.
+          expect(screen.getByLabelText('custom field')).to.have.value('preserve-me');
 
-        // Only the edited custom field enters the changes payload — an untouched
-        // seeded field keeps resolving against the live model instead.
-        const changes = updateEventSpy!.lastCall.firstArg;
-        expect(changes.customField).to.equal('edited');
-        expect(changes).not.to.have.property('untouchedField');
-        expect(updated.untouchedField).to.equal('keep-me');
+          await editCustomFieldAndSave(user);
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.lastCall.firstArg.find(
+            (event) => event.id === nonRecurringEventWithCustomData.id,
+          );
+          expect(updated.customField).to.equal('edited');
+
+          // Only the edited custom field enters the changes payload — an untouched
+          // seeded field keeps resolving against the live model instead.
+          const changes = updateEventSpy!.lastCall.firstArg;
+          expect(changes.customField).to.equal('edited');
+          expect(changes).not.to.have.property('untouchedField');
+          expect(updated.untouchedField).to.equal('keep-me');
+        });
+
+        const scopeScenarios = [
+          {
+            scope: 'all',
+            optionText: /All events/i,
+            // Scope 'all' updates the original event in place...
+            findSavedEvent: (events: any[]) =>
+              events.find((event) => event.id === recurringEventWithUntouchedData.id),
+          },
+          {
+            scope: 'only-this',
+            optionText: /Only this event/i,
+            // ...while the other scopes extract a new event from the series.
+            findSavedEvent: (events: any[]) =>
+              events.find((event) => event.extractedFromId === recurringEventWithUntouchedData.id),
+          },
+          {
+            scope: 'this-and-following',
+            optionText: /This and following events/i,
+            findSavedEvent: (events: any[]) =>
+              events.find((event) => event.extractedFromId === recurringEventWithUntouchedData.id),
+          },
+        ];
+
+        scopeScenarios.forEach(({ scope, optionText, findSavedEvent }) => {
+          it(`should save a custom field edited through the slot with scope '${scope}'`, async () => {
+            const onEventsChange = spy();
+            let updateEventSpy;
+            const { user } = renderWithCustomFieldSlot(
+              recurringEventWithUntouchedData,
+              recurringEventWithUntouchedDataOccurrence,
+              onEventsChange,
+              (sp) => {
+                updateEventSpy = sp;
+              },
+              'updateRecurringEvent',
+            );
+
+            await editCustomFieldAndSave(user);
+
+            await screen.findByText(/Apply this change to:/i);
+            await user.click(screen.getByText(optionText));
+            await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+            const saved = findSavedEvent(onEventsChange.lastCall.firstArg);
+            expect(saved).to.not.equal(undefined);
+            expect(saved.customField).to.equal('edited');
+            expect(saved.untouchedField).to.equal('keep-me');
+            const { changes } = updateEventSpy!.lastCall.firstArg;
+            expect(changes.customField).to.equal('edited');
+            expect(changes).not.to.have.property('untouchedField');
+          });
+        });
       });
 
       it('should use the latest custom data when it changes while the scope dialog is open', async () => {
