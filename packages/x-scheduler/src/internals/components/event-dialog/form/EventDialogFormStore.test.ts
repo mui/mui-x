@@ -1,8 +1,9 @@
 import { spy } from 'sinon';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { EventBuilder } from 'test/utils/scheduler';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import type { EventDialogFormParameters } from './EventDialogFormStore';
-import { EventDialogFormStore } from './EventDialogFormStore';
+import { EventDialogFormStore, eventDialogFormSelectors } from './EventDialogFormStore';
 
 const occurrence = EventBuilder.new().toOccurrence();
 
@@ -18,6 +19,8 @@ function createFormStore<TValues extends Record<string, unknown>>(
 }
 
 describe('EventDialogFormStore', () => {
+  beforeEach(() => clearWarningsCache());
+
   describe('constructor', () => {
     it('should seed the values from the provided object', () => {
       const store = createFormStore({ title: 'Meeting', priority: 'high' });
@@ -138,6 +141,44 @@ describe('EventDialogFormStore', () => {
       const store = createFormStore({ notes: 'from-model' });
       store.seedDefault('notes', 'default');
       expect(store.state.values).to.deep.equal({ notes: 'from-model' });
+    });
+
+    it('should seed and edit a field named __proto__ as a plain own key', () => {
+      const store = createFormStore({ title: '' });
+      store.seedDefault('__proto__', 'seeded');
+      expect(eventDialogFormSelectors.value(store.state, '__proto__')).to.equal('seeded');
+      expect(Object.keys(store.getDirtyValues())).to.deep.equal([]);
+
+      store.setValue('__proto__', 'edited');
+      const dirty = store.getDirtyValues();
+      expect(Object.hasOwn(dirty, '__proto__')).to.equal(true);
+      expect(eventDialogFormSelectors.value(store.state, '__proto__')).to.equal('edited');
+      // The store's own prototype must stay untouched.
+      expect(Object.getPrototypeOf(store.state.values)).to.equal(Object.prototype);
+    });
+
+    it('should seed a default for a key named after an Object.prototype member', () => {
+      const store = createFormStore({ title: '' });
+      store.seedDefault('constructor', 'seeded');
+      expect(store.state.values.constructor).to.equal('seeded');
+      expect(store.getDirtyValues()).to.deep.equal({});
+    });
+
+    it('should not track a model-backed key as default-seeded', () => {
+      const store = createFormStore({ notes: 'from-model' });
+      store.seedDefault('notes', 'default');
+      store.setValue('notes', 'edited');
+      store.setValue('notes', 'from-model');
+      // Reverting to the model value stays clean, unlike a true seeded default.
+      expect(store.getDirtyValues()).to.deep.equal({});
+    });
+
+    it('should submit a written value equal to the seeded default', () => {
+      const store = createFormStore({ title: '' });
+      store.seedDefault('priority', 'medium');
+      store.setValue('priority', 'high');
+      store.setValue('priority', 'medium');
+      expect(store.getDirtyValues()).to.deep.equal({ priority: 'medium' });
     });
 
     it('should report a seeded key as dirty once edited, including a reset to undefined', () => {
@@ -263,6 +304,79 @@ describe('EventDialogFormStore', () => {
       expect(store.state.errors).to.deep.equal({ title: ['First'] });
     });
 
+    it('should not run the later validators of a field after one fails', async () => {
+      const store = createFormStore({ title: '' });
+      const later = spy(() => null);
+      store.registerValidator('title', () => 'Required');
+      store.registerValidator('title', later);
+      await store.validateAll();
+      expect(later.called).to.equal(false);
+      expect(store.state.errors).to.deep.equal({ title: ['Required'] });
+    });
+
+    it('should settle in one pass when a validator writes back the same value', async () => {
+      const store = createFormStore({ title: 'Meeting' });
+      const validator = spy((value: unknown) => {
+        store.setValue('title', value as string);
+        return null;
+      });
+      store.registerValidator('title', validator);
+      expect(await store.validateAll()).to.equal(true);
+      expect(validator.callCount).to.equal(1);
+      expect(store.state.errors).to.deep.equal({});
+    });
+
+    it('should settle as invalid instead of looping when a validator changes a value', async () => {
+      const store = createFormStore({ title: 'Meeting' });
+      let counter = 0;
+      store.registerValidator('title', () => {
+        counter += 1;
+        store.setValue('title', `Meeting ${counter}`);
+        return null;
+      });
+      await expect(async () => {
+        // Failing closed: the cap never resolves valid over values no validator saw.
+        expect(await store.validateAll()).to.equal(false);
+      }).toWarnDev([
+        'MUI X Scheduler: The form values or validators kept changing while the validation was running (for example a validator calling setValue).',
+      ]);
+    });
+
+    it('should keep the last computed errors when the restart cap trips', async () => {
+      const store = createFormStore({ title: 'Meeting' });
+      let counter = 0;
+      store.registerValidator('title', () => {
+        counter += 1;
+        store.setValue('title', `Meeting ${counter}`);
+        return 'Still wrong';
+      });
+      await expect(async () => {
+        expect(await store.validateAll()).to.equal(false);
+      }).toWarnDev([
+        'MUI X Scheduler: The form values or validators kept changing while the validation was running (for example a validator calling setValue).',
+      ]);
+      expect(store.state.errors).to.deep.equal({ title: ['Still wrong'] });
+    });
+
+    it('should keep a failing validator error for a field named __proto__', async () => {
+      const store = createFormStore({ title: '' });
+      store.registerValidator('__proto__', () => 'Required');
+      expect(await store.validateAll()).to.equal(false);
+      expect(eventDialogFormSelectors.error(store.state, '__proto__')).to.deep.equal(['Required']);
+      expect(Object.getPrototypeOf(store.state.errors)).to.equal(Object.prototype);
+    });
+
+    it('should pass undefined to a validator on an unseeded Object.prototype-named key', async () => {
+      const store = createFormStore({ title: '' });
+      const seen: unknown[] = [];
+      store.registerValidator('constructor', (value) => {
+        seen.push(value);
+        return null;
+      });
+      expect(await store.validateAll()).to.equal(true);
+      expect(seen).to.deep.equal([undefined]);
+    });
+
     it('should pass all the values to the validator', async () => {
       const store = createFormStore({ startDate: '2025-01-02', endDate: '2025-01-01' });
       store.registerValidator('startDate', (value, allValues) =>
@@ -314,6 +428,32 @@ describe('EventDialogFormStore', () => {
       expect(store.state.errors).to.deep.equal({ priority: ['Priority required'] });
     });
 
+    it('should restart when the validators are touched while an async validation is pending', async () => {
+      const store = createFormStore({ title: 'Meeting' });
+      let release!: () => void;
+      const gate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      let titleCalls = 0;
+      // Models a validator whose rule changed behind a stable identity: only the
+      // pass running after the touch sees the new behavior.
+      store.registerValidator('title', async () => {
+        titleCalls += 1;
+        if (titleCalls === 1) {
+          await gate;
+          return null;
+        }
+        return 'Blocked by the new rule';
+      });
+
+      const validation = store.validateAll();
+      store.touchValidators();
+      release();
+
+      expect(await validation).to.equal(false);
+      expect(store.state.errors).to.deep.equal({ title: ['Blocked by the new rule'] });
+    });
+
     it('should drop the error of a validator unregistered while an async validation is pending', async () => {
       const store = createFormStore({ title: 'Meeting', priority: null });
       let release!: () => void;
@@ -358,6 +498,30 @@ describe('EventDialogFormStore', () => {
       store.registerValidator('title', () => '');
       expect(await store.validateAll()).to.equal(true);
       expect(store.state.errors).to.deep.equal({});
+    });
+
+    it('should treat a boolean result as valid and warn, so a JS `condition && message` validator cannot block the save', async () => {
+      const store = createFormStore({ title: 'Meeting' });
+      store.registerValidator(
+        'title',
+        // @ts-expect-error booleans are excluded from the validator result type; the runtime still guards JS consumers.
+        (value) => (value as string).length === 0 && 'Required',
+      );
+      await expect(async () => {
+        expect(await store.validateAll()).to.equal(true);
+      }).toWarnDev(['MUI X Scheduler: A form field validator returned a boolean.']);
+      expect(store.state.errors).to.deep.equal({});
+    });
+
+    it('should drop booleans from an error array', async () => {
+      const store = createFormStore({ title: '' });
+      // An array with booleans still type-checks (arrays are `Iterable<ReactNode>`),
+      // so the runtime filter is the only guard for this shape.
+      store.registerValidator('title', () => [false, 'Required', true]);
+      await expect(async () => {
+        expect(await store.validateAll()).to.equal(false);
+      }).toWarnDev(['MUI X Scheduler: A form field validator returned a boolean.']);
+      expect(store.state.errors).to.deep.equal({ title: ['Required'] });
     });
   });
 
