@@ -56,6 +56,11 @@ const caESGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   toolbarAssistant: "Assistent d'IA",
 
+  // Formula bar (Premium formulas)
+  // formulaBarLabel: 'Formula bar',
+  // formulaBarInputLabel: 'Formula',
+  // formulaBarAddressLabel: 'Active cell',
+
   // Columns management text
   columnsManagementSearchTitle: 'Cerca',
   columnsManagementNoColumns: 'Sense columnes',

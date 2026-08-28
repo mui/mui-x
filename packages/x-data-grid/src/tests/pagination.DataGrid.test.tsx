@@ -16,6 +16,7 @@ import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Pagination', () => {
   const { render } = createRenderer();
@@ -502,6 +503,21 @@ describe('<DataGrid /> - Pagination', () => {
       expect(onPaginationModelChange.lastCall.args[0].pageSize).to.equal(
         expectedViewportRowsLengthAfter,
       );
+    });
+
+    it('should not render the page size selector when the computed page size is in the `pageSizeOptions`', () => {
+      const { setProps } = render(
+        <TestCaseAutoPageSize nbRows={100} height={780} columnHeaderHeight={56} rowHeight={52} />,
+      );
+
+      const computedPageSize = getRows().length;
+      const pageSizeOptions = [computedPageSize, computedPageSize * 2];
+
+      setProps({ pageSizeOptions });
+      expect(screen.queryByLabelText('Rows per page:')).to.equal(null);
+
+      setProps({ pageSizeOptions, autoPageSize: false });
+      expect(screen.queryByLabelText('Rows per page:')).not.to.equal(null);
     });
   });
 

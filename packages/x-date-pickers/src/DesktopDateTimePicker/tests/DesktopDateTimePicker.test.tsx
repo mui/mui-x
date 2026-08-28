@@ -8,6 +8,7 @@ import {
   getFieldSectionsContainer,
   expectFieldValue,
 } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer();

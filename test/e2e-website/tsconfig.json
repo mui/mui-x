@@ -6,7 +6,6 @@
       "@mui/material/themeCssVarsAugmentation",
       "dayjs/plugin/timezone.d.ts",
       "dayjs/plugin/utc.d.ts",
-      "vitest/globals",
       "moment-timezone"
     ],
     "skipLibCheck": true

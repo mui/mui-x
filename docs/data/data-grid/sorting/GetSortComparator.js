@@ -6,7 +6,7 @@ import {
 } from '@mui/x-data-grid-generator';
 
 const columns = [
-  { field: 'commodity', headerName: 'Commodity', width: 200 },
+  { field: 'commodity', headerName: 'Commodity', width: 200, rowHeader: true },
   {
     type: 'number',
     field: 'quantity',

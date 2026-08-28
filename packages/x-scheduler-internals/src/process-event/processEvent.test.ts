@@ -3,6 +3,7 @@ import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { describe, it, expect } from 'vitest';
 
 describe('processEvent', () => {
   it('should keep event timezone in modelInBuiltInFormat', () => {

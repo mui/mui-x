@@ -9,6 +9,7 @@ import {
 } from 'test/utils/pickers';
 import type { AdapterFormats } from '@mui/x-date-pickers/models';
 import 'dayjs/locale/th';
+import { describe, it, expect } from 'vitest';
 
 describe('<AdapterDayjsBuddhist />', () => {
   describeBuddhistAdapter(AdapterDayjsBuddhist, {});

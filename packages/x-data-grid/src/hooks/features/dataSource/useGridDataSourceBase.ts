@@ -6,7 +6,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
+import { GRID_ROOT_GROUP_ID, getReplaceRow, isReplaceUpdate } from '../rows/gridRowsUtils';
 import type { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
@@ -16,7 +16,10 @@ import {
   gridVisibleRowsSelector,
 } from '../pagination/gridPaginationSelector';
 import { gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { gridColumnLookupSelector } from '../columns';
+import { removeIncompleteFilterItems } from '../filter/gridFilterUtils';
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
+import { useGridDataSourceFilterModelChange } from './useGridDataSourceFilterModelChange';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
 import { GridDataSourceCacheDefault } from './cache';
 import type { GridDataSourceCacheDefaultConfig } from './cache';
@@ -122,6 +125,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
         ...getRowsParams,
       };
+      // The selector prunes the incomplete items, but a caller passing its own `filterModel`
+      // overrides it, so prune again on the merged params.
+      fetchParams.filterModel = removeIncompleteFilterItems(
+        fetchParams.filterModel,
+        gridColumnLookupSelector(apiRef),
+      );
 
       if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
         options.fetchRowChildren?.([parentId], [fetchParams], showChildrenLoading);
@@ -350,16 +359,26 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       try {
         const finalRowUpdate = await dataSourceUpdateRow(params);
-        if (typeof handleEditRowOption === 'function') {
-          handleEditRowOption(params, finalRowUpdate);
-          return finalRowUpdate;
-        }
-        if (finalRowUpdate && !isDeepEqual(finalRowUpdate, params.previousRow)) {
+        // `dataSource.updateRow()` can resolve with a `{ _action: 'replace', row }` update.
+        // The row update methods unwrap it themselves, everything else works with the row it
+        // holds: comparing the envelope with the previous row would never match.
+        const updatedRow =
+          finalRowUpdate && isReplaceUpdate(finalRowUpdate)
+            ? getReplaceRow(finalRowUpdate)
+            : finalRowUpdate;
+
+        if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
           // Reset the outdated cache, only if the row is _actually_ updated
           apiRef.current.dataSource.cache.clear();
         }
-        apiRef.current.updateNestedRows([finalRowUpdate], []);
-        return finalRowUpdate;
+
+        if (typeof handleEditRowOption === 'function') {
+          handleEditRowOption(params, finalRowUpdate);
+        } else {
+          apiRef.current.updateNestedRows([finalRowUpdate], []);
+        }
+
+        return updatedRow;
       } catch (errorThrown) {
         if (typeof onDataSourceErrorProp === 'function') {
           onDataSourceErrorProp(
@@ -416,6 +435,19 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     stopPolling();
     debouncedFetchRows();
   }, [apiRef, props.dataSourceKeepPreviousData, stopPolling, debouncedFetchRows]);
+
+  const hasFilterModelChanged = useGridDataSourceFilterModelChange(apiRef);
+  const handleFetchRowsOnFilterModelChange = React.useCallback<
+    GridEventListener<'filterModelChange'>
+  >(
+    (newFilterModel) => {
+      if (!hasFilterModelChanged(newFilterModel)) {
+        return;
+      }
+      handleFetchRowsOnParamsChange();
+    },
+    [hasFilterModelChanged, handleFetchRowsOnParamsChange],
+  );
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -538,7 +570,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
       sortModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
-      filterModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
+      filterModelChange: runIf(
+        standardRowsUpdateStrategyActive,
+        handleFetchRowsOnFilterModelChange,
+      ),
       paginationModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
     },
   };

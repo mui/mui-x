@@ -4,6 +4,7 @@ import { DataGrid, GridLogicOperator, getGridStringQuickFilterFn } from '@mui/x-
 import type { DataGridProps, GetApplyQuickFilterFn, GridFilterModel } from '@mui/x-data-grid';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Quick filter', () => {
   const { render } = createRenderer();

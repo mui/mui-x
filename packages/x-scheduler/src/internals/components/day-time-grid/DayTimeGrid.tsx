@@ -20,13 +20,13 @@ import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getDisplayedHourRange } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
-import { getTimeGridHourRange } from '../../utils/getTimeGridHourRange';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
@@ -336,9 +336,16 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { days, className, startTime: startTimeProp, endTime: endTimeProp, ...other } = props;
+  const {
+    days,
+    className,
+    startTime: startTimeProp,
+    endTime: endTimeProp,
+    hourRangeSource = 'viewConfig',
+    ...other
+  } = props;
 
-  const { startTime, endTime } = getTimeGridHourRange(startTimeProp, endTimeProp);
+  const { startTime, endTime } = getDisplayedHourRange(startTimeProp, endTimeProp, hourRangeSource);
   const hoursCount = endTime - startTime;
 
   // Context hooks

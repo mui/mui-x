@@ -2,16 +2,19 @@ import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import type { RefObject } from '@mui/x-internals/types';
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, gridFilterModelSelector, useGridApiRef } from '@mui/x-data-grid';
 import type {
   DataGridProps,
   GridApi,
   GridDataSource,
+  GridFilterItem,
   GridGetRowsParams,
+  GridLogicOperator,
   GridGetRowsResponse,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
-import { getCell } from 'test/utils/helperFn';
+import { actSleep, getCell } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 import { TestCache } from '../internals/utils';
 
@@ -160,6 +163,196 @@ describe('<DataGrid /> - Data source', () => {
     });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+  });
+
+  describe('incomplete filter items', () => {
+    const getSentFilterItems = () => {
+      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      return JSON.parse(url.searchParams.get('filterModel')!).items;
+    };
+
+    const renderAndWaitForInitialFetch = async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+    };
+
+    const upsertFilterItem = async (item: GridFilterItem) => {
+      await act(async () => {
+        apiRef.current!.upsertFilterItem(item);
+      });
+    };
+
+    // See https://github.com/mui/mui-x/issues/23243
+    it('should not send a filter item without a value to the data source', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+      expect(getSentFilterItems()).to.deep.equal([]);
+    });
+
+    it('should not send a filter item whose array value is empty', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isAnyOf', value: ['1'] });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isAnyOf', value: [] });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+      expect(getSentFilterItems()).to.deep.equal([]);
+    });
+
+    // Operators like `isEmpty` are complete without a value.
+    // See https://github.com/mui/mui-x/issues/5402
+    it('should send a valueless filter item whose operator requires no value', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'isEmpty' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      expect(getSentFilterItems()).to.deep.equal([{ id: 1, field: 'id', operator: 'isEmpty' }]);
+    });
+
+    // Adding a filter row asks the data source for what the previous call already returned.
+    it('should not re-fetch when the change only adds an incomplete item', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    it('should re-fetch when an incomplete item becomes complete', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
+      await actSleep(50);
+      expect(fetchRowsSpy.callCount).to.equal(1);
+
+      await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      expect(getSentFilterItems()).to.deep.equal([
+        { id: 1, field: 'id', operator: 'contains', value: '1' },
+      ]);
+    });
+  });
+
+  describe('inapplicable filter model changes', () => {
+    const renderAndWaitForInitialFetch = async () => {
+      render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+    };
+
+    // A logic operator needs two operands to change anything.
+    it('should not re-fetch when the logic operator changes without two complete items', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterLogicOperator('or' as GridLogicOperator);
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    it('should not re-fetch when the quick filter values only contain falsy entries', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['']);
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    it('should not re-fetch when the quick filter logic operator changes below two values', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setFilterModel({
+          ...gridFilterModelSelector(apiRef),
+          quickFilterLogicOperator: 'or' as GridLogicOperator,
+        });
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    // `passFilterLogic` runs every value through the logic operator, so a falsy one added
+    // next to an applying value does change the matched rows.
+    it('should re-fetch when a falsy value joins an applying quick filter value', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc', '']);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3);
+      });
+    });
+
+    it('should re-fetch when a quick filter value is added', async () => {
+      await renderAndWaitForInitialFetch();
+
+      await act(async () => {
+        apiRef.current!.setQuickFilterValues(['abc']);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      expect(JSON.parse(url.searchParams.get('filterModel')!).quickFilterValues).to.deep.equal([
+        'abc',
+      ]);
     });
   });
 
@@ -1041,6 +1234,180 @@ describe('<DataGrid /> - Data source', () => {
 
       expect(editRowSpy.callCount).to.equal(1);
       expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('-edited');
+    });
+
+    it('should store the row verbatim when `updateRow()` returns a replace update', async () => {
+      class CommodityRow {
+        id: number;
+
+        commodity: string;
+
+        #revision: number;
+
+        constructor(id: number, commodity: string, revision = 0) {
+          this.id = id;
+          this.commodity = commodity;
+          this.#revision = revision;
+        }
+
+        withCommodity(commodity: string) {
+          return new CommodityRow(this.id, commodity, this.#revision + 1);
+        }
+
+        get revision() {
+          return this.#revision;
+        }
+      }
+
+      const initialRows = [new CommodityRow(0, 'Nickel'), new CommodityRow(1, 'Cobalt')];
+      let replacement: CommodityRow | undefined;
+      const dataSource: GridDataSource = {
+        getRows: async () => ({ rows: initialRows, rowCount: initialRows.length }),
+        updateRow: async (params) => {
+          replacement = (params.previousRow as CommodityRow).withCommodity(
+            params.updatedRow.commodity,
+          );
+          return { _action: 'replace', row: replacement };
+        },
+      };
+
+      function ReplaceTestCase() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              apiRef={apiRef}
+              columns={[{ field: 'commodity', editable: true }]}
+              dataSource={dataSource}
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+              }}
+              pagination
+              pageSizeOptions={pageSizeOptions}
+              disableVirtualization
+            />
+          </div>
+        );
+      }
+
+      render(<ReplaceTestCase />);
+
+      await waitFor(() => {
+        // The rows returned by `getRows()` are stored verbatim.
+        expect(apiRef.current?.getRow(1)).to.equal(initialRows[1]);
+      });
+
+      await act(async () => apiRef.current?.startCellEditMode({ id: 1, field: 'commodity' }));
+      await act(async () =>
+        apiRef.current?.setEditCellValue({ id: 1, field: 'commodity', value: 'Silver' }),
+      );
+      await act(async () => apiRef.current?.stopCellEditMode({ id: 1, field: 'commodity' }));
+
+      await waitFor(() => {
+        // The instance returned in the envelope is stored verbatim.
+        expect(apiRef.current?.getRow(1)).to.equal(replacement);
+      });
+      const updatedRow = apiRef.current?.getRow(1) as CommodityRow;
+      expect(updatedRow.commodity).to.equal('Silver');
+      // #private state survives the edit because the stored row is the instance itself.
+      expect(updatedRow.revision).to.equal(1);
+    });
+
+    describe('cache invalidation with a replace update', () => {
+      const initialRows = [
+        { id: 0, commodity: 'Nickel' },
+        { id: 1, commodity: 'Cobalt' },
+      ];
+
+      function createTestCase(updateRow: NonNullable<GridDataSource['updateRow']>) {
+        const clearSpy = spy();
+        const cache = new Map<string, GridGetRowsResponse>();
+        const dataSourceCache = {
+          get: (key: GridGetRowsParams) => cache.get(getKeyDefault(key)),
+          set: (key: GridGetRowsParams, value: GridGetRowsResponse) =>
+            cache.set(getKeyDefault(key), value),
+          clear: () => {
+            cache.clear();
+            clearSpy();
+          },
+        };
+        const dataSource: GridDataSource = {
+          getRows: async () => ({ rows: initialRows, rowCount: initialRows.length }),
+          updateRow,
+        };
+
+        function TestCase() {
+          apiRef = useGridApiRef();
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid
+                apiRef={apiRef}
+                columns={[{ field: 'commodity', editable: true }]}
+                dataSource={dataSource}
+                dataSourceCache={dataSourceCache}
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+                }}
+                pagination
+                pageSizeOptions={pageSizeOptions}
+                disableVirtualization
+              />
+            </div>
+          );
+        }
+
+        return { TestCase, clearSpy };
+      }
+
+      async function editCommodityCell() {
+        await act(async () => apiRef.current?.startCellEditMode({ id: 1, field: 'commodity' }));
+        await act(async () =>
+          apiRef.current?.setEditCellValue({ id: 1, field: 'commodity', value: 'Silver' }),
+        );
+        await act(async () => apiRef.current?.stopCellEditMode({ id: 1, field: 'commodity' }));
+        // The cell only leaves edit mode once `dataSource.updateRow()` has been applied.
+        await waitFor(() => {
+          expect(apiRef.current?.getCellMode(1, 'commodity')).to.equal('view');
+        });
+      }
+
+      it('should not clear the cache when the replacement matches the previous row', async () => {
+        // The server refuses the change and echoes the stored row back.
+        const { TestCase, clearSpy } = createTestCase(async (params) => ({
+          _action: 'replace',
+          row: { ...params.previousRow },
+        }));
+
+        render(<TestCase />);
+        await waitFor(() => {
+          expect(apiRef.current?.getRow(1)).not.to.equal(null);
+        });
+        clearSpy.resetHistory();
+
+        await editCommodityCell();
+
+        expect(apiRef.current?.getRow(1)!.commodity).to.equal('Cobalt');
+        // The row did not change, so the cached pages are still valid.
+        expect(clearSpy.callCount).to.equal(0);
+      });
+
+      it('should clear the cache when the replacement changes the row', async () => {
+        const { TestCase, clearSpy } = createTestCase(async (params) => ({
+          _action: 'replace',
+          row: { ...params.previousRow, commodity: params.updatedRow.commodity },
+        }));
+
+        render(<TestCase />);
+        await waitFor(() => {
+          expect(apiRef.current?.getRow(1)).not.to.equal(null);
+        });
+        clearSpy.resetHistory();
+
+        await editCommodityCell();
+
+        expect(apiRef.current?.getRow(1)!.commodity).to.equal('Silver');
+        expect(clearSpy.callCount).to.equal(1);
+      });
     });
   });
 });

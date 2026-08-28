@@ -6,6 +6,7 @@ import { useLocalizationContext } from '@mui/x-date-pickers/internals';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import type { PickersLocaleText } from '@mui/x-date-pickers/locales';
 import { AdapterClassToUse } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 function ContextListener({
   onContextChange,

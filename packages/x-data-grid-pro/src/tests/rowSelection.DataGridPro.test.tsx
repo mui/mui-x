@@ -19,6 +19,7 @@ import type {
   GridFilterModel,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
+import { describe, it, expect } from 'vitest';
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
