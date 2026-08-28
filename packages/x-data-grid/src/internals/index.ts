@@ -220,6 +220,7 @@ export {
   isNavigationKey,
   isPasteShortcut,
   isCopyShortcut,
+  isSelectAllShortcut,
   isUndoShortcut,
   isRedoShortcut,
   isFillDownShortcut,
