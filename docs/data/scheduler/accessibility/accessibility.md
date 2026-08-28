@@ -154,6 +154,7 @@ The dialog is labeled by its event title via `aria-labelledby`.
 
 - The event title input is labeled with a localized `aria-label` (default: `"Event title"`).
 - The color picker group has an `aria-label` (default: `"Event color"`), and each individual color option button is labeled (for example, `"Select green as event color"`).
+- When the dialog shows the General and Recurrence tabs, the General tab panel uses `role="tabpanel"` with `aria-labelledby` pointing to its tab; without tabs the panel claims no tab semantics. The panel and its attributes stay owned by the dialog when the tab content is replaced through the [`eventDialogGeneralTab` slot](/x/react-scheduler/components/event-dialog/).
 - The Recurrence tab panel uses `role="tabpanel"` with `aria-labelledby` pointing to its tab.
 - The recurring scope confirmation dialog radio group has an `aria-label` (default: `"Editing recurring events scope"`).
 

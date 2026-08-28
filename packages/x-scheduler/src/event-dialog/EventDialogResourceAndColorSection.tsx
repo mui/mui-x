@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material/styles';
 import type { SelectChangeEvent } from '@mui/material/Select';
@@ -19,18 +20,19 @@ import { ToggleGroup } from '@base-ui/react/toggle-group';
 import { EVENT_COLORS } from '@mui/x-scheduler-internals/constants';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
-  schedulerEventSelectors,
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useStore } from '@base-ui/utils/store';
-import type { PaletteName } from '../../utils/tokens';
-import { getPaletteVariants } from '../../utils/tokens';
-import { useEventEditingStyledContext } from '../event-editing';
-import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
-import { useEventDialogFormContext } from './form/EventDialogFormContext';
-import { useEventDialogFormField } from './form/useEventDialogFormField';
+import { useId } from '@base-ui/utils/useId';
+import type { PaletteName } from '../internals/utils/tokens';
+import { getPaletteVariants } from '../internals/utils/tokens';
+import { useEventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
+import { EventDialogSectionFieldset } from './EventDialogSectionFieldset';
+import { EventDialogSectionHeaderTitle } from './EventDialogSectionHeaderTitle';
+import { useEventDialogFormContext } from '../internals/components/event-dialog/form/EventDialogFormContext';
+import { useEventDialogFormField } from './useEventDialogFormField';
 
 // Only meaningful in single-select mode: the sentinel value backing the "no resource"
 // MenuItem, so MUI Select's `value=""` always matches a rendered option — otherwise it logs
@@ -138,11 +140,50 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
   );
 }
 
-export default function ResourceAndColorSection() {
+ResourceSelectAdornment.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Whether the field has a selection at all. Kept separate from `resource` because
+   * `resource` is also `null` when the selection references an id that isn't in `resources`
+   * (e.g. a deleted resource) — that's an invalid selection, not an empty one, and shouldn't
+   * render the "no resource" dashed dot.
+   */
+  hasSelection: PropTypes.bool.isRequired,
+  resource: PropTypes.shape({
+    eventColor: PropTypes.oneOf([
+      'amber',
+      'blue',
+      'green',
+      'grey',
+      'indigo',
+      'lime',
+      'orange',
+      'pink',
+      'purple',
+      'red',
+      'teal',
+    ]).isRequired,
+    hidden: PropTypes.bool,
+    indentLevel: PropTypes.number.isRequired,
+    isGroupRoot: PropTypes.bool.isRequired,
+    label: PropTypes.string.isRequired,
+    showDivider: PropTypes.bool.isRequired,
+    value: PropTypes.string.isRequired,
+  }),
+} as any;
+
+export function EventDialogResourceAndColorSection() {
   // Context hooks
-  const { occurrence, resourceSelectionMode: mode } = useEventDialogFormContext();
+  const { resourceSelectionMode: mode } = useEventDialogFormContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
+
+  // Per-instance suffix: the same section can be rendered several times by a custom
+  // General tab, and the ids must stay unique.
+  const sectionId = useId();
 
   // Selector hooks
   const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
@@ -153,19 +194,14 @@ export default function ResourceAndColorSection() {
     store,
     schedulerOtherSelectors.shouldEventRequireResource,
   );
-  const isPropertyReadOnly = useStore(
-    store,
-    schedulerEventSelectors.isPropertyReadOnly,
-    occurrence.id,
-  );
-
-  const resourceField = useEventDialogFormField<SchedulerResourceId[]>('resourceIds', {
+  const resourceField = useEventDialogFormField('resourceIds', {
     validate: (value) =>
       shouldEventRequireResource && value.length === 0 ? localeText.requiredResourceError : null,
   });
-  const colorField = useEventDialogFormField<SchedulerEventColor | null>('color');
+  const colorField = useEventDialogFormField('color');
 
-  const readOnly = isPropertyReadOnly('resource');
+  const resourceReadOnly = resourceField.readOnly;
+  const colorReadOnly = colorField.readOnly;
   const { value: resourceIds } = resourceField;
   const { value: color } = colorField;
   const error = shouldEventRequireResource ? resourceField.error : undefined;
@@ -244,27 +280,26 @@ export default function ResourceAndColorSection() {
     );
   };
 
-  const errorId = `${schedulerId}-resource-error`;
+  const labelId = `${schedulerId}-resource-select-label-${sectionId}`;
+  const errorId = `${schedulerId}-resource-error-${sectionId}`;
 
   return (
-    <SectionFieldset className={classes.eventDialogSectionFieldset}>
-      <SectionHeaderTitle className={classes.eventDialogSectionHeaderTitle}>
+    <EventDialogSectionFieldset>
+      <EventDialogSectionHeaderTitle>
         {resources.length > 0 ? localeText.resourceColorSectionLabel : localeText.colorSectionLabel}
-      </SectionHeaderTitle>
+      </EventDialogSectionHeaderTitle>
       {/* Resources are optional; skip the picker entirely when none are configured. */}
       {resources.length > 0 && (
         <FormControl size="small" fullWidth error={!!error}>
-          <InputLabel id={`${schedulerId}-resource-select-label`}>
-            {localeText.resourceLabel}
-          </InputLabel>
+          <InputLabel id={labelId}>{localeText.resourceLabel}</InputLabel>
           <Select
-            labelId={`${schedulerId}-resource-select-label`}
+            labelId={labelId}
             label={localeText.resourceLabel}
             value={mode === 'multiple' ? resourceIds : (resourceIds[0] ?? NO_RESOURCE_VALUE)}
             multiple={mode === 'multiple'}
             displayEmpty
             onChange={handleChange}
-            readOnly={readOnly}
+            readOnly={resourceReadOnly}
             aria-describedby={error ? errorId : undefined}
             startAdornment={
               <InputAdornment position="start">
@@ -348,7 +383,7 @@ export default function ResourceAndColorSection() {
           colorField.setValue(next ?? null);
         }}
         aria-label={localeText.colorPickerLabel}
-        disabled={readOnly}
+        disabled={colorReadOnly}
         className={classes.eventDialogResourceMenuColorToggleGroup}
       >
         {EVENT_COLORS.map((colorOption) => (
@@ -363,6 +398,6 @@ export default function ResourceAndColorSection() {
           </ResourceMenuColorToggle>
         ))}
       </ResourceMenuColorToggleGroup>
-    </SectionFieldset>
+    </EventDialogSectionFieldset>
   );
 }
