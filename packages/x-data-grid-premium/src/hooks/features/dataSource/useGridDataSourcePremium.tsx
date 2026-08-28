@@ -295,8 +295,11 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
   useGridEvent(
     apiRef,
     'aggregationModelChange',
-    runIf(!pivotActive, () => debouncedFetchRows()),
+    // Only the aggregated values change, not the tree shape, so this stays incremental:
+    // invalidating would rebuild the tree and scroll back to the top.
+    runIf(!pivotActive, () => apiRef.current.fetchRootRowsIncremental()),
   );
+  // Pivoting changes the group fields, so rebuilding the tree is intended here.
   useGridEvent(
     apiRef,
     'pivotModeChange',

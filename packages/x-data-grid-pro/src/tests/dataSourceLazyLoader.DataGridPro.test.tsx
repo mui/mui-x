@@ -1100,11 +1100,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         props: Partial<DataGridProProps> & {
           onFetchRows?: (params: GridGetRowsParams) => void;
           deferRequest?: (params: GridGetRowsParams) => boolean;
+          failRequest?: (params: GridGetRowsParams) => boolean;
         },
       ) {
         const {
           onFetchRows,
           deferRequest = (params: GridGetRowsParams) => !isRootRequest(params),
+          failRequest = () => false,
           ...other
         } = props;
         const requestCountRef = React.useRef(0);
@@ -1134,12 +1136,16 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
                 });
               }
 
+              if (failRequest(params)) {
+                throw new Error('Network error');
+              }
+
               return response;
             },
             getGroupKey: (row) => row.name,
             getChildrenCount: (row) => row.childrenCount,
           }),
-          [onFetchRows, deferRequest],
+          [onFetchRows, deferRequest, failRequest],
         );
 
         return (
@@ -1345,6 +1351,32 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         });
 
         expect(localFetchRowsSpy.callCount).to.equal(requestsBeforeExpansion);
+      });
+
+      it('should not stay stale when an invalidating fetch fails', async () => {
+        let failRootRequests = false;
+        render(
+          <TestConcurrentRequests
+            deferRequest={() => false}
+            failRequest={(params) => failRootRequests && isRootRequest(params)}
+            onDataSourceError={() => {}}
+          />,
+        );
+
+        await waitFor(() => expect(apiRef.current!.getRow('P1-0')).not.to.equal(null));
+
+        failRootRequests = true;
+        await act(async () => apiRef.current!.sortColumn('name', 'desc'));
+        await waitFor(() => {
+          expect(apiRef.current!.state.rows.loading).to.equal(false);
+        });
+
+        // A latched `rowsStale` would keep lazy loading and polling disabled from here on
+        failRootRequests = false;
+        await act(async () => apiRef.current!.dataSource.fetchRows());
+        await waitFor(() => {
+          expect(apiRef.current!.getRow('P1-0')).not.to.equal(null);
+        });
       });
     });
   });

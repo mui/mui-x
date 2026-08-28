@@ -12,7 +12,7 @@ import type {
   GridGroupNode,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, grid } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect, beforeEach } from 'vitest';
 
@@ -533,11 +533,13 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
         props: Partial<DataGridPremiumProps> & {
           deferRequest?: (params: GridGetRowsParams) => boolean;
           onGetRows?: (params: GridGetRowsParams) => void;
+          containerHeight?: number;
         },
       ) {
         const {
           deferRequest = (params: GridGetRowsParams) => !isRootRequest(params),
           onGetRows,
+          containerHeight = 10 * rowHeight + columnHeaderHeight + 2,
           ...other
         } = props;
         apiRef = useGridApiRef();
@@ -565,12 +567,13 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
             },
             getGroupKey: (row) => row.group,
             getChildrenCount: (row) => row.childrenCount,
+            getAggregatedValue: (row, field) => row[field],
           }),
           [deferRequest, onGetRows],
         );
 
         return (
-          <div style={{ width: 400, height: 10 * rowHeight + columnHeaderHeight + 2 }}>
+          <div style={{ width: 400, height: containerHeight }}>
             <DataGridPremium
               apiRef={apiRef}
               columns={[
@@ -675,6 +678,56 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
         });
         expect(apiRef.current!.getRow('industry-software')).to.equal(null);
         expect(apiRef.current!.getRow('industry-banking')).to.equal(null);
+      });
+
+      it('should not re-issue the children requests nor scroll on aggregation model change', async () => {
+        const getRowsSpy = spy();
+        render(
+          <TestConcurrentRequests
+            onGetRows={getRowsSpy}
+            deferRequest={() => false}
+            defaultGroupingExpansionDepth={-1}
+            containerHeight={3 * rowHeight + columnHeaderHeight + 2}
+            aggregationFunctions={{ sum: { columnTypes: ['number'] }, avg: { columnTypes: ['number'] } }}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+              aggregation: { model: { value: 'sum' } },
+            }}
+          />,
+        );
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRow('industry-software')).not.to.equal(null);
+        });
+
+        const countRequestsFor = (groupKeys: string) =>
+          getRowsSpy
+            .getCalls()
+            .filter(
+              (call) =>
+                JSON.stringify((call.firstArg as GridGetRowsParams).groupKeys) === groupKeys,
+            ).length;
+        const childrenRequestsBefore = countRequestsFor('["Technology"]');
+
+        const virtualScroller = grid('virtualScroller')!;
+        await act(async () => {
+          virtualScroller.scrollTop = 60;
+          virtualScroller.dispatchEvent(new Event('scroll'));
+        });
+        expect(virtualScroller.scrollTop).to.equal(60);
+
+        await act(async () => apiRef.current!.setAggregationModel({ value: 'avg' }));
+        await waitFor(() => {
+          expect(getRowsSpy.getCalls().length).to.be.greaterThan(0);
+        });
+        await act(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+          });
+        });
+
+        expect(countRequestsFor('["Technology"]')).to.equal(childrenRequestsBefore);
+        expect(virtualScroller.scrollTop).to.equal(60);
       });
     });
   });

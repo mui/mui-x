@@ -844,6 +844,13 @@ export const useGridDataSourceNestedLazyLoader = (
   const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRootRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
+        if (rowsStale.current) {
+          // The tree no longer matches the request params, and leaving the flag up would keep
+          // lazy loading and polling disabled until a later invalidation happens to succeed.
+          resetRowTree();
+          rowsStale.current = false;
+        }
+        privateApiRef.current.setLoading(false);
         return;
       }
 
