@@ -69,4 +69,47 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
       movedPredecessor.dataTimezone.end.timestamp,
     );
   });
+
+  it('should clamp the successor when it is dropped before the predecessor', async () => {
+    const { store } = await renderTimeline({
+      events: [eventA, eventB],
+      dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+    });
+
+    const predecessor = store.state.processedEventLookup.get('event-a')!;
+    const successorDuration =
+      store.state.processedEventLookup.get('event-b')!.dataTimezone.end.timestamp -
+      store.state.processedEventLookup.get('event-b')!.dataTimezone.start.timestamp;
+
+    const rows = document.querySelectorAll<HTMLElement>(
+      '.MuiEventTimeline-eventsCell[data-drop-target-for-element]',
+    );
+    for (const row of rows) {
+      mockElementBounds(row, { left: 0, width: 6720, height: 40 });
+    }
+    const eventElement = screen.getByText('Event B');
+    mockElementBounds(eventElement, { left: 640, width: 64, height: 30 });
+
+    // Dropped well before the predecessor's end: the clamp snaps it forward on drop.
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: rows[0],
+        sourceClientX: 660,
+        targetClientX: 400,
+      });
+    });
+
+    const clampedSuccessor = store.state.processedEventLookup.get('event-b')!;
+    expect(clampedSuccessor.dataTimezone.start.timestamp).to.equal(
+      predecessor.dataTimezone.end.timestamp,
+    );
+    expect(
+      clampedSuccessor.dataTimezone.end.timestamp - clampedSuccessor.dataTimezone.start.timestamp,
+    ).to.equal(successorDuration);
+    // The predecessor itself never moves.
+    expect(store.state.processedEventLookup.get('event-a')!.dataTimezone.start.timestamp).to.equal(
+      predecessor.dataTimezone.start.timestamp,
+    );
+  });
 });

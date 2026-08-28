@@ -103,8 +103,8 @@ export class SchedulerSchedulingPlugin<
    */
   public handleEventsUpdate = (parameters: UpdateEventsParameters) => {
     const { deleted, updated } = parameters;
-    if (deleted && deleted.length > 0) {
-      const deletedSet = new Set(deleted);
+    const deletedSet = new Set(deleted);
+    if (deletedSet.size > 0) {
       const current = this.store.state.dependencyModelList;
       const remaining = current.filter(
         (dependency) => !deletedSet.has(dependency.source) && !deletedSet.has(dependency.target),
@@ -128,7 +128,7 @@ export class SchedulerSchedulingPlugin<
       ),
       isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
       updated,
-      deleted: new Set(deleted),
+      deleted: deletedSet,
     });
     return cascaded.length > 0 ? { updated: cascaded } : undefined;
   };

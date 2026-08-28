@@ -149,7 +149,7 @@ export default function TimelineAutoScheduling() {
   };
   const store = useEventTimelinePremium(parameters);
   // The context is typed on the base scheduler state and the store generic is
-  // invariant, so the premium store (extra state slices) needs the cast.
+  // invariant, so the premium store (extra state slices) needs widening here.
   const storeContextValue = store;
 
   return (

@@ -185,6 +185,9 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const batch = dataSource.persistEvents.lastCall.firstArg;
       const updatedIds = batch.updated.map((event: SchedulerEvent) => event.id);
       expect(updatedIds).to.have.members(['a', 'b']);
+      const persistedA = batch.updated.find((event: SchedulerEvent) => event.id === 'a')!;
+      expect(timestampOf(persistedA.start)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+      expect(timestampOf(persistedA.end)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
       const persistedB = batch.updated.find((event: SchedulerEvent) => event.id === 'b')!;
       expect(timestampOf(persistedB.start)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
     } finally {

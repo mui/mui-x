@@ -25,7 +25,6 @@ export interface ComputeAutoSchedulingCascadeParameters {
   /**
    * The active dependencies grouped by `target`
    * (`eventTimelinePremiumDependencySelectors.activeModelListByTarget`).
-   * Used to clamp the batch's own repositioned entries against their predecessors.
    */
   activeDependenciesByTarget: Map<SchedulerEventId, SchedulerDependency[]>;
   isEventReadOnly: (eventId: SchedulerEventId) => boolean;
@@ -52,19 +51,20 @@ interface ResolvedDates {
  * `{ id, start, end }` updates restoring `successor.start >= predecessor.end`, transitively.
  *
  * Push-only: an event only ever moves later — moving a predecessor earlier never pulls
- * successors back, and pre-existing violations on untouched events stay as-is.
- * The batch's own entries are seeds. A seed whose entry sets `start` is being placed by
- * the user, so when it lands before an active predecessor's end it is clamped forward to
- * the first valid position (its clamped dates fold back into its own entry); other seeds
- * are never re-emitted. A read-only successor stays in place and stops the cascade
- * behind it. Timed events keep their duration in absolute milliseconds (same policy as
- * drag-and-drop and paste), all-day events shift by whole days.
+ * successors back, and pre-existing violations stay as-is. The batch's entries are
+ * seeds (whole-entry last-wins per id, like the store). A seed whose entry actually
+ * moves `start` is being placed by the user, so every active predecessor clamps it
+ * forward to the first valid position; other seeds and untouched successors are pushed
+ * only by predecessors moved in the same batch. Shifted seeds fold back into their own
+ * entry. A read-only successor stays in place and stops the cascade behind it. Timed
+ * events keep their duration in absolute milliseconds (same policy as drag-and-drop
+ * and paste) and land on the first instant of the day after an all-day predecessor;
+ * all-day events shift by whole days.
  *
- * Topological (Kahn) pass over the subgraph reachable from the seeds — O(V' + E'),
- * each node settled once with the max of its constraining predecessors' ends. Members
- * of a seedless cycle (cyclic props data) never become ready: left unmoved, with a dev
- * warning. A cycle through a seed is broken at the seed, so the nodes behind it are
- * still pushed.
+ * Kahn pass over the subgraph reachable from the seeds, each node settled once.
+ * Members of a seedless cycle (cyclic props data) never become ready: left unmoved,
+ * with a dev warning. A cycle through a seed is broken at the first stalled seed in
+ * batch order, also with a dev warning.
  */
 export function computeAutoSchedulingCascade(
   parameters: ComputeAutoSchedulingCascadeParameters,
@@ -78,25 +78,33 @@ export function computeAutoSchedulingCascade(
     deleted,
   } = parameters;
 
-  // Seeds: the events whose dates the batch changes (last entry per id wins, like the store).
   const newDates = new Map<SchedulerEventId, ResolvedDates>();
   // An event turning recurring in this batch leaves the cascade — the active index is
   // derived from the pre-update state, so it cannot have excluded it yet.
   const becomesRecurring = new Set<SchedulerEventId>();
-  // Seeds whose entry sets `start`: the user is placing them, so they are clampable.
+  // Seeds whose entry actually moves `start`: the user is placing them, so they are
+  // the ones clamped. Checked against the current start because the event dialog
+  // resends unchanged dates on every save.
   const repositionedSeeds = new Set<SchedulerEventId>();
+  // Events whose dates this pass changes (seeds with real changes, then cascaded
+  // shifts). Only these push their non-clamped successors.
+  const movedIds = new Set<SchedulerEventId>();
 
+  // Whole-entry last-wins per id, mirroring the store's fold.
+  const lastEntryById = new Map<SchedulerEventId, SchedulerEventUpdatedProperties>();
   for (const entry of parameters.updated) {
+    lastEntryById.set(entry.id, entry);
+  }
+
+  for (const entry of lastEntryById.values()) {
     if (deleted.has(entry.id)) {
       continue;
     }
     if (entry.rrule != null) {
       becomesRecurring.add(entry.id);
-      newDates.delete(entry.id);
-      repositionedSeeds.delete(entry.id);
       continue;
     }
-    if (entry.start == null && entry.end == null) {
+    if (entry.start == null && entry.end == null && entry.allDay == null) {
       continue;
     }
     const processedEvent = processedEventLookup.get(entry.id);
@@ -111,17 +119,17 @@ export function computeAutoSchedulingCascade(
       entry.end ?? processedEvent.dataTimezone.end.value,
       allDay,
     );
-    newDates.set(entry.id, {
-      start,
-      end,
-      startTimestamp: adapter.getTime(start),
-      endTimestamp: adapter.getTime(end),
-      allDay,
-    });
-    if (entry.start != null) {
+    const startTimestamp = adapter.getTime(start);
+    const endTimestamp = adapter.getTime(end);
+    newDates.set(entry.id, { start, end, startTimestamp, endTimestamp, allDay });
+
+    const current = resolveCurrentDates(entry.id)!;
+    const startMoved = startTimestamp !== current.startTimestamp;
+    if (startMoved || endTimestamp !== current.endTimestamp) {
+      movedIds.add(entry.id);
+    }
+    if (entry.start != null && startMoved) {
       repositionedSeeds.add(entry.id);
-    } else {
-      repositionedSeeds.delete(entry.id);
     }
   }
 
@@ -133,7 +141,6 @@ export function computeAutoSchedulingCascade(
 
   // Subgraph reachable from the seeds, visiting each node and edge once.
   const members = new Set<SchedulerEventId>(seeds);
-  const incomingSources = new Map<SchedulerEventId, SchedulerEventId[]>();
   const inDegree = new Map<SchedulerEventId, number>();
   const discovery = [...seeds];
   while (discovery.length > 0) {
@@ -142,12 +149,6 @@ export function computeAutoSchedulingCascade(
       const { target } = dependency;
       if (deleted.has(target) || becomesRecurring.has(target)) {
         continue;
-      }
-      const sources = incomingSources.get(target);
-      if (sources) {
-        sources.push(eventId);
-      } else {
-        incomingSources.set(target, [eventId]);
       }
       inDegree.set(target, (inDegree.get(target) ?? 0) + 1);
       if (!members.has(target)) {
@@ -164,7 +165,7 @@ export function computeAutoSchedulingCascade(
     }
   }
   const processed = new Set<SchedulerEventId>();
-  const clampedSeeds = new Set<SchedulerEventId>();
+  const cascaded: SchedulerEventUpdatedProperties[] = [];
   while (processed.size < members.size) {
     if (ready.length === 0) {
       // Every remaining member waits on a cycle. A seed on the cycle can still settle —
@@ -173,6 +174,13 @@ export function computeAutoSchedulingCascade(
       const stalledSeed = [...seeds].find((seedId) => !processed.has(seedId));
       if (stalledSeed === undefined) {
         break;
+      }
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X Scheduler: The dependencies provided via props contain a cycle through an updated event.',
+          'Auto-scheduling processed the updated event with the cycle unresolved, so its members may keep violating each other.',
+          'Fix the `dependencies` data — `addDependency()` rejects dependencies that would create a cycle.',
+        ]);
       }
       ready.push(stalledSeed);
     }
@@ -186,9 +194,8 @@ export function computeAutoSchedulingCascade(
     const shifted = computeShift(eventId);
     if (shifted !== null) {
       newDates.set(eventId, shifted);
-      if (seeds.has(eventId)) {
-        clampedSeeds.add(eventId);
-      }
+      movedIds.add(eventId);
+      cascaded.push({ id: eventId, start: shifted.start, end: shifted.end });
     }
 
     for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
@@ -214,12 +221,6 @@ export function computeAutoSchedulingCascade(
     }
   }
 
-  const cascaded: SchedulerEventUpdatedProperties[] = [];
-  for (const [eventId, dates] of newDates) {
-    if (!seeds.has(eventId) || clampedSeeds.has(eventId)) {
-      cascaded.push({ id: eventId, start: dates.start, end: dates.end });
-    }
-  }
   return cascaded;
 
   function resolveCurrentDates(eventId: SchedulerEventId): ResolvedDates | null {
@@ -243,48 +244,33 @@ export function computeAutoSchedulingCascade(
   }
 
   function computeShift(eventId: SchedulerEventId): ResolvedDates | null {
-    const isSeed = seeds.has(eventId);
-    if (isSeed && !repositionedSeeds.has(eventId)) {
-      // The entry left `start` untouched (an end resize): the event is not being
-      // repositioned, so a pre-existing violation stays as-is.
-      return null;
-    }
-
+    // A repositioned seed is being placed by the user: every active predecessor
+    // constrains it. Anything else is pushed only by predecessors that moved.
+    const constrainedByAll = repositionedSeeds.has(eventId);
     let required: ResolvedDates | null = null;
-    if (isSeed) {
-      // The user is placing this event now, so every active predecessor constrains
-      // it — not only the moved ones.
-      for (const dependency of activeDependenciesByTarget.get(eventId) ?? []) {
-        const sourceId = dependency.source;
-        if (sourceId === eventId || deleted.has(sourceId) || becomesRecurring.has(sourceId)) {
-          continue;
-        }
-        const sourceDates = newDates.get(sourceId) ?? resolveCurrentDates(sourceId);
-        if (
-          sourceDates !== null &&
-          (required === null || sourceDates.endTimestamp > required.endTimestamp)
-        ) {
-          required = sourceDates;
-        }
+    for (const dependency of activeDependenciesByTarget.get(eventId) ?? []) {
+      const sourceId = dependency.source;
+      if (sourceId === eventId || deleted.has(sourceId) || becomesRecurring.has(sourceId)) {
+        continue;
       }
-    } else {
-      // Only moved predecessors constrain: an unmoved one already satisfied the
-      // constraint, or its violation predates the batch.
-      for (const sourceId of incomingSources.get(eventId) ?? []) {
-        const sourceDates = newDates.get(sourceId);
-        if (
-          sourceDates &&
-          (required === null || sourceDates.endTimestamp > required.endTimestamp)
-        ) {
-          required = sourceDates;
-        }
+      let sourceDates: ResolvedDates | null = null;
+      if (movedIds.has(sourceId)) {
+        sourceDates = newDates.get(sourceId)!;
+      } else if (constrainedByAll) {
+        sourceDates = resolveCurrentDates(sourceId);
+      }
+      if (
+        sourceDates !== null &&
+        (required === null || sourceDates.endTimestamp > required.endTimestamp)
+      ) {
+        required = sourceDates;
       }
     }
     if (required === null || isEventReadOnly(eventId)) {
       return null;
     }
 
-    const base = isSeed ? newDates.get(eventId)! : resolveCurrentDates(eventId)!;
+    const base = newDates.get(eventId) ?? resolveCurrentDates(eventId)!;
     if (base.startTimestamp >= required.endTimestamp) {
       return null;
     }
@@ -314,12 +300,16 @@ export function computeAutoSchedulingCascade(
       };
     }
 
+    // A timed event lands on the first instant after an all-day predecessor's day:
+    // the inclusive 23:59:59.999 end would not survive the second-resolution
+    // wall-time serialization.
+    const newStart = required.allDay ? adapter.addMilliseconds(required.end, 1) : required.end;
     const durationMs = base.endTimestamp - base.startTimestamp;
-    const newEnd = adapter.addMilliseconds(required.end, durationMs);
+    const newEnd = adapter.addMilliseconds(newStart, durationMs);
     return {
-      start: required.end,
+      start: newStart,
       end: newEnd,
-      startTimestamp: required.endTimestamp,
+      startTimestamp: adapter.getTime(newStart),
       endTimestamp: adapter.getTime(newEnd),
       allDay: false,
     };
