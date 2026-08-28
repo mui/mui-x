@@ -14,8 +14,8 @@ catalog:
   '@babel/preset-typescript': ^7.29.7
   '@babel/runtime': ^7.29.7
   '@babel/traverse': ^7.29.7
-  '@base-ui/react': ^1.6.0
-  '@base-ui/utils': ^0.3.1
+  '@base-ui/react': ^1.7.0
+  '@base-ui/utils': ^0.3.2
   '@date-fns/tz': ^1.5.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
@@ -81,7 +81,7 @@ catalog:
   use-sync-external-store: ^1.6.0
   vite: ^8.2.1
   vitest: ^4.1.10
-  yargs: ^18.0.0
+  yargs: ^18.1.0
 
 engineStrict: true
 updateNotifier: false
