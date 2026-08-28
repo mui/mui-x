@@ -12,6 +12,7 @@ import { describe, it, expect } from 'vitest';
 import { getEventsCellLaneMetrics, getRowHeightForLaneCount } from '../content/rowGeometry';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 import {
+  absorbObserverFrames,
   buildDependency,
   createDependencyTimelineRenderer,
   getArrowPaths,
@@ -479,7 +480,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       .build();
 
     async function renderFarTimelineWithArrow() {
-      renderTimeline({
+      await renderTimeline({
         events: [farPredecessor, farSuccessor],
         dependencies: [buildDependency('dep-1', 'event-far-a', 'event-far-b')],
       });
@@ -496,10 +497,13 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
 
     async function withDrag(source: Element, during: () => Promise<void>) {
       fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      // The drag start (and end) perturb layout; keep the observer deliveries acted.
+      await absorbObserverFrames();
       try {
         await during();
       } finally {
         fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+        await absorbObserverFrames();
       }
     }
 
@@ -577,12 +581,14 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         act(() => {
           getGrid().scrollLeft = 2 * 24 * 64;
         });
+        await absorbObserverFrames();
         await waitFor(() => {
           expect(document.querySelector('[data-dependency-hit]')).to.equal(null);
         });
         act(() => {
           getGrid().scrollLeft = 0;
         });
+        await absorbObserverFrames();
         await waitFor(() => {
           expect(getHitPath()).not.to.equal(null);
         });

@@ -24,6 +24,22 @@ import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 const nativeRequestAnimationFrame =
   typeof requestAnimationFrame === 'function' ? requestAnimationFrame.bind(globalThis) : null;
 
+/**
+ * Waits two native frames inside act, so pending ResizeObserver deliveries land as
+ * acted updates instead of between test steps. Call it after any step that perturbs
+ * layout (render, drag start/end, scroll). No-op in jsdom, which has no ResizeObserver.
+ */
+export async function absorbObserverFrames() {
+  if (typeof ResizeObserver === 'undefined' || nativeRequestAnimationFrame === null) {
+    return;
+  }
+  await act(async () => {
+    await new Promise<void>((resolve) => {
+      nativeRequestAnimationFrame!(() => nativeRequestAnimationFrame!(() => resolve()));
+    });
+  });
+}
+
 export const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
 export const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
 
@@ -196,15 +212,8 @@ export function createDependencyTimelineRenderer(render: (element: React.ReactEl
 
     // The initial ResizeObserver batch (title-column widths, viewport size)
     // delivers on the frames after the render; absorb it inside act so it
-    // cannot land between test steps as an un-acted update. jsdom has no
-    // ResizeObserver, so there is nothing to wait for there.
-    if (typeof ResizeObserver !== 'undefined' && nativeRequestAnimationFrame) {
-      await act(async () => {
-        await new Promise<void>((resolve) => {
-          nativeRequestAnimationFrame(() => nativeRequestAnimationFrame(() => resolve()));
-        });
-      });
-    }
+    // cannot land between test steps as an un-acted update.
+    await absorbObserverFrames();
 
     return { store, ...view };
   }
