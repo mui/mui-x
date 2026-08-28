@@ -87,10 +87,28 @@ const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   },
 ];
 
-// One level of indentation, must match the depth used in `top` below.
+const DEFAULT_EXPANDED_ITEMS = [
+  'grid',
+  'grid-community',
+  'grid-pro',
+  'grid-premium',
+  'pickers',
+  'pickers-community',
+  'pickers-pro',
+  'charts',
+  'charts-community',
+  'tree-view',
+  'tree-view-community',
+];
+
+// The height of one row, enforced with the `itemHeight` prop below.
+// The sticky offsets in `top` rely on it.
 const ITEM_HEIGHT = 32;
 
 const StickyRichTreeView = styled(RichTreeView)(({ theme }) => ({
+  // Extra space at the bottom so the last parents can also reach the top
+  // of the scroll container and stick.
+  paddingBottom: 224,
   // Expanded items stick to the top of the scroll container while any of
   // their descendants are visible, stacking deeper levels below shallower
   // ones thanks to `--TreeView-itemDepth`.
@@ -100,7 +118,23 @@ const StickyRichTreeView = styled(RichTreeView)(({ theme }) => ({
     zIndex: 'calc(100 - var(--TreeView-itemDepth))',
     // Use a solid, theme-aware background instead of an alpha color so
     // stacked sticky headers don't show the items scrolling behind them.
-    backgroundColor: (theme.vars ?? theme).palette.background.paper,
+    backgroundColor: (theme.vars || theme).palette.background.paper,
+    // The solid background overrides the state backgrounds of `TreeItem`,
+    // so paint them back as an overlay on top of it.
+    backgroundImage:
+      'linear-gradient(var(--sticky-overlay, transparent), var(--sticky-overlay, transparent))',
+    '&:hover': {
+      '--sticky-overlay': (theme.vars || theme).palette.action.hover,
+    },
+    '&[data-focused]': {
+      '--sticky-overlay': (theme.vars || theme).palette.action.focus,
+    },
+    '&[data-selected]': {
+      '--sticky-overlay': theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        (theme.vars || theme).palette.action.selectedOpacity,
+      ),
+    },
   },
 }));
 
@@ -109,19 +143,8 @@ export default function StickyHeaders() {
     <Box sx={{ height: 352, width: 280, overflowY: 'auto' }}>
       <StickyRichTreeView
         items={MUI_X_PRODUCTS}
-        defaultExpandedItems={[
-          'grid',
-          'grid-community',
-          'grid-pro',
-          'grid-premium',
-          'pickers',
-          'pickers-community',
-          'pickers-pro',
-          'charts',
-          'charts-community',
-          'tree-view',
-          'tree-view-community',
-        ]}
+        itemHeight={ITEM_HEIGHT}
+        defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
       />
     </Box>
   );
