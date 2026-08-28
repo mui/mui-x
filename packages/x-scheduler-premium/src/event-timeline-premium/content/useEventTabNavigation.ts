@@ -4,9 +4,13 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type {
   SchedulerEventOccurrence,
   SchedulerResource,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import {
+  computeElementPositionInCollection,
+  getTimelineAxisDurationMs,
+} from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 
 type ResourceWithOccurrences = {
   resource: SchedulerResource;
@@ -24,53 +28,49 @@ type ResourceWithOccurrences = {
  */
 export function useEventTabNavigation(params: {
   adapter: Adapter;
+  /**
+   * The visible resources with the occurrences that occupy space on the axis, in row
+   * render order. Occurrences hidden by the hour window must already be excluded:
+   * they never mount, so navigating to one would swallow Tab forever.
+   */
   resources: readonly ResourceWithOccurrences[];
   scrollerRef: React.RefObject<HTMLDivElement | null>;
-  collectionStart: TemporalSupportedObject;
-  collectionEnd: TemporalSupportedObject;
+  axis: TimelineAxis;
   tickCount: number;
   tickWidth: number;
   titleColumnWidth: number;
 }) {
-  const {
-    adapter,
-    resources,
-    scrollerRef,
-    collectionStart,
-    collectionEnd,
-    tickCount,
-    tickWidth,
-    titleColumnWidth,
-  } = params;
+  const { adapter, resources, scrollerRef, axis, tickCount, tickWidth, titleColumnWidth } = params;
 
-  const pendingFocusKeyRef = React.useRef<string | null>(null);
+  const pendingFocusRef = React.useRef<{ key: string; resourceId: string } | null>(null);
 
-  // Map (timestamp - collectionStart) into [0, 1]
-  const collectionStartTs = React.useMemo(
-    () => adapter.getTime(collectionStart),
-    [adapter, collectionStart],
-  );
-  const totalMs = React.useMemo(
-    () => Math.max(1, adapter.getTime(collectionEnd) - collectionStartTs),
-    [adapter, collectionEnd, collectionStartTs],
-  );
+  // Map an axis offset into [0, 1] of the events area, matching the rendered
+  // geometry (a trimmed hour window compresses the days).
+  const totalMs = React.useMemo(() => getTimelineAxisDurationMs(adapter, axis), [adapter, axis]);
 
   const eventsTotalWidth = tickCount * tickWidth;
 
   const computeFractionRange = useStableCallback((occurrence: SchedulerEventOccurrence) => {
-    const clamp = (ms: number) => Math.min(Math.max(ms - collectionStartTs, 0), totalMs);
-    return {
-      fractionStart: clamp(occurrence.displayTimezone.start.timestamp) / totalMs,
-      fractionEnd: clamp(occurrence.displayTimezone.end.timestamp) / totalMs,
-    };
+    const { position, duration } = computeElementPositionInCollection(adapter, {
+      start: occurrence.displayTimezone.start,
+      end: occurrence.displayTimezone.end,
+      collection: axis,
+      durationMs: totalMs,
+    });
+    return { fractionStart: position, fractionEnd: position + duration };
   });
 
-  const focusEventInDom = (key: string): boolean => {
+  // Scoped by `data-resource-id`: occurrence keys are event-scoped, not unique
+  // across rows, so an unscoped lookup could match a same-key copy rendered in
+  // a different row instead of the one being navigated to.
+  const focusEventInDom = (key: string, resourceId: string): boolean => {
     const scroller = scrollerRef.current;
     if (!scroller) {
       return false;
     }
-    const el = scroller.querySelector<HTMLElement>(`[data-occurrence-key="${CSS.escape(key)}"]`);
+    const el = scroller.querySelector<HTMLElement>(
+      `[data-resource-id="${CSS.escape(resourceId)}"] [data-occurrence-key="${CSS.escape(key)}"]`,
+    );
     if (el) {
       el.focus({ preventScroll: true });
       return true;
@@ -116,8 +116,9 @@ export function useEventTabNavigation(params: {
       // Focus isn't on an event; let the default Tab behavior handle row/cell moves.
       return false;
     }
-    const row = active.closest<HTMLElement>('[data-resource-id]');
-    const resourceId = row?.getAttribute('data-resource-id');
+    const resourceId = active
+      .closest<HTMLElement>('[data-resource-id]')
+      ?.getAttribute('data-resource-id');
     if (!resourceId) {
       return false;
     }
@@ -139,11 +140,13 @@ export function useEventTabNavigation(params: {
     // Scroll first so the target is in/near the viewport. If it's already mounted,
     // we focus directly; otherwise we queue the focus and the layout effect picks
     // it up once the virtualizer re-renders with the new column range.
+    // `next` comes from this same row's occurrence list, so it always belongs to
+    // `resourceId`.
     scrollEventIntoView(next);
-    if (focusEventInDom(next.key)) {
-      pendingFocusKeyRef.current = null;
+    if (focusEventInDom(next.key, resourceId)) {
+      pendingFocusRef.current = null;
     } else {
-      pendingFocusKeyRef.current = next.key;
+      pendingFocusRef.current = { key: next.key, resourceId };
     }
     return true;
   };
@@ -152,9 +155,9 @@ export function useEventTabNavigation(params: {
   // how virtualized-out events get focused once the scroll-driven re-render mounts
   // them. Stays a no-op when no focus is queued.
   React.useLayoutEffect(() => {
-    const key = pendingFocusKeyRef.current;
-    if (key && focusEventInDom(key)) {
-      pendingFocusKeyRef.current = null;
+    const pending = pendingFocusRef.current;
+    if (pending && focusEventInDom(pending.key, pending.resourceId)) {
+      pendingFocusRef.current = null;
     }
   });
 

@@ -91,12 +91,14 @@ export * from './scaleGuards';
 export * from './findMinMax';
 export * from './commonNextFocusItem';
 export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
+export { useRegisterItemActivation } from './useRegisterItemActivation';
 export { getSeriesColorFn } from './getSeriesColorFn';
 export { resolveColorProcessor } from './resolveColorProcessor';
 export { processLineLikeSeries } from './processLineLikeSeries';
 export { getLineLikeTooltip } from './getLineLikeTooltip';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
+export { useDefaultTickLabelStyle } from './useDefaultTickLabelStyle';
 export * from './plugins/utils/defaultSeriesConfig';
 export { EPSILON } from '../utils/epsilon';
 export {

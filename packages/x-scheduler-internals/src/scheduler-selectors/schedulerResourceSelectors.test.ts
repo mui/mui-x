@@ -1,4 +1,5 @@
 import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 
 storeClasses.forEach((storeClass) => {

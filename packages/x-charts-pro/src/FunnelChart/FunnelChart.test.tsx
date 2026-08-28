@@ -3,6 +3,7 @@ import { describeConformance } from 'test/utils/charts/describeConformance';
 import { FunnelChart, funnelClasses } from '@mui/x-charts-pro/FunnelChart';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 const config = {
   series: [{ data: [{ value: 200 }, { value: 100 }] }],
@@ -157,6 +158,29 @@ describe('FunnelChart', () => {
       const label = container.querySelector<SVGElement>(`.${funnelClasses.sectionLabel}`);
       expect(label).not.to.equal(null);
       expect(label).toHaveComputedStyle({ strokeDashoffset: '10px' });
+    });
+  });
+
+  describe.skipIf(isJSDOM)('keyboard navigation', () => {
+    it('should remove the focus indicator when the focused section is removed', async () => {
+      const { container, user, setProps } = render(
+        <FunnelChart
+          {...config}
+          series={[{ id: 'A', data: [{ value: 200 }, { value: 100 }, { value: 50 }] }]}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[ArrowRight]');
+
+      expect(container.querySelector('path[fill="none"]')).not.to.equal(null);
+
+      // Shrinking the data leaves the focus on a section that no longer exists.
+      setProps({ series: [{ id: 'A', data: [{ value: 200 }, { value: 100 }] }] });
+
+      expect(container.querySelector('path[fill="none"]')).to.equal(null);
     });
   });
 

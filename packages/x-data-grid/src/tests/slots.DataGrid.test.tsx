@@ -9,6 +9,7 @@ import { spy } from 'sinon';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import type { DataGridProps } from '@mui/x-data-grid';
 import { getCell, getRow, openLongTextViewPopup } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Slots', () => {
   const { render } = createRenderer();

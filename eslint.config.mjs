@@ -268,12 +268,6 @@ export default defineConfig(
       `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-chat{,-*}/**/*${EXTENSION_TS}`,
     ],
-    ignores: [
-      // Vendored copy of Base UI internals — keep in sync with upstream, don't edit.
-      // Base UI will be brought under this rule separately, after which this ignore
-      // can be lifted.
-      'packages/x-scheduler-internals/src/base-ui-copy/**',
-    ],
     rules: {
       '@typescript-eslint/consistent-type-imports': [
         'error',
@@ -363,8 +357,6 @@ export default defineConfig(
       // Codemods are jscodeshift AST transforms with no runtime subscriptions;
       // the only hits are chai assertions in a test-style file.
       'packages/x-codemod/**',
-      // Vendored copy of Base UI internals — keep in sync with upstream, don't edit.
-      'packages/x-scheduler-internals/src/base-ui-copy/**',
     ],
     languageOptions: {
       parserOptions: {
@@ -510,6 +502,8 @@ export default defineConfig(
     'x-charts',
     'x-charts-pro',
     'x-charts-premium',
+    'x-chat',
+    'x-chat-headless',
     'x-codemod',
     'x-data-grid',
     'x-data-grid-pro',
@@ -523,6 +517,8 @@ export default defineConfig(
     'x-scheduler-internals-premium',
     'x-tree-view',
     'x-tree-view-pro',
+    'x-internal-gestures',
+    'x-internals',
     'x-license',
     'x-telemetry',
   ].map((pkgName) => ({
@@ -568,14 +564,6 @@ export default defineConfig(
         }
       : {},
   ],
-
-  // We can't use the react-compiler plugin in the base-ui-utils folder because the Base UI team doesn't use it yet.
-  {
-    files: ['packages/x-scheduler-internals/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
-    rules: {
-      'react-compiler/react-compiler': 'off',
-    },
-  },
 
   {
     // TODO: typescript namespaces found to be harmful. Refactor to different patterns. More info: https://github.com/mui/mui-x/pull/19071

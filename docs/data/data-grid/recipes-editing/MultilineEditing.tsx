@@ -103,7 +103,7 @@ const multilineColumn: GridColTypeDef = {
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID' },
-  { field: 'username', headerName: 'Name', width: 150 },
+  { field: 'username', headerName: 'Name', width: 150, rowHeader: true },
   { field: 'age', headerName: 'Age', width: 80, type: 'number' },
   {
     field: 'bio',

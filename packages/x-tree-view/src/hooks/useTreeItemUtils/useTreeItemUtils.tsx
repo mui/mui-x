@@ -60,6 +60,7 @@ export const useTreeItemUtils = <
   const isExpanded = useStore(store, expansionSelectors.isItemExpanded, itemId);
   const isFocused = useStore(store, focusSelectors.isItemFocused, itemId);
   const isSelected = useStore(store, selectionSelectors.isItemSelected, itemId);
+  const isIndeterminate = useStore(store, selectionSelectors.isItemIndeterminate, itemId);
   const isDisabled = useStore(store, itemsSelectors.isItemDisabled, itemId);
   const isEditing = useStore(store, labelSelectors.isItemBeingEdited, itemId);
   const isEditable = useStore(store, labelSelectors.isItemEditable, itemId);
@@ -69,6 +70,7 @@ export const useTreeItemUtils = <
     expanded: isExpanded,
     focused: isFocused,
     selected: isSelected,
+    indeterminate: isIndeterminate,
     disabled: isDisabled,
     editing: isEditing,
     editable: isEditable,

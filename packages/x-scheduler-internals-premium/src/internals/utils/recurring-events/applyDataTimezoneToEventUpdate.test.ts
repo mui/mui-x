@@ -1,5 +1,6 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
+import { describe, it, expect } from 'vitest';
 import { applyDataTimezoneToEventUpdate } from './applyDataTimezoneToEventUpdate';
 
 describe('applyDataTimezoneToEventUpdate', () => {

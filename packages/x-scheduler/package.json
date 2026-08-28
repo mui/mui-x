@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler",
-  "version": "9.0.0-beta.5",
+  "version": "9.0.0-beta.10",
   "author": "MUI Team",
   "description": "The community edition of the Scheduler component (MUI X).",
   "license": "MIT",
@@ -20,6 +20,7 @@
     "./compact-week-view": "./src/compact-week-view/index.ts",
     "./day-view": "./src/day-view/index.ts",
     "./event-calendar": "./src/event-calendar/index.ts",
+    "./event-dialog": "./src/event-dialog/index.ts",
     "./models": "./src/models/index.ts",
     "./month-view": "./src/month-view/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
@@ -96,6 +97,7 @@
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-transition-group": "catalog:",
     "rimraf": "catalog:"
   },
   "engines": {

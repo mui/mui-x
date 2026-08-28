@@ -100,6 +100,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     className,
     classes: classesProp,
     sx,
+    ...other
   } = props;
 
   const translations = usePickerTranslations();
@@ -117,6 +118,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
 
   return (
     <DateTimePickerTabsRoot
+      {...other}
       ownerState={ownerState}
       variant="fullWidth"
       value={viewToTab(view!)}

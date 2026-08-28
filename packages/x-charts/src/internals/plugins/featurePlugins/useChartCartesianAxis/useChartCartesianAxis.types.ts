@@ -22,6 +22,7 @@ import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
 import type { UseChartBrushSignature } from '../useChartBrush';
 import type { SamplingState } from './sampling.types';
+import type { ChartsTextStyle } from '../../../getWordsByLines';
 
 /**
  * The axes' configuration after computing.
@@ -132,6 +133,8 @@ export interface UseChartCartesianAxisState {
     axesGap: number;
     x: DefaultedXAxis[];
     y: DefaultedYAxis[];
+    /** Only used to measure tick labels. Never merged into the rendered tick style. */
+    defaultTickLabelStyle?: ChartsTextStyle;
   };
   /**
    * The controlled axis item highlighted.

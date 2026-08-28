@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as childProcess from 'child_process';
 import { type Browser, chromium, type ConsoleMessage, type Page } from '@playwright/test';
 import fs from 'node:fs/promises';
-import { test as base } from 'vitest';
+import { describe, expect, it, test as base, afterAll, beforeEach, afterEach } from 'vitest';
 import { minimatch } from 'minimatch';
 
 declare global {
@@ -81,6 +81,11 @@ const TEST_RULES: RouteRule[] = [
     // Same async reprojection sentinel as MapImageProjections.
     waitForSelector: '[data-testid="map-images-ready"]',
   },
+  {
+    test: '/test-regressions-charts/ImageExportAutoSize',
+    // The exported image is screenshotted by a dedicated `test` block below.
+    enabled: false,
+  },
 
   // Overview composites embed desktop-breakpoint media queries that don't
   // match at the default 1000x700 viewport, leaving panes hidden in
@@ -95,7 +100,12 @@ const TEST_RULES: RouteRule[] = [
     // `aria-rowindex` is the absolute dataset position, so a mid-viewport row for
     // the restored scroll (top:2000, 52px rows => row ~41 => aria-rowindex 43)
     // only enters the DOM once the virtualizer has rendered the scrolled window.
-    waitForSelector: '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell',
+    // `rowheader` cells are kept mounted outside the horizontal render context at
+    // zero size, and the Commodity dataset marks one as such. Playwright only
+    // checks the first match for visibility, so exclude them to land on a cell
+    // that the virtualizer actually laid out.
+    waitForSelector:
+      '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell:not([role="rowheader"])',
   },
   {
     test: '/docs-data-grid-components-toolbar/GridToolbarCustom',
@@ -183,6 +193,14 @@ async function main() {
   });
 
   async function navigateToTest(page: Page, route: string) {
+    // Screenshots taken with fallback faces look like a repo-wide text rendering
+    // change. Wait here rather than at page creation: every caller is inside a
+    // test or hook, so vitest's timeouts cover it, and nothing that does not need
+    // fonts (route discovery, page setup) is blocked. It has to happen before the
+    // fixture mounts -- components that measure text at mount would otherwise
+    // bake in fallback metrics that the later font swap does not recompute.
+    await page.evaluate(() => window.muiFixture.fontsReady);
+
     // Use client-side routing which is much faster than full page navigation via page.goto().
     return page.evaluate((_route) => {
       window.muiFixture.navigate(_route);
@@ -589,6 +607,35 @@ async function main() {
       }
     });
 
+    it('should export a chart sized by its parent element as PNG', async () => {
+      const route = '/test-regressions-charts/ImageExportAutoSize';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
+
+      const page = await pool.acquire();
+      // The export catches its own errors and logs them, which would leave the download
+      // promise hanging until the test times out. Surface the error instead.
+      const { promise: exportError, reject } = Promise.withResolvers<never>();
+      const handler = (msg: ConsoleMessage) => {
+        if (msg.type() === 'error') {
+          reject(new Error(msg.text()));
+        }
+      };
+      page.on('console', handler);
+      try {
+        await navigateToTest(page, route);
+
+        const downloadPromise = page.waitForEvent('download');
+        await page.getByRole('button', { name: 'Export Image' }).click();
+
+        const download = await Promise.race([downloadPromise, exportError]);
+
+        await download.saveAs(screenshotPath);
+      } finally {
+        page.off('console', handler);
+        pool.release(page);
+      }
+    });
+
     it('should export a chart as PNG when page is zoomed in', async () => {
       const route = '/docs-charts-export/ExportChartAsImage';
       const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomedInPNG.png`);
@@ -786,8 +833,8 @@ async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}
   });
 
   const baseUrl = 'http://localhost:5001';
-  // Wait for all requests to finish.
-  // This should load shared resources such as fonts.
+  // Wait for all requests to finish. Fonts are awaited per navigation in
+  // `navigateToTest`, not here.
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
 
   await page.waitForFunction(() => window.muiFixture?.isReady);

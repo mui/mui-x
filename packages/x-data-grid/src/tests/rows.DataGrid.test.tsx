@@ -42,6 +42,7 @@ import {
 import Dialog from '@mui/material/Dialog';
 import { isJSDOM } from 'test/utils/skipIf';
 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
 import type { GridApiCommunity } from '../models/api/gridApiCommunity';
 
@@ -1579,6 +1580,174 @@ describe('<DataGrid /> - Rows', () => {
           'Please remove one of these two props.',
         ].join('\n'),
       );
+    });
+
+    describe('prototype preservation on updateRows', () => {
+      it('should preserve the prototype of a class instance when updated with a plain-object partial', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          constructor(id: number, brand: string) {
+            this.id = id;
+            this.brand = brand;
+          }
+          getBrand() {
+            return this.brand;
+          }
+        }
+
+        const classRows = [
+          new BrandRow(0, 'Nike'),
+          new BrandRow(1, 'Adidas'),
+          new BrandRow(2, 'Puma'),
+        ];
+        const { rerender } = render(<TestCase rows={classRows} />);
+        // Plain-object partial update — oldRow is a class instance, partialRow is plain
+        await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        expect(updatedRow instanceof BrandRow).to.equal(true);
+        expect(typeof updatedRow.getBrand).to.equal('function');
+        expect(updatedRow.getBrand()).to.equal('Fila');
+        rerender(<TestCase rows={classRows} />);
+      });
+
+      it('should use the partialRow prototype when partialRow is a class instance', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          constructor(id: number, brand: string) {
+            this.id = id;
+            this.brand = brand;
+          }
+          getBrand() {
+            return this.brand;
+          }
+        }
+
+        const plainRows = [
+          { id: 0, brand: 'Nike' },
+          { id: 1, brand: 'Adidas' },
+          { id: 2, brand: 'Puma' },
+        ];
+        const { rerender } = render(<TestCase rows={plainRows} />);
+        // Class-instance partial update — oldRow is plain, partialRow is a class instance
+        await act(async () => apiRef.current?.updateRows([new BrandRow(1, 'Fila')]));
+
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        expect(updatedRow instanceof BrandRow).to.equal(true);
+        expect(typeof updatedRow.getBrand).to.equal('function');
+        expect(updatedRow.getBrand()).to.equal('Fila');
+        rerender(<TestCase rows={plainRows} />);
+      });
+
+      it('should produce a plain object when both oldRow and partialRow are plain objects', async () => {
+        render(<TestCase />);
+        await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+
+        const updatedRow = apiRef.current?.getRow(1);
+        expect(Object.getPrototypeOf(updatedRow)).to.equal(Object.prototype);
+        expect((updatedRow as any).brand).to.equal('Fila');
+      });
+    });
+
+    describe('_action: "replace" on updateRows', () => {
+      it('should store the row as-is, bypassing the Object.assign merge', async () => {
+        class Person {
+          id: number;
+          firstName: string;
+          #salary: number;
+          constructor(id: number, firstName: string, salary: number) {
+            this.id = id;
+            this.firstName = firstName;
+            this.#salary = salary;
+          }
+          get salaryBand() {
+            return this.#salary > 100_000 ? 'senior' : 'junior';
+          }
+        }
+
+        const rows = [new Person(0, 'Grace', 90_000), new Person(1, 'Ada', 80_000)];
+        render(<TestCase rows={rows} />);
+
+        const replacement = new Person(1, 'Ada', 120_000);
+        await act(async () =>
+          apiRef.current?.updateRows([{ _action: 'replace', row: replacement }]),
+        );
+
+        const updatedRow = apiRef.current?.getRow(1) as Person;
+        // Reference identity is preserved: it's literally the same instance, not a copy.
+        expect(updatedRow).to.equal(replacement);
+        // Reading a #private field would throw a brand-check TypeError on a merged copy.
+        expect(updatedRow.salaryBand).to.equal('senior');
+        // The marker lives on the envelope, the instance itself is never touched.
+        expect('_action' in replacement).to.equal(false);
+      });
+
+      it('should insert a new row as-is when the id does not exist yet', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          constructor(id: number, brand: string) {
+            this.id = id;
+            this.brand = brand;
+          }
+        }
+
+        render(<TestCase />);
+        const newRow = new BrandRow(99, 'Salomon');
+        await act(async () => apiRef.current?.updateRows([{ _action: 'replace', row: newRow }]));
+
+        expect(apiRef.current?.getRow(99)).to.equal(newRow);
+      });
+
+      it('should preserve identity when processRowUpdate returns a replace update after an edit', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          #revision: number;
+          constructor(id: number, brand: string, revision = 0) {
+            this.id = id;
+            this.brand = brand;
+            this.#revision = revision;
+          }
+          withBrand(brand: string) {
+            return new BrandRow(this.id, brand, this.#revision + 1);
+          }
+          get revision() {
+            return this.#revision;
+          }
+        }
+
+        const classRows = [new BrandRow(0, 'Nike'), new BrandRow(1, 'Adidas')];
+        let replacement: BrandRow | undefined;
+        render(
+          <TestCase
+            rows={classRows}
+            columns={[{ field: 'brand', editable: true }]}
+            processRowUpdate={(newRow, oldRow: BrandRow) => {
+              // The draft `newRow` is a plain object, so rebuild a proper instance from it.
+              replacement = oldRow.withBrand(newRow.brand);
+              return { _action: 'replace', row: replacement };
+            }}
+          />,
+        );
+
+        await act(async () => apiRef.current?.startCellEditMode({ id: 1, field: 'brand' }));
+        await act(async () =>
+          apiRef.current?.setEditCellValue({ id: 1, field: 'brand', value: 'Fila' }),
+        );
+        await act(async () => apiRef.current?.stopCellEditMode({ id: 1, field: 'brand' }));
+
+        await waitFor(() => {
+          // The instance returned in the envelope is stored verbatim.
+          expect(apiRef.current?.getRow(1)).to.equal(replacement);
+        });
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        expect(updatedRow.brand).to.equal('Fila');
+        // #private state survives the edit because the stored row is the instance itself.
+        expect(updatedRow.revision).to.equal(1);
+      });
     });
   });
 

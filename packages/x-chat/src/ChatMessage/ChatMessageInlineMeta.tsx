@@ -1,11 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { MessageMeta } from '@mui/x-chat-headless';
-import type { MessageMetaProps } from '@mui/x-chat-headless';
-import DoneIcon from '@mui/icons-material/Done';
-import DoneAllIcon from '@mui/icons-material/DoneAll';
+import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-headless';
 import { styled } from '../internals/zero-styled';
+import { DefaultDoneIcon, DefaultDoneAllIcon } from '../icons/icons';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { chatMessageClasses } from './chatMessageClasses';
 
@@ -87,8 +85,8 @@ const InlineStatusSlot = React.forwardRef<HTMLSpanElement, any>(function InlineS
 
   return (
     <InlineStatusStyled ref={ref} {...other}>
-      {isSent && <DoneIcon sx={{ fontSize: '1em' }} aria-hidden="true" />}
-      {isRead && <DoneAllIcon sx={{ fontSize: '1em' }} aria-hidden="true" />}
+      {isSent && <DefaultDoneIcon fontSize="inherit" />}
+      {isRead && <DefaultDoneAllIcon fontSize="inherit" />}
       {!isSent && !isRead && children}
     </InlineStatusStyled>
   );

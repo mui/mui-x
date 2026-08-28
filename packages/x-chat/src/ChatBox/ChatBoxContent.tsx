@@ -42,10 +42,12 @@ import type {
 } from './ChatBox.types';
 import { useChatSlots } from '../internals/ChatSlotsContext';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
-import DefaultSendIcon from '../icons/DefaultSendIcon';
-import DefaultAttachIcon from '../icons/DefaultAttachIcon';
-import DefaultMenuIcon from '../icons/DefaultMenuIcon';
-import DefaultCloseIcon from '../icons/DefaultCloseIcon';
+import {
+  DefaultSendIcon,
+  DefaultAttachIcon,
+  DefaultMenuIcon,
+  DefaultCloseIcon,
+} from '../icons/icons';
 
 const DEFAULT_OVERLAY_BREAKPOINT = 600;
 const DEFAULT_SPLIT_BREAKPOINT = 450;
@@ -330,7 +332,7 @@ function DefaultConversationHeader({
             onClick={onMenuClick}
             sx={{ mr: 1 }}
           >
-            <DefaultMenuIcon />
+            <DefaultMenuIcon fontSize="inherit" />
           </IconButton>
         </Tooltip>
       )}
@@ -492,7 +494,7 @@ function DefaultComposer({ features }: { features?: ChatBoxFeatures }) {
             aria-label={localeText.composerAttachButtonLabel}
             {...(slotProps.composerAttachButton ?? {})}
           >
-            <DefaultAttachIcon />
+            <DefaultAttachIcon fontSize="inherit" />
           </ComposerAttachButtonComponent>
         )}
         <ComposerInputComponent
@@ -513,7 +515,7 @@ function DefaultComposer({ features }: { features?: ChatBoxFeatures }) {
               aria-label={localeText.composerSendButtonLabel}
               {...(slotProps.composerSendButton ?? {})}
             >
-              <DefaultSendIcon />
+              <DefaultSendIcon fontSize="inherit" />
             </ComposerSendButtonComponent>
           </ComposerToolbarComponent>
         )}
@@ -537,7 +539,7 @@ function DefaultComposer({ features }: { features?: ChatBoxFeatures }) {
             aria-label={localeText.composerAttachButtonLabel}
             {...(slotProps.composerAttachButton ?? {})}
           >
-            <DefaultAttachIcon />
+            <DefaultAttachIcon fontSize="inherit" />
           </ComposerAttachButtonComponent>
         )}
         {showSendButton && (
@@ -545,7 +547,7 @@ function DefaultComposer({ features }: { features?: ChatBoxFeatures }) {
             aria-label={localeText.composerSendButtonLabel}
             {...(slotProps.composerSendButton ?? {})}
           >
-            <DefaultSendIcon />
+            <DefaultSendIcon fontSize="inherit" />
           </ComposerSendButtonComponent>
         )}
       </ComposerToolbarComponent>
@@ -960,7 +962,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
                       onClick={handleDrawerClose}
                       ref={drawerCloseButtonRef}
                     >
-                      <DefaultCloseIcon />
+                      <DefaultCloseIcon fontSize="inherit" />
                     </IconButton>
                   </Tooltip>
                 </ChatBoxDrawerHeader>

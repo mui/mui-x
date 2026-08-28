@@ -17,6 +17,7 @@ import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test
 import { getCell, getRow, spyApi, sleep } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import type { SinonSpy } from 'sinon';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 /**
  * Creates a date that is compatible with years before 1901
@@ -383,6 +384,29 @@ describe('<DataGridPro /> - Edit components', () => {
         new Date(2022, 1, 10).toISOString(),
       );
     });
+
+    // https://github.com/mui/mui-x/issues/23414
+    it('should call onValueChange after setEditCellValue', async () => {
+      const onValueChange = spy();
+
+      defaultData.columns[0].renderEditCell = (params) =>
+        renderEditDateCell({ ...params, onValueChange });
+
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const input = cell.querySelector('input')!;
+      await user.type(input, '2022-02-10', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 10,
+      });
+
+      expect(onValueChange.callCount).to.equal(1);
+      expect(spiedSetEditCellValue.firstCall.calledBefore(onValueChange.firstCall)).to.equal(true);
+    });
   });
 
   describe('column type: dateTime', () => {
@@ -641,6 +665,24 @@ describe('<DataGridPro /> - Edit components', () => {
       expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
     });
 
+    // https://github.com/mui/mui-x/issues/23414
+    it('should call onValueChange after setEditCellValue', async () => {
+      const onValueChange = spy();
+
+      defaultData.columns[0].renderEditCell = (params) =>
+        renderEditSingleSelectCell({ ...params, onValueChange });
+
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+      await user.click(screen.queryAllByRole('option')[1]);
+
+      expect(onValueChange.callCount).to.equal(1);
+      expect(spiedSetEditCellValue.firstCall.calledBefore(onValueChange.firstCall)).to.equal(true);
+    });
+
     it('should call onCellEditStop', async () => {
       const onCellEditStop = spy();
 
@@ -715,6 +757,26 @@ describe('<DataGridPro /> - Edit components', () => {
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal(true);
+    });
+
+    // https://github.com/mui/mui-x/issues/23414
+    it('should call onValueChange after setEditCellValue', async () => {
+      const onValueChange = spy();
+
+      defaultData.columns[0].renderEditCell = (params) =>
+        renderEditBooleanCell({ ...params, onValueChange });
+
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const input = within(cell).getByRole<HTMLInputElement>('checkbox');
+      await user.click(input);
+
+      expect(onValueChange.callCount).to.equal(1);
+      expect(spiedSetEditCellValue.firstCall.calledBefore(onValueChange.firstCall)).to.equal(true);
     });
   });
 
@@ -871,6 +933,27 @@ describe('<DataGridPro /> - Edit components', () => {
 
       expect(onValueChange.callCount).to.be.greaterThan(0);
       expect(onValueChange.lastCall.args[1]).to.deep.equal(['Option 1', 'Option 2']);
+    });
+
+    // https://github.com/mui/mui-x/issues/23414
+    it('should call onValueChange after setEditCellValue', async () => {
+      const onValueChange = spy();
+
+      defaultData.columns[0].renderEditCell = (params) =>
+        renderEditMultiSelectCell({ ...params, onValueChange });
+
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      const option2 = within(listbox).getByRole('option', { name: 'Option 2' });
+      await user.click(option2);
+
+      expect(onValueChange.callCount).to.equal(1);
+      expect(spiedSetEditCellValue.firstCall.calledBefore(onValueChange.firstCall)).to.equal(true);
     });
 
     it('should work with null initial value', async () => {

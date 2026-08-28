@@ -6,7 +6,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
+import { GRID_ROOT_GROUP_ID, getReplaceRow, isReplaceUpdate } from '../rows/gridRowsUtils';
 import type { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
@@ -16,7 +16,10 @@ import {
   gridVisibleRowsSelector,
 } from '../pagination/gridPaginationSelector';
 import { gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { gridColumnLookupSelector } from '../columns';
+import { removeIncompleteFilterItems } from '../filter/gridFilterUtils';
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
+import { useGridDataSourceFilterModelChange } from './useGridDataSourceFilterModelChange';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
 import { GridDataSourceCacheDefault } from './cache';
 import type { GridDataSourceCacheDefaultConfig } from './cache';
@@ -81,6 +84,11 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
+  // `false` while a request is in flight, and for any request that errors or is discarded as
+  // stale. Lets the mount effect tell "rows are already displayed" from "the fetch never landed".
+  const rowsAreUpToDate = React.useRef(false);
+  // Requests that are still running and will apply their response when they settle.
+  const pendingRequestCount = React.useRef(0);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
   const onDataSourceErrorProp = props.onDataSourceError;
@@ -117,6 +125,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
         ...getRowsParams,
       };
+      // The selector prunes the incomplete items, but a caller passing its own `filterModel`
+      // overrides it, so prune again on the merged params.
+      fetchParams.filterModel = removeIncompleteFilterItems(
+        fetchParams.filterModel,
+        gridColumnLookupSelector(apiRef),
+      );
 
       if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
         options.fetchRowChildren?.([parentId], [fetchParams], showChildrenLoading);
@@ -137,6 +151,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           fetchParams,
           options: { skipCache, keepChildrenExpanded },
         });
+        rowsAreUpToDate.current = true;
         if (standardRowsUpdateStrategyActive) {
           apiRef.current.setLoading(false);
         }
@@ -150,6 +165,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       const requestId = lastRequestId.current + 1;
       lastRequestId.current = requestId;
+      rowsAreUpToDate.current = false;
+      pendingRequestCount.current += 1;
 
       try {
         const getRowsResponse = await getRows(fetchParams);
@@ -163,6 +180,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
             fetchParams,
             options: { skipCache, keepChildrenExpanded },
           });
+          rowsAreUpToDate.current = true;
         }
       } catch (originalError) {
         if (lastRequestId.current === requestId) {
@@ -191,6 +209,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           }
         }
       } finally {
+        pendingRequestCount.current -= 1;
         if (standardRowsUpdateStrategyActive && lastRequestId.current === requestId) {
           apiRef.current.setLoading(false);
         }
@@ -340,16 +359,26 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       try {
         const finalRowUpdate = await dataSourceUpdateRow(params);
-        if (typeof handleEditRowOption === 'function') {
-          handleEditRowOption(params, finalRowUpdate);
-          return finalRowUpdate;
-        }
-        if (finalRowUpdate && !isDeepEqual(finalRowUpdate, params.previousRow)) {
+        // `dataSource.updateRow()` can resolve with a `{ _action: 'replace', row }` update.
+        // The row update methods unwrap it themselves, everything else works with the row it
+        // holds: comparing the envelope with the previous row would never match.
+        const updatedRow =
+          finalRowUpdate && isReplaceUpdate(finalRowUpdate)
+            ? getReplaceRow(finalRowUpdate)
+            : finalRowUpdate;
+
+        if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
           // Reset the outdated cache, only if the row is _actually_ updated
           apiRef.current.dataSource.cache.clear();
         }
-        apiRef.current.updateNestedRows([finalRowUpdate], []);
-        return finalRowUpdate;
+
+        if (typeof handleEditRowOption === 'function') {
+          handleEditRowOption(params, finalRowUpdate);
+        } else {
+          apiRef.current.updateNestedRows([finalRowUpdate], []);
+        }
+
+        return updatedRow;
       } catch (errorThrown) {
         if (typeof onDataSourceErrorProp === 'function') {
           onDataSourceErrorProp(
@@ -407,6 +436,19 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     debouncedFetchRows();
   }, [apiRef, props.dataSourceKeepPreviousData, stopPolling, debouncedFetchRows]);
 
+  const hasFilterModelChanged = useGridDataSourceFilterModelChange(apiRef);
+  const handleFetchRowsOnFilterModelChange = React.useCallback<
+    GridEventListener<'filterModelChange'>
+  >(
+    (newFilterModel) => {
+      if (!hasFilterModelChanged(newFilterModel)) {
+        return;
+      }
+      handleFetchRowsOnParamsChange();
+    },
+    [hasFilterModelChanged, handleFetchRowsOnParamsChange],
+  );
+
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (isFirstRender.current) {
@@ -434,7 +476,20 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   React.useEffect(() => stopPolling, [stopPolling]);
 
+  const lastApiRef = React.useRef(apiRef);
+  const lastStrategy = React.useRef(currentStrategy);
+  const lastDataSource = React.useRef(props.dataSource);
+
   React.useEffect(() => {
+    // `<Activity mode="hidden">` leaves the root element in the document, a real unmount does not.
+    // Only discard the in-flight response in the latter case, so hiding lets the request land.
+    const rootElement = apiRef.current?.rootElementRef?.current ?? null;
+    const ignoreInFlightRequest = () => {
+      if (!rootElement?.isConnected) {
+        lastRequestId.current += 1;
+      }
+    };
+
     // Return early if the proper strategy isn't set yet
     // Context: https://github.com/mui/mui-x/issues/19650
     if (
@@ -445,6 +500,22 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     ) {
       return undefined;
     }
+
+    const dependenciesChanged =
+      lastApiRef.current !== apiRef ||
+      lastStrategy.current !== currentStrategy ||
+      lastDataSource.current !== props.dataSource;
+
+    lastApiRef.current = apiRef;
+    lastStrategy.current = currentStrategy;
+    lastDataSource.current = props.dataSource;
+
+    // Re-mounting the effect (`<Activity />` becoming visible again, for instance) must not
+    // re-fetch data that is already displayed.
+    if (!dependenciesChanged && (rowsAreUpToDate.current || pendingRequestCount.current > 0)) {
+      return ignoreInFlightRequest;
+    }
+
     if (props.dataSource) {
       stopPolling();
       // `dataSourceKeepPreviousData` only applies to the flat `Default` strategy (mirroring
@@ -462,10 +533,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       apiRef.current.dataSource.fetchRows();
     }
 
-    return () => {
-      // ignore the current request on unmount
-      lastRequestId.current += 1;
-    };
+    return ignoreInFlightRequest;
   }, [apiRef, props.dataSource, props.dataSourceKeepPreviousData, currentStrategy, stopPolling]);
 
   React.useEffect(() => {
@@ -502,7 +570,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
       sortModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
-      filterModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
+      filterModelChange: runIf(
+        standardRowsUpdateStrategyActive,
+        handleFetchRowsOnFilterModelChange,
+      ),
       paginationModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
     },
   };

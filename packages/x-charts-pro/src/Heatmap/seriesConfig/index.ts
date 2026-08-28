@@ -7,6 +7,7 @@ import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import { selectorTooltipItemPosition } from './tooltipPosition';
 import getItemAtPosition from './getItemAtPosition';
+import getItemWithData from './getItemWithData';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { createIsFaded, createIsHighlighted } from './highlight';
 import identifierSerializer from './identifierSerializer';
@@ -27,6 +28,7 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   identifierSerializer,
   identifierCleaner,
   getItemAtPosition,
+  getItemWithData,
   keyboardFocusHandler,
   descriptionGetter,
   isHighlightedCreator: createIsHighlighted,

@@ -7,17 +7,24 @@ import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { EventManager } from '@mui/x-internals/EventManager';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
   TemporalSupportedObject,
+  TemporalTimezone,
   SchedulerEventUpdatedProperties,
   RecurringEventScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
+  SchedulerSelection,
+  SchedulerRenderableEventOccurrence,
+  SchedulerEventOccurrence,
+  SchedulerEventOccurrencePlaceholder,
 } from '../../../models';
 import type {
   SchedulerState,
@@ -28,8 +35,12 @@ import type {
   SchedulerModelUpdater,
   UpdateEventsParameters,
   SchedulerInstanceName,
+  SchedulerEditingMode,
+  SchedulerEventEditingStartEventDetails,
 } from './SchedulerStore.types';
+import { processDate } from '../../../process-date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
 import type {
   SchedulerEvents,
   SchedulerEventListener,
@@ -41,15 +52,21 @@ import {
   buildEventsState,
   buildResourcesState,
   createEventModel,
+  getCustomEventProperties,
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { dateToEventString } from '../date-utils';
+import { getOccurrenceKey, getRecurringOccurrenceKey } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
-import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
+
+/**
+ * How long a transient error stays in `state.errors` before dismissing itself.
+ */
+const TRANSIENT_ERROR_DURATION_MS = 5000;
 
 export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
   ampm: true,
@@ -89,6 +106,11 @@ export class SchedulerStore<
 
   private eventManager = this.disposables.adopt(new EventManager(), (m) => m.removeAllListeners());
 
+  /**
+   * Plugin that provides event-scheduling support (dependencies). `null` when not attached.
+   */
+  protected schedulingPlugin: SchedulerSchedulingPluginInterface | null = null;
+
   public constructor(
     parameters: Parameters,
     adapter: Adapter,
@@ -102,18 +124,20 @@ export class SchedulerStore<
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...(parameters.dataSource
         ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
-        : buildEventsState(
-            parameters,
+        : buildEventsState({
+            events: parameters.events,
+            eventModelStructure: parameters.eventModelStructure,
             adapter,
-            stateFromParameters.displayTimezone,
+            displayTimezone: stateFromParameters.displayTimezone,
             recurringEventsPlugin,
-          )),
+          })),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      editedOccurrenceKey: null,
+      editingOccurrence: null,
       copiedEvent: null,
+      selection: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
       pendingRecurringEventOperation: null,
       visibleResources:
@@ -135,6 +159,15 @@ export class SchedulerStore<
     this.parameters = parameters;
     this.instanceName = instanceName;
     this.mapper = mapper;
+
+    // The edited occurrence is a snapshot, so a date change can leave its toolbar acting on an event
+    // that is no longer on screen. Timestamp, not the object: a re-passed equal date is not a change.
+    this.disposables.defer(
+      this.registerStoreEffect(
+        (state) => state.adapter.getTime(state.visibleDate),
+        this.stopEditing,
+      ),
+    );
 
     const currentDate = new Date();
     const timeUntilNextMinuteMs =
@@ -222,16 +255,18 @@ export class SchedulerStore<
       !parameters.dataSource &&
       (parameters.events !== this.parameters.events ||
         parameters.eventModelStructure !== this.parameters.eventModelStructure ||
-        adapter !== this.state.adapter)
+        adapter !== this.state.adapter ||
+        newSchedulerState.displayTimezone !== this.state.displayTimezone)
     ) {
       Object.assign(
         newSchedulerState,
-        buildEventsState(
-          parameters,
+        buildEventsState({
+          events: parameters.events,
+          eventModelStructure: parameters.eventModelStructure,
           adapter,
-          newSchedulerState.displayTimezone!,
-          this.state.recurringEventsPlugin,
-        ),
+          displayTimezone: newSchedulerState.displayTimezone!,
+          previousState: this.state,
+        }),
       );
     }
     // Recompute "now" only when the display timezone changes; the minute timer maintains it otherwise.
@@ -282,10 +317,25 @@ export class SchedulerStore<
   }
 
   /**
-   * Removes the error with the given key from `state.errors`.
+   * Selects an entity, or clears the selection when called with `null`. A single
+   * slice shared by every selectable type keeps the selection mutually exclusive
+   * across features.
+   */
+  public setSelection = (selection: SchedulerSelection | null) => {
+    if (isDeepEqual(this.state.selection, selection)) {
+      return;
+    }
+    this.set('selection', selection);
+  };
+
+  /**
+   * Removes the error with the given key from `state.errors`, canceling its
+   * auto-dismiss timer if it was transient.
    * The key is the one carried by the matching `StoredError` entry.
    */
   public dismissError = (key: string) => {
+    this.timeoutManager.clearTimeout(`transient-error-${key}`);
+    this.transientErrorKeys.delete(key);
     this.set(
       'errors',
       this.state.errors.filter((entry) => entry.key !== key),
@@ -294,21 +344,45 @@ export class SchedulerStore<
 
   private nextErrorKey = 0;
 
+  private transientErrorKeys = new Set<string>();
+
   /**
    * Appends an error to `state.errors`, wrapping non-Error rejections to preserve
    * the original payload via `cause`. The store owns the key counter so uniqueness
    * is enforced in one place. Does not dedupe — pushing the same `Error` instance
    * twice produces two entries (intentional; e.g. a retried failure that should
    * re-display after the previous one was dismissed).
+   * With `transient: true` the entry behaves as gesture feedback instead of a
+   * failure that must stay until acknowledged: it replaces a previous transient
+   * entry carrying the same message (refreshing its timer) rather than stacking,
+   * and dismisses itself after `TRANSIENT_ERROR_DURATION_MS`.
+   * Returns the entry's key, so the caller can `dismissError` it later.
    * @internal
    */
-  public pushError = (error: unknown) => {
+  public pushError = (error: unknown, options?: { transient?: boolean }): string => {
     const wrapped =
       error instanceof Error
         ? error
         : /* minify-error-disabled */ new Error(String(error), { cause: error });
+    if (options?.transient) {
+      const existing = this.state.errors.find(
+        (entry) =>
+          this.transientErrorKeys.has(entry.key) && entry.error.message === wrapped.message,
+      );
+      if (existing !== undefined) {
+        this.dismissError(existing.key);
+      }
+    }
     this.nextErrorKey += 1;
-    this.set('errors', [...this.state.errors, { error: wrapped, key: String(this.nextErrorKey) }]);
+    const key = String(this.nextErrorKey);
+    this.set('errors', [...this.state.errors, { error: wrapped, key }]);
+    if (options?.transient) {
+      this.transientErrorKeys.add(key);
+      this.timeoutManager.startTimeout(`transient-error-${key}`, TRANSIENT_ERROR_DURATION_MS, () =>
+        this.dismissError(key),
+      );
+    }
+    return key;
   };
 
   /**
@@ -423,14 +497,31 @@ export class SchedulerStore<
     const createdIds: SchedulerEventId[] = [];
     const createdEvents: TEvent[] = [];
     for (const createdEvent of created) {
+      // Events created from an existing one (split, duplicate, paste) inherit its custom fields.
+      const source =
+        createdEvent.extractedFromId == null
+          ? undefined
+          : originalEventModelLookup.get(createdEvent.extractedFromId);
       const response = createEventModel(
-        createdEvent,
+        source ? { ...getCustomEventProperties(source), ...createdEvent } : createdEvent,
         this.state.eventModelStructure,
         this.state.adapter,
       );
       newEvents.push(response.model);
       createdEvents.push(response.model);
       createdIds.push(response.id);
+    }
+
+    this.schedulingPlugin?.handleEventsUpdate(parameters);
+
+    if (process.env.NODE_ENV !== 'production') {
+      if (!this.parameters.onEventsChange && !this.parameters.dataSource) {
+        warnOnce([
+          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+          'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
+          'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
+        ]);
+      }
     }
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
@@ -608,7 +699,39 @@ export class SchedulerStore<
         scope,
       );
     }
-    this.updateEvents(updatedEvents);
+    const { created: createdIds } = this.updateEvents(updatedEvents);
+
+    // Keep the edited occurrence in sync after a scope-dialog resize, so the armed toolbar + selection
+    // highlight (and a later edit) follow the resized occurrence instead of a now-stale occurrence key.
+    if (pendingRecurringEventOperation.kind === 'update') {
+      const { start, end } = pendingRecurringEventOperation.changes;
+      // Only repoint when the resized occurrence is the armed one, else a sibling drag hijacks the surface.
+      const { editingOccurrence } = this.state;
+      const resizedOccurrenceKey = getRecurringOccurrenceKey(
+        eventId,
+        occurrenceStartInDataTimezone,
+        adapter,
+      );
+      const isEditingResizedOccurrence = editingOccurrence?.occurrence.key === resizedOccurrenceKey;
+      if (isEditingResizedOccurrence && start != null && end != null) {
+        // `only-this` / `this-and-following` move the occurrence onto a freshly-created event, changing
+        // its key; `all` edits the series in place, keeping the same key (only the times need a refresh).
+        const movedToEvent = updatedEvents.created?.[0];
+        const movedToEventId = createdIds[0];
+        if (movedToEvent != null && movedToEventId != null) {
+          this.repointEditingOccurrence(
+            movedToEventId,
+            start,
+            end,
+            movedToEvent.rrule != null,
+            // The moved-to event splits from the same series, so it keeps the original data timezone.
+            original.dataTimezone.timezone,
+          );
+        } else {
+          this.setEditingOccurrenceTimes(start, end);
+        }
+      }
+    }
 
     if (onSubmit) {
       queueMicrotask(() => onSubmit());
@@ -770,19 +893,194 @@ export class SchedulerStore<
   /**
    * Sets the occurrence placeholder to render while creating a new event or dragging an existing event occurrence.
    */
-  public setOccurrencePlaceholder = (newPlaceholder: SchedulerOccurrencePlaceholder | null) => {
+  public setOccurrencePlaceholder = (
+    newPlaceholder: SchedulerOccurrencePlaceholder | null,
+    event?: Event,
+  ) => {
     const { adapter, occurrencePlaceholder: previous } = this.state;
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
+      this.occurrencePlaceholderEvent = newPlaceholder == null ? undefined : event;
       this.set('occurrencePlaceholder', newPlaceholder);
     }
   };
 
   /**
-   * Sets the key of the currently active occurrence (e.g. open in the event dialog).
-   * Pass `null` to clear the active occurrence.
+   * Native event that initiated the current placeholder, forwarded to `onEventEditingStart`
+   * when the creation flow reaches `startEditing` (which runs in an effect, past the DOM event).
    */
-  public setEditedOccurrenceKey = (occurrenceKey: string | null) => {
-    this.set('editedOccurrenceKey', occurrenceKey);
+  private occurrencePlaceholderEvent: Event | undefined;
+
+  /**
+   * Runs `onEventEditingStart` right before the editing surface (dialog or drawer) opens. Arming
+   * does not go through here — only the transitions that actually open the surface do.
+   * Returns `false` when the handler canceled, cleaning up a pending creation draft.
+   */
+  private requestEditingStart(
+    occurrence: SchedulerRenderableEventOccurrence,
+    event?: Event,
+    trigger?: HTMLElement,
+    anchor?: HTMLElement,
+  ): boolean {
+    const isCreation = this.state.occurrencePlaceholder?.type === 'creation';
+    // Callers whose trigger a cancellation would unmount pass a dedicated `anchor` that survives it;
+    // everywhere else the trigger doubles as the positioning anchor.
+    const resolvedAnchor = anchor ?? trigger;
+    // The casts encode the runtime correlation the type system can't prove: a creation always
+    // edits the draft placeholder, anything else edits a real occurrence.
+    let eventDetails: SchedulerEventEditingStartEventDetails;
+    if (isCreation) {
+      eventDetails = createChangeEventDetails(
+        'creation',
+        event ?? this.occurrencePlaceholderEvent,
+        trigger,
+        {
+          occurrence: occurrence as SchedulerEventOccurrencePlaceholder,
+          anchor: resolvedAnchor,
+        },
+      );
+    } else {
+      // The dialog renders view-only content for read-only occurrences — surface that as its own reason.
+      const reason = schedulerEventSelectors.isReadOnly(this.state, occurrence.id)
+        ? 'view'
+        : 'edit';
+      eventDetails = createChangeEventDetails(reason, event, trigger, {
+        occurrence: occurrence as SchedulerEventOccurrence,
+        anchor: resolvedAnchor,
+      });
+    }
+    this.parameters.onEventEditingStart?.(occurrence, eventDetails);
+    if (eventDetails.isCanceled) {
+      // Canceled during a creation: the draft placeholder already exists — drop it.
+      if (isCreation) {
+        this.setOccurrencePlaceholder(null);
+      }
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Marks an occurrence (existing or creation draft) as the one being edited, running
+   * `onEventEditingStart` first when the mode opens the editing surface.
+   * Returns `false` when the handler canceled and nothing was recorded.
+   * Repeat calls for an occurrence already open in the surface are no-ops that return `true`.
+   */
+  public startEditing = (
+    occurrence: SchedulerRenderableEventOccurrence,
+    mode: SchedulerEditingMode = 'edit',
+    event?: Event,
+    trigger?: HTMLElement,
+    anchor?: HTMLElement,
+  ): boolean => {
+    const current = this.state.editingOccurrence;
+    // Creation effects re-run on placeholder churn: once the surface is open for this occurrence,
+    // repeat calls are no-ops so the consumer callback stays one-shot per activation.
+    if (mode === 'edit' && current?.mode === 'edit' && current.occurrence.key === occurrence.key) {
+      return true;
+    }
+    if (mode === 'edit' && !this.requestEditingStart(occurrence, event, trigger, anchor)) {
+      return false;
+    }
+    this.set('editingOccurrence', { occurrence, mode });
+    return true;
+  };
+
+  /**
+   * Switches the edited occurrence between the armed state (toolbar + resize) and the editing form,
+   * keeping the same occurrence. No-op when nothing is being edited.
+   */
+  public setEditingMode = (
+    mode: SchedulerEditingMode,
+    event?: Event,
+    trigger?: HTMLElement,
+    anchor?: HTMLElement,
+  ) => {
+    const { editingOccurrence } = this.state;
+    if (editingOccurrence == null || editingOccurrence.mode === mode) {
+      return;
+    }
+    // Armed → edit opens the surface (e.g. the armed toolbar's Edit action). Canceling disarms:
+    // the armed state keeps document-wide guards (scroll block, outside-pointer capture) that must
+    // not stay active under the custom UI the consumer opens instead.
+    if (
+      mode === 'edit' &&
+      !this.requestEditingStart(editingOccurrence.occurrence, event, trigger, anchor)
+    ) {
+      this.stopEditing();
+      return;
+    }
+    this.set('editingOccurrence', { ...editingOccurrence, mode });
+  };
+
+  /**
+   * Refreshes the edited occurrence's times so a later edit (e.g. opening the form from the armed
+   * toolbar) reflects a just-committed change such as a resize. No-op when nothing is being edited.
+   */
+  public setEditingOccurrenceTimes = (
+    start: TemporalSupportedObject,
+    end: TemporalSupportedObject,
+  ) => {
+    const { editingOccurrence, adapter } = this.state;
+    if (editingOccurrence == null) {
+      return;
+    }
+    const { occurrence } = editingOccurrence;
+    this.set('editingOccurrence', {
+      ...editingOccurrence,
+      occurrence: {
+        ...occurrence,
+        displayTimezone: {
+          ...occurrence.displayTimezone,
+          start: processDate(start, adapter),
+          end: processDate(end, adapter),
+        },
+      },
+    });
+  };
+
+  /**
+   * Re-points the edited occurrence at the event it landed on after a recurring scope change moved it
+   * there (`only-this` / `this-and-following` confirmed from the armed state), so the action toolbar and
+   * the selection highlight follow the resized occurrence instead of its now-stale key. No-op when
+   * nothing is being edited.
+   */
+  private repointEditingOccurrence = (
+    eventId: SchedulerEventId,
+    start: TemporalSupportedObject,
+    end: TemporalSupportedObject,
+    isRecurring: boolean,
+    dataTimezone: TemporalTimezone,
+  ) => {
+    const { editingOccurrence, adapter } = this.state;
+    if (editingOccurrence == null) {
+      return;
+    }
+    const { occurrence } = editingOccurrence;
+    this.set('editingOccurrence', {
+      ...editingOccurrence,
+      occurrence: {
+        ...occurrence,
+        id: eventId,
+        key: isRecurring
+          ? // Key off the data-timezone day, matching occurrence expansion; the display-tz start can differ.
+            getRecurringOccurrenceKey(eventId, adapter.setTimezone(start, dataTimezone), adapter)
+          : getOccurrenceKey(eventId),
+        displayTimezone: {
+          ...occurrence.displayTimezone,
+          start: processDate(start, adapter),
+          end: processDate(end, adapter),
+          // A `only-this` edit detaches the occurrence into a one-off event: clear the rule so the
+          // toolbar's Delete removes it directly instead of reopening the recurring scope dialog.
+          rrule: isRecurring ? occurrence.displayTimezone.rrule : undefined,
+        },
+      },
+    });
+  };
+
+  /** Clears editing state and dismisses any in-progress event creation / live preview. */
+  public stopEditing = () => {
+    this.set('editingOccurrence', null);
+    this.setOccurrencePlaceholder(null);
   };
 
   /**

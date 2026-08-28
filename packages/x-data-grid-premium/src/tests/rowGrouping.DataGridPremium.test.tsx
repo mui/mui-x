@@ -20,6 +20,7 @@ import {
 import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -85,6 +86,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
         expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        expect(getCell(0, 0)).to.have.attribute('role', 'rowheader');
       });
 
       it('should not react to initial state updates', () => {

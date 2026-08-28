@@ -2,14 +2,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import type { SxProps, Theme } from '@mui/system';
-import { ComposerAttachmentList, useChatComposer, useChatLocaleText } from '@mui/x-chat-headless';
-import type { ComposerAttachmentListProps } from '@mui/x-chat-headless';
+import { SxProps, Theme } from '@mui/system';
+import {
+  ComposerAttachmentList,
+  useChatComposer,
+  useChatLocaleText,
+  type ComposerAttachmentListProps,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatComposerUtilityClasses } from './chatComposerClasses';
-import type { ChatComposerClasses } from './chatComposerClasses';
-import DefaultCloseIcon from '../icons/DefaultCloseIcon';
-import DefaultFileIcon from '../icons/DefaultFileIcon';
+import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+import { DefaultCloseIcon, DefaultFileIcon } from '../icons/icons';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerAttachmentList');
@@ -136,7 +138,7 @@ function DefaultAttachmentListContent() {
               <AttachmentThumbnail src={attachment.previewUrl} alt={fileName} />
             ) : (
               <AttachmentFileIconWrapper>
-                <DefaultFileIcon />
+                <DefaultFileIcon fontSize="inherit" />
               </AttachmentFileIconWrapper>
             )}
             <AttachmentFileName>{fileName}</AttachmentFileName>
@@ -145,7 +147,7 @@ function DefaultAttachmentListContent() {
               aria-label={localeText.composerRemoveAttachmentLabel(fileName)}
               onClick={() => composer.removeAttachment(attachment.localId)}
             >
-              <DefaultCloseIcon />
+              <DefaultCloseIcon fontSize="inherit" />
             </AttachmentRemoveButton>
           </AttachmentChip>
         );
