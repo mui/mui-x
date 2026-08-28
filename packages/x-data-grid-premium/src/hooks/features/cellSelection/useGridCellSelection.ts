@@ -8,9 +8,11 @@ import {
   getGridCellElement,
   getTotalHeaderHeight,
   getVisibleRows,
+  isEventTargetInPortal,
   isFillDownShortcut,
   isFillRightShortcut,
   isNavigationKey,
+  isSelectAllShortcut,
   serializeCellValue,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
@@ -34,9 +36,10 @@ import type {
   GridCellCoordinates,
   GridRowId,
   GridCellParams,
+  MuiEvent,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
-import type { GridCellSelectionApi } from './gridCellSelectionInterfaces';
+import type { GridCellSelectionApi, GridCellSelectionModel } from './gridCellSelectionInterfaces';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { CellValueUpdater } from '../clipboard/useGridClipboardImport';
@@ -270,24 +273,31 @@ export const useGridCellSelection = (
 
   useGridApiMethod(apiRef, cellSelectionApi, 'public');
 
+  const isSelectableField = React.useCallback(
+    (field: string) => {
+      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        return false;
+      }
+
+      if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+        return false;
+      }
+
+      const column = apiRef.current.getColumn(field);
+      return column?.type !== GRID_ACTIONS_COLUMN_TYPE;
+    },
+    [apiRef],
+  );
+
   const hasClickedValidCellForRangeSelection = React.useCallback(
     (params: GridCellParams) => {
-      if (params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
-        return false;
-      }
-
-      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
-        return false;
-      }
-
-      const column = apiRef.current.getColumn(params.field);
-      if (column?.type === GRID_ACTIONS_COLUMN_TYPE) {
+      if (!isSelectableField(params.field)) {
         return false;
       }
 
       return params.rowNode.type !== 'pinnedRow';
     },
-    [apiRef],
+    [isSelectableField],
   );
 
   const handleMouseUp = useEventCallback(() => {
@@ -482,10 +492,56 @@ export const useGridCellSelection = (
     }
   });
 
-  const handleCellKeyDown = useEventCallback<
-    [GridEventLookup['cellKeyDown']['params'], GridEventLookup['cellKeyDown']['event']],
+  const selectAllCells = useEventCallback<
+    [GridEventLookup['cellKeyDown']['params'], MuiEvent<GridEventLookup['cellKeyDown']['event']>],
     void
   >((params, event) => {
+    // Get the most recent cell mode because it may have been changed by another listener
+    if (apiRef.current.getCellMode(params.id, params.field) === GridCellModes.Edit) {
+      return;
+    }
+
+    // Do not apply the shortcut if the focus is not on the cell root component
+    if (isEventTargetInPortal(event)) {
+      return;
+    }
+
+    // Prevent the native select-all of the text on the page
+    event.preventDefault();
+    // Block the `cellKeyDown` listener of the row selection feature, which is subscribed
+    // after this one and would select all rows instead
+    event.defaultMuiPrevented = true;
+
+    const visibleRows = getVisibleRows(apiRef);
+    const selectableColumns = apiRef.current
+      .getVisibleColumns()
+      .filter((column) => isSelectableField(column.field));
+
+    if (visibleRows.rows.length === 0 || selectableColumns.length === 0) {
+      return;
+    }
+
+    const newModel: GridCellSelectionModel = {};
+    visibleRows.rows.forEach((row) => {
+      const rowModel: GridCellSelectionModel[GridRowId] = {};
+      selectableColumns.forEach((column) => {
+        rowModel[column.field] = true;
+      });
+      newModel[row.id] = rowModel;
+    });
+
+    apiRef.current.setCellSelectionModel(newModel);
+  });
+
+  const handleCellKeyDown = useEventCallback<
+    [GridEventLookup['cellKeyDown']['params'], MuiEvent<GridEventLookup['cellKeyDown']['event']>],
+    void
+  >((params, event) => {
+    if (isSelectAllShortcut(event)) {
+      selectAllCells(params, event);
+      return;
+    }
+
     if (!isNavigationKey(event.key) || !cellWithVirtualFocus.current) {
       return;
     }

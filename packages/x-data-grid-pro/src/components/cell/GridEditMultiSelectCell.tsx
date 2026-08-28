@@ -110,7 +110,7 @@ export interface GridEditMultiSelectCellProps<
    * Callback called when the value is changed by the user.
    * @param {React.SyntheticEvent} event The event source of the callback.
    * @param {any[]} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @returns {Promise<void> | void} A promise to be awaited after `apiRef.current.setEditCellValue` is called
    */
   onValueChange?: (event: React.SyntheticEvent, newValue: any[]) => Promise<void> | void;
   /**
@@ -415,11 +415,11 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
       }
       const newValues = newValue.map((option) => getOptionValue(option));
 
+      await apiRef.current.setEditCellValue({ id, field, value: newValues }, event);
+
       if (onValueChange) {
         await onValueChange(event, newValues);
       }
-
-      await apiRef.current.setEditCellValue({ id, field, value: newValues }, event);
     },
   );
 
@@ -503,7 +503,7 @@ GridEditMultiSelectAutocomplete.propTypes /* remove-proptypes */ = {
    * Callback called when the value is changed by the user.
    * @param {React.SyntheticEvent} event The event source of the callback.
    * @param {any[]} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @returns {Promise<void> | void} A promise to be awaited after `apiRef.current.setEditCellValue` is called
    */
   onValueChange: PropTypes.func,
   /**
@@ -595,7 +595,7 @@ GridEditMultiSelectCell.propTypes /* remove-proptypes */ = {
    * Callback called when the value is changed by the user.
    * @param {React.SyntheticEvent} event The event source of the callback.
    * @param {any[]} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @returns {Promise<void> | void} A promise to be awaited after `apiRef.current.setEditCellValue` is called
    */
   onValueChange: PropTypes.func,
   /**

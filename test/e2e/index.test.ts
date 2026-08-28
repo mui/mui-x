@@ -365,6 +365,30 @@ async function initializeEnvironment(
         },
       );
 
+      // https://github.com/mui/mui-x/issues/23414
+      // Chromium clears the typing buffer of a date section whenever the value of the input
+      // is written programmatically. Applying the new value after `onValueChange` deferred the
+      // state update past the change event, so React reverted the input and rewrote it on the
+      // next render, and every keystroke started a new buffer instead of extending the previous
+      // one. Only the year is asserted, because the order of the day and month sections follows
+      // the system locale on Chromium.
+      it.skipIf(browserType.name() !== 'chromium')(
+        'should keep the typing buffer of a date section between keystrokes',
+        async () => {
+          await renderFixture('DataGrid/KeyboardEditDateWithValueChange');
+
+          await page.dblclick('[role="gridcell"][data-field="birthday"]');
+          const input = page.locator('[role="gridcell"][data-field="birthday"] input');
+
+          // Fill the first two sections to move the focus to the year section.
+          await page.keyboard.type('0611');
+          // Each of these keystrokes fires a change event and must extend the year buffer.
+          await page.keyboard.type('1986');
+
+          expect(await input.inputValue()).to.match(/^1986-/);
+        },
+      );
+
       // https://github.com/mui/mui-x/issues/3613
       it('should not lose cell focus when scrolling with arrow down', async () => {
         await renderFixture('DataGridPro/KeyboardNavigationFocus');
