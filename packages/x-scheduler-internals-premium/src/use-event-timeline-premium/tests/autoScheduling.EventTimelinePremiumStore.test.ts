@@ -76,6 +76,50 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     expect(emittedB.title).to.equal('Moved b');
   });
 
+  it('should reject the batch when the cascade would move a read-only event', () => {
+    const onEventsChange = spy();
+    const readOnlySuccessor = EventBuilder.new()
+      .id('b')
+      .readOnly()
+      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+      .build();
+    const store = new EventTimelinePremiumStore(
+      { ...DEFAULT_PARAMS, events: [eventA, readOnlySuccessor], onEventsChange },
+      adapter,
+    );
+
+    store.updateEvent({
+      id: 'a',
+      start: date('2025-07-03T11:00:00Z'),
+      end: date('2025-07-03T12:00:00Z'),
+    });
+
+    // Atomic veto: nothing is applied, and the rejection surfaces as a toast.
+    expect(onEventsChange.callCount).to.equal(0);
+    expect(store.state.errors).to.have.length(1);
+    expect(store.state.errors[0].error.message).to.include('read-only');
+  });
+
+  it('should keep the clipboard when a cut paste is rejected', () => {
+    const onEventsChange = spy();
+    const readOnlySuccessor = EventBuilder.new()
+      .id('b')
+      .readOnly()
+      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+      .build();
+    const store = new EventTimelinePremiumStore(
+      { ...DEFAULT_PARAMS, events: [eventA, readOnlySuccessor], onEventsChange },
+      adapter,
+    );
+
+    store.cutEvent('a');
+    const result = store.pasteEvent({ start: date('2025-07-03T11:00:00Z') });
+
+    expect(result).to.equal(null);
+    expect(onEventsChange.callCount).to.equal(0);
+    expect(store.state.copiedEvent).not.to.equal(null);
+  });
+
   it('should cascade on an end-only update', () => {
     const onEventsChange = spy();
     const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);

@@ -467,6 +467,9 @@ export class SchedulerStore<
     }
 
     const contributions = this.schedulingPlugin?.handleEventsUpdate(parameters);
+    if (contributions && 'rejected' in contributions) {
+      return { deleted: [], updated: [], created: [] };
+    }
     if (contributions?.updated) {
       for (const entry of contributions.updated) {
         if (deleted.has(entry.id)) {
@@ -822,9 +825,13 @@ export class SchedulerStore<
 
     if (copiedEvent.action === 'cut') {
       const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
-      const result = this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      const { updated } = this.updateEvents({ updated: [updatedEvent] });
+      if (updated.length === 0) {
+        // Rejected by the scheduling plugin: the clipboard stays usable.
+        return null;
+      }
       this.set('copiedEvent', null);
-      return result;
+      return updated[0];
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;

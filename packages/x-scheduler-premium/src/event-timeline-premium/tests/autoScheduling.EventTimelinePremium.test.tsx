@@ -112,4 +112,46 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
       predecessor.dataTimezone.start.timestamp,
     );
   });
+
+  it('should reject the drop when the cascade would move a read-only event', async () => {
+    const readOnlySuccessor = EventBuilder.new()
+      .id('event-b')
+      .title('Event B')
+      .singleDay('2025-07-03T10:00:00Z')
+      .resource(resource1)
+      .readOnly()
+      .build();
+    const { store } = await renderTimeline({
+      events: [eventA, readOnlySuccessor],
+      dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+    });
+
+    const originalPredecessorStart =
+      store.state.processedEventLookup.get('event-a')!.dataTimezone.start.timestamp;
+
+    const rows = document.querySelectorAll<HTMLElement>(
+      '.MuiEventTimeline-eventsCell[data-drop-target-for-element]',
+    );
+    for (const row of rows) {
+      mockElementBounds(row, { left: 0, width: 6720, height: 40 });
+    }
+    const eventElement = screen.getByText('Event A');
+    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: rows[0],
+        sourceClientX: 160,
+        targetClientX: 3000,
+      });
+    });
+
+    // The whole drop is vetoed: nothing moves, and the rejection shows as a toast.
+    expect(store.state.processedEventLookup.get('event-a')!.dataTimezone.start.timestamp).to.equal(
+      originalPredecessorStart,
+    );
+    expect(store.state.errors).to.have.length(1);
+    expect(store.state.errors[0].error.message).to.include('read-only');
+  });
 });

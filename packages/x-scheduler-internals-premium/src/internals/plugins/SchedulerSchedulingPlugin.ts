@@ -9,7 +9,10 @@ import type {
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
-import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventId,
+  SchedulerEventUpdatedProperties,
+} from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   SchedulerAddDependencyResult,
@@ -95,7 +98,9 @@ export class SchedulerSchedulingPlugin<
 
   /**
    * Removes the dependencies referencing deleted events and computes the
-   * auto-scheduling cascade for the updated ones, all in the same update.
+   * auto-scheduling cascade for the updated ones, all in the same update. A batch
+   * whose cascade would need to move a read-only event is vetoed instead: nothing is
+   * applied, and the rejection surfaces as a transient toast.
    *
    * With a `dataSource`, event deletions are persisted asynchronously after this hook has
    * already emitted `onDependenciesChange`. If that persistence fails, the event survives but
@@ -104,6 +109,37 @@ export class SchedulerSchedulingPlugin<
   public handleEventsUpdate = (parameters: UpdateEventsParameters) => {
     const { deleted, updated } = parameters;
     const deletedSet = new Set(deleted);
+
+    // The cascade runs before the dependency cascade-delete: a vetoed batch must not
+    // have emitted anything.
+    let cascaded: SchedulerEventUpdatedProperties[] = [];
+    if (updated && updated.length > 0 && this.store.state.dependencyModelList.length > 0) {
+      const result = computeAutoSchedulingCascade({
+        adapter: this.store.state.adapter,
+        processedEventLookup: this.store.state.processedEventLookup,
+        activeDependenciesBySource: eventTimelinePremiumDependencySelectors.activeModelListBySource(
+          this.store.state,
+        ),
+        activeDependenciesByTarget: eventTimelinePremiumDependencySelectors.activeModelListByTarget(
+          this.store.state,
+        ),
+        isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
+        updated,
+        deleted: deletedSet,
+      });
+      if (result.blocked.length > 0) {
+        const blockedEvent = this.store.state.processedEventLookup.get(result.blocked[0])!;
+        this.store.pushError(
+          /* minify-error-disabled */ new Error(
+            `This change would move the read-only event "${blockedEvent.title}", so it was not applied.`,
+          ),
+          { transient: true },
+        );
+        return { rejected: true as const };
+      }
+      cascaded = result.updated;
+    }
+
     if (deletedSet.size > 0) {
       const current = this.store.state.dependencyModelList;
       const remaining = current.filter(
@@ -112,24 +148,6 @@ export class SchedulerSchedulingPlugin<
       this.updateDependenciesIfChanged(current, remaining);
     }
 
-    // Covers both the feature being disabled and an empty collection.
-    if (!updated || updated.length === 0 || this.store.state.dependencyModelList.length === 0) {
-      return undefined;
-    }
-
-    const cascaded = computeAutoSchedulingCascade({
-      adapter: this.store.state.adapter,
-      processedEventLookup: this.store.state.processedEventLookup,
-      activeDependenciesBySource: eventTimelinePremiumDependencySelectors.activeModelListBySource(
-        this.store.state,
-      ),
-      activeDependenciesByTarget: eventTimelinePremiumDependencySelectors.activeModelListByTarget(
-        this.store.state,
-      ),
-      isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
-      updated,
-      deleted: deletedSet,
-    });
     return cascaded.length > 0 ? { updated: cascaded } : undefined;
   };
 

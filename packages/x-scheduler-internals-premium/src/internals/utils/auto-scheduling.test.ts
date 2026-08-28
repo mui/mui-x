@@ -26,7 +26,7 @@ interface CascadeOverrides {
   deleted?: ReadonlySet<SchedulerEventId>;
 }
 
-function runCascade(
+function runCascadeResult(
   events: SchedulerProcessedEvent[],
   dependencies: SchedulerDependency[],
   updated: Parameters<typeof computeAutoSchedulingCascade>[0]['updated'],
@@ -41,6 +41,15 @@ function runCascade(
     updated,
     deleted: overrides.deleted ?? new Set(),
   });
+}
+
+function runCascade(
+  events: SchedulerProcessedEvent[],
+  dependencies: SchedulerDependency[],
+  updated: Parameters<typeof computeAutoSchedulingCascade>[0]['updated'],
+  overrides: CascadeOverrides = {},
+) {
+  return runCascadeResult(events, dependencies, updated, overrides).updated;
 }
 
 function expectDates(
@@ -69,6 +78,22 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
     expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
+  });
+
+  it('should not report blocked events on an unobstructed cascade', () => {
+    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
+      .toProcessed();
+
+    const result = runCascadeResult(
+      [predecessor, successor],
+      [fsDependency('a', 'b')],
+      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
+    );
+
+    expect(result.blocked).to.deep.equal([]);
   });
 
   it('should not move a successor whose slack absorbs the change', () => {
@@ -363,15 +388,40 @@ describe('computeAutoSchedulingCascade', () => {
       .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
       .toProcessed();
 
-    const result = runCascade(
+    const result = runCascadeResult(
       [eventA, eventB, eventC],
       [fsDependency('a', 'b'), fsDependency('b', 'c')],
       [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
       { isEventReadOnly: (eventId) => eventId === 'b' },
     );
 
-    // b stays; c has no moved predecessor, so it stays too.
-    expect(result).to.deep.equal([]);
+    // b cannot restore the constraint: the batch is reported as blocked so the
+    // caller rejects it; c has no moved predecessor either way.
+    expect(result.updated).to.deep.equal([]);
+    expect(result.blocked).to.deep.equal(['b']);
+  });
+
+  it('should report a transitively blocked read-only successor', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+      .toProcessed();
+    const eventC = EventBuilder.new()
+      .id('c')
+      .readOnly()
+      .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
+      .toProcessed();
+
+    const result = runCascadeResult(
+      [eventA, eventB, eventC],
+      [fsDependency('a', 'b'), fsDependency('b', 'c')],
+      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
+      { isEventReadOnly: (eventId) => eventId === 'c' },
+    );
+
+    // b's push would in turn need to move the read-only c.
+    expect(result.blocked).to.deep.equal(['c']);
   });
 
   it('should not cascade into an event deleted in the same batch', () => {
@@ -831,7 +881,7 @@ describe('computeAutoSchedulingCascade', () => {
     );
   });
 
-  it('should not clamp a read-only updated event', () => {
+  it('should report a read-only updated event dropped into violation as blocked', () => {
     const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
     const eventB = EventBuilder.new()
       .id('b')
@@ -839,14 +889,15 @@ describe('computeAutoSchedulingCascade', () => {
       .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
       .toProcessed();
 
-    const result = runCascade(
+    const result = runCascadeResult(
       [eventA, eventB],
       [fsDependency('a', 'b')],
       [{ id: 'b', start: date('2025-07-03T09:00:00Z'), end: date('2025-07-03T10:00:00Z') }],
       { isEventReadOnly: (eventId) => eventId === 'b' },
     );
 
-    expect(result).to.deep.equal([]);
+    expect(result.updated).to.deep.equal([]);
+    expect(result.blocked).to.deep.equal(['b']);
   });
 
   it('should not clamp against a predecessor deleted in the same batch', () => {

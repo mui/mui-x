@@ -56,19 +56,32 @@ interface ResolvedDates {
  * moves `start` is being placed by the user, so every active predecessor clamps it
  * forward to the first valid position; other seeds and untouched successors are pushed
  * only by predecessors moved in the same batch. Shifted seeds fold back into their own
- * entry. A read-only successor stays in place and stops the cascade behind it. Timed
- * events keep their duration in absolute milliseconds (same policy as drag-and-drop
- * and paste) and land on the first instant of the day after an all-day predecessor;
- * all-day events shift by whole days.
+ * entry. A read-only event that would need to move is reported in `blocked` (and left
+ * unmoved) so the caller can reject the whole batch. Timed events keep their duration
+ * in absolute milliseconds (same policy as drag-and-drop and paste) and land on the
+ * first instant of the day after an all-day predecessor; all-day events shift by
+ * whole days.
  *
  * Kahn pass over the subgraph reachable from the seeds, each node settled once.
  * Members of a seedless cycle (cyclic props data) never become ready: left unmoved,
  * with a dev warning. A cycle through a seed is broken at the first stalled seed in
  * batch order, also with a dev warning.
  */
+export interface AutoSchedulingCascadeResult {
+  /**
+   * The extra `{ id, start, end }` updates restoring the FS constraints.
+   */
+  updated: SchedulerEventUpdatedProperties[];
+  /**
+   * Read-only events the cascade would have moved: the constraint cannot be restored,
+   * so the caller should reject the batch.
+   */
+  blocked: SchedulerEventId[];
+}
+
 export function computeAutoSchedulingCascade(
   parameters: ComputeAutoSchedulingCascadeParameters,
-): SchedulerEventUpdatedProperties[] {
+): AutoSchedulingCascadeResult {
   const {
     adapter,
     processedEventLookup,
@@ -133,8 +146,10 @@ export function computeAutoSchedulingCascade(
     }
   }
 
+  const blocked: SchedulerEventId[] = [];
+
   if (newDates.size === 0) {
-    return [];
+    return { updated: [], blocked };
   }
 
   const seeds = new Set(newDates.keys());
@@ -221,7 +236,7 @@ export function computeAutoSchedulingCascade(
     }
   }
 
-  return cascaded;
+  return { updated: cascaded, blocked };
 
   function resolveCurrentDates(eventId: SchedulerEventId): ResolvedDates | null {
     const processedEvent = processedEventLookup.get(eventId);
@@ -266,12 +281,16 @@ export function computeAutoSchedulingCascade(
         required = sourceDates;
       }
     }
-    if (required === null || isEventReadOnly(eventId)) {
+    if (required === null) {
       return null;
     }
 
     const base = newDates.get(eventId) ?? resolveCurrentDates(eventId)!;
     if (base.startTimestamp >= required.endTimestamp) {
+      return null;
+    }
+    if (isEventReadOnly(eventId)) {
+      blocked.push(eventId);
       return null;
     }
 
