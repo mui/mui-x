@@ -11,6 +11,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 /**
  * Deleting a recurring event from the armed-event toolbar must route through the recurring scope

@@ -3,9 +3,13 @@ import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerResource,
-  TemporalSupportedObject,
+  SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
-import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
+import {
+  computeElementPositionInCollection,
+  getTimelineAxisDurationMs,
+} from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { computeOccurrencesFirstIndexLookup } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import type {
   SchedulerDependency,
@@ -37,6 +41,32 @@ const DEPENDENCY_ARROW_TARGET_CLEARANCE =
  * hugs it.
  */
 const DEPENDENCY_ARROW_DETOUR_CLEARANCE = 6;
+/**
+ * How much the click hit-area is trimmed at the arrow's source end, so the pointer
+ * near the anchor reaches the dependency terminal (the drag handle) instead of
+ * selecting the arrow. A best-effort budget, not a guarantee: trims cap at half of
+ * their segment, so short first segments (the 8px stubs) keep less clearance, and on
+ * a single-segment route both trims scale down together.
+ */
+const DEPENDENCY_ARROW_HIT_TRIM_START = 12;
+/**
+ * Trim at the target end, freeing the start-edge resize handle under the arrowhead.
+ */
+const DEPENDENCY_ARROW_HIT_TRIM_END = 8;
+/**
+ * Minimum clickable stretch a trimmed single-segment route keeps in its middle.
+ */
+const DEPENDENCY_ARROW_HIT_MIN_LENGTH = 6;
+/**
+ * Stroke width of the invisible path capturing the pointer around each arrow, defined
+ * here because the geometry derives the obstacle clearance from it.
+ */
+export const DEPENDENCY_ARROW_HIT_STROKE_WIDTH = 10;
+/**
+ * How far the hit-area stops before an event box the route crosses: half the stroke,
+ * so the band never covers any part of the event.
+ */
+const DEPENDENCY_ARROW_HIT_CLEARANCE = DEPENDENCY_ARROW_HIT_STROKE_WIDTH / 2;
 
 export interface DependencyArrowPoint {
   x: number;
@@ -56,6 +86,19 @@ export interface DependencyArrow {
    */
   d: string;
   /**
+   * The path of the invisible click hit-area: the same route with both ends trimmed,
+   * so the terminal (at the source anchor) and the start resize handle (under the
+   * arrowhead) stay reachable.
+   * Derived on first read and cached: only the interactions layer needs it, and only
+   * for the arrows surviving the viewport filter.
+   */
+  readonly hitD: string;
+  /**
+   * The point where the arrowhead is drawn, in the same coordinate space as `d`: the
+   * target's start-edge anchor, except when the route clamps at the timeline edge.
+   */
+  endPoint: DependencyArrowPoint;
+  /**
    * Horizontal bounding box of the arrow, as fractions of the events area width.
    */
   minXFraction: number;
@@ -67,12 +110,26 @@ export interface DependencyArrow {
   maxRowIndex: number;
 }
 
-export interface ComputeDependencyArrowsParameters {
-  adapter: Adapter;
+export interface DependencyArrowAnchor {
+  rowIndex: number;
   /**
-   * The active dependencies (both events exist and are not recurring).
+   * The resource of the row: the appearance identity, since the occurrence (and its
+   * key) repeats on every row of a multi-resource event.
    */
-  dependencies: readonly SchedulerDependency[];
+  resourceId: SchedulerResourceId;
+  occurrence: SchedulerEventOccurrence;
+}
+
+export interface DependencyArrowObstacle {
+  occurrenceKey: string;
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+}
+
+export interface DependencyAnchorResolverParameters {
+  adapter: Adapter;
   /**
    * The visible resources with their occurrences, in row render order.
    */
@@ -81,91 +138,151 @@ export interface ComputeDependencyArrowsParameters {
    * The y offset of each row in pixels, in the same order as `resources`.
    */
   rowPositions: readonly number[];
-  collectionStart: TemporalSupportedObject;
-  collectionEnd: TemporalSupportedObject;
+  /**
+   * The visible date range and daily hour window the arrows are positioned in.
+   */
+  axis: TimelineAxis;
+  /**
+   * Positions already computed by the axis filter, when the hour window is trimmed.
+   */
+  positionByOccurrenceKey?: ReadonlyMap<
+    string,
+    ReturnType<typeof computeElementPositionInCollection>
+  > | null;
   /**
    * The width of the events area in pixels (tick count × tick width).
    */
   eventsWidth: number;
   laneMetrics: EventsCellLaneMetrics;
+  /**
+   * When provided, the appearance lookup only indexes these events (the dependency
+   * endpoints) on its single build pass; any other id — the in-flight creation's
+   * events — falls back to a targeted scan cached per id. Without it every occurrence
+   * gets an entry, which is pure allocation waste on large collections.
+   */
+  endpointIds?: ReadonlySet<SchedulerEventId>;
 }
 
-interface DependencyArrowAnchor {
-  rowIndex: number;
-  occurrence: SchedulerEventOccurrence;
+export interface DependencyAnchorResolver {
+  eventsWidth: number;
+  /**
+   * How far from the source anchor the S route runs its horizontal detour.
+   */
+  detourOffset: number;
+  /**
+   * The row appearances of an event. An event assigned to several resources appears
+   * once in each of its rows.
+   */
+  getAppearances: (eventId: SchedulerEventId) => readonly DependencyArrowAnchor[];
+  /**
+   * Whether the row is laid out and can anchor an arrow. A row can briefly have no
+   * position when the resources change before the virtualizer re-measures them.
+   */
+  hasRowPosition: (rowIndex: number) => boolean;
+  /**
+   * The pixel point of an anchor's start or end edge, vertically centered on its lane.
+   */
+  getEdgePoint: (anchor: DependencyArrowAnchor, edge: 'start' | 'end') => DependencyArrowPoint;
+  /**
+   * The cached position of an occurrence in the collection (fractions and edge
+   * overflow flags), shared with the terminals overlay.
+   */
+  getPosition: (
+    occurrence: SchedulerEventOccurrence,
+  ) => ReturnType<typeof computeElementPositionInCollection>;
+  /**
+   * The event boxes of a row, used to pick the elbow candidate crossing the fewest
+   * events.
+   */
+  getRowObstacles: (rowIndex: number) => DependencyArrowObstacle[];
 }
 
 /**
- * Computes the arrow of each renderable dependency, connecting the end edge of the
- * source event to the start edge of the target event.
- * Anchors are derived from the data model (not measured on the DOM) so arrows can
- * reach events that the virtualizer did not mount.
+ * Creates the anchor machinery shared by the dependency arrows and the provisional
+ * (rubber-band) arrow. Anchors are derived from the data model (not measured on the
+ * DOM) so arrows can reach events that the virtualizer did not mount.
+ * Lookups are cached per instance: recreate the resolver when any parameter changes.
  */
-export function computeDependencyArrows(
-  parameters: ComputeDependencyArrowsParameters,
-): DependencyArrow[] {
+export function createDependencyAnchorResolver(
+  parameters: DependencyAnchorResolverParameters,
+): DependencyAnchorResolver {
   const {
     adapter,
-    dependencies,
     resources,
     rowPositions,
-    collectionStart,
-    collectionEnd,
+    axis,
+    positionByOccurrenceKey,
     eventsWidth,
     laneMetrics,
+    endpointIds,
   } = parameters;
 
-  if (dependencies.length === 0 || eventsWidth <= 0) {
-    return [];
-  }
-
-  const endpointIds = new Set<SchedulerEventId>();
-  for (const dependency of dependencies) {
-    endpointIds.add(dependency.source);
-    endpointIds.add(dependency.target);
-  }
-
-  // An event assigned to several resources appears once in each of its rows: collect
-  // every appearance so each one gets its own arrows.
-  const anchorsLookup = new Map<SchedulerEventId, DependencyArrowAnchor[]>();
-  for (let rowIndex = 0; rowIndex < resources.length; rowIndex += 1) {
-    for (const occurrence of resources[rowIndex].occurrences) {
-      if (endpointIds.has(occurrence.id)) {
-        const anchors = anchorsLookup.get(occurrence.id);
-        if (anchors) {
-          anchors.push({ rowIndex, occurrence });
-        } else {
-          anchorsLookup.set(occurrence.id, [{ rowIndex, occurrence }]);
+  // Built on first access with a single pass over the rendered occurrences, only
+  // indexing the endpoint events when the filter is provided.
+  let appearancesLookup: Map<SchedulerEventId, DependencyArrowAnchor[]> | null = null;
+  const getAppearances = (eventId: SchedulerEventId): readonly DependencyArrowAnchor[] => {
+    if (appearancesLookup == null) {
+      appearancesLookup = new Map();
+      for (let rowIndex = 0; rowIndex < resources.length; rowIndex += 1) {
+        for (const occurrence of resources[rowIndex].occurrences) {
+          if (endpointIds !== undefined && !endpointIds.has(occurrence.id)) {
+            continue;
+          }
+          const anchor = { rowIndex, resourceId: resources[rowIndex].resource.id, occurrence };
+          const appearances = appearancesLookup.get(occurrence.id);
+          if (appearances) {
+            appearances.push(anchor);
+          } else {
+            appearancesLookup.set(occurrence.id, [anchor]);
+          }
         }
       }
     }
-  }
+    let appearances = appearancesLookup.get(eventId);
+    if (appearances == null && endpointIds !== undefined && !endpointIds.has(eventId)) {
+      // An id the build pass skipped (the in-flight creation's events): targeted
+      // scan, cached — including the empty result.
+      appearances = [];
+      for (let rowIndex = 0; rowIndex < resources.length; rowIndex += 1) {
+        for (const occurrence of resources[rowIndex].occurrences) {
+          if (occurrence.id === eventId) {
+            appearances.push({ rowIndex, resourceId: resources[rowIndex].resource.id, occurrence });
+          }
+        }
+      }
+      appearancesLookup.set(eventId, appearances);
+    }
+    return appearances ?? [];
+  };
 
   // Lane assignment of a row, computed on demand and only once per involved row.
   const laneLookupByRow = new Map<number, { [occurrenceKey: string]: number }>();
   const getLaneLookup = (rowIndex: number): { [occurrenceKey: string]: number } => {
     let laneLookup = laneLookupByRow.get(rowIndex);
     if (laneLookup == null) {
-      laneLookup = computeOccurrencesFirstIndexLookup(adapter, resources[rowIndex].occurrences);
+      laneLookup = computeOccurrencesFirstIndexLookup(resources[rowIndex].occurrences);
       laneLookupByRow.set(rowIndex, laneLookup);
     }
     return laneLookup;
   };
 
-  const positionByOccurrenceKey = new Map<
-    string,
-    ReturnType<typeof computeElementPositionInCollection>
-  >();
+  // Derived once for the whole walk instead of per positioned occurrence.
+  const axisDurationMs = getTimelineAxisDurationMs(adapter, axis);
+  const positionCache = new Map<string, ReturnType<typeof computeElementPositionInCollection>>();
   const getPosition = (occurrence: SchedulerEventOccurrence) => {
-    let position = positionByOccurrenceKey.get(occurrence.key);
+    const precomputed = positionByOccurrenceKey?.get(occurrence.key);
+    if (precomputed != null) {
+      return precomputed;
+    }
+    let position = positionCache.get(occurrence.key);
     if (position == null) {
       position = computeElementPositionInCollection(adapter, {
         start: occurrence.displayTimezone.start,
         end: occurrence.displayTimezone.end,
-        collectionStart,
-        collectionEnd,
+        collection: axis,
+        durationMs: axisDurationMs,
       });
-      positionByOccurrenceKey.set(occurrence.key, position);
+      positionCache.set(occurrence.key, position);
     }
     return position;
   };
@@ -173,12 +290,22 @@ export function computeDependencyArrows(
   const laneStep = laneMetrics.laneMinHeight + laneMetrics.laneGap;
   const getLaneTop = (rowIndex: number, lane: number): number =>
     rowPositions[rowIndex] + laneMetrics.topPadding + (lane - 1) * laneStep;
-  const getY = (anchor: DependencyArrowAnchor): number =>
-    getLaneTop(anchor.rowIndex, getLaneLookup(anchor.rowIndex)[anchor.occurrence.key]) +
-    laneMetrics.laneMinHeight / 2;
 
-  // The event boxes of a row, used to pick the elbow candidate crossing the fewest
-  // events. Computed on demand and only once per row an arrow spans.
+  const getEdgePoint = (
+    anchor: DependencyArrowAnchor,
+    edge: 'start' | 'end',
+  ): DependencyArrowPoint => {
+    const position = getPosition(anchor.occurrence);
+    const xFraction = edge === 'start' ? position.position : position.position + position.duration;
+    return {
+      x: xFraction * eventsWidth,
+      y:
+        getLaneTop(anchor.rowIndex, getLaneLookup(anchor.rowIndex)[anchor.occurrence.key]) +
+        laneMetrics.laneMinHeight / 2,
+    };
+  };
+
+  // The event boxes of a row, computed on demand and only once per row an arrow spans.
   const obstaclesByRow = new Map<number, DependencyArrowObstacle[]>();
   const getRowObstacles = (rowIndex: number): DependencyArrowObstacle[] => {
     let obstacles = obstaclesByRow.get(rowIndex);
@@ -200,57 +327,108 @@ export function computeDependencyArrows(
     return obstacles;
   };
 
-  const detourOffset = laneMetrics.laneMinHeight / 2 + DEPENDENCY_ARROW_DETOUR_CLEARANCE;
+  return {
+    eventsWidth,
+    detourOffset: laneMetrics.laneMinHeight / 2 + DEPENDENCY_ARROW_DETOUR_CLEARANCE,
+    getAppearances,
+    getPosition,
+    hasRowPosition: (rowIndex: number) => rowPositions[rowIndex] != null,
+    getEdgePoint,
+    getRowObstacles,
+  };
+}
+
+/**
+ * The pixel point of an event edge, used to anchor the provisional (rubber-band)
+ * arrow. Anchors on the appearance matching the occurrence key and the resource (the
+ * key alone repeats on every row of a multi-resource event), falling back to the
+ * event's first appearance when they are `null` or unknown. `null` when the anchoring
+ * appearance's row is not laid out.
+ */
+export function getEventEdgeAnchor(
+  resolver: DependencyAnchorResolver,
+  eventId: SchedulerEventId,
+  edge: 'start' | 'end',
+  occurrenceKey: string | null = null,
+  resourceId: SchedulerResourceId | null = null,
+): DependencyArrowPoint | null {
+  const appearances = resolver.getAppearances(eventId);
+  const anchor =
+    appearances.find(
+      (appearance) =>
+        appearance.occurrence.key === occurrenceKey &&
+        (resourceId === null || appearance.resourceId === resourceId),
+    ) ?? appearances[0];
+  if (anchor == null || !resolver.hasRowPosition(anchor.rowIndex)) {
+    return null;
+  }
+  return resolver.getEdgePoint(anchor, edge);
+}
+
+/**
+ * Computes the arrow of each renderable dependency, connecting the end edge of the
+ * source event to the start edge of the target event.
+ */
+export function computeDependencyArrows(
+  resolver: DependencyAnchorResolver,
+  dependencies: readonly SchedulerDependency[],
+): DependencyArrow[] {
+  const { eventsWidth } = resolver;
+
+  if (dependencies.length === 0 || eventsWidth <= 0) {
+    return [];
+  }
 
   const buildArrow = (
     dependency: SchedulerDependency,
     sourceAnchor: DependencyArrowAnchor,
     targetAnchor: DependencyArrowAnchor,
   ): DependencyArrow | null => {
-    // A row without a position is not laid out yet (see the transient resources /
-    // rowsMeta desync): skip the pair for this frame.
     if (
-      rowPositions[sourceAnchor.rowIndex] == null ||
-      rowPositions[targetAnchor.rowIndex] == null
+      !resolver.hasRowPosition(sourceAnchor.rowIndex) ||
+      !resolver.hasRowPosition(targetAnchor.rowIndex)
     ) {
       return null;
     }
 
     const minRowIndex = Math.min(sourceAnchor.rowIndex, targetAnchor.rowIndex);
     const maxRowIndex = Math.max(sourceAnchor.rowIndex, targetAnchor.rowIndex);
-    const sourcePosition = getPosition(sourceAnchor.occurrence);
-    const targetPosition = getPosition(targetAnchor.occurrence);
+    const source = resolver.getEdgePoint(sourceAnchor, 'end');
+    const target = resolver.getEdgePoint(targetAnchor, 'start');
 
-    const source: DependencyArrowPoint = {
-      x: (sourcePosition.position + sourcePosition.duration) * eventsWidth,
-      y: getY(sourceAnchor),
-    };
-    const target: DependencyArrowPoint = {
-      x: targetPosition.position * eventsWidth,
-      y: getY(targetAnchor),
-    };
+    const routes = buildDependencyArrowRoutes(source, target, resolver.detourOffset, eventsWidth);
 
-    const routes = buildDependencyArrowRoutes(source, target, detourOffset, eventsWidth);
+    // The event boxes the route may cross, used to pick the route and to cut the
+    // hit-area around them. The endpoint events stay out: the end trims already
+    // handle their edges. Gathered on demand — a single-candidate route only needs
+    // them if something reads the hit-area.
+    let obstacles: DependencyArrowObstacle[] | null = null;
+    const getObstacles = () => {
+      if (obstacles === null) {
+        const gathered: DependencyArrowObstacle[] = [];
+        for (let rowIndex = minRowIndex; rowIndex <= maxRowIndex; rowIndex += 1) {
+          for (const obstacle of resolver.getRowObstacles(rowIndex)) {
+            if (
+              obstacle.occurrenceKey !== sourceAnchor.occurrence.key &&
+              obstacle.occurrenceKey !== targetAnchor.occurrence.key
+            ) {
+              gathered.push(obstacle);
+            }
+          }
+        }
+        obstacles = gathered;
+      }
+      return obstacles;
+    };
 
     // With several candidates, keep the one crossing the fewest events (first wins on
     // a tie). Best-effort avoidance, not full pathfinding.
     let points = routes[0];
     if (routes.length > 1) {
-      const obstacles: DependencyArrowObstacle[] = [];
-      for (let rowIndex = minRowIndex; rowIndex <= maxRowIndex; rowIndex += 1) {
-        for (const obstacle of getRowObstacles(rowIndex)) {
-          if (
-            obstacle.occurrenceKey !== sourceAnchor.occurrence.key &&
-            obstacle.occurrenceKey !== targetAnchor.occurrence.key
-          ) {
-            obstacles.push(obstacle);
-          }
-        }
-      }
-
-      let bestCollisions = countRouteCollisions(points, obstacles);
+      const routeObstacles = getObstacles();
+      let bestCollisions = countRouteCollisions(points, routeObstacles);
       for (let index = 1; index < routes.length && bestCollisions > 0; index += 1) {
-        const collisions = countRouteCollisions(routes[index], obstacles);
+        const collisions = countRouteCollisions(routes[index], routeObstacles);
         if (collisions < bestCollisions) {
           bestCollisions = collisions;
           points = routes[index];
@@ -265,10 +443,27 @@ export function computeDependencyArrows(
       maxX = Math.max(maxX, point.x);
     }
 
+    let hitD: string | null = null;
+
     return {
-      key: `${String(dependency.id)}:${sourceAnchor.rowIndex}:${targetAnchor.rowIndex}`,
+      // The id type is part of the key: `SchedulerDependencyId` accepts both strings
+      // and numbers, so `1` and `"1"` would otherwise share a key on the same row pair.
+      key: `${typeof dependency.id}:${String(dependency.id)}:${sourceAnchor.rowIndex}:${targetAnchor.rowIndex}`,
       id: dependency.id,
       d: buildRoundedOrthogonalPath(points, DEPENDENCY_ARROW_CORNER_RADIUS),
+      get hitD() {
+        if (hitD === null) {
+          hitD = clipRouteAroundObstacles(
+            trimRouteEnds(points, DEPENDENCY_ARROW_HIT_TRIM_START, DEPENDENCY_ARROW_HIT_TRIM_END),
+            getObstacles(),
+          )
+            .map((polyline) => buildRoundedOrthogonalPath(polyline, DEPENDENCY_ARROW_CORNER_RADIUS))
+            .filter((subpath) => subpath !== '')
+            .join(' ');
+        }
+        return hitD;
+      },
+      endPoint: points[points.length - 1],
       minXFraction: minX / eventsWidth,
       maxXFraction: maxX / eventsWidth,
       minRowIndex,
@@ -278,13 +473,13 @@ export function computeDependencyArrows(
 
   const arrows: DependencyArrow[] = [];
   for (const dependency of dependencies) {
-    const sourceAnchors = anchorsLookup.get(dependency.source);
-    const targetAnchors = anchorsLookup.get(dependency.target);
+    const sourceAnchors = resolver.getAppearances(dependency.source);
+    const targetAnchors = resolver.getAppearances(dependency.target);
 
     // An endpoint without an anchor is not rendered in the timeline: its event has no
     // resource, is outside the collection range, or its row is hidden. The dependency
     // stays in the data, it just has no arrow.
-    if (sourceAnchors == null || targetAnchors == null) {
+    if (sourceAnchors.length === 0 || targetAnchors.length === 0) {
       continue;
     }
 
@@ -301,6 +496,157 @@ export function computeDependencyArrows(
   }
 
   return arrows;
+}
+
+function movePointAlongSegment(
+  from: DependencyArrowPoint,
+  toward: DependencyArrowPoint,
+  distance: number,
+): DependencyArrowPoint {
+  const length = Math.hypot(toward.x - from.x, toward.y - from.y);
+  // Cap at half the segment so both trims never cross each other.
+  const cappedDistance = Math.min(distance, length / 2);
+  if (length === 0) {
+    return from;
+  }
+  return {
+    x: from.x + ((toward.x - from.x) / length) * cappedDistance,
+    y: from.y + ((toward.y - from.y) / length) * cappedDistance,
+  };
+}
+
+/**
+ * Splits an orthogonal route into the stretches that do not ride over an event box,
+ * so the events a route crosses keep their clicks and drags (the hit band would
+ * otherwise capture the pointerdown and the event's draggable could never start).
+ * Boxes are expanded by half the hit stroke, stopping the band right before it would
+ * visually reach an event. When the boxes cover the whole route, the uncut route is
+ * returned instead: an overlapped band beats an unselectable arrow.
+ */
+function clipRouteAroundObstacles(
+  points: readonly DependencyArrowPoint[],
+  obstacles: readonly DependencyArrowObstacle[],
+): DependencyArrowPoint[][] {
+  if (obstacles.length === 0 || points.length < 2) {
+    return [[...points]];
+  }
+
+  const EPSILON = 1e-6;
+  const polylines: DependencyArrowPoint[][] = [];
+  // The polyline being accumulated across segments, or `null` right after a covered
+  // stretch cut the route.
+  let current: DependencyArrowPoint[] | null = [points[0]];
+  const closeCurrent = () => {
+    if (current !== null && current.length >= 2) {
+      polylines.push(current);
+    }
+    current = null;
+  };
+
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const from = points[index];
+    const to = points[index + 1];
+    const horizontal = from.y === to.y;
+    const delta = horizontal ? to.x - from.x : to.y - from.y;
+    if (Math.abs(delta) <= EPSILON) {
+      continue;
+    }
+
+    // Covered sub-intervals of the segment, as fractions of its length.
+    const covered: Array<[number, number]> = [];
+    for (const obstacle of obstacles) {
+      const x1 = obstacle.x1 - DEPENDENCY_ARROW_HIT_CLEARANCE;
+      const x2 = obstacle.x2 + DEPENDENCY_ARROW_HIT_CLEARANCE;
+      const y1 = obstacle.y1 - DEPENDENCY_ARROW_HIT_CLEARANCE;
+      const y2 = obstacle.y2 + DEPENDENCY_ARROW_HIT_CLEARANCE;
+      if (horizontal ? from.y <= y1 || from.y >= y2 : from.x <= x1 || from.x >= x2) {
+        continue;
+      }
+      const enter = horizontal ? (x1 - from.x) / delta : (y1 - from.y) / delta;
+      const exit = horizontal ? (x2 - from.x) / delta : (y2 - from.y) / delta;
+      const start = Math.max(0, Math.min(enter, exit));
+      const end = Math.min(1, Math.max(enter, exit));
+      if (end > start) {
+        covered.push([start, end]);
+      }
+    }
+    covered.sort((a, b) => a[0] - b[0]);
+
+    // Invert into the visible pieces.
+    const visible: Array<[number, number]> = [];
+    let cursor = 0;
+    for (const [start, end] of covered) {
+      if (start > cursor + EPSILON) {
+        visible.push([cursor, start]);
+      }
+      cursor = Math.max(cursor, end);
+    }
+    if (cursor < 1 - EPSILON) {
+      visible.push([cursor, 1]);
+    }
+
+    if (visible.length === 0) {
+      closeCurrent();
+      continue;
+    }
+    const pointAt = (t: number): DependencyArrowPoint =>
+      horizontal ? { x: from.x + delta * t, y: from.y } : { x: from.x, y: from.y + delta * t };
+    for (const [start, end] of visible) {
+      // Exact corner coordinates at the piece's ends, so consecutive segments keep
+      // sharing their corners and the rounding stays intact.
+      const endPoint = end >= 1 - EPSILON ? to : pointAt(end);
+      if (start <= EPSILON && current !== null) {
+        current.push(endPoint);
+      } else {
+        closeCurrent();
+        current = [pointAt(start), endPoint];
+      }
+      if (end < 1 - EPSILON) {
+        closeCurrent();
+      }
+    }
+  }
+  closeCurrent();
+
+  if (polylines.length === 0) {
+    return [[...points]];
+  }
+  return polylines;
+}
+
+/**
+ * Shortens a route at both ends (first and last segment only).
+ */
+function trimRouteEnds(
+  points: readonly DependencyArrowPoint[],
+  trimStart: number,
+  trimEnd: number,
+): DependencyArrowPoint[] {
+  if (points.length < 2) {
+    return [...points];
+  }
+  let start = trimStart;
+  let end = trimEnd;
+  if (points.length === 2) {
+    // Both trims eat the same segment: scale them jointly (keeping their ratio) so a
+    // clickable middle stretch always survives. Capping each independently makes them
+    // meet at the midpoint of the short adjacent-events route, collapsing the path.
+    const length = Math.hypot(points[1].x - points[0].x, points[1].y - points[0].y);
+    const available = Math.max(0, length - DEPENDENCY_ARROW_HIT_MIN_LENGTH);
+    if (trimStart + trimEnd > available) {
+      const scale = available / (trimStart + trimEnd);
+      start = trimStart * scale;
+      end = trimEnd * scale;
+    }
+  }
+  const trimmed = [...points];
+  trimmed[0] = movePointAlongSegment(points[0], points[1], start);
+  trimmed[trimmed.length - 1] = movePointAlongSegment(
+    points[points.length - 1],
+    points[points.length - 2],
+    end,
+  );
+  return trimmed;
 }
 
 /**
@@ -376,14 +722,6 @@ export function buildDependencyArrowRoutes(
  * touching their own event's edge must not count.
  */
 const COLLISION_EPSILON = 0.5;
-
-interface DependencyArrowObstacle {
-  occurrenceKey: string;
-  x1: number;
-  x2: number;
-  y1: number;
-  y2: number;
-}
 
 function segmentCrossesObstacle(
   a: DependencyArrowPoint,

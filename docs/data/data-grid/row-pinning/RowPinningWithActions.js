@@ -91,7 +91,7 @@ const columns = [
     width: 100,
     renderCell: (params) => <ActionsCell {...params} />,
   },
-  { field: 'name', headerName: 'Name', width: 150 },
+  { field: 'name', headerName: 'Name', width: 150, rowHeader: true },
   { field: 'city', headerName: 'City', width: 150 },
   { field: 'username', headerName: 'Username' },
   { field: 'email', headerName: 'Email', width: 200 },

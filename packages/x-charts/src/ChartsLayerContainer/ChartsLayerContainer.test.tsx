@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { describe, it, expect } from 'vitest';
 import { ChartsProvider } from '../context/ChartsProvider';
 
 describe('<ChartsLayerContainer />', () => {

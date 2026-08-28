@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-chat",
-  "version": "9.0.0-alpha.16",
+  "version": "9.0.0-alpha.17",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Chat components.",
   "license": "MIT",
@@ -84,6 +84,10 @@
     "node": ">=14.0.0"
   },
   "imports": {
-    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage",
+    "#remend": {
+      "import": "remend",
+      "default": "./src/internals/remendUnavailable.ts"
+    }
   }
 }

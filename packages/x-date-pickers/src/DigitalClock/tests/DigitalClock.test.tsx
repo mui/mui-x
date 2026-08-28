@@ -7,6 +7,7 @@ import {
   formatFullTimeValue,
 } from 'test/utils/pickers';
 import { screen } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 
 describe('<DigitalClock />', () => {
   const { render } = createPickerRenderer();

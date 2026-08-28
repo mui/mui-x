@@ -1,4 +1,5 @@
 import type {
+  SchedulerEvent,
   SchedulerEventColor,
   SchedulerResourceId,
   RecurringEventPresetKey,
@@ -17,14 +18,38 @@ import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 export interface EventDialogBuiltInFormValues {
   title: string;
   description: string;
+  /**
+   * Start date in the `yyyy-MM-dd` format.
+   */
   startDate: string;
+  /**
+   * Start time in the `HH:mm` format.
+   */
   startTime: string;
+  /**
+   * End date in the `yyyy-MM-dd` format.
+   */
   endDate: string;
+  /**
+   * End time in the `HH:mm` format.
+   */
   endTime: string;
-  resourceId: SchedulerResourceId | null;
+  /**
+   * Always an array, also when the resource picker is single-select.
+   */
+  resourceIds: SchedulerResourceId[];
   allDay: boolean;
+  /**
+   * `null` inherits the color from the resource or the calendar.
+   */
   color: SchedulerEventColor | null;
+  /**
+   * Managed by the Recurrence tab; treat as read-only from custom sections.
+   */
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
+  /**
+   * Managed by the Recurrence tab; treat as read-only from custom sections.
+   */
   rruleDraft: SchedulerProcessedEventRecurrenceRule;
 }
 
@@ -34,19 +59,23 @@ export interface EventDialogBuiltInFormValues {
  */
 export type EventDialogFormValues = EventDialogBuiltInFormValues & Record<string, unknown>;
 
-// The `-?` mapped type makes a key added to the interface but missing here a compile error.
-const BUILT_IN_FORM_KEYS_LOOKUP: { [P in keyof EventDialogBuiltInFormValues]-?: true } = {
-  title: true,
-  description: true,
-  startDate: true,
-  startTime: true,
-  endDate: true,
-  endTime: true,
-  resourceId: true,
-  allDay: true,
-  color: true,
-  recurrenceSelection: true,
-  rruleDraft: true,
+/**
+ * Event property backing each built-in form key, for per-property read-only checks.
+ */
+export const FORM_KEY_TO_EVENT_PROPERTY: {
+  [P in keyof EventDialogBuiltInFormValues]-?: keyof SchedulerEvent;
+} = {
+  title: 'title',
+  description: 'description',
+  startDate: 'start',
+  startTime: 'start',
+  endDate: 'end',
+  endTime: 'end',
+  resourceIds: 'resource',
+  allDay: 'allDay',
+  color: 'color',
+  recurrenceSelection: 'rrule',
+  rruleDraft: 'rrule',
 };
 
 /**
@@ -54,7 +83,7 @@ const BUILT_IN_FORM_KEYS_LOOKUP: { [P in keyof EventDialogBuiltInFormValues]-?: 
  * bag is a custom field; the ones the user edited are spread onto the event as-is.
  */
 export const BUILT_IN_FORM_KEYS: ReadonlySet<string> = new Set(
-  Object.keys(BUILT_IN_FORM_KEYS_LOOKUP),
+  Object.keys(FORM_KEY_TO_EVENT_PROPERTY),
 );
 
 const WEEKDAYS: SchedulerWeekday[] = [
@@ -125,6 +154,75 @@ export function validateRange(
     }
   }
   return null;
+}
+
+// Structural checks on the documented `yyyy-MM-dd` / `HH:mm` formats: date parsing
+// can roll overflowing components over (2025-06-31 → July 1) instead of rejecting them.
+const DATE_VALUE_REGEX = /^(\d{4})-(\d{2})-(\d{2})$/;
+const TIME_VALUE_REGEX = /^([01]\d|2[0-3]):([0-5]\d)$/;
+
+function isWellFormedDate(raw: string): boolean {
+  const match = DATE_VALUE_REGEX.exec(raw);
+  if (!match) {
+    return false;
+  }
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  if (month < 1 || month > 12 || day < 1) {
+    return false;
+  }
+  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  const daysInMonth = [31, isLeapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  return day <= daysInMonth[month - 1];
+}
+
+/**
+ * Returns the first date/time field whose value cannot produce a valid date
+ * (empty and malformed included), or `null` when they all parse.
+ */
+export function findInvalidRangeField(
+  adapter: Adapter,
+  values: Pick<EventDialogFormValues, 'startDate' | 'startTime' | 'endDate' | 'endTime' | 'allDay'>,
+  displayTimezone: TemporalTimezone,
+): 'startDate' | 'startTime' | 'endDate' | 'endTime' | null {
+  const parsesAsDate = (raw: string) =>
+    isWellFormedDate(raw) && adapter.isValid(adapter.date(raw, displayTimezone));
+  const parsesAsDateTime = (rawDate: string, rawTime: string) =>
+    TIME_VALUE_REGEX.test(rawTime) &&
+    adapter.isValid(adapter.date(`${rawDate}T${rawTime}`, displayTimezone));
+
+  if (!parsesAsDate(values.startDate)) {
+    return 'startDate';
+  }
+  if (!values.allDay && !parsesAsDateTime(values.startDate, values.startTime)) {
+    return 'startTime';
+  }
+  if (!parsesAsDate(values.endDate)) {
+    return 'endDate';
+  }
+  if (!values.allDay && !parsesAsDateTime(values.endDate, values.endTime)) {
+    return 'endTime';
+  }
+  return null;
+}
+
+export function getInvalidValueErrorMessage(
+  field: 'startDate' | 'startTime' | 'endDate' | 'endTime',
+  localeText: EventEditingLocaleText,
+): string {
+  return field === 'startDate' || field === 'endDate'
+    ? localeText.invalidDateError
+    : localeText.invalidTimeError;
+}
+
+export function getRangeErrorMessage(
+  field: 'endDate' | 'endTime',
+  localeText: EventEditingLocaleText,
+): string {
+  return field === 'endDate'
+    ? localeText.startDateAfterEndDateError
+    : localeText.startTimeAfterEndTimeError;
 }
 
 export function getRecurrenceLabel(

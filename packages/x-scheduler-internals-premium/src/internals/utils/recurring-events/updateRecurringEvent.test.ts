@@ -6,6 +6,7 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { mergeDateAndTime } from '@mui/x-scheduler-internals/internals';
+import { describe, it, expect } from 'vitest';
 import {
   adjustRRuleForAllMove,
   applyRecurringUpdateAll,

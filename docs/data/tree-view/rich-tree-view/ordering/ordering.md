@@ -30,6 +30,18 @@ The following example shows how to only let users reorder inside the same parent
 
 {{"demo": "OnlyReorderInSameParent.js"}}
 
+To restrict where an item can be nested (the `make-child` case), check `newPosition.parentId`.
+It contains the id of the item that would become the new parent (or `null` when dropping at the root), so you can pass it to [`apiRef.current.getItem()`](/x/react-tree-view/rich-tree-view/items/#get-an-item-by-id) and inspect that item's data.
+
+:::info
+`canMoveItemToNewPosition` doesn't receive the drop action (`reorder-above`, `reorder-below`, or `make-child`).
+The action is only exposed by `getDragAndDropOverlayProps()`, which is meant for the drag overlay's visuals, not for validation.
+:::
+
+The example below only allows items to be dropped inside items of type `'folder'`:
+
+{{"demo": "CanMoveItemByType.js"}}
+
 ## React to an item reordering
 
 You can use the `onItemPositionChange` to send the new position of an item to your backend:

@@ -3,6 +3,7 @@ import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import { createPickerRenderer } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 import { PickerContext } from '../hooks/usePickerContext';
 
 describe('<PickersActionBar />', () => {

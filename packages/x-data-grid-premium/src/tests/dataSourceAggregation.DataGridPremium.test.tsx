@@ -17,6 +17,7 @@ import type {
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();

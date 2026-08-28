@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
@@ -12,6 +13,7 @@ import {
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { describe, it, expect } from 'vitest';
 import { ErrorContainer } from '../internals/components/error-container';
 import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import {
@@ -438,6 +440,132 @@ describe('EventCalendar', () => {
       const eventElement = document.querySelector('.agenda-class');
       expect(eventElement).not.to.equal(null);
       expect(eventElement?.textContent).to.include('Agenda Event');
+    });
+  });
+
+  describe('onEventEditingStart', () => {
+    it('should be called with the occurrence when activating an event and still open the built-in dialog', async () => {
+      const onEventEditingStart = spy();
+      const { user } = render(
+        <EventCalendar events={[event1]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      const eventButton = screen.getByRole('button', { name: /Running/i });
+      await user.click(eventButton);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.lastCall.firstArg.id).to.equal(event1.id);
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('edit');
+      expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(eventButton);
+    });
+
+    it('should keep the built-in dialog closed when the handler cancels', async () => {
+      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[event1]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Running/i }));
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
+    it('should keep the built-in dialog closed when the handler cancels a keyboard activation', async () => {
+      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[event1]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      const eventButton = screen.getByRole('button', { name: /Running/i });
+      eventButton.focus();
+      expect(eventButton).to.equal(document.activeElement);
+      await user.keyboard('{Enter}');
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
+    it('should keep the built-in dialog closed when the handler cancels an event creation', async () => {
+      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[]} defaultView="month" onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(withinMonthView().getAllByRole('gridcell')[10]);
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
+      expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('click');
+      const draft = onEventEditingStart.lastCall.args[1].occurrence;
+      expect(draft.allDay).to.equal(true);
+      expect(draft.displayTimezone.start.timestamp).to.be.lessThan(
+        draft.displayTimezone.end.timestamp,
+      );
+      expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(
+        withinMonthView().getAllByRole('gridcell')[10],
+      );
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
+    it('should report a `view` reason when the whole calendar is read-only', async () => {
+      const onEventEditingStart = spy();
+      const { user } = render(
+        <EventCalendar events={[event1]} readOnly onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Running/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('view');
+    });
+
+    it('should report a `view` reason when the event belongs to a read-only resource', async () => {
+      const readOnlyResource = ResourceBuilder.new().areEventsReadOnly().build();
+      const lockedEvent = EventBuilder.new()
+        .title('Locked')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .resource(readOnlyResource)
+        .build();
+      const onEventEditingStart = spy();
+      const { user } = render(
+        <EventCalendar
+          events={[lockedEvent]}
+          resources={[readOnlyResource]}
+          onEventEditingStart={onEventEditingStart}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Locked/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('view');
+    });
+
+    it('should keep the built-in view-only dialog closed when the handler cancels a read-only activation', async () => {
+      const readOnlyEvent = EventBuilder.new()
+        .title('Locked')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .readOnly()
+        .build();
+      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[readOnlyEvent]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Locked/i }));
+
+      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('view');
+      expect(screen.queryByRole('dialog')).to.equal(null);
     });
   });
 
