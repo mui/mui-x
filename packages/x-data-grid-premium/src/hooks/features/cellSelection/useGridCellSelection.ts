@@ -19,7 +19,6 @@ import {
 import type { GridPipeProcessor, GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import {
   useGridEvent,
-  useGridEventPriority,
   useGridApiMethod,
   GRID_ACTIONS_COLUMN_TYPE,
   GRID_CHECKBOX_SELECTION_COL_DEF,
@@ -493,14 +492,10 @@ export const useGridCellSelection = (
     }
   });
 
-  const handleSelectAllShortcut = useEventCallback<
+  const selectAllCells = useEventCallback<
     [GridEventLookup['cellKeyDown']['params'], MuiEvent<GridEventLookup['cellKeyDown']['event']>],
     void
   >((params, event) => {
-    if (!isSelectAllShortcut(event)) {
-      return;
-    }
-
     // Get the most recent cell mode because it may have been changed by another listener
     if (apiRef.current.getCellMode(params.id, params.field) === GridCellModes.Edit) {
       return;
@@ -513,7 +508,8 @@ export const useGridCellSelection = (
 
     // Prevent the native select-all of the text on the page
     event.preventDefault();
-    // Select all cells instead of all rows
+    // Block the `cellKeyDown` listener of the row selection feature, which is subscribed
+    // after this one and would select all rows instead
     event.defaultMuiPrevented = true;
 
     const visibleRows = getVisibleRows(apiRef);
@@ -538,9 +534,14 @@ export const useGridCellSelection = (
   });
 
   const handleCellKeyDown = useEventCallback<
-    [GridEventLookup['cellKeyDown']['params'], GridEventLookup['cellKeyDown']['event']],
+    [GridEventLookup['cellKeyDown']['params'], MuiEvent<GridEventLookup['cellKeyDown']['event']>],
     void
   >((params, event) => {
+    if (isSelectAllShortcut(event)) {
+      selectAllCells(params, event);
+      return;
+    }
+
     if (!isNavigationKey(event.key) || !cellWithVirtualFocus.current) {
       return;
     }
@@ -1527,9 +1528,6 @@ export const useGridCellSelection = (
   useGridEvent(apiRef, 'cellMouseDown', runIfCellSelectionIsEnabled(handleFillHandleMouseDown));
   useGridEvent(apiRef, 'cellClick', runIfCellSelectionIsEnabled(handleCellClick));
   useGridEvent(apiRef, 'cellFocusIn', runIfCellSelectionIsEnabled(handleCellFocusIn));
-  // The select-all shortcut must run before the `cellKeyDown` listener of the row selection
-  // feature, which is subscribed first and would select all rows instead
-  useGridEventPriority(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleSelectAllShortcut));
   useGridEvent(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleCellKeyDown));
   useGridEvent(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleFillKeyDown));
   useGridEvent(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleFillRightKeyDown));
