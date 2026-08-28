@@ -4,6 +4,7 @@ import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { TEST_LICENSE_KEY_PRO } from 'test/utils/licenseKeys';
 import {
+  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -15,7 +16,7 @@ describe('<EventTimelinePremium /> - License', () => {
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  it('should throw out of scope error when using EventTimelinePremium with a pro license', () => {
+  it('should throw out of scope error when using EventTimelinePremium with a pro license', async () => {
     LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PRO);
     expect(() =>
       render(
@@ -29,9 +30,11 @@ describe('<EventTimelinePremium /> - License', () => {
         />,
       ),
     ).toErrorDev(['MUI X: License key plan mismatch']);
+    // Absorb the post-render ResizeObserver deliveries so they land as acted updates.
+    await absorbObserverFrames();
   });
 
-  it('should render watermark when the license is missing', () => {
+  it('should render watermark when the license is missing', async () => {
     clearLicenseStatusCache();
     LicenseInfo.setLicenseKey('');
 
@@ -47,6 +50,7 @@ describe('<EventTimelinePremium /> - License', () => {
         />,
       ),
     ).toErrorDev(['MUI X: Missing license key.']);
+    await absorbObserverFrames();
 
     expect(screen.getByText('MUI X Missing license key')).not.to.equal(null);
   });

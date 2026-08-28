@@ -6,7 +6,6 @@ import {
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   adapter,
-  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -42,7 +41,7 @@ const PRESET_EXPECTATIONS: PresetExpectations[] = [
 ];
 
 describe('<EventTimelinePremiumHeader />', () => {
-  const { render } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -56,7 +55,7 @@ describe('<EventTimelinePremiumHeader />', () => {
     // The grid is virtualized; sizing the host wide enough to fit the largest preset
     // (1096 days × 6px = 6576px plus the title column) keeps every header cell mounted
     // so the structural assertions can inspect them all without simulating scrolls.
-    const view = render(
+    const view = await renderSettled(
       <div style={{ width: 10000, height: 2000 }}>
         <EventTimelinePremium
           resources={[engineering]}
@@ -69,9 +68,6 @@ describe('<EventTimelinePremiumHeader />', () => {
         />
       </div>,
     );
-    // The title-column and viewport observers deliver on the frames after the render,
-    // outside act; absorb them so they cannot fail the run as un-acted updates.
-    await absorbObserverFrames();
     return view;
   }
 

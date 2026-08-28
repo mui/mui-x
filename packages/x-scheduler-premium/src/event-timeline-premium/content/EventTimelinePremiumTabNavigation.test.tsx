@@ -2,6 +2,7 @@ import * as React from 'react';
 import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
+  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -17,7 +18,7 @@ import { describe, it, expect } from 'vitest';
 // `clientWidth`/`scrollLeft` and the virtualizer only mounts a subset of events
 // when the scroller has real dimensions). jsdom doesn't lay out, so skip there.
 describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
-  const { render } = createSchedulerRenderer({
+  const { render, renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -46,14 +47,14 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     eventAt(6, 20),
   ];
 
-  function renderTimeline(
+  async function renderTimeline(
     options: {
       events?: SchedulerEvent[];
       presetConfig?: EventTimelinePremiumPresetConfig;
       hostWidth?: number;
     } = {},
   ) {
-    return render(
+    const view = await renderSettled(
       <div style={{ width: options.hostWidth ?? 1200, height: 600 }}>
         <EventTimelinePremium
           resources={[resource]}
@@ -65,6 +66,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
         />
       </div>,
     );
+    return view;
   }
 
   function getEvent(title: string): HTMLElement | null {
@@ -76,7 +78,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
   }
 
   it('should focus the next event in row order when Tab is pressed', async () => {
-    const { user } = renderTimeline();
+    const { user } = await renderTimeline();
 
     // Wait for the timeline to settle and confirm `evt-d3-h1` and `evt-d3-h5` are
     // both currently mounted (the close-together events near scrollLeft=0).
@@ -95,7 +97,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
   });
 
   it('should scroll-then-focus an event that is virtualized out', async () => {
-    const { user } = renderTimeline();
+    const { user } = await renderTimeline();
 
     await waitFor(() => {
       expect(getEvent('evt-d3-h1')).not.to.equal(null);
@@ -139,7 +141,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
   });
 
   it('should walk back through events with Shift+Tab, including virtualized ones', async () => {
-    const { user } = renderTimeline();
+    const { user } = await renderTimeline();
 
     // Scroll all the way right and confirm the last event mounts.
     await waitFor(() => {
@@ -182,7 +184,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
   });
 
   it('should let default Tab take focus out of the row past the last event', async () => {
-    const { user } = renderTimeline();
+    const { user } = await renderTimeline();
 
     await waitFor(() => {
       expect(getEvent('evt-d3-h1')).not.to.equal(null);
@@ -214,7 +216,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     it('should skip the occurrences hidden by the trimmed hour window instead of trapping focus', async () => {
       // 21:00 hides inside the window: its occurrence never mounts, so navigating to it
       // would swallow Tab forever.
-      const { user } = renderTimeline({
+      const { user } = await renderTimeline({
         events: [eventAt(3, 10), eventAt(3, 21), eventAt(4, 10)],
         presetConfig: TRIMMED,
       });
@@ -240,7 +242,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
       // The target sits on the last day at 19:00 — tick 47 of 48, around x=3008 — while
       // the 600px host shows roughly the first 540px. It cannot be reached without the
       // interceptor scrolling to the position the trimmed axis puts it at.
-      const { user } = renderTimeline({
+      const { user } = await renderTimeline({
         events: [eventAt(3, 10), eventAt(3, 21), eventAt(6, 19)],
         presetConfig: TRIMMED,
         hostWidth: 600,
@@ -333,6 +335,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
           />
         </div>,
       );
+      await absorbObserverFrames();
 
       await waitFor(() => {
         expect(within(getEventRow(resourceA.id)).queryByText('Solo A')).not.to.equal(null);

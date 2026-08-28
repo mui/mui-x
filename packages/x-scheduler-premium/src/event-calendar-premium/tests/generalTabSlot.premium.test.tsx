@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { fireEvent, screen } from '@mui/internal-test-utils';
-import { createSchedulerRenderer, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  absorbObserverFrames,
+  createSchedulerRenderer,
+  EventBuilder,
+  ResourceBuilder,
+} from 'test/utils/scheduler';
 import type {
   EventDialogGeneralTabPropsOverrides,
   SchedulerSlotProps,
@@ -62,7 +67,7 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
   ] as const;
 
   surfaces.forEach(([name, Component, isCompact]) => {
-    it(`should forward the eventDialogGeneralTab slot and its slot props from <${name} />`, () => {
+    it(`should forward the eventDialogGeneralTab slot and its slot props from <${name} />`, async () => {
       render(
         <Component
           events={[event]}
@@ -73,6 +78,8 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
           slotProps={slotProps}
         />,
       );
+      // Absorb the post-render ResizeObserver deliveries so they land as acted updates.
+      await absorbObserverFrames();
 
       fireEvent.click(screen.getByRole('button', { name: /Morning Meeting/i }));
       if (isCompact) {
@@ -84,7 +91,7 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
     });
   });
 
-  it('should keep the recurrence tab working when the general tab is replaced by the slot', () => {
+  it('should keep the recurrence tab working when the general tab is replaced by the slot', async () => {
     render(
       <EventCalendarPremium
         events={[event]}
@@ -94,6 +101,7 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
         slots={slots}
       />,
     );
+    await absorbObserverFrames();
 
     fireEvent.click(screen.getByRole('button', { name: /Morning Meeting/i }));
     const generalPanel = screen.getByRole('tabpanel', { name: /general/i });
