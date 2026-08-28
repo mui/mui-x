@@ -87,7 +87,7 @@ The main calendar view area is rendered as a `<section>` element with a localize
 
 The inline side panel (mini calendar, divider, and resources tree) is rendered as an `<aside>` element, exposing the `complementary` landmark role. The header toolbar's toggle button references it via `aria-controls` and reflects its open state with `aria-expanded`.
 
-While the panel is collapsed, it carries `aria-hidden="true"` so its content — including the mini calendar's focusable active day — is removed from the accessibility tree. The attribute is only applied once the collapse animation has fully finished (and cleared immediately when reopening), so no focusable content is ever hidden from assistive technology while it is still interactive.
+While the panel is collapsed, it carries `aria-hidden="true"` so its content — including the mini calendar's focusable active day — is removed from the accessibility tree. The attribute is applied once the collapse animation has finished, and cleared when the panel reopens.
 
 ## Keyboard interactions
 

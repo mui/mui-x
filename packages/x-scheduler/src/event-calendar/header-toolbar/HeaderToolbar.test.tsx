@@ -256,7 +256,7 @@ describe('side panel toggle', () => {
 
     const panel = document.getElementById(panelId);
     expect(panel).not.to.equal(null);
-    expect(panel!.hasAttribute('aria-hidden')).to.equal(false);
+    expect(panel).not.to.have.attribute('aria-hidden');
 
     fireEvent.click(toggleButton);
 
@@ -266,17 +266,22 @@ describe('side panel toggle', () => {
     expect(toggleButton).to.have.attribute('aria-expanded', 'false');
     expect(toggleButton).to.have.attribute('aria-controls', panelId);
 
-    // `aria-hidden` only lands once the Collapse's exit transition has actually finished
-    // (see the `onExited` comment in EventCalendarRoot), so it needs a `waitFor`.
+    // aria-hidden must not land until the exit transition actually finishes: asserting
+    // this synchronously, right after the click and before the `waitFor` below, is what
+    // pins the delay — it fails against an eager `aria-hidden={!isSidePanelOpen}`.
+    expect(panel).not.to.have.attribute('aria-hidden');
+
+    // The exit runs on a real timer (see the comment above `isSidePanelHidden` in
+    // EventCalendarRoot), so it needs a `waitFor`.
     await waitFor(() => expect(panel).to.have.attribute('aria-hidden', 'true'));
 
-    // Re-opening should clear aria-hidden again, immediately (via `onEnter`, before the
-    // expand transition even starts) rather than needing to wait for it to finish.
+    // Re-opening clears aria-hidden immediately and synchronously: the JSX gates on
+    // `isSidePanelOpen` directly, so this doesn't wait on any Collapse callback.
     fireEvent.click(toggleButton);
 
     expect(screen.getByRole('button', { name: 'Close side panel' })).to.equal(toggleButton);
     expect(toggleButton).to.have.attribute('aria-expanded', 'true');
-    expect(panel!.hasAttribute('aria-hidden')).to.equal(false);
+    expect(panel).not.to.have.attribute('aria-hidden');
   });
 
   it('should render the panel as the complementary landmark, with no nested landmark inside', () => {
@@ -287,5 +292,27 @@ describe('side panel toggle', () => {
     const panel = screen.getByRole('complementary');
     expect(panel.tagName).to.equal('ASIDE');
     expect(panel.querySelector('aside')).to.equal(null);
+  });
+
+  it('should already be aria-hidden on mount when the panel starts closed, and clear it on open', () => {
+    render(
+      <EventCalendar events={[]} resources={[]} defaultPreferences={{ isSidePanelOpen: false }} />,
+    );
+
+    // No transition runs on mount, so this must come from the initial state, not a
+    // Collapse callback.
+    const toggleButton = screen.getByRole('button', { name: 'Open side panel' });
+    const panelId = toggleButton.getAttribute('aria-controls');
+    if (!panelId) {
+      throw new Error('Expected the toggle button to have an aria-controls attribute');
+    }
+
+    const panel = document.getElementById(panelId);
+    expect(panel).to.have.attribute('aria-hidden', 'true');
+
+    fireEvent.click(toggleButton);
+
+    // Same `isSidePanelOpen` gate as the reopen path above: clears synchronously.
+    expect(panel).not.to.have.attribute('aria-hidden');
   });
 });
