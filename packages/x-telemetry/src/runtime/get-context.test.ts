@@ -25,6 +25,9 @@ describe.runIf(isJSDOM)('getRuntimePackageHash', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
+    // `isolate: false` shares the module registry across test files, so `./get-context`
+    // may already be cached bound to another file's `vi.mock('../context')` instance.
+    vi.resetModules();
     fetchSpy = vi.fn();
     vi.stubGlobal('fetch', fetchSpy);
   });
@@ -103,6 +106,9 @@ describe.runIf(isJSDOM)('getTelemetryContext runtimePackageNameHash', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
+    // `isolate: false` shares the module registry across test files, so `./get-context`
+    // may already be cached bound to another file's `vi.mock('../context')` instance.
+    vi.resetModules();
     fetchSpy = vi.fn();
     vi.stubGlobal('fetch', fetchSpy);
     telemetryContext.traits.projectId = null;
