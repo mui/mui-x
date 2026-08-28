@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
