@@ -17,7 +17,9 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
   TemporalSupportedObject,
+  TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
@@ -105,6 +107,17 @@ const EventDialogTabs = styled(Tabs, {
 
 // Fields owned by the Recurrence tab; their submit failures must surface there.
 const RECURRENCE_FORM_KEYS = new Set(['recurrenceSelection', 'rruleDraft']);
+
+// Scheduler settings read when the async validation resolves; the submit
+// continuation must not use the render-time closure values.
+interface ResolutionSettings {
+  adapter: Adapter;
+  displayTimezone: TemporalTimezone;
+  shouldEventRequireResource: boolean;
+  recurringEventsPlugin: ReturnType<typeof schedulerOtherSelectors.recurringEventsPlugin>;
+  showRecurrence: boolean;
+  recurrencePresets: ReturnType<typeof schedulerRecurringEventSelectors.presets>;
+}
 
 interface FormContentProps {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -211,15 +224,14 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   const { onClose, dragHandlerRef, isDraggable } = props;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
   const { occurrence, resourceSelectionMode } = formStore;
 
-  // Selector hooks
+  // Selector hooks — only what the render itself needs; the submit continuation
+  // reads its own `ResolutionSettings` snapshot instead of subscribing here.
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
   const shouldEventRequireResource = useStore(
     store,
@@ -228,12 +240,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
   // Optional renderer hooks
   const { recurrenceTab: RecurrenceTabRenderer } = useEventEditingOptionalRenderers();
-
-  const recurrencePresets = useStore(
-    store,
-    schedulerRecurringEventSelectors.presets,
-    occurrence.displayTimezone.start,
-  );
 
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
@@ -265,12 +271,16 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   // Submit-level checks that hold regardless of which sections are mounted.
+  // `current` is the settings snapshot taken when the validation resolved: the
+  // closure values may predate an async validation.
   const runSubmitChecks = (
     values: EventDialogFormValues,
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
+    current: ResolutionSettings,
   ): boolean => {
-    const isMissingRequiredResource = shouldEventRequireResource && values.resourceIds.length === 0;
+    const isMissingRequiredResource =
+      current.shouldEventRequireResource && values.resourceIds.length === 0;
     if (
       isMissingRequiredResource &&
       eventDialogFormSelectors.error(formStore.state, 'resourceIds') === undefined
@@ -279,7 +289,11 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     }
 
     // Only custom fields can produce unparseable or empty date values.
-    const invalidRangeField = findInvalidRangeField(adapter, values, displayTimezone);
+    const invalidRangeField = findInvalidRangeField(
+      current.adapter,
+      values,
+      current.displayTimezone,
+    );
     if (invalidRangeField) {
       warnUnvalidatedField(invalidRangeField, 'The value cannot be parsed into a date');
       if (eventDialogFormSelectors.error(formStore.state, invalidRangeField) === undefined) {
@@ -292,7 +306,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
     // An invalid field already blocks; the ordering verdict would compare
     // against the computeRange fallback and blame a healthy field.
-    const rangeError = invalidRangeField ? null : validateRange(adapter, start, end, values.allDay);
+    const rangeError = invalidRangeField
+      ? null
+      : validateRange(current.adapter, start, end, values.allDay);
     if (rangeError) {
       warnUnvalidatedField(rangeError.field, 'The date range is invalid');
       // A validator on the same field may have stored a more specific message.
@@ -348,10 +364,25 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         return;
       }
 
-      const values = formStore.state.values;
-      const { start, end } = computeRange(adapter, values, displayTimezone);
+      // The async validation may outlive the render that captured this closure and
+      // already re-runs against the current rules, so the checks and the
+      // serialization read one current snapshot of the scheduler settings too.
+      const current: ResolutionSettings = {
+        adapter: store.state.adapter,
+        displayTimezone: schedulerOtherSelectors.displayTimezone(store.state),
+        shouldEventRequireResource: schedulerOtherSelectors.shouldEventRequireResource(store.state),
+        recurringEventsPlugin: schedulerOtherSelectors.recurringEventsPlugin(store.state),
+        showRecurrence: schedulerOtherSelectors.areRecurringEventsAvailable(store.state),
+        recurrencePresets: schedulerRecurringEventSelectors.presets(
+          store.state,
+          occurrence.displayTimezone.start,
+        ),
+      };
 
-      if (!runSubmitChecks(values, start, end) || !isValid) {
+      const values = formStore.state.values;
+      const { start, end } = computeRange(current.adapter, values, current.displayTimezone);
+
+      if (!runSubmitChecks(values, start, end, current) || !isValid) {
         // Show the tab owning a failing field; General wins when both tabs fail.
         const failingKeys = Object.keys(formStore.state.errors);
         const onlyRecurrenceFails =
@@ -381,14 +412,14 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       };
 
       let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
-      if (!showRecurrence || !recurrencePresets) {
+      if (!current.showRecurrence || !current.recurrencePresets) {
         rruleToSubmit = undefined;
       } else if (values.recurrenceSelection === null) {
         rruleToSubmit = undefined;
       } else if (values.recurrenceSelection === 'custom') {
         rruleToSubmit = values.rruleDraft;
       } else {
-        rruleToSubmit = recurrencePresets[values.recurrenceSelection];
+        rruleToSubmit = current.recurrencePresets[values.recurrenceSelection];
       }
 
       // Read directly instead of subscribing: the placeholder changes on every
@@ -401,7 +432,11 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           end,
           rrule: rruleToSubmit,
         });
-      } else if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+      } else if (
+        current.showRecurrence &&
+        current.recurringEventsPlugin &&
+        occurrence.displayTimezone.rrule
+      ) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
           store.state,
           occurrence.displayTimezone.rrule,

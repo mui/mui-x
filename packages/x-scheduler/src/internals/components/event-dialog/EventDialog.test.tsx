@@ -1378,6 +1378,64 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         expect(validator.callCount).to.equal(1);
       });
 
+      it('should serialize with the display timezone current when the async validation settles', async () => {
+        const onEventsChange = spy();
+        const deferred = createDeferred();
+        function AsyncValidatedSection() {
+          useEventDialogFormField('client', {
+            defaultValue: 'Acme',
+            validate: () => deferred.promise,
+          });
+          return null;
+        }
+        const { user, setProps } = renderWithSlot(
+          { eventDialogGeneralTab: AsyncValidatedSection },
+          { onEventsChange, displayTimezone: 'UTC' },
+        );
+
+        // The wall-time fields were seeded as 07:30–08:15 UTC; while the validation
+        // is pending, the same wall times start displaying as New York times.
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+        setProps({ displayTimezone: 'America/New_York' });
+        await act(async () => deferred.resolve(null));
+
+        expect(onEventsChange.callCount).to.equal(1);
+        const updated = onEventsChange.firstCall.firstArg[0];
+        expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:30:00.000Z');
+      });
+
+      it('should enforce a resource requirement enabled while the async validation was pending', async () => {
+        const onEventsChange = spy();
+        const deferred = createDeferred();
+        const noResourceEvent: SchedulerEvent = EventBuilder.new()
+          .title('Running')
+          .singleDay('2025-05-26T07:30:00Z', 45)
+          .build();
+        const noResourceOccurrence = EventBuilder.new()
+          .id(noResourceEvent.id)
+          .title(noResourceEvent.title)
+          .span(noResourceEvent.start, noResourceEvent.end)
+          .toOccurrence();
+        function AsyncValidatedSection() {
+          useEventDialogFormField('client', {
+            defaultValue: 'Acme',
+            validate: () => deferred.promise,
+          });
+          return null;
+        }
+        const { user, setProps } = renderWithSlot(
+          { eventDialogGeneralTab: AsyncValidatedSection },
+          { onEventsChange, events: [noResourceEvent] },
+          noResourceOccurrence,
+        );
+
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+        setProps({ shouldEventRequireResource: true });
+        await act(async () => deferred.resolve(null));
+
+        expect(onEventsChange.callCount).to.equal(0);
+      });
+
       it('should ignore a submission that settles after its editing session ended', async () => {
         const onEventsChange = spy();
         const deferred = createDeferred();
