@@ -107,7 +107,7 @@ export const useGridKeyboardNavigation = (
       logger.debug(`Navigating to cell row ${rowIndexRelativeToAllRows}, col ${colIndex}`);
       apiRef.current.scrollToIndexes({
         colIndex,
-        rowIndex: rowIndexRelativeToAllRows,
+        rowIndex: rowIndexRelativeToAllRows === -1 ? undefined : rowIndexRelativeToAllRows,
       });
       apiRef.current.setCellFocus(nonRowSpannedRowId, field);
     },
