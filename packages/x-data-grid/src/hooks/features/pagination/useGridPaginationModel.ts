@@ -17,7 +17,11 @@ import { gridDensityFactorSelector } from '../density';
 import { useGridLogger, useGridSelector, useGridApiMethod, useGridEvent } from '../../utils';
 import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import type { GridPipeProcessor } from '../../core/pipeProcessing';
-import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
+import {
+  gridPageCountSelector,
+  gridPaginationModelSelector,
+  gridPaginationRowRangeSelector,
+} from './gridPaginationSelector';
 import {
   getPageCount,
   defaultPageSize,
@@ -224,8 +228,9 @@ export const useGridPaginationModel = (
   const handlePaginationModelChange: GridEventListener<'paginationModelChange'> = () => {
     const paginationModel = gridPaginationModelSelector(apiRef);
     if (apiRef.current.virtualScrollerRef?.current) {
+      const paginationRange = gridPaginationRowRangeSelector(apiRef);
       apiRef.current.scrollToIndexes({
-        rowIndex: paginationModel.page * paginationModel.pageSize,
+        rowIndex: paginationRange?.firstRowIndex ?? paginationModel.page * paginationModel.pageSize,
       });
     }
   };
