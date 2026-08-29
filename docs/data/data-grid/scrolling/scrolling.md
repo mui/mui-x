@@ -7,6 +7,7 @@
 You can scroll to a specific cell by calling `apiRef.current.scrollToIndexes()`.
 The only argument that must be passed is an object containing the row index and the column index of the cell to scroll.
 If the row or column index is not present, the Data Grid will not do any movement in the missing axis.
+Indexes are zero-based and must refer to a row in the current page or to a visible column.
 
 The following demo explores the usage of this API:
 
