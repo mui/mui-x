@@ -50,12 +50,15 @@ You can customize the loading rows with the same [slots and classes](/x/react-tr
 
 ### Customized loading UI
 
-The demo below combines the customization options:
+The demo below combines the customization options and adds transitions:
 
-- The `loadingIcon` slot of `TreeItem` replaces the circular progress indicator of an item whose children load.
 - The `loading` slot replaces the loading rows.
   It renders while the root items load and while an item fetches its children.
   Each custom row is wrapped in the `TreeItemLoader` component, which keeps the `role`, `aria` attributes, indentation, and height of a tree item.
+- The `loadingIcon` slot of `TreeItem` replaces the circular progress indicator of an item whose children load.
+- The `groupTransition` slot of `TreeItem` animates the expansion with a spring.
+- The loading rows and the items share a staggered entrance animation.
+  This makes the transition from the loading state to the loaded items read as one continuous motion.
 
 {{"demo": "CustomizedLazyLoading.js"}}
 
