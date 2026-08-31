@@ -17,9 +17,8 @@ vi.mock('../context', () => ({
   },
 }));
 
-// `isolate: false` shares the module registry across test files, so `./sender` and the
-// `./get-context` it imports may already be cached bound to another file's
-// `vi.mock('../context')` instance.
+// `isolate: false` shares the module registry, so `./sender` and the `./get-context` it
+// imports may be cached bound to another file's `vi.mock('../context')`.
 beforeEach(() => {
   vi.resetModules();
 });
@@ -32,8 +31,8 @@ const testEvent = {
 
 describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
-  // Imported after the reset above: `./config` holds its env cache in module scope, so a
-  // reference kept across the reset would no longer be the one `./sender` reads.
+  // Imported after the reset: `./config` caches env in module scope, so a reference held
+  // across the reset is not the one `./sender` reads.
   let muiXTelemetrySettings: typeof import('@mui/x-telemetry').muiXTelemetrySettings;
   let getTelemetryEnvConfig: typeof import('./config').getTelemetryEnvConfig;
 

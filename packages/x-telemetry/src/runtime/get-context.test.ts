@@ -17,8 +17,8 @@ vi.mock('../context', () => ({
   },
 }));
 
-// `isolate: false` shares the module registry across test files, so `./get-context` may
-// already be cached bound to another file's `vi.mock('../context')` instance.
+// `isolate: false` shares the module registry, so `./get-context` may be cached bound to
+// another file's `vi.mock('../context')`.
 beforeEach(() => {
   vi.resetModules();
 });
