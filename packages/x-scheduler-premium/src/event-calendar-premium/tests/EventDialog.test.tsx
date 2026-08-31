@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
@@ -33,6 +32,7 @@ import {
   useEventDialogFormField,
 } from '@mui/x-scheduler/event-dialog';
 import { describe, it, expect, vi } from 'vitest';
+import type { Mock, MockInstance } from 'vitest';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
 
@@ -90,7 +90,7 @@ describe('<EventDialogContent open />', () => {
   const { render } = createSchedulerRenderer();
 
   it('should return to the General tab when the submit fails from the Recurrence tab', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const noResourceEvent = EventBuilder.new()
       .title('Running')
       .singleDay('2025-05-26T07:30:00Z', 45)
@@ -119,14 +119,14 @@ describe('<EventDialogContent open />', () => {
 
     await user.click(screen.getByRole('button', { name: /save/i }));
 
-    expect(onEventsChange.called).to.equal(false);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
     // The failing field lives in the General tab, so the dialog switches back to it.
     expect(generalPanel).not.to.have.attribute('hidden');
     expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
   });
 
   it('should return to the General tab when only a custom validator fails', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     function FailingSection() {
       const client = useEventDialogFormField('client', {
         defaultValue: '',
@@ -157,13 +157,13 @@ describe('<EventDialogContent open />', () => {
 
     await user.click(screen.getByRole('button', { name: /save/i }));
 
-    expect(onEventsChange.called).to.equal(false);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
     expect(generalPanel).not.to.have.attribute('hidden');
     expect(screen.getByRole('alert')).to.have.text('Nope');
   });
 
   it('should return to the General tab when a validator throws', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     function ThrowingSection() {
       useEventDialogFormField('client', {
         defaultValue: '',
@@ -197,12 +197,12 @@ describe('<EventDialogContent open />', () => {
       'MUI X Scheduler: A form field validator threw or rejected during the submit.',
     ]);
 
-    expect(onEventsChange.called).to.equal(false);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
     expect(generalPanel).not.to.have.attribute('hidden');
   });
 
   it('should return to the General tab when the native validation blocks the submit', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     function EndDateClearer() {
       const endDate = useEventDialogFormField('endDate');
       return (
@@ -240,7 +240,7 @@ describe('<EventDialogContent open />', () => {
 
     // The browser refuses the submit over the hidden invalid control; the form
     // must at least bring the failing field back into view.
-    expect(onEventsChange.called).to.equal(false);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
     expect(generalPanel).not.to.have.attribute('hidden');
   });
 
@@ -334,7 +334,7 @@ describe('<EventDialogContent open />', () => {
   });
 
   it('should call "onEventsChange" with updated values on submit', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
         events={[DEFAULT_EVENT]}
@@ -356,8 +356,8 @@ describe('<EventDialogContent open />', () => {
     await user.click(screen.getByRole('button', { name: /pink/i }));
     await user.click(screen.getByRole('button', { name: /save/i }));
 
-    expect(onEventsChange.calledOnce).to.equal(true);
-    const updated = onEventsChange.firstCall.firstArg[0];
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const updated = onEventsChange.mock.calls[0][0][0];
 
     const expectedUpdatedEvent = {
       id: DEFAULT_EVENT.id,
@@ -377,7 +377,7 @@ describe('<EventDialogContent open />', () => {
   }, 10_000);
 
   it('should clear the color when clicking the active color toggle', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
         events={[DEFAULT_EVENT]}
@@ -395,13 +395,13 @@ describe('<EventDialogContent open />', () => {
     expect(pinkToggle).to.have.attribute('aria-pressed', 'false');
     await user.click(screen.getByRole('button', { name: /save/i }));
 
-    expect(onEventsChange.calledOnce).to.equal(true);
-    expect(onEventsChange.firstCall.firstArg[0].color).to.not.equal('pink');
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.calls[0][0][0].color).to.not.equal('pink');
   });
 
   describe('range validation', () => {
     function renderDialog() {
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       const { user } = render(
         <EventCalendarProvider
           events={[DEFAULT_EVENT]}
@@ -438,7 +438,7 @@ describe('<EventDialogContent open />', () => {
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(screen.queryDescriptionOf(screen.getByLabelText(/end date/i))).to.equal(null);
-      expect(onEventsChange.calledOnce).to.equal(true);
+      expect(onEventsChange.mock.calls.length).to.equal(1);
     });
 
     it('should show error on the End time field and block submit if end time is before start time on the same day', async () => {
@@ -449,7 +449,7 @@ describe('<EventDialogContent open />', () => {
       await user.type(screen.getByLabelText(/end time/i), '09:00');
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(onEventsChange.called).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(screen.getDescriptionOf(screen.getByLabelText(/end time/i)).textContent).to.match(
         /end time.*after.*start time/i,
       );
@@ -463,7 +463,7 @@ describe('<EventDialogContent open />', () => {
       await user.type(screen.getByLabelText(/end time/i), '10:00');
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(onEventsChange.called).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(screen.getDescriptionOf(screen.getByLabelText(/end time/i)).textContent).to.match(
         /end time.*after.*start time/i,
       );
@@ -471,7 +471,7 @@ describe('<EventDialogContent open />', () => {
   });
 
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
         events={[DEFAULT_EVENT]}
@@ -483,8 +483,8 @@ describe('<EventDialogContent open />', () => {
       </EventCalendarProvider>,
     );
     await user.click(screen.getByRole('button', { name: /delete event/i }));
-    expect(onEventsChange.calledOnce).to.equal(true);
-    expect(onEventsChange.firstCall.firstArg).to.deep.equal([]);
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.calls[0][0]).to.deep.equal([]);
   });
 
   it('should delete a non-recurring event directly without opening the scope dialog', async () => {
@@ -517,8 +517,8 @@ describe('<EventDialogContent open />', () => {
 
     await user.click(screen.getByRole('button', { name: /delete event/i }));
 
-    expect(deleteEventSpy?.calledOnce).to.equal(true);
-    expect(deleteRecurringEventSpy?.called).to.equal(false);
+    expect(deleteEventSpy?.mock.calls.length).to.equal(1);
+    expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(0);
     expect(screen.queryByText(/Apply this change to:/i)).to.equal(null);
   });
 
@@ -673,7 +673,7 @@ describe('<EventDialogContent open />', () => {
   });
 
   it('should handle a resource without an eventColor (fallback to default)', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
 
     const noColorResource = ResourceBuilder.new().title('NoColor').build();
     const resourcesNoColor: SchedulerResource[] = [workResource, personalResource, noColorResource];
@@ -773,7 +773,7 @@ describe('<EventDialogContent open />', () => {
   });
 
   it('should fallback to "No resource" with default color when the event has no resource', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
 
     const eventWithoutResource: SchedulerEvent = {
       ...DEFAULT_EVENT,
@@ -815,8 +815,8 @@ describe('<EventDialogContent open />', () => {
 
     await user.click(screen.getByRole('button', { name: /save/i }));
 
-    expect(onEventsChange.calledOnce).to.equal(true);
-    const updated = onEventsChange.firstCall.firstArg[0];
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const updated = onEventsChange.mock.calls[0][0][0];
     // A never-assigned event defaults to an empty resource selection, not `undefined`.
     expect(updated.resource).to.deep.equal([]);
   });
@@ -854,7 +854,7 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should show "No resource" in the combobox after picking the "No resource" option (single-select mode)', async () => {
-      let updateEventSpy: sinon.SinonSpy | undefined;
+      let updateEventSpy: MockInstance | undefined;
 
       const { user } = render(
         <EventCalendarProvider
@@ -888,12 +888,12 @@ describe('<EventDialogContent open />', () => {
 
       // Single mode writes the plain id, or `undefined` once cleared — never `[]` or `null`,
       // which would silently widen the shape for an app that never opted into arrays.
-      expect(updateEventSpy?.calledOnce).to.equal(true);
-      expect(updateEventSpy?.firstCall.args[0].resource).to.equal(undefined);
+      expect(updateEventSpy?.mock.calls.length).to.equal(1);
+      expect(updateEventSpy?.mock.calls[0][0].resource).to.equal(undefined);
     });
 
     it('should block submit and not call `onEventsChange` when `shouldEventRequireResource={true}` and the event has no resource', async () => {
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
 
       const { user } = render(
         <EventCalendarProvider
@@ -921,12 +921,12 @@ describe('<EventDialogContent open />', () => {
 
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(onEventsChange.called).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
     });
 
     it('should unblock submit and clear the error after a resource is selected', async () => {
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
 
       const { user } = render(
         <EventCalendarProvider
@@ -945,7 +945,7 @@ describe('<EventDialogContent open />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /save/i }));
-      expect(onEventsChange.called).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
 
       await user.click(screen.getByRole('combobox', { name: /resource/i }));
@@ -957,12 +957,12 @@ describe('<EventDialogContent open />', () => {
 
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(onEventsChange.calledOnce).to.equal(true);
-      expect(onEventsChange.firstCall.firstArg[0].resource).to.deep.equal([workResource.id]);
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.calls[0][0][0].resource).to.deep.equal([workResource.id]);
     });
 
     it('should show the range error and the resource error at the same time', async () => {
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
 
       const { user } = render(
         <EventCalendarProvider
@@ -986,7 +986,7 @@ describe('<EventDialogContent open />', () => {
       await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(onEventsChange.called).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(screen.getDescriptionOf(screen.getByLabelText(/end date/i)).textContent).to.match(
         /end date.*before.*start date/i,
       );
@@ -1001,7 +1001,7 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should keep validating the general tab fields when submitting from the recurrence tab', async () => {
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
 
       const { user } = render(
         <EventCalendarProvider
@@ -1023,12 +1023,12 @@ describe('<EventDialogContent open />', () => {
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       // The general tab is hidden, not unmounted, so its validators still run and block the submit.
-      expect(onEventsChange.called).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
     });
 
     it('should block submit on a Calendar creation placeholder when `shouldEventRequireResource={true}` and no resource is selected', async () => {
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
 
@@ -1064,7 +1064,7 @@ describe('<EventDialogContent open />', () => {
 
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(onEventsChange.called).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
     });
   });
@@ -1133,8 +1133,8 @@ describe('<EventDialogContent open />', () => {
       await user.keyboard('{Escape}');
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(createEventSpy?.calledOnce).to.equal(true);
-      expect(createEventSpy.lastCall.firstArg.resource).to.deep.equal([
+      expect(createEventSpy?.mock.calls.length).to.equal(1);
+      expect(createEventSpy.mock.lastCall?.[0].resource).to.deep.equal([
         workResource.id,
         personalResource.id,
       ]);
@@ -1172,8 +1172,8 @@ describe('<EventDialogContent open />', () => {
       await user.click(await screen.findByRole('option', { name: /work/i }));
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(createEventSpy?.calledOnce).to.equal(true);
-      expect(createEventSpy.lastCall.firstArg.resource).to.equal(workResource.id);
+      expect(createEventSpy?.mock.calls.length).to.equal(1);
+      expect(createEventSpy.mock.lastCall?.[0].resource).to.equal(workResource.id);
     });
 
     it('should infer a multi-select picker for creation when the first event with a resource in the data has an array', async () => {
@@ -1210,8 +1210,8 @@ describe('<EventDialogContent open />', () => {
       await user.keyboard('{Escape}');
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(createEventSpy?.calledOnce).to.equal(true);
-      expect(createEventSpy.lastCall.firstArg.resource).to.deep.equal([
+      expect(createEventSpy?.mock.calls.length).to.equal(1);
+      expect(createEventSpy.mock.lastCall?.[0].resource).to.deep.equal([
         workResource.id,
         personalResource.id,
       ]);
@@ -1249,8 +1249,8 @@ describe('<EventDialogContent open />', () => {
       await user.click(await screen.findByRole('option', { name: /work/i }));
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(createEventSpy?.calledOnce).to.equal(true);
-      expect(createEventSpy.lastCall.firstArg.resource).to.equal(workResource.id);
+      expect(createEventSpy?.mock.calls.length).to.equal(1);
+      expect(createEventSpy.mock.lastCall?.[0].resource).to.equal(workResource.id);
     });
 
     it('should edit an event with an array resource as multi-select even when `canHaveMultipleResources` is false', async () => {
@@ -1287,8 +1287,8 @@ describe('<EventDialogContent open />', () => {
       await user.keyboard('{Escape}');
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(updateEventSpy?.calledOnce).to.equal(true);
-      expect(updateEventSpy.lastCall.firstArg.resource).to.deep.equal([personalResource.id]);
+      expect(updateEventSpy?.mock.calls.length).to.equal(1);
+      expect(updateEventSpy.mock.lastCall?.[0].resource).to.deep.equal([personalResource.id]);
     });
 
     it('should keep every resource of a multi-resource event when saving without touching the resource picker', async () => {
@@ -1338,8 +1338,8 @@ describe('<EventDialogContent open />', () => {
       await user.type(screen.getByLabelText(/event title/i), ' updated');
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(updateEventSpy?.calledOnce).to.equal(true);
-      expect(updateEventSpy.lastCall.firstArg.resource).to.deep.equal([
+      expect(updateEventSpy?.mock.calls.length).to.equal(1);
+      expect(updateEventSpy.mock.lastCall?.[0].resource).to.deep.equal([
         personalResource.id,
         workResource.id,
       ]);
@@ -1371,8 +1371,8 @@ describe('<EventDialogContent open />', () => {
       await user.click(await screen.findByRole('option', { name: /work/i }));
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(updateEventSpy?.calledOnce).to.equal(true);
-      expect(updateEventSpy.lastCall.firstArg.resource).to.equal(workResource.id);
+      expect(updateEventSpy?.mock.calls.length).to.equal(1);
+      expect(updateEventSpy.mock.lastCall?.[0].resource).to.equal(workResource.id);
     });
 
     it('should edit an event with resource: [] as multi-select with nothing selected', async () => {
@@ -1414,8 +1414,8 @@ describe('<EventDialogContent open />', () => {
       await user.keyboard('{Escape}');
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(updateEventSpy?.calledOnce).to.equal(true);
-      expect(updateEventSpy.lastCall.firstArg.resource).to.deep.equal([
+      expect(updateEventSpy?.mock.calls.length).to.equal(1);
+      expect(updateEventSpy.mock.lastCall?.[0].resource).to.deep.equal([
         workResource.id,
         personalResource.id,
       ]);
@@ -1463,8 +1463,8 @@ describe('<EventDialogContent open />', () => {
       await user.keyboard('{Escape}');
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(updateEventSpy?.calledOnce).to.equal(true);
-      expect(updateEventSpy.lastCall.firstArg.resource).to.deep.equal([
+      expect(updateEventSpy?.mock.calls.length).to.equal(1);
+      expect(updateEventSpy.mock.lastCall?.[0].resource).to.deep.equal([
         workResource.id,
         personalResource.id,
       ]);
@@ -1511,18 +1511,18 @@ describe('<EventDialogContent open />', () => {
         </EventCalendarProvider>,
       );
 
-      const callCountAfterMount = pushSpy!.callCount;
+      const callCountAfterMount = pushSpy!.mock.calls.length;
 
       await user.type(screen.getByLabelText(/event title/i), 'My event');
       await user.type(screen.getByLabelText(/description/i), 'Some details');
 
-      expect(pushSpy!.callCount).to.equal(callCountAfterMount);
+      expect(pushSpy!.mock.calls.length).to.equal(callCountAfterMount);
     });
 
     it('should change surface of the placeholder to day-grid when all-day is changed to true', async () => {
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
-      const handleSurfaceChange = spy();
+      const handleSurfaceChange = vi.fn();
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
@@ -1555,17 +1555,17 @@ describe('<EventDialogContent open />', () => {
         </EventCalendarProvider>,
       );
 
-      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
+      expect(handleSurfaceChange.mock.lastCall?.[0]).to.equal('time-grid');
 
       await user.click(screen.getByRole('switch', { name: /all day/i }));
 
-      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('day-grid');
+      expect(handleSurfaceChange.mock.lastCall?.[0]).to.equal('day-grid');
     });
 
     it('should change surface of the placeholder to time-grid when all-day is changed to false', async () => {
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
-      const handleSurfaceChange = spy();
+      const handleSurfaceChange = vi.fn();
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
@@ -1599,17 +1599,17 @@ describe('<EventDialogContent open />', () => {
         </EventCalendarProvider>,
       );
 
-      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('day-grid');
+      expect(handleSurfaceChange.mock.lastCall?.[0]).to.equal('day-grid');
 
       await user.click(screen.getByRole('switch', { name: /all day/i }));
 
-      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
+      expect(handleSurfaceChange.mock.lastCall?.[0]).to.equal('time-grid');
     });
 
     it('should not change surfaceType when all day changed to true and lockSurfaceType=true', async () => {
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
-      const handleSurfaceChange = spy();
+      const handleSurfaceChange = vi.fn();
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
@@ -1641,17 +1641,17 @@ describe('<EventDialogContent open />', () => {
           />
         </EventCalendarProvider>,
       );
-      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
+      expect(handleSurfaceChange.mock.lastCall?.[0]).to.equal('time-grid');
 
       await user.click(screen.getByRole('switch', { name: /all day/i }));
 
-      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
+      expect(handleSurfaceChange.mock.lastCall?.[0]).to.equal('time-grid');
     });
 
     it('should write the selected resource into the creation placeholder', async () => {
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
-      const handleResourceIdChange = spy();
+      const handleResourceIdChange = vi.fn();
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
@@ -1684,12 +1684,12 @@ describe('<EventDialogContent open />', () => {
         </EventCalendarProvider>,
       );
 
-      expect(handleResourceIdChange.lastCall?.firstArg).to.equal(null);
+      expect(handleResourceIdChange.mock.lastCall?.[0]).to.equal(null);
 
       await user.click(screen.getByRole('combobox', { name: /resource/i }));
       await user.click(await screen.findByRole('option', { name: /work/i }));
 
-      expect(handleResourceIdChange.lastCall?.firstArg).to.equal(workResource.id);
+      expect(handleResourceIdChange.mock.lastCall?.[0]).to.equal(workResource.id);
     });
 
     it('should call createEvent with metaChanges + computed start/end on Submit', async () => {
@@ -1711,7 +1711,7 @@ describe('<EventDialogContent open />', () => {
         .description('')
         .toOccurrence();
 
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       let createEventSpy;
 
       const { user } = render(
@@ -1747,8 +1747,8 @@ describe('<EventDialogContent open />', () => {
       await user.click(await screen.findByRole('option', { name: /daily/i }));
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(createEventSpy?.calledOnce).to.equal(true);
-      const payload = createEventSpy.lastCall.firstArg;
+      expect(createEventSpy?.mock.calls.length).to.equal(1);
+      const payload = createEventSpy.mock.lastCall?.[0];
 
       expect(payload.title).to.equal('New title');
       expect(payload.description).to.equal('Some details');
@@ -1780,7 +1780,7 @@ describe('<EventDialogContent open />', () => {
         .title('')
         .toOccurrence();
 
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       let createEventSpy;
 
       const { user } = render(
@@ -1820,8 +1820,8 @@ describe('<EventDialogContent open />', () => {
 
       await user.click(screen.getByRole('button', { name: /save/i }));
 
-      expect(createEventSpy?.calledOnce).to.equal(true);
-      const payload = createEventSpy.lastCall.firstArg;
+      expect(createEventSpy?.mock.calls.length).to.equal(1);
+      const payload = createEventSpy.mock.lastCall?.[0];
 
       // Form inputs are wall-time values.
       // They must be interpreted in displayTimezone, not in 'default'.
@@ -1897,10 +1897,10 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Cancel/i }));
 
-        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
-        expect(selectRecurringEventScopeSpy?.called).to.equal(true);
-        expect(selectRecurringEventScopeSpy?.lastCall.firstArg).to.equal(null);
-        expect(updateRecurringEventSpy?.callCount).to.equal(1);
+        expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
+        expect(selectRecurringEventScopeSpy?.mock.calls.length).to.be.greaterThan(0);
+        expect(selectRecurringEventScopeSpy?.mock.lastCall?.[0]).to.equal(null);
+        expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
       });
 
       it("should call updateRecurringEvent with scope 'all' and not include rrule if not modified on Submit", async () => {
@@ -1952,8 +1952,8 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
-        const openPayload = updateRecurringEventSpy.lastCall.firstArg;
+        expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
+        const openPayload = updateRecurringEventSpy.mock.lastCall?.[0];
 
         expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.title).to.equal('Daily standup');
@@ -1967,8 +1967,8 @@ describe('<EventDialogContent open />', () => {
         );
         expect(openPayload.changes).to.not.have.property('rrule');
 
-        expect(selectRecurringEventScopeSpy?.calledOnce).to.equal(true);
-        expect(selectRecurringEventScopeSpy?.lastCall.firstArg).to.equal('all');
+        expect(selectRecurringEventScopeSpy?.mock.calls.length).to.equal(1);
+        expect(selectRecurringEventScopeSpy?.mock.lastCall?.[0]).to.equal('all');
       });
 
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {
@@ -2019,8 +2019,8 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/Only this event/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
-        const openPayload = updateRecurringEventSpy.lastCall.firstArg;
+        expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
+        const openPayload = updateRecurringEventSpy.mock.lastCall?.[0];
 
         expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.title).to.equal(originalRecurringEventOccurrence.title);
@@ -2033,8 +2033,8 @@ describe('<EventDialogContent open />', () => {
           interval: 1,
           byDay: ['WE'],
         });
-        expect(selectRecurringEventScopeSpy?.calledOnce).to.equal(true);
-        expect(selectRecurringEventScopeSpy?.lastCall.firstArg).to.equal('only-this');
+        expect(selectRecurringEventScopeSpy?.mock.calls.length).to.equal(1);
+        expect(selectRecurringEventScopeSpy?.mock.lastCall?.[0]).to.equal('only-this');
       });
 
       it('should call updateRecurringEvent with scope "this-and-following" and send rrule as undefined when "no repeat" is selected on Submit', async () => {
@@ -2085,14 +2085,14 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/This and following events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
-        const openPayload = updateRecurringEventSpy.lastCall.firstArg;
+        expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
+        const openPayload = updateRecurringEventSpy.mock.lastCall?.[0];
 
         expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.rrule).to.equal(undefined);
 
-        expect(selectRecurringEventScopeSpy?.calledOnce).to.equal(true);
-        expect(selectRecurringEventScopeSpy?.lastCall.firstArg).to.equal('this-and-following');
+        expect(selectRecurringEventScopeSpy?.mock.calls.length).to.equal(1);
+        expect(selectRecurringEventScopeSpy?.mock.lastCall?.[0]).to.equal('this-and-following');
       });
 
       describe('Deletion', () => {
@@ -2133,15 +2133,15 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByRole('button', { name: /delete event/i }));
 
           await screen.findByText(/Apply this change to:/i);
-          expect(deleteRecurringEventSpy?.calledOnce).to.equal(true);
-          expect(deleteRecurringEventSpy?.lastCall.firstArg.eventId).to.equal(
+          expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
+          expect(deleteRecurringEventSpy?.mock.lastCall?.[0].eventId).to.equal(
             originalRecurringEvent.id,
           );
-          expect(deleteEventSpy?.called).to.equal(false);
+          expect(deleteEventSpy?.mock.calls.length).to.equal(0);
         });
 
         it('should not delete anything if the user cancels the scope dialog', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
           let selectRecurringEventScopeSpy;
 
           const { user } = render(
@@ -2174,12 +2174,12 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByText(/All events/i));
           await user.click(screen.getByRole('button', { name: /Cancel/i }));
 
-          expect(selectRecurringEventScopeSpy?.lastCall.firstArg).to.equal(null);
-          expect(onEventsChange.called).to.equal(false);
+          expect(selectRecurringEventScopeSpy?.mock.lastCall?.[0]).to.equal(null);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
         });
 
         it("should delete the whole series with scope 'all' on Confirm", async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2203,12 +2203,12 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByText(/All events/i));
           await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          expect(onEventsChange.lastCall.firstArg).to.deep.equal([]);
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
         });
 
         it("should delete only the selected occurrence with scope 'only-this' on Confirm", async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2232,14 +2232,14 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByText(/Only this event/i));
           await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updatedEvents = onEventsChange.lastCall.firstArg;
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updatedEvents = onEventsChange.mock.lastCall?.[0];
           expect(updatedEvents).to.have.length(1);
           expect(updatedEvents[0].exDates).to.have.length(1);
         });
 
         it("should truncate the series with scope 'this-and-following' on Confirm", async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
           const laterOccurrence = EventBuilder.new(adapter)
             .id(originalRecurringEvent.id)
             .title(originalRecurringEvent.title)
@@ -2266,8 +2266,8 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByText(/This and following events/i));
           await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updatedEvents = onEventsChange.lastCall.firstArg;
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updatedEvents = onEventsChange.mock.lastCall?.[0];
           expect(updatedEvents).to.have.length(1);
           expect(updatedEvents[0].rrule.until).not.to.equal(undefined);
         });
@@ -2379,7 +2379,7 @@ describe('<EventDialogContent open />', () => {
         });
 
         it('should submit custom recurrence with Ends: after', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2419,8 +2419,8 @@ describe('<EventDialogContent open />', () => {
 
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.calls[0][0][0];
 
           expect(updated.rrule).to.deep.equal({
             freq: 'WEEKLY',
@@ -2433,7 +2433,7 @@ describe('<EventDialogContent open />', () => {
         });
 
         it('should submit custom recurrence with Ends: never', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2470,8 +2470,8 @@ describe('<EventDialogContent open />', () => {
 
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.calls[0][0][0];
 
           // DEFAULT_EVENT is 2025-05-26, so byMonthDay defaults to [26]
           expect(updated.rrule).to.deep.equal({
@@ -2483,7 +2483,7 @@ describe('<EventDialogContent open />', () => {
         });
 
         it('should submit custom recurrence with Ends: until and selected date', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2522,8 +2522,8 @@ describe('<EventDialogContent open />', () => {
 
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.calls[0][0][0];
 
           expect(updated.rrule).to.deep.include({ freq: 'YEARLY', interval: 3 });
           expect(updated.rrule?.count ?? undefined).to.equal(undefined);
@@ -2531,7 +2531,7 @@ describe('<EventDialogContent open />', () => {
         });
 
         it('should block saving a custom recurrence with Ends: until and no date', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2555,7 +2555,7 @@ describe('<EventDialogContent open />', () => {
 
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.called).to.equal(false);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
           // The failing field lives in the Recurrence tab, so it must stay visible.
           expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
             'hidden',
@@ -2563,7 +2563,7 @@ describe('<EventDialogContent open />', () => {
         });
 
         it('should block a programmatic submit when the Ends until date is invalid', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2589,14 +2589,14 @@ describe('<EventDialogContent open />', () => {
           fireEvent.submit(screen.getByRole('button', { name: /save/i }).closest('form')!);
           await waitFor(() => expect(dateInput).to.have.attribute('aria-invalid', 'true'));
 
-          expect(onEventsChange.called).to.equal(false);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
           expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
             'hidden',
           );
         });
 
         it('should keep the Recurrence tab visible when a recurrence control is natively invalid', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2621,14 +2621,14 @@ describe('<EventDialogContent open />', () => {
 
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.called).to.equal(false);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
           expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
             'hidden',
           );
         });
 
         it('should submit custom weekly with selected weekdays', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2656,8 +2656,8 @@ describe('<EventDialogContent open />', () => {
 
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.calls[0][0][0];
 
           expect(updated.rrule).to.deep.equal({
             freq: 'WEEKLY',
@@ -2668,7 +2668,7 @@ describe('<EventDialogContent open />', () => {
         });
 
         it('should submit custom monthly with "day of month" option', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2697,8 +2697,8 @@ describe('<EventDialogContent open />', () => {
 
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.calls[0][0][0];
 
           expect(updated.rrule).to.deep.equal({
             freq: 'MONTHLY',
@@ -2709,7 +2709,7 @@ describe('<EventDialogContent open />', () => {
         });
 
         it('should submit custom monthly with "ordinal weekday" option', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2736,8 +2736,8 @@ describe('<EventDialogContent open />', () => {
 
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.calls[0][0][0];
 
           expect(updated.rrule).to.deep.equal({
             freq: 'MONTHLY',
@@ -2773,7 +2773,7 @@ describe('<EventDialogContent open />', () => {
         });
 
         it('should pre-fill WEEKLY preset with the event weekday code', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           // DEFAULT_EVENT falls on Monday 2025-05-26
           const { user } = render(
@@ -2792,15 +2792,15 @@ describe('<EventDialogContent open />', () => {
           await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.calls[0][0][0];
 
           // WEEKLY preset must pre-fill byDay with the event's weekday (Monday → 'MO')
           expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['MO'] });
         });
 
         it('should pre-fill MONTHLY preset with the event day-of-month', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           // DEFAULT_EVENT is on the 26th → byMonthDay should be [26]
           const { user } = render(
@@ -2819,8 +2819,8 @@ describe('<EventDialogContent open />', () => {
           await user.click(await screen.findByRole('option', { name: /repeats monthly/i }));
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.calls[0][0][0];
 
           // MONTHLY preset must never produce an empty byMonthDay array
           expect(updated.rrule).to.deep.equal({
@@ -2875,7 +2875,7 @@ describe('<EventDialogContent open />', () => {
         });
 
         it('should not allow unchecking the last selected weekday in WEEKLY mode', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2904,13 +2904,13 @@ describe('<EventDialogContent open />', () => {
 
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.calls[0][0][0];
           expect(updated.rrule.byDay).to.deep.equal(['MO']);
         });
 
         it('should pre-fill byDay with the event weekday when switching frequency to WEEKLY', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -2940,8 +2940,8 @@ describe('<EventDialogContent open />', () => {
 
           await user.click(screen.getByRole('button', { name: /save/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.calls[0][0][0];
           // byDay must be pre-filled with the event's weekday (Monday → 'MO'), not left empty
           expect(updated.rrule.byDay).to.deep.equal(['MO']);
         });
@@ -2995,8 +2995,8 @@ describe('<EventDialogContent open />', () => {
         await user.keyboard('{Escape}');
         await user.click(screen.getByRole('button', { name: /save/i }));
 
-        expect(updateEventSpy?.calledOnce).to.equal(true);
-        const payload = updateEventSpy.lastCall.firstArg;
+        expect(updateEventSpy?.mock.calls.length).to.equal(1);
+        const payload = updateEventSpy.mock.lastCall?.[0];
 
         expect(payload.id).to.equal(nonRecurringEvent.id);
         expect(payload.title).to.equal('Task updated');
@@ -3038,8 +3038,8 @@ describe('<EventDialogContent open />', () => {
         await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
         await user.click(screen.getByRole('button', { name: /save/i }));
 
-        expect(updateEventSpy?.calledOnce).to.equal(true);
-        const payload = updateEventSpy.lastCall.firstArg;
+        expect(updateEventSpy?.mock.calls.length).to.equal(1);
+        const payload = updateEventSpy.mock.lastCall?.[0];
 
         expect(payload.id).to.equal(nonRecurringEvent.id);
         expect(payload.rrule).to.deep.equal({
@@ -3085,7 +3085,7 @@ describe('<EventDialogContent open />', () => {
         .toOccurrence();
 
       it('should preserve custom data when editing a non-recurring event', async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const { user } = render(
           <EventCalendarProvider
             events={[nonRecurringEventWithCustomData]}
@@ -3103,8 +3103,8 @@ describe('<EventDialogContent open />', () => {
         await user.type(screen.getByLabelText(/event title/i), ' updated');
         await user.click(screen.getByRole('button', { name: /save/i }));
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        const updated = onEventsChange.lastCall.firstArg.find(
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        const updated = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.id === nonRecurringEventWithCustomData.id,
         );
         expect(updated.title).to.equal('Task updated');
@@ -3112,7 +3112,7 @@ describe('<EventDialogContent open />', () => {
       });
 
       it("should preserve custom data when editing a recurring event with scope 'all'", async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const { user } = render(
           <EventCalendarProvider
             events={[recurringEventWithCustomData]}
@@ -3136,14 +3136,14 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const updated = onEventsChange.lastCall.firstArg.find(
+        const updated = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.id === recurringEventWithCustomData.id,
         );
         expect(updated.customField).to.equal('preserve-me');
       });
 
       it("should preserve custom data on the new event with scope 'only-this'", async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const { user } = render(
           <EventCalendarProvider
             events={[recurringEventWithCustomData]}
@@ -3167,7 +3167,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/Only this event/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const created = onEventsChange.lastCall.firstArg.find(
+        const created = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.extractedFromId === recurringEventWithCustomData.id,
         );
         expect(created).to.not.equal(undefined);
@@ -3175,7 +3175,7 @@ describe('<EventDialogContent open />', () => {
       });
 
       it("should preserve custom data on the new event with scope 'this-and-following'", async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const { user } = render(
           <EventCalendarProvider
             events={[recurringEventWithCustomData]}
@@ -3199,7 +3199,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/This and following events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const created = onEventsChange.lastCall.firstArg.find(
+        const created = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.extractedFromId === recurringEventWithCustomData.id,
         );
         expect(created).to.not.equal(undefined);
@@ -3249,7 +3249,7 @@ describe('<EventDialogContent open />', () => {
         function renderWithCustomFieldSlot(
           event: SchedulerEvent,
           occurrence: ReturnType<typeof EventBuilder.prototype.toOccurrence>,
-          onEventsChange: ReturnType<typeof spy>,
+          onEventsChange: Mock,
           onSpyReady: (sp: any) => void,
           // Recurring saves go through `updateRecurringEvent`, non-recurring through `updateEvent`.
           method: 'updateEvent' | 'updateRecurringEvent' = 'updateEvent',
@@ -3280,7 +3280,7 @@ describe('<EventDialogContent open />', () => {
         }
 
         it('should save a custom field edited through useEventDialogFormField', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
           let updateEventSpy;
           const { user } = renderWithCustomFieldSlot(
             nonRecurringEventWithCustomData,
@@ -3296,15 +3296,15 @@ describe('<EventDialogContent open />', () => {
 
           await editCustomFieldAndSave(user);
 
-          expect(onEventsChange.calledOnce).to.equal(true);
-          const updated = onEventsChange.lastCall.firstArg.find(
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          const updated = onEventsChange.mock.lastCall?.[0].find(
             (event) => event.id === nonRecurringEventWithCustomData.id,
           );
           expect(updated.customField).to.equal('edited');
 
           // Only the edited custom field enters the changes payload — an untouched
           // seeded field keeps resolving against the live model instead.
-          const changes = updateEventSpy!.lastCall.firstArg;
+          const changes = updateEventSpy!.mock.lastCall?.[0];
           expect(changes.customField).to.equal('edited');
           expect(changes).not.to.have.property('untouchedField');
           expect(updated.untouchedField).to.equal('keep-me');
@@ -3335,7 +3335,7 @@ describe('<EventDialogContent open />', () => {
 
         scopeScenarios.forEach(({ scope, optionText, findSavedEvent }) => {
           it(`should save a custom field edited through the slot with scope '${scope}'`, async () => {
-            const onEventsChange = spy();
+            const onEventsChange = vi.fn();
             let updateEventSpy;
             const { user } = renderWithCustomFieldSlot(
               recurringEventWithUntouchedData,
@@ -3353,11 +3353,11 @@ describe('<EventDialogContent open />', () => {
             await user.click(screen.getByText(optionText));
             await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-            const saved = findSavedEvent(onEventsChange.lastCall.firstArg);
+            const saved = findSavedEvent(onEventsChange.mock.lastCall?.[0]);
             expect(saved).to.not.equal(undefined);
             expect(saved.customField).to.equal('edited');
             expect(saved.untouchedField).to.equal('keep-me');
-            const { changes } = updateEventSpy!.lastCall.firstArg;
+            const { changes } = updateEventSpy?.mock.lastCall?.[0] ?? {};
             expect(changes.customField).to.equal('edited');
             expect(changes).not.to.have.property('untouchedField');
           });
@@ -3365,7 +3365,7 @@ describe('<EventDialogContent open />', () => {
       });
 
       it('should use the latest custom data when it changes while the scope dialog is open', async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const eventBefore = {
           ...recurringEventWithCustomData,
           customField: 'before',
@@ -3404,14 +3404,14 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const updated = onEventsChange.lastCall.firstArg.find(
+        const updated = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.id === recurringEventWithCustomData.id,
         );
         expect(updated.customField).to.equal('after');
       });
 
       it('should carry the latest custom data onto the new event when it changes while the scope dialog is open', async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const eventBefore = {
           ...recurringEventWithCustomData,
           customField: 'before',
@@ -3450,7 +3450,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/Only this event/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const created = onEventsChange.lastCall.firstArg.find(
+        const created = onEventsChange.mock.lastCall?.[0].find(
           (event) => event.extractedFromId === recurringEventWithCustomData.id,
         );
         expect(created.customField).to.equal('after');
@@ -3520,7 +3520,7 @@ describe('<EventDialogContent open />', () => {
 
   describe('editingOccurrence state', () => {
     it('should leave editingOccurrence null when the content is rendered directly', () => {
-      const handleEditingChange = spy();
+      const handleEditingChange = vi.fn();
 
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
@@ -3534,11 +3534,11 @@ describe('<EventDialogContent open />', () => {
       );
 
       // `onOpen` sets editingOccurrence; rendering content directly (no trigger flow) leaves it null.
-      expect(handleEditingChange.lastCall?.firstArg).to.equal(null);
+      expect(handleEditingChange.mock.lastCall?.[0]).to.equal(null);
     });
 
     it('should reflect the edited occurrence id while an event is being edited', async () => {
-      const handleEditingChange = spy();
+      const handleEditingChange = vi.fn();
 
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
@@ -3556,7 +3556,7 @@ describe('<EventDialogContent open />', () => {
       );
 
       // After `startEditing`, it should be the event ID.
-      expect(handleEditingChange.lastCall?.firstArg).to.equal(DEFAULT_EVENT.id);
+      expect(handleEditingChange.mock.lastCall?.[0]).to.equal(DEFAULT_EVENT.id);
     });
 
     it('should expose startEditing on the store', () => {
