@@ -21,10 +21,8 @@ import { DayGridEvent } from '../../internals/components/event/day-grid-event/Da
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
-import {
-  EventEditingTrigger,
-  useEventEditingContext,
-} from '../../internals/components/event-editing';
+import { useEventEditingContext } from '../../internals/components/event-editing';
+import { EventContextMenuTrigger } from '../../internals/components/event-context-menu';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventSkeleton } from '../../internals/components/event-skeleton';
@@ -220,6 +218,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const rowCount = 1 + maxEvents;
 
   React.useEffect(() => {
+    // `startEditing` is a no-op once the surface is open, so placeholder churn doesn't re-fire it.
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
@@ -267,7 +266,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               adapter.isBefore(occurrence.displayTimezone.start.value, day.value);
 
             return (
-              <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
+              <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
                 <DayGridEvent
                   occurrence={occurrence}
                   variant={
@@ -275,7 +274,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                   }
                   {...(startsBeforeThisDay ? { 'data-starting-before-edge': '' } : {})}
                 />
-              </EventEditingTrigger>
+              </EventContextMenuTrigger>
             );
           })}
         {hiddenCount > 0 && (

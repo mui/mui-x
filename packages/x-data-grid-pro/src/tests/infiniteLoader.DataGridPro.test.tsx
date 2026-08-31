@@ -4,6 +4,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 import { spy, restore } from 'sinon';
 import { getColumnValues } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect, afterEach } from 'vitest';
 
 describe('<DataGridPro /> - Infinite loader', () => {
   afterEach(() => {

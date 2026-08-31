@@ -1,5 +1,4 @@
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
 import {
   getActiveCell,
   getActiveColumnHeader,
@@ -14,6 +13,7 @@ import type { DataGridProps, GridColDef, GridColType, GridValueSetter } from '@m
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, describe, it, expect } from 'vitest';
 
 const PAGE_SIZE = 10;
 const ROW_HEIGHT = 52;
@@ -629,7 +629,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('should call preventDefault when using keyboard navigation', async () => {
-    const handleKeyDown = spy((event) => event.defaultPrevented);
+    const handleKeyDown = vi.fn((event) => event.defaultPrevented);
 
     const columns = [{ field: 'id' }, { field: 'name' }];
     const rows = [{ id: 1, name: 'John' }];
@@ -641,7 +641,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
     await user.click(getCell(0, 0));
     await user.keyboard('{ArrowRight}');
-    expect(handleKeyDown.returnValues).to.deep.equal([true]);
+    expect(handleKeyDown.mock.results.map((result) => result.value)).to.deep.equal([true]);
   });
 
   it('should sort column when pressing enter and column header is selected', async () => {
@@ -692,7 +692,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('should not rerender when pressing a key inside an already focused cell', () => {
-    const renderCell = spy(() => <input type="text" data-testid="custom-input" />);
+    const renderCell = vi.fn(() => <input type="text" data-testid="custom-input" />);
     const columns = [{ field: 'name', renderCell }];
     const rows = [{ id: 1, name: 'John' }];
     render(
@@ -700,13 +700,13 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    expect(renderCell.callCount).to.equal(2);
+    expect(renderCell.mock.calls.length).to.equal(2);
     const input = screen.getByTestId('custom-input');
     input.focus();
     fireEvent.keyDown(input, { key: 'a' });
-    expect(renderCell.callCount).to.equal(4);
+    expect(renderCell.mock.calls.length).to.equal(4);
     fireEvent.keyDown(input, { key: 'b' });
-    expect(renderCell.callCount).to.equal(4);
+    expect(renderCell.mock.calls.length).to.equal(4);
   });
 
   it('should not scroll horizontally when cell is wider than viewport', async () => {
@@ -896,7 +896,7 @@ describe('<DataGrid /> - Keyboard', () => {
       columns: GridColDef[],
       editMode: DataGridProps['editMode'],
     ) {
-      const valueSetterMock = spy<GridValueSetter<(typeof columns)[number]>>(
+      const valueSetterMock = vi.fn<GridValueSetter<(typeof columns)[number]>>(
         (value, row, column) => {
           return {
             ...row,
@@ -935,9 +935,11 @@ describe('<DataGrid /> - Keyboard', () => {
       await act(async () => cell.focus());
       await user.keyboard(`{${keyType}}`);
 
+      expect(valueSetterMock.mock.calls.length).to.be.greaterThan(0);
+
       return {
         cell: cell.textContent,
-        deletedValue: valueSetterMock.lastCall.args[0],
+        deletedValue: valueSetterMock.mock.lastCall?.[0],
       };
     }
 

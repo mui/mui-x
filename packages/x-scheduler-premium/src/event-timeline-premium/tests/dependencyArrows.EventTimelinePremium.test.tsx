@@ -1,4 +1,4 @@
-import { act, waitFor } from '@mui/internal-test-utils';
+import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   adapter,
@@ -8,6 +8,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { createTheme } from '@mui/material/styles';
+import { describe, it, expect } from 'vitest';
 import { getEventsCellLaneMetrics, getRowHeightForLaneCount } from '../content/rowGeometry';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 import {
@@ -459,13 +460,55 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       return document.querySelector<HTMLElement>(`.${eventTimelinePremiumClasses.grid}`)!;
     }
 
+    function getHitPath() {
+      return document.querySelector<SVGPathElement>('[data-dependency-hit]')!;
+    }
+
+    // Far apart, so the middle of the arrow rides over plain lane space.
+    const farPredecessor = EventBuilder.new()
+      .id('event-far-a')
+      .title('Far A')
+      .singleDay('2025-07-03T08:00:00Z')
+      .resource(resource1)
+      .build();
+    const farSuccessor = EventBuilder.new()
+      .id('event-far-b')
+      .title('Far B')
+      .singleDay('2025-07-03T16:00:00Z')
+      .resource(resource1)
+      .build();
+
+    async function renderFarTimelineWithArrow() {
+      renderTimeline({
+        events: [farPredecessor, farSuccessor],
+        dependencies: [buildDependency('dep-1', 'event-far-a', 'event-far-b')],
+      });
+      await waitFor(() => {
+        expect(getHitPath()).not.to.equal(null);
+      });
+    }
+
+    function probeAt(rect: DOMRect) {
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      return () => document.elementFromPoint(x, y)!;
+    }
+
+    async function withDrag(source: Element, during: () => Promise<void>) {
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      try {
+        await during();
+      } finally {
+        fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+      }
+    }
+
     it('should keep the pinned title column above the arrow hit-areas on horizontal scroll', async () => {
       renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
       });
 
-      const getHitPath = () => document.querySelector<SVGPathElement>('[data-dependency-hit]')!;
       await waitFor(() => {
         expect(getHitPath()).not.to.equal(null);
       });
@@ -500,6 +543,97 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
 
       expect(probed.closest('[data-dependency-interactions]')).to.equal(null);
       expect(probed.closest(`.${eventTimelinePremiumClasses.titleCell}`)).not.to.equal(null);
+    });
+
+    it('should let an event drag reach the drop targets under the arrow hit-areas', async () => {
+      await renderFarTimelineWithArrow();
+
+      // A point on the hit stroke over the empty lane space between the two events.
+      const probe = probeAt(getHitPath().getBoundingClientRect());
+      expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
+
+      // Mid-drag, the hit-areas must not intercept the pointer (see the overlay's CSS).
+      await withDrag(getEventElement(farSuccessor.title), async () => {
+        await waitFor(() => {
+          expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
+        });
+        // Present but inert, and the pointer reaches the drop-target surface below.
+        expect(getHitPath()).not.to.equal(null);
+        expect(probe().closest(`.${eventTimelinePremiumClasses.eventsCell}`)).not.to.equal(null);
+      });
+
+      await waitFor(() => {
+        expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
+      });
+    });
+
+    it('should keep the hit-areas muted when the overlay remounts mid-drag', async () => {
+      await renderFarTimelineWithArrow();
+      const probe = probeAt(getHitPath().getBoundingClientRect());
+
+      await withDrag(getEventElement(farSuccessor.title), async () => {
+        // Cull the arrow out of the render window and back: the remounted svg must
+        // come back muted, not with re-armed hit-areas.
+        act(() => {
+          getGrid().scrollLeft = 2 * 24 * 64;
+        });
+        await waitFor(() => {
+          expect(document.querySelector('[data-dependency-hit]')).to.equal(null);
+        });
+        act(() => {
+          getGrid().scrollLeft = 0;
+        });
+        await waitFor(() => {
+          expect(getHitPath()).not.to.equal(null);
+        });
+        expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
+      });
+    });
+
+    it('should mute the hit-areas during a create-dependency terminal drag', async () => {
+      await renderFarTimelineWithArrow();
+      const probe = probeAt(getHitPath().getBoundingClientRect());
+
+      const terminal = document
+        .querySelector('[data-dependency-terminal]')!
+        .closest('[draggable="true"]')!;
+      await withDrag(terminal, async () => {
+        await waitFor(() => {
+          expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
+        });
+      });
+
+      await waitFor(() => {
+        expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
+      });
+    });
+
+    it('should mute the delete button of a selected arrow during a drag', async () => {
+      await renderFarTimelineWithArrow();
+
+      fireEvent.click(getHitPath());
+      const getButton = () =>
+        document.querySelector<SVGGElement>('[data-dependency-delete-button]')!;
+      await waitFor(() => {
+        expect(getButton()).not.to.equal(null);
+      });
+
+      // Probed at its live rect: the button settles its position asynchronously, and
+      // the 14px circle is less forgiving than the hit stroke.
+      const probeButton = () => probeAt(getButton().getBoundingClientRect())();
+      expect(probeButton().closest('[data-dependency-delete-button]')).not.to.equal(null);
+
+      // External-drag shaped: a pointer drag's own pointerdown would deselect first.
+      await withDrag(getEventElement(farPredecessor.title), async () => {
+        await waitFor(() => {
+          expect(probeButton().closest('[data-dependency-interactions]')).to.equal(null);
+        });
+        expect(getButton()).not.to.equal(null);
+      });
+
+      await waitFor(() => {
+        expect(probeButton().closest('[data-dependency-delete-button]')).not.to.equal(null);
+      });
     });
   });
 });

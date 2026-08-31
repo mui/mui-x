@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { fireEvent, screen, createDescribe } from '@mui/internal-test-utils';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
+import { vi, describe, it, expect } from 'vitest';
 import { DescribePickerOptions } from './describePicker.types';
 
 function innerDescribePicker(ElementToTest: React.ElementType, options: DescribePickerOptions) {
@@ -52,8 +52,8 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
     it.skipIf(hasNoView || variant !== 'desktop')(
       'should forward onClick and onTouchStart',
       async () => {
-        const handleClick = spy();
-        const handleTouchStart = spy();
+        const handleClick = vi.fn();
+        const handleTouchStart = vi.fn();
         const { user } = render(
           <ElementToTest
             {...propsToOpen}
@@ -74,8 +74,8 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         // `fireEvent.touchStart` to cover the `onTouchStart` slot prop.
         fireEvent.touchStart(paper);
 
-        expect(handleClick.callCount).to.equal(1);
-        expect(handleTouchStart.callCount).to.equal(1);
+        expect(handleClick.mock.calls.length).to.equal(1);
+        expect(handleTouchStart.mock.calls.length).to.equal(1);
       },
     );
   });
@@ -84,8 +84,8 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
     it.skipIf(hasNoView || variant !== 'desktop')(
       'should forward onClick and onTouchStart',
       async () => {
-        const handleClick = spy();
-        const handleTouchStart = spy();
+        const handleClick = vi.fn();
+        const handleTouchStart = vi.fn();
         const { user } = render(
           <ElementToTest
             {...propsToOpen}
@@ -106,8 +106,8 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         // `fireEvent.touchStart` to cover the `onTouchStart` slot prop.
         fireEvent.touchStart(popper);
 
-        expect(handleClick.callCount).to.equal(1);
-        expect(handleTouchStart.callCount).to.equal(1);
+        expect(handleClick.mock.calls.length).to.equal(1);
+        expect(handleTouchStart.mock.calls.length).to.equal(1);
       },
     );
   });

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import { createPickerRenderer } from 'test/utils/pickers';
+import { vi, describe, it, expect } from 'vitest';
 import { PickerContext } from '../hooks/usePickerContext';
 
 describe('<PickersActionBar />', () => {
@@ -10,15 +10,15 @@ describe('<PickersActionBar />', () => {
 
   const renderWithContext = (element: React.ReactElement) => {
     const spys = {
-      setValue: spy(),
-      setView: spy(),
-      setOpen: spy(),
-      clearValue: spy(),
-      setValueToToday: spy(),
-      acceptValueChanges: spy(),
-      cancelValueChanges: spy(),
-      goToNextStep: spy(),
-      goToPreviousStep: spy(),
+      setValue: vi.fn(),
+      setView: vi.fn(),
+      setOpen: vi.fn(),
+      clearValue: vi.fn(),
+      setValueToToday: vi.fn(),
+      acceptValueChanges: vi.fn(),
+      cancelValueChanges: vi.fn(),
+      goToNextStep: vi.fn(),
+      goToPreviousStep: vi.fn(),
       hasNextStep: false,
     } as any;
 
@@ -39,7 +39,7 @@ describe('<PickersActionBar />', () => {
     const { clearValue, user } = renderWithContext(<PickersActionBar actions={['clear']} />);
 
     await user.click(screen.getByText(/clear/i));
-    expect(clearValue.callCount).to.equal(1);
+    expect(clearValue.mock.calls.length).to.equal(1);
   });
 
   it('should render button for "cancel" action calling the associated callback', async () => {
@@ -48,7 +48,7 @@ describe('<PickersActionBar />', () => {
     );
 
     await user.click(screen.getByText(/cancel/i));
-    expect(cancelValueChanges.callCount).to.equal(1);
+    expect(cancelValueChanges.mock.calls.length).to.equal(1);
   });
 
   it('should render button for "accept" action calling the associated callback', async () => {
@@ -57,14 +57,14 @@ describe('<PickersActionBar />', () => {
     );
 
     await user.click(screen.getByText(/ok/i));
-    expect(acceptValueChanges.callCount).to.equal(1);
+    expect(acceptValueChanges.mock.calls.length).to.equal(1);
   });
 
   it('should render button for "today" action calling the associated callback', async () => {
     const { setValueToToday, user } = renderWithContext(<PickersActionBar actions={['today']} />);
 
     await user.click(screen.getByText(/today/i));
-    expect(setValueToToday.callCount).to.equal(1);
+    expect(setValueToToday.mock.calls.length).to.equal(1);
   });
 
   it('should respect actions order', () => {

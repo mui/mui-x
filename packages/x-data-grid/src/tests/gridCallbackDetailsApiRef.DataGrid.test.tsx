@@ -15,6 +15,7 @@ import type {
   GridFilterModel,
 } from '@mui/x-data-grid';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - GridCallbackDetails apiRef', () => {
   const { render } = createRenderer();

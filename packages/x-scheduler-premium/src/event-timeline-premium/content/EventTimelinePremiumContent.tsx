@@ -8,7 +8,10 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { ColumnWithWidth, PinnedColumns } from '@mui/x-virtualizer';
 import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@mui/x-virtualizer';
-import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
+import {
+  TimelineGrid,
+  useTimelineGridEventRowContext,
+} from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumPresetSelectors,
@@ -26,7 +29,7 @@ import {
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
-  EventEditingTrigger,
+  EventContextMenuTrigger,
   EventSkeleton,
   useEventEditingContext,
   getCellFocusBackground,
@@ -529,7 +532,7 @@ function EventList({
         return (
           position + duration > visibleStart &&
           position < visibleEnd && (
-            <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
+            <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
               <EventTimelinePremiumEvent
                 occurrence={occurrence}
                 elementPosition={occurrence.timelinePosition}
@@ -537,7 +540,7 @@ function EventList({
                 variant="regular"
                 resourceId={resourceId}
               />
-            </EventEditingTrigger>
+            </EventContextMenuTrigger>
           )
         );
       })}
@@ -556,6 +559,7 @@ function EventRowContent({
 }) {
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
+  const { rowRef } = useTimelineGridEventRowContext();
   const { startEditing } = useEventEditingContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
@@ -567,11 +571,13 @@ function EventRowContent({
   );
 
   React.useEffect(() => {
+    // `startEditing` is a no-op once the surface is open, so placeholder churn doesn't re-fire it.
     if (!isCreatingAnEvent || !placeholder || !placeholderRef.current) {
       return;
     }
-    startEditing(placeholderRef, placeholder);
-  }, [isCreatingAnEvent, placeholder, startEditing]);
+    // The row outlives the placeholder, which a cancellation unmounts.
+    startEditing(placeholderRef, placeholder, undefined, rowRef.current);
+  }, [isCreatingAnEvent, placeholder, startEditing, rowRef]);
 
   if (isLoading) {
     return <EventSkeleton data-variant="timeline-row" />;
@@ -733,10 +739,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const laneCountByResource = React.useMemo(() => {
     const map = new Map<SchedulerResourceId, number>();
     for (const { resource, occurrences } of visibleResources) {
-      map.set(resource.id, computeOccurrencesMaxIndex(adapter, occurrences));
+      map.set(resource.id, computeOccurrencesMaxIndex(occurrences));
     }
     return map;
-  }, [visibleResources, adapter]);
+  }, [visibleResources]);
 
   const getRowHeight = React.useCallback(
     (row: { id: SchedulerResourceId }) =>
