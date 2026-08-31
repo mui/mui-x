@@ -548,13 +548,16 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
 
   const isStacked = !isLessThan30Minutes && !isBetween30and60Minutes;
 
+  // The occurrence identity for recurring drag updates; placeholders have none.
+  const dataBounds = isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
+
   return (
     <TimeGridEventRoot
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataStart={isEventOccurrence(occurrence) ? occurrence.dataTimezone.start : undefined}
-      dataEnd={isEventOccurrence(occurrence) ? occurrence.dataTimezone.end : undefined}
+      dataStart={dataBounds?.start}
+      dataEnd={dataBounds?.end}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={isArmed || undefined}
       data-editing={isEditing || undefined}

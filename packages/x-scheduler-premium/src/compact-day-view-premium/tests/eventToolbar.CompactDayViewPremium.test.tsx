@@ -4,6 +4,7 @@ import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
+  adapter,
   createSchedulerRenderer,
   EventBuilder,
   DEFAULT_TESTING_VISIBLE_DATE,
@@ -105,6 +106,8 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     const updatedEvents = onEventsChange.mock.lastCall?.[0];
     const series = updatedEvents.find((item: SchedulerEvent) => item.id === 'event-1')!;
     expect(series.exDates).to.have.length(1);
-    expect(String(series.exDates![0]).slice(0, 10)).to.equal('2025-07-04');
+    expect(
+      adapter.formatByString(adapter.date(String(series.exDates![0]), 'UTC'), 'yyyy-MM-dd'),
+    ).to.equal('2025-07-04');
   });
 });

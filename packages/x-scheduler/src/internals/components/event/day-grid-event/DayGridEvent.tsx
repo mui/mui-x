@@ -430,12 +430,15 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     );
   }
 
+  // The occurrence identity for recurring drag updates; placeholders have none.
+  const dataBounds = isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
+
   return (
     <DayGridEventRoot
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataStart={isEventOccurrence(occurrence) ? occurrence.dataTimezone.start : undefined}
-      dataEnd={isEventOccurrence(occurrence) ? occurrence.dataTimezone.end : undefined}
+      dataStart={dataBounds?.start}
+      dataEnd={dataBounds?.end}
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}

@@ -2,6 +2,7 @@ import { screen, within, act } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { StandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
 import {
+  adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -219,6 +220,56 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     // The event should have moved to a different time
     const newStart = new Date(updatedEvents[0].start);
     expect(newStart.getUTCDate()).to.not.equal(3);
+  });
+
+  it('should exclude the dragged occurrence of its own day when moved from another timezone', async () => {
+    const handleEventsChange = vi.fn();
+    // A UTC all-day weekly series whose display bounds normalize to New York July 3rd.
+    const event = EventBuilder.new()
+      .title('Weekly sync')
+      .withDataTimezone('UTC')
+      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+      .recurrent('WEEKLY')
+      .resource(engineering)
+      .draggable(true)
+      .build();
+
+    const { user } = render(
+      <EventTimelinePremium
+        resources={resources}
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        displayTimezone="America/New_York"
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    mockAllEventRowBounds();
+    const eventElement = screen.getAllByText('Weekly sync')[0];
+    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getEventRow(engineering.id),
+        sourceClientX: 160,
+        targetClientX: 1000,
+      });
+    });
+
+    // A recurring drop opens the scope dialog.
+    await user.click(await screen.findByText(/Only this event/i));
+    await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+    // The exception lands on the occurrence's own July 4th, not the displayed July 3rd.
+    const updatedEvents = handleEventsChange.mock.lastCall?.[0];
+    const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
+    expect(series.exDates).to.have.length(1);
+    expect(
+      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
+    ).to.equal('2025-07-04');
   });
 
   it('should resize an event end to a later time', async () => {

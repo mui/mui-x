@@ -401,12 +401,59 @@ premiumStoreClasses.forEach((storeClass) => {
       });
       store.selectRecurringEventScope('only-this');
 
-      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       // The occurrence moved onto the detached one-off event, keeping its own times.
       expect(occurrence.id).to.not.equal('standup');
       expect(occurrence.key).to.not.equal(armedKey);
       expect(occurrence.displayTimezone.rrule).to.equal(undefined);
       expect(occurrence.displayTimezone.start.value).toEqualDateTime(dayA);
+      expect(occurrence.displayTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));
+      expect(occurrence.dataTimezone.rrule).to.equal(undefined);
+      expect(occurrence.dataTimezone.start.timestamp).to.equal(adapter.getTime(dayA));
+    });
+
+    it('should keep the data-timezone identity on a rename-only scope change from another timezone', () => {
+      // A UTC all-day weekly series whose display bounds normalize to the previous
+      // New York day; the second occurrence is armed so 'this-and-following' splits.
+      const weeklyBuilder = EventBuilder.new()
+        .id('weekly-tz')
+        .withDataTimezone('UTC')
+        .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+        .recurrent('WEEKLY')
+        .withDisplayTimezone('America/New_York');
+      const store = new storeClass.Value(
+        { ...DEFAULT_PARAMS, events: [weeklyBuilder.build()], onEventsChange: () => {} },
+        adapter,
+      );
+      const base = weeklyBuilder.toOccurrence('2025-07-11T00:00:00Z') as any;
+      // `toOccurrence` generates a random render key; the repoint matches on the
+      // expansion key, which derives from the data-timezone day.
+      const armed = {
+        ...base,
+        key: getRecurringOccurrenceKey('weekly-tz', base.dataTimezone.start.value, adapter),
+      };
+      store.startEditing(armed, 'armed');
+
+      store.updateRecurringEvent({
+        occurrenceStart: armed.dataTimezone.start.value,
+        changes: { id: 'weekly-tz', title: 'Renamed weekly' },
+      });
+      store.selectRecurringEventScope('this-and-following');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      // The split series expands keyed off the data-timezone day (July 11th); the
+      // display bounds sit on July 10th and cannot stand in for the identity.
+      expect(occurrence.id).to.not.equal('weekly-tz');
+      expect(occurrence.key).to.equal(
+        getRecurringOccurrenceKey(occurrence.id, armed.dataTimezone.start.value, adapter),
+      );
+      expect(occurrence.dataTimezone.start.timestamp).to.equal(
+        adapter.getTime(adapter.date('2025-07-11T00:00:00', 'UTC')),
+      );
+      expect(occurrence.dataTimezone.timezone).to.equal('UTC');
+      // A 'this-and-following' split stays recurring.
+      expect(occurrence.displayTimezone.rrule).to.not.equal(undefined);
+      expect(occurrence.dataTimezone.rrule).to.not.equal(undefined);
     });
   });
 });

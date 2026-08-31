@@ -208,14 +208,17 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     );
   }
 
+  // The occurrence identity for recurring drag updates; placeholders have none.
+  const dataBounds = isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
+
   return (
     <TimelineGrid.Event
       render={<EventTimelinePremiumEventRoot />}
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataStart={isEventOccurrence(occurrence) ? occurrence.dataTimezone.start : undefined}
-      dataEnd={isEventOccurrence(occurrence) ? occurrence.dataTimezone.end : undefined}
+      dataStart={dataBounds?.start}
+      dataEnd={dataBounds?.end}
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}

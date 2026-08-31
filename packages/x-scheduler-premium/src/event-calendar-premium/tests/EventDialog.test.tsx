@@ -2122,6 +2122,13 @@ describe('<EventDialogContent open />', () => {
           'America/New_York',
         );
         expect(adapter.formatByString(updatedStartInNewYork, 'yyyy-MM-dd')).to.equal('2025-07-04');
+        const updatedEndInNewYork = adapter.setTimezone(
+          adapter.date(String(updated.end), 'UTC'),
+          'America/New_York',
+        );
+        expect(adapter.formatByString(updatedEndInNewYork, 'yyyy-MM-dd')).to.equal('2025-07-05');
+        // The start's data-timezone day is unchanged, so the BYDAY stays put.
+        expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
       });
 
       it('should delete the occurrence of its own day when deleted from another timezone', async () => {
