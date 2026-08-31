@@ -1592,6 +1592,33 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:45:00.000Z');
       });
 
+      it('should keep an untouched range byte-identical when the display timezone changes while the async validation is pending', async () => {
+        const onEventsChange = vi.fn();
+        const deferred = createDeferred();
+        function AsyncValidatedSection() {
+          useEventDialogFormField('client', {
+            defaultValue: 'Acme',
+            validate: () => deferred.promise,
+          });
+          return null;
+        }
+        const { user, setProps } = renderWithSlot(
+          { eventDialogGeneralTab: AsyncValidatedSection },
+          { onEventsChange, displayTimezone: 'UTC' },
+        );
+
+        // No range field was edited: the flip while the validation is pending must not
+        // re-anchor the stored dates to the new display timezone.
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+        setProps({ displayTimezone: 'America/New_York' });
+        await act(async () => deferred.resolve(null));
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        const updated = onEventsChange.mock.calls[0][0][0];
+        expect(updated.start).to.equal(DEFAULT_EVENT.start);
+        expect(updated.end).to.equal(DEFAULT_EVENT.end);
+      });
+
       it('should enforce a resource requirement enabled while the async validation was pending', async () => {
         const onEventsChange = vi.fn();
         const deferred = createDeferred();

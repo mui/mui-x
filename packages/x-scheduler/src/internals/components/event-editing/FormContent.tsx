@@ -233,7 +233,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
   // Selector hooks — only what the render itself needs; the submit continuation
   // reads its own `ResolutionSettings` snapshot instead of subscribing here.
-  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
   const shouldEventRequireResource = useStore(
     store,

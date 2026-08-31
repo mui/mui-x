@@ -2130,6 +2130,61 @@ describe('<EventDialogContent open />', () => {
         expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
       });
 
+      it('should anchor the BYDAY to the data-timezone day when moved as displayed from a timezone ahead of UTC', async () => {
+        const onEventsChange = spy();
+        // Tokyo is ahead of UTC: the displayed day maps to the previous UTC day, so a
+        // BYDAY computed from the display day would hop weekdays (New York, being
+        // behind, shares the calendar day and cannot catch that).
+        const tokyoBuilder = utcJuly4AllDayBuilder(adapter)
+          .title('Weekly sync')
+          .recurrent('WEEKLY')
+          .withDisplayTimezone('Asia/Tokyo');
+        const tokyoEvent = tokyoBuilder.build();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[tokyoEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="Asia/Tokyo"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={tokyoBuilder.toOccurrence()}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        // The dialog shows the series on Tokyo July 4th → 5th; move it one day later.
+        const startDateInput = screen.getByLabelText(/start date/i);
+        await user.clear(startDateInput);
+        await user.type(startDateInput, '2025-07-05');
+        const endDateInput = screen.getByLabelText(/end date/i);
+        await user.clear(endDateInput);
+        await user.type(endDateInput, '2025-07-06');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        const updated = onEventsChange.lastCall.firstArg.find(
+          (event: SchedulerEvent) => event.id === tokyoEvent.id,
+        )!;
+        // The picked Tokyo July 5th is still UTC July 4th — a Friday: the day did not
+        // move in the data timezone, so the BYDAY stays FR (not the display day's SA).
+        expect(updated.rrule).to.deep.equal(tokyoEvent.rrule);
+        const updatedStartInTokyo = adapter.setTimezone(
+          adapter.date(String(updated.start), 'UTC'),
+          'Asia/Tokyo',
+        );
+        expect(adapter.formatByString(updatedStartInTokyo, 'yyyy-MM-dd')).to.equal('2025-07-05');
+      });
+
       it("should keep the untouched start byte-identical when only the end date is edited with scope 'all'", async () => {
         const onEventsChange = spy();
 
@@ -2214,6 +2269,103 @@ describe('<EventDialogContent open />', () => {
         expect(adapter.getTime(payload.occurrenceStart)).to.equal(
           adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
         );
+      });
+
+      it('should identify an occurrence across a DST transition by its data-timezone start', async () => {
+        // A DST-observing data timezone: the series starts in EDT (UTC-4) and the
+        // targeted occurrence falls after the 2025-11-02 fall-back (EST, UTC-5), so a
+        // conversion that cancels out at a fixed offset cannot pass this test.
+        const dstBuilder = EventBuilder.new(adapter)
+          .title('Weekly sync')
+          .withDataTimezone('America/New_York')
+          .span('2025-10-31T00:00:00', '2025-10-31T23:59:59.999', { allDay: true })
+          .recurrent('WEEKLY')
+          .withDisplayTimezone('UTC');
+        const dstEvent = dstBuilder.build();
+
+        let deleteRecurringEventSpy;
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[dstEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            onEventsChange={() => {}}
+            displayTimezone="UTC"
+          >
+            <StoreSpy
+              Context={SchedulerStoreContext}
+              method="deleteRecurringEvent"
+              onSpyReady={(sp) => {
+                deleteRecurringEventSpy = sp;
+              }}
+            />
+
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={dstBuilder.toOccurrence('2025-11-07T05:00:00Z')}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        await user.click(screen.getByRole('button', { name: /delete/i }));
+
+        // November 7th midnight in New York is 05:00Z (EST), not the display day's
+        // 00:00Z nor the pre-transition offset's 04:00Z.
+        expect(deleteRecurringEventSpy?.calledOnce).to.equal(true);
+        const payload = deleteRecurringEventSpy!.lastCall.firstArg;
+        expect(adapter.getTime(payload.occurrenceStart)).to.equal(
+          adapter.getTime(adapter.date('2025-11-07T00:00:00', 'America/New_York')),
+        );
+      });
+
+      it('should keep a series in a DST-observing timezone byte-identical on a rename across the transition', async () => {
+        const dstBuilder = EventBuilder.new(adapter)
+          .title('Weekly sync')
+          .withDataTimezone('America/New_York')
+          .span('2025-10-31T00:00:00', '2025-10-31T23:59:59.999', { allDay: true })
+          .recurrent('WEEKLY')
+          .withDisplayTimezone('UTC');
+        const dstEvent = dstBuilder.build();
+        const onEventsChange = spy();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[dstEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="UTC"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={dstBuilder.toOccurrence('2025-11-07T05:00:00Z')}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        const titleInput = screen.getByLabelText(/title/i);
+        await user.clear(titleInput);
+        await user.type(titleInput, 'Renamed weekly');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        const updated = onEventsChange.lastCall.firstArg.find(
+          (event: SchedulerEvent) => event.id === dstEvent.id,
+        )!;
+        expect(updated.title).to.equal('Renamed weekly');
+        expect(updated.start).to.equal(dstEvent.start);
+        expect(updated.end).to.equal(dstEvent.end);
+        expect(updated.rrule).to.deep.equal(dstEvent.rrule);
       });
 
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {

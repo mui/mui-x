@@ -1,4 +1,9 @@
-import { adapter, EventBuilder, ResourceBuilder, utcJuly4AllDayBuilder } from 'test/utils/scheduler';
+import {
+  adapter,
+  EventBuilder,
+  ResourceBuilder,
+  utcJuly4AllDayBuilder,
+} from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import {
   generateOccurrenceFromEvent,
@@ -215,7 +220,9 @@ describe('event-utils', () => {
 
   describe('generateOccurrenceFromEvent', () => {
     it('should carry the data-timezone bounds separately from the display segment bounds', () => {
-      const processed = utcJuly4AllDayBuilder().withDisplayTimezone('America/New_York').toProcessed();
+      const processed = utcJuly4AllDayBuilder()
+        .withDisplayTimezone('America/New_York')
+        .toProcessed();
 
       const occurrence = generateOccurrenceFromEvent({
         event: processed,

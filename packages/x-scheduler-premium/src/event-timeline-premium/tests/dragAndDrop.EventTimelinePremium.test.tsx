@@ -271,6 +271,53 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     ).to.equal('2025-07-04');
   });
 
+  it('should exclude the dragged occurrence of its own day when dragged from a secondary resource row', async () => {
+    const handleEventsChange = vi.fn();
+    // The same cross-timezone weekly occurrence renders once per resource row; the
+    // appearance does not change which occurrence identity the drag carries.
+    const event = utcJuly4AllDayBuilder()
+      .title('Weekly sync')
+      .recurrent('WEEKLY')
+      .resources([engineering, design])
+      .draggable(true)
+      .build();
+
+    const { user } = render(
+      <EventTimelinePremium
+        resources={resources}
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        displayTimezone="America/New_York"
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    mockAllEventRowBounds();
+    const eventElement = within(getEventRow(design.id)).getAllByText('Weekly sync')[0];
+    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getEventRow(design.id),
+        sourceClientX: 160,
+        targetClientX: 1000,
+      });
+    });
+
+    await user.click(await screen.findByText(/Only this event/i));
+    await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+    const updatedEvents = handleEventsChange.mock.lastCall?.[0];
+    const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
+    expect(series.exDates).to.have.length(1);
+    expect(
+      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
+    ).to.equal('2025-07-04');
+  });
+
   it('should resize an event end to a later time', async () => {
     const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
