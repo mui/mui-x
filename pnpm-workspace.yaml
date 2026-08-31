@@ -65,7 +65,7 @@ catalog:
   moment-hijri: ^3.0.0
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.3
-  motion: ^12.43.0
+  motion: ^13.1.1
   playwright: 1.62.1
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
