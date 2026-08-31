@@ -725,24 +725,24 @@ export class SchedulerStore<
           changedEnd == null && isEventOccurrence(occurrence)
             ? occurrence.dataTimezone.end.value
             : undefined;
-        // `only-this` / `this-and-following` move the occurrence onto a freshly-created event, changing
-        // its key; `all` edits the series in place, keeping the same key (only the times need a refresh).
+        // `only-this` / `this-and-following` move the occurrence onto a freshly-created event;
+        // `all` edits the series in place but the pattern lands the edited occurrence on the
+        // changed start's day (BYDAY realign), so the key must follow the new data day too.
         const movedToEvent = updatedEvents.created?.[0];
         const movedToEventId = createdIds[0];
-        if (movedToEvent != null && movedToEventId != null) {
-          this.repointEditingOccurrence(
-            movedToEventId,
-            start,
-            end,
-            movedToEvent.rrule != null,
-            // The moved-to event splits from the same series, so it keeps the original data timezone.
-            original.dataTimezone.timezone,
-            dataStart,
-            dataEnd,
-          );
-        } else {
-          this.setEditingOccurrenceTimes(start, end, dataStart, dataEnd);
-        }
+        const targetsCreatedEvent = movedToEvent != null && movedToEventId != null;
+        this.repointEditingOccurrence(
+          targetsCreatedEvent ? movedToEventId : eventId,
+          start,
+          end,
+          targetsCreatedEvent
+            ? movedToEvent.rrule != null
+            : occurrence.displayTimezone.rrule != null,
+          // A split series and an in-place update both keep the original data timezone.
+          original.dataTimezone.timezone,
+          dataStart,
+          dataEnd,
+        );
       }
     }
 

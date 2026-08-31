@@ -388,6 +388,29 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.dataTimezone.end.value).toEqualDateTime(resizedEnd);
     });
 
+    it("should re-key the armed occurrence onto the changed day with scope 'all'", () => {
+      const store = createStore();
+      armOccurrence(store, dayB);
+
+      // Move the armed occurrence (the 8th) one day later with scope 'all'.
+      const movedStart = adapter.addHours(dayB, 25);
+      const movedEnd = adapter.addHours(movedStart, 1);
+      store.updateRecurringEvent({
+        occurrenceStart: dayB,
+        changes: { id: 'standup', start: movedStart, end: movedEnd },
+      });
+      store.selectRecurringEventScope('all');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      // A later delete keys off this identity: left on the 8th, it would exDate a
+      // day the highlight no longer sits on.
+      expect(occurrence.key).to.equal(getRecurringOccurrenceKey('standup', movedStart, adapter));
+      expect(occurrence.dataTimezone.start.value).toEqualDateTime(movedStart);
+      // An in-place 'all' update keeps the series recurring.
+      expect(occurrence.displayTimezone.rrule).to.not.equal(undefined);
+      expect(occurrence.dataTimezone.rrule).to.not.equal(undefined);
+    });
+
     it('should re-point a rename-only scope change onto the detached event', () => {
       const store = createStore();
       const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter);
