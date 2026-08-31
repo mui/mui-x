@@ -1971,6 +1971,46 @@ describe('<EventDialogContent open />', () => {
         expect(selectRecurringEventScopeSpy?.lastCall.firstArg).to.equal('all');
       });
 
+      it('should not include the range in the changes when the date fields are not edited', async () => {
+        let updateRecurringEventSpy;
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[originalRecurringEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            onEventsChange={() => {}}
+          >
+            <StoreSpy
+              Context={SchedulerStoreContext}
+              method="updateRecurringEvent"
+              onSpyReady={(sp) => {
+                updateRecurringEventSpy = sp;
+              }}
+            />
+
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={originalRecurringEventOccurrence}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        await user.type(screen.getByLabelText(/event title/i), ' renamed');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        // An untouched range must not enter the pattern-based recurring update:
+        // a start re-read in the display timezone could shift the series' days.
+        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
+        const payload = updateRecurringEventSpy.lastCall.firstArg;
+        expect(payload.changes.title).to.equal('Daily standup renamed');
+        expect(payload.changes).to.not.have.property('start');
+        expect(payload.changes).to.not.have.property('end');
+      });
+
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {
         let updateRecurringEventSpy, selectRecurringEventScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
@@ -3003,8 +3043,10 @@ describe('<EventDialogContent open />', () => {
         expect(payload.description).to.equal('new description');
         expect(payload.resource).to.deep.equal([workResource.id]);
         expect(payload.allDay).to.equal(false);
-        expect(payload.start).toEqualDateTime(adapter.date('2025-06-12T14:00:00', 'default'));
-        expect(payload.end).toEqualDateTime(adapter.date('2025-06-12T15:00:00', 'default'));
+        // The date fields were not edited, so the payload leaves the range out
+        // and the stored dates cannot shift.
+        expect(payload.start).to.equal(undefined);
+        expect(payload.end).to.equal(undefined);
         expect(payload.rrule).to.equal(undefined);
       });
 

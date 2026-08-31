@@ -108,6 +108,9 @@ const EventDialogTabs = styled(Tabs, {
 // Fields owned by the Recurrence tab; their submit failures must surface there.
 const RECURRENCE_FORM_KEYS = new Set(['recurrenceSelection', 'rruleDraft']);
 
+// Fields `computeRange` reads; editing any of them submits a new start/end.
+const RANGE_FORM_KEYS = ['startDate', 'startTime', 'endDate', 'endTime', 'allDay'];
+
 // Scheduler settings read when the async validation resolves; the submit
 // continuation must not use the render-time closure values.
 interface ResolutionSettings {
@@ -380,21 +383,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       };
 
       const values = formStore.state.values;
-      // Read directly instead of subscribing: the placeholder changes on every
-      // creation keystroke and would re-render the whole dialog.
-      const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
-      const isCreation = rawPlaceholder?.type === 'creation';
-      // Edits anchor all-day bounds to the event's own timezone; a creation has no
-      // event timezone yet and stays on the display one.
-      const allDayTimezone = isCreation
-        ? current.displayTimezone
-        : schedulerEventSelectors.dataTimezone(store.state, occurrence.id);
-      const { start, end } = computeRange(
-        current.adapter,
-        values,
-        current.displayTimezone,
-        allDayTimezone,
-      );
+      const { start, end } = computeRange(current.adapter, values, current.displayTimezone);
 
       if (!runSubmitChecks(values, start, end, current) || !isValid) {
         // Show the tab owning a failing field; General wins when both tabs fail.
@@ -405,16 +394,22 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         return;
       }
 
+      const dirtyValues = formStore.getDirtyValues();
       // Only the custom fields the user actually edited enter the changes payload,
       // so untouched fields keep resolving against the live model on the recurring paths.
-      const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
-      // A custom field named after a built-in event property (`id`, `readOnly`, ...)
-      // must not rewrite it; the hook already warns about these keys in dev.
+      const editedCustomValues = { ...dirtyValues };
       for (const key of Object.keys(editedCustomValues)) {
-        if (isBuiltInEventProperty(key)) {
+        // A custom field named after a built-in event property (`id`, `readOnly`, ...)
+        // must not rewrite it; the hook already warns about these keys in dev.
+        if (BUILT_IN_FORM_KEYS.has(key) || isBuiltInEventProperty(key)) {
           delete editedCustomValues[key];
         }
       }
+
+      // The form edits the range as display-timezone day/time strings, so resending
+      // it untouched can move the event: an all-day day re-read in another timezone
+      // is a different day. An edit the user didn't make must not enter the payload.
+      const rangeEdited = RANGE_FORM_KEYS.some((key) => key in dirtyValues);
 
       const metaChanges = {
         ...editedCustomValues,
@@ -436,7 +431,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = current.recurrencePresets[values.recurrenceSelection];
       }
 
-      if (isCreation) {
+      // Read directly instead of subscribing: the placeholder changes on every
+      // creation keystroke and would re-render the whole dialog.
+      const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
+      if (rawPlaceholder?.type === 'creation') {
         store.createEvent({
           ...metaChanges,
           start,
@@ -457,8 +455,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         const changes: SchedulerEventUpdatedProperties = {
           ...metaChanges,
           id: occurrence.id,
-          start,
-          end,
+          ...(rangeEdited ? { start, end } : {}),
           ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
         };
 
@@ -471,7 +468,12 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         // don't close the dialog
         return;
       } else {
-        store.updateEvent({ ...metaChanges, id: occurrence.id, start, end, rrule: rruleToSubmit });
+        store.updateEvent({
+          ...metaChanges,
+          id: occurrence.id,
+          ...(rangeEdited ? { start, end } : {}),
+          rrule: rruleToSubmit,
+        });
       }
 
       onClose();

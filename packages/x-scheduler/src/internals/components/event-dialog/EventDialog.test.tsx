@@ -11,7 +11,7 @@ import {
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
@@ -90,81 +90,114 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     expect(screen.getByRole('combobox', { name: 'Resource' })).not.to.equal(null);
   });
 
-  it('should keep an all-day event on its data-timezone day when renamed from another timezone', async () => {
-    const onEventsChange = spy();
-    const allDayBuilder = EventBuilder.new()
-      .title('Independence day')
-      .withDataTimezone('UTC')
-      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true });
-    const allDayEvent: SchedulerEvent = allDayBuilder.build();
+  describe('events viewed from another display timezone', () => {
+    function renderEditDialog(builder: EventBuilder, displayTimezone: TemporalTimezone) {
+      const onEventsChange = spy();
+      const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
 
-    const { user } = render(
-      <EventCalendarProvider
-        events={[allDayEvent]}
-        displayTimezone="America/New_York"
-        onEventsChange={onEventsChange}
-      >
-        <EventDialogContent open {...defaultProps} occurrence={allDayBuilder.toOccurrence()} />
-      </EventCalendarProvider>,
-    );
+      const { user } = render(
+        <EventCalendarProvider
+          events={[event]}
+          displayTimezone={displayTimezone}
+          onEventsChange={onEventsChange}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+        </EventCalendarProvider>,
+      );
 
-    await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+      function getUpdatedEvent(): SchedulerEvent {
+        expect(onEventsChange.callCount).to.equal(1);
+        return onEventsChange.lastCall.firstArg.find(
+          (updated: SchedulerEvent) => updated.id === event.id,
+        )!;
+      }
 
-    expect(onEventsChange.callCount).to.equal(1);
-    const updated = onEventsChange.lastCall.firstArg.find(
-      (event: SchedulerEvent) => event.id === allDayEvent.id,
-    )!;
-    // The dialog resends the day it displayed (New York): anchored back to the
-    // event's own timezone, the stored day must not shift or stretch.
-    expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
-      adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
-    );
-    // Wall-time serialization has second resolution; the read-time normalization
-    // restores the inclusive end-of-day, so the second-precision instant is the
-    // faithful stored value.
-    expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
-      adapter.getTime(adapter.date('2025-07-04T23:59:59', 'UTC')),
-    );
-  });
+      return { user, event, getUpdatedEvent };
+    }
 
-  it('should move an all-day event to the next data-timezone day when edited from another timezone', async () => {
-    const onEventsChange = spy();
-    const allDayBuilder = EventBuilder.new()
-      .title('Independence day')
-      .withDataTimezone('UTC')
-      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true });
-    const allDayEvent: SchedulerEvent = allDayBuilder.build();
+    it('should keep the dates of an all-day event untouched when only the title is edited', async () => {
+      // New York is behind UTC: the dialog shows this event as July 3rd → 4th.
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        EventBuilder.new()
+          .title('Independence day')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true }),
+        'America/New_York',
+      );
 
-    const { user } = render(
-      <EventCalendarProvider
-        events={[allDayEvent]}
-        displayTimezone="America/New_York"
-        onEventsChange={onEventsChange}
-      >
-        <EventDialogContent open {...defaultProps} occurrence={allDayBuilder.toOccurrence()} />
-      </EventCalendarProvider>,
-    );
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
 
-    const startDateInput = screen.getByLabelText(/start date/i);
-    await user.clear(startDateInput);
-    await user.type(startDateInput, '2025-07-05');
-    const endDateInput = screen.getByLabelText(/end date/i);
-    await user.clear(endDateInput);
-    await user.type(endDateInput, '2025-07-05');
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+      const updated = getUpdatedEvent();
+      expect(updated.title).to.equal('Independence day (renamed)');
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
 
-    expect(onEventsChange.callCount).to.equal(1);
-    const updated = onEventsChange.lastCall.firstArg.find(
-      (event: SchedulerEvent) => event.id === allDayEvent.id,
-    )!;
-    // The picked day means the event's own July 5th: one clean data-zone day.
-    expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
-      adapter.getTime(adapter.date('2025-07-05T00:00:00', 'UTC')),
-    );
-    expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
-      adapter.getTime(adapter.date('2025-07-05T23:59:59', 'UTC')),
-    );
+    it('should keep the dates of a multi-day all-day event untouched when only the title is edited', async () => {
+      // Tokyo is ahead of UTC: the dialog shows this two-day event as July 4th → 6th.
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        EventBuilder.new()
+          .title('Conference')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T00:00:00', '2025-07-05T23:59:59.999', { allDay: true }),
+        'Asia/Tokyo',
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should keep the dates of a timed event untouched when only the title is edited', async () => {
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        EventBuilder.new()
+          .title('Standup')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T09:00:00', '2025-07-04T09:30:00'),
+        'America/New_York',
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should interpret an edited day in the display timezone', async () => {
+      const { user, getUpdatedEvent } = renderEditDialog(
+        EventBuilder.new()
+          .title('Independence day')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true }),
+        'America/New_York',
+      );
+
+      const startDateInput = screen.getByLabelText(/start date/i);
+      await user.clear(startDateInput);
+      await user.type(startDateInput, '2025-07-05');
+      const endDateInput = screen.getByLabelText(/end date/i);
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-07-05');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      // The picked day means the day the user was looking at (New York's July 5th),
+      // matching how the grid renders all-day events in the display timezone.
+      const updated = getUpdatedEvent();
+      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-05T04:00:00', 'UTC')),
+      );
+      // Wall-time serialization has second resolution; the read-time normalization
+      // restores the inclusive end-of-day.
+      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-06T03:59:59', 'UTC')),
+      );
+    });
   });
 
   it('should not render the resource select when there are no resources, but should keep the color picker', () => {
@@ -1471,22 +1504,29 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
             defaultValue: 'Acme',
             validate: () => deferred.promise,
           });
-          return null;
+          const startTime = useEventDialogFormField('startTime');
+          return (
+            <button type="button" onClick={() => startTime.setValue('07:45')}>
+              Shift start
+            </button>
+          );
         }
         const { user, setProps } = renderWithSlot(
           { eventDialogGeneralTab: AsyncValidatedSection },
           { onEventsChange, displayTimezone: 'UTC' },
         );
 
-        // The wall-time fields were seeded as 07:30–08:15 UTC; while the validation
-        // is pending, the same wall times start displaying as New York times.
+        // The start was seeded as 07:30 UTC and edited to 07:45; while the validation
+        // is pending, the display timezone changes, so the edited wall time must
+        // serialize as a New York time.
+        await user.click(screen.getByRole('button', { name: 'Shift start' }));
         await user.click(screen.getByRole('button', { name: 'Save' }));
         setProps({ displayTimezone: 'America/New_York' });
         await act(async () => deferred.resolve(null));
 
         expect(onEventsChange.callCount).to.equal(1);
         const updated = onEventsChange.firstCall.firstArg[0];
-        expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:30:00.000Z');
+        expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:45:00.000Z');
       });
 
       it('should enforce a resource requirement enabled while the async validation was pending', async () => {

@@ -106,21 +106,17 @@ export function computeRange(
   adapter: Adapter,
   next: Pick<EventDialogFormValues, 'startDate' | 'startTime' | 'endDate' | 'endTime' | 'allDay'>,
   displayTimezone: TemporalTimezone,
-  // An all-day event is anchored to a calendar day, not to instants: its bounds must
-  // be built in the event's own timezone or the day shifts and stretches when edited
-  // from another one.
-  allDayTimezone: TemporalTimezone = displayTimezone,
 ) {
   if (next.allDay) {
     return {
       start:
         next.startDate === ''
-          ? adapter.startOfDay(adapter.now(allDayTimezone))
-          : adapter.startOfDay(adapter.date(next.startDate, allDayTimezone)),
+          ? adapter.now(displayTimezone)
+          : adapter.startOfDay(adapter.date(next.startDate, displayTimezone)),
       end:
         next.endDate === ''
-          ? adapter.endOfDay(adapter.now(allDayTimezone))
-          : adapter.endOfDay(adapter.date(next.endDate, allDayTimezone)),
+          ? adapter.now(displayTimezone)
+          : adapter.endOfDay(adapter.date(next.endDate, displayTimezone)),
       surfaceType: 'day-grid' as const,
     };
   }

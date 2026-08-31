@@ -35,12 +35,6 @@ function inferCanHaveMultipleResourcesFromEvents(
 const processedEventSelector = (state: State, eventId: SchedulerEventId | null | undefined) =>
   eventId == null ? null : state.processedEventLookup.get(eventId);
 
-/**
- * The timezone the event's data is expressed in ('default' when the model declares none).
- */
-const dataTimezoneSelector = (state: State, eventId: SchedulerEventId) =>
-  processedEventSelector(state, eventId)?.modelInBuiltInFormat?.timezone ?? 'default';
-
 const isEventReadOnlySelector = (state: State, eventId: SchedulerEventId) => {
   const processedEvent = processedEventSelector(state, eventId);
   if (!processedEvent) {
@@ -110,7 +104,6 @@ export const schedulerEventSelectors = {
     },
   ),
   processedEvent: processedEventSelector,
-  dataTimezone: dataTimezoneSelector,
   processedEventRequired: (state: State, eventId: SchedulerEventId) => {
     const event = processedEventSelector(state, eventId);
     if (!event) {
