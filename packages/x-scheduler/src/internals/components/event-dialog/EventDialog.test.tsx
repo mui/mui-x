@@ -92,11 +92,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
   it('should keep an all-day event on its data-timezone day when renamed from another timezone', async () => {
     const onEventsChange = spy();
-    const allDayEvent: SchedulerEvent = EventBuilder.new()
+    const allDayBuilder = EventBuilder.new()
       .title('Independence day')
       .withDataTimezone('UTC')
-      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
-      .build();
+      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true });
+    const allDayEvent: SchedulerEvent = allDayBuilder.build();
 
     const { user } = render(
       <EventCalendarProvider
@@ -104,16 +104,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         displayTimezone="America/New_York"
         onEventsChange={onEventsChange}
       >
-        <EventDialogContent
-          open
-          {...defaultProps}
-          occurrence={EventBuilder.new()
-            .id(allDayEvent.id)
-            .title(allDayEvent.title)
-            .withDataTimezone('UTC')
-            .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
-            .toOccurrence()}
-        />
+        <EventDialogContent open {...defaultProps} occurrence={allDayBuilder.toOccurrence()} />
       </EventCalendarProvider>,
     );
 
