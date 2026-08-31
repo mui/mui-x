@@ -85,8 +85,8 @@ catalogs:
       specifier: ^1.1.8
       version: 1.1.8
     '@types/luxon':
-      specifier: ^3.7.4
-      version: 3.7.4
+      specifier: ^3.7.5
+      version: 3.7.5
     '@types/moment-hijri':
       specifier: ^2.1.4
       version: 2.1.4
@@ -714,7 +714,7 @@ importers:
         version: 3.1.0
       '@types/luxon':
         specifier: 'catalog:'
-        version: 3.7.4
+        version: 3.7.5
       '@types/moment-hijri':
         specifier: 'catalog:'
         version: 2.1.4
@@ -1518,7 +1518,7 @@ importers:
         version: 9.3.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@types/react@19.2.18)(react@19.2.8)
       '@types/luxon':
         specifier: 'catalog:'
-        version: 3.7.4
+        version: 3.7.5
       '@types/moment-hijri':
         specifier: 'catalog:'
         version: 2.1.4
@@ -1613,7 +1613,7 @@ importers:
         version: 9.3.0(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2))(@types/react@19.2.18)(react@19.2.8)
       '@types/luxon':
         specifier: 'catalog:'
-        version: 3.7.4
+        version: 3.7.5
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -5591,8 +5591,8 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
-  '@types/luxon@3.7.4':
-    resolution: {integrity: sha512-V536ZAd6ZJztrrBlLcDFaaZrXNAL2E5uGmssWf/dpSiLkmkLScXUYhUBnWPmtW+cIqnNHzf6//TCMpIc9SCRRQ==}
+  '@types/luxon@3.7.5':
+    resolution: {integrity: sha512-jJ41Q4z6ZVO260MNDdHfW7+7a5iMiX8Mr6ZJHcmgrvhZha6dz5704o/lF2kKl6URjH6ivEL97w9xS/MgpJEphg==}
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
@@ -14727,7 +14727,7 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/luxon@3.7.4': {}
+  '@types/luxon@3.7.5': {}
 
   '@types/mdast@4.0.4':
     dependencies:
