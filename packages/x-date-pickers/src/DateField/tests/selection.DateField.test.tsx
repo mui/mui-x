@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { createEvent, fireEvent, screen } from '@mui/internal-test-utils';
 import {
@@ -10,7 +9,7 @@ import {
   adapterToUse,
 } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DateField /> - Selection', () => {
   const { render } = createPickerRenderer();
@@ -215,13 +214,13 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should forward mousedown to a userland `onMouseDown` consumer', () => {
-      const consumer = spy();
+      const consumer = vi.fn();
       const view = renderWithProps({ onMouseDown: consumer });
 
       fireEvent.mouseDown(view.getSectionsContainer());
 
-      expect(consumer.callCount).to.equal(1);
-      expect(consumer.lastCall.firstArg.type).to.equal('mousedown');
+      expect(consumer.mock.calls.length).to.equal(1);
+      expect(consumer.mock.lastCall?.[0].type).to.equal('mousedown');
     });
 
     it('should not fire `onSelectedSectionsChange` more than once per section click', () => {
@@ -231,19 +230,19 @@ describe('<DateField /> - Selection', () => {
       // selection so the public callback fires the same number of times as
       // before this handler existed: twice for a click on a new section
       // (mousedown + focus), once for a click on the already-selected section.
-      const onSelectedSectionsChange = spy();
+      const onSelectedSectionsChange = vi.fn();
       const view = renderWithProps({ onSelectedSectionsChange });
 
       const year = view.getSection(2);
       fireEvent.mouseDown(year);
       fireEvent.click(year);
-      expect(onSelectedSectionsChange.args).to.deep.equal([[2], [2]]);
+      expect(onSelectedSectionsChange.mock.calls).to.deep.equal([[2], [2]]);
 
       // Clicking the already-selected section fires exactly once.
-      onSelectedSectionsChange.resetHistory();
+      onSelectedSectionsChange.mockClear();
       fireEvent.mouseDown(year);
       fireEvent.click(year);
-      expect(onSelectedSectionsChange.args).to.deep.equal([[2]]);
+      expect(onSelectedSectionsChange.mock.calls).to.deep.equal([[2]]);
     });
 
     it('should preserve the all-sections selection when clicking the sections container', async () => {
@@ -355,15 +354,15 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should keep the selected section when the field is already focused', async () => {
-      const onSelectedSectionsChange = spy();
+      const onSelectedSectionsChange = vi.fn();
       const view = renderWithProps({ onSelectedSectionsChange });
       await view.selectSection('day');
-      onSelectedSectionsChange.resetHistory();
+      onSelectedSectionsChange.mockClear();
 
       clickBlankSpace(view.getSectionsContainer());
 
       expect(getCleanedSelectedContent()).to.equal('DD');
-      expect(onSelectedSectionsChange.callCount).to.equal(0);
+      expect(onSelectedSectionsChange.mock.calls.length).to.equal(0);
     });
 
     it('should select the last section when clicking just inside its right edge', () => {
