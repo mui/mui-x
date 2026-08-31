@@ -139,7 +139,7 @@
     "sinon": "22.1.0",
     "string-replace-loader": "3.3.0",
     "stylelint": "17.14.1",
-    "supports-color": "10.2.2",
+    "supports-color": "11.0.0",
     "tsx": "catalog:",
     "typescript": "6.0.3",
     "unist-util-visit": "5.1.0",
