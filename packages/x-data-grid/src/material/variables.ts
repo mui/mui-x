@@ -21,11 +21,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
   const paperColor = (t.vars || t).palette.background.paper;
 
-  const backgroundBase =
-    dataGridPalette?.bg ??
-    (t.palette.mode === 'dark'
-      ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 95%, #fff)`, paperColor)
-      : paperColor);
+  const backgroundBase = getBackgroundBase(t);
   const backgroundHeader = dataGridPalette?.headerBg ?? backgroundBase;
   const backgroundPinned = dataGridPalette?.pinnedBg ?? backgroundBase;
   const backgroundBackdrop = t.alpha(
@@ -41,7 +37,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
   const radius = getRadius(t);
 
-  const fontBody = (t.vars as any)?.font?.body2 ?? formatFont(t.typography.body2);
+  const fontBody = getFontBody(t);
   const fontSmall = (t.vars as any)?.font?.caption ?? formatFont(t.typography.caption);
   const fontLarge = (t.vars as any)?.font?.body1 ?? formatFont(t.typography.body1);
   const k = vars.keys;
@@ -109,6 +105,20 @@ function getRadius(theme: Theme) {
   return typeof theme.shape.borderRadius === 'number'
     ? `${theme.shape.borderRadius}px`
     : theme.shape.borderRadius;
+}
+
+export function getBackgroundBase(theme: Theme) {
+  const paperColor = (theme.vars || theme).palette.background.paper;
+  return (
+    (theme.vars || theme).palette.DataGrid?.bg ??
+    (theme.palette.mode === 'dark'
+      ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 95%, #fff)`, paperColor)
+      : paperColor)
+  );
+}
+
+export function getFontBody(theme: Theme) {
+  return (theme.vars as any)?.font?.body2 ?? formatFont(theme.typography.body2);
 }
 
 export function getSpacingUnit(theme: Theme) {

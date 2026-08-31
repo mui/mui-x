@@ -9,7 +9,12 @@ import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { ToolbarContextProvider } from '@mui/x-internals/ToolbarContext';
 import { vars } from '../../constants/cssVariables';
-import { getBorderColor, getSpacingUnit } from '../../material/variables';
+import {
+  getBackgroundBase,
+  getBorderColor,
+  getFontBody,
+  getSpacingUnit,
+} from '../../material/variables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -45,6 +50,9 @@ const ToolbarRoot = styled('div', {
   // declared with a fallback to keep the styles working when rendered outside of a Data Grid.
   const spacingUnit = `var(${vars.keys.spacingUnit}, ${getSpacingUnit(theme)})`;
   const borderColor = `var(${vars.keys.colors.border.base}, ${getBorderColor(theme)})`;
+  const background = `var(${vars.keys.colors.background.base}, ${getBackgroundBase(theme)})`;
+  const foreground = `var(${vars.keys.colors.foreground.base}, ${(theme.vars || theme).palette.text.primary})`;
+  const fontBody = getFontBody(theme);
 
   return {
     flex: '0 1 1px',
@@ -56,6 +64,11 @@ const ToolbarRoot = styled('div', {
     minHeight: 52,
     boxSizing: 'border-box',
     borderBottom: `1px solid ${borderColor}`,
+    // Inherited from the Data Grid root inside a grid, declared here so the component keeps
+    // matching it when rendered on its own.
+    backgroundColor: background,
+    color: foreground,
+    font: fontBody ? `var(${vars.keys.typography.font.body}, ${fontBody})` : undefined,
   };
 });
 

@@ -459,6 +459,9 @@ describe('<DataGrid /> - Toolbar', () => {
         expect(rootStyle.padding).to.equal(toolbarStyle.padding);
         expect(rootStyle.borderBottomColor).to.equal(toolbarStyle.borderBottomColor);
         expect(rootStyle.borderBottomWidth).to.equal(toolbarStyle.borderBottomWidth);
+        expect(rootStyle.backgroundColor).to.equal(toolbarStyle.backgroundColor);
+        expect(rootStyle.color).to.equal(toolbarStyle.color);
+        expect(rootStyle.font).to.equal(toolbarStyle.font);
       },
     );
 
