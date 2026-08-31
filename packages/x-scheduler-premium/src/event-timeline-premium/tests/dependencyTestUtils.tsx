@@ -14,11 +14,17 @@ import {
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
   SharedComponentsStyledContext,
 } from '@mui/x-scheduler/internals';
-import { DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  DEFAULT_TESTING_VISIBLE_DATE,
+  mockElementBounds,
+  ResourceBuilder,
+} from 'test/utils/scheduler';
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 
+// TODO(#23444): replace this local absorb with the shared `renderSettled` once the
+// scheduler test-utils helper lands on master.
 // Captured at module load, before any test can install fake timers: the frame
 // wait below must ride the real rendering pipeline, like ResizeObserver does.
 const nativeRequestAnimationFrame =
@@ -38,6 +44,19 @@ export async function absorbObserverFrames() {
       nativeRequestAnimationFrame!(() => nativeRequestAnimationFrame!(() => resolve()));
     });
   });
+}
+
+/**
+ * Applies mock bounds to all timeline event rows, so jsdom drops resolve positions.
+ */
+export function mockAllEventRowBounds(width = 6720) {
+  const rows = document.querySelectorAll<HTMLElement>(
+    `.MuiEventTimeline-eventsCell[data-drop-target-for-element]`,
+  );
+  for (const row of rows) {
+    mockElementBounds(row, { left: 0, width, height: 40 });
+  }
+  return rows;
 }
 
 export const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();

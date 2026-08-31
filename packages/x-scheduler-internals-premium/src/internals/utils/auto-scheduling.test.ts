@@ -80,6 +80,221 @@ describe('computeAutoSchedulingCascade', () => {
     expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
   });
 
+  it('should mirror the store when a cross-timezone all-day resend stretches the event', () => {
+    const newYorkDate = (value: string) => adapter.date(value, 'America/New_York');
+    const eventA = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('UTC')
+      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+      .toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-05T01:00:00Z', '2025-07-05T02:00:00Z')
+      .toProcessed();
+
+    // The dialog resends "the same day" as display-zone bounds (computeRange builds
+    // them with the display timezone). Applied in the data timezone those stretch the
+    // event to a second day — the engine mirrors the store's effective result. The
+    // stretch itself is an upstream dialog issue, not an engine choice.
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [
+        {
+          id: 'a',
+          title: 'Renamed',
+          start: newYorkDate('2025-07-04T00:00:00'),
+          end: newYorkDate('2025-07-04T23:59:59.999'),
+          allDay: true,
+        },
+      ],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(utcDate('2025-07-06T00:00:00')),
+    );
+  });
+
+  it('should cascade a cross-timezone all-day move from its data-zone bounds', () => {
+    const newYorkDate = (value: string) => adapter.date(value, 'America/New_York');
+    const eventA = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('UTC')
+      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+      .toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-05T01:00:00Z', '2025-07-05T02:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [
+        {
+          id: 'a',
+          start: newYorkDate('2025-07-05T00:00:00'),
+          end: newYorkDate('2025-07-05T23:59:59.999'),
+          allDay: true,
+        },
+      ],
+    );
+
+    // The display-zone day bounds resolve to the 05→06 data-zone span (same
+    // upstream stretch as above): b lands after its effective end.
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(utcDate('2025-07-07T00:00:00')),
+    );
+  });
+
+  it('should skip a cascade target missing from the lookup', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'ghost'), fsDependency('a', 'b')],
+      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+  });
+
+  it('should not clamp a pre-violated event whose entry resends its start with a new end', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T08:00:00Z', '2025-07-03T09:00:00Z')
+      .toProcessed();
+
+    // The dialog's end resize: `start` resent unchanged alongside the new end.
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [
+        {
+          id: 'b',
+          start: date('2025-07-03T08:00:00Z'),
+          end: date('2025-07-03T09:30:00Z'),
+        },
+      ],
+    );
+
+    expect(result).to.deep.equal([]);
+  });
+
+  it('should report every blocked read-only successor', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .readOnly()
+      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+      .toProcessed();
+    const eventC = EventBuilder.new()
+      .id('c')
+      .readOnly()
+      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+      .toProcessed();
+
+    const result = runCascadeResult(
+      [eventA, eventB, eventC],
+      [fsDependency('a', 'b'), fsDependency('a', 'c')],
+      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
+      { isEventReadOnly: (eventId) => eventId !== 'a' },
+    );
+
+    expect(result.updated).to.deep.equal([]);
+    expect(result.blocked).to.have.members(['b', 'c']);
+  });
+
+  it('should let a later recurring entry win over an earlier dated one', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [
+        { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
+        { id: 'a', rrule: { freq: 'DAILY', interval: 1 } },
+      ],
+    );
+
+    expect(result).to.deep.equal([]);
+  });
+
+  it('should drive the cascade from the last of two dated entries', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [
+        { id: 'a', start: date('2025-07-03T13:00:00Z'), end: date('2025-07-03T14:00:00Z') },
+        { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
+      ],
+    );
+
+    expect(result).to.have.length(1);
+    expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
+  });
+
+  it('should ignore an allDay resend that does not change the bounds', () => {
+    const eventA = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('UTC')
+      .span('2025-07-03T00:00:00', '2025-07-03T23:59:59.999', { allDay: true })
+      .toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-04T01:00:00Z', '2025-07-04T02:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'a', allDay: true }],
+    );
+
+    expect(result).to.deep.equal([]);
+  });
+
+  it('should clamp a start-only reposition', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
+      .toProcessed();
+
+    // `end` omitted: resolves from the current model, duration shrinks accordingly.
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'b', start: date('2025-07-03T09:30:00Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(date('2025-07-03T10:00:00Z')),
+    );
+  });
+
   it('should not report blocked events on an unobstructed cascade', () => {
     const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
     const successor = EventBuilder.new()

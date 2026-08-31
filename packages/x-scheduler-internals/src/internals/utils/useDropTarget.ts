@@ -286,10 +286,14 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     return;
   }
 
-  store.updateEvent(changes);
+  const applied = store.updateEvent(changes);
 
-  // Sync the editing surface (if this occurrence is being edited) with the committed times.
-  if (schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)) {
+  // Sync the editing surface (if this occurrence is being edited) with the committed
+  // times — not with the times of a vetoed drop.
+  if (
+    applied &&
+    schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)
+  ) {
     store.setEditingOccurrenceTimes(start, end);
   }
 }

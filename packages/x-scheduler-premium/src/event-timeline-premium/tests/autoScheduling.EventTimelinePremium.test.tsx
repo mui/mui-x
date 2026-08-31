@@ -10,6 +10,7 @@ import {
 import {
   buildDependency,
   createDependencyTimelineRenderer,
+  mockAllEventRowBounds,
   resource1,
 } from './dependencyTestUtils';
 
@@ -43,12 +44,7 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
     const originalSuccessorStart =
       store.state.processedEventLookup.get('event-b')!.dataTimezone.start.timestamp;
 
-    const rows = document.querySelectorAll<HTMLElement>(
-      '.MuiEventTimeline-eventsCell[data-drop-target-for-element]',
-    );
-    for (const row of rows) {
-      mockElementBounds(row, { left: 0, width: 6720, height: 40 });
-    }
+    const rows = mockAllEventRowBounds();
     const eventElement = screen.getByText('Event A');
     mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
 
@@ -81,12 +77,7 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
       store.state.processedEventLookup.get('event-b')!.dataTimezone.end.timestamp -
       store.state.processedEventLookup.get('event-b')!.dataTimezone.start.timestamp;
 
-    const rows = document.querySelectorAll<HTMLElement>(
-      '.MuiEventTimeline-eventsCell[data-drop-target-for-element]',
-    );
-    for (const row of rows) {
-      mockElementBounds(row, { left: 0, width: 6720, height: 40 });
-    }
+    const rows = mockAllEventRowBounds();
     const eventElement = screen.getByText('Event B');
     mockElementBounds(eventElement, { left: 640, width: 64, height: 30 });
 
@@ -129,12 +120,7 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
     const originalPredecessorStart =
       store.state.processedEventLookup.get('event-a')!.dataTimezone.start.timestamp;
 
-    const rows = document.querySelectorAll<HTMLElement>(
-      '.MuiEventTimeline-eventsCell[data-drop-target-for-element]',
-    );
-    for (const row of rows) {
-      mockElementBounds(row, { left: 0, width: 6720, height: 40 });
-    }
+    const rows = mockAllEventRowBounds();
     const eventElement = screen.getByText('Event A');
     mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
 
@@ -153,5 +139,7 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
     );
     expect(store.state.errors).to.have.length(1);
     expect(store.state.errors[0].error.message).to.include('read-only');
+    // The drop gesture still completes: no ghost placeholder survives the veto.
+    expect(store.state.occurrencePlaceholder).to.equal(null);
   });
 });

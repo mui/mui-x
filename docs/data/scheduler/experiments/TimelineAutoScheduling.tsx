@@ -79,7 +79,7 @@ const initialEvents: SchedulerEvent[] = [
     end: '2025-07-03T06:30:00',
     resource: 'release',
   },
-  // A read-only successor never moves; the violation stays visible on its arrow.
+  // A read-only successor never moves: a change that would need to move it is rejected.
   {
     id: 'setup',
     title: 'Setup',
@@ -157,7 +157,7 @@ export default function TimelineAutoScheduling() {
   };
   const store = useEventTimelinePremium(parameters);
   // The context is typed on the base scheduler state and the store generic is
-  // invariant, so the premium store (extra state slices) needs widening here.
+  // invariant, so the premium store (extra state slices) needs a widened type.
   const storeContextValue = store as any;
 
   return (

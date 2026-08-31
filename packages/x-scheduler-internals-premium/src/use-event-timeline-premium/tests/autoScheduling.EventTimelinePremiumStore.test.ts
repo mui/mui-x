@@ -13,6 +13,12 @@ const eventB = EventBuilder.new()
   .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
   .build();
 const recurringEvent = EventBuilder.new().id('r').recurrent('DAILY').build();
+const readOnlySuccessor = EventBuilder.new()
+  .id('b')
+  .title('Blocked successor')
+  .readOnly()
+  .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+  .build();
 
 const DEP_AB: SchedulerDependency = {
   id: 'dep-1',
@@ -78,35 +84,101 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
   it('should reject the batch when the cascade would move a read-only event', () => {
     const onEventsChange = spy();
-    const readOnlySuccessor = EventBuilder.new()
-      .id('b')
-      .readOnly()
-      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
-      .build();
     const store = new EventTimelinePremiumStore(
       { ...DEFAULT_PARAMS, events: [eventA, readOnlySuccessor], onEventsChange },
       adapter,
     );
 
-    store.updateEvent({
+    const applied = store.updateEvent({
       id: 'a',
       start: date('2025-07-03T11:00:00Z'),
       end: date('2025-07-03T12:00:00Z'),
     });
 
-    // Atomic veto: nothing is applied, and the rejection surfaces as a toast.
+    // Atomic veto: nothing is applied, and the rejection surfaces as a toast naming
+    // the blocked event.
+    expect(applied).to.equal(false);
     expect(onEventsChange.callCount).to.equal(0);
     expect(store.state.errors).to.have.length(1);
-    expect(store.state.errors[0].error.message).to.include('read-only');
+    expect(store.state.errors[0].error.message).to.include('"Blocked successor"');
+  });
+
+  it('should report an applied update', () => {
+    const store = new EventTimelinePremiumStore(
+      { ...DEFAULT_PARAMS, onEventsChange: () => {} },
+      adapter,
+    );
+
+    const applied = store.updateEvent({
+      id: 'a',
+      start: date('2025-07-03T08:00:00Z'),
+      end: date('2025-07-03T09:00:00Z'),
+    });
+
+    expect(applied).to.equal(true);
+  });
+
+  it('should discard the whole batch when only one branch is blocked', () => {
+    const onEventsChange = spy();
+    const movableSuccessor = EventBuilder.new()
+      .id('c')
+      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+      .build();
+    const store = new EventTimelinePremiumStore(
+      {
+        ...DEFAULT_PARAMS,
+        events: [eventA, readOnlySuccessor, movableSuccessor],
+        dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'c', type: 'FinishToStart' }],
+        onEventsChange,
+      },
+      adapter,
+    );
+
+    const applied = store.updateEvent({
+      id: 'a',
+      start: date('2025-07-03T11:00:00Z'),
+      end: date('2025-07-03T12:00:00Z'),
+    });
+
+    // c could have been pushed, but the blocked b vetoes everything.
+    expect(applied).to.equal(false);
+    expect(onEventsChange.callCount).to.equal(0);
+  });
+
+  it('should not persist a vetoed batch', async () => {
+    vi.useFakeTimers();
+    try {
+      const dataSource = {
+        getEvents: async () => [eventA, readOnlySuccessor],
+        persistEvents: spy(noopPersistEvents),
+      };
+      const params = {
+        resources: TEST_RESOURCES,
+        dependencies: [DEP_AB],
+        onDependenciesChange: () => {},
+        dataSource,
+      };
+      const store = new EventTimelinePremiumStore(params, adapter);
+      store.updateStateFromParameters(params, adapter);
+      await flushEffect();
+      await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+
+      store.updateEvent({
+        id: 'a',
+        start: date('2025-07-03T11:00:00Z'),
+        end: date('2025-07-03T12:00:00Z'),
+      });
+      await flushEffect();
+      await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+
+      expect(dataSource.persistEvents.callCount).to.equal(0);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('should keep the clipboard when a cut paste is rejected', () => {
     const onEventsChange = spy();
-    const readOnlySuccessor = EventBuilder.new()
-      .id('b')
-      .readOnly()
-      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
-      .build();
     const store = new EventTimelinePremiumStore(
       { ...DEFAULT_PARAMS, events: [eventA, readOnlySuccessor], onEventsChange },
       adapter,

@@ -597,8 +597,10 @@ export class SchedulerStore<
 
   /**
    * Updates an event in the calendar.
+   * Returns whether the update was applied — `false` when the scheduling plugin
+   * vetoed the batch.
    */
-  public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
+  public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties): boolean => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
     if (this.state.recurringEventsPlugin != null && original.dataTimezone.rrule) {
       throw new Error(
@@ -615,13 +617,16 @@ export class SchedulerStore<
           'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
         ]);
       }
-      this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] });
-      return;
+      return (
+        this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }).updated.length > 0
+      );
     }
 
-    this.updateEvents({
-      updated: [calendarEvent],
-    });
+    return (
+      this.updateEvents({
+        updated: [calendarEvent],
+      }).updated.length > 0
+    );
   };
 
   /**

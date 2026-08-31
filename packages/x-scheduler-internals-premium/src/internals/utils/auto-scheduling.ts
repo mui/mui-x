@@ -46,6 +46,18 @@ interface ResolvedDates {
   allDay: boolean;
 }
 
+export interface AutoSchedulingCascadeResult {
+  /**
+   * The extra `{ id, start, end }` updates restoring the FS constraints.
+   */
+  updated: SchedulerEventUpdatedProperties[];
+  /**
+   * Read-only events the cascade would have moved: the constraint cannot be restored,
+   * so the caller should reject the batch.
+   */
+  blocked: SchedulerEventId[];
+}
+
 /**
  * Computes the Finish-to-Start cascade for an `updateEvents` batch: the extra
  * `{ id, start, end }` updates restoring `successor.start >= predecessor.end`, transitively.
@@ -66,19 +78,9 @@ interface ResolvedDates {
  * Members of a seedless cycle (cyclic props data) never become ready: left unmoved,
  * with a dev warning. A cycle through a seed is broken at the first stalled seed in
  * batch order, also with a dev warning.
+ * Entries that change none of `start`/`end`/`allDay` never cascade — notably a
+ * `timezone`-only update, a documented API-only limitation.
  */
-export interface AutoSchedulingCascadeResult {
-  /**
-   * The extra `{ id, start, end }` updates restoring the FS constraints.
-   */
-  updated: SchedulerEventUpdatedProperties[];
-  /**
-   * Read-only events the cascade would have moved: the constraint cannot be restored,
-   * so the caller should reject the batch.
-   */
-  blocked: SchedulerEventId[];
-}
-
 export function computeAutoSchedulingCascade(
   parameters: ComputeAutoSchedulingCascadeParameters,
 ): AutoSchedulingCascadeResult {
@@ -126,10 +128,18 @@ export function computeAutoSchedulingCascade(
       continue;
     }
     const allDay = entry.allDay ?? processedEvent.allDay ?? false;
+    // Entry values arrive in the display timezone; the store applies them in the
+    // data timezone (see `dateToEventString`), so the comparison and the all-day
+    // normalization must happen there too.
+    const dataTimezone = processedEvent.modelInBuiltInFormat.timezone ?? 'default';
     const { start, end } = normalizeAllDayBounds(
       adapter,
-      entry.start ?? processedEvent.dataTimezone.start.value,
-      entry.end ?? processedEvent.dataTimezone.end.value,
+      entry.start == null
+        ? processedEvent.dataTimezone.start.value
+        : adapter.setTimezone(entry.start, dataTimezone),
+      entry.end == null
+        ? processedEvent.dataTimezone.end.value
+        : adapter.setTimezone(entry.end, dataTimezone),
       allDay,
     );
     const startTimestamp = adapter.getTime(start);
@@ -285,7 +295,11 @@ export function computeAutoSchedulingCascade(
       return null;
     }
 
-    const base = newDates.get(eventId) ?? resolveCurrentDates(eventId)!;
+    const base = newDates.get(eventId) ?? resolveCurrentDates(eventId);
+    if (base === null) {
+      // Not loaded (lazy loading): nothing to move.
+      return null;
+    }
     if (base.startTimestamp >= required.endTimestamp) {
       return null;
     }

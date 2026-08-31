@@ -14,6 +14,7 @@ import {
 } from 'test/utils/scheduler';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
+import { mockAllEventRowBounds } from './dependencyTestUtils';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();
@@ -32,18 +33,6 @@ function getEventRow(resourceId: string): HTMLElement {
     throw new Error(`Could not find event row for resource "${resourceId}"`);
   }
   return row;
-}
-
-/**
- * Applies mock bounds to all timeline event rows.
- */
-function mockAllEventRowBounds(width = 6720) {
-  const rows = document.querySelectorAll<HTMLElement>(
-    `.MuiEventTimeline-eventsCell[data-drop-target-for-element]`,
-  );
-  for (const row of rows) {
-    mockElementBounds(row, { left: 0, width, height: 40 });
-  }
 }
 
 describe('EventTimelinePremium - Drag and Drop', () => {

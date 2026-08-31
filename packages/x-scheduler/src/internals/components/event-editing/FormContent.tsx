@@ -460,7 +460,17 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         // don't close the dialog
         return;
       } else {
-        store.updateEvent({ ...metaChanges, id: occurrence.id, start, end, rrule: rruleToSubmit });
+        const applied = store.updateEvent({
+          ...metaChanges,
+          id: occurrence.id,
+          start,
+          end,
+          rrule: rruleToSubmit,
+        });
+        if (!applied) {
+          // A vetoed save keeps the dialog open with the edits; the toast explains why.
+          return;
+        }
       }
 
       onClose();

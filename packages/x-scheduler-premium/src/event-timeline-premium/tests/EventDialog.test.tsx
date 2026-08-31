@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import {
   adapter,
   createSchedulerRenderer,
@@ -9,8 +10,10 @@ import {
 import { screen, within } from '@mui/internal-test-utils';
 import type {
   SchedulerEventCreationConfig,
+  SchedulerEventOccurrence,
   SchedulerResource,
 } from '@mui/x-scheduler-internals/models';
+import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import {
@@ -169,5 +172,98 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
 
     expect(createEventSpy?.calledOnce).to.equal(true);
     expect(createEventSpy?.firstCall.args[0].resource).to.equal(design.id);
+  });
+});
+
+describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
+  const anchor = document.createElement('button');
+  document.body.appendChild(anchor);
+
+  const { render } = createSchedulerRenderer();
+
+  const predecessor = EventBuilder.new()
+    .id('event-a')
+    .title('Movable predecessor')
+    .span('2025-07-03T09:00:00Z', '2025-07-03T10:00:00Z')
+    .resource(engineering)
+    .build();
+  const readOnlySuccessor = EventBuilder.new()
+    .id('event-b')
+    .title('Locked successor')
+    .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+    .resource(engineering)
+    .readOnly()
+    .build();
+  const dependency: SchedulerDependency = {
+    id: 'dep-1',
+    source: predecessor.id,
+    target: readOnlySuccessor.id,
+    type: 'FinishToStart',
+  };
+
+  /**
+   * Renders the dialog editing `predecessor` on a store where its `FinishToStart`
+   * successor is read-only, so a save moving the predecessor past 10:00 is vetoed.
+   * The edit occurrence is derived from the store's own processed state
+   * (an occurrence is a processed event plus a render key).
+   */
+  function renderEditDialog() {
+    const onEventsChange = spy();
+    const onClose = spy();
+
+    const store = new EventTimelinePremiumStore(
+      {
+        events: [predecessor, readOnlySuccessor],
+        resources,
+        dependencies: [dependency],
+        onDependenciesChange: () => {},
+        onEventsChange,
+      },
+      adapter,
+    );
+
+    const editedOccurrence: SchedulerEventOccurrence = {
+      ...store.state.processedEventLookup.get(predecessor.id)!,
+      key: 'occurrence-a',
+    };
+
+    const utils = render(
+      <SchedulerStoreContext.Provider value={store as any}>
+        <TestEventDialogContent
+          open
+          anchor={anchor}
+          container={document.body}
+          occurrence={editedOccurrence}
+          onClose={onClose}
+        />
+      </SchedulerStoreContext.Provider>,
+    );
+
+    // Same desktop Dialog + mobile Drawer duplication as the creation suite above:
+    // scope every query to the last dialog.
+    const dialogs = screen.getAllByRole('dialog');
+    const currentDialog = within(dialogs[dialogs.length - 1]);
+
+    return { ...utils, currentDialog, store, onClose, onEventsChange };
+  }
+
+  it('should keep the dialog open with the edits when the save is vetoed because the cascade would move a read-only event', async () => {
+    const { user, currentDialog, store, onClose, onEventsChange } = renderEditDialog();
+
+    // Move the predecessor to 11:00–12:00: past the read-only successor's 10:00 start,
+    // so the auto-scheduling cascade would have to push it.
+    await user.clear(currentDialog.getByLabelText(/start time/i));
+    await user.type(currentDialog.getByLabelText(/start time/i), '11:00');
+    await user.clear(currentDialog.getByLabelText(/end time/i));
+    await user.type(currentDialog.getByLabelText(/end time/i), '12:00');
+    await user.click(currentDialog.getByRole('button', { name: /save/i }));
+
+    // The batch is vetoed atomically: nothing is emitted, the dialog stays open with
+    // the user's edits, and the toast names the blocking event.
+    expect(onClose.called).to.equal(false);
+    expect(onEventsChange.called).to.equal(false);
+    expect(store.state.errors).to.have.length(1);
+    expect(store.state.errors[0].error.message).to.include('"Locked successor"');
+    expect(currentDialog.getByLabelText(/start time/i)).to.have.value('11:00');
   });
 });
