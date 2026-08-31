@@ -636,6 +636,47 @@ describe('<DataGrid /> - Rows', () => {
         expect(screen.queryByText('print')).to.equal(null);
       });
 
+      it('should not apply menu roles to always-visible actions', () => {
+        render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="delete" />
+                <GridActionsCellItem icon={<span />} label="print" />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByRole('menu')).to.equal(null);
+        expect(screen.queryByRole('menuitem')).to.equal(null);
+        expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'print' })).not.to.equal(null);
+      });
+
+      it('should apply menu roles only to the opened menu', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="delete" />
+                <GridActionsCellItem label="print" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByRole('menu')).to.equal(null);
+        expect(screen.queryByRole('menuitem')).to.equal(null);
+
+        const moreButton = screen.getByRole('button', { name: 'more' });
+        expect(moreButton).to.have.attribute('aria-haspopup', 'menu');
+        expect(moreButton).to.have.attribute('aria-expanded', 'false');
+
+        await user.click(moreButton);
+        expect(moreButton).to.have.attribute('aria-expanded', 'true');
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
+      });
+
       it('should show in a menu the actions marked as showInMenu', async () => {
         const { user } = render(
           <TestCase
