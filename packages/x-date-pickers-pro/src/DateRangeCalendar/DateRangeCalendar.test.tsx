@@ -14,6 +14,7 @@ import {
   DateRangePickerDay,
   dateRangePickerDayClasses as dayClasses,
 } from '@mui/x-date-pickers-pro/DateRangePickerDay';
+import type { DateRangePickerDayProps } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { vi, describe, it, expect } from 'vitest';
@@ -901,7 +902,7 @@ describe('<DateRangeCalendar />', () => {
   describe('Performance', () => {
     it('should only render the new start day when selecting a start day without a previously selected start day', () => {
       const renderCount = vi.fn();
-      const RenderCount = React.memo((props: React.ComponentProps<typeof DateRangePickerDay>) => {
+      const RenderCount = React.memo((props: DateRangePickerDayProps) => {
         renderCount();
         return <DateRangePickerDay {...props} />;
       });
@@ -923,7 +924,7 @@ describe('<DateRangeCalendar />', () => {
 
     it('should only render the day inside range when selecting the end day', () => {
       const renderCount = vi.fn();
-      const RenderCount = React.memo((props: React.ComponentProps<typeof DateRangePickerDay>) => {
+      const RenderCount = React.memo((props: DateRangePickerDayProps) => {
         renderCount();
         return <DateRangePickerDay {...props} />;
       });

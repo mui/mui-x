@@ -6,7 +6,10 @@ import type { DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePick
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
-import type { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
+import type {
+  PickersActionBarAction,
+  PickersActionBarProps,
+} from '@mui/x-date-pickers/PickersActionBar';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
@@ -481,7 +484,7 @@ describe('<DesktopDatePicker />', () => {
   describe('performance', () => {
     it('should not re-render the `PickersActionBar` on date change', async () => {
       const renderCount = vi.fn();
-      const RenderCount = React.memo((props: React.ComponentProps<typeof PickersActionBar>) => {
+      const RenderCount = React.memo((props: PickersActionBarProps) => {
         renderCount();
         return <PickersActionBar {...props} />;
       });
@@ -498,7 +501,7 @@ describe('<DesktopDatePicker />', () => {
 
     it('should not re-render the `PickersActionBar` on date change with custom callback actions with root component updates', async () => {
       const renderCount = vi.fn();
-      const RenderCount = React.memo((props: React.ComponentProps<typeof PickersActionBar>) => {
+      const RenderCount = React.memo((props: PickersActionBarProps) => {
         renderCount();
         return <PickersActionBar {...props} />;
       });
