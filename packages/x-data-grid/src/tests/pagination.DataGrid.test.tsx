@@ -504,6 +504,21 @@ describe('<DataGrid /> - Pagination', () => {
         expectedViewportRowsLengthAfter,
       );
     });
+
+    it('should not render the page size selector when the computed page size is in the `pageSizeOptions`', () => {
+      const { setProps } = render(
+        <TestCaseAutoPageSize nbRows={100} height={780} columnHeaderHeight={56} rowHeight={52} />,
+      );
+
+      const computedPageSize = getRows().length;
+      const pageSizeOptions = [computedPageSize, computedPageSize * 2];
+
+      setProps({ pageSizeOptions });
+      expect(screen.queryByLabelText('Rows per page:')).to.equal(null);
+
+      setProps({ pageSizeOptions, autoPageSize: false });
+      expect(screen.queryByLabelText('Rows per page:')).not.to.equal(null);
+    });
   });
 
   it('should react to an update of rowCount when `paginationMode = server`', () => {

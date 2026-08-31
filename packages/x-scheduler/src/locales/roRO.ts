@@ -58,6 +58,8 @@ const roRODialog: Partial<EventEditingLocaleText> = {
   noResourceAriaLabel: 'Fără resursă',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Resursă',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salvează',
   startDateAfterEndDateError: 'Data de sfârșit nu poate fi înainte de data de început.',
