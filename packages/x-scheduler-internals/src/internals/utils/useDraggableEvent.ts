@@ -126,7 +126,9 @@ export namespace useDraggableEvent {
     occurrenceKey: string;
     /**
      * The occurrence bounds in the data timezone, used as the occurrence identity for
-     * recurring drag updates. Defaults to `start`/`end` (the display bounds).
+     * recurring drag updates. Defaults to `start`/`end` (the display bounds). Read by
+     * the grid event components when building the original drag occurrence, not by
+     * this hook itself.
      */
     dataStart?: SchedulerProcessedDate;
     dataEnd?: SchedulerProcessedDate;
