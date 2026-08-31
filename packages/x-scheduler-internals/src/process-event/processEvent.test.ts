@@ -159,6 +159,31 @@ describe('processEvent', () => {
       );
     });
 
+    it('should label the data-timezone bag in the event timezone for instant strings', () => {
+      const event = EventBuilder.new(adapter)
+        .withDataTimezone('America/New_York')
+        .span('2025-01-01T14:00:00Z', '2025-01-01T15:00:00Z')
+        .exDates(['2025-01-05T14:00:00Z'])
+        .recurrent('DAILY')
+        .build();
+
+      const processed = processEvent(
+        event,
+        'Europe/Paris',
+        adapter,
+        schedulerRecurringEventsPlugin,
+      );
+
+      // The instants are untouched; the objects answer calendar math (day, hour) in the
+      // event's timezone, so recurrence evaluation cannot depend on the machine's zone.
+      expect(processed.dataTimezone.start.timestamp).to.equal(
+        new Date('2025-01-01T14:00:00Z').getTime(),
+      );
+      // 14:00 UTC = 09:00 in New York (UTC-5)
+      expect(adapter.formatByString(processed.dataTimezone.start.value, 'HH:mm')).to.equal('09:00');
+      expect(adapter.formatByString(processed.dataTimezone.exDates![0], 'HH:mm')).to.equal('09:00');
+    });
+
     it('should keep local hour across DST spring-forward for wall-time events', () => {
       // 2025 US spring-forward: March 9 at 02:00 → 03:00
       // Before DST (Jan 1): 09:00 NY = UTC-5 → 14:00 UTC

@@ -773,26 +773,20 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(result).to.have.length(5);
     });
 
-    it('should exclude an exDate carried in another zone on its data-timezone day', () => {
+    it('should exclude an instant-string exDate on its data-timezone day', () => {
+      // The exDate instant (July 12th 03:00Z) parses in the system zone (UTC in tests),
+      // where its day reads July 12th — but in the event's New York timezone it is
+      // July 11th 23:00, the day of the occurrence it excludes.
       const event = EventBuilder.new(adapter)
-        .withDataTimezone('UTC')
-        .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+        .withDataTimezone('America/New_York')
+        .singleDay('2025-07-04T13:00:00Z')
+        .exDates(['2025-07-12T03:00:00Z'])
         .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
         .toProcessed();
-      // A `...Z` exDate string parses in the system zone: on a New York machine this
-      // instant (July 11th 00:00Z) carries a zone where the day reads July 10th, while
-      // the day it excludes is the data-timezone July 11th.
-      const eventWithExDate = {
-        ...event,
-        dataTimezone: {
-          ...event.dataTimezone,
-          exDates: [adapter.date('2025-07-10T20:00:00', 'America/New_York')],
-        },
-      };
 
       const visibleStart = adapter.date('2025-07-04T00:00:00Z', 'default');
       const result = getRecurringEventOccurrencesForVisibleDays(
-        eventWithExDate,
+        event,
         visibleStart,
         adapter.addDays(visibleStart, 15),
         adapter,

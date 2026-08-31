@@ -118,12 +118,9 @@ class RecurringEventExpander {
     this.scanFirstDay = adapter.startOfDay(adapter.addDays(visibleStartDataTz, 1 - eventDuration));
     this.scanLastDay = adapter.startOfDay(visibleEndDataTz);
 
-    // Pre-compute boundaries and exclusions. Occurrences are keyed on their data-timezone
-    // day, so the exDates must be relabeled into it too: a `...Z` exDate string parses in
-    // the system zone, where its day can differ from the data-timezone day it excludes.
-    this.exDateKeys = new Set(
-      this.dataTimezone.exDates?.map((d) => getDateKey(adapter.setTimezone(d, dataTz), adapter)),
-    );
+    // Pre-compute boundaries and exclusions. The exDates come out of `processEvent`
+    // already labeled in the data timezone, matching the day keys occurrences use.
+    this.exDateKeys = new Set(this.dataTimezone.exDates?.map((d) => getDateKey(d, adapter)));
     this.untilBoundary = this.rule.until ? adapter.startOfDay(this.rule.until) : null;
     this.minDate = adapter.isBefore(this.seriesStartDay, this.scanFirstDay)
       ? this.scanFirstDay
