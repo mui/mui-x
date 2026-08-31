@@ -126,7 +126,7 @@
     "lerna": "10.0.1",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
-    "picomatch": "4.0.5",
+    "picomatch": "4.0.7",
     "pkg-pr-new": "0.0.88",
     "playwright": "catalog:",
     "prettier": "3.9.6",
