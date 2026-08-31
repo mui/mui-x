@@ -128,6 +128,45 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     );
   });
 
+  it('should move an all-day event to the next data-timezone day when edited from another timezone', async () => {
+    const onEventsChange = spy();
+    const allDayBuilder = EventBuilder.new()
+      .title('Independence day')
+      .withDataTimezone('UTC')
+      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true });
+    const allDayEvent: SchedulerEvent = allDayBuilder.build();
+
+    const { user } = render(
+      <EventCalendarProvider
+        events={[allDayEvent]}
+        displayTimezone="America/New_York"
+        onEventsChange={onEventsChange}
+      >
+        <EventDialogContent open {...defaultProps} occurrence={allDayBuilder.toOccurrence()} />
+      </EventCalendarProvider>,
+    );
+
+    const startDateInput = screen.getByLabelText(/start date/i);
+    await user.clear(startDateInput);
+    await user.type(startDateInput, '2025-07-05');
+    const endDateInput = screen.getByLabelText(/end date/i);
+    await user.clear(endDateInput);
+    await user.type(endDateInput, '2025-07-05');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(onEventsChange.callCount).to.equal(1);
+    const updated = onEventsChange.lastCall.firstArg.find(
+      (event: SchedulerEvent) => event.id === allDayEvent.id,
+    )!;
+    // The picked day means the event's own July 5th: one clean data-zone day.
+    expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
+      adapter.getTime(adapter.date('2025-07-05T00:00:00', 'UTC')),
+    );
+    expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
+      adapter.getTime(adapter.date('2025-07-05T23:59:59', 'UTC')),
+    );
+  });
+
   it('should not render the resource select when there are no resources, but should keep the color picker', () => {
     const noResourceEvent: SchedulerEvent = EventBuilder.new()
       .title('Running')
