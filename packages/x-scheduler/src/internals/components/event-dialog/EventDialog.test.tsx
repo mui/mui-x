@@ -90,6 +90,53 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     expect(screen.getByRole('combobox', { name: 'Resource' })).not.to.equal(null);
   });
 
+  it('should keep an all-day event on its data-timezone day when renamed from another timezone', async () => {
+    const onEventsChange = spy();
+    const allDayEvent: SchedulerEvent = EventBuilder.new()
+      .title('Independence day')
+      .withDataTimezone('UTC')
+      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+      .build();
+
+    const { user } = render(
+      <EventCalendarProvider
+        events={[allDayEvent]}
+        displayTimezone="America/New_York"
+        onEventsChange={onEventsChange}
+      >
+        <EventDialogContent
+          open
+          {...defaultProps}
+          occurrence={EventBuilder.new()
+            .id(allDayEvent.id)
+            .title(allDayEvent.title)
+            .withDataTimezone('UTC')
+            .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+            .toOccurrence()}
+        />
+      </EventCalendarProvider>,
+    );
+
+    await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(onEventsChange.callCount).to.equal(1);
+    const updated = onEventsChange.lastCall.firstArg.find(
+      (event: SchedulerEvent) => event.id === allDayEvent.id,
+    )!;
+    // The dialog resends the day it displayed (New York): anchored back to the
+    // event's own timezone, the stored day must not shift or stretch.
+    expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
+      adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
+    );
+    // Wall-time serialization has second resolution; the read-time normalization
+    // restores the inclusive end-of-day, so the second-precision instant is the
+    // faithful stored value.
+    expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
+      adapter.getTime(adapter.date('2025-07-04T23:59:59', 'UTC')),
+    );
+  });
+
   it('should not render the resource select when there are no resources, but should keep the color picker', () => {
     const noResourceEvent: SchedulerEvent = EventBuilder.new()
       .title('Running')

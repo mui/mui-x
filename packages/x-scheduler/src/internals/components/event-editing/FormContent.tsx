@@ -380,7 +380,20 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       };
 
       const values = formStore.state.values;
-      const { start, end } = computeRange(current.adapter, values, current.displayTimezone);
+      // Edits anchor all-day bounds to the event's own timezone; a creation has no
+      // event timezone yet and stays on the display one.
+      const isCreation =
+        schedulerOccurrencePlaceholderSelectors.value(store.state)?.type === 'creation';
+      const allDayTimezone = isCreation
+        ? current.displayTimezone
+        : (schedulerEventSelectors.processedEvent(store.state, occurrence.id)?.modelInBuiltInFormat
+            .timezone ?? 'default');
+      const { start, end } = computeRange(
+        current.adapter,
+        values,
+        current.displayTimezone,
+        allDayTimezone,
+      );
 
       if (!runSubmitChecks(values, start, end, current) || !isValid) {
         // Show the tab owning a failing field; General wins when both tabs fail.

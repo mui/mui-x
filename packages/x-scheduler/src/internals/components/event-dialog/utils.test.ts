@@ -1,6 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { findInvalidRangeField } from './utils';
+import { computeRange, findInvalidRangeField } from './utils';
 
 describe('findInvalidRangeField', () => {
   const base = {
@@ -59,5 +59,34 @@ describe('findInvalidRangeField', () => {
     it('should ignore the time fields of an all-day range', () => {
       expect(run({ startTime: '24:00', allDay: true })).to.equal(null);
     });
+  });
+});
+
+describe('computeRange', () => {
+  const allDayValues = {
+    startDate: '2025-07-04',
+    startTime: '',
+    endDate: '2025-07-04',
+    endTime: '',
+    allDay: true,
+  };
+
+  it('should anchor all-day bounds in the given all-day timezone', () => {
+    const range = computeRange(adapter, allDayValues, 'America/New_York', 'UTC');
+
+    expect(adapter.getTime(range.start)).to.equal(
+      adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
+    );
+    expect(adapter.getTime(range.end)).to.equal(
+      adapter.getTime(adapter.date('2025-07-04T23:59:59.999', 'UTC')),
+    );
+  });
+
+  it('should default the all-day anchor to the display timezone', () => {
+    const range = computeRange(adapter, allDayValues, 'America/New_York');
+
+    expect(adapter.getTime(range.start)).to.equal(
+      adapter.getTime(adapter.date('2025-07-04T00:00:00', 'America/New_York')),
+    );
   });
 });
