@@ -58,7 +58,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         onClick={handleClick}
         aria-controls={open ? `${schedulerId}-preferences-menu` : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
+        aria-expanded={open}
       >
         <SettingsOutlined />
       </IconButton>
