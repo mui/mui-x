@@ -492,24 +492,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    if (
-      showRecurrence &&
-      recurringEventsPlugin &&
-      isEventOccurrence(occurrence) &&
-      occurrence.displayTimezone.rrule
-    ) {
-      store.deleteRecurringEvent({
-        occurrenceStart: occurrence.dataTimezone.start.value,
-        eventId: occurrence.id,
-        onSubmit: onClose,
-      });
-
-      // don't close the dialog
-      return;
-    }
-
-    store.deleteEvent(occurrence.id);
-    onClose();
+    // A recurring delete closes the dialog on scope submit instead of right away.
+    store.deleteOccurrence(occurrence, onClose);
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {

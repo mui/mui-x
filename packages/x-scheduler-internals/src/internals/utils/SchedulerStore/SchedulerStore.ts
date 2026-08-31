@@ -639,6 +639,34 @@ export class SchedulerStore<
   };
 
   /**
+   * Deletes the event behind an occurrence: an occurrence of a recurring series opens the
+   * recurring scope dialog (keyed on its data-timezone identity), any other one is deleted
+   * immediately. `onDelete` runs when the delete has applied — right away for an immediate
+   * delete, on scope submit for a recurring one.
+   * @returns Whether the scope dialog was opened.
+   */
+  public deleteOccurrence = (
+    occurrence: SchedulerRenderableEventOccurrence,
+    onDelete: () => void = () => {},
+  ): boolean => {
+    if (
+      this.state.recurringEventsPlugin != null &&
+      isEventOccurrence(occurrence) &&
+      occurrence.displayTimezone.rrule
+    ) {
+      this.deleteRecurringEvent({
+        occurrenceStart: occurrence.dataTimezone.start.value,
+        eventId: occurrence.id,
+        onSubmit: onDelete,
+      });
+      return true;
+    }
+    this.deleteEvent(occurrence.id);
+    onDelete();
+    return false;
+  };
+
+  /**
    * Applies the pending recurring event operation after the user selects a scope.
    * @param scope The selected scope, or null if canceled.
    */
@@ -1028,6 +1056,8 @@ export class SchedulerStore<
   /**
    * Refreshes the edited occurrence's times so a later edit (e.g. opening the form from the armed
    * toolbar) reflects a just-committed change such as a resize. No-op when nothing is being edited.
+   * `dataStart`/`dataEnd` override the data-timezone bounds; when omitted they derive from
+   * `start`/`end` relabeled into the occurrence's data timezone.
    */
   public setEditingOccurrenceTimes = (
     start: TemporalSupportedObject,
