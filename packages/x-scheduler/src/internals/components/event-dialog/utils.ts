@@ -109,8 +109,22 @@ export const RANGE_FORM_KEYS = ['startDate', 'startTime', 'endDate', 'endTime', 
 
 export type RangeFormKey = (typeof RANGE_FORM_KEYS)[number];
 
-// The all-day branch of `computeRange` ignores the time fields.
-export const ALL_DAY_RANGE_FORM_KEYS: readonly RangeFormKey[] = ['startDate', 'endDate', 'allDay'];
+/**
+ * Which bounds of the submitted range the user actually edited, per the keys the
+ * range in its current mode reads (the all-day branch of `computeRange` ignores
+ * the time fields). Toggling `allDay` re-derives both bounds.
+ */
+export function getEditedRangeBounds(
+  dirtyValues: Record<string, unknown>,
+  allDay: boolean,
+): { startEdited: boolean; endEdited: boolean } {
+  const isDirty = (key: RangeFormKey) => key in dirtyValues;
+  const modeEdited = isDirty('allDay');
+  return {
+    startEdited: modeEdited || isDirty('startDate') || (!allDay && isDirty('startTime')),
+    endEdited: modeEdited || isDirty('endDate') || (!allDay && isDirty('endTime')),
+  };
+}
 
 export function computeRange(
   adapter: Adapter,

@@ -45,9 +45,8 @@ import {
   getRangeErrorMessage,
   validateRange,
   hasProp,
-  ALL_DAY_RANGE_FORM_KEYS,
   BUILT_IN_FORM_KEYS,
-  RANGE_FORM_KEYS,
+  getEditedRangeBounds,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
 import TitleSection from '../event-dialog/TitleSection';
@@ -410,8 +409,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // it untouched can move the event: the same day re-read in another timezone
       // is a different day. Only the keys the submitted range reads count — a time
       // left over from toggling all-day off and back on must not re-arm the resend.
-      const rangeKeys = values.allDay ? ALL_DAY_RANGE_FORM_KEYS : RANGE_FORM_KEYS;
-      const rangeEdited = rangeKeys.some((key) => key in dirtyValues);
+      const { startEdited, endEdited } = getEditedRangeBounds(dirtyValues, values.allDay);
+      const rangeEdited = startEdited || endEdited;
 
       const metaChanges = {
         ...editedCustomValues,
@@ -455,10 +454,14 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           rruleToSubmit,
         );
 
+        // Per-bound on the recurring path: the plugin defaults a missing bound to the
+        // occurrence's own, so an untouched display-anchored start cannot reach the
+        // pattern math (where it would move DTSTART and realign BYDAY).
         const changes: SchedulerEventUpdatedProperties = {
           ...metaChanges,
           id: occurrence.id,
-          ...(rangeEdited ? { start, end } : {}),
+          ...(startEdited ? { start } : {}),
+          ...(endEdited ? { end } : {}),
           ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
         };
 

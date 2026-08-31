@@ -2131,6 +2131,52 @@ describe('<EventDialogContent open />', () => {
         expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
       });
 
+      it("should keep the untouched start byte-identical when only the end date is edited with scope 'all'", async () => {
+        const onEventsChange = spy();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[weeklyEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={weeklyBuilder.toOccurrence()}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        // The dialog shows the series on New York July 3rd → 4th; extend only the end.
+        const endDateInput = screen.getByLabelText(/end date/i);
+        await user.clear(endDateInput);
+        await user.type(endDateInput, '2025-07-05');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        const updated = onEventsChange.lastCall.firstArg.find(
+          (event: SchedulerEvent) => event.id === weeklyEvent.id,
+        )!;
+        // The untouched start must not enter the pattern math: no DTSTART move,
+        // no BYDAY realign onto the displayed Thursday.
+        expect(updated.start).to.equal(weeklyEvent.start);
+        expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
+        // The edited end applies as the day the user was looking at.
+        const updatedEndInNewYork = adapter.setTimezone(
+          adapter.date(String(updated.end), 'UTC'),
+          'America/New_York',
+        );
+        expect(adapter.formatByString(updatedEndInNewYork, 'yyyy-MM-dd')).to.equal('2025-07-05');
+      });
+
       it('should delete the occurrence of its own day when deleted from another timezone', async () => {
         let deleteRecurringEventSpy;
 
