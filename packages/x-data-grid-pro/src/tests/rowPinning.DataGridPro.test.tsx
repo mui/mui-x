@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, gridClasses, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { GridApi, GridRowsProp, DataGridProProps, GridColDef } from '@mui/x-data-grid-pro';
@@ -17,7 +16,7 @@ import {
   microtasks,
 } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Row pinning', () => {
   const { render } = createRenderer();
@@ -722,7 +721,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   // flaky in JSDOM
   it.skipIf(isJSDOM)('should support cell editing', async () => {
-    const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
+    const processRowUpdate = vi.fn((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     const { user } = render(
       <div style={{ width: 400, height: 400 }}>
@@ -753,13 +752,13 @@ describe('<DataGridPro /> - Row pinning', () => {
     await user.keyboard('{Enter}');
 
     expect(cell.textContent).to.equal('Marcus');
-    expect(processRowUpdate.callCount).to.equal(1);
-    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+    expect(processRowUpdate.mock.calls.length).to.equal(1);
+    expect(processRowUpdate.mock.lastCall?.[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
 
   // flaky in JSDOM
   it.skipIf(isJSDOM)('should support row editing', async () => {
-    const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
+    const processRowUpdate = vi.fn((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     const { user } = render(
       <div style={{ width: 400, height: 400 }}>
@@ -791,8 +790,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     await user.keyboard('{Enter}');
 
     expect(cell.textContent).to.equal('Marcus');
-    expect(processRowUpdate.callCount).to.equal(1);
-    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+    expect(processRowUpdate.mock.calls.length).to.equal(1);
+    expect(processRowUpdate.mock.lastCall?.[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
 
   it('should support `updateRows`', async () => {
@@ -832,5 +831,62 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     expect(getCell(0, 1).textContent).to.equal('Marcus');
     expect(getCell(4, 1).textContent).to.equal('Tom');
+  });
+
+  describe('`updateRows` on a pinned row', () => {
+    class Person {
+      id: number;
+
+      name: string;
+
+      constructor(id: number, name: string) {
+        this.id = id;
+        this.name = name;
+      }
+
+      getLabel() {
+        return `${this.name} (person)`;
+      }
+    }
+
+    const columns: GridColDef[] = [
+      { field: 'id' },
+      // The cell is empty if the stored row lost its prototype.
+      { field: 'label', valueGetter: (value, row) => (row as Person).getLabel?.() },
+    ];
+    const rows = [new Person(1, 'Jack')];
+    const pinnedRows = { top: [new Person(3, 'Joe')] };
+
+    let apiRef: RefObject<GridApi | null>;
+
+    function TestCase() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 400, height: 400 }}>
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} pinnedRows={pinnedRows} />
+        </div>
+      );
+    }
+
+    it('should preserve the prototype of the pinned row when merging a partial update', async () => {
+      render(<TestCase />);
+
+      expect(getCell(0, 1).textContent).to.equal('Joe (person)');
+
+      await act(async () => apiRef.current?.updateRows([{ id: 3, name: 'Marcus' }]));
+
+      expect(getCell(0, 1).textContent).to.equal('Marcus (person)');
+      expect(apiRef.current?.getRow(3) instanceof Person).to.equal(true);
+    });
+
+    it('should store the pinned row verbatim when it is replaced', async () => {
+      render(<TestCase />);
+
+      const replacement = new Person(3, 'Marcus');
+      await act(async () => apiRef.current?.updateRows([{ _action: 'replace', row: replacement }]));
+
+      expect(getCell(0, 1).textContent).to.equal('Marcus (person)');
+      expect(apiRef.current?.getRow(3)).to.equal(replacement);
+    });
   });
 });

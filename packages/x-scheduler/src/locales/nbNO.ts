@@ -58,6 +58,8 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   noResourceAriaLabel: 'Ingen spesifikk ressurs',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressurs',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Lagre',
   startDateAfterEndDateError: 'Sluttdato kan ikke være før startdato.',

@@ -96,6 +96,16 @@ const schedulerPages: MuiPage[] = [
         ],
       },
       {
+        pathname: '/x/react-scheduler/components-group',
+        title: 'Components',
+        children: [
+          {
+            pathname: '/x/react-scheduler/components/event-dialog',
+            title: 'Event dialog',
+          },
+        ],
+      },
+      {
         pathname: '/x/api/scheduler-group',
         title: 'API reference',
         children: [...schedulerComponentApi],

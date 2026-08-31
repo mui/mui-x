@@ -294,11 +294,12 @@
   "294": "MUI X Charts: Series \"%s\" has a duplicated name \"%s\".\nMap shapes are identified by their name, so duplicates cannot be told apart for coloring, tooltips, and highlighting.\nEnsure each data entry has a unique name.",
   "295": "MUI X Tree View: Unable to add items to the parent with id \"%s\" because it is not present in the tree. Pass the id of an existing item, or `null` to add the items at the root level.",
   "296": "MUI X Tree View: Unable to add items at index \"%s\" because it is out of range. The index must be between 0 and the amount of children of the parent item (%s).",
-  "297": "MUI X Scheduler: useEventDialogFormContext must be used within an <EventDialogFormProvider />. The component requires access to the draft form values. Ensure the component is rendered inside the event dialog form.",
+  "297": "MUI X Scheduler: The component must be rendered inside the event dialog form. The draft form values only exist while the dialog is open. Render the component through the `eventDialogGeneralTab` slot.",
   "298": "MUI X Scheduler: `EventEditingContext` is missing. Hook must be placed within its Provider.",
   "299": "MUI X Scheduler: `MoreEventsPopoverContext` is missing. Hook must be placed within its Provider.",
   "300": "MUI X Data Grid: The column \"%s\" does not allow formulas. Writing a formula to it would store a string rendered as-is instead of an evaluated value. Set `allowFormulas: true` on the column definition. See https://mui.com/x/react-data-grid/formulas/.",
   "301": "MUI X Data Grid: `setCellFormula()` expects a formula source starting with `=`, for example `=price * quantity`. Other values would not be recognized as formulas. To store a plain value, use `updateRows()` instead.",
   "302": "MUI X Data Grid: The formula function name \"%s\" is reserved by the formula syntax. Registering it would make the function unreachable in formulas. Rename the custom function to a non-reserved name.",
-  "303": "MUI X Data Grid: \"%s\" is not a valid formula function name. The formula parser can never produce a call to it, which would make the function unreachable in formulas. Function names must start with a letter or underscore and contain only letters, digits, and underscores."
+  "303": "MUI X Data Grid: \"%s\" is not a valid formula function name. The formula parser can never produce a call to it, which would make the function unreachable in formulas. Function names must start with a letter or underscore and contain only letters, digits, and underscores.",
+  "304": "MUI X Data Grid: A row update with `_action: 'replace'` was provided without a `row` property.\nWithout it, the Data Grid does not know which object to store for that row.\nProvide the replacement object in the `row` property, for example `updateRows([{ _action: 'replace', row }])`.\nFor more detail, see https://mui.com/x/react-data-grid/row-updates/."
 }

@@ -36,7 +36,11 @@ import {
 } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
-import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
+import {
+  isKeyboardEvent,
+  isNavigationKey,
+  isSelectAllShortcut,
+} from '../../../utils/keyboardUtils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
@@ -859,7 +863,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         return;
       }
 
-      if (String.fromCharCode(event.keyCode) === 'A' && (event.ctrlKey || event.metaKey)) {
+      if (isSelectAllShortcut(event)) {
         event.preventDefault();
         if (canHaveMultipleSelection) {
           toggleAllRows(true);

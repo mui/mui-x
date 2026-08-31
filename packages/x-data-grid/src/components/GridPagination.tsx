@@ -92,9 +92,10 @@ function GridPagination() {
     }
   }
 
-  const pageSizeOptions = isPageSizeIncludedInPageSizeOptions(paginationModel.pageSize)
-    ? rootProps.pageSizeOptions
-    : [];
+  const pageSizeOptions =
+    !rootProps.autoPageSize && isPageSizeIncludedInPageSizeOptions(paginationModel.pageSize)
+      ? rootProps.pageSizeOptions
+      : [];
 
   return (
     <GridPaginationRoot
