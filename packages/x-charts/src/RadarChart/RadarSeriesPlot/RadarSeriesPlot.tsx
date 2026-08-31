@@ -68,6 +68,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                       onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
                     }
                     cursor={onMarkClick ? 'pointer' : 'unset'}
+                    {...interactionProps[seriesIndex]}
                   />
                 ))}
             </g>

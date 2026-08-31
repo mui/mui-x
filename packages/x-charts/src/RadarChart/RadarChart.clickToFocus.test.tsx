@@ -60,6 +60,37 @@ describe.skipIf(isJSDOM)('<RadarChart /> - click to focus', () => {
     expect(getFocusedMarkIndex(container)).to.equal(3);
   });
 
+  it('keeps the series a clicked mark belongs to', async () => {
+    // Clickable marks cover the area, so without them reporting their series the click would fall
+    // back to the first one.
+    const { container, user } = render(
+      <RadarChart
+        height={300}
+        width={300}
+        radar={{ metrics: ['A', 'B', 'C', 'D'] }}
+        series={[
+          { id: 'first', data: [10, 20, 30, 40] },
+          { id: 'second', data: [40, 30, 20, 10] },
+        ]}
+        onMarkClick={() => {}}
+      />,
+    );
+
+    const secondMarks = Array.from(
+      container.querySelectorAll<SVGElement>(`[data-series="second"] .${radarClasses.seriesMark}`),
+    );
+    const target = secondMarks[2];
+    await user.pointer([{ target, coords: getCenter(target) }]);
+    await user.pointer([{ keys: '[MouseLeft]', target, coords: getCenter(target) }]);
+    await user.keyboard('[ArrowRight]');
+
+    // The key moved on to the next mark of the same series, not of the first one.
+    const indicator = getCenter(container.querySelector('[fill="none"][stroke-width="2"]')!);
+    const expected = getCenter(secondMarks[3]);
+    expect(Math.abs(indicator.clientX - expected.clientX)).to.be.lessThan(2);
+    expect(Math.abs(indicator.clientY - expected.clientY)).to.be.lessThan(2);
+  });
+
   it('focuses the mark through the area when no click callback is set', async () => {
     const { container, user } = render(<RadarChart {...radarProps} />);
 
