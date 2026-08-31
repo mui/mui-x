@@ -181,7 +181,27 @@ describe('processEvent', () => {
       );
       // 14:00 UTC = 09:00 in New York (UTC-5)
       expect(adapter.formatByString(processed.dataTimezone.start.value, 'HH:mm')).to.equal('09:00');
+      expect(adapter.formatByString(processed.dataTimezone.end.value, 'HH:mm')).to.equal('10:00');
       expect(adapter.formatByString(processed.dataTimezone.exDates![0], 'HH:mm')).to.equal('09:00');
+    });
+
+    it('should project the display BYDAY from the data-timezone weekday for instant strings', () => {
+      // Thursday 21:00 in New York is already Friday in UTC: the projection must
+      // anchor on the data-timezone weekday, not the one the parse zone reads.
+      const event = EventBuilder.new(adapter)
+        .withDataTimezone('America/New_York')
+        .span('2025-01-03T02:00:00Z', '2025-01-03T03:00:00Z')
+        .rrule({ freq: 'WEEKLY', interval: 1, byDay: ['TH'] })
+        .build();
+
+      const processed = processEvent(
+        event,
+        'America/New_York',
+        adapter,
+        schedulerRecurringEventsPlugin,
+      );
+
+      expect(processed.displayTimezone.rrule?.byDay).to.deep.equal(['TH']);
     });
 
     it('should keep local hour across DST spring-forward for wall-time events', () => {

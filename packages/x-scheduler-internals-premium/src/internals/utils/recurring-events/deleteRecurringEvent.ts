@@ -13,6 +13,9 @@ export function deleteRecurringEvent(
   occurrenceStart: TemporalSupportedObject,
   scope: RecurringEventScope,
 ): UpdateEventsParameters {
+  // Callers may hand an instant carrying any zone label; every scope's day math
+  // (exDate markers, truncation boundaries) runs in the data timezone.
+  occurrenceStart = adapter.setTimezone(occurrenceStart, originalEvent.dataTimezone.timezone);
   switch (scope) {
     case 'this-and-following': {
       return applyRecurringDeleteFollowing(adapter, originalEvent, occurrenceStart);
@@ -48,9 +51,7 @@ export function applyRecurringDeleteOnlyThis(
 ): UpdateEventsParameters {
   const exDates = [
     ...(originalEvent.dataTimezone.exDates ?? []),
-    // The exDate is a day marker in the data timezone; the incoming instant may carry
-    // another zone (a `...Z` DTSTART parses in the system zone), so relabel first.
-    adapter.startOfDay(adapter.setTimezone(occurrenceStart, originalEvent.dataTimezone.timezone)),
+    adapter.startOfDay(occurrenceStart),
   ];
 
   if (!hasRemainingOccurrence(adapter, originalEvent, exDates)) {

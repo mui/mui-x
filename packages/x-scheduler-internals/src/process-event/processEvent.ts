@@ -21,15 +21,6 @@ export function processEvent(
     ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, adapter, model.id))
     : undefined;
 
-  // The data bag must carry its own zone, mirroring the display bag below: an instant
-  // (`...Z`) string parses in the system zone, and recurrence math — evaluated in the
-  // data timezone per the docs — must not depend on the zone the parse happened in.
-  const startInDataTz = adapter.setTimezone(startInstant, dataTimezone);
-  const endInDataTz = adapter.setTimezone(endInstant, dataTimezone);
-  const exDatesInDataTz = resolvedExDates
-    ? resolvedExDates.map((exDate) => adapter.setTimezone(exDate, dataTimezone))
-    : undefined;
-
   const startInDisplayTz = adapter.setTimezone(startInstant, displayTimezone);
   const endInDisplayTz = adapter.setTimezone(endInstant, displayTimezone);
   const displayBounds = normalizeAllDayBounds(
@@ -71,11 +62,11 @@ export function processEvent(
     title: model.title,
     description: model.description,
     dataTimezone: {
-      start: processDate(startInDataTz, adapter),
-      end: processDate(endInDataTz, adapter),
+      start: processDate(startInstant, adapter),
+      end: processDate(endInstant, adapter),
       timezone: dataTimezone,
       rrule: parsedDataRRule,
-      exDates: exDatesInDataTz,
+      exDates: resolvedExDates,
     },
     displayTimezone: {
       start: processDate(displayBounds.start, adapter),

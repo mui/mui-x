@@ -13,6 +13,7 @@ import {
   applyRecurringUpdateFollowing,
   applyRecurringUpdateOnlyThis,
   decideSplitRRule,
+  updateRecurringEvent,
 } from './updateRecurringEvent';
 import { getRemainingOccurrences } from './internal-utils';
 
@@ -923,7 +924,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       });
 
       // EXDATE should match America/New_York startOfDay, not the day of the zone the
-      // instant happens to carry (a `...Z` DTSTART parses in the system zone).
+      // instant happens to carry.
       expect(adapter.getTime(updated.updated![0].exDates![0])).to.equal(
         adapter.getTime(
           adapter.startOfDay(adapter.setTimezone(occurrenceStart, 'America/New_York')),
@@ -954,6 +955,34 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.updated).to.equal(undefined);
       expect(updatedEvents.deleted).to.deep.equal([original.id]);
       expect(updatedEvents.created).to.have.length(1);
+    });
+  });
+
+  describe('updateRecurringEvent', () => {
+    it('should truncate on the data-timezone day when the occurrence start carries another zone', () => {
+      // A daily 21:00 New York series: each occurrence's instant is already the next
+      // day in the default zone the caller's date object carries.
+      const nyEvent = EventBuilder.new(adapter)
+        .withDataTimezone('America/New_York')
+        .singleDay('2025-02-02T02:00:00Z')
+        .rrule({ freq: 'DAILY', interval: 1 })
+        .toProcessed();
+      const occurrenceStart = adapter.date('2025-03-02T02:00:00Z', 'default');
+
+      const result = updateRecurringEvent(
+        adapter,
+        nyEvent,
+        occurrenceStart,
+        { id: nyEvent.id, title: 'Renamed' },
+        'this-and-following',
+      );
+
+      // The split lands on the occurrence's New York day (March 1st), so the original
+      // series ends the day before, not on the day the carried zone reads.
+      const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
+      expect(adapter.getTime(rule.until!)).to.equal(
+        adapter.getTime(adapter.date('2025-02-28T00:00:00', 'America/New_York')),
+      );
     });
   });
 });
