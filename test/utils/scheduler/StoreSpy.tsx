@@ -27,6 +27,8 @@ export function StoreSpy<T>({
     spyRef.current = sp;
     onSpyReady(sp);
 
+    // `mockRestore` also clears the recorded calls, unlike Sinon's `restore`, so a spy
+    // must stay mounted for as long as anything asserts on it.
     return () => spyRef.current?.mockRestore();
   }, [store, method, onSpyReady]);
 
