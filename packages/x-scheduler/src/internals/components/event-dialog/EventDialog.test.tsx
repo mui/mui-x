@@ -1274,6 +1274,14 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const priority = screen.getByRole('textbox', { name: 'Priority' });
       await user.clear(priority);
       await user.type(priority, 'high');
+      expect(priority).to.have.value('high');
+
+      // Typing leaves the input focused, and unmounting a typed-in focused node dispatches
+      // events inside the remount's own `act`, which React then reports as an un-awaited
+      // `act` warning. Blurring first keeps the remount free of them.
+      act(() => {
+        priority.blur();
+      });
 
       // The new identity remounts the slot content, but the draft lives in the form store above it.
       setProps({ slot: SlotB });
