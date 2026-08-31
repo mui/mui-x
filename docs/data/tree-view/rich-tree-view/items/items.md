@@ -1,6 +1,6 @@
 ---
 productId: x-tree-view
-components: RichTreeView, TreeItem
+components: RichTreeView, TreeItem, TreeItemLoader
 packageName: '@mui/x-tree-view'
 githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -141,15 +141,18 @@ On `RichTreeViewPro`, the same loading UI is also shown automatically while the 
 
 You can customize the loading UI at several levels:
 
-- Style the default rows with the `itemLoader` and `itemLoaderContent` classes.
-- Configure each row with `slotProps.itemLoader` and `slotProps.itemLoaderContent`.
+- Style the default rows with the `itemLoader` class.
+- Configure each row with `slotProps.itemLoader`.
   The callback form receives the row's `ownerState` with its `index`, `itemsCount`, `itemDepth`, and `isCheckboxSelectionEnabled`.
-- Replace each row with the `itemLoader` or `itemLoaderContent` slots.
-  Custom row components also render for the children of items that [load lazily](/x/react-tree-view/rich-tree-view/lazy-loading/).
+- Replace each row with the `itemLoader` slot.
+  Wrap custom content in the `TreeItemLoader` component to keep the `role`, `aria` attributes, indentation, and height of a tree item.
 - Replace the whole loading UI with the `loading` slot.
   The tree root keeps its `role="tree"` and `aria-busy` attributes.
+  Compose the slot with `TreeItemLoader` elements to keep the rows semantically correct.
 
-The demo below styles each loading row with the `itemLoaderContent` slot and fades the rows out with the `slotProps.itemLoader` callback:
+Custom loading UIs also render for the children of items that [load lazily](/x/react-tree-view/rich-tree-view/lazy-loading/).
+
+The demo below replaces each loading row with the `itemLoader` slot and fades the rows out with the `slotProps.itemLoader` callback:
 
 {{"demo": "LoadingCustomRows.js"}}
 

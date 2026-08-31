@@ -44,7 +44,6 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
       itemDragAndDropOverlay: ['itemDragAndDropOverlay'],
       itemErrorIcon: ['itemErrorIcon'],
       itemLoader: ['itemLoader'],
-      itemLoaderContent: ['itemLoaderContent'],
     };
 
     return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
@@ -65,32 +64,6 @@ export const RichTreeViewProRoot = styled('ul', {
     width: '100%',
   },
 });
-
-const RichTreeViewProItemLoader = styled('li', {
-  name: 'MuiRichTreeViewPro',
-  slot: 'ItemLoader',
-})({
-  listStyle: 'none',
-  margin: 0,
-  padding: 0,
-});
-
-const RichTreeViewProItemLoaderContent = styled('div', {
-  name: 'MuiRichTreeViewPro',
-  slot: 'ItemLoaderContent',
-})(({ theme }) => ({
-  // Same typography as the tree item label, so the loading row line box has the same height.
-  ...theme.typography.body1,
-  padding: theme.spacing(0.5, 1),
-  // Same indentation formula as the tree item content.
-  paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth, 0))`,
-  width: '100%',
-  height: 'var(--TreeView-itemHeight, unset)',
-  boxSizing: 'border-box',
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(1),
-}));
 
 type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
@@ -165,8 +138,6 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   const slots = React.useMemo(
     () => ({
       root: RichTreeViewProRoot,
-      itemLoader: RichTreeViewProItemLoader,
-      itemLoaderContent: RichTreeViewProItemLoaderContent,
       ...inSlots,
     }),
     [inSlots],

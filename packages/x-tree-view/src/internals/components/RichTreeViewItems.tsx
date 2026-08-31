@@ -14,9 +14,11 @@ import { expansionSelectors } from '../plugins/expansion';
 import { lazyLoadingSelectors } from '../plugins/lazyLoading';
 import {
   RichTreeViewItemLoaders,
-  DEFAULT_LOADING_ITEMS_COUNT,
+  RichTreeViewLoadingContext,
+  getLoadingItemsCount,
   MAX_LOADING_ITEMS_COUNT,
 } from './RichTreeViewLoading';
+import type { RichTreeViewLoadingSlotOwnProps } from './RichTreeViewLoading';
 import type { RichTreeViewStore } from '../RichTreeViewStore';
 import type { MinimalTreeViewState } from '../MinimalTreeViewStore';
 import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
@@ -65,30 +67,34 @@ export const RichTreeViewItem = React.memo(function RichTreeViewItem({
     ? children?.map(renderItemForRichTreeView)
     : null;
 
-  const { itemLoader, itemLoaderContent } = styleSlots;
-  if (
-    isLoadingChildren &&
-    !skipChildren &&
-    (children == null || children.length === 0) &&
-    itemLoader &&
-    itemLoaderContent
-  ) {
+  const Loading = styleSlots.loading;
+  const loadingProps = useSlotProps({
+    elementType: Loading ?? 'div',
+    externalSlotProps: styleSlotProps.loading,
+    ownerState: { itemId },
+  }) as RichTreeViewLoadingSlotOwnProps & Record<string, any>;
+
+  if (isLoadingChildren && !skipChildren && (children == null || children.length === 0)) {
+    // The count reported by `getChildrenCount()` wins over `slotProps.loading.itemsCount`,
+    // which only acts as a fallback when the count is unknown.
+    const itemsCount =
+      loadingChildrenCount > 0
+        ? Math.min(loadingChildrenCount, MAX_LOADING_ITEMS_COUNT)
+        : getLoadingItemsCount(loadingProps.itemsCount);
+
     renderedChildren = (
-      <RichTreeViewItemLoaders
-        store={store}
-        classes={classes}
-        slots={{ itemLoader, itemLoaderContent }}
-        slotProps={{
-          itemLoader: styleSlotProps.itemLoader,
-          itemLoaderContent: styleSlotProps.itemLoaderContent,
-        }}
-        itemsCount={
-          loadingChildrenCount > 0
-            ? Math.min(loadingChildrenCount, MAX_LOADING_ITEMS_COUNT)
-            : DEFAULT_LOADING_ITEMS_COUNT
-        }
-        itemDepth={itemDepth + 1}
-      />
+      <RichTreeViewLoadingContext store={store} itemDepth={itemDepth + 1}>
+        {Loading ? (
+          <Loading {...loadingProps} itemsCount={itemsCount} />
+        ) : (
+          <RichTreeViewItemLoaders
+            classes={classes}
+            slots={{ itemLoader: styleSlots.itemLoader }}
+            slotProps={{ itemLoader: styleSlotProps.itemLoader }}
+            itemsCount={itemsCount}
+          />
+        )}
+      </RichTreeViewLoadingContext>
     );
   }
 

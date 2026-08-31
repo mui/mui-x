@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 title: Rich Tree View - Lazy loading
-components: RichTreeViewPro, TreeItem
+components: RichTreeViewPro, TreeItem, TreeItemLoader
 packageName: '@mui/x-tree-view-pro'
 githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -47,6 +47,17 @@ While an item fetches its children, the loading UI depends on the DOM structure:
 You can customize the loading rows with the same [slots and classes](/x/react-tree-view/rich-tree-view/items/#customize-the-loading-ui) as the `loading` prop.
 
 {{"demo": "ChildrenLoadingRows.js"}}
+
+### Customized loading UI
+
+The demo below combines the customization options:
+
+- The `loadingIcon` slot of `TreeItem` replaces the circular progress indicator of an item whose children load.
+- The `loading` slot replaces the loading rows.
+  It renders while the root items load and while an item fetches its children.
+  Each custom row is wrapped in the `TreeItemLoader` component, which keeps the `role`, `aria` attributes, indentation, and height of a tree item.
+
+{{"demo": "CustomizedLazyLoading.js"}}
 
 ## Data caching
 

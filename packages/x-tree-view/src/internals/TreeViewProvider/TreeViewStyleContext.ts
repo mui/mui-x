@@ -1,7 +1,8 @@
 'use client';
 import type { SlotComponentProps } from '@mui/utils/types';
 import * as React from 'react';
-import type { RichTreeViewItemLoaderOwnerState } from '../components/RichTreeViewLoading';
+import type { TreeItemLoaderOwnerState } from '../../TreeItemLoader';
+import type { RichTreeViewLoadingSlotOwnProps } from '../components/RichTreeViewLoading';
 
 export interface TreeViewClasses {
   /** Styles applied to the root element. */
@@ -28,8 +29,6 @@ export interface TreeViewClasses {
   itemLoadingIcon: string;
   /** Styles applied to the item loader element. */
   itemLoader: string;
-  /** Styles applied to the item loader's content element. */
-  itemLoaderContent: string;
 }
 
 export interface TreeViewSlots {
@@ -56,28 +55,30 @@ export interface TreeViewSlotProps {
 
 /**
  * Slots stored in the style context.
- * The item loader slots only exist on the components with a loading state,
+ * The loading slots only exist on the components with a loading state,
  * so they are not part of the public `TreeViewSlots` interface.
  */
 export interface TreeViewStyleContextSlots extends TreeViewSlots {
   /**
+   * Component rendered instead of the default loading rows.
+   */
+  loading?: React.ElementType;
+  /**
    * Component rendered for each loading row. The default renders a skeleton row.
    */
   itemLoader?: React.ElementType;
-  /**
-   * Component rendered inside each loading row, wrapping the placeholders.
-   */
-  itemLoaderContent?: React.ElementType;
 }
 
 /**
  * Slot props stored in the style context.
- * The item loader slot props only exist on the components with a loading state,
+ * The loading slot props only exist on the components with a loading state,
  * so they are not part of the public `TreeViewSlotProps` interface.
+ * The `loading` owner state is typed as `any`: the tree components type it
+ * against their own props, which are not known here.
  */
 export interface TreeViewStyleContextSlotProps extends TreeViewSlotProps {
-  itemLoader?: SlotComponentProps<'li', {}, RichTreeViewItemLoaderOwnerState>;
-  itemLoaderContent?: SlotComponentProps<'div', {}, RichTreeViewItemLoaderOwnerState>;
+  loading?: SlotComponentProps<'div', RichTreeViewLoadingSlotOwnProps, any>;
+  itemLoader?: SlotComponentProps<'li', {}, TreeItemLoaderOwnerState>;
 }
 
 export interface TreeViewStyleContextValue {

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { RichTreeView, richTreeViewClasses as classes } from '@mui/x-tree-view/RichTreeView';
+import { TreeItemLoader } from '@mui/x-tree-view/TreeItemLoader';
+import type { TreeItemLoaderProps } from '@mui/x-tree-view/TreeItemLoader';
 import { describeConformance } from 'test/utils/describeConformance';
 import { describe, it, expect } from 'vitest';
 
@@ -207,6 +209,66 @@ describe('<RichTreeView />', () => {
 
       const tree = screen.getByRole('tree');
       expect(tree).not.to.have.attribute('loading');
+    });
+
+    it('should keep the row semantics when the `itemLoader` slot wraps `TreeItemLoader`', () => {
+      function CustomItemLoader(props: TreeItemLoaderProps) {
+        return (
+          <TreeItemLoader {...props}>
+            <span data-testid="custom-row-content" />
+          </TreeItemLoader>
+        );
+      }
+
+      render(
+        <RichTreeView
+          items={[]}
+          loading
+          itemHeight={40}
+          slots={{ itemLoader: CustomItemLoader }}
+        />,
+      );
+
+      const itemLoaders = screen.getAllByRole('treeitem');
+      expect(itemLoaders).to.have.length(5);
+      itemLoaders.forEach((item) => {
+        expect(item).to.have.attribute('aria-disabled', 'true');
+        expect(item.style.getPropertyValue('--TreeView-itemDepth')).to.equal('0');
+        expect(item.style.getPropertyValue('--TreeView-itemHeight')).to.equal('40px');
+        expect(item.querySelector('[data-testid="custom-row-content"]')).not.to.equal(null);
+      });
+    });
+
+    it('should provide the layout information to `TreeItemLoader` rendered in a custom `loading` slot', () => {
+      function CustomLoading(props: { itemsCount?: number }) {
+        return (
+          <React.Fragment>
+            {Array.from({ length: props.itemsCount ?? 0 }, (_, index) => (
+              <TreeItemLoader key={index} />
+            ))}
+          </React.Fragment>
+        );
+      }
+
+      render(
+        <RichTreeView
+          items={[]}
+          loading
+          itemHeight={40}
+          checkboxSelection
+          slots={{ loading: CustomLoading }}
+          slotProps={{ loading: { itemsCount: 3 } }}
+        />,
+      );
+
+      const itemLoaders = screen.getAllByRole('treeitem');
+      expect(itemLoaders).to.have.length(3);
+      itemLoaders.forEach((item) => {
+        expect(item).to.have.attribute('aria-disabled', 'true');
+        expect(item.style.getPropertyValue('--TreeView-itemHeight')).to.equal('40px');
+        // The checkbox placeholder of the default content comes from the context.
+        expect(item.querySelector('.MuiSkeleton-circular')).not.to.equal(null);
+      });
     });
   });
 });

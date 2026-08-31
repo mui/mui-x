@@ -14,7 +14,6 @@ export type {
   RichTreeViewLoadingSlotProps,
   RichTreeViewLoadingClasses,
   RichTreeViewLoadingSlotOwnProps,
-  RichTreeViewItemLoaderOwnerState,
 } from './components/RichTreeViewLoading';
 
 export { useTreeViewRootProps } from './hooks/useTreeViewRootProps';

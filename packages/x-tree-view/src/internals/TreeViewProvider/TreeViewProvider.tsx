@@ -37,15 +37,15 @@ export function TreeViewProvider<TStore extends TreeViewAnyStore>(
         collapseIcon: slots.collapseIcon,
         expandIcon: slots.expandIcon,
         endIcon: slots.endIcon,
+        loading: slots.loading,
         itemLoader: slots.itemLoader,
-        itemLoaderContent: slots.itemLoaderContent,
       },
       slotProps: {
         collapseIcon: slotProps.collapseIcon,
         expandIcon: slotProps.expandIcon,
         endIcon: slotProps.endIcon,
+        loading: slotProps.loading,
         itemLoader: slotProps.itemLoader,
-        itemLoaderContent: slotProps.itemLoaderContent,
       },
     }),
     [
@@ -53,13 +53,13 @@ export function TreeViewProvider<TStore extends TreeViewAnyStore>(
       slots.collapseIcon,
       slots.expandIcon,
       slots.endIcon,
+      slots.loading,
       slots.itemLoader,
-      slots.itemLoaderContent,
       slotProps.collapseIcon,
       slotProps.expandIcon,
       slotProps.endIcon,
+      slotProps.loading,
       slotProps.itemLoader,
-      slotProps.itemLoaderContent,
     ],
   );
 

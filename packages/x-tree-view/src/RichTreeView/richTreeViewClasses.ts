@@ -8,8 +8,6 @@ export interface RichTreeViewClasses extends Omit<
 > {
   /** Styles applied to each item loader element. */
   itemLoader: string;
-  /** Styles applied to the item loader's content element. */
-  itemLoaderContent: string;
 }
 
 export type RichTreeViewClassKey = keyof RichTreeViewClasses;
@@ -28,5 +26,4 @@ export const richTreeViewClasses: RichTreeViewClasses = generateUtilityClasses('
   'itemCheckbox',
   'itemLabelInput',
   'itemLoader',
-  'itemLoaderContent',
 ]);

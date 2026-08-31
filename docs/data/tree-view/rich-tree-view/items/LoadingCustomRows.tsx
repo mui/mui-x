@@ -1,30 +1,23 @@
 import * as React from 'react';
 import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import {
+  TreeItemLoader,
+  TreeItemLoaderProps,
+} from '@mui/x-tree-view/TreeItemLoader';
 
-interface CustomItemLoaderContentProps extends React.HTMLAttributes<HTMLDivElement> {
-  ownerState?: { index: number; itemsCount: number };
-}
-
-function CustomItemLoaderContent(props: CustomItemLoaderContentProps) {
-  const { ownerState, children, ...other } = props;
+function CustomItemLoader(props: TreeItemLoaderProps) {
+  const { ownerState, ...other } = props;
 
   return (
-    <div {...other}>
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{ alignItems: 'center', px: 1, py: 0.75, width: '100%' }}
-      >
-        <Skeleton variant="circular" width={18} height={18} sx={{ flexShrink: 0 }} />
-        <Skeleton variant="rounded" height={12} sx={{ flexGrow: 1 }} />
-        <Typography variant="caption" color="text.secondary">
-          {(ownerState?.index ?? 0) + 1}/{ownerState?.itemsCount ?? 0}
-        </Typography>
-      </Stack>
-    </div>
+    <TreeItemLoader {...other}>
+      <Skeleton variant="circular" width={18} height={18} sx={{ flexShrink: 0 }} />
+      <Skeleton variant="rounded" height={12} sx={{ flexGrow: 1 }} />
+      <Typography variant="caption" color="text.secondary">
+        {(ownerState?.index ?? 0) + 1}/{ownerState?.itemsCount ?? 0}
+      </Typography>
+    </TreeItemLoader>
   );
 }
 
@@ -33,7 +26,7 @@ export default function LoadingCustomRows() {
     <RichTreeView
       items={[]}
       loading
-      slots={{ itemLoaderContent: CustomItemLoaderContent }}
+      slots={{ itemLoader: CustomItemLoader }}
       slotProps={{
         loading: { itemsCount: 4 },
         itemLoader: (ownerState) => ({

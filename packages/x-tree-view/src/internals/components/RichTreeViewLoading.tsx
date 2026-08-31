@@ -1,18 +1,19 @@
 'use client';
 import * as React from 'react';
-import Skeleton from '@mui/material/Skeleton';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { useStore } from '@mui/x-internals/store';
 import { warnOnce } from '@mui/x-internals/warning';
+import { TreeItemLoader } from '../../TreeItemLoader';
+import type { TreeItemLoaderOwnerState } from '../../TreeItemLoader';
+import type { TreeItemLoaderContextValue } from '../../TreeItemLoader/TreeItemLoaderContext';
+import { TreeItemLoaderContext } from '../../TreeItemLoader/TreeItemLoaderContext';
 import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
 import { itemsSelectors } from '../plugins/items';
 import { selectionSelectors } from '../plugins/selection';
-import { TREE_ITEM_ICON_CONTAINER_WIDTH_PX } from '../constants';
 import type { TreeViewAnyStore } from '../models';
 import type { TreeViewStoreInContext } from '../TreeViewProvider';
 
-const ITEM_LOADER_LABEL_WIDTHS = ['40%', '70%', '55%', '50%', '65%'];
 export const DEFAULT_LOADING_ITEMS_COUNT = 5;
 export const MAX_LOADING_ITEMS_COUNT = 100;
 
@@ -38,44 +39,22 @@ export interface RichTreeViewLoadingSlots {
    */
   root: React.ElementType;
   /**
-   * Component rendered instead of the default loading rows while the tree is loading.
-   * It renders inside the tree root, which keeps its `role="tree"` and `aria-busy` attributes.
+   * Component rendered instead of the default loading rows.
+   * It renders inside the tree root while the tree is loading and inside a
+   * lazily loading item while its children load.
    */
   loading?: React.ElementType;
   /**
-   * Component rendered for each loading row. The default renders a skeleton row.
+   * Component rendered for each loading row.
+   * @default TreeItemLoader
    */
-  itemLoader: React.ElementType;
-  /**
-   * Component rendered inside each loading row, wrapping the icon gutter and the label placeholder.
-   */
-  itemLoaderContent: React.ElementType;
-}
-
-export interface RichTreeViewItemLoaderOwnerState {
-  /**
-   * Index of the loading row inside its group.
-   */
-  index: number;
-  /**
-   * Number of loading rows rendered in the group.
-   */
-  itemsCount: number;
-  /**
-   * Depth of the loading rows.
-   */
-  itemDepth: number;
-  /**
-   * Whether each row renders a checkbox placeholder.
-   */
-  isCheckboxSelectionEnabled: boolean;
+  itemLoader?: React.ElementType;
 }
 
 export interface RichTreeViewLoadingSlotOwnProps {
   /**
    * The number of loading rows to render.
-   * Only applies to the whole-tree loading UI.
-   * The children of a lazily loading item derive their row count from `getChildrenCount()`.
+   * The children of a lazily loading item use `getChildrenCount()` as the default instead.
    * @default 5
    */
   itemsCount?: number;
@@ -90,14 +69,12 @@ export interface RichTreeViewLoadingSlotOwnProps {
 export interface RichTreeViewLoadingSlotProps<TOwnerState extends object> {
   root?: SlotComponentProps<'ul', {}, TOwnerState>;
   loading?: SlotComponentProps<'div', RichTreeViewLoadingSlotOwnProps, TOwnerState>;
-  itemLoader?: SlotComponentProps<'li', {}, RichTreeViewItemLoaderOwnerState>;
-  itemLoaderContent?: SlotComponentProps<'div', {}, RichTreeViewItemLoaderOwnerState>;
+  itemLoader?: SlotComponentProps<'li', {}, TreeItemLoaderOwnerState>;
 }
 
 export interface RichTreeViewLoadingClasses {
   root?: string;
   itemLoader?: string;
-  itemLoaderContent?: string;
 }
 
 export interface RichTreeViewLoadingProps<
@@ -113,34 +90,24 @@ export interface RichTreeViewLoadingProps<
   classes: RichTreeViewLoadingClasses;
 }
 
-export interface RichTreeViewItemLoadersProps<TStore extends TreeViewAnyStore> {
-  store: TreeViewStoreInContext<TStore>;
-  classes: Pick<RichTreeViewLoadingClasses, 'itemLoader' | 'itemLoaderContent'>;
-  slots: Pick<RichTreeViewLoadingSlots, 'itemLoader' | 'itemLoaderContent'>;
-  slotProps?: Pick<RichTreeViewLoadingSlotProps<object>, 'itemLoader' | 'itemLoaderContent'>;
+export interface RichTreeViewItemLoadersProps {
+  classes: Pick<RichTreeViewLoadingClasses, 'itemLoader'>;
+  slots: Pick<RichTreeViewLoadingSlots, 'itemLoader'>;
+  slotProps?: Pick<RichTreeViewLoadingSlotProps<object>, 'itemLoader'>;
   itemsCount: number;
-  /**
-   * The depth of the loading rows.
-   * Pass the depth of the loading items when the rows render inside a parent item.
-   * @default 0
-   */
-  itemDepth?: number;
 }
 
 interface RichTreeViewItemLoaderRowProps {
-  classes: Pick<RichTreeViewLoadingClasses, 'itemLoader' | 'itemLoaderContent'>;
-  slots: Pick<RichTreeViewLoadingSlots, 'itemLoader' | 'itemLoaderContent'>;
-  slotProps?: Pick<RichTreeViewLoadingSlotProps<object>, 'itemLoader' | 'itemLoaderContent'>;
-  ownerState: RichTreeViewItemLoaderOwnerState;
-  style: React.CSSProperties;
-  labelWidth: string;
+  classes: Pick<RichTreeViewLoadingClasses, 'itemLoader'>;
+  slots: Pick<RichTreeViewLoadingSlots, 'itemLoader'>;
+  slotProps?: Pick<RichTreeViewLoadingSlotProps<object>, 'itemLoader'>;
+  ownerState: TreeItemLoaderOwnerState;
 }
 
 function RichTreeViewItemLoaderRow(props: RichTreeViewItemLoaderRowProps) {
-  const { classes, slots, slotProps, ownerState, style, labelWidth } = props;
+  const { classes, slots, slotProps, ownerState } = props;
 
-  const ItemLoader = slots.itemLoader;
-  const ItemLoaderContent = slots.itemLoaderContent;
+  const ItemLoader = slots.itemLoader ?? TreeItemLoader;
 
   const itemLoaderProps = useSlotProps({
     elementType: ItemLoader,
@@ -149,54 +116,23 @@ function RichTreeViewItemLoaderRow(props: RichTreeViewItemLoaderRowProps) {
     additionalProps: {
       role: 'treeitem',
       'aria-disabled': true,
-      style,
     },
     ownerState,
   });
 
-  const itemLoaderContentProps = useSlotProps({
-    elementType: ItemLoaderContent,
-    externalSlotProps: slotProps?.itemLoaderContent,
-    className: classes.itemLoaderContent,
-    ownerState,
-  });
-
-  return (
-    <ItemLoader {...itemLoaderProps}>
-      <ItemLoaderContent {...itemLoaderContentProps}>
-        <span
-          style={{
-            width: TREE_ITEM_ICON_CONTAINER_WIDTH_PX,
-            flexShrink: 0,
-            display: 'inline-block',
-          }}
-        />
-        {ownerState.isCheckboxSelectionEnabled && (
-          // Same size as the checkbox rendered by the tree item, to keep the labels aligned.
-          <Skeleton variant="circular" width={24} height={24} style={{ flexShrink: 0 }} />
-        )}
-        <Skeleton width={labelWidth} />
-      </ItemLoaderContent>
-    </ItemLoader>
-  );
+  return <ItemLoader {...itemLoaderProps} />;
 }
 
 /**
- * Renders the loading rows without any wrapper.
+ * Renders the default loading rows without any wrapper.
  * Used by `RichTreeViewLoading` for the whole-tree loading state and by
  * `RichTreeViewItem` for the children of an item that lazily loads them.
+ * It must render inside a `TreeItemLoaderContext` provider.
  */
-export function RichTreeViewItemLoaders<TStore extends TreeViewAnyStore>(
-  props: RichTreeViewItemLoadersProps<TStore>,
-) {
-  const { store, classes, slots, slotProps, itemsCount, itemDepth = 0 } = props;
+export function RichTreeViewItemLoaders(props: RichTreeViewItemLoadersProps) {
+  const { classes, slots, slotProps, itemsCount } = props;
 
-  const itemHeight = useStore(store, itemsSelectors.itemHeight);
-  const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
-  const itemLoaderStyle = {
-    '--TreeView-itemDepth': itemDepth,
-    ...(itemHeight == null ? {} : { '--TreeView-itemHeight': `${itemHeight}px` }),
-  } as React.CSSProperties;
+  const { itemDepth, isCheckboxSelectionEnabled } = React.useContext(TreeItemLoaderContext);
 
   return (
     <React.Fragment>
@@ -207,11 +143,33 @@ export function RichTreeViewItemLoaders<TStore extends TreeViewAnyStore>(
           slots={slots}
           slotProps={slotProps}
           ownerState={{ index, itemsCount, itemDepth, isCheckboxSelectionEnabled }}
-          style={itemLoaderStyle}
-          labelWidth={ITEM_LOADER_LABEL_WIDTHS[index % ITEM_LOADER_LABEL_WIDTHS.length]}
         />
       ))}
     </React.Fragment>
+  );
+}
+
+/**
+ * Provides the layout information the loading rows need to `TreeItemLoader`.
+ * Wraps both the default rows and a custom `loading` slot, so custom loading
+ * UIs composed with `TreeItemLoader` keep the correct depth and height.
+ */
+export function RichTreeViewLoadingContext<TStore extends TreeViewAnyStore>(props: {
+  store: TreeViewStoreInContext<TStore>;
+  itemDepth?: number;
+  children: React.ReactNode;
+}) {
+  const { store, itemDepth = 0, children } = props;
+
+  const itemHeight = useStore(store, itemsSelectors.itemHeight);
+  const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
+  const contextValue = React.useMemo<TreeItemLoaderContextValue>(
+    () => ({ itemDepth, itemHeight, isCheckboxSelectionEnabled }),
+    [itemDepth, itemHeight, isCheckboxSelectionEnabled],
+  );
+
+  return (
+    <TreeItemLoaderContext.Provider value={contextValue}>{children}</TreeItemLoaderContext.Provider>
   );
 }
 
@@ -252,17 +210,18 @@ export function RichTreeViewLoading<TStore extends TreeViewAnyStore, TOwnerState
 
   return (
     <Root {...rootProps}>
-      {Loading ? (
-        <Loading {...loadingProps} />
-      ) : (
-        <RichTreeViewItemLoaders
-          store={store}
-          classes={classes}
-          slots={slots}
-          slotProps={slotProps}
-          itemsCount={itemsCount}
-        />
-      )}
+      <RichTreeViewLoadingContext store={store}>
+        {Loading ? (
+          <Loading {...loadingProps} />
+        ) : (
+          <RichTreeViewItemLoaders
+            classes={classes}
+            slots={slots}
+            slotProps={slotProps}
+            itemsCount={itemsCount}
+          />
+        )}
+      </RichTreeViewLoadingContext>
     </Root>
   );
 }

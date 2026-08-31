@@ -201,9 +201,8 @@
     "endIcon": "The default icon displayed next to an end item. This is applied to all Tree Items and can be overridden by the TreeItem <code>icon</code> slot prop.",
     "expandIcon": "The default icon used to expand the item.",
     "item": "Custom component to render a Tree Item.",
-    "itemLoader": "Component rendered for each loading row. The default renders a skeleton row. It also renders for the children of an item while they load lazily.",
-    "itemLoaderContent": "Component rendered inside each loading row, wrapping the placeholders.",
-    "loading": "Component rendered instead of the default loading rows while the tree is loading. It renders inside the tree root, which keeps its <code>role=&quot;tree&quot;</code> and <code>aria-busy</code> attributes.",
+    "itemLoader": "Component rendered for each loading row. It also renders for the children of an item while they load lazily. Wrap custom content in <code>TreeItemLoader</code> to keep the row semantically correct.",
+    "loading": "Component rendered instead of the default loading rows. It renders inside the tree root while the tree is loading, which keeps the <code>role=&quot;tree&quot;</code> and <code>aria-busy</code> attributes, and inside a lazily loading item while its children load. Compose it with <code>TreeItemLoader</code> to keep the rows semantically correct.",
     "root": "Element rendered at the root."
   }
 }

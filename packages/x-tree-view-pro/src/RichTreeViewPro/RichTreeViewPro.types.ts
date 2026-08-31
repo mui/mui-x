@@ -3,10 +3,10 @@ import type { Theme } from '@mui/material/styles';
 import type { SxProps } from '@mui/system/styleFunctionSx';
 import type { SlotComponentProps } from '@mui/utils/types';
 import type { TreeViewValidItem } from '@mui/x-tree-view/models';
+import type { TreeItemLoaderOwnerState } from '@mui/x-tree-view/TreeItemLoader';
 import type {
   RichTreeViewItemsSlots,
   RichTreeViewItemsSlotProps,
-  RichTreeViewItemLoaderOwnerState,
   RichTreeViewLoadingSlotOwnProps,
   TreeViewSlots,
   TreeViewSlotProps,
@@ -23,21 +23,20 @@ export interface RichTreeViewProSlots extends TreeViewSlots, Omit<RichTreeViewIt
    */
   root?: React.ElementType;
   /**
-   * Component rendered instead of the default loading rows while the tree is loading.
-   * It renders inside the tree root, which keeps its `role="tree"` and `aria-busy` attributes.
+   * Component rendered instead of the default loading rows.
+   * It renders inside the tree root while the tree is loading, which keeps the
+   * `role="tree"` and `aria-busy` attributes, and inside a lazily loading item
+   * while its children load.
+   * Compose it with `TreeItemLoader` to keep the rows semantically correct.
    */
   loading?: React.ElementType;
   /**
-   * Component rendered for each loading row. The default renders a skeleton row.
+   * Component rendered for each loading row.
    * It also renders for the children of an item while they load lazily.
-   * @default RichTreeViewProItemLoader
+   * Wrap custom content in `TreeItemLoader` to keep the row semantically correct.
+   * @default TreeItemLoader
    */
   itemLoader?: React.ElementType;
-  /**
-   * Component rendered inside each loading row, wrapping the placeholders.
-   * @default RichTreeViewProItemLoaderContent
-   */
-  itemLoaderContent?: React.ElementType;
 }
 
 export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean | undefined>
@@ -47,8 +46,7 @@ export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean
     RichTreeViewLoadingSlotOwnProps,
     RichTreeViewProProps<R, Multiple>
   >;
-  itemLoader?: SlotComponentProps<'li', {}, RichTreeViewItemLoaderOwnerState>;
-  itemLoaderContent?: SlotComponentProps<'div', {}, RichTreeViewItemLoaderOwnerState>;
+  itemLoader?: SlotComponentProps<'li', {}, TreeItemLoaderOwnerState>;
 }
 
 export type RichTreeViewProApiRef<

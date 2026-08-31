@@ -5,8 +5,6 @@ import type { TreeViewClasses } from '@mui/x-tree-view/internals';
 export interface RichTreeViewProClasses extends TreeViewClasses {
   /** Styles applied to each item loader element. */
   itemLoader: string;
-  /** Styles applied to the item loader's content element. */
-  itemLoaderContent: string;
 }
 
 export type RichTreeViewProClassKey = keyof RichTreeViewProClasses;
@@ -30,6 +28,5 @@ export const richTreeViewProClasses: RichTreeViewProClasses = generateUtilityCla
     'itemErrorIcon',
     'itemLoadingIcon',
     'itemLoader',
-    'itemLoaderContent',
   ],
 );

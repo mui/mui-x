@@ -1,7 +1,7 @@
 <RichTreeView
   items={[]}
   loading
-  slots={{ itemLoaderContent: CustomItemLoaderContent }}
+  slots={{ itemLoader: CustomItemLoader }}
   slotProps={{
     loading: { itemsCount: 4 },
     itemLoader: (ownerState) => ({

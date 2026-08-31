@@ -4,6 +4,7 @@ import {
   RichTreeViewPro,
   richTreeViewProClasses as classes,
 } from '@mui/x-tree-view-pro/RichTreeViewPro';
+import { TreeItemLoader } from '@mui/x-tree-view/TreeItemLoader';
 import { describeConformance } from 'test/utils/describeConformance';
 import { describe, it, expect } from 'vitest';
 
@@ -195,6 +196,71 @@ describe('<RichTreeViewPro />', () => {
         expect(screen.getByText('Failed to fetch root items')).not.to.equal(null);
       });
       expect(screen.queryByRole('tree')).to.equal(null);
+    });
+
+    it('should render the `loading` slot for the children of a lazily loading item', async () => {
+      let resolveChildrenFetch!: (items: ItemType[]) => void;
+      const getTreeItems = (parentId?: string | null) => {
+        if (parentId == null) {
+          return Promise.resolve([{ id: '1', label: 'Item 1', childrenCount: 3 }]);
+        }
+        return new Promise<ItemType[]>((resolve) => {
+          resolveChildrenFetch = resolve;
+        });
+      };
+
+      function CustomLoading(props: { itemsCount?: number }) {
+        return (
+          <React.Fragment>
+            {Array.from({ length: props.itemsCount ?? 0 }, (_, index) => (
+              <TreeItemLoader key={index}>
+                <span data-testid="custom-loading-row-content" />
+              </TreeItemLoader>
+            ))}
+          </React.Fragment>
+        );
+      }
+
+      render(
+        <RichTreeViewPro
+          items={[]}
+          disableVirtualization
+          domStructure="nested"
+          defaultExpandedItems={['1']}
+          slots={{ loading: CustomLoading }}
+          dataSource={{
+            getChildrenCount: (item) => item?.childrenCount ?? 0,
+            getTreeItems,
+          }}
+        />,
+      );
+
+      // Root items arrive, the children of the expanded item start loading.
+      await waitFor(() => {
+        expect(screen.getByRole('treeitem', { name: 'Item 1' })).not.to.equal(null);
+      });
+
+      // The `loading` slot renders one row per child reported by `getChildrenCount()`.
+      const loadingRowContents = await screen.findAllByTestId('custom-loading-row-content');
+      expect(loadingRowContents).to.have.length(3);
+      loadingRowContents.forEach((content) => {
+        const row = content.closest('li')!;
+        expect(row).to.have.attribute('role', 'treeitem');
+        expect(row.style.getPropertyValue('--TreeView-itemDepth')).to.equal('1');
+      });
+
+      await act(async () => {
+        resolveChildrenFetch([
+          { id: '1.1', label: 'Item 1.1', childrenCount: 0 },
+          { id: '1.2', label: 'Item 1.2', childrenCount: 0 },
+          { id: '1.3', label: 'Item 1.3', childrenCount: 0 },
+        ]);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole('treeitem', { name: 'Item 1.1' })).not.to.equal(null);
+      });
+      expect(screen.queryByTestId('custom-loading-row-content')).to.equal(null);
     });
   });
 });
