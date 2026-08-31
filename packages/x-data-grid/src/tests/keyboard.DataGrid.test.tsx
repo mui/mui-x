@@ -935,6 +935,10 @@ describe('<DataGrid /> - Keyboard', () => {
       await act(async () => cell.focus());
       await user.keyboard(`{${keyType}}`);
 
+      // Sinon's `lastCall` threw when the spy was never called. `mock.lastCall` is
+      // `undefined` instead, so assert the call to keep "never reset" a failure.
+      expect(valueSetterMock.mock.calls.length).to.be.greaterThan(0);
+
       return {
         cell: cell.textContent,
         deletedValue: valueSetterMock.mock.lastCall?.[0],

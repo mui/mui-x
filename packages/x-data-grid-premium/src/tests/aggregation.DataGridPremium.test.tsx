@@ -911,6 +911,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       const callForAggCell = renderCell.mock.calls.find(
         (call) => call[0].rowNode.type === 'pinnedRow' && call[0].aggregation,
       );
+      expect(callForAggCell).not.to.equal(undefined);
       expect(callForAggCell?.[0].aggregation?.hasCellUnit).to.equal(true);
     });
 
@@ -941,6 +942,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       const callForAggCell = renderCell.mock.calls.find(
         (call) => call[0].rowNode.type === 'pinnedRow' && call[0].aggregation,
       );
+      expect(callForAggCell).not.to.equal(undefined);
       expect(callForAggCell?.[0].aggregation?.hasCellUnit).to.equal(false);
     });
   });

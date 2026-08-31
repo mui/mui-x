@@ -14,6 +14,7 @@ import type {
 } from '@mui/x-data-grid';
 import { actSleep, getCell } from 'test/utils/helperFn';
 import { vi, describe, it, expect } from 'vitest';
+import type { Mock } from 'vitest';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 import { TestCache } from '../internals/utils';
 
@@ -167,6 +168,7 @@ describe('<DataGrid /> - Data source', () => {
 
   describe('incomplete filter items', () => {
     const getSentFilterItems = () => {
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
       const url = new URL(fetchRowsSpy.mock.lastCall?.[0]);
       return JSON.parse(url.searchParams.get('filterModel')!).items;
     };
@@ -933,9 +935,7 @@ describe('<DataGrid /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect((secondDataSource.getRows as ReturnType<typeof vi.fn>).mock.calls.length).to.equal(
-          1,
-        );
+        expect((secondDataSource.getRows as Mock).mock.calls.length).to.equal(1);
       });
       // Previous row remains visible while the new dataSource is fetched.
       expect(localApiRef.current?.getRowsCount()).to.equal(1);
@@ -1187,7 +1187,7 @@ describe('<DataGrid /> - Data source', () => {
       await user.keyboard('{Enter} updated{Enter}');
 
       expect(editRowSpy.mock.calls.length).to.equal(1);
-      expect(editRowSpy.mock.lastCall?.[0].updatedRow.commodity).to.contain('updated');
+      expect(editRowSpy.mock.calls[0][0].updatedRow.commodity).to.contain('updated');
 
       await waitFor(() => {
         expect(clearSpy.mock.calls.length).to.equal(1);
@@ -1234,7 +1234,7 @@ describe('<DataGrid /> - Data source', () => {
       await user.keyboard('{Enter}{Enter}');
 
       expect(editRowSpy.mock.calls.length).to.equal(1);
-      expect(editRowSpy.mock.lastCall?.[0].updatedRow.commodity).to.contain('-edited');
+      expect(editRowSpy.mock.calls[0][0].updatedRow.commodity).to.contain('-edited');
     });
 
     it('should store the row verbatim when `updateRow()` returns a replace update', async () => {

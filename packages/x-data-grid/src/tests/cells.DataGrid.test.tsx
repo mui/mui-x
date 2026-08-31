@@ -412,7 +412,9 @@ describe('<DataGrid /> - Cells', () => {
 
           const customContent = screen.getByTestId('custom-content');
           expect(customContent.textContent).to.equal('Custom: Test content');
-          expect(customRenderContent.mock.calls).to.deep.include(['Test content']);
+          expect(
+            customRenderContent.mock.calls.some((call) => call[0] === 'Test content'),
+          ).to.equal(true);
         });
       });
     });

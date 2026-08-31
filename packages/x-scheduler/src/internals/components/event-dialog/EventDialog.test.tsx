@@ -372,7 +372,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.queryByRole('textbox', { name: 'Description' })).to.equal(null);
     });
 
-    function renderCreation(onEventsChange: Mock<(...args: any[]) => void>) {
+    function renderCreation(onEventsChange: Mock<(events: SchedulerEvent[]) => void>) {
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
       const end = adapter.date('2025-05-26T08:15:00Z', 'default');
       const creationOccurrence = EventBuilder.new()
@@ -417,7 +417,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.click(screen.getByRole('button', { name: 'Save' }));
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
-      const [created] = onEventsChange.mock.lastCall?.[0] ?? [];
+      const [created] = onEventsChange.mock.calls[0][0];
       expect(created.priority).to.equal('high');
     });
 
@@ -430,7 +430,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.click(screen.getByRole('button', { name: 'Save' }));
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
-      const [created] = onEventsChange.mock.lastCall?.[0] ?? [];
+      const [created] = onEventsChange.mock.calls[0][0];
       expect(created).not.to.have.property('priority');
     });
 
@@ -555,9 +555,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       }).toWarnDev(['MUI X Scheduler: useEventDialogFormField() received the key "readOnly"']);
 
       expect(onEventsChange.mock.calls.length).to.equal(1);
-      const saved = onEventsChange.mock.lastCall?.[0].find(
-        (event: SchedulerEvent) => event.id === DEFAULT_EVENT.id,
-      );
+      const saved = onEventsChange.mock.calls[0][0].find((event) => event.id === DEFAULT_EVENT.id);
       expect(saved).not.to.have.property('readOnly');
       expect(saved.notes).to.equal('kept');
     });
