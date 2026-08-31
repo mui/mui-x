@@ -772,5 +772,36 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       // Sanity: COUNT respected
       expect(result).to.have.length(5);
     });
+
+    it('should exclude an exDate carried in another zone on its data-timezone day', () => {
+      const event = EventBuilder.new(adapter)
+        .withDataTimezone('UTC')
+        .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+        .rrule({ freq: 'WEEKLY', byDay: ['FR'] })
+        .toProcessed();
+      // A `...Z` exDate string parses in the system zone: on a New York machine this
+      // instant (July 11th 00:00Z) carries a zone where the day reads July 10th, while
+      // the day it excludes is the data-timezone July 11th.
+      const eventWithExDate = {
+        ...event,
+        dataTimezone: {
+          ...event.dataTimezone,
+          exDates: [adapter.date('2025-07-10T20:00:00', 'America/New_York')],
+        },
+      };
+
+      const visibleStart = adapter.date('2025-07-04T00:00:00Z', 'default');
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        eventWithExDate,
+        visibleStart,
+        adapter.addDays(visibleStart, 15),
+        adapter,
+        'default',
+      );
+
+      expect(
+        result.map((o) => adapter.formatByString(o.dataTimezone.start.value, 'yyyy-MM-dd')),
+      ).to.deep.equal(['2025-07-04', '2025-07-18']);
+    });
   });
 });

@@ -48,7 +48,9 @@ export function applyRecurringDeleteOnlyThis(
 ): UpdateEventsParameters {
   const exDates = [
     ...(originalEvent.dataTimezone.exDates ?? []),
-    adapter.startOfDay(occurrenceStart),
+    // The exDate is a day marker in the data timezone; the incoming instant may carry
+    // another zone (a `...Z` DTSTART parses in the system zone), so relabel first.
+    adapter.startOfDay(adapter.setTimezone(occurrenceStart, originalEvent.dataTimezone.timezone)),
   ];
 
   if (!hasRemainingOccurrence(adapter, originalEvent, exDates)) {
