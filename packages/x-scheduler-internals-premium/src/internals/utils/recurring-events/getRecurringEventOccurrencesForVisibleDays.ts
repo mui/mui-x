@@ -100,13 +100,9 @@ class RecurringEventExpander {
 
     this.dataTimezone = event.dataTimezone;
     this.rule = this.dataTimezone.rrule!;
-    this.dtStartInDataTz = adapter.setTimezone(
-      this.dataTimezone.start.value,
-      this.dataTimezone.timezone,
-    );
-    this.seriesStartDay = adapter.startOfDay(
-      adapter.setTimezone(this.dataTimezone.start.value, this.dataTimezone.timezone),
-    );
+    // `processEvent` labels the data bag in the data timezone, so the start is usable as is.
+    this.dtStartInDataTz = this.dataTimezone.start.value;
+    this.seriesStartDay = adapter.startOfDay(this.dtStartInDataTz);
     this.interval = Math.max(1, this.rule.interval ?? 1);
 
     const dataTz = this.dataTimezone.timezone;
