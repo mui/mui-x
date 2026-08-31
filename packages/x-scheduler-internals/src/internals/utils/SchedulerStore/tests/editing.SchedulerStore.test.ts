@@ -317,6 +317,12 @@ premiumStoreClasses.forEach((storeClass) => {
             end: processDate(adapter.addHours(occurrenceStart, 1), adapter),
             rrule: RRULE,
           },
+          dataTimezone: {
+            timezone: 'default',
+            start: processDate(occurrenceStart, adapter),
+            end: processDate(adapter.addHours(occurrenceStart, 1), adapter),
+            rrule: RRULE,
+          },
         } as any,
         'armed',
       );
@@ -362,6 +368,45 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.key).to.not.equal(armedKey);
       expect(occurrence.displayTimezone.start.value).toEqualDateTime(resizedStart);
       expect(occurrence.displayTimezone.end.value).toEqualDateTime(resizedEnd);
+    });
+
+    it('should keep the data-timezone identity in sync when the armed occurrence is resized', () => {
+      const store = createStore();
+      armOccurrence(store, dayA);
+
+      const resizedStart = adapter.addMinutes(dayA, 30);
+      const resizedEnd = adapter.addMinutes(dayA, 90);
+      store.updateRecurringEvent({
+        occurrenceStart: dayA,
+        changes: { id: 'standup', start: resizedStart, end: resizedEnd },
+      });
+      store.selectRecurringEventScope('this-and-following');
+
+      // A later edit or delete of the still-armed occurrence targets this identity:
+      // left stale, it would anchor the operation on the pre-resize occurrence.
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.dataTimezone.start.value).toEqualDateTime(resizedStart);
+      expect(occurrence.dataTimezone.end.value).toEqualDateTime(resizedEnd);
+    });
+
+    it('should re-point a rename-only scope change onto the detached event', () => {
+      const store = createStore();
+      const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter);
+      armOccurrence(store, dayA);
+
+      // A rename carries no start/end in the changes.
+      store.updateRecurringEvent({
+        occurrenceStart: dayA,
+        changes: { id: 'standup', title: 'Renamed standup' },
+      });
+      store.selectRecurringEventScope('only-this');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
+      // The occurrence moved onto the detached one-off event, keeping its own times.
+      expect(occurrence.id).to.not.equal('standup');
+      expect(occurrence.key).to.not.equal(armedKey);
+      expect(occurrence.displayTimezone.rrule).to.equal(undefined);
+      expect(occurrence.displayTimezone.start.value).toEqualDateTime(dayA);
     });
   });
 });

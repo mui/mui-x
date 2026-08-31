@@ -57,7 +57,7 @@ import {
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { dateToEventString } from '../date-utils';
-import { getOccurrenceKey, getRecurringOccurrenceKey } from '../event-utils';
+import { getOccurrenceKey, getRecurringOccurrenceKey, isEventOccurrence } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 
@@ -667,11 +667,8 @@ export class SchedulerStore<
       );
     }
 
-    // IMPORTANT:
-    // Recurring changes are pattern-based, not instant-based.
-    // Using the raw instant here would incorrectly shift the recurring rule
-    // depending on the user's display timezone. We therefore convert the
-    // occurrence to the event's dataTimezone before applying the change.
+    // `occurrenceStart` is the occurrence's data-timezone start (see the parameter
+    // docs) — the relabel is defensive, `setTimezone` preserves the instant.
     const occurrenceStartInDataTimezone = adapter.setTimezone(
       occurrenceStart,
       original.dataTimezone.timezone,
@@ -704,7 +701,6 @@ export class SchedulerStore<
     // Keep the edited occurrence in sync after a scope-dialog resize, so the armed toolbar + selection
     // highlight (and a later edit) follow the resized occurrence instead of a now-stale occurrence key.
     if (pendingRecurringEventOperation.kind === 'update') {
-      const { start, end } = pendingRecurringEventOperation.changes;
       // Only repoint when the resized occurrence is the armed one, else a sibling drag hijacks the surface.
       const { editingOccurrence } = this.state;
       const resizedOccurrenceKey = getRecurringOccurrenceKey(
@@ -713,7 +709,12 @@ export class SchedulerStore<
         adapter,
       );
       const isEditingResizedOccurrence = editingOccurrence?.occurrence.key === resizedOccurrenceKey;
-      if (isEditingResizedOccurrence && start != null && end != null) {
+      if (isEditingResizedOccurrence) {
+        // A rename carries no range: the occurrence keeps its current bounds.
+        const changedStart = pendingRecurringEventOperation.changes.start;
+        const changedEnd = pendingRecurringEventOperation.changes.end;
+        const start = changedStart ?? editingOccurrence.occurrence.displayTimezone.start.value;
+        const end = changedEnd ?? editingOccurrence.occurrence.displayTimezone.end.value;
         // `only-this` / `this-and-following` move the occurrence onto a freshly-created event, changing
         // its key; `all` edits the series in place, keeping the same key (only the times need a refresh).
         const movedToEvent = updatedEvents.created?.[0];
@@ -1034,6 +1035,23 @@ export class SchedulerStore<
           start: processDate(start, adapter),
           end: processDate(end, adapter),
         },
+        // The data bounds are the occurrence's identity for recurring scope
+        // operations: a later edit must not target the pre-resize occurrence.
+        ...(isEventOccurrence(occurrence)
+          ? {
+              dataTimezone: {
+                ...occurrence.dataTimezone,
+                start: processDate(
+                  adapter.setTimezone(start, occurrence.dataTimezone.timezone),
+                  adapter,
+                ),
+                end: processDate(
+                  adapter.setTimezone(end, occurrence.dataTimezone.timezone),
+                  adapter,
+                ),
+              },
+            }
+          : {}),
       },
     });
   };
@@ -1073,6 +1091,18 @@ export class SchedulerStore<
           // toolbar's Delete removes it directly instead of reopening the recurring scope dialog.
           rrule: isRecurring ? occurrence.displayTimezone.rrule : undefined,
         },
+        // Keep the data-timezone identity on the moved-to occurrence too, so a later
+        // edit or delete targets the day it actually lives on.
+        ...(isEventOccurrence(occurrence)
+          ? {
+              dataTimezone: {
+                ...occurrence.dataTimezone,
+                start: processDate(adapter.setTimezone(start, dataTimezone), adapter),
+                end: processDate(adapter.setTimezone(end, dataTimezone), adapter),
+                rrule: isRecurring ? occurrence.dataTimezone.rrule : undefined,
+              },
+            }
+          : {}),
       },
     });
   };

@@ -103,17 +103,11 @@ export const getWeekdayToken = (adapter: Adapter, value: TemporalSupportedObject
 export type EndsSelection = 'never' | 'after' | 'until';
 
 /**
- * Form keys `computeRange` reads; editing any of them submits a new start/end.
+ * Form keys `computeRange` reads.
  */
-export type RangeFormKey = 'startDate' | 'startTime' | 'endDate' | 'endTime' | 'allDay';
+export const RANGE_FORM_KEYS = ['startDate', 'startTime', 'endDate', 'endTime', 'allDay'] as const;
 
-export const RANGE_FORM_KEYS: readonly RangeFormKey[] = [
-  'startDate',
-  'startTime',
-  'endDate',
-  'endTime',
-  'allDay',
-];
+export type RangeFormKey = (typeof RANGE_FORM_KEYS)[number];
 
 // The all-day branch of `computeRange` ignores the time fields.
 export const ALL_DAY_RANGE_FORM_KEYS: readonly RangeFormKey[] = ['startDate', 'endDate', 'allDay'];

@@ -8,6 +8,7 @@ import DeleteRounded from '@mui/icons-material/DeleteRounded';
 import { useStore } from '@base-ui/utils/store';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { isEventOccurrence } from '@mui/x-scheduler-internals/internals';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 import { useDisarmOnEscape } from '../armed-occurrence';
@@ -81,7 +82,7 @@ export function EventToolbar(props: EventToolbarProps) {
     if (
       areRecurringEventsAvailable &&
       recurringEventsPlugin &&
-      'dataTimezone' in occurrence &&
+      isEventOccurrence(occurrence) &&
       occurrence.displayTimezone.rrule
     ) {
       store.deleteRecurringEvent({

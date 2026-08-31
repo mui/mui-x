@@ -52,6 +52,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     // Internal props
     start,
     end,
+    dataStart,
+    dataEnd,
     eventId,
     occurrenceKey,
     renderDragPreview,
@@ -104,6 +106,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         occurrenceKey,
         start,
         end,
+        dataStart,
+        dataEnd,
       });
 
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });

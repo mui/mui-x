@@ -24,7 +24,7 @@ describe('CompactDayView - touch resize', () => {
     )!;
   }
 
-  function renderResizableEvent(onEventsChange = vi.fn(), { controlled = false } = {}) {
+  function renderResizableEvent({ onEventsChange = vi.fn(), controlled = false } = {}) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -114,7 +114,7 @@ describe('CompactDayView - touch resize', () => {
   it('should keep a prior armed resize when an unrelated field is then edited from the form', async () => {
     // Controlled: the form only resends the fields the user edited, so the resized
     // end survives through the model, not through the form echoing it back.
-    const { onEventsChange, user } = renderResizableEvent(vi.fn(), { controlled: true });
+    const { onEventsChange, user } = renderResizableEvent({ controlled: true });
     const eventElement = armEvent();
 
     const endHandle = getResizeHandle(eventElement, 'end');

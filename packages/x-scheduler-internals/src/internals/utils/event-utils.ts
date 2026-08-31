@@ -8,8 +8,19 @@ import type {
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
+import type { SchedulerRenderableEventOccurrence } from '../../models/event';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getDateKey } from './date-utils';
+
+/**
+ * Whether the occurrence is a persisted event occurrence, as opposed to a
+ * placeholder (creation draft, drag preview) that has no data-timezone bounds.
+ */
+export function isEventOccurrence(
+  occurrence: SchedulerRenderableEventOccurrence,
+): occurrence is SchedulerEventOccurrence {
+  return 'dataTimezone' in occurrence;
+}
 
 /**
  * The render key of a non-recurring occurrence: the event id stringified.
@@ -39,12 +50,21 @@ export function generateOccurrenceFromEvent({
   occurrenceKey,
   start,
   end,
+  dataStart,
+  dataEnd,
 }: {
   event: SchedulerProcessedEvent;
   eventId: SchedulerEventId;
   occurrenceKey: string;
   start: SchedulerProcessedDate;
   end: SchedulerProcessedDate;
+  /**
+   * The occurrence bounds in the data timezone. `start`/`end` are the rendered display
+   * bounds, which for a cross-timezone all-day occurrence sit on a different day —
+   * recurring scope operations need the data-timezone identity.
+   */
+  dataStart?: SchedulerProcessedDate;
+  dataEnd?: SchedulerProcessedDate;
 }): SchedulerEventOccurrence {
   return {
     ...event,
@@ -57,8 +77,8 @@ export function generateOccurrenceFromEvent({
     },
     dataTimezone: {
       ...event?.dataTimezone,
-      start,
-      end,
+      start: dataStart ?? start,
+      end: dataEnd ?? end,
     },
   };
 }

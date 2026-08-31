@@ -8,7 +8,7 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
-import type { SchedulerEventId } from '../../models';
+import type { SchedulerEventId, SchedulerProcessedDate } from '../../models';
 import type { useElementPositionInCollection } from './useElementPositionInCollection';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
@@ -124,6 +124,13 @@ export namespace useDraggableEvent {
      * The unique identifier of the event occurrence.
      */
     occurrenceKey: string;
+    /**
+     * The occurrence bounds in the data timezone, used as the occurrence identity for
+     * recurring drag updates. Default to `start`/`end` (the rendered display bounds),
+     * which sit on a different day for a cross-timezone all-day occurrence.
+     */
+    dataStart?: SchedulerProcessedDate;
+    dataEnd?: SchedulerProcessedDate;
   }
 
   export interface Parameters extends PublicParameters {

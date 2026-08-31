@@ -75,4 +75,51 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     expect(deleteEventSpy?.called).to.equal(false);
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
   });
+
+  it('should identify the deleted occurrence by its data-timezone start from another timezone', () => {
+    const weeklyEventBuilder = EventBuilder.new(adapter)
+      .title('Weekly sync')
+      .withDataTimezone('UTC')
+      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+      .recurrent('WEEKLY')
+      .withDisplayTimezone('America/New_York');
+    const occurrence = weeklyEventBuilder.toOccurrence();
+
+    let deleteRecurringEventSpy: SinonSpy | undefined;
+
+    render(
+      <EventCalendarProvider
+        events={[weeklyEventBuilder.build()]}
+        resources={[]}
+        storeClass={PremiumTestStore}
+        displayTimezone="America/New_York"
+      >
+        <StoreSpy
+          Context={SchedulerStoreContext}
+          method="deleteRecurringEvent"
+          onSpyReady={(sp) => {
+            deleteRecurringEventSpy = sp;
+          }}
+        />
+        <EventEditingProvider surface="dialog">
+          <EventContextMenuProvider>
+            <EventContextMenuTrigger occurrence={occurrence}>
+              <button type="button">Weekly sync</button>
+            </EventContextMenuTrigger>
+          </EventContextMenuProvider>
+        </EventEditingProvider>
+        <RecurringScopeDialog />
+      </EventCalendarProvider>,
+    );
+
+    fireEvent.contextMenu(screen.getByRole('button', { name: 'Weekly sync' }));
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+
+    // The display bounds of this occurrence normalize to New York July 3rd; the
+    // exception must land on the event's own July 4th.
+    expect(deleteRecurringEventSpy?.calledOnce).to.equal(true);
+    expect(adapter.getTime(deleteRecurringEventSpy!.lastCall.firstArg.occurrenceStart)).to.equal(
+      adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
+    );
+  });
 });

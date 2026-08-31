@@ -115,13 +115,17 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       return { user, event, getUpdatedEvent };
     }
 
+    // The builder mutates in place, so each test builds its own instance.
+    const independenceDay = () =>
+      EventBuilder.new()
+        .title('Independence day')
+        .withDataTimezone('UTC')
+        .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true });
+
     it('should keep the dates of an all-day event untouched when only the title is edited', async () => {
       // New York is behind UTC: the dialog shows this event as July 3rd → 4th.
       const { user, event, getUpdatedEvent } = renderEditDialog(
-        EventBuilder.new()
-          .title('Independence day')
-          .withDataTimezone('UTC')
-          .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true }),
+        independenceDay(),
         'America/New_York',
       );
 
@@ -170,13 +174,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should interpret an edited day in the display timezone', async () => {
-      const { user, getUpdatedEvent } = renderEditDialog(
-        EventBuilder.new()
-          .title('Independence day')
-          .withDataTimezone('UTC')
-          .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true }),
-        'America/New_York',
-      );
+      const { user, getUpdatedEvent } = renderEditDialog(independenceDay(), 'America/New_York');
 
       const startDateInput = screen.getByLabelText(/start date/i);
       await user.clear(startDateInput);
@@ -201,10 +199,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should ignore a time edit orphaned by toggling all-day back on', async () => {
       const { user, event, getUpdatedEvent } = renderEditDialog(
-        EventBuilder.new()
-          .title('Independence day')
-          .withDataTimezone('UTC')
-          .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true }),
+        independenceDay(),
         'America/New_York',
       );
 
@@ -224,13 +219,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should submit the whole displayed range when only one of its fields is edited', async () => {
-      const { user, getUpdatedEvent } = renderEditDialog(
-        EventBuilder.new()
-          .title('Independence day')
-          .withDataTimezone('UTC')
-          .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true }),
-        'America/New_York',
-      );
+      const { user, getUpdatedEvent } = renderEditDialog(independenceDay(), 'America/New_York');
 
       const endDateInput = screen.getByLabelText(/end date/i);
       await user.clear(endDateInput);
@@ -245,6 +234,33 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
       expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
         adapter.getTime(adapter.date('2025-07-06T03:59:59', 'UTC')),
+      );
+      // The built-in form keys never leak onto the event model as custom fields.
+      expect(updated).to.not.have.property('startDate');
+      expect(updated).to.not.have.property('endDate');
+    });
+
+    it('should convert an all-day event to timed with the entered display times', async () => {
+      const { user, getUpdatedEvent } = renderEditDialog(independenceDay(), 'America/New_York');
+
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
+      const startTimeInput = screen.getByLabelText(/start time/i);
+      await user.clear(startTimeInput);
+      await user.type(startTimeInput, '09:00');
+      const endTimeInput = screen.getByLabelText(/end time/i);
+      await user.clear(endTimeInput);
+      await user.type(endTimeInput, '10:00');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      // The typed times mean the times the user was looking at: the seeded New York
+      // days (July 3rd → 4th) at 09:00 and 10:00 New York time.
+      const updated = getUpdatedEvent();
+      expect(Boolean(updated.allDay)).to.equal(false);
+      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-03T13:00:00', 'UTC')),
+      );
+      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-04T14:00:00', 'UTC')),
       );
     });
   });

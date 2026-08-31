@@ -76,4 +76,35 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     const updatedEvents = onEventsChange.mock.lastCall?.[0];
     expect(updatedEvents.some((item: SchedulerEvent) => item.id === 'event-1')).to.equal(true);
   });
+
+  it('should exclude the occurrence of its own day when deleted from another timezone', async () => {
+    const onEventsChange = vi.fn();
+    // A UTC all-day series whose display bounds normalize to New York July 3rd → 4th.
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Weekly sync')
+      .withDataTimezone('UTC')
+      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+      .recurrent('WEEKLY')
+      .build();
+
+    const { user } = render(
+      <StandaloneCompactDayViewPremium
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        displayTimezone="America/New_York"
+        onEventsChange={onEventsChange}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Weekly sync/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+    await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+    // The exception lands on the event's own July 4th, not the displayed July 3rd.
+    const updatedEvents = onEventsChange.mock.lastCall?.[0];
+    const series = updatedEvents.find((item: SchedulerEvent) => item.id === 'event-1')!;
+    expect(series.exDates).to.have.length(1);
+    expect(String(series.exDates![0]).slice(0, 10)).to.equal('2025-07-04');
+  });
 });

@@ -12,6 +12,7 @@ import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { isEventOccurrence } from '@mui/x-scheduler-internals/internals';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 
@@ -84,7 +85,7 @@ export function useEventContextMenuItems(
     if (
       areRecurringEventsAvailable &&
       recurringEventsPlugin &&
-      'dataTimezone' in occurrence &&
+      isEventOccurrence(occurrence) &&
       occurrence.displayTimezone.rrule
     ) {
       store.deleteRecurringEvent({

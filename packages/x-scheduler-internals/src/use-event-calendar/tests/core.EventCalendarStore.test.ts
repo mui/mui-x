@@ -1,4 +1,4 @@
-import { adapter, ResourceBuilder } from 'test/utils/scheduler';
+import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { spy } from 'sinon';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
@@ -9,7 +9,7 @@ import {
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
-import type { CalendarView } from '../../models';
+import type { CalendarView, SchedulerEventOccurrence } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -260,6 +260,27 @@ describe('Core - EventCalendarStore', () => {
         );
 
         expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should keep the data-timezone bounds in sync with the refreshed times', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const edited = EventBuilder.new(adapter)
+          .withDataTimezone('UTC')
+          .withDisplayTimezone('America/New_York')
+          .singleDay('2024-01-15T15:00:00Z', 60)
+          .toOccurrence();
+        store.startEditing(edited, 'armed');
+        const start = adapter.date('2024-01-15T14:00:00Z', 'default');
+        const end = adapter.date('2024-01-15T16:00:00Z', 'default');
+
+        store.setEditingOccurrenceTimes(start, end);
+
+        // The data bounds are the occurrence's identity for recurring scope
+        // operations: left stale, a later edit would target the pre-resize times.
+        const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
+        expect(editing.dataTimezone.start.timestamp).to.equal(adapter.getTime(start));
+        expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        expect(editing.dataTimezone.timezone).to.equal('UTC');
       });
     });
 

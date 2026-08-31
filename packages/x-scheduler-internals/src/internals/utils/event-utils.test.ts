@@ -1,6 +1,7 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import {
+  generateOccurrenceFromEvent,
   getDaysTheOccurrenceIsVisibleOn,
   getEventResourceIds,
   getOccurrencesFromEvents,
@@ -209,6 +210,46 @@ describe('event-utils', () => {
       });
 
       expect(result.map((o) => o.id)).toEqual([event.id]);
+    });
+  });
+
+  describe('generateOccurrenceFromEvent', () => {
+    it('should carry the data-timezone bounds separately from the display segment bounds', () => {
+      const processed = EventBuilder.new()
+        .withDataTimezone('UTC')
+        .withDisplayTimezone('America/New_York')
+        .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+        .toProcessed();
+
+      const occurrence = generateOccurrenceFromEvent({
+        event: processed,
+        eventId: processed.id,
+        occurrenceKey: 'key',
+        start: processed.displayTimezone.start,
+        end: processed.displayTimezone.end,
+        dataStart: processed.dataTimezone.start,
+        dataEnd: processed.dataTimezone.end,
+      });
+
+      // Display bounds normalize to New York July 3rd; the data identity stays July 4th.
+      expect(occurrence.displayTimezone.start).to.equal(processed.displayTimezone.start);
+      expect(occurrence.dataTimezone.start.timestamp).to.equal(
+        adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
+      );
+    });
+
+    it('should default the data bounds to the display bounds when not provided', () => {
+      const processed = EventBuilder.new().singleDay('2025-07-04T09:00:00Z', 30).toProcessed();
+
+      const occurrence = generateOccurrenceFromEvent({
+        event: processed,
+        eventId: processed.id,
+        occurrenceKey: 'key',
+        start: processed.displayTimezone.start,
+        end: processed.displayTimezone.end,
+      });
+
+      expect(occurrence.dataTimezone.start).to.equal(processed.displayTimezone.start);
     });
   });
 });

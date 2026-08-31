@@ -35,6 +35,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     // Internal props
     start,
     end,
+    dataStart,
+    dataEnd,
     eventId,
     occurrenceKey,
     renderDragPreview,
@@ -77,6 +79,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         occurrenceKey,
         start,
         end,
+        dataStart,
+        dataEnd,
       });
 
       // No `input` (pointer-based resize) — skip the layout-reading cursor measurement.

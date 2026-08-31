@@ -12,6 +12,7 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { isEventOccurrence } from '@mui/x-scheduler-internals/internals';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -552,6 +553,8 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
+      dataStart={isEventOccurrence(occurrence) ? occurrence.dataTimezone.start : undefined}
+      dataEnd={isEventOccurrence(occurrence) ? occurrence.dataTimezone.end : undefined}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={isArmed || undefined}
       data-editing={isEditing || undefined}

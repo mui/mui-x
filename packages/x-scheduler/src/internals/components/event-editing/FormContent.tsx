@@ -33,6 +33,7 @@ import {
   getEventResourceIds,
   getResourceSelectionMode,
   isBuiltInEventProperty,
+  isEventOccurrence,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -445,8 +446,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       } else if (
         current.showRecurrence &&
         current.recurringEventsPlugin &&
-        // A placeholder occurrence has no data-timezone bounds and is never recurring.
-        'dataTimezone' in occurrence &&
+        isEventOccurrence(occurrence) &&
         occurrence.displayTimezone.rrule
       ) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
@@ -492,7 +492,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     if (
       showRecurrence &&
       recurringEventsPlugin &&
-      'dataTimezone' in occurrence &&
+      isEventOccurrence(occurrence) &&
       occurrence.displayTimezone.rrule
     ) {
       store.deleteRecurringEvent({
