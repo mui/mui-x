@@ -81,9 +81,14 @@ export function useEventContextMenuItems(
   // single events delete immediately. No confirmation step here either — see #18025.
   const handleDelete = () => {
     onRequestClose();
-    if (areRecurringEventsAvailable && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+    if (
+      areRecurringEventsAvailable &&
+      recurringEventsPlugin &&
+      'dataTimezone' in occurrence &&
+      occurrence.displayTimezone.rrule
+    ) {
       store.deleteRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
+        occurrenceStart: occurrence.dataTimezone.start.value,
         eventId: occurrence.id,
         onSubmit: () => {},
       });

@@ -2033,6 +2033,57 @@ describe('<EventDialogContent open />', () => {
         expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
       });
 
+      it("should detach the renamed occurrence on its own day with scope 'only this' from another timezone", async () => {
+        const onEventsChange = spy();
+        const weeklyBuilder = EventBuilder.new(adapter)
+          .title('Weekly sync')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+          .recurrent('WEEKLY')
+          .withDisplayTimezone('America/New_York');
+        const weeklyEvent = weeklyBuilder.build();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[weeklyEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={weeklyBuilder.toOccurrence()}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        await user.type(screen.getByLabelText(/event title/i), ' renamed');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/Only this event/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        // The occurrence is identified by its data-timezone start: the exception and
+        // the detached event must land on the event's own July 4th, not on the day
+        // its display bounds normalize to in New York.
+        const newEvents: SchedulerEvent[] = onEventsChange.lastCall.firstArg;
+        const series = newEvents.find((event) => event.id === weeklyEvent.id)!;
+        expect(series.exDates).to.have.length(1);
+        expect(
+          adapter.formatByString(adapter.date(String(series.exDates![0]), 'UTC'), 'yyyy-MM-dd'),
+        ).to.equal('2025-07-04');
+
+        const detached = newEvents.find((event) => event.id !== weeklyEvent.id)!;
+        expect(detached.title).to.equal('Weekly sync renamed');
+        expect(
+          adapter.formatByString(adapter.date(String(detached.start), 'UTC'), 'yyyy-MM-dd'),
+        ).to.equal('2025-07-04');
+      });
+
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {
         let updateRecurringEventSpy, selectRecurringEventScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();

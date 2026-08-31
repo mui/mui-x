@@ -78,9 +78,14 @@ export function EventToolbar(props: EventToolbarProps) {
   // Mirrors `FormContent`'s delete: recurring events open the scope dialog (which closes the surface
   // on submit); single events delete immediately and close.
   const handleDelete = () => {
-    if (areRecurringEventsAvailable && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+    if (
+      areRecurringEventsAvailable &&
+      recurringEventsPlugin &&
+      'dataTimezone' in occurrence &&
+      occurrence.displayTimezone.rrule
+    ) {
       store.deleteRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
+        occurrenceStart: occurrence.dataTimezone.start.value,
         eventId: occurrence.id,
         onSubmit: stopEditing,
       });

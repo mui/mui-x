@@ -445,6 +445,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       } else if (
         current.showRecurrence &&
         current.recurringEventsPlugin &&
+        // A placeholder occurrence has no data-timezone bounds and is never recurring.
+        'dataTimezone' in occurrence &&
         occurrence.displayTimezone.rrule
       ) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
@@ -461,7 +463,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         };
 
         await store.updateRecurringEvent({
-          occurrenceStart: occurrence.displayTimezone.start.value,
+          occurrenceStart: occurrence.dataTimezone.start.value,
           changes,
           onSubmit: onClose,
         });
@@ -487,9 +489,14 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+    if (
+      showRecurrence &&
+      recurringEventsPlugin &&
+      'dataTimezone' in occurrence &&
+      occurrence.displayTimezone.rrule
+    ) {
       store.deleteRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
+        occurrenceStart: occurrence.dataTimezone.start.value,
         eventId: occurrence.id,
         onSubmit: onClose,
       });
