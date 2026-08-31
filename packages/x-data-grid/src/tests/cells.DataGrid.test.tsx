@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { DataGrid, renderLongTextCell } from '@mui/x-data-grid';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { DataGrid, renderLongTextCell, useGridApiRef } from '@mui/x-data-grid';
 import type { GridApi, GridValueFormatter } from '@mui/x-data-grid';
+import type { RefObject } from '@mui/x-internals/types';
 import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -49,6 +50,61 @@ describe('<DataGrid /> - Cells', () => {
         </div>,
       );
       expect(getCell(0, 0)).to.have.class('foobar');
+    });
+  });
+
+  // A cell can be interacted with after its row was removed from the model (e.g. rapid
+  // clicks under a filter that drops the row). The row's DOM
+  // lingers for a frame, so the cell event handlers must not call `getCellParams`
+  // on a missing row — that throws `MissingRowIdError` and crashes the grid.
+  // `click` is already guarded by `publish`; `mouseDown`/`mouseUp` were not.
+  describe('interaction after the row is removed', () => {
+    let apiRef: RefObject<GridApi | null>;
+
+    function TestCase() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            apiRef={apiRef}
+            columns={[{ field: 'brand' }]}
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    const cellEvents: [string, (cell: HTMLElement) => void][] = [
+      ['click', (cell) => fireEvent.click(cell)],
+      ['mouseDown', (cell) => fireEvent.mouseDown(cell)],
+      ['mouseUp', (cell) => fireEvent.mouseUp(cell)],
+    ];
+
+    cellEvents.forEach(([eventName, fireCellEvent]) => {
+      it(`should not throw on ${eventName} after the row was removed`, () => {
+        render(<TestCase />);
+        const cell = getCell(1, 0);
+
+        // The handler surfaces MissingRowIdError as a global error; catch it and fail if it occurs.
+        let caughtError: Error | undefined;
+        const handleError = (event: ErrorEvent) => {
+          caughtError = event.error;
+          event.preventDefault();
+        };
+        window.addEventListener('error', handleError);
+        try {
+          // Delete the row, then fire before the re-render unmounts the cell (the race).
+          act(() => {
+            apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]);
+            fireCellEvent(cell);
+          });
+        } finally {
+          window.removeEventListener('error', handleError);
+        }
+
+        expect(caughtError).to.equal(undefined);
+      });
     });
   });
 
