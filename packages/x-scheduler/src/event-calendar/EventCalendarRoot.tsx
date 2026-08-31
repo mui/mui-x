@@ -215,6 +215,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             id={`${schedulerId}-side-panel`}
             in={isSidePanelOpen}
             aria-hidden={!isSidePanelOpen && isSidePanelHidden ? true : undefined}
+            onEnter={() => setIsSidePanelHidden(false)}
             onEntered={() => setIsSidePanelHidden(false)}
             onExited={() => setIsSidePanelHidden(true)}
             orientation="horizontal"

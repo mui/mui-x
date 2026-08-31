@@ -282,6 +282,15 @@ describe('side panel toggle', () => {
     expect(screen.getByRole('button', { name: 'Close side panel' })).to.equal(toggleButton);
     expect(toggleButton).to.have.attribute('aria-expanded', 'true');
     expect(panel).not.to.have.attribute('aria-hidden');
+
+    // Double-toggle: closing again before the reopen's enter transition finishes cancels
+    // that transition, so onEntered never fires — the flag must already have been cleared
+    // by onEnter, otherwise this close reuses the stale "hidden" flag from the previous
+    // cycle and applies aria-hidden immediately, over still-visible content.
+    fireEvent.click(toggleButton);
+
+    expect(screen.getByRole('button', { name: 'Open side panel' })).to.equal(toggleButton);
+    expect(panel).not.to.have.attribute('aria-hidden');
   });
 
   it('should render the panel as the complementary landmark, with no nested landmark inside', () => {
