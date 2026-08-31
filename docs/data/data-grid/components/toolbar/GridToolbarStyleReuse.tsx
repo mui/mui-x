@@ -15,8 +15,8 @@ export default function GridToolbarStyleReuse() {
 
   return (
     <Paper variant="outlined" sx={{ width: '100%' }}>
-      <ToolbarRoot sx={{ justifyContent: 'space-between' }}>
-        <Typography sx={{ fontWeight: 'medium', paddingLeft: 1 }}>
+      <ToolbarRoot>
+        <Typography sx={{ fontWeight: 'medium', flex: 1, mx: 0.5 }}>
           Commodities
         </Typography>
         <Button size="small">Learn more</Button>
