@@ -30,7 +30,7 @@
     "@mui/internal-core-docs": "catalog:",
     "@mui/internal-docs-infra": "^0.12.1-canary.36",
     "@mui/material": "catalog:",
-    "@mui/material-nextjs": "^9.3.0",
+    "@mui/material-nextjs": "^9.4.0",
     "@mui/stylis-plugin-rtl": "catalog:",
     "@mui/system": "catalog:",
     "@mui/utils": "catalog:",
