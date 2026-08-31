@@ -1971,15 +1971,26 @@ describe('<EventDialogContent open />', () => {
         expect(selectRecurringEventScopeSpy?.lastCall.firstArg).to.equal('all');
       });
 
-      it('should not include the range in the changes when the date fields are not edited', async () => {
+      it('should apply a rename to the whole series without resending or moving its dates', async () => {
         let updateRecurringEventSpy;
+        const onEventsChange = spy();
+        // A UTC all-day weekly series viewed from New York: resending the display-day
+        // range on a rename used to shift the series and realign its BYDAY.
+        const weeklyBuilder = EventBuilder.new(adapter)
+          .title('Weekly sync')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+          .recurrent('WEEKLY')
+          .withDisplayTimezone('America/New_York');
+        const weeklyEvent = weeklyBuilder.build();
 
         const { user } = render(
           <EventCalendarProvider
-            events={[originalRecurringEvent]}
+            events={[weeklyEvent]}
             resources={resources}
             storeClass={PremiumTestStore}
-            onEventsChange={() => {}}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
           >
             <StoreSpy
               Context={SchedulerStoreContext}
@@ -1992,7 +2003,7 @@ describe('<EventDialogContent open />', () => {
             <TestEventDialogContent
               open
               {...defaultProps}
-              occurrence={originalRecurringEventOccurrence}
+              occurrence={weeklyBuilder.toOccurrence()}
             />
 
             <RecurringScopeDialog />
@@ -2006,9 +2017,20 @@ describe('<EventDialogContent open />', () => {
         // a start re-read in the display timezone could shift the series' days.
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
         const payload = updateRecurringEventSpy.lastCall.firstArg;
-        expect(payload.changes.title).to.equal('Daily standup renamed');
         expect(payload.changes).to.not.have.property('start');
         expect(payload.changes).to.not.have.property('end');
+
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        const updated = onEventsChange.lastCall.firstArg.find(
+          (event: SchedulerEvent) => event.id === weeklyEvent.id,
+        )!;
+        expect(updated.title).to.equal('Weekly sync renamed');
+        expect(updated.start).to.equal(weeklyEvent.start);
+        expect(updated.end).to.equal(weeklyEvent.end);
+        expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
       });
 
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {

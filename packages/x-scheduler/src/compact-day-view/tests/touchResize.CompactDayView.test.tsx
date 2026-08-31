@@ -124,6 +124,8 @@ describe('CompactDayView - touch resize', () => {
 
     // Open the editing form from the armed toolbar and change only the title.
     fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+    // The form must be seeded with the resized end, not the pre-resize model value.
+    expect(screen.getByLabelText(/end time/i)).to.have.value('16:00');
     fireEvent.change(screen.getByRole('textbox', { name: /Event title/i }), {
       target: { value: 'Renamed Meeting' },
     });

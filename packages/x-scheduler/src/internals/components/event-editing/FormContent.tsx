@@ -44,7 +44,9 @@ import {
   getRangeErrorMessage,
   validateRange,
   hasProp,
+  ALL_DAY_RANGE_FORM_KEYS,
   BUILT_IN_FORM_KEYS,
+  RANGE_FORM_KEYS,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
 import TitleSection from '../event-dialog/TitleSection';
@@ -107,9 +109,6 @@ const EventDialogTabs = styled(Tabs, {
 
 // Fields owned by the Recurrence tab; their submit failures must surface there.
 const RECURRENCE_FORM_KEYS = new Set(['recurrenceSelection', 'rruleDraft']);
-
-// Fields `computeRange` reads; editing any of them submits a new start/end.
-const RANGE_FORM_KEYS = ['startDate', 'startTime', 'endDate', 'endTime', 'allDay'];
 
 // Scheduler settings read when the async validation resolves; the submit
 // continuation must not use the render-time closure values.
@@ -407,9 +406,11 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       }
 
       // The form edits the range as display-timezone day/time strings, so resending
-      // it untouched can move the event: an all-day day re-read in another timezone
-      // is a different day. An edit the user didn't make must not enter the payload.
-      const rangeEdited = RANGE_FORM_KEYS.some((key) => key in dirtyValues);
+      // it untouched can move the event: the same day re-read in another timezone
+      // is a different day. Only the keys the submitted range reads count — a time
+      // left over from toggling all-day off and back on must not re-arm the resend.
+      const rangeKeys = values.allDay ? ALL_DAY_RANGE_FORM_KEYS : RANGE_FORM_KEYS;
+      const rangeEdited = rangeKeys.some((key) => key in dirtyValues);
 
       const metaChanges = {
         ...editedCustomValues,
