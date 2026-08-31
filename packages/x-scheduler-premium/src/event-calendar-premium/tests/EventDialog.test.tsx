@@ -1900,7 +1900,6 @@ describe('<EventDialogContent open />', () => {
         expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
         expect(selectRecurringEventScopeSpy?.mock.calls.length).to.be.greaterThan(0);
         expect(selectRecurringEventScopeSpy?.mock.lastCall?.[0]).to.equal(null);
-        expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
       });
 
       it("should call updateRecurringEvent with scope 'all' and not include rrule if not modified on Submit", async () => {
@@ -3357,6 +3356,7 @@ describe('<EventDialogContent open />', () => {
             expect(saved).to.not.equal(undefined);
             expect(saved.customField).to.equal('edited');
             expect(saved.untouchedField).to.equal('keep-me');
+            expect(updateEventSpy?.mock.calls.length).to.equal(1);
             const { changes } = updateEventSpy?.mock.lastCall?.[0] ?? {};
             expect(changes.customField).to.equal('edited');
             expect(changes).not.to.have.property('untouchedField');

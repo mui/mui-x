@@ -27,7 +27,7 @@ export function StoreSpy<T>({
     spyRef.current = sp;
     onSpyReady(sp);
 
-    return () => spyRef.current?.mockRestore?.();
+    return () => spyRef.current?.mockRestore();
   }, [store, method, onSpyReady]);
 
   return null;

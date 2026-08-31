@@ -710,7 +710,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       render(<TestCaseExcelExport />);
       const getDataAsExcelSpy = spyApi(apiRef.current!, 'getDataAsExcel');
       await act(() => apiRef.current?.exportDataAsExcel({ worker: () => workerMock as any }));
-      expect(getDataAsExcelSpy.mock.calls.length).not.to.equal(1);
+      expect(getDataAsExcelSpy.mock.calls.length).to.equal(0);
     });
 
     it('should post a message to the web worker with the serialized columns', async () => {
@@ -773,6 +773,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           escapeFormulas: false,
         }),
       );
+      expect(workerMock.postMessage.mock.calls.length).to.equal(1);
       const { serializedRows } = workerMock.postMessage.mock.lastCall?.[0] ?? {};
       expect(serializedRows[0].formulas).to.deep.equal({
         total: { formula: 'A2*B2', result: 20 },
