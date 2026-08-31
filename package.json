@@ -75,7 +75,7 @@
     "@base-ui/utils": "catalog:",
     "@emotion/cache": "catalog:",
     "@eslint/compat": "2.1.0",
-    "@inquirer/prompts": "8.5.2",
+    "@inquirer/prompts": "8.7.0",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.23",
     "@mui/internal-babel-plugin-minify-errors": "2.0.8-canary.30",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.88",
@@ -126,7 +126,7 @@
     "lerna": "10.0.1",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
-    "picomatch": "4.0.5",
+    "picomatch": "4.0.7",
     "pkg-pr-new": "0.0.88",
     "playwright": "catalog:",
     "prettier": "3.9.6",
@@ -150,7 +150,7 @@
     "zod": "4.4.3"
   },
   "config": {
-    "valeVersion": "3.18.0"
+    "valeVersion": "3.19.0"
   },
   "packageManager": "pnpm@11.24.0",
   "engines": {
