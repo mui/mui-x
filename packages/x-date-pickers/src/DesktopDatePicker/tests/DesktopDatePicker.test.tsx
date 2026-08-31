@@ -480,41 +480,41 @@ describe('<DesktopDatePicker />', () => {
 
   describe('performance', () => {
     it('should not re-render the `PickersActionBar` on date change', async () => {
-      const RenderCount = vi.fn((props: React.ComponentProps<typeof PickersActionBar>) => (
-        <PickersActionBar {...props} />
-      ));
+      const renderCount = vi.fn();
+      const RenderCount = React.memo((props: React.ComponentProps<typeof PickersActionBar>) => {
+        renderCount();
+        return <PickersActionBar {...props} />;
+      });
 
       const { user } = render(
-        <DesktopDatePicker
-          slots={{ actionBar: React.memo(RenderCount) as unknown as typeof PickersActionBar }}
-          closeOnSelect={false}
-          open
-        />,
+        <DesktopDatePicker slots={{ actionBar: RenderCount }} closeOnSelect={false} open />,
       );
 
-      const renderCountBeforeChange = RenderCount.mock.calls.length;
+      const renderCountBeforeChange = renderCount.mock.calls.length;
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       await user.click(screen.getByRole('gridcell', { name: '3' }));
-      expect(RenderCount.mock.calls.length - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values
+      expect(renderCount.mock.calls.length - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values
     });
 
     it('should not re-render the `PickersActionBar` on date change with custom callback actions with root component updates', async () => {
-      const RenderCount = vi.fn((props: React.ComponentProps<typeof PickersActionBar>) => (
-        <PickersActionBar {...props} />
-      ));
+      const renderCount = vi.fn();
+      const RenderCount = React.memo((props: React.ComponentProps<typeof PickersActionBar>) => {
+        renderCount();
+        return <PickersActionBar {...props} />;
+      });
       const actions: PickersActionBarAction[] = ['clear', 'today'];
 
       const { setProps, user } = render(
         <DesktopDatePicker
           defaultValue={adapterToUse.date('2018-01-01')}
-          slots={{ actionBar: React.memo(RenderCount) as unknown as typeof PickersActionBar }}
+          slots={{ actionBar: RenderCount }}
           slotProps={{ actionBar: () => ({ actions }) }}
           closeOnSelect={false}
           open
         />,
       );
 
-      const renderCountBeforeChange = RenderCount.mock.calls.length;
+      const renderCountBeforeChange = renderCount.mock.calls.length;
 
       await act(async () => {
         setProps({ defaultValue: adapterToUse.date('2018-01-04') });
@@ -522,7 +522,7 @@ describe('<DesktopDatePicker />', () => {
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       await user.click(screen.getByRole('gridcell', { name: '3' }));
-      expect(RenderCount.mock.calls.length - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values and causing a root component re-render
+      expect(renderCount.mock.calls.length - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values and causing a root component re-render
     });
   });
 

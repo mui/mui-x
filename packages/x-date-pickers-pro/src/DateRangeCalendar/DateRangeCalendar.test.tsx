@@ -900,45 +900,49 @@ describe('<DateRangeCalendar />', () => {
 
   describe('Performance', () => {
     it('should only render the new start day when selecting a start day without a previously selected start day', () => {
-      const RenderCount = vi.fn((props: React.ComponentProps<typeof DateRangePickerDay>) => (
-        <DateRangePickerDay {...props} />
-      ));
+      const renderCount = vi.fn();
+      const RenderCount = React.memo((props: React.ComponentProps<typeof DateRangePickerDay>) => {
+        renderCount();
+        return <DateRangePickerDay {...props} />;
+      });
 
       render(
         <DateRangeCalendar
           referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
-            day: React.memo(RenderCount) as typeof DateRangePickerDay,
+            day: RenderCount,
           }}
         />,
       );
 
-      const renderCountBeforeChange = RenderCount.mock.calls.length;
+      const renderCountBeforeChange = renderCount.mock.calls.length;
       // sticking with `fireEvent` for simplified performance test
       fireEvent.click(getPickerDay('2'));
-      expect(RenderCount.mock.calls.length - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
+      expect(renderCount.mock.calls.length - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
     it('should only render the day inside range when selecting the end day', () => {
-      const RenderCount = vi.fn((props: React.ComponentProps<typeof DateRangePickerDay>) => (
-        <DateRangePickerDay {...props} />
-      ));
+      const renderCount = vi.fn();
+      const RenderCount = React.memo((props: React.ComponentProps<typeof DateRangePickerDay>) => {
+        renderCount();
+        return <DateRangePickerDay {...props} />;
+      });
 
       render(
         <DateRangeCalendar
           referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
-            day: React.memo(RenderCount) as typeof DateRangePickerDay,
+            day: RenderCount,
           }}
         />,
       );
 
       fireEvent.click(getPickerDay('2'));
 
-      const renderCountBeforeChange = RenderCount.mock.calls.length;
+      const renderCountBeforeChange = renderCount.mock.calls.length;
       // sticking with `fireEvent` for simplified performance test
       fireEvent.click(getPickerDay('4'));
-      expect(RenderCount.mock.calls.length - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
+      expect(renderCount.mock.calls.length - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
     });
   });
 });

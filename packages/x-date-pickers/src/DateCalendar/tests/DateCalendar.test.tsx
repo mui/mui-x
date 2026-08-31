@@ -763,39 +763,47 @@ describe('<DateCalendar />', () => {
 
   describe('Performance', () => {
     it('should only render newly selected day when selecting a day without a previously selected day', async () => {
-      const RenderCount = vi.fn((props: PickerDayProps) => <PickerDay {...props} />);
+      const renderCount = vi.fn();
+      const RenderCount = React.memo((props: PickerDayProps) => {
+        renderCount();
+        return <PickerDay {...props} />;
+      });
 
       const { user } = render(
         <DateCalendar
           referenceDate={adapterToUse.date('2019-01-02')}
           slots={{
-            day: React.memo(RenderCount) as typeof PickerDay,
+            day: RenderCount,
           }}
         />,
       );
 
-      const renderCountBeforeChange = RenderCount.mock.calls.length;
+      const renderCountBeforeChange = renderCount.mock.calls.length;
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 (because dev mode)
-      expect(RenderCount.mock.calls.length - renderCountBeforeChange).to.equal(4);
+      expect(renderCount.mock.calls.length - renderCountBeforeChange).to.equal(4);
     });
 
     it('should only re-render previously selected day and newly selected day when selecting a day', async () => {
-      const RenderCount = vi.fn((props: PickerDayProps) => <PickerDay {...props} />);
+      const renderCount = vi.fn();
+      const RenderCount = React.memo((props: PickerDayProps) => {
+        renderCount();
+        return <PickerDay {...props} />;
+      });
 
       const { user } = render(
         <DateCalendar
           defaultValue={adapterToUse.date('2019-04-29')}
           slots={{
-            day: React.memo(RenderCount) as typeof PickerDay,
+            day: RenderCount,
           }}
         />,
       );
 
-      const renderCountBeforeChange = RenderCount.mock.calls.length;
+      const renderCountBeforeChange = renderCount.mock.calls.length;
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 days * 2 (because dev mode)
-      expect(RenderCount.mock.calls.length - renderCountBeforeChange).to.equal(8);
+      expect(renderCount.mock.calls.length - renderCountBeforeChange).to.equal(8);
     });
   });
 });
