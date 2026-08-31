@@ -252,9 +252,9 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
   };
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       ref={rootRef}
+      role="toolbar"
       tabIndex={-1}
       className={gridClasses.actionsCell}
       onKeyDown={handleRootKeyDown}
