@@ -6,6 +6,7 @@ import {
   adapter,
   createSchedulerRenderer,
   EventBuilder,
+  utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
   StateWatcher,
@@ -1852,10 +1853,8 @@ describe('<EventDialogContent open />', () => {
       // A UTC all-day weekly series viewed from New York: resending the display-day
       // range on a rename used to shift the series and realign its BYDAY. The builder
       // is not mutated after setup, so the fixture is shared by the cross-timezone tests.
-      const weeklyBuilder = EventBuilder.new(adapter)
+      const weeklyBuilder = utcJuly4AllDayBuilder(adapter)
         .title('Weekly sync')
-        .withDataTimezone('UTC')
-        .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
         .recurrent('WEEKLY')
         .withDisplayTimezone('America/New_York');
       const weeklyEvent = weeklyBuilder.build();

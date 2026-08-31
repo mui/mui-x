@@ -1,7 +1,13 @@
 import * as React from 'react';
 import type { SinonSpy } from 'sinon';
 import { screen, fireEvent } from '@mui/internal-test-utils';
-import { adapter, createSchedulerRenderer, EventBuilder, StoreSpy } from 'test/utils/scheduler';
+import {
+  adapter,
+  createSchedulerRenderer,
+  EventBuilder,
+  StoreSpy,
+  utcJuly4AllDayBuilder,
+} from 'test/utils/scheduler';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
@@ -77,10 +83,8 @@ describe('EventContextMenu - recurring events (Premium)', () => {
   });
 
   it('should identify the deleted occurrence by its data-timezone start from another timezone', () => {
-    const weeklyEventBuilder = EventBuilder.new(adapter)
+    const weeklyEventBuilder = utcJuly4AllDayBuilder(adapter)
       .title('Weekly sync')
-      .withDataTimezone('UTC')
-      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
       .recurrent('WEEKLY')
       .withDisplayTimezone('America/New_York');
     const occurrence = weeklyEventBuilder.toOccurrence();

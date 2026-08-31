@@ -7,6 +7,7 @@ import {
   adapter,
   createSchedulerRenderer,
   EventBuilder,
+  utcJuly4AllDayBuilder,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
@@ -81,11 +82,9 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
   it('should exclude the occurrence of its own day when deleted from another timezone', async () => {
     const onEventsChange = vi.fn();
     // A UTC all-day series whose display bounds normalize to New York July 3rd → 4th.
-    const event = EventBuilder.new()
+    const event = utcJuly4AllDayBuilder()
       .id('event-1')
       .title('Weekly sync')
-      .withDataTimezone('UTC')
-      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
       .recurrent('WEEKLY')
       .build();
 

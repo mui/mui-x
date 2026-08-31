@@ -5,6 +5,7 @@ import {
   createMatchMedia,
   createSchedulerRenderer,
   EventBuilder,
+  utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
@@ -116,11 +117,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     }
 
     // The builder mutates in place, so each test builds its own instance.
-    const independenceDay = () =>
-      EventBuilder.new()
-        .title('Independence day')
-        .withDataTimezone('UTC')
-        .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true });
+    const independenceDay = () => utcJuly4AllDayBuilder().title('Independence day');
 
     it('should keep the dates of an all-day event untouched when only the title is edited', async () => {
       // New York is behind UTC: the dialog shows this event as July 3rd → 4th.

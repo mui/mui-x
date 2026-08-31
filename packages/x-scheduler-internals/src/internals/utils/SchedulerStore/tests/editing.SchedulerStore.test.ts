@@ -1,6 +1,7 @@
 import {
   adapter,
   EventBuilder,
+  utcJuly4AllDayBuilder,
   premiumStoreClasses,
   ResourceBuilder,
   storeClasses,
@@ -437,10 +438,8 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should keep the data-timezone identity on a rename-only scope change from another timezone', () => {
       // A UTC all-day weekly series whose display bounds normalize to the previous
       // New York day; the second occurrence is armed so 'this-and-following' splits.
-      const weeklyBuilder = EventBuilder.new()
+      const weeklyBuilder = utcJuly4AllDayBuilder()
         .id('weekly-tz')
-        .withDataTimezone('UTC')
-        .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
         .recurrent('WEEKLY')
         .withDisplayTimezone('America/New_York');
       const store = new storeClass.Value(
