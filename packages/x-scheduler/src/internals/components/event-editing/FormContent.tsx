@@ -380,14 +380,15 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       };
 
       const values = formStore.state.values;
+      // Read directly instead of subscribing: the placeholder changes on every
+      // creation keystroke and would re-render the whole dialog.
+      const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
+      const isCreation = rawPlaceholder?.type === 'creation';
       // Edits anchor all-day bounds to the event's own timezone; a creation has no
       // event timezone yet and stays on the display one.
-      const isCreation =
-        schedulerOccurrencePlaceholderSelectors.value(store.state)?.type === 'creation';
       const allDayTimezone = isCreation
         ? current.displayTimezone
-        : (schedulerEventSelectors.processedEvent(store.state, occurrence.id)?.modelInBuiltInFormat
-            .timezone ?? 'default');
+        : schedulerEventSelectors.dataTimezone(store.state, occurrence.id);
       const { start, end } = computeRange(
         current.adapter,
         values,
@@ -435,10 +436,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = current.recurrencePresets[values.recurrenceSelection];
       }
 
-      // Read directly instead of subscribing: the placeholder changes on every
-      // creation keystroke and would re-render the whole dialog.
-      const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
-      if (rawPlaceholder?.type === 'creation') {
+      if (isCreation) {
         store.createEvent({
           ...metaChanges,
           start,
