@@ -24,6 +24,10 @@ const getProjects = () => {
     const isBrowser = process.env.BROWSER === 'true';
     // We delete the env to prevent it from being used in the tests
     delete process.env.BROWSER;
+    // Each config file is bundled separately, so the shared config can no longer read the
+    // environment variable by the time it is loaded. This global is set before the project
+    // configs are resolved, which makes it the place where they can pick the mode up.
+    (globalThis as { MUI_BROWSER_TESTS?: boolean }).MUI_BROWSER_TESTS = isBrowser;
     if (isBrowser) {
       return 'browser';
     }

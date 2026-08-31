@@ -4,6 +4,9 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
 
+// Set by the root config before the project configs are resolved.
+const isBrowserRun = (globalThis as { MUI_BROWSER_TESTS?: boolean }).MUI_BROWSER_TESTS === true;
+
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 
@@ -117,6 +120,15 @@ export default defineConfig({
     },
     // Disable isolation to speed up the tests.
     isolate: false,
+    // Every project gets its own workers, so the default lets a full run open a browser page
+    // per core in each of the ~20 browser projects at once. The pages then starve each other,
+    // and the Playwright commands that wait for the renderer to acknowledge an input event
+    // (the pointer reset in the setup hook) block for tens of seconds, which times the hook
+    // out. Capping the workers keeps the full browser run both green and faster. The jsdom
+    // projects are much cheaper per worker, so they keep the default outside of the CI.
+    ...(isBrowserRun && {
+      maxWorkers: 2,
+    }),
     // Performance improvements for the tests.
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
