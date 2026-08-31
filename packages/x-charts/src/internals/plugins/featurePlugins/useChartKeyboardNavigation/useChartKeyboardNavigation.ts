@@ -180,10 +180,18 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
    * outside its circle, reads as the chart grabbing clicks that were not meant for it.
    */
   const resolveItemAtPointer = useEventCallback((event: MouseEvent | PointerEvent) => {
-    // Series that report a complete item need no further wiring.
+    const seriesConfig = selectorChartSeriesConfig(store.state);
     const hoveredItem = store.state.interaction?.hoveredItem;
-    if (hoveredItem != null && isCompleteFocusIdentifier(hoveredItem)) {
-      return hoveredItem as FocusedItemIdentifier<ChartSeriesType>;
+    // Cleaned before the check, because what a series stores is not always an identifier: the
+    // scatter reports its whole data point, whose optional `id` would read as an incomplete one.
+    const cleanedHoveredItem =
+      hoveredItem == null
+        ? null
+        : (cleanIdentifier(seriesConfig, hoveredItem) as FocusedItemIdentifier<ChartSeriesType>);
+
+    // Series that report a complete item need no further wiring.
+    if (cleanedHoveredItem != null && isCompleteFocusIdentifier(cleanedHoveredItem)) {
+      return cleanedHoveredItem;
     }
 
     const element = chartsLayerContainerRef.current;
@@ -196,9 +204,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     const processedSeries = selectorChartSeriesProcessed(store.state);
     // An incomplete hovered item still names the series under the pointer, which is a better
     // target than the focused one: a click on a series should stay on it.
-    const focusedItem =
-      (hoveredItem as FocusedItemIdentifier<ChartSeriesType> | null) ??
-      store.state.keyboardNavigation.item;
+    const focusedItem = cleanedHoveredItem ?? store.state.keyboardNavigation.item;
 
     const item = getItemAtAxisPosition({
       point,
