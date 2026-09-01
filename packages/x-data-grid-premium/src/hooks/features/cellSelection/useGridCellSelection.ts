@@ -283,6 +283,10 @@ export const useGridCellSelection = (
         return false;
       }
 
+      if (field === GRID_REORDER_COL_DEF.field) {
+        return false;
+      }
+
       const column = apiRef.current.getColumn(field);
       return column?.type !== GRID_ACTIONS_COLUMN_TYPE;
     },

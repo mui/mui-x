@@ -187,6 +187,20 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
     });
 
+    it('should not select the row reordering cells', async () => {
+      const { user } = render(<TestDataGridSelection rowReordering />);
+      const cell = getCell(0, 1);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      const cellSelectionModel = apiRef.current!.getCellSelectionModel();
+      expect(Object.keys(cellSelectionModel)).to.have.length(4);
+      expect(cellSelectionModel['0']).to.deep.equal({
+        id: true,
+        currencyPair: true,
+        price1M: true,
+      });
+    });
+
     it('should reset the selection when a cell is clicked afterwards', async () => {
       const { user } = render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
