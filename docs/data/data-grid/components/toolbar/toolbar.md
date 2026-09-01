@@ -50,7 +50,8 @@ import { ToolbarRoot } from '@mui/x-data-grid';
 ```
 
 It can be rendered anywhere, including outside of a Data Grid, and picks up the theme values the Data Grid uses.
-It doesn't provide the toolbar context, so [Toolbar Button](#toolbar-button) and the other toolbar subcomponents can't be used inside it.
+It only applies the styles.
+The toolbar subcomponents such as [Toolbar Button](#toolbar-button) render Data Grid slots and register with the toolbar context, so they need a [Toolbar](#toolbar) inside a Data Grid.
 
 {{"demo": "GridToolbarStyleReuse.js", "bg": "inline", "defaultCodeOpen": false}}
 
