@@ -267,6 +267,22 @@ describe('<RichTreeView />', () => {
       });
     });
 
+    it('should pass the default `itemsCount` to the `loading` slot when `slotProps.loading` does not set it', () => {
+      function CustomLoading(props: { itemsCount?: number }) {
+        return (
+          <React.Fragment>
+            {Array.from({ length: props.itemsCount ?? 0 }, (_, index) => (
+              <TreeItemLoader key={index} />
+            ))}
+          </React.Fragment>
+        );
+      }
+
+      render(<RichTreeView items={[]} loading slots={{ loading: CustomLoading }} />);
+
+      expect(screen.getAllByRole('treeitem')).to.have.length(5);
+    });
+
     it('should provide the layout information to `TreeItemLoader` rendered in a custom `loading` slot', () => {
       function CustomLoading(props: { itemsCount?: number }) {
         return (

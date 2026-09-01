@@ -228,7 +228,7 @@ export function RichTreeViewLoading<TStore extends TreeViewAnyStore, TOwnerState
     <Root {...rootProps}>
       <RichTreeViewLoadingContext store={store}>
         {Loading ? (
-          <Loading {...loadingProps} />
+          <Loading {...loadingProps} itemsCount={itemsCount} />
         ) : (
           <RichTreeViewItemLoaders
             classes={classes}
