@@ -2,14 +2,13 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
-import { spy } from 'sinon';
-import type { SinonSpy } from 'sinon';
+import type { MockInstance } from 'vitest';
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect, afterEach } from 'vitest';
+import { vi, describe, it, expect, afterEach } from 'vitest';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 import type { GridFormulaPrivateApi } from '../hooks/features/formula/gridFormulaInterfaces';
 
@@ -105,22 +104,22 @@ describe('<DataGridPremium /> - Formulas feature integration', () => {
   });
 
   describe('clipboard', () => {
-    let writeText: SinonSpy | undefined;
+    let writeText: MockInstance | undefined;
 
     afterEach(function afterEachHook() {
-      writeText?.restore();
+      writeText?.mockRestore();
       writeText = undefined;
     });
 
     it('should copy the evaluated value, not the formula source', async () => {
       const { user } = await render(<Test cellSelection disableRowSelectionOnClick />);
-      writeText = spy(navigator.clipboard, 'writeText');
+      writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 3);
       await user.click(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
 
-      expect(writeText.lastCall.args[0]).to.equal('6');
+      expect(writeText.mock.lastCall?.[0]).to.equal('6');
     });
 
     it('should paste `=` strings as formulas', async () => {
