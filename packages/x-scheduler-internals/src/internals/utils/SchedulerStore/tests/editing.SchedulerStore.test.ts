@@ -8,6 +8,8 @@ import {
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { vi, describe, it, expect } from 'vitest';
 import { schedulerOtherSelectors } from '../../../../scheduler-selectors';
 import { processDate } from '../../../../process-date';
@@ -361,6 +363,59 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.key).to.not.equal(armedKey);
       expect(occurrence.displayTimezone.start.value).toEqualDateTime(resizedStart);
       expect(occurrence.displayTimezone.end.value).toEqualDateTime(resizedEnd);
+    });
+
+    it('should keep a cross-timezone deleted occurrence excluded after the events round-trip through strings', () => {
+      // A daily 21:00 New York series stored as instant strings: the stored exDate
+      // must re-parse onto the same data-timezone day it excludes.
+      const nyEvent = EventBuilder.new()
+        .id('ny-daily')
+        .withDataTimezone('America/New_York')
+        .singleDay('2025-02-02T02:00:00Z')
+        .rrule({ freq: 'DAILY', interval: 1 })
+        .build();
+      let latestEvents: SchedulerEvent[] = [nyEvent];
+      const store = new storeClass.Value(
+        {
+          ...DEFAULT_PARAMS,
+          events: latestEvents,
+          onEventsChange: (events: SchedulerEvent[]) => {
+            latestEvents = events;
+          },
+        },
+        adapter,
+      );
+
+      // Delete the March 1st (New York) occurrence — March 2nd 02:00Z.
+      store.deleteRecurringEvent({
+        occurrenceStart: adapter.date('2025-03-02T02:00:00Z', 'default'),
+        eventId: 'ny-daily',
+        onSubmit: () => {},
+      });
+      store.selectRecurringEventScope('only-this');
+
+      // Reprocess the serialized model the way a fresh mount would.
+      const reprocessed = processEvent(
+        latestEvents[0],
+        'default',
+        adapter,
+        schedulerRecurringEventsPlugin,
+      );
+      const visibleStart = adapter.date('2025-02-27T00:00:00Z', 'default');
+      const days = schedulerRecurringEventsPlugin
+        .getOccurrencesForVisibleDays(
+          reprocessed,
+          visibleStart,
+          adapter.addDays(visibleStart, 4),
+          adapter,
+          'default',
+        )
+        .map((occurrence) =>
+          adapter.formatByString(occurrence.dataTimezone.start.value, 'yyyy-MM-dd'),
+        );
+
+      expect(days).to.include('2025-02-28');
+      expect(days).to.not.include('2025-03-01');
     });
   });
 });
