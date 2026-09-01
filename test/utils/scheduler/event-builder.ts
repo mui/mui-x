@@ -274,8 +274,10 @@ export class EventBuilder {
 
     const occurrenceModel: SchedulerEvent = {
       ...this.event,
-      start: rawStart.toISOString(),
-      end: rawEnd.toISOString(),
+      // Serialize as UTC instants: a data-timezone-labeled date stringifies with an
+      // offset suffix, which `resolveEventDate` would re-read as wall time.
+      start: new Date(this.adapter.getTime(rawStart)).toISOString(),
+      end: new Date(this.adapter.getTime(rawEnd)).toISOString(),
     };
 
     const processed = processEvent(
