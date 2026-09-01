@@ -11,7 +11,8 @@ const nativeRequestAnimationFrame = capturedRequestAnimationFrame?.bind(globalTh
  * Waits two native frames inside act, so pending ResizeObserver deliveries land as
  * acted updates instead of between test steps. Call it after rendering a scheduler
  * surface (prefer `renderSettled`) or after a scroll that mounts observed elements.
- * No-op in jsdom, which has no ResizeObserver.
+ * jsdom has no ResizeObserver and so no frames to absorb; there it flushes pending
+ * microtasks inside act instead.
  */
 export async function absorbObserverFrames() {
   if (typeof ResizeObserver === 'undefined' || nativeRequestAnimationFrame === null) {

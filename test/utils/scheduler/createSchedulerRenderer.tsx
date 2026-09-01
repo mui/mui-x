@@ -17,6 +17,12 @@ export function createSchedulerRenderer({
   });
 
   return {
+    /**
+     * Renders synchronously, leaving the post-render ResizeObserver deliveries
+     * un-acted. Use it only where the render can't be awaited (conformance,
+     * `toErrorDev`) or where nothing observed mounts. Anything mounting a scheduler
+     * surface must use `renderSettled`, or it races those deliveries in browser mode.
+     */
     render(node: React.ReactElement<any>, options?: RenderOptions) {
       return clientRender(node, options);
     },
