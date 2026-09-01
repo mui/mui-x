@@ -53,6 +53,25 @@ describe('<RichTreeView />', () => {
       expect(itemLoaders).to.have.length(3);
     });
 
+    it('should resolve `slotProps.loading` with a `null` itemId while the whole tree is loading', () => {
+      const itemIds: (string | null)[] = [];
+      render(
+        <RichTreeView
+          items={[]}
+          loading
+          slotProps={{
+            loading: (ownerState) => {
+              itemIds.push(ownerState.itemId);
+              return { itemsCount: 2 };
+            },
+          }}
+        />,
+      );
+
+      expect(itemIds).to.include(null);
+      expect(screen.getAllByRole('treeitem')).to.have.length(2);
+    });
+
     it('should render tree items when loading changes to false', () => {
       const { setProps } = render(<RichTreeView items={ITEMS} loading />);
 

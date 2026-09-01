@@ -7,7 +7,10 @@ import type {
   RichTreeViewItemsSlotProps,
   RichTreeViewItemsSlots,
 } from '../internals/components/RichTreeViewItems';
-import type { RichTreeViewLoadingSlotOwnProps } from '../internals/components/RichTreeViewLoading';
+import type {
+  RichTreeViewLoadingSlotOwnProps,
+  RichTreeViewLoadingSlotOwnerState,
+} from '../internals/components/RichTreeViewLoading';
 import type { TreeItemLoaderOwnerState } from '../TreeItemLoader';
 import type {
   TreeViewSlotProps,
@@ -46,7 +49,7 @@ export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | 
   loading?: SlotComponentProps<
     'div',
     RichTreeViewLoadingSlotOwnProps,
-    RichTreeViewProps<R, Multiple>
+    RichTreeViewLoadingSlotOwnerState
   >;
   itemLoader?: SlotComponentProps<'li', {}, TreeItemLoaderOwnerState>;
 }

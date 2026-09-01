@@ -12,6 +12,7 @@ import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
 import { itemsSelectors } from '../plugins/items';
 import { selectionSelectors } from '../plugins/selection';
 import type { TreeViewAnyStore } from '../models';
+import type { TreeViewItemId } from '../../models';
 import type { TreeViewStoreInContext } from '../TreeViewProvider';
 
 export const DEFAULT_LOADING_ITEMS_COUNT = 5;
@@ -66,9 +67,24 @@ export interface RichTreeViewLoadingSlotOwnProps {
   message?: React.ReactNode;
 }
 
+/**
+ * The owner state of the `loading` slot.
+ */
+export interface RichTreeViewLoadingSlotOwnerState {
+  /**
+   * The id of the item whose children are loading.
+   * `null` while the whole tree is loading.
+   */
+  itemId: TreeViewItemId | null;
+}
+
 export interface RichTreeViewLoadingSlotProps<TOwnerState extends object> {
   root?: SlotComponentProps<'ul', {}, TOwnerState>;
-  loading?: SlotComponentProps<'div', RichTreeViewLoadingSlotOwnProps, TOwnerState>;
+  loading?: SlotComponentProps<
+    'div',
+    RichTreeViewLoadingSlotOwnProps,
+    RichTreeViewLoadingSlotOwnerState
+  >;
   itemLoader?: SlotComponentProps<'li', {}, TreeItemLoaderOwnerState>;
 }
 
@@ -190,7 +206,7 @@ export function RichTreeViewLoading<TStore extends TreeViewAnyStore, TOwnerState
   const loadingProps = useSlotProps({
     elementType: Loading ?? 'div',
     externalSlotProps: slotProps?.loading,
-    ownerState,
+    ownerState: { itemId: null } satisfies RichTreeViewLoadingSlotOwnerState,
   }) as RichTreeViewLoadingSlotOwnProps & Record<string, any>;
   const itemsCount = getLoadingItemsCount(loadingProps.itemsCount);
   const rootProps = useSlotProps({

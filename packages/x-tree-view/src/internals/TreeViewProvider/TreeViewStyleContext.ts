@@ -2,7 +2,10 @@
 import type { SlotComponentProps } from '@mui/utils/types';
 import * as React from 'react';
 import type { TreeItemLoaderOwnerState } from '../../TreeItemLoader';
-import type { RichTreeViewLoadingSlotOwnProps } from '../components/RichTreeViewLoading';
+import type {
+  RichTreeViewLoadingSlotOwnProps,
+  RichTreeViewLoadingSlotOwnerState,
+} from '../components/RichTreeViewLoading';
 
 export interface TreeViewClasses {
   /** Styles applied to the root element. */
@@ -73,11 +76,13 @@ export interface TreeViewStyleContextSlots extends TreeViewSlots {
  * Slot props stored in the style context.
  * The loading slot props only exist on the components with a loading state,
  * so they are not part of the public `TreeViewSlotProps` interface.
- * The `loading` owner state is typed as `any`: the tree components type it
- * against their own props, which are not known here.
  */
 export interface TreeViewStyleContextSlotProps extends TreeViewSlotProps {
-  loading?: SlotComponentProps<'div', RichTreeViewLoadingSlotOwnProps, any>;
+  loading?: SlotComponentProps<
+    'div',
+    RichTreeViewLoadingSlotOwnProps,
+    RichTreeViewLoadingSlotOwnerState
+  >;
   itemLoader?: SlotComponentProps<'li', {}, TreeItemLoaderOwnerState>;
 }
 

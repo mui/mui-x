@@ -198,6 +198,44 @@ describe('<RichTreeViewPro />', () => {
       expect(screen.queryByRole('tree')).to.equal(null);
     });
 
+    it('should resolve `slotProps.loading` with the id of the item whose children are loading', async () => {
+      const itemIds: (string | null)[] = [];
+      const getTreeItems = (parentId?: string | null) => {
+        if (parentId == null) {
+          return Promise.resolve([{ id: '1', label: 'Item 1', childrenCount: 3 }]);
+        }
+        // The children fetch never resolves, the item stays in its loading state.
+        return new Promise<ItemType[]>(() => {});
+      };
+
+      render(
+        <RichTreeViewPro
+          items={[]}
+          disableVirtualization
+          domStructure="nested"
+          defaultExpandedItems={['1']}
+          slotProps={{
+            loading: (ownerState) => {
+              itemIds.push(ownerState.itemId);
+              return {};
+            },
+          }}
+          dataSource={{
+            getChildrenCount: (item) => item?.childrenCount ?? 0,
+            getTreeItems,
+          }}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('treeitem', { name: 'Item 1' })).not.to.equal(null);
+      });
+
+      await waitFor(() => {
+        expect(itemIds).to.include('1');
+      });
+    });
+
     it('should render the `loading` slot for the children of a lazily loading item', async () => {
       let resolveChildrenFetch!: (items: ItemType[]) => void;
       const getTreeItems = (parentId?: string | null) => {
