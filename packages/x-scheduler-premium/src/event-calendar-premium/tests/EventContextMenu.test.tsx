@@ -89,7 +89,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
       .withDisplayTimezone('America/New_York');
     const occurrence = weeklyEventBuilder.toOccurrence();
 
-    let deleteRecurringEventSpy: SinonSpy | undefined;
+    let deleteRecurringEventSpy: MockInstance | undefined;
 
     render(
       <EventCalendarProvider
@@ -121,8 +121,8 @@ describe('EventContextMenu - recurring events (Premium)', () => {
 
     // The display bounds of this occurrence normalize to New York July 3rd; the
     // exception must land on the event's own July 4th.
-    expect(deleteRecurringEventSpy?.calledOnce).to.equal(true);
-    expect(adapter.getTime(deleteRecurringEventSpy!.lastCall.firstArg.occurrenceStart)).to.equal(
+    expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
+    expect(adapter.getTime(deleteRecurringEventSpy!.mock.lastCall![0].occurrenceStart)).to.equal(
       adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
     );
   });

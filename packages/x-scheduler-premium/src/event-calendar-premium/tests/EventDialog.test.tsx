@@ -1982,7 +1982,7 @@ describe('<EventDialogContent open />', () => {
 
       it('should apply a rename to the whole series without resending or moving its dates', async () => {
         let updateRecurringEventSpy;
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const { user } = render(
           <EventCalendarProvider
             events={[weeklyEvent]}
@@ -2014,8 +2014,8 @@ describe('<EventDialogContent open />', () => {
 
         // An untouched range must not enter the pattern-based recurring update:
         // a start re-read in the display timezone could shift the series' days.
-        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
-        const payload = updateRecurringEventSpy.lastCall.firstArg;
+        expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
+        const payload = updateRecurringEventSpy.mock.lastCall[0];
         expect(payload.changes).to.not.have.property('start');
         expect(payload.changes).to.not.have.property('end');
 
@@ -2023,7 +2023,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const updated = onEventsChange.lastCall.firstArg.find(
+        const updated = onEventsChange.mock.lastCall?.[0].find(
           (event: SchedulerEvent) => event.id === weeklyEvent.id,
         )!;
         expect(updated.title).to.equal('Weekly sync renamed');
@@ -2033,7 +2033,7 @@ describe('<EventDialogContent open />', () => {
       });
 
       it("should detach the renamed occurrence on its own day with scope 'only this' from another timezone", async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const { user } = render(
           <EventCalendarProvider
             events={[weeklyEvent]}
@@ -2061,7 +2061,7 @@ describe('<EventDialogContent open />', () => {
         // The occurrence is identified by its data-timezone start: the exception and
         // the detached event must land on the event's own July 4th, not on the day
         // its display bounds normalize to in New York.
-        const newEvents: SchedulerEvent[] = onEventsChange.lastCall.firstArg;
+        const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall?.[0];
         const series = newEvents.find((event) => event.id === weeklyEvent.id)!;
         expect(series.exDates).to.have.length(1);
         expect(
@@ -2077,7 +2077,7 @@ describe('<EventDialogContent open />', () => {
       });
 
       it("should move the whole series to the edited day as displayed with scope 'all'", async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
 
         const { user } = render(
           <EventCalendarProvider
@@ -2112,7 +2112,7 @@ describe('<EventDialogContent open />', () => {
 
         // The picked days mean the days the user was looking at: the series start
         // lands on New York July 4th.
-        const updated = onEventsChange.lastCall.firstArg.find(
+        const updated = onEventsChange.mock.lastCall?.[0].find(
           (event: SchedulerEvent) => event.id === weeklyEvent.id,
         )!;
         const updatedStartInNewYork = adapter.setTimezone(
@@ -2130,7 +2130,7 @@ describe('<EventDialogContent open />', () => {
       });
 
       it('should anchor the BYDAY to the data-timezone day when moved as displayed from a timezone ahead of UTC', async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         // Tokyo is ahead of UTC: the displayed day maps to the previous UTC day, so a
         // BYDAY computed from the display day would hop weekdays (New York, being
         // behind, shares the calendar day and cannot catch that).
@@ -2171,7 +2171,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const updated = onEventsChange.lastCall.firstArg.find(
+        const updated = onEventsChange.mock.lastCall?.[0].find(
           (event: SchedulerEvent) => event.id === tokyoEvent.id,
         )!;
         // The picked Tokyo July 5th is still UTC July 4th — a Friday: the day did not
@@ -2185,7 +2185,7 @@ describe('<EventDialogContent open />', () => {
       });
 
       it("should keep the untouched start byte-identical when only the end date is edited with scope 'all'", async () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
 
         const { user } = render(
           <EventCalendarProvider
@@ -2215,7 +2215,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const updated = onEventsChange.lastCall.firstArg.find(
+        const updated = onEventsChange.mock.lastCall?.[0].find(
           (event: SchedulerEvent) => event.id === weeklyEvent.id,
         )!;
         // The untouched start must not enter the pattern math: no DTSTART move,
@@ -2263,8 +2263,8 @@ describe('<EventDialogContent open />', () => {
 
         // The occurrence is identified by its data-timezone start, not by the day its
         // display bounds normalize to in New York.
-        expect(deleteRecurringEventSpy?.calledOnce).to.equal(true);
-        const payload = deleteRecurringEventSpy.lastCall.firstArg;
+        expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
+        const payload = deleteRecurringEventSpy.mock.lastCall[0];
         expect(adapter.getTime(payload.occurrenceStart)).to.equal(
           adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
         );
@@ -2314,8 +2314,8 @@ describe('<EventDialogContent open />', () => {
 
         // November 7th midnight in New York is 05:00Z (EST), not the display day's
         // 00:00Z nor the pre-transition offset's 04:00Z.
-        expect(deleteRecurringEventSpy?.calledOnce).to.equal(true);
-        const payload = deleteRecurringEventSpy!.lastCall.firstArg;
+        expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
+        const payload = deleteRecurringEventSpy!.mock.lastCall![0];
         expect(adapter.getTime(payload.occurrenceStart)).to.equal(
           adapter.getTime(adapter.date('2025-11-07T00:00:00', 'America/New_York')),
         );
@@ -2329,7 +2329,7 @@ describe('<EventDialogContent open />', () => {
           .recurrent('WEEKLY')
           .withDisplayTimezone('UTC');
         const dstEvent = dstBuilder.build();
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
 
         const { user } = render(
           <EventCalendarProvider
@@ -2358,7 +2358,7 @@ describe('<EventDialogContent open />', () => {
         await user.click(screen.getByText(/All events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        const updated = onEventsChange.lastCall.firstArg.find(
+        const updated = onEventsChange.mock.lastCall?.[0].find(
           (event: SchedulerEvent) => event.id === dstEvent.id,
         )!;
         expect(updated.title).to.equal('Renamed weekly');
