@@ -73,6 +73,26 @@ function getSelectedOrFocusedCells(
   return selectedCells;
 }
 
+// Answers "is more than one cell selected" without the cost of
+// `getSelectedCellsAsArray`, which allocates one object per selected cell
+function hasMultipleSelectedCells(apiRef: RefObject<GridPrivateApiPremium>): boolean {
+  const cellSelectionModel = apiRef.current.getCellSelectionModel();
+  const visibleRows = getVisibleRows(apiRef);
+  let selectedCellCount = 0;
+  for (let i = 0; i < visibleRows.rows.length && selectedCellCount < 2; i += 1) {
+    const fieldsMap = cellSelectionModel[visibleRows.rows[i].id];
+    if (fieldsMap !== undefined) {
+      const fields = Object.keys(fieldsMap);
+      for (let j = 0; j < fields.length && selectedCellCount < 2; j += 1) {
+        if (fieldsMap[fields[j]]) {
+          selectedCellCount += 1;
+        }
+      }
+    }
+  }
+  return selectedCellCount >= 2;
+}
+
 interface FillSourceState {
   cells: { id: GridRowId; field: string }[];
   fields: string[];
@@ -1689,15 +1709,16 @@ export const useGridCellSelection = (
 
   const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(
     (value) => {
-      if (apiRef.current.getSelectedCellsAsArray().length <= 1) {
+      if (!hasMultipleSelectedCells(apiRef)) {
         return value;
       }
-      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
+
       const cellSelectionModel = apiRef.current.getCellSelectionModel();
+      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
       const sortedSelectedRowIds = sortedRowIds.filter(
         (id) => cellSelectionModel[id] !== undefined,
       );
-      const copyData = sortedSelectedRowIds.reduce<string>((acc, rowId) => {
+      const rowStrings = sortedSelectedRowIds.map((rowId) => {
         const fieldsMap = cellSelectionModel[rowId];
         const rowValues = Object.keys(fieldsMap).map((field) => {
           let cellData: string;
@@ -1715,11 +1736,10 @@ export const useGridCellSelection = (
             cellData = '';
           }
           return cellData;
-        }, '');
-        const rowString = rowValues.join(clipboardCopyCellDelimiter);
-        return acc === '' ? rowString : [acc, rowString].join('\r\n');
-      }, '');
-      return copyData;
+        });
+        return rowValues.join(clipboardCopyCellDelimiter);
+      });
+      return rowStrings.join('\r\n');
     },
     [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
   );
