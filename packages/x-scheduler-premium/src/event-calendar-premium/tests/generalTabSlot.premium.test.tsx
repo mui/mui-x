@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { fireEvent, screen } from '@mui/internal-test-utils';
-import {
-  absorbObserverFrames,
-  createSchedulerRenderer,
-  EventBuilder,
-  ResourceBuilder,
-} from 'test/utils/scheduler';
+import { createSchedulerRenderer, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type {
   EventDialogGeneralTabPropsOverrides,
   SchedulerSlotProps,
@@ -52,7 +47,7 @@ const slotProps: SchedulerSlotProps = {
  * down to it. The compact views open the drawer, the others the dialog; both render the same form.
  */
 describe('eventDialogGeneralTab slot - premium surfaces', () => {
-  const { render } = createSchedulerRenderer({ clockConfig: visibleDate });
+  const { renderSettled } = createSchedulerRenderer({ clockConfig: visibleDate });
 
   const surfaces = [
     ['EventCalendarPremium', EventCalendarPremium, false],
@@ -68,7 +63,7 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
 
   surfaces.forEach(([name, Component, isCompact]) => {
     it(`should forward the eventDialogGeneralTab slot and its slot props from <${name} />`, async () => {
-      render(
+      await renderSettled(
         <Component
           events={[event]}
           resources={[engineering]}
@@ -78,8 +73,6 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
           slotProps={slotProps}
         />,
       );
-      // Absorb the post-render ResizeObserver deliveries so they land as acted updates.
-      await absorbObserverFrames();
 
       fireEvent.click(screen.getByRole('button', { name: /Morning Meeting/i }));
       if (isCompact) {
@@ -92,7 +85,7 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
   });
 
   it('should keep the recurrence tab working when the general tab is replaced by the slot', async () => {
-    render(
+    await renderSettled(
       <EventCalendarPremium
         events={[event]}
         resources={[engineering]}
@@ -101,7 +94,6 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
         slots={slots}
       />,
     );
-    await absorbObserverFrames();
 
     fireEvent.click(screen.getByRole('button', { name: /Morning Meeting/i }));
     const generalPanel = screen.getByRole('tabpanel', { name: /general/i });

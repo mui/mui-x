@@ -9,7 +9,6 @@ import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/us
 import { ErrorContainer, SharedComponentsStyledContext } from '@mui/x-scheduler/internals';
 import {
   adapter,
-  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -641,7 +640,7 @@ describe('<EventTimelinePremium />', () => {
         persistEvents: async () => ({ success: true }),
       };
 
-      render(
+      await renderSettled(
         <EventTimelinePremium
           resources={baseResources}
           dataSource={dataSource}
@@ -649,7 +648,6 @@ describe('<EventTimelinePremium />', () => {
           defaultPreset="dayAndMonth"
         />,
       );
-      await absorbObserverFrames();
 
       await waitFor(() => expect(dataSource.getEvents.mock.calls.length).to.equal(1));
     });
@@ -677,8 +675,7 @@ describe('<EventTimelinePremium />', () => {
         );
       }
 
-      const { user } = render(<Test />);
-      await absorbObserverFrames();
+      const { user } = await renderSettled(<Test />);
       await waitFor(() => {
         expect(screen.getByText(event1.title)).not.to.equal(null);
         expect(
@@ -704,7 +701,7 @@ describe('<EventTimelinePremium />', () => {
         persistEvents: async () => ({ success: true }),
       };
 
-      render(
+      await renderSettled(
         <EventTimelinePremium
           resources={baseResources}
           dataSource={dataSource}
@@ -712,7 +709,6 @@ describe('<EventTimelinePremium />', () => {
           defaultPreset="dayAndMonth"
         />,
       );
-      await absorbObserverFrames();
 
       await waitFor(() => {
         expect(
@@ -764,7 +760,7 @@ describe('<EventTimelinePremium />', () => {
         persistEvents: async () => ({ success: true }),
       };
 
-      render(
+      await renderSettled(
         <EventTimelinePremium
           resources={baseResources}
           dataSource={dataSource}
@@ -772,7 +768,6 @@ describe('<EventTimelinePremium />', () => {
           defaultPreset="dayAndMonth"
         />,
       );
-      await absorbObserverFrames();
 
       await waitFor(() => {
         expect(screen.getByText('Network error')).not.to.equal(null);
@@ -836,8 +831,7 @@ describe('<EventTimelinePremium />', () => {
         );
       }
 
-      const { user } = render(<Test />);
-      await absorbObserverFrames();
+      const { user } = await renderSettled(<Test />);
 
       await waitFor(() => {
         expect(screen.getByText('Transient error')).not.to.equal(null);
@@ -890,8 +884,7 @@ describe('<EventTimelinePremium />', () => {
         );
       }
 
-      const { user } = render(<Test />);
-      await absorbObserverFrames();
+      const { user } = await renderSettled(<Test />);
 
       await waitFor(() => {
         expect(screen.getByText(event1.title)).not.to.equal(null);
@@ -919,7 +912,7 @@ describe('<EventTimelinePremium />', () => {
         persistEvents: async () => ({ success: true }),
       };
 
-      render(
+      await renderSettled(
         <EventTimelinePremium
           resources={baseResources}
           dataSource={dataSource}
@@ -927,7 +920,6 @@ describe('<EventTimelinePremium />', () => {
           defaultPreset="dayAndMonth"
         />,
       );
-      await absorbObserverFrames();
 
       await waitFor(() => {
         expect(screen.getByText('500 Internal Server Error')).not.to.equal(null);

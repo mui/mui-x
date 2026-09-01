@@ -2,7 +2,6 @@ import * as React from 'react';
 import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
-  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -18,7 +17,7 @@ import { describe, it, expect } from 'vitest';
 // `clientWidth`/`scrollLeft` and the virtualizer only mounts a subset of events
 // when the scroller has real dimensions). jsdom doesn't lay out, so skip there.
 describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
-  const { render, renderSettled } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -321,7 +320,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
         .resources([resourceA, resourceB])
         .build();
 
-      const { user } = render(
+      const { user } = await renderSettled(
         <div style={{ width: 1200, height: 600 }}>
           <EventTimelinePremium
             // B listed before A so its (duplicate-keyed) copy of `shared` sits
@@ -335,7 +334,6 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
           />
         </div>,
       );
-      await absorbObserverFrames();
 
       await waitFor(() => {
         expect(within(getEventRow(resourceA.id)).queryByText('Solo A')).not.to.equal(null);

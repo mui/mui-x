@@ -5,7 +5,6 @@ import {
   eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
-  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -27,7 +26,7 @@ function getTitleColumnWidth(): number {
 // title cells; jsdom doesn't implement layout, so these assertions only work in
 // the browser project.
 describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
-  const { render, renderSettled } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -170,7 +169,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
         .span('2025-07-06T14:00:00', '2025-07-06T20:00:00')
         .build();
 
-      render(
+      await renderSettled(
         <div style={{ width: 1200, height: 300 }}>
           <EventTimelinePremium
             resources={resources}
@@ -182,7 +181,6 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
           />
         </div>,
       );
-      await absorbObserverFrames();
 
       await waitFor(() => {
         expect(getTitleColumnWidth()).to.be.greaterThan(0);
@@ -229,7 +227,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
       // should overflow.
       const only = ResourceBuilder.new().title('A').build();
 
-      render(
+      await renderSettled(
         <div style={{ width: 8000, height: 600 }}>
           <EventTimelinePremium
             resources={[only]}
@@ -240,7 +238,6 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
           />
         </div>,
       );
-      await absorbObserverFrames();
 
       // First wait for the grid to mount and dimensions to settle.
       await waitFor(() => {
@@ -257,7 +254,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
         ResourceBuilder.new().title(`Resource ${i}`).build(),
       );
 
-      render(
+      await renderSettled(
         <div style={{ width: 600, height: 400 }}>
           <EventTimelinePremium
             resources={many}
@@ -268,7 +265,6 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
           />
         </div>,
       );
-      await absorbObserverFrames();
 
       await waitFor(() => {
         expect(getScrollbars().length).to.be.greaterThanOrEqual(2);

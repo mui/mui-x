@@ -1,6 +1,7 @@
 import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
+  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
@@ -79,10 +80,10 @@ function simulateTerminalDrag(sourceTitle: string, targetElement: Element) {
 }
 
 describe('<EventTimelinePremium /> dependency terminals', () => {
-  const { render } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
-  const { renderTimeline } = createDependencyTimelineRenderer(render);
+  const { renderTimeline } = createDependencyTimelineRenderer(renderSettled);
 
   afterEach(() => {
     // A failed assertion mid-gesture must not leak pragmatic's global drag state or
@@ -451,6 +452,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         act(() => {
           grid.scrollTop = grid.scrollHeight;
         });
+        await absorbObserverFrames();
         await waitFor(() => {
           expect(screen.queryByText('Event first row')).to.equal(null);
         });
@@ -1554,7 +1556,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       .resource(resource1)
       .build();
 
-    function renderTwoTimelines({
+    async function renderTwoTimelines({
       dependenciesA = [],
       dependenciesB = [],
       onDependenciesChangeB,
@@ -1565,7 +1567,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     } = {}) {
       let storeA!: any;
       let storeB!: any;
-      render(
+      await renderSettled(
         <div className="test-timeline-host" style={{ width: 1200, height: 1200 }}>
           <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
           <TestTimeline
@@ -1590,8 +1592,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       return { storeA, storeB };
     }
 
-    it('should move the selection when clicking an arrow of another timeline', () => {
-      const { storeA, storeB } = renderTwoTimelines({
+    it('should move the selection when clicking an arrow of another timeline', async () => {
+      const { storeA, storeB } = await renderTwoTimelines({
         dependenciesA: [buildDependency('dep-a1', 'event-a', 'event-b')],
         dependenciesB: [buildDependency('dep-b1', 'event-c', 'event-d')],
       });
@@ -1611,7 +1613,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
     it('should not react to a creation gesture started in another timeline', async () => {
       const handleDependenciesChangeB = vi.fn();
-      const { storeA, storeB } = renderTwoTimelines({
+      const { storeA, storeB } = await renderTwoTimelines({
         onDependenciesChangeB: handleDependenciesChangeB,
       });
 
@@ -1638,7 +1640,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
     it('should not accept a terminal dropped from another timeline', async () => {
       const handleDependenciesChangeB = vi.fn();
-      const { storeA, storeB } = renderTwoTimelines({
+      const { storeA, storeB } = await renderTwoTimelines({
         onDependenciesChangeB: handleDependenciesChangeB,
       });
 

@@ -2,7 +2,6 @@ import { screen, within, act } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { StandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
 import {
-  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -47,7 +46,7 @@ function mockAllEventRowBounds(width = 6720) {
 }
 
 describe('EventTimelinePremium - Drag and Drop', () => {
-  const { render, renderSettled } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -60,7 +59,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -70,7 +69,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         onEventsChange={handleEventsChange}
       />,
     );
-    await absorbObserverFrames();
 
     mockAllEventRowBounds();
 
@@ -102,7 +100,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={[engineering, design, marketing]}
         events={[event]}
@@ -112,7 +110,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         onEventsChange={handleEventsChange}
       />,
     );
-    await absorbObserverFrames();
 
     mockAllEventRowBounds();
 
@@ -146,7 +143,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={[engineering, design]}
         events={[event]}
@@ -156,7 +153,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         onEventsChange={handleEventsChange}
       />,
     );
-    await absorbObserverFrames();
 
     mockAllEventRowBounds();
 
@@ -190,7 +186,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -200,7 +196,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         onEventsChange={handleEventsChange}
       />,
     );
-    await absorbObserverFrames();
 
     mockAllEventRowBounds();
 
@@ -235,7 +230,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .resizable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -245,7 +240,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         onEventsChange={handleEventsChange}
       />,
     );
-    await absorbObserverFrames();
 
     mockAllEventRowBounds();
 
@@ -284,7 +278,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .resizable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -294,7 +288,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         onEventsChange={handleEventsChange}
       />,
     );
-    await absorbObserverFrames();
 
     mockAllEventRowBounds();
 
@@ -638,7 +631,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
     it('should drop a standalone event into a trimmed row through the axis', async () => {
       const handleEventsChange = vi.fn();
-      render(
+      await renderSettled(
         <div>
           <StandaloneEvent
             data={{ id: 'external-1', title: 'External Job', duration: 60 }}
@@ -658,7 +651,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
           />
         </div>,
       );
-      await absorbObserverFrames();
       mockAllEventRowBounds(AXIS_WIDTH);
 
       const standaloneElement = screen.getByText('External Job');
@@ -684,7 +676,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
     it('should keep a drop on the exact right edge of the axis inside the collection', async () => {
       const handleEventsChange = vi.fn();
-      render(
+      await renderSettled(
         <div>
           <StandaloneEvent
             data={{ id: 'external-1', title: 'External Job', duration: 60 }}
@@ -704,7 +696,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
           />
         </div>,
       );
-      await absorbObserverFrames();
       mockAllEventRowBounds(AXIS_WIDTH);
 
       const standaloneElement = screen.getByText('External Job');
@@ -730,7 +721,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
     it('should keep a drop past the left edge of the axis inside the collection', async () => {
       const handleEventsChange = vi.fn();
-      render(
+      await renderSettled(
         <div>
           <StandaloneEvent
             data={{ id: 'external-1', title: 'External Job', duration: 60 }}
@@ -750,7 +741,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
           />
         </div>,
       );
-      await absorbObserverFrames();
       mockAllEventRowBounds(AXIS_WIDTH);
 
       const standaloneElement = screen.getByText('External Job');

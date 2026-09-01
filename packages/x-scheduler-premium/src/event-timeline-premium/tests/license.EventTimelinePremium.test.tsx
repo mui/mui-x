@@ -30,7 +30,7 @@ describe('<EventTimelinePremium /> - License', () => {
         />,
       ),
     ).toErrorDev(['MUI X: License key plan mismatch']);
-    // Absorb the post-render ResizeObserver deliveries so they land as acted updates.
+    // The render lives inside the sync `toErrorDev` callback, so settle afterwards.
     await absorbObserverFrames();
   });
 
