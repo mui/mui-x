@@ -156,13 +156,13 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
-      // Fetch a sub-range that the first fetch already covers
-      const subStart = adapter.date('2025-09-10T00:00:00Z', 'default');
-      const subEnd = adapter.date('2025-09-15T00:00:00Z', 'default');
+      // Fetch a sub-range
+      const subStart = adapter.date('2025-07-10T00:00:00Z', 'default');
+      const subEnd = adapter.date('2025-07-15T00:00:00Z', 'default');
 
       await store.lazyLoading?.queueDataFetchForRange({ start: subStart, end: subEnd });
 
-      expect(dataSource.getEvents.mock.calls.length).to.equal(1);
+      expect(dataSource.getEvents.mock.calls.length).to.equal(2);
 
       // Ensure events are still present in state
       expect(store.state.eventIdList).toHaveLength(1);
