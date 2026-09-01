@@ -174,8 +174,7 @@ describe('processEvent', () => {
         schedulerRecurringEventsPlugin,
       );
 
-      // The instants are untouched; the objects answer calendar math (day, hour) in the
-      // event's timezone, so recurrence evaluation cannot depend on the machine's zone.
+      // Same instants; day and hour reads answer in the event's timezone.
       expect(processed.dataTimezone.start.timestamp).to.equal(
         new Date('2025-01-01T14:00:00Z').getTime(),
       );
@@ -186,8 +185,7 @@ describe('processEvent', () => {
     });
 
     it('should project the display BYDAY from the data-timezone weekday for instant strings', () => {
-      // Thursday 21:00 in New York is already Friday in UTC: the projection must
-      // anchor on the data-timezone weekday, not the one the parse zone reads.
+      // Thursday 21:00 in New York is already Friday in UTC.
       const event = EventBuilder.new(adapter)
         .withDataTimezone('America/New_York')
         .span('2025-01-03T02:00:00Z', '2025-01-03T03:00:00Z')

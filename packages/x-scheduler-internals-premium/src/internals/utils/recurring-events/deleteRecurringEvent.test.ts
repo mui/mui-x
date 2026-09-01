@@ -28,8 +28,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
     });
 
     it('should mark the exDate on the data-timezone day when the occurrence start carries another zone', () => {
-      // A daily 21:00 New York series: each occurrence's instant is already the next
-      // day in the default zone the caller's date object carries.
+      // A daily 21:00 New York series: each occurrence's instant is the next UTC day.
       const nyEvent = EventBuilder.new(adapter)
         .withDataTimezone('America/New_York')
         .singleDay('2025-02-02T02:00:00Z')

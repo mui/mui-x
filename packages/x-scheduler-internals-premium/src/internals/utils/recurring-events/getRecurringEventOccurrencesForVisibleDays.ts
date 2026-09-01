@@ -100,8 +100,7 @@ class RecurringEventExpander {
 
     this.dataTimezone = event.dataTimezone;
     this.rule = this.dataTimezone.rrule!;
-    // Data-bag dates are always labeled in the data timezone (`resolveEventDate`
-    // guarantees it), so the start is usable as is.
+    // Already labeled in the data timezone by `resolveEventDate`.
     this.dtStartInDataTz = this.dataTimezone.start.value;
     this.seriesStartDay = adapter.startOfDay(this.dtStartInDataTz);
     this.interval = Math.max(1, this.rule.interval ?? 1);
@@ -115,9 +114,7 @@ class RecurringEventExpander {
     this.scanFirstDay = adapter.startOfDay(adapter.addDays(visibleStartDataTz, 1 - eventDuration));
     this.scanLastDay = adapter.startOfDay(visibleEndDataTz);
 
-    // Pre-compute boundaries and exclusions. Data-bag exDates are always labeled in the
-    // data timezone (`resolveEventDate` and the exDate producers guarantee it), matching
-    // the day keys occurrences use.
+    // Pre-compute boundaries and exclusions (exDates are data-timezone labeled, like the day keys).
     this.exDateKeys = new Set(this.dataTimezone.exDates?.map((d) => getDateKey(d, adapter)));
     this.untilBoundary = this.rule.until ? adapter.startOfDay(this.rule.until) : null;
     this.minDate = adapter.isBefore(this.seriesStartDay, this.scanFirstDay)

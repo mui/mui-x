@@ -8,9 +8,8 @@ import type { SchedulerEventId } from '../models';
  * - Strings ending with `"Z"` are treated as instants (UTC).
  * - Strings without `"Z"` are treated as wall-time and interpreted in `dataTimezone`.
  *
- * The result always carries the `dataTimezone` label, so calendar math on it
- * (day keys, `startOfDay`, weekday reads) runs in the event's timezone
- * regardless of the string format.
+ * The result carries the `dataTimezone` label, so day and weekday math runs in the
+ * event's timezone for both formats.
  */
 export function resolveEventDate(
   value: string,

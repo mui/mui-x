@@ -366,8 +366,7 @@ premiumStoreClasses.forEach((storeClass) => {
     });
 
     it('should keep a cross-timezone deleted occurrence excluded after the events round-trip through strings', () => {
-      // A daily 21:00 New York series stored as instant strings: each occurrence's
-      // instant is already the next day in the default zone. The stored exDate string
+      // A daily 21:00 New York series stored as instant strings: the stored exDate
       // must re-parse onto the same data-timezone day it excludes.
       const nyEvent = EventBuilder.new()
         .id('ny-daily')

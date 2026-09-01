@@ -13,8 +13,7 @@ export function deleteRecurringEvent(
   occurrenceStart: TemporalSupportedObject,
   scope: RecurringEventScope,
 ): UpdateEventsParameters {
-  // Callers may hand an instant carrying any zone label; every scope's day math
-  // (exDate markers, truncation boundaries) runs in the data timezone.
+  // Normalize once: all scope day math runs in the data timezone.
   occurrenceStart = adapter.setTimezone(occurrenceStart, originalEvent.dataTimezone.timezone);
   switch (scope) {
     case 'this-and-following': {

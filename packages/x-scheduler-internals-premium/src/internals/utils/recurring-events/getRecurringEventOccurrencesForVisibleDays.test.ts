@@ -774,9 +774,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
 
     it('should exclude an instant-string exDate on its data-timezone day', () => {
-      // The exDate instant (July 12th 03:00Z) reads as July 12th in the date library's
-      // default zone (UTC in tests) — but in the event's New York timezone it is
-      // July 11th 23:00, the day of the occurrence it excludes.
+      // July 12th 03:00Z is July 11th 23:00 in New York: the exDate excludes the
+      // data-timezone day, not the UTC one.
       const event = EventBuilder.new(adapter)
         .withDataTimezone('America/New_York')
         .singleDay('2025-07-04T13:00:00Z')
@@ -799,8 +798,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
 
     it('should exclude an instant-string exDate across the DST fall-back on its data-timezone day', () => {
-      // Nov 3rd 04:30Z is Nov 2nd 23:30 in New York — EST after the Nov 2nd
-      // fall-back, one hour further from UTC than the series start (EDT).
+      // Nov 3rd 04:30Z is Nov 2nd 23:30 in New York — EST, after the fall-back.
       const event = EventBuilder.new(adapter)
         .withDataTimezone('America/New_York')
         .singleDay('2025-10-26T13:00:00Z')
@@ -823,8 +821,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
 
     it('should include the last day of an instant-string UNTIL on its data-timezone day', () => {
-      // The UNTIL instant (Jan 5th 05:00Z) is Jan 5th 00:00 in New York: the series
-      // runs through Jan 5th even though the instant's UTC day starts earlier.
+      // Jan 5th 05:00Z is Jan 5th 00:00 in New York: the series runs through Jan 5th.
       const event = EventBuilder.new(adapter)
         .withDataTimezone('America/New_York')
         .singleDay('2025-01-01T14:00:00Z')

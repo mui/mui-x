@@ -35,8 +35,7 @@ export function updateRecurringEvent(
   changes: SchedulerEventUpdatedProperties,
   scope: RecurringEventScope,
 ) {
-  // Callers may hand an instant carrying any zone label; every scope's day math
-  // (exDate markers, split boundaries, DTSTART checks) runs in the data timezone.
+  // Normalize once: all scope day math runs in the data timezone.
   occurrenceStart = adapter.setTimezone(occurrenceStart, originalEvent.dataTimezone.timezone);
   switch (scope) {
     case 'this-and-following': {
