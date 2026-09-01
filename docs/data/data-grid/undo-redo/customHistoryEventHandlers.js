@@ -72,7 +72,7 @@ export function createCustomCellEditHandler(apiRef) {
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: gridExpandedSortedRowIndexLookupSelector(apiRef)[id],
           colIndex: apiRef.current.getColumnIndex(field),
         });
       });
@@ -97,7 +97,7 @@ export function createCustomCellEditHandler(apiRef) {
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: gridExpandedSortedRowIndexLookupSelector(apiRef)[id],
           colIndex: apiRef.current.getColumnIndex(field),
         });
       });
@@ -193,7 +193,7 @@ export function createCustomClipboardPasteHistoryHandler(apiRef) {
             );
             apiRef.current.scrollToIndexes({
               rowIndex:
-                apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
+                gridExpandedSortedRowIndexLookupSelector(apiRef)[firstNewRowId],
               colIndex: differentFieldIndex,
             });
           });
@@ -238,7 +238,7 @@ export function createCustomClipboardPasteHistoryHandler(apiRef) {
             );
             apiRef.current.scrollToIndexes({
               rowIndex:
-                apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
+                gridExpandedSortedRowIndexLookupSelector(apiRef)[firstNewRowId],
               colIndex: differentFieldIndex,
             });
           });

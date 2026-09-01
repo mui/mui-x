@@ -14,9 +14,9 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
+import { getRowIndexRelativeToAllRows } from '../../utils/useGridVisibleRows';
 import { useGridEvent } from '../../utils/useGridEvent';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 import { gridClasses } from '../../../constants/gridClasses';
 import { GridCellModes } from '../../../models/gridEditRowModel';
@@ -83,7 +83,6 @@ export const useGridKeyboardNavigation = (
       closestColumnToUse: 'left' | 'right' = 'left',
       rowSpanScanDirection: 'up' | 'down' = 'up',
     ) => {
-      const visibleSortedRows = gridExpandedSortedRowEntriesSelector(apiRef);
       const nextCellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, colIndex);
       if (nextCellColSpanInfo && nextCellColSpanInfo.spannedByColSpan) {
         if (closestColumnToUse === 'left') {
@@ -99,15 +98,14 @@ export const useGridKeyboardNavigation = (
         colIndex,
         rowSpanScanDirection,
       );
-      // `scrollToIndexes` requires a rowIndex relative to all visible rows.
-      // Those rows do not include pinned rows, but pinned rows do not need scroll anyway.
-      const rowIndexRelativeToAllRows = visibleSortedRows.findIndex(
-        (row) => row.id === nonRowSpannedRowId,
-      );
+      // `scrollToIndexes` requires a rowIndex relative to all visible rows, offset by the page
+      // when the pagination is server-side. Pinned rows are not part of those rows, but they
+      // do not need to scroll anyway.
+      const rowIndexRelativeToAllRows = getRowIndexRelativeToAllRows(apiRef, nonRowSpannedRowId);
       logger.debug(`Navigating to cell row ${rowIndexRelativeToAllRows}, col ${colIndex}`);
       apiRef.current.scrollToIndexes({
         colIndex,
-        rowIndex: rowIndexRelativeToAllRows === -1 ? undefined : rowIndexRelativeToAllRows,
+        rowIndex: rowIndexRelativeToAllRows,
       });
       apiRef.current.setCellFocus(nonRowSpannedRowId, field);
     },

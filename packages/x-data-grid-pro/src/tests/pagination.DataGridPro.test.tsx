@@ -1,5 +1,5 @@
 import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, spyApi } from 'test/utils/helperFn';
 import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { GridApi } from '@mui/x-data-grid-pro';
@@ -66,6 +66,35 @@ describe('<DataGridPro /> - Pagination', () => {
         apiRef.current?.setPage(50);
       });
       expect(getColumnValues(0)).to.deep.equal(['19']);
+    });
+
+    it('should not scroll when pagination is disabled', () => {
+      let apiRef: RefObject<GridApi | null>;
+
+      function GridTest() {
+        const basicData = useBasicDemoData(20, 2);
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...basicData}
+              apiRef={apiRef}
+              initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+              pageSizeOptions={[1]}
+            />
+          </div>
+        );
+      }
+
+      render(<GridTest />);
+      const scrollToIndexes = spyApi(apiRef!.current!, 'scrollToIndexes');
+
+      act(() => {
+        apiRef!.current?.setPage(1);
+      });
+
+      expect(scrollToIndexes.mock.calls.length).to.equal(0);
     });
   });
 

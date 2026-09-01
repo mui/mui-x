@@ -17,9 +17,12 @@ export interface GridScrollApi {
   getScrollPosition: () => GridScrollParams;
   /**
    * Triggers the viewport to scroll to the cell at indexes given by `params`.
-   * Returns `true` if the grid had to scroll to reach the target.
-   * @param {GridCellIndexCoordinates} params The indexes where the cell is.
-   * @returns {boolean} Returns `true` if the index was outside of the viewport and the grid had to scroll to reach the target.
+   * `rowIndex` is the zero-based index in the full filtered and sorted row list, not the index within the current page.
+   * When pagination is enabled, `rowIndex` must point to a row on the current page.
+   * `colIndex` is the zero-based index in the visible columns.
+   * Invalid indexes return `false` without scrolling.
+   * @param {GridCellIndexCoordinates} params The indexes of the cell.
+   * @returns {boolean} `true` if the grid had to scroll to reach the target, `false` if no scrolling was needed or an index is invalid.
    */
   scrollToIndexes: (params: Partial<GridCellIndexCoordinates>) => boolean;
 }
