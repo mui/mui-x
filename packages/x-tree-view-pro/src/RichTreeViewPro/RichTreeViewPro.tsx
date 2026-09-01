@@ -144,13 +144,36 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   );
 
   const isLoading = lazyLoadingRootIsLoading || loading;
-
-  if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
-  }
-
   const Renderer = isVirtualizationEnabled ? RichTreeViewVirtualizedItems : RichTreeViewItems;
 
+  let content: React.ReactNode;
+  if (error) {
+    content = <Alert severity="error">{error.message}</Alert>;
+  } else if (isLoading) {
+    content = (
+      <RichTreeViewLoading
+        store={store}
+        slots={slots}
+        slotProps={slotProps}
+        ownerState={props}
+        forwardedProps={forwardedProps}
+        rootRef={handleRef}
+        classes={classes}
+      />
+    );
+  } else {
+    content = (
+      <Renderer
+        slots={slots}
+        slotProps={slotProps}
+        forwardedProps={forwardedProps}
+        ownerState={props}
+        rootRef={handleRef}
+      />
+    );
+  }
+
+  // The provider must mount in the loading and error states too, so `apiRef` is initialized on mount.
   return (
     <TreeViewProvider
       store={store}
@@ -161,26 +184,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
       rootRef={ref}
     >
       <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
-        {isLoading ? (
-          // The loading UI must render inside the provider so `apiRef` is initialized on mount.
-          <RichTreeViewLoading
-            store={store}
-            slots={slots}
-            slotProps={slotProps}
-            ownerState={props}
-            forwardedProps={forwardedProps}
-            rootRef={handleRef}
-            classes={classes}
-          />
-        ) : (
-          <Renderer
-            slots={slots}
-            slotProps={slotProps}
-            forwardedProps={forwardedProps}
-            ownerState={props}
-            rootRef={handleRef}
-          />
-        )}
+        {content}
         <Watermark packageInfo={packageInfo} />
       </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
