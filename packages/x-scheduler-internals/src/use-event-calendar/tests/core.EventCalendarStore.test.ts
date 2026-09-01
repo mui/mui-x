@@ -274,8 +274,8 @@ describe('Core - EventCalendarStore', () => {
 
         store.setEditingOccurrenceTimes(start, end);
 
-        // The data bounds are the occurrence's identity for recurring scope
-        // operations: left stale, a later edit would target the pre-resize times.
+        // Both bags describe the same instants, so the refreshed snapshot cannot
+        // report a start the event no longer has.
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
         expect(editing.dataTimezone.start.timestamp).to.equal(adapter.getTime(start));
         expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));

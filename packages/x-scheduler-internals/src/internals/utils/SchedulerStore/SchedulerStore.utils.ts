@@ -58,6 +58,9 @@ export function shouldUpdateOccurrencePlaceholder(
 
 export const DEFAULT_EVENT_MODEL_STRUCTURE: SchedulerEventModelStructure<any> = {};
 
+/** Event properties that always exist, so an update cannot remove them. */
+const ALWAYS_PRESENT_EVENT_PROPERTIES = new Set<string>(['id', 'start', 'end']);
+
 const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
   id: true,
   title: true,
@@ -268,18 +271,21 @@ function createOrUpdateEventModelFromBuiltInEventModel<
   for (const key in changes) {
     if (Object.prototype.hasOwnProperty.call(changes, key)) {
       const typedKey = key as keyof SchedulerEvent;
+      // An event always has these, so an explicit `undefined` reads as "unchanged"
+      // instead of removing them — checked before the setter dispatch so a custom
+      // event model cannot receive the `undefined` either.
+      if (changes[key] === undefined && ALWAYS_PRESENT_EVENT_PROPERTIES.has(key)) {
+        continue;
+      }
       const setter = eventModelStructure?.[typedKey]?.setter;
       if (setter) {
         // @ts-ignore
         propertiesWithSetter.push([setter, changes[key]]);
       } else if (changes[key] === undefined) {
-        // An explicit `undefined` removes the property (how `rrule: undefined` clears the
-        // recurrence), except `id`, `start` and `end` — an event always has them, so a
-        // `start: edited ? value : undefined` spelling must read as "unchanged".
-        if (key !== 'id' && key !== 'start' && key !== 'end') {
-          // @ts-ignore
-          delete eventModel[key];
-        }
+        // An explicit `undefined` removes the property, e.g. `rrule: undefined` clears
+        // the recurrence.
+        // @ts-ignore
+        delete eventModel[key];
       }
       // If the property was set to its default value, remove it from the model
       else if (oldModel != null && key === 'allDay' && changes[key] === false) {

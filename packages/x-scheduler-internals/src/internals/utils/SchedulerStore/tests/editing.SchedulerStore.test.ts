@@ -25,14 +25,15 @@ const RRULE = { freq: 'DAILY' } as any;
 
 // A minimal edited occurrence of a recurring series (only the fields `repointEditingOccurrence` reads).
 function armRecurringOccurrence(store: any) {
+  const start = processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter);
+  const end = processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter);
   const editedOccurrence = {
     id: 'standup',
     key: 'standup::2025-07-07',
-    displayTimezone: {
-      start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
-      end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
-      rrule: RRULE,
-    },
+    displayTimezone: { start, end, rrule: RRULE },
+    // Present on every real occurrence: without it the repoint skips the data-timezone
+    // identity branch these tests are about.
+    dataTimezone: { timezone: 'default', start, end, rrule: RRULE },
   } as any;
   store.startEditing(editedOccurrence, 'armed');
 }
@@ -292,7 +293,8 @@ storeClasses.forEach((storeClass) => {
   });
 });
 
-// A recurring scope change must only re-point the surface when the armed occurrence is the resized one.
+// A recurring scope change re-points the surface only when the armed occurrence is the changed one,
+// and drops it when the change leaves that occurrence on a day only the pattern can resolve.
 premiumStoreClasses.forEach((storeClass) => {
   describe(`Editing recurring scope - ${storeClass.name}`, () => {
     const RECURRING_EVENT = EventBuilder.new()

@@ -274,6 +274,16 @@ export interface SchedulerEventOccurrence extends SchedulerProcessedEvent {
 }
 
 /**
+ * The occurrence bounds in the data timezone — the identity recurring scope operations
+ * target. The rendered display bounds cannot stand in for it: a cross-timezone all-day
+ * occurrence displays on a different day.
+ */
+export type SchedulerOccurrenceDataBounds = Pick<
+  SchedulerEventOccurrence['dataTimezone'],
+  'start' | 'end'
+>;
+
+/**
  * A concrete occurrence placeholder derived from a `SchedulerEvent`.
  * Used temporarily during creation, drag or resize interactions.
  */
@@ -424,8 +434,8 @@ export interface SchedulerProcessedDate {
  * Properties to pass to the methods that update an event (recurring or not).
  * `id` identifies the event to update; every other property is optional and left unchanged
  * when absent. An explicit `undefined` removes the property from the event model
- * (e.g. `rrule: undefined` clears the recurrence), except for `id`, `start` and `end`,
- * which an event always has — there it reads as "unchanged".
+ * (e.g. `rrule: undefined` clears the recurrence), except for `start` and `end`, which an
+ * event always has — passing them as `undefined` leaves them unchanged.
  */
 export type SchedulerEventUpdatedProperties = Omit<
   Partial<SchedulerEvent>,

@@ -127,6 +127,38 @@ storeClasses.forEach((storeClass) => {
         ]);
       });
 
+      it('should leave the dates untouched when they are passed as undefined', () => {
+        const onEventsChange = vi.fn();
+        const events: MyEvent[] = [
+          {
+            myId: '1',
+            myTitle: 'Event 1',
+            myStart: '2025-07-01T09:00:00.000Z',
+            myEnd: '2025-07-01T10:00:00.000Z',
+            allDay: false,
+          },
+        ];
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events, eventModelStructure, onEventsChange },
+          adapter,
+        );
+
+        // An event always has dates, so the setter must not receive the `undefined`
+        // either — it would write it straight into the consumer's model.
+        store.updateEvent({ id: '1', title: 'Event 1 updated', start: undefined });
+
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
+          {
+            myId: '1',
+            myTitle: 'Event 1 updated',
+            myStart: '2025-07-01T09:00:00.000Z',
+            myEnd: '2025-07-01T10:00:00.000Z',
+            allDay: false,
+          },
+        ]);
+      });
+
       it('should use the provided event model structure to create an event', () => {
         const onEventsChange = vi.fn();
 
@@ -428,6 +460,40 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('Method: updateEvent', () => {
+      it('should leave the dates untouched when start and end are passed as undefined', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().build();
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        // An event always has dates, so `start: edited ? value : undefined` reads as
+        // "unchanged" instead of removing them.
+        store.updateEvent({ id: event.id, title: 'Renamed', start: undefined, end: undefined });
+
+        const updated = onEventsChange.mock.lastCall?.[0][0];
+        expect(updated.title).to.equal('Renamed');
+        expect(updated.start).to.equal(event.start);
+        expect(updated.end).to.equal(event.end);
+      });
+
+      it('should remove a property that is not a date when passed as undefined', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().description('To remove').build();
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        store.updateEvent({ id: event.id, description: undefined });
+
+        const updated = onEventsChange.mock.lastCall?.[0][0];
+        expect(updated).to.not.have.property('description');
+      });
+
       it('should replace matching id and emit onEventsChange with the updated events', () => {
         const onEventsChange = vi.fn();
         const event1 = EventBuilder.new().build();

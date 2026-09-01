@@ -395,21 +395,19 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       const dirtyValues = formStore.getDirtyValues();
       // Only the custom fields the user actually edited enter the changes payload,
       // so untouched fields keep resolving against the live model on the recurring paths.
-      const editedCustomValues = { ...dirtyValues };
-      for (const key of Object.keys(editedCustomValues)) {
-        // A custom field named after a built-in event property (`id`, `readOnly`, ...)
-        // must not rewrite it; the hook already warns about these keys in dev.
-        if (BUILT_IN_FORM_KEYS.has(key) || isBuiltInEventProperty(key)) {
-          delete editedCustomValues[key];
-        }
-      }
+      // A custom field named after a built-in event property (`id`, `readOnly`, ...)
+      // must not rewrite it; the hook already warns about these keys in dev.
+      const editedCustomValues = Object.fromEntries(
+        Object.entries(dirtyValues).filter(
+          ([key]) => !BUILT_IN_FORM_KEYS.has(key) && !isBuiltInEventProperty(key),
+        ),
+      );
 
       // The form edits the range as display-timezone day/time strings, so resending
       // it untouched can move the event: the same day re-read in another timezone
       // is a different day. Only the keys the submitted range reads count — a time
       // left over from toggling all-day off and back on must not re-arm the resend.
       const { startEdited, endEdited } = getEditedRangeBounds(dirtyValues, values.allDay);
-      const rangeEdited = startEdited || endEdited;
 
       const metaChanges = {
         ...editedCustomValues,
@@ -476,7 +474,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         store.updateEvent({
           ...metaChanges,
           id: occurrence.id,
-          ...(rangeEdited ? { start, end } : {}),
+          // Per-bound here too: an untouched bound must keep its stored value instead of
+          // being re-anchored to the display timezone, which is a different instant.
+          ...(startEdited ? { start } : {}),
+          ...(endEdited ? { end } : {}),
           rrule: rruleToSubmit,
         });
       }

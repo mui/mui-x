@@ -1853,7 +1853,7 @@ describe('<EventDialogContent open />', () => {
       // A UTC all-day weekly series viewed from New York: resending the display-day
       // range on a rename used to shift the series and realign its BYDAY. The builder
       // is not mutated after setup, so the fixture is shared by the cross-timezone tests.
-      const weeklyBuilder = utcJuly4AllDayBuilder(adapter)
+      const weeklyBuilder = utcJuly4AllDayBuilder()
         .title('Weekly sync')
         .recurrent('WEEKLY')
         .withDisplayTimezone('America/New_York');
@@ -2134,7 +2134,7 @@ describe('<EventDialogContent open />', () => {
         // Tokyo is ahead of UTC: the displayed day maps to the previous UTC day, so a
         // BYDAY computed from the display day would hop weekdays (New York, being
         // behind, shares the calendar day and cannot catch that).
-        const tokyoBuilder = utcJuly4AllDayBuilder(adapter)
+        const tokyoBuilder = utcJuly4AllDayBuilder()
           .title('Weekly sync')
           .recurrent('WEEKLY')
           .withDisplayTimezone('Asia/Tokyo');

@@ -6,21 +6,12 @@ import type {
   SchedulerEventOccurrence,
   SchedulerEventId,
   SchedulerRenderableEventOccurrence,
+  SchedulerOccurrenceDataBounds,
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getDateKey } from './date-utils';
-
-/**
- * The occurrence bounds in the data timezone — the identity recurring scope operations
- * target. The rendered display bounds cannot stand in for it: a cross-timezone all-day
- * occurrence displays on a different day.
- */
-export interface SchedulerOccurrenceDataBounds {
-  start: SchedulerProcessedDate;
-  end: SchedulerProcessedDate;
-}
 
 /**
  * Whether the occurrence is a persisted event occurrence, as opposed to a
@@ -68,10 +59,8 @@ export function generateOccurrenceFromEvent({
   start: SchedulerProcessedDate;
   end: SchedulerProcessedDate;
   /**
-   * The occurrence bounds in the data timezone. Defaults to `start`/`end` (the rendered
-   * display bounds) — a fallback only placeholder occurrences may rely on: for a
-   * cross-timezone all-day occurrence of a real event the display bounds sit on a
-   * different day than the identity recurring scope operations target.
+   * See `SchedulerOccurrenceDataBounds`. Defaults to the display `start`/`end`, a
+   * fallback only placeholder occurrences may rely on.
    */
   dataBounds?: SchedulerOccurrenceDataBounds;
 }): SchedulerEventOccurrence {

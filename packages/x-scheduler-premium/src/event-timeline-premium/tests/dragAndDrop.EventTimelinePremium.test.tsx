@@ -271,9 +271,16 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     ).to.equal('2025-07-04');
 
     // The dragged occurrence materializes as a detached one-off on the drop day.
+    // The detached one-off lands on the day it was dropped on as the user saw it,
+    // not on a day shifted by re-reading the display bounds as the base.
     const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
     expect(detached.rrule).to.equal(undefined);
-    expect(detached.start).to.not.equal(event.start);
+    expect(
+      adapter.formatByString(
+        adapter.setTimezone(adapter.date(String(detached.start), 'UTC'), 'America/New_York'),
+        'yyyy-MM-dd',
+      ),
+    ).to.equal('2025-07-10');
   });
 
   it('should exclude the dragged occurrence of its own day when dragged from a secondary resource row', async () => {
@@ -322,11 +329,11 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
     ).to.equal('2025-07-04');
 
-    // The dragged occurrence materializes as a detached one-off on the drop day,
-    // keeping the appearance's resources intact.
+    // Dragging a secondary appearance detaches the occurrence without dropping the
+    // resources it belongs to: the key does not identify which row it was dragged from.
     const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
     expect(detached.rrule).to.equal(undefined);
-    expect(detached.start).to.not.equal(event.start);
+    expect(detached.resource).to.deep.equal([engineering.id, design.id]);
   });
 
   it('should resize an event end to a later time', async () => {

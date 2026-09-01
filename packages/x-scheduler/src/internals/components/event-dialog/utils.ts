@@ -118,7 +118,7 @@ export function getEditedRangeBounds(
   dirtyValues: Record<string, unknown>,
   allDay: boolean,
 ): { startEdited: boolean; endEdited: boolean } {
-  const isDirty = (key: RangeFormKey) => key in dirtyValues;
+  const isDirty = (key: RangeFormKey) => hasProp(dirtyValues, key);
   const modeEdited = isDirty('allDay');
   return {
     startEdited: modeEdited || isDirty('startDate') || (!allDay && isDirty('startTime')),

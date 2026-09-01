@@ -215,20 +215,22 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(updated.end).to.equal(event.end);
     });
 
-    it('should submit the whole displayed range when only one of its fields is edited', async () => {
-      const { user, getUpdatedEvent } = renderEditDialog(independenceDay(), 'America/New_York');
+    it('should submit only the edited bound of the displayed range', async () => {
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        independenceDay(),
+        'America/New_York',
+      );
 
       const endDateInput = screen.getByLabelText(/end date/i);
       await user.clear(endDateInput);
       await user.type(endDateInput, '2025-07-05');
       await user.click(screen.getByRole('button', { name: 'Save' }));
 
-      // Editing any range field submits the range as displayed: the event keeps the
-      // New York days the user saw (July 3rd → 5th), re-anchored to that timezone.
       const updated = getUpdatedEvent();
-      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
-        adapter.getTime(adapter.date('2025-07-03T04:00:00', 'UTC')),
-      );
+      // The untouched start keeps its stored value: re-anchoring it to the display
+      // timezone would move the event for anyone reading it from another one.
+      expect(updated.start).to.equal(event.start);
+      // The edited end applies as the day the user was looking at (New York July 5th).
       expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
         adapter.getTime(adapter.date('2025-07-06T03:59:59', 'UTC')),
       );

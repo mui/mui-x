@@ -83,7 +83,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
   });
 
   it('should identify the deleted occurrence by its data-timezone start from another timezone', () => {
-    const weeklyEventBuilder = utcJuly4AllDayBuilder(adapter)
+    const weeklyEventBuilder = utcJuly4AllDayBuilder()
       .title('Weekly sync')
       .recurrent('WEEKLY')
       .withDisplayTimezone('America/New_York');
@@ -125,5 +125,9 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     expect(adapter.getTime(deleteRecurringEventSpy!.mock.lastCall![0].occurrenceStart)).to.equal(
       adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
     );
+    // The scope dialog owns the focus while it is open: the menu must not pull it
+    // back to the grid the way it does after an immediate delete.
+    expect(document.activeElement).to.not.equal(document.body);
+    expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
   });
 });

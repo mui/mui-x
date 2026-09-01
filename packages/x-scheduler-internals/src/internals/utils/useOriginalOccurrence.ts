@@ -5,9 +5,9 @@ import { schedulerEventSelectors } from '../../scheduler-selectors';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
+  SchedulerOccurrenceDataBounds,
   SchedulerProcessedDate,
 } from '../../models';
-import type { SchedulerOccurrenceDataBounds } from './event-utils';
 import { generateOccurrenceFromEvent } from './event-utils';
 
 /**
@@ -34,7 +34,7 @@ export namespace useOriginalOccurrence {
     /** The rendered display bounds of the occurrence (or segment). */
     start: SchedulerProcessedDate;
     end: SchedulerProcessedDate;
-    /** The occurrence bounds in the data timezone; see `generateOccurrenceFromEvent`. */
+    /** See `SchedulerOccurrenceDataBounds`. */
     dataBounds?: SchedulerOccurrenceDataBounds;
   }
 }
