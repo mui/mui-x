@@ -46,7 +46,7 @@ function mockAllEventRowBounds(width = 6720) {
 }
 
 describe('EventTimelinePremium - Drag and Drop', () => {
-  const { render } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -59,7 +59,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -100,7 +100,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={[engineering, design, marketing]}
         events={[event]}
@@ -143,7 +143,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={[engineering, design]}
         events={[event]}
@@ -186,7 +186,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -230,7 +230,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .resizable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -278,7 +278,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .resizable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -324,8 +324,11 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     // minutes. Rows are mocked at 2880px so 1px = 1 axis minute.
     const AXIS_WIDTH = 2880;
 
-    function renderTimeline(event: ReturnType<typeof EventBuilder.prototype.build>, spyFn: any) {
-      render(
+    async function renderTimeline(
+      event: ReturnType<typeof EventBuilder.prototype.build>,
+      spyFn: any,
+    ) {
+      const view = await renderSettled(
         <EventTimelinePremium
           resources={resources}
           events={[event]}
@@ -337,6 +340,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         />,
       );
       mockAllEventRowBounds(AXIS_WIDTH);
+      return view;
     }
 
     /**
@@ -366,7 +370,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .draggable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       // 10:00 sits 120 axis minutes after the first visible hour (8:00).
       const { element: eventElement, left } = mockEventBoundsFromRender('Team Standup');
@@ -402,7 +406,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .resizable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       // Rendered from axis minute 600 (18:00) with a 240 axis-minute span
       // (2h before the gap + 2h after it).
@@ -441,7 +445,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .draggable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       // The 07:00 start hides inside the hidden hours: the event renders clamped
       // to the window edge (axis minute 0).
@@ -475,7 +479,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .draggable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       const { element: eventElement } = mockEventBoundsFromRender('Early Shift');
       const sameRow = getEventRow(engineering.id);
@@ -503,7 +507,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .draggable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       const { element: eventElement, left } = mockEventBoundsFromRender('Overnight Job');
       expect(left).to.be.closeTo(600, 0.001);
@@ -539,7 +543,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .draggable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       // Starts before the collection: rendered from the row start.
       const { element: eventElement, left } = mockEventBoundsFromRender('Long Job');
@@ -575,7 +579,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .resizable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       const { element: eventElement, left } = mockEventBoundsFromRender('Overnight Job');
       expect(left).to.be.closeTo(600, 0.001);
@@ -613,7 +617,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .resizable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       const eventElement = screen
         .getByText('Early Shift')
@@ -627,7 +631,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
     it('should drop a standalone event into a trimmed row through the axis', async () => {
       const handleEventsChange = vi.fn();
-      render(
+      await renderSettled(
         <div>
           <StandaloneEvent
             data={{ id: 'external-1', title: 'External Job', duration: 60 }}
@@ -672,7 +676,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
     it('should keep a drop on the exact right edge of the axis inside the collection', async () => {
       const handleEventsChange = vi.fn();
-      render(
+      await renderSettled(
         <div>
           <StandaloneEvent
             data={{ id: 'external-1', title: 'External Job', duration: 60 }}
@@ -717,7 +721,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
     it('should keep a drop past the left edge of the axis inside the collection', async () => {
       const handleEventsChange = vi.fn();
-      render(
+      await renderSettled(
         <div>
           <StandaloneEvent
             data={{ id: 'external-1', title: 'External Job', duration: 60 }}
