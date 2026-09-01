@@ -201,6 +201,62 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
     });
 
+    it('should not select skeleton rows when rows are loaded lazily', async () => {
+      const { user } = render(
+        <TestDataGridSelection
+          sortingMode="server"
+          filterMode="server"
+          paginationMode="server"
+          rowsLoadingMode="server"
+          rowCount={10}
+        />,
+      );
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(Object.keys(apiRef.current!.getCellSelectionModel())).to.deep.equal([
+        '0',
+        '1',
+        '2',
+        '3',
+      ]);
+    });
+
+    it('should not select group footer rows', async () => {
+      const columns: GridColDef[] = [
+        { field: 'id' },
+        { field: 'category' },
+        { field: 'value', type: 'number' },
+      ];
+      const rows = [
+        { id: 0, category: 'Cat A', value: 5 },
+        { id: 1, category: 'Cat A', value: 10 },
+        { id: 2, category: 'Cat B', value: 15 },
+      ];
+      const { user } = render(
+        <TestDataGridSelection
+          columns={columns}
+          rows={rows}
+          initialState={{
+            rowGrouping: { model: ['category'] },
+            aggregation: { model: { value: 'sum' } },
+          }}
+          getAggregationPosition={() => 'footer'}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      const cell = getCell(0, 1);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(Object.keys(apiRef.current!.getCellSelectionModel())).to.deep.equal([
+        '0',
+        '1',
+        '2',
+        'auto-generated-row-category/Cat A',
+        'auto-generated-row-category/Cat B',
+      ]);
+    });
+
     it('should reset the selection when a cell is clicked afterwards', async () => {
       const { user } = render(<TestDataGridSelection />);
       const cell = getCell(0, 0);

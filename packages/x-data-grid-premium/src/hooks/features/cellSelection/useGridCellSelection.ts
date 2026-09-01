@@ -26,6 +26,7 @@ import {
   gridClasses,
   gridFocusCellSelector,
   GRID_REORDER_COL_DEF,
+  gridRowNodeSelector,
   gridSortedRowIdsSelector,
   gridDimensionsSelector,
   GridCellModes,
@@ -527,6 +528,11 @@ export const useGridCellSelection = (
 
     const newModel: GridCellSelectionModel = {};
     visibleRows.rows.forEach((row) => {
+      const rowNode = gridRowNodeSelector(apiRef, row.id);
+      // Skeleton rows have no data and footer rows only contain aggregated values
+      if (!rowNode || rowNode.type === 'skeletonRow' || rowNode.type === 'footer') {
+        return;
+      }
       const rowModel: GridCellSelectionModel[GridRowId] = {};
       selectableColumns.forEach((column) => {
         rowModel[column.field] = true;
