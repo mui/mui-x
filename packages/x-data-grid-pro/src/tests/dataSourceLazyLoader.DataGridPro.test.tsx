@@ -850,6 +850,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(apiRef.current!.getRow('A-0')).not.to.equal(null));
 
       const setChildrenLoadingSpy = vi.spyOn(apiRef.current!.dataSource, 'setChildrenLoading');
+      onTestFinished(() => setChildrenLoadingSpy.mockRestore());
       localFetchRowsSpy.mockClear();
       setChildrenLoadingSpy.mockClear();
 
@@ -864,7 +865,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       const hasLoadingTrueCall = setChildrenLoadingSpy.mock.calls.some(
         (call) => call[0] === 'A' && call[1] === true,
       );
-      setChildrenLoadingSpy.mockRestore();
       expect(hasLoadingTrueCall).to.equal(false);
     });
 

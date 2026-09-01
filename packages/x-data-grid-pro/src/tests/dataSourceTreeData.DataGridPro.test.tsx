@@ -13,7 +13,7 @@ import type {
 } from '@mui/x-data-grid-pro';
 import { actSleep, getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, onTestFinished, describe, it, expect } from 'vitest';
 
 const dataSetOptions = {
   dataSet: 'Employee' as const,
@@ -348,6 +348,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     const setChildrenLoadingSpy = vi.spyOn(apiRef.current!.dataSource, 'setChildrenLoading');
+    onTestFinished(() => setChildrenLoadingSpy.mockRestore());
 
     localFetchRowsSpy.mockClear();
     setChildrenLoadingSpy.mockClear();
@@ -366,7 +367,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     const hasLoadingTrueCall = setChildrenLoadingSpy.mock.calls.some(
       (call) => call[0] === expandedRowId && call[1] === true,
     );
-    setChildrenLoadingSpy.mockRestore();
     expect(hasLoadingTrueCall).to.equal(false);
 
     // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval

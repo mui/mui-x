@@ -41,7 +41,7 @@ describe('<DataGridPro /> - Clipboard', () => {
   }
 
   describe('copy to clipboard', () => {
-    let writeText: MockInstance | undefined;
+    let writeText: MockInstance<typeof navigator.clipboard.writeText> | undefined;
 
     afterEach(function afterEachHook() {
       writeText?.mockRestore();

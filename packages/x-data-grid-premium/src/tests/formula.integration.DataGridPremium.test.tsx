@@ -104,7 +104,7 @@ describe('<DataGridPremium /> - Formulas feature integration', () => {
   });
 
   describe('clipboard', () => {
-    let writeText: MockInstance | undefined;
+    let writeText: MockInstance<typeof navigator.clipboard.writeText> | undefined;
 
     afterEach(function afterEachHook() {
       writeText?.mockRestore();

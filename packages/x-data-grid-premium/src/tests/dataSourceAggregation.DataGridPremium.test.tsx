@@ -16,7 +16,7 @@ import type {
   GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, onTestFinished, describe, it, expect } from 'vitest';
 
 describe('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();
@@ -266,6 +266,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     });
 
     const setChildrenLoadingSpy = vi.spyOn(apiRef.current!.dataSource, 'setChildrenLoading');
+    onTestFinished(() => setChildrenLoadingSpy.mockRestore());
 
     fetchRowsSpy.mockClear();
     setChildrenLoadingSpy.mockClear();
@@ -281,7 +282,6 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     const hasLoadingTrueCall = setChildrenLoadingSpy.mock.calls.some(
       (call) => call[0] === expandedRowId && call[1] === true,
     );
-    setChildrenLoadingSpy.mockRestore();
     expect(hasLoadingTrueCall).to.equal(false);
   });
 
