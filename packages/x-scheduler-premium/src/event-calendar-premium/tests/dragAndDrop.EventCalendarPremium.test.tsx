@@ -1,32 +1,14 @@
-import { screen, within, act } from '@mui/internal-test-utils';
+import { screen, act } from '@mui/internal-test-utils';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import {
   adapter,
   createSchedulerRenderer,
+  getMonthViewCell,
   utcJuly4AllDayBuilder,
   simulateDragAndDrop,
   mockElementBounds,
 } from 'test/utils/scheduler';
 import { vi, describe, it, expect } from 'vitest';
-
-/**
- * Returns the droppable month grid cell for a given day-of-month number (the date
- * picker in the sidebar exposes gridcells with the same day numbers, so only cells
- * wired as drop targets qualify).
- */
-function getMonthViewCell(dayOfMonth: number): HTMLElement {
-  const cells = screen.getAllByRole('gridcell');
-  const cell = cells.find(
-    (c) =>
-      (c.matches('[data-drop-target-for-element]') ||
-        c.querySelector('[data-drop-target-for-element]') != null) &&
-      within(c).queryByText(new RegExp(`^${dayOfMonth}$`)),
-  );
-  if (!cell) {
-    throw new Error(`Could not find month view cell for day ${dayOfMonth}`);
-  }
-  return cell;
-}
 
 describe('EventCalendarPremium - Month view drag and drop', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
@@ -75,5 +57,16 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     expect(
       adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
     ).to.equal('2025-07-04');
+
+    // The detached one-off lands on the day the user dropped it on (New York July 8th),
+    // not a day shifted by re-reading the display bounds as the base.
+    const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
+    expect(detached.rrule).to.equal(undefined);
+    expect(
+      adapter.formatByString(
+        adapter.setTimezone(adapter.date(String(detached.start), 'UTC'), 'America/New_York'),
+        'yyyy-MM-dd',
+      ),
+    ).to.equal('2025-07-08');
   });
 });

@@ -556,8 +556,7 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataStart={dataBounds?.start}
-      dataEnd={dataBounds?.end}
+      dataBounds={dataBounds}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={isArmed || undefined}
       data-editing={isEditing || undefined}

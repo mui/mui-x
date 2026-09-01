@@ -13,6 +13,16 @@ import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getDateKey } from './date-utils';
 
 /**
+ * The occurrence bounds in the data timezone — the identity recurring scope operations
+ * target. The rendered display bounds cannot stand in for it: a cross-timezone all-day
+ * occurrence displays on a different day.
+ */
+export interface SchedulerOccurrenceDataBounds {
+  start: SchedulerProcessedDate;
+  end: SchedulerProcessedDate;
+}
+
+/**
  * Whether the occurrence is a persisted event occurrence, as opposed to a
  * placeholder (creation draft, drag preview) that has no data-timezone bounds.
  */
@@ -50,8 +60,7 @@ export function generateOccurrenceFromEvent({
   occurrenceKey,
   start,
   end,
-  dataStart,
-  dataEnd,
+  dataBounds,
 }: {
   event: SchedulerProcessedEvent;
   eventId: SchedulerEventId;
@@ -59,12 +68,12 @@ export function generateOccurrenceFromEvent({
   start: SchedulerProcessedDate;
   end: SchedulerProcessedDate;
   /**
-   * The occurrence bounds in the data timezone. `start`/`end` are the rendered display
-   * bounds, which for a cross-timezone all-day occurrence sit on a different day —
-   * recurring scope operations need the data-timezone identity.
+   * The occurrence bounds in the data timezone. Defaults to `start`/`end` (the rendered
+   * display bounds) — a fallback only placeholder occurrences may rely on: for a
+   * cross-timezone all-day occurrence of a real event the display bounds sit on a
+   * different day than the identity recurring scope operations target.
    */
-  dataStart?: SchedulerProcessedDate;
-  dataEnd?: SchedulerProcessedDate;
+  dataBounds?: SchedulerOccurrenceDataBounds;
 }): SchedulerEventOccurrence {
   return {
     ...event,
@@ -77,8 +86,8 @@ export function generateOccurrenceFromEvent({
     },
     dataTimezone: {
       ...event?.dataTimezone,
-      start: dataStart ?? start,
-      end: dataEnd ?? end,
+      start: dataBounds?.start ?? start,
+      end: dataBounds?.end ?? end,
     },
   };
 }

@@ -2270,6 +2270,52 @@ describe('<EventDialogContent open />', () => {
         );
       });
 
+      it("should split the series on its own day with scope 'this and following' from another timezone", async () => {
+        const onEventsChange = vi.fn();
+        const { user } = render(
+          <EventCalendarProvider
+            events={[weeklyEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={weeklyBuilder.toOccurrence('2025-07-11T00:00:00Z')}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        await user.type(screen.getByLabelText(/event title/i), ' renamed');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/This and following events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        // The split boundary derives from the occurrence's own July 11th, not the
+        // July 10th its display bounds normalize to in New York: the original series
+        // truncates the day before, and the split series starts on the 11th.
+        const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall?.[0];
+        const series = newEvents.find((event) => event.id === weeklyEvent.id)!;
+        expect(
+          adapter.formatByString(
+            adapter.date(String((series.rrule as any).until), 'UTC'),
+            'yyyy-MM-dd',
+          ),
+        ).to.equal('2025-07-10');
+
+        const split = newEvents.find((event) => event.id !== weeklyEvent.id)!;
+        expect(split.title).to.equal('Weekly sync renamed');
+        expect(split.rrule).to.not.equal(undefined);
+        expect(
+          adapter.formatByString(adapter.date(String(split.start), 'UTC'), 'yyyy-MM-dd'),
+        ).to.equal('2025-07-11');
+      });
+
       it('should identify an occurrence across a DST transition by its data-timezone start', async () => {
         // A DST-observing data timezone: the series starts in EDT (UTC-4) and the
         // targeted occurrence falls after the 2025-11-02 fall-back (EST, UTC-5), so a

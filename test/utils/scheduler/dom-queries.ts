@@ -1,4 +1,4 @@
-import { within } from '@mui/internal-test-utils';
+import { screen, within } from '@mui/internal-test-utils';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 
 /**
@@ -35,4 +35,23 @@ export function withinMonthView() {
   }
 
   return within(monthView as HTMLElement);
+}
+
+/**
+ * Returns the droppable month grid cell for a given day-of-month number (the date picker
+ * in the side panel exposes gridcells with the same day numbers, so only cells wired as
+ * drop targets qualify).
+ */
+export function getMonthViewCell(dayOfMonth: number): HTMLElement {
+  const cells = screen.getAllByRole('gridcell');
+  const cell = cells.find(
+    (c) =>
+      (c.matches('[data-drop-target-for-element]') ||
+        c.querySelector('[data-drop-target-for-element]') != null) &&
+      within(c).queryByText(new RegExp(`^${dayOfMonth}$`)),
+  );
+  if (!cell) {
+    throw new Error(`Could not find month view cell for day ${dayOfMonth}`);
+  }
+  return cell;
 }

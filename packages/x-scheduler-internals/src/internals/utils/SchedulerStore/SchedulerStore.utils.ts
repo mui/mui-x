@@ -273,8 +273,13 @@ function createOrUpdateEventModelFromBuiltInEventModel<
         // @ts-ignore
         propertiesWithSetter.push([setter, changes[key]]);
       } else if (changes[key] === undefined) {
-        // @ts-ignore
-        delete eventModel[key];
+        // An explicit `undefined` removes the property (how `rrule: undefined` clears the
+        // recurrence), except `id`, `start` and `end` — an event always has them, so a
+        // `start: edited ? value : undefined` spelling must read as "unchanged".
+        if (key !== 'id' && key !== 'start' && key !== 'end') {
+          // @ts-ignore
+          delete eventModel[key];
+        }
       }
       // If the property was set to its default value, remove it from the model
       else if (oldModel != null && key === 'allDay' && changes[key] === false) {

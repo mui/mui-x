@@ -47,13 +47,14 @@ storeClasses.forEach((storeClass) => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
         armRecurringOccurrence(store);
 
-        (store as any).repointEditingOccurrence(
-          'detached-event',
-          newStart,
-          newEnd,
-          false,
-          'default',
-        );
+        (store as any).repointEditingOccurrence({
+          eventId: 'detached-event',
+          start: newStart,
+          end: newEnd,
+          isRecurring: false,
+          dataStart: newStart,
+          dataEnd: newEnd,
+        });
 
         const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
         expect(occurrence.id).to.equal('detached-event');
@@ -71,13 +72,14 @@ storeClasses.forEach((storeClass) => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
         armRecurringOccurrence(store);
 
-        (store as any).repointEditingOccurrence(
-          'following-event',
-          newStart,
-          newEnd,
-          true,
-          'default',
-        );
+        (store as any).repointEditingOccurrence({
+          eventId: 'following-event',
+          start: newStart,
+          end: newEnd,
+          isRecurring: true,
+          dataStart: newStart,
+          dataEnd: newEnd,
+        });
 
         const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
         expect(occurrence.id).to.equal('following-event');
@@ -100,13 +102,14 @@ storeClasses.forEach((storeClass) => {
         const displayStart = adapter.date('2025-07-08T23:00:00', 'America/New_York');
         const displayEnd = adapter.addHours(displayStart, 1);
 
-        (store as any).repointEditingOccurrence(
-          'following-event',
-          displayStart,
-          displayEnd,
-          true,
-          'UTC',
-        );
+        (store as any).repointEditingOccurrence({
+          eventId: 'following-event',
+          start: displayStart,
+          end: displayEnd,
+          isRecurring: true,
+          dataStart: adapter.setTimezone(displayStart, 'UTC'),
+          dataEnd: adapter.setTimezone(displayEnd, 'UTC'),
+        });
 
         const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
         // Rendered keys expand in the data timezone, so the repointed key must match the data-tz day...
@@ -126,13 +129,14 @@ storeClasses.forEach((storeClass) => {
       it('should be a no-op when nothing is being edited', () => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
 
-        (store as any).repointEditingOccurrence(
-          'detached-event',
-          newStart,
-          newEnd,
-          false,
-          'default',
-        );
+        (store as any).repointEditingOccurrence({
+          eventId: 'detached-event',
+          start: newStart,
+          end: newEnd,
+          isRecurring: false,
+          dataStart: newStart,
+          dataEnd: newEnd,
+        });
 
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
       });
@@ -389,11 +393,14 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.dataTimezone.end.value).toEqualDateTime(resizedEnd);
     });
 
-    it("should re-key the armed occurrence onto the changed day with scope 'all'", () => {
+    it("should disarm when a scope 'all' date move edits an occurrence that is not the series start", () => {
       const store = createStore();
       armOccurrence(store, dayB);
 
-      // Move the armed occurrence (the 8th) one day later with scope 'all'.
+      // Drag the armed occurrence (the 8th, not the series start) one day later with
+      // scope 'all'. The pattern keeps the occurrence on its own day (only the time
+      // reaches DTSTART), so re-keying onto the changed day would anchor the armed
+      // toolbar on a sibling — and a follow-up Delete would exDate the wrong day.
       const movedStart = adapter.addHours(dayB, 25);
       const movedEnd = adapter.addHours(movedStart, 1);
       store.updateRecurringEvent({
@@ -402,14 +409,46 @@ premiumStoreClasses.forEach((storeClass) => {
       });
       store.selectRecurringEventScope('all');
 
+      expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+    });
+
+    it("should keep the armed occurrence on a same-day scope 'all' time change", () => {
+      const store = createStore();
+      const armedKey = getRecurringOccurrenceKey('standup', dayB, adapter);
+      armOccurrence(store, dayB);
+
+      const movedStart = adapter.addHours(dayB, 1);
+      const movedEnd = adapter.addHours(movedStart, 1);
+      store.updateRecurringEvent({
+        occurrenceStart: dayB,
+        changes: { id: 'standup', start: movedStart, end: movedEnd },
+      });
+      store.selectRecurringEventScope('all');
+
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
-      // A later delete keys off this identity: left on the 8th, it would exDate a
-      // day the highlight no longer sits on.
+      expect(occurrence.key).to.equal(armedKey);
+      expect(occurrence.dataTimezone.start.value).toEqualDateTime(movedStart);
+      expect(occurrence.displayTimezone.rrule).to.not.equal(undefined);
+    });
+
+    it("should re-key the armed occurrence onto the changed day when scope 'all' moves the series start", () => {
+      const store = createStore();
+      armOccurrence(store, dayA);
+
+      // The armed occurrence is the series start: a scope-'all' date move relocates
+      // DTSTART, so the occurrence really lands on the changed day.
+      const movedStart = adapter.addHours(dayA, 25);
+      const movedEnd = adapter.addHours(movedStart, 1);
+      store.updateRecurringEvent({
+        occurrenceStart: dayA,
+        changes: { id: 'standup', start: movedStart, end: movedEnd },
+      });
+      store.selectRecurringEventScope('all');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       expect(occurrence.key).to.equal(getRecurringOccurrenceKey('standup', movedStart, adapter));
       expect(occurrence.dataTimezone.start.value).toEqualDateTime(movedStart);
-      // An in-place 'all' update keeps the series recurring.
       expect(occurrence.displayTimezone.rrule).to.not.equal(undefined);
-      expect(occurrence.dataTimezone.rrule).to.not.equal(undefined);
     });
 
     it('should re-point a rename-only scope change onto the detached event', () => {

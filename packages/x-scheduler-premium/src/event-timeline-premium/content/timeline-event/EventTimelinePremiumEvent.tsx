@@ -217,8 +217,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataStart={dataBounds?.start}
-      dataEnd={dataBounds?.end}
+      dataBounds={dataBounds}
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}

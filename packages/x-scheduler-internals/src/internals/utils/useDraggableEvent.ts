@@ -8,7 +8,8 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
-import type { SchedulerEventId, SchedulerProcessedDate } from '../../models';
+import type { SchedulerEventId } from '../../models';
+import type { SchedulerOccurrenceDataBounds } from './event-utils';
 import type { useElementPositionInCollection } from './useElementPositionInCollection';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
@@ -126,12 +127,11 @@ export namespace useDraggableEvent {
     occurrenceKey: string;
     /**
      * The occurrence bounds in the data timezone, used as the occurrence identity for
-     * recurring drag updates. Defaults to `start`/`end` (the display bounds). Read by
-     * the grid event components when building the original drag occurrence, not by
-     * this hook itself.
+     * recurring drag and resize updates. Defaults to `start`/`end` (the display bounds),
+     * which only placeholder occurrences may rely on. Consumed by the grid event
+     * components through `useOriginalOccurrence` when building the drag data.
      */
-    dataStart?: SchedulerProcessedDate;
-    dataEnd?: SchedulerProcessedDate;
+    dataBounds?: SchedulerOccurrenceDataBounds;
   }
 
   export interface Parameters extends PublicParameters {

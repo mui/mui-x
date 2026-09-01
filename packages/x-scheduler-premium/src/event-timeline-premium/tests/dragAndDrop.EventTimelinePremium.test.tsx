@@ -269,6 +269,11 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     expect(
       adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
     ).to.equal('2025-07-04');
+
+    // The dragged occurrence materializes as a detached one-off on the drop day.
+    const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
+    expect(detached.rrule).to.equal(undefined);
+    expect(detached.start).to.not.equal(event.start);
   });
 
   it('should exclude the dragged occurrence of its own day when dragged from a secondary resource row', async () => {
@@ -316,6 +321,12 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     expect(
       adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
     ).to.equal('2025-07-04');
+
+    // The dragged occurrence materializes as a detached one-off on the drop day,
+    // keeping the appearance's resources intact.
+    const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
+    expect(detached.rrule).to.equal(undefined);
+    expect(detached.start).to.not.equal(event.start);
   });
 
   it('should resize an event end to a later time', async () => {

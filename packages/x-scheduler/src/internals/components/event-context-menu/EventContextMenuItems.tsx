@@ -76,7 +76,7 @@ export function useEventContextMenuItems(
     // Captured before the delete unmounts `anchorEl` — see `getFocusFallback`. Only the
     // immediate delete needs it; the scope dialog manages its own focus.
     const focusFallback = getFocusFallback(anchorEl);
-    if (!store.deleteOccurrence(occurrence)) {
+    if (store.deleteOccurrence(occurrence)) {
       focusFallback?.focus();
     }
   };

@@ -437,8 +437,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     <DayGridEventRoot
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataStart={dataBounds?.start}
-      dataEnd={dataBounds?.end}
+      dataBounds={dataBounds}
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}

@@ -262,6 +262,27 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
   });
 
+  it('should delete the event and close the dialog when Delete is pressed on a non-recurring event', async () => {
+    const onEventsChange = vi.fn();
+    const onClose = vi.fn();
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        resources={resources}
+        onEventsChange={onEventsChange}
+      >
+        <EventDialogContent open {...defaultProps} onClose={onClose} />
+      </EventCalendarProvider>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Delete event' }));
+
+    // Without the recurring plugin the delete applies immediately and the dialog closes.
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+    expect(onClose.mock.calls.length).to.equal(1);
+  });
+
   it('should not render the resource select when there are no resources, but should keep the color picker', () => {
     const noResourceEvent: SchedulerEvent = EventBuilder.new()
       .title('Running')

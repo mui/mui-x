@@ -230,8 +230,7 @@ describe('event-utils', () => {
         occurrenceKey: 'key',
         start: processed.displayTimezone.start,
         end: processed.displayTimezone.end,
-        dataStart: processed.dataTimezone.start,
-        dataEnd: processed.dataTimezone.end,
+        dataBounds: processed.dataTimezone,
       });
 
       // Display bounds normalize to New York July 3rd; the data identity stays July 4th.
