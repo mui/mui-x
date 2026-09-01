@@ -1,7 +1,7 @@
-import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import type { ExtendableRichTreeViewStore } from '@mui/x-tree-view/internals';
+import { vi, it, expect } from 'vitest';
 
 // `addItems` is a Rich Tree View only API. The Simple Tree View derives its items from JSX
 // and does not expose it, so this suite is typed with the Rich store and skips the Simple variant.
@@ -70,7 +70,7 @@ describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
     });
 
     it('should update the indexes of the following siblings', () => {
-      const onSelectedItemsChange = spy();
+      const onSelectedItemsChange = vi.fn();
 
       const view = render({
         items: [{ id: '1' }, { id: '3' }],
@@ -85,7 +85,7 @@ describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
       // Check if the internal state is updated by running a range selection
       fireEvent.click(view.getItemContent('2'));
       fireEvent.click(view.getItemContent('3'), { shiftKey: true });
-      expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['2', '3']);
+      expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['2', '3']);
     });
 
     it('should support editing a newly added item', () => {
@@ -123,7 +123,7 @@ describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
     });
 
     it('should select the new items when their parent is selected and the selection propagates to the descendants', () => {
-      const onSelectedItemsChange = spy();
+      const onSelectedItemsChange = vi.fn();
 
       const view = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -140,11 +140,11 @@ describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
         });
       });
 
-      expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1', '1.1', '1.2', '1.2.1']);
+      expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['1', '1.1', '1.2', '1.2.1']);
     });
 
     it('should only toggle the new items, not the whole parent subtree', () => {
-      const onItemSelectionToggle = spy();
+      const onItemSelectionToggle = vi.fn();
 
       const view = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -161,12 +161,12 @@ describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
         });
       });
 
-      const toggled = onItemSelectionToggle.getCalls().map((call) => call.args[1]);
+      const toggled = onItemSelectionToggle.mock.calls.map((call) => call[1]);
       expect(toggled).to.deep.equal(['1.2', '1.2.1']);
     });
 
     it('should not select the new items when their parent is not selected', () => {
-      const onSelectedItemsChange = spy();
+      const onSelectedItemsChange = vi.fn();
 
       const view = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -179,11 +179,11 @@ describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
         view.apiRef.current.addItems({ items: [{ id: '1.2' }], parentId: '1' });
       });
 
-      expect(onSelectedItemsChange.callCount).to.equal(0);
+      expect(onSelectedItemsChange.mock.calls.length).to.equal(0);
     });
 
     it('should not select the new items when the selection does not propagate to the descendants', () => {
-      const onSelectedItemsChange = spy();
+      const onSelectedItemsChange = vi.fn();
 
       const view = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -196,7 +196,7 @@ describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
         view.apiRef.current.addItems({ items: [{ id: '1.2' }], parentId: '1' });
       });
 
-      expect(onSelectedItemsChange.callCount).to.equal(0);
+      expect(onSelectedItemsChange.mock.calls.length).to.equal(0);
     });
 
     it('should throw an error when the index is out of range', () => {

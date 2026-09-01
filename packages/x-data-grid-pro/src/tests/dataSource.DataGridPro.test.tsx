@@ -11,20 +11,20 @@ import type {
   GridGetRowsResponse,
   GridLogicOperator,
 } from '@mui/x-data-grid-pro';
-import { spy } from 'sinon';
 import { actSleep, getRow } from 'test/utils/helperFn';
 import { TestCache } from '@mui/x-data-grid/internals';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
-  const fetchRowsSpy = spy();
+  const fetchRowsSpy = vi.fn();
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset({ resetSpy }: { resetSpy: typeof fetchRowsSpy }) {
     React.useLayoutEffect(() => {
-      resetSpy.resetHistory();
+      resetSpy.mockClear();
     }, [resetSpy]);
     return null;
   }
@@ -90,32 +90,32 @@ describe('<DataGridPro /> - Data source', () => {
     it('should not re-fetch when an incomplete item is added next to a complete one', async () => {
       render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
 
       await upsertFilterItem({ id: 2, field: 'id', operator: 'contains' });
       await actSleep(50);
 
-      expect(fetchRowsSpy.callCount).to.equal(2);
-      expect(fetchRowsSpy.lastCall.args[0].filterModel.items).to.have.length(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
+      expect(fetchRowsSpy.mock.lastCall?.[0].filterModel.items).to.have.length(1);
     });
 
     // The logic operator only applies once two items can be combined.
     it('should re-fetch when the logic operator changes with two complete items', async () => {
       render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
       await upsertFilterItem({ id: 2, field: 'id', operator: 'contains', value: '2' });
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
 
       await act(async () => {
@@ -123,21 +123,21 @@ describe('<DataGridPro /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(4);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(4);
       });
-      expect(fetchRowsSpy.lastCall.args[0].filterModel.logicOperator).to.equal('or');
+      expect(fetchRowsSpy.mock.lastCall?.[0].filterModel.logicOperator).to.equal('or');
     });
 
     it('should not re-fetch when the logic operator changes next to an incomplete item', async () => {
       render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
       await upsertFilterItem({ id: 2, field: 'id', operator: 'contains' });
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
 
       await act(async () => {
@@ -145,33 +145,33 @@ describe('<DataGridPro /> - Data source', () => {
       });
       await actSleep(50);
 
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
 
     // The skipped operator change must not be lost: the next real fetch carries it.
     it('should send the logic operator set while it could not apply', async () => {
       render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
 
       await act(async () => {
         apiRef.current!.setFilterLogicOperator('or' as GridLogicOperator);
       });
       await actSleep(50);
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
 
       await upsertFilterItem({ id: 2, field: 'id', operator: 'contains', value: '2' });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
-      const { filterModel } = fetchRowsSpy.lastCall.args[0];
+      const { filterModel } = fetchRowsSpy.mock.lastCall?.[0] ?? {};
       expect(filterModel.logicOperator).to.equal('or');
       expect(filterModel.items).to.have.length(2);
     });
@@ -179,14 +179,14 @@ describe('<DataGridPro /> - Data source', () => {
     it('should re-fetch when the quick filter logic operator changes with two values', async () => {
       render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
       await act(async () => {
         apiRef.current!.setQuickFilterValues(['1', '2']);
       });
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
 
       await act(async () => {
@@ -197,9 +197,9 @@ describe('<DataGridPro /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
-      expect(fetchRowsSpy.lastCall.args[0].filterModel.quickFilterLogicOperator).to.equal('or');
+      expect(fetchRowsSpy.mock.lastCall?.[0].filterModel.quickFilterLogicOperator).to.equal('or');
     });
   });
 
@@ -208,7 +208,7 @@ describe('<DataGridPro /> - Data source', () => {
       const testCache = new TestCache();
       render(<TestDataSource dataSourceCache={testCache} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(199)).not.to.be.undefined);
@@ -218,7 +218,7 @@ describe('<DataGridPro /> - Data source', () => {
 
   describe('Revalidation', () => {
     it('should periodically revalidate the current query when dataSourceRevalidateMs is set', async () => {
-      const localFetchRowsSpy = spy();
+      const localFetchRowsSpy = vi.fn();
       render(
         <TestDataSource
           dataSourceCache={null}
@@ -227,14 +227,57 @@ describe('<DataGridPro /> - Data source', () => {
         />,
       );
       await waitFor(() => {
-        expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
+        expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
       });
 
-      localFetchRowsSpy.resetHistory();
+      localFetchRowsSpy.mockClear();
 
       await waitFor(() => {
-        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+        expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
       });
+    });
+  });
+  // Data source rows live in the state, but a new `getRowId` must still re-key them.
+  it('should re-key the rows when `getRowId` changes', async () => {
+    const rows = [
+      { id: 'a', alt: 'alt-a', name: 'Row A' },
+      { id: 'b', alt: 'alt-b', name: 'Row B' },
+    ];
+
+    function TestGetRowId(props: { useAltId?: boolean }) {
+      const { useAltId = false } = props;
+      apiRef = useGridApiRef();
+
+      const dataSource: GridDataSource = React.useMemo(
+        () => ({ getRows: async () => ({ rows, rowCount: rows.length }) }),
+        [],
+      );
+
+      const getRowId = React.useCallback((row: any) => (useAltId ? row.alt : row.id), [useAltId]);
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }]}
+            dataSource={dataSource}
+            getRowId={getRowId}
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestGetRowId />);
+
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.dataRowIds).to.deep.equal(['a', 'b']);
+    });
+
+    setProps({ useAltId: true });
+
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.dataRowIds).to.deep.equal(['alt-a', 'alt-b']);
     });
   });
 });

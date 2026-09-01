@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-internals",
-  "version": "9.0.0-beta.8",
+  "version": "9.0.0-beta.10",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Scheduler internals.",
   "license": "MIT",
@@ -56,9 +56,10 @@
     "big-calendar"
   ],
   "scripts": {
-    "typescript": "tsgo -p tsconfig.json",
-    "build": "code-infra build --tsgo --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
-    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+    "typescript": "tsc -p tsconfig.json",
+    "build": "code-infra build --tsgo --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\" --ignore 'src/**/*.bench.ts'",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
+    "bench:jsdom": "pnpm vitest bench -c ./vitest.config.jsdom.mts"
   },
   "repository": {
     "type": "git",
@@ -67,7 +68,7 @@
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "catalog:",
-    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.5",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^3.1.0",
     "@babel/runtime": "catalog:",
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",

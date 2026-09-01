@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-internals",
-  "version": "9.11.0",
+  "version": "9.12.0",
   "author": "MUI Team",
   "description": "Utility functions for the MUI X packages (internal use only).",
   "license": "MIT",
@@ -26,7 +26,7 @@
     "utils"
   ],
   "scripts": {
-    "typescript": "tsgo -p tsconfig.json",
+    "typescript": "tsc -p tsconfig.json",
     "build": "code-infra build --tsgo",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },

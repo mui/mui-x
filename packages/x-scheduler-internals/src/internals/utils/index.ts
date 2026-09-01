@@ -10,6 +10,7 @@ export * from './useElementPositionInCollection';
 export * from './timeline-axis';
 export * from './useEvent';
 export * from './useDraggableEvent';
+export * from './useElementDragMarker';
 export * from './useTimelineDragAutoScroll';
 export * from './TimeoutManager';
 export * from './date-utils';

@@ -1,5 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { describe, it, expect } from 'vitest';
 import { getMonthlyReference, getWeeklyDays } from './presets';
 
 describe('recurring-events/presets', () => {

@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { fireEvent, waitFor } from '@mui/internal-test-utils';
-import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
 import {
@@ -9,6 +8,7 @@ import {
   describeConformance,
   ResourceBuilder,
 } from 'test/utils/scheduler';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<TimelineGrid.EventDependencyTerminal />', () => {
   const { render } = createSchedulerRenderer();
@@ -37,7 +37,7 @@ describe('<TimelineGrid.EventDependencyTerminal />', () => {
   );
 
   it('should stamp its side into the drag data', async () => {
-    const onDragStart = spy();
+    const onDragStart = vi.fn();
     const cleanup = monitorForElements({ onDragStart });
     render(
       <Wrapper>
@@ -54,9 +54,9 @@ describe('<TimelineGrid.EventDependencyTerminal />', () => {
       dataTransfer: new DataTransfer(),
     });
     await waitFor(() => {
-      expect(onDragStart.callCount).to.equal(1);
+      expect(onDragStart.mock.calls.length).to.equal(1);
     });
-    const { data } = onDragStart.firstCall.firstArg.source;
+    const { data } = onDragStart.mock.calls[0][0].source;
     expect(data.sourceSide).to.equal('start');
     expect(data.eventId).to.equal('fake-id');
     fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });

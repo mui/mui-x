@@ -17,7 +17,7 @@ import type {
 import { EventItem } from '../event/event-item/EventItem';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
-import { EventEditingTrigger } from '../event-editing';
+import { EventContextMenuTrigger } from '../event-context-menu';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 const MoreEventsPopoverHeader = styled('div', {
@@ -143,14 +143,20 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       </MoreEventsPopoverHeader>
       <MoreEventsPopoverBody className={classes.moreEventsPopoverBody}>
         {occurrences.map((occurrence) => (
-          <EventEditingTrigger occurrence={occurrence} key={occurrence.key}>
+          <EventContextMenuTrigger
+            occurrence={occurrence}
+            key={occurrence.key}
+            onEditingCanceled={onClose}
+            // A cancellation closes this popover and unmounts the clicked item.
+            stableAnchor={anchor}
+          >
             <EventItem
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
               occurrence={occurrence}
               date={day}
               ariaLabelledBy={`${schedulerId}-PopoverHeader-${day.key}`}
             />
-          </EventEditingTrigger>
+          </EventContextMenuTrigger>
         ))}
       </MoreEventsPopoverBody>
     </Popover>

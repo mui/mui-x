@@ -59,7 +59,6 @@ export default defineConfig({
     alias,
   },
   test: {
-    globals: true,
     setupFiles: [fileURLToPath(new URL('test/setupVitest.ts', import.meta.url))],
     // Inline so Vite resolves @mui/material's `react-transition-group/TransitionGroupContext`
     // directory import (legacy `main`/`module`, no `exports`), which native ESM rejects.

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { createRenderer } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLocalizationContext } from '@mui/x-date-pickers/internals';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import type { PickersLocaleText } from '@mui/x-date-pickers/locales';
 import { AdapterClassToUse } from 'test/utils/pickers';
+import { vi, describe, it, expect } from 'vitest';
 
 function ContextListener({
   onContextChange,
@@ -25,7 +25,7 @@ describe('<LocalizationProvider />', () => {
   const { render } = createRenderer();
 
   it('should respect localeText from the theme', () => {
-    const handleContextChange = spy();
+    const handleContextChange = vi.fn();
 
     const theme = createTheme({
       components: {
@@ -45,13 +45,13 @@ describe('<LocalizationProvider />', () => {
       </ThemeProvider>,
     );
 
-    const localeText: PickersLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
     expect(localeText.start).to.equal('Debut');
     expect(localeText.end).to.equal('End');
   });
 
   it('should prioritize localeText key passed on LocalizationProvider compared to key passed from the theme', () => {
-    const handleContextChange = spy();
+    const handleContextChange = vi.fn();
 
     const theme = createTheme({
       components: {
@@ -71,12 +71,12 @@ describe('<LocalizationProvider />', () => {
       </ThemeProvider>,
     );
 
-    const localeText: PickersLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
     expect(localeText.start).to.equal('Start');
   });
 
   it('should prioritize deepest LocalizationProvider when using nested ones', () => {
-    const handleContextChange = spy();
+    const handleContextChange = vi.fn();
 
     render(
       <LocalizationProvider dateAdapter={AdapterClassToUse} localeText={{ start: 'Empezar' }}>
@@ -86,12 +86,12 @@ describe('<LocalizationProvider />', () => {
       </LocalizationProvider>,
     );
 
-    const localeText: PickersLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
     expect(localeText.start).to.equal('Début');
   });
 
   it("should not loose locales from higher LocalizationProvider when deepest one don't have the translation key", () => {
-    const handleContextChange = spy();
+    const handleContextChange = vi.fn();
 
     render(
       <LocalizationProvider dateAdapter={AdapterClassToUse} localeText={{ start: 'Empezar' }}>
@@ -101,7 +101,7 @@ describe('<LocalizationProvider />', () => {
       </LocalizationProvider>,
     );
 
-    const localeText: PickersLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
     expect(localeText.start).to.equal('Empezar');
   });
 });

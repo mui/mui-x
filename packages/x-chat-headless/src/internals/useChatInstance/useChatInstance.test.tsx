@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { act, renderHook } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { spy } from 'sinon';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import type { ChatConversation, ChatMessage } from '../../types/chat-entities';
 import { useChatInstance } from './useChatInstance';
 
@@ -104,10 +104,10 @@ describe('useChatInstance', () => {
   });
 
   it('calls the matching onChange callbacks for internal store mutations', () => {
-    const onMessagesChange = spy();
-    const onConversationsChange = spy();
-    const onActiveConversationChange = spy();
-    const onComposerValueChange = spy();
+    const onMessagesChange = vi.fn();
+    const onConversationsChange = vi.fn();
+    const onActiveConversationChange = vi.fn();
+    const onComposerValueChange = vi.fn();
     const { result } = renderHook(() =>
       useChatInstance({
         onMessagesChange,
@@ -124,21 +124,21 @@ describe('useChatInstance', () => {
       result.current.setComposerValue('Draft one');
     });
 
-    expect(onMessagesChange.callCount).toBe(1);
-    expect(onMessagesChange.lastCall.args[0]).toEqual([message1]);
-    expect(onConversationsChange.callCount).toBe(1);
-    expect(onConversationsChange.lastCall.args[0]).toEqual([conversation1]);
-    expect(onActiveConversationChange.callCount).toBe(1);
-    expect(onActiveConversationChange.lastCall.args[0]).toBe('c1');
-    expect(onComposerValueChange.callCount).toBe(1);
-    expect(onComposerValueChange.lastCall.args[0]).toBe('Draft one');
+    expect(onMessagesChange.mock.calls.length).toBe(1);
+    expect(onMessagesChange.mock.lastCall?.[0]).toEqual([message1]);
+    expect(onConversationsChange.mock.calls.length).toBe(1);
+    expect(onConversationsChange.mock.lastCall?.[0]).toEqual([conversation1]);
+    expect(onActiveConversationChange.mock.calls.length).toBe(1);
+    expect(onActiveConversationChange.mock.lastCall?.[0]).toBe('c1');
+    expect(onComposerValueChange.mock.calls.length).toBe(1);
+    expect(onComposerValueChange.mock.lastCall?.[0]).toBe('Draft one');
   });
 
   it('does not echo controlled prop sync through onChange callbacks', () => {
-    const onMessagesChange = spy();
-    const onConversationsChange = spy();
-    const onActiveConversationChange = spy();
-    const onComposerValueChange = spy();
+    const onMessagesChange = vi.fn();
+    const onConversationsChange = vi.fn();
+    const onActiveConversationChange = vi.fn();
+    const onComposerValueChange = vi.fn();
     const { rerender } = renderHook(
       ({
         messages,
@@ -179,10 +179,10 @@ describe('useChatInstance', () => {
       composerValue: 'Draft two',
     });
 
-    expect(onMessagesChange.callCount).toBe(0);
-    expect(onConversationsChange.callCount).toBe(0);
-    expect(onActiveConversationChange.callCount).toBe(0);
-    expect(onComposerValueChange.callCount).toBe(0);
+    expect(onMessagesChange.mock.calls.length).toBe(0);
+    expect(onConversationsChange.mock.calls.length).toBe(0);
+    expect(onActiveConversationChange.mock.calls.length).toBe(0);
+    expect(onComposerValueChange.mock.calls.length).toBe(0);
   });
 
   it('keeps activeConversationId controlled when rerendered with undefined', () => {
@@ -251,7 +251,7 @@ describe('useChatInstance', () => {
   });
 
   it('cleans up subscriptions correctly in Strict Mode', () => {
-    const onMessagesChange = spy();
+    const onMessagesChange = vi.fn();
     const wrapper = ({ children }: React.PropsWithChildren) => (
       <React.StrictMode>{children}</React.StrictMode>
     );
@@ -261,6 +261,6 @@ describe('useChatInstance', () => {
       result.current.addMessage(message1);
     });
 
-    expect(onMessagesChange.callCount).toBe(1);
+    expect(onMessagesChange.mock.calls.length).toBe(1);
   });
 });

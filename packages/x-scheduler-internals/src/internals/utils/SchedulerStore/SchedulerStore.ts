@@ -23,6 +23,8 @@ import type {
   SchedulerEventPasteProperties,
   SchedulerSelection,
   SchedulerRenderableEventOccurrence,
+  SchedulerEventOccurrence,
+  SchedulerEventOccurrencePlaceholder,
 } from '../../../models';
 import type {
   SchedulerState,
@@ -34,6 +36,7 @@ import type {
   UpdateEventsParameters,
   SchedulerInstanceName,
   SchedulerEditingMode,
+  SchedulerEventEditingStartEventDetails,
 } from './SchedulerStore.types';
 import { processDate } from '../../../process-date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
@@ -121,12 +124,13 @@ export class SchedulerStore<
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...(parameters.dataSource
         ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
-        : buildEventsState(
-            parameters,
+        : buildEventsState({
+            events: parameters.events,
+            eventModelStructure: parameters.eventModelStructure,
             adapter,
-            stateFromParameters.displayTimezone,
+            displayTimezone: stateFromParameters.displayTimezone,
             recurringEventsPlugin,
-          )),
+          })),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
@@ -251,16 +255,18 @@ export class SchedulerStore<
       !parameters.dataSource &&
       (parameters.events !== this.parameters.events ||
         parameters.eventModelStructure !== this.parameters.eventModelStructure ||
-        adapter !== this.state.adapter)
+        adapter !== this.state.adapter ||
+        newSchedulerState.displayTimezone !== this.state.displayTimezone)
     ) {
       Object.assign(
         newSchedulerState,
-        buildEventsState(
-          parameters,
+        buildEventsState({
+          events: parameters.events,
+          eventModelStructure: parameters.eventModelStructure,
           adapter,
-          newSchedulerState.displayTimezone!,
-          this.state.recurringEventsPlugin,
-        ),
+          displayTimezone: newSchedulerState.displayTimezone!,
+          previousState: this.state,
+        }),
       );
     }
     // Recompute "now" only when the display timezone changes; the minute timer maintains it otherwise.
@@ -889,31 +895,120 @@ export class SchedulerStore<
   /**
    * Sets the occurrence placeholder to render while creating a new event or dragging an existing event occurrence.
    */
-  public setOccurrencePlaceholder = (newPlaceholder: SchedulerOccurrencePlaceholder | null) => {
+  public setOccurrencePlaceholder = (
+    newPlaceholder: SchedulerOccurrencePlaceholder | null,
+    event?: Event,
+  ) => {
     const { adapter, occurrencePlaceholder: previous } = this.state;
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
+      this.occurrencePlaceholderEvent = newPlaceholder == null ? undefined : event;
       this.set('occurrencePlaceholder', newPlaceholder);
     }
   };
 
   /**
-   * Marks an occurrence (existing or creation draft) as the one being edited. Only records *what*
-   * is edited; opening the surface (dialog or drawer) is handled separately.
+   * Native event that initiated the current placeholder, forwarded to `onEventEditingStart`
+   * when the creation flow reaches `startEditing` (which runs in an effect, past the DOM event).
+   */
+  private occurrencePlaceholderEvent: Event | undefined;
+
+  /**
+   * Runs `onEventEditingStart` right before the editing surface (dialog or drawer) opens. Arming
+   * does not go through here — only the transitions that actually open the surface do.
+   * Returns `false` when the handler canceled, cleaning up a pending creation draft.
+   */
+  private requestEditingStart(
+    occurrence: SchedulerRenderableEventOccurrence,
+    event?: Event,
+    trigger?: HTMLElement,
+    anchor?: HTMLElement,
+  ): boolean {
+    const isCreation = this.state.occurrencePlaceholder?.type === 'creation';
+    // Callers whose trigger a cancellation would unmount pass a dedicated `anchor` that survives it;
+    // everywhere else the trigger doubles as the positioning anchor.
+    const resolvedAnchor = anchor ?? trigger;
+    // The casts encode the runtime correlation the type system can't prove: a creation always
+    // edits the draft placeholder, anything else edits a real occurrence.
+    let eventDetails: SchedulerEventEditingStartEventDetails;
+    if (isCreation) {
+      eventDetails = createChangeEventDetails(
+        'creation',
+        event ?? this.occurrencePlaceholderEvent,
+        trigger,
+        {
+          occurrence: occurrence as SchedulerEventOccurrencePlaceholder,
+          anchor: resolvedAnchor,
+        },
+      );
+    } else {
+      // The dialog renders view-only content for read-only occurrences — surface that as its own reason.
+      const reason = schedulerEventSelectors.isReadOnly(this.state, occurrence.id)
+        ? 'view'
+        : 'edit';
+      eventDetails = createChangeEventDetails(reason, event, trigger, {
+        occurrence: occurrence as SchedulerEventOccurrence,
+        anchor: resolvedAnchor,
+      });
+    }
+    this.parameters.onEventEditingStart?.(occurrence, eventDetails);
+    if (eventDetails.isCanceled) {
+      // Canceled during a creation: the draft placeholder already exists — drop it.
+      if (isCreation) {
+        this.setOccurrencePlaceholder(null);
+      }
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Marks an occurrence (existing or creation draft) as the one being edited, running
+   * `onEventEditingStart` first when the mode opens the editing surface.
+   * Returns `false` when the handler canceled and nothing was recorded.
+   * Repeat calls for an occurrence already open in the surface are no-ops that return `true`.
    */
   public startEditing = (
     occurrence: SchedulerRenderableEventOccurrence,
     mode: SchedulerEditingMode = 'edit',
-  ) => {
+    event?: Event,
+    trigger?: HTMLElement,
+    anchor?: HTMLElement,
+  ): boolean => {
+    const current = this.state.editingOccurrence;
+    // Creation effects re-run on placeholder churn: once the surface is open for this occurrence,
+    // repeat calls are no-ops so the consumer callback stays one-shot per activation.
+    if (mode === 'edit' && current?.mode === 'edit' && current.occurrence.key === occurrence.key) {
+      return true;
+    }
+    if (mode === 'edit' && !this.requestEditingStart(occurrence, event, trigger, anchor)) {
+      return false;
+    }
     this.set('editingOccurrence', { occurrence, mode });
+    return true;
   };
 
   /**
    * Switches the edited occurrence between the armed state (toolbar + resize) and the editing form,
    * keeping the same occurrence. No-op when nothing is being edited.
    */
-  public setEditingMode = (mode: SchedulerEditingMode) => {
+  public setEditingMode = (
+    mode: SchedulerEditingMode,
+    event?: Event,
+    trigger?: HTMLElement,
+    anchor?: HTMLElement,
+  ) => {
     const { editingOccurrence } = this.state;
     if (editingOccurrence == null || editingOccurrence.mode === mode) {
+      return;
+    }
+    // Armed → edit opens the surface (e.g. the armed toolbar's Edit action). Canceling disarms:
+    // the armed state keeps document-wide guards (scroll block, outside-pointer capture) that must
+    // not stay active under the custom UI the consumer opens instead.
+    if (
+      mode === 'edit' &&
+      !this.requestEditingStart(editingOccurrence.occurrence, event, trigger, anchor)
+    ) {
+      this.stopEditing();
       return;
     }
     this.set('editingOccurrence', { ...editingOccurrence, mode });
