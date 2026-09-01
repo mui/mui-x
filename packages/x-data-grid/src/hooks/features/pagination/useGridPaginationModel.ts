@@ -226,6 +226,10 @@ export const useGridPaginationModel = (
    * EVENTS
    */
   const handlePaginationModelChange: GridEventListener<'paginationModelChange'> = () => {
+    if (!props.pagination) {
+      return;
+    }
+
     const paginationModel = gridPaginationModelSelector(apiRef);
     if (apiRef.current.virtualScrollerRef?.current) {
       const paginationRange = gridPaginationRowRangeSelector(apiRef);
