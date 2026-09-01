@@ -118,12 +118,11 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 
   const isLoading = loading || lazyLoadingRootIsLoading;
 
+  let content: React.ReactNode;
   if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
-  }
-
-  if (isLoading) {
-    return (
+    content = <Alert severity="error">{error.message}</Alert>;
+  } else if (isLoading) {
+    content = (
       <RichTreeViewLoading
         store={store}
         slots={slots}
@@ -134,8 +133,19 @@ const RichTreeView = React.forwardRef(function RichTreeView<
         classes={classes}
       />
     );
+  } else {
+    content = (
+      <RichTreeViewItems
+        slots={slots}
+        slotProps={slotProps}
+        forwardedProps={forwardedProps}
+        ownerState={props}
+        rootRef={handleRef}
+      />
+    );
   }
 
+  // The provider must mount in the loading and error states too, so `apiRef` is initialized on mount.
   return (
     <TreeViewProvider
       store={store}
@@ -146,13 +156,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
       rootRef={ref}
     >
       <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
-        <RichTreeViewItems
-          slots={slots}
-          slotProps={slotProps}
-          forwardedProps={forwardedProps}
-          ownerState={props}
-          rootRef={handleRef}
-        />
+        {content}
       </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );

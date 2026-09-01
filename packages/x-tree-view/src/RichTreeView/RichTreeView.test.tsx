@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { RichTreeView, richTreeViewClasses as classes } from '@mui/x-tree-view/RichTreeView';
+import type { RichTreeViewApiRef } from '@mui/x-tree-view/RichTreeView';
 import { TreeItemLoader } from '@mui/x-tree-view/TreeItemLoader';
 import type { TreeItemLoaderProps } from '@mui/x-tree-view/TreeItemLoader';
 import { describeConformance } from 'test/utils/describeConformance';
@@ -63,6 +64,14 @@ describe('<RichTreeView />', () => {
 
       expect(screen.getByRole('tree')).not.to.have.attribute('aria-busy');
       expect(screen.getAllByRole('treeitem')).to.have.length(ITEMS.length);
+    });
+
+    it('should initialize apiRef on mount while loading', () => {
+      const apiRef: RichTreeViewApiRef = { current: undefined };
+      render(<RichTreeView items={[]} loading apiRef={apiRef} />);
+
+      expect(apiRef.current).not.to.equal(undefined);
+      expect(apiRef.current!.focusItem).to.be.a('function');
     });
 
     it('should mark item loaders as disabled via aria-disabled', () => {

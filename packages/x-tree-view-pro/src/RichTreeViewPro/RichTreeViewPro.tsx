@@ -149,23 +149,6 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     return <Alert severity="error">{error.message}</Alert>;
   }
 
-  if (isLoading) {
-    return (
-      <React.Fragment>
-        <RichTreeViewLoading
-          store={store}
-          slots={slots}
-          slotProps={slotProps}
-          ownerState={props}
-          forwardedProps={forwardedProps}
-          rootRef={handleRef}
-          classes={classes}
-        />
-        <Watermark packageInfo={packageInfo} />
-      </React.Fragment>
-    );
-  }
-
   const Renderer = isVirtualizationEnabled ? RichTreeViewVirtualizedItems : RichTreeViewItems;
 
   return (
@@ -178,13 +161,26 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
       rootRef={ref}
     >
       <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
-        <Renderer
-          slots={slots}
-          slotProps={slotProps}
-          forwardedProps={forwardedProps}
-          ownerState={props}
-          rootRef={handleRef}
-        />
+        {isLoading ? (
+          // The loading UI must render inside the provider so `apiRef` is initialized on mount.
+          <RichTreeViewLoading
+            store={store}
+            slots={slots}
+            slotProps={slotProps}
+            ownerState={props}
+            forwardedProps={forwardedProps}
+            rootRef={handleRef}
+            classes={classes}
+          />
+        ) : (
+          <Renderer
+            slots={slots}
+            slotProps={slotProps}
+            forwardedProps={forwardedProps}
+            ownerState={props}
+            rootRef={handleRef}
+          />
+        )}
         <Watermark packageInfo={packageInfo} />
       </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
