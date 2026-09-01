@@ -2,8 +2,7 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import { getColumnValues, microtasks } from 'test/utils/helperFn';
-import { spy } from 'sinon';
-import { onTestFinished, describe, it, expect } from 'vitest';
+import { vi, onTestFinished, describe, it, expect } from 'vitest';
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import { GRID_FORMULA_FUNCTIONS, formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type {
@@ -248,23 +247,23 @@ describe('<DataGridPremium /> - Formulas', () => {
 
     it('should publish formulaEvaluated with the changed cells', async () => {
       await render(<Test />);
-      const listener = spy();
+      const listener = vi.fn();
       apiRef.current!.subscribeEvent('formulaEvaluated', listener);
 
       await act(async () => apiRef.current!.updateRows([{ id: 0, price: 10 }]));
 
-      expect(listener.callCount).to.equal(1);
-      expect(listener.lastCall.args[0].changedCells).to.deep.equal([{ id: 0, field: 'total' }]);
+      expect(listener.mock.calls.length).to.equal(1);
+      expect(listener.mock.lastCall?.[0].changedCells).to.deep.equal([{ id: 0, field: 'total' }]);
     });
 
     it('should not re-evaluate when an unrelated cell changes', async () => {
       await render(<Test />);
-      const listener = spy();
+      const listener = vi.fn();
       apiRef.current!.subscribeEvent('formulaEvaluated', listener);
 
       await act(async () => apiRef.current!.updateRows([{ id: 0, item: 'Apricot' }]));
 
-      expect(listener.callCount).to.equal(0);
+      expect(listener.mock.calls.length).to.equal(0);
       expect(getColumnValues(3)).to.deep.equal(['6', '5', '8']);
     });
   });
@@ -321,14 +320,14 @@ describe('<DataGridPremium /> - Formulas', () => {
           columns={summaryColumns}
         />,
       );
-      const listener = spy();
+      const listener = vi.fn();
       apiRef.current!.subscribeEvent('formulaEvaluated', listener);
 
       await act(async () => apiRef.current!.updateRows([{ id: 1, price: 10 }]));
 
       expect(getColumnValues(1)).to.deep.equal(['17', '', '']);
-      expect(listener.callCount).to.equal(1);
-      expect(listener.lastCall.args[0].changedCells).to.deep.equal([{ id: 0, field: 'summary' }]);
+      expect(listener.mock.calls.length).to.equal(1);
+      expect(listener.mock.lastCall?.[0].changedCells).to.deep.equal([{ id: 0, field: 'summary' }]);
     });
 
     it('should evaluate formula cells inside a range before the range consumer', async () => {
@@ -417,17 +416,17 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       expect(getColumnValues(2)).to.deep.equal(['10', '', '']);
 
-      const listener = spy();
+      const listener = vi.fn();
       apiRef.current!.subscribeEvent('formulaEvaluated', listener);
 
       // A change inside the rectangle recomputes the consumer.
       await act(async () => apiRef.current!.updateRows([{ id: 1, p2: 14 }]));
       expect(getColumnValues(2)).to.deep.equal(['20', '', '']);
-      expect(listener.callCount).to.equal(1);
+      expect(listener.mock.calls.length).to.equal(1);
 
       // A change outside the rectangle does not.
       await act(async () => apiRef.current!.updateRows([{ id: 2, p1: 7 }]));
-      expect(listener.callCount).to.equal(1);
+      expect(listener.mock.calls.length).to.equal(1);
       expect(getColumnValues(2)).to.deep.equal(['20', '', '']);
     });
 
@@ -532,7 +531,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       // Initial view order [a, b, c]: posVal = [price@3, price@2, price@1].
       expect(getColumnValues(2)).to.deep.equal(['20', '10', '30']);
 
-      const sortListener = spy();
+      const sortListener = vi.fn();
       apiRef.current!.subscribeEvent('sortedRowsSet', sortListener);
 
       await act(async () => apiRef.current!.setSortModel([{ field: 'posVal', sort: 'asc' }]));
@@ -543,7 +542,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       // exactly once — and even though they now disagree with the ascending
       // sort, the grid did not re-sort.
       expect(getColumnValues(2)).to.deep.equal(['30', '20', '10']);
-      expect(sortListener.callCount).to.equal(1);
+      expect(sortListener.mock.calls.length).to.equal(1);
     });
 
     it('should rebind COLUMN_POSITION references on visibility changes and column reorder', async () => {
@@ -824,7 +823,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       expect(getColumnValues(1)).to.deep.equal(['10', '5', '7']);
 
-      const filterListener = spy();
+      const filterListener = vi.fn();
       apiRef.current!.subscribeEvent('filteredRowsSet', filterListener);
 
       await act(async () =>
@@ -838,7 +837,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       // exist — but the grid never re-filters (one-shot, D4): the row stays
       // visible showing #REF!.
       expect(getColumnValues(1)).to.deep.equal(['10', '#REF!']);
-      expect(filterListener.callCount).to.equal(1);
+      expect(filterListener.mock.calls.length).to.equal(1);
     });
 
     it('should materialize COLUMN_VALUES over all pages', async () => {
@@ -963,14 +962,14 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       expect(getColumnValues(1)).to.deep.equal(['', '2', '8']);
 
-      const listener = spy();
+      const listener = vi.fn();
       apiRef.current!.subscribeEvent('formulaEvaluated', listener);
 
       await act(async () => apiRef.current!.updateRows([{ id: 0, _action: 'delete' }]));
 
       expect(getColumnValues(1)).to.deep.equal(['#REF!', '8']);
-      expect(listener.callCount).to.equal(1);
-      expect(listener.lastCall.args[0].changedCells).to.deep.equal([{ id: 1, field: 'calc' }]);
+      expect(listener.mock.calls.length).to.equal(1);
+      expect(listener.mock.lastCall?.[0].changedCells).to.deep.equal([{ id: 1, field: 'calc' }]);
     });
   });
 
@@ -993,7 +992,7 @@ describe('<DataGridPremium /> - Formulas', () => {
     });
 
     it('should ignore the valueGetter of the formula column for formula cells only', async () => {
-      const warnSpy = spy();
+      const warnSpy = vi.fn();
       const originalWarn = console.warn;
       console.warn = warnSpy;
       onTestFinished(() => {
@@ -1018,13 +1017,11 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       expect(getColumnValues(1)).to.deep.equal(['3', '700']);
       expect(
-        warnSpy
-          .getCalls()
-          .some((call) =>
-            call.args.some(
-              (arg) => typeof arg === 'string' && arg.includes('`allowFormulas` and `valueGetter`'),
-            ),
+        warnSpy.mock.calls.some((call) =>
+          call.some(
+            (arg) => typeof arg === 'string' && arg.includes('`allowFormulas` and `valueGetter`'),
           ),
+        ),
       ).to.equal(true);
     });
   });
@@ -1138,13 +1135,13 @@ describe('<DataGridPremium /> - Formulas', () => {
     });
 
     it('should not evaluate formulas when dataSource is set', async () => {
-      const warnSpy = spy();
+      const warnSpy = vi.fn();
       const originalWarn = console.warn;
       console.warn = warnSpy;
       onTestFinished(() => {
         console.warn = originalWarn;
       });
-      const getRows = spy(async () => ({
+      const getRows = vi.fn(async () => ({
         rows: baselineProps.rows as Record<string, unknown>[],
         rowCount: 3,
       }));
