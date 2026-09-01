@@ -1,6 +1,6 @@
 // `test/regressions` renders in a plain Vite app driven by Playwright, not in a Vitest
 // context, so `vi.useFakeTimers` is not available here. Use the fake-timers package
-// Vitest itself is built on, which is what Sinon wrapped.
+// Vitest itself is built on.
 import { install, type Clock } from '@sinonjs/fake-timers';
 
 declare global {
