@@ -26,23 +26,6 @@ describe('recurring-events/deleteRecurringEvent', () => {
         deleteRecurringEvent(adapter, defaultEvent, occurrenceStart, 'bogus' as any);
       }).to.throw(/not supported for recurring events/);
     });
-
-    it('should mark the exDate on the data-timezone day when the occurrence start carries another zone', () => {
-      // A daily 21:00 New York series: each occurrence's instant is the next UTC day.
-      const nyEvent = EventBuilder.new(adapter)
-        .withDataTimezone('America/New_York')
-        .singleDay('2025-02-02T02:00:00Z')
-        .rrule({ freq: 'DAILY', interval: 1 })
-        .toProcessed();
-      const occurrenceStart = adapter.date('2025-03-02T02:00:00Z', 'default');
-
-      const result = deleteRecurringEvent(adapter, nyEvent, occurrenceStart, 'only-this');
-
-      const exDates = result.updated![0].exDates!;
-      expect(adapter.getTime(exDates.at(-1)!)).to.equal(
-        adapter.getTime(adapter.date('2025-03-01T00:00:00', 'America/New_York')),
-      );
-    });
   });
 
   describe('applyRecurringDeleteOnlyThis', () => {

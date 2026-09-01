@@ -13,8 +13,6 @@ export function deleteRecurringEvent(
   occurrenceStart: TemporalSupportedObject,
   scope: RecurringEventScope,
 ): UpdateEventsParameters {
-  // Normalize once: all scope day math runs in the data timezone.
-  occurrenceStart = adapter.setTimezone(occurrenceStart, originalEvent.dataTimezone.timezone);
   switch (scope) {
     case 'this-and-following': {
       return applyRecurringDeleteFollowing(adapter, originalEvent, occurrenceStart);
@@ -41,7 +39,7 @@ export function deleteRecurringEvent(
 /**
  * Deletes a single occurrence by adding an EXDATE to the series.
  * Drops the whole series when excluding the occurrence would leave no occurrence.
- * Expects `occurrenceStart` labeled in the event's data timezone; the dispatcher normalizes it.
+ * Expects `occurrenceStart` labeled in the event's data timezone.
  * @returns The updated list of events.
  */
 export function applyRecurringDeleteOnlyThis(
@@ -66,7 +64,7 @@ export function applyRecurringDeleteOnlyThis(
 /**
  * Deletes the edited occurrence and every following one by truncating the rule to end the day
  * before. Drops the whole series when no occurrence remains before the edited one.
- * Expects `occurrenceStart` labeled in the event's data timezone; the dispatcher normalizes it.
+ * Expects `occurrenceStart` labeled in the event's data timezone.
  * @returns The updated list of events.
  */
 export function applyRecurringDeleteFollowing(

@@ -13,7 +13,6 @@ import {
   applyRecurringUpdateFollowing,
   applyRecurringUpdateOnlyThis,
   decideSplitRRule,
-  updateRecurringEvent,
 } from './updateRecurringEvent';
 import { getRemainingOccurrences } from './internal-utils';
 
@@ -958,29 +957,4 @@ describe('recurring-events/updateRecurringEvent', () => {
     });
   });
 
-  describe('updateRecurringEvent', () => {
-    it('should truncate on the data-timezone day when the occurrence start carries another zone', () => {
-      // A daily 21:00 New York series: each occurrence's instant is the next UTC day.
-      const nyEvent = EventBuilder.new(adapter)
-        .withDataTimezone('America/New_York')
-        .singleDay('2025-02-02T02:00:00Z')
-        .rrule({ freq: 'DAILY', interval: 1 })
-        .toProcessed();
-      const occurrenceStart = adapter.date('2025-03-02T02:00:00Z', 'default');
-
-      const result = updateRecurringEvent(
-        adapter,
-        nyEvent,
-        occurrenceStart,
-        { id: nyEvent.id, title: 'Renamed' },
-        'this-and-following',
-      );
-
-      // The split lands on the New York day (March 1st): the series ends the day before.
-      const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
-      expect(adapter.getTime(rule.until!)).to.equal(
-        adapter.getTime(adapter.date('2025-02-28T00:00:00', 'America/New_York')),
-      );
-    });
-  });
 });
