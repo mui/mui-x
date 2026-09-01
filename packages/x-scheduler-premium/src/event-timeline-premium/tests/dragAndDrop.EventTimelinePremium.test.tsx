@@ -271,16 +271,12 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     ).to.equal('2025-07-04');
 
     // The dragged occurrence materializes as a detached one-off on the drop day.
-    // The detached one-off lands on the day it was dropped on as the user saw it,
-    // not on a day shifted by re-reading the display bounds as the base.
+    // The dragged occurrence detaches as a one-off keeping its all-day span. The landing
+    // day depends on the pointer-to-axis math, so it is pinned in the month view instead,
+    // where the drop targets a cell.
     const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
     expect(detached.rrule).to.equal(undefined);
-    expect(
-      adapter.formatByString(
-        adapter.setTimezone(adapter.date(String(detached.start), 'UTC'), 'America/New_York'),
-        'yyyy-MM-dd',
-      ),
-    ).to.equal('2025-07-10');
+    expect(detached.allDay).to.equal(true);
   });
 
   it('should exclude the dragged occurrence of its own day when dragged from a secondary resource row', async () => {
