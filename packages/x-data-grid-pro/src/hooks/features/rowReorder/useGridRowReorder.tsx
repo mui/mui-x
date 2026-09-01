@@ -21,6 +21,7 @@ import {
 import type { GridEventListener, GridRowId, GridGroupNode } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
+  gridIsRowDragActiveSelector,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid/internals';
 import type {
@@ -430,11 +431,28 @@ export const useGridRowReorder = (
     [dragRowId, apiRef, logger, timeout, calculateDropPosition],
   );
 
+  // A drag session can end without a valid drop: no drop target, a rejected drop,
+  // or a reorder that got disabled during the drag. The reorder state must not stay
+  // active in these cases, because components like the scroll areas derive their
+  // visibility from it.
+  const resetRowDragState = React.useCallback(() => {
+    if (gridIsRowDragActiveSelector(apiRef)) {
+      apiRef.current.setState((state) => ({
+        ...state,
+        rowReorder: {
+          isActive: false,
+          draggedRowId: null,
+        },
+      }));
+    }
+  }, [apiRef]);
+
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
     async (_, event): Promise<void> => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef);
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
+        resetRowDragState();
         return;
       }
 
@@ -466,13 +484,7 @@ export const useGridRowReorder = (
         setDragRowId('');
         // Clear visual indicators and dragged state
         applyDraggedState(dragRowId, false);
-        apiRef.current.setState((state) => ({
-          ...state,
-          rowReorder: {
-            isActive: false,
-            draggedRowId: null,
-          },
-        }));
+        resetRowDragState();
         return;
       }
       if (dropTarget.current.targetRowIndex !== null && dropTarget.current.targetRowId !== null) {
@@ -553,14 +565,11 @@ export const useGridRowReorder = (
           }
         } else {
           applyDraggedState(dragRowId, false);
-          apiRef.current.setState((state) => ({
-            ...state,
-            rowReorder: {
-              ...state.rowReorder,
-              dropTarget: undefined,
-            },
-          }));
+          resetRowDragState();
         }
+      } else {
+        // The drag ended without a drop target.
+        resetRowDragState();
       }
 
       // Reset drop target state
@@ -580,6 +589,7 @@ export const useGridRowReorder = (
       applyDraggedState,
       timeout,
       applyRowAnimation,
+      resetRowDragState,
     ],
   );
 
