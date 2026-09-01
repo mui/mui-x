@@ -89,6 +89,23 @@ const GridToolbarExportContainer = forwardRef<
             if (!React.isValidElement(child)) {
               return child;
             }
+            if (
+              child.type === rootProps.slots.baseMenuItem ||
+              (child.type as any).muiName === 'MenuItem'
+            ) {
+              const childProps = child.props as {
+                onClick?: React.MouseEventHandler<HTMLElement>;
+              };
+
+              return React.cloneElement<any>(child, {
+                onClick: (event: React.MouseEvent<HTMLElement>) => {
+                  childProps.onClick?.(event);
+                  if (!event.defaultPrevented) {
+                    handleMenuClose();
+                  }
+                },
+              });
+            }
             return React.cloneElement<any>(child, { hideMenu: handleMenuClose });
           })}
         </rootProps.slots.baseMenuList>
