@@ -15,6 +15,7 @@ import {
   getColumnValues,
   getRows,
   microtasks,
+  spyApi,
 } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
@@ -327,14 +328,18 @@ describe('<DataGridPro /> - Row pinning', () => {
     }
 
     it('should work with top pinned rows', async () => {
+      let apiRef!: RefObject<GridApi | null>;
+
       function TestCase() {
         const data = getBasicGridData(20, 5);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+        apiRef = useGridApiRef();
 
         return (
           <div style={{ width: 302, height: 300 }}>
             <DataGridPro
               {...data}
+              apiRef={apiRef}
               rows={rows}
               pinnedRows={{
                 top: [pinnedRow1, pinnedRow0],
@@ -353,6 +358,11 @@ describe('<DataGridPro /> - Row pinning', () => {
       // first top pinned row
       expect(getActiveCellRowId()).to.equal('1');
 
+      const scrollToIndexes = spyApi(apiRef.current!, 'scrollToIndexes');
+      await user.keyboard('{ArrowRight}');
+      expect(scrollToIndexes.lastCall.args[0]).to.deep.include({ rowIndex: undefined });
+
+      await user.keyboard('{ArrowLeft}');
       await user.keyboard('{ArrowDown}');
       // second top pinned row
       expect(getActiveCellRowId()).to.equal('0');

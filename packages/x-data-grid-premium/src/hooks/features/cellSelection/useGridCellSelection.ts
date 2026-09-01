@@ -6,6 +6,7 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
   getGridCellElement,
+  getRowIndexRelativeToAllRows,
   getTotalHeaderHeight,
   getVisibleRows,
   isEventTargetInPortal,
@@ -584,7 +585,10 @@ export const useGridCellSelection = (
       field: visibleColumns[endColumnIndex].field,
     };
 
-    apiRef.current.scrollToIndexes({ rowIndex: endRowIndex, colIndex: endColumnIndex });
+    apiRef.current.scrollToIndexes({
+      rowIndex: getRowIndexRelativeToAllRows(apiRef, visibleRows.rows[endRowIndex].id),
+      colIndex: endColumnIndex,
+    });
 
     const { id, field } = params;
     apiRef.current.selectCellRange({ id, field }, cellWithVirtualFocus.current);
@@ -1223,7 +1227,10 @@ export const useGridCellSelection = (
       // Move selection and focus to the filled cell
       apiRef.current.setCellSelectionModel({ [nextRowId]: { [cell.field]: true } });
       const colIndex = apiRef.current.getColumnIndex(cell.field);
-      apiRef.current.scrollToIndexes({ rowIndex: nextRowIndex, colIndex });
+      apiRef.current.scrollToIndexes({
+        rowIndex: getRowIndexRelativeToAllRows(apiRef, nextRowId),
+        colIndex,
+      });
       apiRef.current.setCellFocus(nextRowId, cell.field);
       cellWithVirtualFocus.current = { id: nextRowId, field: cell.field };
       return;
@@ -1283,7 +1290,10 @@ export const useGridCellSelection = (
       );
       if (firstEditableField) {
         const colIndex = apiRef.current.getColumnIndex(firstEditableField);
-        apiRef.current.scrollToIndexes({ rowIndex: nextRowIndex, colIndex });
+        apiRef.current.scrollToIndexes({
+          rowIndex: getRowIndexRelativeToAllRows(apiRef, nextRowId),
+          colIndex,
+        });
         apiRef.current.setCellFocus(nextRowId, firstEditableField);
         cellWithVirtualFocus.current = { id: nextRowId, field: firstEditableField };
       }
@@ -1412,7 +1422,7 @@ export const useGridCellSelection = (
 
       // Move selection and focus to the filled cell
       apiRef.current.setCellSelectionModel({ [cell.id]: { [nextField]: true } });
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(cell.id);
+      const rowIndex = getRowIndexRelativeToAllRows(apiRef, cell.id);
       apiRef.current.scrollToIndexes({ rowIndex, colIndex: nextColIndex });
       apiRef.current.setCellFocus(cell.id, nextField);
       cellWithVirtualFocus.current = { id: cell.id, field: nextField };

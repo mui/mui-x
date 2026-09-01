@@ -1,7 +1,11 @@
 import type { RefObject } from '@mui/x-internals/types';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { gridVisibleRowsSelector } from '../features/pagination/gridPaginationSelector';
-import type { GridApiCommon } from '../../models';
+import {
+  gridPaginationSelector,
+  gridVisibleRowsSelector,
+} from '../features/pagination/gridPaginationSelector';
+import { gridExpandedSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
+import type { GridApiCommon, GridRowId } from '../../models';
 import { useGridSelector } from '.';
 
 export const getVisibleRows = <Api extends GridApiCommon>(
@@ -28,4 +32,27 @@ export const useGridVisibleRows = <Api extends GridApiCommon>(
   props?: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
   return useGridSelector(apiRef, gridVisibleRowsSelector);
+};
+
+/**
+ * Returns the row index expected by `apiRef.current.scrollToIndexes`. For server-side
+ * pagination, the current page offset is added to the index of the loaded row.
+ * Returns `undefined` when the row is not part of the visible rows.
+ */
+export const getRowIndexRelativeToAllRows = <Api extends GridApiCommon>(
+  apiRef: RefObject<Api>,
+  id: GridRowId,
+) => {
+  const rowIndex = gridExpandedSortedRowEntriesSelector(apiRef).findIndex((row) => row.id === id);
+
+  if (rowIndex === -1) {
+    return undefined;
+  }
+
+  const pagination = gridPaginationSelector(apiRef);
+  if (!pagination.enabled || pagination.paginationMode === 'client') {
+    return rowIndex;
+  }
+
+  return pagination.paginationModel.page * pagination.paginationModel.pageSize + rowIndex;
 };

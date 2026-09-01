@@ -383,7 +383,7 @@ describe('<DataGridPro /> - Tree data', () => {
       );
 
       act(() => apiRef.current?.scroll({ top: 100 }));
-      expect(apiRef.current?.getScrollPosition().top).to.equal(100);
+      expect(apiRef.current?.getScrollPosition().top).to.be.greaterThan(0);
 
       let result: boolean | undefined;
       expect(() => {
@@ -391,6 +391,30 @@ describe('<DataGridPro /> - Tree data', () => {
       }).not.toWarnDev();
 
       expect(result).to.equal(true);
+      expect(apiRef.current?.getScrollPosition().top).to.equal(0);
+    });
+
+    it('should scroll to the start of the page when the page changes', () => {
+      render(
+        <Test
+          containerHeight={200}
+          defaultGroupingExpansionDepth={-1}
+          pagination
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 1 } } }}
+          pageSizeOptions={[1]}
+        />,
+      );
+
+      act(() => apiRef.current?.scroll({ top: 100 }));
+      expect(apiRef.current?.getScrollPosition().top).to.be.greaterThan(0);
+
+      // Changing the page makes `useGridPaginationModel` scroll to the first row of the new
+      // page. On a tree that index is `firstRowIndex` (3 here), not `page * pageSize` (1),
+      // so the wrong offset would land out of bounds and warn instead of scrolling.
+      expect(() => {
+        act(() => apiRef.current?.setPage(1));
+      }).not.toWarnDev();
+
       expect(apiRef.current?.getScrollPosition().top).to.equal(0);
     });
   });

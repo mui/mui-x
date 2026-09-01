@@ -98,16 +98,18 @@ export const useGridScroll = (
       let rowIndexOffset = 0;
 
       if (params.rowIndex !== undefined && props.pagination) {
-        const page = gridPageSelector(apiRef);
-        const pageSize = gridPageSizeSelector(apiRef);
         const paginationRange = gridPaginationRowRangeSelector(apiRef);
-        rowIndexOffset = page * pageSize;
 
         if (paginationRange) {
           firstRowIndex = paginationRange.firstRowIndex;
           lastRowIndex = paginationRange.lastRowIndex;
           rowIndexOffset = paginationRange.firstRowIndex;
         } else {
+          // Server-side pagination: the row range selector is empty, so fall back to the
+          // page offset and the rows currently held for the page.
+          const page = gridPageSelector(apiRef);
+          const pageSize = gridPageSizeSelector(apiRef);
+          rowIndexOffset = page * pageSize;
           firstRowIndex = rowIndexOffset;
           lastRowIndex = firstRowIndex + visibleSortedRows.length - 1;
         }
