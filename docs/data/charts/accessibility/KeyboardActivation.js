@@ -20,6 +20,7 @@ const lineChartsParams = {
 
 export default function KeyboardActivation() {
   const [itemData, setItemData] = React.useState();
+  const [axisData, setAxisData] = React.useState();
 
   return (
     <Stack
@@ -34,6 +35,7 @@ export default function KeyboardActivation() {
           onAreaClick={(event, d) => setItemData(d)}
           onLineClick={(event, d) => setItemData(d)}
           onMarkClick={(event, d) => setItemData(d)}
+          onAxisClick={(event, d) => setAxisData(d)}
         />
       </Box>
 
@@ -53,6 +55,7 @@ export default function KeyboardActivation() {
             size="small"
             onClick={() => {
               setItemData(undefined);
+              setAxisData(null);
             }}
           >
             <UndoOutlinedIcon fontSize="small" />
@@ -62,6 +65,8 @@ export default function KeyboardActivation() {
           code={`// Data from item click
 ${itemData ? JSON.stringify(itemData, null, 2) : '// The data will appear here'}
 
+// Data from axis click
+${axisData ? JSON.stringify(axisData, null, 2) : '// The data will appear here'}
 `}
           language="json"
           copyButtonHidden

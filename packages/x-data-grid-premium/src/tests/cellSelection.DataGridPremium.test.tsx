@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { stub } from 'sinon';
-import type { SinonStub } from 'sinon';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
@@ -10,6 +8,7 @@ import type { DataGridPremiumProps, GridApi, GridColDef } from '@mui/x-data-grid
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM, isOSX } from 'test/utils/skipIf';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import type { MockInstance } from 'vitest';
 
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
@@ -607,12 +606,14 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
   // JSDOM doesn't support scroll events
   describe.skipIf(isJSDOM)('Auto-scroll', () => {
+    let rafStub: MockInstance;
+
     beforeEach(() => {
-      stub(window, 'requestAnimationFrame').callsFake(() => 0);
+      rafStub = vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 0);
     });
 
     afterEach(() => {
-      (window.requestAnimationFrame as SinonStub).restore();
+      rafStub.mockRestore();
     });
 
     it('should auto-scroll when the mouse approaches the bottom edge', async () => {
