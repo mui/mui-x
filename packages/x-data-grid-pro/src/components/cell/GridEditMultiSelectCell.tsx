@@ -25,6 +25,7 @@ import {
   vars,
   isMultiSelectColDef,
   getValueOptions,
+  getRowIndexRelativeToAllRows,
   gridRowHeightSelector,
 } from '@mui/x-data-grid/internals';
 import type { AutocompleteProps } from '@mui/x-data-grid/internals';
@@ -212,7 +213,7 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
     if (!prevHasFocusRef.current) {
       apiRef.current.scrollToIndexes({
         colIndex: apiRef.current.getColumnIndex(field, true),
-        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+        rowIndex: getRowIndexRelativeToAllRows(apiRef, id),
       });
       prevHasFocusRef.current = true;
     }
