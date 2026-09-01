@@ -20,6 +20,7 @@ describe('<TimelineGrid.Event />', () => {
     <TimelineGrid.Event
       eventId="fake-id"
       occurrenceKey="fake-key"
+      dataBounds={undefined}
       start={start}
       end={end}
       renderDragPreview={() => null}
@@ -50,6 +51,7 @@ describe('<TimelineGrid.Event />', () => {
                 <TimelineGrid.Event
                   eventId="fake-id"
                   occurrenceKey="fake-key"
+                  dataBounds={undefined}
                   start={start}
                   end={end}
                   elementPosition={{

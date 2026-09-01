@@ -270,7 +270,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
     ).to.equal('2025-07-04');
 
-    // The dragged occurrence materializes as a detached one-off on the drop day.
     // The dragged occurrence detaches as a one-off keeping its all-day span. The landing
     // day depends on the pointer-to-axis math, so it is pinned in the month view instead,
     // where the drop targets a cell.

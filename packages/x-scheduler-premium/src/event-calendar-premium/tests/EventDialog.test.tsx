@@ -2184,6 +2184,44 @@ describe('<EventDialogContent open />', () => {
         expect(adapter.formatByString(updatedStartInTokyo, 'yyyy-MM-dd')).to.equal('2025-07-05');
       });
 
+      it("should keep the untouched end byte-identical when only the start date is edited with scope 'all'", async () => {
+        const onEventsChange = vi.fn();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[weeklyEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={weeklyBuilder.toOccurrence()}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        // The mirror of the end-only case: the recurring payload gates each bound on its
+        // own, and a missing end must default to the occurrence's, not to the series'.
+        const startDateInput = screen.getByLabelText(/start date/i);
+        await user.clear(startDateInput);
+        await user.type(startDateInput, '2025-07-02');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (event: SchedulerEvent) => event.id === weeklyEvent.id,
+        )!;
+        expect(updated.end).to.equal(weeklyEvent.end);
+      });
+
       it("should keep the untouched start byte-identical when only the end date is edited with scope 'all'", async () => {
         const onEventsChange = vi.fn();
 

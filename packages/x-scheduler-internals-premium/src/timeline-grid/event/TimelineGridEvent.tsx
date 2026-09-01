@@ -207,7 +207,8 @@ export namespace TimelineGridEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {
+      useDraggableEvent.PublicParameters,
+      Pick<useOriginalOccurrence.Parameters, 'dataBounds'> {
     elementPosition?: useElementPositionInCollection.ReturnValue;
   }
 

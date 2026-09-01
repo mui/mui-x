@@ -433,9 +433,9 @@ export interface SchedulerProcessedDate {
 /**
  * Properties to pass to the methods that update an event (recurring or not).
  * `id` identifies the event to update; every other property is optional and left unchanged
- * when absent. An explicit `undefined` removes the property from the event model
- * (e.g. `rrule: undefined` clears the recurrence), except for `start` and `end`, which an
- * event always has — passing them as `undefined` leaves them unchanged.
+ * when absent. An explicit `undefined` removes the property from the event model when it has
+ * no custom setter (e.g. `rrule: undefined` clears the recurrence), except for `start` and
+ * `end`, which an event always has — passing them as `undefined` leaves them unchanged.
  */
 export type SchedulerEventUpdatedProperties = Omit<
   Partial<SchedulerEvent>,

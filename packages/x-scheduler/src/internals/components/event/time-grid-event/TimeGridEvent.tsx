@@ -491,6 +491,8 @@ const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlacehol
       isDraggable={false}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
+      // A placeholder has no data-timezone bounds to carry.
+      dataBounds={undefined}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={placeholderHasResizeHandles || undefined}
       // Non-interactive keeps the preview out of the tab order without `aria-hidden`, which would

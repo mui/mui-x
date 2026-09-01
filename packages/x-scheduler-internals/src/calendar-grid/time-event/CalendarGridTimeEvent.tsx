@@ -166,7 +166,8 @@ export namespace CalendarGridTimeEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {
+      useDraggableEvent.PublicParameters,
+      Pick<useOriginalOccurrence.Parameters, 'dataBounds'> {
     /**
      * Whether the event behaves like a button: `role="button"`, roving `tabIndex` and the column
      * header labelling. Set it to `false` for an inert preview (creation / resize placeholder) that

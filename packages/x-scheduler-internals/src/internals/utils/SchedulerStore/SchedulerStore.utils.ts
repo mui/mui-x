@@ -58,8 +58,20 @@ export function shouldUpdateOccurrencePlaceholder(
 
 export const DEFAULT_EVENT_MODEL_STRUCTURE: SchedulerEventModelStructure<any> = {};
 
-/** Event properties that always exist, so an update cannot remove them. */
-const ALWAYS_PRESENT_EVENT_PROPERTIES = new Set<string>(['id', 'start', 'end']);
+type RequiredEventProperty = {
+  [P in keyof SchedulerEvent]-?: {} extends Pick<SchedulerEvent, P> ? never : P;
+}[keyof SchedulerEvent];
+
+/**
+ * The properties an event always has, so an update cannot remove them. Typed off
+ * `SchedulerEvent` so a new required property has to be listed here too.
+ */
+const ALWAYS_PRESENT_EVENT_PROPERTIES: { [P in RequiredEventProperty]: true } = {
+  id: true,
+  title: true,
+  start: true,
+  end: true,
+};
 
 const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
   id: true,
@@ -274,7 +286,11 @@ function createOrUpdateEventModelFromBuiltInEventModel<
       // An event always has these, so an explicit `undefined` reads as "unchanged"
       // instead of removing them — checked before the setter dispatch so a custom
       // event model cannot receive the `undefined` either.
-      if (changes[key] === undefined && ALWAYS_PRESENT_EVENT_PROPERTIES.has(key)) {
+      if (
+        changes[key] === undefined &&
+        ALWAYS_PRESENT_EVENT_PROPERTIES.hasOwnProperty(key) &&
+        oldModel != null
+      ) {
         continue;
       }
       const setter = eventModelStructure?.[typedKey]?.setter;

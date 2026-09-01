@@ -8,7 +8,7 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
-import type { SchedulerEventId, SchedulerOccurrenceDataBounds } from '../../models';
+import type { SchedulerEventId } from '../../models';
 import type { useElementPositionInCollection } from './useElementPositionInCollection';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
@@ -124,11 +124,6 @@ export namespace useDraggableEvent {
      * The unique identifier of the event occurrence.
      */
     occurrenceKey: string;
-    /**
-     * See `SchedulerOccurrenceDataBounds`. Defaults to the display `start`/`end`, a
-     * fallback only placeholder occurrences may rely on.
-     */
-    dataBounds?: SchedulerOccurrenceDataBounds;
   }
 
   export interface Parameters extends PublicParameters {

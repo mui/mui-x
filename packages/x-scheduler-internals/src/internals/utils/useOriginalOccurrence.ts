@@ -34,7 +34,7 @@ export namespace useOriginalOccurrence {
     /** The rendered display bounds of the occurrence (or segment). */
     start: SchedulerProcessedDate;
     end: SchedulerProcessedDate;
-    /** See `SchedulerOccurrenceDataBounds`. */
-    dataBounds?: SchedulerOccurrenceDataBounds;
+    /** See `SchedulerOccurrenceDataBounds`; `undefined` only for placeholders. */
+    dataBounds: SchedulerOccurrenceDataBounds | undefined;
   }
 }

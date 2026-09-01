@@ -55,8 +55,8 @@ export class EventBuilder {
     this.event = {
       id,
       title: `Event ${id}`,
-      start: start.toISOString(),
-      end: end.toISOString(),
+      start: toInstantString(this.adapter, start),
+      end: toInstantString(this.adapter, end),
       description: `Event ${id} description`,
     };
   }

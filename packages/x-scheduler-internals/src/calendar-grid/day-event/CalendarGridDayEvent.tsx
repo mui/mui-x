@@ -191,7 +191,8 @@ export namespace CalendarGridDayEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {}
+      useDraggableEvent.PublicParameters,
+      Pick<useOriginalOccurrence.Parameters, 'dataBounds'> {}
 
   export interface SharedDragData {
     eventId: SchedulerEventId;

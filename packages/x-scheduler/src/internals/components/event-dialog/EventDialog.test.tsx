@@ -215,6 +215,27 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(updated.end).to.equal(event.end);
     });
 
+    it('should keep the untouched end byte-identical when only the start date is edited', async () => {
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        independenceDay(),
+        'America/New_York',
+      );
+
+      // The mirror of the end-only case: the two bounds are gated independently, so a
+      // mis-wired spread would only show up from this direction.
+      const startDateInput = screen.getByLabelText(/start date/i);
+      await user.clear(startDateInput);
+      await user.type(startDateInput, '2025-07-02');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.end).to.equal(event.end);
+      // The picked day means the day the user was looking at (New York July 2nd).
+      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-02T04:00:00', 'UTC')),
+      );
+    });
+
     it('should submit only the edited bound of the displayed range', async () => {
       const { user, event, getUpdatedEvent } = renderEditDialog(
         independenceDay(),

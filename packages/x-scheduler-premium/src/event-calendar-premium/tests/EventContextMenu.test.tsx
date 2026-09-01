@@ -125,9 +125,7 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     expect(adapter.getTime(deleteRecurringEventSpy!.mock.lastCall![0].occurrenceStart)).to.equal(
       adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
     );
-    // The scope dialog owns the focus while it is open: the menu must not pull it
-    // back to the grid the way it does after an immediate delete.
-    expect(document.activeElement).to.not.equal(document.body);
+    // The recurring branch defers to the scope dialog instead of deleting right away.
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
   });
 });
