@@ -233,7 +233,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    const { user } = render(
+    const { user } = await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -294,7 +294,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    const { user } = render(
+    const { user } = await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
