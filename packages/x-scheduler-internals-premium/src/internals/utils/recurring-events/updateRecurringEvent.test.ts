@@ -956,5 +956,4 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.created).to.have.length(1);
     });
   });
-
 });
