@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import {
   EventTimelinePremium,
@@ -24,7 +23,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();
@@ -230,7 +229,7 @@ describe('<EventTimelinePremium />', () => {
     });
 
     it('should call onCollapsedResourcesChange when the cell is clicked', async () => {
-      const onCollapsedResourcesChange = spy();
+      const onCollapsedResourcesChange = vi.fn();
       const { user } = await renderTimeline({
         resources: nestedResources,
         events: [],
@@ -239,8 +238,8 @@ describe('<EventTimelinePremium />', () => {
 
       await user.click(getTitleCell(parent.id)!);
 
-      expect(onCollapsedResourcesChange.callCount).to.equal(1);
-      expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ [parent.id]: true });
+      expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
+      expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ [parent.id]: true });
     });
 
     it('should toggle collapse with the keyboard', async () => {
@@ -258,7 +257,7 @@ describe('<EventTimelinePremium />', () => {
     });
 
     it('should toggle collapse with the Space key and emit the shared collapsed state', async () => {
-      const onCollapsedResourcesChange = spy();
+      const onCollapsedResourcesChange = vi.fn();
       const { user } = await renderTimeline({
         resources: nestedResources,
         events: [],
@@ -275,7 +274,7 @@ describe('<EventTimelinePremium />', () => {
         expect(screen.queryByText(child.title)).to.equal(null);
       });
       expect(parentCell.getAttribute('aria-expanded')).to.equal('false');
-      expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ [parent.id]: true });
+      expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ [parent.id]: true });
     });
 
     it('should move focus to the parent when a controlled collapse removes the focused child row', async () => {
@@ -638,7 +637,7 @@ describe('<EventTimelinePremium />', () => {
   describe('lazy loading', () => {
     it('should call dataSource.getEvents when the timeline mounts', async () => {
       const dataSource = {
-        getEvents: spy(async () => baseEvents),
+        getEvents: vi.fn(async () => baseEvents),
         persistEvents: async () => ({ success: true }),
       };
 
@@ -652,12 +651,12 @@ describe('<EventTimelinePremium />', () => {
       );
       await absorbObserverFrames();
 
-      await waitFor(() => expect(dataSource.getEvents.callCount).to.equal(1));
+      await waitFor(() => expect(dataSource.getEvents.mock.calls.length).to.equal(1));
     });
 
     it('should call dataSource.getEvents again when navigating to a different range', async () => {
       const dataSource = {
-        getEvents: spy(async () => baseEvents),
+        getEvents: vi.fn(async () => baseEvents),
         persistEvents: async () => ({ success: true }),
       };
 
@@ -687,10 +686,12 @@ describe('<EventTimelinePremium />', () => {
         ).to.equal(0);
       });
 
-      const initialCount = dataSource.getEvents.callCount;
+      const initialCount = dataSource.getEvents.mock.calls.length;
       await user.click(screen.getByRole('button', { name: 'Next' }));
 
-      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThan(initialCount));
+      await waitFor(() =>
+        expect(dataSource.getEvents.mock.calls.length).to.be.greaterThan(initialCount),
+      );
     });
 
     it('should render the skeleton while events are loading and remove it once they resolve', async () => {
@@ -1012,7 +1013,7 @@ describe('<EventTimelinePremium />', () => {
       .build();
 
     it('should be called with the occurrence when activating an event and still open the built-in dialog', async () => {
-      const onEventEditingStart = spy();
+      const onEventEditingStart = vi.fn();
       const { user } = await renderTimeline({ events: [standupEvent], onEventEditingStart });
 
       await user.click(screen.getByText('Standup'));
@@ -1020,19 +1021,19 @@ describe('<EventTimelinePremium />', () => {
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);
       });
-      expect(onEventEditingStart.calledOnce).to.equal(true);
-      expect(onEventEditingStart.lastCall.firstArg.id).to.equal(standupEvent.id);
-      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('edit');
-      expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('click');
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(onEventEditingStart.mock.lastCall?.[0].id).to.equal(standupEvent.id);
+      expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('edit');
+      expect(onEventEditingStart.mock.lastCall?.[1].event.type).to.equal('click');
     });
 
     it('should keep the built-in dialog closed when the handler cancels', async () => {
-      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
       const { user } = await renderTimeline({ events: [standupEvent], onEventEditingStart });
 
       await user.click(screen.getByText('Standup'));
 
-      expect(onEventEditingStart.calledOnce).to.equal(true);
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
 
@@ -1042,14 +1043,14 @@ describe('<EventTimelinePremium />', () => {
         .singleDay('2025-07-03T09:00:00Z')
         .resources([engineering, design])
         .build();
-      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
       const { user } = await renderTimeline({ events: [sharedEvent], onEventEditingStart });
 
       const designRow = document.querySelector(`[data-resource-id="${design.id}"]`) as HTMLElement;
       await user.click(within(designRow).getByText('Shared event'));
 
-      expect(onEventEditingStart.calledOnce).to.equal(true);
-      expect(onEventEditingStart.lastCall.firstArg.id).to.equal(sharedEvent.id);
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(onEventEditingStart.mock.lastCall?.[0].id).to.equal(sharedEvent.id);
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
 
@@ -1060,7 +1061,7 @@ describe('<EventTimelinePremium />', () => {
         .resource(readOnlyResource)
         .title('Locked')
         .build();
-      const onEventEditingStart = spy();
+      const onEventEditingStart = vi.fn();
       const { user } = await renderTimeline({
         resources: [readOnlyResource],
         events: [lockedEvent],
@@ -1072,23 +1073,23 @@ describe('<EventTimelinePremium />', () => {
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);
       });
-      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('view');
+      expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('view');
     });
 
     it('should expose the persistent row as `anchor` when the handler cancels an event creation', async () => {
-      const onEventEditingStart = spy((_occurrence, eventDetails) => eventDetails.cancel());
+      const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
       const { user } = await renderTimeline({ events: [standupEvent], onEventEditingStart });
 
       const row = document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement;
       await act(async () => row.focus());
       await user.keyboard('{Enter}');
 
-      expect(onEventEditingStart.calledOnce).to.equal(true);
-      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('creation');
       expect(screen.queryByRole('dialog')).to.equal(null);
 
-      expect(onEventEditingStart.lastCall.args[1].trigger.isConnected).to.equal(false);
-      expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(row);
+      expect(onEventEditingStart.mock.lastCall?.[1].trigger.isConnected).to.equal(false);
+      expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(row);
       expect(row.isConnected).to.equal(true);
     });
   });

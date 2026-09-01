@@ -5,14 +5,13 @@ import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
-import { spy } from 'sinon';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<DateCalendar />', () => {
   const { render } = createPickerRenderer();
 
   it('switches between views uncontrolled', async () => {
-    const handleViewChange = spy();
+    const handleViewChange = vi.fn();
     const { user } = render(
       <DateCalendar
         defaultValue={adapterToUse.date('2019-01-01')}
@@ -22,14 +21,14 @@ describe('<DateCalendar />', () => {
 
     await user.click(screen.getByLabelText(/switch to year view/i));
 
-    expect(handleViewChange.callCount).to.equal(1);
+    expect(handleViewChange.mock.calls.length).to.equal(1);
     expect(screen.queryByLabelText(/switch to year view/i)).to.equal(null);
     expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
   it('should allow month and view changing, but not selection when readOnly prop is passed', async () => {
-    const onChangeMock = spy();
-    const onMonthChangeMock = spy();
+    const onChangeMock = vi.fn();
+    const onMonthChangeMock = vi.fn();
     const { user } = render(
       <DateCalendar
         value={adapterToUse.date('2019-01-01')}
@@ -40,23 +39,23 @@ describe('<DateCalendar />', () => {
     );
 
     await user.click(screen.getByTitle('Previous month'));
-    expect(onMonthChangeMock.callCount).to.equal(1);
+    expect(onMonthChangeMock.mock.calls.length).to.equal(1);
 
     await user.click(screen.getByTitle('Next month'));
-    expect(onMonthChangeMock.callCount).to.equal(2);
+    expect(onMonthChangeMock.mock.calls.length).to.equal(2);
 
     await waitFor(() => expect(screen.getAllByRole('rowgroup').length).to.equal(1));
 
     await user.click(screen.getByRole('gridcell', { name: '5' }));
-    expect(onChangeMock.callCount).to.equal(0);
+    expect(onChangeMock.mock.calls.length).to.equal(0);
 
     await user.click(screen.getByText('January 2019'));
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
   it('should not allow interaction when disabled prop is passed', async () => {
-    const onChangeMock = spy();
-    const onMonthChangeMock = spy();
+    const onChangeMock = vi.fn();
+    const onMonthChangeMock = vi.fn();
     const { user } = render(
       <DateCalendar
         value={adapterToUse.date('2019-01-01')}
@@ -71,18 +70,18 @@ describe('<DateCalendar />', () => {
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).to.equal(null);
 
     await user.setup({ pointerEventsCheck: 0 }).click(screen.getByTitle('Previous month'));
-    expect(onMonthChangeMock.callCount).to.equal(0);
+    expect(onMonthChangeMock.mock.calls.length).to.equal(0);
 
     await user.setup({ pointerEventsCheck: 0 }).click(screen.getByTitle('Next month'));
-    expect(onMonthChangeMock.callCount).to.equal(0);
+    expect(onMonthChangeMock.mock.calls.length).to.equal(0);
 
     await user.setup({ pointerEventsCheck: 0 }).click(screen.getByRole('gridcell', { name: '5' }));
-    expect(onChangeMock.callCount).to.equal(0);
+    expect(onChangeMock.mock.calls.length).to.equal(0);
   });
 
   it('should display disabled days when disabled prop is passed', () => {
-    const onChangeMock = spy();
-    const onMonthChangeMock = spy();
+    const onChangeMock = vi.fn();
+    const onMonthChangeMock = vi.fn();
     render(
       <DateCalendar
         value={adapterToUse.date('2019-01-01')}
@@ -225,7 +224,7 @@ describe('<DateCalendar />', () => {
 
     // test: https://github.com/mui/mui-x/issues/12373
     it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
       const { user } = render(
         <DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />,
@@ -245,7 +244,7 @@ describe('<DateCalendar />', () => {
       // select the current year with a date in the past to trigger "findClosestEnabledDate"
       await user.click(screen.getByRole('radio', { name: '2019' }));
 
-      expect(onChange.lastCall.firstArg).toEqualDateTime(defaultDate);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(defaultDate);
     });
   });
 
@@ -277,7 +276,7 @@ describe('<DateCalendar />', () => {
     });
 
     it('should use `referenceDate` when no value defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -291,12 +290,12 @@ describe('<DateCalendar />', () => {
       expect(screen.getByRole('gridcell', { name: '17' })).to.have.attribute('tabindex', '0');
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 3, 2, 12, 30));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 3, 2, 12, 30));
     });
 
     it('should not use `referenceDate` when a value is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -308,12 +307,12 @@ describe('<DateCalendar />', () => {
       );
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
 
     it('should not use `referenceDate` when a defaultValue is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -325,12 +324,12 @@ describe('<DateCalendar />', () => {
       );
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
 
     it('should keep the time of the currently provided date', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -341,8 +340,8 @@ describe('<DateCalendar />', () => {
       );
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(
         adapterToUse.date('2018-01-02T11:11:11.111'),
       );
     });
@@ -449,7 +448,7 @@ describe('<DateCalendar />', () => {
 
   describe('view: month', () => {
     it('should select the closest enabled date in the month if the current date is disabled', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -466,12 +465,12 @@ describe('<DateCalendar />', () => {
       const april = screen.getByText('Apr', { selector: 'button' });
       await user.click(april);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 6));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 3, 6));
     });
 
     it('should respect minDate when selecting closest enabled date', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -486,12 +485,12 @@ describe('<DateCalendar />', () => {
       const april = screen.getByText('Apr', { selector: 'button' });
       await user.click(april);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 7));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 3, 7));
     });
 
     it('should respect maxDate when selecting closest enabled date', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -506,12 +505,12 @@ describe('<DateCalendar />', () => {
       const april = screen.getByText('Apr', { selector: 'button' });
       await user.click(april);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 22));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 3, 22));
     });
 
     it('should go to next view without changing the date when no date of the new month is enabled', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -526,12 +525,12 @@ describe('<DateCalendar />', () => {
       const april = screen.getByText('Apr', { selector: 'button' });
       await user.click(april);
 
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
       expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('April 2019');
     });
 
     it('should use `referenceDate` when no value defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -545,12 +544,12 @@ describe('<DateCalendar />', () => {
       const april = screen.getByText('Apr', { selector: 'button' });
       await user.click(april);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 3, 1, 12, 30));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 3, 1, 12, 30));
     });
 
     it('should not use `referenceDate` when a value is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -565,12 +564,12 @@ describe('<DateCalendar />', () => {
       const april = screen.getByText('Apr', { selector: 'button' });
       await user.click(april);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
     });
 
     it('should not use `referenceDate` when a defaultValue is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -585,8 +584,8 @@ describe('<DateCalendar />', () => {
       const april = screen.getByText('Apr', { selector: 'button' });
       await user.click(april);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
     });
   });
 
@@ -598,7 +597,7 @@ describe('<DateCalendar />', () => {
     });
 
     it('should select the closest enabled date in the month if the current date is disabled', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -615,12 +614,12 @@ describe('<DateCalendar />', () => {
       const year2022 = screen.getByText('2022', { selector: 'button' });
       await user.click(year2022);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 4, 1));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 4, 1));
     });
 
     it('should respect minDate when selecting closest enabled date', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -635,12 +634,12 @@ describe('<DateCalendar />', () => {
       const year2017 = screen.getByText('2017', { selector: 'button' });
       await user.click(year2017);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2017, 4, 12));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2017, 4, 12));
     });
 
     it('should respect maxDate when selecting closest enabled date', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -655,12 +654,12 @@ describe('<DateCalendar />', () => {
       const year2022 = screen.getByText('2022', { selector: 'button' });
       await user.click(year2022);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 2, 31));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 2, 31));
     });
 
     it('should go to next view without changing the date when no date of the new year is enabled', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -675,7 +674,7 @@ describe('<DateCalendar />', () => {
       const year2022 = screen.getByText('2022', { selector: 'button' });
       await user.click(year2022);
 
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
       expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('January 2022');
     });
 
@@ -703,7 +702,7 @@ describe('<DateCalendar />', () => {
     });
 
     it('should use `referenceDate` when no value defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -717,12 +716,12 @@ describe('<DateCalendar />', () => {
       const year2022 = screen.getByText('2022', { selector: 'button' });
       await user.click(year2022);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 0, 1, 12, 30));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 0, 1, 12, 30));
     });
 
     it('should not use `referenceDate` when a value is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -737,12 +736,12 @@ describe('<DateCalendar />', () => {
       const year2022 = screen.getByText('2022', { selector: 'button' });
       await user.click(year2022);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
     });
 
     it('should not use `referenceDate` when a defaultValue is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateCalendar
@@ -757,46 +756,54 @@ describe('<DateCalendar />', () => {
       const year2022 = screen.getByText('2022', { selector: 'button' });
       await user.click(year2022);
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
     });
   });
 
   describe('Performance', () => {
     it('should only render newly selected day when selecting a day without a previously selected day', async () => {
-      const RenderCount = spy((props) => <PickerDay {...props} />);
+      const renderCount = vi.fn();
+      const RenderCount = React.memo((props: PickerDayProps) => {
+        renderCount();
+        return <PickerDay {...props} />;
+      });
 
       const { user } = render(
         <DateCalendar
           referenceDate={adapterToUse.date('2019-01-02')}
           slots={{
-            day: React.memo(RenderCount),
+            day: RenderCount,
           }}
         />,
       );
 
-      const renderCountBeforeChange = RenderCount.callCount;
+      const renderCountBeforeChange = renderCount.mock.calls.length;
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 (because dev mode)
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4);
+      expect(renderCount.mock.calls.length - renderCountBeforeChange).to.equal(4);
     });
 
     it('should only re-render previously selected day and newly selected day when selecting a day', async () => {
-      const RenderCount = spy((props) => <PickerDay {...props} />);
+      const renderCount = vi.fn();
+      const RenderCount = React.memo((props: PickerDayProps) => {
+        renderCount();
+        return <PickerDay {...props} />;
+      });
 
       const { user } = render(
         <DateCalendar
           defaultValue={adapterToUse.date('2019-04-29')}
           slots={{
-            day: React.memo(RenderCount),
+            day: RenderCount,
           }}
         />,
       );
 
-      const renderCountBeforeChange = RenderCount.callCount;
+      const renderCountBeforeChange = renderCount.mock.calls.length;
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 days * 2 (because dev mode)
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(8);
+      expect(renderCount.mock.calls.length - renderCountBeforeChange).to.equal(8);
     });
   });
 });
