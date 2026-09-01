@@ -96,20 +96,24 @@ export const useGridScroll = (
       let firstRowIndex = 0;
       let lastRowIndex = visibleSortedRows.length - 1;
       let rowIndexOffset = 0;
+      let rowIndexInVisibleSortedRows = params.rowIndex;
 
       if (params.rowIndex !== undefined && props.pagination) {
-        const page = gridPageSelector(apiRef);
-        const pageSize = gridPageSizeSelector(apiRef);
         const paginationRange = gridPaginationRowRangeSelector(apiRef);
-        rowIndexOffset = page * pageSize;
 
         if (paginationRange) {
           firstRowIndex = paginationRange.firstRowIndex;
           lastRowIndex = paginationRange.lastRowIndex;
           rowIndexOffset = paginationRange.firstRowIndex;
         } else {
+          // Server-side pagination: the row range selector is empty, so fall back to the
+          // page offset and the rows currently held for the page.
+          const page = gridPageSelector(apiRef);
+          const pageSize = gridPageSizeSelector(apiRef);
+          rowIndexOffset = page * pageSize;
           firstRowIndex = rowIndexOffset;
           lastRowIndex = firstRowIndex + visibleSortedRows.length - 1;
+          rowIndexInVisibleSortedRows = params.rowIndex - rowIndexOffset;
         }
       }
 
@@ -135,8 +139,8 @@ export const useGridScroll = (
 
         let cellWidth: number | undefined;
 
-        if (typeof params.rowIndex !== 'undefined') {
-          const rowId = visibleSortedRows[params.rowIndex]?.id;
+        if (typeof rowIndexInVisibleSortedRows !== 'undefined') {
+          const rowId = visibleSortedRows[rowIndexInVisibleSortedRows]?.id;
           const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
             rowId,
             params.colIndex,

@@ -5,6 +5,7 @@ import {
   gridVisibleColumnFieldsSelector,
   gridColumnFieldsSelector,
 } from '@mui/x-data-grid-pro';
+import { getRowIndexRelativeToAllRows } from '@mui/x-data-grid-pro/internals';
 import type {
   GridCellEditStopParams,
   GridRowEditStopParams,
@@ -85,15 +86,10 @@ export const createCellEditHistoryHandler = (
         return false;
       }
 
-      const { rowIdToIndexMap, range } = gridVisibleRowsSelector(apiRef);
+      const { rowIdToIndexMap } = gridVisibleRowsSelector(apiRef);
 
       // Check if row is in the current page
-      const rowIndex = rowIdToIndexMap.get(id);
-      if (
-        rowIndex === undefined ||
-        rowIndex < (range?.firstRowIndex || 0) ||
-        rowIndex > (range?.lastRowIndex || rowIndex)
-      ) {
+      if (!rowIdToIndexMap.has(id)) {
         return false;
       }
 
@@ -138,7 +134,7 @@ export const createCellEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexRelativeToAllRows(apiRef, id),
           colIndex: apiRef.current.getColumnIndex(field),
         });
       });
@@ -166,7 +162,7 @@ export const createCellEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexRelativeToAllRows(apiRef, id),
           colIndex: apiRef.current.getColumnIndex(field),
         });
       });
@@ -201,15 +197,10 @@ export const createRowEditHistoryHandler = (
     validate: (data: GridRowEditHistoryData, direction: 'undo' | 'redo') => {
       const { id, oldRow, newRow } = data;
 
-      const { rowIdToIndexMap, range } = gridVisibleRowsSelector(apiRef);
+      const { rowIdToIndexMap } = gridVisibleRowsSelector(apiRef);
 
       // Check if row is in the current page
-      const rowIndex = rowIdToIndexMap.get(id);
-      if (
-        rowIndex === undefined ||
-        rowIndex < (range?.firstRowIndex || 0) ||
-        rowIndex > (range?.lastRowIndex || rowIndex)
-      ) {
+      if (!rowIdToIndexMap.has(id)) {
         return false;
       }
 
@@ -254,7 +245,7 @@ export const createRowEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, Object.keys(oldRow)[0]);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexRelativeToAllRows(apiRef, id),
           colIndex: 0,
         });
       });
@@ -282,7 +273,7 @@ export const createRowEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, Object.keys(newRow)[0]);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexRelativeToAllRows(apiRef, id),
           colIndex: 0,
         });
       });
@@ -308,16 +299,11 @@ export const createClipboardPasteHistoryHandler = (
       }
 
       // Check if all affected rows are still visible and have expected values
-      const { rowIdToIndexMap, range } = gridVisibleRowsSelector(apiRef);
+      const { rowIdToIndexMap } = gridVisibleRowsSelector(apiRef);
 
       for (let i = 0; i < updatedRowIds.length; i += 1) {
         const rowId = updatedRowIds[i];
-        const rowIndex = rowIdToIndexMap.get(rowId);
-        if (
-          rowIndex === undefined ||
-          rowIndex < (range?.firstRowIndex || 0) ||
-          rowIndex > (range?.lastRowIndex || rowIndex)
-        ) {
+        if (!rowIdToIndexMap.has(rowId)) {
           return false;
         }
 
@@ -369,10 +355,15 @@ export const createClipboardPasteHistoryHandler = (
 
         if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
-            apiRef.current.setCellFocus(firstNewRowId, columnOrder[differentFieldIndex]);
+            const focusField = columnOrder[differentFieldIndex];
+            const colIndex = apiRef.current.getColumnIndex(focusField);
+            apiRef.current.setCellFocus(firstNewRowId, focusField);
             apiRef.current.scrollToIndexes({
-              rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
-              colIndex: differentFieldIndex,
+              rowIndex: getRowIndexRelativeToAllRows(apiRef, firstNewRowId),
+              // `differentFieldIndex` is an index into all columns, so a hidden column
+              // before it would make it point past the visible columns. Resolve it to a
+              // visible index and skip the horizontal scroll when the column is hidden.
+              colIndex: colIndex === -1 ? undefined : colIndex,
             });
           });
         }
@@ -407,10 +398,15 @@ export const createClipboardPasteHistoryHandler = (
 
         if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
-            apiRef.current.setCellFocus(firstNewRowId, columnOrder[differentFieldIndex]);
+            const focusField = columnOrder[differentFieldIndex];
+            const colIndex = apiRef.current.getColumnIndex(focusField);
+            apiRef.current.setCellFocus(firstNewRowId, focusField);
             apiRef.current.scrollToIndexes({
-              rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
-              colIndex: differentFieldIndex,
+              rowIndex: getRowIndexRelativeToAllRows(apiRef, firstNewRowId),
+              // `differentFieldIndex` is an index into all columns, so a hidden column
+              // before it would make it point past the visible columns. Resolve it to a
+              // visible index and skip the horizontal scroll when the column is hidden.
+              colIndex: colIndex === -1 ? undefined : colIndex,
             });
           });
         }
