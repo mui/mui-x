@@ -65,4 +65,34 @@ describe('streamingMarkdownRepair', () => {
       expect(repair('x')).to.equal('x-2');
     });
   });
+
+  // Regression coverage for the `remend` specifier resolving in bundled apps.
+  // Importing it under a specifier a bundler can't statically resolve left the upgrade
+  // as dead code in every browser bundle and — where the bundler wraps dynamic imports
+  // in a preload helper — dispatched a global load-error event on each render.
+  // See https://github.com/mui/mui-x/issues/23160.
+  describe('remend specifier resolution', () => {
+    it('resolves the real remend through the default importer', async () => {
+      // No injected importer: exercises `import('#remend')` for real, so a specifier
+      // that stopped resolving would fail here rather than silently degrade.
+      const repair = await loadRemend();
+
+      expect(repair).not.to.equal(fallbackRepair);
+      // remend completes the unterminated inline marker; fallbackRepair never would.
+      expect(repair('a **bold')).to.equal('a **bold**');
+    });
+
+    it('degrades to fallbackRepair on the CommonJS `#remend` stub', async () => {
+      // What `require('#remend')` resolves to in the CJS build, where the ESM-only
+      // `remend` cannot be named at all.
+      const stub = await import('./remendUnavailable');
+      const repair = await loadRemend(() => Promise.resolve(stub));
+
+      expect(repair).to.equal(fallbackRepair);
+    });
+
+    // The packaging side of this — that the specifier stays statically analyzable and
+    // that `#remend` maps per module format — reads the source tree off disk, so it
+    // lives in `src/tests/packagingGuard/remendSpecifier.test.ts` (Node-only).
+  });
 });

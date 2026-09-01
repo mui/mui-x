@@ -14,6 +14,9 @@ import {
 } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import { getChartPoint } from '../../../getChartPoint';
 import { getItemAtAxisPosition } from './utils/getItemAtAxisPosition';
+import { getItemAtRotationIndex } from './utils/getItemAtRotationIndex';
+import { selectorChartRotationAxis } from '../useChartPolarAxis/useChartPolarAxis.selectors';
+import { selectorChartsInteractionRotationAxisIndex } from '../useChartPolarAxis/useChartPolarInteraction.selectors';
 import type { ChartPlugin } from '../../models';
 import type {
   FocusItemOptions,
@@ -168,36 +171,64 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   );
 
   /**
-   * The item a click landed on, read from the item the pointer is over. Falls back to the axis
-   * under the pointer, which covers the line and area paths, whose hovered item only knows its
-   * series.
+   * The item a click landed on, read from the item the pointer is over. An area or line path only
+   * knows its series, and a radar reports no item at all, so an incomplete one falls back to the
+   * axis under the pointer.
    *
    * A click that resolves nothing is left alone rather than focusing the chart. The drawing area
    * is a rectangle, but the data rarely fills it: taking the focus from a click next to a pie,
    * outside its circle, reads as the chart grabbing clicks that were not meant for it.
    */
   const resolveItemAtPointer = useEventCallback((event: MouseEvent | PointerEvent) => {
-    // Every series reports the item under the pointer, so the click itself needs no wiring.
+    const seriesConfig = selectorChartSeriesConfig(store.state);
     const hoveredItem = store.state.interaction?.hoveredItem;
-    if (hoveredItem != null) {
-      return hoveredItem as FocusedItemIdentifier<ChartSeriesType>;
+    // Cleaned before the check, because what a series stores is not always an identifier: the
+    // scatter reports its whole data point, whose optional `id` would read as an incomplete one.
+    const cleanedHoveredItem =
+      hoveredItem == null
+        ? null
+        : (cleanIdentifier(seriesConfig, hoveredItem) as FocusedItemIdentifier<ChartSeriesType>);
+
+    // Series that report a complete item need no further wiring.
+    if (cleanedHoveredItem != null && isCompleteFocusIdentifier(cleanedHoveredItem)) {
+      return cleanedHoveredItem;
     }
 
     const element = chartsLayerContainerRef.current;
     const point = element === null ? null : getChartPoint(element, event);
 
-    const item =
-      point && instance.isPointInside?.(point.x, point.y)
-        ? getItemAtAxisPosition({
-            point,
-            xAxis: selectorChartXAxis(store.state),
-            yAxis: selectorChartYAxis(store.state),
-            processedSeries: selectorChartSeriesProcessed(store.state),
-            focusedItem: store.state.keyboardNavigation.item,
-          })
-        : null;
+    if (!point || !instance.isPointInside?.(point.x, point.y)) {
+      return null;
+    }
 
-    return item;
+    const processedSeries = selectorChartSeriesProcessed(store.state);
+    // An incomplete hovered item still names the series under the pointer, which is a better
+    // target than the focused one: a click on a series should stay on it.
+    const focusedItem = cleanedHoveredItem ?? store.state.keyboardNavigation.item;
+
+    const item = getItemAtAxisPosition({
+      point,
+      xAxis: selectorChartXAxis(store.state),
+      yAxis: selectorChartYAxis(store.state),
+      processedSeries,
+      focusedItem,
+    });
+
+    if (item !== null) {
+      return item;
+    }
+
+    // A radar area only covers the polygon the data draws, so a click inside the chart but outside
+    // it resolves nothing above. Fall back to the rotation axis, the same one the highlight uses.
+    if (selectorChartRotationAxis(store.state).axisIds.length === 0) {
+      return null;
+    }
+
+    return getItemAtRotationIndex({
+      dataIndex: selectorChartsInteractionRotationAxisIndex(store.state),
+      processedSeries,
+      focusedItem,
+    });
   });
 
   const activationRegistrationsRef = React.useRef(new Map<number, ItemActivationRegistration>());
