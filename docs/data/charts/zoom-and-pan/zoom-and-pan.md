@@ -246,7 +246,7 @@ This provides an intuitive way to focus on a particular region of interest in th
 Pointer-only zoom and pan leave keyboard-only users without a way to reach data outside the visible window ([WCAG 2.1 SC 2.1.1](https://www.w3.org/WAI/WCAG21/Understanding/keyboard.html)).
 The `keyboard` interaction closes that gap, and is part of the default zoom and pan interactions.
 
-Setting `zoomInteractionConfig` replaces those defaults, so list `keyboard` there to keep it:
+Setting `zoom` or `pan` in `zoomInteractionConfig` replaces those defaults, so list `keyboard` there to keep it:
 
 ```jsx
 <LineChartPro
