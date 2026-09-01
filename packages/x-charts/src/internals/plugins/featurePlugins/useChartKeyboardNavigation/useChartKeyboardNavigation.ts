@@ -321,6 +321,10 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         return;
       }
 
+      // The chart handles this key, so it should never also scroll the page, even when the focus
+      // does not move because it already is at a boundary.
+      event.preventDefault();
+
       newFocusedItem = calculateFocusedItem(newFocusedItem, store.state);
 
       const keyboardNavigation = store.state.keyboardNavigation;
@@ -329,8 +333,6 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       if (newFocusedItem === keyboardNavigation.item && keyboardNavigation.isFocusVisible) {
         return;
       }
-
-      event.preventDefault();
 
       updateFocus(newFocusedItem, true);
     }
