@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ellipsize } from './ellipsize';
+import { ellipsize, getRotatedTextBounds } from './ellipsize';
 
 describe('ellipsizeText', () => {
   it('returns the original text if it fits', () => {
@@ -71,6 +71,106 @@ describe('ellipsizeText', () => {
 
       /* Starting with 5 graphemes, we should reduce to 2, then 1, totaling 3 calls. */
       expect(doesTextFitCalled).to.equal(3);
+    });
+  });
+});
+
+describe('getRotatedTextBounds', () => {
+  const textSize = { width: 40, height: 10 };
+
+  /* `Math.cos(Math.PI / 2)` is not exactly 0, so the results are rounded before being compared. */
+  const round = (bounds: ReturnType<typeof getRotatedTextBounds>) => ({
+    width: Number(bounds.width.toFixed(6)),
+    above: Number(bounds.above.toFixed(6)),
+    below: Number(bounds.below.toFixed(6)),
+  });
+
+  describe('without rotation', () => {
+    it('splits the height evenly around the anchor for a central baseline', () => {
+      const bounds = getRotatedTextBounds(textSize, {
+        angle: 0,
+        textAnchor: 'end',
+        dominantBaseline: 'central',
+      });
+
+      expect(round(bounds)).to.deep.equal({ width: 40, above: 5, below: 5 });
+    });
+
+    it('puts the whole text below the anchor for a hanging baseline', () => {
+      const bounds = getRotatedTextBounds(textSize, {
+        angle: 0,
+        textAnchor: 'end',
+        dominantBaseline: 'hanging',
+      });
+
+      expect(round(bounds)).to.deep.equal({ width: 40, above: 0, below: 10 });
+    });
+
+    it('puts the whole text above the anchor for an auto baseline', () => {
+      const bounds = getRotatedTextBounds(textSize, {
+        angle: 0,
+        textAnchor: 'end',
+        dominantBaseline: 'auto',
+      });
+
+      expect(round(bounds)).to.deep.equal({ width: 40, above: 10, below: 0 });
+    });
+
+    it('does not let the text anchor influence the vertical extents', () => {
+      const anchors = ['start', 'middle', 'end'] as const;
+
+      anchors.forEach((textAnchor) => {
+        const bounds = getRotatedTextBounds(textSize, {
+          angle: 0,
+          textAnchor,
+          dominantBaseline: 'central',
+        });
+
+        expect(round(bounds)).to.deep.equal({ width: 40, above: 5, below: 5 });
+      });
+    });
+  });
+
+  describe('with a quarter turn', () => {
+    it('splits the width evenly around the anchor for a middle text anchor', () => {
+      const bounds = getRotatedTextBounds(textSize, {
+        angle: 90,
+        textAnchor: 'middle',
+        dominantBaseline: 'hanging',
+      });
+
+      expect(round(bounds)).to.deep.equal({ width: 10, above: 20, below: 20 });
+    });
+
+    it('puts the whole text below the anchor for a start text anchor', () => {
+      const bounds = getRotatedTextBounds(textSize, {
+        angle: 90,
+        textAnchor: 'start',
+        dominantBaseline: 'hanging',
+      });
+
+      expect(round(bounds)).to.deep.equal({ width: 10, above: 0, below: 40 });
+    });
+
+    it('mirrors the extents when the text is rotated the other way', () => {
+      const bounds = getRotatedTextBounds(textSize, {
+        angle: 270,
+        textAnchor: 'start',
+        dominantBaseline: 'hanging',
+      });
+
+      expect(round(bounds)).to.deep.equal({ width: 10, above: 40, below: 0 });
+    });
+
+    it('mirrors the extents in right-to-left', () => {
+      const bounds = getRotatedTextBounds(textSize, {
+        angle: 90,
+        textAnchor: 'start',
+        dominantBaseline: 'hanging',
+        isRtl: true,
+      });
+
+      expect(round(bounds)).to.deep.equal({ width: 10, above: 40, below: 0 });
     });
   });
 });

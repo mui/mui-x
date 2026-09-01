@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import type { MultiSectionDigitalClockProps } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import {
@@ -8,14 +7,14 @@ import {
   multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
 import { screen, within } from '@mui/internal-test-utils';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<MultiSectionDigitalClock />', () => {
   const { render } = createPickerRenderer();
 
   describe('Reference date', () => {
     it('should use `referenceDate` when no value defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const referenceDate = '2018-01-01T13:30:00';
 
       const { user } = render(
@@ -39,8 +38,8 @@ describe('<MultiSectionDigitalClock />', () => {
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
-      expect(onChange.callCount).to.equal(3);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
+      expect(onChange.mock.calls.length).to.equal(3);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
     });
 
     it('should fallback to making the first entry focusable when `referenceDate` does not map to an option', () => {
@@ -52,7 +51,7 @@ describe('<MultiSectionDigitalClock />', () => {
     });
 
     it('should not use `referenceDate` when a value is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       function ControlledMultiSectionDigitalClock(props: MultiSectionDigitalClockProps) {
         const [value, setValue] = React.useState(props.value);
@@ -82,12 +81,12 @@ describe('<MultiSectionDigitalClock />', () => {
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
-      expect(onChange.callCount).to.equal(3);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
+      expect(onChange.mock.calls.length).to.equal(3);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
     });
 
     it('should not use `referenceDate` when a defaultValue is defined', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <MultiSectionDigitalClock
@@ -102,14 +101,14 @@ describe('<MultiSectionDigitalClock />', () => {
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
-      expect(onChange.callCount).to.equal(3);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
+      expect(onChange.mock.calls.length).to.equal(3);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
     });
   });
 
   describe('Keyboard support', () => {
     it('should move item focus up by 5 on PageUp press', async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
       const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
@@ -118,17 +117,17 @@ describe('<MultiSectionDigitalClock />', () => {
       await user.keyboard('{End}'); // moves focus to last element
       await user.keyboard('{PageUp}');
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[lastOptionIndex - 5]);
 
       await user.keyboard('{PageUp}');
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[lastOptionIndex - 10]);
     });
 
     it('should move focus to first item on PageUp press when current focused item index is among the first 5 items', async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
       const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
@@ -137,29 +136,29 @@ describe('<MultiSectionDigitalClock />', () => {
       await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
 
       await user.keyboard('{PageUp}');
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[0]);
     });
 
     it('should move item focus down by 5 on PageDown press', async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
       const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
 
       await user.keyboard('{PageDown}');
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[5]);
 
       await user.keyboard('{PageDown}');
 
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[10]);
     });
 
     it('should move focus to last item on PageDown press when current focused item index is among the last 5 items', async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
       const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
@@ -172,7 +171,7 @@ describe('<MultiSectionDigitalClock />', () => {
       await user.keyboard('{ArrowUp}{ArrowUp}{ArrowUp}');
 
       await user.keyboard('{PageDown}');
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
       expect(document.activeElement).to.equal(lastElement);
     });
   });
