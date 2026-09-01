@@ -38,6 +38,11 @@ async function getTreeItems(parentId?: string): Promise<ItemType[]> {
   });
 }
 
+const dataSource = {
+  getChildrenCount: (item: ItemType) => item?.childrenCount ?? 0,
+  getTreeItems,
+};
+
 // Spring-based expand/collapse of the item groups.
 function SpringGroupTransition(props: TransitionProps) {
   const style = useSpring({
@@ -166,10 +171,7 @@ export default function CustomizedLazyLoading() {
         itemHeight={32}
         slots={{ item: CustomTreeItem, loading: CustomLoading }}
         slotProps={{ loading: { itemsCount: 4 } }}
-        dataSource={{
-          getChildrenCount: (item) => item?.childrenCount ?? 0,
-          getTreeItems,
-        }}
+        dataSource={dataSource}
         sx={transitionStyles}
       />
     </Box>
