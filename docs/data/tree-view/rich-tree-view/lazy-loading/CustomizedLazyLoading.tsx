@@ -54,33 +54,31 @@ function SpringGroupTransition(props: TransitionProps) {
   );
 }
 
+const bouncingDotStyles = {
+  display: 'inline-flex',
+  gap: '3px',
+  alignItems: 'center',
+  '& > span': {
+    width: 4,
+    height: 4,
+    borderRadius: '50%',
+    backgroundColor: 'primary.main',
+    animation: 'bouncingDot 0.9s ease-in-out infinite',
+  },
+  '& > span:nth-of-type(2)': { animationDelay: '0.15s' },
+  '& > span:nth-of-type(3)': { animationDelay: '0.3s' },
+  '@keyframes bouncingDot': {
+    '0%, 100%': { transform: 'translateY(0)', opacity: 0.5 },
+    '50%': { transform: 'translateY(-3px)', opacity: 1 },
+  },
+};
+
 // Three bouncing dots replace the circular progress while an item loads its children.
 // The component also receives the `size` and `thickness` props of the default icon,
 // which it ignores.
 function BouncingDotsLoadingIcon(props: { className?: string }) {
   return (
-    <Box
-      component="span"
-      className={props.className}
-      sx={{
-        display: 'inline-flex',
-        gap: '3px',
-        alignItems: 'center',
-        '& > span': {
-          width: 4,
-          height: 4,
-          borderRadius: '50%',
-          backgroundColor: 'primary.main',
-          animation: 'bouncingDot 0.9s ease-in-out infinite',
-        },
-        '& > span:nth-of-type(2)': { animationDelay: '0.15s' },
-        '& > span:nth-of-type(3)': { animationDelay: '0.3s' },
-        '@keyframes bouncingDot': {
-          '0%, 100%': { transform: 'translateY(0)', opacity: 0.5 },
-          '50%': { transform: 'translateY(-3px)', opacity: 1 },
-        },
-      }}
-    >
+    <Box component="span" className={props.className} sx={bouncingDotStyles}>
       <span />
       <span />
       <span />
@@ -143,6 +141,21 @@ const ITEM_STAGGER_DELAYS: Record<string, { animationDelay: string }> =
     ]),
   );
 
+const transitionStyles = {
+  // The loading rows and the items share the same springy entrance,
+  // so the swap between them reads as one continuous motion.
+  [`& .${treeItemLoaderClasses.root}, & .${treeItemClasses.content}`]: {
+    borderRadius: 1,
+    transformOrigin: 'left center',
+    animation: 'popIn 420ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards',
+  },
+  ...ITEM_STAGGER_DELAYS,
+  '@keyframes popIn': {
+    from: { opacity: 0, transform: 'scale(0.85) translateX(-8px)' },
+    to: { opacity: 1, transform: 'none' },
+  },
+};
+
 export default function CustomizedLazyLoading() {
   return (
     <Box sx={{ width: 300, minHeight: 200 }}>
@@ -157,20 +170,7 @@ export default function CustomizedLazyLoading() {
           getChildrenCount: (item) => item?.childrenCount ?? 0,
           getTreeItems,
         }}
-        sx={{
-          // The loading rows and the items share the same springy entrance,
-          // so the swap between them reads as one continuous motion.
-          [`& .${treeItemLoaderClasses.root}, & .${treeItemClasses.content}`]: {
-            borderRadius: 1,
-            transformOrigin: 'left center',
-            animation: 'popIn 420ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards',
-          },
-          ...ITEM_STAGGER_DELAYS,
-          '@keyframes popIn': {
-            from: { opacity: 0, transform: 'scale(0.85) translateX(-8px)' },
-            to: { opacity: 1, transform: 'none' },
-          },
-        }}
+        sx={transitionStyles}
       />
     </Box>
   );
