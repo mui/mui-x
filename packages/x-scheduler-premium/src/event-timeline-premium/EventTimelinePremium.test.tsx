@@ -42,11 +42,11 @@ const event3 = EventBuilder.new()
 const baseEvents = [event1, event2, event3];
 
 describe('<EventTimelinePremium />', () => {
-  const { render } = createSchedulerRenderer({
+  const { render, renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  function renderTimeline(options?: {
+  async function renderTimeline(options?: {
     resources?: SchedulerResource[];
     events?: SchedulerEvent[];
     preset?: EventTimelinePremiumPreset;
@@ -61,7 +61,7 @@ describe('<EventTimelinePremium />', () => {
     defaultVisibleResources?: Record<string, boolean>;
     onEventEditingStart?: React.ComponentProps<typeof EventTimelinePremium>['onEventEditingStart'];
   }) {
-    return render(
+    const view = await renderSettled(
       <EventTimelinePremium
         resources={options?.resources ?? baseResources}
         events={options?.events ?? baseEvents}
@@ -80,11 +80,12 @@ describe('<EventTimelinePremium />', () => {
         onEventEditingStart={options?.onEventEditingStart}
       />,
     );
+    return view;
   }
 
   describe('resources', () => {
-    it('renders all resource titles', () => {
-      renderTimeline();
+    it('renders all resource titles', async () => {
+      await renderTimeline();
 
       baseResources.forEach((resourceItem) => {
         expect(screen.getByText(resourceItem.title)).not.to.equal(null);
@@ -96,12 +97,12 @@ describe('<EventTimelinePremium />', () => {
       expect(resourceTitleCells.filter(Boolean).length).to.equal(baseResources.length);
     });
 
-    it('does render resources with no events', () => {
+    it('does render resources with no events', async () => {
       const extendedResources: SchedulerResource[] = [
         ...baseResources,
         { id: 'resource-3', title: 'QA', eventColor: 'red' },
       ];
-      renderTimeline({ resources: extendedResources });
+      await renderTimeline({ resources: extendedResources });
 
       expect(screen.queryByText('QA')).to.not.equal(null);
     });
@@ -120,20 +121,20 @@ describe('<EventTimelinePremium />', () => {
         .closest(`.${eventTimelinePremiumClasses.event}`) as HTMLElement;
     };
 
-    it('should resolve a colorless multi-resource event against each row resource, not just the primary one', () => {
+    it('should resolve a colorless multi-resource event against each row resource, not just the primary one', async () => {
       const multiResourceEvent = EventBuilder.new()
         .title('Shared event')
         .singleDay('2025-07-03T09:00:00Z')
         .resources([red, blue])
         .build();
 
-      renderTimeline({ resources: multiResourceResources, events: [multiResourceEvent] });
+      await renderTimeline({ resources: multiResourceResources, events: [multiResourceEvent] });
 
       expect(getEventInRow(red.id, 'Shared event')).to.have.attribute('data-palette', 'red');
       expect(getEventInRow(blue.id, 'Shared event')).to.have.attribute('data-palette', 'blue');
     });
 
-    it("should keep the event's own color in every row of a multi-resource event", () => {
+    it("should keep the event's own color in every row of a multi-resource event", async () => {
       const multiResourceEvent = EventBuilder.new()
         .title('Shared event')
         .singleDay('2025-07-03T09:00:00Z')
@@ -141,7 +142,7 @@ describe('<EventTimelinePremium />', () => {
         .color('purple')
         .build();
 
-      renderTimeline({ resources: multiResourceResources, events: [multiResourceEvent] });
+      await renderTimeline({ resources: multiResourceResources, events: [multiResourceEvent] });
 
       expect(getEventInRow(red.id, 'Shared event')).to.have.attribute('data-palette', 'purple');
       expect(getEventInRow(blue.id, 'Shared event')).to.have.attribute('data-palette', 'purple');
@@ -158,8 +159,8 @@ describe('<EventTimelinePremium />', () => {
         `[id$="-EventTimelinePremiumTitleCell-${resourceId}"]`,
       ) as HTMLElement | null;
 
-    it('should not mark a leaf resource as collapsible', () => {
-      renderTimeline({ resources: nestedResources, events: [] });
+    it('should not mark a leaf resource as collapsible', async () => {
+      await renderTimeline({ resources: nestedResources, events: [] });
 
       const childCell = getTitleCell(child.id);
       expect(childCell).not.to.equal(null);
@@ -167,8 +168,8 @@ describe('<EventTimelinePremium />', () => {
       expect(childCell!.getAttribute('aria-expanded')).to.equal(null);
     });
 
-    it('should not mark a parent collapsible when all children are hidden', () => {
-      renderTimeline({
+    it('should not mark a parent collapsible when all children are hidden', async () => {
+      await renderTimeline({
         resources: nestedResources,
         events: [],
         defaultVisibleResources: { [child.id]: false },
@@ -177,26 +178,26 @@ describe('<EventTimelinePremium />', () => {
       expect(getTitleCell(parent.id)!.getAttribute('data-collapsible')).to.equal(null);
     });
 
-    it('should mark a collapsible parent as expanded', () => {
-      renderTimeline({ resources: nestedResources, events: [] });
+    it('should mark a collapsible parent as expanded', async () => {
+      await renderTimeline({ resources: nestedResources, events: [] });
 
       expect(getTitleCell(parent.id)!.getAttribute('aria-expanded')).to.equal('true');
     });
 
-    it('should reserve the toggle column when the timeline has nested resources', () => {
-      renderTimeline({ resources: nestedResources, events: [] });
+    it('should reserve the toggle column when the timeline has nested resources', async () => {
+      await renderTimeline({ resources: nestedResources, events: [] });
 
       expect(screen.getByRole('grid').closest('[data-flat]')).to.equal(null);
     });
 
-    it('should not reserve the toggle column on a flat timeline', () => {
-      renderTimeline({ resources: baseResources, events: [] });
+    it('should not reserve the toggle column on a flat timeline', async () => {
+      await renderTimeline({ resources: baseResources, events: [] });
 
       expect(screen.getByRole('grid').closest('[data-flat]')).not.to.equal(null);
     });
 
     it('should collapse a parent and hide its children when the cell is clicked', async () => {
-      const { user } = renderTimeline({ resources: nestedResources, events: [] });
+      const { user } = await renderTimeline({ resources: nestedResources, events: [] });
 
       expect(screen.getByText(child.title)).not.to.equal(null);
 
@@ -206,8 +207,8 @@ describe('<EventTimelinePremium />', () => {
       expect(getTitleCell(parent.id)!.getAttribute('aria-expanded')).to.equal('false');
     });
 
-    it('should hide children initially when collapsedResources is controlled', () => {
-      renderTimeline({
+    it('should hide children initially when collapsedResources is controlled', async () => {
+      await renderTimeline({
         resources: nestedResources,
         events: [],
         collapsedResources: { [parent.id]: true },
@@ -216,8 +217,8 @@ describe('<EventTimelinePremium />', () => {
       expect(screen.queryByText(child.title)).to.equal(null);
     });
 
-    it('should hide children initially from defaultCollapsedResources', () => {
-      renderTimeline({
+    it('should hide children initially from defaultCollapsedResources', async () => {
+      await renderTimeline({
         resources: nestedResources,
         events: [],
         defaultCollapsedResources: { [parent.id]: true },
@@ -228,7 +229,7 @@ describe('<EventTimelinePremium />', () => {
 
     it('should call onCollapsedResourcesChange when the cell is clicked', async () => {
       const onCollapsedResourcesChange = vi.fn();
-      const { user } = renderTimeline({
+      const { user } = await renderTimeline({
         resources: nestedResources,
         events: [],
         onCollapsedResourcesChange,
@@ -241,7 +242,7 @@ describe('<EventTimelinePremium />', () => {
     });
 
     it('should toggle collapse with the keyboard', async () => {
-      const { user } = renderTimeline({ resources: nestedResources, events: [] });
+      const { user } = await renderTimeline({ resources: nestedResources, events: [] });
 
       const parentCell = getTitleCell(parent.id)!;
       act(() => {
@@ -256,7 +257,7 @@ describe('<EventTimelinePremium />', () => {
 
     it('should toggle collapse with the Space key and emit the shared collapsed state', async () => {
       const onCollapsedResourcesChange = vi.fn();
-      const { user } = renderTimeline({
+      const { user } = await renderTimeline({
         resources: nestedResources,
         events: [],
         onCollapsedResourcesChange,
@@ -276,7 +277,7 @@ describe('<EventTimelinePremium />', () => {
     });
 
     it('should move focus to the parent when a controlled collapse removes the focused child row', async () => {
-      const { setProps } = renderTimeline({
+      const { setProps } = await renderTimeline({
         resources: nestedResources,
         events: [],
         collapsedResources: {},
@@ -305,7 +306,7 @@ describe('<EventTimelinePremium />', () => {
       const b2 = ResourceBuilder.new().title('B2').build();
       const parentB = ResourceBuilder.new().title('Parent B').children([b1, b2]).build();
 
-      const { setProps } = renderTimeline({
+      const { setProps } = await renderTimeline({
         resources: [parentA, parentB],
         events: [],
         collapsedResources: {},
@@ -330,20 +331,20 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('events', () => {
-    it('should render all visible events', () => {
-      renderTimeline();
+    it('should render all visible events', async () => {
+      await renderTimeline();
       baseEvents.forEach((eventItem) => {
         expect(screen.getByText(eventItem.title)).not.to.equal(null);
       });
     });
 
-    it('does not render events out of range', () => {
+    it('does not render events out of range', async () => {
       const outOfRangeEvent = EventBuilder.new()
         .title('Out of range')
         .span('2050-07-04T13:00:00Z', '2050-08-04T14:30:00Z')
         .build();
 
-      renderTimeline({ events: [...baseEvents, outOfRangeEvent] });
+      await renderTimeline({ events: [...baseEvents, outOfRangeEvent] });
       baseEvents.forEach((eventItem) => {
         expect(screen.getByText(eventItem.title)).not.to.equal(null);
       });
@@ -351,8 +352,8 @@ describe('<EventTimelinePremium />', () => {
       expect(screen.queryByText(outOfRangeEvent.title)).to.equal(null);
     });
 
-    it('should keep events visible after rerender', () => {
-      const { rerender: localRerender } = renderTimeline();
+    it('should keep events visible after rerender', async () => {
+      const { rerender: localRerender } = await renderTimeline();
       localRerender(
         <EventTimelinePremium
           resources={baseResources}
@@ -367,7 +368,7 @@ describe('<EventTimelinePremium />', () => {
       });
     });
 
-    it('should display recurrence icon only for recurring events', () => {
+    it('should display recurrence icon only for recurring events', async () => {
       const recurringEvent = EventBuilder.new()
         .title('Recurring timeline event')
         .singleDay('2025-07-03T09:00:00Z')
@@ -380,7 +381,7 @@ describe('<EventTimelinePremium />', () => {
         .resource(engineering)
         .build();
 
-      renderTimeline({ events: [recurringEvent, singleEvent], preset: 'dayAndMonth' });
+      await renderTimeline({ events: [recurringEvent, singleEvent], preset: 'dayAndMonth' });
 
       const recurringEventElements = screen.getAllByLabelText(recurringEvent.title);
       expect(recurringEventElements.length).to.be.greaterThan(0);
@@ -404,7 +405,7 @@ describe('<EventTimelinePremium />', () => {
         .recurrent('DAILY')
         .build();
 
-      const { user } = renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
+      const { user } = await renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
 
       const occurrences = screen.getAllByLabelText(recurringEvent.title);
       expect(occurrences.length).to.be.greaterThan(1);
@@ -430,7 +431,7 @@ describe('<EventTimelinePremium />', () => {
         .recurrent('DAILY')
         .build();
 
-      const { user } = renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
+      const { user } = await renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
 
       const occurrences = screen.getAllByLabelText(recurringEvent.title);
       await user.click(occurrences[0]);
@@ -449,10 +450,10 @@ describe('<EventTimelinePremium />', () => {
       ).to.have.length(0);
     });
 
-    it('should render events correctly in the dayAndHour preset', () => {
+    it('should render events correctly in the dayAndHour preset', async () => {
       const totalWidth = 6144; // 96 hours * 64px
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
-      renderTimeline({ preset: 'dayAndHour' });
+      await renderTimeline({ preset: 'dayAndHour' });
 
       const eventElement = screen.getByLabelText(event1.title);
       expect(eventElement).not.to.equal(null);
@@ -464,10 +465,10 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(hourBoundaries.end);
     });
 
-    it('should render events correctly in the dayAndMonth preset', () => {
+    it('should render events correctly in the dayAndMonth preset', async () => {
       const totalWidth = 6720; // 56 days * 120px
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
-      renderTimeline({ preset: 'dayAndMonth' });
+      await renderTimeline({ preset: 'dayAndMonth' });
 
       const eventElement = screen.getByLabelText(event3.title);
       expect(eventElement).not.to.equal(null);
@@ -479,7 +480,7 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
 
-    it('should render events correctly in the dayAndWeek preset', () => {
+    it('should render events correctly in the dayAndWeek preset', async () => {
       const totalWidth = 64 * 7 * 16; // 64px * 7 days * 16 weeks
       const startOfWeek = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
       const weekDayNumber = adapter.differenceInDays(
@@ -488,7 +489,7 @@ describe('<EventTimelinePremium />', () => {
       );
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
-      renderTimeline({ preset: 'dayAndWeek' });
+      await renderTimeline({ preset: 'dayAndWeek' });
 
       const eventElement = screen.getByLabelText(event1.title);
       expect(eventElement).not.to.equal(null);
@@ -500,7 +501,7 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
 
-    it('should render events correctly in the monthAndYear preset', () => {
+    it('should render events correctly in the monthAndYear preset', async () => {
       const nextMonthEvent = EventBuilder.new()
         .title('Next month')
         .span('2025-08-04T13:00:00Z', '2025-09-04T14:30:00Z')
@@ -508,7 +509,7 @@ describe('<EventTimelinePremium />', () => {
         .build();
       const extendedEvents: SchedulerEvent[] = [...baseEvents, nextMonthEvent];
 
-      renderTimeline({ events: extendedEvents, preset: 'monthAndYear' });
+      await renderTimeline({ events: extendedEvents, preset: 'monthAndYear' });
 
       // monthAndYear ticks per day (6px), so the total width depends on the actual
       // calendar days in the visible range — read it from the grid CSS variables.
@@ -537,7 +538,7 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition2).to.be.lessThanOrEqual(monthWidth * 2); // second month
     });
 
-    it('should render events correctly in the year preset', () => {
+    it('should render events correctly in the year preset', async () => {
       const thisYearEvent = EventBuilder.new()
         .span('2025-08-03T13:00:00Z', '2025-09-04T14:30:00Z')
         .resource(engineering)
@@ -547,7 +548,7 @@ describe('<EventTimelinePremium />', () => {
         .resource(engineering)
         .build();
 
-      renderTimeline({ events: [thisYearEvent, nextYearEvent], preset: 'year' });
+      await renderTimeline({ events: [thisYearEvent, nextYearEvent], preset: 'year' });
 
       const totalWidth = 30 * 200;
       const thisYearEventElement = screen.getByLabelText(thisYearEvent.title);
@@ -570,8 +571,8 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('current time indicator', () => {
-    it('should render the indicator when today is in view', () => {
-      renderTimeline();
+    it('should render the indicator when today is in view', async () => {
+      await renderTimeline();
 
       const indicators = document.querySelectorAll(
         `.${eventTimelinePremiumClasses.currentTimeIndicator}`,
@@ -579,9 +580,9 @@ describe('<EventTimelinePremium />', () => {
       expect(indicators.length).to.be.greaterThan(0);
     });
 
-    it('should not render the indicator when today is not in view', () => {
+    it('should not render the indicator when today is not in view', async () => {
       const visibleDate = adapter.date('2030-01-01T00:00:00Z', 'default');
-      renderTimeline({ visibleDate });
+      await renderTimeline({ visibleDate });
 
       const indicators = document.querySelectorAll(
         `.${eventTimelinePremiumClasses.currentTimeIndicator}`,
@@ -589,8 +590,8 @@ describe('<EventTimelinePremium />', () => {
       expect(indicators.length).to.equal(0);
     });
 
-    it('should not render the indicator when showCurrentTimeIndicator is false', () => {
-      renderTimeline({ showCurrentTimeIndicator: false });
+    it('should not render the indicator when showCurrentTimeIndicator is false', async () => {
+      await renderTimeline({ showCurrentTimeIndicator: false });
 
       const indicators = document.querySelectorAll(
         `.${eventTimelinePremiumClasses.currentTimeIndicator}`,
@@ -600,21 +601,21 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('resourceColumnLabel', () => {
-    it('should display "Resource title" by default', () => {
-      renderTimeline();
+    it('should display "Resource title" by default', async () => {
+      await renderTimeline();
 
       expect(screen.getByText('Resource title')).not.to.equal(null);
     });
 
-    it('should display resourceColumnLabel value when provided', () => {
-      renderTimeline({ resourceColumnLabel: 'Team' });
+    it('should display resourceColumnLabel value when provided', async () => {
+      await renderTimeline({ resourceColumnLabel: 'Team' });
 
       expect(screen.getByText('Team')).not.to.equal(null);
       expect(screen.queryByText('Resource title')).to.equal(null);
     });
 
-    it('should take priority over localeText.timelineResourceTitleHeader', () => {
-      renderTimeline({
+    it('should take priority over localeText.timelineResourceTitleHeader', async () => {
+      await renderTimeline({
         resourceColumnLabel: 'My Label',
         localeText: { timelineResourceTitleHeader: 'Locale Label' },
       });
@@ -623,8 +624,8 @@ describe('<EventTimelinePremium />', () => {
       expect(screen.queryByText('Locale Label')).to.equal(null);
     });
 
-    it('should fall back to localeText.timelineResourceTitleHeader when not set', () => {
-      renderTimeline({
+    it('should fall back to localeText.timelineResourceTitleHeader when not set', async () => {
+      await renderTimeline({
         localeText: { timelineResourceTitleHeader: 'Custom Locale' },
       });
 
@@ -639,7 +640,7 @@ describe('<EventTimelinePremium />', () => {
         persistEvents: async () => ({ success: true }),
       };
 
-      render(
+      await renderSettled(
         <EventTimelinePremium
           resources={baseResources}
           dataSource={dataSource}
@@ -674,7 +675,7 @@ describe('<EventTimelinePremium />', () => {
         );
       }
 
-      const { user } = render(<Test />);
+      const { user } = await renderSettled(<Test />);
       await waitFor(() => {
         expect(screen.getByText(event1.title)).not.to.equal(null);
         expect(
@@ -700,7 +701,7 @@ describe('<EventTimelinePremium />', () => {
         persistEvents: async () => ({ success: true }),
       };
 
-      render(
+      await renderSettled(
         <EventTimelinePremium
           resources={baseResources}
           dataSource={dataSource}
@@ -759,7 +760,7 @@ describe('<EventTimelinePremium />', () => {
         persistEvents: async () => ({ success: true }),
       };
 
-      render(
+      await renderSettled(
         <EventTimelinePremium
           resources={baseResources}
           dataSource={dataSource}
@@ -830,7 +831,7 @@ describe('<EventTimelinePremium />', () => {
         );
       }
 
-      const { user } = render(<Test />);
+      const { user } = await renderSettled(<Test />);
 
       await waitFor(() => {
         expect(screen.getByText('Transient error')).not.to.equal(null);
@@ -883,7 +884,7 @@ describe('<EventTimelinePremium />', () => {
         );
       }
 
-      const { user } = render(<Test />);
+      const { user } = await renderSettled(<Test />);
 
       await waitFor(() => {
         expect(screen.getByText(event1.title)).not.to.equal(null);
@@ -911,7 +912,7 @@ describe('<EventTimelinePremium />', () => {
         persistEvents: async () => ({ success: true }),
       };
 
-      render(
+      await renderSettled(
         <EventTimelinePremium
           resources={baseResources}
           dataSource={dataSource}
@@ -968,7 +969,7 @@ describe('<EventTimelinePremium />', () => {
 
   describe('presets', () => {
     it('should set --unit-width to the preset tickWidth and render one row per header level', async () => {
-      renderTimeline({
+      await renderTimeline({
         preset: 'dayAndHour',
         presets: ['dayAndMonth', 'dayAndHour'],
       });
@@ -981,7 +982,7 @@ describe('<EventTimelinePremium />', () => {
         rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);
 
-      renderTimeline({
+      await renderTimeline({
         preset: 'dayAndMonth',
         presets: ['dayAndMonth', 'dayAndHour'],
       });
@@ -1005,7 +1006,7 @@ describe('<EventTimelinePremium />', () => {
 
     it('should be called with the occurrence when activating an event and still open the built-in dialog', async () => {
       const onEventEditingStart = vi.fn();
-      const { user } = renderTimeline({ events: [standupEvent], onEventEditingStart });
+      const { user } = await renderTimeline({ events: [standupEvent], onEventEditingStart });
 
       await user.click(screen.getByText('Standup'));
 
@@ -1020,7 +1021,7 @@ describe('<EventTimelinePremium />', () => {
 
     it('should keep the built-in dialog closed when the handler cancels', async () => {
       const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
-      const { user } = renderTimeline({ events: [standupEvent], onEventEditingStart });
+      const { user } = await renderTimeline({ events: [standupEvent], onEventEditingStart });
 
       await user.click(screen.getByText('Standup'));
 
@@ -1035,7 +1036,7 @@ describe('<EventTimelinePremium />', () => {
         .resources([engineering, design])
         .build();
       const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
-      const { user } = renderTimeline({ events: [sharedEvent], onEventEditingStart });
+      const { user } = await renderTimeline({ events: [sharedEvent], onEventEditingStart });
 
       const designRow = document.querySelector(`[data-resource-id="${design.id}"]`) as HTMLElement;
       await user.click(within(designRow).getByText('Shared event'));
@@ -1053,7 +1054,7 @@ describe('<EventTimelinePremium />', () => {
         .title('Locked')
         .build();
       const onEventEditingStart = vi.fn();
-      const { user } = renderTimeline({
+      const { user } = await renderTimeline({
         resources: [readOnlyResource],
         events: [lockedEvent],
         onEventEditingStart,
@@ -1069,7 +1070,7 @@ describe('<EventTimelinePremium />', () => {
 
     it('should expose the persistent row as `anchor` when the handler cancels an event creation', async () => {
       const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
-      const { user } = renderTimeline({ events: [standupEvent], onEventEditingStart });
+      const { user } = await renderTimeline({ events: [standupEvent], onEventEditingStart });
 
       const row = document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement;
       await act(async () => row.focus());
