@@ -207,6 +207,26 @@ export const useGridCellSelection = (
     [apiRef, props.cellSelection],
   );
 
+  const isSelectableField = React.useCallback(
+    (field: string) => {
+      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        return false;
+      }
+
+      if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+        return false;
+      }
+
+      if (field === GRID_REORDER_COL_DEF.field) {
+        return false;
+      }
+
+      const column = apiRef.current.getColumn(field);
+      return column?.type !== GRID_ACTIONS_COLUMN_TYPE;
+    },
+    [apiRef],
+  );
+
   const selectCellRange = React.useCallback<GridCellSelectionApi['selectCellRange']>(
     (start, end, keepOtherSelected = false) => {
       const startRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(start.id);
@@ -232,22 +252,28 @@ export const useGridCellSelection = (
       const visibleColumns = apiRef.current.getVisibleColumns();
       const visibleRows = getVisibleRows(apiRef);
       const rowsInRange = visibleRows.rows.slice(finalStartRowIndex, finalEndRowIndex + 1);
-      const columnsInRange = visibleColumns.slice(finalStartColumnIndex, finalEndColumnIndex + 1);
+      const columnsInRange = visibleColumns
+        .slice(finalStartColumnIndex, finalEndColumnIndex + 1)
+        .filter((column) => isSelectableField(column.field));
 
       const newModel = keepOtherSelected ? { ...apiRef.current.getCellSelectionModel() } : {};
 
-      rowsInRange.forEach((row) => {
-        if (!newModel[row.id]) {
-          newModel[row.id] = {};
-        }
-        columnsInRange.forEach((column) => {
-          newModel[row.id][column.field] = true;
-        }, {});
-      });
+      // Without this check, a range with only non-selectable columns would add
+      // empty row entries to the model
+      if (columnsInRange.length > 0) {
+        rowsInRange.forEach((row) => {
+          if (!newModel[row.id]) {
+            newModel[row.id] = {};
+          }
+          columnsInRange.forEach((column) => {
+            newModel[row.id][column.field] = true;
+          });
+        });
+      }
 
       apiRef.current.setCellSelectionModel(newModel);
     },
-    [apiRef],
+    [apiRef, isSelectableField],
   );
 
   const getSelectedCellsAsArray = React.useCallback<
@@ -293,26 +319,6 @@ export const useGridCellSelection = (
   };
 
   useGridApiMethod(apiRef, cellSelectionApi, 'public');
-
-  const isSelectableField = React.useCallback(
-    (field: string) => {
-      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
-        return false;
-      }
-
-      if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
-        return false;
-      }
-
-      if (field === GRID_REORDER_COL_DEF.field) {
-        return false;
-      }
-
-      const column = apiRef.current.getColumn(field);
-      return column?.type !== GRID_ACTIONS_COLUMN_TYPE;
-    },
-    [apiRef],
-  );
 
   const hasClickedValidCellForRangeSelection = React.useCallback(
     (params: GridCellParams) => {

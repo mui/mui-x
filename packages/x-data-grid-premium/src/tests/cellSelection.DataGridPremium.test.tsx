@@ -658,6 +658,26 @@ describe('<DataGridPremium /> - Cell selection', () => {
         expect(getCell(2, 1)).to.have.class('Mui-selected');
         expect(getCell(2, 2)).to.have.class('Mui-selected');
       });
+
+      it('should not select cells of non-selectable columns inside the range', async () => {
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          { field: 'actions', type: 'actions', getActions: () => [] },
+          { field: 'name' },
+        ];
+        const rows = [
+          { id: 0, name: 'Alice' },
+          { id: 1, name: 'Bob' },
+        ];
+        render(<TestDataGridSelection columns={columns} rows={rows} />);
+        act(() =>
+          apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 1, field: 'name' }),
+        );
+        expect(apiRef.current?.getCellSelectionModel()).to.deep.equal({
+          '0': { id: true, name: true },
+          '1': { id: true, name: true },
+        });
+      });
     });
 
     describe('getSelectedCellsAsArray', () => {
