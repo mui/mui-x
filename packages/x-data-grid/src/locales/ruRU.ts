@@ -209,6 +209,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'ещё',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Закрепить слева',

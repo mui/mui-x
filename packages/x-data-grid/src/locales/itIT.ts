@@ -181,6 +181,7 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'più',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Blocca a sinistra',

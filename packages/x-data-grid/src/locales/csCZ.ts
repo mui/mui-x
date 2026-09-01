@@ -207,6 +207,7 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'více',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Připnout vlevo',

@@ -174,6 +174,7 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'daha fazla',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Sola sabitle',

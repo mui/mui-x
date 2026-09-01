@@ -177,6 +177,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'още',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Закачи в ляво',

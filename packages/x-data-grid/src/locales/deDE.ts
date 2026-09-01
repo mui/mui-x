@@ -182,6 +182,7 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'Mehr',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Links anheften',

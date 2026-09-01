@@ -209,6 +209,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'більше',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Закріпити ліворуч',

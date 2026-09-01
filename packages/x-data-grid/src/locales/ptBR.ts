@@ -182,6 +182,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'mais',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Fixar à esquerda',

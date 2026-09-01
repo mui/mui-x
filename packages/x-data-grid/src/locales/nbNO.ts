@@ -179,6 +179,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'mer',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Fest til venstre',

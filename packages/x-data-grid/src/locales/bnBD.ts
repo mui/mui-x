@@ -179,6 +179,7 @@ const bnBDGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'আরও',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'বাঁ দিকে পিন করুন',

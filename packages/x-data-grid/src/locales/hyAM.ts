@@ -197,6 +197,7 @@ const hyAMGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'ավելին',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Կցել ձախ',

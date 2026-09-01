@@ -176,6 +176,7 @@ export const idIDGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'lainnya',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Sematkan ke kiri',

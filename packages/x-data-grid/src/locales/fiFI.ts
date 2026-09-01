@@ -179,6 +179,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'lisää',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Kiinnitä vasemmalle',

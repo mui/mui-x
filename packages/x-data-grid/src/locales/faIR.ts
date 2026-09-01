@@ -179,6 +179,7 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'بیشتر',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'سنجاق کردن به چپ',

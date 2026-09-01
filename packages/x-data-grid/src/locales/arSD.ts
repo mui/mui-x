@@ -179,6 +179,7 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'المزيد',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'التدبيس يميناً',

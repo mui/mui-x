@@ -255,6 +255,7 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
     <div
       ref={rootRef}
       role="toolbar"
+      aria-label={colDef.headerName || apiRef.current.getLocaleText('actionsCellLabel')}
       tabIndex={-1}
       className={gridClasses.actionsCell}
       onKeyDown={handleRootKeyDown}

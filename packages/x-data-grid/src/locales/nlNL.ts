@@ -179,6 +179,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'meer',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Links vastzetten',

@@ -179,6 +179,7 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'Mai multe',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Fixare în stânga',

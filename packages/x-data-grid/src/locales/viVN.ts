@@ -177,6 +177,7 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'Thêm',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Ghim cột bên trái',

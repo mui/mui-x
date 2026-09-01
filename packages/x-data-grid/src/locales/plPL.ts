@@ -176,6 +176,7 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'więcej',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Przypnij do lewej',

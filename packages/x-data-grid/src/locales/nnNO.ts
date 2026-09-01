@@ -180,6 +180,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'meir',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Fest til venstre',

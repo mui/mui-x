@@ -177,6 +177,7 @@ const isISGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'meira',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Festa til vinstri',

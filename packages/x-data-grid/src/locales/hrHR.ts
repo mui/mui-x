@@ -199,6 +199,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'više',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Prikvači lijevo',

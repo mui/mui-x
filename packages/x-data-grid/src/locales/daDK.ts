@@ -177,6 +177,7 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'mere',
+  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Fastgør til venstre',
