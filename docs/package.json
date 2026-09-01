@@ -28,7 +28,7 @@
     "@emotion/styled": "catalog:",
     "@mui/icons-material": "catalog:",
     "@mui/internal-core-docs": "catalog:",
-    "@mui/internal-docs-infra": "^0.12.1-canary.40",
+    "@mui/internal-docs-infra": "^0.12.1-canary.41",
     "@mui/material": "catalog:",
     "@mui/material-nextjs": "^9.4.0",
     "@mui/stylis-plugin-rtl": "catalog:",
