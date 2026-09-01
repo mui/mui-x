@@ -1694,9 +1694,8 @@ export const useGridCellSelection = (
       }
       const sortedRowIds = gridSortedRowIdsSelector(apiRef);
       const cellSelectionModel = apiRef.current.getCellSelectionModel();
-      const unsortedSelectedRowIds = Object.keys(cellSelectionModel);
-      const sortedSelectedRowIds = sortedRowIds.filter((id) =>
-        unsortedSelectedRowIds.includes(`${id}`),
+      const sortedSelectedRowIds = sortedRowIds.filter(
+        (id) => cellSelectionModel[id] !== undefined,
       );
       const copyData = sortedSelectedRowIds.reduce<string>((acc, rowId) => {
         const fieldsMap = cellSelectionModel[rowId];
