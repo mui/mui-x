@@ -40,7 +40,7 @@ describe('<DataGridPremium /> - AI Assistant', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
-  const promptSpy = vi.fn().mockResolvedValue({});
+  const promptSpy = vi.fn();
 
   function Test(props: Partial<DataGridPremiumProps & { allowAiAssistantDataSampling: boolean }>) {
     apiRef = useGridApiRef();

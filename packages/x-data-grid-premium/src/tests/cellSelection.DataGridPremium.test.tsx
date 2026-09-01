@@ -606,14 +606,14 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
   // JSDOM doesn't support scroll events
   describe.skipIf(isJSDOM)('Auto-scroll', () => {
-    let requestAnimationFrame: MockInstance;
+    let rafStub: MockInstance;
 
     beforeEach(() => {
-      requestAnimationFrame = vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 0);
+      rafStub = vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 0);
     });
 
     afterEach(() => {
-      requestAnimationFrame.mockRestore();
+      rafStub.mockRestore();
     });
 
     it('should auto-scroll when the mouse approaches the bottom edge', async () => {
