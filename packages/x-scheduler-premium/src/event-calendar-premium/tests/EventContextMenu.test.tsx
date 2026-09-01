@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { SinonSpy } from 'sinon';
 import { screen, fireEvent } from '@mui/internal-test-utils';
 import {
   adapter,
@@ -18,6 +17,7 @@ import {
   EventContextMenuTrigger,
 } from '@mui/x-scheduler/internals';
 import { describe, it, expect } from 'vitest';
+import type { MockInstance } from 'vitest';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
 
 /**
@@ -40,8 +40,8 @@ describe('EventContextMenu - recurring events (Premium)', () => {
       .recurrent('WEEKLY');
     const occurrence = weeklyEventBuilder.toOccurrence();
 
-    let deleteEventSpy: SinonSpy | undefined;
-    let deleteRecurringEventSpy: SinonSpy | undefined;
+    let deleteEventSpy: MockInstance | undefined;
+    let deleteRecurringEventSpy: MockInstance | undefined;
 
     render(
       <EventCalendarProvider
@@ -77,8 +77,8 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     fireEvent.contextMenu(screen.getByRole('button', { name: 'Weekly sync' }));
     fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
 
-    expect(deleteRecurringEventSpy?.calledOnce).to.equal(true);
-    expect(deleteEventSpy?.called).to.equal(false);
+    expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
+    expect(deleteEventSpy?.mock.calls.length).to.equal(0);
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
   });
 
