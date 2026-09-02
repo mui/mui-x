@@ -41,7 +41,7 @@ catalog:
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.8.0
   '@types/use-sync-external-store': ^1.5.0
-  '@typescript-eslint/parser': ^8.65.0
+  '@typescript-eslint/parser': ^8.68.0
   '@vitejs/plugin-react': ^6.1.1
   '@vitejs/plugin-react-swc': ^4.3.3
   '@vitest/browser': ^4.1.11
@@ -57,7 +57,7 @@ catalog:
   date-fns-jalali: ^4.1.0-0
   dayjs: ^1.11.23
   es-toolkit: ^1.51.0
-  execa: 9.6.1
+  execa: 10.0.1
   jscodeshift: 17.4.0
   jsdom: 30.0.1
   luxon: ^3.7.2
