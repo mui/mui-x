@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { screen, within, act, ErrorBoundary, reactMajor } from '@mui/internal-test-utils';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
@@ -18,6 +17,7 @@ import {
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
+import { vi, describe, it, expect } from 'vitest';
 import { useTimelineGridRootContext } from '../root/TimelineGridRootContext';
 
 describe('TimelineGrid keyboard navigation', () => {
@@ -239,7 +239,7 @@ describe('TimelineGrid keyboard navigation', () => {
   describe('event creation', () => {
     it('should create a timeline event placeholder on Enter keypress', async () => {
       let store: AnyEventCalendarStore | null = null;
-      const onEventEditingStart = spy();
+      const onEventEditingStart = vi.fn();
       const { user } = render(
         <Grid
           onStoreMount={(s) => {
@@ -263,8 +263,8 @@ describe('TimelineGrid keyboard navigation', () => {
       act(() => {
         store!.startEditing(store!.state.occurrencePlaceholder as any);
       });
-      expect(onEventEditingStart.lastCall.args[1].reason).to.equal('creation');
-      expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('keydown');
+      expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('creation');
+      expect(onEventEditingStart.mock.lastCall?.[1].event.type).to.equal('keydown');
     });
 
     it('should not create a placeholder on Enter from a title cell', async () => {

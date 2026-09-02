@@ -1,5 +1,5 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import type { ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';

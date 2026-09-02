@@ -1,4 +1,5 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import {
   getDaysTheOccurrenceIsVisibleOn,
   getEventResourceIds,

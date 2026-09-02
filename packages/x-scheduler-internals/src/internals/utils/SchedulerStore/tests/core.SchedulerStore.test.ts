@@ -1,6 +1,7 @@
 import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import { describe, it, expect } from 'vitest';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,

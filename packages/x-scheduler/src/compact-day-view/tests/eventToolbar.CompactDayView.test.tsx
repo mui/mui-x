@@ -1,7 +1,7 @@
-import { spy } from 'sinon';
 import { screen, within, fireEvent } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
+import { vi, describe, it, expect } from 'vitest';
 
 /**
  * The compact (touch) layout arms an event on tap, docking an Edit/Delete toolbar at the bottom of
@@ -11,7 +11,7 @@ describe('CompactDayView - event toolbar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
 
   function renderEvent(
-    onEventsChange = spy(),
+    onEventsChange = vi.fn(),
     { readOnly = false, onEventEditingStart = undefined as any } = {},
   ) {
     const event = EventBuilder.new()
@@ -39,28 +39,30 @@ describe('CompactDayView - event toolbar', () => {
   }
 
   it('should keep arming built-in and only fire `onEventEditingStart` when the toolbar Edit is tapped', () => {
-    const onEventEditingStart = spy((_occurrence: any, eventDetails: any) => eventDetails.cancel());
-    renderEvent(spy(), { onEventEditingStart });
+    const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
+      eventDetails.cancel(),
+    );
+    renderEvent(vi.fn(), { onEventEditingStart });
 
     // Arming (toolbar + resize affordances) is not the editing surface: no callback yet.
     const eventElement = getEvent();
     fireEvent.click(eventElement);
-    expect(onEventEditingStart.callCount).to.equal(0);
+    expect(onEventEditingStart.mock.calls.length).to.equal(0);
     expect(eventElement).to.have.attribute('data-armed');
 
     // Tapping Edit is what opens the surface. Canceling disarms: the armed state keeps
     // document-wide guards that must not stay active under the consumer's custom UI.
     const editButton = screen.getByRole('button', { name: 'Edit event' });
     fireEvent.click(editButton);
-    expect(onEventEditingStart.calledOnce).to.equal(true);
-    expect(onEventEditingStart.lastCall.args[1].event.type).to.equal('click');
-    expect(onEventEditingStart.lastCall.args[1].trigger).to.equal(editButton);
+    expect(onEventEditingStart.mock.calls.length).to.equal(1);
+    expect(onEventEditingStart.mock.lastCall?.[1].event.type).to.equal('click');
+    expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(editButton);
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
     expect(eventElement).not.to.have.attribute('data-armed');
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
 
     expect(editButton.isConnected).to.equal(false);
-    expect(onEventEditingStart.lastCall.args[1].anchor).to.equal(eventElement);
+    expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(eventElement);
     expect(eventElement.isConnected).to.equal(true);
   });
 
@@ -105,8 +107,8 @@ describe('CompactDayView - event toolbar', () => {
     fireEvent.click(getEvent());
     fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
 
-    expect(onEventsChange.callCount).to.equal(1);
-    expect(onEventsChange.firstCall.args[0]).to.have.length(0);
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
     // The delete and edit flows are independent: deleting must not open the editing drawer.
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
@@ -124,11 +126,11 @@ describe('CompactDayView - event toolbar', () => {
     expect(screen.queryByRole('button', { name: /Morning Meeting/i })).to.equal(null);
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
     expect(screen.queryByRole('button', { name: 'Delete event' })).to.equal(null);
-    expect(onEventsChange.called).to.equal(false);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
   });
 
   it('should not arm a read-only event: it opens the read-only summary directly', () => {
-    renderEvent(spy(), { readOnly: true });
+    renderEvent(vi.fn(), { readOnly: true });
     fireEvent.click(getEvent());
 
     // No action toolbar for a read-only event.

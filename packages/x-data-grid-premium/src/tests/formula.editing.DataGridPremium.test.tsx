@@ -2,8 +2,7 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
-import { spy } from 'sinon';
-import { onTestFinished } from 'vitest';
+import { vi, onTestFinished, describe, it, expect } from 'vitest';
 import { DataGridPremium, useGridApiContext, useGridApiRef } from '@mui/x-data-grid-premium';
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type {
@@ -184,7 +183,7 @@ describe('<DataGridPremium /> - Formulas editing', () => {
     });
 
     it('should commit a new formula and re-evaluate', async () => {
-      const processRowUpdate = spy((newRow) => newRow);
+      const processRowUpdate = vi.fn((newRow) => newRow);
       const { user } = await render(<Test processRowUpdate={processRowUpdate} />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
@@ -198,7 +197,7 @@ describe('<DataGridPremium /> - Formulas editing', () => {
       expect(apiRef.current!.getRow(0).total).to.equal('=price + quantity');
       expect(getColumnValues(3)).to.deep.equal(['5', '5', '8']);
       // The commit hands the formula source (not the evaluated value) to userland.
-      expect(processRowUpdate.lastCall.args[0].total).to.equal('=price + quantity');
+      expect(processRowUpdate.mock.lastCall?.[0].total).to.equal('=price + quantity');
     });
 
     it('should commit a plain value over a formula', async () => {
@@ -488,7 +487,7 @@ describe('<DataGridPremium /> - Formulas editing', () => {
 
     it('focuses the editor without scrolling the grid into view', async () => {
       // Shadow `focus` on HTMLDivElement (the editable is a div) with a
-      // recording wrapper. A plain sinon spy cannot wrap it here: the test
+      // recording wrapper. A plain mock cannot wrap it here: the test
       // environment turns `HTMLElement.prototype.focus` into an accessor.
       const focusCalls: { element: Element; options?: FocusOptions }[] = [];
       const divProto = HTMLDivElement.prototype;

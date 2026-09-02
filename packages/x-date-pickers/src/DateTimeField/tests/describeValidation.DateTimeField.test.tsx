@@ -1,5 +1,6 @@
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { createPickerRenderer, describeValidation } from 'test/utils/pickers';
+import { describe } from 'vitest';
 
 describe('<DateTimeField /> - Describe Validation', () => {
   const { render } = createPickerRenderer();

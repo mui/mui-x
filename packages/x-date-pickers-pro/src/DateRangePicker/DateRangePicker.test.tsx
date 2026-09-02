@@ -1,7 +1,6 @@
 import type { DateRangePickerProps } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { screen, waitFor, within } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
 import {
   adapterToUse,
   buildFieldInteractions,
@@ -12,6 +11,7 @@ import {
 import { pickerPopperClasses } from '@mui/x-date-pickers/internals';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, describe, it, expect } from 'vitest';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 
 describe('<DateRangePicker />', () => {
@@ -67,22 +67,20 @@ describe('<DateRangePicker />', () => {
     }
 
     it('should submit the form when "Enter" is pressed on the input', async () => {
-      const handleSubmit = spy();
+      const handleSubmit = vi.fn();
       const { user } = render(<TestComponent onSubmit={handleSubmit} />);
 
       // focus the input
       await user.keyboard('{Tab}');
       await user.keyboard('{Enter}');
 
-      expect(handleSubmit.callCount).to.equal(1);
-      expect([...handleSubmit.lastCall.args[0]][0]).to.deep.equal([
-        'testDate',
-        '04/17/2022 – 04/21/2022',
-      ]);
+      expect(handleSubmit.mock.calls.length).to.equal(1);
+      const formData = handleSubmit.mock.lastCall?.[0];
+      expect([...formData][0]).to.deep.equal(['testDate', '04/17/2022 – 04/21/2022']);
     });
 
     it('should not submit the form when "Enter" is pressed on the multi input field', async () => {
-      const handleSubmit = spy();
+      const handleSubmit = vi.fn();
       const { user } = render(
         <TestComponent
           onSubmit={handleSubmit}
@@ -95,11 +93,11 @@ describe('<DateRangePicker />', () => {
       await user.keyboard('{Tab}');
       await user.keyboard('{Enter}');
 
-      expect(handleSubmit.callCount).to.equal(0);
+      expect(handleSubmit.mock.calls.length).to.equal(0);
     });
 
     it('should not submit the form when "Enter" is pressed on the input with "defaultMuiPrevented" set to "true"', async () => {
-      const handleSubmit = spy();
+      const handleSubmit = vi.fn();
       const { user } = render(
         <TestComponent
           onSubmit={handleSubmit}
@@ -119,7 +117,7 @@ describe('<DateRangePicker />', () => {
       await user.keyboard('{Tab}');
       await user.keyboard('{Enter}');
 
-      expect(handleSubmit.callCount).to.equal(0);
+      expect(handleSubmit.mock.calls.length).to.equal(0);
     });
   });
 

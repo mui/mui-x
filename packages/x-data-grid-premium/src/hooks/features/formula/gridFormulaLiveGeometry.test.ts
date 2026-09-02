@@ -1,4 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
+import { describe, it, expect } from 'vitest';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   applyResizeDeltaToPositions,

@@ -1,7 +1,7 @@
-import { spy } from 'sinon';
 import { act, fireEvent, reactMajor, waitFor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
+import { vi, describe, it, expect } from 'vitest';
 import type { TreeViewAnyStore } from '../../models';
 
 // This suite covers the items API shared by every Tree View variant.
@@ -85,7 +85,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
       });
 
       it('should update indexes when two items are swapped', async () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           items: [{ id: '1' }, { id: '2' }, { id: '3' }],
@@ -101,7 +101,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         await view.user.keyboard('{Shift>}');
         await view.user.click(view.getItemContent('3'));
         await view.user.keyboard('{/Shift}');
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1', '3']);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['1', '3']);
       });
 
       it('should not mark an item as expandable if its children is an empty array', () => {
@@ -222,7 +222,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
 
     describe('onItemClick prop', () => {
       it('should call onItemClick when clicking on the content of an item', async () => {
-        const onItemClick = spy();
+        const onItemClick = vi.fn();
 
         const view = render({
           items: [{ id: '1' }],
@@ -230,12 +230,12 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         });
 
         await view.user.click(view.getItemContent('1'));
-        expect(onItemClick.callCount).to.equal(1);
-        expect(onItemClick.lastCall.lastArg).to.equal('1');
+        expect(onItemClick.mock.calls.length).to.equal(1);
+        expect(onItemClick.mock.lastCall?.at(-1)).to.equal('1');
       });
 
       it('should not call onItemClick for the ancestors on the clicked item', async () => {
-        const onItemClick = spy();
+        const onItemClick = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -244,8 +244,8 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         });
 
         await view.user.click(view.getItemContent('1.1'));
-        expect(onItemClick.callCount).to.equal(1);
-        expect(onItemClick.lastCall.lastArg).to.equal('1.1');
+        expect(onItemClick.mock.calls.length).to.equal(1);
+        expect(onItemClick.mock.lastCall?.at(-1)).to.equal('1.1');
       });
     });
 
@@ -253,17 +253,17 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
       it.skipIf(!isRichTreeView)(
         'should not re-render any children when the Tree View re-renders (flat tree)',
         () => {
-          const spyLabel = spy((props) => <TreeItemLabel {...props} />);
+          const spyLabel = vi.fn((props) => <TreeItemLabel {...props} />);
           const view = render({
             items: Array.from({ length: 10 }, (_, i) => ({ id: i.toString() })),
             slotProps: { item: { slots: { label: spyLabel } } },
           });
 
-          spyLabel.resetHistory();
+          spyLabel.mockClear();
 
           view.setProps({ onClick: () => {} });
 
-          const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+          const renders = spyLabel.mock.calls.map((call) => call[0].children);
           expect(renders).to.deep.equal([]);
         },
       );
@@ -271,18 +271,18 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
       it.skipIf(!isRichTreeView)(
         'should not re-render every children when updating the state on an item (flat tree)',
         () => {
-          const spyLabel = spy((props) => <TreeItemLabel {...props} />);
+          const spyLabel = vi.fn((props) => <TreeItemLabel {...props} />);
           const view = render({
             items: Array.from({ length: 10 }, (_, i) => ({ id: i.toString() })),
             selectedItems: [],
             slotProps: { item: { slots: { label: spyLabel } } },
           });
 
-          spyLabel.resetHistory();
+          spyLabel.mockClear();
 
           view.setProps({ selectedItems: ['1'] });
 
-          const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+          const renders = spyLabel.mock.calls.map((call) => call[0].children);
 
           // 2 renders of the 1st item to remove to tabIndex={0}
           // 2 renders of the selected item to change its visual state
@@ -293,7 +293,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
       it.skipIf(!isRichTreeView)(
         'should not re-render any children when the Tree View re-renders (nested tree)',
         () => {
-          const spyLabel = spy((props) => <TreeItemLabel {...props} />);
+          const spyLabel = vi.fn((props) => <TreeItemLabel {...props} />);
           const view = render({
             items: Array.from({ length: 5 }, (_, i) => ({
               id: i.toString(),
@@ -302,11 +302,11 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
             slotProps: { item: { slots: { label: spyLabel } } },
           });
 
-          spyLabel.resetHistory();
+          spyLabel.mockClear();
 
           view.setProps({ onClick: () => {} });
 
-          const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+          const renders = spyLabel.mock.calls.map((call) => call[0].children);
           expect(renders).to.deep.equal([]);
         },
       );
@@ -314,7 +314,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
       it.skipIf(!isRichTreeView)(
         'should not re-render every children when updating the state on an item (nested tree)',
         () => {
-          const spyLabel = spy((props) => <TreeItemLabel {...props} />);
+          const spyLabel = vi.fn((props) => <TreeItemLabel {...props} />);
           const view = render({
             items: Array.from({ length: 5 }, (_, i) => ({
               id: i.toString(),
@@ -325,11 +325,11 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
             slotProps: { item: { slots: { label: spyLabel } } },
           });
 
-          spyLabel.resetHistory();
+          spyLabel.mockClear();
 
           view.setProps({ selectedItems: ['1'] });
 
-          const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+          const renders = spyLabel.mock.calls.map((call) => call[0].children);
 
           // 2 renders of the 1st item to remove to tabIndex={0}
           // 2 renders of the selected item to change its visual state

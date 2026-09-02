@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { expect } from 'vitest';
+import { vi, expect, describe, it } from 'vitest';
+import type { Mock } from 'vitest';
 import { createRenderer, act } from '@mui/internal-test-utils';
-import { spy, type SinonSpy } from 'sinon';
 import { disposeSymbol } from '../disposable';
 import { useDisposable } from './useDisposable';
 
 interface TestDisposable {
-  dispose: SinonSpy;
+  dispose: Mock;
   [disposeSymbol](): void;
 }
 
 function createDisposable(): TestDisposable {
-  const dispose = spy();
+  const dispose = vi.fn();
   return {
     dispose,
     [disposeSymbol]() {
@@ -48,7 +48,7 @@ describe('useDisposable', () => {
   function setup() {
     let instance: TestDisposable | undefined;
     let effectMounts = 0;
-    const factory = spy(() => {
+    const factory = vi.fn(() => {
       instance = createDisposable();
       return instance;
     });
@@ -79,14 +79,14 @@ describe('useDisposable', () => {
     // otherwise the assertions below wouldn't actually cover the double mount.
     expect(getEffectMounts()).to.equal(2);
     // The committed instance survives the cycle (React 18 adds a throwaway create).
-    expect(factory.callCount).to.equal(expected.factoryCallCount);
+    expect(factory.mock.calls.length).to.equal(expected.factoryCallCount);
     // ...and the simulated unmount does not dispose the committed instance.
-    expect(getInstance().dispose.callCount).to.equal(0);
+    expect(getInstance().dispose.mock.calls.length).to.equal(0);
 
     unmount();
 
     // The real unmount disposes exactly once, even inside `<StrictMode>`.
-    expect(getInstance().dispose.callCount).to.equal(1);
+    expect(getInstance().dispose.mock.calls.length).to.equal(1);
   });
 
   it('creates the instance once and disposes it on unmount (without StrictMode)', () => {
@@ -97,12 +97,12 @@ describe('useDisposable', () => {
     // No replay: a single mount, so the skip-the-simulated-unmount branch is
     // never taken.
     expect(getEffectMounts()).to.equal(1);
-    expect(factory.callCount).to.equal(1);
-    expect(getInstance().dispose.callCount).to.equal(0);
+    expect(factory.mock.calls.length).to.equal(1);
+    expect(getInstance().dispose.mock.calls.length).to.equal(0);
 
     unmount();
 
-    expect(getInstance().dispose.callCount).to.equal(1);
+    expect(getInstance().dispose.mock.calls.length).to.equal(1);
   });
 
   // Why this hook detects StrictMode instead of just disposing + recreating the
@@ -168,12 +168,12 @@ describe('useDisposable', () => {
     // disposed. React 18's throwaway create sits at index 0, shifting committed to 1.
     expect(created).to.have.length(expected.createdCount);
     expect(committedInstance).to.equal(created[expected.committedIndex]);
-    expect(created[expected.committedIndex].dispose.callCount).to.equal(1);
+    expect(created[expected.committedIndex].dispose.mock.calls.length).to.equal(1);
     // The live, non-disposed instance is the last one, rebuilt in the remount
     // effect — the component never re-rendered to pick it up (split-brain).
     const live = created[created.length - 1];
     expect(live).to.not.equal(committedInstance);
-    expect(live.dispose.callCount).to.equal(0);
+    expect(live.dispose.mock.calls.length).to.equal(0);
 
     unmount();
   });
@@ -217,18 +217,18 @@ describe('useDisposable', () => {
     render(<App />, { strict: false });
     expect(created).to.have.length(1);
     const first = created[0];
-    expect(first.dispose.callCount).to.equal(0);
+    expect(first.dispose.mock.calls.length).to.equal(0);
 
     // Hiding disconnects effects: the cleanup disposes the instance and clears
     // the ref.
     act(() => setMode('hidden'));
-    expect(first.dispose.callCount).to.equal(1);
+    expect(first.dispose.mock.calls.length).to.equal(1);
 
     // Revealing re-renders before re-running effects, so the component is
     // committed against a fresh, never-disposed instance — not the torn-down one.
     act(() => setMode('visible'));
     expect(created.length).to.be.greaterThan(1);
     expect(committed).to.equal(created[created.length - 1]);
-    expect(committed!.dispose.callCount).to.equal(0);
+    expect(committed!.dispose.mock.calls.length).to.equal(0);
   });
 });

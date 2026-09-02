@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { createFormulaFunctionRegistry, FORMULA_BUILT_IN_FUNCTIONS } from './formulaFunctions';
 import { FORMULA_RESERVED_NAMES } from './formulaAst';
 

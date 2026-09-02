@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { tokenizeFormula } from './formulaTokenizer';
 import type { FormulaToken } from './formulaTokenizer';
 

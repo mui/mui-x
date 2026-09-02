@@ -12,8 +12,9 @@ import type {
   GridLogicOperator,
   GridGetRowsResponse,
 } from '@mui/x-data-grid';
-import { spy } from 'sinon';
 import { actSleep, getCell } from 'test/utils/helperFn';
+import { vi, describe, it, expect } from 'vitest';
+import type { Mock } from 'vitest';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 import { TestCache } from '../internals/utils';
 
@@ -25,15 +26,15 @@ const SUPPORTS_ACTIVITY = 'Activity' in React;
 
 describe('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
-  const fetchRowsSpy = spy();
-  const editRowSpy = spy();
+  const fetchRowsSpy = vi.fn();
+  const editRowSpy = vi.fn();
   let apiRef: RefObject<GridApi | null>;
   let mockServer: ReturnType<typeof useMockServer>;
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
     }, []);
     return null;
   }
@@ -137,44 +138,45 @@ describe('<DataGrid /> - Data source', () => {
   it('should fetch the data on initial render', async () => {
     render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
   });
 
   it('should re-fetch the data on data source change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
     setProps({ dataSourceKey: 2 });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
   });
 
   it('should re-fetch the data on filter change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
     setProps({
       filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
     });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
   });
 
   describe('incomplete filter items', () => {
     const getSentFilterItems = () => {
-      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      const url = new URL(fetchRowsSpy.mock.lastCall?.[0]);
       return JSON.parse(url.searchParams.get('filterModel')!).items;
     };
 
     const renderAndWaitForInitialFetch = async () => {
       render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
     };
 
@@ -190,13 +192,13 @@ describe('<DataGrid /> - Data source', () => {
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
       expect(getSentFilterItems()).to.deep.equal([]);
     });
@@ -206,13 +208,13 @@ describe('<DataGrid /> - Data source', () => {
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'isAnyOf', value: ['1'] });
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'isAnyOf', value: [] });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
       expect(getSentFilterItems()).to.deep.equal([]);
     });
@@ -225,7 +227,7 @@ describe('<DataGrid /> - Data source', () => {
       await upsertFilterItem({ id: 1, field: 'id', operator: 'isEmpty' });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
       expect(getSentFilterItems()).to.deep.equal([{ id: 1, field: 'id', operator: 'isEmpty' }]);
     });
@@ -237,7 +239,7 @@ describe('<DataGrid /> - Data source', () => {
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
       await actSleep(50);
 
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
 
     it('should re-fetch when an incomplete item becomes complete', async () => {
@@ -245,12 +247,12 @@ describe('<DataGrid /> - Data source', () => {
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains' });
       await actSleep(50);
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
 
       await upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
       expect(getSentFilterItems()).to.deep.equal([
         { id: 1, field: 'id', operator: 'contains', value: '1' },
@@ -262,7 +264,7 @@ describe('<DataGrid /> - Data source', () => {
     const renderAndWaitForInitialFetch = async () => {
       render(<TestDataSource columns={[{ field: 'id' }]} dataSourceCache={null} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
     };
 
@@ -274,7 +276,7 @@ describe('<DataGrid /> - Data source', () => {
         apiRef.current!.upsertFilterItem({ id: 1, field: 'id', operator: 'contains', value: '1' });
       });
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
 
       await act(async () => {
@@ -282,7 +284,7 @@ describe('<DataGrid /> - Data source', () => {
       });
       await actSleep(50);
 
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
 
     it('should not re-fetch when the quick filter values only contain falsy entries', async () => {
@@ -293,7 +295,7 @@ describe('<DataGrid /> - Data source', () => {
       });
       await actSleep(50);
 
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
 
     it('should not re-fetch when the quick filter logic operator changes below two values', async () => {
@@ -303,7 +305,7 @@ describe('<DataGrid /> - Data source', () => {
         apiRef.current!.setQuickFilterValues(['abc']);
       });
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
 
       await act(async () => {
@@ -314,7 +316,7 @@ describe('<DataGrid /> - Data source', () => {
       });
       await actSleep(50);
 
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
 
     // `passFilterLogic` runs every value through the logic operator, so a falsy one added
@@ -326,7 +328,7 @@ describe('<DataGrid /> - Data source', () => {
         apiRef.current!.setQuickFilterValues(['abc']);
       });
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
 
       await act(async () => {
@@ -334,7 +336,7 @@ describe('<DataGrid /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
     });
 
@@ -346,9 +348,9 @@ describe('<DataGrid /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
-      const url = new URL(fetchRowsSpy.lastCall.args[0]);
+      const url = new URL(fetchRowsSpy.mock.lastCall?.[0]);
       expect(JSON.parse(url.searchParams.get('filterModel')!).quickFilterValues).to.deep.equal([
         'abc',
       ]);
@@ -358,29 +360,29 @@ describe('<DataGrid /> - Data source', () => {
   it('should re-fetch the data on sort change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
     setProps({ sortModel: [{ field: 'id', sort: 'asc' }] });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
   });
 
   it('should re-fetch the data on pagination change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
     setProps({ paginationModel: { page: 1, pageSize: 10 } });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
   });
 
   it('should re-fetch the data once if multiple models have changed', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
 
     setProps({
@@ -390,7 +392,7 @@ describe('<DataGrid /> - Data source', () => {
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
   });
 
@@ -410,17 +412,17 @@ describe('<DataGrid /> - Data source', () => {
       it('should not re-fetch the data when the Activity becomes visible', async () => {
         const { setProps } = render(<TestDataSource />);
         await waitFor(() => {
-          expect(fetchRowsSpy.callCount).to.equal(1);
+          expect(fetchRowsSpy.mock.calls.length).to.equal(1);
         });
         await toggleActivity(setProps);
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
       it('should keep a request in flight when the Activity is hidden', async () => {
         const { promise, resolve } = Promise.withResolvers<void>();
         const { setProps } = render(<TestDataSource stallResponsePromise={promise} />);
         await waitFor(() => {
-          expect(fetchRowsSpy.callCount).to.equal(1);
+          expect(fetchRowsSpy.mock.calls.length).to.equal(1);
         });
         await toggleActivity(setProps);
         await act(async () => {
@@ -429,14 +431,14 @@ describe('<DataGrid /> - Data source', () => {
         await waitFor(() => {
           expect(apiRef.current?.getRowsCount()).to.be.above(0);
         });
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
       it('should apply a response that settles while the Activity is hidden', async () => {
         const { promise, resolve } = Promise.withResolvers<void>();
         const { setProps } = render(<TestDataSource stallResponsePromise={promise} />);
         await waitFor(() => {
-          expect(fetchRowsSpy.callCount).to.equal(1);
+          expect(fetchRowsSpy.mock.calls.length).to.equal(1);
         });
         await act(async () => {
           setProps({ activityMode: 'hidden' });
@@ -450,21 +452,21 @@ describe('<DataGrid /> - Data source', () => {
         await act(async () => {
           setProps({ activityMode: 'visible' });
         });
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
       it('should re-fetch the data when the Activity becomes visible after a failed request', async () => {
-        const onDataSourceError = spy();
+        const onDataSourceError = vi.fn();
         const { setProps } = render(
           <TestDataSource shouldRequestsFail onDataSourceError={onDataSourceError} />,
         );
         await waitFor(() => {
-          expect(onDataSourceError.callCount).to.equal(1);
+          expect(onDataSourceError.mock.calls.length).to.equal(1);
         });
-        const callCountBeforeToggle = fetchRowsSpy.callCount;
+        const callCountBeforeToggle = fetchRowsSpy.mock.calls.length;
         await toggleActivity(setProps);
         await waitFor(() => {
-          expect(fetchRowsSpy.callCount).to.be.above(callCountBeforeToggle);
+          expect(fetchRowsSpy.mock.calls.length).to.be.above(callCountBeforeToggle);
         });
       });
 
@@ -472,14 +474,14 @@ describe('<DataGrid /> - Data source', () => {
         const { promise, resolve } = Promise.withResolvers<void>();
         const { setProps } = render(<TestDataSource />);
         await waitFor(() => {
-          expect(fetchRowsSpy.callCount).to.equal(1);
+          expect(fetchRowsSpy.mock.calls.length).to.equal(1);
         });
         setProps({
           stallResponsePromise: promise,
           filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
         });
         await waitFor(() => {
-          expect(fetchRowsSpy.callCount).to.equal(2);
+          expect(fetchRowsSpy.mock.calls.length).to.equal(2);
         });
         await act(async () => {
           setProps({ activityMode: 'hidden' });
@@ -493,45 +495,45 @@ describe('<DataGrid /> - Data source', () => {
         await act(async () => {
           setProps({ activityMode: 'visible' });
         });
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
     });
   }
 
   describe('Cache', () => {
     it('should cache the data using the default cache', async () => {
-      const pageChangeSpy = spy();
+      const pageChangeSpy = vi.fn();
       render(<TestDataSource onPaginationModelChange={pageChangeSpy} />);
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
-      expect(pageChangeSpy.callCount).to.equal(0);
+      expect(pageChangeSpy.mock.calls.length).to.equal(0);
 
       act(() => {
         apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
-      expect(pageChangeSpy.callCount).to.equal(1);
+      expect(pageChangeSpy.mock.calls.length).to.equal(1);
 
       act(() => {
         apiRef.current?.setPage(0);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
-      expect(pageChangeSpy.callCount).to.equal(2);
+      expect(pageChangeSpy.mock.calls.length).to.equal(2);
     });
 
     it('should cache the data using the custom cache', async () => {
       const testCache = new TestCache();
       render(<TestDataSource dataSourceCache={testCache} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
       expect(testCache.size()).to.equal(1);
     });
@@ -542,71 +544,71 @@ describe('<DataGrid /> - Data source', () => {
         <TestDataSource dataSourceCache={testCache} paginationModel={{ page: 0, pageSize: 20 }} />,
       );
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
       expect(testCache.size()).to.equal(2); // 2 chunks of 10 rows
     });
 
     it('should use the cached data when the same query is made again', async () => {
       const testCache = new TestCache();
-      const pageChangeSpy = spy();
+      const pageChangeSpy = vi.fn();
       render(
         <TestDataSource dataSourceCache={testCache} onPaginationModelChange={pageChangeSpy} />,
       );
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
       expect(testCache.size()).to.equal(1);
-      expect(pageChangeSpy.callCount).to.equal(0);
+      expect(pageChangeSpy.mock.calls.length).to.equal(0);
 
       act(() => {
         apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
       await waitFor(() => {
         expect(testCache.size()).to.equal(2);
       });
-      expect(pageChangeSpy.callCount).to.equal(1);
+      expect(pageChangeSpy.mock.calls.length).to.equal(1);
 
       act(() => {
         apiRef.current?.setPage(0);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
       expect(testCache.size()).to.equal(2);
-      expect(pageChangeSpy.callCount).to.equal(2);
+      expect(pageChangeSpy.mock.calls.length).to.equal(2);
     });
 
     it('should allow to disable the default cache', async () => {
-      const pageChangeSpy = spy();
+      const pageChangeSpy = vi.fn();
       render(<TestDataSource dataSourceCache={null} onPaginationModelChange={pageChangeSpy} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
-      expect(pageChangeSpy.callCount).to.equal(0);
+      expect(pageChangeSpy.mock.calls.length).to.equal(0);
 
       act(() => {
         apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
-      expect(pageChangeSpy.callCount).to.equal(1);
+      expect(pageChangeSpy.mock.calls.length).to.equal(1);
 
       act(() => {
         apiRef.current?.setPage(0);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       });
-      expect(pageChangeSpy.callCount).to.equal(2);
+      expect(pageChangeSpy.mock.calls.length).to.equal(2);
     });
 
     it('should not apply a stale in-flight response after a cache-hit navigation', async () => {
@@ -627,7 +629,7 @@ describe('<DataGrid /> - Data source', () => {
         Promise.withResolvers<GridGetRowsResponse>();
       const localApiRef = React.createRef<GridApi | null>() as RefObject<GridApi | null>;
       let callIndex = 0;
-      const getRows = spy((params: GridGetRowsParams) => {
+      const getRows = vi.fn((params: GridGetRowsParams) => {
         const index = callIndex;
         callIndex += 1;
         if (index === 0) {
@@ -672,7 +674,7 @@ describe('<DataGrid /> - Data source', () => {
         localApiRef.current?.setPage(1);
       });
       await waitFor(() => {
-        expect(getRows.callCount).to.equal(2);
+        expect(getRows.mock.calls.length).to.equal(2);
       });
 
       // Navigate back to page 0 which is now served by the cache.
@@ -698,7 +700,7 @@ describe('<DataGrid /> - Data source', () => {
 
       // Wait for initial fetch
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
       expect(testCache.size()).to.equal(1);
 
@@ -708,7 +710,7 @@ describe('<DataGrid /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
       // Cache should still be updated with new data
       expect(testCache.size()).to.equal(1);
@@ -720,14 +722,14 @@ describe('<DataGrid /> - Data source', () => {
 
       // Should not trigger another fetch since data is cached
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
     });
   });
 
   describe('Revalidation', () => {
     it('should periodically revalidate the current query when dataSourceRevalidateMs is set', async () => {
-      const localFetchRowsSpy = spy();
+      const localFetchRowsSpy = vi.fn();
       render(
         <TestDataSource
           dataSourceCache={null}
@@ -736,33 +738,33 @@ describe('<DataGrid /> - Data source', () => {
         />,
       );
       await waitFor(() => {
-        expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
+        expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
       });
 
-      localFetchRowsSpy.resetHistory();
+      localFetchRowsSpy.mockClear();
 
       await waitFor(() => {
-        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+        expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
       });
     });
   });
 
   describe('No rows overlay flicker', () => {
     it('should not render the "no rows" overlay between paginated re-fetches when the cache hits', async () => {
-      const NoRowsOverlay = spy(() => null);
+      const NoRowsOverlay = vi.fn(() => null);
       render(<TestDataSource slots={{ noRowsOverlay: NoRowsOverlay }} />);
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
-      NoRowsOverlay.resetHistory();
+      NoRowsOverlay.mockClear();
 
       act(() => {
         apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
 
       act(() => {
@@ -773,34 +775,34 @@ describe('<DataGrid /> - Data source', () => {
         expect(apiRef.current?.getRowsCount()).to.be.greaterThan(0);
       });
 
-      expect(NoRowsOverlay.callCount).to.equal(0);
+      expect(NoRowsOverlay.mock.calls.length).to.equal(0);
     });
 
     it('should not render the "no rows" overlay between paginated re-fetches when the cache misses', async () => {
-      const NoRowsOverlay = spy(() => null);
+      const NoRowsOverlay = vi.fn(() => null);
       render(<TestDataSource dataSourceCache={null} slots={{ noRowsOverlay: NoRowsOverlay }} />);
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
-      NoRowsOverlay.resetHistory();
+      NoRowsOverlay.mockClear();
 
       act(() => {
         apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
       await waitFor(() => {
         expect(apiRef.current?.getRowsCount()).to.be.greaterThan(0);
       });
 
-      expect(NoRowsOverlay.callCount).to.equal(0);
+      expect(NoRowsOverlay.mock.calls.length).to.equal(0);
     });
 
     it('should still render the "no rows" overlay when the response contains zero rows', async () => {
-      const NoRowsOverlay = spy(() => null);
+      const NoRowsOverlay = vi.fn(() => null);
       render(
         <TestDataSource
           dataSourceCache={null}
@@ -810,10 +812,10 @@ describe('<DataGrid /> - Data source', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
       await waitFor(() => {
-        expect(NoRowsOverlay.callCount).to.be.greaterThan(0);
+        expect(NoRowsOverlay.mock.calls.length).to.be.greaterThan(0);
       });
     });
   });
@@ -830,7 +832,7 @@ describe('<DataGrid /> - Data source', () => {
         rowCount: 2,
       };
       let resolvedFirst = false;
-      const getRows = spy(() => {
+      const getRows = vi.fn(() => {
         if (!resolvedFirst) {
           resolvedFirst = true;
           return Promise.resolve(initialResponse);
@@ -872,7 +874,7 @@ describe('<DataGrid /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect(getRows.callCount).to.equal(2);
+        expect(getRows.mock.calls.length).to.equal(2);
       });
       // The previous row stays visible and the loading overlay is shown on top of it.
       expect(localApiRef.current?.getRowsCount()).to.equal(1);
@@ -896,7 +898,7 @@ describe('<DataGrid /> - Data source', () => {
         getRows: () => Promise.resolve({ rows: [{ id: 1, value: 'first' }], rowCount: 2 }),
       };
       const secondDataSource: GridDataSource = {
-        getRows: spy(() => promise),
+        getRows: vi.fn(() => promise),
       };
       let localApiRef: RefObject<GridApi | null> = { current: null };
       function Test(props: Partial<DataGridProps>) {
@@ -933,7 +935,7 @@ describe('<DataGrid /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect((secondDataSource.getRows as ReturnType<typeof spy>).callCount).to.equal(1);
+        expect((secondDataSource.getRows as Mock).mock.calls.length).to.equal(1);
       });
       // Previous row remains visible while the new dataSource is fetched.
       expect(localApiRef.current?.getRowsCount()).to.equal(1);
@@ -959,7 +961,7 @@ describe('<DataGrid /> - Data source', () => {
         rowCount: 2,
       };
       let resolvedFirst = false;
-      const getRows = spy(() => {
+      const getRows = vi.fn(() => {
         if (!resolvedFirst) {
           resolvedFirst = true;
           return Promise.resolve(initialResponse);
@@ -1000,7 +1002,7 @@ describe('<DataGrid /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect(getRows.callCount).to.equal(2);
+        expect(getRows.mock.calls.length).to.equal(2);
       });
       // Without the prop, the previous rows are cleared while the new page is fetched.
       expect(localApiRef.current?.getRowsCount()).to.equal(0);
@@ -1015,7 +1017,7 @@ describe('<DataGrid /> - Data source', () => {
     });
 
     it('should not render the "no rows" overlay while keeping previous rows during fetch', async () => {
-      const NoRowsOverlay = spy(() => null);
+      const NoRowsOverlay = vi.fn(() => null);
       render(
         <TestDataSource
           dataSourceCache={null}
@@ -1025,22 +1027,22 @@ describe('<DataGrid /> - Data source', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
-      NoRowsOverlay.resetHistory();
+      NoRowsOverlay.mockClear();
 
       act(() => {
         apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       });
       await waitFor(() => {
         expect(apiRef.current?.getRowsCount()).to.be.greaterThan(0);
       });
 
-      expect(NoRowsOverlay.callCount).to.equal(0);
+      expect(NoRowsOverlay.mock.calls.length).to.equal(0);
     });
 
     it('should reset the rows when the refetch errors', async () => {
@@ -1052,7 +1054,7 @@ describe('<DataGrid /> - Data source', () => {
         rowCount: 2,
       };
       let firstCall = true;
-      const getRows = spy(() => {
+      const getRows = vi.fn(() => {
         if (firstCall) {
           firstCall = false;
           return Promise.resolve(initialResponse);
@@ -1060,7 +1062,7 @@ describe('<DataGrid /> - Data source', () => {
         return Promise.reject(new Error('Network error'));
       });
       const dataSource: GridDataSource = { getRows };
-      const onDataSourceError = spy();
+      const onDataSourceError = vi.fn();
       let localApiRef: RefObject<GridApi | null> = { current: null };
       function Test(props: Partial<DataGridProps>) {
         localApiRef = useGridApiRef();
@@ -1096,7 +1098,7 @@ describe('<DataGrid /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect(onDataSourceError.callCount).to.equal(1);
+        expect(onDataSourceError.mock.calls.length).to.equal(1);
       });
       // The previous rows are reset once the request fails.
       expect(localApiRef.current?.getRowsCount()).to.equal(0);
@@ -1107,17 +1109,17 @@ describe('<DataGrid /> - Data source', () => {
 
   describe('Error handling', () => {
     it('should call `onDataSourceError` when the data source returns an error', async () => {
-      const onDataSourceError = spy();
+      const onDataSourceError = vi.fn();
       render(<TestDataSource onDataSourceError={onDataSourceError} shouldRequestsFail />);
       await waitFor(() => {
-        expect(onDataSourceError.callCount).to.equal(1);
+        expect(onDataSourceError.mock.calls.length).to.equal(1);
       });
     });
 
     it('should not call `onDataSourceError` after unmount', async () => {
-      const onDataSourceError = spy();
+      const onDataSourceError = vi.fn();
       const { promise, reject } = Promise.withResolvers<GridGetRowsResponse>();
-      const getRows = spy(() => promise);
+      const getRows = vi.fn(() => promise);
       const dataSource: GridDataSource = {
         getRows,
       };
@@ -1137,18 +1139,18 @@ describe('<DataGrid /> - Data source', () => {
         </div>,
       );
       await waitFor(() => {
-        expect(getRows.called).to.equal(true);
+        expect(getRows.mock.calls.length).to.be.greaterThan(0);
       });
       unmount();
       reject();
       await promise.catch(() => 'rejected');
-      expect(onDataSourceError.notCalled).to.equal(true);
+      expect(onDataSourceError.mock.calls.length).to.equal(0);
     });
   });
 
   describe('Editing', () => {
     it('should call `editRow()` and clear the cache when a row is updated', async () => {
-      const clearSpy = spy();
+      const clearSpy = vi.fn();
       const cache = new Map<string, GridGetRowsResponse>();
       const dataSourceCache = {
         get: (key: GridGetRowsParams) => cache.get(getKeyDefault(key)),
@@ -1167,7 +1169,7 @@ describe('<DataGrid /> - Data source', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
       await waitFor(() => {
@@ -1177,18 +1179,18 @@ describe('<DataGrid /> - Data source', () => {
       await user.click(cell);
       expect(cell).toHaveFocus();
 
-      clearSpy.resetHistory();
+      clearSpy.mockClear();
 
       expect(cache.size).to.equal(1);
 
       // edit the cell
       await user.keyboard('{Enter} updated{Enter}');
 
-      expect(editRowSpy.callCount).to.equal(1);
-      expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('updated');
+      expect(editRowSpy.mock.calls.length).to.equal(1);
+      expect(editRowSpy.mock.calls[0][0].updatedRow.commodity).to.contain('updated');
 
       await waitFor(() => {
-        expect(clearSpy.callCount).to.equal(1);
+        expect(clearSpy.mock.calls.length).to.equal(1);
       });
     });
 
@@ -1216,7 +1218,7 @@ describe('<DataGrid /> - Data source', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
       await waitFor(() => {
@@ -1226,13 +1228,187 @@ describe('<DataGrid /> - Data source', () => {
       await user.click(cell);
       expect(cell).toHaveFocus();
 
-      editRowSpy.resetHistory();
+      editRowSpy.mockClear();
 
       // edit the cell
       await user.keyboard('{Enter}{Enter}');
 
-      expect(editRowSpy.callCount).to.equal(1);
-      expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('-edited');
+      expect(editRowSpy.mock.calls.length).to.equal(1);
+      expect(editRowSpy.mock.calls[0][0].updatedRow.commodity).to.contain('-edited');
+    });
+
+    it('should store the row verbatim when `updateRow()` returns a replace update', async () => {
+      class CommodityRow {
+        id: number;
+
+        commodity: string;
+
+        #revision: number;
+
+        constructor(id: number, commodity: string, revision = 0) {
+          this.id = id;
+          this.commodity = commodity;
+          this.#revision = revision;
+        }
+
+        withCommodity(commodity: string) {
+          return new CommodityRow(this.id, commodity, this.#revision + 1);
+        }
+
+        get revision() {
+          return this.#revision;
+        }
+      }
+
+      const initialRows = [new CommodityRow(0, 'Nickel'), new CommodityRow(1, 'Cobalt')];
+      let replacement: CommodityRow | undefined;
+      const dataSource: GridDataSource = {
+        getRows: async () => ({ rows: initialRows, rowCount: initialRows.length }),
+        updateRow: async (params) => {
+          replacement = (params.previousRow as CommodityRow).withCommodity(
+            params.updatedRow.commodity,
+          );
+          return { _action: 'replace', row: replacement };
+        },
+      };
+
+      function ReplaceTestCase() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              apiRef={apiRef}
+              columns={[{ field: 'commodity', editable: true }]}
+              dataSource={dataSource}
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+              }}
+              pagination
+              pageSizeOptions={pageSizeOptions}
+              disableVirtualization
+            />
+          </div>
+        );
+      }
+
+      render(<ReplaceTestCase />);
+
+      await waitFor(() => {
+        // The rows returned by `getRows()` are stored verbatim.
+        expect(apiRef.current?.getRow(1)).to.equal(initialRows[1]);
+      });
+
+      await act(async () => apiRef.current?.startCellEditMode({ id: 1, field: 'commodity' }));
+      await act(async () =>
+        apiRef.current?.setEditCellValue({ id: 1, field: 'commodity', value: 'Silver' }),
+      );
+      await act(async () => apiRef.current?.stopCellEditMode({ id: 1, field: 'commodity' }));
+
+      await waitFor(() => {
+        // The instance returned in the envelope is stored verbatim.
+        expect(apiRef.current?.getRow(1)).to.equal(replacement);
+      });
+      const updatedRow = apiRef.current?.getRow(1) as CommodityRow;
+      expect(updatedRow.commodity).to.equal('Silver');
+      // #private state survives the edit because the stored row is the instance itself.
+      expect(updatedRow.revision).to.equal(1);
+    });
+
+    describe('cache invalidation with a replace update', () => {
+      const initialRows = [
+        { id: 0, commodity: 'Nickel' },
+        { id: 1, commodity: 'Cobalt' },
+      ];
+
+      function createTestCase(updateRow: NonNullable<GridDataSource['updateRow']>) {
+        const clearSpy = vi.fn();
+        const cache = new Map<string, GridGetRowsResponse>();
+        const dataSourceCache = {
+          get: (key: GridGetRowsParams) => cache.get(getKeyDefault(key)),
+          set: (key: GridGetRowsParams, value: GridGetRowsResponse) =>
+            cache.set(getKeyDefault(key), value),
+          clear: () => {
+            cache.clear();
+            clearSpy();
+          },
+        };
+        const dataSource: GridDataSource = {
+          getRows: async () => ({ rows: initialRows, rowCount: initialRows.length }),
+          updateRow,
+        };
+
+        function TestCase() {
+          apiRef = useGridApiRef();
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid
+                apiRef={apiRef}
+                columns={[{ field: 'commodity', editable: true }]}
+                dataSource={dataSource}
+                dataSourceCache={dataSourceCache}
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+                }}
+                pagination
+                pageSizeOptions={pageSizeOptions}
+                disableVirtualization
+              />
+            </div>
+          );
+        }
+
+        return { TestCase, clearSpy };
+      }
+
+      async function editCommodityCell() {
+        await act(async () => apiRef.current?.startCellEditMode({ id: 1, field: 'commodity' }));
+        await act(async () =>
+          apiRef.current?.setEditCellValue({ id: 1, field: 'commodity', value: 'Silver' }),
+        );
+        await act(async () => apiRef.current?.stopCellEditMode({ id: 1, field: 'commodity' }));
+        // The cell only leaves edit mode once `dataSource.updateRow()` has been applied.
+        await waitFor(() => {
+          expect(apiRef.current?.getCellMode(1, 'commodity')).to.equal('view');
+        });
+      }
+
+      it('should not clear the cache when the replacement matches the previous row', async () => {
+        // The server refuses the change and echoes the stored row back.
+        const { TestCase, clearSpy } = createTestCase(async (params) => ({
+          _action: 'replace',
+          row: { ...params.previousRow },
+        }));
+
+        render(<TestCase />);
+        await waitFor(() => {
+          expect(apiRef.current?.getRow(1)).not.to.equal(null);
+        });
+        clearSpy.mockClear();
+
+        await editCommodityCell();
+
+        expect(apiRef.current?.getRow(1)!.commodity).to.equal('Cobalt');
+        // The row did not change, so the cached pages are still valid.
+        expect(clearSpy.mock.calls.length).to.equal(0);
+      });
+
+      it('should clear the cache when the replacement changes the row', async () => {
+        const { TestCase, clearSpy } = createTestCase(async (params) => ({
+          _action: 'replace',
+          row: { ...params.previousRow, commodity: params.updatedRow.commodity },
+        }));
+
+        render(<TestCase />);
+        await waitFor(() => {
+          expect(apiRef.current?.getRow(1)).not.to.equal(null);
+        });
+        clearSpy.mockClear();
+
+        await editCommodityCell();
+
+        expect(apiRef.current?.getRow(1)!.commodity).to.equal('Silver');
+        expect(clearSpy.mock.calls.length).to.equal(1);
+      });
     });
   });
 });

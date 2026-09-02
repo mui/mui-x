@@ -52,7 +52,7 @@ export function createMinimalInitialState<
   Multiple extends boolean | undefined,
 >(parameters: MinimalTreeViewParameters<R, Multiple>): MinimalTreeViewState<R, Multiple> {
   return {
-    treeId: undefined,
+    treeId: parameters.defaultId,
     focusedItemId: null,
     ...deriveStateFromParameters(parameters),
     ...TreeViewItemsPlugin.buildItemsStateIfNeeded(parameters),
@@ -68,9 +68,3 @@ export function createMinimalInitialState<
     ),
   };
 }
-
-let globalTreeViewDefaultId = 0;
-export const createTreeViewDefaultId = () => {
-  globalTreeViewDefaultId += 1;
-  return `mui-tree-view-${globalTreeViewDefaultId}`;
-};

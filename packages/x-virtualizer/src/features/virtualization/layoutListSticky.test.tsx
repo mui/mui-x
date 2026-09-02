@@ -3,6 +3,7 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { useVirtualizer, LayoutListSticky, type RowEntry } from '@mui/x-virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 const ROW_HEIGHT = 48;
 const VIEWPORT_HEIGHT = 400;
