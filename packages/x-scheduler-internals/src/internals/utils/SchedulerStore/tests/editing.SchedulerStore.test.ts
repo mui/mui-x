@@ -455,6 +455,21 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.displayTimezone.rrule).to.not.equal(undefined);
     });
 
+    it("should disarm when a scope 'all' change edits the recurrence rule", () => {
+      const store = createStore();
+      armOccurrence(store, dayA);
+
+      // A new rule re-expands the series in place: the armed day may no longer be an
+      // occurrence, so the surface is dropped instead of re-keyed.
+      store.updateRecurringEvent({
+        occurrenceStart: dayA,
+        changes: { id: 'standup', rrule: { freq: 'WEEKLY' } as any },
+      });
+      store.selectRecurringEventScope('all');
+
+      expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+    });
+
     it('should re-point a rename-only scope change onto the detached event', () => {
       const store = createStore();
       const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter);

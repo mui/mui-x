@@ -765,22 +765,20 @@ export class SchedulerStore<
           event: original,
           occurrenceStart: occurrenceStartInDataTimezone,
         });
-        // An in-place `all` only follows a changed day when the edit moves the series start
-        // (DTSTART): for any other occurrence the pattern merges the time into DTSTART/DTEND and
-        // realigns within the occurrence's own period, so the changed day holds a sibling and the
-        // bounds the user picked are not the ones stored. Where it lands is the pattern's
-        // business: drop the armed surface instead of guessing.
+        // An in-place `all` only lands on the changed day when it moves the series start;
+        // any other occurrence stays inside its own period, so disarm instead of guessing.
         const movesDayInPlace = (
           changedInDataTimezone: TemporalSupportedObject | null,
           currentInDataTimezone: TemporalSupportedObject,
         ) =>
           changedInDataTimezone != null &&
           !adapter.isSameDay(currentInDataTimezone, changedInDataTimezone);
+        const rruleChanged = Object.prototype.hasOwnProperty.call(changes, 'rrule');
         const landingIsPatternDecided =
           !targetsCreatedEvent &&
           // A new rule re-expands the series: the armed day may not even be an
           // occurrence any more.
-          (Object.prototype.hasOwnProperty.call(changes, 'rrule') ||
+          (rruleChanged ||
             (!editedIsSeriesStart &&
               (movesDayInPlace(changedStartInDataTimezone, occurrenceStartInDataTimezone) ||
                 movesDayInPlace(changedEndInDataTimezone, occurrenceEndInDataTimezone))));
@@ -793,15 +791,11 @@ export class SchedulerStore<
           // displays on a different day).
           const start = changedStart ?? occurrence.displayTimezone.start.value;
           const end = changedEnd ?? occurrence.displayTimezone.end.value;
-          let isRecurring: boolean;
-          if (targetsCreatedEvent) {
-            isRecurring = movedToEvent.rrule != null;
-          } else if (Object.prototype.hasOwnProperty.call(changes, 'rrule')) {
-            // The in-place update may itself add or remove the recurrence.
-            isRecurring = changes.rrule != null;
-          } else {
-            isRecurring = occurrence.displayTimezone.rrule != null;
-          }
+          // An in-place update that changes the rule disarmed above, so the series here is
+          // still recurring.
+          const isRecurring = targetsCreatedEvent
+            ? movedToEvent.rrule != null
+            : occurrence.displayTimezone.rrule != null;
           this.repointEditingOccurrence({
             eventId: targetsCreatedEvent ? movedToEventId : eventId,
             start,
@@ -1119,11 +1113,8 @@ export class SchedulerStore<
           start: processDate(start, adapter),
           end: processDate(end, adapter),
         },
-        // The data bounds are deliberately left alone: only the non-recurring commit
-        // reaches here (the recurring one refreshes on scope submit) and nothing reads
-        // them for a non-recurring occurrence, whose key is its event id. Deriving them
-        // from the display bounds would be wrong anyway — an all-day event normalizes
-        // those to the display day, which is not the instant it is stored at.
+        // Data bounds untouched: only the non-recurring commit lands here and nothing
+        // reads them for it.
       },
     });
   };
