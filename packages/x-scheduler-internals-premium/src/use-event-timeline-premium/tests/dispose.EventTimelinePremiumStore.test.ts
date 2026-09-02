@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { disposeSymbol } from '@mui/x-internals/disposable';
@@ -28,7 +27,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
       resolveFetch = resolve;
     });
     const dataSource = {
-      getEvents: spy(() => fetchPromise),
+      getEvents: vi.fn(() => fetchPromise),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -38,7 +37,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
     expect(store.state.eventIdList).to.have.length(0);
 
     store[disposeSymbol]();
@@ -52,7 +51,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
 
   it('should not fetch when the debounce timer fires after dispose', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -62,7 +61,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     // Initial fetch is immediate; let it settle.
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     // A subsequent navigation goes through the debounced path.
     store.goToNextVisibleDate(noopUIEvent);
@@ -74,13 +73,13 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushDebounce();
     await flushEffect();
 
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
   });
 
   it('should not call dataSource.persistEvents when an eventsUpdated is published after dispose', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
-      persistEvents: spy(noopPersistEvents),
+      getEvents: vi.fn(async () => buildEvents()),
+      persistEvents: vi.fn(noopPersistEvents),
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -105,12 +104,12 @@ describe('Dispose - EventTimelinePremiumStore', () => {
 
     await flushEffect();
 
-    expect(dataSource.persistEvents.called).to.equal(false);
+    expect(dataSource.persistEvents.mock.calls.length).to.equal(0);
   });
 
   it('should not start a new fetch when state changes after dispose', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -119,7 +118,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
 
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     store[disposeSymbol]();
 
@@ -128,12 +127,12 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
   });
 
   it('should be safe to dispose twice', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -149,7 +148,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
 
   it('should not crash when disposing after a cache-hit navigation', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -159,7 +158,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     // First fetch hydrates the cache for the initial range.
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     // Navigate away and back: the second navigation hits the cache.
     store.goToNextVisibleDate(noopUIEvent);
@@ -171,7 +170,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
 
     expect(() => store[disposeSymbol]()).not.to.throw();
     // No third fetch: the return navigation was served from the cache.
-    expect(dataSource.getEvents.callCount).to.equal(2);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
   });
 
   it('should not pushError when persistEvents rejects after dispose', async () => {
@@ -182,8 +181,8 @@ describe('Dispose - EventTimelinePremiumStore', () => {
       rejectPersist = reject;
     });
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
-      persistEvents: spy(() => persistPromise),
+      getEvents: vi.fn(async () => buildEvents()),
+      persistEvents: vi.fn(() => persistPromise),
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -206,7 +205,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
 
     // Let `persistEvents` start before we dispose.
     await flushEffect();
-    expect(dataSource.persistEvents.calledOnce).to.equal(true);
+    expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
 
     store[disposeSymbol]();
 
