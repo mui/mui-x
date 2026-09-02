@@ -10,11 +10,12 @@ import type {
 import { buildEventsState } from '@mui/x-scheduler-internals/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { SchedulerDataManager } from '../utils/queue';
+import type { SchedulerLazyLoadingParameters } from '../../models/lazyLoading';
 
 export class SchedulerLazyLoadingPlugin<
   TEvent extends object,
   State extends SchedulerState,
-  Parameters extends SchedulerParameters<TEvent, any>,
+  Parameters extends SchedulerParameters<TEvent, any> & SchedulerLazyLoadingParameters<TEvent>,
 > {
   protected store: SchedulerStore<TEvent, any, State, Parameters>;
 

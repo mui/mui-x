@@ -13,6 +13,7 @@ import type {
   SchedulerDependenciesState,
   SchedulerDependencyCreation,
 } from '../models/dependency';
+import type { SchedulerLazyLoadingParameters } from '../models/lazyLoading';
 
 export interface EventTimelinePremiumState extends SchedulerState, SchedulerDependenciesState {
   /**
@@ -49,10 +50,8 @@ export interface EventTimelinePremiumState extends SchedulerState, SchedulerDepe
   hasInitialized: boolean;
 }
 
-export interface EventTimelinePremiumParameters<
-  TEvent extends object,
-  TResource extends object,
-> extends SchedulerParameters<TEvent, TResource> {
+export interface EventTimelinePremiumParameters<TEvent extends object, TResource extends object>
+  extends SchedulerParameters<TEvent, TResource>, SchedulerLazyLoadingParameters<TEvent> {
   /**
    * The preset currently displayed in the timeline.
    */

@@ -110,18 +110,19 @@ const mapper: SchedulerParametersToStateMapper<
 /**
  * Base class that can be extended by premium stores.
  * Accepts instanceName as a parameter to allow subclasses to provide their own instance name.
+ * `Parameters` is generic so premium stores can widen it with their own parameters
+ * (for example the Premium-only `dataSource`).
  */
 export class ExtendableEventCalendarStore<
   TEvent extends object,
   TResource extends object,
-> extends SchedulerStore<
-  TEvent,
-  TResource,
-  EventCalendarState,
-  EventCalendarParameters<TEvent, TResource>
-> {
+  Parameters extends EventCalendarParameters<TEvent, TResource> = EventCalendarParameters<
+    TEvent,
+    TResource
+  >,
+> extends SchedulerStore<TEvent, TResource, EventCalendarState, Parameters> {
   public constructor(
-    parameters: EventCalendarParameters<TEvent, TResource>,
+    parameters: Parameters,
     adapter: Adapter,
     instanceName: SchedulerInstanceName,
     recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,

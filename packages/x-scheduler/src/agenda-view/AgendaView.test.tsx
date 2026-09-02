@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from '@mui/internal-test-utils';
+import { screen, within } from '@mui/internal-test-utils';
 import {
   adapter,
   createSchedulerRenderer,
@@ -7,36 +7,10 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
-import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
-import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { vi, describe, it, expect } from 'vitest';
 
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();
-
-  // Regression test for https://github.com/mui/mui-x/pull/22676#pullrequestreview-4424947060
-  // The standalone views render `EventSkeleton`, which reads `SharedComponentsStyledContext`.
-  // `EventCalendarProvider` (the wrapper used by every standalone view) must supply that
-  // context, otherwise rendering the data-source loading state throws.
-  it('should render the skeleton in a standalone view while events are loading', async () => {
-    const dataSource = {
-      getEvents: () => new Promise<SchedulerEvent[]>(() => {}),
-      persistEvents: async () => ({ success: true }),
-    };
-
-    render(
-      <StandaloneAgendaView
-        dataSource={dataSource}
-        defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-      />,
-    );
-
-    await waitFor(() => {
-      expect(
-        document.querySelectorAll(`.${eventCalendarClasses.eventSkeleton}`).length,
-      ).to.be.greaterThan(0);
-    });
-  });
 
   it('should reference resolvable header IDs in each event aria-labelledby', () => {
     const event = EventBuilder.new().title('My Event').build();

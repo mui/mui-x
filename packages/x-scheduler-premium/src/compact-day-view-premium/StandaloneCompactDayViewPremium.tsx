@@ -1,8 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
+import {
+  EventCalendarPremiumStore,
+  useExtractEventCalendarPremiumParameters,
+} from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { CompactDayView } from '@mui/x-scheduler/compact-day-view';
 import {
   EventCalendarProvider,
@@ -32,7 +34,7 @@ const StandaloneCompactDayViewPremium = React.forwardRef(function StandaloneComp
 ) {
   useLicenseVerifier(packageInfo);
 
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+  const { parameters, forwardedProps } = useExtractEventCalendarPremiumParameters<
     TEvent,
     TResource,
     typeof props
@@ -42,6 +44,8 @@ const StandaloneCompactDayViewPremium = React.forwardRef(function StandaloneComp
 
   return (
     <ResponsiveTypographyContainer>
+      {/* `parameters` carries the Premium-only `dataSource`, which the community provider
+          parameters do not declare: it rides through this spread into `storeClass`. */}
       <EventCalendarProvider
         {...parameters}
         storeClass={EventCalendarPremiumStore}
