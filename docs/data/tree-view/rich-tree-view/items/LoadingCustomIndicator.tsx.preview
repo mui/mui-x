@@ -1,0 +1,7 @@
+<RichTreeView
+  items={[]}
+  loading
+  slots={{ loading: CustomLoading }}
+  slotProps={{ loading: { message: 'Fetching items…' } }}
+  sx={{ width: 300 }}
+/>
