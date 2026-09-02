@@ -681,9 +681,6 @@ importers:
       semver:
         specifier: 7.8.5
         version: 7.8.5
-      styled-components:
-        specifier: ^6.4.4
-        version: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       stylis:
         specifier: ^4.4.0
         version: 4.4.0
@@ -20911,6 +20908,7 @@ snapshots:
       stylis: 4.4.0
     optionalDependencies:
       react-dom: 19.2.8(react@19.2.8)
+    optional: true
 
   styled-jsx@5.1.6(@babel/core@7.29.7(supports-color@10.2.2))(babel-plugin-macros@3.1.0)(react@19.2.8):
     dependencies:
