@@ -9,13 +9,15 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { EventTimelinePremiumPresetConfig } from '@mui/x-scheduler-internals-premium/models';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 // Tab between events only works on top of real layout (the handler reads
 // `clientWidth`/`scrollLeft` and the virtualizer only mounts a subset of events
 // when the scroller has real dimensions). jsdom doesn't lay out, so skip there.
 describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
-  const { render } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -44,18 +46,26 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     eventAt(6, 20),
   ];
 
-  function renderTimeline() {
-    return render(
-      <div style={{ width: 1200, height: 600 }}>
+  async function renderTimeline(
+    options: {
+      events?: SchedulerEvent[];
+      presetConfig?: EventTimelinePremiumPresetConfig;
+      hostWidth?: number;
+    } = {},
+  ) {
+    const view = await renderSettled(
+      <div style={{ width: options.hostWidth ?? 1200, height: 600 }}>
         <EventTimelinePremium
           resources={[resource]}
-          events={events}
+          events={options.events ?? events}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           preset="dayAndHour"
           presets={['dayAndHour']}
+          presetConfig={options.presetConfig}
         />
       </div>,
     );
+    return view;
   }
 
   function getEvent(title: string): HTMLElement | null {
@@ -67,7 +77,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
   }
 
   it('should focus the next event in row order when Tab is pressed', async () => {
-    const { user } = renderTimeline();
+    const { user } = await renderTimeline();
 
     // Wait for the timeline to settle and confirm `evt-d3-h1` and `evt-d3-h5` are
     // both currently mounted (the close-together events near scrollLeft=0).
@@ -86,7 +96,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
   });
 
   it('should scroll-then-focus an event that is virtualized out', async () => {
-    const { user } = renderTimeline();
+    const { user } = await renderTimeline();
 
     await waitFor(() => {
       expect(getEvent('evt-d3-h1')).not.to.equal(null);
@@ -130,7 +140,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
   });
 
   it('should walk back through events with Shift+Tab, including virtualized ones', async () => {
-    const { user } = renderTimeline();
+    const { user } = await renderTimeline();
 
     // Scroll all the way right and confirm the last event mounts.
     await waitFor(() => {
@@ -173,7 +183,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
   });
 
   it('should let default Tab take focus out of the row past the last event', async () => {
-    const { user } = renderTimeline();
+    const { user } = await renderTimeline();
 
     await waitFor(() => {
       expect(getEvent('evt-d3-h1')).not.to.equal(null);
@@ -196,6 +206,76 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     // the events cell is outside the events row (or outside the grid entirely).
     await user.keyboard('{Tab}');
     expect(document.activeElement).to.not.equal(getEvent('evt-d6-h20'));
+  });
+
+  describe('with a trimmed hour window', () => {
+    // 8:00 → 20:00 leaves 12 ticks per day (768px), so the 4-day axis is 3072px wide.
+    const TRIMMED = { dayAndHour: { startTime: 8, endTime: 20 } };
+
+    it('should skip the occurrences hidden by the trimmed hour window instead of trapping focus', async () => {
+      // 21:00 hides inside the window: its occurrence never mounts, so navigating to it
+      // would swallow Tab forever.
+      const { user } = await renderTimeline({
+        events: [eventAt(3, 10), eventAt(3, 21), eventAt(4, 10)],
+        presetConfig: TRIMMED,
+      });
+
+      await waitFor(() => {
+        expect(getEvent('evt-d3-h10')).not.to.equal(null);
+      });
+      expect(getEvent('evt-d3-h21')).to.equal(null);
+
+      act(() => {
+        getEvent('evt-d3-h10')!.focus();
+      });
+
+      await user.keyboard('{Tab}');
+      await waitFor(() => {
+        const next = getEvent('evt-d4-h10');
+        expect(next).not.to.equal(null);
+        expect(document.activeElement).to.equal(next);
+      });
+    });
+
+    it('should scroll a virtualized-out target into view at its compressed-axis position', async () => {
+      // The target sits on the last day at 19:00 — tick 47 of 48, around x=3008 — while
+      // the 600px host shows roughly the first 540px. It cannot be reached without the
+      // interceptor scrolling to the position the trimmed axis puts it at.
+      const { user } = await renderTimeline({
+        events: [eventAt(3, 10), eventAt(3, 21), eventAt(6, 19)],
+        presetConfig: TRIMMED,
+        hostWidth: 600,
+      });
+
+      await waitFor(() => {
+        expect(getEvent('evt-d3-h10')).not.to.equal(null);
+      });
+      // The premise of the test: the target starts virtualized out.
+      expect(getEvent('evt-d6-h19')).to.equal(null);
+      expect(getScroller().scrollLeft).to.equal(0);
+
+      act(() => {
+        getEvent('evt-d3-h10')!.focus();
+      });
+
+      await user.keyboard('{Tab}');
+
+      await waitFor(() => {
+        const target = getEvent('evt-d6-h19');
+        expect(target).not.to.equal(null);
+        expect(document.activeElement).to.equal(target);
+      });
+
+      // Scrolled to where the compressed axis puts the target, not merely far enough to
+      // mount it: an offset derived from the untrimmed geometry lands elsewhere. The box
+      // is checked by its start edge, since a short event renders wider than its slot to
+      // fit the label.
+      expect(getScroller().scrollLeft).to.be.greaterThan(0);
+      const scrollerRect = getScroller().getBoundingClientRect();
+      const targetRect = getEvent('evt-d6-h19')!.getBoundingClientRect();
+      expect(targetRect.left).to.be.greaterThanOrEqual(scrollerRect.left);
+      expect(targetRect.left).to.be.lessThan(scrollerRect.right);
+    });
   });
 
   describe('multi-resource occurrences', () => {
@@ -240,7 +320,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
         .resources([resourceA, resourceB])
         .build();
 
-      const { user } = render(
+      const { user } = await renderSettled(
         <div style={{ width: 1200, height: 600 }}>
           <EventTimelinePremium
             // B listed before A so its (duplicate-keyed) copy of `shared` sits

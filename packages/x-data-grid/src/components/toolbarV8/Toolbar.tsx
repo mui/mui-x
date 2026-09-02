@@ -9,6 +9,12 @@ import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { ToolbarContextProvider } from '@mui/x-internals/ToolbarContext';
 import { vars } from '../../constants/cssVariables';
+import {
+  getBackgroundBase,
+  getBorderColor,
+  getFontBody,
+  getSpacingUnit,
+} from '../../material/variables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -32,19 +38,38 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+/**
+ * The styled `<div />` element rendered by the `<Toolbar />` component.
+ * Use it to apply the toolbar styles to other elements, inside or outside of a Data Grid.
+ */
 const ToolbarRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Toolbar',
-})({
-  flex: '0 1 1px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'end',
-  gap: vars.spacing(0.25),
-  padding: vars.spacing(0.75),
-  minHeight: 52,
-  boxSizing: 'border-box',
-  borderBottom: `1px solid ${vars.colors.border.base}`,
+})(({ theme }) => {
+  // The Data Grid CSS variables are only defined on the Data Grid root element, so they are
+  // declared with a fallback to keep the styles working when rendered outside of a Data Grid.
+  const spacingUnit = `var(${vars.keys.spacingUnit}, ${getSpacingUnit(theme)})`;
+  const borderColor = `var(${vars.keys.colors.border.base}, ${getBorderColor(theme)})`;
+  const background = `var(${vars.keys.colors.background.base}, ${getBackgroundBase(theme)})`;
+  const foreground = `var(${vars.keys.colors.foreground.base}, ${(theme.vars || theme).palette.text.primary})`;
+  const fontBody = getFontBody(theme);
+
+  return {
+    flex: '0 1 1px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'end',
+    gap: `calc(${spacingUnit} * 0.25)`,
+    padding: `calc(${spacingUnit} * 0.75)`,
+    minHeight: 52,
+    boxSizing: 'border-box',
+    borderBottom: `1px solid ${borderColor}`,
+    // Inherited from the Data Grid root inside a grid, declared here so the component keeps
+    // matching it when rendered on its own.
+    backgroundColor: background,
+    color: foreground,
+    font: fontBody ? `var(${vars.keys.typography.font.body}, ${fontBody})` : undefined,
+  };
 });
 
 /**
@@ -87,4 +112,4 @@ Toolbar.propTypes /* remove-proptypes */ = {
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 
-export { Toolbar };
+export { Toolbar, ToolbarRoot };

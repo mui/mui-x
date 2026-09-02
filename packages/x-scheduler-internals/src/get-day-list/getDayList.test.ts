@@ -1,4 +1,5 @@
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { getDayList } from './getDayList';
 import { isWeekend } from '../use-adapter';
 import { processDate } from '../process-date';

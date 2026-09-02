@@ -51,7 +51,7 @@
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element."
+          "description": "The event recorded on the <code>&lt;svg/&gt;</code> element."
         },
         "data": {
           "name": "data",
@@ -75,6 +75,13 @@
           "name": "highlightedItem",
           "description": "The newly highlighted item."
         }
+      }
+    },
+    "onItemClick": {
+      "description": "The callback fired when an item is clicked.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The click event." },
+        "item": { "name": "item", "description": "The clicked item." }
       }
     },
     "onTooltipItemChange": {

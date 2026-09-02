@@ -60,7 +60,7 @@
     "onAxisClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
+        "type": "function(event: ChartsActivationEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
       }
     },
@@ -76,6 +76,13 @@
       "signature": {
         "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
         "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: ChartsActivationEvent<HTMLDivElement>, item: SeriesItemIdentifierWithType<SeriesType>) => void",
+        "describedArgs": ["event", "item"]
       }
     },
     "onTooltipItemChange": {

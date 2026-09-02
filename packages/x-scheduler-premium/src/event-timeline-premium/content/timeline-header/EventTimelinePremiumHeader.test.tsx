@@ -5,12 +5,17 @@ import {
   eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
+  adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+import type {
+  EventTimelinePremiumPreset,
+  EventTimelinePremiumPresetConfig,
+} from '@mui/x-scheduler-internals-premium/models';
+import { describe, it, expect } from 'vitest';
 
 type PresetExpectations = {
   preset: EventTimelinePremiumPreset;
@@ -36,30 +41,34 @@ const PRESET_EXPECTATIONS: PresetExpectations[] = [
 ];
 
 describe('<EventTimelinePremiumHeader />', () => {
-  const { render } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  function renderHeader(options: {
+  async function renderHeader(options: {
     preset: EventTimelinePremiumPreset;
     presets?: EventTimelinePremiumPreset[];
     defaultPreferences?: { ampm: boolean };
+    visibleDate?: typeof DEFAULT_TESTING_VISIBLE_DATE;
+    presetConfig?: EventTimelinePremiumPresetConfig;
   }) {
     // The grid is virtualized; sizing the host wide enough to fit the largest preset
     // (1096 days × 6px = 6576px plus the title column) keeps every header cell mounted
     // so the structural assertions can inspect them all without simulating scrolls.
-    return render(
+    const view = await renderSettled(
       <div style={{ width: 10000, height: 2000 }}>
         <EventTimelinePremium
           resources={[engineering]}
           events={[]}
-          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          visibleDate={options.visibleDate ?? DEFAULT_TESTING_VISIBLE_DATE}
           preset={options.preset}
           presets={options.presets ?? [options.preset]}
+          presetConfig={options.presetConfig}
           defaultPreferences={options.defaultPreferences}
         />
       </div>,
     );
+    return view;
   }
 
   function getTicksSum(row: Element): number {
@@ -71,8 +80,8 @@ describe('<EventTimelinePremiumHeader />', () => {
 
   PRESET_EXPECTATIONS.forEach(({ preset, rowCount, tickWidth, totalTicks, leafRowIndex }) => {
     describe(`preset "${preset}"`, () => {
-      it('should render one level row per preset header and span the full visible range', () => {
-        renderHeader({ preset });
+      it('should render one level row per preset header and span the full visible range', async () => {
+        await renderHeader({ preset });
 
         const grid = screen.getByRole('grid');
         const container = grid.closest('section')!;
@@ -103,8 +112,8 @@ describe('<EventTimelinePremiumHeader />', () => {
   });
 
   describe('formatDate content', () => {
-    it('should render the formatDate result as the cell label', () => {
-      renderHeader({ preset: 'monthAndYear' });
+    it('should render the formatDate result as the cell label', async () => {
+      await renderHeader({ preset: 'monthAndYear' });
 
       // Visible range Jul 2025 → Jun 2028.
       const yearCells = document.querySelectorAll<HTMLElement>(
@@ -120,8 +129,8 @@ describe('<EventTimelinePremiumHeader />', () => {
   });
 
   describe('<time> semantics', () => {
-    it('should wrap every cell label in a <time> element with an ISO dateTime', () => {
-      renderHeader({ preset: 'dayAndHour' });
+    it('should wrap every cell label in a <time> element with an ISO dateTime', async () => {
+      await renderHeader({ preset: 'dayAndHour' });
 
       const hourCells = document.querySelectorAll<HTMLElement>(
         `.${classes.headerCell}[data-unit="hour"]`,
@@ -139,8 +148,8 @@ describe('<EventTimelinePremiumHeader />', () => {
   describe('weekend marking', () => {
     // DEFAULT_TESTING_VISIBLE_DATE is 2025-07-03 (Thursday); the test adapter has no
     // locale configured, so date-fns starts weeks on Sunday → first cell is Sun Jun 29.
-    it('should mark weekend day cells with data-weekend in `dayAndWeek` (where the day row is the leaf)', () => {
-      renderHeader({ preset: 'dayAndWeek' });
+    it('should mark weekend day cells with data-weekend in `dayAndWeek` (where the day row is the leaf)', async () => {
+      await renderHeader({ preset: 'dayAndWeek' });
 
       const dayCells = Array.from(
         document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
@@ -160,10 +169,10 @@ describe('<EventTimelinePremiumHeader />', () => {
       expect(firstWeek[6].dataset.weekend).to.equal(''); // Sat
     });
 
-    it('should still expose data-weekend on day cells even when the day row is a grouping level (accessibility)', () => {
+    it('should still expose data-weekend on day cells even when the day row is a grouping level (accessibility)', async () => {
       // dayAndHour: the day row is level 0 (grouping) with hour ticks below. Saturday should
       // still carry `data-weekend` for screen readers / custom CSS, but without data-unit-leaf.
-      renderHeader({ preset: 'dayAndHour' });
+      await renderHeader({ preset: 'dayAndHour' });
 
       const dayCells = Array.from(
         document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
@@ -185,12 +194,12 @@ describe('<EventTimelinePremiumHeader />', () => {
   });
 
   describe('`dayAndMonth` month row clamping', () => {
-    it('should clamp the first and last month cells to the visible range', () => {
+    it('should clamp the first and last month cells to the visible range', async () => {
       // visibleDate Jul 03 2025 → first day cell is Jul 3 (startOfDay). The 56-day window
       // (8 weeks) ends on Aug 27, so the month row should produce exactly two cells:
       //   - July: Jul 3 → Jul 31 = 29 days (clamped at the start)
       //   - August: Aug 1 → Aug 27 = 27 days (clamped at the end)
-      renderHeader({ preset: 'dayAndMonth' });
+      await renderHeader({ preset: 'dayAndMonth' });
 
       const monthCells = document.querySelectorAll<HTMLElement>(
         `.${classes.headerCell}[data-unit="month"]`,
@@ -202,8 +211,8 @@ describe('<EventTimelinePremiumHeader />', () => {
   });
 
   describe('`dayAndHour` hour row ampm preference', () => {
-    it('should format hour labels in 12h with AM/PM when ampm is true', () => {
-      renderHeader({ preset: 'dayAndHour', defaultPreferences: { ampm: true } });
+    it('should format hour labels in 12h with AM/PM when ampm is true', async () => {
+      await renderHeader({ preset: 'dayAndHour', defaultPreferences: { ampm: true } });
 
       const hourCell = document.querySelector<HTMLElement>(
         `.${classes.headerCell}[data-unit="hour"][data-index="0"]`,
@@ -212,8 +221,8 @@ describe('<EventTimelinePremiumHeader />', () => {
       expect(hourCell!.textContent).to.match(/AM|PM/);
     });
 
-    it('should format hour labels in 24h without AM/PM when ampm is false', () => {
-      renderHeader({ preset: 'dayAndHour', defaultPreferences: { ampm: false } });
+    it('should format hour labels in 24h without AM/PM when ampm is false', async () => {
+      await renderHeader({ preset: 'dayAndHour', defaultPreferences: { ampm: false } });
 
       const hourCell = document.querySelector<HTMLElement>(
         `.${classes.headerCell}[data-unit="hour"][data-index="0"]`,
@@ -223,10 +232,86 @@ describe('<EventTimelinePremiumHeader />', () => {
     });
   });
 
+  describe('`dayAndHour` hour row across a DST transition', () => {
+    // Mar 8 2026 in America/New_York skips the 02:00 wall-clock hour; Nov 2 2025 repeats
+    // the 01:00 one. The hour row is a wall-clock grid, so both days show the same columns
+    // as any other day, matching the Event Calendar's time axis.
+    const springForward = adapter.date('2026-03-08T00:00:00', 'America/New_York');
+    const fallBack = adapter.date('2025-11-02T00:00:00', 'America/New_York');
+
+    function getHourLabels(dayIndex: number, hoursPerDay: number) {
+      const cells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="hour"]`),
+      );
+      return cells
+        .slice(dayIndex * hoursPerDay, (dayIndex + 1) * hoursPerDay)
+        .map((cell) => cell.textContent);
+    }
+
+    it('should label the hour skipped by the spring-forward transition', async () => {
+      await renderHeader({
+        preset: 'dayAndHour',
+        visibleDate: springForward,
+        defaultPreferences: { ampm: true },
+      });
+
+      expect(getHourLabels(0, 24).slice(0, 5)).to.deep.equal([
+        '12:00 AM',
+        '1:00 AM',
+        '2:00 AM',
+        '3:00 AM',
+        '4:00 AM',
+      ]);
+    });
+
+    it('should label the hour repeated by the fall-back transition once', async () => {
+      await renderHeader({
+        preset: 'dayAndHour',
+        visibleDate: fallBack,
+        defaultPreferences: { ampm: true },
+      });
+
+      expect(getHourLabels(0, 24).slice(0, 5)).to.deep.equal([
+        '12:00 AM',
+        '1:00 AM',
+        '2:00 AM',
+        '3:00 AM',
+        '4:00 AM',
+      ]);
+    });
+
+    it('should build the dateTime of the skipped hour from its wall-clock hour', async () => {
+      await renderHeader({ preset: 'dayAndHour', visibleDate: springForward });
+
+      const hourCells = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="hour"]`,
+      );
+      expect(hourCells[2].querySelector('time')!.getAttribute('datetime')).to.equal(
+        '2026-03-08T02:00',
+      );
+    });
+
+    it('should keep the hour row aligned with the day row when the window starts on the skipped hour', async () => {
+      await renderHeader({
+        preset: 'dayAndHour',
+        visibleDate: springForward,
+        presetConfig: { dayAndHour: { startTime: 2, endTime: 20 } },
+        defaultPreferences: { ampm: true },
+      });
+
+      const dayCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
+      );
+      expect(Number(dayCells[0].style.getPropertyValue('--span'))).to.equal(18);
+      expect(getHourLabels(0, 18)[0]).to.equal('2:00 AM');
+      expect(getHourLabels(0, 18).length).to.equal(18);
+    });
+  });
+
   describe('`dayAndMonth` renderCell escape hatch', () => {
-    it('should render the weekday letter and day number as separate data-slot spans', () => {
+    it('should render the weekday letter and day number as separate data-slot spans', async () => {
       // This is the built-in `day` row's custom renderCell — exercising the escape hatch path.
-      renderHeader({ preset: 'dayAndMonth' });
+      await renderHeader({ preset: 'dayAndMonth' });
 
       const dayCells = document.querySelectorAll<HTMLElement>(
         `.${classes.headerCell}[data-unit="day"]`,

@@ -1,8 +1,8 @@
-import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { expectFieldValue, getCleanedSelectedContent } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DateField /> - Editing', () => {
   describeAdapters(
@@ -10,7 +10,7 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps }) => {
       it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const view = renderWithProps({
           value: adapter.date('2022-06-04'),
           onChange,
@@ -21,12 +21,12 @@ describe('<DateField /> - Editing', () => {
         await view.pressKey('ArrowUp');
         expectFieldValue(view.getSectionsContainer(), '06/04/2022');
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2023, 5, 4));
       });
 
       it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const view = renderWithProps({
           defaultValue: adapter.date('2022-06-04'),
           onChange,
@@ -37,12 +37,12 @@ describe('<DateField /> - Editing', () => {
         await view.pressKey('ArrowUp');
         expectFieldValue(view.getSectionsContainer(), '06/04/2023');
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2023, 5, 4));
       });
 
       it('should not call the onChange callback before filling the last section when starting from a null value', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const view = renderWithProps({
           value: null,
           onChange,
@@ -52,13 +52,13 @@ describe('<DateField /> - Editing', () => {
         await view.selectSection('day');
 
         await view.pressKey('4');
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
         expectFieldValue(view.getSectionsContainer(), '04 MMMM');
 
         await view.pressKey('S');
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 8, 4));
         await waitFor(() => {
           expectFieldValue(view.getSectionsContainer(), 'DD MMMM');
         });
@@ -68,7 +68,7 @@ describe('<DateField /> - Editing', () => {
 
   describeAdapters('Disabled field', DateField, ({ renderWithProps }) => {
     it('should not allow key editing on disabled field', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const view = renderWithProps({
         onChange,
         disabled: true,
@@ -92,7 +92,7 @@ describe('<DateField /> - Editing', () => {
         // eslint-disable-next-line no-await-in-loop
         await view.pressKey(key);
         expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
       }
 
       // digit key press
@@ -514,7 +514,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         await testFieldChange({
           format: adapter.formats.year,
@@ -522,11 +522,11 @@ describe('<DateField /> - Editing', () => {
           keyStrokes: [{ value: '', expected: 'YYYY' }],
         });
 
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
       });
 
       it('should call `onChange` when clearing the first section (Backspace)', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -536,16 +536,16 @@ describe('<DateField /> - Editing', () => {
 
         await view.selectSection('month');
         await view.pressKey('');
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.firstArg).to.equal(null);
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0]).to.equal(null);
 
         await view.selectSection('year');
         await view.pressKey('');
-        expect(onChange.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(1);
       });
 
       it('should not call `onChange` if the section is already empty (Backspace)', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         await testFieldChange({
           format: adapter.formats.year,
@@ -557,7 +557,7 @@ describe('<DateField /> - Editing', () => {
           onChange,
         });
 
-        expect(onChange.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(1);
       });
     },
   );
@@ -587,7 +587,7 @@ describe('<DateField /> - Editing', () => {
     };
 
     it('should set the date when all sections are selected, the pasted value is valid and a value is provided', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const view = renderWithProps({
         defaultValue: adapter.date(),
         onChange,
@@ -599,12 +599,12 @@ describe('<DateField /> - Editing', () => {
 
       await firePasteEvent(view.getSectionsContainer(), '09/16/2022');
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 8, 16));
     });
 
     it('should set the date when all sections are selected, the pasted value is valid and no value is provided', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const view = renderWithProps({
         onChange,
       });
@@ -615,12 +615,12 @@ describe('<DateField /> - Editing', () => {
 
       await firePasteEvent(view.getSectionsContainer(), '09/16/2022');
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 8, 16));
     });
 
     it('should not set the date when all sections are selected and the pasted value is not valid', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const view = renderWithProps({
         onChange,
       });
@@ -636,7 +636,7 @@ describe('<DateField /> - Editing', () => {
     it('should set the date when all sections are selected and the format contains escaped characters', async () => {
       const { start: startChar, end: endChar } = adapter.escapedCharacters;
 
-      const onChange = spy();
+      const onChange = vi.fn();
       const view = renderWithProps({
         onChange,
         format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
@@ -648,12 +648,12 @@ describe('<DateField /> - Editing', () => {
       await view.user.keyboard('{Control>}a{/Control}');
 
       await firePasteEvent(view.getSectionsContainer(), `Escaped 2014`);
-      expect(onChange.callCount).to.equal(1);
-      expect(adapter.getYear(onChange.lastCall.firstArg)).to.equal(2014);
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(adapter.getYear(onChange.mock.lastCall?.[0])).to.equal(2014);
     });
 
     it('should not set the date when all sections are selected and props.readOnly = true', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         onChange,
@@ -666,11 +666,11 @@ describe('<DateField /> - Editing', () => {
       await view.user.keyboard('{Control>}a{/Control}');
 
       await firePasteEvent(view.getSectionsContainer(), '09/16/2022');
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
     });
 
     it('should set the section when one section is selected, the pasted value has the correct type and no value is provided', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         onChange,
@@ -681,12 +681,12 @@ describe('<DateField /> - Editing', () => {
       expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
       await firePasteEvent(view.getActiveSection(0), '12');
 
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
       expectFieldValue(view.getSectionsContainer(), '12/DD/YYYY');
     });
 
     it('should set the section when one section is selected, the pasted value has the correct type and value is provided', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         defaultValue: adapter.date('2018-01-13'),
@@ -698,12 +698,12 @@ describe('<DateField /> - Editing', () => {
       expectFieldValue(view.getSectionsContainer(), '01/13/2018');
       await firePasteEvent(view.getActiveSection(0), '12');
       expectFieldValue(view.getSectionsContainer(), '12/13/2018');
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 11, 13));
     });
 
     it('should not update the section when one section is selected and the pasted value has incorrect type', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         defaultValue: adapter.date('2018-01-13'),
@@ -715,7 +715,7 @@ describe('<DateField /> - Editing', () => {
       expectFieldValue(view.getSectionsContainer(), '01/13/2018');
       await firePasteEvent(view.getActiveSection(0), 'Jun');
       expectFieldValue(view.getSectionsContainer(), '01/13/2018');
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
     });
 
     it('should reset sections internal state when pasting', async () => {
@@ -759,7 +759,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should not allow pasting on disabled field', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const view = renderWithProps({
         onChange,
         disabled: true,
@@ -771,7 +771,7 @@ describe('<DateField /> - Editing', () => {
       await view.user.keyboard('{Control>}a{/Control}');
 
       await firePasteEvent(view.getSectionsContainer(), '09/16/2022');
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
       expectFieldValue(view.getSectionsContainer(), 'MM/DD/YYYY');
     });
   });
@@ -781,18 +781,18 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps }) => {
       it('should not loose time information when a value is provided', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange,
         });
         await view.selectSection('year');
         await view.user.keyboard('{ArrowDown}');
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
       });
 
       it('should not loose time information when cleaning the date then filling it again', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
@@ -816,11 +816,11 @@ describe('<DateField /> - Editing', () => {
 
         await view.user.keyboard('2009');
         expectFieldValue(view.getSectionsContainer(), '11/25/2009');
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 10, 25, 3, 3, 3));
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2009, 10, 25, 3, 3, 3));
       });
 
       it('should not loose date information when using the year format and value is provided', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const view = renderWithProps({
           format: adapter.formats.year,
@@ -831,11 +831,11 @@ describe('<DateField /> - Editing', () => {
         await view.selectSection('year');
         await view.user.keyboard('{ArrowDown}');
 
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
       });
 
       it('should not loose date information when using the month format and value is provided', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const view = renderWithProps({
           format: adapter.formats.month,
@@ -845,7 +845,7 @@ describe('<DateField /> - Editing', () => {
 
         await view.selectSection('month');
         await view.user.keyboard('{ArrowDown}');
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
       });
     },
   );
@@ -855,18 +855,18 @@ describe('<DateField /> - Editing', () => {
     DateField,
     ({ adapter, renderWithProps }) => {
       it('should set the date when the change value is valid and no value is provided', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const view = renderWithProps({
           onChange,
         });
         fireEvent.change(view.getHiddenInput(), { target: { value: '09/16/2022' } });
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 8, 16));
       });
 
       it('should set the date when the change value is valid and a value is provided', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const view = renderWithProps({
           defaultValue: adapter.date('2010-04-03T03:03:03'),
@@ -875,8 +875,8 @@ describe('<DateField /> - Editing', () => {
 
         fireEvent.change(view.getHiddenInput(), { target: { value: '09/16/2022' } });
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
       });
     },
   );

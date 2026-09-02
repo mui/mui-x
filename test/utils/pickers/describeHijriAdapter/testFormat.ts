@@ -1,3 +1,4 @@
+import { it, expect } from 'vitest';
 import { DescribeHijriAdapterTestSuite } from './describeHijriAdapter.types';
 
 export const testFormat: DescribeHijriAdapterTestSuite = ({ adapter }) => {

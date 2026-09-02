@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import { selectionSelectors } from '../selection/selectors';
 import { itemsSelectors } from '../items/selectors';
 import { isItemDisabled } from '../items/utils';
@@ -48,19 +48,15 @@ export const focusSelectors = {
   /**
    * Checks whether an item is the default focusable item.
    */
-  isItemTheDefaultFocusableItem: createSelector(
-    defaultFocusableItemIdSelector,
-    (defaultFocusableItemId, itemId) => defaultFocusableItemId === itemId,
-  ),
+  isItemTheDefaultFocusableItem: (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
+    defaultFocusableItemIdSelector(state) === itemId,
   /**
    * Gets the id of the item that is currently focused.
    */
-  focusedItemId: createSelector((state: MinimalTreeViewState<any, any>) => state.focusedItemId),
+  focusedItemId: (state: MinimalTreeViewState<any, any>) => state.focusedItemId,
   /**
    * Checks whether an item is focused.
    */
-  isItemFocused: createSelector(
-    (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
-      state.focusedItemId === itemId,
-  ),
+  isItemFocused: (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
+    state.focusedItemId === itemId,
 };

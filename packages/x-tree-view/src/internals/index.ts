@@ -7,6 +7,16 @@ export type {
   RichTreeViewItemsSlotProps,
 } from './components/RichTreeViewItems';
 
+export { RichTreeViewLoading, getLoadingItemsCount } from './components/RichTreeViewLoading';
+export type {
+  RichTreeViewLoadingProps,
+  RichTreeViewLoadingSlots,
+  RichTreeViewLoadingSlotProps,
+  RichTreeViewLoadingClasses,
+  RichTreeViewLoadingSlotOwnProps,
+  RichTreeViewLoadingSlotOwnerState,
+} from './components/RichTreeViewLoading';
+
 export { useTreeViewRootProps } from './hooks/useTreeViewRootProps';
 export { useTreeViewStore } from './hooks/useTreeViewStore';
 export type { UseTreeViewStoreParameters } from './hooks/useTreeViewStore';

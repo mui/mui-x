@@ -1,11 +1,11 @@
 import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import type { EventType } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
 import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, gridClasses, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { DataGridProProps, GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getRow } from 'test/utils/helperFn';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
@@ -47,13 +47,13 @@ describe('<DataGridPro/> - Components', () => {
       ] as const
     ).forEach(([prop, event]) => {
       it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.cell`, async () => {
-        const propHandler = spy();
-        const eventHandler = spy();
+        const propHandler = vi.fn();
+        const eventHandler = vi.fn();
         render(<TestCase slotProps={{ cell: { [prop as any]: propHandler } }} />);
         apiRef.current?.subscribeEvent(event, eventHandler);
 
-        expect(propHandler.callCount).to.equal(0);
-        expect(eventHandler.callCount).to.equal(0);
+        expect(propHandler.mock.calls.length).to.equal(0);
+        expect(eventHandler.mock.calls.length).to.equal(0);
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
           match.slice(2).toLowerCase(),
@@ -67,28 +67,28 @@ describe('<DataGridPro/> - Components', () => {
         fireEvent[eventToFire](cell);
 
         await waitFor(() => {
-          expect(propHandler.callCount).to.equal(1);
+          expect(propHandler.mock.calls.length).to.equal(1);
         });
-        expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
-        expect(eventHandler.callCount).to.equal(1);
+        expect(propHandler.mock.lastCall?.[0]).not.to.equal(undefined);
+        expect(eventHandler.mock.calls.length).to.equal(1);
       });
     });
 
     it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in slots.cell`, async () => {
-      const propHandler = spy();
-      const eventHandler = spy();
+      const propHandler = vi.fn();
+      const eventHandler = vi.fn();
       const { user } = render(<TestCase slotProps={{ cell: { onKeyDown: propHandler } }} />);
       apiRef.current?.subscribeEvent('cellKeyDown', eventHandler);
 
-      expect(propHandler.callCount).to.equal(0);
-      expect(eventHandler.callCount).to.equal(0);
+      expect(propHandler.mock.calls.length).to.equal(0);
+      expect(eventHandler.mock.calls.length).to.equal(0);
 
       await user.click(getCell(0, 0));
       await user.keyboard('a');
 
-      expect(propHandler.callCount).to.equal(1);
-      expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
-      expect(eventHandler.callCount).to.equal(1);
+      expect(propHandler.mock.calls.length).to.equal(1);
+      expect(propHandler.mock.lastCall?.[0]).not.to.equal(undefined);
+      expect(eventHandler.mock.calls.length).to.equal(1);
     });
 
     (
@@ -98,22 +98,22 @@ describe('<DataGridPro/> - Components', () => {
       ] as const
     ).forEach(([prop, event]) => {
       it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.row`, () => {
-        const propHandler = spy();
-        const eventHandler = spy();
+        const propHandler = vi.fn();
+        const eventHandler = vi.fn();
         render(<TestCase slotProps={{ row: { [prop as any]: propHandler } }} />);
         apiRef.current?.subscribeEvent(event, eventHandler);
 
-        expect(propHandler.callCount).to.equal(0);
-        expect(eventHandler.callCount).to.equal(0);
+        expect(propHandler.mock.calls.length).to.equal(0);
+        expect(eventHandler.mock.calls.length).to.equal(0);
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
           match.slice(2).toLowerCase(),
         ) as EventType; // for example onDoubleClick -> doubleClick
         fireEvent[eventToFire](getRow(0));
 
-        expect(propHandler.callCount).to.equal(1);
-        expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
-        expect(eventHandler.callCount).to.equal(1);
+        expect(propHandler.mock.calls.length).to.equal(1);
+        expect(propHandler.mock.lastCall?.[0]).not.to.equal(undefined);
+        expect(eventHandler.mock.calls.length).to.equal(1);
       });
     });
   });

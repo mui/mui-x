@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
-import { SinonFakeTimers, useFakeTimers } from 'sinon';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
@@ -37,13 +37,11 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
     });
 
     describe('with fake timers', () => {
-      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-      let timer: SinonFakeTimers | null = null;
       beforeEach(() => {
-        timer = useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
+        vi.useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
       });
       afterEach(() => {
-        timer?.restore();
+        vi.useRealTimers();
       });
 
       it('should apply disablePast', () => {

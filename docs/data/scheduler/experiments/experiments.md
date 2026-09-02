@@ -14,9 +14,9 @@ components: StandaloneCompactDayViewPremium, StandaloneCompactThreeDayViewPremiu
 
 {{"demo": "RecurringEventDurations.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Timeline dependency arrows (#22855)
+## Timeline dependency arrows (#22855, #22856, #22858)
 
-Finish-to-Start dependencies rendered as arrows on the timeline. The dataset covers every route shape: a straight arrow on the same lane, an elbow across rows that turns right before its target to avoid crossing other events, a short arrow between adjacent events, and S routes for successors starting before their predecessor ends. Drag or resize an event to see its arrows follow. The feature has no public API yet, so the demo feeds the internal store parameters.
+Finish-to-Start dependencies on the timeline. The dataset covers every route shape: a straight arrow on the same lane, an elbow across rows that turns right before its target to avoid crossing other events, a short arrow between adjacent events, and S routes for successors starting before their predecessor ends. Drag or resize an event to see its arrows follow. Hover an event and drag the terminal on its end edge onto another event to create a dependency — dropping on a duplicate link or on one that would close a cycle (for example, reversing an existing dependency) is rejected with a transient toast, and dropping on empty space cancels the gesture. Click an arrow to select it, then delete it with its button or the Delete/Backspace keys; Escape or clicking away deselects. `Handoff` belongs to two resources: its dependencies draw one arrow per pair of row appearances, each terminal drags from its own row, and selecting any of its arrows reveals a delete button on each. The feature has no public API yet, so the demo feeds the internal store parameters.
 
 {{"demo": "TimelineDependencyArrows.js", "bg": "inline", "defaultCodeOpen": false}}
 
