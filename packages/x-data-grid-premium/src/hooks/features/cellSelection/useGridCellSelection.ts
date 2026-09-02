@@ -44,6 +44,7 @@ import type { GridCellSelectionApi, GridCellSelectionModel } from './gridCellSel
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { CellValueUpdater } from '../clipboard/useGridClipboardImport';
+import { GRID_FORMULA_ROW_NUMBER_FIELD } from '../formula/gridFormulaPositionContext';
 
 export const cellSelectionStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'cellSelectionModel' | 'initialState'>
@@ -221,8 +222,21 @@ export const useGridCellSelection = (
         return false;
       }
 
+      if (field === GRID_FORMULA_ROW_NUMBER_FIELD) {
+        return false;
+      }
+
       const column = apiRef.current.getColumn(field);
       return column?.type !== GRID_ACTIONS_COLUMN_TYPE;
+    },
+    [apiRef],
+  );
+
+  const isSelectableRow = React.useCallback(
+    (id: GridRowId) => {
+      const rowNode = gridRowNodeSelector(apiRef, id);
+      // Skeleton rows have no data and footer rows only contain aggregated values
+      return !!rowNode && rowNode.type !== 'skeletonRow' && rowNode.type !== 'footer';
     },
     [apiRef],
   );
@@ -251,7 +265,9 @@ export const useGridCellSelection = (
 
       const visibleColumns = apiRef.current.getVisibleColumns();
       const visibleRows = getVisibleRows(apiRef);
-      const rowsInRange = visibleRows.rows.slice(finalStartRowIndex, finalEndRowIndex + 1);
+      const rowsInRange = visibleRows.rows
+        .slice(finalStartRowIndex, finalEndRowIndex + 1)
+        .filter((row) => isSelectableRow(row.id));
       const columnsInRange = visibleColumns
         .slice(finalStartColumnIndex, finalEndColumnIndex + 1)
         .filter((column) => isSelectableField(column.field));
@@ -273,7 +289,7 @@ export const useGridCellSelection = (
 
       apiRef.current.setCellSelectionModel(newModel);
     },
-    [apiRef, isSelectableField],
+    [apiRef, isSelectableField, isSelectableRow],
   );
 
   const getSelectedCellsAsArray = React.useCallback<
@@ -554,9 +570,7 @@ export const useGridCellSelection = (
 
     const newModel: GridCellSelectionModel = {};
     visibleRows.rows.forEach((row) => {
-      const rowNode = gridRowNodeSelector(apiRef, row.id);
-      // Skeleton rows have no data and footer rows only contain aggregated values
-      if (!rowNode || rowNode.type === 'skeletonRow' || rowNode.type === 'footer') {
+      if (!isSelectableRow(row.id)) {
         return;
       }
       const rowModel: GridCellSelectionModel[GridRowId] = {};
