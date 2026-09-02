@@ -755,44 +755,32 @@ export class SchedulerStore<
         const movedToEventId = createdIds[0];
         const targetsCreatedEvent = movedToEvent != null && movedToEventId != null;
 
-        const editedIsSeriesStart = adapter.isSameDay(
-          occurrenceStartInDataTimezone,
-          original.dataTimezone.start.value,
-        );
         // The same definition the pattern uses, so the two agree by construction.
         const occurrenceEndInDataTimezone = getOccurrenceEnd({
           adapter,
           event: original,
           occurrenceStart: occurrenceStartInDataTimezone,
         });
-        // An in-place `all` only lands on the changed day when it moves the series start;
-        // any other occurrence stays inside its own period, so disarm instead of guessing.
-        const movesDayInPlace = (
+        // An in-place `all` keeps the armed occurrence only while it stays on its own day (a
+        // time change); a day or rule change lets the pattern decide where it lands, if anywhere.
+        const staysOnItsDay = (
           changedInDataTimezone: TemporalSupportedObject | null,
           currentInDataTimezone: TemporalSupportedObject,
         ) =>
-          changedInDataTimezone != null &&
-          !adapter.isSameDay(currentInDataTimezone, changedInDataTimezone);
-        const rruleChanged = Object.prototype.hasOwnProperty.call(changes, 'rrule');
-        const landingIsPatternDecided =
-          !targetsCreatedEvent &&
-          // A new rule re-expands the series: the armed day may not even be an
-          // occurrence any more.
-          (rruleChanged ||
-            (!editedIsSeriesStart &&
-              (movesDayInPlace(changedStartInDataTimezone, occurrenceStartInDataTimezone) ||
-                movesDayInPlace(changedEndInDataTimezone, occurrenceEndInDataTimezone))));
-        if (landingIsPatternDecided) {
+          changedInDataTimezone == null ||
+          adapter.isSameDay(currentInDataTimezone, changedInDataTimezone);
+        const keepsIdentity =
+          targetsCreatedEvent ||
+          (!Object.prototype.hasOwnProperty.call(changes, 'rrule') &&
+            staysOnItsDay(changedStartInDataTimezone, occurrenceStartInDataTimezone) &&
+            staysOnItsDay(changedEndInDataTimezone, occurrenceEndInDataTimezone));
+        if (!keepsIdentity) {
           this.stopEditing();
         } else {
-          // A bound the submit left out — a rename carries none, a partial range edit carries
-          // one — keeps the occurrence's current value, data-timezone identity included: the
-          // display bounds cannot stand in for it (a cross-timezone all-day occurrence
-          // displays on a different day).
+          // A bound the submit left out (a rename carries none) keeps the occurrence's current
+          // value, data-timezone identity included: the display bounds cannot stand in for it.
           const start = changedStart ?? occurrence.displayTimezone.start.value;
           const end = changedEnd ?? occurrence.displayTimezone.end.value;
-          // An in-place update that changes the rule disarmed above, so the series here is
-          // still recurring.
           const isRecurring = targetsCreatedEvent
             ? movedToEvent.rrule != null
             : occurrence.displayTimezone.rrule != null;

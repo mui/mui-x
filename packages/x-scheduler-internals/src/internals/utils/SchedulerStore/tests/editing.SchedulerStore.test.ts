@@ -294,7 +294,7 @@ storeClasses.forEach((storeClass) => {
 });
 
 // A recurring scope change re-points the surface only when the armed occurrence is the changed one,
-// and drops it when the change leaves that occurrence on a day only the pattern can resolve.
+// and drops it when an in-place change moves that occurrence off its day or edits the rule.
 premiumStoreClasses.forEach((storeClass) => {
   describe(`Editing recurring scope - ${storeClass.name}`, () => {
     const RECURRING_EVENT = EventBuilder.new()
@@ -397,14 +397,13 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.dataTimezone.end.value).toEqualDateTime(resizedEnd);
     });
 
-    it("should disarm when a scope 'all' date move edits an occurrence that is not the series start", () => {
+    it("should disarm when a scope 'all' change moves the armed occurrence to another day", () => {
       const store = createStore();
       armOccurrence(store, dayB);
 
-      // Drag the armed occurrence (the 8th, not the series start) one day later with
-      // scope 'all'. The pattern keeps the occurrence on its own day (only the time
-      // reaches DTSTART), so re-keying onto the changed day would anchor the armed
-      // toolbar on a sibling — and a follow-up Delete would exDate the wrong day.
+      // The pattern decides where the series lands after an in-place day move, so
+      // re-keying onto the changed day could anchor the toolbar on a sibling — and a
+      // follow-up Delete would exDate the wrong day.
       const movedStart = adapter.addHours(dayB, 25);
       const movedEnd = adapter.addHours(movedStart, 1);
       store.updateRecurringEvent({
@@ -431,26 +430,6 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       expect(occurrence.key).to.equal(armedKey);
-      expect(occurrence.dataTimezone.start.value).toEqualDateTime(movedStart);
-      expect(occurrence.displayTimezone.rrule).to.not.equal(undefined);
-    });
-
-    it("should re-key the armed occurrence onto the changed day when scope 'all' moves the series start", () => {
-      const store = createStore();
-      armOccurrence(store, dayA);
-
-      // The armed occurrence is the series start: a scope-'all' date move relocates
-      // DTSTART, so the occurrence really lands on the changed day.
-      const movedStart = adapter.addHours(dayA, 25);
-      const movedEnd = adapter.addHours(movedStart, 1);
-      store.updateRecurringEvent({
-        occurrenceStart: dayA,
-        changes: { id: 'standup', start: movedStart, end: movedEnd },
-      });
-      store.selectRecurringEventScope('all');
-
-      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
-      expect(occurrence.key).to.equal(getRecurringOccurrenceKey('standup', movedStart, adapter));
       expect(occurrence.dataTimezone.start.value).toEqualDateTime(movedStart);
       expect(occurrence.displayTimezone.rrule).to.not.equal(undefined);
     });
