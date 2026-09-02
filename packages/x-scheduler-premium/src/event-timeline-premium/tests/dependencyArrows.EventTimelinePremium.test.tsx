@@ -1,6 +1,7 @@
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
+  absorbObserverFrames,
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -40,13 +41,13 @@ const eventC = EventBuilder.new()
   .build();
 
 describe('<EventTimelinePremium /> dependency arrows', () => {
-  const { render } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
-  const { renderTimeline } = createDependencyTimelineRenderer(render);
+  const { renderTimeline } = createDependencyTimelineRenderer(renderSettled);
 
-  it('should render one arrow per active dependency', () => {
-    renderTimeline({
+  it('should render one arrow per active dependency', async () => {
+    await renderTimeline({
       events: [eventA, eventB, eventC],
       dependencies: [
         buildDependency('dep-1', 'event-a', 'event-b'),
@@ -60,8 +61,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     ]);
   });
 
-  it('should render a straight horizontal path between two events in the same row and lane', () => {
-    renderTimeline({
+  it('should render a straight horizontal path between two events in the same row and lane', async () => {
+    await renderTimeline({
       events: [eventA, eventB],
       dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
     });
@@ -75,8 +76,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     expect(parseFloat(match![3])).to.be.greaterThan(parseFloat(match![1]));
   });
 
-  it('should render an orthogonal path with softened corners between two rows', () => {
-    renderTimeline({
+  it('should render an orthogonal path with softened corners between two rows', async () => {
+    await renderTimeline({
       events: [eventA, eventC],
       dependencies: [buildDependency('dep-1', 'event-a', 'event-c')],
     });
@@ -91,7 +92,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     expect(coordinates[coordinates.length - 1]).to.be.greaterThan(coordinates[1]);
   });
 
-  it('should render an S route when the successor starts before the predecessor ends', () => {
+  it('should render an S route when the successor starts before the predecessor ends', async () => {
     const earlyEvent = EventBuilder.new()
       .id('event-early')
       .title('Event early')
@@ -99,7 +100,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       .resource(resource2)
       .build();
 
-    renderTimeline({
+    await renderTimeline({
       events: [eventA, earlyEvent],
       dependencies: [buildDependency('dep-1', 'event-a', 'event-early')],
     });
@@ -147,7 +148,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       );
     }
 
-    it('should not reserve a lane for an occurrence hidden by the hour window', () => {
+    it('should not reserve a lane for an occurrence hidden by the hour window', async () => {
       // 21:00 → 22:00 overlaps the source in real time but is fully hidden: the
       // virtualized first row must keep its one-lane height.
       const hiddenOverlap = EventBuilder.new()
@@ -157,7 +158,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         .resource(resource1)
         .build();
 
-      renderTimeline({
+      await renderTimeline({
         events: [sourceEvent, hiddenOverlap, targetEvent],
         dependencies: [dependency],
         presetConfig: PRESET_CONFIG,
@@ -166,7 +167,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       expect(getArrowEndY()).to.be.closeTo(getTargetAnchorY(1), 0.01);
     });
 
-    it('should reserve a second lane for a visible overlapping occurrence', () => {
+    it('should reserve a second lane for a visible overlapping occurrence', async () => {
       // Sensitivity control for the previous test: a visible overlap must grow the
       // first row, proving the anchor really tracks its virtualized height.
       const visibleOverlap = EventBuilder.new()
@@ -176,7 +177,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         .resource(resource1)
         .build();
 
-      renderTimeline({
+      await renderTimeline({
         events: [sourceEvent, visibleOverlap, targetEvent],
         dependencies: [dependency],
         presetConfig: PRESET_CONFIG,
@@ -190,14 +191,14 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
   // row appearance of a multi-resource event once the rendering support lands. The
   // per-appearance fan-out is covered by the `computeDependencyArrows` unit tests.
 
-  it('should not render an arrow when an endpoint event has no resource', () => {
+  it('should not render an arrow when an endpoint event has no resource', async () => {
     const unresourcedEvent = EventBuilder.new()
       .id('event-unresourced')
       .title('Event unresourced')
       .singleDay('2025-07-03T11:00:00Z')
       .build();
 
-    renderTimeline({
+    await renderTimeline({
       events: [eventA, eventB, unresourcedEvent],
       dependencies: [
         buildDependency('dep-1', 'event-a', 'event-unresourced'),
@@ -210,7 +211,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     ]);
   });
 
-  it('should not render an arrow when an endpoint event is outside the visible range', () => {
+  it('should not render an arrow when an endpoint event is outside the visible range', async () => {
     const outOfRangeEvent = EventBuilder.new()
       .id('event-out-of-range')
       .title('Event out of range')
@@ -218,7 +219,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       .resource(resource2)
       .build();
 
-    renderTimeline({
+    await renderTimeline({
       events: [eventA, eventB, outOfRangeEvent],
       dependencies: [
         buildDependency('dep-1', 'event-a', 'event-out-of-range'),
@@ -231,8 +232,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     ]);
   });
 
-  it('should update the arrow when the predecessor event moves', () => {
-    const { store } = renderTimeline({
+  it('should update the arrow when the predecessor event moves', async () => {
+    const { store } = await renderTimeline({
       events: [eventA, eventB],
       dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
     });
@@ -256,8 +257,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     expect(updatedMatch[2]).to.equal(initialMatch[2]);
   });
 
-  it('should remove the arrow when the dependency is deleted', () => {
-    const { store } = renderTimeline({
+  it('should remove the arrow when the dependency is deleted', async () => {
+    const { store } = await renderTimeline({
       events: [eventA, eventB],
       dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
     });
@@ -272,8 +273,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     expect(document.querySelector('[data-dependency-arrows]')).to.equal(null);
   });
 
-  it('should hide the arrows overlay from assistive technology', () => {
-    renderTimeline({
+  it('should hide the arrows overlay from assistive technology', async () => {
+    await renderTimeline({
       events: [eventA, eventB],
       dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
     });
@@ -283,15 +284,15 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     ).to.equal('true');
   });
 
-  it('should render no overlay when there is no dependency', () => {
-    renderTimeline({ events: [eventA, eventB] });
+  it('should render no overlay when there is no dependency', async () => {
+    await renderTimeline({ events: [eventA, eventB] });
 
     expect(document.querySelector('[data-dependency-arrows]')).to.equal(null);
   });
 
   describe('successor accessible description', () => {
-    it('should describe the successor event with its predecessor titles', () => {
-      renderTimeline({
+    it('should describe the successor event with its predecessor titles', async () => {
+      await renderTimeline({
         events: [eventA, eventB, eventC],
         dependencies: [
           buildDependency('dep-1', 'event-a', 'event-b'),
@@ -304,8 +305,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       expect(successor).toHaveAccessibleDescription('Depends on Event A, Event C');
     });
 
-    it('should keep the predecessor titles out of the successor accessible name', () => {
-      renderTimeline({
+    it('should keep the predecessor titles out of the successor accessible name', async () => {
+      await renderTimeline({
         events: [eventA, eventB, eventC],
         dependencies: [
           buildDependency('dep-1', 'event-a', 'event-b'),
@@ -316,8 +317,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       expect(getEventElement('Event B')).toHaveAccessibleName('Resource 1 Event B');
     });
 
-    it('should not describe an event without predecessors', () => {
-      renderTimeline({
+    it('should not describe an event without predecessors', async () => {
+      await renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
       });
@@ -330,7 +331,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
   // CSS in JS: this pins the mirror against the layout the browser actually produces.
   describe.skipIf(isJSDOM)('anchor alignment', () => {
     it('should anchor the straight arrow on the vertical center of the source event', async () => {
-      renderTimeline({
+      await renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
       });
@@ -371,7 +372,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         .resource(resource1)
         .build();
 
-      renderTimeline({
+      await renderTimeline({
         events: [laterEventA, laterEventB],
         dependencies: [buildDependency('dep-1', 'event-later-a', 'event-later-b')],
       });
@@ -384,6 +385,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       act(() => {
         getGrid().scrollLeft = 2 * 24 * 64;
       });
+      await absorbObserverFrames();
       await waitFor(() => {
         expect(getArrowPaths().length).to.equal(1);
       });
@@ -391,6 +393,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       act(() => {
         getGrid().scrollLeft = 0;
       });
+      await absorbObserverFrames();
       await waitFor(() => {
         expect(getArrowPaths().length).to.equal(0);
       });
@@ -416,7 +419,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         .resource(manyResources[29])
         .build();
 
-      renderTimeline({
+      await renderTimeline({
         events: [firstRowEvent, lastRowEvent],
         resources: manyResources,
         dependencies: [buildDependency('dep-1', 'event-first-row', 'event-last-row')],
@@ -434,6 +437,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       act(() => {
         getGrid().scrollTop = 900;
       });
+      await absorbObserverFrames();
       await waitFor(() => {
         expect(getGrid().scrollTop).to.be.greaterThan(0);
       });
@@ -441,7 +445,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     });
 
     it('should not catch pointer events on the overlay', async () => {
-      renderTimeline({
+      await renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
       });
@@ -479,7 +483,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       .build();
 
     async function renderFarTimelineWithArrow() {
-      renderTimeline({
+      await renderTimeline({
         events: [farPredecessor, farSuccessor],
         dependencies: [buildDependency('dep-1', 'event-far-a', 'event-far-b')],
       });
@@ -496,15 +500,18 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
 
     async function withDrag(source: Element, during: () => Promise<void>) {
       fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      // The drag start (and end) perturb layout; keep the observer deliveries acted.
+      await absorbObserverFrames();
       try {
         await during();
       } finally {
         fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+        await absorbObserverFrames();
       }
     }
 
     it('should keep the pinned title column above the arrow hit-areas on horizontal scroll', async () => {
-      renderTimeline({
+      await renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
       });
@@ -526,6 +533,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         getGrid().scrollLeft =
           initialHitRect.left + initialHitRect.width / 2 - getTitleRect().right + 20;
       });
+      await absorbObserverFrames();
       await waitFor(() => {
         const hitRect = getHitPath().getBoundingClientRect();
         const titleRect = getTitleRect();
@@ -577,12 +585,14 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         act(() => {
           getGrid().scrollLeft = 2 * 24 * 64;
         });
+        await absorbObserverFrames();
         await waitFor(() => {
           expect(document.querySelector('[data-dependency-hit]')).to.equal(null);
         });
         act(() => {
           getGrid().scrollLeft = 0;
         });
+        await absorbObserverFrames();
         await waitFor(() => {
           expect(getHitPath()).not.to.equal(null);
         });

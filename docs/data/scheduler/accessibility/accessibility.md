@@ -83,6 +83,12 @@ Each day group in the agenda carries `aria-labelledby` pointing to its day heade
 
 The main calendar view area is rendered as a `<section>` element with a localized `aria-label` (default: `"Calendar content"`), providing a named landmark region that assistive technology users can navigate to directly.
 
+### Side panel
+
+The inline side panel (mini calendar, divider, and resources tree) is rendered as an `<aside>` element, exposing the `complementary` landmark role. The header toolbar's toggle button references it via `aria-controls` and reflects its open state with `aria-expanded`.
+
+While the panel is collapsed, it carries `aria-hidden="true"` so its content — including the mini calendar's focusable active day — is removed from the accessibility tree. The attribute is applied once the collapse animation has finished, and cleared when the panel reopens.
+
 ## Keyboard interactions
 
 :::info

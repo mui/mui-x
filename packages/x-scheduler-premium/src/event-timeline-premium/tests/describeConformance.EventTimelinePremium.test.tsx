@@ -8,9 +8,13 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { describeConformance } from 'test/utils/describeConformance';
+import { isJSDOM } from 'test/utils/skipIf';
 import { describe } from 'vitest';
 
-describe('<EventTimelinePremium /> - Describe Conformance', () => {
+// Conformance drives renders synchronously, so the ResizeObserver deliveries of the
+// mounted timeline cannot be absorbed (see `absorbObserverFrames`); its checks are
+// environment-agnostic, so jsdom-only loses nothing.
+describe.skipIf(!isJSDOM)('<EventTimelinePremium /> - Describe Conformance', () => {
   const { render } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
