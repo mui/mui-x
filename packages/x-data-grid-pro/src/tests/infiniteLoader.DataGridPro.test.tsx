@@ -1,15 +1,11 @@
 import * as React from 'react';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import { DataGridPro } from '@mui/x-data-grid-pro';
-import { spy, restore } from 'sinon';
 import { getColumnValues } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, onTestFinished, describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Infinite loader', () => {
-  afterEach(() => {
-    restore();
-  });
-
   const { render } = createRenderer();
 
   // Needs layout
@@ -24,7 +20,7 @@ describe('<DataGridPro /> - Infinite loader', () => {
         { id: 4, brand: 'Jordan' },
         { id: 5, brand: 'Reebok' },
       ];
-      const handleRowsScrollEnd = spy();
+      const handleRowsScrollEnd = vi.fn();
       function TestCase({ rows }: { rows: typeof baseRows }) {
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -44,7 +40,7 @@ describe('<DataGridPro /> - Infinite loader', () => {
       await act(async () => virtualScroller.scrollTo({ top: 12345, behavior: 'instant' }));
 
       await waitFor(() => {
-        expect(handleRowsScrollEnd.callCount).to.equal(1);
+        expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
       });
 
       await act(async () => {
@@ -60,12 +56,12 @@ describe('<DataGridPro /> - Infinite loader', () => {
         virtualScroller.dispatchEvent(new Event('scroll'));
       });
 
-      expect(handleRowsScrollEnd.callCount).to.equal(1);
+      expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
 
       await act(async () => virtualScroller.scrollTo({ top: 12345, behavior: 'instant' }));
 
       await waitFor(() => {
-        expect(handleRowsScrollEnd.callCount).to.equal(2);
+        expect(handleRowsScrollEnd.mock.calls.length).to.equal(2);
       });
     },
   );
@@ -83,7 +79,7 @@ describe('<DataGridPro /> - Infinite loader', () => {
         { id: 5, brand: 'Reebok' },
       ];
       const initialRows = [allRows[0]];
-      const getRow = spy((id) => {
+      const getRow = vi.fn((id) => {
         return allRows.find((row) => row.id === id);
       });
 
@@ -131,13 +127,12 @@ describe('<DataGridPro /> - Infinite loader', () => {
 
       const multiplier = 2; // `setRows` is called twice for each `handleRowsScrollEnd` call
       await waitFor(() => {
-        expect(getRow.callCount).to.equal(5 * multiplier);
+        expect(getRow.mock.calls.length).to.equal(5 * multiplier);
       });
 
-      const getRowCalls = getRow.getCalls();
-      for (let callIndex = 0; callIndex < getRowCalls.length; callIndex += multiplier) {
-        const call = getRowCalls[callIndex];
-        expect(call.returnValue?.id).to.equal(callIndex / multiplier + 1);
+      const getRowResults = getRow.mock.results;
+      for (let callIndex = 0; callIndex < getRowResults.length; callIndex += multiplier) {
+        expect(getRowResults[callIndex].value?.id).to.equal(callIndex / multiplier + 1);
       }
 
       await waitFor(() => {
@@ -162,8 +157,9 @@ describe('<DataGridPro /> - Infinite loader', () => {
         bottom: [{ id: 6, brand: 'Unbranded' }],
       };
 
-      const handleRowsScrollEnd = spy();
-      const observe = spy(window.IntersectionObserver.prototype, 'observe');
+      const handleRowsScrollEnd = vi.fn();
+      const observe = vi.spyOn(window.IntersectionObserver.prototype, 'observe');
+      onTestFinished(() => observe.mockRestore());
 
       function TestCase({
         rows,
@@ -187,12 +183,12 @@ describe('<DataGridPro /> - Infinite loader', () => {
       // eslint-disable-next-line testing-library/no-container
       const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
       // on the initial render, last row is not visible and the `observe` method is not called
-      expect(observe.callCount).to.equal(0);
+      expect(observe.mock.calls.length).to.equal(0);
       // arbitrary number to make sure that the bottom of the grid window is reached.
       await act(async () => virtualScroller.scrollTo({ top: 12345, behavior: 'instant' }));
       // observer was attached
       await waitFor(() => {
-        expect(observe.callCount).to.equal(1);
+        expect(observe.mock.calls.length).to.equal(1);
       });
     },
   );

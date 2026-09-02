@@ -1,0 +1,11 @@
+<DataGridPremium
+  featureDependencies={{ formula: formulaFeature }}
+  rows={rows}
+  columns={columns}
+  formulaFunctions={formulaFunctions}
+  rowSelection={false}
+  density="compact"
+  showCellVerticalBorder
+  showColumnVerticalBorder
+  disablePivoting
+/>

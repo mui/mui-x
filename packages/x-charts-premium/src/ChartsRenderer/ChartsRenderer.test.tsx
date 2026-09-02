@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
 import { screen } from '@mui/internal-test-utils';

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-codemod",
-  "version": "9.11.0",
+  "version": "9.12.0",
   "author": "MUI Team",
   "description": "Codemod scripts for MUI X.",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "jscodeshift"
   ],
   "scripts": {
-    "typescript": "tsgo -p tsconfig.json",
+    "typescript": "tsc -p tsconfig.json",
     "prebuild": "rimraf build",
     "build": "code-infra build --tsgo --bundle cjs --buildTypes false --ignore 'src/types.ts'"
   },
@@ -30,11 +30,11 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@mui/x-internals": "workspace:^",
     "jscodeshift": "catalog:",
     "yargs": "catalog:"
   },
   "devDependencies": {
+    "@mui/x-internals": "workspace:^",
     "@types/jscodeshift": "17.3.0",
     "dayjs": "catalog:",
     "moment-timezone": "catalog:",

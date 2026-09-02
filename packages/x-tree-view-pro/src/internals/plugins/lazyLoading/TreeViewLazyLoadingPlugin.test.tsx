@@ -1,7 +1,8 @@
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import * as React from 'react';
-import { spy } from 'sinon';
+import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
+import { vi, describe, it, expect } from 'vitest';
 import type { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 interface ItemType {
@@ -41,7 +42,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
     describe('interaction', () => {
       it('should keep the loading icon visible while loading when parameters references change', async () => {
         let resolveFetch: (() => void) | undefined;
-        const getTreeItems = spy(
+        const getTreeItems = vi.fn(
           () =>
             new Promise<ItemType[]>((resolve) => {
               resolveFetch = () => resolve([{ id: '1-1', childrenCount: 0 }]);
@@ -77,7 +78,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
           resolveFetch!();
         });
 
-        expect(getTreeItems.callCount).to.equal(1);
+        expect(getTreeItems.mock.calls.length).to.equal(1);
         expect(view.getItemIconContainer('1').querySelector('[role="progressbar"]')).to.equal(null);
       });
 
@@ -100,8 +101,8 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       });
 
       it('should not update the selection when expanding a selected item in single selection', async () => {
-        const onSelectedItemsChange = spy();
-        const onItemSelectionToggle = spy();
+        const onSelectedItemsChange = vi.fn();
+        const onItemSelectionToggle = vi.fn();
 
         const view = render({
           items: [{ id: '1', childrenCount: 1 }],
@@ -125,12 +126,12 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.isItemSelected('1')).to.equal(true);
-        expect(onSelectedItemsChange.callCount).to.equal(0);
-        expect(onItemSelectionToggle.callCount).to.equal(0);
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(0);
+        expect(onItemSelectionToggle.mock.calls.length).to.equal(0);
       });
 
       it('should not update the selection when expanding a selected item without descendants propagation', async () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           items: [{ id: '1', childrenCount: 1 }],
@@ -154,7 +155,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
-        expect(onSelectedItemsChange.callCount).to.equal(0);
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(0);
       });
 
       it('should propagate the selection to the lazy loaded children when expanding a selected item', async () => {
@@ -277,6 +278,36 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
       });
 
+      it('should render the error indicator on the item when its children fail to load', async () => {
+        const errorFetchData = async (): Promise<ItemType[]> => {
+          return new Promise((_, reject) => {
+            setTimeout(() => {
+              reject(new Error('Failed to fetch data'));
+            }, 0);
+          });
+        };
+
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: errorFetchData,
+          },
+        });
+
+        expect(
+          view.getItemIconContainer('1').querySelector(`.${treeItemClasses.errorIcon}`),
+        ).to.equal(null);
+
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+
+        expect(view.isItemExpanded('1')).to.equal(false);
+        expect(
+          view.getItemIconContainer('1').querySelector(`.${treeItemClasses.errorIcon}`),
+        ).not.to.equal(null);
+      });
+
       it('should load expanded items on mount', async () => {
         const view = render({
           items: [{ id: '1', childrenCount: 1 }],
@@ -384,7 +415,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
       it('should not apply a stale expand response over a newer forced refresh', async () => {
         const resolvers: Array<(items: ItemType[]) => void> = [];
-        const getTreeItems = spy(
+        const getTreeItems = vi.fn(
           () =>
             new Promise<ItemType[]>((resolve) => {
               resolvers.push(resolve);
@@ -400,13 +431,13 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
         // expanding item '1' starts the first (expand) fetch
         fireEvent.click(view.getItemContent('1'));
-        expect(getTreeItems.callCount).to.equal(1);
+        expect(getTreeItems.mock.calls.length).to.equal(1);
 
         // a forced refresh starts before the expand fetch resolves, starting a second fetch
         await act(async () => {
           view.apiRef.current.updateItemChildren('1');
         });
-        expect(getTreeItems.callCount).to.equal(2);
+        expect(getTreeItems.mock.calls.length).to.equal(2);
 
         // the newer (forced refresh) request resolves first with the fresh children
         await act(async () => {
@@ -426,19 +457,19 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.isItemExpanded('1')).to.equal(false);
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
-        expect(getTreeItems.callCount).to.equal(2);
+        expect(getTreeItems.mock.calls.length).to.equal(2);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', 'fresh']);
       });
 
       it('should still propagate selection to children when an expand fetch resolves before a racing refresh', async () => {
         const resolvers: Array<(items: ItemType[]) => void> = [];
-        const getTreeItems = spy(
+        const getTreeItems = vi.fn(
           () =>
             new Promise<ItemType[]>((resolve) => {
               resolvers.push(resolve);
             }),
         );
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           items: [{ id: '1', childrenCount: 1 }],
@@ -454,13 +485,13 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
         // expanding the already-selected item '1' starts the expand fetch
         fireEvent.click(view.getItemContent('1'));
-        expect(getTreeItems.callCount).to.equal(1);
+        expect(getTreeItems.mock.calls.length).to.equal(1);
 
         // a forced refresh starts before the expand fetch resolves
         await act(async () => {
           view.apiRef.current.updateItemChildren('1');
         });
-        expect(getTreeItems.callCount).to.equal(2);
+        expect(getTreeItems.mock.calls.length).to.equal(2);
 
         // the expand fetch resolves first, then the refresh resolves with the same children
         await act(async () => {
@@ -472,7 +503,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
         // the child loaded for the selected parent must be selected through descendant propagation
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.include('1-1');
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.include('1-1');
       });
 
       it('should use the data from props.items on mount', () => {
@@ -513,7 +544,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       });
 
       it('should not refetch children from props.items when re-expanding a preloaded item', async () => {
-        const getTreeItems = spy(mockFetchData);
+        const getTreeItems = vi.fn(mockFetchData);
         const view = render({
           items: [{ id: '1', childrenCount: 1, children: [{ id: '1-1' }] }],
           defaultExpandedItems: ['1'],
@@ -532,13 +563,13 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
 
-        expect(getTreeItems.callCount).to.equal(0);
+        expect(getTreeItems.mock.calls.length).to.equal(0);
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
 
       it('should still fetch a genuinely lazy sibling that ships no inline children', async () => {
-        const getTreeItems = spy(mockFetchData);
+        const getTreeItems = vi.fn(mockFetchData);
         const view = render({
           items: [
             { id: '1', childrenCount: 1, children: [{ id: '1-1' }] },
@@ -557,14 +588,14 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         fireEvent.click(view.getItemContent('2'));
         await awaitMockFetch();
 
-        expect(getTreeItems.callCount).to.equal(1);
-        expect(getTreeItems.lastCall.firstArg).to.equal('2');
+        expect(getTreeItems.mock.calls.length).to.equal(1);
+        expect(getTreeItems.mock.lastCall?.[0]).to.equal('2');
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '2', '2-1']);
       });
     });
     describe('onItemsLazyLoaded', () => {
       it('should call onItemsLazyLoaded with (items, null) when root items are fetched', async () => {
-        const onItemsLazyLoaded = spy();
+        const onItemsLazyLoaded = vi.fn();
         render({
           items: [],
           dataSource: {
@@ -575,7 +606,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         });
 
         await awaitMockFetch();
-        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal({
+        expect(onItemsLazyLoaded.mock.lastCall?.[0]).to.deep.equal({
           items: [{ id: '1', childrenCount: 1 }],
           parentId: null,
           isCacheHit: false,
@@ -583,7 +614,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       });
 
       it('should call onItemsLazyLoaded with (items, parentId) when child items are fetched', async () => {
-        const onItemsLazyLoaded = spy();
+        const onItemsLazyLoaded = vi.fn();
         const view = render({
           items: [{ id: '1', childrenCount: 1 }],
           dataSource: {
@@ -593,12 +624,12 @@ describeTreeView<RichTreeViewProStore<any, any>>(
           onItemsLazyLoaded,
         });
 
-        expect(onItemsLazyLoaded.callCount).to.equal(0);
+        expect(onItemsLazyLoaded.mock.calls.length).to.equal(0);
 
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
-        expect(onItemsLazyLoaded.callCount).to.equal(1);
-        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal({
+        expect(onItemsLazyLoaded.mock.calls.length).to.equal(1);
+        expect(onItemsLazyLoaded.mock.lastCall?.[0]).to.deep.equal({
           items: [{ id: '1-1', childrenCount: 1 }],
           parentId: '1',
           isCacheHit: false,
@@ -606,7 +637,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       });
 
       it('should call onItemsLazyLoaded on cache hit when the same item is expanded again', async () => {
-        const onItemsLazyLoaded = spy();
+        const onItemsLazyLoaded = vi.fn();
         const view = render({
           items: [{ id: '1', childrenCount: 1 }],
           dataSource: {
@@ -619,21 +650,21 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         // First expansion — server fetch
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
-        expect(onItemsLazyLoaded.callCount).to.equal(1);
-        expect(onItemsLazyLoaded.lastCall.args[0].isCacheHit).to.equal(false);
+        expect(onItemsLazyLoaded.mock.calls.length).to.equal(1);
+        expect(onItemsLazyLoaded.mock.lastCall?.[0].isCacheHit).to.equal(false);
 
         // Collapse
         fireEvent.click(view.getItemContent('1'));
         // Second expansion — cache hit
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
-        expect(onItemsLazyLoaded.callCount).to.equal(2);
-        expect(onItemsLazyLoaded.lastCall.args[0].parentId).to.equal('1');
-        expect(onItemsLazyLoaded.lastCall.args[0].isCacheHit).to.equal(true);
+        expect(onItemsLazyLoaded.mock.calls.length).to.equal(2);
+        expect(onItemsLazyLoaded.mock.lastCall?.[0].parentId).to.equal('1');
+        expect(onItemsLazyLoaded.mock.lastCall?.[0].isCacheHit).to.equal(true);
       });
 
       it('should call onItemsLazyLoaded with isCacheHit=true when re-expanding a preloaded item', async () => {
-        const onItemsLazyLoaded = spy();
+        const onItemsLazyLoaded = vi.fn();
         const view = render({
           items: [{ id: '1', childrenCount: 1, children: [{ id: '1-1' }] }],
           defaultExpandedItems: ['1'],
@@ -645,20 +676,20 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         });
 
         // Children come from props.items, so nothing loads on mount.
-        expect(onItemsLazyLoaded.callCount).to.equal(0);
+        expect(onItemsLazyLoaded.mock.calls.length).to.equal(0);
 
         // Seeded cache makes re-expanding a cache hit, not a fetch.
         fireEvent.click(view.getItemContent('1'));
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
 
-        expect(onItemsLazyLoaded.callCount).to.equal(1);
-        expect(onItemsLazyLoaded.lastCall.args[0].parentId).to.equal('1');
-        expect(onItemsLazyLoaded.lastCall.args[0].isCacheHit).to.equal(true);
+        expect(onItemsLazyLoaded.mock.calls.length).to.equal(1);
+        expect(onItemsLazyLoaded.mock.lastCall?.[0].parentId).to.equal('1');
+        expect(onItemsLazyLoaded.mock.lastCall?.[0].isCacheHit).to.equal(true);
       });
 
       it('should call onItemsLazyLoaded on mount when items=[] and root items are auto-fetched', async () => {
-        const onItemsLazyLoaded = spy();
+        const onItemsLazyLoaded = vi.fn();
         render({
           items: [],
           dataSource: {
@@ -669,8 +700,8 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         });
 
         await awaitMockFetch();
-        expect(onItemsLazyLoaded.callCount).to.equal(1);
-        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal({
+        expect(onItemsLazyLoaded.mock.calls.length).to.equal(1);
+        expect(onItemsLazyLoaded.mock.lastCall?.[0]).to.deep.equal({
           items: [{ id: '1', childrenCount: 1 }],
           parentId: null,
           isCacheHit: false,
@@ -678,7 +709,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       });
 
       it('should not call onItemsLazyLoaded when getTreeItems throws', async () => {
-        const onItemsLazyLoaded = spy();
+        const onItemsLazyLoaded = vi.fn();
         const errorFetchData = async (): Promise<ItemType[]> => {
           return new Promise((_, reject) => {
             setTimeout(() => reject(new Error('Failed')), 0);
@@ -696,13 +727,13 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
-        expect(onItemsLazyLoaded.callCount).to.equal(0);
+        expect(onItemsLazyLoaded.mock.calls.length).to.equal(0);
       });
 
       it('should pre-cache inline nested children so expanding them requires no extra fetch', async () => {
         let fetchCount = 0;
         let view: ReturnType<typeof render>;
-        const onItemsLazyLoaded = spy(({ items }) => {
+        const onItemsLazyLoaded = vi.fn(({ items }) => {
           items.forEach((item) => {
             if (item.children && item.children.length > 0) {
               view.apiRef.current.setItemExpansion({
@@ -750,7 +781,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.isItemExpanded('1-1')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '1-1-1']);
         // onItemsLazyLoaded should fire exactly once — not cascade for auto-expanded children
-        expect(onItemsLazyLoaded.callCount).to.equal(1);
+        expect(onItemsLazyLoaded.mock.calls.length).to.equal(1);
       });
     });
 
@@ -773,7 +804,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
       });
       it('should call onItemsLazyLoaded with isCacheHit=false when updateItemChildren is called', async () => {
-        const onItemsLazyLoaded = spy();
+        const onItemsLazyLoaded = vi.fn();
         const view = render({
           items: [{ id: '1', childrenCount: 1 }],
           dataSource: {
@@ -788,8 +819,8 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         });
         await awaitMockFetch();
 
-        expect(onItemsLazyLoaded.callCount).to.equal(1);
-        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal({
+        expect(onItemsLazyLoaded.mock.calls.length).to.equal(1);
+        expect(onItemsLazyLoaded.mock.lastCall?.[0]).to.deep.equal({
           items: [{ id: '1-1', childrenCount: 1 }],
           parentId: '1',
           isCacheHit: false,

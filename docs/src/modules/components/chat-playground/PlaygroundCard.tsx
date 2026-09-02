@@ -121,7 +121,7 @@ export interface PlaygroundCardProps {
 }
 
 const DEFAULT_PACKAGE_NAME = '@mui/x-chat';
-const docsDarkModeSelector = ':where([data-mui-color-scheme="dark"], .mode-dark) &';
+const docsDarkModeSelector = '*:where([data-mui-color-scheme="dark"], .mode-dark) &';
 
 const defaultRegistryMetadata: Record<string, PlaygroundCardRegistryMetadata> = {
   ChatBox: {

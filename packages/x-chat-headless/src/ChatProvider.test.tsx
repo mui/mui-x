@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { act, renderHook } from '@mui/internal-test-utils';
 import { useStore } from '@mui/x-internals/store';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { spy } from 'sinon';
 import type { ChatAdapter } from './adapters';
 import { useChatRuntimeContext } from './internals/useChatRuntimeContext';
 import { useChatStore } from './hooks';
@@ -139,10 +138,10 @@ describe('ChatProvider', () => {
 
   it('creates the store once, resyncs controlled props, and exposes runtime context values', () => {
     const adapter = createAdapter();
-    const onToolCall = spy();
-    const onFinish = spy();
-    const onData = spy();
-    const onError = spy();
+    const onToolCall = vi.fn();
+    const onFinish = vi.fn();
+    const onData = vi.fn();
+    const onError = vi.fn();
     const partRenderers: ChatPartRendererMap = {
       text: ({ part }) => part.text,
     };
@@ -214,10 +213,10 @@ describe('ChatProvider', () => {
   });
 
   it('calls uncontrolled onChange callbacks for internal store mutations', () => {
-    const onMessagesChange = spy();
-    const onConversationsChange = spy();
-    const onActiveConversationChange = spy();
-    const onComposerValueChange = spy();
+    const onMessagesChange = vi.fn();
+    const onConversationsChange = vi.fn();
+    const onActiveConversationChange = vi.fn();
+    const onComposerValueChange = vi.fn();
     const { Wrapper } = createProviderWrapper({
       adapter: createAdapter(),
       onMessagesChange,
@@ -234,22 +233,22 @@ describe('ChatProvider', () => {
       result.current.setComposerValue('Draft one');
     });
 
-    expect(onMessagesChange.callCount).toBe(2);
-    expect(onMessagesChange.getCall(0).args[0]).toEqual([message1]);
-    expect(onMessagesChange.lastCall.args[0]).toEqual([]);
-    expect(onConversationsChange.callCount).toBe(1);
-    expect(onConversationsChange.lastCall.args[0]).toEqual([conversation1]);
-    expect(onActiveConversationChange.callCount).toBe(1);
-    expect(onActiveConversationChange.lastCall.args[0]).toBe('c1');
-    expect(onComposerValueChange.callCount).toBe(1);
-    expect(onComposerValueChange.lastCall.args[0]).toBe('Draft one');
+    expect(onMessagesChange.mock.calls.length).toBe(2);
+    expect(onMessagesChange.mock.calls[0][0]).toEqual([message1]);
+    expect(onMessagesChange.mock.lastCall?.[0]).toEqual([]);
+    expect(onConversationsChange.mock.calls.length).toBe(1);
+    expect(onConversationsChange.mock.lastCall?.[0]).toEqual([conversation1]);
+    expect(onActiveConversationChange.mock.calls.length).toBe(1);
+    expect(onActiveConversationChange.mock.lastCall?.[0]).toBe('c1');
+    expect(onComposerValueChange.mock.calls.length).toBe(1);
+    expect(onComposerValueChange.mock.lastCall?.[0]).toBe('Draft one');
   });
 
   it('resyncs controlled models after internal mutations and keeps the parent values authoritative', () => {
-    const onMessagesChange = spy();
-    const onConversationsChange = spy();
-    const onActiveConversationChange = spy();
-    const onComposerValueChange = spy();
+    const onMessagesChange = vi.fn();
+    const onConversationsChange = vi.fn();
+    const onActiveConversationChange = vi.fn();
+    const onComposerValueChange = vi.fn();
     const controlledMessages = [message1];
     const controlledConversations = [conversation1];
     const { Wrapper, setProps } = createProviderWrapper({
@@ -272,10 +271,10 @@ describe('ChatProvider', () => {
       result.current.setComposerValue('Draft two');
     });
 
-    expect(onMessagesChange.lastCall.args[0]).toEqual([message1, message2]);
-    expect(onConversationsChange.lastCall.args[0]).toEqual([conversation2]);
-    expect(onActiveConversationChange.lastCall.args[0]).toBe('c2');
-    expect(onComposerValueChange.lastCall.args[0]).toBe('Draft two');
+    expect(onMessagesChange.mock.lastCall?.[0]).toEqual([message1, message2]);
+    expect(onConversationsChange.mock.lastCall?.[0]).toEqual([conversation2]);
+    expect(onActiveConversationChange.mock.lastCall?.[0]).toBe('c2');
+    expect(onComposerValueChange.mock.lastCall?.[0]).toBe('Draft two');
 
     setProps({
       adapter: createAdapter(),
