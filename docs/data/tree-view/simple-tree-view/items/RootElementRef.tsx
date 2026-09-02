@@ -2,23 +2,11 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
-
-const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
-  {
-    id: 'grid',
-    label: 'Data Grid',
-    children: [
-      { id: 'grid-community', label: '@mui/x-data-grid' },
-      { id: 'grid-pro', label: '@mui/x-data-grid-pro' },
-    ],
-  },
-  { id: 'pickers', label: 'Date and Time Pickers' },
-];
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 export default function RootElementRef() {
-  // `RichTreeView` forwards its `ref` to the root `<ul>` element
+  // `SimpleTreeView` forwards its `ref` to the root `<ul>` element
   const rootRef = React.useRef<HTMLUListElement>(null);
 
   const handleHighlight = () => {
@@ -39,11 +27,13 @@ export default function RootElementRef() {
         <Button onClick={handleHighlight}>Highlight the root element</Button>
       </div>
       <Box sx={{ minWidth: 250 }}>
-        <RichTreeView
-          ref={rootRef}
-          items={MUI_X_PRODUCTS}
-          defaultExpandedItems={['grid']}
-        />
+        <SimpleTreeView ref={rootRef} defaultExpandedItems={['grid']}>
+          <TreeItem itemId="grid" label="Data Grid">
+            <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
+            <TreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
+          </TreeItem>
+          <TreeItem itemId="pickers" label="Date and Time Pickers" />
+        </SimpleTreeView>
       </Box>
     </Stack>
   );

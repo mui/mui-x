@@ -86,6 +86,13 @@ If not provided, no height restriction is applied to the tree item content eleme
 
 {{"demo": "ItemHeight.js"}}
 
+## Get the root DOM element
+
+`SimpleTreeView` forwards its `ref` to the root `<ul>` element.
+Pass a regular React `ref` to the component to access this element:
+
+{{"demo": "RootElementRef.js", "defaultCodeOpen": false}}
+
 ## Imperative API
 
 To use the `apiRef` object, you need to initialize it using the `useSimpleTreeViewApiRef()` hook as follows:
