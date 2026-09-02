@@ -154,8 +154,8 @@ catalogs:
       specifier: ^1.51.0
       version: 1.51.0
     execa:
-      specifier: 9.6.1
-      version: 9.6.1
+      specifier: 10.0.1
+      version: 10.0.1
     jscodeshift:
       specifier: 17.4.0
       version: 17.4.0
@@ -398,7 +398,7 @@ importers:
         version: link:packages/eslint-plugin-mui-x
       execa:
         specifier: 'catalog:'
-        version: 9.6.1
+        version: 10.0.1
       globby:
         specifier: 16.2.4
         version: 16.2.4
@@ -1103,7 +1103,7 @@ importers:
         version: 5.0.3
       execa:
         specifier: 'catalog:'
-        version: 9.6.1
+        version: 10.0.1
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
