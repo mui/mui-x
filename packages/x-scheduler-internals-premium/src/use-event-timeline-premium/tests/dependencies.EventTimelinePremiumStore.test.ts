@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { vi, describe, it, expect } from 'vitest';
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
@@ -92,7 +91,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
   describe('method: addDependency', () => {
     it('should emit onDependenciesChange with the new dependency appended', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         {
           events: [eventA, eventB, eventC],
@@ -110,8 +109,8 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
 
       expect(result.status).to.equal('added');
-      expect(onDependenciesChange.calledOnce).to.equal(true);
-      const newDependencies = onDependenciesChange.lastCall.firstArg;
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      const newDependencies = onDependenciesChange.mock.lastCall?.[0];
       expect(newDependencies).to.have.length(2);
       expect(newDependencies[1]).to.deep.include({
         source: 'event-b',
@@ -123,7 +122,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should generate a distinct id for each added dependency and echo it back to the caller', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         {
           events: [eventA, eventB, eventC],
@@ -156,15 +155,15 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       // controlled prop: each call re-reads the same original `[DEP_AB]` list, so both
       // emissions append the new dependency at index 1.
-      const firstEmitted = onDependenciesChange.firstCall.firstArg;
+      const firstEmitted = onDependenciesChange.mock.calls[0][0];
       expect(firstEmitted[1].id).to.equal(firstResult.id);
 
-      const secondEmitted = onDependenciesChange.secondCall.firstArg;
+      const secondEmitted = onDependenciesChange.mock.calls[1][0];
       expect(secondEmitted[1].id).to.equal(secondResult.id);
     });
 
     it('should reject a dependency referencing a recurring event', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         {
           events: [eventA, recurringEvent],
@@ -186,7 +185,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         reason: 'recurringEvent',
         eventId: 'event-r',
       });
-      expect(onDependenciesChange.called).to.equal(false);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should reject a dependency referencing an unknown event', () => {
@@ -203,7 +202,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should reject a dependency referencing an event not yet loaded, even with a dataSource', () => {
       const dataSource = {
-        getEvents: spy(async () => []),
+        getEvents: vi.fn(async () => []),
         persistEvents: noopPersistEvents,
       };
       const store = new EventTimelinePremiumStore(
@@ -225,7 +224,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should reject a dependency that duplicates an existing one', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
         adapter,
@@ -242,11 +241,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         reason: 'duplicateDependency',
         dependencyId: 'dep-1',
       });
-      expect(onDependenciesChange.called).to.equal(false);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should reject a self-referencing dependency', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
         adapter,
@@ -259,11 +258,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
 
       expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
-      expect(onDependenciesChange.called).to.equal(false);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should reject a dependency closing a direct cycle', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
         adapter,
@@ -276,11 +275,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
 
       expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
-      expect(onDependenciesChange.called).to.equal(false);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should reject a dependency closing a transitive cycle', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         {
           events: [eventA, eventB, eventC],
@@ -301,14 +300,14 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
 
       expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
-      expect(onDependenciesChange.called).to.equal(false);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should reject a dependency whose cycle closes through a middle outgoing branch', () => {
       // `event-a` has three outgoing edges and only the middle one reaches the proposed
       // source: a grouping that retained a single branch per event — whether the first
       // or the last — would admit the cycle.
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         {
           events: [eventA, eventB, eventC, eventD, eventE],
@@ -331,13 +330,13 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
 
       expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
-      expect(onDependenciesChange.called).to.equal(false);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should accept a dependency whose walk traverses a diamond', () => {
       // Reconvergence is not a cycle: the walk from `event-a` reaches `event-d` through
       // both branches (revisit, not cycle) and must still accept the new edge.
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         {
           events: [eventA, eventB, eventC, eventD, eventE],
@@ -360,13 +359,13 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
 
       expect(result.status).to.equal('added');
-      expect(onDependenciesChange.calledOnce).to.equal(true);
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
     });
 
     it('should accept a dependency whose walk enters a pre-existing cycle', () => {
       // The `visited` set is what terminates the walk here: the data already contains
       // the cycle b→c→b, and the added edge never reaches it back.
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         {
           events: [eventA, eventB, eventC],
@@ -387,13 +386,13 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
 
       expect(result.status).to.equal('added');
-      expect(onDependenciesChange.calledOnce).to.equal(true);
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
     });
 
     it('should report a duplicate before a cycle when the data already contains one', () => {
       // A controlled `dependencies` value can arrive already cyclic. Re-adding an
       // existing pair must report the duplicate (its arrow gets selected), not the cycle.
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         {
           ...DEFAULT_PARAMS,
@@ -417,14 +416,14 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         reason: 'duplicateDependency',
         dependencyId: 'dep-1',
       });
-      expect(onDependenciesChange.called).to.equal(false);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should ignore a dependency shadowed by a duplicate id', () => {
       // With duplicate ids only the last entry per id exists for the feature (last
       // wins): a shadowed edge is invisible and undeletable, so it must not reject
       // an add as cyclic either.
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const createStore = () =>
         new EventTimelinePremiumStore(
           {
@@ -451,13 +450,13 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
 
       expect(result.status).to.equal('added');
-      expect(onDependenciesChange.calledOnce).to.equal(true);
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
     });
 
     it('should reject a cycle running through an inactive endpoint', () => {
       // The guard walks the full dependency list: this cycle is dormant (recurring
       // endpoint) but becomes live if the endpoint reactivates.
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const createStore = () =>
         new EventTimelinePremiumStore(
           {
@@ -486,7 +485,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
 
       expect(result).to.deep.equal({ status: 'rejected', reason: 'cyclicDependency' });
-      expect(onDependenciesChange.called).to.equal(false);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should reject a cycle running through a not-yet-loaded endpoint', async () => {
@@ -529,7 +528,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     it('should not detect a cycle closed by a dependency added earlier in the same update cycle', () => {
       // Same known limitation as the duplicate leg below: the guard reads the
       // controlled `dependencyModelList`, which has not round-tripped yet.
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
         adapter,
@@ -553,7 +552,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     it('should not detect a duplicate added earlier in the same update cycle', () => {
       // The duplicate and cycle guards read the controlled `dependencyModelList`, which
       // only updates when the consumer round-trips the prop — same known limitation.
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
         adapter,
@@ -572,13 +571,13 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       expect(firstResult.status).to.equal('added');
       expect(secondResult.status).to.equal('added');
-      expect(onDependenciesChange.calledTwice).to.equal(true);
+      expect(onDependenciesChange.mock.calls.length).to.equal(2);
     });
   });
 
   describe('method: deleteDependency', () => {
     it('should emit onDependenciesChange without the deleted dependency', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
         adapter,
@@ -586,12 +585,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       store.deleteDependency('dep-1');
 
-      expect(onDependenciesChange.calledOnce).to.equal(true);
-      expect(onDependenciesChange.lastCall.firstArg).to.deep.equal([]);
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([]);
     });
 
     it('should not emit onDependenciesChange when the dependency does not exist', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
         adapter,
@@ -601,11 +600,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // deletion with a side effect (clearing the selection) act on a no-op.
       expect(store.deleteDependency('nope')).to.equal(false);
 
-      expect(onDependenciesChange.called).to.equal(false);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should emit onDependenciesChange with only the other dependency when one of two is deleted', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const DEP_BA: SchedulerDependency = {
         id: 'dep-2',
         source: 'event-b',
@@ -619,14 +618,14 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       store.deleteDependency('dep-1');
 
-      expect(onDependenciesChange.calledOnce).to.equal(true);
-      expect(onDependenciesChange.lastCall.firstArg).to.deep.equal([DEP_BA]);
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([DEP_BA]);
     });
 
     it('should remove every dependency sharing the deleted id', () => {
       // Duplicate ids are a consumer data error (dev-warned at ingestion); the id is the
       // identity, so deleting it removes all of its entries.
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const createStore = () =>
         new EventTimelinePremiumStore(
           {
@@ -647,15 +646,15 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       store!.deleteDependency('dup');
 
-      expect(onDependenciesChange.calledOnce).to.equal(true);
-      expect(onDependenciesChange.lastCall.firstArg).to.deep.equal([]);
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([]);
     });
   });
 
   describe('referential integrity', () => {
     it('should remove the dependencies of a deleted event in the same update', () => {
-      const onDependenciesChange = spy();
-      const onEventsChange = spy();
+      const onDependenciesChange = vi.fn();
+      const onEventsChange = vi.fn();
       const eventC = EventBuilder.new().id('event-c').build();
       const DEP_BC: SchedulerDependency = {
         id: 'dep-2',
@@ -677,15 +676,17 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       store.deleteEvent('event-a');
 
       // dep-1 references event-a (as source) and is dropped; dep-2 survives
-      expect(onDependenciesChange.calledOnce).to.equal(true);
-      expect(onDependenciesChange.lastCall.firstArg).to.deep.equal([DEP_BC]);
-      expect(onEventsChange.calledOnce).to.equal(true);
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([DEP_BC]);
+      expect(onEventsChange.mock.calls.length).to.equal(1);
       // both callbacks fired synchronously in the same mutation
-      expect(onDependenciesChange.calledBefore(onEventsChange)).to.equal(true);
+      expect(onDependenciesChange.mock.invocationCallOrder[0]).to.be.lessThan(
+        onEventsChange.mock.invocationCallOrder[0],
+      );
     });
 
     it('should drop every dependency touching the deleted event in a single emission', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const eventC = EventBuilder.new().id('event-c').build();
       const DEP_AC: SchedulerDependency = {
         id: 'dep-2',
@@ -714,12 +715,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       // dep-1 (a→b) and dep-2 (a→c) both touch event-a and are dropped in the same pass;
       // dep-3 (b→c) survives.
-      expect(onDependenciesChange.calledOnce).to.equal(true);
-      expect(onDependenciesChange.lastCall.firstArg).to.deep.equal([DEP_BC]);
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([DEP_BC]);
     });
 
     it('should not emit onDependenciesChange when the deleted event has no dependencies', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const eventC = EventBuilder.new().id('event-c').build();
       const store = new EventTimelinePremiumStore(
         {
@@ -734,11 +735,11 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       store.deleteEvent('event-c');
 
-      expect(onDependenciesChange.called).to.equal(false);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should remove a dependency when the deleted event is only referenced as its target', () => {
-      const onDependenciesChange = spy();
+      const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         {
           ...DEFAULT_PARAMS,
@@ -751,8 +752,8 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       store.deleteEvent('event-b');
 
-      expect(onDependenciesChange.calledOnce).to.equal(true);
-      expect(onDependenciesChange.lastCall.firstArg).to.deep.equal([]);
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([]);
     });
   });
 
@@ -891,7 +892,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should not warn about unknown events when a dataSource is provided', () => {
       const dataSource = {
-        getEvents: spy(async () => []),
+        getEvents: vi.fn(async () => []),
         persistEvents: noopPersistEvents,
       };
 
@@ -918,7 +919,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       vi.useFakeTimers();
       try {
         const dataSource = {
-          getEvents: spy(async () => [eventA, recurringEvent]),
+          getEvents: vi.fn(async () => [eventA, recurringEvent]),
           persistEvents: noopPersistEvents,
         };
         const params = { events: [], resources: TEST_RESOURCES, dataSource };
