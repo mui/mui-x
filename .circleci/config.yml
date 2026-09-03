@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/99c21315b55b03f58d832f7854e628da68343a10/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/ecaf36c894f9e8bc68959b23bf33e45aefeb319c/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -81,7 +81,8 @@ commands:
         default: << pipeline.parameters.react-version >>
     steps:
       - code-infra/install-deps:
-          package-overrides: react@<< parameters.react-version >> @mui/material@<< pipeline.parameters.material-ui-version >>
+          react-version: << parameters.react-version >>
+          package-overrides: '@mui/material@<< pipeline.parameters.material-ui-version >>'
 
 jobs:
   test_unit:
@@ -161,33 +162,13 @@ jobs:
       - checkout
       - install-deps
       - code-infra/check-static-changes
-      - run:
-          name: Generate PropTypes
+      - code-infra/check-generated:
           command: pnpm proptypes
-          environment:
-            NODE_OPTIONS: --max-old-space-size=3584
-      - run:
-          name: '`pnpm proptypes` changes committed?'
-          command: git add -A && git diff --exit-code --staged
-      - run:
-          name: Generate the documentation
+      - code-infra/check-generated:
           command: pnpm docs:api
-          environment:
-            NODE_OPTIONS: --max-old-space-size=3584
-      - run:
-          name: '`pnpm docs:api` changes committed?'
-          command: git add -A && git diff --exit-code --staged
-      - run:
-          name: '`pnpm extract-error-codes` changes committed?'
-          command: |
-            pnpm extract-error-codes
-            git add -A && git diff --exit-code --staged
-      - run:
-          name: Sync locale files
+      - code-infra/extract-error-codes
+      - code-infra/check-generated:
           command: pnpm l10n
-      - run:
-          name: '`pnpm l10n` changes committed?'
-          command: git add -A && git diff --exit-code --staged
       - run:
           name: 'No dynamic date library import in the Pickers built types?'
           command: |
@@ -198,23 +179,17 @@ jobs:
             else
                 exit 0
             fi
-      - run:
-          name: '`pnpm generate:exports` was run?'
-          command: |
-            pnpm generate:exports
-            git add -A && git diff --exit-code --staged
+      - code-infra/check-generated:
+          command: pnpm generate:exports
   test_types:
     <<: *default-job
     resource_class: xlarge.gen2
     steps:
       - checkout
       - install-deps
-      - run:
-          name: Transpile TypeScript demos
+      - code-infra/check-generated:
           command: pnpm docs:typescript:formatted --disable-cache
-      - run:
-          name: '`pnpm docs:typescript:formatted` changes committed?'
-          command: git add -A && git diff --exit-code --staged docs/src docs/data
+          pathspec: docs/src docs/data
       - run:
           name: Tests TypeScript definitions
           command: pnpm typescript:ci
@@ -275,9 +250,7 @@ jobs:
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
-      - run:
-          name: Upload screenshots to Argos CI
-          command: pnpm test:argos
+      - code-infra/argos-push
   test_charts_benchmark:
     <<: *default-job
     executor:
