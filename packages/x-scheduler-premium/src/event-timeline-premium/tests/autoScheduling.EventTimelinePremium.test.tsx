@@ -30,10 +30,10 @@ const eventB = EventBuilder.new()
   .build();
 
 describe('<EventTimelinePremium /> auto-scheduling', () => {
-  const { render } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
-  const { renderTimeline } = createDependencyTimelineRenderer(render);
+  const { renderTimeline } = createDependencyTimelineRenderer(renderSettled);
 
   it('should push the successor when the predecessor is dropped past it', async () => {
     const { store } = await renderTimeline({

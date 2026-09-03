@@ -27,7 +27,7 @@
     "treeview"
   ],
   "scripts": {
-    "typescript": "tsgo -p tsconfig.json",
+    "typescript": "tsc -p tsconfig.json",
     "build": "code-infra build --tsgo",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
@@ -41,10 +41,8 @@
     "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:^",
-    "@types/react-transition-group": "catalog:",
     "clsx": "catalog:",
-    "prop-types": "catalog:",
-    "react-transition-group": "catalog:"
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",

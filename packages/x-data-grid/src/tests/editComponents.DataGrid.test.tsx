@@ -49,7 +49,7 @@ describe('<DataGrid /> - Edit components', () => {
       await user.clear(textarea);
       await user.type(textarea, 'New text');
 
-      expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
+      expect(spiedSetEditCellValue.mock.lastCall?.[0]).to.deep.equal({
         id: 0,
         field: 'bio',
         value: 'New text',

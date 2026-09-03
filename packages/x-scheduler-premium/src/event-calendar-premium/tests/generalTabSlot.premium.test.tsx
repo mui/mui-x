@@ -47,7 +47,7 @@ const slotProps: SchedulerSlotProps = {
  * down to it. The compact views open the drawer, the others the dialog; both render the same form.
  */
 describe('eventDialogGeneralTab slot - premium surfaces', () => {
-  const { render } = createSchedulerRenderer({ clockConfig: visibleDate });
+  const { renderSettled } = createSchedulerRenderer({ clockConfig: visibleDate });
 
   const surfaces = [
     ['EventCalendarPremium', EventCalendarPremium, false],
@@ -62,8 +62,8 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
   ] as const;
 
   surfaces.forEach(([name, Component, isCompact]) => {
-    it(`should forward the eventDialogGeneralTab slot and its slot props from <${name} />`, () => {
-      render(
+    it(`should forward the eventDialogGeneralTab slot and its slot props from <${name} />`, async () => {
+      await renderSettled(
         <Component
           events={[event]}
           resources={[engineering]}
@@ -84,8 +84,8 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
     });
   });
 
-  it('should keep the recurrence tab working when the general tab is replaced by the slot', () => {
-    render(
+  it('should keep the recurrence tab working when the general tab is replaced by the slot', async () => {
+    await renderSettled(
       <EventCalendarPremium
         events={[event]}
         resources={[engineering]}

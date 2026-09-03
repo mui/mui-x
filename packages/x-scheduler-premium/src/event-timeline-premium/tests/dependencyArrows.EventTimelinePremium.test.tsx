@@ -1,6 +1,7 @@
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
+  absorbObserverFrames,
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -12,7 +13,6 @@ import { describe, it, expect } from 'vitest';
 import { getEventsCellLaneMetrics, getRowHeightForLaneCount } from '../content/rowGeometry';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 import {
-  absorbObserverFrames,
   buildDependency,
   createDependencyTimelineRenderer,
   getArrowPaths,
@@ -41,10 +41,10 @@ const eventC = EventBuilder.new()
   .build();
 
 describe('<EventTimelinePremium /> dependency arrows', () => {
-  const { render } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
-  const { renderTimeline } = createDependencyTimelineRenderer(render);
+  const { renderTimeline } = createDependencyTimelineRenderer(renderSettled);
 
   it('should render one arrow per active dependency', async () => {
     await renderTimeline({
@@ -385,6 +385,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       act(() => {
         getGrid().scrollLeft = 2 * 24 * 64;
       });
+      await absorbObserverFrames();
       await waitFor(() => {
         expect(getArrowPaths().length).to.equal(1);
       });
@@ -392,6 +393,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       act(() => {
         getGrid().scrollLeft = 0;
       });
+      await absorbObserverFrames();
       await waitFor(() => {
         expect(getArrowPaths().length).to.equal(0);
       });
@@ -435,6 +437,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       act(() => {
         getGrid().scrollTop = 900;
       });
+      await absorbObserverFrames();
       await waitFor(() => {
         expect(getGrid().scrollTop).to.be.greaterThan(0);
       });
@@ -530,6 +533,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         getGrid().scrollLeft =
           initialHitRect.left + initialHitRect.width / 2 - getTitleRect().right + 20;
       });
+      await absorbObserverFrames();
       await waitFor(() => {
         const hitRect = getHitPath().getBoundingClientRect();
         const titleRect = getTitleRect();

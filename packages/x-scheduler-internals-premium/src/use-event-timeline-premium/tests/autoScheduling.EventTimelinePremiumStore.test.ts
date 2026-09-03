@@ -1,7 +1,6 @@
-import { spy } from 'sinon';
 import { describe, expect, it, vi } from 'vitest';
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
-import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent, SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
@@ -36,7 +35,11 @@ const DEFAULT_PARAMS = {
 
 const date = (value: string) => adapter.date(value, 'default');
 const timestampOf = (value: string | undefined) => new Date(value!).getTime();
-const noopPersistEvents = async () => ({ success: true });
+const noopPersistEvents = async (_batch: {
+  deleted: SchedulerEventId[];
+  updated: SchedulerEvent[];
+  created: SchedulerEvent[];
+}) => ({ success: true });
 const flushEffect = async () => {
   await Promise.resolve();
   await Promise.resolve();
@@ -44,7 +47,7 @@ const flushEffect = async () => {
 
 describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   it('should emit onEventsChange once with the cascaded events included', () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);
 
     store.updateEvent({
@@ -53,8 +56,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       end: date('2025-07-03T12:00:00Z'),
     });
 
-    expect(onEventsChange.calledOnce).to.equal(true);
-    const newEvents: SchedulerEvent[] = onEventsChange.lastCall.firstArg;
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
     const emittedA = newEvents.find((event) => event.id === 'a')!;
     const emittedB = newEvents.find((event) => event.id === 'b')!;
     expect(timestampOf(emittedA.end)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
@@ -63,7 +66,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   });
 
   it('should clamp a successor dropped before its predecessor within the same emission', () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);
 
     store.updateEvent({
@@ -73,8 +76,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       title: 'Moved b',
     });
 
-    expect(onEventsChange.calledOnce).to.equal(true);
-    const newEvents: SchedulerEvent[] = onEventsChange.lastCall.firstArg;
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
     const emittedB = newEvents.find((event) => event.id === 'b')!;
     // Clamped to the predecessor's end, keeping the rest of the user's entry.
     expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
@@ -83,7 +86,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   });
 
   it('should reject the batch when the cascade would move a read-only event', () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const store = new EventTimelinePremiumStore(
       { ...DEFAULT_PARAMS, events: [eventA, readOnlySuccessor], onEventsChange },
       adapter,
@@ -98,7 +101,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     // Atomic veto: nothing is applied, and the rejection surfaces as a toast naming
     // the blocked event.
     expect(applied).to.equal(false);
-    expect(onEventsChange.callCount).to.equal(0);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
     expect(store.state.errors).to.have.length(1);
     expect(store.state.errors[0].error.message).to.include('"Blocked successor"');
   });
@@ -119,7 +122,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   });
 
   it('should discard the whole batch when only one branch is blocked', () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const movableSuccessor = EventBuilder.new()
       .id('c')
       .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
@@ -142,7 +145,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     // c could have been pushed, but the blocked b vetoes everything.
     expect(applied).to.equal(false);
-    expect(onEventsChange.callCount).to.equal(0);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
   });
 
   it('should not persist a vetoed batch', async () => {
@@ -150,7 +153,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     try {
       const dataSource = {
         getEvents: async () => [eventA, readOnlySuccessor],
-        persistEvents: spy(noopPersistEvents),
+        persistEvents: vi.fn(noopPersistEvents),
       };
       const params = {
         resources: TEST_RESOURCES,
@@ -171,14 +174,14 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       await flushEffect();
       await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 
-      expect(dataSource.persistEvents.callCount).to.equal(0);
+      expect(dataSource.persistEvents.mock.calls.length).to.equal(0);
     } finally {
       vi.useRealTimers();
     }
   });
 
   it('should keep the clipboard when a cut paste is rejected', () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const store = new EventTimelinePremiumStore(
       { ...DEFAULT_PARAMS, events: [eventA, readOnlySuccessor], onEventsChange },
       adapter,
@@ -188,26 +191,26 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     const result = store.pasteEvent({ start: date('2025-07-03T11:00:00Z') });
 
     expect(result).to.equal(null);
-    expect(onEventsChange.callCount).to.equal(0);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
     expect(store.state.copiedEvent).not.to.equal(null);
   });
 
   it('should cascade on an end-only update', () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);
 
     // Resize: only the end moves, past the successor's start.
     store.updateEvent({ id: 'a', end: date('2025-07-03T10:30:00Z') });
 
-    expect(onEventsChange.calledOnce).to.equal(true);
-    const newEvents: SchedulerEvent[] = onEventsChange.lastCall.firstArg;
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
     const emittedB = newEvents.find((event) => event.id === 'b')!;
     expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:30:00Z')));
     expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:30:00Z')));
   });
 
   it('should leave the successor untouched when the predecessor moves earlier', () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);
 
     store.updateEvent({
@@ -216,14 +219,14 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       end: date('2025-07-03T09:00:00Z'),
     });
 
-    expect(onEventsChange.calledOnce).to.equal(true);
-    const newEvents: SchedulerEvent[] = onEventsChange.lastCall.firstArg;
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
     const emittedB = newEvents.find((event) => event.id === 'b')!;
     expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
   });
 
   it('should not cascade when the dependencies feature is disabled', () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const store = new EventTimelinePremiumStore(
       { events: [eventA, eventB], resources: TEST_RESOURCES, onEventsChange },
       adapter,
@@ -235,14 +238,14 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       end: date('2025-07-03T12:00:00Z'),
     });
 
-    expect(onEventsChange.calledOnce).to.equal(true);
-    const newEvents: SchedulerEvent[] = onEventsChange.lastCall.firstArg;
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
     const emittedB = newEvents.find((event) => event.id === 'b')!;
     expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
   });
 
   it('should keep recurring-endpoint dependencies inert', () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const dependencies: SchedulerDependency[] = [
       { id: 'dep-r', source: 'a', target: 'r', type: 'FinishToStart' },
     ];
@@ -266,8 +269,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       end: date('2025-07-03T12:00:00Z'),
     });
 
-    expect(onEventsChange.calledOnce).to.equal(true);
-    const newEvents: SchedulerEvent[] = onEventsChange.lastCall.firstArg;
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
     const emittedRecurring = newEvents.find((event) => event.id === 'r')!;
     expect(emittedRecurring.start).to.equal(recurringEvent.start);
   });
@@ -277,7 +280,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     try {
       const dataSource = {
         getEvents: async () => [eventA, eventB],
-        persistEvents: spy(noopPersistEvents),
+        persistEvents: vi.fn(noopPersistEvents),
       };
       const params = {
         resources: TEST_RESOURCES,
@@ -297,8 +300,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       });
       await flushEffect();
 
-      expect(dataSource.persistEvents.calledOnce).to.equal(true);
-      const batch = dataSource.persistEvents.lastCall.firstArg;
+      expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
+      const batch = dataSource.persistEvents.mock.lastCall![0];
       const updatedIds = batch.updated.map((event: SchedulerEvent) => event.id);
       expect(updatedIds).to.have.members(['a', 'b']);
       const persistedA = batch.updated.find((event: SchedulerEvent) => event.id === 'a')!;

@@ -9,7 +9,7 @@ permissions: {}
 jobs:
   issue_cleanup:
     name: Clean issue body
-    uses: mui/mui-public/.github/workflows/issues_body-cleanup.yml@807e0c1e8be98ebd77407aa7aa43a16259958d14 # master
+    uses: mui/mui-public/.github/workflows/issues_body-cleanup.yml@c2ed9f97b6ea98e50de89d38b6cbc84c570316d9 # master
     permissions:
       contents: read
       issues: write
@@ -17,7 +17,7 @@ jobs:
     name: Validate order ID
     needs: issue_cleanup
     if: needs.issue_cleanup.outputs.orderId != ''
-    uses: mui/mui-public/.github/workflows/issues_order-id-validation.yml@807e0c1e8be98ebd77407aa7aa43a16259958d14 # master
+    uses: mui/mui-public/.github/workflows/issues_order-id-validation.yml@c2ed9f97b6ea98e50de89d38b6cbc84c570316d9 # master
     secrets: inherit
     with:
       orderId: ${{ needs.issue_cleanup.outputs.orderId }}

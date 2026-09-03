@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { act, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type {
@@ -22,29 +22,6 @@ import {
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
-
-// TODO(#23444): replace this local absorb with the shared `renderSettled` once the
-// scheduler test-utils helper lands on master.
-// Captured at module load, before any test can install fake timers: the frame
-// wait below must ride the real rendering pipeline, like ResizeObserver does.
-const nativeRequestAnimationFrame =
-  typeof requestAnimationFrame === 'function' ? requestAnimationFrame.bind(globalThis) : null;
-
-/**
- * Waits two native frames inside act, so pending ResizeObserver deliveries land as
- * acted updates instead of between test steps. Call it after any step that perturbs
- * layout (render, drag start/end, scroll). No-op in jsdom, which has no ResizeObserver.
- */
-export async function absorbObserverFrames() {
-  if (typeof ResizeObserver === 'undefined' || nativeRequestAnimationFrame === null) {
-    return;
-  }
-  await act(async () => {
-    await new Promise<void>((resolve) => {
-      nativeRequestAnimationFrame!(() => nativeRequestAnimationFrame!(() => resolve()));
-    });
-  });
-}
 
 /**
  * Applies mock bounds to all timeline event rows, so jsdom drops resolve positions.
@@ -216,11 +193,13 @@ function TimelineHost({
  * Binds the dependency timeline harness to a renderer created with
  * `createSchedulerRenderer` inside the suite.
  */
-export function createDependencyTimelineRenderer(render: (element: React.ReactElement) => any) {
+export function createDependencyTimelineRenderer(
+  renderSettled: (element: React.ReactElement) => Promise<any>,
+) {
   async function renderTimeline(parameters: RenderTimelineParameters) {
     let store!: EventTimelinePremiumStore<any, any>;
 
-    const view = render(
+    const view = await renderSettled(
       <TimelineHost
         {...parameters}
         onStoreReady={(mountedStore) => {
@@ -228,11 +207,6 @@ export function createDependencyTimelineRenderer(render: (element: React.ReactEl
         }}
       />,
     );
-
-    // The initial ResizeObserver batch (title-column widths, viewport size)
-    // delivers on the frames after the render; absorb it inside act so it
-    // cannot land between test steps as an un-acted update.
-    await absorbObserverFrames();
 
     return { store, ...view };
   }

@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
-import { getChatLayoutPaneKind, type ChatLayoutPaneKind } from './internals/chatLayoutPaneKind';
+import type { SlotComponentProps } from '@mui/utils/types';
+import { getChatLayoutPaneKind } from './internals/chatLayoutPaneKind';
+import type { ChatLayoutPaneKind } from './internals/chatLayoutPaneKind';
 
 export interface ChatLayoutSlots {
   root: React.ElementType;
