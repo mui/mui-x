@@ -103,7 +103,7 @@ A value written to a field is submitted even if the section that wrote it is lat
 There is no way to remove a key from the draft: writing `undefined` into a field that is part of the draft submits the removal of the stored property; writing it into a key absent from the draft is a no-op.
 
 When binding a built-in key, match its value shape (`EventDialogBuiltInFormValues`): the dates are `yyyy-MM-dd` strings, the times `HH:mm` strings, `resourceIds` is always an array, and `color: null` inherits from the resource or the calendar's default event color.
-The range keys (`startDate`, `startTime`, `endDate`, `endTime`, `allDay`) are not merged as-is: on save, only a bound whose keys changed is re-read from these display-timezone strings, an untouched bound keeps the event's stored value, and the time keys are ignored while `allDay` is `true`.
+Range fields you leave untouched (`startDate`, `startTime`, `endDate`, `endTime`) are not resubmitted on save, so the event keeps its stored dates.
 
 Two groups of names are **reserved** and cannot back custom model data:
 

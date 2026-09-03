@@ -408,9 +408,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // is a different day. Only the keys the submitted range reads count — a time
       // left over from toggling all-day off and back on must not re-arm the resend.
       const { startEdited, endEdited } = getEditedRangeBounds(dirtyValues, values.allDay);
-      // The range was validated as re-read in the current display timezone, while an
-      // untouched bound keeps the instant seeded in the occurrence's. If that timezone moved
-      // since seeding, the two disagree, so both bounds are re-read to persist the validated pair.
+      // The range was validated as a pair in the current display timezone; if that moved since
+      // seeding, an untouched bound's stored instant no longer matches, so editing either bound
+      // resends both.
       const displayTimezoneMoved = current.displayTimezone !== occurrence.displayTimezone.timezone;
       const submitStart = startEdited || (endEdited && displayTimezoneMoved);
       const submitEnd = endEdited || (startEdited && displayTimezoneMoved);
@@ -477,7 +477,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         // don't close the dialog
         return;
       } else {
-        store.updateEvent({
+        const changes: SchedulerEventUpdatedProperties = {
           ...metaChanges,
           id: occurrence.id,
           // Per-bound here too: an untouched bound must keep its stored value instead of
@@ -485,7 +485,19 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           ...(submitStart ? { start } : {}),
           ...(submitEnd ? { end } : {}),
           rrule: rruleToSubmit,
-        });
+        };
+        // A rule added here is built on the display weekday; the plugin projects it into the
+        // data timezone the series expands in (the bounds it relabels keep their instant).
+        const { recurringEventsPlugin } = current;
+        store.updateEvent(
+          recurringEventsPlugin != null && rruleToSubmit != null && isEventOccurrence(occurrence)
+            ? recurringEventsPlugin.applyDataTimezoneToEventUpdate({
+                adapter: current.adapter,
+                originalEvent: occurrence,
+                changes,
+              })
+            : changes,
+        );
       }
 
       onClose();

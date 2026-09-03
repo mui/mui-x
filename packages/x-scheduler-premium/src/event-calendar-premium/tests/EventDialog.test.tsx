@@ -2451,6 +2451,86 @@ describe('<EventDialogContent open />', () => {
         expect(updated.rrule).to.deep.equal(dstEvent.rrule);
       });
 
+      it('should resend both bounds of a series when the display timezone moved since the form was seeded', async () => {
+        let updateRecurringEventSpy;
+        const utcBuilder = utcJuly4AllDayBuilder()
+          .title('Weekly sync')
+          .recurrent('WEEKLY')
+          .withDisplayTimezone('UTC');
+        const { user, setProps } = render(
+          <EventCalendarProvider
+            events={[utcBuilder.build()]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="UTC"
+            onEventsChange={() => {}}
+          >
+            <StoreSpy
+              Context={SchedulerStoreContext}
+              method="updateRecurringEvent"
+              onSpyReady={(sp) => {
+                updateRecurringEventSpy = sp;
+              }}
+            />
+
+            <TestEventDialogContent open {...defaultProps} occurrence={utcBuilder.toOccurrence()} />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        // The form was seeded in UTC; the host moves the display timezone while it is open.
+        setProps({ displayTimezone: 'America/New_York' });
+        const endDateInput = screen.getByLabelText(/end date/i);
+        await user.clear(endDateInput);
+        await user.type(endDateInput, '2025-07-05');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        // The range was validated as a pair in New York, so the untouched start follows the
+        // edited end instead of keeping its UTC instant next to a New York end.
+        const payload = updateRecurringEventSpy!.mock.lastCall![0];
+        expect(payload.changes).to.have.property('start');
+        expect(payload.changes).to.have.property('end');
+      });
+
+      it('should anchor a rule added to a non-recurring event on its data-timezone weekday', async () => {
+        const onEventsChange = vi.fn();
+        // A UTC all-day Friday viewed from New York, where it shows on Thursday.
+        const fridayBuilder = utcJuly4AllDayBuilder()
+          .title('Independence day')
+          .withDisplayTimezone('America/New_York');
+        const fridayEvent = fridayBuilder.build();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[fridayEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={fridayBuilder.toOccurrence()}
+            />
+          </EventCalendarProvider>,
+        );
+
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        // The preset reads "weekly on Thursday" in New York; stored against the untouched
+        // Friday UTC start, the rule must expand on Fridays UTC to keep showing on Thursdays.
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (event: SchedulerEvent) => event.id === fridayEvent.id,
+        )!;
+        expect(updated.start).to.equal(fridayEvent.start);
+        expect(updated.rrule).to.deep.include({ freq: 'WEEKLY', byDay: ['FR'] });
+      });
+
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {
         let updateRecurringEventSpy, selectRecurringEventScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();

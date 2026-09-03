@@ -7,6 +7,7 @@ import {
 import { describe, it, expect } from 'vitest';
 import {
   generateOccurrenceFromEvent,
+  getOccurrenceDataBounds,
   getDaysTheOccurrenceIsVisibleOn,
   getEventResourceIds,
   getOccurrencesFromEvents,
@@ -215,6 +216,22 @@ describe('event-utils', () => {
       });
 
       expect(result.map((o) => o.id)).toEqual([event.id]);
+    });
+  });
+
+  describe('getOccurrenceDataBounds', () => {
+    it('should return the data-timezone bounds of an event occurrence', () => {
+      const occurrence = utcJuly4AllDayBuilder()
+        .withDisplayTimezone('America/New_York')
+        .toOccurrence();
+
+      expect(getOccurrenceDataBounds(occurrence)).to.equal(occurrence.dataTimezone);
+    });
+
+    it('should return undefined for a placeholder occurrence', () => {
+      const { dataTimezone, ...placeholder } = EventBuilder.new().toOccurrence();
+
+      expect(getOccurrenceDataBounds(placeholder as any)).to.equal(undefined);
     });
   });
 

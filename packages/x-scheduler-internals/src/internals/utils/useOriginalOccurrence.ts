@@ -12,8 +12,7 @@ import { generateOccurrenceFromEvent } from './event-utils';
 
 /**
  * Returns a lazy builder for the occurrence a drag or resize session starts from,
- * carrying the data-timezone identity next to the rendered display bounds. Shared by
- * the grid event primitives so the occurrence shape stays consistent across grids.
+ * carrying the data-timezone identity next to the rendered display bounds.
  */
 export function useOriginalOccurrence(
   parameters: useOriginalOccurrence.Parameters,
