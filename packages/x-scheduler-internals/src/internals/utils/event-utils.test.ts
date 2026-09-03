@@ -220,7 +220,7 @@ describe('event-utils', () => {
   });
 
   describe('getOccurrenceDataTimezone', () => {
-    it('should return the data-timezone bounds of an event occurrence', () => {
+    it('should return the dataTimezone of an event occurrence', () => {
       const occurrence = utcJuly4AllDayBuilder()
         .withDisplayTimezone('America/New_York')
         .toOccurrence();
@@ -236,7 +236,7 @@ describe('event-utils', () => {
   });
 
   describe('generateOccurrenceFromEvent', () => {
-    it('should carry the data-timezone bounds separately from the display segment bounds', () => {
+    it('should carry the dataTimezone next to the display segment bounds', () => {
       const processed = utcJuly4AllDayBuilder()
         .withDisplayTimezone('America/New_York')
         .toProcessed();
@@ -257,7 +257,7 @@ describe('event-utils', () => {
       );
     });
 
-    it('should default the data bounds to the display bounds when not provided', () => {
+    it('should default the dataTimezone bounds to the display bounds when not provided', () => {
       const processed = EventBuilder.new().singleDay('2025-07-04T09:00:00Z', 30).toProcessed();
 
       const occurrence = generateOccurrenceFromEvent({

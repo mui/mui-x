@@ -14,7 +14,7 @@ import { getDateKey } from './date-utils';
 
 /**
  * Whether the occurrence is a persisted event occurrence, as opposed to a
- * placeholder (creation draft, drag preview) that has no data-timezone bounds.
+ * placeholder (creation draft, drag preview) that has no `dataTimezone`.
  */
 export function isEventOccurrence(
   occurrence: SchedulerRenderableEventOccurrence,

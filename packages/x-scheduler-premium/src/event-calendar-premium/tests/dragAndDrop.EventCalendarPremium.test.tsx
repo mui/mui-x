@@ -51,7 +51,7 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
     // The exception lands on the occurrence's own July 4th, not the displayed July
-    // 3rd — the day grid threads the data-timezone bounds into the drag data.
+    // 3rd — the day grid threads the occurrence's `dataTimezone` into the drag data.
     const updatedEvents = handleEventsChange.mock.lastCall?.[0];
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
     expect(series.exDates).to.have.length(1);
@@ -112,7 +112,7 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     await user.click(await screen.findByText(/Only this event/i));
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-    // The time grid threads the data-timezone bounds too: the exception lands on the
+    // The time grid threads the occurrence's `dataTimezone` too: the exception lands on the
     // occurrence's own July 3rd, not on the July 4th the column shows it in.
     const updatedEvents = handleEventsChange.mock.lastCall?.[0];
     const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
