@@ -16,6 +16,7 @@ import type {
   SchedulerResourceId,
   TemporalSupportedObject,
   SchedulerEventUpdatedProperties,
+  SchedulerProcessedEvent,
   RecurringEventScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
@@ -733,75 +734,15 @@ export class SchedulerStore<
     }
     const { created: createdIds } = this.updateEvents(updatedEvents);
 
-    // Keep the edited occurrence in sync after a scope-dialog change, so the armed toolbar + selection
-    // highlight (and a later edit) follow the changed occurrence instead of a now-stale occurrence key.
     if (pendingRecurringEventOperation.kind === 'update' && changesInDataTimezone != null) {
-      // Only repoint when the changed occurrence is the armed one, else a sibling drag hijacks the surface.
-      const { editingOccurrence } = this.state;
-      const changedOccurrenceKey = getRecurringOccurrenceKey(
-        eventId,
-        occurrenceStartInDataTimezone,
-        adapter,
-      );
-      const occurrence = editingOccurrence?.occurrence;
-      if (
-        occurrence != null &&
-        isEventOccurrence(occurrence) &&
-        occurrence.key === changedOccurrenceKey
-      ) {
-        const { changes } = pendingRecurringEventOperation;
-        const { start: changedStart, end: changedEnd } = changes;
-        // The plugin already relabeled the submitted bounds into the data timezone.
-        const changedStartInDataTimezone = changesInDataTimezone.start ?? null;
-        const changedEndInDataTimezone = changesInDataTimezone.end ?? null;
-        // `only-this` / `this-and-following` move the occurrence onto a freshly-created event;
-        // `all` edits the series in place.
-        const movedToEvent = updatedEvents.created?.[0];
-        const movedToEventId = createdIds[0];
-        const targetsCreatedEvent = movedToEvent != null && movedToEventId != null;
-
-        // The same definition the pattern uses, so the two agree by construction.
-        const occurrenceEndInDataTimezone = getOccurrenceEnd({
-          adapter,
-          event: original,
-          occurrenceStart: occurrenceStartInDataTimezone,
-        });
-        // An in-place `all` keeps the armed occurrence only while it stays on its own day (a
-        // time change); a day or rule change lets the pattern decide where it lands, if anywhere.
-        // The day is checked in both timezones: the display projection of a weekly rule follows
-        // the display day of the series start.
-        const staysOnItsDay = (
-          changed: TemporalSupportedObject | null | undefined,
-          current: TemporalSupportedObject,
-        ) => changed == null || adapter.isSameDay(current, changed);
-        const keepsIdentity =
-          targetsCreatedEvent ||
-          (!Object.prototype.hasOwnProperty.call(changes, 'rrule') &&
-            staysOnItsDay(changedStartInDataTimezone, occurrenceStartInDataTimezone) &&
-            staysOnItsDay(changedEndInDataTimezone, occurrenceEndInDataTimezone) &&
-            staysOnItsDay(changedStart, occurrence.displayTimezone.start.value) &&
-            staysOnItsDay(changedEnd, occurrence.displayTimezone.end.value));
-        if (!keepsIdentity) {
-          this.stopEditing();
-        } else {
-          // A bound the submit left out (a rename carries none) keeps the occurrence's current
-          // value, data-timezone identity included: the display bounds cannot stand in for it.
-          const start = changedStart ?? occurrence.displayTimezone.start.value;
-          const end = changedEnd ?? occurrence.displayTimezone.end.value;
-          this.repointEditingOccurrence({
-            eventId: targetsCreatedEvent ? movedToEventId : eventId,
-            start,
-            end,
-            // In place the series stays recurring: a rule change disarmed above.
-            isRecurring: targetsCreatedEvent ? movedToEvent.rrule != null : true,
-            // An untouched bound keeps the occurrence's own identity; a changed one carries the
-            // bound the plugin was given, in the data timezone the split series and the in-place
-            // update both keep.
-            dataStart: changedStartInDataTimezone ?? occurrenceStartInDataTimezone,
-            dataEnd: changedEndInDataTimezone ?? occurrenceEndInDataTimezone,
-          });
-        }
-      }
+      this.reconcileEditingOccurrence({
+        original,
+        occurrenceStart: occurrenceStartInDataTimezone,
+        changes: pendingRecurringEventOperation.changes,
+        changesInDataTimezone,
+        createdEvent: updatedEvents.created?.[0],
+        createdEventId: createdIds[0],
+      });
     }
 
     if (onSubmit) {
@@ -1119,6 +1060,74 @@ export class SchedulerStore<
           end: processDate(end, adapter),
         },
       },
+    });
+  };
+
+  /**
+   * Keeps the armed occurrence in sync after a confirmed recurring scope change: it follows the
+   * occurrence onto the event `only-this` / `this-and-following` created, stays in place on an
+   * `all` change that keeps the occurrence on its day, and is dropped otherwise. No-op when the
+   * changed occurrence is not the armed one.
+   */
+  private reconcileEditingOccurrence = (parameters: {
+    original: SchedulerProcessedEvent;
+    /** The changed occurrence's start, in the data timezone. */
+    occurrenceStart: TemporalSupportedObject;
+    /** The submitted changes, with display-timezone bounds. */
+    changes: SchedulerEventUpdatedProperties;
+    /** The same changes relabeled into the data timezone. */
+    changesInDataTimezone: SchedulerEventUpdatedProperties;
+    createdEvent: SchedulerEventCreationProperties | undefined;
+    createdEventId: SchedulerEventId | undefined;
+  }) => {
+    const {
+      original,
+      occurrenceStart,
+      changes,
+      changesInDataTimezone,
+      createdEvent,
+      createdEventId,
+    } = parameters;
+    const { adapter } = this.state;
+    const occurrence = this.state.editingOccurrence?.occurrence;
+    // Only the armed occurrence follows its own change, else a sibling drag hijacks the surface.
+    if (
+      occurrence == null ||
+      !isEventOccurrence(occurrence) ||
+      occurrence.key !== getRecurringOccurrenceKey(original.id, occurrenceStart, adapter)
+    ) {
+      return;
+    }
+
+    const occurrenceEnd = getOccurrenceEnd({ adapter, event: original, occurrenceStart });
+    const targetsCreatedEvent = createdEvent != null && createdEventId != null;
+    // In place, the pattern decides where a day or rule change lands: only a change that keeps
+    // the occurrence on its day, in both timezones, can keep the surface armed.
+    const bounds: [TemporalSupportedObject | undefined, TemporalSupportedObject][] = [
+      [changesInDataTimezone.start, occurrenceStart],
+      [changesInDataTimezone.end, occurrenceEnd],
+      [changes.start, occurrence.displayTimezone.start.value],
+      [changes.end, occurrence.displayTimezone.end.value],
+    ];
+    const staysOnItsDay = bounds.every(
+      ([changed, current]) => changed == null || adapter.isSameDay(current, changed),
+    );
+    const keepsIdentity =
+      targetsCreatedEvent ||
+      (!Object.prototype.hasOwnProperty.call(changes, 'rrule') && staysOnItsDay);
+    if (!keepsIdentity) {
+      this.stopEditing();
+      return;
+    }
+
+    // A bound the submit left out keeps the occurrence's current value, in both timezones.
+    this.repointEditingOccurrence({
+      eventId: targetsCreatedEvent ? createdEventId : original.id,
+      start: changes.start ?? occurrence.displayTimezone.start.value,
+      end: changes.end ?? occurrence.displayTimezone.end.value,
+      isRecurring: targetsCreatedEvent ? createdEvent.rrule != null : true,
+      dataStart: changesInDataTimezone.start ?? occurrenceStart,
+      dataEnd: changesInDataTimezone.end ?? occurrenceEnd,
     });
   };
 
