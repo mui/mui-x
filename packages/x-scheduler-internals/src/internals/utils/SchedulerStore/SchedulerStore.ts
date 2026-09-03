@@ -638,13 +638,9 @@ export class SchedulerStore<
   };
 
   /**
-   * Deletes the event behind an occurrence. When the recurring-events plugin is available,
-   * an occurrence of a recurring series opens the recurring scope dialog (keyed on its
-   * data-timezone identity) instead; any other occurrence goes straight to `deleteEvent`.
-   * This is the entry point of the interactive surfaces (toolbar, context menu, dialog).
-   * `onDelete` runs when the delete has applied — right away for an immediate delete,
-   * on scope submit for a recurring one.
-   * @returns Whether the event was deleted immediately (`false` when the scope dialog opened).
+   * Deletes an occurrence from a UI surface: a recurring one opens the scope dialog, any other
+   * goes straight to `deleteEvent`. `onDelete` runs once the delete applied.
+   * @returns Whether the delete applied immediately (`false` when the scope dialog opened).
    */
   public deleteOccurrence = (
     occurrence: SchedulerRenderableEventOccurrence,
