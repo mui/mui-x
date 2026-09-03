@@ -819,6 +819,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bce6f11(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@11.0.0)
@@ -887,6 +890,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bce6f11(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@11.0.0)
@@ -950,6 +956,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bce6f11(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@11.0.0)
@@ -1111,6 +1120,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bce6f11(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.18)(react@19.2.8)(supports-color@11.0.0)
@@ -1170,6 +1182,9 @@ importers:
       '@base-ui/react':
         specifier: 'catalog:'
         version: 1.7.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/utils@bce6f11(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.4.0(@types/react@19.2.18)(react@19.2.8)

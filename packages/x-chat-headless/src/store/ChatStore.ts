@@ -1,4 +1,4 @@
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import type {
   ChatConversation,
   ChatDraftAttachment,

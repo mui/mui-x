@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';

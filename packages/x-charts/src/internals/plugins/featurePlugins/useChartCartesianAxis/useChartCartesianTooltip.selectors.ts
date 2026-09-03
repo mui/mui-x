@@ -2,7 +2,7 @@ import {
   createSelector,
   createSelectorMemoized,
   createSelectorMemoizedWithOptions,
-} from '@mui/x-internals/store';
+} from '@base-ui/utils/store';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import {

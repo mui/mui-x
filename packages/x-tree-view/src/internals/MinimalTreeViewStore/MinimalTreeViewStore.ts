@@ -1,4 +1,4 @@
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
