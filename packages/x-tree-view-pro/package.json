@@ -27,7 +27,7 @@
     "treeview"
   ],
   "scripts": {
-    "typescript": "tsgo -p tsconfig.json",
+    "typescript": "tsc -p tsconfig.json",
     "build": "code-infra build --tsgo",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
@@ -44,12 +44,7 @@
     "@mui/x-license": "workspace:^",
     "@mui/x-tree-view": "workspace:^",
     "@mui/x-virtualizer": "workspace:*",
-    "@types/react-transition-group": "catalog:",
-    "clsx": "catalog:",
-    "prop-types": "catalog:",
-    "react-transition-group": "catalog:",
-    "reselect": "catalog:",
-    "use-sync-external-store": "catalog:"
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
@@ -72,7 +67,6 @@
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
-    "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
