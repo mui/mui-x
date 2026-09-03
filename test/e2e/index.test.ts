@@ -267,6 +267,37 @@ async function initializeEnvironment(
         },
       );
 
+      // this test sometimes fails on webkit for some reason
+      it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
+        'should reorder rows by dropping the row reorder cell on another row',
+        async () => {
+          await renderFixture('DataGridPro/RowReorder');
+
+          const readRowOrder = () =>
+            page.evaluate(() =>
+              Array.from(
+                document.querySelectorAll('[role="gridcell"][data-field="brand"]'),
+                (cell) => cell.textContent,
+              ),
+            );
+
+          await waitFor(async () => {
+            expect(await readRowOrder()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+          });
+
+          const nikeReorderCell = page.locator(
+            '[role="row"][data-rowindex="0"] [data-field="__reorder__"] [draggable]',
+          );
+          const pumaRow = page.locator('[role="row"][data-rowindex="2"]');
+          // Drop into the lower half of the last row, so the dragged row lands below it.
+          await nikeReorderCell.dragTo(pumaRow, { targetPosition: { x: 20, y: 45 } });
+
+          await waitFor(async () => {
+            expect(await readRowOrder()).to.deep.equal(['Adidas', 'Puma', 'Nike']);
+          });
+        },
+      );
+
       // https://github.com/mui/mui-x/pull/9117
       it('should not trigger sorting after resizing', async () => {
         await renderFixture('DataGridPro/NotResize');
