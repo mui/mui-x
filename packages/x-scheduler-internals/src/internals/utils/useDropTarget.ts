@@ -282,7 +282,8 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
       occurrenceStart: originalOccurrence.dataTimezone.start.value,
       changes,
     });
-    // Editing surface is refreshed in `selectRecurringEventScope` once the user confirms a scope.
+    // Editing surface is refreshed (or disarmed) in `selectRecurringEventScope` once the user
+    // confirms a scope.
     return;
   }
 

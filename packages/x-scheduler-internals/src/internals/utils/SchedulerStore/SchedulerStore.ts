@@ -15,7 +15,9 @@ import type {
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
   TemporalSupportedObject,
+  SchedulerEvent,
   SchedulerEventUpdatedProperties,
+  SchedulerProcessedEventRecurrenceRule,
   RecurringEventScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
@@ -47,6 +49,7 @@ import type {
 } from '../../models/events';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
+import { processEvent } from '../../../process-event';
 import {
   buildEventsState,
   buildResourcesState,
@@ -82,6 +85,11 @@ const MOCK_EVENT_STATE = {
 /**
  * Instance shared by the Event Calendar and the Event Timeline Premium components.
  */
+type RepointedRRule = {
+  display: SchedulerProcessedEventRecurrenceRule | undefined;
+  data: SchedulerProcessedEventRecurrenceRule | undefined;
+};
+
 export class SchedulerStore<
   TEvent extends object,
   TResource extends object,
@@ -495,6 +503,7 @@ export class SchedulerStore<
 
     const createdIds: SchedulerEventId[] = [];
     const createdEvents: TEvent[] = [];
+    const createdBuiltInEvents: SchedulerEvent[] = [];
     for (const createdEvent of created) {
       // Events created from an existing one (split, duplicate, paste) inherit its custom fields.
       const source =
@@ -508,6 +517,7 @@ export class SchedulerStore<
       );
       newEvents.push(response.model);
       createdEvents.push(response.model);
+      createdBuiltInEvents.push(response.builtInEvent);
       createdIds.push(response.id);
     }
 
@@ -539,6 +549,8 @@ export class SchedulerStore<
       deleted: deletedParam ?? [],
       updated: Array.from(updated.keys()) as SchedulerEventId[],
       created: createdIds,
+      /** The created events in the built-in format, ids assigned. */
+      createdEvents: createdBuiltInEvents,
     };
   }
 
@@ -650,9 +662,8 @@ export class SchedulerStore<
     onDelete?: () => void,
   ): boolean => {
     if (
-      this.state.recurringEventsPlugin != null &&
       isEventOccurrence(occurrence) &&
-      occurrence.displayTimezone.rrule
+      schedulerEventSelectors.isRecurring(this.state, occurrence.id)
     ) {
       this.deleteRecurringEvent({
         occurrenceStart: occurrence.dataTimezone.start.value,
@@ -668,8 +679,8 @@ export class SchedulerStore<
 
   /**
    * Applies the pending recurring event operation after the user selects a scope.
-   * Stops editing when the change leaves the armed occurrence on a day only the recurrence
-   * pattern can resolve.
+   * The armed occurrence follows a scope change onto the event it moved to; an in-place `all`
+   * change that moves it off its day or edits the rule disarms it instead.
    * @param scope The selected scope, or null if canceled.
    */
   public selectRecurringEventScope = (scope: RecurringEventScope | null) => {
@@ -729,7 +740,7 @@ export class SchedulerStore<
         scope,
       );
     }
-    const { created: createdIds } = this.updateEvents(updatedEvents);
+    const { createdEvents } = this.updateEvents(updatedEvents);
 
     // Keep the edited occurrence in sync after a scope-dialog change, so the armed toolbar + selection
     // highlight (and a later edit) follow the changed occurrence instead of a now-stale occurrence key.
@@ -741,9 +752,12 @@ export class SchedulerStore<
         occurrenceStartInDataTimezone,
         adapter,
       );
-      const isEditingChangedOccurrence = editingOccurrence?.occurrence.key === changedOccurrenceKey;
-      if (isEditingChangedOccurrence) {
-        const { occurrence } = editingOccurrence;
+      const occurrence = editingOccurrence?.occurrence;
+      if (
+        occurrence != null &&
+        isEventOccurrence(occurrence) &&
+        occurrence.key === changedOccurrenceKey
+      ) {
         const { changes } = pendingRecurringEventOperation;
         const { start: changedStart, end: changedEnd } = changes;
         // The plugin already relabeled the submitted bounds into the data timezone.
@@ -751,9 +765,8 @@ export class SchedulerStore<
         const changedEndInDataTimezone = changesInDataTimezone.end ?? null;
         // `only-this` / `this-and-following` move the occurrence onto a freshly-created event;
         // `all` edits the series in place.
-        const movedToEvent = updatedEvents.created?.[0];
-        const movedToEventId = createdIds[0];
-        const targetsCreatedEvent = movedToEvent != null && movedToEventId != null;
+        const movedToEvent = createdEvents[0];
+        const targetsCreatedEvent = movedToEvent != null;
 
         // The same definition the pattern uses, so the two agree by construction.
         const occurrenceEndInDataTimezone = getOccurrenceEnd({
@@ -781,14 +794,31 @@ export class SchedulerStore<
           // value, data-timezone identity included: the display bounds cannot stand in for it.
           const start = changedStart ?? occurrence.displayTimezone.start.value;
           const end = changedEnd ?? occurrence.displayTimezone.end.value;
-          const isRecurring = targetsCreatedEvent
-            ? movedToEvent.rrule != null
-            : occurrence.displayTimezone.rrule != null;
+          // The created event carries the rule the split rewrote (remaining count, realigned
+          // BYDAY), so it is read off that event rather than copied from the snapshot.
+          let rrule: RepointedRRule;
+          if (targetsCreatedEvent) {
+            const movedToProcessed = processEvent(
+              movedToEvent,
+              this.state.displayTimezone,
+              adapter,
+              recurringEventsPlugin,
+            );
+            rrule = {
+              display: movedToProcessed.displayTimezone.rrule,
+              data: movedToProcessed.dataTimezone.rrule,
+            };
+          } else {
+            rrule = {
+              display: occurrence.displayTimezone.rrule,
+              data: occurrence.dataTimezone.rrule,
+            };
+          }
           this.repointEditingOccurrence({
-            eventId: targetsCreatedEvent ? movedToEventId : eventId,
+            eventId: targetsCreatedEvent ? movedToEvent.id : eventId,
             start,
             end,
-            isRecurring,
+            rrule,
             // An untouched bound keeps the occurrence's own identity; a changed one carries the
             // bound the plugin was given, in the data timezone the split series and the in-place
             // update both keep.
@@ -1079,9 +1109,10 @@ export class SchedulerStore<
   };
 
   /**
-   * Refreshes the edited occurrence's times so a later edit (e.g. opening the form from the armed
-   * toolbar) reflects a just-committed change such as a resize. The data-timezone bounds follow,
-   * relabeled into the occurrence's data timezone. No-op when nothing is being edited.
+   * Refreshes the edited occurrence's display times so a later edit (e.g. opening the form from
+   * the armed toolbar) reflects a just-committed change such as a resize. Only the non-recurring
+   * commit reaches this method and nothing reads the data-timezone bounds for it, so those are
+   * left as they are. No-op when nothing is being edited.
    */
   public setEditingOccurrenceTimes = (
     start: TemporalSupportedObject,
@@ -1101,8 +1132,6 @@ export class SchedulerStore<
           start: processDate(start, adapter),
           end: processDate(end, adapter),
         },
-        // Data bounds untouched: only the non-recurring commit lands here and nothing
-        // reads them for it.
       },
     });
   };
@@ -1118,12 +1147,14 @@ export class SchedulerStore<
     /** The occurrence bounds in the display timezone. */
     start: TemporalSupportedObject;
     end: TemporalSupportedObject;
-    isRecurring: boolean;
+    /** The rule of the event the occurrence now belongs to, `undefined` when it is not recurring. */
+    rrule: RepointedRRule;
     /** The occurrence bounds in the data timezone — the identity the key derives from. */
     dataStart: TemporalSupportedObject;
     dataEnd: TemporalSupportedObject;
   }) => {
-    const { eventId, start, end, isRecurring, dataStart, dataEnd } = parameters;
+    const { eventId, start, end, rrule, dataStart, dataEnd } = parameters;
+    const isRecurring = rrule.display != null;
     const { editingOccurrence, adapter } = this.state;
     if (editingOccurrence == null) {
       return;
@@ -1142,10 +1173,9 @@ export class SchedulerStore<
           ...occurrence.displayTimezone,
           start: processDate(start, adapter),
           end: processDate(end, adapter),
-          // Clear the rule whenever the result is no longer recurring (a `only-this` detach, or an
-          // `all` edit that removed it), so the toolbar's Delete removes the event directly
-          // instead of reopening the recurring scope dialog.
-          rrule: isRecurring ? occurrence.displayTimezone.rrule : undefined,
+          // The rule follows the event the occurrence now belongs to: cleared by a `only-this`
+          // detach, rewritten by a `this-and-following` split.
+          rrule: rrule.display,
         },
         // Keep the data-timezone identity in sync too, so a later edit or delete
         // targets the day the occurrence actually lives on.
@@ -1155,7 +1185,7 @@ export class SchedulerStore<
                 ...occurrence.dataTimezone,
                 start: processDate(dataStart, adapter),
                 end: processDate(dataEnd, adapter),
-                rrule: isRecurring ? occurrence.dataTimezone.rrule : undefined,
+                rrule: rrule.data,
               },
             }
           : {}),

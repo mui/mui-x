@@ -154,11 +154,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
 
     it('should keep the dates of a timed event untouched when only the title is edited', async () => {
+      // Seconds the `HH:mm` form fields cannot carry: a resend of the displayed range would
+      // drop them, so byte-identity proves the range was left out of the payload.
       const { user, event, getUpdatedEvent } = renderEditDialog(
         EventBuilder.new()
           .title('Standup')
           .withDataTimezone('UTC')
-          .span('2025-07-04T09:00:00', '2025-07-04T09:30:00'),
+          .span('2025-07-04T09:00:30', '2025-07-04T09:30:30'),
         'America/New_York',
       );
 
@@ -1634,6 +1636,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         expect(onEventsChange.mock.calls.length).to.equal(1);
         const updated = onEventsChange.mock.calls[0][0][0];
         expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:45:00.000Z');
+        // The untouched end was validated as a New York time too: persisting its stored
+        // 08:15Z would invert the range, so it follows the start into the new timezone.
+        expect(new Date(updated.end).toISOString()).to.equal('2025-05-26T12:15:00.000Z');
       });
 
       it('should keep an untouched range byte-identical when the display timezone changes while the async validation is pending', async () => {

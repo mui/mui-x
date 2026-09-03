@@ -2,9 +2,11 @@ import {
   adapter,
   adapterFr,
   EventBuilder,
+  premiumStoreClasses,
   ResourceBuilder,
   storeClasses,
 } from 'test/utils/scheduler';
+import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import type {
   SchedulerEvent,
   SchedulerEventModelStructure,
@@ -157,6 +159,15 @@ storeClasses.forEach((storeClass) => {
             allDay: false,
           },
         ]);
+
+        // Same for the title, which an event always has (the `events` prop is controlled,
+        // so the store still holds the original title here).
+        store.updateEvent({ id: '1', title: undefined, description: 'Updated' });
+
+        expect(onEventsChange.mock.lastCall?.[0][0]).to.deep.include({
+          myTitle: 'Event 1',
+          description: 'Updated',
+        });
       });
 
       it('should use the provided event model structure to create an event', () => {
@@ -479,6 +490,22 @@ storeClasses.forEach((storeClass) => {
         expect(updated.end).to.equal(event.end);
       });
 
+      it('should leave the title untouched when it is passed as undefined', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().build();
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        store.updateEvent({ id: event.id, title: undefined, description: 'Updated' });
+
+        const updated = onEventsChange.mock.lastCall?.[0][0];
+        expect(updated.title).to.equal(event.title);
+        expect(updated.description).to.equal('Updated');
+      });
+
       it('should remove a property that is not a date when passed as undefined', () => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().description('To remove').build();
@@ -620,6 +647,24 @@ storeClasses.forEach((storeClass) => {
         }).toWarnDev([
           `MUI X Scheduler: id "${event.id}" appears in both \`deleted\` and \`updated\`.`,
         ]);
+      });
+    });
+
+    describe('Method: deleteOccurrence', () => {
+      it('should delete a non-recurring occurrence immediately and report it', () => {
+        const onEventsChange = vi.fn();
+        const onDelete = vi.fn();
+        const builder = EventBuilder.new();
+        const event = builder.build();
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(true);
+        expect(onDelete.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
       });
     });
 
@@ -1060,6 +1105,62 @@ storeClasses.forEach((storeClass) => {
           store.createEvent(EventBuilder.new().toCreationProperties());
         }).not.toWarnDev();
       });
+    });
+  });
+});
+
+describe('Method: deleteOccurrence - recurring occurrences', () => {
+  it('should delete a recurring occurrence immediately without the recurring events plugin', () => {
+    const onEventsChange = vi.fn();
+    const onDelete = vi.fn();
+    const builder = EventBuilder.new().recurrent('DAILY');
+    const event = builder.build();
+
+    let store!: EventCalendarStore<SchedulerEvent, any>;
+    expect(() => {
+      store = new EventCalendarStore(
+        { resources: TEST_RESOURCES, events: [event], onEventsChange },
+        adapter,
+      );
+    }).toWarnDev([
+      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+    ]);
+
+    // The rule is ignored without the plugin, so there is no scope to ask for.
+    expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(true);
+    expect(onDelete.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+  });
+
+  premiumStoreClasses.forEach((storeClass) => {
+    it(`should open the recurring scope dialog and delete on scope submit - ${storeClass.name}`, async () => {
+      const onEventsChange = vi.fn();
+      const onDelete = vi.fn();
+      const builder = EventBuilder.new().recurrent('DAILY');
+      const event = builder.build();
+
+      const store = new storeClass.Value(
+        { resources: TEST_RESOURCES, events: [event], onEventsChange },
+        adapter,
+      );
+      const occurrence = builder.toOccurrence();
+
+      // Nothing is deleted until the user picks a scope; `onDelete` waits for it too.
+      expect(store.deleteOccurrence(occurrence, onDelete)).to.equal(false);
+      expect(onDelete.mock.calls.length).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(store.state.pendingRecurringEventOperation).to.deep.include({
+        kind: 'delete',
+        eventId: event.id,
+      });
+
+      store.selectRecurringEventScope('only-this');
+      // `onSubmit` is deferred to a microtask.
+      await Promise.resolve();
+
+      expect(onDelete.mock.calls.length).to.equal(1);
+      const series = onEventsChange.mock.lastCall![0][0];
+      expect(series.exDates).to.have.length(1);
     });
   });
 });

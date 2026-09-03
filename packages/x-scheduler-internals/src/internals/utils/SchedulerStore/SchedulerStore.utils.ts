@@ -266,7 +266,7 @@ export function createEventModel<TEvent extends object>(
     eventModelStructure,
   );
 
-  return { id, model };
+  return { id, model, builtInEvent };
 }
 
 function createOrUpdateEventModelFromBuiltInEventModel<

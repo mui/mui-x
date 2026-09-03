@@ -54,7 +54,7 @@ storeClasses.forEach((storeClass) => {
           eventId: 'detached-event',
           start: newStart,
           end: newEnd,
-          isRecurring: false,
+          rrule: { display: undefined, data: undefined },
           dataStart: newStart,
           dataEnd: newEnd,
         });
@@ -79,7 +79,7 @@ storeClasses.forEach((storeClass) => {
           eventId: 'following-event',
           start: newStart,
           end: newEnd,
-          isRecurring: true,
+          rrule: { display: RRULE, data: RRULE },
           dataStart: newStart,
           dataEnd: newEnd,
         });
@@ -109,7 +109,7 @@ storeClasses.forEach((storeClass) => {
           eventId: 'following-event',
           start: displayStart,
           end: displayEnd,
-          isRecurring: true,
+          rrule: { display: RRULE, data: RRULE },
           dataStart: adapter.setTimezone(displayStart, 'UTC'),
           dataEnd: adapter.setTimezone(displayEnd, 'UTC'),
         });
@@ -136,7 +136,7 @@ storeClasses.forEach((storeClass) => {
           eventId: 'detached-event',
           start: newStart,
           end: newEnd,
-          isRecurring: false,
+          rrule: { display: undefined, data: undefined },
           dataStart: newStart,
           dataEnd: newEnd,
         });
@@ -432,6 +432,70 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.key).to.equal(armedKey);
       expect(occurrence.dataTimezone.start.value).toEqualDateTime(movedStart);
       expect(occurrence.displayTimezone.rrule).to.not.equal(undefined);
+    });
+
+    it("should keep the armed occurrence on an end-only same-day scope 'all' change", () => {
+      const store = createStore();
+      const armedKey = getRecurringOccurrenceKey('standup', dayB, adapter);
+      armOccurrence(store, dayB);
+
+      // A resize handle or the dialog can submit a single bound; the untouched start
+      // keeps the occurrence's own data-timezone identity.
+      const extendedEnd = adapter.addHours(dayB, 3);
+      store.updateRecurringEvent({
+        occurrenceStart: dayB,
+        changes: { id: 'standup', end: extendedEnd },
+      });
+      store.selectRecurringEventScope('all');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.key).to.equal(armedKey);
+      expect(occurrence.dataTimezone.start.value).toEqualDateTime(dayB);
+      expect(occurrence.dataTimezone.end.value).toEqualDateTime(extendedEnd);
+    });
+
+    it("should disarm when an end-only scope 'all' change pushes the armed occurrence past its day", () => {
+      const store = createStore();
+      armOccurrence(store, dayB);
+
+      store.updateRecurringEvent({
+        occurrenceStart: dayB,
+        changes: { id: 'standup', end: adapter.addHours(dayB, 25) },
+      });
+      store.selectRecurringEventScope('all');
+
+      expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+    });
+
+    it("should carry the split series' rewritten rule onto the re-pointed occurrence", () => {
+      const countedEvent = EventBuilder.new()
+        .id('standup')
+        .startAt('2025-07-07T09:00:00Z')
+        .endAt('2025-07-07T10:00:00Z')
+        .recurrent('DAILY', { count: 10 })
+        .build();
+      const store = new storeClass.Value(
+        { ...DEFAULT_PARAMS, events: [countedEvent], onEventsChange: () => {} },
+        adapter,
+      );
+      const fourth = adapter.addDays(dayA, 3);
+      armOccurrence(store, fourth);
+
+      store.updateRecurringEvent({
+        occurrenceStart: fourth,
+        changes: {
+          id: 'standup',
+          start: adapter.addMinutes(fourth, 30),
+          end: adapter.addMinutes(fourth, 90),
+        },
+      });
+      store.selectRecurringEventScope('this-and-following');
+
+      // Seven occurrences remain from the fourth: a later Edit from the armed toolbar must
+      // seed the dialog with that count, not the original series' ten.
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.displayTimezone.rrule.count).to.equal(7);
+      expect(occurrence.dataTimezone.rrule.count).to.equal(7);
     });
 
     it("should disarm when a scope 'all' change edits the recurrence rule", () => {

@@ -16,7 +16,10 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { getPrimaryResourceId, isEventOccurrence } from '@mui/x-scheduler-internals/internals';
+import {
+  getPrimaryResourceId,
+  getOccurrenceDataBounds,
+} from '@mui/x-scheduler-internals/internals';
 import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { EventDragPreview } from '../../../components/event-drag-preview';
@@ -430,14 +433,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     );
   }
 
-  // The occurrence identity for recurring drag updates; placeholders have none.
-  const dataBounds = isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
-
   return (
     <DayGridEventRoot
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataBounds={dataBounds}
+      dataBounds={getOccurrenceDataBounds(occurrence)}
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}

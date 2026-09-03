@@ -7,7 +7,7 @@ import { useId } from '@base-ui/utils/useId';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { isEventOccurrence } from '@mui/x-scheduler-internals/internals';
+import { getOccurrenceDataBounds } from '@mui/x-scheduler-internals/internals';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
@@ -208,16 +208,13 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     );
   }
 
-  // The occurrence identity for recurring drag updates; placeholders have none.
-  const dataBounds = isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
-
   return (
     <TimelineGrid.Event
       render={<EventTimelinePremiumEventRoot />}
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataBounds={dataBounds}
+      dataBounds={getOccurrenceDataBounds(occurrence)}
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}

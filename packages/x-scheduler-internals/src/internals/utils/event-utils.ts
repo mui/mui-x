@@ -24,6 +24,16 @@ export function isEventOccurrence(
 }
 
 /**
+ * The data-timezone bounds identifying the occurrence in recurring drag updates;
+ * placeholders have none.
+ */
+export function getOccurrenceDataBounds(
+  occurrence: SchedulerRenderableEventOccurrence,
+): SchedulerOccurrenceDataBounds | undefined {
+  return isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
+}
+
+/**
  * The render key of a non-recurring occurrence: the event id stringified.
  * Single source of truth so producers (occurrence expansion) and consumers (the editing highlight)
  * derive identical keys.

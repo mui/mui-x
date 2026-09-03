@@ -408,6 +408,12 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // is a different day. Only the keys the submitted range reads count — a time
       // left over from toggling all-day off and back on must not re-arm the resend.
       const { startEdited, endEdited } = getEditedRangeBounds(dirtyValues, values.allDay);
+      // The range was validated as re-read in the current display timezone, while an
+      // untouched bound keeps the instant seeded in the occurrence's. If that timezone moved
+      // since seeding, the two disagree, so both bounds are re-read to persist the validated pair.
+      const displayTimezoneMoved = current.displayTimezone !== occurrence.displayTimezone.timezone;
+      const submitStart = startEdited || (endEdited && displayTimezoneMoved);
+      const submitEnd = endEdited || (startEdited && displayTimezoneMoved);
 
       const metaChanges = {
         ...editedCustomValues,
@@ -457,8 +463,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         const changes: SchedulerEventUpdatedProperties = {
           ...metaChanges,
           id: occurrence.id,
-          ...(startEdited ? { start } : {}),
-          ...(endEdited ? { end } : {}),
+          ...(submitStart ? { start } : {}),
+          ...(submitEnd ? { end } : {}),
           ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
         };
 
@@ -476,8 +482,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           id: occurrence.id,
           // Per-bound here too: an untouched bound must keep its stored value instead of
           // being re-anchored to the display timezone, which is a different instant.
-          ...(startEdited ? { start } : {}),
-          ...(endEdited ? { end } : {}),
+          ...(submitStart ? { start } : {}),
+          ...(submitEnd ? { end } : {}),
           rrule: rruleToSubmit,
         });
       }
