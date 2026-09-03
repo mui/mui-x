@@ -1,12 +1,15 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
-import { ChatProvider, type ChatProviderProps } from '../ChatProvider';
+import type { SlotComponentProps } from '@mui/utils/types';
+import { ChatProvider } from '../ChatProvider';
+import type { ChatProviderProps } from '../ChatProvider';
 import type { ChatLocaleText } from './internals/chatLocaleText';
 import { ChatLocaleProvider } from './internals/ChatLocaleContext';
-import { ChatVariantProvider, type ChatVariant } from './internals/ChatVariantContext';
-import { ChatDensityProvider, type ChatDensity } from './internals/ChatDensityContext';
+import { ChatVariantProvider } from './internals/ChatVariantContext';
+import type { ChatVariant } from './internals/ChatVariantContext';
+import { ChatDensityProvider } from './internals/ChatDensityContext';
+import type { ChatDensity } from './internals/ChatDensityContext';
 
 export interface ChatRootSlots {
   root: React.ElementType;

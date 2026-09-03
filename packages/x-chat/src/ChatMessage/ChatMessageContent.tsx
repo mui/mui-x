@@ -2,12 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  MessageContent,
-  useMessageContentTabIndex,
-  type MessageContentProps,
-  type ToolPartOwnerState,
-  type ToolPartSectionOwnerState,
+import { MessageContent, useMessageContentTabIndex } from '@mui/x-chat-headless';
+import type {
+  MessageContentProps,
+  ToolPartOwnerState,
+  ToolPartSectionOwnerState,
 } from '@mui/x-chat-headless';
 import { useToolDisclosure } from '@mui/x-chat-headless/internals';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
