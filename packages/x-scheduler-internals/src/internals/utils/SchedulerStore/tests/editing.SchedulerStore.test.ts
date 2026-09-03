@@ -615,14 +615,18 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
       });
 
-      it('should disarm when the occurrence changes day in the display timezone only', () => {
+      it('should keep the armed occurrence when it changes day in the display timezone only', () => {
         const { store, armed } = armTokyoOccurrence();
 
-        // 19:00 Tokyo July 8th is 10:00 UTC July 8th: same data day, but the displayed day
-        // moved from July 9th to July 8th, which can flip the rule's display projection.
+        // 19:00 Tokyo July 8th is 10:00 UTC July 8th: the displayed day moved from July 9th
+        // to July 8th, but the pattern only sees the data day, where nothing moved.
         moveArmedWithScopeAll(store, armed, '2025-07-08T19:00:00', '2025-07-08T19:30:00');
 
-        expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+        expect(occurrence.key).to.equal(armed.key);
+        expect(
+          adapter.formatByString(occurrence.displayTimezone.start.value, 'yyyy-MM-dd HH:mm'),
+        ).to.equal('2025-07-08 19:00');
       });
     });
 

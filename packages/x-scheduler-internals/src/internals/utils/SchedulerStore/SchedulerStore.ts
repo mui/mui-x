@@ -1102,12 +1102,10 @@ export class SchedulerStore<
     const occurrenceEnd = getOccurrenceEnd({ adapter, event: original, occurrenceStart });
     const targetsCreatedEvent = createdEvent != null && createdEventId != null;
     // In place, the pattern decides where a day or rule change lands: only a change that keeps
-    // the occurrence on its day, in both timezones, can keep the surface armed.
+    // the occurrence on its own data-timezone day can keep the surface armed.
     const bounds: [TemporalSupportedObject | undefined, TemporalSupportedObject][] = [
       [changesInDataTimezone.start, occurrenceStart],
       [changesInDataTimezone.end, occurrenceEnd],
-      [changes.start, occurrence.displayTimezone.start.value],
-      [changes.end, occurrence.displayTimezone.end.value],
     ];
     const staysOnItsDay = bounds.every(
       ([changed, current]) => changed == null || adapter.isSameDay(current, changed),
