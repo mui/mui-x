@@ -2011,18 +2011,12 @@ importers:
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
-      '@types/react-transition-group':
-        specifier: 'catalog:'
-        version: 4.4.12(@types/react@19.2.18)
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
-      react-transition-group:
-        specifier: 'catalog:'
-        version: 4.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -2076,24 +2070,9 @@ importers:
       '@mui/x-virtualizer':
         specifier: workspace:*
         version: link:../x-virtualizer/build
-      '@types/react-transition-group':
-        specifier: 'catalog:'
-        version: 4.4.12(@types/react@19.2.18)
-      clsx:
-        specifier: 'catalog:'
-        version: 2.1.1
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
-      react-transition-group:
-        specifier: 'catalog:'
-        version: 4.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      reselect:
-        specifier: 'catalog:'
-        version: 5.2.0
-      use-sync-external-store:
-        specifier: 'catalog:'
-        version: 1.6.0(react@19.2.8)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -2107,9 +2086,6 @@ importers:
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
-      '@types/use-sync-external-store':
-        specifier: 'catalog:'
-        version: 1.5.0
       react:
         specifier: 'catalog:'
         version: 19.2.8
