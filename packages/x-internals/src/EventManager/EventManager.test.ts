@@ -4,7 +4,7 @@ import { EventManager } from './EventManager';
 
 /** Vitest's invocation counter is global across mocks, so it orders calls between them. */
 function expectCallOrder(...listeners: Mock[]) {
-  // `sinon.assert.callOrder` also failed when a spy was never called.
+  // A listener that never ran would otherwise contribute `undefined` and pass vacuously.
   listeners.forEach((listener) => expect(listener.mock.calls.length).to.be.greaterThan(0));
   const order = listeners.map((listener) => listener.mock.invocationCallOrder[0]);
   expect(order).to.deep.equal([...order].sort((a, b) => a - b));

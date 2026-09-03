@@ -2,12 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import { MessageGroup, type MessageGroupProps } from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { MessageGroup } from '@mui/x-chat-headless';
+import type { MessageGroupProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
-import { ChatMessage, type ChatMessageSlots, type ChatMessageSlotProps } from './ChatMessage';
+import { ChatMessage } from './ChatMessage';
+import type { ChatMessageSlots, ChatMessageSlotProps } from './ChatMessage';
 import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageGroup');
