@@ -23,6 +23,7 @@ import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
+import type { ChartsActivationEvent } from '@mui/x-charts/models';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
@@ -69,7 +70,10 @@ export interface BarChartPremiumProps
    * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier | RangeBarItemIdentifier} itemIdentifier The item identifier.
    */
-  onItemClick?(event: MouseEvent, itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier): void;
+  onItemClick?(
+    event: ChartsActivationEvent,
+    itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier,
+  ): void;
 
   /**
    * The series to display in the bar chart.
@@ -241,7 +245,16 @@ BarChartPremium.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -426,7 +439,7 @@ BarChartPremium.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
@@ -658,7 +671,7 @@ BarChartPremium.propTypes /* remove-proptypes */ = {
   zoomInteractionConfig: PropTypes.shape({
     pan: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
+        PropTypes.oneOf(['drag', 'keyboard', 'pressAndDrag', 'wheel']),
         PropTypes.shape({
           allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
           pointerMode: PropTypes.any,
@@ -675,11 +688,16 @@ BarChartPremium.propTypes /* remove-proptypes */ = {
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
         }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['keyboard']).isRequired,
+        }),
       ]).isRequired,
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
+        PropTypes.oneOf(['brush', 'doubleTapReset', 'keyboard', 'pinch', 'tapAndDrag', 'wheel']),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
@@ -694,6 +712,11 @@ BarChartPremium.propTypes /* remove-proptypes */ = {
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['keyboard']).isRequired,
         }),
         PropTypes.shape({
           pointerMode: PropTypes.any,

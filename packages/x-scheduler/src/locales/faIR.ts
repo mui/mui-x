@@ -1,20 +1,27 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const faIRDialog: Partial<EventDialogLocaleText> = {
+const faIRDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
+  // colorSectionLabel: 'Color',
   // dateTimeSectionLabel: 'Date & time',
   // resourceColorSectionLabel: 'Resource & color',
   // allDayLabel: 'All Day',
   // closeButtonAriaLabel: 'Close',
   // closeButtonLabel: 'Close',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   // deleteEvent: 'Delete event',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   // descriptionLabel: 'Description',
   // endDateLabel: 'End date',
   // endTimeLabel: 'End time',
@@ -53,10 +60,13 @@ const faIRDialog: Partial<EventDialogLocaleText> = {
   // noResourceAriaLabel: 'No specific resource',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   // resourceLabel: 'Resource',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   // saveChanges: 'Save',
-  // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
+  // startDateAfterEndDateError: 'End date cannot be before start date.',
   // startDateLabel: 'Start date',
+  // startTimeAfterEndTimeError: 'End time must be after start time.',
   // startTimeLabel: 'Start time',
   // RecurringScopeDialog
   // all: 'All events',
@@ -68,7 +78,7 @@ const faIRDialog: Partial<EventDialogLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const faIRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const faIRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -121,7 +131,7 @@ const faIRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const faIRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const faIRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

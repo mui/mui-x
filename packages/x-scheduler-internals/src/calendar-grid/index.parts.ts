@@ -12,7 +12,6 @@ export { CalendarGridDayEventResizeHandler as DayEventResizeHandler } from './da
 export { CalendarGridTimeScrollableContent as TimeScrollableContent } from './time-scrollable-content/CalendarGridTimeScrollableContent';
 export { CalendarGridTimeColumn as TimeColumn } from './time-column/CalendarGridTimeColumn';
 export { CalendarGridTimeEvent as TimeEvent } from './time-event/CalendarGridTimeEvent';
-export { CalendarGridTimeEventPlaceholder as TimeEventPlaceholder } from './time-event-placeholder/CalendarGridTimeEventPlaceholder';
 export { CalendarGridTimeEventResizeHandler as TimeEventResizeHandler } from './time-event-resize-handler/CalendarGridTimeEventResizeHandler';
 export { CalendarGridCurrentTimeIndicator as CurrentTimeIndicator } from './current-time-indicator/CalendarGridCurrentTimeIndicator';
 

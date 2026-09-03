@@ -1,20 +1,27 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const roRODialog: Partial<EventDialogLocaleText> = {
+const roRODialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Culoarea evenimentului',
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Dată și oră',
   resourceColorSectionLabel: 'Resursă și culoare',
   allDayLabel: 'Toată ziua',
   closeButtonAriaLabel: 'Închide',
   closeButtonLabel: 'Închide',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Șterge evenimentul',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Descriere',
   endDateLabel: 'Data de sfârșit',
   endTimeLabel: 'Ora de sfârșit',
@@ -51,10 +58,13 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   noResourceAriaLabel: 'Fără resursă',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Resursă',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salvează',
-  startDateAfterEndDateError: 'Data/ora de început trebuie să fie înainte de data/ora de sfârșit.',
+  startDateAfterEndDateError: 'Data de sfârșit nu poate fi înainte de data de început.',
   startDateLabel: 'Data de început',
+  startTimeAfterEndTimeError: 'Ora de sfârșit trebuie să fie după ora de început.',
   startTimeLabel: 'Ora de început',
 
   // RecurringScopeDialog
@@ -67,7 +77,7 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   title: 'Aplică această modificare la:',
 };
 
-const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Resurse',
 
@@ -129,7 +139,7 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   timelineResourceTitleHeader: 'Titlul resursei',
 };
 
-const roROTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const roROTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titlul resursei',
 };

@@ -431,8 +431,16 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
    */
   experimentalFeatures: PropTypes.shape({
     enablePositionBasedPointerInteraction: PropTypes.bool,
+    keyboardActivation: PropTypes.bool,
     progressiveRendering: PropTypes.bool,
   }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -665,7 +673,7 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
@@ -691,7 +699,7 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when clicking close to an item.
    * This is only available for scatter plot for now.
-   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ChartsActivationEvent} event Event caught at the svg level
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,

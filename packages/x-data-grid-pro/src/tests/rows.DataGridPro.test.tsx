@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { RefObject } from '@mui/x-internals/types';
 import {
   $,
@@ -267,6 +266,89 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
+    describe('_action: "replace" in a batch', () => {
+      class BrandRow {
+        id: number;
+        brand: string;
+        constructor(id: number, brand: string) {
+          this.id = id;
+          this.brand = brand;
+        }
+        getBrand() {
+          return this.brand;
+        }
+      }
+
+      it('should keep the reference identity when the replace is the last entry for its id', () => {
+        render(<TestCase />);
+        const replacement = new BrandRow(1, 'Fila');
+        act(() =>
+          apiRef.current?.updateRows([
+            { id: 1, brand: 'Kappa' },
+            { _action: 'replace', row: replacement },
+          ]),
+        );
+        expect(apiRef.current?.getRow(1)).to.equal(replacement);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
+      });
+
+      it('should stay a replace when a partial update follows it for the same id', () => {
+        render(<TestCase rows={[{ id: 1, brand: 'Adidas', stock: 5 }]} />);
+        const replacement = new BrandRow(1, 'Fila');
+        expect(() => {
+          act(() =>
+            apiRef.current?.updateRows([
+              { _action: 'replace', row: replacement },
+              { id: 1, brand: 'Kappa' },
+            ]),
+          );
+        }).toWarnDev(
+          [
+            "MUI X Data Grid: A row was provided with `_action: 'replace'` but it is not the last update for that row in this batch.",
+            'The remaining updates are merged onto the replacement, so the row keeps its prototype but is neither the same object nor carries its `#private` fields, which a merge cannot copy.',
+            'Make the replace the last update for that row if `apiRef.current.getRow(id)` must return the object you passed in.',
+            'For more detail, see https://mui.com/x/react-data-grid/row-updates/.',
+          ].join('\n'),
+        );
+
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        // Only the reference identity is lost, the replace semantics are not.
+        expect(updatedRow).not.to.equal(replacement);
+        expect(updatedRow instanceof BrandRow).to.equal(true);
+        expect(updatedRow.getBrand()).to.equal('Kappa');
+        expect('stock' in updatedRow).to.equal(false);
+        expect('_action' in updatedRow).to.equal(false);
+        // The caller's instance is never mutated, even in the merge path.
+        expect('_action' in replacement).to.equal(false);
+      });
+
+      it('should cancel a deletion queued earlier in the same batch', () => {
+        render(<TestCase />);
+        const replacement = new BrandRow(1, 'Fila');
+        act(() =>
+          apiRef.current?.updateRows([
+            { id: 1, _action: 'delete' },
+            { _action: 'replace', row: replacement },
+          ]),
+        );
+        expect(apiRef.current?.getRow(1)).to.equal(replacement);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
+      });
+
+      it('should replace a row inserted earlier in the same batch', () => {
+        render(<TestCase />);
+        const replacement = new BrandRow(5, 'Atari');
+        act(() =>
+          apiRef.current?.updateRows([
+            { id: 5, brand: 'Amiga' },
+            { _action: 'replace', row: replacement },
+          ]),
+        );
+        expect(apiRef.current?.getRow(5)).to.equal(replacement);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma', 'Atari']);
+      });
+    });
+
     it('update row data should process getRowId', () => {
       function TestCaseGetRowId() {
         apiRef = useGridApiRef();
@@ -316,7 +398,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should not trigger unnecessary cells rerenders', () => {
-      const renderCellSpy = spy((params: any) => {
+      const renderCellSpy = vi.fn((params: any) => {
         return params.value;
       });
       function Test() {
@@ -334,10 +416,10 @@ describe('<DataGridPro /> - Rows', () => {
 
       render(<Test />);
       const initialRendersCount = 2;
-      expect(renderCellSpy.callCount).to.equal(initialRendersCount);
+      expect(renderCellSpy.mock.calls.length).to.equal(initialRendersCount);
 
       act(() => apiRef.current?.updateRows([{ id: 1, name: 'John' }]));
-      expect(renderCellSpy.callCount).to.equal(initialRendersCount + 2);
+      expect(renderCellSpy.mock.calls.length).to.equal(initialRendersCount + 2);
     });
   });
 
@@ -889,15 +971,15 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should publish "cellFocusOut" when clicking outside the focused cell', async () => {
-      const handleCellFocusOut = spy();
+      const handleCellFocusOut = vi.fn();
       const { user } = render(<TestCase rows={baselineProps.rows} />);
       apiRef.current?.subscribeEvent('cellFocusOut', handleCellFocusOut);
       await user.click(getCell(1, 0));
-      expect(handleCellFocusOut.callCount).to.equal(0);
+      expect(handleCellFocusOut.mock.calls.length).to.equal(0);
       await user.click(document.body);
-      expect(handleCellFocusOut.callCount).to.equal(1);
-      expect(handleCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
-      expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
+      expect(handleCellFocusOut.mock.calls.length).to.equal(1);
+      expect(handleCellFocusOut.mock.calls[0][0].id).to.equal(baselineProps.rows[1].id);
+      expect(handleCellFocusOut.mock.calls[0][0].field).to.equal(baselineProps.columns[0].field);
     });
 
     it('should not crash when the row is removed during the click', async () => {

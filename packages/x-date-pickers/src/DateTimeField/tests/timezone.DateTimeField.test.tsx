@@ -1,8 +1,10 @@
-import { spy } from 'sinon';
+import * as React from 'react';
 import type { DateTime } from 'luxon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { vi, describe, it, expect } from 'vitest';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
@@ -40,7 +42,7 @@ describe('<DateTimeField /> - Timezone', () => {
       };
 
       it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const view = renderWithProps({
           onChange,
           format,
@@ -52,7 +54,7 @@ describe('<DateTimeField /> - Timezone', () => {
         expectFieldValue(view.getSectionsContainer(), '12/31/2022 23');
 
         // Check the `onChange` value (uses default timezone, for example: UTC, see TZ env variable)
-        const actualDate = onChange.lastCall.firstArg;
+        const actualDate = onChange.mock.lastCall?.[0];
 
         // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.
         // In a real world scenario, this should probably never occur.
@@ -65,7 +67,7 @@ describe('<DateTimeField /> - Timezone', () => {
       TIMEZONE_TO_TEST.forEach((timezone) => {
         describe(`Timezone: ${timezone}`, () => {
           it('should use timezone prop for onChange and rendering when no value is provided', async () => {
-            const onChange = spy();
+            const onChange = vi.fn();
             const view = renderWithProps({
               onChange,
               format,
@@ -77,13 +79,13 @@ describe('<DateTimeField /> - Timezone', () => {
             expectFieldValue(view.getSectionsContainer(), '12/31/2022 23');
 
             // Check the `onChange` value (uses timezone prop)
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.lastCall?.[0];
             expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });
 
           it('should use timezone prop for rendering and value timezone for onChange when a value is provided', async () => {
-            const onChange = spy();
+            const onChange = vi.fn();
             const view = renderWithProps({
               defaultValue: adapter.date(undefined, timezone),
               onChange,
@@ -99,7 +101,7 @@ describe('<DateTimeField /> - Timezone', () => {
 
             // Check the `onChange` value (uses timezone prop)
             const expectedDate = adapter.addMonths(adapter.date(undefined, timezone), -1);
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.lastCall?.[0];
             expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });
@@ -128,6 +130,48 @@ describe('<DateTimeField /> - Timezone', () => {
       view.setProps({ value: date.setZone('America/Los_Angeles') });
 
       expectFieldValue(view.getSectionsContainer(), '06/18/2020 07:30 AM');
+    });
+  });
+
+  describe('Editing a year in a timezone using Local Mean Time - Dayjs', () => {
+    const { render, adapter } = createPickerRenderer({
+      adapterName: 'dayjs',
+      clockConfig: new Date('2026-08-05T20:11:00Z'),
+    });
+
+    // Each key press publishes a value, so the year goes through `0002`, `0020` and `0202` before
+    // reaching `2020`. On those years `Asia/Kolkata` falls back on its Local Mean Time, which used to
+    // shift the day of the month. The shifted day was written back into the day section and never
+    // recovered. See https://github.com/mui/mui-x/issues/23163
+    it('should not change the day of the month while the year is being typed', async () => {
+      function ControlledField(props: React.ComponentProps<typeof DateTimeField>) {
+        const [value, setValue] = React.useState<PickerValue>(() =>
+          adapter.date(undefined, 'Asia/Kolkata'),
+        );
+
+        return (
+          <DateTimeField
+            {...props}
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+            format="MM/DD/YYYY HH:mm"
+            timezone="Asia/Kolkata"
+          />
+        );
+      }
+
+      const { renderWithProps } = buildFieldInteractions({
+        render,
+        Component: ControlledField,
+      });
+      const view = renderWithProps({});
+
+      await view.selectSection('month');
+      await view.user.keyboard('03');
+      await view.user.keyboard('03');
+      await view.user.keyboard('2020');
+
+      expectFieldValue(view.getSectionsContainer(), '03/03/2020 01:41');
     });
   });
 });

@@ -1,12 +1,15 @@
+import * as React from 'react';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
-import { DataGrid, Toolbar, ToolbarButton } from '@mui/x-data-grid';
+import { DataGrid, Toolbar, ToolbarButton, ToolbarRoot } from '@mui/x-data-grid';
 import type { GridColumnsManagementProps } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 declare module '@mui/x-data-grid' {
   interface GridToolbarProps {
     items: string[];
+    disabledItems?: string[];
   }
 }
 
@@ -15,6 +18,30 @@ function CustomToolbar({ items = ['Item 1', 'Item 2', 'Item 3'] }: { items: stri
     <Toolbar>
       {items.map((item) => (
         <ToolbarButton key={item}>{item}</ToolbarButton>
+      ))}
+    </Toolbar>
+  );
+}
+
+function DisableableToolbar({ disabledItems = [] }: { disabledItems?: string[] }) {
+  return (
+    <Toolbar>
+      {['Item 1', 'Item 2', 'Item 3'].map((item) => (
+        <ToolbarButton key={item} disabled={disabledItems.includes(item)}>
+          {item}
+        </ToolbarButton>
+      ))}
+    </Toolbar>
+  );
+}
+
+function AriaDisableableToolbar({ disabledItems = [] }: { disabledItems?: string[] }) {
+  return (
+    <Toolbar>
+      {['Item 1', 'Item 2', 'Item 3'].map((item) => (
+        <ToolbarButton key={item} aria-disabled={disabledItems.includes(item) || undefined}>
+          {item}
+        </ToolbarButton>
       ))}
     </Toolbar>
   );
@@ -170,6 +197,284 @@ describe('<DataGrid /> - Toolbar', () => {
 
       await user.keyboard('{ArrowLeft}');
       expect(screen.getByRole('button', { name: 'Item 1' })).toHaveFocus();
+    });
+
+    describe('initial tab stop', () => {
+      it('should skip items that mount disabled when assigning the initial tab stop', async () => {
+        render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: DisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: ['Item 1'] } }}
+            showToolbar
+          />,
+        );
+
+        expect(screen.getByRole('button', { name: 'Item 2' })).to.have.attribute('tabindex', '0');
+      });
+
+      it('should skip items that mount aria-disabled when assigning the initial tab stop', async () => {
+        render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: AriaDisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: ['Item 1'] } }}
+            showToolbar
+          />,
+        );
+
+        expect(screen.getByRole('button', { name: 'Item 2' })).to.have.attribute('tabindex', '0');
+      });
+
+      it('should fall back to the first item when every item mounts disabled', async () => {
+        // `aria-disabled` keeps the rendered `tabIndex`, unlike `disabled` which
+        // the underlying button always renders as `-1`
+        render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: AriaDisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: ['Item 1', 'Item 2', 'Item 3'] } }}
+            showToolbar
+          />,
+        );
+
+        expect(screen.getByRole('button', { name: 'Item 1' })).to.have.attribute('tabindex', '0');
+      });
+    });
+
+    // https://github.com/mui/mui-x/issues/23035
+    describe('focus management when items become disabled', () => {
+      it('should not move focus when an item becomes disabled and focus is outside the toolbar', async () => {
+        const { setProps } = render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: DisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: ['Item 2'] } }}
+            showToolbar
+          />,
+        );
+
+        expect(document.body).toHaveFocus();
+
+        await act(async () => {
+          setProps({
+            slotProps: {
+              toolbar: { disabledItems: ['Item 1', 'Item 2'] },
+            },
+          });
+        });
+
+        expect(document.body).toHaveFocus();
+        // The disabled item was the tab stop, so the tab stop should move to an
+        // enabled item without moving focus
+        expect(screen.getByRole('button', { name: 'Item 3' })).to.have.attribute('tabindex', '0');
+      });
+
+      it('should move focus to the next enabled item when the focused item becomes disabled', async () => {
+        const { setProps } = render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: DisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: [] } }}
+            showToolbar
+          />,
+        );
+
+        await act(async () => screen.getByRole('button', { name: 'Item 1' }).focus());
+        await act(async () => {
+          setProps({
+            slotProps: {
+              toolbar: { disabledItems: ['Item 1'] },
+            },
+          });
+        });
+
+        expect(screen.getByRole('button', { name: 'Item 2' })).toHaveFocus();
+      });
+
+      it('should skip disabled items when moving focus away from the focused item that becomes disabled', async () => {
+        const { setProps } = render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: DisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: ['Item 2'] } }}
+            showToolbar
+          />,
+        );
+
+        await act(async () => screen.getByRole('button', { name: 'Item 1' }).focus());
+        await act(async () => {
+          setProps({
+            slotProps: {
+              toolbar: { disabledItems: ['Item 1', 'Item 2'] },
+            },
+          });
+        });
+
+        expect(screen.getByRole('button', { name: 'Item 3' })).toHaveFocus();
+      });
+
+      it('should not move focus or the tab stop when a non-tab-stop item becomes disabled', async () => {
+        const { setProps } = render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: DisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: [] } }}
+            showToolbar
+          />,
+        );
+
+        await act(async () => {
+          setProps({
+            slotProps: {
+              toolbar: { disabledItems: ['Item 2'] },
+            },
+          });
+        });
+
+        expect(document.body).toHaveFocus();
+        expect(screen.getByRole('button', { name: 'Item 1' })).to.have.attribute('tabindex', '0');
+      });
+
+      it('should keep focus on the focused item when it becomes aria-disabled', async () => {
+        // `aria-disabled` items remain focusable, so focus should not move,
+        // but the tab stop should move to an enabled item
+        const { setProps } = render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: AriaDisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: [] } }}
+            showToolbar
+          />,
+        );
+
+        await act(async () => screen.getByRole('button', { name: 'Item 1' }).focus());
+        await act(async () => {
+          setProps({
+            slotProps: {
+              toolbar: { disabledItems: ['Item 1'] },
+            },
+          });
+        });
+
+        expect(screen.getByRole('button', { name: 'Item 1' })).toHaveFocus();
+        expect(screen.getByRole('button', { name: 'Item 2' })).to.have.attribute('tabindex', '0');
+      });
+
+      it('should not move focus when the focused item is re-enabled after being disabled', async () => {
+        const { setProps } = render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: DisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: [] } }}
+            showToolbar
+          />,
+        );
+
+        await act(async () => screen.getByRole('button', { name: 'Item 1' }).focus());
+        await act(async () => {
+          setProps({
+            slotProps: {
+              toolbar: { disabledItems: ['Item 1'] },
+            },
+          });
+        });
+        expect(screen.getByRole('button', { name: 'Item 2' })).toHaveFocus();
+
+        await act(async () => {
+          setProps({
+            slotProps: {
+              toolbar: { disabledItems: [] },
+            },
+          });
+        });
+        expect(screen.getByRole('button', { name: 'Item 2' })).toHaveFocus();
+      });
+    });
+
+    it('should not move focus when an item is removed and focus is outside the toolbar', async () => {
+      const { setProps } = render(
+        <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
+      );
+
+      expect(document.body).toHaveFocus();
+
+      await act(async () => {
+        setProps({
+          slotProps: {
+            toolbar: { items: ['Item 2', 'Item 3'] },
+          },
+        });
+      });
+
+      expect(document.body).toHaveFocus();
+      // The removed item was the tab stop, so the tab stop should move to
+      // another item without moving focus
+      expect(screen.getByRole('button', { name: 'Item 3' })).to.have.attribute('tabindex', '0');
+    });
+  });
+
+  describe('ToolbarRoot', () => {
+    it('should render a div with the toolbar styles outside of the Data Grid', () => {
+      render(<ToolbarRoot data-testid="custom-header">Header</ToolbarRoot>);
+
+      const element = screen.getByTestId('custom-header');
+      expect(element.tagName).to.equal('DIV');
+      expect(element).toHaveComputedStyle({
+        display: 'flex',
+        alignItems: 'center',
+        minHeight: '52px',
+      });
+    });
+
+    it('should apply the same styles as the element rendered by Toolbar', () => {
+      render(
+        <React.Fragment>
+          <ToolbarRoot data-testid="custom-header" />
+          <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />
+        </React.Fragment>,
+      );
+
+      const toolbarClasses = new Set(screen.getByRole('toolbar').classList);
+      const rootClasses = Array.from(screen.getByTestId('custom-header').classList);
+      // The styled component class is shared between both elements.
+      expect(rootClasses.some((className) => toolbarClasses.has(className))).to.equal(true);
+    });
+
+    // The CSS variable fallbacks are resolved by the browser, jsdom keeps them unresolved.
+    it.skipIf(isJSDOM)(
+      'should fall back to the theme values for the variables the Data Grid defines',
+      () => {
+        render(
+          <React.Fragment>
+            <ToolbarRoot data-testid="custom-header" />
+            <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />
+          </React.Fragment>,
+        );
+
+        const toolbarStyle = getComputedStyle(screen.getByRole('toolbar'));
+        const rootStyle = getComputedStyle(screen.getByTestId('custom-header'));
+
+        expect(rootStyle.padding).not.to.equal('0px');
+        expect(rootStyle.padding).to.equal(toolbarStyle.padding);
+        expect(rootStyle.borderBottomColor).to.equal(toolbarStyle.borderBottomColor);
+        expect(rootStyle.borderBottomWidth).to.equal(toolbarStyle.borderBottomWidth);
+        expect(rootStyle.backgroundColor).to.equal(toolbarStyle.backgroundColor);
+        expect(rootStyle.color).to.equal(toolbarStyle.color);
+        expect(rootStyle.font).to.equal(toolbarStyle.font);
+      },
+    );
+
+    // The CSS variable fallbacks are resolved by the browser, jsdom keeps them unresolved.
+    it.skipIf(isJSDOM)('should prefer the Data Grid variables over the fallbacks', () => {
+      render(
+        <div style={{ '--DataGrid-t-spacing-unit': '20px' } as React.CSSProperties}>
+          <ToolbarRoot data-testid="custom-header" />
+        </div>,
+      );
+
+      // 20 * 0.75 = 15px, coming from the inherited variable rather than from the fallback.
+      expect(getComputedStyle(screen.getByTestId('custom-header')).padding).to.equal('15px');
     });
   });
 

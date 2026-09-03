@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { act, createEvent, fireEvent, screen } from '@mui/internal-test-utils';
 import type { DescribeTreeViewRendererUtils } from 'test/utils/tree-view/describeTreeView';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { vi, describe, it, expect } from 'vitest';
 import type { TreeViewAnyStore } from '../internals/models';
 
 describeTreeView<TreeViewAnyStore>(
@@ -31,8 +31,8 @@ describeTreeView<TreeViewAnyStore>(
     describe('onClick prop', () => {
       it.skipIf(treeViewComponentName === 'RichTreeViewPro')(
         'should call onClick when clicked, and when children are clicked for TreeItem (when using nested DOM structure)',
-        () => {
-          const onClick = spy();
+        async () => {
+          const onClick = vi.fn();
 
           const view = render({
             items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -44,15 +44,15 @@ describeTreeView<TreeViewAnyStore>(
             },
           });
 
-          fireEvent.click(view.getItemContent('1.1'));
-          expect(onClick.callCount).to.equal(2);
-          expect(onClick.firstCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
-          expect(onClick.lastCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
+          await view.user.click(view.getItemContent('1.1'));
+          expect(onClick.mock.calls.length).to.equal(2);
+          expect(onClick.mock.calls[0][0].target.parentElement.dataset.testid).to.equal('1.1');
+          expect(onClick.mock.lastCall?.[0].target.parentElement.dataset.testid).to.equal('1.1');
         },
       );
 
-      it('should call onClick even when the element is disabled', () => {
-        const onClick = spy();
+      it('should call onClick even when the element is disabled', async () => {
+        const onClick = vi.fn();
 
         const view = render({
           items: [{ id: '1', disabled: true }],
@@ -63,8 +63,8 @@ describeTreeView<TreeViewAnyStore>(
           },
         });
 
-        fireEvent.click(view.getItemContent('1'));
-        expect(onClick.callCount).to.equal(1);
+        await view.user.click(view.getItemContent('1'));
+        expect(onClick.mock.calls.length).to.equal(1);
       });
     });
 
@@ -87,10 +87,10 @@ describeTreeView<TreeViewAnyStore>(
         keyCode: 65,
       });
 
-      const handlePreventDefault = spy();
+      const handlePreventDefault = vi.fn();
       keydownEvent.preventDefault = handlePreventDefault;
       fireEvent(input, keydownEvent);
-      expect(handlePreventDefault.callCount).to.equal(0);
+      expect(handlePreventDefault.mock.calls.length).to.equal(0);
     });
 
     it('should not focus steal', () => {

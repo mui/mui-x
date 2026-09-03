@@ -9,6 +9,7 @@ import { useYAxes } from '../hooks/useAxis';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { invertTextAnchor } from '../internals/invertTextAnchor';
 import { defaultProps, useUtilityClasses } from './utilities';
+import { DEFAULT_TICK_LABEL_FONT_SIZE } from '../constants';
 
 export function useAxisTicksProps(inProps: ChartsYAxisProps) {
   const { yAxis, yAxisIds } = useYAxes();
@@ -30,7 +31,10 @@ export function useAxisTicksProps(inProps: ChartsYAxisProps) {
 
   const positionSign = position === 'right' ? 1 : -1;
 
-  const tickFontSize = typeof tickLabelStyle?.fontSize === 'number' ? tickLabelStyle.fontSize : 12;
+  const tickFontSize =
+    typeof tickLabelStyle?.fontSize === 'number'
+      ? tickLabelStyle.fontSize
+      : DEFAULT_TICK_LABEL_FONT_SIZE;
 
   const Tick = slots?.axisTick ?? 'line';
   const TickLabel = slots?.axisTickLabel ?? ChartsText;

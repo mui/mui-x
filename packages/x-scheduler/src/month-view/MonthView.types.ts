@@ -6,6 +6,8 @@ import type {
   CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
+import type { EventCalendarLocaleText } from '../models/translations';
+import type { SchedulerSlotsAndSlotProps } from '../models/slots';
 
 export interface MonthViewProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -18,12 +20,19 @@ export interface StandaloneMonthViewProps<TEvent extends object, TResource exten
       | keyof EventCalendarSchedulerParametersOverrides
       | CollapsibleResourcesParameterKeys
     >,
-    EventCalendarSchedulerParametersOverrides {
+    EventCalendarSchedulerParametersOverrides,
+    SchedulerSlotsAndSlotProps {
   /**
    * Configuration applied to the view, keyed by the view name.
    * The `month` view does not support any configuration keys yet.
    */
   viewConfig?: Omit<EventCalendarViewConfig, 'day' | 'week'>;
+  /**
+   * Set the locale text of the view.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
+   * in the GitHub repository.
+   */
+  localeText?: Partial<EventCalendarLocaleText>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

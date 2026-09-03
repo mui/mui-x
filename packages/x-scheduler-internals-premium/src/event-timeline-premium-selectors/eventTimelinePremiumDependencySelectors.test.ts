@@ -4,6 +4,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import { describe, it, expect } from 'vitest';
 import { eventTimelinePremiumDependencySelectors } from './eventTimelinePremiumDependencySelectors';
 
 const TEST_RESOURCES = [ResourceBuilder.new().build()];
@@ -123,6 +124,169 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     const second = eventTimelinePremiumDependencySelectors.activeModelListBySource(state);
 
     expect(first).to.equal(second);
+  });
+
+  it('should group the source event titles by target event id', () => {
+    const state = getState();
+
+    const titlesByTarget =
+      eventTimelinePremiumDependencySelectors.activeSourceTitlesByTarget(state);
+
+    expect(titlesByTarget.get('event-b')).to.deep.equal([eventA.title]);
+    expect(titlesByTarget.get('event-a')).to.equal(undefined);
+  });
+
+  it('should return the source titles of all the active dependencies targeting the event', () => {
+    const eventC = EventBuilder.new().id('event-c').title('Event C').build();
+    const state = getEventTimelinePremiumStateFromParameters({
+      resources: TEST_RESOURCES,
+      events: [eventA, eventB, eventC],
+      dependencies: [
+        DEP_1,
+        { id: 'dep-c', source: 'event-c', target: 'event-b', type: 'FinishToStart' },
+      ],
+    });
+
+    expect(
+      eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(state, 'event-b'),
+    ).to.deep.equal([eventA.title, 'Event C']);
+  });
+
+  it('should return the same empty instance for every event without predecessors', () => {
+    const state = getState();
+
+    const first = eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(
+      state,
+      'event-a',
+    );
+    const second = eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(
+      state,
+      'event-r',
+    );
+
+    expect(first).to.deep.equal([]);
+    expect(first).to.equal(second);
+  });
+
+  it('should report the feature as enabled only when a dependencies parameter is provided', () => {
+    const stateWithDependencies = getState();
+    const stateWithoutDependencies = getEventTimelinePremiumStateFromParameters({
+      resources: TEST_RESOURCES,
+      events: [eventA, eventB],
+    });
+    let stateWithHandlerOnly!: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
+    expect(() => {
+      stateWithHandlerOnly = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        onDependenciesChange: () => {},
+      });
+    }).toWarnDev([
+      'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
+    ]);
+
+    expect(eventTimelinePremiumDependencySelectors.enabled(stateWithDependencies)).to.equal(true);
+    expect(eventTimelinePremiumDependencySelectors.enabled(stateWithoutDependencies)).to.equal(
+      false,
+    );
+    expect(eventTimelinePremiumDependencySelectors.enabled(stateWithHandlerOnly)).to.equal(false);
+  });
+
+  it('should return the creation gesture source and target flags', () => {
+    const state = {
+      ...getState(),
+      dependencyCreation: {
+        sourceEventId: 'event-a',
+        sourceOccurrenceKey: 'event-a-0',
+        sourceResourceId: 'r1',
+        sourceSide: 'end' as const,
+        targetEventId: 'event-b',
+        targetOccurrenceKey: 'event-b-0',
+        targetResourceId: 'r1',
+      },
+    };
+
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r1'),
+    ).to.equal(true);
+    // A multi-resource event repeats the same occurrence key on another row: that
+    // appearance is not the gesture's appearance.
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r2'),
+    ).to.equal(false);
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-b-0', 'r1'),
+    ).to.equal(false);
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r1'),
+    ).to.equal(true);
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r2'),
+    ).to.equal(false);
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-a-0', 'r1'),
+    ).to.equal(false);
+  });
+
+  it('should not flag any occurrence when no creation gesture is in progress', () => {
+    const state = getState();
+
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r1'),
+    ).to.equal(false);
+    expect(
+      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r1'),
+    ).to.equal(false);
+  });
+
+  it('should resolve the selected id to null when the dependency no longer exists', () => {
+    const state = getState();
+
+    expect(
+      eventTimelinePremiumDependencySelectors.selectedId({
+        ...state,
+        selection: { type: 'dependency' as const, id: 'dep-1' },
+      }),
+    ).to.equal('dep-1');
+    expect(
+      eventTimelinePremiumDependencySelectors.selectedId({
+        ...state,
+        selection: { type: 'dependency' as const, id: 'removed-dep' },
+      }),
+    ).to.equal(null);
+    expect(eventTimelinePremiumDependencySelectors.selectedId(state)).to.equal(null);
+  });
+
+  it('should report a dependency as read-only when either of its events is read-only', () => {
+    const readOnlyEvent = EventBuilder.new().id('event-ro').readOnly().build();
+    const DEP_SOURCE_RO: SchedulerDependency = {
+      id: 'dep-source-ro',
+      source: 'event-ro',
+      target: 'event-b',
+      type: 'FinishToStart',
+    };
+    const DEP_TARGET_RO: SchedulerDependency = {
+      id: 'dep-target-ro',
+      source: 'event-a',
+      target: 'event-ro',
+      type: 'FinishToStart',
+    };
+    const state = getEventTimelinePremiumStateFromParameters({
+      resources: TEST_RESOURCES,
+      events: [eventA, eventB, readOnlyEvent],
+      dependencies: [DEP_1, DEP_SOURCE_RO, DEP_TARGET_RO],
+    });
+
+    expect(eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'dep-1')).to.equal(false);
+    expect(
+      eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'dep-source-ro'),
+    ).to.equal(true);
+    expect(
+      eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'dep-target-ro'),
+    ).to.equal(true);
+    // A null or unknown id resolves to false: there is no dependency to protect.
+    expect(eventTimelinePremiumDependencySelectors.isModelReadOnly(state, null)).to.equal(false);
+    expect(eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'nope')).to.equal(false);
   });
 
   it('should keep only the last dependency when two of them share the same id', () => {

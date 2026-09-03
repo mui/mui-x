@@ -4,6 +4,7 @@ import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { describe, it, expect } from 'vitest';
 
 describe('useChartKeyboardNavigation', () => {
   const { render } = createRenderer();
@@ -59,6 +60,34 @@ describe('useChartKeyboardNavigation', () => {
 
     expect(container.querySelector(FOCUSED_BAR_SELECTOR)).to.equal(null);
   });
+
+  it.skipIf(isJSDOM)(
+    'should remove focus indicator when clicking a non-focusable element outside',
+    async () => {
+      const { container, user } = render(
+        <div>
+          <BarChart
+            height={100}
+            width={100}
+            skipAnimation
+            margin={0}
+            series={[{ id: 'A', data: [50, 100] }]}
+          />
+          <div id="test-outside" style={{ height: 50, width: 50 }} />
+        </div>,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+
+      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
+
+      // Clicking a non-focusable element gives a null `relatedTarget` on `focusout`.
+      await user.click(container.querySelector('#test-outside')!);
+
+      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).to.equal(null);
+    },
+  );
 
   it.skipIf(isJSDOM)('should not focus a hidden series via keyboard navigation', async () => {
     const { container, user } = render(

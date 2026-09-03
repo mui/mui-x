@@ -5,6 +5,7 @@ import {
   scalePow,
   scaleSqrt,
 } from '@mui/x-charts-vendor/d3-scale';
+import { describe, it, expect } from 'vitest';
 
 describe('d3-scale', () => {
   it('exports valid functions', () => {

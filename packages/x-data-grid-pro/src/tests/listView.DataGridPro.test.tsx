@@ -6,6 +6,7 @@ import type {
   GridListViewColDef,
   GridRowsProp,
 } from '@mui/x-data-grid-pro';
+import { describe, it, expect } from 'vitest';
 
 const rows: GridRowsProp = [{ id: '123567', title: 'test' }];
 

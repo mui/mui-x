@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, isItemExpanded?: func, setEditedItem?: func, setIsItemDisabled?: func, setItemExpansion?: func, setItemSelection?: func, updateItemLabel?: func } }"
+        "description": "{ current?: { addItems?: func, focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemSelection?: func, getItemTree?: func, getParentId?: func, isItemExpanded?: func, setEditedItem?: func, setIsItemDisabled?: func, setItemExpansion?: func, setItemSelection?: func, updateItemLabel?: func } }"
       }
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
@@ -77,6 +77,7 @@
       "default": "12px"
     },
     "itemHeight": { "type": { "name": "number" }, "default": "null" },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
@@ -157,6 +158,17 @@
       "description": "Element rendered at the root.",
       "default": "RichTreeViewRoot",
       "class": "MuiRichTreeView-root"
+    },
+    {
+      "name": "loading",
+      "description": "Component rendered instead of the default loading rows.\nIt renders inside the tree root while the tree is loading, which keeps the\n`role=\"tree\"` and `aria-busy` attributes, and inside a lazily loading item\nwhile its children load.\nCompose it with `TreeItemLoader` to keep the rows semantically correct.",
+      "class": null
+    },
+    {
+      "name": "itemLoader",
+      "description": "Component rendered for each loading row.\nIt also renders for the children of an item while they load lazily.\nWrap custom content in `TreeItemLoader` to keep the row semantically correct.",
+      "default": "TreeItemLoader",
+      "class": "MuiRichTreeView-itemLoader"
     },
     {
       "name": "collapseIcon",

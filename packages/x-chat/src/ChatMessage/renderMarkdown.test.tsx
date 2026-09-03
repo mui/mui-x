@@ -104,10 +104,9 @@ describe('renderMarkdown', () => {
       expect(document.querySelector('img')!.getAttribute('src')).toBe(null);
     });
 
-    it('rejects protocol-relative // URLs (treated as external)', () => {
-      render(<React.Fragment>{renderMarkdown('[x](//evil.example.com)')}</React.Fragment>);
-      // The sanitizer drops the unsafe href entirely, so the anchor is inert.
-      expect(document.querySelector('a')!.getAttribute('href')).toBe(null);
+    it('keeps a protocol-relative // URL, which resolves to an ordinary external link', () => {
+      render(<React.Fragment>{renderMarkdown('[x](//example.com)')}</React.Fragment>);
+      expect(document.querySelector('a')!.getAttribute('href')).toBe('//example.com');
     });
 
     it('strips an optional CommonMark title from an image src', () => {

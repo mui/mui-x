@@ -1,5 +1,394 @@
 # Changelog
 
+## 9.12.0
+
+_Aug 21, 2026_
+
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🧮 Support [Formulas](https://mui.com/x/react-data-grid/formulas/) on the Data Grid: cells in opted-in columns can hold spreadsheet-like formulas (`=SUM(RANGE(…))`, `=price * quantity`) evaluated by a built-in engine, with a formula editor and [Formula Bar](https://mui.com/x/react-data-grid/components/formula-bar/), autocomplete, reference highlighting, optional A1 notation, fill-handle reference adjustment, custom functions, and live formula Excel export
+- ♿️ Improve the accessibility of Data Grid cells and picker day cells
+- 🗓️ Enable multi-resource event creation and editing in the Scheduler
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@Anexus5919, @mustafajw07
+
+The following team members contributed to this release:
+@brijeshb42, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @silviuaavram
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.12.0`
+
+- [DataGrid] Expose `apiRef` on `GridCallbackDetails` for selector access in callbacks (#22973) @michelengelen
+- [DataGrid] Fix header height not updating when `headerFilters` or `columnGroupingModel` change (#23059) @MBilalShafi
+- [DataGrid] Fix unhandled rejection when unmounting mid-autosize (#23319) @JCQuintas
+- [DataGrid] Label the blank `singleSelect` filter option (#23294) @JCQuintas
+- [DataGrid] Stop sending incomplete filter items to the data source (#23303) @JCQuintas
+- [DataGrid] Support the `rowheader` attribute for grid cells (#23340) @silviuaavram
+
+#### `@mui/x-data-grid-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.12.0`, plus:
+
+- [DataGridPro] Honor `hasNextPage` in infinite lazy loading (#23048) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@9.12.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.12.0`, plus:
+
+- [DataGridPremium] Formula support (#22807) @MBilalShafi
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.12.0`
+
+- [fields] Keep the selected section on blank space clicks (#23318) @LukasTy
+- [pickers] Associate the day cells with their week day column header (#23339) @LukasTy
+- [pickers] Keep the `gridcell` role and the column index on filler cells (#23326) @Anexus5919
+
+#### `@mui/x-date-pickers-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.12.0`, plus:
+
+- [DateRangeCalendar] Round the range highlight at the month grid edges (#23297) @JCQuintas
+- [DateRangePicker] Keep the range highlight opaque for disabled days (#23317) @JCQuintas
+
+### Charts
+
+#### `@mui/x-charts@9.12.0`
+
+- [charts] Add a demo for label on grid row (#23333) @noraleonte
+- [charts] Fix React 18 `propTypes` warnings and stray-pointer test flakiness (#23384) @LukasTy
+- [charts] Focus the clicked item for keyboard navigation (#23247) @JCQuintas
+
+#### `@mui/x-charts-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.12.0`.
+
+#### `@mui/x-charts-premium@9.12.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.12.0`, plus:
+
+- [charts-premium] Add `onItemClick` to the radial charts (#23253) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@9.12.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.12.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.10`
+
+- [scheduler] Add `onEventEditingStart` to let consumers open their own edit UI (#23361) @rita-codes
+- [scheduler] Fix keyboard and focus issues around the "+N more" popover (#23312) @rita-codes
+- [scheduler] Honor `viewConfig` hour limits in the compact day and week views (#23316) @rita-codes
+- [scheduler] Share timeline event layout data (#23366) @flaviendelangle
+- [scheduler] enable multi-resource event creation and editing (#23313) @mustafajw07
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.10` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.10`, plus:
+
+- [scheduler-premium] Allow to control the min and max hour in the Event Timeline (#23212) @rita-codes
+- [scheduler-premium] Dependencies - Create, select and delete via terminals (#23200) @rita-codes
+
+### Codemod
+
+#### `@mui/x-codemod@9.12.0`
+
+Internal changes.
+
+### Docs
+
+- [docs][charts] Document line mark size customization (#23370) @JCQuintas
+- [docs] Add recipe for constraining the `make-child` drop action by item type (#22940) @michelengelen
+- [docs] Redirect the renamed Event Timeline views page (#23324) @brijeshb42
+- [docs] Remove unused `adapter-dependencies.json` (#23328) @LukasTy
+
+### Core
+
+- [code-infra] Add release skill (#23308) @brijeshb42
+- [code-infra] Fix changelog categorization of docs and `DateRangeCalendar` tags (#23385) @JCQuintas
+- [code-infra] Sync mui-release skill (#23330) @brijeshb42
+
+### Miscellaneous
+
+- [core] Declare the missing `react-dom` peer dependencies (#23381) @LukasTy
+- [test] Fix act warnings in the data source filter tests (#23360) @JCQuintas
+- [virtualizer] Add inverse-sticky layout (#23053) @romgrk
+
+## 9.11.1
+
+_Aug 6, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐛 Fix the empty `@mui/x-charts-vendor` package published in v9.11.0
+
+The following team members contributed to this release:
+@JCQuintas, @rita-codes
+
+### Charts
+
+#### `@mui/x-charts@9.11.1`
+
+- [charts] Fix empty `@mui/x-charts-vendor` published package (#23310) @JCQuintas
+
+#### `@mui/x-charts-pro@9.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.11.1`.
+
+#### `@mui/x-charts-premium@9.11.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.11.1`.
+
+#### `@mui/x-charts-vendor@9.11.1`
+
+- [charts] Fix empty `@mui/x-charts-vendor` published package (#23310) @JCQuintas
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.9`
+
+- [scheduler] Show the range validation errors on the End date and End time fields (#23291) @rita-codes
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.9`.
+
+## 9.11.0
+
+_Aug 6, 2026_
+
+We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Add `addItems()` and `getItemSelection()` API methods to Tree View
+
+Special thanks go out to these community members for their valuable contributions:
+@12joan, @Anexus5919, @kevincorizi-sbt, @mixelburg, @mustafajw07, @strazto
+
+The following team members contributed to this release:
+@flaviendelangle, @hasdfa, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.11.0`
+
+- [DataGrid] Fix `updateRows` stripping class prototypes from rows in datasource mode (#22288) @mixelburg
+- [DataGrid] Do not re-fetch data when an `Activity` becomes visible (#22603) @12joan
+- [DataGrid] Fix toolbar button stealing focus when a sibling's disabled state changes (#23204) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.11.0`.
+
+#### `@mui/x-data-grid-premium@9.11.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.11.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.11.0`
+
+- [pickers] Fix day shift when editing dates predating timezone standardization (#23296) @JCQuintas
+
+#### `@mui/x-date-pickers-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.11.0`, plus:
+
+- [DateRangePicker] Fix disabled filler cells showing the range highlight (#23293) @JCQuintas
+
+### Charts
+
+#### `@mui/x-charts@9.11.0`
+
+- [charts] Activate the focused item with `Enter`/`Space` (#23218) @JCQuintas
+- [charts] Extract the axis click payload builders (#23215) @JCQuintas
+- [charts] Fix `GestureManager` event listener leak on chart unmount (#23283) @kevincorizi-sbt
+- [charts] Fix `slotProps.legend.position` and `direction` in `RadarChart` (#23254) @JCQuintas
+- [charts] Fix axis clicks being discarded on slight pointer movement (#23244) @noraleonte
+- [charts] Fix image export of charts sized by their parent element (#23255) @JCQuintas
+- [charts] Forward `experimentalFeatures` on `RadarChart` and `Heatmap` (#23216) @JCQuintas
+- [charts] Hide focus indicator when the chart loses focus (#23213) @JCQuintas
+
+#### `@mui/x-charts-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.11.0`.
+
+#### `@mui/x-charts-premium@9.11.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.11.0`, plus:
+
+- [charts-premium] Fix `RangeBar` type override (#23217) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@9.11.0`
+
+- [tree view] Add `addItems()` API method (#23159) @JCQuintas
+- [tree view] Add `getItemSelection` API method (#23257) @noraleonte
+- [tree view] Ignore `keepExistingSelection` when `multiSelect` is `false` (#23242) @JCQuintas
+- [tree view] Prevent duplicate ids in multi-select arrow navigation (#23006) @Anexus5919
+
+#### `@mui/x-tree-view-pro@9.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.11.0`, plus:
+
+- [tree view] Discard superseded lazy-loading responses (#23005) @Anexus5919
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.8`
+
+- [scheduler] Add `localeText` prop to standalone views (#23210) @rita-codes
+- [scheduler] Finetune touch experience for time grid events and introduce editing drawer (#22624) @noraleonte
+- [scheduler] Introduce the edit dialog form context & lifecycle contract (#23284) @rita-codes
+- [scheduler] Refactor edit dialog General tab into section components (#23206) @rita-codes
+- [scheduler] Replace copied Base UI internals with `@base-ui/react/internals` imports (#21972) @flaviendelangle
+- [scheduler] Hide resource picker when no resources are provided (#23290) @mustafajw07
+- [scheduler] Support multi-resource occurrences in `EventTimeline` (#23240) @mustafajw07
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.8` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.8`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.11.0`
+
+- [codemod] Remove unused `@babel/core` and `@babel/traverse` dependencies (#23245) @LukasTy
+
+### Docs
+
+- [docs] Add recipe for adding new rows from clipboard copy (#22913) @michelengelen
+- [docs] Clarify the package versions in v8 upgrade guides (#22376) @strazto
+- [docs] Replace README peer dependency lists with an npm install command (#23256) @LukasTy
+
+### Core
+
+- [code-infra] Align action pin version comments (#23238) @LukasTy
+
+### Miscellaneous
+
+- [chat] Drop the undeclared `@mui/icons-material` dependency (#23252) @LukasTy
+- [chat] Sanitize image part URLs and share the URL allow-list with markdown (#23058) @hasdfa
+- [test] Type the `PickersTextField` test stub instead of `as any` (#23194) @LukasTy
+
+## 9.10.1
+
+_Jul 23, 2026_
+
+We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🦮 Improve accessibility of the Charts and Pickers components.
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@kevincorizi-sbt, @mustafajw07, @SamanPandey-in
+
+The following team members contributed to this release:
+@brijeshb42, @hasdfa, @JCQuintas, @LukasTy, @michelengelen, @noraleonte, @rita-codes, @silviuaavram
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.10.1`
+
+- [data grid] Fix `getColumn` return type not reflecting that it can return undefined (#23165) @JCQuintas
+
+#### `@mui/x-data-grid-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.10.1`.
+
+#### `@mui/x-data-grid-premium@9.10.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.10.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.10.1`
+
+- [pickers] Fix format placeholder brightness with a start adornment (#23189) @LukasTy
+
+#### `@mui/x-date-pickers-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.10.1`, plus:
+
+- [DateRangePicker] Fix broken active range position underline in single input range fields (#23166) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@9.10.1`
+
+- [charts] Fix pie chart disappearing when an arc spans almost the full circle (#23145) @JCQuintas
+- [charts] Set `aria-hidden` on accessibility proxy divs at initialization (#23186) @kevincorizi-sbt
+- [charts] Fix keyboard navigation on series with different lengths (#23182) @JCQuintas
+- [charts] Fix out of bounds keyboard navigation (#23180) @silviuaavram
+
+#### `@mui/x-charts-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.10.1`, plus:
+
+- [charts-pro] Fix highlight shifting on sampled bar charts (#23190) @noraleonte
+- [charts-pro] Sampled band highlight falls back to single-band width for Date/object values (#23024) @SamanPandey-in
+
+#### `@mui/x-charts-premium@9.10.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.10.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.10.1`
+
+- [TreeView] Fix selection propagation to exclude disabled items (#23012) @michelengelen
+
+#### `@mui/x-tree-view-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.10.1`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.7`
+
+- [scheduler] Polish `EventCalendar` rendering for multi-resource events (#23161) @mustafajw07
+- [scheduler] Responsive header (#22954) @noraleonte
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.7`, plus:
+
+- [scheduler-premium] Add the dependencies data model (#23117) @rita-codes
+- [scheduler-premium] Dependencies - Render the FS arrow (#23162) @rita-codes
+
+### Codemod
+
+#### `@mui/x-codemod@9.10.1`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix clearing, layout shift, and prop leak in Pickers demos (#23191) @LukasTy
+
+### Core
+
+- [code-infra] Validate working of specific code-infra canary (#23207) @brijeshb42
+
+### Miscellaneous
+
+- [chat] Normalize message part link URLs (#23187) @hasdfa
+- [x-chat] Fix object URL leaks for submitted attachments (#23198) @hasdfa
+- [internals] Make disposable types self-contained without `esnext.disposable` lib (#23164) @JCQuintas
+
 ## 9.10.0
 
 _Jul 17, 2026_

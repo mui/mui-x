@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
-import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
@@ -12,6 +11,7 @@ import type { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
+import { RichTreeViewLoading } from '../internals/components/RichTreeViewLoading';
 import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
 import type { TreeViewValidItem } from '../models';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
@@ -39,6 +39,7 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
       itemCheckbox: ['itemCheckbox'],
       // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
       // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
+      itemLoader: ['itemLoader'],
     };
 
     return composeClasses(slots, getRichTreeViewUtilityClass, classes);
@@ -91,6 +92,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     apiRef,
     parameters,
     forwardedProps,
+    loading,
   } = useExtractRichTreeViewParameters(props);
 
   // Context hooks
@@ -101,21 +103,49 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const handleRef = useMergedRefs(forwardedRef, ref);
 
   // Selector hooks
-  const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
+  const lazyLoadingRootIsLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
   const error = useStore(store, lazyLoadingSelectors.itemError, null);
 
   // Feature hooks
   const classes = useUtilityClasses(props);
-  const slots = React.useMemo(() => ({ root: RichTreeViewRoot, ...inSlots }), [inSlots]);
+  const slots = React.useMemo(
+    () => ({
+      root: RichTreeViewRoot,
+      ...inSlots,
+    }),
+    [inSlots],
+  );
 
-  if (isLoading) {
-    return <Typography>Loading…</Typography>;
-  }
+  const isLoading = loading || lazyLoadingRootIsLoading;
 
+  let content: React.ReactNode;
   if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
+    content = <Alert severity="error">{error.message}</Alert>;
+  } else if (isLoading) {
+    content = (
+      <RichTreeViewLoading
+        store={store}
+        slots={slots}
+        slotProps={slotProps}
+        ownerState={props}
+        forwardedProps={forwardedProps}
+        rootRef={handleRef}
+        classes={classes}
+      />
+    );
+  } else {
+    content = (
+      <RichTreeViewItems
+        slots={slots}
+        slotProps={slotProps}
+        forwardedProps={forwardedProps}
+        ownerState={props}
+        rootRef={handleRef}
+      />
+    );
   }
 
+  // The provider must mount in the loading and error states too, so `apiRef` is initialized on mount.
   return (
     <TreeViewProvider
       store={store}
@@ -126,13 +156,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
       rootRef={ref}
     >
       <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
-        <RichTreeViewItems
-          slots={slots}
-          slotProps={slotProps}
-          forwardedProps={forwardedProps}
-          ownerState={props}
-          rootRef={handleRef}
-        />
+        {content}
       </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );
@@ -148,10 +172,12 @@ RichTreeView.propTypes /* remove-proptypes */ = {
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      addItems: PropTypes.func,
       focusItem: PropTypes.func,
       getItem: PropTypes.func,
       getItemDOMElement: PropTypes.func,
       getItemOrderedChildrenIds: PropTypes.func,
+      getItemSelection: PropTypes.func,
       getItemTree: PropTypes.func,
       getParentId: PropTypes.func,
       isItemExpanded: PropTypes.func,
@@ -278,6 +304,11 @@ RichTreeView.propTypes /* remove-proptypes */ = {
    */
   itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
+  /**
+   * If `true`, a loading UI is displayed instead of the tree items.
+   * @default false
+   */
+  loading: PropTypes.bool,
   /**
    * Whether multiple items can be selected.
    * @default false

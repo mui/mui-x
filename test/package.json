@@ -2,10 +2,11 @@
   "name": "@mui-x-internal/test",
   "private": true,
   "scripts": {
-    "typescript": "tsgo -p tsconfig.json"
+    "typescript": "tsc -p tsconfig.json"
   },
   "devDependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
@@ -28,7 +29,6 @@
     "@types/moment-jalaali": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/react": "catalog:",
-    "@types/react-router": "catalog:",
     "@types/react-transition-group": "catalog:",
     "@types/semver": "catalog:",
     "date-fns": "catalog:",

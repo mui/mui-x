@@ -1,5 +1,6 @@
 import { adapter } from 'test/utils/scheduler/adapters';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
+import { describe, it, expect } from 'vitest';
 
 describe('resolveEventDate', () => {
   it('should convert Z-string to an instant', () => {

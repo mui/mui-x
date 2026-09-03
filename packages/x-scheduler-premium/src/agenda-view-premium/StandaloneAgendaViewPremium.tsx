@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
@@ -23,10 +24,13 @@ const StandaloneAgendaViewPremium = React.forwardRef(function StandaloneAgendaVi
   TEvent extends object,
   TResource extends object,
 >(
-  props: StandaloneAgendaViewPremiumProps<TEvent, TResource>,
+  inProps: StandaloneAgendaViewPremiumProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   useLicenseVerifier(packageInfo);
+
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
 
   const { parameters, forwardedProps } = useExtractEventCalendarParameters<
     TEvent,
@@ -34,10 +38,18 @@ const StandaloneAgendaViewPremium = React.forwardRef(function StandaloneAgendaVi
     typeof props
   >(props);
 
+  const { localeText, slots, slotProps, ...other } = forwardedProps;
+
   return (
-    <EventCalendarProvider {...parameters} storeClass={EventCalendarPremiumStore}>
+    <EventCalendarProvider
+      {...parameters}
+      storeClass={EventCalendarPremiumStore}
+      localeText={localeText}
+      slots={slots}
+      slotProps={slotProps}
+    >
       <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-        <AgendaView ref={forwardedRef} {...forwardedProps} />
+        <AgendaView ref={forwardedRef} {...other} />
         {watermark}
       </EventDialogProvider>
     </EventCalendarProvider>
@@ -162,6 +174,7 @@ StandaloneAgendaViewPremium.propTypes /* remove-proptypes */ = {
    */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
+      canHaveMultipleResources: PropTypes.bool,
       duration: PropTypes.number,
       interaction: PropTypes.oneOf(['click', 'double-click']),
     }),
@@ -175,9 +188,27 @@ StandaloneAgendaViewPremium.propTypes /* remove-proptypes */ = {
   eventModelStructure: PropTypes.object,
   /**
    * The events currently available in the calendar.
+   *
+   * Event models are compared by reference to avoid reprocessing unchanged events.
+   * Replace an event model with a new object when updating it instead of mutating it in place.
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Set the locale text of the view.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
+   * in the GitHub repository.
+   */
+  localeText: PropTypes.object,
+  /**
+   * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
+   * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
+   * `eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the
+   * occurrence is read-only (through the event, its resource or the `readOnly` prop) and the dialog
+   * opens in view-only mode, and `"edit"` otherwise.
+   * Call `eventDetails.cancel()` to keep it closed and handle the interaction in your own UI.
+   */
+  onEventEditingStart: PropTypes.func,
   /**
    * Callback fired when some event of the calendar change.
    */
@@ -250,6 +281,16 @@ StandaloneAgendaViewPremium.propTypes /* remove-proptypes */ = {
    * @default true
    */
   showCurrentTimeIndicator: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

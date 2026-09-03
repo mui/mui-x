@@ -44,7 +44,7 @@ export interface GridEditInputCellProps extends GridRenderEditCellParams {
    * Callback called when the value is changed by the user.
    * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
    * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @returns {Promise<void> | void} A promise to be awaited after `apiRef.current.setEditCellValue` is called
    */
   onValueChange?: (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -91,7 +91,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
       const column = apiRef.current.getColumn(field);
 
       let parsedValue = newValue;
-      if (column.valueParser) {
+      if (column?.valueParser) {
         parsedValue = column.valueParser(newValue, apiRef.current.getRow(id), column, apiRef);
       }
 
@@ -187,7 +187,7 @@ GridEditInputCell.propTypes /* remove-proptypes */ = {
    * Callback called when the value is changed by the user.
    * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
    * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @returns {Promise<void> | void} A promise to be awaited after `apiRef.current.setEditCellValue` is called
    */
   onValueChange: PropTypes.func,
   /**

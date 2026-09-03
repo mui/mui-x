@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { screen, fireEvent, createEvent, within, waitFor } from '@mui/internal-test-utils';
 import {
   adapterToUse,
@@ -11,9 +10,14 @@ import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
-import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
+import {
+  DateRangePickerDay,
+  dateRangePickerDayClasses as dayClasses,
+} from '@mui/x-date-pickers-pro/DateRangePickerDay';
+import type { DateRangePickerDayProps } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
+import { vi, describe, it, expect } from 'vitest';
 import type { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -40,7 +44,7 @@ describe('<DateRangeCalendar />', () => {
 
   describe('Selection', () => {
     it('should select the range from the next month', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateRangeCalendar
@@ -62,19 +66,19 @@ describe('<DateRangeCalendar />', () => {
 
       await user.click(getPickerDay('19', 'March 2019'));
 
-      expect(onChange.callCount).to.equal(2);
+      expect(onChange.mock.calls.length).to.equal(2);
 
-      const rangeOn1stCall = onChange.firstCall.firstArg;
+      const rangeOn1stCall = onChange.mock.calls[0][0];
       expect(rangeOn1stCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
       expect(rangeOn1stCall[1]).to.equal(null);
 
-      const rangeOn2ndCall = onChange.lastCall.firstArg;
+      const rangeOn2ndCall = onChange.mock.lastCall?.[0];
       expect(rangeOn2ndCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
       expect(rangeOn2ndCall[1]).to.toEqualDateTime(new Date(2019, 2, 19));
     });
 
     it('should continue start selection if selected "end" date is before start', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const { user } = render(
         <DateRangeCalendar onChange={onChange} referenceDate={adapterToUse.date('2019-01-01')} />,
@@ -87,8 +91,8 @@ describe('<DateRangeCalendar />', () => {
 
       await user.click(getPickerDay('30', 'January 2019'));
 
-      expect(onChange.callCount).to.equal(3);
-      const range = onChange.lastCall.firstArg;
+      expect(onChange.mock.calls.length).to.equal(3);
+      const range = onChange.mock.lastCall?.[0];
       expect(range[0]).to.toEqualDateTime(new Date(2019, 0, 19));
       expect(range[1]).to.toEqualDateTime(new Date(2019, 0, 30));
     });
@@ -104,7 +108,7 @@ describe('<DateRangeCalendar />', () => {
     });
 
     it('prop: disableDragEditing - should not allow dragging range', () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       render(
         <DateRangeCalendar
           onChange={onChange}
@@ -118,12 +122,12 @@ describe('<DateRangeCalendar />', () => {
 
       executeDateDrag(startDay, targetDay);
 
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
     });
 
     describe('dragging behavior', () => {
       it('should not emit "onChange" when dragging is ended where it was started', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -133,15 +137,15 @@ describe('<DateRangeCalendar />', () => {
 
         const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
         const dragToDay = screen.getByRole('gridcell', { name: '30' });
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
 
         executeDateDrag(startDay, dragToDay, startDay);
 
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
       });
 
       it('should emit "onChange" when dragging end date', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const initialValue: [any, any] = [
           adapterToUse.date('2018-01-10'),
           adapterToUse.date('2018-01-31'),
@@ -155,9 +159,9 @@ describe('<DateRangeCalendar />', () => {
           screen.getByRole('gridcell', { name: '29' }),
         );
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2018, 0, 29));
         expect(document.activeElement).toHaveAccessibleName('29');
 
         // test range expansion
@@ -166,9 +170,9 @@ describe('<DateRangeCalendar />', () => {
           screen.getByRole('gridcell', { name: '30' }),
         );
 
-        expect(onChange.callCount).to.equal(2);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 30));
+        expect(onChange.mock.calls.length).to.equal(2);
+        expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2018, 0, 30));
         expect(document.activeElement).toHaveAccessibleName('30');
 
         // test range flip
@@ -177,14 +181,14 @@ describe('<DateRangeCalendar />', () => {
           getPickerDay('2'),
         );
 
-        expect(onChange.callCount).to.equal(3);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 2));
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[0]);
+        expect(onChange.mock.calls.length).to.equal(3);
+        expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(new Date(2018, 0, 2));
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(initialValue[0]);
         expect(document.activeElement).toHaveAccessibleName('2');
       });
 
       it('should emit "onChange" when dragging start date', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const initialValue: [any, any] = [
           adapterToUse.date('2018-01-01'),
           adapterToUse.date('2018-01-20'),
@@ -194,25 +198,25 @@ describe('<DateRangeCalendar />', () => {
         // test range reduction
         executeDateDrag(getPickerDay('1'), getPickerDay('2'), getPickerDay('3'));
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(new Date(2018, 0, 3));
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(initialValue[1]);
         expect(document.activeElement).toHaveAccessibleName('3');
 
         // test range expansion
         executeDateDrag(getPickerDay('3'), getPickerDay('1'));
 
-        expect(onChange.callCount).to.equal(2);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+        expect(onChange.mock.calls.length).to.equal(2);
+        expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(initialValue[1]);
         expect(document.activeElement).toHaveAccessibleName('1');
 
         // test range flip
         executeDateDrag(getPickerDay('1'), getPickerDay('22'));
 
-        expect(onChange.callCount).to.equal(3);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[1]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 22));
+        expect(onChange.mock.calls.length).to.equal(3);
+        expect(onChange.mock.lastCall?.[0][0]).toEqualDateTime(initialValue[1]);
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2018, 0, 22));
         expect(document.activeElement).toHaveAccessibleName('22');
       });
 
@@ -247,7 +251,7 @@ describe('<DateRangeCalendar />', () => {
       });
 
       it('should not initiate drag on non-draggable dates', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -262,11 +266,11 @@ describe('<DateRangeCalendar />', () => {
         executeDateDrag(middleDay, targetDay);
 
         // No change should occur since middle day is not draggable
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
       });
 
       it('should ignore secondary multi-touch pointers (isPrimary === false)', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -287,12 +291,12 @@ describe('<DateRangeCalendar />', () => {
 
         // The first finger's gesture survives intact — exactly one drop, from
         // pointerId 1.
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2018, 0, 29));
       });
 
       it('should recover from a stuck gesture when a fresh primary pointerdown arrives', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -312,14 +316,14 @@ describe('<DateRangeCalendar />', () => {
         fireEvent.pointerOver(endDay, { pointerId: 2 });
         fireEvent.pointerUp(endDay, { pointerId: 2 });
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2018, 0, 29));
       });
 
       it('should commit the drop when the gesture is canceled after movement', () => {
         // `pointercancel` after the user has crossed cells should be treated
         // as "UA interrupted, not the user" and commit the drop.
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -334,12 +338,12 @@ describe('<DateRangeCalendar />', () => {
         fireEvent.pointerOver(endDay, { pointerId: 1 });
         fireEvent.pointerCancel(document, { pointerId: 1 });
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2018, 0, 29));
       });
 
       it('should not commit a drop on pointercancel before any movement', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -352,11 +356,11 @@ describe('<DateRangeCalendar />', () => {
         fireEvent.pointerDown(startDay, { pointerId: 1, button: 0, isPrimary: true });
         fireEvent.pointerCancel(document, { pointerId: 1 });
 
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
       });
 
       it('should clean up listeners after pointercancel and allow a new drag', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -376,14 +380,14 @@ describe('<DateRangeCalendar />', () => {
         // properly torn down.
         executeDateDrag(otherEndpoint, newEndDay);
 
-        expect(onChange.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(1);
       });
 
       it('should suppress the click that follows a moved drag', () => {
         // The browser fires a synthesized click after pointerup. Without
         // suppression it would re-enter the day's normal selection logic and
         // overwrite the drop.
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -399,15 +403,15 @@ describe('<DateRangeCalendar />', () => {
         fireEvent.click(endDay);
 
         // Exactly one onChange — from the drop, not double-counted by the click.
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2018, 0, 29));
       });
 
       it('should cancel the drop when the pointer is released outside any cell', () => {
         // Native HTML5 drag cancels when the user releases outside any drop
         // target. Match that — releasing into a gap or off the calendar
         // entirely must not commit the last cell the user happened to hover.
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -423,14 +427,14 @@ describe('<DateRangeCalendar />', () => {
         // `event.target` doesn't resolve to a cell, so the drop is cancelled.
         fireEvent.pointerUp(document.body, { pointerId: 1 });
 
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
       });
 
       it('should cancel the drop when the pointer is released on a disabled day', () => {
         // `pointerup` lands on disabled `<button>` elements in real browsers,
         // and `handleDrop` doesn't re-validate the date — without an explicit
         // guard the gesture would route an invalid date through `onChange`.
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -445,7 +449,7 @@ describe('<DateRangeCalendar />', () => {
 
         executeDateDrag(startDay, disabledDay);
 
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
       });
 
       it('should notify the parent of the source endpoint on first cross-cell move', () => {
@@ -453,7 +457,7 @@ describe('<DateRangeCalendar />', () => {
         // `onDatePositionChange` on the first real move — that's what tells
         // the calendar which side of the range the drag is editing. Range
         // flip / preview correctness depends on it.
-        const onRangePositionChange = spy();
+        const onRangePositionChange = vi.fn();
         render(
           <DateRangeCalendar
             defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
@@ -466,23 +470,23 @@ describe('<DateRangeCalendar />', () => {
 
         // No callback until real movement crosses into a different cell.
         fireEvent.pointerDown(endDay, { pointerId: 1, button: 0, isPrimary: true });
-        expect(onRangePositionChange.callCount).to.equal(0);
+        expect(onRangePositionChange.mock.calls.length).to.equal(0);
 
         // First cross-cell move announces the source endpoint.
         fireEvent.pointerOver(targetDay, { pointerId: 1 });
-        expect(onRangePositionChange.callCount).to.equal(1);
-        expect(onRangePositionChange.lastCall.args[0]).to.equal('end');
+        expect(onRangePositionChange.mock.calls.length).to.equal(1);
+        expect(onRangePositionChange.mock.lastCall?.[0]).to.equal('end');
 
         // Subsequent moves don't re-announce — the source position is fixed
         // for the gesture.
         fireEvent.pointerOver(getPickerDay('28'), { pointerId: 1 });
-        expect(onRangePositionChange.callCount).to.equal(1);
+        expect(onRangePositionChange.mock.calls.length).to.equal(1);
 
         fireEvent.pointerUp(getPickerDay('28'), { pointerId: 1 });
       });
 
       it('should cancel an in-flight drag on Escape', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -498,7 +502,7 @@ describe('<DateRangeCalendar />', () => {
         // pointerup arriving after Escape is a no-op (cleanup already ran).
         fireEvent.pointerUp(document, { pointerId: 1 });
 
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
       });
 
       it('should preventDefault on `touchmove` during a touch drag', () => {
@@ -562,7 +566,7 @@ describe('<DateRangeCalendar />', () => {
         // release. If the user lifts over a TouchRipple span or text node
         // inside the button, `finalizeGesture` must walk up to find the
         // owning day cell rather than dropping on `null`.
-        const onChange = spy();
+        const onChange = vi.fn();
         render(
           <DateRangeCalendar
             onChange={onChange}
@@ -582,8 +586,8 @@ describe('<DateRangeCalendar />', () => {
         // the day button via the `.closest('button')` / data-attribute walk.
         fireEvent.pointerUp(endDayChild, { pointerId: 1 });
 
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onChange.mock.lastCall?.[0][1]).toEqualDateTime(new Date(2018, 0, 29));
       });
     });
   });
@@ -752,7 +756,7 @@ describe('<DateRangeCalendar />', () => {
 
   ['readOnly', 'disabled'].forEach((prop) => {
     it(`prop: ${prop}="true" should not allow date editing`, async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(
         <DateRangeCalendar
           value={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-10')]}
@@ -773,10 +777,40 @@ describe('<DateRangeCalendar />', () => {
         screen.getByRole('gridcell', { name: '1', selected: true }),
         getPickerDay('5'),
       );
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
 
       await user.setup({ pointerEventsCheck: 0 }).click(getPickerDay('2'));
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.mock.calls.length).to.equal(0);
+    });
+  });
+
+  describe('disabled days styling', () => {
+    const value: [PickerValidDate, PickerValidDate] = [
+      adapterToUse.date('2018-01-01'),
+      adapterToUse.date('2018-01-10'),
+    ];
+
+    it('should not dim the days when only some dates of the range are disabled', () => {
+      render(
+        <DateRangeCalendar
+          value={value}
+          shouldDisableDate={(date) => [5, 10].includes(adapterToUse.getDate(date))}
+        />,
+      );
+
+      // Inside the range.
+      const disabledDay = getPickerDay('5');
+      expect(disabledDay).to.have.attribute('disabled');
+      expect(disabledDay).to.have.style('opacity', '1');
+      // End of the range.
+      expect(getPickerDay('10')).to.have.style('opacity', '1');
+    });
+
+    it('should dim the days when the whole calendar is disabled', () => {
+      render(<DateRangeCalendar value={value} disabled />);
+
+      expect(getPickerDay('5')).to.have.style('opacity', '0.6');
+      expect(getPickerDay('10')).to.have.style('opacity', '0.6');
     });
   });
 
@@ -786,43 +820,130 @@ describe('<DateRangeCalendar />', () => {
     expect(screen.getAllByTestId('pickers-calendar')).to.have.length(3);
   });
 
+  describe('prop: showDaysOutsideCurrentMonth', () => {
+    const props = {
+      referenceDate: adapterToUse.date('2018-01-01'),
+      showDaysOutsideCurrentMonth: true,
+    } as const;
+
+    // January 2018 starts on a Monday and ends on a Wednesday, its grid is 5 weeks long:
+    // 31 days of January, one day of December and three days of February.
+    const getJanuaryCells = () => {
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const cells = grid.querySelectorAll(`.${dayClasses.root}`);
+      return {
+        cells,
+        fillerCells: grid.querySelectorAll(`.${dayClasses.fillerCell}`),
+      };
+    };
+
+    it('should render the days outside the current month with a single calendar', () => {
+      render(<DateRangeCalendar {...props} calendars={1} />);
+
+      const { cells, fillerCells } = getJanuaryCells();
+      expect(cells).to.have.length(35);
+      expect(fillerCells).to.have.length(0);
+    });
+
+    it('should be ignored with several calendars', () => {
+      render(<DateRangeCalendar {...props} calendars={2} />);
+
+      const { cells, fillerCells } = getJanuaryCells();
+      expect(cells).to.have.length(35);
+      expect(fillerCells).to.have.length(4);
+    });
+  });
+
+  describe('filler cells', () => {
+    const referenceDate = adapterToUse.date('2018-01-01');
+
+    it('should be exposed as grid cells', () => {
+      render(<DateRangeCalendar calendars={1} referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+
+      expect(within(grid).getAllByRole('gridcell')).to.have.length(35);
+      expect(grid.querySelectorAll(`.${dayClasses.fillerCell}`)).to.have.length(4);
+    });
+
+    // The week number is a `rowheader` taking the first column, so a cell without an explicit
+    // column index would be off by one.
+    it('should keep the column index of the day they replace', () => {
+      render(<DateRangeCalendar calendars={1} displayWeekNumber referenceDate={referenceDate} />);
+
+      const grid = screen.getByRole('grid', { name: 'January 2018' });
+      const weeks = within(within(grid).getByRole('rowgroup')).getAllByRole('row');
+
+      expect(weeks).to.have.length(5);
+      weeks.forEach((week) => {
+        const columnIndexes = within(week)
+          .getAllByRole('gridcell')
+          .map((cell) => cell.getAttribute('aria-colindex'));
+
+        expect(columnIndexes).to.deep.equal(['2', '3', '4', '5', '6', '7', '8']);
+      });
+    });
+  });
+
+  it('should give every calendar its own week day headers', () => {
+    render(<DateRangeCalendar calendars={2} referenceDate={adapterToUse.date('2018-01-01')} />);
+
+    ['January 2018', 'February 2018'].forEach((month) => {
+      const headers = within(screen.getByRole('grid', { name: month })).getAllByRole(
+        'columnheader',
+      );
+
+      expect(headers).to.have.length(7);
+      expect(headers[0]).toHaveAccessibleName('Sunday');
+      expect(headers[0]).to.have.attribute('aria-colindex', '1');
+    });
+  });
+
   describe('Performance', () => {
     it('should only render the new start day when selecting a start day without a previously selected start day', () => {
-      const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
+      const renderCount = vi.fn();
+      const RenderCount = React.memo((props: DateRangePickerDayProps) => {
+        renderCount();
+        return <DateRangePickerDay {...props} />;
+      });
 
       render(
         <DateRangeCalendar
           referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
-            day: React.memo(RenderCount),
+            day: RenderCount,
           }}
         />,
       );
 
-      const renderCountBeforeChange = RenderCount.callCount;
+      const renderCountBeforeChange = renderCount.mock.calls.length;
       // sticking with `fireEvent` for simplified performance test
       fireEvent.click(getPickerDay('2'));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
+      expect(renderCount.mock.calls.length - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
     it('should only render the day inside range when selecting the end day', () => {
-      const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
+      const renderCount = vi.fn();
+      const RenderCount = React.memo((props: DateRangePickerDayProps) => {
+        renderCount();
+        return <DateRangePickerDay {...props} />;
+      });
 
       render(
         <DateRangeCalendar
           referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
-            day: React.memo(RenderCount),
+            day: RenderCount,
           }}
         />,
       );
 
       fireEvent.click(getPickerDay('2'));
 
-      const renderCountBeforeChange = RenderCount.callCount;
+      const renderCountBeforeChange = renderCount.mock.calls.length;
       // sticking with `fireEvent` for simplified performance test
       fireEvent.click(getPickerDay('4'));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
+      expect(renderCount.mock.calls.length - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
     });
   });
 });

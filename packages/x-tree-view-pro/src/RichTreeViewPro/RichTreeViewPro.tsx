@@ -3,14 +3,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
+import Alert from '@mui/material/Alert';
 import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import {
   TreeViewProvider,
   RichTreeViewItems,
+  RichTreeViewLoading,
   TreeViewItemDepthContext,
   itemsSelectors,
   useTreeViewStore,
+  lazyLoadingSelectors,
 } from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -40,6 +43,7 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
       itemCheckbox: ['itemCheckbox'],
       itemDragAndDropOverlay: ['itemDragAndDropOverlay'],
       itemErrorIcon: ['itemErrorIcon'],
+      itemLoader: ['itemLoader'],
     };
 
     return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
@@ -105,6 +109,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     apiRef,
     parameters,
     forwardedProps,
+    loading,
   } = useExtractRichTreeViewProParameters(props);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -125,13 +130,50 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 
   // Selector hooks
   const isVirtualizationEnabled = useStore(store, virtualizationSelectors.enabled);
+  const lazyLoadingRootIsLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
+  const error = useStore(store, lazyLoadingSelectors.itemError, null);
 
   // Feature hooks
   const classes = useUtilityClasses(props);
-  const slots = React.useMemo(() => ({ root: RichTreeViewProRoot, ...inSlots }), [inSlots]);
+  const slots = React.useMemo(
+    () => ({
+      root: RichTreeViewProRoot,
+      ...inSlots,
+    }),
+    [inSlots],
+  );
 
+  const isLoading = lazyLoadingRootIsLoading || loading;
   const Renderer = isVirtualizationEnabled ? RichTreeViewVirtualizedItems : RichTreeViewItems;
 
+  let content: React.ReactNode;
+  if (error) {
+    content = <Alert severity="error">{error.message}</Alert>;
+  } else if (isLoading) {
+    content = (
+      <RichTreeViewLoading
+        store={store}
+        slots={slots}
+        slotProps={slotProps}
+        ownerState={props}
+        forwardedProps={forwardedProps}
+        rootRef={handleRef}
+        classes={classes}
+      />
+    );
+  } else {
+    content = (
+      <Renderer
+        slots={slots}
+        slotProps={slotProps}
+        forwardedProps={forwardedProps}
+        ownerState={props}
+        rootRef={handleRef}
+      />
+    );
+  }
+
+  // The provider must mount in the loading and error states too, so `apiRef` is initialized on mount.
   return (
     <TreeViewProvider
       store={store}
@@ -142,13 +184,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
       rootRef={ref}
     >
       <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
-        <Renderer
-          slots={slots}
-          slotProps={slotProps}
-          forwardedProps={forwardedProps}
-          ownerState={props}
-          rootRef={handleRef}
-        />
+        {content}
         <Watermark packageInfo={packageInfo} />
       </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
@@ -165,10 +201,12 @@ RichTreeViewPro.propTypes /* remove-proptypes */ = {
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      addItems: PropTypes.func,
       focusItem: PropTypes.func,
       getItem: PropTypes.func,
       getItemDOMElement: PropTypes.func,
       getItemOrderedChildrenIds: PropTypes.func,
+      getItemSelection: PropTypes.func,
       getItemTree: PropTypes.func,
       getParentId: PropTypes.func,
       isItemExpanded: PropTypes.func,
@@ -338,6 +376,13 @@ RichTreeViewPro.propTypes /* remove-proptypes */ = {
    * @default false
    */
   itemsReordering: PropTypes.bool,
+  /**
+   * If `true`, a loading UI is displayed instead of the tree items.
+   * The loading UI is also shown automatically while `dataSource` is fetching root items.
+   * Setting `loading={false}` does not suppress the loading UI during an active `dataSource` root fetch.
+   * @default false
+   */
+  loading: PropTypes.bool,
   /**
    * Whether multiple items can be selected.
    * @default false
