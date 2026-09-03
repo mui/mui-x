@@ -404,7 +404,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.DayEvent
                   eventId="event-1"
                   occurrenceKey="occ-1"
-                  dataBounds={undefined}
+                  dataTimezone={undefined}
                   start={processDate(day1, adapter)}
                   end={processDate(adapter.addHours(day1, 1), adapter)}
                   renderDragPreview={() => null}
@@ -415,7 +415,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.DayEvent
                   eventId="event-2"
                   occurrenceKey="occ-2"
-                  dataBounds={undefined}
+                  dataTimezone={undefined}
                   start={processDate(day2, adapter)}
                   end={processDate(adapter.addHours(day2, 1), adapter)}
                   renderDragPreview={() => null}
@@ -465,7 +465,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.TimeEvent
                   eventId="event-1"
                   occurrenceKey="occ-1"
-                  dataBounds={undefined}
+                  dataTimezone={undefined}
                   start={processDate(adapter.addHours(day1, 9), adapter)}
                   end={processDate(adapter.addHours(day1, 10), adapter)}
                   renderDragPreview={() => null}
@@ -480,7 +480,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.TimeEvent
                   eventId="event-2"
                   occurrenceKey="occ-2"
-                  dataBounds={undefined}
+                  dataTimezone={undefined}
                   start={processDate(adapter.addHours(day2, 9), adapter)}
                   end={processDate(adapter.addHours(day2, 10), adapter)}
                   renderDragPreview={() => null}

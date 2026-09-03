@@ -12,7 +12,7 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { getOccurrenceDataBounds } from '@mui/x-scheduler-internals/internals';
+import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -491,7 +491,7 @@ const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlacehol
       isDraggable={false}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataBounds={getOccurrenceDataBounds(occurrence)}
+      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={placeholderHasResizeHandles || undefined}
       // Non-interactive keeps the preview out of the tab order without `aria-hidden`, which would
@@ -554,7 +554,7 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataBounds={getOccurrenceDataBounds(occurrence)}
+      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={isArmed || undefined}
       data-editing={isEditing || undefined}

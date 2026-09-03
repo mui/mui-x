@@ -274,16 +274,6 @@ export interface SchedulerEventOccurrence extends SchedulerProcessedEvent {
 }
 
 /**
- * The occurrence bounds in the data timezone — the identity recurring scope operations
- * target. The rendered display bounds cannot stand in for it: a cross-timezone all-day
- * occurrence displays on a different day.
- */
-export type SchedulerOccurrenceDataBounds = Pick<
-  SchedulerEventOccurrence['dataTimezone'],
-  'start' | 'end'
->;
-
-/**
  * A concrete occurrence placeholder derived from a `SchedulerEvent`.
  * Used temporarily during creation, drag or resize interactions.
  */

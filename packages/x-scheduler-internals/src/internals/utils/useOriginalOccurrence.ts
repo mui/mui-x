@@ -5,7 +5,6 @@ import { schedulerEventSelectors } from '../../scheduler-selectors';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
-  SchedulerOccurrenceDataBounds,
   SchedulerProcessedDate,
 } from '../../models';
 import { generateOccurrenceFromEvent } from './event-utils';
@@ -17,12 +16,12 @@ import { generateOccurrenceFromEvent } from './event-utils';
 export function useOriginalOccurrence(
   parameters: useOriginalOccurrence.Parameters,
 ): () => SchedulerEventOccurrence {
-  const { eventId, occurrenceKey, start, end, dataBounds } = parameters;
+  const { eventId, occurrenceKey, start, end, dataTimezone } = parameters;
   const store = useSchedulerStoreContext();
 
   return useStableCallback(() => {
     const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
-    return generateOccurrenceFromEvent({ event, eventId, occurrenceKey, start, end, dataBounds });
+    return generateOccurrenceFromEvent({ event, eventId, occurrenceKey, start, end, dataTimezone });
   });
 }
 
@@ -33,7 +32,11 @@ export namespace useOriginalOccurrence {
     /** The rendered display bounds of the occurrence (or segment). */
     start: SchedulerProcessedDate;
     end: SchedulerProcessedDate;
-    /** See `SchedulerOccurrenceDataBounds`; `undefined` only for placeholders. */
-    dataBounds: SchedulerOccurrenceDataBounds | undefined;
+    /**
+     * The occurrence in the data timezone — the identity recurring scope operations target. The
+     * rendered display bounds cannot stand in for it: a cross-timezone all-day occurrence displays
+     * on a different day. `undefined` only for placeholders.
+     */
+    dataTimezone: SchedulerEventOccurrence['dataTimezone'] | undefined;
   }
 }

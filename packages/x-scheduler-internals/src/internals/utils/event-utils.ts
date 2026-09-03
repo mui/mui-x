@@ -6,7 +6,6 @@ import type {
   SchedulerEventOccurrence,
   SchedulerEventId,
   SchedulerRenderableEventOccurrence,
-  SchedulerOccurrenceDataBounds,
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
@@ -24,12 +23,12 @@ export function isEventOccurrence(
 }
 
 /**
- * The data-timezone bounds identifying the occurrence in recurring drag updates;
+ * The occurrence in the data timezone, the identity recurring drag updates target;
  * placeholders have none.
  */
-export function getOccurrenceDataBounds(
+export function getOccurrenceDataTimezone(
   occurrence: SchedulerRenderableEventOccurrence,
-): SchedulerOccurrenceDataBounds | undefined {
+): SchedulerEventOccurrence['dataTimezone'] | undefined {
   return isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
 }
 
@@ -61,7 +60,7 @@ export function generateOccurrenceFromEvent({
   occurrenceKey,
   start,
   end,
-  dataBounds,
+  dataTimezone,
 }: {
   event: SchedulerProcessedEvent;
   eventId: SchedulerEventId;
@@ -69,10 +68,10 @@ export function generateOccurrenceFromEvent({
   start: SchedulerProcessedDate;
   end: SchedulerProcessedDate;
   /**
-   * See `SchedulerOccurrenceDataBounds`. Defaults to the display `start`/`end`, a
-   * fallback only placeholder occurrences may rely on.
+   * The occurrence in the data timezone; only its bounds are read. Defaults to the display
+   * `start`/`end`, a fallback only placeholder occurrences may rely on.
    */
-  dataBounds?: SchedulerOccurrenceDataBounds;
+  dataTimezone?: SchedulerEventOccurrence['dataTimezone'];
 }): SchedulerEventOccurrence {
   return {
     ...event,
@@ -85,8 +84,8 @@ export function generateOccurrenceFromEvent({
     },
     dataTimezone: {
       ...event?.dataTimezone,
-      start: dataBounds?.start ?? start,
-      end: dataBounds?.end ?? end,
+      start: dataTimezone?.start ?? start,
+      end: dataTimezone?.end ?? end,
     },
   };
 }

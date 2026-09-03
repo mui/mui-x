@@ -7,7 +7,7 @@ import {
 import { describe, it, expect } from 'vitest';
 import {
   generateOccurrenceFromEvent,
-  getOccurrenceDataBounds,
+  getOccurrenceDataTimezone,
   getDaysTheOccurrenceIsVisibleOn,
   getEventResourceIds,
   getOccurrencesFromEvents,
@@ -219,19 +219,19 @@ describe('event-utils', () => {
     });
   });
 
-  describe('getOccurrenceDataBounds', () => {
+  describe('getOccurrenceDataTimezone', () => {
     it('should return the data-timezone bounds of an event occurrence', () => {
       const occurrence = utcJuly4AllDayBuilder()
         .withDisplayTimezone('America/New_York')
         .toOccurrence();
 
-      expect(getOccurrenceDataBounds(occurrence)).to.equal(occurrence.dataTimezone);
+      expect(getOccurrenceDataTimezone(occurrence)).to.equal(occurrence.dataTimezone);
     });
 
     it('should return undefined for a placeholder occurrence', () => {
       const { dataTimezone, ...placeholder } = EventBuilder.new().toOccurrence();
 
-      expect(getOccurrenceDataBounds(placeholder as any)).to.equal(undefined);
+      expect(getOccurrenceDataTimezone(placeholder as any)).to.equal(undefined);
     });
   });
 
@@ -247,7 +247,7 @@ describe('event-utils', () => {
         occurrenceKey: 'key',
         start: processed.displayTimezone.start,
         end: processed.displayTimezone.end,
-        dataBounds: processed.dataTimezone,
+        dataTimezone: processed.dataTimezone,
       });
 
       // Display bounds normalize to New York July 3rd; the data identity stays July 4th.

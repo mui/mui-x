@@ -20,7 +20,7 @@ describe('<CalendarGrid.TimeEventResizeHandler />', () => {
               <CalendarGrid.TimeEvent
                 eventId="fake-id"
                 occurrenceKey="fake-key"
-                dataBounds={undefined}
+                dataTimezone={undefined}
                 start={eventStart}
                 end={eventEnd}
                 renderDragPreview={() => null}

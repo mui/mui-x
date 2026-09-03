@@ -18,7 +18,7 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-eve
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import {
   getPrimaryResourceId,
-  getOccurrenceDataBounds,
+  getOccurrenceDataTimezone,
 } from '@mui/x-scheduler-internals/internals';
 import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
@@ -437,7 +437,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     <DayGridEventRoot
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      dataBounds={getOccurrenceDataBounds(occurrence)}
+      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}
