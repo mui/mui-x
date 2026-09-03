@@ -2,8 +2,8 @@ import type { RefObject } from '@mui/x-internals/types';
 import {
   createSelector as baseCreateSelector,
   createSelectorMemoized as baseCreateSelectorMemoized,
-} from '@mui/x-internals/store';
-import type { CreateSelectorFunction } from '@mui/x-internals/store';
+} from '@base-ui/utils/store';
+import type { CreateSelectorFunction } from '@base-ui/utils/store';
 
 export interface OutputSelector<State, Args, Result> {
   (apiRef: RefObject<{ state: State } | null>, args?: Args): Result;

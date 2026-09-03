@@ -1,4 +1,4 @@
-import { createSelectorMemoized, createSelector } from '@mui/x-internals/store';
+import { createSelectorMemoized, createSelector } from '@base-ui/utils/store';
 import type { SeriesId } from '../../../../models';
 import type { ChartRootSelector } from '../../utils/selectors';
 import type { UseChartSeriesSignature } from './useChartSeries.types';

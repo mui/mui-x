@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { selectionSelectors } from '../selection/selectors';
 import { itemsSelectors } from '../items/selectors';
 import { isItemDisabled } from '../items/utils';

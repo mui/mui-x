@@ -1,4 +1,4 @@
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import type {
   ChatConversation,
   ChatDraftAttachment,
@@ -281,7 +281,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     }
 
     this.parameters = parameters;
-    this.update(newState);
+    this.update(newState as ChatInternalState<Cursor>);
   };
 
   /**

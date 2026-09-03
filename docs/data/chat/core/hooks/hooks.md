@@ -256,7 +256,7 @@ This is the escape hatch for advanced use cases that need direct store access—
 
 ```tsx
 import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 
 function MessageCounter() {
   const store = useChatStore();

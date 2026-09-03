@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStoreEffect } from '@mui/x-internals/store';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import type { ChatAdapter } from '../../adapters';
 import { asCursorAgnosticChatStore } from '../../store';
 import type { ChatStore } from '../../store';
