@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-headless';
+import { MessageMeta } from '@mui/x-chat-headless';
+import type { MessageMetaProps } from '@mui/x-chat-headless';
 import { styled } from '../internals/zero-styled';
 import { DefaultDoneIcon, DefaultDoneAllIcon } from '../icons/icons';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
