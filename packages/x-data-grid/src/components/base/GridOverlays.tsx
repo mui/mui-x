@@ -19,23 +19,20 @@ interface GridOverlaysProps {
   loadingOverlayVariant: GridLoadingOverlayVariant | null;
 }
 
-interface GridOverlayWrapperRootProps extends GridOverlaysProps {
-  right: number;
-}
-
 const GridOverlayWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapper',
-  shouldForwardProp: (prop) =>
-    prop !== 'overlayType' && prop !== 'loadingOverlayVariant' && prop !== 'right',
-})<GridOverlayWrapperRootProps>(({ overlayType, loadingOverlayVariant, right }) =>
+  shouldForwardProp: (prop) => prop !== 'overlayType' && prop !== 'loadingOverlayVariant',
+})<GridOverlaysProps>(({ overlayType, loadingOverlayVariant }) =>
   // Skeleton overlay should flow with the scroll container and not be sticky
   loadingOverlayVariant !== 'skeleton'
     ? {
         position: 'sticky', // To stay in place while scrolling
         top: 'var(--DataGrid-topContainerHeight)',
+        // Sticking to both edges keeps the overlay in the viewport in LTR and RTL alike,
+        // whichever of the two offsets the browser gives priority to.
         left: 0,
-        right: `${right}px`,
+        right: 0,
         width: 0, // To stay above the content instead of shifting it down
         height: 0, // To stay above the content instead of shifting it down
         zIndex:
@@ -85,11 +82,7 @@ export function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysPr
   const classes = useUtilityClasses({ ...props, classes: rootProps.classes });
 
   return (
-    <GridOverlayWrapperRoot
-      className={classes.root}
-      {...props}
-      right={dimensions.columnsTotalWidth - dimensions.viewportOuterSize.width}
-    >
+    <GridOverlayWrapperRoot className={classes.root} {...props}>
       <GridOverlayWrapperInner
         className={classes.inner}
         style={{
