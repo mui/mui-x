@@ -15,7 +15,8 @@ catalog:
   '@babel/runtime': ^7.29.7
   '@babel/traverse': ^7.29.8
   '@base-ui/react': ^1.7.0
-  '@base-ui/utils': ^0.3.2
+  # TODO: revert to a released version (with the shared utilities, mui/base-ui#5542) before merging
+  '@base-ui/utils': https://pkg.pr.new/mui/base-ui/@base-ui/utils@f4538f6
   '@date-fns/tz': ^1.5.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
