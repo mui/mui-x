@@ -51,13 +51,10 @@ storeClasses.forEach((storeClass) => {
         armRecurringOccurrence(store);
 
         (store as any).repointEditingOccurrence({
-          target: {
-            id: 'detached-event',
-            displayTimezone: { rrule: undefined },
-            dataTimezone: { rrule: undefined },
-          },
+          eventId: 'detached-event',
           start: newStart,
           end: newEnd,
+          isRecurring: false,
           dataStart: newStart,
           dataEnd: newEnd,
         });
@@ -79,13 +76,10 @@ storeClasses.forEach((storeClass) => {
         armRecurringOccurrence(store);
 
         (store as any).repointEditingOccurrence({
-          target: {
-            id: 'following-event',
-            displayTimezone: { rrule: RRULE },
-            dataTimezone: { rrule: RRULE },
-          },
+          eventId: 'following-event',
           start: newStart,
           end: newEnd,
+          isRecurring: true,
           dataStart: newStart,
           dataEnd: newEnd,
         });
@@ -112,13 +106,10 @@ storeClasses.forEach((storeClass) => {
         const displayEnd = adapter.addHours(displayStart, 1);
 
         (store as any).repointEditingOccurrence({
-          target: {
-            id: 'following-event',
-            displayTimezone: { rrule: RRULE },
-            dataTimezone: { rrule: RRULE },
-          },
+          eventId: 'following-event',
           start: displayStart,
           end: displayEnd,
+          isRecurring: true,
           dataStart: adapter.setTimezone(displayStart, 'UTC'),
           dataEnd: adapter.setTimezone(displayEnd, 'UTC'),
         });
@@ -142,13 +133,10 @@ storeClasses.forEach((storeClass) => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
 
         (store as any).repointEditingOccurrence({
-          target: {
-            id: 'detached-event',
-            displayTimezone: { rrule: undefined },
-            dataTimezone: { rrule: undefined },
-          },
+          eventId: 'detached-event',
           start: newStart,
           end: newEnd,
+          isRecurring: false,
           dataStart: newStart,
           dataEnd: newEnd,
         });
@@ -479,17 +467,27 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
     });
 
-    it("should carry the split series' rewritten rule onto the re-pointed occurrence", () => {
+    // A store whose host feeds every change back into the controlled `events` prop.
+    function createControlledStore(events: any[]) {
+      let store: any;
+      const parameters = {
+        ...DEFAULT_PARAMS,
+        events,
+        onEventsChange: (nextEvents: any[]) =>
+          store.updateStateFromParameters({ ...parameters, events: nextEvents }, adapter),
+      };
+      store = new storeClass.Value(parameters, adapter);
+      return store;
+    }
+
+    it("should open the editor on the split series' rewritten rule", () => {
       const countedEvent = EventBuilder.new()
         .id('standup')
         .startAt('2025-07-07T09:00:00Z')
         .endAt('2025-07-07T10:00:00Z')
         .recurrent('DAILY', { count: 10 })
         .build();
-      const store = new storeClass.Value(
-        { ...DEFAULT_PARAMS, events: [countedEvent], onEventsChange: () => {} },
-        adapter,
-      );
+      const store = createControlledStore([countedEvent]);
       const fourth = adapter.addDays(dayA, 3);
       armOccurrence(store, fourth);
 
@@ -502,25 +500,25 @@ premiumStoreClasses.forEach((storeClass) => {
         },
       });
       store.selectRecurringEventScope('this-and-following');
+      // Edit from the still-armed toolbar.
+      store.setEditingMode('edit');
 
-      // Seven occurrences remain from the fourth: a later Edit from the armed toolbar must
-      // seed the dialog with that count, not the original series' ten.
+      // Seven occurrences remain from the fourth: the editor must seed that count, not the
+      // original series' ten the armed snapshot was taken with.
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.id).to.not.equal('standup');
       expect(occurrence.displayTimezone.rrule.count).to.equal(7);
       expect(occurrence.dataTimezone.rrule.count).to.equal(7);
     });
 
-    it("should realign the split series' BYDAY onto the re-pointed occurrence", () => {
+    it("should open the editor on the split series' realigned BYDAY", () => {
       const weeklyEvent = EventBuilder.new()
         .id('standup')
         .startAt('2025-07-07T09:00:00Z')
         .endAt('2025-07-07T10:00:00Z')
         .recurrent('WEEKLY')
         .build();
-      const store = new storeClass.Value(
-        { ...DEFAULT_PARAMS, events: [weeklyEvent], onEventsChange: () => {} },
-        adapter,
-      );
+      const store = createControlledStore([weeklyEvent]);
       const secondMonday = adapter.addDays(dayA, 7);
       armOccurrence(store, secondMonday);
 
@@ -531,6 +529,7 @@ premiumStoreClasses.forEach((storeClass) => {
         changes: { id: 'standup', start: movedStart, end: adapter.addHours(movedStart, 1) },
       });
       store.selectRecurringEventScope('this-and-following');
+      store.setEditingMode('edit');
 
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       expect(occurrence.dataTimezone.rrule.byDay).to.deep.equal(['TU']);
