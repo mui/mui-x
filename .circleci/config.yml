@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/076479f7fc8775ddbf12ac7d9801e9fbfee9129e/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/d635b57a4903c914b791b2a5f77291f69b63ce94/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -188,7 +188,6 @@ jobs:
       - checkout
       - install-deps
       - code-infra/check-generated:
-          label: pnpm docs:typescript:formatted
           command: pnpm docs:typescript:formatted --disable-cache
           pathspec: docs/src docs/data
       - run:
@@ -248,8 +247,10 @@ jobs:
       - run:
           name: Install ffmpeg
           command: apt-get update && apt-get install ffmpeg --no-install-recommends -y
-      - code-infra/run-regressions:
-          test-results-path: ''
+      - run:
+          name: Run visual regression tests
+          command: xvfb-run pnpm test:regressions
+      - code-infra/argos-push
   test_charts_benchmark:
     <<: *default-job
     executor:
