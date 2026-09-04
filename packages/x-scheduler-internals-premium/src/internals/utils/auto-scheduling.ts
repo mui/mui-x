@@ -80,7 +80,9 @@ export interface AutoSchedulingCascadeResult {
  * with a dev warning. A cycle through a seed is broken at the first stalled seed in
  * batch order, also with a dev warning.
  * Entries that change none of `start`/`end`/`allDay` never cascade — notably a
- * `timezone`-only update, a documented API-only limitation.
+ * `timezone`-only update, which no UI path produces. With lazy loading, only loaded
+ * events take part: a dependency whose other end is not fetched is inactive, so the
+ * loaded event moves freely and the violation only shows once the other one loads.
  */
 export function computeAutoSchedulingCascade(
   parameters: ComputeAutoSchedulingCascadeParameters,
