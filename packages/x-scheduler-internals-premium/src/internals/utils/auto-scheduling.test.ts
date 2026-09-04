@@ -95,7 +95,10 @@ describe('computeAutoSchedulingCascade', () => {
     // The dialog resends "the same day" as display-zone bounds (computeRange builds
     // them with the display timezone). Applied in the data timezone those stretch the
     // event to a second day — the engine mirrors the store's effective result. The
-    // stretch itself is an upstream dialog issue, not an engine choice.
+    // stretch itself is an upstream dialog issue, not an engine choice: #23462 stops
+    // resending untouched dates and #23490 revisits the all-day model. Once #23462
+    // lands, a rename no longer reaches the engine with dates and this case is only
+    // reachable through the API.
     const result = runCascade(
       [eventA, eventB],
       [fsDependency('a', 'b')],
