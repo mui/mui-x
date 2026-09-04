@@ -276,6 +276,9 @@ The keys require [keyboard navigation](/x/react-charts/accessibility/#keyboard-s
 Charts rendered with `disableKeyboardNavigation` have no keyboard zoom.
 :::
 
+The visible range is announced to screen readers each time it changes from the keyboard.
+A zoom coming from the pointer or from the application is not announced, because it is not the user driving the chart from the keyboard.
+
 {{"demo": "ZoomKeyboard.js"}}
 
 ### Key modifiers

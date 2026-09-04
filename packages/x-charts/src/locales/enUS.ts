@@ -126,6 +126,10 @@ export const enUSLocaleText: ChartsLocaleText = {
   // Accessibility descriptions
   a11yNoValue: 'no value',
   a11yConnector: '; ',
+  zoomRangeDescription: function zoomRangeDescription({ axisDirection, start, end }) {
+    const axisName = axisDirection === 'x' ? 'horizontal axis' : 'vertical axis';
+    return `Showing ${Math.round(start)}% to ${Math.round(end)}% of the ${axisName}`;
+  },
   barDescription: function barDescription({
     value,
     formattedValue,
