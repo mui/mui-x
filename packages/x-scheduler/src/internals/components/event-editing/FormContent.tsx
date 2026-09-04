@@ -33,6 +33,7 @@ import {
   getEventResourceIds,
   getResourceSelectionMode,
   isBuiltInEventProperty,
+  isEventOccurrence,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -45,6 +46,7 @@ import {
   validateRange,
   hasProp,
   BUILT_IN_FORM_KEYS,
+  getEditedRangeBounds,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
 import TitleSection from '../event-dialog/TitleSection';
@@ -231,7 +233,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
   // Selector hooks — only what the render itself needs; the submit continuation
   // reads its own `ResolutionSettings` snapshot instead of subscribing here.
-  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
   const shouldEventRequireResource = useStore(
     store,
@@ -391,16 +392,28 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         return;
       }
 
+      const dirtyValues = formStore.getDirtyValues();
       // Only the custom fields the user actually edited enter the changes payload,
       // so untouched fields keep resolving against the live model on the recurring paths.
-      const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
       // A custom field named after a built-in event property (`id`, `readOnly`, ...)
       // must not rewrite it; the hook already warns about these keys in dev.
-      for (const key of Object.keys(editedCustomValues)) {
-        if (isBuiltInEventProperty(key)) {
-          delete editedCustomValues[key];
-        }
-      }
+      const editedCustomValues = Object.fromEntries(
+        Object.entries(dirtyValues).filter(
+          ([key]) => !BUILT_IN_FORM_KEYS.has(key) && !isBuiltInEventProperty(key),
+        ),
+      );
+
+      // The form edits the range as display-timezone day/time strings, so resending
+      // it untouched can move the event: the same day re-read in another timezone
+      // is a different day. Only the keys the submitted range reads count — a time
+      // left over from toggling all-day off and back on must not re-arm the resend.
+      const { startEdited, endEdited } = getEditedRangeBounds(dirtyValues, values.allDay);
+      // The range was validated as a pair in the current display timezone; if that moved since
+      // seeding, an untouched bound's stored instant no longer matches, so editing either bound
+      // resends both.
+      const displayTimezoneMoved = current.displayTimezone !== occurrence.displayTimezone.timezone;
+      const submitStart = startEdited || (endEdited && displayTimezoneMoved);
+      const submitEnd = endEdited || (startEdited && displayTimezoneMoved);
 
       const metaChanges = {
         ...editedCustomValues,
@@ -435,6 +448,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       } else if (
         current.showRecurrence &&
         current.recurringEventsPlugin &&
+        isEventOccurrence(occurrence) &&
         occurrence.displayTimezone.rrule
       ) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
@@ -443,16 +457,19 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           rruleToSubmit,
         );
 
+        // Per-bound on the recurring path: the plugin defaults a missing bound to the
+        // occurrence's own, so an untouched display-anchored start cannot reach the
+        // pattern math (where it would move DTSTART and realign BYDAY).
         const changes: SchedulerEventUpdatedProperties = {
           ...metaChanges,
           id: occurrence.id,
-          start,
-          end,
+          ...(submitStart ? { start } : {}),
+          ...(submitEnd ? { end } : {}),
           ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
         };
 
         await store.updateRecurringEvent({
-          occurrenceStart: occurrence.displayTimezone.start.value,
+          occurrenceStart: occurrence.dataTimezone.start.value,
           changes,
           onSubmit: onClose,
         });
@@ -460,7 +477,27 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         // don't close the dialog
         return;
       } else {
-        store.updateEvent({ ...metaChanges, id: occurrence.id, start, end, rrule: rruleToSubmit });
+        const changes: SchedulerEventUpdatedProperties = {
+          ...metaChanges,
+          id: occurrence.id,
+          // Per-bound here too: an untouched bound must keep its stored value instead of
+          // being re-anchored to the display timezone, which is a different instant.
+          ...(submitStart ? { start } : {}),
+          ...(submitEnd ? { end } : {}),
+          rrule: rruleToSubmit,
+        };
+        // A rule added here is built on the display weekday; the plugin projects it into the
+        // data timezone the series expands in (the bounds it relabels keep their instant).
+        const { recurringEventsPlugin } = current;
+        store.updateEvent(
+          recurringEventsPlugin != null && rruleToSubmit != null && isEventOccurrence(occurrence)
+            ? recurringEventsPlugin.applyDataTimezoneToEventUpdate({
+                adapter: current.adapter,
+                originalEvent: occurrence,
+                changes,
+              })
+            : changes,
+        );
       }
 
       onClose();
@@ -473,19 +510,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
-      store.deleteRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
-        eventId: occurrence.id,
-        onSubmit: onClose,
-      });
-
-      // don't close the dialog
-      return;
-    }
-
-    store.deleteEvent(occurrence.id);
-    onClose();
+    // A recurring delete closes the dialog on scope submit instead of right away.
+    store.deleteOccurrence(occurrence, onClose);
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {

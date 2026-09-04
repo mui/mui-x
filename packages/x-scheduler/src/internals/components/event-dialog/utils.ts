@@ -102,9 +102,33 @@ export const getWeekdayToken = (adapter: Adapter, value: TemporalSupportedObject
 
 export type EndsSelection = 'never' | 'after' | 'until';
 
+/**
+ * Form keys `computeRange` reads.
+ */
+export const RANGE_FORM_KEYS = ['startDate', 'startTime', 'endDate', 'endTime', 'allDay'] as const;
+
+export type RangeFormKey = (typeof RANGE_FORM_KEYS)[number];
+
+/**
+ * Which bounds of the submitted range the user actually edited, per the keys the
+ * range in its current mode reads (the all-day branch of `computeRange` ignores
+ * the time fields). Toggling `allDay` re-derives both bounds.
+ */
+export function getEditedRangeBounds(
+  dirtyValues: Record<string, unknown>,
+  allDay: boolean,
+): { startEdited: boolean; endEdited: boolean } {
+  const isDirty = (key: RangeFormKey) => hasProp(dirtyValues, key);
+  const modeEdited = isDirty('allDay');
+  return {
+    startEdited: modeEdited || isDirty('startDate') || (!allDay && isDirty('startTime')),
+    endEdited: modeEdited || isDirty('endDate') || (!allDay && isDirty('endTime')),
+  };
+}
+
 export function computeRange(
   adapter: Adapter,
-  next: Pick<EventDialogFormValues, 'startDate' | 'startTime' | 'endDate' | 'endTime' | 'allDay'>,
+  next: Pick<EventDialogFormValues, RangeFormKey>,
   displayTimezone: TemporalTimezone,
 ) {
   if (next.allDay) {
@@ -183,7 +207,7 @@ function isWellFormedDate(raw: string): boolean {
  */
 export function findInvalidRangeField(
   adapter: Adapter,
-  values: Pick<EventDialogFormValues, 'startDate' | 'startTime' | 'endDate' | 'endTime' | 'allDay'>,
+  values: Pick<EventDialogFormValues, RangeFormKey>,
   displayTimezone: TemporalTimezone,
 ): 'startDate' | 'startTime' | 'endDate' | 'endTime' | null {
   const parsesAsDate = (raw: string) =>

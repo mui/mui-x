@@ -36,14 +36,11 @@ export function applyDataTimezoneToEventUpdate({
   }
 
   if (result.rrule && typeof result.rrule === 'object') {
-    result.rrule = projectRRuleFromDisplayToData(
-      adapter,
-      {
-        ...result.rrule,
-        until: result.rrule.until ? toDataTz(result.rrule.until) : undefined,
-      },
-      originalEvent,
-    );
+    // Keep the rule's shape: an absent `until` must not come back as an `undefined` key.
+    const { until, ...rule } = result.rrule;
+    const relabeledRule =
+      'until' in result.rrule ? { ...rule, until: until && toDataTz(until) } : rule;
+    result.rrule = projectRRuleFromDisplayToData(adapter, relabeledRule, originalEvent);
   }
 
   return result;

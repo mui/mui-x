@@ -15,8 +15,8 @@ import type {
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
   TemporalSupportedObject,
-  TemporalTimezone,
   SchedulerEventUpdatedProperties,
+  SchedulerProcessedEvent,
   RecurringEventScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
@@ -56,8 +56,8 @@ import {
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
-import { dateToEventString } from '../date-utils';
-import { getOccurrenceKey, getRecurringOccurrenceKey } from '../event-utils';
+import { dateToEventString, getOccurrenceEnd } from '../date-utils';
+import { getOccurrenceKey, getRecurringOccurrenceKey, isEventOccurrence } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 
@@ -639,7 +639,40 @@ export class SchedulerStore<
   };
 
   /**
+   * Deletes an occurrence from a UI surface: a recurring one opens the scope dialog, any other
+   * goes straight to `deleteEvent`. `onDelete` runs once the delete applied.
+   * @returns Whether the delete applied immediately (`false` when the scope dialog opened).
+   */
+  public deleteOccurrence = (
+    occurrence: SchedulerRenderableEventOccurrence,
+    onDelete?: () => void,
+  ): boolean => {
+    // The store is the truth once the host fed the event back; until then (a `dataSource`
+    // persist still in flight after a scope change) the snapshot is all there is.
+    const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
+    const isRecurring =
+      this.state.recurringEventsPlugin != null &&
+      isEventOccurrence(occurrence) &&
+      (liveEvent != null
+        ? liveEvent.dataTimezone.rrule != null
+        : occurrence.dataTimezone.rrule != null);
+    if (isRecurring) {
+      this.deleteRecurringEvent({
+        occurrenceStart: occurrence.dataTimezone.start.value,
+        eventId: occurrence.id,
+        onSubmit: onDelete,
+      });
+      return false;
+    }
+    this.deleteEvent(occurrence.id);
+    onDelete?.();
+    return true;
+  };
+
+  /**
    * Applies the pending recurring event operation after the user selects a scope.
+   * The armed occurrence follows a scope change onto the event it moved to; an in-place `all`
+   * change that moves it off its day or edits the rule disarms it instead.
    * @param scope The selected scope, or null if canceled.
    */
   public selectRecurringEventScope = (scope: RecurringEventScope | null) => {
@@ -667,17 +700,17 @@ export class SchedulerStore<
       );
     }
 
-    // IMPORTANT:
-    // Recurring changes are pattern-based, not instant-based.
-    // Using the raw instant here would incorrectly shift the recurring rule
-    // depending on the user's display timezone. We therefore convert the
-    // occurrence to the event's dataTimezone before applying the change.
+    // `occurrenceStart` is the occurrence's data-timezone start (see the parameter
+    // docs) — the relabel is defensive, `setTimezone` preserves the instant.
     const occurrenceStartInDataTimezone = adapter.setTimezone(
       occurrenceStart,
       original.dataTimezone.timezone,
     );
 
     let updatedEvents: UpdateEventsParameters;
+    // Assigned on the update path only, which is also the only path that reconciles the
+    // editing surface below.
+    let changesInDataTimezone: SchedulerEventUpdatedProperties | null = null;
     if (pendingRecurringEventOperation.kind === 'delete') {
       updatedEvents = recurringEventsPlugin.deleteRecurringEvent(
         adapter,
@@ -686,7 +719,7 @@ export class SchedulerStore<
         scope,
       );
     } else {
-      const changesInDataTimezone = recurringEventsPlugin.applyDataTimezoneToEventUpdate({
+      changesInDataTimezone = recurringEventsPlugin.applyDataTimezoneToEventUpdate({
         adapter,
         originalEvent: original,
         changes: pendingRecurringEventOperation.changes,
@@ -701,36 +734,15 @@ export class SchedulerStore<
     }
     const { created: createdIds } = this.updateEvents(updatedEvents);
 
-    // Keep the edited occurrence in sync after a scope-dialog resize, so the armed toolbar + selection
-    // highlight (and a later edit) follow the resized occurrence instead of a now-stale occurrence key.
-    if (pendingRecurringEventOperation.kind === 'update') {
-      const { start, end } = pendingRecurringEventOperation.changes;
-      // Only repoint when the resized occurrence is the armed one, else a sibling drag hijacks the surface.
-      const { editingOccurrence } = this.state;
-      const resizedOccurrenceKey = getRecurringOccurrenceKey(
-        eventId,
-        occurrenceStartInDataTimezone,
-        adapter,
-      );
-      const isEditingResizedOccurrence = editingOccurrence?.occurrence.key === resizedOccurrenceKey;
-      if (isEditingResizedOccurrence && start != null && end != null) {
-        // `only-this` / `this-and-following` move the occurrence onto a freshly-created event, changing
-        // its key; `all` edits the series in place, keeping the same key (only the times need a refresh).
-        const movedToEvent = updatedEvents.created?.[0];
-        const movedToEventId = createdIds[0];
-        if (movedToEvent != null && movedToEventId != null) {
-          this.repointEditingOccurrence(
-            movedToEventId,
-            start,
-            end,
-            movedToEvent.rrule != null,
-            // The moved-to event splits from the same series, so it keeps the original data timezone.
-            original.dataTimezone.timezone,
-          );
-        } else {
-          this.setEditingOccurrenceTimes(start, end);
-        }
-      }
+    if (pendingRecurringEventOperation.kind === 'update' && changesInDataTimezone != null) {
+      this.reconcileEditingOccurrence({
+        original,
+        occurrenceStart: occurrenceStartInDataTimezone,
+        changes: pendingRecurringEventOperation.changes,
+        changesInDataTimezone,
+        createdEvent: updatedEvents.created?.[0],
+        createdEventId: createdIds[0],
+      });
     }
 
     if (onSubmit) {
@@ -739,7 +751,8 @@ export class SchedulerStore<
   };
 
   /**
-   * Deletes an event from the calendar.
+   * Deletes an event from the calendar, with no recurring scope step: the interactive
+   * surfaces go through `deleteOccurrence`.
    */
   public deleteEvent = (eventId: SchedulerEventId) => {
     this.updateEvents({ deleted: [eventId] });
@@ -1009,12 +1022,24 @@ export class SchedulerStore<
       this.stopEditing();
       return;
     }
-    this.set('editingOccurrence', { ...editingOccurrence, mode });
+    // The armed snapshot carries the occurrence identity; the rule is the event's and may
+    // predate a scope change (a split rewrites it), so the editor reads it from the store.
+    let { occurrence } = editingOccurrence;
+    const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
+    if (mode === 'edit' && liveEvent != null && isEventOccurrence(occurrence)) {
+      occurrence = {
+        ...occurrence,
+        displayTimezone: { ...occurrence.displayTimezone, rrule: liveEvent.displayTimezone.rrule },
+        dataTimezone: { ...occurrence.dataTimezone, rrule: liveEvent.dataTimezone.rrule },
+      };
+    }
+    this.set('editingOccurrence', { ...editingOccurrence, occurrence, mode });
   };
 
   /**
-   * Refreshes the edited occurrence's times so a later edit (e.g. opening the form from the armed
-   * toolbar) reflects a just-committed change such as a resize. No-op when nothing is being edited.
+   * Refreshes the edited occurrence's display times so a later edit (e.g. opening the form from
+   * the armed toolbar) reflects a just-committed change such as a resize. The data-timezone
+   * bounds are left untouched. No-op when nothing is being edited.
    */
   public setEditingOccurrenceTimes = (
     start: TemporalSupportedObject,
@@ -1039,18 +1064,88 @@ export class SchedulerStore<
   };
 
   /**
-   * Re-points the edited occurrence at the event it landed on after a recurring scope change moved it
-   * there (`only-this` / `this-and-following` confirmed from the armed state), so the action toolbar and
-   * the selection highlight follow the resized occurrence instead of its now-stale key. No-op when
-   * nothing is being edited.
+   * Keeps the armed occurrence in sync after a confirmed recurring scope change: it follows the
+   * occurrence onto the event `only-this` / `this-and-following` created, stays in place on an
+   * `all` change that keeps the occurrence on its day, and is dropped otherwise. No-op when the
+   * changed occurrence is not the armed one.
    */
-  private repointEditingOccurrence = (
-    eventId: SchedulerEventId,
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
-    isRecurring: boolean,
-    dataTimezone: TemporalTimezone,
-  ) => {
+  private reconcileEditingOccurrence = (parameters: {
+    original: SchedulerProcessedEvent;
+    /** The changed occurrence's start, in the data timezone. */
+    occurrenceStart: TemporalSupportedObject;
+    /** The submitted changes, with display-timezone bounds. */
+    changes: SchedulerEventUpdatedProperties;
+    /** The same changes relabeled into the data timezone. */
+    changesInDataTimezone: SchedulerEventUpdatedProperties;
+    createdEvent: SchedulerEventCreationProperties | undefined;
+    createdEventId: SchedulerEventId | undefined;
+  }) => {
+    const {
+      original,
+      occurrenceStart,
+      changes,
+      changesInDataTimezone,
+      createdEvent,
+      createdEventId,
+    } = parameters;
+    const { adapter } = this.state;
+    const occurrence = this.state.editingOccurrence?.occurrence;
+    // Only the armed occurrence follows its own change, else a sibling drag hijacks the surface.
+    if (
+      occurrence == null ||
+      !isEventOccurrence(occurrence) ||
+      occurrence.key !== getRecurringOccurrenceKey(original.id, occurrenceStart, adapter)
+    ) {
+      return;
+    }
+
+    const occurrenceEnd = getOccurrenceEnd({ adapter, event: original, occurrenceStart });
+    const targetsCreatedEvent = createdEvent != null && createdEventId != null;
+    // In place, the pattern decides where a day or rule change lands: only a change that keeps
+    // the occurrence on its own data-timezone day can keep the surface armed.
+    const bounds: [TemporalSupportedObject | undefined, TemporalSupportedObject][] = [
+      [changesInDataTimezone.start, occurrenceStart],
+      [changesInDataTimezone.end, occurrenceEnd],
+    ];
+    const staysOnItsDay = bounds.every(
+      ([changed, current]) => changed == null || adapter.isSameDay(current, changed),
+    );
+    const keepsIdentity =
+      targetsCreatedEvent ||
+      (!Object.prototype.hasOwnProperty.call(changes, 'rrule') && staysOnItsDay);
+    if (!keepsIdentity) {
+      this.stopEditing();
+      return;
+    }
+
+    // A bound the submit left out keeps the occurrence's current value, in both timezones.
+    this.repointEditingOccurrence({
+      eventId: targetsCreatedEvent ? createdEventId : original.id,
+      start: changes.start ?? occurrence.displayTimezone.start.value,
+      end: changes.end ?? occurrence.displayTimezone.end.value,
+      isRecurring: targetsCreatedEvent ? createdEvent.rrule != null : true,
+      dataStart: changesInDataTimezone.start ?? occurrenceStart,
+      dataEnd: changesInDataTimezone.end ?? occurrenceEnd,
+    });
+  };
+
+  /**
+   * Re-points the edited occurrence after a confirmed recurring scope change, so the action toolbar
+   * and the selection highlight follow it instead of its now-stale key: onto the freshly-created
+   * event for `only-this` / `this-and-following`, or in place for `all`. No-op when nothing is
+   * being edited.
+   */
+  private repointEditingOccurrence = (parameters: {
+    eventId: SchedulerEventId;
+    /** The occurrence bounds in the display timezone. */
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
+    isRecurring: boolean;
+    /** The occurrence bounds in the data timezone — the identity the key derives from. */
+    dataStart: TemporalSupportedObject;
+    dataEnd: TemporalSupportedObject;
+  }) => {
+    const { eventId, start, end, isRecurring, dataStart, dataEnd } = parameters;
     const { editingOccurrence, adapter } = this.state;
     if (editingOccurrence == null) {
       return;
@@ -1063,16 +1158,28 @@ export class SchedulerStore<
         id: eventId,
         key: isRecurring
           ? // Key off the data-timezone day, matching occurrence expansion; the display-tz start can differ.
-            getRecurringOccurrenceKey(eventId, adapter.setTimezone(start, dataTimezone), adapter)
+            getRecurringOccurrenceKey(eventId, dataStart, adapter)
           : getOccurrenceKey(eventId),
         displayTimezone: {
           ...occurrence.displayTimezone,
           start: processDate(start, adapter),
           end: processDate(end, adapter),
-          // A `only-this` edit detaches the occurrence into a one-off event: clear the rule so the
-          // toolbar's Delete removes it directly instead of reopening the recurring scope dialog.
+          // Cleared by a `only-this` detach so the surface reads as non-recurring; otherwise the
+          // rule is the series' and the editor refreshes it from the store when it opens.
           rrule: isRecurring ? occurrence.displayTimezone.rrule : undefined,
         },
+        // Keep the data-timezone identity in sync too, so a later edit or delete
+        // targets the day the occurrence actually lives on.
+        ...(isEventOccurrence(occurrence)
+          ? {
+              dataTimezone: {
+                ...occurrence.dataTimezone,
+                start: processDate(dataStart, adapter),
+                end: processDate(dataEnd, adapter),
+                rrule: isRecurring ? occurrence.dataTimezone.rrule : undefined,
+              },
+            }
+          : {}),
       },
     });
   };
