@@ -9,6 +9,7 @@ _Sep 4, 2026_
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 🦮 Improve keyboard navigation features of the Charts.
+- 🎨 Improved customization of the edit event dialog in the `EventCalendar`
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -90,8 +91,8 @@ Same changes as in `@mui/x-tree-view@9.13.0`.
 
 #### `@mui/x-scheduler@9.0.0-beta.11`
 
-- [scheduler] Absorb un-acted ResizeObserver deliveries after rendering the timeline (#23444) @rita-codes
-- [scheduler] Add EventContextMenu with Edit and Delete actions (#23379) @mustafajw07
+- [scheduler] Absorb un-acted `ResizeObserver` deliveries after rendering the timeline (#23444) @rita-codes
+- [scheduler] Add `EventContextMenu` with Edit and Delete actions (#23379) @mustafajw07
 - [scheduler] Add aria-hidden to collapsed side panel and refactor landmark structure (#23425) @mustafajw07
 - [scheduler] Add the `eventDialogGeneralTab` slot (#23338) @rita-codes
 - [scheduler] Fix the un-awaited act warning in the event dialog slot test (#23446) @JCQuintas
@@ -101,7 +102,7 @@ Same changes as in `@mui/x-tree-view@9.13.0`.
 - [scheduler] Migrate to the pragmatic-drag-and-drop v3 entry points (#23442) @rita-codes
 - [scheduler] Reduce selector bundle size (#23413) @flaviendelangle
 - [scheduler] Reuse processed events between updates (#23363) @flaviendelangle
-- [scheduler] add aria-expanded and aria-controls to side panel toggle button (#23402) @mustafajw07
+- [scheduler] Add `aria-expanded` and `aria-controls` to side panel toggle button (#23402) @mustafajw07
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.11` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -109,7 +110,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.11`, plus:
 
 - [scheduler-premium] Dependencies - Keep event drags working over the arrow hit-areas (#23441) @rita-codes
 - [scheduler-premium] Dependencies - Reject dependencies that would create a cycle (#23389) @rita-codes
-- [scheduler-premium] Key recurring exDates on their data-timezone day (#23467) @rita-codes
+- [scheduler-premium] Key recurring `exDates` on their data-timezone day (#23467) @rita-codes
 
 ### Codemod
 
@@ -123,6 +124,7 @@ Internal changes.
 - [docs] Add sticky headers recipe to `RichTreeView` customization (#22908) @michelengelen
 - [docs] Pin the visible date of the scheduler preferences demos (#23432) @rita-codes
 - [docs] Star-prefix bare :where() dark-mode selectors (#23419) @Janpot
+- [docs] Consolidate demo data into shared dataset files (#23496) @michelengelen
 
 ### Core
 
