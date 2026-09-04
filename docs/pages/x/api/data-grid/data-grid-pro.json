@@ -1405,6 +1405,12 @@
       "isGlobal": false
     },
     {
+      "key": "cell--nonText",
+      "className": "MuiDataGridPro-cell--nonText",
+      "description": "Styles applied to the cell element if its content is not text.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--pinnedLeft",
       "className": "MuiDataGridPro-cell--pinnedLeft",
       "description": "Styles applied to the cell element if it is pinned to the left.",
