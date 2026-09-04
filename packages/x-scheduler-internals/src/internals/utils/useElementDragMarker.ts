@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
-import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 
 /**
  * Toggles `data-drag-active` on the element while a pragmatic element drag runs, so an
