@@ -8,6 +8,11 @@ You can scroll to a specific cell by calling `apiRef.current.scrollToIndexes()`.
 The only argument that must be passed is an object containing the row index and the column index of the cell to scroll.
 If the row or column index is not present, the Data Grid will not do any movement in the missing axis.
 
+Indexes are zero-based.
+The `rowIndex` is an index into the full filtered and sorted row list, not relative to the current page, and it must fall within the range of rows displayed on the current page.
+The `colIndex` is an index into the visible columns.
+When an index is out of bounds, the Data Grid logs a warning in development and `scrollToIndexes` returns `false` without scrolling.
+
 The following demo explores the usage of this API:
 
 {{"demo": "ScrollPlayground.js", "bg": "inline"}}
