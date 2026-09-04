@@ -73,6 +73,14 @@ The demo below shows how to replace the checkbox slot with a custom component.
 
 {{"demo": "CheckboxSlot.js"}}
 
+#### Radio buttons for single selection
+
+When `multiSelect` is not enabled, a radio button communicates that only one item can be selected at a time.
+The demo below replaces the checkbox slot with Material UI's [`Radio`](/material-ui/react-radio-button/) component.
+The `indeterminate` prop is ignored so that a parent with a selected descendant keeps rendering an unchecked radio.
+
+{{"demo": "CheckboxSlotRadio.js"}}
+
 ## Basics
 
 ### Change nested item's indentation
