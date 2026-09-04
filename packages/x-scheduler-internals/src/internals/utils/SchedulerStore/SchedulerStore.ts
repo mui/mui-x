@@ -81,13 +81,13 @@ const MOCK_EVENT_STATE = {
   eventModelList: [],
 };
 
-/**
- * Instance shared by the Event Calendar and the Event Timeline Premium components.
- */
 function toUpdateEventResult(result: { rejection: Error | null }): SchedulerUpdateEventResult {
   return result.rejection ? { applied: false, rejection: result.rejection } : { applied: true };
 }
 
+/**
+ * Instance shared by the Event Calendar and the Event Timeline Premium components.
+ */
 export class SchedulerStore<
   TEvent extends object,
   TResource extends object,
