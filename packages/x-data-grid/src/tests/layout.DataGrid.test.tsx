@@ -910,6 +910,77 @@ describe('<DataGrid /> - Layout & warnings', () => {
       expect(overlayWrapper).toHaveComputedStyle({ height: `${expectedHeight}px` });
     });
 
+    // See https://github.com/mui/mui-x/issues/14289
+    describe('overlay position', () => {
+      const renderGrid = (direction: 'ltr' | 'rtl', columns: GridColDef[]) => {
+        render(
+          <ThemeProvider theme={createTheme({ direction })}>
+            <div dir={direction} style={{ width: 300, height: 300 }}>
+              <DataGrid rows={[]} columns={columns} hideFooter />
+            </div>
+          </ThemeProvider>,
+        );
+        return { scroller: grid('virtualScroller')!, overlay: grid('overlayWrapperInner')! };
+      };
+
+      const expectOverlayToCoverTheViewport = (scroller: HTMLElement, overlay: HTMLElement) => {
+        const scrollerRect = scroller.getBoundingClientRect();
+        const overlayRect = overlay.getBoundingClientRect();
+        expect(Math.round(overlayRect.left)).to.equal(Math.round(scrollerRect.left));
+        expect(Math.round(overlayRect.right)).to.equal(Math.round(scrollerRect.right));
+      };
+
+      describe('columns wider than the viewport', () => {
+        // The columns are more than twice as wide as the viewport, so the overlay has to travel
+        // further than a single viewport width to stay in place.
+        const wideColumns: GridColDef[] = Array.from({ length: 10 }, (_, index) => ({
+          field: `col${index}`,
+          width: 100,
+        }));
+
+        const expectOverlayToStayInTheViewport = async (direction: 'ltr' | 'rtl') => {
+          const { scroller, overlay } = renderGrid(direction, wideColumns);
+          const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+          expect(maxScrollLeft).to.be.greaterThan(scroller.clientWidth);
+
+          await act(async () => {
+            // In RTL, `scrollLeft` goes from 0 (scrolled to the start) to `-maxScrollLeft`
+            scroller.scrollLeft = direction === 'rtl' ? -maxScrollLeft : maxScrollLeft;
+            scroller.dispatchEvent(new Event('scroll'));
+          });
+
+          await waitFor(() => {
+            expectOverlayToCoverTheViewport(scroller, overlay);
+          });
+        };
+
+        it('should keep the overlay in the viewport in LTR', async () => {
+          await expectOverlayToStayInTheViewport('ltr');
+        });
+
+        it('should keep the overlay in the viewport in RTL', async () => {
+          await expectOverlayToStayInTheViewport('rtl');
+        });
+      });
+
+      describe('columns narrower than the viewport', () => {
+        // The columns leave empty space next to them, which the overlay has to cover as well.
+        const narrowColumns: GridColDef[] = [{ field: 'col0', width: 100 }];
+
+        it('should cover the viewport in LTR', () => {
+          const { scroller, overlay } = renderGrid('ltr', narrowColumns);
+          expect(scroller.scrollWidth).to.equal(scroller.clientWidth);
+          expectOverlayToCoverTheViewport(scroller, overlay);
+        });
+
+        it('should cover the viewport in RTL', () => {
+          const { scroller, overlay } = renderGrid('rtl', narrowColumns);
+          expect(scroller.scrollWidth).to.equal(scroller.clientWidth);
+          expectOverlayToCoverTheViewport(scroller, overlay);
+        });
+      });
+    });
+
     it('should respect the maxHeight of the flex parent', () => {
       render(
         <div
