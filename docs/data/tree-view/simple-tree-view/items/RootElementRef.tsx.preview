@@ -1,0 +1,12 @@
+<div>
+  <Button onClick={handleHighlight}>Highlight the root element</Button>
+</div>
+<Box sx={{ minWidth: 250 }}>
+  <SimpleTreeView ref={rootRef} defaultExpandedItems={['grid']}>
+    <TreeItem itemId="grid" label="Data Grid">
+      <TreeItem itemId="grid-community" label="@mui/x-data-grid" />
+      <TreeItem itemId="grid-pro" label="@mui/x-data-grid-pro" />
+    </TreeItem>
+    <TreeItem itemId="pickers" label="Date and Time Pickers" />
+  </SimpleTreeView>
+</Box>

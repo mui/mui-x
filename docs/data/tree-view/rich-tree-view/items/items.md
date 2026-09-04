@@ -262,6 +262,13 @@ When `domStructure="flat"`, all items are rendered as siblings regardless of the
 The **nested** DOM structure is not compatible with the virtualization on the `<RichTreeViewPro />`.
 :::
 
+### Get the root DOM element
+
+`RichTreeView` forwards its `ref` to the root `<ul>` element.
+Pass a regular React `ref` to the component to access this element:
+
+{{"demo": "RootElementRef.js", "defaultCodeOpen": false}}
+
 ## Track item clicks
 
 Use the `onItemClick` prop to track the clicked item:
