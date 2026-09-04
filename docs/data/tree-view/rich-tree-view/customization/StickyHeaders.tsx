@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { MUI_X_PRODUCTS, DEFAULT_EXPANDED_ITEMS } from './products';
+import { MUI_X_PRODUCTS, DEFAULT_EXPANDED_ITEMS } from '../../datasets/deepProducts';
 
 const ITEM_HEIGHT = 32;
 
