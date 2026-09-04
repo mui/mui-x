@@ -1,5 +1,6 @@
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import * as React from 'react';
+import { Store } from '@mui/x-internals/store';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { vi, describe, it, expect } from 'vitest';
@@ -785,6 +786,66 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       });
     });
 
+    describe('inline nested children', () => {
+      it('should add the response and its inline nested children to the state in a single store update', async () => {
+        const getTreeItems = vi.fn(async (): Promise<ItemType[]> => [
+          {
+            id: '1-1',
+            childrenCount: 1,
+            children: [
+              { id: '1-1-1', childrenCount: 1, children: [{ id: '1-1-1-1', childrenCount: 0 }] },
+            ],
+          },
+          { id: '1-2', childrenCount: 1, children: [{ id: '1-2-1', childrenCount: 0 }] },
+        ]);
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems,
+          },
+        });
+
+        // record the size of the item lookup each time a store write changes it
+        const itemMetaLookupWrites: number[] = [];
+        const originalSetState = Store.prototype.setState;
+        const setStateSpy = vi
+          .spyOn(Store.prototype, 'setState')
+          .mockImplementation(function setState(this: Store<any>, newState: any) {
+            if (newState.itemMetaLookup !== this.state.itemMetaLookup) {
+              itemMetaLookupWrites.push(Object.keys(newState.itemMetaLookup).length);
+            }
+            return originalSetState.call(this, newState);
+          });
+
+        try {
+          fireEvent.click(view.getItemContent('1'));
+          await awaitMockFetch();
+        } finally {
+          setStateSpy.mockRestore();
+        }
+
+        // the 2 top-level items and the 3 nested ones are added by one write, not one per group
+        expect(itemMetaLookupWrites).to.deep.equal([6]);
+
+        // the nested children are already in the tree, so expanding them requires no extra fetch
+        fireEvent.click(view.getItemContent('1-1'));
+        fireEvent.click(view.getItemContent('1-2'));
+        await awaitMockFetch();
+        fireEvent.click(view.getItemContent('1-1-1'));
+        await awaitMockFetch();
+        expect(getTreeItems.mock.calls.length).to.equal(1);
+        expect(view.getAllTreeItemIds()).to.deep.equal([
+          '1',
+          '1-1',
+          '1-1-1',
+          '1-1-1-1',
+          '1-2',
+          '1-2-1',
+        ]);
+      });
+    });
+
     describe('updateItemChildren', () => {
       it('should refresh root children when updateItemChildren is called with null', async () => {
         const view = render({
@@ -846,6 +907,42 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         await awaitMockFetch();
 
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
+      });
+
+      it('should remove the children of the item when the refresh fails', async () => {
+        let shouldFail = false;
+        const getTreeItems = vi.fn(async (parentId?: string): Promise<ItemType[]> => {
+          if (shouldFail) {
+            throw new Error('Failed to fetch data');
+          }
+          return [{ id: `${parentId}-1`, childrenCount: 0 }];
+        });
+        const view = render({
+          items: [
+            { id: '1', childrenCount: 1 },
+            { id: '2', childrenCount: 1 },
+          ],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems,
+          },
+        });
+
+        fireEvent.click(view.getItemContent('1'));
+        fireEvent.click(view.getItemContent('2'));
+        await awaitMockFetch();
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '2', '2-1']);
+
+        shouldFail = true;
+        await act(async () => {
+          await view.apiRef.current.updateItemChildren('1');
+        });
+
+        // only the children of the refreshed item are removed
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '2', '2-1']);
+        expect(
+          view.getItemIconContainer('1').querySelector(`.${treeItemClasses.errorIcon}`),
+        ).not.to.equal(null);
       });
     });
 
