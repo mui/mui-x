@@ -109,6 +109,12 @@ jobs:
           path: test-results
   test_browser:
     <<: *default-job
+    environment:
+      <<: *default-environment
+      # Vitest opens `maxWorkers` pages per project and keeps them until the run ends
+      # (https://github.com/vitest-dev/vitest/issues/10990), so this halves the peak
+      # renderer count. The `--maxWorkers` CLI flag does not reach the projects.
+      VITEST_MAX_WORKERS: '1'
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.62.1-noble
