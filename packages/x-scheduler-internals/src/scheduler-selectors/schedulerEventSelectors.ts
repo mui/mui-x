@@ -10,6 +10,7 @@ import type { SchedulerState as State } from '../internals/utils/SchedulerStore/
 import { resolveResourceProperty } from './schedulerResourceSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 import { getPrimaryResourceId } from '../internals/utils/event-utils';
+import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
 /**
  * Scans the events in order and returns whether the first one with a defined `resource`
@@ -34,6 +35,12 @@ function inferCanHaveMultipleResourcesFromEvents(
 
 const processedEventSelector = (state: State, eventId: SchedulerEventId | null | undefined) =>
   eventId == null ? null : state.processedEventLookup.get(eventId);
+
+const processedEventListSelector = createSelectorMemoized(
+  (state: State) => state.eventIdList,
+  (state: State) => state.processedEventLookup,
+  (eventIds, processedEventLookup) => eventIds.map((id) => processedEventLookup.get(id)!),
+);
 
 const isEventReadOnlySelector = (state: State, eventId: SchedulerEventId) => {
   const processedEvent = processedEventSelector(state, eventId);
@@ -161,10 +168,13 @@ export const schedulerEventSelectors = {
       };
     },
   ),
-  processedEventList: createSelectorMemoized(
-    (state: State) => state.eventIdList,
-    (state: State) => state.processedEventLookup,
-    (eventIds, processedEventLookup) => eventIds.map((id) => processedEventLookup.get(id)!),
+  processedEventList: processedEventListSelector,
+  processedEventRangeIndex: createSelectorMemoized(
+    (state: State) => state.adapter,
+    processedEventListSelector,
+    (state: State) => state.recurringEventsPlugin,
+    (adapter, events, recurringEventsPlugin) =>
+      createEventRangeIndex(events, adapter, recurringEventsPlugin != null),
   ),
   idList: (state: State) => state.eventIdList,
   modelList: (state: State) => state.eventModelList,

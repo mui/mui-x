@@ -6,6 +6,7 @@ import type {
 import {
   getOccurrencesFromEvents,
   computeElementPositionInCollection,
+  createEventRangeIndex,
 } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
@@ -54,7 +55,7 @@ function getOccurrences(events: SchedulerProcessedEvent[]) {
     adapter,
     start: collectionStart,
     end: collectionEnd,
-    events,
+    eventRangeIndex: createEventRangeIndex(events, adapter, false),
     displayTimezone: 'default',
     visibleResources: {},
     recurringEventsPlugin: null,
@@ -893,7 +894,7 @@ describe('dependencyArrowGeometry', () => {
             adapter,
             start: collectionStart,
             end: twoDayAxis.end,
-            events,
+            eventRangeIndex: createEventRangeIndex(events, adapter, false),
             displayTimezone: 'default',
             visibleResources: {},
             recurringEventsPlugin: null,

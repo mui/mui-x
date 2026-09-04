@@ -13,7 +13,7 @@ import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   (state: State) => state.adapter,
-  schedulerEventSelectors.processedEventList,
+  schedulerEventSelectors.processedEventRangeIndex,
   schedulerResourceSelectors.visibleMap,
   (state: State) => state.collapsedResources,
   schedulerResourceSelectors.processedResourceList,
@@ -23,7 +23,7 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
 
   (
     adapter,
-    events,
+    eventRangeIndex,
     visibleResources,
     collapsedResources,
     resources,
@@ -39,7 +39,7 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
       adapter,
       start,
       end,
-      events,
+      eventRangeIndex,
       visibleResources,
       displayTimezone,
       recurringEventsPlugin,
