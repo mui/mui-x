@@ -2,14 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import { TypingIndicator, type TypingIndicatorProps } from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { TypingIndicator } from '@mui/x-chat-headless';
+import type { TypingIndicatorProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
-import {
-  useChatTypingIndicatorUtilityClasses,
-  type ChatTypingIndicatorClasses,
-} from './chatTypingIndicatorClasses';
+import { useChatTypingIndicatorUtilityClasses } from './chatTypingIndicatorClasses';
+import type { ChatTypingIndicatorClasses } from './chatTypingIndicatorClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatTypingIndicator');
 
