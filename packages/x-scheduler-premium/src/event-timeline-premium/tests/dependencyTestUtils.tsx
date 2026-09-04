@@ -44,7 +44,9 @@ export function getEventRow(resourceId: string): HTMLElement {
     `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
   );
   if (!row) {
-    throw new Error(`Could not find event row for resource "${resourceId}"`);
+    throw /* minify-error-disabled */ new Error(
+      `Could not find event row for resource "${resourceId}"`,
+    );
   }
   return row;
 }
