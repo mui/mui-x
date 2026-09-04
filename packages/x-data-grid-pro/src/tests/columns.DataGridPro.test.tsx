@@ -746,6 +746,27 @@ describe('<DataGridPro /> - Columns', () => {
       });
     });
 
+    // Regression test for https://github.com/mui/mui-x/issues/23234
+    it('should compute a stable width when the header text wraps to multiple lines', async () => {
+      render(
+        <Test
+          rows={rows}
+          columns={[{ field: 'brand', headerName: 'This is the brand column', width: 60 }]}
+          sx={{
+            [`& .${gridClasses.columnHeaderTitle}`]: {
+              whiteSpace: 'normal',
+              lineHeight: 1.2,
+            },
+          }}
+        />,
+      );
+      await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: true }));
+      const widthAfterFirstCall = parseInt(getColumnHeaderCell(0).style.width, 10);
+      await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: true }));
+      const widthAfterSecondCall = parseInt(getColumnHeaderCell(0).style.width, 10);
+      expect(widthAfterSecondCall).to.equal(widthAfterFirstCall);
+    });
+
     it('should work with custom column header sort icon', async () => {
       const iconSize = 24;
       const gap = 2;
