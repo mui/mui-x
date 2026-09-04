@@ -93,8 +93,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       end: date('2025-07-03T12:00:00Z'),
     });
 
-    // Atomic veto: nothing is applied, and the rejection naming the blocked event is
-    // returned to the caller rather than pushed as a toast.
+    // Atomic veto: nothing applied, the rejection returned rather than pushed as a toast.
     expect(result.applied).to.equal(false);
     expect((result as { rejection: Error }).rejection.message).to.include('"Blocked successor"');
     expect(onEventsChange.mock.calls.length).to.equal(0);
@@ -345,8 +344,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       adapter,
     );
 
-    // Only recurring scope changes build such batches today; the store contract is
-    // exercised directly.
+    // Only recurring scope changes build such batches today, so the store method is
+    // called directly.
     const result = (store as any).updateEvents({
       deleted: ['d'],
       updated: [
@@ -415,8 +414,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
     const events: SchedulerEvent[] = onEventsChange.mock.calls[0][0];
     const successor = events.find((event) => event.id === 'b')!;
-    // The wall-time serialization drops the milliseconds; the model stays all-day and
-    // the re-processed bounds cover the whole pushed day.
+    // Serialization drops the milliseconds; the model stays all-day on the pushed day.
     expect(successor.allDay).to.equal(true);
     expect(successor.start).to.equal('2025-07-06T00:00:00');
     expect(successor.end).to.equal('2025-07-06T23:59:59');

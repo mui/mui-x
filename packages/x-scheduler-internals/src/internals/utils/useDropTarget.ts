@@ -288,7 +288,7 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const result = store.updateEvent(changes);
   if (!result.applied) {
-    // The drop has no other surface for the rejection than the transient toast.
+    // The drop has no other surface for the rejection.
     store.pushError(result.rejection, { transient: true });
     return;
   }

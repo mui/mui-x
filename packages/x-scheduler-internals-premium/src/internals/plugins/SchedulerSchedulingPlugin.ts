@@ -110,8 +110,7 @@ export class SchedulerSchedulingPlugin<
     const { deleted, updated } = parameters;
     const deletedSet = new Set(deleted);
 
-    // The cascade runs before the dependency cascade-delete: a vetoed batch must not
-    // have emitted anything.
+    // Cascade first: a vetoed batch must not have emitted the dependency cleanup.
     let cascaded: SchedulerEventUpdatedProperties[] = [];
     if (updated && updated.length > 0 && this.store.state.dependencyModelList.length > 0) {
       const result = computeAutoSchedulingCascade({

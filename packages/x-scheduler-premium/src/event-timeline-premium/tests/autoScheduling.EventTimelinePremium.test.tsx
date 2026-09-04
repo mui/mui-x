@@ -61,8 +61,7 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
       });
     });
 
-    // The drop landed past the successor and the cascade ran on it: the successor
-    // starts at the predecessor's new end, with no rejection.
+    // The drop landed past the successor: it now starts at the predecessor's new end.
     const movedPredecessor = store.state.processedEventLookup.get('event-a')!;
     const movedSuccessor = store.state.processedEventLookup.get('event-b')!;
     expect(movedPredecessor.dataTimezone.start.timestamp).to.be.greaterThan(
@@ -182,8 +181,7 @@ describe('<EventTimelinePremium /> auto-scheduling', () => {
       });
     });
 
-    // The whole drop is vetoed: neither event moves, and the rejection shows as a
-    // toast naming the blocking event.
+    // Vetoed: neither event moves and the toast names the blocking event.
     expect(store.state.processedEventLookup.get('event-a')!.dataTimezone.start.timestamp).to.equal(
       originalPredecessorStart,
     );

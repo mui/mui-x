@@ -60,27 +60,16 @@ export interface AutoSchedulingCascadeResult {
  * Computes the Finish-to-Start cascade for an `updateEvents` batch: the extra
  * `{ id, start, end }` updates restoring `successor.start >= predecessor.end`, transitively.
  *
- * Push-only: an event only ever moves later — moving a predecessor earlier never pulls
- * successors back, and pre-existing violations stay as-is. The batch's entries are
- * seeds (whole-entry last-wins per id, like the store). A seed whose entry actually
- * moves `start` is being placed by the user, so every active predecessor clamps it
- * forward to the first valid position; other seeds and untouched successors are pushed
- * only by predecessors moved in the same batch. Shifted seeds fold back into their own
- * entry. A read-only event that would need to move is reported in `blocked` (and left
- * unmoved) so the caller can reject the whole batch. Timed events keep their duration
- * in absolute milliseconds (same policy as drag-and-drop and paste) and land on the
- * first instant of the day after an all-day predecessor; all-day events shift by
- * whole days. A seed whose entry moved only `start` (a start resize) keeps its end
- * instead and gets shorter, unless that would leave nothing of it.
+ * Push-only: events only move later, and pre-existing violations stay as-is. A seed whose
+ * entry moves `start` is being placed by the user and is clamped forward by all its
+ * predecessors; everything else is pushed only by predecessors moved in the same batch.
+ * Timed events keep their duration (a start resize keeps its end instead), all-day events
+ * shift by whole days, and a read-only event that would need to move is reported in
+ * `blocked` so the caller rejects the batch.
  *
- * Kahn pass over the subgraph reachable from the seeds, each node settled once.
- * Members of a seedless cycle (cyclic props data) never become ready: left unmoved,
- * with a dev warning. A cycle through a seed is broken at the first stalled seed in
- * batch order, also with a dev warning.
- * Entries that change none of `start`/`end`/`allDay` never cascade — notably a
- * `timezone`-only update, which no UI path produces. With lazy loading, only loaded
- * events take part: a dependency whose other end is not fetched is inactive, so the
- * loaded event moves freely and the violation only shows once the other one loads.
+ * Kahn pass over the subgraph reachable from the seeds. Cycles in the props data warn in
+ * dev: a seedless cycle stays unmoved, a cycle through a seed is broken at that seed.
+ * Only loaded events take part: with lazy loading, an unfetched successor is not pushed.
  */
 export function computeAutoSchedulingCascade(
   parameters: ComputeAutoSchedulingCascadeParameters,
@@ -95,18 +84,17 @@ export function computeAutoSchedulingCascade(
   } = parameters;
 
   const newDates = new Map<SchedulerEventId, ResolvedDates>();
-  // An event turning recurring in this batch leaves the cascade — the active index is
-  // derived from the pre-update state, so it cannot have excluded it yet.
+  // Turning recurring in this batch: the active index predates the update and still
+  // lists the event.
   const becomesRecurring = new Set<SchedulerEventId>();
   // Seeds whose entry actually moves `start`: the user is placing them, so they are
-  // the ones clamped. Checked against the current start because the event dialog
-  // resends unchanged dates on every save.
+  // the ones clamped. Checked against the current start: an entry can carry the same
+  // dates (a drop released in place, an API call) and those place nothing.
   const repositionedSeeds = new Set<SchedulerEventId>();
-  // Repositioned seeds whose entry left `end` where it is: a start resize, so the
-  // clamp shortens them instead of dragging the end along.
+  // Repositioned seeds whose entry left `end` where it is (a start resize): the clamp
+  // keeps their end.
   const startResizedSeeds = new Set<SchedulerEventId>();
-  // Events whose dates this pass changes (seeds with real changes, then cascaded
-  // shifts). Only these push their non-clamped successors.
+  // Events whose dates change in this pass; only these push their successors.
   const movedIds = new Set<SchedulerEventId>();
 
   // Whole-entry last-wins per id, mirroring the store's fold.
@@ -132,9 +120,8 @@ export function computeAutoSchedulingCascade(
       continue;
     }
     const allDay = entry.allDay ?? processedEvent.allDay ?? false;
-    // Entry values arrive in the display timezone; the store applies them in the
-    // data timezone (see `dateToEventString`), so the comparison and the all-day
-    // normalization must happen there too.
+    // Entries arrive in the display timezone and the store applies them in the data
+    // timezone (`dateToEventString`): compare and normalize there.
     const dataTimezone = processedEvent.modelInBuiltInFormat.timezone ?? 'default';
     const { start, end } = normalizeAllDayBounds(
       adapter,
@@ -200,9 +187,8 @@ export function computeAutoSchedulingCascade(
   const cascaded: SchedulerEventUpdatedProperties[] = [];
   while (processed.size < members.size) {
     if (ready.length === 0) {
-      // Every remaining member waits on a cycle. A seed on the cycle can still settle —
-      // its dates are user-given — so the stall breaks there; without one, the
-      // remaining members sit behind a seedless cycle and stay unmoved.
+      // Every remaining member waits on a cycle. A seed on it can still settle (its
+      // dates are the user's), so the stall breaks there; a seedless cycle stays unmoved.
       const stalledSeed = [...seeds].find((seedId) => !processed.has(seedId));
       if (stalledSeed === undefined) {
         break;
@@ -316,9 +302,7 @@ export function computeAutoSchedulingCascade(
     }
 
     if (base.allDay) {
-      // Minimal whole-day shift: the full-day count floors, so at most one more day is
-      // needed across a DST transition. `addDays` keeps the wall time, preserving the
-      // day alignment and span.
+      // Minimal whole-day shift; the full-day count floors, so a DST day may need one more.
       let dayCount = Math.max(1, adapter.differenceInDays(required.end, base.start));
       while (adapter.getTime(adapter.addDays(base.start, dayCount)) < required.endTimestamp) {
         dayCount += 1;
@@ -338,9 +322,8 @@ export function computeAutoSchedulingCascade(
       };
     }
 
-    // A timed event lands on the first instant after an all-day predecessor's day:
-    // the inclusive 23:59:59.999 end would not survive the second-resolution
-    // wall-time serialization.
+    // After an all-day predecessor, start on the next day's first instant: the inclusive
+    // 23:59:59.999 end would not survive the second-resolution serialization.
     const newStart = required.allDay ? adapter.addMilliseconds(required.end, 1) : required.end;
     const newStartTimestamp = adapter.getTime(newStart);
     const newEnd =

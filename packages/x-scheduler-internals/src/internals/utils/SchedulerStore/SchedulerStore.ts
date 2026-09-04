@@ -482,8 +482,7 @@ export class SchedulerStore<
         if (deleted.has(entry.id)) {
           continue;
         }
-        // Append, never rebuild the Map: `pasteEvent` reads `.updated[0]` from the
-        // return value, so the caller's entries must keep their insertion order.
+        // Append, never rebuild: `pasteEvent` reads the caller's entry from `.updated[0]`.
         const existing = updated.get(entry.id);
         updated.set(
           entry.id,
@@ -840,7 +839,7 @@ export class SchedulerStore<
       const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
       const { updated, rejection } = this.updateEvents({ updated: [updatedEvent] });
       if (rejection) {
-        // The paste has no other surface for the rejection; the clipboard stays usable.
+        // No other surface for the rejection; the clipboard stays usable.
         this.pushError(rejection, { transient: true });
         return null;
       }

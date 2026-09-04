@@ -8,12 +8,10 @@ import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerSt
 export interface SchedulerSchedulingPluginInterface {
   /**
    * Reacts to event mutations.
-   * Called inside `updateEvents` before the batch is merged, so the returned entries
-   * (the auto-scheduling cascade, `{ id, start, end }` only) fold into the same update
-   * and the same `onEventsChange` emission. An entry for an id already in the batch
-   * overrides that entry's dates (a dropped event clamped forward). `{ rejected: true }`
-   * vetoes the whole batch: nothing is applied or emitted, and the caller surfaces
-   * `error` where the interaction happened.
+   * Called inside `updateEvents` before the batch is merged: the returned entries
+   * (`{ id, start, end }` only) fold into the same update and the same `onEventsChange`
+   * emission, overriding the dates of an entry already in the batch. `rejected` vetoes
+   * the whole batch: nothing is applied or emitted, and the caller surfaces `error`.
    */
   handleEventsUpdate: (
     parameters: UpdateEventsParameters,

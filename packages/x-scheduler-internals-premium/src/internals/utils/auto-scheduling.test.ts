@@ -93,13 +93,10 @@ describe('computeAutoSchedulingCascade', () => {
       .span('2025-07-05T01:00:00Z', '2025-07-05T02:00:00Z')
       .toProcessed();
 
-    // The dialog resends "the same day" as display-zone bounds (computeRange builds
-    // them with the display timezone). Applied in the data timezone those stretch the
-    // event to a second day — the engine mirrors the store's effective result. The
-    // stretch itself is an upstream dialog issue, not an engine choice: #23462 stops
-    // resending untouched dates and #23490 revisits the all-day model. Once #23462
-    // lands, a rename no longer reaches the engine with dates and this case is only
-    // reachable through the API.
+    // The dialog resends "the same day" as display-zone bounds; applied in the data
+    // timezone those stretch the event to a second day, and the engine mirrors the
+    // store. Upstream dialog issue (#23462 stops resending untouched dates, #23490
+    // revisits the all-day model), not an engine choice.
     const result = runCascade(
       [eventA, eventB],
       [fsDependency('a', 'b')],
@@ -578,8 +575,8 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result).to.have.length(1);
-    // Starts at the next day's first instant, not the inclusive 23:59:59.999 end —
-    // wall-time serialization has second resolution and would truncate the .999.
+    // Next day's first instant, not the inclusive 23:59:59.999 end (second-resolution
+    // serialization).
     expect(adapter.getTime(result[0].start!)).to.equal(
       adapter.getTime(utcDate('2025-07-05T00:00:00')),
     );
@@ -985,10 +982,8 @@ describe('computeAutoSchedulingCascade', () => {
       .span('2025-07-03T11:00:00', '2025-07-03T12:00:00')
       .toProcessed();
 
-    // The dialog sends the day bounds when the switch is flipped: the start lands at
-    // 00:00, before the predecessor's end, so the flip counts as a reposition and the
-    // whole day is clamped forward. Intended under the "all-day spans the whole day"
-    // policy; pinned so a dialog change does not alter it silently.
+    // The dialog sends the day bounds when the switch is flipped, so the flip counts as
+    // a reposition and the whole day is clamped forward. Pinned on purpose.
     const result = runCascade(
       [eventA, eventB],
       [fsDependency('a', 'b')],
@@ -1060,8 +1055,7 @@ describe('computeAutoSchedulingCascade', () => {
   });
 
   it('should push an all-day successor by whole days across a fall-back transition', () => {
-    // America/New_York falls back on 2025-11-02: the day is 25h long, so the ms
-    // estimate overshoots and the correction loops must settle on one day.
+    // America/New_York falls back on 2025-11-02: the 25h day still counts as one.
     const predecessor = EventBuilder.new()
       .id('a')
       .withDataTimezone('America/New_York')
@@ -1411,8 +1405,8 @@ describe('computeAutoSchedulingCascade', () => {
       .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
       .toProcessed();
 
-    // A self-loop in the props data is the shortest cycle: the seed still settles and
-    // pushes b, and the bad data warns like any other cycle through a seed.
+    // A self-loop is the shortest cycle: the seed still settles and pushes b, with the
+    // usual warning.
     let result: ReturnType<typeof runCascade>;
     expect(() => {
       result = runCascade(

@@ -203,10 +203,8 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
   };
 
   /**
-   * Renders the dialog editing `predecessor` on a store where its `FinishToStart`
-   * successor is read-only, so a save moving the predecessor past 10:00 is vetoed.
-   * The edit occurrence is derived from the store's own processed state
-   * (an occurrence is a processed event plus a render key).
+   * Renders the dialog editing `predecessor`, whose FinishToStart successor is
+   * read-only: a save moving it past 10:00 is vetoed.
    */
   async function renderEditDialog() {
     const onEventsChange = vi.fn();
@@ -259,9 +257,8 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     await user.type(currentDialog.getByLabelText(/end time/i), '12:00');
     await user.click(currentDialog.getByRole('button', { name: /save/i }));
 
-    // The batch is vetoed atomically: nothing is emitted, the dialog stays open with
-    // the user's edits, and the rejection naming the blocking event sits on the end
-    // time field instead of a toast the modal would keep out of reach.
+    // Vetoed atomically: nothing emitted, the dialog keeps the edits, and the rejection
+    // sits on the end time field rather than on a toast behind the modal.
     expect(onClose.mock.calls.length).to.equal(0);
     expect(onEventsChange.mock.calls.length).to.equal(0);
     expect(store.state.errors).to.have.length(0);

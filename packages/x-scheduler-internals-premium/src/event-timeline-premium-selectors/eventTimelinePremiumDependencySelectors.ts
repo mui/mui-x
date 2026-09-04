@@ -10,10 +10,8 @@ import {
   isDependencyReadOnly,
 } from '../internals/utils/dependency-utils';
 
-// The active-dependency selectors only read these two slices. Typing them against the
-// narrow intersection (instead of the full timeline state) lets the scheduling plugin —
-// generic over `SchedulerState & SchedulerDependenciesState` — consume them directly,
-// sharing their memoization with the rendering.
+// Typed against the two slices they read, so the scheduling plugin (generic over
+// `SchedulerState & SchedulerDependenciesState`) shares them with the rendering.
 type DependenciesState = SchedulerState & SchedulerDependenciesState;
 
 const activeModelListSelector = createSelectorMemoized(
