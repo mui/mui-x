@@ -972,6 +972,45 @@ describe('computeAutoSchedulingCascade', () => {
     );
   });
 
+  it("should clamp a successor flipped to all-day on its predecessor's day to the next day", () => {
+    const eventA = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('UTC')
+      .span('2025-07-03T09:00:00', '2025-07-03T10:00:00')
+      .toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('UTC')
+      .span('2025-07-03T11:00:00', '2025-07-03T12:00:00')
+      .toProcessed();
+
+    // The dialog sends the day bounds when the switch is flipped: the start lands at
+    // 00:00, before the predecessor's end, so the flip counts as a reposition and the
+    // whole day is clamped forward. Intended under the "all-day spans the whole day"
+    // policy; pinned so a dialog change does not alter it silently.
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [
+        {
+          id: 'b',
+          start: utcDate('2025-07-03T00:00:00'),
+          end: utcDate('2025-07-03T23:59:59.999'),
+          allDay: true,
+        },
+      ],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(utcDate('2025-07-04T00:00:00')),
+    );
+    expect(adapter.getTime(result[0].end!)).to.equal(
+      adapter.getTime(utcDate('2025-07-04T23:59:59.999')),
+    );
+  });
+
   it('should clamp a timed event dropped onto an all-day predecessor to the next day', () => {
     const predecessor = EventBuilder.new()
       .id('a')
