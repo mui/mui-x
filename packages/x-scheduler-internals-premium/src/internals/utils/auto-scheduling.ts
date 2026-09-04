@@ -72,7 +72,8 @@ export interface AutoSchedulingCascadeResult {
  * unmoved) so the caller can reject the whole batch. Timed events keep their duration
  * in absolute milliseconds (same policy as drag-and-drop and paste) and land on the
  * first instant of the day after an all-day predecessor; all-day events shift by
- * whole days.
+ * whole days. A seed whose entry moved only `start` (a start resize) keeps its end
+ * instead and gets shorter, unless that would leave nothing of it.
  *
  * Kahn pass over the subgraph reachable from the seeds, each node settled once.
  * Members of a seedless cycle (cyclic props data) never become ready: left unmoved,
@@ -101,6 +102,9 @@ export function computeAutoSchedulingCascade(
   // the ones clamped. Checked against the current start because the event dialog
   // resends unchanged dates on every save.
   const repositionedSeeds = new Set<SchedulerEventId>();
+  // Repositioned seeds whose entry left `end` where it is: a start resize, so the
+  // clamp shortens them instead of dragging the end along.
+  const startResizedSeeds = new Set<SchedulerEventId>();
   // Events whose dates this pass changes (seeds with real changes, then cascaded
   // shifts). Only these push their non-clamped successors.
   const movedIds = new Set<SchedulerEventId>();
@@ -153,6 +157,9 @@ export function computeAutoSchedulingCascade(
     }
     if (entry.start != null && startMoved) {
       repositionedSeeds.add(entry.id);
+      if (endTimestamp === current.endTimestamp) {
+        startResizedSeeds.add(entry.id);
+      }
     }
   }
 
@@ -323,11 +330,15 @@ export function computeAutoSchedulingCascade(
         dayCount -= 1;
       }
       const newStart = adapter.addDays(base.start, dayCount);
-      const newEnd = adapter.addDays(base.end, dayCount);
+      const newStartTimestamp = adapter.getTime(newStart);
+      const newEnd =
+        startResizedSeeds.has(eventId) && newStartTimestamp < base.endTimestamp
+          ? base.end
+          : adapter.addDays(base.end, dayCount);
       return {
         start: newStart,
         end: newEnd,
-        startTimestamp: adapter.getTime(newStart),
+        startTimestamp: newStartTimestamp,
         endTimestamp: adapter.getTime(newEnd),
         allDay: true,
       };
@@ -337,12 +348,15 @@ export function computeAutoSchedulingCascade(
     // the inclusive 23:59:59.999 end would not survive the second-resolution
     // wall-time serialization.
     const newStart = required.allDay ? adapter.addMilliseconds(required.end, 1) : required.end;
-    const durationMs = base.endTimestamp - base.startTimestamp;
-    const newEnd = adapter.addMilliseconds(newStart, durationMs);
+    const newStartTimestamp = adapter.getTime(newStart);
+    const newEnd =
+      startResizedSeeds.has(eventId) && newStartTimestamp < base.endTimestamp
+        ? base.end
+        : adapter.addMilliseconds(newStart, base.endTimestamp - base.startTimestamp);
     return {
       start: newStart,
       end: newEnd,
-      startTimestamp: adapter.getTime(newStart),
+      startTimestamp: newStartTimestamp,
       endTimestamp: adapter.getTime(newEnd),
       allDay: false,
     };

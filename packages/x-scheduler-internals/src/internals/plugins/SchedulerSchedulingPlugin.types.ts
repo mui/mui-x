@@ -12,9 +12,10 @@ export interface SchedulerSchedulingPluginInterface {
    * (the auto-scheduling cascade, `{ id, start, end }` only) fold into the same update
    * and the same `onEventsChange` emission. An entry for an id already in the batch
    * overrides that entry's dates (a dropped event clamped forward). `{ rejected: true }`
-   * vetoes the whole batch: nothing is applied or emitted.
+   * vetoes the whole batch: nothing is applied or emitted, and the caller surfaces
+   * `error` where the interaction happened.
    */
   handleEventsUpdate: (
     parameters: UpdateEventsParameters,
-  ) => { updated: SchedulerEventUpdatedProperties[] } | { rejected: true } | void;
+  ) => { updated: SchedulerEventUpdatedProperties[] } | { rejected: true; error: Error } | void;
 }

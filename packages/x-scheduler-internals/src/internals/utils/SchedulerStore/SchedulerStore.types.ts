@@ -506,6 +506,12 @@ export interface UpdateEventsParameters {
   updated?: SchedulerEventUpdatedProperties[];
 }
 
+/**
+ * Outcome of `updateEvent`: applied, or vetoed by the scheduling plugin with the
+ * error to surface.
+ */
+export type SchedulerUpdateEventResult = { applied: true } | { applied: false; rejection: Error };
+
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
 
 /**

@@ -259,11 +259,35 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     await user.click(currentDialog.getByRole('button', { name: /save/i }));
 
     // The batch is vetoed atomically: nothing is emitted, the dialog stays open with
-    // the user's edits, and the toast names the blocking event.
+    // the user's edits, and the rejection naming the blocking event sits on the end
+    // time field instead of a toast the modal would keep out of reach.
     expect(onClose.mock.calls.length).to.equal(0);
     expect(onEventsChange.mock.calls.length).to.equal(0);
-    expect(store.state.errors).to.have.length(1);
-    expect(store.state.errors[0].error.message).to.include('"Locked successor"');
+    expect(store.state.errors).to.have.length(0);
+    expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
     expect(currentDialog.getByLabelText(/start time/i)).to.have.value('11:00');
+  });
+
+  it('should save after the vetoed dates are edited back into a valid range', async () => {
+    const { user, currentDialog, onClose, onEventsChange } = renderEditDialog();
+
+    await user.clear(currentDialog.getByLabelText(/start time/i));
+    await user.type(currentDialog.getByLabelText(/start time/i), '11:00');
+    await user.clear(currentDialog.getByLabelText(/end time/i));
+    await user.type(currentDialog.getByLabelText(/end time/i), '12:00');
+    await user.click(currentDialog.getByRole('button', { name: /save/i }));
+    expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
+
+    // Editing a range field clears the rejection; a save that no longer pushes the
+    // successor goes through.
+    await user.clear(currentDialog.getByLabelText(/start time/i));
+    await user.type(currentDialog.getByLabelText(/start time/i), '08:30');
+    await user.clear(currentDialog.getByLabelText(/end time/i));
+    await user.type(currentDialog.getByLabelText(/end time/i), '09:30');
+    expect(currentDialog.queryByText(/"Locked successor"/)).to.equal(null);
+    await user.click(currentDialog.getByRole('button', { name: /save/i }));
+
+    expect(onClose.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.calls.length).to.equal(1);
   });
 });

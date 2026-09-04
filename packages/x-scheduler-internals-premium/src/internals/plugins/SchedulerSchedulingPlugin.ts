@@ -100,7 +100,7 @@ export class SchedulerSchedulingPlugin<
    * Removes the dependencies referencing deleted events and computes the
    * auto-scheduling cascade for the updated ones, all in the same update. A batch
    * whose cascade would need to move a read-only event is vetoed instead: nothing is
-   * applied, and the rejection surfaces as a transient toast.
+   * applied, and the rejection is returned for the caller to surface.
    *
    * With a `dataSource`, event deletions are persisted asynchronously after this hook has
    * already emitted `onDependenciesChange`. If that persistence fails, the event survives but
@@ -129,13 +129,12 @@ export class SchedulerSchedulingPlugin<
       });
       if (result.blocked.length > 0) {
         const blockedEvent = this.store.state.processedEventLookup.get(result.blocked[0])!;
-        this.store.pushError(
-          /* minify-error-disabled */ new Error(
+        return {
+          rejected: true as const,
+          error: /* minify-error-disabled */ new Error(
             `This change would move the read-only event "${blockedEvent.title}", so it was not applied.`,
           ),
-          { transient: true },
-        );
-        return { rejected: true as const };
+        };
       }
       cascaded = result.updated;
     }

@@ -460,15 +460,19 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         // don't close the dialog
         return;
       } else {
-        const applied = store.updateEvent({
+        const result = store.updateEvent({
           ...metaChanges,
           id: occurrence.id,
           start,
           end,
           rrule: rruleToSubmit,
         });
-        if (!applied) {
-          // A vetoed save keeps the dialog open with the edits; the toast explains why.
+        if (!result.applied) {
+          // A vetoed save keeps the dialog open with the edits. The rejection sits on the
+          // range field the user has to change; editing the dates clears it.
+          const rejectedField = values.allDay ? 'endDate' : 'endTime';
+          warnUnvalidatedField(rejectedField, 'The scheduling plugin rejected the save');
+          formStore.setError(rejectedField, result.rejection.message);
           return;
         }
       }

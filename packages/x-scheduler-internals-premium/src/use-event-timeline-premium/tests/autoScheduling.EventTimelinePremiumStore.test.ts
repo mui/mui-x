@@ -92,18 +92,18 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       adapter,
     );
 
-    const applied = store.updateEvent({
+    const result = store.updateEvent({
       id: 'a',
       start: date('2025-07-03T11:00:00Z'),
       end: date('2025-07-03T12:00:00Z'),
     });
 
-    // Atomic veto: nothing is applied, and the rejection surfaces as a toast naming
-    // the blocked event.
-    expect(applied).to.equal(false);
+    // Atomic veto: nothing is applied, and the rejection naming the blocked event is
+    // returned to the caller rather than pushed as a toast.
+    expect(result.applied).to.equal(false);
+    expect((result as { rejection: Error }).rejection.message).to.include('"Blocked successor"');
     expect(onEventsChange.mock.calls.length).to.equal(0);
-    expect(store.state.errors).to.have.length(1);
-    expect(store.state.errors[0].error.message).to.include('"Blocked successor"');
+    expect(store.state.errors).to.have.length(0);
   });
 
   it('should report an applied update', () => {
@@ -112,13 +112,13 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       adapter,
     );
 
-    const applied = store.updateEvent({
+    const result = store.updateEvent({
       id: 'a',
       start: date('2025-07-03T08:00:00Z'),
       end: date('2025-07-03T09:00:00Z'),
     });
 
-    expect(applied).to.equal(true);
+    expect(result.applied).to.equal(true);
   });
 
   it('should discard the whole batch when only one branch is blocked', () => {
@@ -137,14 +137,14 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       adapter,
     );
 
-    const applied = store.updateEvent({
+    const result = store.updateEvent({
       id: 'a',
       start: date('2025-07-03T11:00:00Z'),
       end: date('2025-07-03T12:00:00Z'),
     });
 
     // c could have been pushed, but the blocked b vetoes everything.
-    expect(applied).to.equal(false);
+    expect(result.applied).to.equal(false);
     expect(onEventsChange.mock.calls.length).to.equal(0);
   });
 
@@ -190,9 +190,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     store.cutEvent('a');
     const result = store.pasteEvent({ start: date('2025-07-03T11:00:00Z') });
 
+    // The paste has no surface of its own, so the rejection shows as a toast.
     expect(result).to.equal(null);
     expect(onEventsChange.mock.calls.length).to.equal(0);
     expect(store.state.copiedEvent).not.to.equal(null);
+    expect(store.state.errors).to.have.length(1);
+    expect(store.state.errors[0].error.message).to.include('"Blocked successor"');
   });
 
   it('should cascade on an end-only update', () => {

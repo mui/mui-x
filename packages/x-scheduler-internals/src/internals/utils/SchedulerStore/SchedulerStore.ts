@@ -34,6 +34,7 @@ import type {
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
   UpdateEventsParameters,
+  SchedulerUpdateEventResult,
   SchedulerInstanceName,
   SchedulerEditingMode,
   SchedulerEventEditingStartEventDetails,
@@ -83,6 +84,10 @@ const MOCK_EVENT_STATE = {
 /**
  * Instance shared by the Event Calendar and the Event Timeline Premium components.
  */
+function toUpdateEventResult(result: { rejection: Error | null }): SchedulerUpdateEventResult {
+  return result.rejection ? { applied: false, rejection: result.rejection } : { applied: true };
+}
+
 export class SchedulerStore<
   TEvent extends object,
   TResource extends object,
@@ -447,6 +452,8 @@ export class SchedulerStore<
 
   /**
    * Adds, updates and / or deletes events in the calendar.
+   * A batch the scheduling plugin vetoes is not applied nor emitted: the result then
+   * carries the `rejection` for the caller to surface, and empty id lists.
    */
   protected updateEvents(parameters: UpdateEventsParameters) {
     const eventDetails = createChangeEventDetails('none');
@@ -468,7 +475,7 @@ export class SchedulerStore<
 
     const contributions = this.schedulingPlugin?.handleEventsUpdate(parameters);
     if (contributions && 'rejected' in contributions) {
-      return { deleted: [], updated: [], created: [] };
+      return { deleted: [], updated: [], created: [], rejection: contributions.error };
     }
     if (contributions?.updated) {
       for (const entry of contributions.updated) {
@@ -558,6 +565,7 @@ export class SchedulerStore<
       deleted: deletedParam ?? [],
       updated: Array.from(updated.keys()) as SchedulerEventId[],
       created: createdIds,
+      rejection: null,
     };
   }
 
@@ -597,10 +605,12 @@ export class SchedulerStore<
 
   /**
    * Updates an event in the calendar.
-   * Returns whether the update was applied — `false` when the scheduling plugin
-   * vetoed the batch.
+   * The result says whether the update was applied, with the rejection to surface
+   * when the scheduling plugin vetoed it.
    */
-  public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties): boolean => {
+  public updateEvent = (
+    calendarEvent: SchedulerEventUpdatedProperties,
+  ): SchedulerUpdateEventResult => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
     if (this.state.recurringEventsPlugin != null && original.dataTimezone.rrule) {
       throw new Error(
@@ -617,16 +627,12 @@ export class SchedulerStore<
           'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
         ]);
       }
-      return (
-        this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }).updated.length > 0
+      return toUpdateEventResult(
+        this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }),
       );
     }
 
-    return (
-      this.updateEvents({
-        updated: [calendarEvent],
-      }).updated.length > 0
-    );
+    return toUpdateEventResult(this.updateEvents({ updated: [calendarEvent] }));
   };
 
   /**
@@ -830,9 +836,10 @@ export class SchedulerStore<
 
     if (copiedEvent.action === 'cut') {
       const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
-      const { updated } = this.updateEvents({ updated: [updatedEvent] });
-      if (updated.length === 0) {
-        // Rejected by the scheduling plugin: the clipboard stays usable.
+      const { updated, rejection } = this.updateEvents({ updated: [updatedEvent] });
+      if (rejection) {
+        // The paste has no other surface for the rejection; the clipboard stays usable.
+        this.pushError(rejection, { transient: true });
         return null;
       }
       this.set('copiedEvent', null);

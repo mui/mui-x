@@ -286,14 +286,15 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     return;
   }
 
-  const applied = store.updateEvent(changes);
+  const result = store.updateEvent(changes);
+  if (!result.applied) {
+    // The drop has no other surface for the rejection than the transient toast.
+    store.pushError(result.rejection, { transient: true });
+    return;
+  }
 
-  // Sync the editing surface (if this occurrence is being edited) with the committed
-  // times — not with the times of a vetoed drop.
-  if (
-    applied &&
-    schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)
-  ) {
+  // Sync the editing surface (if this occurrence is being edited) with the committed times.
+  if (schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)) {
     store.setEditingOccurrenceTimes(start, end);
   }
 }

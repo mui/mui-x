@@ -281,7 +281,7 @@ describe('computeAutoSchedulingCascade', () => {
       .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
       .toProcessed();
 
-    // `end` omitted: resolves from the current model, duration shrinks accordingly.
+    // `end` omitted: resolves from the current model and stays put, the event shrinks.
     const result = runCascade(
       [eventA, eventB],
       [fsDependency('a', 'b')],
@@ -290,8 +290,75 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
+    expectDates(result[0], '2025-07-03T10:00:00Z', '2025-07-03T12:00:00Z');
+  });
+
+  it('should keep the end of a start-resized event clamped against its predecessor', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
+      .toProcessed();
+
+    // A start resize resends the unchanged end (drag-and-drop and the dialog both do).
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'b', start: date('2025-07-03T09:30:00Z'), end: date('2025-07-03T12:00:00Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expectDates(result[0], '2025-07-03T10:00:00Z', '2025-07-03T12:00:00Z');
+  });
+
+  it('should keep the duration of a start-resized event whose end would not survive the clamp', () => {
+    const eventA = EventBuilder.new()
+      .id('a')
+      .span('2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z')
+      .toProcessed();
+    // Pre-existing violation: B already ends before A does.
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T10:00:00Z', '2025-07-03T12:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'b', start: date('2025-07-03T09:30:00Z'), end: date('2025-07-03T12:00:00Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expectDates(result[0], '2025-07-03T13:00:00Z', '2025-07-03T15:30:00Z');
+  });
+
+  it('should keep the end of a start-resized all-day event clamped by whole days', () => {
+    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-04T09:00:00Z').toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('UTC')
+      .span('2025-07-10T00:00:00', '2025-07-12T23:59:59.999', { allDay: true })
+      .toProcessed();
+
+    const result = runCascade(
+      [predecessor, successor],
+      [fsDependency('a', 'b')],
+      [
+        {
+          id: 'b',
+          start: utcDate('2025-07-04T00:00:00'),
+          end: utcDate('2025-07-12T23:59:59.999'),
+          allDay: true,
+        },
+      ],
+    );
+
+    expect(result).to.have.length(1);
     expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(date('2025-07-03T10:00:00Z')),
+      adapter.getTime(utcDate('2025-07-05T00:00:00')),
+    );
+    expect(adapter.getTime(result[0].end!)).to.equal(
+      adapter.getTime(utcDate('2025-07-12T23:59:59.999')),
     );
   });
 
