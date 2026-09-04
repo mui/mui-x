@@ -2,8 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { useStore } from '@mui/x-internals/store';
-import Alert from '@mui/material/Alert';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
@@ -12,7 +10,6 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
 import { RichTreeViewLoading } from '../internals/components/RichTreeViewLoading';
-import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
 import type { TreeViewValidItem } from '../models';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
@@ -102,10 +99,6 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const ref = React.useRef<HTMLUListElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, ref);
 
-  // Selector hooks
-  const lazyLoadingRootIsLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
-  const error = useStore(store, lazyLoadingSelectors.itemError, null);
-
   // Feature hooks
   const classes = useUtilityClasses(props);
   const slots = React.useMemo(
@@ -116,12 +109,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     [inSlots],
   );
 
-  const isLoading = loading || lazyLoadingRootIsLoading;
-
   let content: React.ReactNode;
-  if (error) {
-    content = <Alert severity="error">{error.message}</Alert>;
-  } else if (isLoading) {
+  if (loading) {
     content = (
       <RichTreeViewLoading
         store={store}
@@ -145,7 +134,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     );
   }
 
-  // The provider must mount in the loading and error states too, so `apiRef` is initialized on mount.
+  // The provider must mount in the loading state too, so `apiRef` is initialized on mount.
   return (
     <TreeViewProvider
       store={store}
