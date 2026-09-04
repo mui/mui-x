@@ -818,6 +818,8 @@ export class SchedulerStore<
 
   /**
    * Pastes the copied or cut event with the provided changes.
+   * Returns the pasted event's id, or `null` when nothing was copied or the
+   * scheduling plugin vetoed a cut paste (the clipboard is then kept).
    */
   public pasteEvent = (changes: SchedulerEventPasteProperties) => {
     const { adapter, copiedEvent } = this.state;

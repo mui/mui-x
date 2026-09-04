@@ -133,7 +133,7 @@ export default function TimelineAutoScheduling() {
   const [events, setEvents] = React.useState(initialEvents);
   const [dependencies, setDependencies] = React.useState(initialDependencies);
 
-  // `dependencies` has no public API yet (#22857), so instead of `<EventTimelinePremium />`
+  // `dependencies` has no public API yet (#22854), so instead of `<EventTimelinePremium />`
   // this experiment feeds the internal store parameters to the same hook the component
   // uses and renders its content inside the same providers.
   const parameters = {

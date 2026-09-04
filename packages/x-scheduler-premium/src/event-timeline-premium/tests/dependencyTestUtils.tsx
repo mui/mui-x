@@ -36,6 +36,19 @@ export function mockAllEventRowBounds(width = 6720) {
   return rows;
 }
 
+/**
+ * Returns the timeline event row for a given resource id.
+ */
+export function getEventRow(resourceId: string): HTMLElement {
+  const row = document.querySelector<HTMLElement>(
+    `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
+  );
+  if (!row) {
+    throw new Error(`Could not find event row for resource "${resourceId}"`);
+  }
+  return row;
+}
+
 export const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
 export const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
 

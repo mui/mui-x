@@ -9,8 +9,6 @@ import { normalizeAllDayBounds } from '@mui/x-scheduler-internals/internals';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerDependency } from '../../models';
 
-const DAY_MS = 24 * 60 * 60 * 1000;
-
 export interface ComputeAutoSchedulingCascadeParameters {
   adapter: Adapter;
   /**
@@ -318,18 +316,12 @@ export function computeAutoSchedulingCascade(
     }
 
     if (base.allDay) {
-      // Minimal whole-day shift. The ms estimate is corrected through the adapter so a
-      // DST transition cannot leave it a day short or long; `addDays` keeps the wall
-      // time, preserving the day alignment and span.
-      let dayCount = Math.max(1, Math.ceil((required.endTimestamp - base.startTimestamp) / DAY_MS));
+      // Minimal whole-day shift: the full-day count floors, so at most one more day is
+      // needed across a DST transition. `addDays` keeps the wall time, preserving the
+      // day alignment and span.
+      let dayCount = Math.max(1, adapter.differenceInDays(required.end, base.start));
       while (adapter.getTime(adapter.addDays(base.start, dayCount)) < required.endTimestamp) {
         dayCount += 1;
-      }
-      while (
-        dayCount > 1 &&
-        adapter.getTime(adapter.addDays(base.start, dayCount - 1)) >= required.endTimestamp
-      ) {
-        dayCount -= 1;
       }
       const newStart = adapter.addDays(base.start, dayCount);
       const newStartTimestamp = adapter.getTime(newStart);

@@ -13,26 +13,13 @@ import {
 } from 'test/utils/scheduler';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { vi, describe, it, expect } from 'vitest';
-import { mockAllEventRowBounds } from './dependencyTestUtils';
+import { getEventRow, mockAllEventRowBounds } from './dependencyTestUtils';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();
 const marketing = ResourceBuilder.new().build();
 
 const resources: SchedulerResource[] = [engineering, design];
-
-/**
- * Returns the timeline event row for a given resource id.
- */
-function getEventRow(resourceId: string): HTMLElement {
-  const row = document.querySelector<HTMLElement>(
-    `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
-  );
-  if (!row) {
-    throw new Error(`Could not find event row for resource "${resourceId}"`);
-  }
-  return row;
-}
 
 describe('EventTimelinePremium - Drag and Drop', () => {
   const { renderSettled } = createSchedulerRenderer({

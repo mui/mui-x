@@ -10,6 +10,8 @@ const date = (value: string): TemporalSupportedObject => adapter.date(value, 'de
 // `Z` strings resolve to the machine timezone, so the all-day fixtures use wall-time
 // strings with an explicit zone to stay machine-independent.
 const utcDate = (value: string): TemporalSupportedObject => adapter.date(value, 'UTC');
+const newYorkDate = (value: string): TemporalSupportedObject =>
+  adapter.date(value, 'America/New_York');
 
 function buildLookup(events: SchedulerProcessedEvent[]) {
   return new Map(events.map((event) => [event.id, event]));
@@ -81,7 +83,6 @@ describe('computeAutoSchedulingCascade', () => {
   });
 
   it('should mirror the store when a cross-timezone all-day resend stretches the event', () => {
-    const newYorkDate = (value: string) => adapter.date(value, 'America/New_York');
     const eventA = EventBuilder.new()
       .id('a')
       .withDataTimezone('UTC')
@@ -121,7 +122,6 @@ describe('computeAutoSchedulingCascade', () => {
   });
 
   it('should cascade a cross-timezone all-day move from its data-zone bounds', () => {
-    const newYorkDate = (value: string) => adapter.date(value, 'America/New_York');
     const eventA = EventBuilder.new()
       .id('a')
       .withDataTimezone('UTC')
@@ -505,7 +505,6 @@ describe('computeAutoSchedulingCascade', () => {
       .span('2025-03-08T22:00:00', '2025-03-08T23:00:00')
       .toProcessed();
 
-    const newYorkDate = (value: string) => adapter.date(value, 'America/New_York');
     const result = runCascade(
       [predecessor, successor],
       [fsDependency('a', 'b')],
@@ -637,7 +636,6 @@ describe('computeAutoSchedulingCascade', () => {
       .span('2025-03-08T00:00:00', '2025-03-08T23:59:59.999', { allDay: true })
       .toProcessed();
 
-    const newYorkDate = (value: string) => adapter.date(value, 'America/New_York');
     const result = runCascade(
       [predecessor, successor],
       [fsDependency('a', 'b')],
@@ -1064,7 +1062,6 @@ describe('computeAutoSchedulingCascade', () => {
   it('should push an all-day successor by whole days across a fall-back transition', () => {
     // America/New_York falls back on 2025-11-02: the day is 25h long, so the ms
     // estimate overshoots and the correction loops must settle on one day.
-    const newYorkDate = (value: string) => adapter.date(value, 'America/New_York');
     const predecessor = EventBuilder.new()
       .id('a')
       .withDataTimezone('America/New_York')
@@ -1372,5 +1369,63 @@ describe('computeAutoSchedulingCascade', () => {
 
     // b and c sit on the cycle and d behind it: all left unmoved instead of looping.
     expect(result).to.deep.equal([]);
+  });
+
+  it('should not move a successor starting exactly at the new end of its predecessor', () => {
+    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [predecessor, successor],
+      [fsDependency('a', 'b')],
+      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
+    );
+
+    expect(result).to.deep.equal([]);
+  });
+
+  it('should push a zero-duration successor to the new end of its predecessor', () => {
+    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T10:30:00Z', '2025-07-03T10:30:00Z')
+      .toProcessed();
+
+    const result = runCascade(
+      [predecessor, successor],
+      [fsDependency('a', 'b')],
+      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T12:00:00Z');
+  });
+
+  it('should push the successors of an event carrying a self-dependency, with a dev warning', () => {
+    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T10:30:00Z', '2025-07-03T11:30:00Z')
+      .toProcessed();
+
+    // A self-loop in the props data is the shortest cycle: the seed still settles and
+    // pushes b, and the bad data warns like any other cycle through a seed.
+    let result: ReturnType<typeof runCascade>;
+    expect(() => {
+      result = runCascade(
+        [predecessor, successor],
+        [fsDependency('a', 'a'), fsDependency('a', 'b')],
+        [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
+      );
+    }).toWarnDev([
+      'MUI X Scheduler: The dependencies provided via props contain a cycle through an updated event.',
+    ]);
+
+    expect(result!).to.have.length(1);
+    expect(result![0].id).to.equal('b');
+    expectDates(result![0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
   });
 });

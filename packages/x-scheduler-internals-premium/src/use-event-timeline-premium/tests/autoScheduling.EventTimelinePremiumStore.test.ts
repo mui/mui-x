@@ -1,8 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
-import type { SchedulerEvent, SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import { DEBOUNCE_MS } from '../../internals/utils/queue';
+import {
+  flushDebounce,
+  flushEffect,
+  noopPersistEvents,
+} from '../../internals/tests/disposeTestHelpers';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const TEST_RESOURCES = [ResourceBuilder.new().id('r1').title('Resource 1').build()];
@@ -35,15 +39,6 @@ const DEFAULT_PARAMS = {
 
 const date = (value: string) => adapter.date(value, 'default');
 const timestampOf = (value: string | undefined) => new Date(value!).getTime();
-const noopPersistEvents = async (_batch: {
-  deleted: SchedulerEventId[];
-  updated: SchedulerEvent[];
-  created: SchedulerEvent[];
-}) => ({ success: true });
-const flushEffect = async () => {
-  await Promise.resolve();
-  await Promise.resolve();
-};
 
 describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   it('should emit onEventsChange once with the cascaded events included', () => {
@@ -164,7 +159,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const store = new EventTimelinePremiumStore(params, adapter);
       store.updateStateFromParameters(params, adapter);
       await flushEffect();
-      await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+      await flushDebounce();
 
       store.updateEvent({
         id: 'a',
@@ -172,7 +167,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         end: date('2025-07-03T12:00:00Z'),
       });
       await flushEffect();
-      await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+      await flushDebounce();
 
       expect(dataSource.persistEvents.mock.calls.length).to.equal(0);
     } finally {
@@ -294,7 +289,7 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       const store = new EventTimelinePremiumStore(params, adapter);
       store.updateStateFromParameters(params, adapter);
       await flushEffect();
-      await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+      await flushDebounce();
 
       store.updateEvent({
         id: 'a',
@@ -304,7 +299,9 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       await flushEffect();
 
       expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
-      const batch = dataSource.persistEvents.mock.lastCall![0];
+      const [batch] = dataSource.persistEvents.mock.lastCall! as unknown as [
+        { updated: SchedulerEvent[] },
+      ];
       const updatedIds = batch.updated.map((event: SchedulerEvent) => event.id);
       expect(updatedIds).to.have.members(['a', 'b']);
       const persistedA = batch.updated.find((event: SchedulerEvent) => event.id === 'a')!;
@@ -315,5 +312,113 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it('should return the pasted event when a cut paste cascades into its successor', () => {
+    const onEventsChange = vi.fn();
+    const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onEventsChange }, adapter);
+
+    store.cutEvent('a');
+    const pastedId = store.pasteEvent({ start: date('2025-07-03T11:00:00Z') });
+
+    // The caller's entry stays first in the batch even though the cascade folded in b.
+    expect(pastedId).to.equal('a');
+    const events: SchedulerEvent[] = onEventsChange.mock.calls[0][0];
+    const successor = events.find((event) => event.id === 'b')!;
+    expect(timestampOf(successor.start as string)).to.equal(
+      timestampOf('2025-07-03T12:00:00.000Z'),
+    );
+  });
+
+  it('should emit nothing, not even the dependency cleanup, when a batch with a deletion is vetoed', () => {
+    const onEventsChange = vi.fn();
+    const onDependenciesChange = vi.fn();
+    const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
+    const store = new EventTimelinePremiumStore(
+      {
+        ...DEFAULT_PARAMS,
+        events: [eventA, readOnlySuccessor, orphan],
+        dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
+        onEventsChange,
+        onDependenciesChange,
+      },
+      adapter,
+    );
+
+    // Only recurring scope changes build such batches today; the store contract is
+    // exercised directly.
+    const result = (store as any).updateEvents({
+      deleted: ['d'],
+      updated: [
+        { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
+      ],
+    });
+
+    expect(result.rejection).not.to.equal(null);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    expect(onDependenciesChange.mock.calls.length).to.equal(0);
+  });
+
+  it('should emit the cascade and the dependency cleanup once each for a batch with a deletion', () => {
+    const onEventsChange = vi.fn();
+    const onDependenciesChange = vi.fn();
+    const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
+    const store = new EventTimelinePremiumStore(
+      {
+        ...DEFAULT_PARAMS,
+        events: [eventA, eventB, orphan],
+        dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
+        onEventsChange,
+        onDependenciesChange,
+      },
+      adapter,
+    );
+
+    (store as any).updateEvents({
+      deleted: ['d'],
+      updated: [
+        { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
+      ],
+    });
+
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const events: SchedulerEvent[] = onEventsChange.mock.calls[0][0];
+    expect(events.map((event) => event.id)).to.deep.equal(['a', 'b']);
+    expect(timestampOf(events[1].start as string)).to.equal(
+      timestampOf('2025-07-03T12:00:00.000Z'),
+    );
+    expect(onDependenciesChange.mock.calls.length).to.equal(1);
+    expect(onDependenciesChange.mock.calls[0][0]).to.deep.equal([DEP_AB]);
+  });
+
+  it('should keep a pushed all-day successor all-day and day-aligned once serialized', () => {
+    const onEventsChange = vi.fn();
+    const allDayA = EventBuilder.new()
+      .id('a')
+      .span('2025-07-03T00:00:00', '2025-07-03T23:59:59.999', { allDay: true })
+      .build();
+    const allDayB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-04T00:00:00', '2025-07-04T23:59:59.999', { allDay: true })
+      .build();
+    const store = new EventTimelinePremiumStore(
+      { ...DEFAULT_PARAMS, events: [allDayA, allDayB], onEventsChange },
+      adapter,
+    );
+
+    store.updateEvent({
+      id: 'a',
+      start: date('2025-07-05T00:00:00'),
+      end: date('2025-07-05T23:59:59.999'),
+      allDay: true,
+    });
+
+    const events: SchedulerEvent[] = onEventsChange.mock.calls[0][0];
+    const successor = events.find((event) => event.id === 'b')!;
+    // The wall-time serialization drops the milliseconds; the model stays all-day and
+    // the re-processed bounds cover the whole pushed day.
+    expect(successor.allDay).to.equal(true);
+    expect(successor.start).to.equal('2025-07-06T00:00:00');
+    expect(successor.end).to.equal('2025-07-06T23:59:59');
   });
 });

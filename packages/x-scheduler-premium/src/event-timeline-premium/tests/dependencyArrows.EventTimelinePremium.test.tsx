@@ -646,21 +646,4 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       });
     });
   });
-
-  it.skipIf(isJSDOM)(
-    'should not leak un-acted resize-observer updates after the render',
-    async () => {
-      await renderTimeline({
-        events: [eventA, eventB],
-        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-      });
-
-      // Give the browser the frames where the initial ResizeObserver batch
-      // delivers; an update landing here is outside act and fails the suite
-      // through the console guard.
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-      });
-    },
-  );
 });

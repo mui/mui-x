@@ -23,7 +23,7 @@ import {
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
 import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { describe, it, expect, vi } from 'vitest';
+import { afterAll, describe, it, expect, vi } from 'vitest';
 import type { MockInstance } from 'vitest';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 
@@ -178,8 +178,9 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
 describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
   const anchor = document.createElement('button');
   document.body.appendChild(anchor);
+  afterAll(() => anchor.remove());
 
-  const { render } = createSchedulerRenderer();
+  const { renderSettled } = createSchedulerRenderer();
 
   const predecessor = EventBuilder.new()
     .id('event-a')
@@ -207,7 +208,7 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
    * The edit occurrence is derived from the store's own processed state
    * (an occurrence is a processed event plus a render key).
    */
-  function renderEditDialog() {
+  async function renderEditDialog() {
     const onEventsChange = vi.fn();
     const onClose = vi.fn();
 
@@ -227,7 +228,7 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
       key: 'occurrence-a',
     };
 
-    const utils = render(
+    const utils = await renderSettled(
       <SchedulerStoreContext.Provider value={store as any}>
         <TestEventDialogContent
           open
@@ -248,7 +249,7 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
   }
 
   it('should keep the dialog open with the edits when the save is vetoed because the cascade would move a read-only event', async () => {
-    const { user, currentDialog, store, onClose, onEventsChange } = renderEditDialog();
+    const { user, currentDialog, store, onClose, onEventsChange } = await renderEditDialog();
 
     // Move the predecessor to 11:00–12:00: past the read-only successor's 10:00 start,
     // so the auto-scheduling cascade would have to push it.
@@ -269,7 +270,7 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
   });
 
   it('should save after the vetoed dates are edited back into a valid range', async () => {
-    const { user, currentDialog, onClose, onEventsChange } = renderEditDialog();
+    const { user, currentDialog, onClose, onEventsChange } = await renderEditDialog();
 
     await user.clear(currentDialog.getByLabelText(/start time/i));
     await user.type(currentDialog.getByLabelText(/start time/i), '11:00');
