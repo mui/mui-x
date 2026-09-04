@@ -16,11 +16,13 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
+  gridDataRowIdsSelector,
   gridRowsLookupSelector,
   gridRowMaximumTreeDepthSelector,
   gridRowNodeSelector,
   gridRowTreeSelector,
 } from '../rows/gridRowsSelector';
+import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import {
   gridRowSelectionManagerSelector,
   gridRowSelectionStateSelector,
@@ -207,6 +209,15 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
         return false;
       }
 
+      const rowNode = gridRowNodeSelector(apiRef, id);
+      if (
+        rowNode?.type === 'footer' ||
+        rowNode?.type === 'pinnedRow' ||
+        rowNode?.type === 'skeletonRow'
+      ) {
+        return false;
+      }
+
       // If `keepNonExistentRowsSelected` is true, we might run in a case where row selectability is checked for a row that does not exist.
       // Since that row was previously selected (otherwise it would not be checked at this point), we return true.
       if (props.keepNonExistentRowsSelected && !apiRef.current.getRow(id)) {
@@ -214,11 +225,6 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
       }
 
       if (propIsRowSelectable && !propIsRowSelectable(apiRef.current.getRowParams(id))) {
-        return false;
-      }
-
-      const rowNode = gridRowNodeSelector(apiRef, id);
-      if (rowNode?.type === 'footer' || rowNode?.type === 'pinnedRow') {
         return false;
       }
 
@@ -537,6 +543,9 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
    * EVENTS
    */
   const isFirstRender = React.useRef(true);
+  const previousRowsLookupRef = React.useRef<ReturnType<typeof gridRowsLookupSelector> | null>(
+    null,
+  );
   const removeOutdatedSelection = React.useCallback(() => {
     if (isFirstRender.current) {
       return;
@@ -546,6 +555,11 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     const rowsLookup = gridRowsLookupSelector(apiRef);
     const rowTree = gridRowTreeSelector(apiRef);
     const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
+    const previousRowsLookup = previousRowsLookupRef.current;
+    previousRowsLookupRef.current = rowsLookup;
+    // Read the depth at call time. The event that runs this callback can fire in the same
+    // tick as the state update that changes the depth, before the render-scope value updates.
+    const isNested = gridRowMaximumTreeDepthSelector(apiRef) > 1;
 
     const isNonExistent = (id: GridRowId) => {
       if (props.filterMode === 'server') {
@@ -578,6 +592,47 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     };
 
     let hasChanged = false;
+
+    // Rows can load after their parent was selected (server-side lazy loading).
+    // They arrive unselected, so the parent re-derivation below would drop the parent.
+    // With `rowSelectionPropagation.descendants`, the rows that appeared since the last run
+    // inherit the selection state of their closest previously known ancestor instead.
+    if (
+      isNested &&
+      props.rowSelectionPropagation?.descendants &&
+      currentSelection.type === 'include' &&
+      currentSelection.ids.size > 0 &&
+      previousRowsLookup !== null &&
+      previousRowsLookup !== rowsLookup
+    ) {
+      const isNewRow = (id: GridRowId) =>
+        rowsLookup[id] !== undefined && previousRowsLookup[id] === undefined;
+      const inheritsSelection = (id: GridRowId): boolean => {
+        const parentId = rowTree[id]?.parent;
+        if (parentId == null || parentId === GRID_ROOT_GROUP_ID) {
+          return false;
+        }
+        if (selectionManager.has(parentId)) {
+          return true;
+        }
+        // A row that appeared together with its parent reads the state further up the chain.
+        return isNewRow(parentId) ? inheritsSelection(parentId) : false;
+      };
+
+      const dataRowIds = gridDataRowIdsSelector(apiRef);
+      for (const id of dataRowIds) {
+        if (
+          isNewRow(id) &&
+          filteredRowsLookup[id] !== false &&
+          inheritsSelection(id) &&
+          apiRef.current.isRowSelectable(id)
+        ) {
+          selectionManager.select(id);
+          hasChanged = true;
+        }
+      }
+    }
+
     for (const id of currentSelection.ids) {
       if (isNonExistent(id)) {
         if (props.keepNonExistentRowsSelected) {
@@ -616,7 +671,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     // not empty, we need to re-run scanning of the tree to propagate the selection changes
     // Example: A parent whose de-selected children are filtered out should now be selected
     const shouldReapplyPropagation =
-      isNestedData &&
+      isNested &&
       props.rowSelectionPropagation?.parents &&
       (newSelectionModel.ids.size > 0 ||
         // In case of exclude selection, newSelectionModel.ids.size === 0 means all rows are selected
@@ -638,7 +693,19 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
           }
           apiRef.current.selectRows(selectedRowIds, true, true);
         } else {
-          apiRef.current.selectRows(Array.from(newSelectionModel.ids), true, true);
+          // `getPropagatedRowSelectionModel` reads the sibling selection state from the model
+          // built above, so the rows selected during this run count for the parent derivation.
+          // `selectRows` would read the state from before this run instead.
+          const propagatedModel = apiRef.current.getPropagatedRowSelectionModel(newSelectionModel);
+          const isSelectionValid = propagatedModel.ids.size < 2 || canHaveMultipleSelection;
+          if (
+            isSelectionValid &&
+            (propagatedModel.type !== currentSelection.type ||
+              propagatedModel.ids.size !== currentSelection.ids.size ||
+              !Array.from(propagatedModel.ids).every((id) => currentSelection.ids.has(id)))
+          ) {
+            apiRef.current.setRowSelectionModel(propagatedModel, 'multipleRowsSelection');
+          }
         }
       } else {
         apiRef.current.setRowSelectionModel(newSelectionModel, 'multipleRowsSelection');
@@ -646,10 +713,11 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     }
   }, [
     apiRef,
-    isNestedData,
     props.rowSelectionPropagation?.parents,
+    props.rowSelectionPropagation?.descendants,
     props.keepNonExistentRowsSelected,
     props.filterMode,
+    canHaveMultipleSelection,
     getRowsToBeSelected,
   ]);
 
