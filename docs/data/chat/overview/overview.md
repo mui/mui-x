@@ -6,6 +6,8 @@ githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
+{{"component": "modules/components/overview/chat/ChatFeedbackBanner.tsx"}}
+
 {{"component": "modules/components/overview/XLogo.tsx"}}
 
 # MUI X Chat
