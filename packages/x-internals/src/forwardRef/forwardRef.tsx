@@ -1,5 +1,5 @@
 import * as React from 'react';
-import reactMajor from '../reactMajor';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 
 // Compatibility shim that ensures stable props object for forwardRef components
 // Fixes https://github.com/react/react/issues/31613
@@ -8,7 +8,7 @@ import reactMajor from '../reactMajor';
 export const forwardRef = <T, P = {}>(
   render: React.ForwardRefRenderFunction<T, P & { ref: React.Ref<T> }>,
 ) => {
-  if (reactMajor >= 19) {
+  if (isReactVersionAtLeast(19)) {
     const Component = (props: any) => render(props, props.ref ?? null);
     Component.displayName = render.displayName ?? render.name;
     return Component as React.ForwardRefExoticComponent<P>;
