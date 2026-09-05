@@ -3,8 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
+import {
+  EventCalendarPremiumStore,
+  useExtractEventCalendarPremiumParameters,
+} from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendarProvider, EventDialogProvider } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
@@ -32,7 +34,7 @@ const StandaloneWeekViewPremium = React.forwardRef(function StandaloneWeekViewPr
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
 
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+  const { parameters, forwardedProps } = useExtractEventCalendarPremiumParameters<
     TEvent,
     TResource,
     typeof props
@@ -41,6 +43,8 @@ const StandaloneWeekViewPremium = React.forwardRef(function StandaloneWeekViewPr
   const { localeText, slots, slotProps, ...other } = forwardedProps;
 
   return (
+    // `parameters` carries the Premium-only `dataSource`, which the community provider
+    // parameters do not declare: it rides through this spread into `storeClass`.
     <EventCalendarProvider
       {...parameters}
       storeClass={EventCalendarPremiumStore}
