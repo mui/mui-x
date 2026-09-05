@@ -179,7 +179,6 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'עוד',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'נעץ משמאל',

@@ -177,7 +177,6 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'ذیادہ',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'بائیں جانب pin کریں',

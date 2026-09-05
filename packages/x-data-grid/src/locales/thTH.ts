@@ -176,7 +176,6 @@ const thTHGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'เพิ่มเติม',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'ปักหมุดทางซ้าย',

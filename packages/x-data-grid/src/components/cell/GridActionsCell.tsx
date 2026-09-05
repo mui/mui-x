@@ -213,7 +213,7 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
       }
     };
 
-  const handleRootKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
     if (numberOfButtons <= 1) {
       return;
     }
@@ -251,21 +251,24 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
     }
   };
 
+  const handleButtonKeyDown =
+    (onKeyDown?: React.KeyboardEventHandler): React.KeyboardEventHandler =>
+    (event) => {
+      handleKeyDown(event);
+
+      if (onKeyDown) {
+        onKeyDown(event);
+      }
+    };
+
   return (
-    <div
-      ref={rootRef}
-      role="toolbar"
-      aria-label={colDef.headerName || apiRef.current.getLocaleText('actionsCellLabel')}
-      tabIndex={-1}
-      className={gridClasses.actionsCell}
-      onKeyDown={handleRootKeyDown}
-      {...other}
-    >
+    <div ref={rootRef} tabIndex={-1} className={gridClasses.actionsCell} {...other}>
       {iconButtons.map((button, index) =>
         React.cloneElement(button, {
           key: index,
           touchRippleRef: handleTouchRippleRef(index),
           onClick: handleButtonClick(index, button.props.onClick),
+          onKeyDown: handleButtonKeyDown(button.props.onKeyDown),
           tabIndex: focusedButtonIndex === index ? tabIndex : -1,
         }),
       )}
@@ -280,6 +283,7 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
           aria-controls={open ? menuId : undefined}
           size="small"
           onClick={toggleMenu}
+          onKeyDown={handleKeyDown}
           touchRippleRef={handleTouchRippleRef(buttonId)}
           tabIndex={focusedButtonIndex === iconButtons.length ? tabIndex : -1}
           {...rootProps.slotProps?.baseIconButton}

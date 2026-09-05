@@ -175,7 +175,6 @@ export interface GridLocaleText {
 
   // Actions cell more text
   actionsCellMore: string;
-  actionsCellLabel: string;
 
   // Column pinning text
   pinToLeft: string;

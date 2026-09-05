@@ -208,7 +208,6 @@ const beBYGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'больш',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Замацаваць злева',

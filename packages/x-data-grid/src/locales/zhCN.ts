@@ -177,7 +177,6 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: '更多',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: '固定到左侧',

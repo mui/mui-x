@@ -179,7 +179,6 @@ const elGRGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'περισσότερα',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Καρφιτσώμα στα αριστερά',

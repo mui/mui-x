@@ -180,7 +180,6 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Actions cell more text
   actionsCellMore: 'more',
-  actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Pin to left',

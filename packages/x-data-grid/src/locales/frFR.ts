@@ -181,7 +181,6 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'Plus',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Épingler à gauche',

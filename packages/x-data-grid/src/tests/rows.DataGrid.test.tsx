@@ -336,31 +336,6 @@ describe('<DataGrid /> - Rows', () => {
         expect(screen.queryByRole('button', { name: 'print' })).not.to.equal(null);
       });
 
-      it('should label the actions toolbar with the default locale text', () => {
-        render(
-          <TestCase
-            getActions={() => [<GridActionsCellItem key={1} icon={<span />} label="delete" />]}
-          />,
-        );
-        expect(screen.queryByRole('toolbar', { name: 'Actions' })).not.to.equal(null);
-      });
-
-      it('should label the actions toolbar with the column header name', () => {
-        render(
-          <TestCase
-            columns={[
-              {
-                field: 'actions',
-                type: 'actions',
-                headerName: 'Row actions',
-                getActions: () => [<GridActionsCellItem key={1} icon={<span />} label="delete" />],
-              },
-            ]}
-          />,
-        );
-        expect(screen.queryByRole('toolbar', { name: 'Row actions' })).not.to.equal(null);
-      });
-
       it('should apply menu roles only to the opened menu', async () => {
         const { user } = render(
           <TestCase
@@ -675,39 +650,6 @@ describe('<DataGrid /> - Rows', () => {
         expect(screen.queryByRole('menuitem')).to.equal(null);
         expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
         expect(screen.queryByRole('button', { name: 'print' })).not.to.equal(null);
-      });
-
-      it('should label the actions toolbar with the default locale text', () => {
-        render(
-          <TestCase
-            renderCell={(params) => (
-              <GridActionsCell {...params}>
-                <GridActionsCellItem icon={<span />} label="delete" />
-              </GridActionsCell>
-            )}
-          />,
-        );
-        expect(screen.queryByRole('toolbar', { name: 'Actions' })).not.to.equal(null);
-      });
-
-      it('should label the actions toolbar with the column header name', () => {
-        render(
-          <TestCase
-            columns={[
-              {
-                field: 'actions',
-                type: 'actions',
-                headerName: 'Row actions',
-                renderCell: (params) => (
-                  <GridActionsCell {...params}>
-                    <GridActionsCellItem icon={<span />} label="delete" />
-                  </GridActionsCell>
-                ),
-              },
-            ]}
-          />,
-        );
-        expect(screen.queryByRole('toolbar', { name: 'Row actions' })).not.to.equal(null);
       });
 
       it('should apply menu roles only to the opened menu', async () => {

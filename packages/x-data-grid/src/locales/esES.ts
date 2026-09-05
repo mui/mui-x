@@ -181,7 +181,6 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'más',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Anclar a la izquierda',

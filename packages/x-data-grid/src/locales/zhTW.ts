@@ -176,7 +176,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: '查看更多',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: '釘選在左側',

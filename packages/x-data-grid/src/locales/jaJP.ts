@@ -176,7 +176,6 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'もっと見る',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: '左側に固定',

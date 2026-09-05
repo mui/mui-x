@@ -181,7 +181,6 @@ const caESGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'més',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: "Fixa a l'esquerra",

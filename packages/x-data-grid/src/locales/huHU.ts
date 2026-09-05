@@ -174,7 +174,6 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'további',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Rögzítés balra',

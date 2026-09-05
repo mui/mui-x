@@ -207,7 +207,6 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'viac',
-  // actionsCellLabel: 'Actions',
 
   // Column pinning text
   pinToLeft: 'Pripnúť na ľavo',
