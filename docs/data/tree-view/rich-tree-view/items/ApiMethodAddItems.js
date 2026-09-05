@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
 import * as React from 'react';
-import { MUI_X_PRODUCTS } from './products';
+import { MUI_X_PRODUCTS } from '../../datasets/disabledAndEditableProducts';
 
 export default function ApiMethodAddItems() {
   const apiRef = useRichTreeViewApiRef();

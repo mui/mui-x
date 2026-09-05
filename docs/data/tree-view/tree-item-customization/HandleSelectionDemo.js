@@ -9,7 +9,7 @@ import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import { MUI_X_PRODUCTS } from './products';
+import { MUI_X_PRODUCTS } from '../datasets/disabledAndEditableProducts';
 
 function CustomLabel({ children, status, onClick, ...props }) {
   return (
