@@ -21,6 +21,7 @@ import {
 import type { GridEventListener, GridRowId, GridGroupNode } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
+  gridIsRowDragActiveSelector,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid/internals';
 import type {
@@ -430,11 +431,41 @@ export const useGridRowReorder = (
     [dragRowId, apiRef, logger, timeout, calculateDropPosition],
   );
 
+  // A drag session can end without a valid drop: no drop target, a rejected drop,
+  // or a reorder that got disabled during the drag. The reorder state must not stay
+  // active in these cases, because components like the scroll areas derive their
+  // visibility from it. The hook-local values must reset together with the state:
+  // a stale `dragRowId` keeps the drag-over handlers acting on a dead drag session.
+  const resetRowDragState = React.useCallback(() => {
+    dropTarget.current = {
+      targetRowId: null,
+      targetRowIndex: null,
+      dropPosition: null,
+    };
+    previousReorderState.current = EMPTY_REORDER_STATE;
+    originRowIndex.current = null;
+    dragRowNode.current = null;
+    if (dragRowId !== '') {
+      applyDraggedState(dragRowId, false);
+      setDragRowId('');
+    }
+    if (gridIsRowDragActiveSelector(apiRef)) {
+      apiRef.current.setState((state) => ({
+        ...state,
+        rowReorder: {
+          isActive: false,
+          draggedRowId: null,
+        },
+      }));
+    }
+  }, [apiRef, dragRowId, applyDraggedState]);
+
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
     async (_, event): Promise<void> => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef);
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
+        resetRowDragState();
         return;
       }
 
@@ -456,23 +487,7 @@ export const useGridRowReorder = (
 
       // Check if the row was dropped outside the grid.
       if (!event.dataTransfer || event.dataTransfer.dropEffect === 'none') {
-        // Reset drop target state
-        dropTarget.current = {
-          targetRowId: null,
-          targetRowIndex: null,
-          dropPosition: null,
-        };
-        originRowIndex.current = null;
-        setDragRowId('');
-        // Clear visual indicators and dragged state
-        applyDraggedState(dragRowId, false);
-        apiRef.current.setState((state) => ({
-          ...state,
-          rowReorder: {
-            isActive: false,
-            draggedRowId: null,
-          },
-        }));
+        resetRowDragState();
         return;
       }
       if (dropTarget.current.targetRowIndex !== null && dropTarget.current.targetRowId !== null) {
@@ -529,57 +544,29 @@ export const useGridRowReorder = (
                 newParent: newParent === GRID_ROOT_GROUP_ID ? null : newParent,
               };
 
-              applyDraggedState(dragRowId, false);
-              apiRef.current.setState((state) => ({
-                ...state,
-                rowReorder: {
-                  isActive: false,
-                  draggedRowId: null,
-                },
-              }));
+              resetRowDragState();
 
               apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
             });
-          } catch (error) {
-            // Handle error: reset visual state but don't publish success event
-            applyDraggedState(dragRowId, false);
-            apiRef.current.setState((state) => ({
-              ...state,
-              rowReorder: {
-                isActive: false,
-                draggedRowId: null,
-              },
-            }));
+          } catch {
+            // The reorder failed: skip the `rowOrderChange` event.
+            // The catch-all cleanup below resets the visual and reorder state.
           }
-        } else {
-          applyDraggedState(dragRowId, false);
-          apiRef.current.setState((state) => ({
-            ...state,
-            rowReorder: {
-              ...state.rowReorder,
-              dropTarget: undefined,
-            },
-          }));
         }
       }
 
-      // Reset drop target state
-      dropTarget.current = {
-        targetRowId: null,
-        targetRowIndex: null,
-        dropPosition: null,
-      };
-
-      setDragRowId('');
+      // Catch-all cleanup: also covers a rejected drop, a missing drop target,
+      // and an animation that bailed out before it ran the reorder callback.
+      resetRowDragState();
     },
     [
       apiRef,
       dragRowId,
       isRowReorderDisabled,
       logger,
-      applyDraggedState,
       timeout,
       applyRowAnimation,
+      resetRowDragState,
     ],
   );
 
