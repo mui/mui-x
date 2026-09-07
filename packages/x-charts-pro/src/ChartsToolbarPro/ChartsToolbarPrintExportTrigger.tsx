@@ -46,7 +46,9 @@ const ChartsToolbarPrintExportTrigger = forwardRef<
   const apiRef = useChartProApiContext();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    apiRef.current.exportAsPrint(options);
+    apiRef.current.exportAsPrint(options).catch((error) => {
+      console.error('MUI X Charts: Error exporting chart as print:', error);
+    });
     onClick?.(event);
   };
 

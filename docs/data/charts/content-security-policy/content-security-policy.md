@@ -35,15 +35,17 @@ Follow Material UI's [CSP implementation guide](/material-ui/guides/content-sec
 You can [export charts](/x/react-charts/export/) as images or PDFs with MUI X Charts.
 When a CSP is set, you need to configure additional settings for exporting to work.
 
-Enable `data:` and `blob:` URIs for images by adding these directives to your CSP header:
+The export inlines images and fonts as `data:` URIs, and rasterizes the chart through a `blob:` URI.
+Enable those URIs by adding these directives to your CSP header:
 
 ```text
-Content-Security-Policy: img-src 'self' data: blob:;
+Content-Security-Policy: img-src 'self' data: blob:; font-src 'self' data:;
 ```
 
-If your CSP uses a nonce for scripts or styles (for example, `script-src 'nonce-<value>'`), provide the same nonce when exporting.
+If your CSP uses a nonce for styles (for example, `style-src-elem 'nonce-<value>'`), the export reuses the nonce of the page style elements.
+Charts styled by a nonce-aware style engine, such as Emotion configured through `AppRouterCacheProvider`, export without further configuration.
 
-Pass the nonce to the `printOptions` and `imageExportOptions` props of the `toolbar` slot.
+If the page has no style element carrying the nonce, pass the nonce to the `printOptions` and `imageExportOptions` props of the `toolbar` slot.
 
 ```tsx
 <LineChartPro
@@ -61,3 +63,6 @@ Pass the nonce to the `printOptions` and `imageExportOptions` props of the `tool
   }}
 />
 ```
+
+If the styles copied to the export document are still blocked, the export fails with an error telling you to set the `nonce` option.
+Set the `copyStyles` option to `false` to export the chart without the page styles instead.

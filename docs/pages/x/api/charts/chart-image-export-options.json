@@ -9,7 +9,11 @@
       "default": "The title of the document the chart belongs to",
       "isProPlan": true
     },
-    "nonce": { "type": { "description": "string" }, "isProPlan": true },
+    "nonce": {
+      "type": { "description": "string" },
+      "default": "the nonce of the page style elements, if there is one",
+      "isProPlan": true
+    },
     "onBeforeExport": {
       "type": { "description": "(iframe: HTMLIFrameElement) =&gt; Promise&lt;void&gt; | void" },
       "isProPlan": true
