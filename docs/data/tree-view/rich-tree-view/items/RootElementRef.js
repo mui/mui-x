@@ -19,6 +19,10 @@ const MUI_X_PRODUCTS = [
 export default function RootElementRef() {
   // `RichTreeView` forwards its `ref` to the root `<ul>` element
   const rootRef = React.useRef(null);
+  const highlightTimeout = React.useRef(undefined);
+
+  // Cancel the pending timeout when the component unmounts.
+  React.useEffect(() => () => clearTimeout(highlightTimeout.current), []);
 
   const handleHighlight = () => {
     const rootElement = rootRef.current;
@@ -26,8 +30,10 @@ export default function RootElementRef() {
       return;
     }
 
+    // Re-arm the timer on repeated clicks, so the highlight always lasts 1s.
+    clearTimeout(highlightTimeout.current);
     rootElement.style.outline = '2px solid red';
-    setTimeout(() => {
+    highlightTimeout.current = setTimeout(() => {
       rootElement.style.outline = '';
     }, 1000);
   };
