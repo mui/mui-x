@@ -13,6 +13,7 @@ import type { GridActionsColDef } from '../../models/colDef/gridColDef';
 import type { GridValidRowModel, GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { isEventTargetInPortal } from '../../utils/domUtils';
 import { GridActionsCellItem } from './GridActionsCellItem';
 import type { GridActionsCellItemProps } from './GridActionsCellItem';
 
@@ -213,8 +214,10 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
       }
     };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (numberOfButtons <= 1) {
+  const handleRootKeyDown = (event: React.KeyboardEvent) => {
+    // The menu renders in a portal, but its key events still bubble through the React tree.
+    // They must not move the roving focus between the buttons behind the open menu.
+    if (numberOfButtons <= 1 || isEventTargetInPortal(event)) {
       return;
     }
 
@@ -251,24 +254,22 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
     }
   };
 
-  const handleButtonKeyDown =
-    (onKeyDown?: React.KeyboardEventHandler): React.KeyboardEventHandler =>
-    (event) => {
-      handleKeyDown(event);
-
-      if (onKeyDown) {
-        onKeyDown(event);
-      }
-    };
-
   return (
-    <div ref={rootRef} tabIndex={-1} className={gridClasses.actionsCell} {...other}>
+    // The wrapper carries no role on purpose: the buttons are plain buttons inside the
+    // `gridcell`. It only relays the key events bubbling from them.
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    <div
+      ref={rootRef}
+      tabIndex={-1}
+      className={gridClasses.actionsCell}
+      onKeyDown={handleRootKeyDown}
+      {...other}
+    >
       {iconButtons.map((button, index) =>
         React.cloneElement(button, {
           key: index,
           touchRippleRef: handleTouchRippleRef(index),
           onClick: handleButtonClick(index, button.props.onClick),
-          onKeyDown: handleButtonKeyDown(button.props.onKeyDown),
           tabIndex: focusedButtonIndex === index ? tabIndex : -1,
         }),
       )}
@@ -283,7 +284,6 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
           aria-controls={open ? menuId : undefined}
           size="small"
           onClick={toggleMenu}
-          onKeyDown={handleKeyDown}
           touchRippleRef={handleTouchRippleRef(buttonId)}
           tabIndex={focusedButtonIndex === iconButtons.length ? tabIndex : -1}
           {...rootProps.slotProps?.baseIconButton}
