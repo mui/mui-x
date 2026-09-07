@@ -538,6 +538,26 @@ describe('<DataGrid /> - Rows', () => {
         expect(customButton).toHaveFocus();
       });
 
+      it('should not move the focus out of the open menu with the arrow keys', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem key={1} icon={<span />} label="print" />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" />,
+              <GridActionsCellItem key={3} label="copy" showInMenu />,
+            ]}
+          />,
+        );
+        await user.click(screen.getByRole('button', { name: 'more' }));
+
+        const copyItem = screen.getByRole('menuitem', { name: 'copy' });
+        expect(copyItem).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(copyItem).toHaveFocus();
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+      });
+
       it('should not move focus to first item when clicking in another item', async () => {
         const { user } = render(
           <TestCase
@@ -888,6 +908,28 @@ describe('<DataGrid /> - Rows', () => {
 
         await user.keyboard('{ArrowLeft}');
         expect(customButton).toHaveFocus();
+      });
+
+      it('should not move the focus out of the open menu with the arrow keys', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+                <GridActionsCellItem icon={<span />} label="delete" />
+                <GridActionsCellItem label="copy" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        await user.click(screen.getByRole('button', { name: 'more' }));
+
+        const copyItem = screen.getByRole('menuitem', { name: 'copy' });
+        expect(copyItem).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(copyItem).toHaveFocus();
+        expect(screen.queryByRole('menu')).not.to.equal(null);
       });
 
       it('should not move focus to first item when clicking in another item', async () => {
