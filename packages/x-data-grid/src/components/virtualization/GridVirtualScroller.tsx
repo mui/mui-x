@@ -101,8 +101,8 @@ const Viewport = styled('div', {
     display: 'inline-block',
     position: 'sticky',
     top: 0,
-    // Sticking to both edges keeps the viewport in place in LTR and RTL alike,
-    // whichever of the two offsets the browser gives priority to.
+    // The viewport spans the scrollport exactly, so both 0-insets resolve to the same
+    // offset and it stays pinned in LTR and RTL alike.
     left: 0,
     right: 0,
     overflow: 'hidden',

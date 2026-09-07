@@ -29,8 +29,9 @@ const GridOverlayWrapperRoot = styled('div', {
     ? {
         position: 'sticky', // To stay in place while scrolling
         top: 'var(--DataGrid-topContainerHeight)',
-        // Sticking to both edges keeps the overlay in the viewport in LTR and RTL alike,
-        // whichever of the two offsets the browser gives priority to.
+        // Both 0-insets keep the overlay in the viewport in LTR and RTL alike. Sticky insets
+        // are independent constraints, and a width: 0 box satisfies both at once, so it
+        // clamps at whichever edge the scroll pushes it past.
         left: 0,
         right: 0,
         width: 0, // To stay above the content instead of shifting it down
