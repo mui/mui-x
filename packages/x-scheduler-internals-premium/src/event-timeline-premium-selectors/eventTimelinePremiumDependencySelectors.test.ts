@@ -126,6 +126,22 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(first).to.equal(second);
   });
 
+  it('should exclude a dependency with an unknown type', () => {
+    let state: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
+    expect(() => {
+      state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        dependencies: [
+          DEP_1,
+          { id: 'dep-x', source: 'event-b', target: 'event-a', type: 'FS' as any },
+        ],
+      });
+    }).toWarnDev(['MUI X Scheduler: The dependency "dep-x" has the unknown type "FS".']);
+
+    expect(eventTimelinePremiumDependencySelectors.activeModelList(state!)).to.deep.equal([DEP_1]);
+  });
+
   it('should group the source event titles and dependency types by target event id', () => {
     const state = getState();
 
@@ -159,14 +175,8 @@ describe('eventTimelinePremiumDependencySelectors', () => {
   it('should return the same empty instance for every event without predecessors', () => {
     const state = getState();
 
-    const first = eventTimelinePremiumDependencySelectors.activeSourcesForTarget(
-      state,
-      'event-a',
-    );
-    const second = eventTimelinePremiumDependencySelectors.activeSourcesForTarget(
-      state,
-      'event-r',
-    );
+    const first = eventTimelinePremiumDependencySelectors.activeSourcesForTarget(state, 'event-a');
+    const second = eventTimelinePremiumDependencySelectors.activeSourcesForTarget(state, 'event-r');
 
     expect(first).to.deep.equal([]);
     expect(first).to.equal(second);
@@ -196,7 +206,7 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(eventTimelinePremiumDependencySelectors.enabled(stateWithHandlerOnly)).to.equal(false);
   });
 
-  it('should return the creation gesture source and target flags', () => {
+  it('should return the creation gesture target flag', () => {
     const state = {
       ...getState(),
       dependencyCreation: {
@@ -212,19 +222,10 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     };
 
     expect(
-      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r1'),
+      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r1'),
     ).to.equal(true);
     // A multi-resource event repeats the same occurrence key on another row: that
     // appearance is not the gesture's appearance.
-    expect(
-      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r2'),
-    ).to.equal(false);
-    expect(
-      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-b-0', 'r1'),
-    ).to.equal(false);
-    expect(
-      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r1'),
-    ).to.equal(true);
     expect(
       eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r2'),
     ).to.equal(false);
@@ -236,9 +237,6 @@ describe('eventTimelinePremiumDependencySelectors', () => {
   it('should not flag any occurrence when no creation gesture is in progress', () => {
     const state = getState();
 
-    expect(
-      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r1'),
-    ).to.equal(false);
     expect(
       eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r1'),
     ).to.equal(false);

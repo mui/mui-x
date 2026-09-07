@@ -29,9 +29,10 @@ const DEPENDENCY_ARROW_TARGET_CLEARANCE =
  * mirrored around the events area, routed, and mirrored back. That leaves two shapes:
  * opposite edges (`FinishToStart`, mirrored `StartToFinish`) and same edges
  * (`FinishToFinish`, mirrored `StartToStart`).
- * `detourOffset` is how far from the source anchor the same-height routes run their
- * horizontal detour — it must clear the event's edge, otherwise the route overlaps the
- * events and reads as a knot instead of a detour.
+ * `detourOffset` is how far from the source anchor the detouring routes (the S route,
+ * and the same-edges route between same-height anchors) run their horizontal detour —
+ * it must clear the event's edge, otherwise the route overlaps the events and reads
+ * as a knot instead of a detour.
  * Routes stay inside `[0, eventsWidth]`: at a timeline edge the stubs ride over the
  * event instead of leaving the visible area.
  */
@@ -76,8 +77,8 @@ function routeOppositeEdges(
     }
 
     // Adjacent events (two same-lane events never overlap in time, so a same-height
-    // gap is always forward): a short straight arrow slightly overlapping the
-    // predecessor's tail reads better than a detour around the junction.
+    // gap is always forward): a short straight arrow slightly overlapping the source
+    // reads better than a detour around the junction.
     return [[{ x: Math.max(0, target.x - 2 * DEPENDENCY_ARROW_STUB), y: target.y }, target]];
   }
 
@@ -160,6 +161,7 @@ function routeSameEdges(
     ],
   ];
 }
+
 /**
  * How much a route segment must overlap an event to count as crossing it — anchors
  * touching their own event's edge must not count.

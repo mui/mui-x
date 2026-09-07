@@ -43,6 +43,7 @@ function getDependencyDropTarget(
         targetEventId: eventId,
         targetOccurrenceKey: typeof occurrenceKey === 'string' ? occurrenceKey : null,
         targetResourceId: typeof resourceId === 'string' ? resourceId : null,
+        // The event body registers the start edge; only a terminal can target the end.
         targetSide: dropTarget.data.dependencyTargetSide === 'end' ? 'end' : 'start',
         isValid: dropTarget.data.dependencyTargetIsValid === true,
       };
@@ -57,7 +58,7 @@ function getDependencyDropTarget(
 // until it brings a message.
 const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
   cyclicDependency: 'This dependency would create a cycle between events.',
-  duplicateDependency: 'This dependency already exists between these two events.',
+  duplicateDependency: 'A dependency of this type already exists between these two events.',
   recurringEvent: 'Dependencies cannot involve recurring events.',
   readOnlyEvent: 'Dependencies cannot involve read-only events.',
   unknownEvent: 'This dependency cannot be created because one of its events no longer exists.',

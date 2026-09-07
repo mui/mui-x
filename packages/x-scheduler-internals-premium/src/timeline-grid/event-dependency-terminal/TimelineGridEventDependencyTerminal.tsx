@@ -14,8 +14,6 @@ import { useEventDependencyDropTarget } from '../event/useEventDependencyDropTar
 import { TimelineGridEventDependencyTerminalDataAttributes } from './TimelineGridEventDependencyTerminalDataAttributes';
 import type { DependencyTerminalDragData } from './dependencyTerminalDragData';
 
-export { isDependencyTerminalDrag } from './dependencyTerminalDragData';
-
 /**
  * The terminal on one edge of an event. Dragging it onto another event (or onto one
  * of its terminals) creates a dependency whose type follows the two edges: the

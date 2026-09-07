@@ -23,6 +23,7 @@ import {
   classifyDependencyEvent,
   groupRetainedDependenciesBySource,
   isDependencyReadOnly,
+  isDependencyType,
 } from '../utils/dependency-utils';
 
 /**
@@ -215,6 +216,12 @@ export class SchedulerSchedulingPlugin<
     const hasDataSource = this.store.parameters.dataSource != null;
 
     for (const dependency of dependencyModelList) {
+      if (!isDependencyType(dependency.type)) {
+        warnOnce([
+          `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown type "${String(dependency.type)}".`,
+          'It is kept in the data but ignored by the timeline.',
+        ]);
+      }
       for (const eventId of [dependency.source, dependency.target]) {
         const status = classifyDependencyEvent(processedEventLookup, eventId);
         if (status === 'unknownEvent') {

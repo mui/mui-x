@@ -538,6 +538,36 @@ describe('dependencyArrowGeometry', () => {
       ]);
     });
 
+    it('should route every appearance pair of a FinishToFinish dependency on the end edges', () => {
+      const occurrencesA = getOccurrences([eventA]);
+      const occurrencesB = getOccurrences([eventB]);
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: [...occurrencesA, ...occurrencesB] },
+            { resource: RESOURCE_2, occurrences: occurrencesB },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b', 'FinishToFinish')],
+      );
+
+      expect(arrows.map((arrow) => arrow.key)).to.deep.equal([
+        'string:dep-1:0:0',
+        'string:dep-1:0:1',
+      ]);
+      expect(arrows.map((arrow) => arrow.targetEdge)).to.deep.equal(['end', 'end']);
+      // Both arrows end on event-b's end edge, each on its own row.
+      expect(arrows.map((arrow) => arrow.endPoint.y)).to.deep.equal([
+        LANE_1_CENTER,
+        62 + LANE_1_CENTER,
+      ]);
+      arrows.forEach((arrow) => {
+        expect(arrow.endPoint.x).to.be.closeTo(840, 1e-9);
+      });
+    });
+
     it('should give distinct keys to dependencies whose ids differ only in type', () => {
       // `SchedulerDependencyId` accepts both strings and numbers: `1` and `"1"` are
       // two dependencies, and on the same row pair only the id type separates them.

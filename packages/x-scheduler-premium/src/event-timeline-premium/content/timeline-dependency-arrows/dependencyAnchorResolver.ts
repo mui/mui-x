@@ -80,7 +80,7 @@ export interface DependencyAnchorResolverParameters {
 export interface DependencyAnchorResolver {
   eventsWidth: number;
   /**
-   * How far from the source anchor the S route runs its horizontal detour.
+   * How far from the source anchor a route runs its horizontal detour.
    */
   detourOffset: number;
   /**

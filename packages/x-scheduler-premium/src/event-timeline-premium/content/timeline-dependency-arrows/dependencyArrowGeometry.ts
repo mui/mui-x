@@ -39,7 +39,7 @@ export interface DependencyArrow {
   readonly d: string;
   /**
    * The path of the invisible click hit-area: the same route with both ends trimmed,
-   * so the terminal (at the source anchor) and the start resize handle (under the
+   * so the terminal (at the source anchor) and the resize handle (under the
    * arrowhead) stay reachable.
    * Derived on first read and cached: only the interactions layer needs it.
    */
@@ -50,7 +50,7 @@ export interface DependencyArrow {
    */
   endPoint: DependencyArrowPoint;
   /**
-   * The edge of the target event the arrow enters, which side of `endPoint` the
+   * The edge of the target event the arrow enters, and so the side of `endPoint` the
    * arrow comes from.
    */
   targetEdge: SchedulerEventSide;

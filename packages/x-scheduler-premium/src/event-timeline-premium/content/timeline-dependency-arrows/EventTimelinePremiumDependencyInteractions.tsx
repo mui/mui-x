@@ -124,16 +124,14 @@ function DependencyInteractionsLayer() {
         // scrolled-out row has its tip above or below the rendered range — an
         // unclamped button would be unreachable there even though the arrow is
         // selected.
-        const buttonX =
-          arrow.targetEdge === 'start'
-            ? Math.max(
-                arrow.endPoint.x - DEPENDENCY_DELETE_BUTTON_RADIUS,
-                DEPENDENCY_DELETE_BUTTON_RADIUS,
-              )
-            : Math.min(
-                arrow.endPoint.x + DEPENDENCY_DELETE_BUTTON_RADIUS,
-                eventsWidth - DEPENDENCY_DELETE_BUTTON_RADIUS,
-              );
+        const buttonDirection = arrow.targetEdge === 'start' ? -1 : 1;
+        const buttonX = Math.min(
+          Math.max(
+            arrow.endPoint.x + buttonDirection * DEPENDENCY_DELETE_BUTTON_RADIUS,
+            DEPENDENCY_DELETE_BUTTON_RADIUS,
+          ),
+          eventsWidth - DEPENDENCY_DELETE_BUTTON_RADIUS,
+        );
         const buttonY = Math.min(
           Math.max(arrow.endPoint.y, offsetTop + DEPENDENCY_DELETE_BUTTON_RADIUS),
           offsetTop + height - DEPENDENCY_DELETE_BUTTON_RADIUS,

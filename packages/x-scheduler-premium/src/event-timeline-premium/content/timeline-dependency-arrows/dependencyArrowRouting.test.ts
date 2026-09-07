@@ -482,6 +482,78 @@ describe('dependencyArrowRouting', () => {
         ]);
       });
 
+      it('should render a short straight arrow overlapping the source head between two adjacent events', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 50, y: 5 },
+          { x: 50, y: 5 },
+          'StartToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 66, y: 5 },
+          { x: 50, y: 5 },
+        ]);
+      });
+
+      it('should route the mirrored S detour below the events when the anchors share the same height', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 20, y: 5 },
+          { x: 50, y: 5 },
+          'StartToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 20, y: 5 },
+          { x: 12, y: 5 },
+          { x: 12, y: 5 + DETOUR_OFFSET },
+          { x: 62, y: 5 + DETOUR_OFFSET },
+          { x: 62, y: 5 },
+          { x: 50, y: 5 },
+        ]);
+      });
+
+      it('should ride the exit onto the source when it starts at the timeline start', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 0, y: 5 },
+          { x: 30, y: 40 },
+          'StartToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 8, y: 5 },
+          { x: 0, y: 5 },
+          { x: 0, y: 5 + DETOUR_OFFSET },
+          { x: 42, y: 5 + DETOUR_OFFSET },
+          { x: 42, y: 40 },
+          { x: 30, y: 40 },
+        ]);
+      });
+
+      it('should ride the entry onto the target when it ends at the timeline end', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 1400, y: 5 },
+          { x: EVENTS_WIDTH, y: 40 },
+          'StartToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 1400, y: 5 },
+          { x: 1392, y: 5 },
+          { x: 1392, y: 5 + DETOUR_OFFSET },
+          { x: 1440, y: 5 + DETOUR_OFFSET },
+          { x: 1440, y: 40 },
+          { x: 1428, y: 40 },
+        ]);
+      });
+
       it('should route the mirrored S detour when the target ends after the source starts', () => {
         const [points] = buildDependencyArrowRoutes(
           { x: 20, y: 5 },

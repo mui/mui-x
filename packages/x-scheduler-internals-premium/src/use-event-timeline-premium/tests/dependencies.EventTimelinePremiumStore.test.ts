@@ -1005,6 +1005,22 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       ]);
     });
 
+    it('should warn when a dependency from props has an unknown type', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore(
+          {
+            events: [eventA, eventB],
+            resources: TEST_RESOURCES,
+            dependencies: [
+              { id: 'dep-x', source: 'event-a', target: 'event-b', type: 'FS' as any },
+            ],
+          },
+          adapter,
+        );
+      }).toWarnDev(['MUI X Scheduler: The dependency "dep-x" has the unknown type "FS".']);
+    });
+
     it('should warn in dev when dependencies are updated without onDependenciesChange', () => {
       const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
 

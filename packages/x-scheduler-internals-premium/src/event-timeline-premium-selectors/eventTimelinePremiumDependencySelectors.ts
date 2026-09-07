@@ -7,6 +7,7 @@ import {
   classifyDependencyEvent,
   groupByEventId,
   isDependencyReadOnly,
+  isDependencyType,
 } from '../internals/utils/dependency-utils';
 
 const activeModelListSelector = createSelectorMemoized(
@@ -15,10 +16,12 @@ const activeModelListSelector = createSelectorMemoized(
   (dependencyModelLookup, processedEventLookup) =>
     // `dependencyModelLookup` already deduped duplicate ids (last wins) while
     // preserving insertion order, so no separate dedup pass is needed here.
-    Array.from(dependencyModelLookup.values()).filter((dependency) =>
-      [dependency.source, dependency.target].every(
-        (eventId) => classifyDependencyEvent(processedEventLookup, eventId) === 'ok',
-      ),
+    Array.from(dependencyModelLookup.values()).filter(
+      (dependency) =>
+        isDependencyType(dependency.type) &&
+        [dependency.source, dependency.target].every(
+          (eventId) => classifyDependencyEvent(processedEventLookup, eventId) === 'ok',
+        ),
     ),
 );
 
@@ -67,7 +70,7 @@ export const eventTimelinePremiumDependencySelectors = {
   model: (state: State, dependencyId: SchedulerDependencyId) =>
     state.dependencyModelLookup.get(dependencyId) ?? null,
   /**
-   * Dependencies whose two events exist and are not recurring.
+   * Dependencies with a supported type whose two events exist and are not recurring.
    * Rendering and the scheduling engine must only consume these.
    */
   activeModelList: activeModelListSelector,
@@ -98,14 +101,6 @@ export const eventTimelinePremiumDependencySelectors = {
   // Keyed by occurrence *and* resource: an event appearing on several resources
   // repeats the same occurrence key on each row, and only the row appearance the
   // gesture actually involves must highlight.
-  isCreationSource: (state: State, occurrenceKey: string, resourceId: SchedulerResourceId) => {
-    const creation = creationSelector(state);
-    return (
-      creation !== null &&
-      creation.sourceOccurrenceKey === occurrenceKey &&
-      creation.sourceResourceId === resourceId
-    );
-  },
   isCreationTarget: (state: State, occurrenceKey: string, resourceId: SchedulerResourceId) => {
     const creation = creationSelector(state);
     return (

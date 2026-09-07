@@ -53,7 +53,8 @@ export interface SchedulerDependency {
 export type SchedulerDependencyCreationProperties = Omit<SchedulerDependency, 'id'>;
 
 /**
- * State of the pending create-dependency drag gesture, from a terminal to a target event.
+ * State of the pending create-dependency drag gesture, from a terminal to a target
+ * event or one of its terminals.
  */
 export interface SchedulerDependencyCreation {
   /**

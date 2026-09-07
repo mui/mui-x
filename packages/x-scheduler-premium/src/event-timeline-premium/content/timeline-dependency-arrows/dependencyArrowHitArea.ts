@@ -9,7 +9,7 @@ import type { DependencyArrowObstacle, DependencyArrowPoint } from './dependency
  */
 export const DEPENDENCY_ARROW_HIT_TRIM_START = 12;
 /**
- * Trim at the target end, freeing the start-edge resize handle under the arrowhead.
+ * Trim at the target end, freeing the resize handle under the arrowhead.
  */
 export const DEPENDENCY_ARROW_HIT_TRIM_END = 8;
 /**
