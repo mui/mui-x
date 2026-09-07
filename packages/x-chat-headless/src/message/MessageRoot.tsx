@@ -3,7 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useMessage } from '../hooks/useMessage';
 import { useMessageAuthor } from '../hooks/useMessageAuthor';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
@@ -17,7 +17,7 @@ import {
   useMessageRovingItem,
 } from '../message-list/internals/MessageRovingContext';
 import { MessageContextProvider } from './internals/MessageContext';
-import { type MessageRootOwnerState } from './message.types';
+import type { MessageRootOwnerState } from './message.types';
 
 export interface MessageRootSlots {
   root: React.ElementType;

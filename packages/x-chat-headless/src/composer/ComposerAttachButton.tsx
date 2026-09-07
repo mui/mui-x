@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import type { ChatAttachmentRejection } from '../types/chat-entities';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useComposerContext } from './internals/ComposerContext';
-import { type ComposerAttachButtonOwnerState } from './composer.types';
+import type { ComposerAttachButtonOwnerState } from './composer.types';
 import { matchesMimeType } from './internals/matchesMimeType';
 
 export interface ComposerAttachButtonSlots {

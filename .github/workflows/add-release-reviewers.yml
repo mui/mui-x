@@ -10,7 +10,7 @@ permissions: {}
 
 jobs:
   add-reviewers-to-release-pr:
-    uses: mui/mui-public/.github/workflows/reusable-add-reviewers-to-pr.yml@fdfa28912aa56f2473702b4a49a5a7a3164f5e4c # master
+    uses: mui/mui-public/.github/workflows/reusable-add-reviewers-to-pr.yml@c2ed9f97b6ea98e50de89d38b6cbc84c570316d9 # master
     with:
       team-slug: x
       label-name: release

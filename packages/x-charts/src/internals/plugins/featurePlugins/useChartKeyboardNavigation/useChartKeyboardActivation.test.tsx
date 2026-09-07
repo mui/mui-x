@@ -29,6 +29,31 @@ describe('keyboard item activation', () => {
     expect(onItemClick.mock.calls.length).to.equal(0);
   });
 
+  it('should not move the focused item with modified arrow keys', async () => {
+    const onItemClick = vi.fn();
+    const { user } = render(
+      <BarChart
+        {...barConfig}
+        series={[{ id: 'A', data: [50, 100] }]}
+        onItemClick={onItemClick}
+        experimentalFeatures={{ keyboardActivation: true }}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    // Modified arrows are reserved for other interactions, such as keyboard zoom and pan.
+    await user.keyboard('{Shift>}[ArrowRight]{/Shift}');
+    await user.keyboard('{Alt>}[ArrowRight]{/Alt}');
+    await user.keyboard('[Enter]');
+
+    expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
+      type: 'bar',
+      seriesId: 'A',
+      dataIndex: 0,
+    });
+  });
+
   it('should ignore the auto-repeat keydown while the key is held down', async () => {
     const onItemClick = vi.fn();
     const { user } = render(

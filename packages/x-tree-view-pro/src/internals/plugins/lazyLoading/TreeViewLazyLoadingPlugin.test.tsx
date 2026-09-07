@@ -1,5 +1,6 @@
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import * as React from 'react';
+import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { vi, describe, it, expect } from 'vitest';
 import type { RichTreeViewProStore } from '../../RichTreeViewProStore';
@@ -275,6 +276,36 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         await awaitMockFetch();
         expect(view.isItemExpanded('1')).to.equal(false);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
+      });
+
+      it('should render the error indicator on the item when its children fail to load', async () => {
+        const errorFetchData = async (): Promise<ItemType[]> => {
+          return new Promise((_, reject) => {
+            setTimeout(() => {
+              reject(new Error('Failed to fetch data'));
+            }, 0);
+          });
+        };
+
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: errorFetchData,
+          },
+        });
+
+        expect(
+          view.getItemIconContainer('1').querySelector(`.${treeItemClasses.errorIcon}`),
+        ).to.equal(null);
+
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+
+        expect(view.isItemExpanded('1')).to.equal(false);
+        expect(
+          view.getItemIconContainer('1').querySelector(`.${treeItemClasses.errorIcon}`),
+        ).not.to.equal(null);
       });
 
       it('should load expanded items on mount', async () => {

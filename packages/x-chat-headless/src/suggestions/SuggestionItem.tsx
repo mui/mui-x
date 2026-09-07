@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { useSuggestionsContext } from './internals/SuggestionsContext';
-import { type SuggestionItemOwnerState } from './suggestions.types';
+import type { SuggestionItemOwnerState } from './suggestions.types';
 
 export interface SuggestionItemSlots {
   root: React.ElementType;

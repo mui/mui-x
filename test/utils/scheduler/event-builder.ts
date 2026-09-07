@@ -259,7 +259,7 @@ export class EventBuilder {
   toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
     const dataTimezone = this.event.timezone ?? 'default';
     const rawStart = occurrenceStartDate
-      ? this.adapter.date(occurrenceStartDate, 'default')
+      ? resolveEventDate(occurrenceStartDate, dataTimezone, this.adapter)
       : resolveEventDate(this.event.start, dataTimezone, this.adapter);
 
     const baseProcessed = processEvent(
