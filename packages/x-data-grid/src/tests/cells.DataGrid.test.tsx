@@ -58,7 +58,7 @@ describe('<DataGrid /> - Cells', () => {
   // on a missing row — that throws `MissingRowIdError` and crashes the grid.
   // `click` is already guarded by `publish`; `mouseDown`/`mouseUp` were not.
   describe('interaction after the row is removed', () => {
-    let apiRef: RefObject<GridApi | null>;
+    let apiRef!: RefObject<GridApi | null>;
 
     function TestCase() {
       apiRef = useGridApiRef();
