@@ -65,5 +65,5 @@ Each export type reads its own options, so a nonce set only on `printOptions` do
 />
 ```
 
-When the copied styles are blocked, the export fails with an error telling you to set the `nonce` option.
+When the copied styles are blocked, the image export fails with an error telling you to set the `nonce` option, and the print export produces an unstyled chart.
 Set the `copyStyles` option to `false` to export the chart without the page styles instead.

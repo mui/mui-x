@@ -22,7 +22,7 @@ export const getDrawDocument = async () => {
  * A style element that the Content Security Policy blocked has no `sheet`, which makes the export
  * fail with an error that doesn't point to the actual problem.
  */
-function checkStyleSheetsLoaded(exportDoc: Document) {
+export function checkStyleSheetsLoaded(exportDoc: Document) {
   const blockedStyle = Array.from(exportDoc.head.querySelectorAll('style')).some(
     (style) => style.textContent && style.sheet === null,
   );
@@ -63,6 +63,9 @@ export async function exportImage(
   }
 
   const drawDocumentPromise = getDrawDocument();
+  /* The import starts before the export document is ready, so it can settle while another step
+   * fails. Keep it handled to avoid an unhandled rejection when it's never awaited. */
+  drawDocumentPromise.catch(() => {});
   const doc = ownerDocument(element);
 
   const ratio = pixelRatio ?? Math.max(window.devicePixelRatio || 1, 1);

@@ -31,7 +31,7 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ ins
       try {
         // Wait for animation frame to ensure the animation finished
         await waitForAnimationFrame();
-        printChart(chartRoot, options);
+        await printChart(chartRoot, options);
       } finally {
         enableAnimation();
       }

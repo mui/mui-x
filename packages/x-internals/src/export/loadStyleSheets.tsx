@@ -36,6 +36,9 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot,
       stylesheetLoadPromises.push(
         new Promise((resolve) => {
           newHeadStyleElement.addEventListener('load', () => resolve());
+          /* A stylesheet blocked by the Content Security Policy, or that fails to load, only fires
+           * `error`. Without this the export would wait for a `load` event that never comes. */
+          newHeadStyleElement.addEventListener('error', () => resolve());
         }),
       );
     }
