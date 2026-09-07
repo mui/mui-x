@@ -23,9 +23,10 @@ const resources = [
 ];
 
 // The dataset covers every arrow shape: same-row straight, cross-row elbow (with an
-// event blocking the default turn), adjacent events, and backward S routes. `Handoff`
-// is assigned to two resources, so it renders one appearance per row and its
-// dependencies fan out to one arrow per pair of appearances.
+// event blocking the default turn), adjacent events, backward S routes, and one
+// dependency of each of the other types. `Handoff` is assigned to two resources, so
+// it renders one appearance per row and its dependencies fan out to one arrow per
+// pair of appearances.
 // Early hours so every arrow is inside the initial viewport without scrolling.
 const initialEvents = [
   {
@@ -111,6 +112,9 @@ const initialDependencies = [
   // one arrow reaches each of them.
   { id: 'd7', source: 'handoff', target: 'impl', type: 'FinishToStart' },
   { id: 'd8', source: 'review', target: 'handoff', type: 'FinishToStart' },
+  { id: 'd9', source: 'spike', target: 'retro', type: 'StartToStart' },
+  { id: 'd10', source: 'impl', target: 'hotfix', type: 'FinishToFinish' },
+  { id: 'd11', source: 'publish', target: 'retro', type: 'StartToFinish' },
 ];
 
 const styledContextValue = {

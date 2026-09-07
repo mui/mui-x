@@ -42,7 +42,7 @@ const recurringEvent = EventBuilder.new()
   .resource(resource1)
   .build();
 
-function getTerminal(title: string, resourceId?: string) {
+function getTerminal(title: string, resourceId?: string, side: 'start' | 'end' = 'end') {
   // The terminals render in an overlay outside the event elements, tied to their
   // event by the occurrence key — qualified by the resource for events appearing on
   // several rows. The key is appearance-invariant, so any rendered appearance serves
@@ -54,7 +54,7 @@ function getTerminal(title: string, resourceId?: string) {
   const resourceSelector =
     resourceId === undefined ? '' : `[data-resource-id="${CSS.escape(resourceId)}"]`;
   return document.querySelector<HTMLElement>(
-    `[data-dependency-terminal="${CSS.escape(occurrenceKey!)}"]${resourceSelector}`,
+    `[data-dependency-terminal="${CSS.escape(occurrenceKey!)}"]${resourceSelector}[data-side="${side}"]`,
   );
 }
 
@@ -70,13 +70,25 @@ function getAppearanceElement(title: string, resourceId: string) {
     )!;
 }
 
-function simulateTerminalDrag(sourceTitle: string, targetElement: Element) {
+function simulateTerminalDrag(
+  sourceTitle: string,
+  targetElement: Element,
+  sourceSide: 'start' | 'end' = 'end',
+) {
   act(() => {
     simulateDragAndDrop({
-      source: getTerminal(sourceTitle)!,
+      source: getTerminal(sourceTitle, undefined, sourceSide)!,
       target: targetElement,
     });
   });
+}
+
+/**
+ * The x where the drawn arrow ends, parsed from the last `L` command of its path.
+ */
+function getArrowTipX(path: Element): number {
+  const match = path.getAttribute('d')!.match(/L ([\d.-]+) [\d.-]+$/);
+  return Number(match![1]);
 }
 
 describe('<EventTimelinePremium /> dependency terminals', () => {
@@ -99,6 +111,39 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(getTerminal('Event A')).not.to.equal(null);
       expect(getTerminal('Event B')).not.to.equal(null);
+    });
+
+    it('should render a terminal on the start edge too', async () => {
+      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      expect(getTerminal('Event A', undefined, 'start')).not.to.equal(null);
+      expect(getTerminal('Event B', undefined, 'start')).not.to.equal(null);
+    });
+
+    it('should not render a start terminal on an event starting before the collection start', async () => {
+      // Starts a month early and ends inside the initial viewport: the end edge can
+      // anchor a gesture, the start edge cannot — same rule as the resize handles.
+      const clippedEvent = EventBuilder.new()
+        .id('event-clipped')
+        .title('Clipped event')
+        .singleDay('2025-06-01T09:00:00Z', 32 * 24 * 60 + 60)
+        .resource(resource1)
+        .build();
+      await renderTimeline({ events: [eventA, clippedEvent], dependencies: [] });
+
+      expect(getTerminal('Clipped event', undefined, 'end')).not.to.equal(null);
+      expect(getTerminal('Clipped event', undefined, 'start')).to.equal(null);
+    });
+
+    it('should reveal both terminals while its event is hovered', async () => {
+      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      fireEvent.pointerOver(getEventElement('Event A'));
+
+      expect(getTerminal('Event A', undefined, 'start')!.hasAttribute('data-visible')).to.equal(
+        true,
+      );
+      expect(getTerminal('Event A', undefined, 'end')!.hasAttribute('data-visible')).to.equal(true);
     });
 
     it('should not render terminals when the dependencies feature is not enabled', async () => {
@@ -361,6 +406,135 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(dependencies[0].type).to.equal('FinishToStart');
       // The harness closes the controlled loop, so the created arrow actually renders.
       expect(getArrowPaths()).to.have.length(1);
+    });
+
+    it('should create a StartToStart dependency when dragging the start terminal onto another event', async () => {
+      // Dropping on the event body targets its start edge: the dragged edge alone
+      // picks the type.
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getEventElement('Event B'), 'start');
+
+      const [dependency] = handleDependenciesChange.mock.calls[0][0];
+      expect(dependency.source).to.equal('event-a');
+      expect(dependency.target).to.equal('event-b');
+      expect(dependency.type).to.equal('StartToStart');
+    });
+
+    it('should create a FinishToFinish dependency when dropping the end terminal on the end terminal of another event', async () => {
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getTerminal('Event B', undefined, 'end')!, 'end');
+
+      const [dependency] = handleDependenciesChange.mock.calls[0][0];
+      expect(dependency.type).to.equal('FinishToFinish');
+    });
+
+    it('should create a StartToFinish dependency when dropping the start terminal on the end terminal of another event', async () => {
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getTerminal('Event B', undefined, 'end')!, 'start');
+
+      const [dependency] = handleDependenciesChange.mock.calls[0][0];
+      expect(dependency.type).to.equal('StartToFinish');
+    });
+
+    it('should create a FinishToStart dependency when dropping the end terminal on the start terminal of another event', async () => {
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getTerminal('Event B', undefined, 'start')!, 'end');
+
+      const [dependency] = handleDependenciesChange.mock.calls[0][0];
+      expect(dependency.type).to.equal('FinishToStart');
+    });
+
+    it('should create a second dependency of another type between the same events', async () => {
+      const handleDependenciesChange = vi.fn();
+      const { store } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getTerminal('Event B', undefined, 'end')!, 'end');
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+      expect(store.state.errors).to.have.length(0);
+      expect(getArrowPaths()).to.have.length(2);
+    });
+
+    it('should reveal the terminals of the hovered target during the gesture', async () => {
+      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const target = getEventElement('Event B');
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+
+      // A native drag suppresses the hover: the target's terminals must show by state
+      // so the user can drop on the edge they want.
+      await waitFor(() => {
+        expect(getTerminal('Event B', undefined, 'start')!.hasAttribute('data-visible')).to.equal(
+          true,
+        );
+      });
+      expect(getTerminal('Event B', undefined, 'end')!.hasAttribute('data-visible')).to.equal(true);
+      // The source only keeps the dragged edge revealed.
+      expect(getTerminal('Event A', undefined, 'end')!.hasAttribute('data-visible')).to.equal(true);
+      expect(getTerminal('Event A', undefined, 'start')!.hasAttribute('data-visible')).to.equal(
+        false,
+      );
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+    });
+
+    it('should snap the provisional line to the hovered terminal edge', async () => {
+      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const target = getEventElement('Event B');
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      await waitFor(() => {
+        expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
+      });
+      const snappedToStartX = getArrowTipX(document.querySelector('[data-dependency-drag-line]')!);
+
+      const endTerminal = getTerminal('Event B', undefined, 'end')!;
+      fireEvent.dragEnter(endTerminal, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(endTerminal, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(
+          getArrowTipX(document.querySelector('[data-dependency-drag-line]')!),
+        ).to.be.greaterThan(snappedToStartX);
+      });
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
     });
 
     it('should ignore dropping a terminal on its own event', async () => {
@@ -792,6 +966,21 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(handleDependenciesChange.mock.calls.length).to.equal(1);
       expect(handleDependenciesChange.mock.calls[0][0]).to.deep.equal([]);
       expect(getArrowPaths()).to.have.length(0);
+    });
+
+    it('should place the delete button past the target end edge of a FinishToFinish arrow', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b', 'FinishToFinish')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      // The arrow enters the target from the right, so the button sits on that side
+      // of the tip instead of covering the event's tail.
+      const tipX = getArrowTipX(document.querySelector('[data-dependency-id="dep-1"]')!);
+      const button = document.querySelector('[data-dependency-delete-button] circle')!;
+      expect(Number(button.getAttribute('cx'))).to.be.greaterThan(tipX);
     });
 
     it('should delete the selected arrow with the Delete key', async () => {

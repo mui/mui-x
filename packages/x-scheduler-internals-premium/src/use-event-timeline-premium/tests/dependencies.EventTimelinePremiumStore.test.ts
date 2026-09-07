@@ -244,6 +244,23 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
+    it('should accept a dependency of another type between the same events', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      const result = store.addDependency({
+        source: 'event-a',
+        target: 'event-b',
+        type: 'FinishToFinish',
+      });
+
+      expect(result.status).to.equal('added');
+      expect(onDependenciesChange.mock.calls[0][0]).to.have.length(2);
+    });
+
     it('should reject a self-referencing dependency', () => {
       const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
@@ -768,6 +785,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         targetEventId: null,
         targetOccurrenceKey: null,
         targetResourceId: null,
+        targetSide: null,
       };
       store.setDependencyCreation(creation);
       const stateBefore = store.state;
@@ -812,6 +830,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         targetEventId: null,
         targetOccurrenceKey: null,
         targetResourceId: null,
+        targetSide: null,
       });
       store.setSelectedDependencyId('dep-1');
 

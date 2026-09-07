@@ -302,7 +302,38 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
 
       const successor = getEventElement('Event B');
 
-      expect(successor).toHaveAccessibleDescription('Depends on Event A, Event C');
+      expect(successor).toHaveAccessibleDescription(
+        'Cannot start until Event A finishes. Cannot start until Event C finishes.',
+      );
+    });
+
+    it('should describe each dependency type with its own sentence', async () => {
+      const eventD = EventBuilder.new()
+        .id('event-d')
+        .title('Event D')
+        .singleDay('2025-07-03T15:00:00Z')
+        .resource(resource1)
+        .build();
+      const eventE = EventBuilder.new()
+        .id('event-e')
+        .title('Event E')
+        .singleDay('2025-07-03T16:00:00Z')
+        .resource(resource1)
+        .build();
+      await renderTimeline({
+        events: [eventA, eventB, eventC, eventD, eventE],
+        dependencies: [
+          buildDependency('dep-1', 'event-a', 'event-b', 'FinishToStart'),
+          buildDependency('dep-2', 'event-c', 'event-b', 'StartToStart'),
+          buildDependency('dep-3', 'event-d', 'event-b', 'FinishToFinish'),
+          buildDependency('dep-4', 'event-e', 'event-b', 'StartToFinish'),
+        ],
+      });
+
+      expect(getEventElement('Event B')).toHaveAccessibleDescription(
+        'Cannot start until Event A finishes. Cannot start until Event C starts. ' +
+          'Cannot finish until Event D finishes. Cannot finish until Event E starts.',
+      );
     });
 
     it('should keep the predecessor titles out of the successor accessible name', async () => {

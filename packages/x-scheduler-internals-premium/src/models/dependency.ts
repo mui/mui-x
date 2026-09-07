@@ -21,10 +21,7 @@ declare module '@mui/x-scheduler-internals/models' {
  * the successor.
  */
 export type SchedulerDependencyType =
-  | 'FinishToStart'
-  | 'StartToStart'
-  | 'FinishToFinish'
-  | 'StartToFinish';
+  'FinishToStart' | 'StartToStart' | 'FinishToFinish' | 'StartToFinish';
 
 /**
  * A dependency between two events, referencing them by id.
@@ -92,6 +89,12 @@ export interface SchedulerDependencyCreation {
    * same way `sourceResourceId` qualifies the source.
    */
   targetResourceId: SchedulerResourceId | null;
+  /**
+   * The edge of the hovered target the drop would land on: the hovered terminal's, or
+   * the start edge on the event body. Together with `sourceSide`, it determines the
+   * created dependency's type.
+   */
+  targetSide: SchedulerEventSide | null;
 }
 
 export type SchedulerDependencyEventRejectionReason =

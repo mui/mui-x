@@ -118,14 +118,22 @@ function DependencyInteractionsLayer() {
       viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}
     >
       {orderedArrows.map((arrow) => {
-        // Clamped inside the viewBox on both axes: at the timeline's left edge the
-        // anchor sits at x = 0, and an arrow into a scrolled-out row has its tip above
-        // or below the rendered range — an unclamped button would be unreachable there
-        // even though the arrow is selected.
-        const buttonX = Math.max(
-          arrow.endPoint.x - DEPENDENCY_DELETE_BUTTON_RADIUS,
-          DEPENDENCY_DELETE_BUTTON_RADIUS,
-        );
+        // The button sits on the side of the tip the arrow comes from, so it never
+        // covers the target event. Clamped inside the viewBox on both axes: at a
+        // timeline edge the anchor sits on the boundary, and an arrow into a
+        // scrolled-out row has its tip above or below the rendered range — an
+        // unclamped button would be unreachable there even though the arrow is
+        // selected.
+        const buttonX =
+          arrow.targetEdge === 'start'
+            ? Math.max(
+                arrow.endPoint.x - DEPENDENCY_DELETE_BUTTON_RADIUS,
+                DEPENDENCY_DELETE_BUTTON_RADIUS,
+              )
+            : Math.min(
+                arrow.endPoint.x + DEPENDENCY_DELETE_BUTTON_RADIUS,
+                eventsWidth - DEPENDENCY_DELETE_BUTTON_RADIUS,
+              );
         const buttonY = Math.min(
           Math.max(arrow.endPoint.y, offsetTop + DEPENDENCY_DELETE_BUTTON_RADIUS),
           offsetTop + height - DEPENDENCY_DELETE_BUTTON_RADIUS,

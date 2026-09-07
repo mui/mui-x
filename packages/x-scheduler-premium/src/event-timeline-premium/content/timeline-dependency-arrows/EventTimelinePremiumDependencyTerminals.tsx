@@ -4,10 +4,12 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { isElement } from '@mui/x-scheduler-internals/internals';
+import type { SchedulerEventSide, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import type { SchedulerDependencyCreation } from '@mui/x-scheduler-internals-premium/models';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
 
@@ -58,12 +60,12 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
   width: DEPENDENCY_TERMINAL_SIZE,
   height: DEPENDENCY_TERMINAL_SIZE,
   borderRadius: '50%',
-  // Starts exactly on the end-edge anchor (the arrows' source point), fully outside
-  // its event, so the event's own end resize strip stays free. Flush against the edge
-  // (no gap): a gap would let the pointer land between event and terminal on its way
+  // Starts exactly on the edge anchor (the arrows' anchor point), fully outside its
+  // event, so the event's own resize strip stays free. Flush against the edge (no
+  // gap): a gap would let the pointer land between event and terminal on its way
   // out, dropping the hover and hiding the terminal mid-approach. Trade-off: while
-  // revealed it covers the first pixels of a back-to-back neighbor, whose
-  // start-resize grab must aim above or below the circle.
+  // revealed it covers the first pixels of a back-to-back neighbor, whose resize grab
+  // must aim above or below the circle.
   transform: 'translate(0, -50%)',
   transition: 'transform 120ms ease-out',
   cursor: 'crosshair',
@@ -93,8 +95,22 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
   '&[data-visible]:hover': {
     transform: 'translate(0, -50%) scale(1.3)',
   },
+  // The start-edge terminal mirrors the end-edge one: hanging off the left of its
+  // anchor, halo outward to the left.
+  '&[data-side="start"]': {
+    transform: 'translate(-100%, -50%)',
+    '&::before': {
+      left: -DEPENDENCY_TERMINAL_HALO,
+      right: 0,
+    },
+    '&[data-visible]:hover': {
+      transform: 'translate(-100%, -50%) scale(1.3)',
+    },
+  },
   variants: getPaletteVariants(theme),
 }));
+
+const TERMINAL_SIDES: readonly SchedulerEventSide[] = ['start', 'end'];
 
 /**
  * The dependency terminals of the visible events, in an overlay above the arrows and
@@ -135,36 +151,47 @@ function DependencyTerminalsLayerImpl() {
 
   const layerRef = React.useRef<HTMLDivElement>(null);
 
-  // The hover never enters React: it toggles `data-visible` on the two affected
-  // terminals directly (the same DOM-driven technique as the rubber band), so
-  // pointer-rate transitions do not rebuild the layer.
-  const revealedTerminalRef = React.useRef<Element | null>(null);
-  // The event appearance anchoring the revealed terminal: together they define the
+  // The hover never enters React: it toggles `data-visible` on the terminals of the
+  // hovered appearance directly (the same DOM-driven technique as the rubber band),
+  // so pointer-rate transitions do not rebuild the layer.
+  const revealedTerminalsRef = React.useRef<readonly Element[]>([]);
+  // The event appearance anchoring the revealed terminals: together they define the
   // proximity surface the pointer may roam without dropping the reveal.
   const revealedEventRef = React.useRef<Element | null>(null);
-  const revealTerminal = useStableCallback(
-    (terminal: Element | null, eventElement: Element | null = null) => {
-      if (revealedTerminalRef.current === terminal) {
+  const revealTerminals = useStableCallback(
+    (terminals: readonly Element[], eventElement: Element | null = null) => {
+      // Terminals are queried per appearance, so the first one identifies the set.
+      if (revealedTerminalsRef.current[0] === terminals[0]) {
         if (eventElement !== null) {
           revealedEventRef.current = eventElement;
         }
         return;
       }
-      revealedTerminalRef.current?.removeAttribute('data-visible');
-      terminal?.setAttribute('data-visible', '');
-      revealedTerminalRef.current = terminal;
-      revealedEventRef.current = terminal === null ? null : eventElement;
+      for (const terminal of revealedTerminalsRef.current) {
+        terminal.removeAttribute('data-visible');
+      }
+      for (const terminal of terminals) {
+        terminal.setAttribute('data-visible', '');
+      }
+      revealedTerminalsRef.current = terminals;
+      revealedEventRef.current = terminals.length === 0 ? null : eventElement;
     },
   );
+  const getAppearanceTerminals = (occurrenceKey: string, resourceId: string) =>
+    Array.from(
+      layerRef.current?.querySelectorAll(
+        `[data-dependency-terminal="${CSS.escape(occurrenceKey)}"][data-resource-id="${CSS.escape(resourceId)}"]`,
+      ) ?? [],
+    );
 
   // A native drag suppresses pointer events, so the hover tracked before the gesture
   // goes stale by its end (the pointer may have dropped far away): reset it when the
   // gesture ends and let the next pointerover rebuild it.
   React.useEffect(() => {
     if (creation === null) {
-      revealTerminal(null);
+      revealTerminals([]);
     }
-  }, [creation, revealTerminal]);
+  }, [creation, revealTerminals]);
 
   const mounted = eventsWidth > 0 && height > 0;
 
@@ -180,11 +207,16 @@ function DependencyTerminalsLayerImpl() {
       if (!isElement(target)) {
         return;
       }
-      // A terminal keeps itself revealed while hovered — it is only hit-testable
-      // while revealed, so this is always the terminal already tracked.
+      // A terminal keeps its appearance revealed while hovered — it is only
+      // hit-testable while revealed, so this is always the set already tracked.
       const terminal = target.closest('[data-dependency-terminal]');
       if (terminal !== null) {
-        revealTerminal(terminal);
+        revealTerminals(
+          getAppearanceTerminals(
+            terminal.getAttribute('data-dependency-terminal')!,
+            terminal.getAttribute('data-resource-id')!,
+          ),
+        );
         return;
       }
       const eventElement = target.closest('[data-occurrence-key]');
@@ -202,23 +234,20 @@ function DependencyTerminalsLayerImpl() {
       if (resourceId === null) {
         return;
       }
-      const next =
-        layerRef.current?.querySelector(
-          `[data-dependency-terminal="${CSS.escape(occurrenceKey)}"][data-resource-id="${CSS.escape(resourceId)}"]`,
-        ) ?? null;
-      if (next !== null) {
-        revealTerminal(next, eventElement);
+      const next = getAppearanceTerminals(occurrenceKey, resourceId);
+      if (next.length > 0) {
+        revealTerminals(next, eventElement);
       }
     };
     // The reveal ends when the pointer leaves the proximity surface around the event
-    // and its terminal — not when it merely steps onto an empty cell, which a
+    // and its terminals — not when it merely steps onto an empty cell, which a
     // diagonal exit through the event's corner does on its way to the halo.
     const handlePointerMove = (event: PointerEvent) => {
-      const terminal = revealedTerminalRef.current;
-      if (terminal === null) {
+      const terminals = revealedTerminalsRef.current;
+      if (terminals.length === 0) {
         return;
       }
-      const nearAnchor = [revealedEventRef.current, terminal].some((anchor) => {
+      const nearAnchor = [revealedEventRef.current, ...terminals].some((anchor) => {
         if (anchor === null) {
           return false;
         }
@@ -231,12 +260,12 @@ function DependencyTerminalsLayerImpl() {
         );
       });
       if (!nearAnchor) {
-        revealTerminal(null);
+        revealTerminals([]);
       }
     };
     // Leaving the whole grid is unambiguous: hide right away.
     const handlePointerLeave = () => {
-      revealTerminal(null);
+      revealTerminals([]);
     };
     container.addEventListener('pointerover', handlePointerOver);
     container.addEventListener('pointermove', handlePointerMove);
@@ -245,9 +274,9 @@ function DependencyTerminalsLayerImpl() {
       container.removeEventListener('pointerover', handlePointerOver);
       container.removeEventListener('pointermove', handlePointerMove);
       container.removeEventListener('pointerleave', handlePointerLeave);
-      revealTerminal(null);
+      revealTerminals([]);
     };
-  }, [mounted, revealTerminal]);
+  }, [mounted, revealTerminals]);
 
   if (!mounted) {
     return null;
@@ -265,14 +294,9 @@ function DependencyTerminalsLayerImpl() {
       // Geometry culls before the per-event selectors: the row holds every occurrence
       // of the collection range, most of which are outside the viewport.
       const position = resolver.getPosition(occurrence);
-      // The gesture starts from the end edge (the `FinishToStart` origin), which must
-      // be inside the collection to anchor the provisional arrow — same rule as the
-      // end resize handle.
-      if (position.endingAfterEdge) {
-        continue;
-      }
+      const startFraction = position.position;
       const endFraction = position.position + position.duration;
-      if (endFraction < visibleStartFraction || endFraction > visibleEndFraction) {
+      if (endFraction < visibleStartFraction || startFraction > visibleEndFraction) {
         continue;
       }
       if (
@@ -281,37 +305,45 @@ function DependencyTerminalsLayerImpl() {
       ) {
         continue;
       }
-      const point = resolver.getEdgePoint(
-        { rowIndex, resourceId: rowResourceId, occurrence },
-        'end',
-      );
-      // The hover reveal is DOM-driven; only the gesture's source appearance is
-      // render-driven, so it survives the hover reset at drag start.
-      const visible = eventTimelinePremiumDependencySelectors.isCreationSource(
-        store.state,
-        occurrence.key,
-        rowResourceId,
-      );
-      terminals.push(
-        <EventTimelinePremiumDependencyTerminal
-          // The occurrence key repeats on every row of a multi-resource event: only
-          // the row disambiguates the appearance.
-          key={`${rowIndex}:${occurrence.key}`}
-          eventId={occurrence.id}
-          occurrenceKey={occurrence.key}
-          resourceId={rowResourceId}
-          side="end"
-          data-palette={schedulerEventSelectors.color(store.state, occurrence.id, rowResourceId)}
-          data-visible={visible ? '' : undefined}
-          // Clamped at the collection end: the outside circle would overflow the
-          // events area and be clipped by the viewport, so it slides back over the
-          // event's tail to stay reachable.
-          style={{
-            left: Math.min(point.x, eventsWidth - DEPENDENCY_TERMINAL_SIZE),
-            top: point.y - offsetTop,
-          }}
-        />,
-      );
+      const anchor = { rowIndex, resourceId: rowResourceId, occurrence };
+      const color = schedulerEventSelectors.color(store.state, occurrence.id, rowResourceId);
+      for (const side of TERMINAL_SIDES) {
+        // The edge must be inside the collection to anchor an arrow — same rule as the
+        // resize handles — and inside the viewport to be reachable.
+        const clipped = side === 'start' ? position.startingBeforeEdge : position.endingAfterEdge;
+        const fraction = side === 'start' ? startFraction : endFraction;
+        if (clipped || fraction < visibleStartFraction || fraction > visibleEndFraction) {
+          continue;
+        }
+        const point = resolver.getEdgePoint(anchor, side);
+        terminals.push(
+          <EventTimelinePremiumDependencyTerminal
+            // The occurrence key repeats on every row of a multi-resource event: only
+            // the row disambiguates the appearance.
+            key={`${rowIndex}:${occurrence.key}:${side}`}
+            eventId={occurrence.id}
+            occurrenceKey={occurrence.key}
+            resourceId={rowResourceId}
+            side={side}
+            data-palette={color}
+            data-visible={
+              isTerminalRevealedByGesture(creation, occurrence.key, rowResourceId, side)
+                ? ''
+                : undefined
+            }
+            // Clamped at the collection edges: the outside circle would overflow the
+            // events area and be clipped by the viewport, so it slides back over the
+            // event to stay reachable.
+            style={{
+              left:
+                side === 'start'
+                  ? Math.max(point.x, DEPENDENCY_TERMINAL_SIZE)
+                  : Math.min(point.x, eventsWidth - DEPENDENCY_TERMINAL_SIZE),
+              top: point.y - offsetTop,
+            }}
+          />,
+        );
+      }
     }
   }
 
@@ -320,4 +352,24 @@ function DependencyTerminalsLayerImpl() {
       {terminals}
     </DependencyTerminalsLayer>
   );
+}
+
+/**
+ * The hover reveal is DOM-driven; the gesture's terminals are render-driven so they
+ * survive the hover reset at drag start: the dragged edge of the source appearance,
+ * and both edges of the hovered target appearance, so the user can drop on either.
+ */
+function isTerminalRevealedByGesture(
+  creation: SchedulerDependencyCreation | null,
+  occurrenceKey: string,
+  resourceId: SchedulerResourceId,
+  side: SchedulerEventSide,
+): boolean {
+  if (creation === null) {
+    return false;
+  }
+  if (creation.sourceOccurrenceKey === occurrenceKey && creation.sourceResourceId === resourceId) {
+    return creation.sourceSide === side;
+  }
+  return creation.targetOccurrenceKey === occurrenceKey && creation.targetResourceId === resourceId;
 }

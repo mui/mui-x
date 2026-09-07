@@ -1,7 +1,7 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
-import type { SchedulerDependencyId } from '../models';
+import type { SchedulerDependencyId, SchedulerDependencyType } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import {
   classifyDependencyEvent,
@@ -22,22 +22,33 @@ const activeModelListSelector = createSelectorMemoized(
     ),
 );
 
-const activeSourceTitlesByTargetSelector = createSelectorMemoized(
+export interface SchedulerDependencySourceDescription {
+  /**
+   * The title of the source event.
+   */
+  title: string;
+  type: SchedulerDependencyType;
+}
+
+const activeSourcesByTargetSelector = createSelectorMemoized(
   activeModelListSelector,
   (state: State) => state.processedEventLookup,
   (dependencies, processedEventLookup) => {
-    const titlesByTarget = new Map<SchedulerEventId, string[]>();
+    const sourcesByTarget = new Map<SchedulerEventId, SchedulerDependencySourceDescription[]>();
     for (const dependency of dependencies) {
       // Active dependencies always resolve: their events exist in the lookup.
-      const title = processedEventLookup.get(dependency.source)!.title;
-      const titles = titlesByTarget.get(dependency.target);
-      if (titles) {
-        titles.push(title);
+      const source = {
+        title: processedEventLookup.get(dependency.source)!.title,
+        type: dependency.type,
+      };
+      const sources = sourcesByTarget.get(dependency.target);
+      if (sources) {
+        sources.push(source);
       } else {
-        titlesByTarget.set(dependency.target, [title]);
+        sourcesByTarget.set(dependency.target, [source]);
       }
     }
-    return titlesByTarget;
+    return sourcesByTarget;
   },
 );
 
@@ -67,12 +78,15 @@ export const eventTimelinePremiumDependencySelectors = {
     groupByEventId(dependencies, 'target'),
   ),
   /**
-   * Titles of the source events of the active dependencies, grouped by target event id.
-   * Used to describe an event with the events it depends on.
+   * The source event title and type of the active dependencies, grouped by target
+   * event id. Used to describe an event with the events it depends on.
    */
-  activeSourceTitlesByTarget: activeSourceTitlesByTargetSelector,
-  activeSourceTitlesForTarget: (state: State, eventId: SchedulerEventId): readonly string[] =>
-    activeSourceTitlesByTargetSelector(state).get(eventId) ?? EMPTY_ARRAY,
+  activeSourcesByTarget: activeSourcesByTargetSelector,
+  activeSourcesForTarget: (
+    state: State,
+    eventId: SchedulerEventId,
+  ): readonly SchedulerDependencySourceDescription[] =>
+    activeSourcesByTargetSelector(state).get(eventId) ?? EMPTY_ARRAY,
   /**
    * Whether the dependencies feature is enabled (internal parameters provided).
    */

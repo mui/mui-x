@@ -7,7 +7,10 @@ import type {
   EventTimelinePremiumStore,
   EventTimelinePremiumStoreParameters,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import type {
+  SchedulerDependency,
+  SchedulerDependencyType,
+} from '@mui/x-scheduler-internals-premium/models';
 import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
 import {
   EventEditingStyledContext,
@@ -27,8 +30,13 @@ export const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').buil
 // resource state a real consumer keeps.
 const defaultResources = [resource1, resource2];
 
-export function buildDependency(id: string, source: string, target: string): SchedulerDependency {
-  return { id, source, target, type: 'FinishToStart' };
+export function buildDependency(
+  id: string,
+  source: string,
+  target: string,
+  type: SchedulerDependencyType = 'FinishToStart',
+): SchedulerDependency {
+  return { id, source, target, type };
 }
 
 const styledContextValue = {

@@ -126,40 +126,44 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(first).to.equal(second);
   });
 
-  it('should group the source event titles by target event id', () => {
+  it('should group the source event titles and dependency types by target event id', () => {
     const state = getState();
 
-    const titlesByTarget =
-      eventTimelinePremiumDependencySelectors.activeSourceTitlesByTarget(state);
+    const sourcesByTarget = eventTimelinePremiumDependencySelectors.activeSourcesByTarget(state);
 
-    expect(titlesByTarget.get('event-b')).to.deep.equal([eventA.title]);
-    expect(titlesByTarget.get('event-a')).to.equal(undefined);
+    expect(sourcesByTarget.get('event-b')).to.deep.equal([
+      { title: eventA.title, type: 'FinishToStart' },
+    ]);
+    expect(sourcesByTarget.get('event-a')).to.equal(undefined);
   });
 
-  it('should return the source titles of all the active dependencies targeting the event', () => {
+  it('should return the sources of all the active dependencies targeting the event', () => {
     const eventC = EventBuilder.new().id('event-c').title('Event C').build();
     const state = getEventTimelinePremiumStateFromParameters({
       resources: TEST_RESOURCES,
       events: [eventA, eventB, eventC],
       dependencies: [
         DEP_1,
-        { id: 'dep-c', source: 'event-c', target: 'event-b', type: 'FinishToStart' },
+        { id: 'dep-c', source: 'event-c', target: 'event-b', type: 'FinishToFinish' },
       ],
     });
 
     expect(
-      eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(state, 'event-b'),
-    ).to.deep.equal([eventA.title, 'Event C']);
+      eventTimelinePremiumDependencySelectors.activeSourcesForTarget(state, 'event-b'),
+    ).to.deep.equal([
+      { title: eventA.title, type: 'FinishToStart' },
+      { title: 'Event C', type: 'FinishToFinish' },
+    ]);
   });
 
   it('should return the same empty instance for every event without predecessors', () => {
     const state = getState();
 
-    const first = eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(
+    const first = eventTimelinePremiumDependencySelectors.activeSourcesForTarget(
       state,
       'event-a',
     );
-    const second = eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(
+    const second = eventTimelinePremiumDependencySelectors.activeSourcesForTarget(
       state,
       'event-r',
     );
@@ -203,6 +207,7 @@ describe('eventTimelinePremiumDependencySelectors', () => {
         targetEventId: 'event-b',
         targetOccurrenceKey: 'event-b-0',
         targetResourceId: 'r1',
+        targetSide: 'start' as const,
       },
     };
 

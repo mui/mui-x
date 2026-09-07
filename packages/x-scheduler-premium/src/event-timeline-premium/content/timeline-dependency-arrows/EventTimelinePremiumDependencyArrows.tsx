@@ -196,9 +196,9 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
 }
 
 /**
- * The path of the provisional arrow: a straight dashed line from the end edge of the
- * gesture's source occurrence to the cursor, turning solid (still straight) and
- * snapping to the start edge of the hovered target when there is one — the routed
+ * The path of the provisional arrow: a straight dashed line from the dragged edge of
+ * the gesture's source occurrence to the cursor, turning solid (still straight) and
+ * snapping to the targeted edge of the hovered target when there is one — the routed
  * arrow only appears once the dependency is actually created. Pure: the cursor
  * position never enters the state, the unsnapped line is driven through the DOM.
  */
@@ -221,11 +221,11 @@ function getCreationPath(
     return null;
   }
 
-  if (creation.targetEventId !== null) {
+  if (creation.targetEventId !== null && creation.targetSide !== null) {
     const target = getEventEdgeAnchor(
       resolver,
       creation.targetEventId,
-      'start',
+      creation.targetSide,
       creation.targetOccurrenceKey,
       creation.targetResourceId,
     );

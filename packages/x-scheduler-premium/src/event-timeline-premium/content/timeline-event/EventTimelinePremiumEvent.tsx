@@ -8,6 +8,8 @@ import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import type { SchedulerDependencySourceDescription } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
 import type { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
@@ -162,9 +164,9 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, resourceId);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
-  const dependsOnTitles = useStore(
+  const dependencySources = useStore(
     store,
-    eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget,
+    eventTimelinePremiumDependencySelectors.activeSourcesForTarget,
     occurrence.id,
   );
 
@@ -216,7 +218,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
-      aria-describedby={dependsOnTitles.length > 0 ? `${id}-dependencies` : undefined}
+      aria-describedby={dependencySources.length > 0 ? `${id}-dependencies` : undefined}
       className={clsx(sharedProps.className, classes.event)}
     >
       {isStartResizable && (
@@ -228,14 +230,12 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
         {occurrence.title}
       </EventTimelinePremiumEventLinesClamp>
-      {dependsOnTitles.length > 0 && (
+      {dependencySources.length > 0 && (
         // `aria-hidden` keeps the description out of the name-from-content computed
         // through the self-referential `aria-labelledby`; the `aria-describedby`
         // reference still picks it up.
         <span id={`${id}-dependencies`} style={visuallyHidden} aria-hidden>
-          {/* TODO(dependencies public flip): move to localeText. Hardcoded while the
-              feature has no public API. */}
-          Depends on {dependsOnTitles.join(', ')}
+          {dependencySources.map(describeDependencySource).join(' ')}
         </span>
       )}
       {isRecurring && (
@@ -250,3 +250,16 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     </TimelineGrid.Event>
   );
 });
+
+// TODO(dependencies public flip): move to localeText. Hardcoded while the feature has
+// no public API.
+const DEPENDENCY_SOURCE_DESCRIPTIONS: Record<SchedulerDependencyType, (title: string) => string> = {
+  FinishToStart: (title) => `Cannot start until ${title} finishes.`,
+  StartToStart: (title) => `Cannot start until ${title} starts.`,
+  FinishToFinish: (title) => `Cannot finish until ${title} finishes.`,
+  StartToFinish: (title) => `Cannot finish until ${title} starts.`,
+};
+
+function describeDependencySource(source: SchedulerDependencySourceDescription): string {
+  return DEPENDENCY_SOURCE_DESCRIPTIONS[source.type](source.title);
+}
