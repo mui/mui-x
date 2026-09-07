@@ -10,7 +10,7 @@ import {
   orderArrowsWithSelectedLast,
   useDependencyGeometry,
 } from './EventTimelinePremiumDependencyGeometry';
-import { DEPENDENCY_ARROW_HIT_STROKE_WIDTH } from './dependencyArrowGeometry';
+import { DEPENDENCY_ARROW_HIT_STROKE_WIDTH } from './dependencyArrowHitArea';
 import { useDependencySelectionInteraction } from './useDependencySelectionInteraction';
 
 // The hit paths never ride over an event the route crosses (the geometry cuts them

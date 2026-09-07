@@ -8,8 +8,9 @@ import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyCreation } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
-import type { DependencyAnchorResolver, DependencyArrowPoint } from './dependencyArrowGeometry';
-import { getEventEdgeAnchor, DEPENDENCY_ARROWHEAD_SIZE } from './dependencyArrowGeometry';
+import type { DependencyAnchorResolver, DependencyArrowPoint } from './dependencyAnchorResolver';
+import { getEventEdgeAnchor } from './dependencyAnchorResolver';
+import { DEPENDENCY_ARROWHEAD_SIZE } from './dependencyArrowRouting';
 import {
   orderArrowsWithSelectedLast,
   useDependencyGeometry,
