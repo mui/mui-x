@@ -14,21 +14,37 @@ describe('absorbObserverFrames', () => {
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
+  function renderTimeline() {
+    return renderSettled(
+      <EventTimelinePremium
+        resources={[{ id: 'r1', title: 'Engineering' }]}
+        events={[]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+      />,
+    );
+  }
+
   it.skipIf(isJSDOM)(
     'should leave no observer delivery pending after a settled render',
     async () => {
-      await renderSettled(
-        <EventTimelinePremium
-          resources={[{ id: 'r1', title: 'Engineering' }]}
-          events={[]}
-          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        />,
-      );
+      await renderTimeline();
 
-      // Raw time outside act: an update the absorb failed to drain would land here
+      // Raw frames outside act: a delivery the absorb failed to drain would land here
       // un-acted, and the console guard fails the test with the React act warning.
-      // This has to outlast the virtualizer's `resizeThrottleMs` (100ms), because the
-      // update that escapes is the trailing edge of that throttle rather than a frame.
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      });
+    },
+  );
+
+  it.skipIf(isJSDOM)(
+    'should leave no throttled dimension update pending after a settled render',
+    async () => {
+      await renderTimeline();
+
+      // A delivery also schedules a dimension update throttled by `resizeThrottleMs`
+      // (100ms), whose trailing edge rides a timer rather than a frame, so the frames
+      // above are too short to catch it. Wait past that window instead.
       await new Promise<void>((resolve) => {
         setTimeout(resolve, 250);
       });
