@@ -3,7 +3,7 @@ import { alpha, styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import { MUI_X_PRODUCTS } from './products';
+import { MUI_X_PRODUCTS } from '../datasets/disabledAndEditableProducts';
 
 const CustomContent = styled('div')(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
