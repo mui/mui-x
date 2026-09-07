@@ -1,4 +1,5 @@
 import type { FocusedItemIdentifier } from '@mui/x-charts/models';
+import { describe, it, expect } from 'vitest';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 import keyboardFocusHandler from './keyboardFocusHandler';
 
@@ -75,7 +76,7 @@ const linkBE = {
   targetId: 'E',
 } as const;
 
-function test(
+function move(
   direction: 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown' | 'A',
   initialFocus: FocusedItemIdentifier<'sankey'> | null,
   align: 'left' | 'justify' = 'left',
@@ -86,99 +87,99 @@ function test(
 describe('<Sankey /> - keyboard navigation', () => {
   describe('ArrowRight', () => {
     it('should move to the first node if no current focus', async () => {
-      expect(test('ArrowRight', null)).to.deep.equal(nodeA);
+      expect(move('ArrowRight', null)).to.deep.equal(nodeA);
     });
 
     it('should move to the first the first link if focus is on node', async () => {
-      expect(test('ArrowRight', nodeA)).to.deep.equal(linkAC);
+      expect(move('ArrowRight', nodeA)).to.deep.equal(linkAC);
     });
 
     it('should not move if no node on the right', async () => {
-      expect(test('ArrowRight', nodeE)).to.deep.equal(nodeE);
+      expect(move('ArrowRight', nodeE)).to.deep.equal(nodeE);
     });
 
     it('should move to the target node', async () => {
-      expect(test('ArrowRight', linkAC)).to.deep.equal(nodeC);
+      expect(move('ArrowRight', linkAC)).to.deep.equal(nodeC);
     });
   });
 
   describe('ArrowLeft', () => {
     it('should move to the first node if no current focus', async () => {
-      expect(test('ArrowLeft', null)).to.deep.equal(nodeA);
+      expect(move('ArrowLeft', null)).to.deep.equal(nodeA);
     });
 
     it('should move to the first the first link if focus is on node', async () => {
-      expect(test('ArrowLeft', nodeC)).to.deep.equal(linkAC);
+      expect(move('ArrowLeft', nodeC)).to.deep.equal(linkAC);
     });
 
     it('should not move if no node on the left', async () => {
-      expect(test('ArrowLeft', nodeA)).to.deep.equal(nodeA);
+      expect(move('ArrowLeft', nodeA)).to.deep.equal(nodeA);
     });
 
     it('should move to the source node', async () => {
-      expect(test('ArrowLeft', linkAC)).to.deep.equal(nodeA);
+      expect(move('ArrowLeft', linkAC)).to.deep.equal(nodeA);
     });
   });
 
   describe('ArrowDown', () => {
     it('should move to the first node if no current focus', async () => {
-      expect(test('ArrowDown', null)).to.deep.equal(nodeA);
+      expect(move('ArrowDown', null)).to.deep.equal(nodeA);
     });
 
     it('should move to next node of same layer - align=left', async () => {
-      expect(test('ArrowDown', nodeC, 'left')).to.deep.equal(nodeD);
+      expect(move('ArrowDown', nodeC, 'left')).to.deep.equal(nodeD);
     });
 
     it('should move to next node of same layer - align=justify', async () => {
-      expect(test('ArrowDown', nodeC, 'justify')).to.deep.equal(nodeE);
+      expect(move('ArrowDown', nodeC, 'justify')).to.deep.equal(nodeE);
     });
 
     it('should loop on node of same layer', async () => {
-      expect(test('ArrowDown', nodeA)).to.deep.equal(nodeB);
-      expect(test('ArrowDown', nodeB)).to.deep.equal(nodeA);
+      expect(move('ArrowDown', nodeA)).to.deep.equal(nodeB);
+      expect(move('ArrowDown', nodeB)).to.deep.equal(nodeA);
     });
 
     it('should move to next link with same source', async () => {
-      expect(test('ArrowDown', linkAC)).to.deep.equal(linkAD);
-      expect(test('ArrowDown', linkAD)).to.deep.equal(linkAC);
+      expect(move('ArrowDown', linkAC)).to.deep.equal(linkAD);
+      expect(move('ArrowDown', linkAD)).to.deep.equal(linkAC);
     });
 
     it('should stay if source has no other link', async () => {
-      expect(test('ArrowDown', linkBE)).to.deep.equal(linkBE);
+      expect(move('ArrowDown', linkBE)).to.deep.equal(linkBE);
     });
   });
 
   describe('ArrowUp', () => {
     it('should move to the first node if no current focus', async () => {
-      expect(test('ArrowUp', null)).to.deep.equal(nodeA);
+      expect(move('ArrowUp', null)).to.deep.equal(nodeA);
     });
 
     it('should move to next node of same layer - align=left', async () => {
-      expect(test('ArrowUp', nodeC, 'left')).to.deep.equal(nodeD);
+      expect(move('ArrowUp', nodeC, 'left')).to.deep.equal(nodeD);
     });
 
     it('should move to next node of same layer - align=justify', async () => {
-      expect(test('ArrowUp', nodeC, 'justify')).to.deep.equal(nodeE);
+      expect(move('ArrowUp', nodeC, 'justify')).to.deep.equal(nodeE);
     });
 
     it('should loop on node of same layer', async () => {
-      expect(test('ArrowUp', nodeA)).to.deep.equal(nodeB);
-      expect(test('ArrowUp', nodeB)).to.deep.equal(nodeA);
+      expect(move('ArrowUp', nodeA)).to.deep.equal(nodeB);
+      expect(move('ArrowUp', nodeB)).to.deep.equal(nodeA);
     });
 
     it('should move to next link with same source', async () => {
-      expect(test('ArrowUp', linkAC)).to.deep.equal(linkAD);
-      expect(test('ArrowUp', linkAD)).to.deep.equal(linkAC);
+      expect(move('ArrowUp', linkAC)).to.deep.equal(linkAD);
+      expect(move('ArrowUp', linkAD)).to.deep.equal(linkAC);
     });
 
     it('should stay if source has no other link', async () => {
-      expect(test('ArrowUp', linkBE)).to.deep.equal(linkBE);
+      expect(move('ArrowUp', linkBE)).to.deep.equal(linkBE);
     });
   });
 
   it('should no move is the key is not an arrow key', async () => {
-    expect(test('A', null)).to.deep.equal(null);
-    expect(test('A', nodeC)).to.deep.equal(nodeC);
-    expect(test('A', linkAD)).to.deep.equal(linkAD);
+    expect(move('A', null)).to.deep.equal(null);
+    expect(move('A', nodeC)).to.deep.equal(nodeC);
+    expect(move('A', linkAD)).to.deep.equal(linkAD);
   });
 });

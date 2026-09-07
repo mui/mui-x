@@ -8,7 +8,6 @@ import {
   reactMajor,
   act,
 } from '@mui/internal-test-utils';
-import { stub, spy } from 'sinon';
 import { DataGrid, gridClasses, useGridApiRef } from '@mui/x-data-grid';
 import type { DataGridProps, GridColDef, GridApi } from '@mui/x-data-grid';
 import { ptBR } from '@mui/x-data-grid/locales';
@@ -25,6 +24,8 @@ import {
   sleep,
 } from 'test/utils/helperFn';
 import { isJSDOM, isOSX } from 'test/utils/skipIf';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import type { MockInstance } from 'vitest';
 
 const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
@@ -246,13 +247,14 @@ describe('<DataGrid /> - Layout & warnings', () => {
     });
 
     describe('swallow warnings', () => {
+      let consoleError: MockInstance;
+
       beforeEach(() => {
-        stub(console, 'error');
+        consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
       });
 
       afterEach(() => {
-        // @ts-expect-error beforeEach side effect
-        console.error.restore();
+        consoleError.mockRestore();
       });
 
       it('should have a stable height if the parent container has no intrinsic height', () => {
@@ -1174,7 +1176,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   it('should not render the "no rows" overlay when transitioning the loading prop from false to true', () => {
-    const NoRowsOverlay = spy(() => null);
+    const NoRowsOverlay = vi.fn(() => null);
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
@@ -1183,13 +1185,13 @@ describe('<DataGrid /> - Layout & warnings', () => {
       );
     }
     const { setProps } = render(<TestCase rows={[]} loading />);
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
     setProps({ loading: false, rows: [{ id: 1 }] });
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
   });
 
   it('should render the "no rows" overlay when changing the loading to false but not changing the rows prop', () => {
-    const NoRowsOverlay = spy(() => null);
+    const NoRowsOverlay = vi.fn(() => null);
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
@@ -1199,9 +1201,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
     }
     const rows: DataGridProps['rows'] = [];
     const { setProps } = render(<TestCase rows={rows} loading />);
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
     setProps({ loading: false });
-    expect(NoRowsOverlay.callCount).not.to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).not.to.equal(0);
   });
 
   // Doesn't work with mocked window.getComputedStyle
@@ -1404,7 +1406,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
     async () => {
       // Stub performance.now to drive the oscillation detector's elapsed-time check.
       let mockTime = 1000;
-      const performanceNowStub = stub(performance, 'now').callsFake(() => mockTime);
+      const performanceNowStub = vi.spyOn(performance, 'now').mockImplementation(() => mockTime);
       try {
         function TestCase({ height }: { height: number }) {
           return (
@@ -1434,7 +1436,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
         });
       } finally {
-        performanceNowStub.restore();
+        performanceNowStub.mockRestore();
       }
     },
   );

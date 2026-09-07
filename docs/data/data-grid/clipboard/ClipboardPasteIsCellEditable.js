@@ -48,7 +48,13 @@ const rows = [
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'product', headerName: 'Product', width: 150, editable: true },
+  {
+    field: 'product',
+    headerName: 'Product',
+    width: 150,
+    editable: true,
+    rowHeader: true,
+  },
   { field: 'quantity', headerName: 'Quantity', width: 120, editable: true },
   { field: 'price', headerName: 'Price', width: 120, editable: true },
   {

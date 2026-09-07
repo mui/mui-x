@@ -45,7 +45,7 @@ function ExpandableCell({ value }: GridRenderCellParams) {
 
 const columns: GridColDef[] = [
   { field: 'id' },
-  { field: 'username' },
+  { field: 'username', rowHeader: true },
   { field: 'age', type: 'number' },
   {
     field: 'bio',

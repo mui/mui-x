@@ -21,6 +21,10 @@ export function getComponentInfo(filename: string): ComponentInfo {
     filename,
     name,
     muiName: getMuiName(name),
+    // The scheduler components share one slots interface instead of each declaring a
+    // `<ComponentName>Slots`, which is what the builder looks for by default.
+    // `StandaloneEvent` is the only public component that takes no slots.
+    slotInterfaceName: name === 'StandaloneEvent' ? undefined : 'SchedulerSlots',
     apiPathname: `/x/api/scheduler/${kebabCase(name)}`,
     apiPagesDirectory: path.join(process.cwd(), `docs/pages/x/api/scheduler`),
     readFile: () => {

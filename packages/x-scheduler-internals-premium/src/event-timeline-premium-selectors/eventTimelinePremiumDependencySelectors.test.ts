@@ -4,6 +4,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import { describe, it, expect } from 'vitest';
 import { eventTimelinePremiumDependencySelectors } from './eventTimelinePremiumDependencySelectors';
 
 const TEST_RESOURCES = [ResourceBuilder.new().build()];

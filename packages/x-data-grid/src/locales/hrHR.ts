@@ -62,6 +62,11 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI Asistent',
 
+  // Formula bar (Premium formulas)
+  // formulaBarLabel: 'Formula bar',
+  // formulaBarInputLabel: 'Formula',
+  // formulaBarAddressLabel: 'Active cell',
+
   // Columns management text
   columnsManagementSearchTitle: 'Traži',
   columnsManagementNoColumns: 'Nema stupaca',

@@ -59,6 +59,7 @@ export default function CustomEditComponent() {
 const columns: GridColDef[] = [
   {
     field: 'places',
+    rowHeader: true,
     headerName: 'Places',
     width: 120,
   },

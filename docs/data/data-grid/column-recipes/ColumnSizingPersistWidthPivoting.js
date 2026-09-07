@@ -95,7 +95,7 @@ export default function ColumnSizingPersistWidthPivoting() {
   const [index, setIndex] = React.useState(0);
   const inputColumns = React.useMemo(
     () => [
-      { field: 'product', headerName: 'Product', key: index },
+      { field: 'product', headerName: 'Product', key: index, rowHeader: true },
       { field: 'region', headerName: 'Region' },
       { field: 'quarter', headerName: 'Quarter' },
       {

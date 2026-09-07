@@ -1,4 +1,5 @@
 import { scaleBand, scaleLinear } from '@mui/x-charts-vendor/d3-scale';
+import { describe, it, expect } from 'vitest';
 import { getSampledBandHighlight } from './getSampledBandHighlight';
 import { createGetBucketBarDimensions } from '../internals/createGetBarDimensions';
 import type { D3OrdinalScale } from '../models/axis';

@@ -47,6 +47,46 @@ export function buildDependenciesState(
 }
 
 /**
+ * Groups dependencies by the event id at one of their ends.
+ */
+export function groupByEventId(
+  dependencies: readonly SchedulerDependency[],
+  property: 'source' | 'target',
+): Map<SchedulerEventId, SchedulerDependency[]> {
+  const groups = new Map<SchedulerEventId, SchedulerDependency[]>();
+  for (const dependency of dependencies) {
+    const eventId = dependency[property];
+    const group = groups.get(eventId);
+    if (group) {
+      group.push(dependency);
+    } else {
+      groups.set(eventId, [dependency]);
+    }
+  }
+  return groups;
+}
+
+// Cached per lookup instance so `addDependency` does not regroup everything on each attempt.
+const bySourceCache = new WeakMap<
+  Map<SchedulerDependencyId, SchedulerDependency>,
+  Map<SchedulerEventId, SchedulerDependency[]>
+>();
+
+/**
+ * Groups the retained (deduplicated) dependencies by their `source` event id.
+ */
+export function groupRetainedDependenciesBySource(
+  dependencyModelLookup: Map<SchedulerDependencyId, SchedulerDependency>,
+): Map<SchedulerEventId, SchedulerDependency[]> {
+  let groups = bySourceCache.get(dependencyModelLookup);
+  if (groups == null) {
+    groups = groupByEventId(Array.from(dependencyModelLookup.values()), 'source');
+    bySourceCache.set(dependencyModelLookup, groups);
+  }
+  return groups;
+}
+
+/**
  * Whether the dependency cannot be created or deleted because one of its endpoint
  * events is read-only. The single definition shared by the store guard and the
  * `isModelReadOnly` selector.

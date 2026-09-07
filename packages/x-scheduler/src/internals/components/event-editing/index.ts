@@ -1,5 +1,6 @@
 export {
   useEventEditingContext,
+  useEventEditingTriggerProps,
   EventEditingProvider,
   EventEditingTrigger,
   CompactEventEditingProvider,

@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import useLazyRef from '@mui/utils/useLazyRef';
 import {
   useGridSelector,
@@ -15,7 +14,7 @@ import {
 import type {
   GridDataSourceGroupNode,
   GridRowModelUpdate,
-  GridRowModel,
+  GridRowModelReplace,
   GridUpdateRowParams,
   GridRowId,
 } from '@mui/x-data-grid';
@@ -69,13 +68,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   }, [apiRef, nestedDataManager]);
 
   const handleEditRow = React.useCallback(
-    (params: GridUpdateRowParams, updatedRow: GridRowModel) => {
-      if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
-        // Reset the outdated cache, only if the row is _actually_ updated
-        apiRef.current.dataSource.cache.clear();
-      }
+    (params: GridUpdateRowParams, rowUpdate: GridRowModelUpdate | GridRowModelReplace) => {
       const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), params.rowId) as string[];
-      apiRef.current.updateNestedRows([updatedRow], groupKeys);
+      apiRef.current.updateNestedRows([rowUpdate], groupKeys);
     },
     [apiRef],
   );

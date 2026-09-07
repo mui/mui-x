@@ -6,7 +6,7 @@ import type {
   CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
-import type { EventCalendarLocaleText } from '@mui/x-scheduler/models';
+import type { EventCalendarLocaleText, SchedulerSlotsAndSlotProps } from '@mui/x-scheduler/models';
 import type { WeekViewProps } from '@mui/x-scheduler/week-view';
 
 export interface StandaloneWeekViewPremiumProps<TEvent extends object, TResource extends object>
@@ -18,7 +18,8 @@ export interface StandaloneWeekViewPremiumProps<TEvent extends object, TResource
       | keyof EventCalendarSchedulerParametersOverrides
       | CollapsibleResourcesParameterKeys
     >,
-    EventCalendarSchedulerParametersOverrides {
+    EventCalendarSchedulerParametersOverrides,
+    SchedulerSlotsAndSlotProps {
   /**
    * Configuration applied to the view, keyed by the view name.
    * For the `week` view, `startTime` and `endTime` (whole hours between 0 and 24)

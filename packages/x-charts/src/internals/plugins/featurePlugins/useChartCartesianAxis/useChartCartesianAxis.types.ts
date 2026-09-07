@@ -22,6 +22,8 @@ import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
 import type { UseChartBrushSignature } from '../useChartBrush';
 import type { SamplingState } from './sampling.types';
+import type { ChartsActivationEvent } from '../../../../models/events';
+import type { ChartsTextStyle } from '../../../getWordsByLines';
 
 /**
  * The axes' configuration after computing.
@@ -51,10 +53,10 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
-  onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
+  onAxisClick?: (event: ChartsActivationEvent, data: null | ChartsAxisData) => void;
   /**
    * The function called when the pointer position corresponds to a new axis data item.
    * This update can either be caused by a pointer movement, or an axis update.
@@ -132,6 +134,8 @@ export interface UseChartCartesianAxisState {
     axesGap: number;
     x: DefaultedXAxis[];
     y: DefaultedYAxis[];
+    /** Only used to measure tick labels. Never merged into the rendered tick style. */
+    defaultTickLabelStyle?: ChartsTextStyle;
   };
   /**
    * The controlled axis item highlighted.

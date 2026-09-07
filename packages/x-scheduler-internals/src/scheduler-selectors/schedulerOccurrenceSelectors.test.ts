@@ -6,6 +6,7 @@ import {
   ResourceBuilder,
   getEventTimelinePremiumStateFromParameters,
 } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { processDate } from '../process-date';
 import { schedulerOccurrenceSelectors } from './schedulerOccurrenceSelectors';
 

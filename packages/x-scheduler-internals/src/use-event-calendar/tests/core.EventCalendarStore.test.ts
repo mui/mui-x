@@ -1,6 +1,7 @@
 import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { vi, describe, it, expect } from 'vitest';
 import {
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
@@ -112,6 +113,95 @@ describe('Core - EventCalendarStore', () => {
         store.startEditing(occurrence('event-1'), 'armed');
 
         expect(store.state.editingOccurrence?.mode).to.equal('armed');
+      });
+
+      it('should call `onEventEditingStart` with the occurrence before recording the editing state', () => {
+        const onEventEditingStart = vi.fn();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const edited = occurrence('event-1');
+
+        store.startEditing(edited);
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        expect(onEventEditingStart.mock.lastCall?.[0]).to.equal(edited);
+        expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('edit');
+        expect(onEventEditingStart.mock.lastCall?.[1].occurrence).to.equal(edited);
+        expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
+      });
+
+      it('should not call `onEventEditingStart` when arming, then call it on the armed → edit transition', () => {
+        const onEventEditingStart = vi.fn();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const edited = occurrence('event-1');
+
+        store.startEditing(edited, 'armed');
+        expect(onEventEditingStart.mock.calls.length).to.equal(0);
+
+        const nativeEvent = new Event('click');
+        store.setEditingMode('edit', nativeEvent);
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        expect(onEventEditingStart.mock.lastCall?.[0]).to.equal(edited);
+        expect(onEventEditingStart.mock.lastCall?.[1].event).to.equal(nativeEvent);
+      });
+
+      it('should disarm when `onEventEditingStart` cancels the armed → edit transition', () => {
+        const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        store.startEditing(occurrence('event-1'), 'armed');
+
+        store.setEditingMode('edit');
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        // The armed state keeps document-wide guards active, so a canceled edit fully disarms.
+        expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should not record the editing state when `onEventEditingStart` cancels', () => {
+        const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should clear the creation placeholder when `onEventEditingStart` cancels a creation', () => {
+        const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const placeholder = {
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T10:30:00', 'default'),
+        } as any;
+        store.setOccurrencePlaceholder(placeholder);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('creation');
+        expect(onEventEditingStart.mock.lastCall?.[1].occurrence).to.equal(
+          onEventEditingStart.mock.lastCall?.[0],
+        );
+        expect(store.state.editingOccurrence).to.equal(null);
+        expect(store.state.occurrencePlaceholder).to.equal(null);
+      });
+
+      it('should forward the native event that initiated the creation placeholder', () => {
+        const onEventEditingStart = vi.fn();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const nativeEvent = new Event('click');
+        const placeholder = {
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T10:30:00', 'default'),
+        } as any;
+        store.setOccurrencePlaceholder(placeholder, nativeEvent);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(onEventEditingStart.mock.lastCall?.[1].event).to.equal(nativeEvent);
       });
     });
 

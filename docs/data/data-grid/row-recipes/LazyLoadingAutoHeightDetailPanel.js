@@ -32,7 +32,7 @@ async function getProducts(orderId) {
 }
 
 const detailPanelColumns = [
-  { field: 'name', headerName: 'Product', flex: 1 },
+  { field: 'name', headerName: 'Product', flex: 1, rowHeader: true },
   {
     field: 'quantity',
     headerName: 'Quantity',

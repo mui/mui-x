@@ -7,6 +7,7 @@
 import {
   interpolate,
 } from '@mui/x-charts-vendor/d3-interpolate';
+import { describe, it, test, expect } from 'vitest';
 
 describe('d3-interpolate', () => {
   it('exports valid functions', () => {

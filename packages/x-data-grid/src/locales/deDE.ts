@@ -57,6 +57,11 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   toolbarAssistant: 'KI-Assistent',
 
+  // Formula bar (Premium formulas)
+  // formulaBarLabel: 'Formula bar',
+  // formulaBarInputLabel: 'Formula',
+  // formulaBarAddressLabel: 'Active cell',
+
   // Columns management text
   columnsManagementSearchTitle: 'Suche',
   columnsManagementNoColumns: 'Keine Spalten',

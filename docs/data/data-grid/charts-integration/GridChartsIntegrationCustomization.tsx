@@ -23,7 +23,7 @@ import { downloads } from './dataset';
 
 const columns: GridColDef[] = [
   { field: 'id', chartable: false },
-  { field: 'timestamp', headerName: 'Timestamp', type: 'date' },
+  { field: 'timestamp', headerName: 'Timestamp', type: 'date', rowHeader: true },
   { field: 'version', headerName: 'Version', width: 100 },
   { field: 'downloads', headerName: 'Downloads', type: 'number' },
 ];

@@ -46,6 +46,7 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
   {
     field: 'fullName',
     headerName: 'Full name',
+    rowHeader: true,
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
     width: 160,

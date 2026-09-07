@@ -1,5 +1,6 @@
 import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';
 import { createPickerRenderer, describeRangeValidation } from 'test/utils/pickers';
+import { describe } from 'vitest';
 
 describe('<SingleInputDateTimeRangeField /> - Describe Validation', () => {
   const { render } = createPickerRenderer();

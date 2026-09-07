@@ -1,4 +1,4 @@
-import { describe } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { scaleLinear, scaleLog } from '@mui/x-charts-vendor/d3-scale';
 import { Flatbush } from '../../../Flatbush';
 import { findClosestPoints } from './findClosestPoints';

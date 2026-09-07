@@ -83,7 +83,7 @@ const createRandomRow = () => {
 
 const columns: GridColDef[] = [
   { field: 'id' },
-  { field: 'username', width: 150 },
+  { field: 'username', width: 150, rowHeader: true },
   { field: 'age', width: 80, type: 'number' },
 ];
 

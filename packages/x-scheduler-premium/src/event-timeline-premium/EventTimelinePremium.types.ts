@@ -5,7 +5,7 @@ import type {
   EventTimelinePremiumStore,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
-import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import type { EventTimelineLocaleText, SchedulerSlotsAndSlotProps } from '@mui/x-scheduler/models';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 
 export type EventTimelinePremiumApiRef<
@@ -16,7 +16,10 @@ export type EventTimelinePremiumApiRef<
 >;
 
 export interface EventTimelinePremiumProps<TEvent extends object, TResource extends object>
-  extends React.HTMLAttributes<HTMLDivElement>, EventTimelinePremiumParameters<TEvent, TResource> {
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
+    EventTimelinePremiumParameters<TEvent, TResource>,
+    SchedulerSlotsAndSlotProps {
   /**
    * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
    * @default true

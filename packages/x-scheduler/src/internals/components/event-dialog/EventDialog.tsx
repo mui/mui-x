@@ -23,6 +23,7 @@ import {
   useEventEditingStyledContext,
   FormContent,
 } from '../event-editing';
+import { EventContextMenuProvider } from '../event-context-menu';
 import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
 import { AnchoredEventToolbar } from '../event-toolbar';
 import ReadonlyContent from './ReadonlyContent';
@@ -159,7 +160,8 @@ function AnchoredEventToolbarSurface() {
 }
 
 /**
- * Mounts the desktop dialog during the `'edit'` stage, anchored to the element editing started from.
+ * Mounts the desktop dialog during the `'edit'` stage, anchored to the element editing started from,
+ * or to another mounted trigger of the same occurrence once that one is gone.
  * Open state comes from the store; the anchor comes from the editing context.
  */
 function EventDialogSurface() {
@@ -192,7 +194,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
       value={optionalRenderers ?? (EMPTY_OBJECT as EventEditingOptionalRenderers)}
     >
       <EventEditingProvider surface="dialog">
-        {children}
+        <EventContextMenuProvider>{children}</EventContextMenuProvider>
         <AnchoredEventToolbarSurface />
         <EventDialogSurface />
         {RecurringScopeDialogRenderer && <RecurringScopeDialogRenderer />}

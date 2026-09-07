@@ -23,6 +23,7 @@ const baseColumnOptions = {
 const columns = [
   {
     field: 'item',
+    rowHeader: true,
     headerName: 'Item/Description',
     ...baseColumnOptions,
     flex: 3,

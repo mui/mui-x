@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { getVerticalCenterRatio, translateZoom, zoomAtPoint } from './useZoom.utils';
 
 describe('zoomAtPoint', () => {

@@ -32,6 +32,11 @@ export default defineConfig({
     { id: '@mui/x-data-grid', expand: componentPackage },
     { id: '@mui/x-data-grid-pro', expand: componentPackage },
     { id: '@mui/x-data-grid-premium', expand: componentPackage },
+    // The injectable formula feature is a lowercase sub-path (excluded by the
+    // component rule above) but its size matters: it carries the formula
+    // engine, evaluation glue and editor components that `featureDependencies`
+    // keeps out of the main entry.
+    { id: '@mui/x-data-grid-premium/formula' },
     { id: '@mui/x-charts', expand: componentPackage },
     { id: '@mui/x-charts-pro', expand: componentPackage },
     { id: '@mui/x-charts-premium', expand: componentPackage },

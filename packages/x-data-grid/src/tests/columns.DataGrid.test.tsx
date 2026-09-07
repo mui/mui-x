@@ -6,6 +6,7 @@ import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/
 import { isJSDOM } from 'test/utils/skipIf';
 import type { RefObject } from '@mui/x-internals/types';
 import type { GridApiCommunity } from '@mui/x-data-grid/internals';
+import { describe, it, expect } from 'vitest';
 
 const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 

@@ -3,6 +3,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
+import { describe, it, expect } from 'vitest';
 import { ChartsWebGLLayer } from '../../ChartsWebGLLayer';
 import { ScatterWebGLPlot } from './ScatterWebGLPlot';
 

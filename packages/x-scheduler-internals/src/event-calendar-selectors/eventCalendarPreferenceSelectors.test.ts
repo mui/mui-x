@@ -2,6 +2,7 @@ import {
   DEFAULT_EVENT_CALENDAR_STATE,
   getEventCalendarStateFromParameters,
 } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelectors';
 import {
   DEFAULT_EVENT_CALENDAR_PREFERENCES,

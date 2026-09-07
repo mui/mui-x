@@ -3,6 +3,7 @@ import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, getCleanedSelectedContent } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<TimeField /> - Selection', () => {
   const { render } = createPickerRenderer();

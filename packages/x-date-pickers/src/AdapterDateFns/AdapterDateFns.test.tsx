@@ -9,6 +9,7 @@ import {
   buildFieldInteractions,
 } from 'test/utils/pickers';
 import { enUS, fr, de, ru } from 'date-fns/locale';
+import { describe, it, expect } from 'vitest';
 
 describe('<AdapterDateFns />', () => {
   describeGregorianAdapter(AdapterDateFns, {

@@ -3,6 +3,7 @@ import type {
   RecurringEventByDayValue,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
+import { describe, it, expect } from 'vitest';
 import { parseRRule, serializeRRule } from './rRuleString';
 
 describe('recurring-events/rRuleString', () => {

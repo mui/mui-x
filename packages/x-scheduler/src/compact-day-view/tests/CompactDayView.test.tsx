@@ -7,6 +7,7 @@ import { screen, within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { CompactDayView } from '@mui/x-scheduler/compact-day-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { describe, it, expect } from 'vitest';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 

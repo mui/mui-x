@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { calculateZoomEnd, calculateZoomStart, calculateZoomFromPointImpl } from './zoom-utils';
 import type { ZoomData } from '../../models';
 

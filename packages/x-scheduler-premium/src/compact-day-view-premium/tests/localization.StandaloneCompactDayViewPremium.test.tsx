@@ -1,6 +1,7 @@
 import { createSchedulerRenderer, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
 import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
+import { describe, it, expect } from 'vitest';
 
 describe('<StandaloneCompactDayViewPremium />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: DEFAULT_TESTING_VISIBLE_DATE });

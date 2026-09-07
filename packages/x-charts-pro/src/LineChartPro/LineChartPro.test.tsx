@@ -1,6 +1,7 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
+import { describe, it, expect } from 'vitest';
 import { LineChartPro } from './LineChartPro';
 
 describe('<LineChartPro /> - License', () => {

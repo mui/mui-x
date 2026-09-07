@@ -1,4 +1,5 @@
 import type { GridMultiSelectColDef } from '@mui/x-data-grid';
+import { describe, it, expect } from 'vitest';
 import { GRID_MULTI_SELECT_COL_DEF } from './gridMultiSelectColDef';
 
 describe('GRID_MULTI_SELECT_COL_DEF', () => {

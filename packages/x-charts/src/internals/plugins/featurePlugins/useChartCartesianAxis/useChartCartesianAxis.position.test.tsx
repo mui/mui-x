@@ -2,6 +2,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('useChartCartesianAxis - positions', () => {
   const { render } = createRenderer();

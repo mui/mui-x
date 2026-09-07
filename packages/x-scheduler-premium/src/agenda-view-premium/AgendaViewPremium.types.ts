@@ -6,7 +6,7 @@ import type {
   CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
-import type { EventCalendarLocaleText } from '@mui/x-scheduler/models';
+import type { EventCalendarLocaleText, SchedulerSlotsAndSlotProps } from '@mui/x-scheduler/models';
 import type { AgendaViewProps } from '@mui/x-scheduler/agenda-view';
 
 export interface StandaloneAgendaViewPremiumProps<TEvent extends object, TResource extends object>
@@ -18,7 +18,8 @@ export interface StandaloneAgendaViewPremiumProps<TEvent extends object, TResour
       | keyof EventCalendarSchedulerParametersOverrides
       | CollapsibleResourcesParameterKeys
     >,
-    EventCalendarSchedulerParametersOverrides {
+    EventCalendarSchedulerParametersOverrides,
+    SchedulerSlotsAndSlotProps {
   /**
    * Configuration applied to the view, keyed by the view name.
    * The `agenda` view does not support any configuration keys yet.

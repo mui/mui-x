@@ -5,6 +5,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { getFakeContextValue } from 'test/utils/tree-view/fakeContextValue';
 import { describeSlotsConformance } from 'test/utils/describeSlotsConformance';
 // It's not publicly exported, so, using a relative import
+import { describe } from 'vitest';
 import { TreeViewContext } from '../internals/TreeViewProvider/TreeViewContext';
 
 describe('<TreeItem />', () => {

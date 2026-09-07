@@ -98,10 +98,12 @@ const columns = [
   {
     field: 'day',
     headerName: 'Day',
+    rowHeader: true,
   },
   {
     field: 'time',
     headerName: 'Time',
+    rowHeader: true,
     minWidth: 160,
   },
   {

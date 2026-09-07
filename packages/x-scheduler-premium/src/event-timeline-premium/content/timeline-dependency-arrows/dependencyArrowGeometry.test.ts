@@ -9,6 +9,7 @@ import {
 } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import { describe, it, expect } from 'vitest';
 import {
   buildDependencyArrowRoutes,
   buildRoundedOrthogonalPath,

@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/internal-test-utils';
 import { DataGrid } from '@mui/x-data-grid';
 import type { DataGridProps, GridRowModel, GridColDef } from '@mui/x-data-grid';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

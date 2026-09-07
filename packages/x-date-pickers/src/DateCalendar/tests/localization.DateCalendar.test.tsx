@@ -9,6 +9,7 @@ import 'dayjs/locale/fr';
 import 'moment/locale/he';
 import 'moment/locale/fr';
 import moment from 'moment';
+import { describe, it, expect } from 'vitest';
 
 const ADAPTERS_TO_USE: AdapterName[] = ['date-fns', 'dayjs', 'luxon', 'moment'];
 

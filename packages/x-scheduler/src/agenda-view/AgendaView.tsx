@@ -24,7 +24,7 @@ import type { AgendaViewProps } from './AgendaView.types';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import { EventSkeleton } from '../internals/components/event-skeleton';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
-import { EventEditingTrigger } from '../internals/components/event-editing';
+import { EventContextMenuTrigger } from '../internals/components/event-context-menu';
 
 const AgendaViewRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -270,14 +270,14 @@ export const AgendaView = React.memo(
                 {!isLoading &&
                   occurrences.map((occurrence) => (
                     <li key={occurrence.key} className={classes.agendaViewEventListItem}>
-                      <EventEditingTrigger occurrence={occurrence}>
+                      <EventContextMenuTrigger occurrence={occurrence}>
                         <EventItem
                           occurrence={occurrence}
                           date={date}
                           variant="regular"
                           ariaLabelledBy={`${schedulerId}-DayHeaderCell-${date.key}`}
                         />
-                      </EventEditingTrigger>
+                      </EventContextMenuTrigger>
                     </li>
                   ))}
               </EventsList>

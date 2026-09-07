@@ -14,6 +14,7 @@ const columns = [
   },
   {
     field: 'username',
+    rowHeader: true,
     width: 200,
     resizable: false,
   },

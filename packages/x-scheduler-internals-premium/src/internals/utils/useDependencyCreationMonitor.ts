@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import type { DragLocationHistory, ElementDragType } from '@atlaskit/pragmatic-drag-and-drop/types';
 import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -42,9 +42,10 @@ function getDependencyDropTarget(
 
 // TODO(dependencies public flip): source these messages from the locale text so the
 // feedback is translatable.
-// The `Record` is exhaustive on the rejection union: a new reason (e.g. the cycle
-// guard of #22858) fails to compile until it brings a message.
+// The `Record` is exhaustive on the rejection union: a new reason fails to compile
+// until it brings a message.
 const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
+  cyclicDependency: 'This dependency would create a cycle between events.',
   duplicateDependency: 'This dependency already exists between these two events.',
   recurringEvent: 'Dependencies cannot involve recurring events.',
   readOnlyEvent: 'Dependencies cannot involve read-only events.',

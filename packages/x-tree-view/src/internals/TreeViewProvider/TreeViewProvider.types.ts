@@ -7,7 +7,11 @@ import type {
   TreeViewAnyStore,
 } from '../models';
 import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
-import type { TreeViewClasses, TreeViewSlotProps, TreeViewSlots } from './TreeViewStyleContext';
+import type {
+  TreeViewClasses,
+  TreeViewStyleContextSlotProps,
+  TreeViewStyleContextSlots,
+} from './TreeViewStyleContext';
 import type { UseTreeViewBuildContextParameters } from './useTreeViewBuildContext';
 
 export type TreeViewItemPluginsRunner = (
@@ -41,6 +45,6 @@ export interface TreeViewProviderProps<
 > extends UseTreeViewBuildContextParameters<TStore> {
   children: React.ReactNode;
   classes: Partial<TreeViewClasses> | undefined;
-  slots: TreeViewSlots | undefined;
-  slotProps: TreeViewSlotProps | undefined;
+  slots: TreeViewStyleContextSlots | undefined;
+  slotProps: TreeViewStyleContextSlotProps | undefined;
 }

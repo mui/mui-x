@@ -9,6 +9,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { describe, it, expect } from 'vitest';
 
 describe('<TimelineGrid.EventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();

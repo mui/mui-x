@@ -1,6 +1,7 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { Gauge } from '@mui/x-charts/Gauge';
 import { describeConformance } from 'test/utils/charts/describeConformance';
+import { describe } from 'vitest';
 
 describe('<Gauge />', () => {
   const { render } = createRenderer();

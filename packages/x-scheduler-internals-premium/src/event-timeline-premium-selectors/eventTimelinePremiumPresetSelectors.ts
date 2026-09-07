@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   getDisplayedHourRange,
@@ -10,8 +10,8 @@ import type { EventTimelinePremiumState as State } from '../use-event-timeline-p
 import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS } from '../internals/utils/preset-utils';
 
 export const eventTimelinePremiumPresetSelectors = {
-  preset: createSelector((state: State) => state.preset),
-  presets: createSelector((state: State) => state.presets),
+  preset: (state: State) => state.preset,
+  presets: (state: State) => state.presets,
   config: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,

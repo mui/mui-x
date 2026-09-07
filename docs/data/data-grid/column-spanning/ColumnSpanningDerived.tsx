@@ -88,6 +88,7 @@ const slotColumnCommonFields: Partial<GridColDef> = {
 const columns: GridColDef<Row>[] = [
   {
     field: 'day',
+    rowHeader: true,
     headerName: 'Day',
   },
   {

@@ -130,7 +130,7 @@ function FlashOnChange({ children, changeId, align = 'left', fontWeight, sx }) {
 
 const columns = [
   { field: 'symbol', headerName: 'Symbol', width: 100 },
-  { field: 'name', headerName: 'Company', flex: 1, minWidth: 180 },
+  { field: 'name', headerName: 'Company', flex: 1, minWidth: 180, rowHeader: true },
   {
     field: 'price',
     headerName: 'Price',

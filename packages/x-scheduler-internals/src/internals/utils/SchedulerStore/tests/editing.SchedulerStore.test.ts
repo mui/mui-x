@@ -8,6 +8,9 @@ import {
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { processEvent } from '@mui/x-scheduler-internals/process-event';
+import { vi, describe, it, expect } from 'vitest';
 import { schedulerOtherSelectors } from '../../../../scheduler-selectors';
 import { processDate } from '../../../../process-date';
 import { getOccurrenceKey, getRecurringOccurrenceKey } from '../../event-utils';
@@ -183,6 +186,104 @@ storeClasses.forEach((storeClass) => {
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).not.to.equal(null);
       });
     });
+
+    describe('startEditing one-shot invariant', () => {
+      function buildOccurrence() {
+        return {
+          id: 'standup',
+          key: 'standup::2025-07-07',
+          displayTimezone: {
+            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
+            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
+          },
+        } as any;
+      }
+
+      it('should not re-run `onEventEditingStart` when the occurrence is already open in the surface', () => {
+        const onEventEditingStart = vi.fn();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const occurrence = buildOccurrence();
+
+        expect(store.startEditing(occurrence)).to.equal(true);
+        expect(store.startEditing(occurrence)).to.equal(true);
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      });
+
+      it('should run `onEventEditingStart` again when the previous start was canceled', () => {
+        const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
+          eventDetails.cancel(),
+        );
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const occurrence = buildOccurrence();
+
+        expect(store.startEditing(occurrence)).to.equal(false);
+        expect(store.startEditing(occurrence)).to.equal(false);
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(2);
+      });
+
+      it('should run `onEventEditingStart` when the armed occurrence opens the surface', () => {
+        const onEventEditingStart = vi.fn();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const occurrence = buildOccurrence();
+
+        store.startEditing(occurrence, 'armed');
+        expect(onEventEditingStart.mock.calls.length).to.equal(0);
+
+        store.setEditingMode('edit');
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      });
+    });
+
+    describe('`onEventEditingStart` positioning anchor', () => {
+      function buildOccurrence() {
+        return {
+          id: 'standup',
+          key: 'standup::2025-07-07',
+          displayTimezone: {
+            start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
+            end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
+          },
+        } as any;
+      }
+
+      it('should expose the trigger as `anchor` when no dedicated anchor is provided', () => {
+        const onEventEditingStart = vi.fn();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const trigger = document.createElement('button');
+
+        store.startEditing(buildOccurrence(), 'edit', undefined, trigger);
+
+        expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(trigger);
+        expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(trigger);
+      });
+
+      it('should expose the dedicated anchor without replacing the trigger', () => {
+        const onEventEditingStart = vi.fn();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const trigger = document.createElement('button');
+        const anchor = document.createElement('div');
+
+        store.startEditing(buildOccurrence(), 'edit', undefined, trigger, anchor);
+
+        expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(trigger);
+        expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(anchor);
+      });
+
+      it('should forward the dedicated anchor when the armed occurrence opens the surface', () => {
+        const onEventEditingStart = vi.fn();
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const trigger = document.createElement('button');
+        const anchor = document.createElement('div');
+
+        store.startEditing(buildOccurrence(), 'armed');
+        store.setEditingMode('edit', undefined, trigger, anchor);
+
+        expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(trigger);
+        expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(anchor);
+      });
+    });
   });
 });
 
@@ -262,6 +363,59 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.key).to.not.equal(armedKey);
       expect(occurrence.displayTimezone.start.value).toEqualDateTime(resizedStart);
       expect(occurrence.displayTimezone.end.value).toEqualDateTime(resizedEnd);
+    });
+
+    it('should keep a cross-timezone deleted occurrence excluded after the events round-trip through strings', () => {
+      // A daily 21:00 New York series stored as instant strings: the stored exDate
+      // must re-parse onto the same data-timezone day it excludes.
+      const nyEvent = EventBuilder.new()
+        .id('ny-daily')
+        .withDataTimezone('America/New_York')
+        .singleDay('2025-02-02T02:00:00Z')
+        .rrule({ freq: 'DAILY', interval: 1 })
+        .build();
+      let latestEvents: SchedulerEvent[] = [nyEvent];
+      const store = new storeClass.Value(
+        {
+          ...DEFAULT_PARAMS,
+          events: latestEvents,
+          onEventsChange: (events: SchedulerEvent[]) => {
+            latestEvents = events;
+          },
+        },
+        adapter,
+      );
+
+      // Delete the March 1st (New York) occurrence — March 2nd 02:00Z.
+      store.deleteRecurringEvent({
+        occurrenceStart: adapter.date('2025-03-02T02:00:00Z', 'default'),
+        eventId: 'ny-daily',
+        onSubmit: () => {},
+      });
+      store.selectRecurringEventScope('only-this');
+
+      // Reprocess the serialized model the way a fresh mount would.
+      const reprocessed = processEvent(
+        latestEvents[0],
+        'default',
+        adapter,
+        schedulerRecurringEventsPlugin,
+      );
+      const visibleStart = adapter.date('2025-02-27T00:00:00Z', 'default');
+      const days = schedulerRecurringEventsPlugin
+        .getOccurrencesForVisibleDays(
+          reprocessed,
+          visibleStart,
+          adapter.addDays(visibleStart, 4),
+          adapter,
+          'default',
+        )
+        .map((occurrence) =>
+          adapter.formatByString(occurrence.dataTimezone.start.value, 'yyyy-MM-dd'),
+        );
+
+      expect(days).to.include('2025-02-28');
+      expect(days).to.not.include('2025-03-01');
     });
   });
 });

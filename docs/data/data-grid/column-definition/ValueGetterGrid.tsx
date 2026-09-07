@@ -22,6 +22,7 @@ const columns: GridColDef[] = [
   {
     field: 'fullName',
     headerName: 'Full name',
+    rowHeader: true,
     width: 160,
     valueGetter: getFullName,
   },

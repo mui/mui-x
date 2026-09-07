@@ -90,6 +90,11 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   headerName?: string;
   /**
+   * If `true`, the cells in this column identify their respective rows and receive the `rowheader` ARIA role.
+   * @default false
+   */
+  rowHeader?: boolean;
+  /**
    * The tooltip text shown when the column header name is truncated.
    */
   description?: string;

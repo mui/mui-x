@@ -1,7 +1,7 @@
-import { spy } from 'sinon';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const DEFAULT_PARAMS = {
@@ -81,18 +81,18 @@ describe('Preset - EventTimelinePremiumStore', () => {
 
   describe('Method: setPreset', () => {
     it('should update preset and call onPresetChange when value changes and is uncontrolled', () => {
-      const onPresetChange = spy();
+      const onPresetChange = vi.fn();
       const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onPresetChange }, adapter);
 
       store.setPreset('dayAndMonth', {} as any);
 
       expect(store.state.preset).to.equal('dayAndMonth');
-      expect(onPresetChange.calledOnce).to.equal(true);
-      expect(onPresetChange.lastCall.firstArg).to.equal('dayAndMonth');
+      expect(onPresetChange.mock.calls.length).to.equal(1);
+      expect(onPresetChange.mock.lastCall?.[0]).to.equal('dayAndMonth');
     });
 
     it('should NOT mutate store but call onPresetChange when is controlled', () => {
-      const onPresetChange = spy();
+      const onPresetChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, preset: 'dayAndWeek', onPresetChange },
         adapter,
@@ -101,12 +101,12 @@ describe('Preset - EventTimelinePremiumStore', () => {
       store.setPreset('dayAndMonth', {} as any);
 
       expect(store.state.preset).to.equal('dayAndWeek');
-      expect(onPresetChange.calledOnce).to.equal(true);
-      expect(onPresetChange.lastCall.firstArg).to.equal('dayAndMonth');
+      expect(onPresetChange.mock.calls.length).to.equal(1);
+      expect(onPresetChange.mock.lastCall?.[0]).to.equal('dayAndMonth');
     });
 
     it('should do nothing if setting the same preset: no state change, no callback', () => {
-      const onPresetChange = spy();
+      const onPresetChange = vi.fn();
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, defaultPreset: 'monthAndYear', onPresetChange },
         adapter,
@@ -115,7 +115,7 @@ describe('Preset - EventTimelinePremiumStore', () => {
       store.setPreset('monthAndYear', {} as any);
 
       expect(store.state.preset).to.equal('monthAndYear');
-      expect(onPresetChange.called).to.equal(false);
+      expect(onPresetChange.mock.calls.length).to.equal(0);
     });
 
     it('should NOT mutate store when onPresetChange cancels the change', () => {

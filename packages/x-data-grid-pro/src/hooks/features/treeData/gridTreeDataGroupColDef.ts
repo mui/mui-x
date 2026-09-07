@@ -12,6 +12,7 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editab
   filterable: false,
   disableColumnMenu: true,
   disableReorder: true,
+  rowHeader: true,
   align: 'left',
   width: 200,
   valueGetter: (value, row, column, apiRef) => {

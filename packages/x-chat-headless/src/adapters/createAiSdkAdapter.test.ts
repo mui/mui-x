@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createAiSdkAdapter, type AiSdkUIMessageChunk } from './createAiSdkAdapter';
+import { createAiSdkAdapter } from './createAiSdkAdapter';
+import type { AiSdkUIMessageChunk } from './createAiSdkAdapter';
 import { ChatStreamError } from '../stream/ChatStreamError';
 import type { ChatMessage } from '../types/chat-entities';
 import type { ChatMessageChunk, ChatStreamEnvelope } from '../types/chat-stream';

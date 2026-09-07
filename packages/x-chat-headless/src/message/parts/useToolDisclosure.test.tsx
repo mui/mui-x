@@ -3,11 +3,8 @@ import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils
 import { describe, expect, it } from 'vitest';
 import type { ChatToolInvocationState } from '../../types/chat-message-parts';
 import type { ToolPartOwnerState } from './ToolPart';
-import {
-  type ChatToolGetExpanded,
-  ToolDisclosureContext,
-  useToolDisclosure,
-} from './toolDisclosure';
+import { ToolDisclosureContext, useToolDisclosure } from './toolDisclosure';
+import type { ChatToolGetExpanded } from './toolDisclosure';
 
 const { render } = createRenderer();
 

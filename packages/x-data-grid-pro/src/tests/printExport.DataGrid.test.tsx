@@ -1,9 +1,9 @@
-import { spy } from 'sinon';
 import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Print export', () => {
   const { render } = createRenderer();
@@ -73,7 +73,7 @@ describe('<DataGridPro /> - Print export', () => {
       it(`should have 'currencyPair' ${printVisible ? "'visible'" : "'hidden'"} in print and ${
         gridVisible ? "'visible'" : "'hidden'"
       } in screen`, async () => {
-        const onColumnVisibilityModelChange = spy();
+        const onColumnVisibilityModelChange = vi.fn();
 
         render(
           <Test
@@ -89,7 +89,7 @@ describe('<DataGridPro /> - Print export', () => {
           />,
         );
 
-        expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+        expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
 
         await act(() =>
           apiRef.current?.exportDataAsPrint({
@@ -97,15 +97,15 @@ describe('<DataGridPro /> - Print export', () => {
           }),
         );
 
-        expect(onColumnVisibilityModelChange.callCount).to.equal(2);
+        expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
         // verify column visibility has been set
-        expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+        expect(onColumnVisibilityModelChange.mock.calls[0][0]).to.deep.equal({
           currencyPair: printVisible,
           id: true,
         });
 
         // verify column visibility has been restored
-        expect(onColumnVisibilityModelChange.secondCall.firstArg).to.deep.equal({
+        expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
           currencyPair: gridVisible,
           id: false,
         });
@@ -115,22 +115,22 @@ describe('<DataGridPro /> - Print export', () => {
 
   describe('columns to print', () => {
     it(`should ignore 'allColumns' if 'fields' is provided`, async () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
 
       render(<Test onColumnVisibilityModelChange={onColumnVisibilityModelChange} />);
 
-      expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ fields: ['id'], allColumns: true }));
 
-      expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[0][0]).to.deep.equal({
         currencyPair: false,
         id: true,
       });
     });
 
     it(`should ignore 'disableExport' if 'fields' is provided`, async () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
 
       render(
         <Test
@@ -139,18 +139,18 @@ describe('<DataGridPro /> - Print export', () => {
         />,
       );
 
-      expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ fields: ['id'], allColumns: true }));
 
-      expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[0][0]).to.deep.equal({
         currencyPair: false,
         id: true,
       });
     });
 
     it(`should apply 'disableExport' even if 'allColumns' is set`, async () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
 
       render(
         <Test
@@ -159,18 +159,18 @@ describe('<DataGridPro /> - Print export', () => {
         />,
       );
 
-      expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ allColumns: true }));
 
-      expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[0][0]).to.deep.equal({
         currencyPair: true,
         id: false,
       });
     });
 
     it(`should print hidden columns if 'allColumns' set to true`, async () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
 
       render(
         <Test
@@ -180,11 +180,11 @@ describe('<DataGridPro /> - Print export', () => {
         />,
       );
 
-      expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ allColumns: true }));
 
-      expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[0][0]).to.deep.equal({
         currencyPair: true,
         id: true,
       });

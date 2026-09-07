@@ -1,5 +1,6 @@
 import jscodeshift from 'jscodeshift';
 import path from 'path';
+import { describe, it, expect } from 'vitest';
 import transform, { testConfig } from './index';
 import readFile from '../../../util/readFile';
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { ChartsWebGLLayer } from './ChartsWebGLLayer';

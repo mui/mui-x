@@ -5,6 +5,7 @@ import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { useYAxis } from '@mui/x-charts/hooks';
 import { screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<BarChart />', () => {
   const { render } = createRenderer();

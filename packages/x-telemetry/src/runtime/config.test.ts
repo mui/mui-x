@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getTelemetryEnvConfig } from './config';

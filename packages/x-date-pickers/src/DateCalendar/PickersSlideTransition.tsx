@@ -138,7 +138,12 @@ export function PickersSlideTransition(inProps: SlideTransitionProps) {
   const classes = useUtilityClasses(classesProp, ownerState);
   const theme = useTheme();
   if (reduceAnimations) {
-    return <div className={clsx(classes.root, className)}>{children}</div>;
+    // `role="none"` keeps the day rows owned by the calendar grid.
+    return (
+      <div role="none" className={clsx(classes.root, className)}>
+        {children}
+      </div>
+    );
   }
 
   const transitionClasses = {

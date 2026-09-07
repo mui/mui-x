@@ -29,7 +29,7 @@ const rows = [
 ];
 
 const columns = [
-  { field: 'name', width: 150 },
+  { field: 'name', width: 150, rowHeader: true },
   { field: 'stars', width: 150 },
 ];
 

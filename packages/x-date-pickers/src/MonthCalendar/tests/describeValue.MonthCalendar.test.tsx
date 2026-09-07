@@ -2,6 +2,7 @@ import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, adapterToUse, describeValue } from 'test/utils/pickers';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe, expect } from 'vitest';
 
 describe('<MonthCalendar /> - Describe Value', () => {
   const { render } = createPickerRenderer();

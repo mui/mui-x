@@ -78,7 +78,7 @@ const rows = [
 ];
 
 const columns = [
-  { field: 'product', headerName: 'Product' },
+  { field: 'product', headerName: 'Product', rowHeader: true },
   { field: 'region', headerName: 'Region' },
   { field: 'quarter', headerName: 'Quarter' },
   {

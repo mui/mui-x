@@ -56,7 +56,7 @@
     "eventCreation": {
       "type": {
         "name": "union",
-        "description": "{ duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
+        "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
       }
     },
     "eventModelStructure": { "type": { "name": "object" } },
@@ -66,6 +66,7 @@
     },
     "localeText": { "type": { "name": "object" } },
     "onCollapsedResourcesChange": { "type": { "name": "func" } },
+    "onEventEditingStart": { "type": { "name": "func" } },
     "onEventsChange": { "type": { "name": "func" } },
     "onPreferencesChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
@@ -89,6 +90,12 @@
     "resources": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "shouldEventRequireResource": { "type": { "name": "bool" }, "default": "false" },
     "showCurrentTimeIndicator": { "type": { "name": "bool" }, "default": "true" },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -122,6 +129,14 @@
   "imports": [
     "import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';",
     "import { EventCalendarPremium } from '@mui/x-scheduler-premium';"
+  ],
+  "slots": [
+    {
+      "name": "eventDialogGeneralTab",
+      "description": "The content of the \"General\" tab of the event editing surface:\nthe dialog on regular views, the compact editing drawer on compact views.\nIt is rendered inside the tab panel, so it must not render a tab panel of its own.\nReturn a fragment rather than a wrapper element to keep the spacing between the sections.",
+      "default": "EventDialogGeneralTabContent",
+      "class": null
+    }
   ],
   "classes": [
     {
@@ -476,6 +491,30 @@
       "key": "eventColorIndicator",
       "className": "MuiEventCalendarPremium-eventColorIndicator",
       "description": "Styles applied to event color indicator elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenu",
+      "className": "MuiEventCalendarPremium-eventContextMenu",
+      "description": "Styles applied to the event context menu root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenuDeleteItem",
+      "className": "MuiEventCalendarPremium-eventContextMenuDeleteItem",
+      "description": "Styles applied to the event context menu delete item element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenuEditItem",
+      "className": "MuiEventCalendarPremium-eventContextMenuEditItem",
+      "description": "Styles applied to the event context menu edit item element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventContextMenuShowDetailsItem",
+      "className": "MuiEventCalendarPremium-eventContextMenuShowDetailsItem",
+      "description": "Styles applied to the event context menu show details item element (read-only events).",
       "isGlobal": false
     },
     {
@@ -1355,5 +1394,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler-premium/src/event-calendar-premium/EventCalendarPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/drag-interactions/\">Event Calendar - Drag Interactions</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/editing/\">Event Calendar - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/events/\">Event Calendar - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/lazy-loading/\">Event Calendar - Lazy Loading Events <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/localization/\">Event Calendar - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/navigation/\">Event Calendar - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/preferences/\">Event Calendar - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/resources/\">Event Calendar - Resources</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-scheduler/components/event-dialog/\">Scheduler - Event dialog</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/drag-interactions/\">Event Calendar - Drag Interactions</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/editing/\">Event Calendar - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/events/\">Event Calendar - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/lazy-loading/\">Event Calendar - Lazy Loading Events <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/localization/\">Event Calendar - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/navigation/\">Event Calendar - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/preferences/\">Event Calendar - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/resources/\">Event Calendar - Resources</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>"
 }

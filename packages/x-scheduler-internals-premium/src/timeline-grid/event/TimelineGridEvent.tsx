@@ -14,9 +14,10 @@ import type {
 import {
   useDraggableEvent,
   generateOccurrenceFromEvent,
-  useElementPositionInCollection,
+  computeElementPositionInCollection,
   dateToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
+import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -55,6 +56,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     occurrenceKey,
     renderDragPreview,
     isDraggable,
+    elementPosition: elementPositionProp,
     nativeButton = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -122,12 +124,17 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     source: 'TimelineGridEvent',
   }));
 
-  const elementPosition = useElementPositionInCollection({
-    start,
-    end,
-    collection: config,
-    durationMs: config.durationMs,
-  });
+  const elementPosition = React.useMemo(
+    () =>
+      elementPositionProp ??
+      computeElementPositionInCollection(adapter, {
+        start,
+        end,
+        collection: config,
+        durationMs: config.durationMs,
+      }),
+    [adapter, config, elementPositionProp, end, start],
+  );
   const { position, duration, startingBeforeEdge, endingAfterEdge } = elementPosition;
 
   const {
@@ -202,7 +209,9 @@ export namespace TimelineGridEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {}
+      useDraggableEvent.PublicParameters {
+    elementPosition?: useElementPositionInCollection.ReturnValue;
+  }
 
   export interface SharedDragData {
     eventId: SchedulerEventId;

@@ -59,7 +59,6 @@ export default defineConfig({
     alias,
   },
   test: {
-    globals: true,
     setupFiles: [fileURLToPath(new URL('test/setupVitest.ts', import.meta.url))],
     // Inline so Vite resolves @mui/material's `react-transition-group/TransitionGroupContext`
     // directory import (legacy `main`/`module`, no `exports`), which native ESM rejects.
@@ -97,6 +96,11 @@ export default defineConfig({
       headless: true,
       screenshotFailures: false,
       commands: {
+        async resetMousePosition(ctx) {
+          // Move the pointer out of the page. A pointer left over the content
+          // makes components react to hover during unrelated tests.
+          await ctx.page.mouse.move(10_000, 10_000);
+        },
         async setupCrashHandler(ctx) {
           ctx.page.on('crash', (page) => {
             console.error(`Browser page crashed! URL: ${page.url()}`);

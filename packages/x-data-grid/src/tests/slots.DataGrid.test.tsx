@@ -5,10 +5,10 @@ import {
   reactMajor,
   screen,
 } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import type { DataGridProps } from '@mui/x-data-grid';
 import { getCell, getRow, openLongTextViewPopup } from 'test/utils/helperFn';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Slots', () => {
   const { render } = createRenderer();
@@ -104,7 +104,7 @@ describe('<DataGrid /> - Slots', () => {
     });
 
     it('should pass the props from slotProps.columnHeaderFilterIconButton to the column header filter icon', async () => {
-      const onClick = spy();
+      const onClick = vi.fn();
       const { user } = render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
@@ -118,11 +118,11 @@ describe('<DataGrid /> - Slots', () => {
           />
         </div>,
       );
-      expect(onClick.callCount).to.equal(0);
+      expect(onClick.mock.calls.length).to.equal(0);
       const button = screen.getByLabelText('Show filters');
       await user.click(button);
-      expect(onClick.lastCall.args[0]).to.have.property('field', 'brand');
-      expect(onClick.lastCall.args[1]).to.have.property('target', button);
+      expect(onClick.mock.lastCall?.[0]).to.have.property('field', 'brand');
+      expect(onClick.mock.lastCall?.[1]).to.have.property('target', button);
     });
   });
 

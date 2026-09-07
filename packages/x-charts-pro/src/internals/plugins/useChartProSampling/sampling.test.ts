@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import {
   MAX_RENDERED_POINTS,
   MIN_ELEMENT_SIZE_PX,

@@ -1,5 +1,6 @@
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DEFAULT_LOCALE } from '@mui/x-date-pickers/locales';
+import { describe, it, expect } from 'vitest';
 import {
   getSectionVisibleValue,
   getSectionsBoundaries,

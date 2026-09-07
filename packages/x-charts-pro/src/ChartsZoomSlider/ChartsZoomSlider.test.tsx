@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { LineChartPro } from '../LineChartPro/LineChartPro';
 import type { LineChartProProps } from '../LineChartPro/LineChartPro';
 import { chartsAxisZoomSliderThumbClasses } from './internals/chartsAxisZoomSliderThumbClasses';

@@ -1,5 +1,5 @@
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCenter } from 'test/utils/charts/getCenter';
 import { chartsSvgLayerClasses } from '@mui/x-charts/ChartsSvgLayer';

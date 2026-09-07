@@ -4,7 +4,7 @@ import { gridClasses, DataGridPro } from '@mui/x-data-grid-pro';
 import type { DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<DataGridPro /> - Column headers', () => {
   const { render } = createRenderer();

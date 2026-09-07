@@ -3,6 +3,7 @@ import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePi
 import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, adapterToUse, describeRangeValidation } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe, it, expect } from 'vitest';
 
 describe('<StaticDateRangePicker />', () => {
   const { render } = createPickerRenderer();

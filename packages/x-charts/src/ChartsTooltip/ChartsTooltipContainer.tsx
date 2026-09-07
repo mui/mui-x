@@ -287,6 +287,10 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     [positionRef],
   );
 
+  // `anchorEl` is only set once the portal below is mounted. Rendering the popper
+  // without an anchor makes Popper warn about an invalid `anchorEl`.
+  const tooltipAnchorEl = itemPosition ? anchorEl : pointerAnchorEl;
+
   const isMouse = pointerType === 'mouse' || isFineMainPointer;
   const isTouch = pointerType === 'touch' || !isFineMainPointer;
 
@@ -345,7 +349,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
           chartsLayerContainerRef.current,
         )}
       <NoSsr>
-        {isOpen && (
+        {isOpen && tooltipAnchorEl && (
           <ChartsTooltipRoot
             {...other}
             // The key is here to make sure the tooltip uses the new anchor immediately.
@@ -358,7 +362,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
               (!isTooltipNodeAnchored && isMouse ? 'right-start' : 'top')
             }
             popperRef={popperRef}
-            anchorEl={itemPosition ? anchorEl : pointerAnchorEl}
+            anchorEl={tooltipAnchorEl}
             modifiers={modifiers}
             container={other.container ?? chartsLayerContainerRef.current}
             popperOptions={{ ...other.popperOptions, strategy: 'fixed' }}

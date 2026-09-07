@@ -34,6 +34,7 @@ export function EventDragPreview(props: RenderDragPreviewParameters) {
     store ?? fakeStore,
     store ? schedulerEventSelectors.color : () => 'teal' as const,
     props.data.id,
+    undefined,
   );
 
   return (

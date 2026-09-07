@@ -20,7 +20,7 @@ export function useKeyboardEventCreation(
   getCreationPlaceholder: (
     params: GetKeyboardCreationPlaceholderParams,
   ) => CreationPlaceholderFields,
-): (() => void) | undefined {
+): ((event?: Event) => void) | undefined {
   const store = useSchedulerStoreContext();
   const creationConfig = useStore(store, schedulerEventSelectors.creationConfig);
 
@@ -28,10 +28,13 @@ export function useKeyboardEventCreation(
     return undefined;
   }
 
-  return () => {
-    store.setOccurrencePlaceholder({
-      type: 'creation',
-      ...getCreationPlaceholder({ creationConfig }),
-    });
+  return (event?: Event) => {
+    store.setOccurrencePlaceholder(
+      {
+        type: 'creation',
+        ...getCreationPlaceholder({ creationConfig }),
+      },
+      event,
+    );
   };
 }

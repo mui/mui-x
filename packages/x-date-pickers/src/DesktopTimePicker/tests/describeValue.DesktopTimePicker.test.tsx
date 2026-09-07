@@ -9,6 +9,7 @@ import {
 } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe } from 'vitest';
 
 describe('<DesktopTimePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();

@@ -1,4 +1,5 @@
 import type { ScaleBand } from '@mui/x-charts-vendor/d3-scale';
+import { describe, it, expect } from 'vitest';
 import { getNormalizedAxisScale } from './getAxisScale';
 
 describe('getNormalizedAxisScale - shared domain cache', () => {

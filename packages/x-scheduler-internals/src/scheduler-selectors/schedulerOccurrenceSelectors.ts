@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
@@ -89,19 +89,12 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
 );
 
 export const schedulerOccurrenceSelectors = {
-  isStarted: createSelector(
-    (state: State) => state.adapter,
-    (state: State) => state.nowUpdatedEveryMinute,
-    (adapter, now, start: SchedulerProcessedDate) => {
-      return adapter.isBefore(start.value, now) || adapter.isEqual(start.value, now);
-    },
-  ),
-  isEnded: createSelector(
-    (state: State) => state.adapter,
-    (state: State) => state.nowUpdatedEveryMinute,
-    (adapter, now, end: SchedulerProcessedDate) => {
-      return adapter.isBefore(end.value, now);
-    },
-  ),
+  isStarted: (state: State, start: SchedulerProcessedDate) => {
+    const now = state.nowUpdatedEveryMinute;
+    return state.adapter.isBefore(start.value, now) || state.adapter.isEqual(start.value, now);
+  },
+  isEnded: (state: State, end: SchedulerProcessedDate) => {
+    return state.adapter.isBefore(end.value, state.nowUpdatedEveryMinute);
+  },
   groupedByResourceList: occurrencesGroupedByResourceListSelector,
 };

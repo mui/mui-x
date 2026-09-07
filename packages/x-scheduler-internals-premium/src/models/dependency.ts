@@ -93,7 +93,7 @@ export type SchedulerDependencyEventRejectionReason =
   'recurringEvent' | 'unknownEvent' | 'readOnlyEvent';
 
 export type SchedulerDependencyRejectionReason =
-  SchedulerDependencyEventRejectionReason | 'duplicateDependency';
+  SchedulerDependencyEventRejectionReason | 'duplicateDependency' | 'cyclicDependency';
 
 export type SchedulerAddDependencyResult =
   | { status: 'added'; id: SchedulerDependencyId }
@@ -102,7 +102,8 @@ export type SchedulerAddDependencyResult =
       reason: SchedulerDependencyEventRejectionReason;
       eventId: SchedulerEventId;
     }
-  | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId };
+  | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
+  | { status: 'rejected'; reason: 'cyclicDependency' };
 
 /**
  * State slice holding the dependencies collection.

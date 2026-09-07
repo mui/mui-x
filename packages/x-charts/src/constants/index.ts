@@ -12,3 +12,6 @@ export const DEFAULT_AXIS_SIZE_WIDTH = 45;
 export const DEFAULT_AXIS_SIZE_HEIGHT = 25;
 
 export const AXIS_LABEL_DEFAULT_HEIGHT = 20;
+
+/** Font size the axes render their tick labels with, unless `tickLabelStyle` overrides it. */
+export const DEFAULT_TICK_LABEL_FONT_SIZE = 12;

@@ -8,6 +8,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 
 describe('<EventCalendarPremium /> - License', () => {
   const { render } = createSchedulerRenderer({

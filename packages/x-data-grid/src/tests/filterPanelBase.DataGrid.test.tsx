@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import {
   DataGrid,
   GridFilterPanelBase,
@@ -10,6 +9,7 @@ import {
 import type { DataGridProps, GridFilterModel, GridFilterPanelProps } from '@mui/x-data-grid';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnValues, getSelectByName } from 'test/utils/helperFn';
+import { vi, describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -77,7 +77,7 @@ describe('<DataGrid /> - Filter panel base (controlled)', () => {
   }
 
   it('should not change the grid filter model until the draft is applied', () => {
-    const onDraftChange = spy();
+    const onDraftChange = vi.fn();
     render(
       <TestCase
         slots={{ filterPanel: ControlledFilterPanel }}
@@ -99,7 +99,7 @@ describe('<DataGrid /> - Filter panel base (controlled)', () => {
 
     // Editing the panel updates the draft...
     fireEvent.change(getSelectByName('Value'), { target: { value: 'true' } });
-    expect(onDraftChange.callCount).to.be.greaterThan(0);
+    expect(onDraftChange.mock.calls.length).to.be.greaterThan(0);
 
     // ...but the grid is not filtered yet.
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -110,8 +110,8 @@ describe('<DataGrid /> - Filter panel base (controlled)', () => {
   });
 
   it('should report edits through onFilterModelChange without mutating the grid state', () => {
-    const onDraftChange = spy();
-    const onFilterModelChange = spy();
+    const onDraftChange = vi.fn();
+    const onFilterModelChange = vi.fn();
     render(
       <TestCase
         slots={{ filterPanel: ControlledFilterPanel }}
@@ -135,17 +135,17 @@ describe('<DataGrid /> - Filter panel base (controlled)', () => {
     setOperatorValue('equals');
 
     // The draft received the change with the upsert reason.
-    expect(onDraftChange.lastCall.args[0].items[0].operator).to.equal('equals');
-    expect(onDraftChange.lastCall.args[1]).to.equal('upsertFilterItem');
+    expect(onDraftChange.mock.lastCall?.[0].items[0].operator).to.equal('equals');
+    expect(onDraftChange.mock.lastCall?.[1]).to.equal('upsertFilterItem');
 
     // The grid's own filter model was not touched (it stays controlled by the draft):
     // its onFilterModelChange never fired and the rows keep matching the original model.
-    expect(onFilterModelChange.callCount).to.equal(0);
+    expect(onFilterModelChange.mock.calls.length).to.equal(0);
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
   });
 
   it('should call onClose when the last valid filter is removed', () => {
-    const onClose = spy();
+    const onClose = vi.fn();
     render(
       <TestCase
         slots={{ filterPanel: ControlledFilterPanel }}
@@ -164,6 +164,6 @@ describe('<DataGrid /> - Filter panel base (controlled)', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
-    expect(onClose.callCount).to.equal(1);
+    expect(onClose.mock.calls.length).to.equal(1);
   });
 });

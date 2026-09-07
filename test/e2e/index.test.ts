@@ -14,6 +14,7 @@ import {
 } from '@playwright/test';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 import { pickersOutlinedInputClasses } from '@mui/x-date-pickers/PickersTextField';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
@@ -266,6 +267,37 @@ async function initializeEnvironment(
         },
       );
 
+      // this test sometimes fails on webkit for some reason
+      it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
+        'should reorder rows by dropping the row reorder cell on another row',
+        async () => {
+          await renderFixture('DataGridPro/RowReorder');
+
+          const readRowOrder = () =>
+            page.evaluate(() =>
+              Array.from(
+                document.querySelectorAll('[role="gridcell"][data-field="brand"]'),
+                (cell) => cell.textContent,
+              ),
+            );
+
+          await waitFor(async () => {
+            expect(await readRowOrder()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+          });
+
+          const nikeReorderCell = page.locator(
+            '[role="row"][data-rowindex="0"] [data-field="__reorder__"] [draggable]',
+          );
+          const pumaRow = page.locator('[role="row"][data-rowindex="2"]');
+          // Drop into the lower half of the last row, so the dragged row lands below it.
+          await nikeReorderCell.dragTo(pumaRow, { targetPosition: { x: 20, y: 45 } });
+
+          await waitFor(async () => {
+            expect(await readRowOrder()).to.deep.equal(['Adidas', 'Puma', 'Nike']);
+          });
+        },
+      );
+
       // https://github.com/mui/mui-x/pull/9117
       it('should not trigger sorting after resizing', async () => {
         await renderFixture('DataGridPro/NotResize');
@@ -361,6 +393,30 @@ async function initializeEnvironment(
           await page.keyboard.press('Enter');
 
           await page.getByText('1/31/2025, 4:05:00 PM').waitFor();
+        },
+      );
+
+      // https://github.com/mui/mui-x/issues/23414
+      // Chromium clears the typing buffer of a date section whenever the value of the input
+      // is written programmatically. Applying the new value after `onValueChange` deferred the
+      // state update past the change event, so React reverted the input and rewrote it on the
+      // next render, and every keystroke started a new buffer instead of extending the previous
+      // one. Only the year is asserted, because the order of the day and month sections follows
+      // the system locale on Chromium.
+      it.skipIf(browserType.name() !== 'chromium')(
+        'should keep the typing buffer of a date section between keystrokes',
+        async () => {
+          await renderFixture('DataGrid/KeyboardEditDateWithValueChange');
+
+          await page.dblclick('[role="gridcell"][data-field="birthday"]');
+          const input = page.locator('[role="gridcell"][data-field="birthday"] input');
+
+          // Fill the first two sections to move the focus to the year section.
+          await page.keyboard.type('0611');
+          // Each of these keystrokes fires a change event and must extend the year buffer.
+          await page.keyboard.type('1986');
+
+          expect(await input.inputValue()).to.match(/^1986-/);
         },
       );
 

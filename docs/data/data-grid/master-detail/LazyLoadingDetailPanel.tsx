@@ -78,7 +78,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
             density="compact"
             loading={isLoading}
             columns={[
-              { field: 'name', headerName: 'Product', flex: 1 },
+              { field: 'name', headerName: 'Product', flex: 1, rowHeader: true },
               {
                 field: 'quantity',
                 headerName: 'Quantity',

@@ -2,6 +2,7 @@ import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { disposeSymbol } from '@mui/x-internals/disposable';
+import { describe, it, expect } from 'vitest';
 import { schedulerRecurringEventsPlugin } from '../../internals/plugins/schedulerRecurringEventsPlugin';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 

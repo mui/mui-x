@@ -45,7 +45,7 @@ function ExpandableCell({ value }) {
 
 const columns = [
   { field: 'id' },
-  { field: 'username' },
+  { field: 'username', rowHeader: true },
   { field: 'age', type: 'number' },
   {
     field: 'bio',

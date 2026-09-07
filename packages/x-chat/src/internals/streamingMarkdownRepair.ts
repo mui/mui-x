@@ -15,29 +15,30 @@ export type RepairMarkdown = (text: string) => string;
  */
 export const fallbackRepair: RepairMarkdown = normalizeMarkdownForRender;
 
-// `remend` is an ESM-only package and a declared dependency of this package. The
-// build downlevels dynamic `import()` to `require()` in the CJS output, and a static
-// `require()` of an ES module throws `ERR_REQUIRE_ESM`. Reading the specifier from a
-// variable (plus the `@vite-ignore`/`webpackIgnore` hints) keeps that `require`/
-// `import` dynamic and unanalyzable, so it stays a genuine runtime import that fails
-// gracefully at call time instead of at build time. The `.catch` in `loadRemend`
-// then degrades to `fallbackRepair` — so a runtime that can't resolve the specifier
-// (or a CJS `require()` of the ESM module) costs nothing beyond the failed attempt.
-const REMEND_SPECIFIER = 'remend';
+// `remend` is an ESM-only package and a declared dependency of this package, so the
+// specifier it is imported under has to differ per output format. `#remend` is a
+// subpath import (see this package's `imports` field) that resolves to the real
+// `remend` package under the `import` condition and to a stub under `require`.
+//
+// The literal specifier matters: it has to stay statically analyzable so a consumer's
+// bundler resolves and bundles `remend` like any other dependency. Reading it from a
+// variable instead leaves an unresolvable bare `import('remend')` in the browser
+// bundle, which can never resolve at runtime (no import map) — making the upgrade dead
+// code, and, under bundlers that wrap dynamic imports in a preload helper, dispatching
+// a global load-error event on every render.
 function defaultRemendImporter(): Promise<unknown> {
-  // eslint-disable-next-line jsdoc/no-bad-blocks -- bundler hint comments, not JSDoc
-  return import(/* @vite-ignore */ /* webpackIgnore: true */ REMEND_SPECIFIER);
+  return import('#remend');
 }
 
 let remendPromise: Promise<RepairMarkdown> | undefined;
 
 /**
- * Lazily loads `remend` and returns a repair function. If the import rejects — e.g.
- * the CJS build downlevelled it to a `require()` of the ESM-only module, or a
- * consumer's bundler can't resolve the runtime specifier — it transparently degrades
- * to {@link fallbackRepair}. Cached after the first call.
+ * Lazily loads `remend` and returns a repair function. When it can't be loaded — the
+ * CJS build resolves `#remend` to a stub, and a consumer may have deduped or blocked
+ * the dependency — it transparently degrades to {@link fallbackRepair}. Cached after
+ * the first call.
  *
- * @param importer Injectable for tests; defaults to `() => import('remend')`.
+ * @param importer Injectable for tests; defaults to `() => import('#remend')`.
  */
 export function loadRemend(
   importer: () => Promise<unknown> = defaultRemendImporter,

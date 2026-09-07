@@ -7,6 +7,7 @@ import type {
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
 import type { EventCalendarLocaleText } from '../models/translations';
+import type { SchedulerSlotsAndSlotProps } from '../models/slots';
 import type { EventCalendarClasses } from './eventCalendarClasses';
 
 export type EventCalendarApiRef<
@@ -21,7 +22,8 @@ export interface EventCalendarProps<TEvent extends object, TResource extends obj
       EventCalendarParameters<TEvent, TResource>,
       keyof EventCalendarSchedulerParametersOverrides
     >,
-    EventCalendarSchedulerParametersOverrides {
+    EventCalendarSchedulerParametersOverrides,
+    SchedulerSlotsAndSlotProps {
   /**
    * Override or extend the styles applied to the component.
    */

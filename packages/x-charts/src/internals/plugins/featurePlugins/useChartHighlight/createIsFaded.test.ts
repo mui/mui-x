@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { createIsFaded } from './createIsFaded';
 
 const seriesId = 'id1';

@@ -79,7 +79,7 @@ const EventCalendarRootStyled = styled('div', {
   },
 }));
 
-const EventCalendarSidePanel = styled('aside', {
+const EventCalendarSidePanel = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'SidePanel',
 })(({ theme }) => ({
@@ -150,7 +150,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
     const { children, className, ...other } = props;
 
     const store = useEventCalendarStoreContext();
-    const { classes, localeText } = useEventCalendarStyledContext();
+    const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
 
     const view = useStore(store, eventCalendarViewSelectors.view);
     const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
@@ -158,6 +158,11 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
     // The compact drawer keeps its own state (default closed) rather than reusing
     // `isSidePanelOpen` (default open), so it never covers the calendar on load.
     const [isCompactDrawerOpen, setIsCompactDrawerOpen] = React.useState(false);
+
+    // Delays hiding the panel from AT until the Collapse's exit transition finishes, so
+    // focusable content is never inside an aria-hidden subtree mid-animation (axe
+    // aria-hidden-focus).
+    const [isSidePanelHidden, setIsSidePanelHidden] = React.useState(!isSidePanelOpen);
 
     let content: React.ReactNode;
 
@@ -206,7 +211,13 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
 
         <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
           <EventCalendarSidePanelCollapse
+            component="aside"
+            id={`${schedulerId}-side-panel`}
             in={isSidePanelOpen}
+            aria-hidden={!isSidePanelOpen && isSidePanelHidden ? true : undefined}
+            onEnter={() => setIsSidePanelHidden(false)}
+            onEntered={() => setIsSidePanelHidden(false)}
+            onExited={() => setIsSidePanelHidden(true)}
             orientation="horizontal"
             className={classes.sidePanelCollapse}
           >

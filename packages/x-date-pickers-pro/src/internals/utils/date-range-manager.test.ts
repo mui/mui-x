@@ -1,5 +1,6 @@
 import { adapterToUse } from 'test/utils/pickers';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
+import { describe, it, expect } from 'vitest';
 import { calculateRangeChange, calculateRangePreview } from './date-range-manager';
 import type { DateRange } from '../../models';
 

@@ -179,6 +179,39 @@ export function getPrimaryResourceId(
   return resource;
 }
 
+export type ResourceSelectionMode = 'single' | 'multiple';
+
+/**
+ * Resolves whether an occurrence should be edited (and saved) as single- or multi-resource.
+ *
+ * - Creating: `canHaveMultipleResources` decides, full stop. A creation placeholder can already
+ *   carry a `resource` (e.g. the Event Timeline pre-selects the row it was created in), but that
+ *   only seeds an entry — it doesn't get to pick the picker, exactly like the Event Calendar,
+ *   whose creation placeholder never carries a resource at all.
+ * - Editing: the shape of `resource` is the source of truth and is never overridden — a string
+ *   means single, an array (including `[]`) means multiple. Only when `resource` carries no
+ *   shape (`null` or `undefined`) does the mode fall back to `canHaveMultipleResources`.
+ *
+ * `canHaveMultipleResources` is resolved by the caller from the `eventCreation` prop, or
+ * inferred from the rest of the data — see `schedulerEventSelectors.canHaveMultipleResources`.
+ */
+export function getResourceSelectionMode(
+  resource: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
+  canHaveMultipleResources: boolean,
+  isCreating: boolean,
+): ResourceSelectionMode {
+  if (isCreating) {
+    return canHaveMultipleResources ? 'multiple' : 'single';
+  }
+  if (Array.isArray(resource)) {
+    return 'multiple';
+  }
+  if (resource != null) {
+    return 'single';
+  }
+  return canHaveMultipleResources ? 'multiple' : 'single';
+}
+
 export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: TemporalSupportedObject;

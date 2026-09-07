@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import {
   DataGrid,
   GridFilterInputValue,
@@ -14,6 +13,7 @@ import type {
 } from '@mui/x-data-grid';
 import { createRenderer, fireEvent, screen, within } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getSelectByName } from 'test/utils/helperFn';
+import { vi, describe, it, expect } from 'vitest';
 
 function setColumnValue(columnValue: string) {
   fireEvent.change(getSelectByName('Column'), {
@@ -222,7 +222,7 @@ describe('<DataGrid /> - Filter panel', () => {
   });
 
   it('should reset value if the new operator has no input component', () => {
-    const onFilterModelChange = spy();
+    const onFilterModelChange = vi.fn();
 
     render(
       <TestCase
@@ -250,12 +250,12 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(getSelectByName('Operator').value).to.equal('contains');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
-    expect(onFilterModelChange.callCount).to.equal(0);
+    expect(onFilterModelChange.mock.calls.length).to.equal(0);
 
     setOperatorValue('isEmpty');
 
-    expect(onFilterModelChange.callCount).to.equal(1);
-    expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
+    expect(onFilterModelChange.mock.calls.length).to.equal(1);
+    expect(onFilterModelChange.mock.lastCall?.[0].items[0].value).to.equal(undefined);
 
     expect(getSelectByName('Operator').value).to.equal('isEmpty');
   });
@@ -443,7 +443,7 @@ describe('<DataGrid /> - Filter panel', () => {
   });
 
   it('should close filter panel when removing the last filter', async () => {
-    const onFilterModelChange = spy();
+    const onFilterModelChange = vi.fn();
 
     render(
       <TestCase
@@ -620,7 +620,7 @@ describe('<DataGrid /> - Filter panel', () => {
     });
 
     it('should reset the filter value when picking the blank option', async () => {
-      const onFilterModelChange = spy();
+      const onFilterModelChange = vi.fn();
       const { user } = render(
         <TestCase
           initialState={{
@@ -637,7 +637,7 @@ describe('<DataGrid /> - Filter panel', () => {
       const listbox = await openValueOptions(user);
       await user.click(within(listbox).getByRole('option', { name: 'any' }));
 
-      expect(onFilterModelChange.lastCall.firstArg.items).to.deep.equal([
+      expect(onFilterModelChange.mock.lastCall?.[0].items).to.deep.equal([
         { id: 1, field: 'country', operator: 'is', value: undefined },
       ]);
     });

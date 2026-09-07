@@ -56,6 +56,11 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   toolbarAssistant: 'Assistant IA',
 
+  // Formula bar (Premium formulas)
+  // formulaBarLabel: 'Formula bar',
+  // formulaBarInputLabel: 'Formula',
+  // formulaBarAddressLabel: 'Active cell',
+
   // Columns management text
   columnsManagementSearchTitle: 'Rechercher',
   columnsManagementNoColumns: 'Pas de colonnes',

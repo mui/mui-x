@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import { BarChartPremium } from '../BarChartPremium';
 
 describe('<BarWebGLPlot />', () => {

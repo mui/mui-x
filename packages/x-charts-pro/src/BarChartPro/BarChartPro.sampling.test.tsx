@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { barClasses } from '@mui/x-charts/BarChart';
+import { describe, it, expect } from 'vitest';
 import { BarChartPro } from './BarChartPro';
 
 describe('<BarChartPro /> - Sampling', () => {

@@ -49,6 +49,7 @@ const columns = [
   {
     field: 'description',
     headerName: 'Description',
+    rowHeader: true,
     width: 170,
   },
   {

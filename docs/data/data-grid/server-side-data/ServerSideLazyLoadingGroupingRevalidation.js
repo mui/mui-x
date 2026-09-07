@@ -240,6 +240,7 @@ const columns = [
   {
     field: 'name',
     headerName: 'Company',
+    rowHeader: true,
     width: 220,
   },
   {

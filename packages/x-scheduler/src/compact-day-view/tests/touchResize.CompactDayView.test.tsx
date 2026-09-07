@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
@@ -9,6 +8,7 @@ import {
   simulatePointerResize,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
+import { vi, describe, it, expect } from 'vitest';
 
 /**
  * Touch resize uses pointer events, not native drag-and-drop, so it is driven here via
@@ -23,7 +23,7 @@ describe('CompactDayView - touch resize', () => {
     )!;
   }
 
-  function renderResizableEvent(onEventsChange = spy()) {
+  function renderResizableEvent(onEventsChange = vi.fn()) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -67,8 +67,8 @@ describe('CompactDayView - touch resize', () => {
       simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
     });
 
-    expect(onEventsChange.callCount).to.equal(1);
-    const updatedEvents = onEventsChange.firstCall.args[0];
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = onEventsChange.mock.calls[0][0];
     // Start stays at 10:00, end moves later than 11:00.
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
@@ -84,8 +84,8 @@ describe('CompactDayView - touch resize', () => {
       simulatePointerResize({ handle: startHandle, to: { clientY: clientYForTime(0, 24, 8) } });
     });
 
-    expect(onEventsChange.callCount).to.equal(1);
-    const updatedEvents = onEventsChange.firstCall.args[0];
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = onEventsChange.mock.calls[0][0];
     // End stays at 11:00, start moves earlier than 10:00.
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(8);
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(11);
@@ -108,7 +108,7 @@ describe('CompactDayView - touch resize', () => {
     // The form validates asynchronously before submitting, so let the submit settle.
     await user.click(screen.getByRole('button', { name: 'Save' }));
 
-    const updatedEvents = onEventsChange.lastCall.args[0];
+    const updatedEvents = onEventsChange.mock.lastCall?.[0];
     // Saving the form must preserve the resized end time, not revert it to the pre-resize value.
     expect(updatedEvents[0].title).to.equal('Renamed Meeting');
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
@@ -146,6 +146,6 @@ describe('CompactDayView - touch resize', () => {
       });
     });
 
-    expect(onEventsChange.callCount).to.equal(0);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
   });
 });

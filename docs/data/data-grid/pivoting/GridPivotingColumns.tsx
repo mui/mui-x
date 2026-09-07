@@ -85,7 +85,7 @@ const rows: GridRowModel[] = [
 ];
 
 const columns: GridColDef[] = [
-  { field: 'product', headerName: 'Product' },
+  { field: 'product', headerName: 'Product', rowHeader: true },
   { field: 'size', headerName: 'Size' },
   { field: 'region', headerName: 'Region' },
   { field: 'quarter', headerName: 'Quarter' },

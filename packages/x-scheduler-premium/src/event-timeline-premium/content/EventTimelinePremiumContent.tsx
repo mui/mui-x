@@ -8,13 +8,17 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { ColumnWithWidth, PinnedColumns } from '@mui/x-virtualizer';
 import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@mui/x-virtualizer';
-import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
+import {
+  TimelineGrid,
+  useTimelineGridEventRowContext,
+} from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumPresetSelectors,
   eventTimelinePremiumOccurrenceSelectors,
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import type { EventTimelinePremiumLayoutOccurrence } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { computeOccurrencesMaxIndex } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import {
@@ -25,15 +29,12 @@ import {
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
-  EventEditingTrigger,
+  EventContextMenuTrigger,
   EventSkeleton,
   useEventEditingContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
-import {
-  computeElementPositionInCollection,
-  useTimelineDragAutoScroll,
-} from '@mui/x-scheduler-internals/internals';
+import { useTimelineDragAutoScroll } from '@mui/x-scheduler-internals/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { EventTimelinePremiumHeader } from './timeline-header';
 import type { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
@@ -509,43 +510,14 @@ function EventList({
   occurrences,
 }: {
   resourceId: SchedulerResourceId;
-  occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
+  occurrences: EventTimelinePremiumLayoutOccurrence[];
 }) {
-  const adapter = useAdapterContext();
-  const store = useEventTimelinePremiumStoreContext();
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
 
-  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const visiblePositions = useStore(
-    store,
-    eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
-  );
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
-
-  // Precompute position fractions for all occurrences (recomputed only when occurrences or preset changes)
-  const occurrencesWithFraction = React.useMemo(
-    () =>
-      occurrences.map((occurrence) => {
-        // On a trimmed hour window the axis filter already positioned the occurrence.
-        const { position, duration } =
-          visiblePositions?.get(occurrence.key) ??
-          computeElementPositionInCollection(adapter, {
-            start: occurrence.displayTimezone.start,
-            end: occurrence.displayTimezone.end,
-            collection: config,
-            durationMs: config.durationMs,
-          });
-
-        return {
-          occurrence,
-          fractionStart: position,
-          fractionEnd: position + duration,
-        };
-      }),
-    // The config selector is memoized, so the object identity only changes with its content.
-    [adapter, occurrences, config, visiblePositions],
-  );
+  const store = useEventTimelinePremiumStoreContext();
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Convert virtualizer column range to fraction range
   const { start: visibleStart, end: visibleEnd } = getVisibleFractionRange(
@@ -555,19 +527,23 @@ function EventList({
 
   return (
     <React.Fragment>
-      {occurrencesWithFraction.map(
-        ({ occurrence, fractionStart, fractionEnd }) =>
-          fractionEnd > visibleStart &&
-          fractionStart < visibleEnd && (
-            <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
+      {occurrences.map((occurrence) => {
+        const { position, duration } = occurrence.timelinePosition;
+        return (
+          position + duration > visibleStart &&
+          position < visibleEnd && (
+            <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
               <EventTimelinePremiumEvent
                 occurrence={occurrence}
+                elementPosition={occurrence.timelinePosition}
                 ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
                 variant="regular"
+                resourceId={resourceId}
               />
-            </EventEditingTrigger>
-          ),
-      )}
+            </EventContextMenuTrigger>
+          )
+        );
+      })}
     </React.Fragment>
   );
 }
@@ -578,11 +554,12 @@ function EventRowContent({
   placeholder,
 }: {
   resourceId: SchedulerResourceId;
-  occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
+  occurrences: EventTimelinePremiumLayoutOccurrence[];
   placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
 }) {
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
+  const { rowRef } = useTimelineGridEventRowContext();
   const { startEditing } = useEventEditingContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
@@ -594,11 +571,13 @@ function EventRowContent({
   );
 
   React.useEffect(() => {
+    // `startEditing` is a no-op once the surface is open, so placeholder churn doesn't re-fire it.
     if (!isCreatingAnEvent || !placeholder || !placeholderRef.current) {
       return;
     }
-    startEditing(placeholderRef, placeholder);
-  }, [isCreatingAnEvent, placeholder, startEditing]);
+    // The row outlives the placeholder, which a cancellation unmounts.
+    startEditing(placeholderRef, placeholder, undefined, rowRef.current);
+  }, [isCreatingAnEvent, placeholder, startEditing, rowRef]);
 
   if (isLoading) {
     return <EventSkeleton data-variant="timeline-row" />;
@@ -613,6 +592,7 @@ function EventRowContent({
           occurrence={placeholder}
           ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
           variant="placeholder"
+          resourceId={resourceId}
         />
       )}
     </React.Fragment>
@@ -759,10 +739,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const laneCountByResource = React.useMemo(() => {
     const map = new Map<SchedulerResourceId, number>();
     for (const { resource, occurrences } of visibleResources) {
-      map.set(resource.id, computeOccurrencesMaxIndex(adapter, occurrences));
+      map.set(resource.id, computeOccurrencesMaxIndex(occurrences));
     }
     return map;
-  }, [visibleResources, adapter]);
+  }, [visibleResources]);
 
   const getRowHeight = React.useCallback(
     (row: { id: SchedulerResourceId }) =>

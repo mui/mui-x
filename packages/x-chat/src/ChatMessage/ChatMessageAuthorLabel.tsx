@@ -2,9 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { MessageAuthorLabel, type MessageAuthorLabelProps } from '@mui/x-chat-headless';
+import { MessageAuthorLabel } from '@mui/x-chat-headless';
+import type { MessageAuthorLabelProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import type { ChatMessageClasses } from './chatMessageClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageAuthorLabel');

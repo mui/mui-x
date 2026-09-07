@@ -3,6 +3,7 @@ import { describeConformance } from 'test/utils/charts/describeConformance';
 import { pieClasses, PieChart } from '@mui/x-charts/PieChart';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();

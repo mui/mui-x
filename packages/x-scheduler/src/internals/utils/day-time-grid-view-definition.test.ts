@@ -1,6 +1,7 @@
 import { adapter, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
 import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import type { EventCalendarPreferences } from '@mui/x-scheduler-internals/models';
+import { describe, it, expect } from 'vitest';
 import { createDayTimeGridViewDefinition } from './day-time-grid-view-definition';
 
 describe('createDayTimeGridViewDefinition', () => {
