@@ -88,6 +88,7 @@ export const useGridRowSelection = (
     | 'keepNonExistentRowsSelected'
     | 'rowSelection'
     | 'rowSelectionPropagation'
+    | 'dataSource'
     | 'signature'
   >,
 ): void => {
@@ -670,12 +671,15 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     // For nested data, on row tree updation (filtering, adding rows, etc.) when the selection is
     // not empty, we need to re-run scanning of the tree to propagate the selection changes
     // Example: A parent whose de-selected children are filtered out should now be selected
+    // With a data source, an `exclude` model is left alone: the grid only knows the loaded
+    // subset of the rows, so rewriting the model into an `include` of the known rows would
+    // drop the "rows that load later are selected too" semantics of the select-all state.
     const shouldReapplyPropagation =
       isNested &&
       props.rowSelectionPropagation?.parents &&
-      (newSelectionModel.ids.size > 0 ||
-        // In case of exclude selection, newSelectionModel.ids.size === 0 means all rows are selected
-        newSelectionModel.type === 'exclude');
+      (newSelectionModel.type === 'exclude'
+        ? props.dataSource === undefined
+        : newSelectionModel.ids.size > 0);
 
     if (hasChanged || shouldReapplyPropagation) {
       if (shouldReapplyPropagation) {
@@ -717,6 +721,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     props.rowSelectionPropagation?.descendants,
     props.keepNonExistentRowsSelected,
     props.filterMode,
+    props.dataSource,
     canHaveMultipleSelection,
     getRowsToBeSelected,
   ]);

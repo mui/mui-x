@@ -756,6 +756,108 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         // Without descendants propagation the children stay unselected.
         expect(apiRef.current!.state.rowSelection.ids.has('A-0')).to.equal(false);
       });
+
+      it('should keep an exclude select-all model when rows load', async () => {
+        render(
+          <TestNestedDataSourceLazyLoader
+            dataSourceCache={null}
+            onFetchRows={spy()}
+            checkboxSelection
+            rowSelectionPropagation={{ parents: true, descendants: true }}
+          />,
+        );
+        await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+        // Select all rows: an `exclude` model with no excluded ids.
+        await act(async () =>
+          apiRef.current?.setRowSelectionModel({ type: 'exclude', ids: new Set() }),
+        );
+
+        // Expand A so that its children load, which triggers a rows update.
+        await act(async () => apiRef.current?.setRowChildrenExpansion('A', true));
+        await waitFor(() => expect(apiRef.current!.getRow('A-1')).not.to.equal(null));
+
+        // The model must stay `exclude`, so rows that load later count as selected.
+        // Rewriting it into an `include` model of the loaded rows would drop them.
+        const selectionModel = apiRef.current!.state.rowSelection;
+        expect(selectionModel.type).to.equal('exclude');
+        expect(selectionModel.ids.size).to.equal(0);
+        expect(apiRef.current!.isRowSelected('A-0')).to.equal(true);
+      });
+
+      it('should propagate a derived parent selection to siblings that load later', async () => {
+        // Documents intended behavior: skeleton siblings are neutral for the parent
+        // derivation. Selecting the only loaded child of a partially loaded group derives
+        // the parent as selected, and the siblings inherit that selection on arrival.
+        let releaseSiblings!: () => void;
+        const siblingsGate = new Promise<void>((resolve) => {
+          releaseSiblings = resolve;
+        });
+        let childRequestCount = 0;
+
+        function TestPartialGroup() {
+          apiRef = useGridApiRef();
+          const dataSource: GridDataSource = React.useMemo(
+            () => ({
+              getRows: async (params: GridGetRowsParams) => {
+                const groupKeys = params.groupKeys ?? [];
+                if (groupKeys.length === 0) {
+                  return { rows: treeRows['[]'], rowCount: treeRows['[]'].length };
+                }
+                childRequestCount += 1;
+                if (childRequestCount === 1) {
+                  // Deliver only the first child. The second child stays a skeleton row.
+                  return { rows: treeRows['["A"]'].slice(0, 1), rowCount: 2 };
+                }
+                await siblingsGate;
+                return { rows: treeRows['["A"]'], rowCount: 2 };
+              },
+              getGroupKey: (row) => row.name,
+              getChildrenCount: (row) => row.childrenCount,
+            }),
+            [],
+          );
+
+          return (
+            <div style={{ width: 300, height: gridHeight }}>
+              <DataGridPro
+                apiRef={apiRef}
+                columns={[{ field: 'name', width: 160 }]}
+                dataSource={dataSource}
+                dataSourceCache={null}
+                lazyLoading
+                treeData
+                checkboxSelection
+                rowSelectionPropagation={{ parents: true, descendants: true }}
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+                }}
+                rowHeight={rowHeight}
+                columnHeaderHeight={columnHeaderHeight}
+                disableVirtualization={false}
+              />
+            </div>
+          );
+        }
+
+        render(<TestPartialGroup />);
+        await waitFor(() => expect(apiRef.current!.getRow('A')).not.to.equal(null));
+
+        await act(async () => apiRef.current?.setRowChildrenExpansion('A', true));
+        await waitFor(() => expect(apiRef.current!.getRow('A-0')).not.to.equal(null));
+
+        // Select the only loaded child while its sibling is still a skeleton row.
+        await act(async () => apiRef.current?.selectRow('A-0', true, false));
+
+        // The skeleton sibling is neutral, so the parent derives as selected.
+        await waitFor(() => expect(apiRef.current!.isRowSelected('A')).to.equal(true));
+
+        releaseSiblings();
+        await waitFor(() => expect(apiRef.current!.getRow('A-1')).not.to.equal(null));
+
+        // The late sibling inherits the selection from the derived-selected parent.
+        await waitFor(() => expect(apiRef.current!.isRowSelected('A-1')).to.equal(true));
+      });
     });
 
     it('should lazy load children for default-expanded tree data groups', async () => {

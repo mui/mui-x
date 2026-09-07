@@ -88,8 +88,8 @@
     "stylis": "catalog:",
     "topojson-client": "^3.1.0",
     "us-atlas": "^3.0.1",
-    "webpack-bundle-analyzer": "^5.3.1",
-    "visionscarto-world-atlas": "^1.0.0"
+    "visionscarto-world-atlas": "^1.0.0",
+    "webpack-bundle-analyzer": "^5.3.1"
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",
@@ -107,6 +107,7 @@
     "@types/topojson-specification": "1.0.5",
     "@types/webpack-bundle-analyzer": "4.7.0",
     "gm": "1.25.1",
-    "serve": "catalog:"
+    "serve": "catalog:",
+    "typescript": "7.0.2"
   }
 }
