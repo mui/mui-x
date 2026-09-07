@@ -41,39 +41,40 @@ export async function absorbObserverFrames() {
         'the live one. A test likely leaked fake timers without restoring them.',
     );
   }
-  await act(async () => {
-    let lastMutationAt = nativeNow();
-    // Record in the callback: delivering records to it also drains the queue, so
-    // `takeRecords()` would come back empty and read as a false quiet.
-    const observer = new MutationObserver(() => {
-      lastMutationAt = nativeNow();
-    });
-    observer.observe(document.body, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      characterData: true,
-    });
-    try {
-      const startedAt = nativeNow();
-      lastMutationAt = startedAt;
-      // The frames have to be pumped one at a time: each one may produce the mutation
-      // that extends the quiet window.
-      /* eslint-disable no-await-in-loop */
-      do {
+  let lastMutationAt = nativeNow();
+  // Record in the callback: delivering records to it also drains the queue, so
+  // `takeRecords()` would come back empty and read as a false quiet.
+  const observer = new MutationObserver(() => {
+    lastMutationAt = nativeNow();
+  });
+  observer.observe(document.body, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    characterData: true,
+  });
+  try {
+    const startedAt = nativeNow();
+    lastMutationAt = startedAt;
+    // One act scope per frame, rather than one wrapping the whole drain: React 18
+    // only flushes the work queued inside an act scope when that scope exits, so a
+    // single long-running one would hide every update until the very end and read
+    // as quiet throughout.
+    /* eslint-disable no-await-in-loop */
+    do {
+      await act(async () => {
         await new Promise<void>((resolve) => {
           nativeRequestAnimationFrame!(() => resolve());
         });
-        // Let React commit what the frame produced, and the observer deliver the
-        // records for it, before testing the quiet window below.
-        await Promise.resolve();
-      } while (
-        nativeNow() - lastMutationAt < QUIET_WINDOW_MS &&
-        nativeNow() - startedAt < MAX_DRAIN_MS
-      );
-      /* eslint-enable no-await-in-loop */
-    } finally {
-      observer.disconnect();
-    }
-  });
+      });
+      // Let the observer deliver the records for what the commit just changed.
+      await Promise.resolve();
+    } while (
+      nativeNow() - lastMutationAt < QUIET_WINDOW_MS &&
+      nativeNow() - startedAt < MAX_DRAIN_MS
+    );
+    /* eslint-enable no-await-in-loop */
+  } finally {
+    observer.disconnect();
+  }
 }
