@@ -266,6 +266,7 @@ export default defineConfig(
       `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-chat{,-*}/**/*${EXTENSION_TS}`,
     ],
     rules: {
       '@typescript-eslint/consistent-type-imports': [

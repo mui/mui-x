@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useChatStatus } from '../hooks/useChatStatus';
 import type { ChatUser } from '../types/chat-entities';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
-import { type TypingIndicatorOwnerState } from './indicators.types';
+import type { TypingIndicatorOwnerState } from './indicators.types';
 
 function resolveTypingUser(
   userId: string,

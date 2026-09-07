@@ -1,4 +1,11 @@
-export const MUI_X_PRODUCTS = [
+export type MuiXProduct = {
+  id: string;
+  label: string;
+  disabled?: boolean;
+  children?: MuiXProduct[];
+};
+
+export const MUI_X_PRODUCTS: MuiXProduct[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -10,23 +17,21 @@ export const MUI_X_PRODUCTS = [
   },
   {
     id: 'pickers',
-    label: 'Date and Time pickers',
+    label: 'Date and Time Pickers',
     children: [
-      {
-        id: 'pickers-community',
-        label: '@mui/x-date-pickers',
-      },
+      { id: 'pickers-community', label: '@mui/x-date-pickers' },
       { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
     ],
   },
   {
     id: 'charts',
     label: 'Charts',
-    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+    children: [{ id: 'charts-community', label: '@mui/x-charts', disabled: true }],
   },
   {
     id: 'tree-view',
     label: 'Tree View',
+    disabled: true,
     children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
   },
 ];

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChatComposer } from '../hooks/useChatComposer';
 import { useChatStatus } from '../hooks/useChatStatus';
 import { useChatStore } from '../hooks/useChatStore';
@@ -9,7 +9,7 @@ import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import type { ChatAttachmentsConfig } from '../types/chat-entities';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { ComposerContextProvider } from './internals/ComposerContext';
-import { type ComposerRootOwnerState } from './composer.types';
+import type { ComposerRootOwnerState } from './composer.types';
 
 export interface ComposerRootSlots {
   root: React.ElementType;

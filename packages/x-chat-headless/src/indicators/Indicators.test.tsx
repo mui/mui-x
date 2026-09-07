@@ -5,7 +5,8 @@ import type { ChatAdapter } from '../adapters/chatAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import type { ChatRealtimeEvent } from '../types/chat-realtime';
 import { ChatRoot } from '../chat/ChatRoot';
-import { MessageListRoot, type MessageListRootProps } from '../message-list/MessageListRoot';
+import { MessageListRoot } from '../message-list/MessageListRoot';
+import type { MessageListRootProps } from '../message-list/MessageListRoot';
 import { MessageListContextProvider } from '../message-list/internals/MessageListContext';
 import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './index';
 

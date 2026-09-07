@@ -2,8 +2,6 @@ import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { spy } from 'sinon';
-import type { SinonSpy } from 'sinon';
 import {
   DataGridPremium,
   GRID_AGGREGATION_FUNCTIONS,
@@ -18,7 +16,8 @@ import type {
   GridColDef,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
+import type { Mock } from 'vitest';
 
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
@@ -86,7 +85,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
     describe('prop: aggregationModel', () => {
       it('should not call onAggregationModelChange on initialisation or on aggregationModel prop change', async () => {
-        const onAggregationModelChange = spy();
+        const onAggregationModelChange = vi.fn();
 
         const { setProps } = await render(
           <Test
@@ -95,10 +94,10 @@ describe('<DataGridPremium /> - Aggregation', () => {
           />,
         );
 
-        expect(onAggregationModelChange.callCount).to.equal(0);
+        expect(onAggregationModelChange.mock.calls.length).to.equal(0);
         setProps({ id: 'min' });
 
-        expect(onAggregationModelChange.callCount).to.equal(0);
+        expect(onAggregationModelChange.mock.calls.length).to.equal(0);
       });
 
       it('should allow to update the aggregation model from the outside', async () => {
@@ -887,7 +886,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
 
     it('should pass aggregation meta with `hasCellUnit: true` if the aggregation function have no hasCellUnit property', async () => {
-      const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
+      const renderCell: Mock<(params: GridRenderCellParams) => string> = vi.fn(
+        (params) => `- ${params.value}`,
+      );
 
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
@@ -907,14 +908,17 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      const callForAggCell = renderCell
-        .getCalls()
-        .find((call) => call.firstArg.rowNode.type === 'pinnedRow' && call.firstArg.aggregation);
-      expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(true);
+      const callForAggCell = renderCell.mock.calls.find(
+        (call) => call[0].rowNode.type === 'pinnedRow' && call[0].aggregation,
+      );
+      expect(callForAggCell).not.to.equal(undefined);
+      expect(callForAggCell?.[0].aggregation?.hasCellUnit).to.equal(true);
     });
 
     it('should pass aggregation meta with `hasCellUnit: false` if the aggregation function have `hasCellUnit: false`', async () => {
-      const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
+      const renderCell: Mock<(params: GridRenderCellParams) => string> = vi.fn(
+        (params) => `- ${params.value}`,
+      );
 
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
@@ -935,10 +939,11 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      const callForAggCell = renderCell
-        .getCalls()
-        .find((call) => call.firstArg.rowNode.type === 'pinnedRow' && call.firstArg.aggregation);
-      expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(false);
+      const callForAggCell = renderCell.mock.calls.find(
+        (call) => call[0].rowNode.type === 'pinnedRow' && call[0].aggregation,
+      );
+      expect(callForAggCell).not.to.equal(undefined);
+      expect(callForAggCell?.[0].aggregation?.hasCellUnit).to.equal(false);
     });
   });
 

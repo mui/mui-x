@@ -63,10 +63,12 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                       getHighlightState,
                       classes,
                     })}
+                    pointerEvents={onMarkClick ? undefined : 'none'}
                     onClick={(event) =>
                       onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
                     }
                     cursor={onMarkClick ? 'pointer' : 'unset'}
+                    {...interactionProps[seriesIndex]}
                   />
                 ))}
             </g>
