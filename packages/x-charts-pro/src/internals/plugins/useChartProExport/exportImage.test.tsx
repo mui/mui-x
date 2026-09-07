@@ -75,39 +75,7 @@ describe.skipIf(isJSDOM)('exportImage', () => {
     expect(exportedSize?.height).to.equal(300);
   });
 
-  it('uses the nonce of the page styles when no nonce is provided', async () => {
-    const style = document.createElement('style');
-    style.setAttribute('nonce', 'page-nonce');
-    style.textContent = 'body { margin: 0; }';
-    document.head.appendChild(style);
-    onTestFinished(() => style.remove());
-
-    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
-    let exportedNonces: (string | null)[] = [];
-
-    render(<Chart apiRef={apiRef} />);
-
-    await act(async () => {
-      await apiRef.current!.exportAsImage({
-        onBeforeExport: (iframe) => {
-          exportedNonces = Array.from(iframe.contentDocument!.head.querySelectorAll('style')).map(
-            (element) => element.nonce || element.getAttribute('nonce'),
-          );
-        },
-      });
-    });
-
-    expect(exportedNonces.length).to.be.greaterThan(0);
-    expect(exportedNonces.every((nonce) => nonce === 'page-nonce')).to.equal(true);
-  });
-
-  it('uses the provided nonce over the nonce of the page styles', async () => {
-    const style = document.createElement('style');
-    style.setAttribute('nonce', 'page-nonce');
-    style.textContent = 'body { margin: 0; }';
-    document.head.appendChild(style);
-    onTestFinished(() => style.remove());
-
+  it('sets the provided nonce on the copied styles', async () => {
     const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
     let exportedNonces: (string | null)[] = [];
 

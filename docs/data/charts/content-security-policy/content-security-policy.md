@@ -42,10 +42,11 @@ Enable those URIs by adding these directives to your CSP header:
 Content-Security-Policy: img-src 'self' data: blob:; font-src 'self' data:;
 ```
 
-If your CSP uses a nonce for styles (for example, `style-src-elem 'nonce-<value>'`), the export reuses the nonce of the page style elements.
-Charts styled by a nonce-aware style engine, such as Emotion configured through `AppRouterCacheProvider`, export without further configuration.
+If your CSP uses a nonce for styles (for example, `style-src-elem 'nonce-<value>'`), you must provide the same nonce when exporting.
+The export copies the page styles into the export document, and the browser blocks those styles when they carry no nonce.
 
-If the page has no style element carrying the nonce, pass the nonce to the `printOptions` and `imageExportOptions` props of the `toolbar` slot.
+Pass the nonce to the `printOptions` and `imageExportOptions` props of the `toolbar` slot.
+Each export type reads its own options, so a nonce set only on `printOptions` doesn't apply to the image export.
 
 ```tsx
 <LineChartPro
@@ -64,5 +65,5 @@ If the page has no style element carrying the nonce, pass the nonce to the `prin
 />
 ```
 
-If the styles copied to the export document are still blocked, the export fails with an error telling you to set the `nonce` option.
+When the copied styles are blocked, the export fails with an error telling you to set the `nonce` option.
 Set the `copyStyles` option to `false` to export the chart without the page styles instead.

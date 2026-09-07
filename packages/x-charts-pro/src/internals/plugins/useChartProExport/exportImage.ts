@@ -1,5 +1,5 @@
 import ownerDocument from '@mui/utils/ownerDocument';
-import { getStyleNonce, loadStyleSheets } from '@mui/x-internals/export';
+import { loadStyleSheets } from '@mui/x-internals/export';
 import { warnOnce } from '@mui/x-internals/warning';
 import { applyStyles, copyCanvasesContent, createExportIframe } from './common';
 import type { ChartImageExportOptions } from './useChartProExport.types';
@@ -71,9 +71,6 @@ export async function exportImage(
   const rootCandidate = element.getRootNode();
   const root =
     rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
-  /* Without a nonce, a Content Security Policy that requires one blocks the styles of the export
-   * document, so fall back to the nonce the page styles already use. */
-  const cspNonce = nonce ?? getStyleNonce(root);
 
   const iframeLoadPromise = new Promise<void>((resolve, reject) => {
     iframe.onload = () => {
@@ -107,7 +104,7 @@ export async function exportImage(
         exportDoc.body.style.height = 'fit-content';
 
         if (copyStyles) {
-          await Promise.all(loadStyleSheets(exportDoc, root, cspNonce));
+          await Promise.all(loadStyleSheets(exportDoc, root, nonce));
           checkStyleSheetsLoaded(exportDoc);
         }
 
@@ -142,7 +139,7 @@ export async function exportImage(
     await drawDocument(iframe.contentDocument!, canvas, {
       // Handle retina displays: https://github.com/cburgmer/rasterizeHTML.js/blob/262b3404d1c469ce4a7750a2976dec09b8ae2d6c/examples/retina.html#L71
       zoom: ratio,
-      nonce: cspNonce,
+      nonce,
     });
   } finally {
     iframe.remove();

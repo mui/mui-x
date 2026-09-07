@@ -30,8 +30,9 @@ export interface ChartExportOptions {
   copyStyles?: boolean;
   /**
    * A nonce to be used for Content Security Policy (CSP) compliance.
-   * This nonce is added to any style elements created during the export process.
-   * @default the nonce of the page style elements, if there is one
+   * If provided, this nonce will be added to any style elements created during the export process.
+   * Required when the CSP restricts styles with a nonce, otherwise the export fails because the
+   * copied styles are blocked.
    */
   nonce?: string;
 }

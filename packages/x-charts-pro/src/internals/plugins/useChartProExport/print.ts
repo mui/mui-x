@@ -1,5 +1,5 @@
 import ownerDocument from '@mui/utils/ownerDocument';
-import { getStyleNonce, loadStyleSheets } from '@mui/x-internals/export';
+import { loadStyleSheets } from '@mui/x-internals/export';
 import { copyCanvasesContent, createExportIframe } from './common';
 import type { ChartPrintExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
@@ -28,9 +28,7 @@ export function printChart(
       rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
     if (copyStyles) {
-      /* Without a nonce, a Content Security Policy that requires one blocks the styles of the print
-       * document, so fall back to the nonce the page styles already use. */
-      await Promise.all(loadStyleSheets(printDoc, root, nonce ?? getStyleNonce(root)));
+      await Promise.all(loadStyleSheets(printDoc, root, nonce));
     }
 
     await copyCanvasesContent(element, elementClone);
