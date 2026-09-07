@@ -511,6 +511,33 @@ describe('<DataGrid /> - Rows', () => {
         expect(firstCell).toHaveFocus();
       });
 
+      it('should allow to navigate between actions that do not forward their props', async () => {
+        function CustomAction() {
+          return <button type="button">custom</button>;
+        }
+
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <CustomAction key={1} />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" />,
+            ]}
+          />,
+        );
+        await user.click(getCell(0, 0));
+        expect(getActiveCell()).to.equal('0-0');
+
+        await user.keyboard('{ArrowRight}');
+        const customButton = screen.getByRole('button', { name: 'custom' });
+        expect(customButton).toHaveFocus();
+
+        await user.keyboard('{ArrowRight}');
+        expect(screen.getByRole('button', { name: 'delete' })).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(customButton).toHaveFocus();
+      });
+
       it('should not move focus to first item when clicking in another item', async () => {
         const { user } = render(
           <TestCase
@@ -832,6 +859,35 @@ describe('<DataGrid /> - Rows', () => {
 
         await user.keyboard('{ArrowLeft}');
         expect(firstCell).toHaveFocus();
+      });
+
+      it('should allow to navigate between actions that do not forward their props', async () => {
+        function CustomAction() {
+          return <button type="button">custom</button>;
+        }
+
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params} suppressChildrenValidation>
+                <CustomAction />
+                <GridActionsCellItem icon={<span />} label="delete" />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        await user.click(getCell(0, 0));
+        expect(getActiveCell()).to.equal('0-0');
+
+        await user.keyboard('{ArrowRight}');
+        const customButton = screen.getByRole('button', { name: 'custom' });
+        expect(customButton).toHaveFocus();
+
+        await user.keyboard('{ArrowRight}');
+        expect(screen.getByRole('button', { name: 'delete' })).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(customButton).toHaveFocus();
       });
 
       it('should not move focus to first item when clicking in another item', async () => {
