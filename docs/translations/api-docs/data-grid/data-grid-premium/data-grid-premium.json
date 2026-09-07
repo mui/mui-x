@@ -1204,6 +1204,11 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell element in flex display mode"
     },
+    "cell--nonText": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "its content is not text"
+    },
     "cell--pinnedLeft": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",

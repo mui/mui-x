@@ -702,6 +702,10 @@ export const GridRootStyles = styled('div', {
       alignItems: 'center',
       lineHeight: 'inherit',
     },
+    // Kept at the same specificity as the cell rule so that users can restore the ellipsis.
+    [`& .${c['cell--nonText']}`]: {
+      textOverflow: 'clip',
+    },
     [`& .${c['cell--textLeft']}`]: {
       textAlign: 'left',
       justifyContent: 'flex-start',
