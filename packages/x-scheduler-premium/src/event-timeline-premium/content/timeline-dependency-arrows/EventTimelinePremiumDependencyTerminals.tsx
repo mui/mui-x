@@ -91,9 +91,13 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
     pointerEvents: 'auto',
   },
   // The grab feedback: growing under the pointer tells the user the target is
-  // acquired before they press.
-  '&[data-visible]:hover': {
+  // acquired before they press. The same growth marks the terminal a pending
+  // gesture would drop on, in the creation color of the provisional arrow.
+  '&[data-visible]:hover, &[data-dependency-drop-target]': {
     transform: 'translate(0, -50%) scale(1.3)',
+  },
+  '&[data-dependency-drop-target]': {
+    backgroundColor: (theme.vars || theme).palette.success.main,
   },
   // The start-edge terminal mirrors the end-edge one: hanging off the left of its
   // anchor, halo outward to the left.
@@ -103,7 +107,7 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
       left: -DEPENDENCY_TERMINAL_HALO,
       right: 0,
     },
-    '&[data-visible]:hover': {
+    '&[data-visible]:hover, &[data-dependency-drop-target]': {
       transform: 'translate(-100%, -50%) scale(1.3)',
     },
   },
@@ -316,6 +320,7 @@ function DependencyTerminalsLayerImpl() {
           continue;
         }
         const point = resolver.getEdgePoint(anchor, side);
+        const gestureRole = getTerminalGestureRole(creation, occurrence.key, rowResourceId, side);
         terminals.push(
           <EventTimelinePremiumDependencyTerminal
             // The occurrence key repeats on every row of a multi-resource event: only
@@ -326,11 +331,8 @@ function DependencyTerminalsLayerImpl() {
             resourceId={rowResourceId}
             side={side}
             data-palette={color}
-            data-visible={
-              isTerminalRevealedByGesture(creation, occurrence.key, rowResourceId, side)
-                ? ''
-                : undefined
-            }
+            data-visible={gestureRole === null ? undefined : ''}
+            data-dependency-drop-target={gestureRole === 'drop' ? '' : undefined}
             // Clamped at the collection edges: the outside circle would overflow the
             // events area and be clipped by the viewport, so it slides back over the
             // event to stay reachable.
@@ -355,21 +357,26 @@ function DependencyTerminalsLayerImpl() {
 }
 
 /**
- * The hover reveal is DOM-driven; the gesture's terminals are render-driven so they
- * survive the hover reset at drag start: the dragged edge of the source appearance,
- * and both edges of the hovered target appearance, so the user can drop on either.
+ * The terminal's part in the pending gesture, or `null` when it has none. The hover
+ * reveal is DOM-driven; the gesture's terminals are render-driven so they survive the
+ * hover reset at drag start: the dragged edge of the source appearance, and both
+ * edges of the hovered target appearance so the user can drop on either — the one
+ * the drop would currently land on marked as such.
  */
-function isTerminalRevealedByGesture(
+function getTerminalGestureRole(
   creation: SchedulerDependencyCreation | null,
   occurrenceKey: string,
   resourceId: SchedulerResourceId,
   side: SchedulerEventSide,
-): boolean {
+): 'source' | 'target' | 'drop' | null {
   if (creation === null) {
-    return false;
+    return null;
   }
   if (creation.sourceOccurrenceKey === occurrenceKey && creation.sourceResourceId === resourceId) {
-    return creation.sourceSide === side;
+    return creation.sourceSide === side ? 'source' : null;
   }
-  return creation.targetOccurrenceKey === occurrenceKey && creation.targetResourceId === resourceId;
+  if (creation.targetOccurrenceKey !== occurrenceKey || creation.targetResourceId !== resourceId) {
+    return null;
+  }
+  return creation.targetSide === side ? 'drop' : 'target';
 }

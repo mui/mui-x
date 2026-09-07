@@ -510,6 +510,36 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
     });
 
+    it('should mark the terminal of the edge the gesture would drop on', async () => {
+      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const target = getEventElement('Event B');
+      const startTerminal = getTerminal('Event B', undefined, 'start')!;
+      const endTerminal = getTerminal('Event B', undefined, 'end')!;
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+
+      // Over the body the drop targets the start edge: its terminal reads as acquired,
+      // the other one only as available.
+      await waitFor(() => {
+        expect(startTerminal.hasAttribute('data-dependency-drop-target')).to.equal(true);
+      });
+      expect(endTerminal.hasAttribute('data-dependency-drop-target')).to.equal(false);
+
+      fireEvent.dragEnter(endTerminal, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(endTerminal, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(endTerminal.hasAttribute('data-dependency-drop-target')).to.equal(true);
+      });
+      expect(startTerminal.hasAttribute('data-dependency-drop-target')).to.equal(false);
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+    });
+
     it('should snap the provisional line to the hovered terminal edge', async () => {
       await renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
