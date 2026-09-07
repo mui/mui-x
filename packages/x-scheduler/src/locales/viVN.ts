@@ -60,6 +60,8 @@ const viVNDialog: Partial<EventEditingLocaleText> = {
   // noResourceAriaLabel: 'No specific resource',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   // resourceLabel: 'Resource',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   // saveChanges: 'Save',
   // startDateAfterEndDateError: 'End date cannot be before start date.',

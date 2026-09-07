@@ -1,0 +1,10 @@
+<RichTreeViewPro
+  items={[]}
+  domStructure="nested"
+  disableVirtualization
+  itemHeight={32}
+  slots={{ item: CustomTreeItem, loading: CustomLoading }}
+  slotProps={{ loading: { itemsCount: 4 } }}
+  dataSource={dataSource}
+  sx={transitionStyles}
+/>

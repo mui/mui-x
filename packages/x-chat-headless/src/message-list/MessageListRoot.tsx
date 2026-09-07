@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useChatStore } from '../hooks/useChatStore';
 import { useMessageIds } from '../hooks/useMessage';
@@ -22,7 +22,7 @@ import {
   MessageRovingProvider,
   useMessageRovingController,
 } from './internals/MessageRovingContext';
-import { type MessageListRootOwnerState } from './messageList.types';
+import type { MessageListRootOwnerState } from './messageList.types';
 
 const DEFAULT_ESTIMATED_ITEM_SIZE = 84;
 const DEFAULT_AUTO_SCROLL_BUFFER = 150;

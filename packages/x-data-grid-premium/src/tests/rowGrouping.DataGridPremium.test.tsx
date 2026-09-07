@@ -18,9 +18,8 @@ import {
   GridLogicOperator,
 } from '@mui/x-data-grid-premium';
 import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
-import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -105,7 +104,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
 
     describe('prop: rowGroupingModel', () => {
       it('should not call onRowGroupingModelChange on initialisation or on rowGroupingModel prop change', () => {
-        const onRowGroupingModelChange = spy();
+        const onRowGroupingModelChange = vi.fn();
 
         const { setProps } = render(
           <Test
@@ -114,10 +113,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(onRowGroupingModelChange.callCount).to.equal(0);
+        expect(onRowGroupingModelChange.mock.calls.length).to.equal(0);
         setProps({ rowGroupingModel: ['category2'] });
 
-        expect(onRowGroupingModelChange.callCount).to.equal(0);
+        expect(onRowGroupingModelChange.mock.calls.length).to.equal(0);
       });
 
       it('should allow to update the row grouping model from the outside', () => {
@@ -1440,11 +1439,11 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
 
-      const onFilteredRowsSet = spy();
+      const onFilteredRowsSet = vi.fn();
       apiRef.current?.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
 
       fireEvent.click(getCell(0, 0).querySelector('button')!);
-      expect(onFilteredRowsSet.callCount).to.equal(0);
+      expect(onFilteredRowsSet.mock.calls.length).to.equal(0);
     });
 
     it('should not apply filters when the row is collapsed', () => {
@@ -1457,11 +1456,11 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
 
-      const onFilteredRowsSet = spy();
+      const onFilteredRowsSet = vi.fn();
       apiRef.current?.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
 
       fireEvent.click(getCell(0, 0).querySelector('button')!);
-      expect(onFilteredRowsSet.callCount).to.equal(0);
+      expect(onFilteredRowsSet.mock.calls.length).to.equal(0);
     });
   });
 

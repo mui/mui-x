@@ -135,5 +135,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler-premium/src/week-view-premium/StandaloneWeekViewPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-scheduler/components/event-dialog/\">Scheduler - Event dialog</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>"
 }

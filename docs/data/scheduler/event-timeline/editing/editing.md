@@ -56,6 +56,8 @@ The dialog has two tabs:
 Click any event in the demo below to open the dialog.
 From there you can edit the event details or delete it.
 
+The General tab can be recomposed with built-in and custom sections through the `eventDialogGeneralTab` slot — see the [Event dialog component page](/x/react-scheduler/components/event-dialog/).
+
 {{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info

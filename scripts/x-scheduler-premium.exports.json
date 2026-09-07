@@ -2,7 +2,6 @@
   { "name": "EventCalendarPremium", "kind": "Variable" },
   { "name": "EventCalendarPremiumApiRef", "kind": "TypeAlias" },
   { "name": "EventCalendarPremiumProps", "kind": "Interface" },
-  { "name": "EventDialogGeneralTabProps", "kind": "Interface" },
   { "name": "EventDialogGeneralTabPropsOverrides", "kind": "Interface" },
   { "name": "EventTimelinePremium", "kind": "Variable" },
   { "name": "EventTimelinePremiumApiRef", "kind": "TypeAlias" },

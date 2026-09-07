@@ -86,14 +86,30 @@ export function isBuiltInEventProperty(key: string): boolean {
   return EVENT_PROPERTIES_LOOKUP.hasOwnProperty(key);
 }
 
+// Custom model keys are arbitrary consumer strings: a plain assignment of a key
+// like `__proto__` would hit the legacy prototype setter instead of creating an
+// own property.
+function setOwnProperty(target: object, key: string, value: unknown) {
+  Object.defineProperty(target, key, {
+    value,
+    writable: true,
+    enumerable: true,
+    configurable: true,
+  });
+}
+
 /**
  * Returns the properties of an event model that are not part of the built-in `SchedulerEvent` shape.
  */
 export function getCustomEventProperties<TEvent extends object>(model: TEvent): Partial<TEvent> {
   const customProperties: Record<string, unknown> = {};
   for (const key in model) {
-    if (model.hasOwnProperty(key) && !EVENT_PROPERTIES_LOOKUP.hasOwnProperty(key)) {
-      customProperties[key] = model[key as keyof TEvent];
+    // `call` form: a custom event property named `hasOwnProperty` would shadow the method.
+    if (
+      Object.prototype.hasOwnProperty.call(model, key) &&
+      !EVENT_PROPERTIES_LOOKUP.hasOwnProperty(key)
+    ) {
+      setOwnProperty(customProperties, key, model[key as keyof TEvent]);
     }
   }
   return customProperties as Partial<TEvent>;
@@ -250,7 +266,7 @@ function createOrUpdateEventModelFromBuiltInEventModel<
   const propertiesWithSetter: [AnyEventSetter<TEvent>, any][] = [];
 
   for (const key in changes) {
-    if (changes.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(changes, key)) {
       const typedKey = key as keyof SchedulerEvent;
       const setter = eventModelStructure?.[typedKey]?.setter;
       if (setter) {
@@ -265,8 +281,7 @@ function createOrUpdateEventModelFromBuiltInEventModel<
         // @ts-ignore
         delete eventModel[key];
       } else {
-        // @ts-ignore
-        eventModel[key] = changes[key];
+        setOwnProperty(eventModel, key, changes[key]);
       }
     }
   }

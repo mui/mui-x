@@ -2,7 +2,6 @@ import * as React from 'react';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import type {
-  EventDialogGeneralTabProps,
   EventDialogGeneralTabPropsOverrides,
   SchedulerSlotProps,
   SchedulerSlots,
@@ -25,11 +24,15 @@ const event = EventBuilder.new()
   .singleDay('2025-07-03T10:00:00Z', 60)
   .build();
 
-function CustomGeneralTab(props: EventDialogGeneralTabProps & { marker?: string }) {
+function CustomGeneralTab(props: { marker?: string }) {
   return <p>{props.marker ? `Custom general tab ${props.marker}` : 'Custom general tab'}</p>;
 }
 
-const slots: SchedulerSlots = { eventDialogGeneralTab: CustomGeneralTab };
+// The overrides interface is only populated through module augmentation on the consumer side.
+const slots: SchedulerSlots = {
+  eventDialogGeneralTab:
+    CustomGeneralTab as React.ComponentType<EventDialogGeneralTabPropsOverrides>,
+};
 const slotProps: SchedulerSlotProps = {
   // The overrides interface is only populated through module augmentation on the consumer side.
   eventDialogGeneralTab: { marker: 'via slotProps' } as EventDialogGeneralTabPropsOverrides,

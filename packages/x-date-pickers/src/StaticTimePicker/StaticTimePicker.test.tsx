@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { screen, within } from '@mui/internal-test-utils';
 import {
   adapterToUse,
@@ -8,7 +7,7 @@ import {
 } from 'test/utils/pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<StaticTimePicker />', () => {
   const { render } = createPickerRenderer({
@@ -44,8 +43,8 @@ describe('<StaticTimePicker />', () => {
         },
       ],
     };
-    const onChange = spy();
-    const onViewChange = spy();
+    const onChange = vi.fn();
+    const onViewChange = vi.fn();
     const { user } = render(
       <StaticTimePicker
         value={adapterToUse.date('2019-01-01')}
@@ -57,20 +56,20 @@ describe('<StaticTimePicker />', () => {
 
     // Can switch between views
     await user.click(screen.getByTestId('minutes'));
-    expect(onViewChange.callCount).to.equal(1);
+    expect(onViewChange.mock.calls.length).to.equal(1);
 
     await user.click(screen.getByTestId('hours'));
-    expect(onViewChange.callCount).to.equal(2);
+    expect(onViewChange.mock.calls.length).to.equal(2);
 
     // Can not switch between meridiem
     await user.click(screen.getByRole('button', { name: /AM/i }));
-    expect(onChange.callCount).to.equal(0);
+    expect(onChange.mock.calls.length).to.equal(0);
     await user.click(screen.getByRole('button', { name: /PM/i }));
-    expect(onChange.callCount).to.equal(0);
+    expect(onChange.mock.calls.length).to.equal(0);
 
     // Can not set value
     fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', selectEvent);
-    expect(onChange.callCount).to.equal(0);
+    expect(onChange.mock.calls.length).to.equal(0);
 
     // hours are not disabled
     const hoursContainer = screen.getByRole('listbox');
@@ -90,8 +89,8 @@ describe('<StaticTimePicker />', () => {
         },
       ],
     };
-    const onChange = spy();
-    const onViewChange = spy();
+    const onChange = vi.fn();
+    const onViewChange = vi.fn();
     const { user } = render(
       <StaticTimePicker
         value={adapterToUse.date('2019-01-01')}
@@ -103,21 +102,21 @@ describe('<StaticTimePicker />', () => {
 
     // Can switch between views
     await user.click(screen.getByTestId('minutes'));
-    expect(onViewChange.callCount).to.equal(1);
+    expect(onViewChange.mock.calls.length).to.equal(1);
 
     await user.click(screen.getByTestId('hours'));
-    expect(onViewChange.callCount).to.equal(2);
+    expect(onViewChange.mock.calls.length).to.equal(2);
 
     const userWithoutPointerEventsCheck = user.setup({ pointerEventsCheck: 0 });
     // Can not switch between meridiem
     await userWithoutPointerEventsCheck.click(screen.getByRole('button', { name: /AM/i }));
-    expect(onChange.callCount).to.equal(0);
+    expect(onChange.mock.calls.length).to.equal(0);
     await userWithoutPointerEventsCheck.click(screen.getByRole('button', { name: /PM/i }));
-    expect(onChange.callCount).to.equal(0);
+    expect(onChange.mock.calls.length).to.equal(0);
 
     // Can not set value
     fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', selectEvent);
-    expect(onChange.callCount).to.equal(0);
+    expect(onChange.mock.calls.length).to.equal(0);
 
     // hours are disabled
     const hoursContainer = screen.getByRole('listbox');

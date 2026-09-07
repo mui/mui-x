@@ -22,6 +22,7 @@ import {
 } from '@mui/x-scheduler/internals';
 import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { describe, it, expect } from 'vitest';
+import type { MockInstance } from 'vitest';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 
 const editingStyledContextValue = {
@@ -60,7 +61,7 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
   const anchor = document.createElement('button');
   document.body.appendChild(anchor);
 
-  const { render } = createSchedulerRenderer();
+  const { renderSettled } = createSchedulerRenderer();
 
   /**
    * Seeds a `type: 'creation'` placeholder anchored to `rowResource`'s row — mirroring what
@@ -68,10 +69,10 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
    * `rawPlaceholder.resourceId ?? originalEvent?.resource`: the row's (string) id for a fresh
    * creation with no original event.
    */
-  function renderCreationDialog(options: {
+  async function renderCreationDialog(options: {
     rowResource: SchedulerResource;
     eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
-    onCreateEventSpyReady: (spy: sinon.SinonSpy) => void;
+    onCreateEventSpyReady: (spy: MockInstance) => void;
   }) {
     const { rowResource, eventCreation, onCreateEventSpyReady } = options;
 
@@ -98,7 +99,7 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
       .resource(rowResource)
       .toOccurrence();
 
-    const utils = render(
+    const utils = await renderSettled(
       <SchedulerStoreContext.Provider value={store as any}>
         <StoreSpy
           Context={SchedulerStoreContext}
@@ -125,8 +126,8 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
   }
 
   it("should seed the picker as multi-select with the row's resource when `canHaveMultipleResources` is true, and let a second resource be added", async () => {
-    let createEventSpy: sinon.SinonSpy | undefined;
-    const { user, currentDialog } = renderCreationDialog({
+    let createEventSpy: MockInstance | undefined;
+    const { user, currentDialog } = await renderCreationDialog({
       rowResource: engineering,
       eventCreation: { canHaveMultipleResources: true },
       onCreateEventSpyReady: (sp) => {
@@ -144,13 +145,13 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
     await user.keyboard('{Escape}');
     await user.click(currentDialog.getByRole('button', { name: /save/i }));
 
-    expect(createEventSpy?.calledOnce).to.equal(true);
-    expect(createEventSpy?.firstCall.args[0].resource).to.deep.equal([engineering.id, design.id]);
+    expect(createEventSpy?.mock.calls.length).to.equal(1);
+    expect(createEventSpy?.mock.calls[0][0].resource).to.deep.equal([engineering.id, design.id]);
   });
 
   it("should seed the picker as single-select with the row's resource when `canHaveMultipleResources` is false, and picking another resource replaces it", async () => {
-    let createEventSpy: sinon.SinonSpy | undefined;
-    const { user, currentDialog } = renderCreationDialog({
+    let createEventSpy: MockInstance | undefined;
+    const { user, currentDialog } = await renderCreationDialog({
       rowResource: engineering,
       eventCreation: { canHaveMultipleResources: false },
       onCreateEventSpyReady: (sp) => {
@@ -167,7 +168,7 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
     await user.click(await screen.findByRole('option', { name: /design/i }));
     await user.click(currentDialog.getByRole('button', { name: /save/i }));
 
-    expect(createEventSpy?.calledOnce).to.equal(true);
-    expect(createEventSpy?.firstCall.args[0].resource).to.equal(design.id);
+    expect(createEventSpy?.mock.calls.length).to.equal(1);
+    expect(createEventSpy?.mock.calls[0][0].resource).to.equal(design.id);
   });
 });

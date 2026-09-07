@@ -259,8 +259,10 @@ export const useDataGridPremiumComponent = (
   // run before filtering and sorting read cell values in the same cascade.
   useFormulaFeature(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
-  useGridRowSelection(apiRef, props);
+  // Before `useGridRowSelection`: the select-all shortcut of the cell selection feature
+  // must run first and block the row selection listener with `defaultMuiPrevented`.
   useGridCellSelection(apiRef, props);
+  useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);

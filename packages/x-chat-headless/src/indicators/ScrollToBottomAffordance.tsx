@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { mergeReactProps } from '../internals/mergeReactProps';
 import { useMessageListContext } from '../message-list/internals/MessageListContext';
-import { type ScrollToBottomAffordanceOwnerState } from './indicators.types';
+import type { ScrollToBottomAffordanceOwnerState } from './indicators.types';
 
 export interface ScrollToBottomAffordanceSlots {
   root: React.ElementType;

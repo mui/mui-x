@@ -35,7 +35,7 @@ export interface GridEditDateCellProps extends GridRenderEditCellParams {
    * Callback called when the value is changed by the user.
    * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
    * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @returns {Promise<void> | void} A promise to be awaited after `apiRef.current.setEditCellValue` is called
    */
   onValueChange?: (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -127,12 +127,12 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       const newFormattedDate = event.target.value;
       const newParsedDate = parseValueToDate(newFormattedDate);
 
+      setValueState({ parsed: newParsedDate, formatted: newFormattedDate });
+      await apiRef.current.setEditCellValue({ id, field, value: newParsedDate }, event);
+
       if (onValueChange) {
         await onValueChange(event, newParsedDate);
       }
-
-      setValueState({ parsed: newParsedDate, formatted: newFormattedDate });
-      apiRef.current.setEditCellValue({ id, field, value: newParsedDate }, event);
     },
     [apiRef, field, id, onValueChange, parseValueToDate],
   );
@@ -219,7 +219,7 @@ GridEditDateCell.propTypes /* remove-proptypes */ = {
    * Callback called when the value is changed by the user.
    * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
    * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @returns {Promise<void> | void} A promise to be awaited after `apiRef.current.setEditCellValue` is called
    */
   onValueChange: PropTypes.func,
   /**

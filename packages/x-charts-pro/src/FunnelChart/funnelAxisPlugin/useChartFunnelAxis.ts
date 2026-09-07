@@ -9,6 +9,7 @@ import {
   selectorChartsInteractionIsInitialized,
   defaultizeXAxis,
   defaultizeYAxis,
+  useDefaultTickLabelStyle,
 } from '@mui/x-charts/internals';
 import type { ChartPlugin } from '@mui/x-charts/internals';
 import type { PointerGestureEventData } from '@mui/x-internal-gestures/core';
@@ -22,6 +23,8 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
 }) => {
   const { chartsLayerContainerRef } = instance;
   const { xAxis, yAxis, dataset, gap } = params;
+
+  const defaultTickLabelStyle = useDefaultTickLabelStyle();
 
   if (process.env.NODE_ENV !== 'production') {
     const ids = [...(xAxis ?? []), ...(yAxis ?? [])]
@@ -58,9 +61,10 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
         axesGap: 0,
         x: defaultizeXAxis(xAxis, dataset, 0),
         y: defaultizeYAxis(yAxis, dataset, 0),
+        defaultTickLabelStyle,
       },
     });
-  }, [drawingArea, xAxis, yAxis, dataset, store, gap]);
+  }, [drawingArea, xAxis, yAxis, dataset, store, gap, defaultTickLabelStyle]);
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;

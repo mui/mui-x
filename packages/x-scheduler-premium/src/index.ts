@@ -3,7 +3,6 @@
 export type {
   SchedulerSlots,
   SchedulerSlotProps,
-  EventDialogGeneralTabProps,
   EventDialogGeneralTabPropsOverrides,
 } from '@mui/x-scheduler/models';
 

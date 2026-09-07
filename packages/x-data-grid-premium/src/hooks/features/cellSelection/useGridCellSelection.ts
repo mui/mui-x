@@ -8,9 +8,11 @@ import {
   getGridCellElement,
   getTotalHeaderHeight,
   getVisibleRows,
+  isEventTargetInPortal,
   isFillDownShortcut,
   isFillRightShortcut,
   isNavigationKey,
+  isSelectAllShortcut,
   serializeCellValue,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
@@ -24,6 +26,7 @@ import {
   gridClasses,
   gridFocusCellSelector,
   GRID_REORDER_COL_DEF,
+  gridRowNodeSelector,
   gridSortedRowIdsSelector,
   gridDimensionsSelector,
   GridCellModes,
@@ -34,12 +37,14 @@ import type {
   GridCellCoordinates,
   GridRowId,
   GridCellParams,
+  MuiEvent,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
-import type { GridCellSelectionApi } from './gridCellSelectionInterfaces';
+import type { GridCellSelectionApi, GridCellSelectionModel } from './gridCellSelectionInterfaces';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { CellValueUpdater } from '../clipboard/useGridClipboardImport';
+import { GRID_FORMULA_ROW_NUMBER_FIELD } from '../formula/gridFormulaPositionContext';
 
 export const cellSelectionStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'cellSelectionModel' | 'initialState'>
@@ -67,6 +72,26 @@ function getSelectedOrFocusedCells(
     }
   }
   return selectedCells;
+}
+
+// Answers "is more than one cell selected" without the cost of
+// `getSelectedCellsAsArray`, which allocates one object per selected cell
+function hasMultipleSelectedCells(apiRef: RefObject<GridPrivateApiPremium>): boolean {
+  const cellSelectionModel = apiRef.current.getCellSelectionModel();
+  const visibleRows = getVisibleRows(apiRef);
+  let selectedCellCount = 0;
+  for (let i = 0; i < visibleRows.rows.length && selectedCellCount < 2; i += 1) {
+    const fieldsMap = cellSelectionModel[visibleRows.rows[i].id];
+    if (fieldsMap !== undefined) {
+      const fields = Object.keys(fieldsMap);
+      for (let j = 0; j < fields.length && selectedCellCount < 2; j += 1) {
+        if (fieldsMap[fields[j]]) {
+          selectedCellCount += 1;
+        }
+      }
+    }
+  }
+  return selectedCellCount >= 2;
 }
 
 interface FillSourceState {
@@ -183,6 +208,39 @@ export const useGridCellSelection = (
     [apiRef, props.cellSelection],
   );
 
+  const isSelectableField = React.useCallback(
+    (field: string) => {
+      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        return false;
+      }
+
+      if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+        return false;
+      }
+
+      if (field === GRID_REORDER_COL_DEF.field) {
+        return false;
+      }
+
+      if (field === GRID_FORMULA_ROW_NUMBER_FIELD) {
+        return false;
+      }
+
+      const column = apiRef.current.getColumn(field);
+      return column?.type !== GRID_ACTIONS_COLUMN_TYPE;
+    },
+    [apiRef],
+  );
+
+  const isSelectableRow = React.useCallback(
+    (id: GridRowId) => {
+      const rowNode = gridRowNodeSelector(apiRef, id);
+      // Skeleton rows have no data and footer rows only contain aggregated values
+      return !!rowNode && rowNode.type !== 'skeletonRow' && rowNode.type !== 'footer';
+    },
+    [apiRef],
+  );
+
   const selectCellRange = React.useCallback<GridCellSelectionApi['selectCellRange']>(
     (start, end, keepOtherSelected = false) => {
       const startRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(start.id);
@@ -207,23 +265,31 @@ export const useGridCellSelection = (
 
       const visibleColumns = apiRef.current.getVisibleColumns();
       const visibleRows = getVisibleRows(apiRef);
-      const rowsInRange = visibleRows.rows.slice(finalStartRowIndex, finalEndRowIndex + 1);
-      const columnsInRange = visibleColumns.slice(finalStartColumnIndex, finalEndColumnIndex + 1);
+      const rowsInRange = visibleRows.rows
+        .slice(finalStartRowIndex, finalEndRowIndex + 1)
+        .filter((row) => isSelectableRow(row.id));
+      const columnsInRange = visibleColumns
+        .slice(finalStartColumnIndex, finalEndColumnIndex + 1)
+        .filter((column) => isSelectableField(column.field));
 
       const newModel = keepOtherSelected ? { ...apiRef.current.getCellSelectionModel() } : {};
 
-      rowsInRange.forEach((row) => {
-        if (!newModel[row.id]) {
-          newModel[row.id] = {};
-        }
-        columnsInRange.forEach((column) => {
-          newModel[row.id][column.field] = true;
-        }, {});
-      });
+      // Without this check, a range with only non-selectable columns would add
+      // empty row entries to the model
+      if (columnsInRange.length > 0) {
+        rowsInRange.forEach((row) => {
+          if (!newModel[row.id]) {
+            newModel[row.id] = {};
+          }
+          columnsInRange.forEach((column) => {
+            newModel[row.id][column.field] = true;
+          });
+        });
+      }
 
       apiRef.current.setCellSelectionModel(newModel);
     },
-    [apiRef],
+    [apiRef, isSelectableField, isSelectableRow],
   );
 
   const getSelectedCellsAsArray = React.useCallback<
@@ -272,22 +338,13 @@ export const useGridCellSelection = (
 
   const hasClickedValidCellForRangeSelection = React.useCallback(
     (params: GridCellParams) => {
-      if (params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
-        return false;
-      }
-
-      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
-        return false;
-      }
-
-      const column = apiRef.current.getColumn(params.field);
-      if (column?.type === GRID_ACTIONS_COLUMN_TYPE) {
+      if (!isSelectableField(params.field)) {
         return false;
       }
 
       return params.rowNode.type !== 'pinnedRow';
     },
-    [apiRef],
+    [isSelectableField],
   );
 
   const handleMouseUp = useEventCallback(() => {
@@ -482,10 +539,59 @@ export const useGridCellSelection = (
     }
   });
 
-  const handleCellKeyDown = useEventCallback<
-    [GridEventLookup['cellKeyDown']['params'], GridEventLookup['cellKeyDown']['event']],
+  const selectAllCells = useEventCallback<
+    [GridEventLookup['cellKeyDown']['params'], MuiEvent<GridEventLookup['cellKeyDown']['event']>],
     void
   >((params, event) => {
+    // Get the most recent cell mode because it may have been changed by another listener
+    if (apiRef.current.getCellMode(params.id, params.field) === GridCellModes.Edit) {
+      return;
+    }
+
+    // Do not apply the shortcut if the focus is not on the cell root component
+    if (isEventTargetInPortal(event)) {
+      return;
+    }
+
+    // Prevent the native select-all of the text on the page
+    event.preventDefault();
+    // Block the `cellKeyDown` listener of the row selection feature, which is subscribed
+    // after this one and would select all rows instead
+    event.defaultMuiPrevented = true;
+
+    const visibleRows = getVisibleRows(apiRef);
+    const selectableColumns = apiRef.current
+      .getVisibleColumns()
+      .filter((column) => isSelectableField(column.field));
+
+    if (visibleRows.rows.length === 0 || selectableColumns.length === 0) {
+      return;
+    }
+
+    const newModel: GridCellSelectionModel = {};
+    visibleRows.rows.forEach((row) => {
+      if (!isSelectableRow(row.id)) {
+        return;
+      }
+      const rowModel: GridCellSelectionModel[GridRowId] = {};
+      selectableColumns.forEach((column) => {
+        rowModel[column.field] = true;
+      });
+      newModel[row.id] = rowModel;
+    });
+
+    apiRef.current.setCellSelectionModel(newModel);
+  });
+
+  const handleCellKeyDown = useEventCallback<
+    [GridEventLookup['cellKeyDown']['params'], MuiEvent<GridEventLookup['cellKeyDown']['event']>],
+    void
+  >((params, event) => {
+    if (isSelectAllShortcut(event)) {
+      selectAllCells(params, event);
+      return;
+    }
+
     if (!isNavigationKey(event.key) || !cellWithVirtualFocus.current) {
       return;
     }
@@ -1623,16 +1729,16 @@ export const useGridCellSelection = (
 
   const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(
     (value) => {
-      if (apiRef.current.getSelectedCellsAsArray().length <= 1) {
+      if (!hasMultipleSelectedCells(apiRef)) {
         return value;
       }
-      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
+
       const cellSelectionModel = apiRef.current.getCellSelectionModel();
-      const unsortedSelectedRowIds = Object.keys(cellSelectionModel);
-      const sortedSelectedRowIds = sortedRowIds.filter((id) =>
-        unsortedSelectedRowIds.includes(`${id}`),
+      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
+      const sortedSelectedRowIds = sortedRowIds.filter(
+        (id) => cellSelectionModel[id] !== undefined,
       );
-      const copyData = sortedSelectedRowIds.reduce<string>((acc, rowId) => {
+      const rowStrings = sortedSelectedRowIds.map((rowId) => {
         const fieldsMap = cellSelectionModel[rowId];
         const rowValues = Object.keys(fieldsMap).map((field) => {
           let cellData: string;
@@ -1650,11 +1756,10 @@ export const useGridCellSelection = (
             cellData = '';
           }
           return cellData;
-        }, '');
-        const rowString = rowValues.join(clipboardCopyCellDelimiter);
-        return acc === '' ? rowString : [acc, rowString].join('\r\n');
-      }, '');
-      return copyData;
+        });
+        return rowValues.join(clipboardCopyCellDelimiter);
+      });
+      return rowStrings.join('\r\n');
     },
     [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
   );

@@ -7,9 +7,11 @@ export {
   useDragGesture,
   useWheelGesture,
   usePinchGesture,
+  useKeyboardGesture,
   type UseDragGestureOptions,
   type UseWheelGestureOptions,
   type UsePinchGestureOptions,
+  type UseKeyboardGestureOptions,
   type GestureInstance,
   type PanGestureConfig,
 } from './plugins/zoomGestures';

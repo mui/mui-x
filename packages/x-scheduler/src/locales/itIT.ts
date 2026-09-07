@@ -58,6 +58,8 @@ const itITDialog: Partial<EventEditingLocaleText> = {
   noResourceAriaLabel: 'Nessuna risorsa specifica',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Risorsa',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salva',
   startDateAfterEndDateError: 'La data di fine non può essere precedente alla data di inizio.',
