@@ -47,6 +47,7 @@ export async function absorbObserverFrames() {
   const observer = new MutationObserver(() => {
     lastMutationAt = nativeNow();
   });
+  const startedAt = lastMutationAt;
   observer.observe(document.body, {
     subtree: true,
     childList: true,
@@ -54,8 +55,6 @@ export async function absorbObserverFrames() {
     characterData: true,
   });
   try {
-    const startedAt = nativeNow();
-    lastMutationAt = startedAt;
     // One act scope per frame, rather than one wrapping the whole drain: React 18
     // only flushes the work queued inside an act scope when that scope exits, so a
     // single long-running one would hide every update until the very end and read
