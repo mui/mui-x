@@ -192,7 +192,10 @@ const EventTimelinePremiumViewport = styled('div', {
   display: 'inline-block',
   position: 'sticky',
   top: 0,
+  // Sticking to both edges keeps the viewport in place in LTR and RTL alike,
+  // whichever of the two offsets the browser gives priority to.
   left: 0,
+  right: 0,
   overflow: 'hidden',
 });
 

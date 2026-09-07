@@ -912,11 +912,15 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
     // See https://github.com/mui/mui-x/issues/14289
     describe('overlay position', () => {
-      const renderGrid = (direction: 'ltr' | 'rtl', columns: GridColDef[]) => {
+      const renderGrid = (
+        direction: 'ltr' | 'rtl',
+        columns: GridColDef[],
+        props?: Partial<DataGridProps>,
+      ) => {
         render(
           <ThemeProvider theme={createTheme({ direction })}>
             <div dir={direction} style={{ width: 300, height: 300 }}>
-              <DataGrid rows={[]} columns={columns} hideFooter />
+              <DataGrid rows={[]} columns={columns} hideFooter {...props} />
             </div>
           </ThemeProvider>,
         );
@@ -938,8 +942,11 @@ describe('<DataGrid /> - Layout & warnings', () => {
           width: 100,
         }));
 
-        const expectOverlayToStayInTheViewport = async (direction: 'ltr' | 'rtl') => {
-          const { scroller, overlay } = renderGrid(direction, wideColumns);
+        const expectOverlayToStayInTheViewport = async (
+          direction: 'ltr' | 'rtl',
+          props?: Partial<DataGridProps>,
+        ) => {
+          const { scroller, overlay } = renderGrid(direction, wideColumns, props);
           const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
           expect(maxScrollLeft).to.be.greaterThan(scroller.clientWidth);
 
@@ -960,6 +967,19 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
         it('should keep the overlay in the viewport in RTL', async () => {
           await expectOverlayToStayInTheViewport('rtl');
+        });
+
+        // The controlled layout mode pins the whole viewport instead of the overlay alone.
+        const controlledLayout: Partial<DataGridProps> = {
+          experimentalFeatures: { virtualizerLayoutMode: 'controlled' },
+        };
+
+        it('should keep the overlay in the viewport in LTR with a controlled layout', async () => {
+          await expectOverlayToStayInTheViewport('ltr', controlledLayout);
+        });
+
+        it('should keep the overlay in the viewport in RTL with a controlled layout', async () => {
+          await expectOverlayToStayInTheViewport('rtl', controlledLayout);
         });
       });
 

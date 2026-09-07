@@ -14,7 +14,10 @@ const InfiniteLoadingTriggerElement = styled('div', {
   shouldForwardProp: undefined,
 })({
   position: 'sticky',
+  // Sticking to both edges keeps the trigger in the viewport in LTR and RTL alike,
+  // whichever of the two offsets the browser gives priority to.
   left: 0,
+  right: 0,
   width: 0,
   height: 0,
 });
