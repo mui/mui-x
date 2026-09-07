@@ -1,7 +1,9 @@
+import type { SchedulerEventSide } from '@mui/x-scheduler-internals/models';
 import type {
   SchedulerDependency,
   SchedulerDependencyId,
 } from '@mui/x-scheduler-internals-premium/models';
+import { getDependencyEdges } from '@mui/x-scheduler-internals-premium/internals';
 import type {
   DependencyAnchorResolver,
   DependencyArrowAnchor,
@@ -31,21 +33,27 @@ export interface DependencyArrow {
   /**
    * The SVG path of the arrow, in absolute row-space pixels (y = 0 is the top of the
    * first row), so it does not depend on the scroll position.
+   * Built on first read and cached, like `hitD`: a row re-measure recomputes every
+   * arrow, and only the ones surviving the viewport filter need their string.
    */
-  d: string;
+  readonly d: string;
   /**
    * The path of the invisible click hit-area: the same route with both ends trimmed,
    * so the terminal (at the source anchor) and the start resize handle (under the
    * arrowhead) stay reachable.
-   * Derived on first read and cached: only the interactions layer needs it, and only
-   * for the arrows surviving the viewport filter.
+   * Derived on first read and cached: only the interactions layer needs it.
    */
   readonly hitD: string;
   /**
    * The point where the arrowhead is drawn, in the same coordinate space as `d`: the
-   * target's start-edge anchor, except when the route clamps at the timeline edge.
+   * target edge anchor, except when the route clamps at the timeline edge.
    */
   endPoint: DependencyArrowPoint;
+  /**
+   * The edge of the target event the arrow enters, which side of `endPoint` the
+   * arrow comes from.
+   */
+  targetEdge: SchedulerEventSide;
   /**
    * Horizontal bounding box of the arrow, as fractions of the events area width.
    */
@@ -59,8 +67,8 @@ export interface DependencyArrow {
 }
 
 /**
- * Computes the arrow of each renderable dependency, connecting the end edge of the
- * source event to the start edge of the target event.
+ * Computes the arrow of each renderable dependency, connecting the edges of its two
+ * events that its type constrains.
  */
 export function computeDependencyArrows(
   resolver: DependencyAnchorResolver,
@@ -86,10 +94,17 @@ export function computeDependencyArrows(
 
     const minRowIndex = Math.min(sourceAnchor.rowIndex, targetAnchor.rowIndex);
     const maxRowIndex = Math.max(sourceAnchor.rowIndex, targetAnchor.rowIndex);
-    const source = resolver.getEdgePoint(sourceAnchor, 'end');
-    const target = resolver.getEdgePoint(targetAnchor, 'start');
+    const edges = getDependencyEdges(dependency.type);
+    const source = resolver.getEdgePoint(sourceAnchor, edges.source);
+    const target = resolver.getEdgePoint(targetAnchor, edges.target);
 
-    const routes = buildDependencyArrowRoutes(source, target, resolver.detourOffset, eventsWidth);
+    const routes = buildDependencyArrowRoutes(
+      source,
+      target,
+      dependency.type,
+      resolver.detourOffset,
+      eventsWidth,
+    );
 
     // The event boxes the route may cross, used to pick the route and to cut the
     // hit-area around them. The endpoint events stay out: the end trims already
@@ -136,6 +151,7 @@ export function computeDependencyArrows(
       maxX = Math.max(maxX, point.x);
     }
 
+    let d: string | null = null;
     let hitD: string | null = null;
 
     return {
@@ -143,7 +159,12 @@ export function computeDependencyArrows(
       // and numbers, so `1` and `"1"` would otherwise share a key on the same row pair.
       key: `${typeof dependency.id}:${String(dependency.id)}:${sourceAnchor.rowIndex}:${targetAnchor.rowIndex}`,
       id: dependency.id,
-      d: buildRoundedOrthogonalPath(points, DEPENDENCY_ARROW_CORNER_RADIUS),
+      get d() {
+        if (d === null) {
+          d = buildRoundedOrthogonalPath(points, DEPENDENCY_ARROW_CORNER_RADIUS);
+        }
+        return d;
+      },
       get hitD() {
         if (hitD === null) {
           hitD = clipRouteAroundObstacles(
@@ -157,6 +178,7 @@ export function computeDependencyArrows(
         return hitD;
       },
       endPoint: points[points.length - 1],
+      targetEdge: edges.target,
       minXFraction: minX / eventsWidth,
       maxXFraction: maxX / eventsWidth,
       minRowIndex,

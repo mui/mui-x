@@ -1,8 +1,10 @@
+import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
+import { getDependencyEdges } from '@mui/x-scheduler-internals-premium/internals';
 import type { DependencyArrowObstacle, DependencyArrowPoint } from './dependencyAnchorResolver';
 
 /**
- * Minimum horizontal segment when leaving the predecessor's end edge and when
- * entering the successor's start edge.
+ * Minimum horizontal segment when leaving the source edge and when entering the
+ * target edge.
  */
 const DEPENDENCY_ARROW_STUB = 8;
 /**
@@ -10,7 +12,7 @@ const DEPENDENCY_ARROW_STUB = 8;
  */
 export const DEPENDENCY_ARROW_CORNER_RADIUS = 4;
 /**
- * Size of the arrowhead marker at the successor's start edge.
+ * Size of the arrowhead marker at the target edge.
  */
 export const DEPENDENCY_ARROWHEAD_SIZE = 7;
 /**
@@ -21,17 +23,45 @@ const DEPENDENCY_ARROW_TARGET_CLEARANCE =
   DEPENDENCY_ARROW_CORNER_RADIUS + DEPENDENCY_ARROWHEAD_SIZE + 1;
 
 /**
- * Builds the candidate orthogonal routes from the source anchor (end edge of the
- * predecessor) to the target anchor (start edge of the successor), best first.
- * The forward elbow returns two candidates (turn right after the source, or right
- * before the target) so the caller can pick the one crossing the fewest events.
- * `detourOffset` is how far from the source anchor the S route runs its horizontal
- * detour — it must clear the event's edge, otherwise the route overlaps the events and
- * reads as a knot instead of a detour.
+ * Builds the candidate orthogonal routes from the source anchor to the target anchor,
+ * best first. Routes are computed in a canonical frame where the source exits to the
+ * right: `StartToStart` and `StartToFinish` exit to the left, so their anchors are
+ * mirrored around the events area, routed, and mirrored back. That leaves two shapes:
+ * opposite edges (`FinishToStart`, mirrored `StartToFinish`) and same edges
+ * (`FinishToFinish`, mirrored `StartToStart`).
+ * `detourOffset` is how far from the source anchor the same-height routes run their
+ * horizontal detour — it must clear the event's edge, otherwise the route overlaps the
+ * events and reads as a knot instead of a detour.
  * Routes stay inside `[0, eventsWidth]`: at a timeline edge the stubs ride over the
  * event instead of leaving the visible area.
  */
 export function buildDependencyArrowRoutes(
+  source: DependencyArrowPoint,
+  target: DependencyArrowPoint,
+  type: SchedulerDependencyType,
+  detourOffset: number,
+  eventsWidth: number,
+): DependencyArrowPoint[][] {
+  const edges = getDependencyEdges(type);
+  const route = edges.source === edges.target ? routeSameEdges : routeOppositeEdges;
+  if (edges.source === 'end') {
+    return route(source, target, detourOffset, eventsWidth);
+  }
+  const mirror = (point: DependencyArrowPoint): DependencyArrowPoint => ({
+    x: eventsWidth - point.x,
+    y: point.y,
+  });
+  return route(mirror(source), mirror(target), detourOffset, eventsWidth).map((points) =>
+    points.map(mirror),
+  );
+}
+
+/**
+ * Exit to the right off the source, enter the target from the left.
+ * The forward elbow returns two candidates (turn right after the source, or right
+ * before the target) so the caller can pick the one crossing the fewest events.
+ */
+function routeOppositeEdges(
   source: DependencyArrowPoint,
   target: DependencyArrowPoint,
   detourOffset: number,
@@ -65,11 +95,11 @@ export function buildDependencyArrowRoutes(
     return routes;
   }
 
-  // S route: the successor starts before (or too close to) the predecessor's end, so
-  // the arrow exits right, detours horizontally hugging the source event (below it, or
-  // above when the target is higher) and comes back before entering the target. An
-  // arbitrary height between the two anchors could land exactly on a row border and
-  // read as part of the grid.
+  // S route: the target sits before (or too close to) the source, so the arrow exits
+  // right, detours horizontally hugging the source event (below it, or above when the
+  // target is higher) and comes back before entering the target. An arbitrary height
+  // between the two anchors could land exactly on a row border and read as part of
+  // the grid.
   // The verticals clamp to the events area (x < 0 sits under the pinned title column)
   // and the fixed-length stubs then ride over the event — the same overlap trade-off
   // as the short arrow between two adjacent events.
@@ -88,6 +118,48 @@ export function buildDependencyArrowRoutes(
   ];
 }
 
+/**
+ * Exit to the right off the source, wrap around the rightmost of the two anchors and
+ * enter the target from the right. Whether the target sits before or after the source
+ * only moves the wrap, so there is no backwards layout to speak of.
+ */
+function routeSameEdges(
+  source: DependencyArrowPoint,
+  target: DependencyArrowPoint,
+  detourOffset: number,
+  eventsWidth: number,
+): DependencyArrowPoint[][] {
+  const exitX = Math.min(eventsWidth, source.x + DEPENDENCY_ARROW_STUB);
+  const entryX = Math.min(eventsWidth, target.x + DEPENDENCY_ARROW_TARGET_CLEARANCE);
+
+  if (source.y === target.y) {
+    // Same height: the wrap would fold onto itself, so the route detours below the
+    // events between the exit and the entry, like the S route.
+    const detourY = source.y + detourOffset;
+    return [
+      [
+        source,
+        { x: exitX, y: source.y },
+        { x: exitX, y: detourY },
+        { x: entryX, y: detourY },
+        { x: entryX, y: target.y },
+        target,
+      ],
+    ];
+  }
+
+  // The vertical runs past both anchors; at the timeline end it clamps and the stubs
+  // ride over the events, like the S route.
+  const wrapX = Math.max(exitX, entryX);
+  return [
+    [
+      { x: Math.min(source.x, wrapX - DEPENDENCY_ARROW_STUB), y: source.y },
+      { x: wrapX, y: source.y },
+      { x: wrapX, y: target.y },
+      { x: Math.min(target.x, wrapX - DEPENDENCY_ARROW_TARGET_CLEARANCE), y: target.y },
+    ],
+  ];
+}
 /**
  * How much a route segment must overlap an event to count as crossing it — anchors
  * touching their own event's edge must not count.

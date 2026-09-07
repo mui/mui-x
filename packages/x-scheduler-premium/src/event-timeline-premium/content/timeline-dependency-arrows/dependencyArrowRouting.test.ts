@@ -65,6 +65,7 @@ describe('dependencyArrowRouting', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: 10, y: 5 },
         { x: 50, y: 5 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -79,6 +80,7 @@ describe('dependencyArrowRouting', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: 10, y: 5 },
         { x: 50, y: 40 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -95,6 +97,7 @@ describe('dependencyArrowRouting', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: 50, y: 5 },
         { x: 20, y: 40 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -113,6 +116,7 @@ describe('dependencyArrowRouting', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: 50, y: 40 },
         { x: 20, y: 5 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -131,6 +135,7 @@ describe('dependencyArrowRouting', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: 50, y: 5 },
         { x: 20, y: 5 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -150,6 +155,7 @@ describe('dependencyArrowRouting', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: 50, y: 5 },
         { x: 55, y: 40 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -168,6 +174,7 @@ describe('dependencyArrowRouting', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: 50, y: 5 },
         { x: 50, y: 5 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -182,6 +189,7 @@ describe('dependencyArrowRouting', () => {
       const routes = buildDependencyArrowRoutes(
         { x: 10, y: 5 },
         { x: 50, y: 40 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -201,6 +209,7 @@ describe('dependencyArrowRouting', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: 50, y: 5 },
         { x: 5, y: 40 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -219,6 +228,7 @@ describe('dependencyArrowRouting', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: EVENTS_WIDTH, y: 5 },
         { x: 30, y: 40 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -237,6 +247,7 @@ describe('dependencyArrowRouting', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: 10, y: 5 },
         { x: 10, y: 5 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -253,6 +264,7 @@ describe('dependencyArrowRouting', () => {
       const routes = buildDependencyArrowRoutes(
         { x: 10, y: 5 },
         { x: 30, y: 40 },
+        'FinishToStart',
         DETOUR_OFFSET,
         EVENTS_WIDTH,
       );
@@ -264,6 +276,230 @@ describe('dependencyArrowRouting', () => {
         { x: 18, y: 40 },
         { x: 30, y: 40 },
       ]);
+    });
+
+    describe('FinishToFinish', () => {
+      it('should wrap past the target end when it ends after the source on another row', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 10, y: 5 },
+          { x: 50, y: 40 },
+          'FinishToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 10, y: 5 },
+          { x: 62, y: 5 },
+          { x: 62, y: 40 },
+          { x: 50, y: 40 },
+        ]);
+      });
+
+      it('should wrap past the source end when the target ends before it on another row', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 50, y: 5 },
+          { x: 20, y: 40 },
+          'FinishToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 50, y: 5 },
+          { x: 58, y: 5 },
+          { x: 58, y: 40 },
+          { x: 20, y: 40 },
+        ]);
+      });
+
+      it('should detour below the events when the anchors share the same height', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 10, y: 5 },
+          { x: 50, y: 5 },
+          'FinishToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 10, y: 5 },
+          { x: 18, y: 5 },
+          { x: 18, y: 5 + DETOUR_OFFSET },
+          { x: 62, y: 5 + DETOUR_OFFSET },
+          { x: 62, y: 5 },
+          { x: 50, y: 5 },
+        ]);
+      });
+
+      it('should detour back below the source when the target ends before it at the same height', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 50, y: 5 },
+          { x: 20, y: 5 },
+          'FinishToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 50, y: 5 },
+          { x: 58, y: 5 },
+          { x: 58, y: 5 + DETOUR_OFFSET },
+          { x: 32, y: 5 + DETOUR_OFFSET },
+          { x: 32, y: 5 },
+          { x: 20, y: 5 },
+        ]);
+      });
+
+      it('should ride both stubs onto the events when the wrap clamps at the timeline end', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: EVENTS_WIDTH, y: 5 },
+          { x: 1435, y: 40 },
+          'FinishToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 1432, y: 5 },
+          { x: 1440, y: 5 },
+          { x: 1440, y: 40 },
+          { x: 1428, y: 40 },
+        ]);
+      });
+    });
+
+    describe('StartToStart', () => {
+      it('should wrap before the source start when the target starts after it on another row', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 10, y: 5 },
+          { x: 50, y: 40 },
+          'StartToStart',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 10, y: 5 },
+          { x: 2, y: 5 },
+          { x: 2, y: 40 },
+          { x: 50, y: 40 },
+        ]);
+      });
+
+      it('should wrap before the target start when it starts before the source on another row', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 50, y: 5 },
+          { x: 20, y: 40 },
+          'StartToStart',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 50, y: 5 },
+          { x: 8, y: 5 },
+          { x: 8, y: 40 },
+          { x: 20, y: 40 },
+        ]);
+      });
+
+      it('should detour below the events when the anchors share the same height', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 10, y: 5 },
+          { x: 50, y: 5 },
+          'StartToStart',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 10, y: 5 },
+          { x: 2, y: 5 },
+          { x: 2, y: 5 + DETOUR_OFFSET },
+          { x: 38, y: 5 + DETOUR_OFFSET },
+          { x: 38, y: 5 },
+          { x: 50, y: 5 },
+        ]);
+      });
+
+      it('should ride both stubs onto the events when the wrap clamps at the timeline start', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 0, y: 5 },
+          { x: 5, y: 40 },
+          'StartToStart',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 8, y: 5 },
+          { x: 0, y: 5 },
+          { x: 0, y: 40 },
+          { x: 12, y: 40 },
+        ]);
+      });
+    });
+
+    describe('StartToFinish', () => {
+      it('should return the mirrored elbow candidates when the target ends before the source starts', () => {
+        const routes = buildDependencyArrowRoutes(
+          { x: 50, y: 5 },
+          { x: 10, y: 40 },
+          'StartToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(routes).to.deep.equal([
+          [
+            { x: 50, y: 5 },
+            { x: 42, y: 5 },
+            { x: 42, y: 40 },
+            { x: 10, y: 40 },
+          ],
+          [
+            { x: 50, y: 5 },
+            { x: 22, y: 5 },
+            { x: 22, y: 40 },
+            { x: 10, y: 40 },
+          ],
+        ]);
+      });
+
+      it('should return a straight segment when the anchors share the same height and the target ends before the source', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 50, y: 5 },
+          { x: 10, y: 5 },
+          'StartToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 50, y: 5 },
+          { x: 10, y: 5 },
+        ]);
+      });
+
+      it('should route the mirrored S detour when the target ends after the source starts', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 20, y: 5 },
+          { x: 50, y: 40 },
+          'StartToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 20, y: 5 },
+          { x: 12, y: 5 },
+          { x: 12, y: 5 + DETOUR_OFFSET },
+          { x: 62, y: 5 + DETOUR_OFFSET },
+          { x: 62, y: 40 },
+          { x: 50, y: 40 },
+        ]);
+      });
     });
   });
 });

@@ -17,13 +17,18 @@ declare module '@mui/x-scheduler-internals/models' {
 }
 
 /**
- * The other PDM types (`StartToStart`, `FinishToFinish`, `StartToFinish`) will widen this union when implemented.
+ * The PDM dependency types: which edge of the predecessor constrains which edge of
+ * the successor.
  */
-export type SchedulerDependencyType = 'FinishToStart';
+export type SchedulerDependencyType =
+  | 'FinishToStart'
+  | 'StartToStart'
+  | 'FinishToFinish'
+  | 'StartToFinish';
 
 /**
  * A dependency between two events, referencing them by id.
- * For `"FinishToStart"`, `source` is the predecessor and `target` the successor.
+ * `source` is the predecessor and `target` the successor, whatever the type.
  */
 export interface SchedulerDependency {
   /**

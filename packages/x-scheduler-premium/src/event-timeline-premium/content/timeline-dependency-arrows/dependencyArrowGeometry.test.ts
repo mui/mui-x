@@ -8,7 +8,10 @@ import {
   computeElementPositionInCollection,
 } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
-import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import type {
+  SchedulerDependency,
+  SchedulerDependencyType,
+} from '@mui/x-scheduler-internals-premium/models';
 import { describe, it, expect } from 'vitest';
 import { createDependencyAnchorResolver, getEventEdgeAnchor } from './dependencyAnchorResolver';
 import { computeDependencyArrows } from './dependencyArrowGeometry';
@@ -54,8 +57,13 @@ function getOccurrences(events: SchedulerProcessedEvent[]) {
   });
 }
 
-function buildDependency(id: string, source: string, target: string): SchedulerDependency {
-  return { id, source, target, type: 'FinishToStart' };
+function buildDependency(
+  id: string,
+  source: string,
+  target: string,
+  type: SchedulerDependencyType = 'FinishToStart',
+): SchedulerDependency {
+  return { id, source, target, type };
 }
 
 function buildResolver(parameters: {
@@ -99,6 +107,99 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].maxXFraction).to.equal(780 / EVENTS_WIDTH);
       expect(arrows[0].minRowIndex).to.equal(0);
       expect(arrows[0].maxRowIndex).to.equal(0);
+    });
+
+    it('should build the path and the hit-area lazily', () => {
+      // Every row re-measure recomputes all the arrows, most of them off-screen: the
+      // string building only pays for the arrows something actually renders.
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
+
+      expect(Object.getOwnPropertyDescriptor(arrows[0], 'd')!.get).to.be.a('function');
+      expect(Object.getOwnPropertyDescriptor(arrows[0], 'hitD')!.get).to.be.a('function');
+    });
+
+    it('should expose the start edge as the target edge of a FinishToStart arrow', () => {
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
+
+      expect(arrows[0].targetEdge).to.equal('start');
+    });
+
+    it('should connect the end edges of both events for a FinishToFinish dependency', () => {
+      // event-a ends at x = 720 (row 0), event-b ends at x = 840 (row 1): the route
+      // wraps 12px past the later end and enters event-b from the right.
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
+            { resource: RESOURCE_2, occurrences: getOccurrences([eventB]) },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b', 'FinishToFinish')],
+      );
+
+      expect(arrows[0].d).to.equal(
+        'M 720 31 L 848 31 Q 852 31 852 35 L 852 89 Q 852 93 848 93 L 840 93',
+      );
+      // 14:00 → 14 / 24 × 1440 lands a hair below 840 in floating point.
+      expect(arrows[0].endPoint.x).to.be.closeTo(840, 1e-9);
+      expect(arrows[0].endPoint.y).to.equal(93);
+      expect(arrows[0].targetEdge).to.equal('end');
+    });
+
+    it('should connect the start edges of both events for a StartToStart dependency', () => {
+      // event-a starts at x = 600 (row 0), event-b at x = 780 (row 1): the route wraps
+      // 8px before the earlier start and enters event-b from the left.
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
+            { resource: RESOURCE_2, occurrences: getOccurrences([eventB]) },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b', 'StartToStart')],
+      );
+
+      expect(arrows[0].d).to.equal(
+        'M 600 31 L 596 31 Q 592 31 592 35 L 592 89 Q 592 93 596 93 L 780 93',
+      );
+      expect(arrows[0].endPoint).to.deep.equal({ x: 780, y: 93 });
+      expect(arrows[0].targetEdge).to.equal('start');
+    });
+
+    it('should connect the source start to the target end for a StartToFinish dependency', () => {
+      // event-b starts at x = 780 (row 1), event-a ends at x = 720 (row 0): the
+      // mirrored forward elbow turns 8px before the source start and enters event-a
+      // from the right.
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
+            { resource: RESOURCE_2, occurrences: getOccurrences([eventB]) },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-b', 'event-a', 'StartToFinish')],
+      );
+
+      expect(arrows[0].d).to.equal(
+        'M 780 93 L 776 93 Q 772 93 772 89 L 772 35 Q 772 31 768 31 L 720 31',
+      );
+      expect(arrows[0].endPoint).to.deep.equal({ x: 720, y: 31 });
+      expect(arrows[0].targetEdge).to.equal('end');
     });
 
     it('should keep a clickable hit-area between two adjacent events', () => {
