@@ -25,10 +25,12 @@ describe('absorbObserverFrames', () => {
         />,
       );
 
-      // Raw frames outside act: a delivery the absorb failed to drain would land here
+      // Raw time outside act: an update the absorb failed to drain would land here
       // un-acted, and the console guard fails the test with the React act warning.
+      // This has to outlast the virtualizer's `resizeThrottleMs` (100ms), because the
+      // update that escapes is the trailing edge of that throttle rather than a frame.
       await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+        setTimeout(resolve, 250);
       });
     },
   );

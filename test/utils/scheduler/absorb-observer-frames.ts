@@ -6,12 +6,24 @@ import { vi } from 'vitest';
 const capturedRequestAnimationFrame =
   typeof requestAnimationFrame === 'function' ? requestAnimationFrame : null;
 const nativeRequestAnimationFrame = capturedRequestAnimationFrame?.bind(globalThis) ?? null;
+// Same reason as the frame capture: fake timers freeze `performance.now`, which would
+// stop the quiet window below from ever elapsing.
+const nativeNow = performance.now.bind(performance);
+
+// A ResizeObserver delivery does not settle the virtualizer on its own: it schedules a
+// dimension update throttled by `resizeThrottleMs` (100ms by default), whose trailing
+// edge runs on a timer rather than a frame. Waiting a fixed number of frames therefore
+// races that timer, so drain until the DOM has been still for longer than that window.
+const QUIET_WINDOW_MS = 150;
+// Upper bound so a genuinely oscillating layout fails the test instead of hanging.
+const MAX_DRAIN_MS = 1000;
 
 /**
- * Waits two native frames inside act, so pending ResizeObserver deliveries land as
+ * Waits inside act until the scheduler surface stops mutating the DOM, so pending
+ * ResizeObserver deliveries and the throttled dimension updates they schedule land as
  * acted updates instead of between test steps. Call it after rendering a scheduler
  * surface (prefer `renderSettled`) or after a scroll that mounts observed elements.
- * jsdom has no ResizeObserver and so no frames to absorb; there it flushes pending
+ * jsdom has no ResizeObserver and so nothing to absorb; there it flushes pending
  * microtasks inside act instead.
  */
 export async function absorbObserverFrames() {
@@ -29,11 +41,39 @@ export async function absorbObserverFrames() {
         'the live one. A test likely leaked fake timers without restoring them.',
     );
   }
-  // Two frames: one for layout, one for the delivery. A delivery chain (observer-driven
-  // state resizing an observed element) would need a third; nothing observed does today.
   await act(async () => {
-    await new Promise<void>((resolve) => {
-      nativeRequestAnimationFrame!(() => nativeRequestAnimationFrame!(() => resolve()));
+    let lastMutationAt = nativeNow();
+    // Record in the callback: delivering records to it also drains the queue, so
+    // `takeRecords()` would come back empty and read as a false quiet.
+    const observer = new MutationObserver(() => {
+      lastMutationAt = nativeNow();
     });
+    observer.observe(document.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      characterData: true,
+    });
+    try {
+      const startedAt = nativeNow();
+      lastMutationAt = startedAt;
+      // The frames have to be pumped one at a time: each one may produce the mutation
+      // that extends the quiet window.
+      /* eslint-disable no-await-in-loop */
+      do {
+        await new Promise<void>((resolve) => {
+          nativeRequestAnimationFrame!(() => resolve());
+        });
+        // Let React commit what the frame produced, and the observer deliver the
+        // records for it, before testing the quiet window below.
+        await Promise.resolve();
+      } while (
+        nativeNow() - lastMutationAt < QUIET_WINDOW_MS &&
+        nativeNow() - startedAt < MAX_DRAIN_MS
+      );
+      /* eslint-enable no-await-in-loop */
+    } finally {
+      observer.disconnect();
+    }
   });
 }
