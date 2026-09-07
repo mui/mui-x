@@ -1,18 +1,14 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  useGridApiMethod,
-  useGridLogger,
-  type GridExportDisplayOptions,
-  useGridEventPriority,
-} from '@mui/x-data-grid';
+import { useGridApiMethod, useGridLogger, useGridEventPriority } from '@mui/x-data-grid';
+import type { GridExportDisplayOptions } from '@mui/x-data-grid';
 import {
   useGridRegisterPipeProcessor,
   exportAs,
   getColumnsToExport,
   defaultGetRowsToExport,
-  type GridPipeProcessor,
 } from '@mui/x-data-grid/internals';
+import type { GridPipeProcessor } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProps } from '../../../models/dataGridPremiumProps';
 import type {
@@ -22,11 +18,11 @@ import type {
 } from './gridExcelExportInterface';
 import {
   buildExcel,
-  type ExcelExportInitEvent,
   getDataForValueOptionsSheet,
   serializeColumns,
   serializeRowUnsafe,
 } from './serializer/excelSerializer';
+import type { ExcelExportInitEvent } from './serializer/excelSerializer';
 import { GridExcelExportMenuItem } from '../../../components';
 import type { SerializedRow } from './serializer/utils';
 
@@ -143,13 +139,30 @@ export const useGridExcelExport = (
 
       const serializedColumns = serializeColumns(exportedColumns, options.columnsStyles || {});
 
+      // Mirror the worker's own header logic so the formula A1 row numbers line
+      // up with the sheet it builds: the worker always writes the column-header
+      // row (`includeHeaders` is not forwarded and defaults to `true` there) and
+      // writes group headers only when `includeColumnGroupsHeaders` is truthy.
+      const formulaExport =
+        (options.escapeFormulas ?? true)
+          ? null
+          : (apiRef.current.createFormulaExcelExportLayout?.(exportedColumns, exportedRowIds, {
+              includeHeaders: true,
+              includeColumnGroupsHeaders: Boolean(options.includeColumnGroupsHeaders),
+            }) ?? null);
+
       apiRef.current.resetColSpan();
       const serializedRows: SerializedRow[] = [];
       for (let i = 0; i < exportedRowIds.length; i += 1) {
         const id = exportedRowIds[i];
-        const serializedRow = serializeRowUnsafe(id, exportedColumns, apiRef, valueOptionsData, {
-          escapeFormulas: options.escapeFormulas ?? true,
-        });
+        const serializedRow = serializeRowUnsafe(
+          id,
+          exportedColumns,
+          apiRef,
+          valueOptionsData,
+          { escapeFormulas: options.escapeFormulas ?? true },
+          formulaExport,
+        );
         serializedRows.push(serializedRow);
       }
       apiRef.current.resetColSpan();

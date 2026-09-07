@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
-import { vi } from 'vitest';
-import { type RefObject } from '@mui/x-internals/types';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   $,
   $$,
@@ -15,14 +14,16 @@ import {
   getColumnHeaderCell,
 } from 'test/utils/helperFn';
 import {
-  type GridRowModel,
   useGridApiRef,
   DataGridPro,
-  type DataGridProProps,
-  type GridApi,
   gridFocusCellSelector,
   gridClasses,
-  type GridValidRowModel,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridRowModel,
+  DataGridProProps,
+  GridApi,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -265,6 +266,89 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
+    describe('_action: "replace" in a batch', () => {
+      class BrandRow {
+        id: number;
+        brand: string;
+        constructor(id: number, brand: string) {
+          this.id = id;
+          this.brand = brand;
+        }
+        getBrand() {
+          return this.brand;
+        }
+      }
+
+      it('should keep the reference identity when the replace is the last entry for its id', () => {
+        render(<TestCase />);
+        const replacement = new BrandRow(1, 'Fila');
+        act(() =>
+          apiRef.current?.updateRows([
+            { id: 1, brand: 'Kappa' },
+            { _action: 'replace', row: replacement },
+          ]),
+        );
+        expect(apiRef.current?.getRow(1)).to.equal(replacement);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
+      });
+
+      it('should stay a replace when a partial update follows it for the same id', () => {
+        render(<TestCase rows={[{ id: 1, brand: 'Adidas', stock: 5 }]} />);
+        const replacement = new BrandRow(1, 'Fila');
+        expect(() => {
+          act(() =>
+            apiRef.current?.updateRows([
+              { _action: 'replace', row: replacement },
+              { id: 1, brand: 'Kappa' },
+            ]),
+          );
+        }).toWarnDev(
+          [
+            "MUI X Data Grid: A row was provided with `_action: 'replace'` but it is not the last update for that row in this batch.",
+            'The remaining updates are merged onto the replacement, so the row keeps its prototype but is neither the same object nor carries its `#private` fields, which a merge cannot copy.',
+            'Make the replace the last update for that row if `apiRef.current.getRow(id)` must return the object you passed in.',
+            'For more detail, see https://mui.com/x/react-data-grid/row-updates/.',
+          ].join('\n'),
+        );
+
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        // Only the reference identity is lost, the replace semantics are not.
+        expect(updatedRow).not.to.equal(replacement);
+        expect(updatedRow instanceof BrandRow).to.equal(true);
+        expect(updatedRow.getBrand()).to.equal('Kappa');
+        expect('stock' in updatedRow).to.equal(false);
+        expect('_action' in updatedRow).to.equal(false);
+        // The caller's instance is never mutated, even in the merge path.
+        expect('_action' in replacement).to.equal(false);
+      });
+
+      it('should cancel a deletion queued earlier in the same batch', () => {
+        render(<TestCase />);
+        const replacement = new BrandRow(1, 'Fila');
+        act(() =>
+          apiRef.current?.updateRows([
+            { id: 1, _action: 'delete' },
+            { _action: 'replace', row: replacement },
+          ]),
+        );
+        expect(apiRef.current?.getRow(1)).to.equal(replacement);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
+      });
+
+      it('should replace a row inserted earlier in the same batch', () => {
+        render(<TestCase />);
+        const replacement = new BrandRow(5, 'Atari');
+        act(() =>
+          apiRef.current?.updateRows([
+            { id: 5, brand: 'Amiga' },
+            { _action: 'replace', row: replacement },
+          ]),
+        );
+        expect(apiRef.current?.getRow(5)).to.equal(replacement);
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma', 'Atari']);
+      });
+    });
+
     it('update row data should process getRowId', () => {
       function TestCaseGetRowId() {
         apiRef = useGridApiRef();
@@ -314,7 +398,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should not trigger unnecessary cells rerenders', () => {
-      const renderCellSpy = spy((params: any) => {
+      const renderCellSpy = vi.fn((params: any) => {
         return params.value;
       });
       function Test() {
@@ -332,10 +416,10 @@ describe('<DataGridPro /> - Rows', () => {
 
       render(<Test />);
       const initialRendersCount = 2;
-      expect(renderCellSpy.callCount).to.equal(initialRendersCount);
+      expect(renderCellSpy.mock.calls.length).to.equal(initialRendersCount);
 
       act(() => apiRef.current?.updateRows([{ id: 1, name: 'John' }]));
-      expect(renderCellSpy.callCount).to.equal(initialRendersCount + 2);
+      expect(renderCellSpy.mock.calls.length).to.equal(initialRendersCount + 2);
     });
   });
 
@@ -453,12 +537,14 @@ describe('<DataGridPro /> - Rows', () => {
       const { setProps } = render(
         <TestCaseVirtualization nbRows={5} nbCols={2} height={160} rowBufferPx={0} />,
       );
-      expect(getRows()).to.have.length(1);
+      // `getIndexesToRender` renders one extra row past the visible viewport so
+      // there is no empty space if the user starts scrolling, hence the +1.
+      expect(getRows()).to.have.length(2);
       setProps({
         height: 220,
       });
       await waitFor(() => {
-        expect(getRows()).to.have.length(3);
+        expect(getRows()).to.have.length(4);
       });
     });
 
@@ -529,6 +615,9 @@ describe('<DataGridPro /> - Rows', () => {
       const n = 2;
       const columnWidth = 100;
       const columnBufferPx = n * columnWidth;
+      // `getIndexesToRender` renders one extra column past the visible viewport
+      // (or past the buffer) so a horizontal scroll does not leave empty space.
+      const extra = 1;
       render(
         <TestCaseVirtualization
           width={width + border * 2}
@@ -537,12 +626,14 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
       const firstRow = getRow(0);
-      expect($$(firstRow, '[role="gridcell"]')).to.have.length(Math.floor(width / columnWidth) + n);
+      expect($$(firstRow, '[role="gridcell"]')).to.have.length(
+        Math.floor(width / columnWidth) + n + extra,
+      );
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       await act(async () => virtualScroller.scrollTo({ left: 301 }));
       await waitFor(() => {
         expect($$(firstRow, '[role="gridcell"]')).to.have.length(
-          n + 1 + Math.floor(width / columnWidth) + n,
+          n + 1 + Math.floor(width / columnWidth) + n + extra,
         );
       });
     });
@@ -594,9 +685,15 @@ describe('<DataGridPro /> - Rows', () => {
         // scroll to the bottom
         await act(async () => virtualScroller.scrollTo({ top: 2000 }));
 
+        // `scrollTo` updates `scrollTop` synchronously but the browser dispatches the native
+        // `scroll` event asynchronously, and the render context only updates from that event.
+        // Poll until the bottom window is rendered to avoid a flaky race.
+        await waitFor(() => {
+          const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
+          expect(lastCell).to.have.text('31');
+        });
+
         const dimensions = apiRef.current!.state.dimensions;
-        const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
-        expect(lastCell).to.have.text('31');
         expect(virtualScroller.scrollHeight).to.equal(
           dimensions.headerHeight + nbRows * rowHeight + dimensions.scrollbarSize,
         );
@@ -874,15 +971,15 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should publish "cellFocusOut" when clicking outside the focused cell', async () => {
-      const handleCellFocusOut = spy();
+      const handleCellFocusOut = vi.fn();
       const { user } = render(<TestCase rows={baselineProps.rows} />);
       apiRef.current?.subscribeEvent('cellFocusOut', handleCellFocusOut);
       await user.click(getCell(1, 0));
-      expect(handleCellFocusOut.callCount).to.equal(0);
+      expect(handleCellFocusOut.mock.calls.length).to.equal(0);
       await user.click(document.body);
-      expect(handleCellFocusOut.callCount).to.equal(1);
-      expect(handleCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
-      expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
+      expect(handleCellFocusOut.mock.calls.length).to.equal(1);
+      expect(handleCellFocusOut.mock.calls[0][0].id).to.equal(baselineProps.rows[1].id);
+      expect(handleCellFocusOut.mock.calls[0][0].field).to.equal(baselineProps.columns[0].field);
     });
 
     it('should not crash when the row is removed during the click', async () => {
@@ -968,5 +1065,25 @@ describe('<DataGridPro /> - Rows', () => {
       const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
     });
+  });
+
+  // See https://github.com/mui/mui-x/issues/22831
+  it('should not throw when getting params for a field without a matching column', () => {
+    const apiRef = React.createRef<GridApi>();
+    render(
+      <div style={{ width: 400, height: 300 }}>
+        <DataGridPro
+          apiRef={apiRef}
+          rows={[
+            { id: 1, name: 'a' },
+            { id: 2, name: 'b' },
+          ]}
+          columns={[{ field: 'name' }]}
+        />
+      </div>,
+    );
+
+    expect(() => apiRef.current!.getCellParams(1, 'does-not-exist')).not.to.throw();
+    expect(apiRef.current!.getCellParams(1, 'does-not-exist').value).to.equal(undefined);
   });
 });

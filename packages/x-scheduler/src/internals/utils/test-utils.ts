@@ -1,11 +1,11 @@
 import { screen } from '@mui/internal-test-utils';
 
 export function getPreferencesMenu() {
-  return screen.queryByRole('button', { name: /settings/i });
+  return screen.queryByRole('button', { name: /preferences/i });
 }
 
 export async function findPreferencesMenu() {
-  return screen.findByRole('button', { name: /settings/i });
+  return screen.findByRole('button', { name: /preferences/i });
 }
 
 export async function openPreferencesMenu(user) {

@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { act, renderHook } from '@mui/internal-test-utils';
 import { useStore } from '@mui/x-internals/store';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { spy } from 'sinon';
 import type { ChatAdapter } from './adapters';
 import { useChatRuntimeContext } from './internals/useChatRuntimeContext';
 import { useChatStore } from './hooks';
 import type { ChatPartRendererMap } from './renderers';
 import { chatSelectors } from './selectors';
-import { ChatStore, type ChatStoreParameters } from './store';
+import { ChatStore } from './store';
+import type { ChatStoreParameters } from './store';
 import type { ChatConversation, ChatMessage } from './types/chat-entities';
-import { ChatProvider, type ChatProviderProps } from './ChatProvider';
+import { ChatProvider } from './ChatProvider';
+import type { ChatProviderProps } from './ChatProvider';
 import { useChatStoreContext } from './internals/useChatStoreContext';
 
 const message1: ChatMessage = {
@@ -139,10 +140,10 @@ describe('ChatProvider', () => {
 
   it('creates the store once, resyncs controlled props, and exposes runtime context values', () => {
     const adapter = createAdapter();
-    const onToolCall = spy();
-    const onFinish = spy();
-    const onData = spy();
-    const onError = spy();
+    const onToolCall = vi.fn();
+    const onFinish = vi.fn();
+    const onData = vi.fn();
+    const onError = vi.fn();
     const partRenderers: ChatPartRendererMap = {
       text: ({ part }) => part.text,
     };
@@ -202,11 +203,22 @@ describe('ChatProvider', () => {
     expect(result.current.partRenderers).toEqual({});
   });
 
+  it('forwards role display names to the store parameters', () => {
+    const roleDisplayNames = { assistant: 'Assistent' };
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter(),
+      roleDisplayNames,
+    });
+    const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+    expect(result.current.parameters.roleDisplayNames).toBe(roleDisplayNames);
+  });
+
   it('calls uncontrolled onChange callbacks for internal store mutations', () => {
-    const onMessagesChange = spy();
-    const onConversationsChange = spy();
-    const onActiveConversationChange = spy();
-    const onComposerValueChange = spy();
+    const onMessagesChange = vi.fn();
+    const onConversationsChange = vi.fn();
+    const onActiveConversationChange = vi.fn();
+    const onComposerValueChange = vi.fn();
     const { Wrapper } = createProviderWrapper({
       adapter: createAdapter(),
       onMessagesChange,
@@ -223,21 +235,22 @@ describe('ChatProvider', () => {
       result.current.setComposerValue('Draft one');
     });
 
-    expect(onMessagesChange.callCount).toBe(1);
-    expect(onMessagesChange.lastCall.args[0]).toEqual([message1]);
-    expect(onConversationsChange.callCount).toBe(1);
-    expect(onConversationsChange.lastCall.args[0]).toEqual([conversation1]);
-    expect(onActiveConversationChange.callCount).toBe(1);
-    expect(onActiveConversationChange.lastCall.args[0]).toBe('c1');
-    expect(onComposerValueChange.callCount).toBe(1);
-    expect(onComposerValueChange.lastCall.args[0]).toBe('Draft one');
+    expect(onMessagesChange.mock.calls.length).toBe(2);
+    expect(onMessagesChange.mock.calls[0][0]).toEqual([message1]);
+    expect(onMessagesChange.mock.lastCall?.[0]).toEqual([]);
+    expect(onConversationsChange.mock.calls.length).toBe(1);
+    expect(onConversationsChange.mock.lastCall?.[0]).toEqual([conversation1]);
+    expect(onActiveConversationChange.mock.calls.length).toBe(1);
+    expect(onActiveConversationChange.mock.lastCall?.[0]).toBe('c1');
+    expect(onComposerValueChange.mock.calls.length).toBe(1);
+    expect(onComposerValueChange.mock.lastCall?.[0]).toBe('Draft one');
   });
 
   it('resyncs controlled models after internal mutations and keeps the parent values authoritative', () => {
-    const onMessagesChange = spy();
-    const onConversationsChange = spy();
-    const onActiveConversationChange = spy();
-    const onComposerValueChange = spy();
+    const onMessagesChange = vi.fn();
+    const onConversationsChange = vi.fn();
+    const onActiveConversationChange = vi.fn();
+    const onComposerValueChange = vi.fn();
     const controlledMessages = [message1];
     const controlledConversations = [conversation1];
     const { Wrapper, setProps } = createProviderWrapper({
@@ -260,10 +273,10 @@ describe('ChatProvider', () => {
       result.current.setComposerValue('Draft two');
     });
 
-    expect(onMessagesChange.lastCall.args[0]).toEqual([message1, message2]);
-    expect(onConversationsChange.lastCall.args[0]).toEqual([conversation2]);
-    expect(onActiveConversationChange.lastCall.args[0]).toBe('c2');
-    expect(onComposerValueChange.lastCall.args[0]).toBe('Draft two');
+    expect(onMessagesChange.mock.lastCall?.[0]).toEqual([message1, message2]);
+    expect(onConversationsChange.mock.lastCall?.[0]).toEqual([conversation2]);
+    expect(onActiveConversationChange.mock.lastCall?.[0]).toBe('c2');
+    expect(onComposerValueChange.mock.lastCall?.[0]).toBe('Draft two');
 
     setProps({
       adapter: createAdapter(),
@@ -321,36 +334,80 @@ describe('ChatProvider', () => {
   });
 
   it('passes streamFlushInterval through to streaming behavior', async () => {
+    vi.useFakeTimers();
+    let controller: ReadableStreamDefaultController<any> | undefined;
     const adapter: ChatAdapter = {
-      async sendMessage() {
+      sendMessage: vi.fn(async () => {
         return new ReadableStream({
-          start(controller) {
-            controller.enqueue({ type: 'start', messageId: 'a1' });
-            controller.enqueue({ type: 'text-delta', id: 'text-1', delta: 'Hello' });
-            controller.enqueue({ type: 'text-delta', id: 'text-1', delta: ' world' });
-            controller.enqueue({ type: 'finish', messageId: 'a1' });
-            controller.close();
+          start(nextController) {
+            controller = nextController;
           },
         });
-      },
+      }),
     };
-    const { Wrapper } = createProviderWrapper({
-      adapter,
-      streamFlushInterval: 0,
-    });
-    const { result } = renderHook(
-      () => {
-        const store = useChatStoreContext();
-        const runtime = useChatRuntimeContext();
-        return { store, runtime };
-      },
-      { wrapper: Wrapper },
-    );
 
-    // streamFlushInterval is passed through — we verify by checking it doesn't error
-    // and the store initializes correctly
-    expect(result.current.store).toBeDefined();
-    expect(result.current.runtime.adapter).toBe(adapter);
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        streamFlushInterval: 50,
+      });
+      const { result } = renderHook(
+        () => {
+          const store = useChatStoreContext();
+          const runtime = useChatRuntimeContext();
+          return { store, runtime };
+        },
+        { wrapper: Wrapper },
+      );
+
+      let sendPromise: Promise<void> | undefined;
+      act(() => {
+        sendPromise = result.current.runtime.actions.sendMessage({
+          parts: [{ type: 'text', text: 'Hello' }],
+        });
+      });
+
+      await act(async () => {
+        await Promise.resolve();
+      });
+
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+      expect(controller).not.toBe(undefined);
+
+      act(() => {
+        controller!.enqueue({ type: 'start', messageId: 'a1' });
+        controller!.enqueue({ type: 'text-delta', id: 'text-1', delta: 'Buffered' });
+      });
+      await act(async () => {
+        await Promise.resolve();
+      });
+
+      expect(result.current.store.state.messagesById.a1.parts).toEqual([]);
+
+      act(() => {
+        vi.advanceTimersByTime(49);
+      });
+      expect(result.current.store.state.messagesById.a1.parts).toEqual([]);
+
+      await act(async () => {
+        vi.advanceTimersByTime(1);
+      });
+
+      expect(result.current.store.state.messagesById.a1.parts).toEqual([
+        { type: 'text', text: 'Buffered', state: 'streaming' },
+      ]);
+
+      act(() => {
+        controller!.enqueue({ type: 'finish', messageId: 'a1' });
+        controller!.close();
+      });
+
+      await act(async () => {
+        await sendPromise;
+      });
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('store reference stays stable when adapter changes', () => {
@@ -398,5 +455,153 @@ describe('ChatProvider', () => {
 
     expect(result.current).toBeInstanceOf(TestStore);
     expect(TestStore.instances).toHaveLength(1);
+  });
+
+  describe('outbound typing signals (features.typingSignal)', () => {
+    function createTypingAdapter(): ChatAdapter & { setTyping: ReturnType<typeof vi.fn> } {
+      const adapter = createAdapter() as ChatAdapter & { setTyping: ReturnType<typeof vi.fn> };
+      adapter.setTyping = vi.fn(async () => {});
+      return adapter;
+    }
+
+    it('signals true once on empty→non-empty and never again while typing continues', () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        features: { typingSignal: true },
+      });
+      const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setComposerValue('h');
+      });
+
+      expect(adapter.setTyping).toHaveBeenCalledTimes(1);
+      expect(adapter.setTyping).toHaveBeenCalledWith({ conversationId: 'c1', isTyping: true });
+
+      act(() => {
+        for (let i = 0; i < 10; i += 1) {
+          result.current.setComposerValue(`h${'i'.repeat(i + 1)}`);
+        }
+      });
+
+      expect(adapter.setTyping).toHaveBeenCalledTimes(1);
+    });
+
+    it('signals false on non-empty→empty', () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        features: { typingSignal: true },
+      });
+      const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setComposerValue('h');
+      });
+      act(() => {
+        result.current.setComposerValue('');
+      });
+
+      expect(adapter.setTyping).toHaveBeenCalledTimes(2);
+      expect(adapter.setTyping).toHaveBeenLastCalledWith({ conversationId: 'c1', isTyping: false });
+    });
+
+    it('signals false on the previous conversation and true on the new one when switching with a draft', async () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        initialConversations: [conversation1, conversation2],
+        features: { typingSignal: true },
+      });
+      const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setComposerValue('draft');
+      });
+      adapter.setTyping.mockClear();
+
+      await act(async () => {
+        result.current.setActiveConversation('c2');
+      });
+
+      expect(adapter.setTyping).toHaveBeenCalledWith({ conversationId: 'c1', isTyping: false });
+      expect(adapter.setTyping).toHaveBeenCalledWith({ conversationId: 'c2', isTyping: true });
+    });
+
+    it('signals false on unmount while typing', () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        features: { typingSignal: true },
+      });
+      const { result, unmount } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setComposerValue('h');
+      });
+      adapter.setTyping.mockClear();
+
+      unmount();
+
+      expect(adapter.setTyping).toHaveBeenCalledTimes(1);
+      expect(adapter.setTyping).toHaveBeenLastCalledWith({ conversationId: 'c1', isTyping: false });
+    });
+
+    it('seeds true at mount when an initial draft and active conversation exist', () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        initialComposerValue: 'draft',
+        features: { typingSignal: true },
+      });
+      renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      expect(adapter.setTyping).toHaveBeenCalledTimes(1);
+      expect(adapter.setTyping).toHaveBeenCalledWith({ conversationId: 'c1', isTyping: true });
+    });
+
+    it('never calls setTyping when the feature is off (default)', () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        initialComposerValue: 'draft',
+        initialConversations: [conversation1, conversation2],
+      });
+      const { result, unmount } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setComposerValue('hello');
+        result.current.setComposerValue('');
+        result.current.setActiveConversation('c2');
+      });
+      unmount();
+
+      expect(adapter.setTyping).not.toHaveBeenCalled();
+    });
+
+    it('does not error when the adapter has no setTyping (smoke)', () => {
+      const adapter = createAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        features: { typingSignal: true },
+      });
+      const { result, unmount } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      expect(() => {
+        act(() => {
+          result.current.setComposerValue('hello');
+          result.current.setComposerValue('');
+        });
+        unmount();
+      }).not.toThrow();
+    });
   });
 });

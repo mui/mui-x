@@ -18,7 +18,7 @@ export interface ChartsLabelMarkClasses {
   fill: string;
 }
 
-export function getLabelMarkUtilityClass(slot: string) {
+function getLabelMarkUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLabelMark', slot);
 }
 
@@ -30,7 +30,8 @@ export const labelMarkClasses: ChartsLabelMarkClasses = generateUtilityClasses(
 export const useUtilityClasses = (props: ChartsLabelMarkProps) => {
   const { type } = props;
   const slots = {
-    root: typeof type === 'function' ? ['root'] : ['root', type],
+    root:
+      typeof type === 'function' ? ['root'] : ['root', type === 'line+mark' ? 'lineAndMark' : type],
     fill: ['fill'],
   };
 

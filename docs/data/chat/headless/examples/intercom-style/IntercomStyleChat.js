@@ -446,7 +446,7 @@ export default function IntercomStyleChat() {
       <Composer.Root slots={{ root: IntercomComposerRoot }}>
         <Composer.TextArea
           aria-label="Message"
-          placeholder="Message..."
+          placeholder="Message…"
           slots={{ input: IntercomTextArea }}
         />
         <div

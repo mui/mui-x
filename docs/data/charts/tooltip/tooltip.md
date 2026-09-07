@@ -130,6 +130,22 @@ You can pass these props to the tooltip using `slotProps.tooltip`, or directly t
 
 {{"demo": "TooltipPosition.js", "hideToolbar": true, "bg": "playground"}}
 
+## Portaling the tooltip
+
+By default, the tooltip is rendered inside the chart container with a fixed position.
+
+To render the tooltip outside, use the `container` prop to provide the element that receives the tooltip.
+You can pass it through `slotProps.tooltip`, or directly to `ChartsTooltip`/`ChartsTooltipContainer` when composing a custom component.
+
+```jsx
+<BarChart
+  // ...
+  slotProps={{ tooltip: { container: document.body } }}
+/>
+```
+
+Alternatively, set `disablePortal` to render the tooltip inline, in the DOM hierarchy of its parent.
+
 ## Style modification
 
 Similar to other chart elements, you can style the tooltip using CSS classes.
@@ -201,6 +217,15 @@ Otherwise no tooltip will be shown.
 :::
 
 {{"demo": "ControlledAxisTooltip.js"}}
+
+### Synchronizing tooltips across charts
+
+To compare values at the same position across stacked charts, share the highlighted axis between them and render a single tooltip for all of them.
+
+Each chart receives the same `highlightedAxis` state and updates it with `onHighlightedAxisChange`, so hovering one chart moves the crosshair on every chart.
+The built-in tooltip is turned off with `slotProps={{ tooltip: { trigger: 'none' } }}`, and one tooltip reads the value of every chart at the shared `dataIndex`.
+
+{{"demo": "SynchronizedTooltip.js"}}
 
 ## Creating a tooltip
 

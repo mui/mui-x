@@ -4,10 +4,10 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   GridCellEditStopReasons,
   GridEditModes,
-  type GridRowId,
   useGridApiContext,
   useGridRootProps,
 } from '@mui/x-data-grid-premium';
+import type { GridRowId } from '@mui/x-data-grid-premium';
 import { useRowEditHandlers } from './useRowEditHandlers';
 
 interface UseEditDropdownStateParams {

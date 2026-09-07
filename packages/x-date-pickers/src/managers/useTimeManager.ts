@@ -5,12 +5,12 @@ import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
-import { PickerManager, TimeValidationError } from '../models';
+import type { PickerManager, TimeValidationError } from '../models';
 import { validateTime } from '../validation';
-import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { AmPmProps } from '../internals/models/props/time';
-import { ExportedValidateTimeProps, ValidateTimeProps } from '../validation/validateTime';
-import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
+import type { UseFieldInternalProps } from '../internals/hooks/useField';
+import type { AmPmProps } from '../internals/models/props/time';
+import type { ExportedValidateTimeProps, ValidateTimeProps } from '../validation/validateTime';
+import type { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 
 export function useTimeManager(

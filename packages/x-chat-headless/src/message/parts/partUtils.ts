@@ -46,6 +46,31 @@ export function safeUri(uri: string | null | undefined): string {
   }
 }
 
+export function safeFileUri(uri: string | null | undefined): string {
+  const safe = safeUri(uri);
+
+  if (safe || uri == null || typeof window === 'undefined') {
+    return safe;
+  }
+
+  try {
+    const trimmed = uri.trim();
+    const parsed = new URL(trimmed);
+
+    if (
+      parsed.protocol.toLowerCase() === 'blob:' &&
+      parsed.origin !== 'null' &&
+      parsed.origin === window.location.origin
+    ) {
+      return trimmed;
+    }
+  } catch {
+    // Ignore malformed URLs.
+  }
+
+  return '';
+}
+
 export function normalizeMarkdownForRender(markdown: string): string {
   const fenceMatches = markdown.match(/```/g);
 

@@ -2,7 +2,7 @@
 
 import { useStore } from '../internals/store/useStore';
 import { selectorChartsHighlightState } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.types';
+import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.types';
 import type { HighlightItemIdentifierWithType } from '../models/seriesType';
 import type { ChartSeriesType } from '../models/seriesType/config';
 

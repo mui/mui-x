@@ -1,5 +1,5 @@
 'use client';
-import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
 function getDevicePixelContentBoxSize(entry: ResizeObserverEntry) {
   // Safari does not support devicePixelContentBoxSize
@@ -24,7 +24,7 @@ function getDevicePixelContentBoxSize(entry: ResizeObserverEntry) {
  * @param onResize Callback invoked after the canvas and viewport are updated.
  */
 export function useWebGLResizeObserver(gl: WebGL2RenderingContext | null, onResize: () => void) {
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     const canvas = gl?.canvas;
 
     if (!(canvas instanceof HTMLCanvasElement)) {

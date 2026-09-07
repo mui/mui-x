@@ -44,6 +44,36 @@ export const COMMODITY_OPTIONS = [
   'Robusta coffee',
 ];
 
+export const TRADE_TAG_OPTIONS = [
+  'Hedge',
+  'Speculative',
+  'Arbitrage',
+  'Spot',
+  'Forward',
+  'Option',
+  'Swap',
+  'Futures',
+  'Derivative',
+  'Leveraged',
+  'Short',
+  'Long',
+  'Day Trade',
+  'Swing',
+  'Scalping',
+  'Algorithmic',
+  'OTC',
+  'Exchange',
+  'Institutional',
+  'Retail',
+];
+export const CERTIFICATION_OPTIONS = [
+  'Fair Trade',
+  'Organic',
+  'Rainforest Alliance',
+  'UTZ',
+  'Non-GMO',
+];
+
 export const CURRENCY_OPTIONS = [
   'USD',
   'GBP',

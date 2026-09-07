@@ -4,6 +4,7 @@ import {
   formatStructuredValue,
   normalizeCodeContent,
   normalizeMarkdownForRender,
+  safeFileUri,
   safeUri,
   shouldCollapsePayload,
 } from './partUtils';
@@ -107,6 +108,22 @@ describe('safeUri', () => {
 
   it('blocks data: protocol', () => {
     expect(safeUri('data:text/html,<h1>Hi</h1>')).to.equal('');
+  });
+});
+
+describe('safeFileUri', () => {
+  it('allows same-origin blob URLs', () => {
+    const blobUrl = `blob:${window.location.origin}/attachment`;
+
+    expect(safeFileUri(blobUrl)).to.equal(blobUrl);
+  });
+
+  it('blocks cross-origin blob URLs', () => {
+    expect(safeFileUri('blob:https://example.invalid/attachment')).to.equal('');
+  });
+
+  it('blocks opaque-origin blob URLs', () => {
+    expect(safeFileUri('blob:null/attachment')).to.equal('');
   });
 });
 

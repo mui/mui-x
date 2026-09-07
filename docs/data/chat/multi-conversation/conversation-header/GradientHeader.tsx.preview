@@ -1,0 +1,16 @@
+<ScopedChat conversations={conversations} activeConversationId="design">
+  <ChatConversation>
+    <CustomHeader>
+      <ChatConversationHeaderInfo>
+        <ChatConversationTitle />
+        <ChatConversationSubtitle />
+      </ChatConversationHeaderInfo>
+      <Box sx={{ flex: 1 }} />
+      <ChatConversationHeaderActions>
+        <IconButton size="small" aria-label="More options">
+          <MoreVertIcon fontSize="small" />
+        </IconButton>
+      </ChatConversationHeaderActions>
+    </CustomHeader>
+  </ChatConversation>
+</ScopedChat>

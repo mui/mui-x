@@ -51,6 +51,11 @@ export interface GridBaseSlots {
    */
   baseMenuItem: React.JSXElementConstructor<GridSlotProps['baseMenuItem']>;
   /**
+   * The custom Modal component used in the grid.
+   * @default Modal
+   */
+  baseModal: React.JSXElementConstructor<GridSlotProps['baseModal']>;
+  /**
    * The custom TextField component used in the grid.
    * @default TextField
    */

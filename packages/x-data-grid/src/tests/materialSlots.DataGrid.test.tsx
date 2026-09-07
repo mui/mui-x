@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import {
-  DataGrid,
-  type DataGridProps,
-  type GridColDef,
-  type GridFilterModel,
-} from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import type { DataGridProps, GridColDef, GridFilterModel } from '@mui/x-data-grid';
+import { describe, it, expect } from 'vitest';
 import materialSlots from '../material';
 
 describe('<DataGrid /> - Material Slots', () => {

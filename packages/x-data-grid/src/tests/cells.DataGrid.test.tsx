@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { DataGrid, type GridValueFormatter, renderLongTextCell } from '@mui/x-data-grid';
+import { DataGrid, renderLongTextCell } from '@mui/x-data-grid';
+import type { GridApi, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Cells', () => {
   const { render } = createRenderer();
@@ -132,8 +133,23 @@ describe('<DataGrid /> - Cells', () => {
     expect(getCell(0, 0)).to.have.text('');
   });
 
+  // See https://github.com/mui/mui-x/issues/22831
+  it('should not throw when getting params for a field without a matching column', () => {
+    const apiRef = React.createRef<GridApi>();
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid {...baselineProps} apiRef={apiRef} columns={[{ field: 'brand' }]} />
+      </div>,
+    );
+
+    // `getColumn('unknown')` returns `undefined`, which used to crash `getRowValue`
+    // with "Cannot read properties of undefined (reading 'field')".
+    expect(() => apiRef.current!.getCellParams(0, 'unknown')).not.to.throw();
+    expect(apiRef.current!.getCellParams(0, 'unknown').value).to.equal(undefined);
+  });
+
   it('should call the valueFormatter with the correct params', () => {
-    const valueFormatter = spy<GridValueFormatter<{ id: number; isActive: boolean }>>((value) =>
+    const valueFormatter = vi.fn<GridValueFormatter<{ id: number; isActive: boolean }>>((value) =>
       value ? 'Yes' : 'No',
     );
     render(
@@ -151,10 +167,10 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
     expect(getCell(0, 0)).to.have.text('Yes');
-    // expect(valueFormatter.lastCall.args[0]).to.have.keys('id', 'field', 'value', 'api');
-    expect(valueFormatter.lastCall.args[0]).to.equal(true);
-    expect(valueFormatter.lastCall.args[1]).to.deep.equal({ id: 0, isActive: true });
-    expect(valueFormatter.lastCall.args[2].field).to.equal('isActive');
+    // expect(valueFormatter.mock.lastCall?.[0]).to.have.keys('id', 'field', 'value', 'api');
+    expect(valueFormatter.mock.lastCall?.[0]).to.equal(true);
+    expect(valueFormatter.mock.lastCall?.[1]).to.deep.equal({ id: 0, isActive: true });
+    expect(valueFormatter.mock.lastCall?.[2].field).to.equal('isActive');
   });
 
   it('should throw when focusing cell without updating the state', async () => {
@@ -319,8 +335,59 @@ describe('<DataGrid /> - Cells', () => {
           expect(expandButton).to.have.attribute('aria-expanded', 'false');
         });
 
+        // Regression test for https://github.com/mui/mui-x/issues/22382
+        it('should not submit a surrounding form when clicking the expand button', async () => {
+          const handleSubmit = vi.fn((event: React.FormEvent) => {
+            event.preventDefault();
+          });
+
+          const { user } = render(
+            <form onSubmit={handleSubmit}>
+              <div style={{ width: 300, height: 300 }}>
+                <DataGrid {...longTextBaselineProps} />
+              </div>
+            </form>,
+          );
+
+          const cell = getCell(0, 0);
+          await user.click(cell);
+
+          const expandButton = cell.querySelector<HTMLButtonElement>(
+            'button[aria-haspopup="dialog"]',
+          );
+          expect(expandButton).not.to.equal(null);
+          await user.click(expandButton!);
+
+          expect(handleSubmit.mock.calls.length).to.equal(0);
+        });
+
+        it('should not submit a surrounding form when clicking the collapse button', async () => {
+          const handleSubmit = vi.fn((event: React.FormEvent) => {
+            event.preventDefault();
+          });
+
+          const { user } = render(
+            <form onSubmit={handleSubmit}>
+              <div style={{ width: 300, height: 300 }}>
+                <DataGrid {...longTextBaselineProps} />
+              </div>
+            </form>,
+          );
+
+          const cell = getCell(0, 0);
+          await openLongTextViewPopup(cell, user, 'spacebar');
+
+          const popup = document.querySelector('.MuiDataGrid-longTextCellPopup')!;
+          const collapseButton = popup.querySelector('button')!;
+          // `fireEvent` (not `user.click`) because the popup keeps `pointer-events: none`
+          // until its open transition settles, which never happens under jsdom.
+          fireEvent.click(collapseButton);
+
+          expect(handleSubmit.mock.calls.length).to.equal(0);
+        });
+
         it('should render custom content via renderContent prop', async () => {
-          const customRenderContent = spy((value: string | null) => (
+          const customRenderContent = vi.fn((value: string | null) => (
             <span data-testid="custom-content">Custom: {value}</span>
           ));
 
@@ -345,7 +412,9 @@ describe('<DataGrid /> - Cells', () => {
 
           const customContent = screen.getByTestId('custom-content');
           expect(customContent.textContent).to.equal('Custom: Test content');
-          expect(customRenderContent.calledWith('Test content')).to.equal(true);
+          expect(
+            customRenderContent.mock.calls.some((call) => call[0] === 'Test content'),
+          ).to.equal(true);
         });
       });
     });

@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { useChartId } from '../../../hooks/useChartId';
+import { useChartsContext } from '../../../context/ChartsProvider';
 import { useDescription } from './useDescription';
 
 /**
@@ -30,12 +32,15 @@ export function ChartsAccessibilityProxy() {
   const message = useDescription();
   const chartId = useChartId();
 
+  const { instance } = useChartsContext();
+
   const currentFormatRef = React.useRef<string | null>(null);
   const currentIndexRef = React.useRef<number>(0);
-  const containerRef = React.useRef(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(containerRef, instance.chartsAccessibilityProxyRef);
 
   React.useEffect(() => {
-    const container = containerRef.current as HTMLDivElement | null;
+    const container = containerRef.current;
     if (!container) {
       return;
     }
@@ -56,6 +61,7 @@ export function ChartsAccessibilityProxy() {
           div.setAttribute('tabindex', '0');
         }
         div.setAttribute('role', 'img');
+        div.setAttribute('aria-hidden', 'true');
         div.setAttribute(
           'aria-labelledby',
           i === 0 ? `voiceover-${chartId}-1` : `voiceover-${chartId}-2`,
@@ -108,9 +114,11 @@ export function ChartsAccessibilityProxy() {
 
   return (
     <div
-      role="presentation"
-      tabIndex={message ? undefined : 0}
-      ref={containerRef}
+      role="none"
+      // Stays focusable once an announcer child owns the tab stop, otherwise the browser would
+      // blur the root mid hand-off and the chart would look like it lost the focus.
+      tabIndex={message ? -1 : 0}
+      ref={handleRef}
       style={fullSizeLayerStyle}
     />
   );

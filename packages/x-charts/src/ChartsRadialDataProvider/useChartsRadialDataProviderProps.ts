@@ -1,16 +1,14 @@
 'use client';
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import type { ChartsRadialDataProviderProps } from './ChartsRadialDataProvider';
-import { type ChartsProviderProps } from '../context/ChartsProvider';
-import {
-  type ChartAnyPluginSignature,
-  type MergeSignaturesProperty,
-} from '../internals/plugins/models';
-import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
-import { type RadialPluginSignatures, RADIAL_PLUGINS } from './ChartsRadialDataProvider.plugins';
-import { type ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
-import { type ChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import { type PolarChartSeriesType } from '../models/seriesType/config';
+import type { ChartsProviderProps } from '../context/ChartsProvider';
+import type { ChartAnyPluginSignature, MergeSignaturesProperty } from '../internals/plugins/models';
+import type { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
+import { RADIAL_PLUGINS } from './ChartsRadialDataProvider.plugins';
+import type { RadialPluginSignatures } from './ChartsRadialDataProvider.plugins';
+import type { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
+import type { ChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { PolarChartSeriesType } from '../models/seriesType/config';
 
 const RADIAL_SERIES_CONFIG: ChartSeriesConfig<never> = {};
 

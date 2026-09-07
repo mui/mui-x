@@ -20,6 +20,7 @@ export default function ColumnFluidWidthGrid() {
           },
           {
             field: 'username',
+            rowHeader: true,
             width: 200,
           },
           {

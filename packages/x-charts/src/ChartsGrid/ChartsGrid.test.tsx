@@ -1,6 +1,7 @@
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { ChartsGrid, chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
+import { describe, it, expect } from 'vitest';
 
 describe('<ChartsGrid />', () => {
   const { render } = createRenderer();

@@ -94,7 +94,7 @@ const columns: GridColDef[] = [
     renderHeader: () => <CustomDetailPanelHeader />,
   },
   { field: 'id', headerName: 'Order ID' },
-  { field: 'customer', headerName: 'Customer', width: 200 },
+  { field: 'customer', headerName: 'Customer', width: 200, rowHeader: true },
   { field: 'date', type: 'date', headerName: 'Placed at' },
   { field: 'currency', headerName: 'Currency' },
   { field: 'total', type: 'number', headerName: 'Total' },

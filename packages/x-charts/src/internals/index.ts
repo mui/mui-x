@@ -16,11 +16,19 @@ export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useAreaPlotData } from '../LineChart/useAreaPlotData';
 export { useLinePlotData } from '../LineChart/useLinePlotData';
 export * from '../BarChart/useBarChartProps';
-export { processBarDataForPlot } from '../BarChart/useBarPlotData';
+export { processBarDataForPlot, useBarPlotData } from '../BarChart/useBarPlotData';
+export type {
+  BorderRadiusSide,
+  MaskData,
+  ProcessedBarData,
+  ProcessedBarSeriesData,
+} from '../BarChart/types';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartsDataProvider/useChartsDataProviderProps';
+export * from '../ChartsRadialDataProvider/useChartsRadialDataProviderProps';
 export * from './seriesSelectorOfType';
+export * from './createGetBarDimensions';
 export { useSkipAnimation } from '../hooks/useSkipAnimation';
 export { useRegisterPointerInteractions } from './plugins/featurePlugins/shared/useRegisterPointerInteractions';
 
@@ -41,9 +49,11 @@ export * from './plugins/featurePlugins/useChartKeyboardNavigation';
 export * from './plugins/featurePlugins/useChartClosestPoint';
 export * from './plugins/featurePlugins/useChartBrush';
 export * from './plugins/featurePlugins/useChartItemClick';
+export * from './plugins/featurePlugins/useProgressiveRendering';
 export * from './plugins/utils/selectors';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
 export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
+export { getRotationAxisIndex } from './plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
 
 export * from './store/useCharts';
 export * from './store/useStore';
@@ -57,17 +67,23 @@ export * from '../PieChart/PieChart.plugins';
 
 // utils
 export * from './configInit';
+export * from './clampAngle';
 export * from './getLabel';
 export * from './legendUtils';
 export * from './getChartPoint';
+export * from './plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
 export * from './isDefined';
 export * from './getScale';
+export * from './getAsNumber';
 export * from './stacking';
 export * from './getCurve';
+export * from './getSymbol';
 export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';
 export * from './colorScale';
+export * from './sizeScale';
+export * from './incompleteDatasetKeysError';
 export * from './ticks';
 export * from './dateHelpers';
 export * from './invertScale';
@@ -75,10 +91,16 @@ export * from './scaleGuards';
 export * from './findMinMax';
 export * from './commonNextFocusItem';
 export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
+export { useRegisterItemActivation } from './useRegisterItemActivation';
 export { getSeriesColorFn } from './getSeriesColorFn';
+export { resolveColorProcessor } from './resolveColorProcessor';
+export { processLineLikeSeries } from './processLineLikeSeries';
+export { getLineLikeTooltip } from './getLineLikeTooltip';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
+export { useDefaultTickLabelStyle } from './useDefaultTickLabelStyle';
 export * from './plugins/utils/defaultSeriesConfig';
+export { EPSILON } from '../utils/epsilon';
 export {
   useUtilityClasses as useChartsTooltipUtilityClasses,
   getChartsTooltipUtilityClass,
@@ -93,6 +115,7 @@ export * from '../context/ChartsSlotsContext';
 export * from '../models/seriesType/config';
 export * from '../models/seriesType/common';
 export * from '../models/seriesType/line';
+export * from '../models/seriesType/bar';
 
 export * from '../models/z-axis';
 export * from '../models/axis';
@@ -107,4 +130,5 @@ export * from './scales';
 export * from './identifierSerializer';
 export * from './identifierCleaner';
 
+export { evaluateCurveAtAngle } from '../LineChart/seriesConfig/curveEvaluation';
 export { default as getLineItemAtPosition } from '../LineChart/seriesConfig/getItemAtPosition';

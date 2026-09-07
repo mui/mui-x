@@ -8,7 +8,7 @@ components: EventTimelinePremium
 
 # Event Timeline - Events
 
-<p class="description">Define events for your Event Timeline.</p>
+<p class="description">Configure event properties including color, timezone, recurrence, and custom data mapping.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -27,7 +27,7 @@ const event = {
 
 #### Dynamic resource
 
-Use the [eventModelStructure](#store-data-in-custom-properties) property to switch the resource between several fields:
+Use the [`eventModelStructure`](#store-data-in-custom-properties) property to switch the resource between several fields:
 
 {{"demo": "DynamicResourceProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -46,7 +46,7 @@ const event = {
 
 ### Timezone
 
-Use the `timezone` property to define in which timezone an event's dates are defined:
+Use the `timezone` property to specify the timezone for an event's dates:
 
 ```ts
 const event = {
@@ -55,9 +55,7 @@ const event = {
 };
 ```
 
-:::success
-Learn more about _timeone support_ in the [dedicated doc page](/x/react-scheduler/timezone/).
-:::
+See [Timezone](/x/react-scheduler/timezone/) for details.
 
 ### Color
 
@@ -70,12 +68,12 @@ const event = {
 };
 ```
 
-Here is the list of all the available color palettes:
+The available color palettes are shown below:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
-Event colors can also be defined on the resources or at the component levels.
+:::info
+Event colors can also be defined on the resources or at the component level.
 The effective color resolves in the following order:
 
 1. The `color` property assigned to the event
@@ -115,13 +113,11 @@ const event = {
 
 {{"demo": "ClassNameProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
-When defined, the class is applied to the event root DOM element in all views (Week, Month, Day, and Agenda views).
-:::
+When defined, it applies to the event root DOM element across all views.
 
 ### Drag interactions
 
-Use the `draggable` property on the event model to prevent an event from being dragged to another point in time:
+Use the `draggable` property on the event model to prevent an event from being dragged to a different time slot:
 
 ```ts
 const event = {
@@ -141,9 +137,7 @@ const event = {
 };
 ```
 
-:::success
-Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-timeline/drag-interactions/).
-:::
+See [Drag interactions](/x/react-scheduler/event-timeline/drag-interactions/) for details.
 
 ### Read-only
 
@@ -156,9 +150,7 @@ const event = {
 };
 ```
 
-:::success
-Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-timeline/editing/#read-only).
-:::
+See [Editing—Read-only](/x/react-scheduler/event-timeline/editing/#read-only) for details.
 
 ### Recurring events
 
@@ -171,13 +163,11 @@ const event = {
 };
 ```
 
-:::success
-Learn more about _recurring events_ in the [dedicated doc page](/x/react-scheduler/recurring-events/).
-:::
+See [Recurring events](/x/react-scheduler/recurring-events/) for details.
 
 ## Store data in custom properties
 
-Use the `eventModelStructure` prop to define how to read and write properties of the event model when they don't match the model expected by the components:
+Use the `eventModelStructure` prop to define how to read and write event properties when your data doesn't match the expected model:
 
 ```tsx
 const eventModelStructure = {
@@ -204,7 +194,7 @@ function Timeline() {
 ## Event constraints 🚧
 
 :::warning
-This feature isn't available yet, but it is planned — you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21582) to help us prioritize it.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21582) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 

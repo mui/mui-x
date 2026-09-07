@@ -14,6 +14,7 @@ export const eventList: Record<keyof GlobalEventHandlersEventMap, true> = {
   change: true,
   click: true,
   close: true,
+  command: true,
   compositionend: true,
   compositionstart: true,
   compositionupdate: true,

@@ -7,11 +7,11 @@ githubLabel: 'scope: scheduler'
 
 # Scheduler - Quickstart
 
-<p class="description">Install the MUI X Scheduler package and start building your React scheduling components.</p>
+<p class="description">Install the MUI X Scheduler package to start building React calendars and event timelines.</p>
 
 ## Installation
 
-Install the Scheduler package that best suits your needs — Community, or Premium:
+Install the Scheduler package that best suits your needs—Community or Premium:
 
 {{"component": "modules/components/SchedulerInstallationInstructions.js"}}
 
@@ -94,7 +94,7 @@ const events: SchedulerEvent[] = [
 
 ### Render the component
 
-With the component imported, and events defined, you're now ready to render the render the Event Timeline as shown below:
+With the component imported and events defined, you're now ready to render the Event Calendar as shown below:
 
 {{"demo": "RenderEventCalendar.js", "defaultCodeOpen": true, "bg": "inline"}}
 
@@ -102,7 +102,7 @@ With the component imported, and events defined, you're now ready to render the 
 
 ### Import the component
 
-Import the `<EventTimelinePremium />` component along with the `SchedulerEvent` and `SchedulerResource` types:
+Import the `EventTimelinePremium` component along with the `SchedulerEvent` and `SchedulerResource` types:
 
 ```js
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -134,7 +134,7 @@ const events: SchedulerEvent[] = [
 ];
 ```
 
-The event passed to the Event Timeline component need to have a resource that represents the entities (people, rooms, equipment) that it is are assigned to:
+Each event passed to the Event Timeline component needs a resource that represents the entities (people, rooms, equipment) it's assigned to:
 
 ```ts
 const resources: SchedulerResource[] = [
@@ -145,7 +145,7 @@ const resources: SchedulerResource[] = [
 
 ### Render the component
 
-With the component imported, and events and resources defined, you're now ready to render the render the Event Timeline as shown below:
+With the component imported and events and resources defined, you're now ready to render the Event Timeline as shown below:
 
 {{"demo": "RenderEventTimelinePremium.js", "defaultCodeOpen": true, "bg": "inline"}}
 
@@ -186,7 +186,8 @@ TODO: Uncomment once available
 ### Feature availability
 
 :::info
-MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license. The Scheduler's advanced features are only available with a Premium license.
+MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
+The Scheduler's advanced features are only available with a Premium license.
 See [Licensing](/x/introduction/licensing/) for details.
 :::
 

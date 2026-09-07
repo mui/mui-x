@@ -1,18 +1,18 @@
-import { type BarLabelProps } from '../BarChart/BarLabel';
-import { type BarChartProps } from '../BarChart/BarChart';
-import { type ChartsGridProps } from '../ChartsGrid';
-import { type ChartsLegendProps } from '../ChartsLegend';
-import { type ChartsSurfaceProps } from '../ChartsSurface';
-import { type ChartsTooltipProps } from '../ChartsTooltip';
-import { type LineChartProps } from '../LineChart/LineChart';
-import { type ScatterChartProps } from '../ScatterChart/ScatterChart';
-import { type PieChartProps } from '../PieChart/PieChart';
-import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models/axis';
-import { type ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
-import { type ChartsDataProviderProps } from '../ChartsDataProvider';
-import { type ChartsLayerContainerProps } from '../ChartsLayerContainer';
-import { type ChartsSvgLayerProps } from '../ChartsSvgLayer';
-import { type ChartsRadialGridProps } from '../ChartsRadialGrid';
+import type { BarLabelProps } from '../BarChart/BarLabel';
+import type { BarChartProps } from '../BarChart/BarChart';
+import type { ChartsGridProps } from '../ChartsGrid';
+import type { ChartsLegendProps } from '../ChartsLegend';
+import type { ChartsSurfaceProps } from '../ChartsSurface';
+import type { ChartsTooltipProps } from '../ChartsTooltip';
+import type { LineChartProps } from '../LineChart/LineChart';
+import type { ScatterChartProps } from '../ScatterChart/ScatterChart';
+import type { PieChartProps } from '../PieChart/PieChart';
+import type { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
+import type { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
+import type { ChartsDataProviderProps } from '../ChartsDataProvider';
+import type { ChartsLayerContainerProps } from '../ChartsLayerContainer';
+import type { ChartsSvgLayerProps } from '../ChartsSvgLayer';
+import type { ChartsRadialGridProps } from '../ChartsRadialGrid';
 
 export interface ChartsComponentsPropsList {
   MuiChartsXAxis: ChartsXAxisProps;

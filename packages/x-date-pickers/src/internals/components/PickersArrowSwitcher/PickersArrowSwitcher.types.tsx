@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils/types';
-import IconButton from '@mui/material/IconButton';
-import SvgIcon from '@mui/material/SvgIcon';
-import { PickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
-import { PickerOwnerState } from '../../../models';
+import type * as React from 'react';
+import type { SlotComponentProps } from '@mui/utils/types';
+import type IconButton from '@mui/material/IconButton';
+import type SvgIcon from '@mui/material/SvgIcon';
+import type { PickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
+import type { PickerOwnerState } from '../../../models';
 
 export interface ExportedPickersArrowSwitcherProps {
   /**

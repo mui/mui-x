@@ -77,9 +77,21 @@ export type PointerManagerOptions = {
 
   /**
    * Whether to use passive event listeners for better scrolling performance.
-   * When true, listeners cannot call preventDefault() on events.
    *
-   * @default true
+   * Tradeoff:
+   * - `true`: Listeners cannot call `preventDefault()`. Browsers can scroll
+   *   without waiting for handlers, which keeps the page responsive but
+   *   means gestures cannot suppress native scrolling/zooming.
+   * - `false`: Listeners can call `preventDefault()`. Required for gestures
+   *   that need to override native behaviour (e.g. preventing page scroll
+   *   while panning), at the cost of blocking the scroll thread until the
+   *   handler returns.
+   *
+   * Most gesture-driven UIs need `preventDefault()`, so the default is
+   * `false`. Set to `true` when the gestures only observe input and never
+   * need to suppress browser defaults.
+   *
+   * @default false
    */
   passive?: boolean;
 
@@ -159,15 +171,17 @@ export class PointerManager {
   }
 
   /**
-   * Get a copy of the current active pointers map.
+   * Get a read-only view of the current active pointers map.
    *
-   * Returns a new Map containing all currently active pointers.
-   * Modifying the returned map will not affect the internal pointers state.
+   * Returns a reference to the internal pointer map. Callers must not
+   * mutate the result; the type is narrowed to `ReadonlyMap` to enforce
+   * this at compile time. Avoiding a per-call copy matters because this
+   * is invoked on every pointer event by every active gesture handler.
    *
-   * @returns A new Map containing all active pointers
+   * @returns The active pointers as a read-only map
    */
-  public getPointers(): Map<number, PointerData> {
-    return new Map(this.pointers);
+  public getPointers(): ReadonlyMap<number, PointerData> {
+    return this.pointers;
   }
 
   /**

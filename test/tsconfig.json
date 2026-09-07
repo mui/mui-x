@@ -7,7 +7,6 @@
       "dayjs/plugin/timezone.d.ts",
       "dayjs/plugin/utc.d.ts",
       "vite/client",
-      "vitest/globals",
       "moment-timezone"
     ],
     "skipLibCheck": true

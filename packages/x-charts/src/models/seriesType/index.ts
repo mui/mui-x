@@ -48,9 +48,15 @@ export type {
   MarkShape,
   LineSeriesType,
   LineItemIdentifier,
+  LineItemClickIdentifier,
   DefaultizedLineSeriesType,
 } from './line';
-export * from './bar';
+export type {
+  BarValueType,
+  BarSeriesType,
+  BarItemIdentifier,
+  DefaultizedBarSeriesType,
+} from './bar';
 export * from './scatter';
 export * from './pie';
 export * from './radar';

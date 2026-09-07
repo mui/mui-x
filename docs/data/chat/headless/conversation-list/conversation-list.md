@@ -14,7 +14,7 @@ githubLabel: 'scope: chat'
 
 {{"demo": "../examples/two-pane-inbox/TwoPaneInbox.js", "hideToolbar": true}}
 
-## Primitive set
+## Conversation list primitives
 
 The conversation list surface is built from:
 
@@ -27,20 +27,20 @@ The conversation list surface is built from:
 - `ConversationList.Timestamp`
 - `ConversationList.UnreadBadge`
 
-## `ConversationList.Root`
+## Conversation list root
 
 `ConversationList.Root` reads the current conversation collection from chat state and renders a `listbox` with one `option` per conversation.
 
 It handles:
 
-- active-conversation selection
-- click-to-select behavior
-- roving focus across items
-- `ArrowUp`, `ArrowDown`, `Home`, and `End`
-- Enter-to-select for the focused item
-- focus restoration when the list remounts
+- Active-conversation selection
+- Click-to-select behavior
+- Roving focus across items
+- Keyboard navigation with `ArrowUp`, `ArrowDown`, `Home`, and `End`
+- `Enter` to select the focused item
+- Focus restoration when the list remounts
 
-This makes it the main structural entry point for inbox, sidebar, and thread-switching UIs.
+The root is the main structural entry point for inbox, sidebar, and thread-switching UIs.
 
 The root is also the conversation-pane marker recognized by `Chat.Layout`, so it can be dropped directly into the canonical shell without extra wiring.
 
@@ -48,16 +48,16 @@ The root is also the conversation-pane marker recognized by `Chat.Layout`, so it
 
 Each rendered row is composed from:
 
-- `ItemAvatar` for participant identity
-- `ItemContent` wrapper that groups title and preview
-- `Title` for the conversation name
-- `Preview` for the last message subtitle
-- `Timestamp` for the last-message time
-- `UnreadBadge` for the unread count
+- `ConversationList.ItemAvatar` for participant identity
+- `ConversationList.ItemContent` to group title and preview
+- `ConversationList.Title` for the conversation name
+- `ConversationList.Preview` for the last message subtitle
+- `ConversationList.Timestamp` for the last-message time
+- `ConversationList.UnreadBadge` for the unread count
 
 Replace the row or any subpart through `slots` and `slotProps` when a product surface needs a different row layout.
 
-The default structure is useful for inbox-like sidebars, but the slot model makes it easy to adapt to denser support tools, mobile previews, or more visual conversation cards.
+The default structure fits inbox-like sidebars; the slot model adapts to denser support tools, mobile previews, or visual conversation cards.
 
 ```tsx
 <ConversationList.Root
@@ -80,16 +80,16 @@ Replace only one subpart when the default structure is correct and only a small 
 
 Conversation list item slots receive owner-state flags such as:
 
-- `selected`
-- `unread`
-- `focused`
-- `conversation`
+- `selected` — whether the row is the active conversation
+- `unread` — whether the row has unread messages
+- `focused` — whether the row currently holds roving focus
+- `conversation` — the full conversation object
 
 These flags are the main styling hook for active rows, unread emphasis, and focused keyboard states.
 
 Because `conversation` is included in owner state, custom slots can also react to conversation-specific fields such as titles, subtitles, participants, and unread counts.
 
-## Accessibility semantics
+## Accessibility
 
 The root uses `role="listbox"`.
 Each row uses `role="option"` plus `aria-selected`.
@@ -114,7 +114,7 @@ That gives you:
 - keyboard navigation inside the rail
 - a structural conversation pane that can be styled as a sidebar, navigation rail, or stacked list
 
-## When to replace slots
+## Replacing slots
 
 Replace slots when you want to:
 
@@ -124,8 +124,8 @@ Replace slots when you want to:
 
 Rebuild the conversation rail from headless selectors only when the built-in keyboard and selection model no longer matches the desired interaction.
 
-For the broader page shell, continue with [Layout](/x/react-chat/headless/layout/).
-For end-to-end inbox patterns, continue with [Two-pane inbox](/x/react-chat/headless/examples/two-pane-inbox/).
+See [Layout](/x/react-chat/headless/layout/) for details.
+See [Two-pane inbox](/x/react-chat/headless/examples/two-pane-inbox/) for an end-to-end inbox pattern.
 
 ## API
 

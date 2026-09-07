@@ -2,16 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import {
-  ConversationHeaderActions,
-  type ConversationHeaderActionsProps,
-} from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { ConversationHeaderActions } from '@mui/x-chat-headless';
+import type { ConversationHeaderActionsProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import {
-  useChatConversationUtilityClasses,
-  type ChatConversationClasses,
-} from './chatConversationClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { useChatConversationUtilityClasses } from './chatConversationClasses';
+import type { ChatConversationClasses } from './chatConversationClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationHeaderActions');
 
@@ -45,22 +42,24 @@ const ChatConversationHeaderActions = React.forwardRef<
       ref={ref}
       {...other}
       slots={{
-        actions: slots?.actions ?? ChatConversationHeaderActionsStyled,
         ...slots,
+        actions: slots?.actions ?? ChatConversationHeaderActionsStyled,
       }}
       slotProps={{
         ...slotProps,
-        actions: {
-          className: clsx(classes.headerActions, className),
-          sx,
-          ...(slotProps?.actions as object),
-        } as any,
+        actions: mergeSlotProps(
+          {
+            className: clsx(classes.headerActions, className),
+            sx,
+          },
+          slotProps?.actions,
+        ) as any,
       }}
     />
   );
 });
 
-ChatConversationHeaderActions.propTypes = {
+ChatConversationHeaderActions.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

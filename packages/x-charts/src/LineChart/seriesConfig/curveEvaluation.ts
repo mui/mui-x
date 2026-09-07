@@ -1,5 +1,9 @@
+import BezierEasing from 'bezier-easing';
+import { warnOnce } from '@mui/x-internals/warning';
+import { EPSILON } from '../../utils/epsilon';
 import type { CurveType } from '../../models/curve';
 import { getCurveFactory } from '../../internals/getCurve';
+import { clampAngleRad } from '../../internals/clampAngle';
 import { cubicRoots } from '../../internals/cubiqSolver';
 
 /**
@@ -92,19 +96,81 @@ function cubicBezierCoeffs(
 }
 
 /**
- * Find parameter t such that the segment's x(t) ≈ targetX
+ * Evaluate y on a segment at the given x.
+ *
+ * Line segments are interpolated linearly. Bezier segments are normalized so
+ * their endpoints become (0, 0) and (1, 1), passed to `bezier-easing`, and
+ * the result is mapped back to pixel space.
+ *
+ * Warns once if a curve produces control points outside the segment's x
+ * range.
  */
-function findTForX(segment: CurveSegment, targetX: number): number {
+function evaluateSegmentYAtX(segment: CurveSegment, targetX: number): number {
+  const dx = segment.x1 - segment.x0;
+  if (dx === 0) {
+    return segment.y0;
+  }
+  const dy = segment.y1 - segment.y0;
+  if (!isBezierSegment(segment)) {
+    return segment.y0 + (dy * (targetX - segment.x0)) / dx;
+  }
+  const nx1 = (segment.cpx1 - segment.x0) / dx;
+  const nx2 = (segment.cpx2 - segment.x0) / dx;
+  if (process.env.NODE_ENV !== 'production' && (nx1 < 0 || nx1 > 1 || nx2 < 0 || nx2 > 1)) {
+    warnOnce(
+      `MUI X Charts: a curve segment has control points outside its x range. ` +
+        `Please report the curve type and data at https://github.com/mui/mui-x/issues ` +
+        `so we can support it natively.`,
+    );
+  }
+  const ny1 = dy === 0 ? 0 : (segment.cpy1 - segment.y0) / dy;
+  const ny2 = dy === 0 ? 0 : (segment.cpy2 - segment.y0) / dy;
+  const ease = BezierEasing(nx1, ny1, nx2, ny2);
+  const nt = (targetX - segment.x0) / dx;
+  return segment.y0 + dy * ease(nt);
+}
+
+/**
+ * Find parameter t such that the segment's x(t) ≈ targetX using cubic roots.
+ */
+function findTForAngle(segment: CurveSegment, targetAngle: number): number {
   if (!isBezierSegment(segment)) {
     // Linear segment.
-    const dx = segment.x1 - segment.x0;
-    return dx === 0 ? 0 : (targetX - segment.x0) / dx;
+    const DeltaY = segment.y1 - segment.y0;
+    const DeltaX = segment.x1 - segment.x0;
+
+    const dx = Math.sin(targetAngle);
+    const dy = -Math.cos(targetAngle);
+
+    if (Math.abs(dx) < EPSILON) {
+      if (Math.abs(DeltaX) < EPSILON) {
+        return -1;
+      }
+      return -segment.x0 / DeltaX;
+    }
+
+    if (Math.abs(dy) < EPSILON) {
+      if (Math.abs(DeltaY) < EPSILON) {
+        return -1;
+      }
+      return -segment.y0 / DeltaY;
+    }
+
+    return (segment.y0 / dy - segment.x0 / dx) / (DeltaX / dx - DeltaY / dy);
   }
 
   const xBezierCoeffs = cubicBezierCoeffs(segment.x0, segment.cpx1, segment.cpx2, segment.x1);
+  const yBezierCoeffs = cubicBezierCoeffs(segment.y0, segment.cpy1, segment.cpy2, segment.y1);
 
-  const polyToSolve: [number, number, number, number] = [...xBezierCoeffs];
-  polyToSolve[3] -= targetX;
+  const targetX = Math.sin(targetAngle);
+  const targetY = -Math.cos(targetAngle);
+
+  const polyToSolve: [number, number, number, number] = [
+    targetY * xBezierCoeffs[0] - targetX * yBezierCoeffs[0],
+    targetY * xBezierCoeffs[1] - targetX * yBezierCoeffs[1],
+    targetY * xBezierCoeffs[2] - targetX * yBezierCoeffs[2],
+    targetY * xBezierCoeffs[3] - targetX * yBezierCoeffs[3],
+  ];
 
   const roots = cubicRoots(polyToSolve);
   if (roots.length > 0) {
@@ -120,6 +186,14 @@ function evaluateSegmentY(segment: CurveSegment, t: number): number {
     return segment.y0 + t * (segment.y1 - segment.y0);
   }
   return cubicBezier(t, segment.y0, segment.cpy1, segment.cpy2, segment.y1);
+}
+
+/** Evaluate the segment's x at parameter t. */
+function evaluateSegmentX(segment: CurveSegment, t: number): number {
+  if (!isBezierSegment(segment)) {
+    return segment.x0 + t * (segment.x1 - segment.x0);
+  }
+  return cubicBezier(t, segment.x0, segment.cpx1, segment.cpx2, segment.x1);
 }
 
 /**
@@ -144,14 +218,25 @@ export function evaluateCurveY(
   const factory = getCurveFactory(curveType);
   const curveInstance = factory(capture as any);
 
+  // Track which side of targetX the first point is on, so we detect the
+  // crossing regardless of whether x is increasing or decreasing.
+  const initialSide = points[0].x > targetX;
+  let searchStartIndex = 0;
+  let crossingDetected = false;
+
   curveInstance.lineStart();
   for (const p of points) {
+    if (!crossingDetected && p.x > targetX !== initialSide) {
+      searchStartIndex = Math.max(0, capture.segments.length - 1);
+      crossingDetected = true;
+    }
     curveInstance.point(p.x, p.y);
   }
   curveInstance.lineEnd();
 
   // Find the segment containing targetX.
-  for (const segment of capture.segments) {
+  for (let i = searchStartIndex; i < capture.segments.length; i += 1) {
+    const segment = capture.segments[i];
     if (targetX < segment.x0 + 0.5 && targetX > segment.x0 - 0.5) {
       return segment.y0;
     }
@@ -163,9 +248,84 @@ export function evaluateCurveY(
     const xMax = Math.max(segment.x0, segment.x1);
 
     if (targetX >= xMin && targetX <= xMax) {
-      const t = findTForX(segment, targetX);
-      return evaluateSegmentY(segment, t);
+      return evaluateSegmentYAtX(segment, targetX);
     }
+  }
+
+  return null;
+}
+
+const vectorProduct = (a: { x: number; y: number }, b: { x: number; y: number }) =>
+  a.x * b.y - a.y * b.x;
+
+/**
+ * Build the curve segments for a set of pixel-coordinate points using d3's curve factory,
+ * then evaluate the point on the curve at the given angle.
+ *
+ * Returns null if no point on the curve matches the target angle.
+ */
+export function evaluateCurveAtAngle(
+  /**
+   * The points only uses the x/y coordinate system, because internally curve factory only works with x/y coordinates.
+   * So angles/radius are lost during the curve generation.
+   */
+  points: Array<{ x: number; y: number }>,
+  targetAngle: number,
+  curveType?: CurveType,
+): { x: number; y: number } | null {
+  if (points.length === 0) {
+    return null;
+  }
+  if (points.length === 1) {
+    return points[0];
+  }
+
+  const capture = new SegmentCapture();
+  const factory = getCurveFactory(curveType);
+  const curveInstance = factory(capture as any);
+
+  let pointsContainsOrigin = false;
+  curveInstance.lineStart();
+  for (const p of points) {
+    curveInstance.point(p.x, p.y);
+    if (p.x === 0 && p.y === 0) {
+      pointsContainsOrigin = true;
+    }
+  }
+  curveInstance.lineEnd();
+
+  const xTarget = Math.sin(targetAngle);
+  const yTarget = -Math.cos(targetAngle);
+  const pointTarget = { x: xTarget, y: yTarget };
+
+  // Find the segment containing targetAngle.
+  for (const segment of capture.segments) {
+    const directionX0Target = vectorProduct({ x: segment.x0, y: segment.y0 }, pointTarget);
+    const directionTargetX1 = vectorProduct(pointTarget, { x: segment.x1, y: segment.y1 });
+
+    // Test if target angle is between x0 and x1. To do so we check the sign of the vector product.
+    if (directionX0Target >= 0 && directionTargetX1 >= 0) {
+      const angle0 = Math.atan2(segment.x0, -segment.y0);
+      const angle1 = Math.atan2(segment.x1, -segment.y1);
+
+      const clampedAngleGap0 = clampAngleRad(targetAngle - angle0);
+      if (clampedAngleGap0 < EPSILON || clampedAngleGap0 > Math.PI * 2 - EPSILON) {
+        return { x: segment.x0, y: segment.y0 };
+      }
+      const clampedAngleGap1 = clampAngleRad(targetAngle - angle1);
+      if (clampedAngleGap1 < EPSILON || clampedAngleGap1 > Math.PI * 2 - EPSILON) {
+        return { x: segment.x1, y: segment.y1 };
+      }
+
+      const t = findTForAngle(segment, targetAngle);
+      return { x: evaluateSegmentX(segment, t), y: evaluateSegmentY(segment, t) };
+    }
+  }
+
+  if (pointsContainsOrigin) {
+    // Frequent edge case when handling area with minRadius set to 0.
+    // The only point on the curve is at the origin, so we can return (0, 0) for any angle.
+    return { x: 0, y: 0 };
   }
 
   return null;

@@ -12,7 +12,7 @@ import * as ReactDOM from 'react-dom';
 
 const columns = [
   { field: 'id', headerName: 'Brand ID' },
-  { field: 'brand', headerName: 'Brand name' },
+  { field: 'brand', headerName: 'Brand name', rowHeader: true },
   { field: 'rep', headerName: 'Representative' },
   {
     field: 'rating',

@@ -1,3 +1,4 @@
+import { it, expect } from 'vitest';
 import { DescribeJalaliAdapterTestSuite } from './describeJalaliAdapter.types';
 
 export const testLocalization: DescribeJalaliAdapterTestSuite = ({ adapter }) => {

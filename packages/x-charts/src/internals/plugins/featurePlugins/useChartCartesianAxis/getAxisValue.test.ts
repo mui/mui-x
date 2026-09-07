@@ -1,5 +1,5 @@
 import { scaleBand } from '@mui/x-charts/internals';
-import { describe } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { scaleLinear } from '@mui/x-charts-vendor/d3-scale';
 import { getAxisValue } from './getAxisValue';
 

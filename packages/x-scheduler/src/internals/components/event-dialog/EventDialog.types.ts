@@ -1,6 +1,7 @@
-import * as React from 'react';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { DialogProps } from '@mui/material/Dialog';
+import type * as React from 'react';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { DialogProps } from '@mui/material/Dialog';
+import type { EventEditingOptionalRenderers } from '../event-editing';
 
 export interface EventDialogProps extends DialogProps {
   /**
@@ -8,9 +9,9 @@ export interface EventDialogProps extends DialogProps {
    */
   occurrence: SchedulerRenderableEventOccurrence;
   /**
-   * The anchor element for the popover positioning.
+   * The element the dialog is positioned against.
    */
-  anchorRef: React.RefObject<HTMLElement | null>;
+  anchor: HTMLElement | null;
   /**
    * Handles the close action of the popover.
    */
@@ -19,9 +20,8 @@ export interface EventDialogProps extends DialogProps {
 
 export interface EventDialogProviderProps {
   children: React.ReactNode;
-}
-
-export interface EventDialogTriggerProps extends React.HTMLAttributes<HTMLElement> {
-  occurrence: SchedulerRenderableEventOccurrence;
-  children: React.ReactNode;
+  /**
+   * Optional components rendered during editing (recurrence tab, recurring scope confirmation).
+   */
+  optionalRenderers?: EventEditingOptionalRenderers;
 }

@@ -1,5 +1,5 @@
-import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
-import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 
 /**
  * @example "Sun, Jul 13"

@@ -3,7 +3,10 @@ import type { KeyboardFocusHandler } from '../../internals/plugins/featurePlugin
 
 const outSeriesTypes: Set<'radar'> = new Set(['radar']);
 
+const allowCycles = true;
+const useCurrentSeriesMaxLength = false;
+
 const keyboardFocusHandler: KeyboardFocusHandler<'radar', 'radar'> =
-  createCommonKeyboardFocusHandler(outSeriesTypes, true);
+  createCommonKeyboardFocusHandler(outSeriesTypes, allowCycles, useCurrentSeriesMaxLength);
 
 export default keyboardFocusHandler;

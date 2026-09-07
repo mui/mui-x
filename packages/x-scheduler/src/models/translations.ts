@@ -1,14 +1,31 @@
-import { CalendarView } from '@mui/x-scheduler-headless/models';
+import type { CalendarView } from '@mui/x-scheduler-internals/models';
 
-export interface EventDialogLocaleText {
+export type SchedulerWeekday =
+  'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+
+// Strings shared by every event-editing surface: the dialog, the drawer, and the armed-event toolbar.
+export interface EventEditingLocaleText {
   // EventDialog
   colorPickerLabel: string;
+  colorSectionLabel: string;
   dateTimeSectionLabel: string;
   resourceColorSectionLabel: string;
   allDayLabel: string;
   closeButtonAriaLabel: string;
   closeButtonLabel: string;
+  // EventToolbar (armed-event actions), not the dialog.
+  editEventButtonAriaLabel: string;
+  // Duplicates `deleteEvent` today but stays separate so the toolbar's aria-label can diverge from the
+  // dialog's button text without a translation regression.
+  deleteEventButtonAriaLabel: string;
+  eventActionsToolbarAriaLabel: string;
   deleteEvent: string;
+  // EventContextMenu (shown on right-click of an event, or on Space while it is focused)
+  editEvent: string;
+  // Replaces `editEvent` on a read-only event: opens the same non-editable view, so the label
+  // says so instead of promising an edit that can't happen.
+  showEventDetails: string;
+  eventContextMenuAriaLabel: string;
   descriptionLabel: string;
   endDateLabel: string;
   endTimeLabel: string;
@@ -31,7 +48,10 @@ export interface EventDialogLocaleText {
   recurrenceTabLabel: string;
   recurrenceMainSelectCustomLabel: string;
   recurrenceWeeklyFrequencyLabel: string;
-  recurrenceWeeklyPresetLabel: (weekday: string) => string;
+  recurrenceWeeklyPresetLabel: (params: {
+    weekday: SchedulerWeekday;
+    weekdayName: string;
+  }) => string;
   recurrenceMonthlyDayOfMonthLabel: (dayNumber: number) => string;
   recurrenceMonthlyFrequencyLabel: string;
   recurrenceMonthlyLastWeekAriaLabel: (weekDay: string) => string;
@@ -43,13 +63,18 @@ export interface EventDialogLocaleText {
   recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
   noResourceAriaLabel: string;
+  selectColorAriaLabel: (color: string) => string;
   resourceLabel: string;
+  invalidDateError: string;
+  invalidTimeError: string;
+  requiredResourceError: string;
   saveChanges: string;
   startDateAfterEndDateError: string;
   startDateLabel: string;
+  startTimeAfterEndTimeError: string;
   startTimeLabel: string;
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: string;
   cancel: string;
   confirm: string;
@@ -59,12 +84,9 @@ export interface EventDialogLocaleText {
   title: string;
 }
 
-export interface EventCalendarLocaleText extends EventDialogLocaleText {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName: string) => string;
+export interface EventCalendarLocaleText extends EventEditingLocaleText {
+  // ResourcesTree
   resourcesLabel: string;
-  resourcesLegendSectionLabel: string;
-  showEventsLabel: (resourceName: string) => string;
 
   // ViewSwitcher
   agenda: string;
@@ -83,6 +105,9 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   closeSidePanel: string;
   openSidePanel: string;
 
+  // SidePanelDrawer (small screens)
+  openMenu: string;
+
   // PreferencesMenu
   amPm12h: string;
   hour24h: string;
@@ -92,6 +117,10 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   showWeekNumber: string;
   timeFormat: string;
   viewSpecificOptions: (view: CalendarView) => string;
+  startWeekOn: string;
+  weekdaySunday: string;
+  weekdayMonday: string;
+  weekdaySaturday: string;
 
   // WeekView
   allDay: string;
@@ -112,11 +141,14 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   miniCalendarGoToPreviousMonth: string;
   miniCalendarGoToNextMonth: string;
 
+  // Main calendar region
+  calendarContentAriaLabel: string;
+
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
 }
 
-export interface EventTimelineLocaleText extends EventDialogLocaleText {
+export interface EventTimelineLocaleText extends EventEditingLocaleText {
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
 }

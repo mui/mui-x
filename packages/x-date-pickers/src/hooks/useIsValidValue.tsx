@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { PickerValidValue } from '../internals/models';
+import type { PickerValidValue } from '../internals/models';
 
 export const IsValidValueContext = React.createContext<(value: any) => boolean>(() => true);
 

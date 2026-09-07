@@ -1,6 +1,9 @@
 import { ExtendableRichTreeViewStore } from '@mui/x-tree-view/internals';
-import { TreeViewValidItem } from '@mui/x-tree-view/models';
-import { RichTreeViewProStoreParameters, RichTreeViewProState } from './RichTreeViewProStore.types';
+import type { TreeViewValidItem } from '@mui/x-tree-view/models';
+import type {
+  RichTreeViewProStoreParameters,
+  RichTreeViewProState,
+} from './RichTreeViewProStore.types';
 import { TreeViewLazyLoadingPlugin } from '../plugins/lazyLoading';
 import { TreeViewItemsReorderingPlugin } from '../plugins/itemsReordering';
 import { parametersToStateMapper } from './RichTreeViewProStore.utils';
@@ -18,9 +21,8 @@ export class RichTreeViewProStore<
 
   public itemsReordering = new TreeViewItemsReorderingPlugin(this);
 
-  public disposeEffect = () => {
+  public mountEffect = () => {
     this.lazyLoading.initEffect();
-    return this.timeoutManager.clearAll;
   };
 
   public constructor(parameters: RichTreeViewProStoreParameters<R, Multiple>) {

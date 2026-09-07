@@ -9,6 +9,8 @@ export interface RadialLineClasses {
   line: string;
   /** Styles applied to the mark element. */
   mark: string;
+  /** Styles applied to the highlight element. */
+  highlight: string;
   /** Styles applied to the AreaPlot root element. */
   areaPlot: string;
   /** Styles applied to the LinePlot root element. */
@@ -32,6 +34,7 @@ export const radialLineClasses: RadialLineClasses = generateUtilityClasses('MuiR
   'area',
   'line',
   'mark',
+  'highlight',
   'areaPlot',
   'linePlot',
   'markPlot',
@@ -47,6 +50,7 @@ export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
     area: ['area'],
     line: ['line'],
     mark: ['mark'],
+    highlight: ['highlight'],
     areaPlot: ['areaPlot'],
     linePlot: ['linePlot'],
     markPlot: ['markPlot'],

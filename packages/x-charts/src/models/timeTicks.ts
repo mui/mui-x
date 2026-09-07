@@ -35,12 +35,6 @@ export type TickFrequencyDefinition = {
  * - 'hours': displays the hour and minutes, placing ticks at the start of each hour
  */
 export type TickFrequency =
-  | 'years'
-  | 'quarterly'
-  | 'months'
-  | 'biweekly'
-  | 'weeks'
-  | 'days'
-  | 'hours';
+  'years' | 'quarterly' | 'months' | 'biweekly' | 'weeks' | 'days' | 'hours';
 
 export type OrdinalTimeTicks = (TickFrequencyDefinition | TickFrequency)[];

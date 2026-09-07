@@ -1,5 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
-import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import type { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -9,6 +9,7 @@ import {
 } from 'test/utils/pickers';
 import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
+import { describe } from 'vitest';
 
 describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();

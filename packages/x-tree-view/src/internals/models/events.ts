@@ -1,5 +1,5 @@
-import { MuiEvent } from '@mui/x-internals/types';
-import { TreeViewItemId } from '../../models';
+import type { MuiEvent } from '@mui/x-internals/types';
+import type { TreeViewItemId } from '../../models';
 
 interface TreeViewEventLookup {
   /**

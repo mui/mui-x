@@ -181,11 +181,20 @@ The demo below shows how to anchor the filter panel to the toolbar button instea
 
 {{"demo": "CustomFilterPanelPosition.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Apply filters on demand
+
+By default, the filter panel writes directly to the grid's filter state, so each change is applied immediately.
+To apply changes on demand instead—for example, to avoid a [server request](/x/react-data-grid/filtering/server-side/) on every change—use the [`<GridFilterPanelBase />`](/x/api/data-grid/grid-filter-panel-base/) component, a controlled version of the filter panel driven by the `filterModel` and `onFilterModelChange` props rather than the grid state.
+Keep a _draft_ filter model in your own state, let the panel edit it, and sync it to the grid only when the user clicks **Apply**.
+
+{{"demo": "ApplyFiltersOnDemand.js", "bg": "inline"}}
+
 ## API
 
 - [GridFilterOperator](/x/api/data-grid/grid-filter-operator/)
 - [GridFilterItem](/x/api/data-grid/grid-filter-item/)
 - [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)
+- [GridFilterPanelBase](/x/api/data-grid/grid-filter-panel-base/)
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)

@@ -3,19 +3,22 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
+import Alert from '@mui/material/Alert';
 import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import {
   TreeViewProvider,
   RichTreeViewItems,
+  RichTreeViewLoading,
   TreeViewItemDepthContext,
   itemsSelectors,
   useTreeViewStore,
+  lazyLoadingSelectors,
 } from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
-import { RichTreeViewProProps } from './RichTreeViewPro.types';
+import type { RichTreeViewProProps } from './RichTreeViewPro.types';
 import { useExtractRichTreeViewProParameters } from './useExtractRichTreeViewProParameters';
 import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
 import { RichTreeViewVirtualizedItems } from '../components/RichTreeViewVirtualizedItems';
@@ -40,6 +43,7 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
       itemCheckbox: ['itemCheckbox'],
       itemDragAndDropOverlay: ['itemDragAndDropOverlay'],
       itemErrorIcon: ['itemErrorIcon'],
+      itemLoader: ['itemLoader'],
     };
 
     return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
@@ -105,6 +109,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     apiRef,
     parameters,
     forwardedProps,
+    loading,
   } = useExtractRichTreeViewProParameters(props);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -125,13 +130,50 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 
   // Selector hooks
   const isVirtualizationEnabled = useStore(store, virtualizationSelectors.enabled);
+  const lazyLoadingRootIsLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
+  const error = useStore(store, lazyLoadingSelectors.itemError, null);
 
   // Feature hooks
   const classes = useUtilityClasses(props);
-  const slots = React.useMemo(() => ({ root: RichTreeViewProRoot, ...inSlots }), [inSlots]);
+  const slots = React.useMemo(
+    () => ({
+      root: RichTreeViewProRoot,
+      ...inSlots,
+    }),
+    [inSlots],
+  );
 
+  const isLoading = lazyLoadingRootIsLoading || loading;
   const Renderer = isVirtualizationEnabled ? RichTreeViewVirtualizedItems : RichTreeViewItems;
 
+  let content: React.ReactNode;
+  if (error) {
+    content = <Alert severity="error">{error.message}</Alert>;
+  } else if (isLoading) {
+    content = (
+      <RichTreeViewLoading
+        store={store}
+        slots={slots}
+        slotProps={slotProps}
+        ownerState={props}
+        forwardedProps={forwardedProps}
+        rootRef={handleRef}
+        classes={classes}
+      />
+    );
+  } else {
+    content = (
+      <Renderer
+        slots={slots}
+        slotProps={slotProps}
+        forwardedProps={forwardedProps}
+        ownerState={props}
+        rootRef={handleRef}
+      />
+    );
+  }
+
+  // The provider must mount in the loading and error states too, so `apiRef` is initialized on mount.
   return (
     <TreeViewProvider
       store={store}
@@ -142,20 +184,14 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
       rootRef={ref}
     >
       <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
-        <Renderer
-          slots={slots}
-          slotProps={slotProps}
-          forwardedProps={forwardedProps}
-          ownerState={props}
-          rootRef={handleRef}
-        />
+        {content}
         <Watermark packageInfo={packageInfo} />
       </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );
 }) as RichTreeViewProComponent;
 
-RichTreeViewPro.propTypes = {
+RichTreeViewPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -165,10 +201,12 @@ RichTreeViewPro.propTypes = {
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      addItems: PropTypes.func,
       focusItem: PropTypes.func,
       getItem: PropTypes.func,
       getItemDOMElement: PropTypes.func,
       getItemOrderedChildrenIds: PropTypes.func,
+      getItemSelection: PropTypes.func,
       getItemTree: PropTypes.func,
       getParentId: PropTypes.func,
       isItemExpanded: PropTypes.func,
@@ -242,9 +280,10 @@ RichTreeViewPro.propTypes = {
    */
   disableVirtualization: PropTypes.bool,
   /**
-   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
-   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
-   * Nested DOM structure is not compatible with collapse / expansion animations.
+   * When `'flat'`, the tree is rendered as a flat list (children are rendered as siblings of their parent).
+   * When `'nested'`, children are rendered inside their parent's groupTransition slot.
+   * Collapse/expansion animations that rely on the groupTransition slot only work with the nested DOM structure.
+   * Nested DOM structure is not compatible with virtualization.
    * @default 'flat'
    */
   domStructure: PropTypes.oneOf(['flat', 'nested']),
@@ -337,6 +376,13 @@ RichTreeViewPro.propTypes = {
    * @default false
    */
   itemsReordering: PropTypes.bool,
+  /**
+   * If `true`, a loading UI is displayed instead of the tree items.
+   * The loading UI is also shown automatically while `dataSource` is fetching root items.
+   * Setting `loading={false}` does not suppress the loading UI during an active `dataSource` root fetch.
+   * @default false
+   */
+  loading: PropTypes.bool,
   /**
    * Whether multiple items can be selected.
    * @default false

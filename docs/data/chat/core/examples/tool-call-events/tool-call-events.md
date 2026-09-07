@@ -7,17 +7,17 @@ githubLabel: 'scope: chat'
 
 # Chat - Tool call events
 
-<p class="description">Observe tool invocation state changes with <code>onToolCall</code> and drive side effects outside the message list.</p>
+<p class="description">Observe tool invocation state changes and drive side effects outside the chat message list.</p>
 
-This demo focuses on the `onToolCall` callback and how to use it for side effects that live outside the message store:
+Use the `onToolCall` callback to react to tool state changes for side effects that live outside the message store:
 
-- observing tool input and output state changes
-- building a local audit log from tool invocations
-- reacting to specific tool names with app-level logic
+- Observing tool input and output state changes
+- Building a local audit log from tool invocations
+- Reacting to specific tool names with app-level logic
 
 ## Key concepts
 
-### The `onToolCall` callback
+### Observing tool invocations
 
 Register `onToolCall` on `ChatProvider` to observe every tool invocation state change during streaming:
 
@@ -28,7 +28,7 @@ Register `onToolCall` on `ChatProvider` to observe every tool invocation state c
     console.log(`Tool "${toolCall.toolName}" is now ${toolCall.state}`);
 
     if (toolCall.state === 'output-available') {
-      // Drive side effects — update dashboards, trigger notifications, etc.
+      // Drive side effects—update dashboards, trigger notifications, etc.
     }
   }}
 >
@@ -50,7 +50,7 @@ The `toolCall.state` field tracks the tool lifecycle:
 | `output-error`       | Tool execution failed              |
 | `output-denied`      | User denied the tool call          |
 
-### The `ChatOnToolCallPayload`
+### Callback payload structure
 
 ```ts
 interface ChatOnToolCallPayload {
@@ -58,23 +58,25 @@ interface ChatOnToolCallPayload {
 }
 ```
 
-The `toolCall` object includes `toolCallId`, `toolName`, `state`, `input`, `output`, `errorText`, and `approval` fields — all typed based on your `ChatToolDefinitionMap` augmentation.
+The `toolCall` object includes `toolCallId`, `toolName`, `state`, `input`, `output`, `errorText`, and `approval` fields—all typed based on your `ChatToolDefinitionMap` augmentation.
+
+The demo below shows how `onToolCall` observes state transitions and feeds an external audit log:
 
 {{"demo": "ToolCallEventsHeadlessChat.js"}}
 
 ## Key takeaways
 
-- `onToolCall` fires on every tool state change — not just when output is available
-- Use it for side effects outside the store: logging, analytics, external API calls
-- Tool invocation state progresses through a well-defined lifecycle from input to output
-- For approval flows, see the [Tool approval and renderers](/x/react-chat/core/examples/tool-approval-and-renderers/) demo
+- `onToolCall` fires on every tool state change—not just when output is available.
+- Use it for side effects outside the store: logging, analytics, external API calls.
+- Tool invocation state progresses through a defined lifecycle from input to output.
+- For approval flows, see the [Tool approval and renderers](/x/react-chat/core/examples/tool-approval-and-renderers/) demo.
 
 ## See also
 
-- [Streaming](/x/react-chat/core/streaming/) for the tool chunk protocol reference
-- [Type augmentation](/x/react-chat/core/types/) for typing tool input and output
-- [Tool approval and renderers](/x/react-chat/core/examples/tool-approval-and-renderers/) for approval flows and custom part rendering
-- [State and store](/x/react-chat/core/state/) for all callback signatures
+- [Streaming](/x/react-chat/core/streaming/) for details on the tool chunk protocol.
+- [Type augmentation](/x/react-chat/core/types/) for details on typing tool input and output.
+- [Tool approval and renderers](/x/react-chat/core/examples/tool-approval-and-renderers/) for details on approval flows and custom part rendering.
+- [State and store](/x/react-chat/core/state/) for details on all callback signatures.
 
 ## API
 

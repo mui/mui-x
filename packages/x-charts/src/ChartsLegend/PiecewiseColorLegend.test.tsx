@@ -3,6 +3,7 @@ import { PiecewiseColorLegend, piecewiseColorLegendClasses } from '@mui/x-charts
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { describe, it, expect } from 'vitest';
 
 describe('<PiecewiseColorLegend />', () => {
   const { render } = createRenderer();

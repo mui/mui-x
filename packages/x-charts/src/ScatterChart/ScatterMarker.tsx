@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type SeriesId } from '../models/seriesType/common';
+import type { SeriesId } from '../models/seriesType/common';
 
 export interface ScatterMarkerProps {
   /**
@@ -59,7 +59,7 @@ function ScatterMarker(props: ScatterMarkerProps) {
   );
 }
 
-ScatterMarker.propTypes = {
+ScatterMarker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -88,7 +88,7 @@ ScatterMarker.propTypes = {
   /**
    * The series ID.
    */
-  seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * The size of the marker.
    */

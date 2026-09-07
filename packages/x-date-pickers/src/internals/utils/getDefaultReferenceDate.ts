@@ -1,6 +1,11 @@
 import { createIsAfterIgnoreDatePart } from './time-utils';
 import { mergeDateAndTime, getTodayDate } from './date-utils';
-import { FieldSection, MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../../models';
+import type {
+  FieldSection,
+  MuiPickersAdapter,
+  PickersTimezone,
+  PickerValidDate,
+} from '../../models';
 
 export interface GetDefaultReferenceDateProps {
   maxDate?: PickerValidDate;

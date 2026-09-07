@@ -7,7 +7,8 @@ import {
   buildFieldInteractions,
 } from 'test/utils/pickers';
 import { enUS, faIR } from 'date-fns-jalali/locale';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
+import type { AdapterFormats } from '@mui/x-date-pickers/models';
+import { describe, it, expect } from 'vitest';
 
 describe('<AdapterDateFnsJalaliV2 />', () => {
   describeJalaliAdapter(AdapterDateFnsJalali, {});
@@ -51,6 +52,7 @@ describe('<AdapterDateFnsJalaliV2 />', () => {
       describe(`test with the "${localeKey}" locale`, () => {
         const { render, adapter } = createPickerRenderer({
           adapterName: 'date-fns-jalali',
+          Adapter: AdapterDateFnsJalali,
           locale: localeObject,
         });
 

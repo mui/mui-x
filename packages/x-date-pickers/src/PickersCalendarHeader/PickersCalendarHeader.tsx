@@ -15,15 +15,15 @@ import {
   usePreviousMonthDisabled,
   useNextMonthDisabled,
 } from '../internals/hooks/date-helpers-hooks';
+import type { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 import {
   getPickersCalendarHeaderUtilityClass,
-  PickersCalendarHeaderClasses,
   pickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
-import { PickersCalendarHeaderProps } from './PickersCalendarHeader.types';
-import { PickerOwnerState } from '../models/pickers';
+import type { PickersCalendarHeaderProps } from './PickersCalendarHeader.types';
+import type { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { DateView } from '../models/views';
+import type { DateView } from '../models/views';
 
 const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | undefined) => {
   const slots = {
@@ -220,8 +220,11 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
       className={clsx(classes.root, className)}
       ref={ref}
     >
+      {/* `role="none"` is an alias for `role="presentation"`, but aria-query treats them differently. */}
+      {/* See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1090 */}
+      {/* eslint-disable-next-line jsx-a11y/role-supports-aria-props */}
       <PickersCalendarHeaderLabelContainer
-        role="presentation"
+        role="none"
         onClick={handleToggleView}
         ownerState={ownerState}
         // putting this on the label item element below breaks when using transition
@@ -260,7 +263,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
   );
 }) as PickersCalendarHeaderComponent;
 
-PickersCalendarHeader.propTypes = {
+PickersCalendarHeader.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

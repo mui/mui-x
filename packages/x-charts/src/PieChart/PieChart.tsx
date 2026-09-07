@@ -2,31 +2,34 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type MakeOptional } from '@mui/x-internals/types';
+import type { MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_PIE_CHART_MARGIN } from '../internals/constants';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
-import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
-import { type ChartsContainerProps } from '../ChartsContainer';
-import { type PieSeriesType } from '../models/seriesType';
+import type { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
+import type { ChartsSlotProps, ChartsSlots } from '../internals/material';
+import type { ChartsContainerProps } from '../ChartsContainer';
+import type { PieSeriesType } from '../models/seriesType';
 import { ChartsTooltip } from '../ChartsTooltip';
-import {
-  type ChartsTooltipSlots,
-  type ChartsTooltipSlotProps,
+import type {
+  ChartsTooltipSlots,
+  ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
-import { PiePlot, type PiePlotProps, type PiePlotSlotProps, type PiePlotSlots } from './PiePlot';
-import { type PieValueType } from '../models/seriesType/pie';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { PiePlot } from './PiePlot';
+import type { PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
+import type { PieValueType } from '../models/seriesType/pie';
+import { ChartsOverlay } from '../ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
 } from '../ChartsOverlay';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsDataProvider } from '../ChartsDataProvider';
 import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { PIE_CHART_PLUGINS, type PieChartPluginSignatures } from './PieChart.plugins';
+import { PIE_CHART_PLUGINS } from './PieChart.plugins';
+import type { PieChartPluginSignatures } from './PieChart.plugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
 import { FocusedPieArc } from './FocusedPieArc';
 
@@ -170,7 +173,7 @@ const PieChart = React.forwardRef(function PieChart(
   );
 });
 
-PieChart.propTypes = {
+PieChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -201,7 +204,16 @@ PieChart.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -252,11 +264,11 @@ PieChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['pie']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']).isRequired,
     }),
   ]),
   /**
@@ -388,11 +400,11 @@ PieChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['pie']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']).isRequired,
     }),
   ]),
   /**

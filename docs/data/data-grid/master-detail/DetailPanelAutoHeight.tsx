@@ -81,7 +81,13 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
 
   const columns = React.useMemo<GridColDef<Customer['products'][number]>[]>(
     () => [
-      { field: 'name', headerName: 'Product', flex: 1, editable: true },
+      {
+        field: 'name',
+        headerName: 'Product',
+        flex: 1,
+        editable: true,
+        rowHeader: true,
+      },
       {
         field: 'quantity',
         headerName: 'Quantity',

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import Stack, { StackProps, stackClasses } from '@mui/material/Stack';
+import type { StackProps } from '@mui/material/Stack';
+import Stack, { stackClasses } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { SxProps, Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { textFieldClasses } from '@mui/material/TextField';
 import { pickersTextFieldClasses } from '../../PickersTextField';
 

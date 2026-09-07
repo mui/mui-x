@@ -1,7 +1,7 @@
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { Heatmap } from './Heatmap';
 import { heatmapClasses } from './heatmapClasses';

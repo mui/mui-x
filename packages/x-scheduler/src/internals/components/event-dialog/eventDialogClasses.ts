@@ -1,10 +1,34 @@
 export interface EventDialogClasses {
   /** Styles applied to the event dialog root element. */
   eventDialog: string;
+  /** Styles applied to the armed-event toolbar root element. */
+  eventToolbar: string;
+  /** Styles applied to the armed-event toolbar edit button element. */
+  eventToolbarEditButton: string;
+  /** Styles applied to the armed-event toolbar delete button element. */
+  eventToolbarDeleteButton: string;
+  /** Styles applied to the anchored (desktop) armed-event toolbar wrapper element. */
+  anchoredEventToolbar: string;
+  /** Styles applied to the compact (touch) day time grid root element. */
+  compactDayTimeGrid: string;
+  /** Styles applied to the compact (touch) day time grid content element. */
+  compactDayTimeGridContent: string;
+  /** Styles applied to the compact (touch) armed-event toolbar dock element. */
+  compactEventToolbarDock: string;
+  /** Styles applied to the compact editing drawer root element. */
+  compactEventDrawer: string;
+  /** Styles applied to the compact editing drawer content element. */
+  compactEventDrawerContent: string;
+  /** Styles applied to the compact editing drawer read-only header element. */
+  compactEventDrawerReadonlyHeader: string;
+  /** Styles applied to the compact editing drawer read-only title element. */
+  compactEventDrawerReadonlyTitle: string;
   /** Styles applied to the event dialog close button element. */
   eventDialogCloseButton: string;
   /** Styles applied to the event dialog header element. */
   eventDialogHeader: string;
+  /** Styles applied to the event dialog header actions container element. */
+  eventDialogHeaderActions: string;
   /** Styles applied to the event dialog readonly content element. */
   eventDialogReadonlyContent: string;
   /** Styles applied to the event dialog actions element. */
@@ -47,12 +71,16 @@ export interface EventDialogClasses {
   eventDialogResourceMenuListSubheader: string;
   /** Styles applied to the event dialog resource menu color dot element. */
   eventDialogResourceMenuColorDot: string;
-  /** Styles applied to the event dialog resource menu color radio button element. */
-  eventDialogResourceMenuColorRadioButton: string;
+  /** Styles applied to the event dialog resource menu color toggle group element. */
+  eventDialogResourceMenuColorToggleGroup: string;
+  /** Styles applied to the event dialog resource menu color toggle element. */
+  eventDialogResourceMenuColorToggle: string;
   /** Styles applied to the event dialog inline row element. */
   eventDialogInlineRow: string;
   /** Styles applied to the event dialog section header title element. */
   eventDialogSectionHeaderTitle: string;
+  /** Styles applied to the event dialog section fieldset element. */
+  eventDialogSectionFieldset: string;
   /** Styles applied to the event dialog radio button label element. */
   eventDialogRadioButtonLabel: string;
   /** Styles applied to the event dialog repeat section label element. */
@@ -99,8 +127,20 @@ export type EventDialogClassKey = keyof EventDialogClasses;
 
 export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialog',
+  'eventToolbar',
+  'eventToolbarEditButton',
+  'eventToolbarDeleteButton',
+  'anchoredEventToolbar',
+  'compactDayTimeGrid',
+  'compactDayTimeGridContent',
+  'compactEventToolbarDock',
+  'compactEventDrawer',
+  'compactEventDrawerContent',
+  'compactEventDrawerReadonlyHeader',
+  'compactEventDrawerReadonlyTitle',
   'eventDialogCloseButton',
   'eventDialogHeader',
+  'eventDialogHeaderActions',
   'eventDialogReadonlyContent',
   'eventDialogActions',
   'eventDialogDateTimeContainer',
@@ -120,11 +160,13 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogResourceMenuItem',
   'eventDialogResourceMenuListSubheader',
   'eventDialogResourceMenuColorDot',
-  'eventDialogResourceMenuColorRadioButton',
+  'eventDialogResourceMenuColorToggleGroup',
+  'eventDialogResourceMenuColorToggle',
   'eventDialogRecurrenceLabelContainer',
   'eventDialogRecurrenceSelectorContainer',
   'eventDialogInlineRow',
   'eventDialogSectionHeaderTitle',
+  'eventDialogSectionFieldset',
   'eventDialogRadioButtonLabel',
   'eventDialogRepeatSectionLabel',
   'eventDialogEndsRadioGroup',
@@ -150,8 +192,20 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
 // Create a slots object for reuse in useUtilityClasses (avoids duplication in EventCalendar.tsx and EventTimelinePremium.tsx)
 export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]> = {
   eventDialog: ['eventDialog'],
+  eventToolbar: ['eventToolbar'],
+  eventToolbarEditButton: ['eventToolbarEditButton'],
+  eventToolbarDeleteButton: ['eventToolbarDeleteButton'],
+  anchoredEventToolbar: ['anchoredEventToolbar'],
+  compactDayTimeGrid: ['compactDayTimeGrid'],
+  compactDayTimeGridContent: ['compactDayTimeGridContent'],
+  compactEventToolbarDock: ['compactEventToolbarDock'],
+  compactEventDrawer: ['compactEventDrawer'],
+  compactEventDrawerContent: ['compactEventDrawerContent'],
+  compactEventDrawerReadonlyHeader: ['compactEventDrawerReadonlyHeader'],
+  compactEventDrawerReadonlyTitle: ['compactEventDrawerReadonlyTitle'],
   eventDialogCloseButton: ['eventDialogCloseButton'],
   eventDialogHeader: ['eventDialogHeader'],
+  eventDialogHeaderActions: ['eventDialogHeaderActions'],
   eventDialogReadonlyContent: ['eventDialogReadonlyContent'],
   eventDialogActions: ['eventDialogActions'],
   eventDialogDateTimeContainer: ['eventDialogDateTimeContainer'],
@@ -171,11 +225,13 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogResourceMenuItem: ['eventDialogResourceMenuItem'],
   eventDialogResourceMenuListSubheader: ['eventDialogResourceMenuListSubheader'],
   eventDialogResourceMenuColorDot: ['eventDialogResourceMenuColorDot'],
-  eventDialogResourceMenuColorRadioButton: ['eventDialogResourceMenuColorRadioButton'],
+  eventDialogResourceMenuColorToggleGroup: ['eventDialogResourceMenuColorToggleGroup'],
+  eventDialogResourceMenuColorToggle: ['eventDialogResourceMenuColorToggle'],
   eventDialogRecurrenceLabelContainer: ['eventDialogRecurrenceLabelContainer'],
   eventDialogRecurrenceSelectorContainer: ['eventDialogRecurrenceSelectorContainer'],
   eventDialogInlineRow: ['eventDialogInlineRow'],
   eventDialogSectionHeaderTitle: ['eventDialogSectionHeaderTitle'],
+  eventDialogSectionFieldset: ['eventDialogSectionFieldset'],
   eventDialogRadioButtonLabel: ['eventDialogRadioButtonLabel'],
   eventDialogRepeatSectionLabel: ['eventDialogRepeatSectionLabel'],
   eventDialogEndsRadioGroup: ['eventDialogEndsRadioGroup'],

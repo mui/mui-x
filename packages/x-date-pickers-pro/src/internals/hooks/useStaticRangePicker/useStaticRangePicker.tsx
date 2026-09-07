@@ -2,16 +2,15 @@
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
+import type { DateOrTimeViewWithMeridiem, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   usePicker,
   DIALOG_WIDTH,
-  DateOrTimeViewWithMeridiem,
   PickerProvider,
-  PickerRangeValue,
   extractRootForwardedProps,
   mergeSx,
 } from '@mui/x-date-pickers/internals';
-import {
+import type {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';

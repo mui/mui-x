@@ -1,9 +1,7 @@
 import { useRotationScale } from '../../hooks/useScale';
 import { useRadiusAxes } from '../../hooks';
-import {
-  selectorChartPolarCenter,
-  type UseChartPolarAxisSignature,
-} from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import { selectorChartPolarCenter } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 
 export function useRadarGridData() {

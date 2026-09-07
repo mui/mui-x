@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useTicks } from '../hooks/useTicks';
-import { type ComputedXAxis } from '../models/axis';
+import type { ComputedXAxis } from '../models/axis';
 import { GridLine } from './styledComponents';
-import { type ChartsGridClasses } from './chartsGridClasses';
+import type { ChartsGridClasses } from './chartsGridClasses';
 import { useChartsContext } from '../context/ChartsProvider';
 
 interface ChartsGridVerticalProps {

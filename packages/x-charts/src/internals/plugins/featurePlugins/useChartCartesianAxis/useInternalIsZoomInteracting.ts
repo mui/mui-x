@@ -1,7 +1,7 @@
 'use client';
 import { useStore } from '../../../store/useStore';
 import { selectorChartZoomIsInteracting } from './useChartCartesianAxisRendering.selectors';
-import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 
 /**
  * Check if the zoom is interacting.

@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
+import type * as React from 'react';
+import type { SxProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
 
 export interface BaseToolbarProps extends ExportedBaseToolbarProps {
   titleId?: string;

@@ -1,12 +1,9 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
-import {
-  DataGridPremium as DataGrid,
-  type DataGridPremiumProps as DataGridProps,
-  type GridApi,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium as DataGrid, useGridApiRef } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps as DataGridProps, GridApi } from '@mui/x-data-grid-premium';
 import { getColumnValues } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

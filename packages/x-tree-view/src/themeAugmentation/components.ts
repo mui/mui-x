@@ -1,4 +1,8 @@
-import { ComponentsProps, ComponentsOverrides, ComponentsVariants } from '@mui/material/styles';
+import type {
+  ComponentsProps,
+  ComponentsOverrides,
+  ComponentsVariants,
+} from '@mui/material/styles';
 
 export interface TreeViewComponents<Theme = unknown> {
   MuiSimpleTreeView?: {

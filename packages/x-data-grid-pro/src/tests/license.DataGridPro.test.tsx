@@ -1,6 +1,7 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { LicenseInfo } from '@mui/x-license';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('<DataGridPro /> - License', () => {
   const { render } = createRenderer();

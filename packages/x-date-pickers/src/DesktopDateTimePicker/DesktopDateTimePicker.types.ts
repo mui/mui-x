@@ -1,17 +1,17 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
-import {
+import type {
   BaseDateTimePickerProps,
   BaseDateTimePickerSlots,
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
-import { DateOrTimeView } from '../models';
-import { DigitalTimePickerProps } from '../internals/models/props/time';
-import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
+import type { DateOrTimeView } from '../models';
+import type { DigitalTimePickerProps } from '../internals/models/props/time';
+import type { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDateTimePickerSlots
   extends

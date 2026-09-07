@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
-  type GridTreeNode,
   useGridSelector,
   gridFilteredTopLevelRowCountSelector,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
+import type { GridTreeNode } from '@mui/x-data-grid';
 import {
   useGridRowAriaAttributes as useGridRowAriaAttributesCommunity,
   gridFilteredChildrenCountLookupSelector,

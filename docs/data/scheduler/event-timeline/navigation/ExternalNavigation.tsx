@@ -8,7 +8,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-headless-premium/models';
+import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import {
   initialEvents,
   resources as allResources,
@@ -19,7 +19,7 @@ const resources = allResources.slice(0, 5);
 
 const presetOptions: { value: EventTimelinePremiumPreset; label: string }[] = [
   { value: 'dayAndHour', label: 'Time' },
-  { value: 'day', label: 'Days' },
+  { value: 'dayAndMonth', label: 'Days' },
   { value: 'dayAndWeek', label: 'Weeks' },
   { value: 'monthAndYear', label: 'Months' },
   { value: 'year', label: 'Years' },

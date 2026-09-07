@@ -1,0 +1,12 @@
+<ChatBox
+  adapter={adapter}
+  initialActiveConversationId={CONVERSATION_ID}
+  suggestions={['Clean up /tmp/cache']}
+  suggestionsAutoSubmit
+  sx={{
+    height: 500,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

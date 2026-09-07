@@ -1,4 +1,5 @@
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 
 export const enUS: Localization = getGridLocalization(GRID_DEFAULT_LOCALE_TEXT);

@@ -1,7 +1,7 @@
 import { createSelectorMemoized, createSelector } from '@mui/x-internals/store';
-import { type SeriesId } from '../../../../models';
-import { type ChartRootSelector } from '../../utils/selectors';
-import { type UseChartSeriesSignature } from './useChartSeries.types';
+import type { SeriesId } from '../../../../models';
+import type { ChartRootSelector } from '../../utils/selectors';
+import type { UseChartSeriesSignature } from './useChartSeries.types';
 import { applySeriesProcessors } from './processSeries';
 import { selectorIsItemVisibleGetter } from '../../featurePlugins/useChartVisibilityManager';
 import { selectorChartSeriesConfig } from '../useChartSeriesConfig/useChartSeriesConfig.selectors';

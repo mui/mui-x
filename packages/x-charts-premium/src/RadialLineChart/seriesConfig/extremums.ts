@@ -1,4 +1,5 @@
-import { findMinMax, type PolarExtremumGetter } from '@mui/x-charts/internals';
+import { findMinMax } from '@mui/x-charts/internals';
+import type { PolarExtremumGetter } from '@mui/x-charts/internals';
 
 export const rotationExtremumGetter: PolarExtremumGetter<'radialLine'> = (params) => {
   const { axis } = params;

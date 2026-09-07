@@ -3,8 +3,8 @@ import {
   useGridEventPriority,
   gridVisibleColumnDefinitionsSelector,
   useGridEvent,
-  type GridEventListener,
 } from '@mui/x-data-grid';
+import type { GridEventListener } from '@mui/x-data-grid';
 import { runIf, getVisibleRows } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { GridRowScrollEndParams } from '../../../models';

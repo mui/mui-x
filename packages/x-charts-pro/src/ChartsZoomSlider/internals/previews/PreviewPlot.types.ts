@@ -1,4 +1,4 @@
-import { type AxisId, type SeriesId } from '@mui/x-charts/internals';
+import type { AxisId, SeriesId } from '@mui/x-charts/internals';
 
 export interface PreviewPlotProps {
   axisId: AxisId;

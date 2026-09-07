@@ -1,0 +1,108 @@
+'use client';
+import * as React from 'react';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
+import { useEventPointerResizeHandler } from '../../internals/utils/useEventPointerResizeHandler';
+import { isResizeHandlerEnabled } from '../../internals/utils/resize-utils';
+import { getPrimaryResourceId } from '../../internals/utils/event-utils';
+import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
+import { useCalendarGridTimeEventContext } from '../time-event/CalendarGridTimeEventContext';
+import type { CalendarGridTimeEvent } from '../time-event/CalendarGridTimeEvent';
+import type { SchedulerEventSide } from '../../models';
+
+// Time grid events are never all-day; keep them that way on resize.
+function addPropertiesToResizedEvent() {
+  return { allDay: false as const };
+}
+
+export const CalendarGridTimeEventResizeHandler = React.forwardRef(
+  function CalendarGridTimeEventResizeHandler(
+    componentProps: CalendarGridTimeEventResizeHandler.Props,
+    forwardedRef: React.ForwardedRef<HTMLDivElement>,
+  ) {
+    const {
+      // Rendering props
+      className,
+      render,
+      style,
+      // Internal props
+      side,
+      // Props forwarded to the DOM element
+      ...elementProps
+    } = componentProps;
+
+    // Context hooks
+    const contextValue = useCalendarGridTimeEventContext();
+    const { getDateAtPointer } = useCalendarGridTimeColumnContext();
+
+    // Ref hooks
+    const ref = React.useRef<HTMLDivElement>(null);
+
+    // Feature hooks
+    const getDragData = useStableCallback((input) => ({
+      ...contextValue.getSharedDragData(input),
+      source: 'CalendarGridTimeEventResizeHandler',
+      side,
+    }));
+
+    // Pointer-resize session, built from the event's drag data. The pointer maps directly to a date,
+    // so no grab offset is needed.
+    const getResizeSession = useStableCallback((): useEventPointerResizeHandler.ResizeSession => {
+      const data = contextValue.getSharedDragData();
+      return {
+        start: data.start,
+        end: data.end,
+        eventId: data.eventId,
+        occurrenceKey: data.occurrenceKey,
+        originalOccurrence: data.originalOccurrence,
+        resourceId: getPrimaryResourceId(data.originalOccurrence.resource) ?? null,
+      };
+    });
+
+    // Shared by both resize handlers running together: native drag-and-drop serves the mouse, the
+    // pointer handler serves touch/pen, so one handle resizes from whatever pointer the user has.
+    const enabled = isResizeHandlerEnabled({
+      side,
+      isEventStartClipped: contextValue.isEventStartClipped,
+      isEventEndClipped: contextValue.isEventEndClipped,
+    });
+
+    const { state } = useEventResizeHandler({
+      ref,
+      side,
+      enabled,
+      getDragData,
+    });
+
+    useEventPointerResizeHandler({
+      ref,
+      side,
+      enabled,
+      surfaceType: 'time-grid',
+      getDateAtPointer,
+      getResizeSession,
+      addPropertiesToResizedEvent,
+    });
+
+    return useRenderElement('div', componentProps, {
+      enabled,
+      state,
+      ref: [forwardedRef, ref],
+      props: [elementProps],
+    });
+  },
+);
+
+export namespace CalendarGridTimeEventResizeHandler {
+  export interface State extends useEventResizeHandler.State {}
+
+  export interface Props
+    extends BaseUIComponentProps<'div', State>, useEventResizeHandler.PublicParameters {}
+
+  export interface DragData extends CalendarGridTimeEvent.SharedDragData {
+    source: 'CalendarGridTimeEventResizeHandler';
+    side: SchedulerEventSide;
+  }
+}

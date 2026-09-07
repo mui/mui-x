@@ -4,7 +4,7 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsContainerPro } from '@mui/x-charts-pro/ChartsContainerPro';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
+import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
 import { Chance } from 'chance';
 
 const chance = new Chance(42);
@@ -42,7 +42,7 @@ export default function ZoomSliderComposition() {
         <LinePlot />
       </g>
       <ChartsXAxis label="X axis" axisId="x-axis-id" />
-      <ChartZoomSlider />
+      <ChartsZoomSlider />
       <ChartsClipPath id={clipPathId} />
     </ChartsContainerPro>
   );

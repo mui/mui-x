@@ -1,0 +1,4 @@
+<ComposerDemoShell
+  hideAttachButton
+  helperText="This toolbar omits ChatComposerAttachButton, leaving only the send action."
+/>

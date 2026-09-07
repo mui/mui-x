@@ -1,20 +1,26 @@
 import {
   useChartZAxis,
-  type UseChartZAxisSignature,
   useChartPolarAxis,
-  type UseChartPolarAxisSignature,
   useChartTooltip,
-  type UseChartTooltipSignature,
   useChartInteraction,
-  type UseChartInteractionSignature,
   useChartHighlight,
-  type UseChartHighlightSignature,
   useChartKeyboardNavigation,
-  type UseChartKeyboardNavigationSignature,
+  useChartItemClick,
   useChartVisibilityManager,
-  type UseChartVisibilityManagerSignature,
-  type ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
+import type {
+  UseChartZAxisSignature,
+  UseChartPolarAxisSignature,
+  UseChartTooltipSignature,
+  UseChartInteractionSignature,
+  UseChartHighlightSignature,
+  UseChartKeyboardNavigationSignature,
+  UseChartItemClickSignature,
+  UseChartVisibilityManagerSignature,
+  ConvertSignaturesIntoPlugins,
+} from '@mui/x-charts/internals';
+import { useChartProExport } from '@mui/x-charts-pro/plugins';
+import type { UseChartProExportSignature } from '@mui/x-charts-pro/plugins';
 
 export type RadialLineChartPluginSignatures = [
   UseChartZAxisSignature,
@@ -24,6 +30,8 @@ export type RadialLineChartPluginSignatures = [
   UseChartHighlightSignature<'radialLine'>,
   UseChartVisibilityManagerSignature<'radialLine'>,
   UseChartKeyboardNavigationSignature,
+  UseChartItemClickSignature<'radialLine'>,
+  UseChartProExportSignature,
 ];
 
 export const RADIAL_LINE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<RadialLineChartPluginSignatures> =
@@ -35,4 +43,6 @@ export const RADIAL_LINE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<RadialLineC
     useChartHighlight,
     useChartVisibilityManager,
     useChartKeyboardNavigation,
+    useChartItemClick,
+    useChartProExport,
   ];

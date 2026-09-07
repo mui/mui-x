@@ -7,11 +7,11 @@ githubLabel: 'scope: chat'
 
 # Chat - Core streaming
 
-<p class="description">Understand the stream chunk protocol that turns adapter responses into normalized message state, including text, reasoning, tool, source, file, and data chunks.</p>
+<p class="description">Process streamed adapter responses into normalized message parts for text, reasoning, tool calls, sources, files, and custom data.</p>
 
 The adapter's `sendMessage()` method returns a `ReadableStream<ChatMessageChunk | ChatStreamEnvelope>`.
 The runtime reads this stream, processes each chunk, and updates the normalized store.
-Your UI components see the updates through hooks and selectors.
+UI components consume the updates through hooks and selectors.
 
 The following demo visualizes the streaming lifecycle:
 
@@ -50,7 +50,7 @@ Multiple `text-delta` chunks are batched according to `streamFlushInterval` befo
 | `reasoning-delta` | `id`, `delta` | Append reasoning content    |
 | `reasoning-end`   | `id`          | Finalize the reasoning part |
 
-Reasoning chunks create a `ChatReasoningMessagePart` — useful for chain-of-thought or thinking trace displays.
+Reasoning chunks create a `ChatReasoningMessagePart`—useful for displaying chain-of-thought or thinking traces.
 
 ### Tool chunks
 
@@ -125,13 +125,14 @@ interface ChatStreamEnvelope {
 The runtime accepts both raw `ChatMessageChunk` objects and enveloped chunks in the same stream.
 Envelopes are useful for SSE-based transports where chunks might arrive out of order or be replayed.
 
-## `streamFlushInterval`
+## Throttling stream updates
 
 Rapid text and reasoning deltas are batched before being applied to the store.
 The `streamFlushInterval` prop on `ChatProvider` controls the batching window (default: 16ms).
 
 :::info
-Lower values mean faster visual updates but more store mutations. Higher values reduce mutation frequency at the cost of perceived latency.
+Lower values mean faster visual updates but more store mutations.
+Higher values reduce mutation frequency at the cost of perceived latency.
 :::
 
 ```tsx
@@ -165,14 +166,15 @@ If the stream closes without a terminal chunk (`finish` or `abort`), the runtime
 
 1. Records a recoverable stream error.
 2. Sets the message status to `'error'`.
-3. Calls `onError` and `onFinish` with `isDisconnect: true`.
-4. If `reconnectToStream()` is implemented, attempts to resume.
+3. Calls `onFinish` with `isDisconnect: true`.
+4. If `reconnectToStream()` is implemented, makes one attempt to resume.
+5. Calls `onError` only when the disconnect remains unrecovered.
 
 If the adapter's `sendMessage()` throws, the runtime records a send error and surfaces it through the error model.
 
 ## Building a stream
 
-When writing an adapter, you can construct a `ReadableStream` from an array of chunks:
+When writing an adapter, construct a `ReadableStream` from an array of chunks:
 
 ```tsx
 function createStream(
@@ -193,7 +195,7 @@ function createStream(
 }
 ```
 
-Or convert a server-sent event stream into chunks:
+To convert a server-sent event stream into chunks, read the response body and enqueue parsed chunks:
 
 ```tsx
 async function fromSSE(
@@ -220,10 +222,10 @@ async function fromSSE(
 
 ## See also
 
-- [Adapters](/x/react-chat/core/adapters/) for the adapter interface that produces streams.
-- [State and store](/x/react-chat/core/state/) for `streamFlushInterval` and error model.
-- [Streaming lifecycle](/x/react-chat/core/examples/streaming-lifecycle/) for send, stop, retry, and callbacks in action.
-- [Message parts](/x/react-chat/core/examples/message-parts/) for rendering the parts that chunks produce.
+- See [Adapters](/x/react-chat/core/adapters/) for details on the adapter interface that produces streams.
+- See [State and store](/x/react-chat/core/state/) for details on `streamFlushInterval` and error model.
+- See [Streaming lifecycle](/x/react-chat/core/examples/streaming-lifecycle/) for details on send, stop, retry, and callbacks in action.
+- See [Message parts](/x/react-chat/core/examples/message-parts/) for details on rendering the parts that chunks produce.
 
 ## API
 

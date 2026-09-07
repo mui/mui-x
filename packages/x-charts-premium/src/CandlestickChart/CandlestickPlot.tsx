@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
-import { type ContinuousScaleName, useDrawingArea } from '@mui/x-charts/internals';
+import { useDrawingArea } from '@mui/x-charts/internals';
+import type { ContinuousScaleName } from '@mui/x-charts/internals';
 import { useXScale, useYScale } from '@mui/x-charts/hooks';
-import { type DefaultizedOHLCSeriesType } from '../models';
+import type { DefaultizedOHLCSeriesType } from '../models';
 import { useOHLCSeriesContext } from '../hooks/useOHLCSeries';
 import { useCandlestickPlotData } from './useCandlestickPlotData';
 import { useWebGLLayer } from '../ChartsWebGLLayer/ChartsWebGLContext';

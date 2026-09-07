@@ -1,5 +1,6 @@
 import { createPickerRenderer, describeValidation, describePicker } from 'test/utils/pickers';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { describe } from 'vitest';
 
 describe('<DesktopDatePicker /> - Describe Validation', () => {
   const { render } = createPickerRenderer();

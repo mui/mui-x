@@ -3,9 +3,9 @@ import * as React from 'react';
 import { useCharts } from '../../internals/store/useCharts';
 import type { ChartsProviderProps } from './ChartsProvider.types';
 import { ChartsContext } from './ChartsContext';
-import {
-  type ChartAnyPluginSignature,
-  type ConvertSignaturesIntoPlugins,
+import type {
+  ChartAnyPluginSignature,
+  ConvertSignaturesIntoPlugins,
 } from '../../internals/plugins/models';
 import type { ChartSeriesType } from '../../models/seriesType/config';
 import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';

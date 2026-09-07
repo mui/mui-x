@@ -9,9 +9,9 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
-import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
+import type { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
-import { FieldType } from '../models';
+import type { FieldType } from '../models';
 
 type DateRangeFieldComponent = ((
   props: SingleInputDateTimeRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -55,7 +55,7 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
 
 SingleInputDateTimeRangeField.fieldType = 'single-input';
 
-SingleInputDateTimeRangeField.propTypes = {
+SingleInputDateTimeRangeField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -250,6 +250,7 @@ SingleInputDateTimeRangeField.propTypes = {
   onFocus: PropTypes.func,
   onInput: PropTypes.func,
   onKeyDown: PropTypes.func,
+  onMouseDown: PropTypes.func,
   onPaste: PropTypes.func,
   /**
    * Callback fired when the selected sections change.

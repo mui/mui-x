@@ -1,0 +1,16 @@
+<ScopedChat
+  conversations={directoryConversations}
+  activeConversationId={activeId}
+>
+  <Box
+    sx={{
+      height: 360,
+      overflow: 'hidden',
+      border: '1px solid',
+      borderColor: 'divider',
+      borderRadius: 1,
+    }}
+  >
+    <ChatConversationList slots={{ item: FullCustomRow }} />
+  </Box>
+</ScopedChat>

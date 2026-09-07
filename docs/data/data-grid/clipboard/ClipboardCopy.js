@@ -9,6 +9,7 @@ export default function ClipboardCopy() {
     dataSet: 'Commodity',
     rowLength: 10,
     maxColumns: 20,
+    multiSelect: true,
   });
 
   const [copiedData, setCopiedData] = React.useState('');

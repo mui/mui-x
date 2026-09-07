@@ -2,14 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import {
-  ComposerHelperText,
-  type ComposerHelperTextProps,
-  type ComposerHelperTextOwnerState,
-} from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { ComposerHelperText } from '@mui/x-chat-headless';
+import type { ComposerHelperTextProps, ComposerHelperTextOwnerState } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { useChatComposerUtilityClasses } from './chatComposerClasses';
+import type { ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerHelperText');
 
@@ -48,23 +47,25 @@ const ChatComposerHelperText = React.forwardRef<HTMLParagraphElement, ChatCompos
         ref={ref}
         {...other}
         slots={{
-          helperText: slots?.helperText ?? ChatComposerHelperTextStyled,
           ...slots,
+          helperText: slots?.helperText ?? ChatComposerHelperTextStyled,
         }}
         slotProps={{
           ...slotProps,
-          helperText: {
-            className: clsx(classes.helperText, className),
-            sx,
-            ...slotProps?.helperText,
-          } as any,
+          helperText: mergeSlotProps(
+            {
+              className: clsx(classes.helperText, className),
+              sx,
+            },
+            slotProps?.helperText,
+          ) as any,
         }}
       />
     );
   },
 );
 
-ChatComposerHelperText.propTypes = {
+ChatComposerHelperText.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

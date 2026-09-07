@@ -1,9 +1,9 @@
-import moment, { Moment } from 'moment';
+import type { Moment } from 'moment';
+import moment from 'moment';
 import momentTZ from 'moment-timezone';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
-import { spy } from 'sinon';
+import type { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   createPickerRenderer,
   expectFieldValue,
@@ -15,6 +15,7 @@ import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';
 import 'moment/locale/ru';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('<AdapterMoment />', () => {
   const commonParams = {
@@ -179,10 +180,10 @@ describe('<AdapterMoment />', () => {
   });
 
   it('should use moment custom instance if provided', () => {
-    const spiedInstance = spy(moment);
+    const spiedInstance = vi.fn(moment);
 
     const adapter = new AdapterMoment({ instance: spiedInstance as unknown as typeof moment });
     adapter.date()!;
-    expect(spiedInstance.callCount).to.equal(1);
+    expect(spiedInstance.mock.calls.length).to.equal(1);
   });
 });

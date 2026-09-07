@@ -7,10 +7,10 @@ import {
   selectorChartRawYAxis,
   selectorChartXAxisAutoSizes,
   selectorChartYAxisAutoSizes,
-  type ChartState,
 } from '@mui/x-charts/internals';
+import type { ChartState } from '@mui/x-charts/internals';
 import { computeAxisValue } from './computeAxisValue';
-import { type UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
+import type { UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
 
 export const selectorFunnel = (state: ChartState<[], [UseChartFunnelAxisSignature]>) =>
   state.funnel;

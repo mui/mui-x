@@ -2,13 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import { ConversationSubtitle, type ConversationSubtitleProps } from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { ConversationSubtitle } from '@mui/x-chat-headless';
+import type { ConversationSubtitleProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import {
-  useChatConversationUtilityClasses,
-  type ChatConversationClasses,
-} from './chatConversationClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { useChatConversationUtilityClasses } from './chatConversationClasses';
+import type { ChatConversationClasses } from './chatConversationClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationSubtitle');
 
@@ -45,22 +45,24 @@ const ChatConversationSubtitle = React.forwardRef<
       ref={ref}
       {...other}
       slots={{
-        subtitle: slots?.subtitle ?? ChatConversationSubtitleStyled,
         ...slots,
+        subtitle: slots?.subtitle ?? ChatConversationSubtitleStyled,
       }}
       slotProps={{
         ...slotProps,
-        subtitle: {
-          className: clsx(classes.subtitle, className),
-          sx,
-          ...(slotProps?.subtitle as object),
-        } as any,
+        subtitle: mergeSlotProps(
+          {
+            className: clsx(classes.subtitle, className),
+            sx,
+          },
+          slotProps?.subtitle,
+        ) as any,
       }}
     />
   );
 });
 
-ChatConversationSubtitle.propTypes = {
+ChatConversationSubtitle.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

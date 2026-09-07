@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
-import { useIsHydrated } from '../hooks/useIsHydrated';
+import { useIsHydrated } from '@mui/x-internals/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import type { ChartsYAxisProps } from '../models/axis';

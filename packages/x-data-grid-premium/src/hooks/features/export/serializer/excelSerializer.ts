@@ -1,21 +1,15 @@
 import type * as Excel from '@mui/x-internal-exceljs-fork';
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  type GridRowId,
-  type GridColDef,
-  type GridApi,
-  type ValueOptions,
-  GRID_DATE_COL_DEF,
-  GRID_DATETIME_COL_DEF,
-  type GridValidRowModel,
+import { GRID_DATE_COL_DEF, GRID_DATETIME_COL_DEF } from '@mui/x-data-grid-pro';
+import type {
+  GridRowId,
+  GridColDef,
+  GridApi,
+  ValueOptions,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
-import {
-  type GridStateColDef,
-  type GridSingleSelectColDef,
-  isObject,
-  isSingleSelectColDef,
-  gridHasColSpanSelector,
-} from '@mui/x-data-grid/internals';
+import { isObject, isSingleSelectColDef, gridHasColSpanSelector } from '@mui/x-data-grid/internals';
+import type { GridStateColDef, GridSingleSelectColDef } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
 import type { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
@@ -24,10 +18,9 @@ import {
   addSerializedRowToWorksheet,
   createValueOptionsSheetIfNeeded,
   getExcelJs,
-  type SerializedColumns,
-  type SerializedRow,
-  type ValueOptionsData,
 } from './utils';
+import type { FormulaExcelExportLayout } from '../../formula/gridFormulaExcelExport';
+import type { SerializedColumns, SerializedRow, ValueOptionsData } from './utils';
 
 export type { ExcelExportInitEvent } from './utils';
 
@@ -74,10 +67,12 @@ export const serializeRowUnsafe = (
   apiRef: RefObject<GridPrivateApiPremium>,
   defaultValueOptionsFormulae: { [field: string]: { address: string } },
   options: Pick<BuildExcelOptions, 'escapeFormulas'>,
+  formulaExport: FormulaExcelExportLayout | null = null,
 ): SerializedRow => {
   const serializedRow: SerializedRow['row'] = {};
   const dataValidation: SerializedRow['dataValidation'] = {};
   const mergedCells: SerializedRow['mergedCells'] = [];
+  const formulas: NonNullable<SerializedRow['formulas']> = {};
 
   const row = apiRef.current.getRow(id);
   const rowNode = apiRef.current.getRowNode(id);
@@ -162,9 +157,9 @@ export const serializeRowUnsafe = (
           }
         }
         if (isObject<{ label: any }>(formattedValue)) {
-          serializedRow[castColumn.field] = formattedValue?.label;
+          cellValue = formattedValue?.label;
         } else {
-          serializedRow[castColumn.field] = formattedValue as any;
+          cellValue = formattedValue as any;
         }
         break;
       }
@@ -220,6 +215,16 @@ export const serializeRowUnsafe = (
     if (typeof cellValue !== 'undefined') {
       serializedRow[column.field] = cellValue;
     }
+
+    // A live formula cell overlays its plain value with a real Excel formula.
+    // The value above stays as the fallback (used when the cell is not a formula
+    // or its formula cannot be expressed against the export layout).
+    if (formulaExport) {
+      const cellFormula = apiRef.current.getCellExcelFormula?.(formulaExport, id, column.field);
+      if (cellFormula) {
+        formulas[column.field] = cellFormula;
+      }
+    }
   });
 
   return {
@@ -227,6 +232,7 @@ export const serializeRowUnsafe = (
     dataValidation,
     outlineLevel,
     mergedCells,
+    ...(Object.keys(formulas).length > 0 ? { formulas } : {}),
   };
 };
 
@@ -365,9 +371,28 @@ export async function buildExcel(
   );
   createValueOptionsSheetIfNeeded(valueOptionsData, valueOptionsSheetName, workbook);
 
+  // Formulas are exported as real Excel formulas only when injection-escaping is
+  // off (`escapeFormulas: false`) — that flag already governs whether `=`-content
+  // may be live in the export. Layout maps identities to this sheet's coordinates.
+  // The layout builder is a private API seam registered by the injected formula
+  // feature — without the feature the export stays value-only.
+  const formulaExport = options.escapeFormulas
+    ? null
+    : (apiRef.current.createFormulaExcelExportLayout?.(columns, rowIds, {
+        includeHeaders,
+        includeColumnGroupsHeaders,
+      }) ?? null);
+
   apiRef.current.resetColSpan();
   rowIds.forEach((id) => {
-    const serializedRow = serializeRowUnsafe(id, columns, apiRef, valueOptionsData, options);
+    const serializedRow = serializeRowUnsafe(
+      id,
+      columns,
+      apiRef,
+      valueOptionsData,
+      options,
+      formulaExport,
+    );
     addSerializedRowToWorksheet(serializedRow, worksheet);
   });
   apiRef.current.resetColSpan();

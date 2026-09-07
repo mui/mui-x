@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import {
+import type {
   TreeViewContextValue,
   TreeViewItemPluginsRunner,
   TreeViewStoreInContext,
 } from './TreeViewProvider.types';
-import {
+import type {
   TreeViewItemPluginSlotPropsEnhancers,
   TreeViewItemPluginSlotPropsEnhancerParams,
   TreeViewAnyStore,
@@ -127,7 +127,7 @@ function initializeInputApiRef<TStore extends TreeViewAnyStore>(
   publicAPI: TreeViewPublicAPI<TStore>,
   apiRef: React.RefObject<Partial<TreeViewPublicAPI<TStore>> | undefined> | undefined,
 ) {
-  if (apiRef != null && apiRef.current == null) {
+  if (apiRef != null && apiRef.current !== publicAPI) {
     apiRef.current = publicAPI;
   }
 }

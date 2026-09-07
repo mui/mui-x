@@ -2,11 +2,7 @@ import type * as React from 'react';
 import { getStringSize } from './domUtils';
 
 export type ChartsTextBaseline =
-  | 'hanging'
-  | 'central'
-  | 'auto'
-  | 'text-after-edge'
-  | 'text-before-edge';
+  'hanging' | 'central' | 'auto' | 'text-after-edge' | 'text-before-edge';
 
 export type ChartsTextAnchor = 'start' | 'middle' | 'end';
 

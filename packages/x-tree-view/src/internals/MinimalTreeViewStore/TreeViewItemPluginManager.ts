@@ -1,4 +1,4 @@
-import { TreeItemWrapper, TreeViewAnyStore, TreeViewItemPlugin } from '../models';
+import type { TreeItemWrapper, TreeViewAnyStore, TreeViewItemPlugin } from '../models';
 
 /**
  * Manages the registration and application of plugins for the Tree Item.

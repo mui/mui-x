@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridMenu, type GridMenuProps } from '../GridMenu';
+import { GridMenu } from '../GridMenu';
+import type { GridMenuProps } from '../GridMenu';
 
 export interface GridColumnHeaderMenuProps {
   columnMenuId?: string;
@@ -65,7 +66,7 @@ function GridColumnHeaderMenu({
   );
 }
 
-GridColumnHeaderMenu.propTypes = {
+GridColumnHeaderMenu.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

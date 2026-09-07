@@ -1,6 +1,7 @@
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { describe, it, expect } from 'vitest';
 
 describe('<YearCalendar /> - Keyboard', () => {
   const { render } = createPickerRenderer();

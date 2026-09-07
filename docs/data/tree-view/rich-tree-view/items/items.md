@@ -1,6 +1,6 @@
 ---
 productId: x-tree-view
-components: RichTreeView, TreeItem
+components: RichTreeView, TreeItem, TreeItemLoader
 packageName: '@mui/x-tree-view'
 githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -117,6 +117,48 @@ function getItemChildren(item) {
 ```
 
 {{"demo": "GetItemChildren.js", "defaultCodeOpen": false}}
+
+## Loading state
+
+Use the `loading` prop to display a loading placeholder instead of the tree items, for example while you fetch the `items` prop yourself.
+By default, the tree renders animated skeleton rows in place of the real items.
+
+```tsx
+<RichTreeView items={[]} loading />
+```
+
+{{"demo": "LoadingRichTreeView.js"}}
+
+Use the `itemsCount` value in `slotProps.loading` to control how many loading rows are shown (default is `5`):
+
+```tsx
+<RichTreeView items={[]} loading slotProps={{ loading: { itemsCount: 8 } }} />
+```
+
+On `RichTreeViewPro`, the same loading UI is also shown automatically while the [`dataSource`](/x/react-tree-view/rich-tree-view/lazy-loading/) is fetching the root items, even if `loading` is not set.
+
+### Customize the loading UI
+
+You can customize the loading UI at several levels:
+
+- Style the default rows with the `itemLoader` class.
+- Configure each row with `slotProps.itemLoader`.
+  The callback form receives the row's `ownerState` with its `index`, `itemsCount`, `itemDepth`, and `isCheckboxSelectionEnabled`.
+- Replace each row with the `itemLoader` slot.
+  Wrap custom content in the `TreeItemLoader` component to keep the `role`, `aria` attributes, indentation, and height of a tree item.
+- Replace the whole loading UI with the `loading` slot.
+  The tree root keeps its `role="tree"` and `aria-busy` attributes.
+  Compose the slot with `TreeItemLoader` elements to keep the rows semantically correct.
+
+Custom loading UIs also render for the children of items that [load lazily](/x/react-tree-view/rich-tree-view/lazy-loading/).
+
+The demo below replaces each loading row with the `itemLoader` slot and fades the rows out with the `slotProps.itemLoader` callback:
+
+{{"demo": "LoadingCustomRows.js"}}
+
+The demo below replaces the whole loading UI with a spinner through the `loading` slot and configures its message with `slotProps.loading`:
+
+{{"demo": "LoadingCustomIndicator.js"}}
 
 ## Disabled items
 
@@ -325,3 +367,34 @@ publicAPI.setIsItemDisabled({
 ```
 
 {{"demo": "DisableTreeItemPublicAPI.js", "defaultCodeOpen": false}}
+
+### Imperatively add items
+
+Use the `addItems()` API method to add items to the tree.
+
+```ts
+apiRef.current.addItems({
+  // The items to add
+  items: [{ id: 'new-item', label: 'New item' }],
+  // The id of the parent item, or `null` to add the items at the root level
+  parentId,
+  // The position in the parent's children at which the items are inserted
+  // If not defined, the items are appended after the existing children
+  index,
+});
+```
+
+You can combine it with the [`setEditedItem()`](/x/react-tree-view/rich-tree-view/editing/#imperative-api) API method to let users name the new item right away, similar to creating files and folders in a file explorer:
+
+{{"demo": "ApiMethodAddItems.js", "defaultCodeOpen": false}}
+
+:::info
+Items added with `addItems()` are only stored in the internal state of the component.
+They are discarded when the `items` prop changes.
+You can use the `getItemTree()` API method to retrieve the current item tree and sync it with your data source.
+
+The same applies to the other updates made from inside the component—for example, the labels updated with [label editing](/x/react-tree-view/rich-tree-view/editing/) are only stored in the internal state.
+Use the `onItemLabelChange()` callback to persist them alongside the items you added.
+
+When using [lazy loading](/x/react-tree-view/rich-tree-view/lazy-loading/), the added items must also be [written to the data source cache](/x/react-tree-view/rich-tree-view/lazy-loading/#lazy-loading-and-adding-items).
+:::

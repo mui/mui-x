@@ -1,12 +1,13 @@
-import { spy } from 'sinon';
-import { screen, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import {
+  fireClockPointerEvent,
   getClockTouchEvent,
   getTimeClockValue,
   getDateOffset,
-  describeAdapters,
 } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import { vi, describe, it, expect } from 'vitest';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
@@ -14,17 +15,17 @@ describe('<TimeClock /> - Timezone', () => {
   describeAdapters('Timezone prop', TimeClock, ({ adapter, render }) => {
     describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         render(<TimeClock onChange={onChange} />);
 
         const hourClockEvent = getClockTouchEvent(8, '12hours');
-        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+        fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', hourClockEvent);
+        fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', hourClockEvent);
 
         const expectedDate = adapter.setHours(adapter.date(), 8);
 
         // Check the `onChange` value (uses default timezone, for example: UTC, see TZ env variable)
-        const actualDate = onChange.lastCall.firstArg;
+        const actualDate = onChange.mock.lastCall?.[0];
 
         // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.
         // In a real world scenario, this should probably never occur.
@@ -37,12 +38,12 @@ describe('<TimeClock /> - Timezone', () => {
       TIMEZONE_TO_TEST.forEach((timezone) => {
         describe(`Timezone: ${timezone}`, () => {
           it('should use timezone prop for onChange when no value is provided', () => {
-            const onChange = spy();
+            const onChange = vi.fn();
             render(<TimeClock onChange={onChange} timezone={timezone} />);
 
             const hourClockEvent = getClockTouchEvent(8, '12hours');
-            fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-            fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+            fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', hourClockEvent);
+            fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', hourClockEvent);
 
             const expectedDate = adapter.setHours(
               adapter.startOfDay(adapter.date(undefined, timezone)),
@@ -50,13 +51,13 @@ describe('<TimeClock /> - Timezone', () => {
             );
 
             // Check the `onChange` value (uses timezone prop)
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.lastCall?.[0];
             expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });
 
           it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
-            const onChange = spy();
+            const onChange = vi.fn();
             const value = adapter.date('2022-04-17T04:30', timezone);
 
             render(
@@ -78,10 +79,10 @@ describe('<TimeClock /> - Timezone', () => {
             );
 
             const hourClockEvent = getClockTouchEvent(8, '12hours');
-            fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-            fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+            fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', hourClockEvent);
+            fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', hourClockEvent);
 
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.lastCall?.[0];
 
             const renderedHourAfter = getTimeClockValue();
             expect(renderedHourAfter).to.equal(

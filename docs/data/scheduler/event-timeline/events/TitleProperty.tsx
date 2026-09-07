@@ -68,7 +68,7 @@ export default function TitleProperty() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         eventModelStructure={eventModelStructure}
-        defaultPreset="day"
+        defaultPreset="dayAndMonth"
       />
     </div>
   );

@@ -1,13 +1,14 @@
 'use client';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import List, { ListProps } from '@mui/material/List';
+import type { ListProps } from '@mui/material/List';
+import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { PickerValidValue } from '../internals/models';
+import type { PickerValidValue } from '../internals/models';
 import { useIsValidValue, usePickerActionsContext } from '../hooks';
-import { PickerChangeImportance } from '../models/pickers';
+import type { PickerChangeImportance } from '../models/pickers';
 
 interface PickersShortcutsItemGetValueParams<TValue extends PickerValidValue> {
   isValid: (value: TValue) => boolean;
@@ -109,7 +110,7 @@ function PickersShortcuts<TValue extends PickerValidValue>(props: PickersShortcu
   );
 }
 
-PickersShortcuts.propTypes = {
+PickersShortcuts.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

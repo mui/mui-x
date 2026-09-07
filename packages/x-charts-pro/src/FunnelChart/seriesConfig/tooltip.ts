@@ -1,4 +1,5 @@
-import { getLabel, type TooltipGetter } from '@mui/x-charts/internals';
+import { getLabel } from '@mui/x-charts/internals';
+import type { TooltipGetter } from '@mui/x-charts/internals';
 
 const tooltipGetter: TooltipGetter<'funnel'> = (params) => {
   const { series, getColor, identifier } = params;
@@ -8,6 +9,11 @@ const tooltipGetter: TooltipGetter<'funnel'> = (params) => {
   }
 
   const point = series.data[identifier.dataIndex];
+
+  if (point == null) {
+    return null;
+  }
+
   const label = getLabel(point.label, 'tooltip');
   const value = { ...point, label };
   const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });

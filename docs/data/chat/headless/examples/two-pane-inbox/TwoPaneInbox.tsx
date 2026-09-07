@@ -159,12 +159,12 @@ export default function TwoPaneInbox() {
                 <Message.Root
                   messageId={id}
                   slotProps={{
-                    root: demoSlotProps.messageRoot,
+                    root: demoSlotProps.message,
                   }}
                 >
                   <Message.Avatar
                     slotProps={{
-                      avatar: demoSlotProps.messageAvatar,
+                      avatar: demoSlotProps.avatar,
                       image: demoSlotProps.messageAvatarImage,
                     }}
                   />
@@ -175,7 +175,7 @@ export default function TwoPaneInbox() {
                   />
                   <Message.Meta
                     slotProps={{
-                      meta: demoSlotProps.messageMeta,
+                      meta: demoSlotProps.meta,
                     }}
                   />
                 </Message.Root>
@@ -184,7 +184,7 @@ export default function TwoPaneInbox() {
           />
           <Composer.Root
             slotProps={{
-              root: demoSlotProps.composerRoot,
+              root: demoSlotProps.composer,
             }}
           >
             <Composer.TextArea
@@ -198,7 +198,7 @@ export default function TwoPaneInbox() {
               <Composer.SendButton
                 data-variant="primary"
                 slotProps={{
-                  sendButton: demoSlotProps.composerSendButton,
+                  sendButton: demoSlotProps.send,
                 }}
               >
                 Send reply

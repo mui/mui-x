@@ -1,0 +1,46 @@
+import { renderHook } from '@mui/internal-test-utils';
+import { ResourceBuilder } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
+import { useExtractEventTimelinePremiumParameters } from '../useExtractEventTimelinePremiumParameters';
+
+describe('useExtractEventTimelinePremiumParameters', () => {
+  it('should forward `shouldEventRequireResource` to the parameters object', () => {
+    const { result } = renderHook(() =>
+      useExtractEventTimelinePremiumParameters({
+        events: [],
+        resources: [ResourceBuilder.new().build()],
+        shouldEventRequireResource: true,
+      }),
+    );
+
+    expect(result.current.parameters.shouldEventRequireResource).to.equal(true);
+  });
+
+  it('should forward `presetConfig` to the parameters object instead of the forwarded props', () => {
+    const presetConfig = { dayAndHour: { startTime: 8, endTime: 20 } };
+    const { result } = renderHook(() =>
+      useExtractEventTimelinePremiumParameters({
+        events: [],
+        resources: [ResourceBuilder.new().build()],
+        presetConfig,
+      }),
+    );
+
+    expect(result.current.parameters.presetConfig).to.equal(presetConfig);
+    expect(result.current.forwardedProps).to.not.have.property('presetConfig');
+  });
+
+  it('should forward `onEventEditingStart` to the parameters object instead of the forwarded props', () => {
+    const onEventEditingStart = () => {};
+    const { result } = renderHook(() =>
+      useExtractEventTimelinePremiumParameters({
+        events: [],
+        resources: [ResourceBuilder.new().build()],
+        onEventEditingStart,
+      }),
+    );
+
+    expect(result.current.parameters.onEventEditingStart).to.equal(onEventEditingStart);
+    expect(result.current.forwardedProps).to.not.have.property('onEventEditingStart');
+  });
+});

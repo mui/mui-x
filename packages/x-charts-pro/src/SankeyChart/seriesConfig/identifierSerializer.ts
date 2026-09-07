@@ -1,4 +1,5 @@
-import { typeSerializer, type IdentifierSerializer } from '@mui/x-charts/internals';
+import { typeSerializer } from '@mui/x-charts/internals';
+import type { IdentifierSerializer } from '@mui/x-charts/internals';
 
 const identifierSerializer: IdentifierSerializer<'sankey'> = (identifier) => {
   if (identifier.subType === 'node') {

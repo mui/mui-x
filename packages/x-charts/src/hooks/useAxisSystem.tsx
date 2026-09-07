@@ -1,13 +1,11 @@
 'use client';
 import { selectorChartRawXAxis } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import {
-  selectorChartRawRotationAxis,
-  type UseChartPolarAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import { selectorChartRawRotationAxis } from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { UseChartPolarAxisSignature } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useStore } from '../internals/store/useStore';
 
 /**
- * @internals
+ * @internal
  *
  * Get the coordinate system implemented.
  * The hook assumes polar and cartesian are never implemented at the same time.

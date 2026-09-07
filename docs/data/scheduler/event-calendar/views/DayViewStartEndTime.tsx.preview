@@ -1,0 +1,7 @@
+<StandaloneDayView
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  viewConfig={{ day: { startTime: 8, endTime: 20 } }}
+/>

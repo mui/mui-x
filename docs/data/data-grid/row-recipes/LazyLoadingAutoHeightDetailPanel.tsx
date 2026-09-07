@@ -40,7 +40,7 @@ async function getProducts(orderId: Customer['id']) {
 }
 
 const detailPanelColumns: GridColDef[] = [
-  { field: 'name', headerName: 'Product', flex: 1 },
+  { field: 'name', headerName: 'Product', flex: 1, rowHeader: true },
   {
     field: 'quantity',
     headerName: 'Quantity',

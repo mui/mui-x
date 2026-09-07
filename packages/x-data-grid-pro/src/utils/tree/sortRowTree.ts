@@ -1,9 +1,5 @@
-import {
-  GRID_ROOT_GROUP_ID,
-  type GridGroupNode,
-  type GridRowId,
-  type GridRowTreeConfig,
-} from '@mui/x-data-grid';
+import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '@mui/x-data-grid';
 import type { GridSortingModelApplier } from '@mui/x-data-grid/internals';
 
 interface SortRowTreeParams {

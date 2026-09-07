@@ -49,6 +49,16 @@ export function isCopyShortcut(event: KeyboardEvent): boolean {
   );
 }
 
+// Checks if the keyboard event corresponds to the select-all shortcut (CTRL+A or CMD+A) across different localization keyboards.
+export function isSelectAllShortcut(event: React.KeyboardEvent): boolean {
+  return (
+    (event.ctrlKey || event.metaKey) &&
+    String.fromCharCode(event.keyCode) === 'A' &&
+    !event.shiftKey &&
+    !event.altKey
+  );
+}
+
 export function isUndoShortcut(event: React.KeyboardEvent): boolean {
   return (
     (event.ctrlKey || event.metaKey) &&

@@ -1,4 +1,7 @@
 import type { GridColTypeDef } from './gridColDef';
 import type { GridColType } from './gridColType';
 
-export type GridColumnTypesRecord = Record<GridColType, GridColTypeDef>;
+export interface GridColumnTypesRecord extends Omit<
+  Record<GridColType, GridColTypeDef>,
+  'multiSelect'
+> {}

@@ -19,6 +19,13 @@ import type {
   RadialLineSeriesType,
   DefaultizedRadialLineSeriesType,
   RadialLineItemIdentifier,
+  RadialBarSeriesType,
+  DefaultizedRadialBarSeriesType,
+  RadialBarItemIdentifier,
+  MapShapeSeriesType,
+  DefaultizedMapShapeSeriesType,
+  MapShapeItemIdentifier,
+  MapShapeValueType,
 } from '../models';
 import type {
   DefaultizedRangeBarSeriesType,
@@ -101,6 +108,46 @@ declare module '@mui/x-charts/internals' {
         type: 'radialLine';
         seriesId: SeriesId;
         dataIndex?: number;
+      };
+    };
+    mapShape: {
+      seriesInput: DefaultizedProps<MapShapeSeriesType, 'id'> &
+        MakeRequired<SeriesColor<MapShapeValueType>, 'color'>;
+      series: DefaultizedMapShapeSeriesType;
+      seriesLayout: {};
+      seriesProp: MapShapeSeriesType;
+      itemIdentifier: MapShapeItemIdentifier;
+      itemIdentifierWithData: MapShapeItemIdentifier;
+      valueType: MapShapeValueType;
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: MapShapeItemIdentifier;
+        series: DefaultizedMapShapeSeriesType;
+      };
+      highlightIdentifier: MapShapeItemIdentifier;
+    };
+    radialBar: {
+      seriesInput: DefaultizedProps<RadialBarSeriesType, 'id'> &
+        MakeRequired<SeriesColor<number | null>, 'color'>;
+      series: DefaultizedRadialBarSeriesType;
+      seriesLayout: {};
+      seriesProp: RadialBarSeriesType;
+      itemIdentifier: RadialBarItemIdentifier;
+      itemIdentifierWithData: RadialBarItemIdentifier;
+      valueType: number | null;
+      canBeStacked: true;
+      axisType: 'polar';
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: RadialBarItemIdentifier;
+        rotationAxis: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
+        radiusAxis: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
+        series: DefaultizedRadialBarSeriesType;
+      };
+      highlightIdentifier: {
+        type: 'radialBar';
+        seriesId: SeriesId;
+        dataIndex: number;
       };
     };
   }

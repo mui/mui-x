@@ -11,14 +11,14 @@ import {
   selectorChartYAxisWithDomains,
   selectorChartZoomOptionsLookup,
 } from './useChartCartesianAxisRendering.selectors';
-import {
-  type AxisId,
-  type ChartsAxisProps,
-  type D3Scale,
-  type DefaultedAxis,
-  type ScaleName,
+import type {
+  AxisId,
+  ChartsAxisProps,
+  D3Scale,
+  DefaultedAxis,
+  ScaleName,
 } from '../../../../models/axis';
-import { type ZoomData } from './zoom.types';
+import type { ZoomData } from './zoom.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { ZOOM_SLIDER_PREVIEW_SIZE } from '../../../constants';
 import { getNormalizedAxisScale, getRange } from './getAxisScale';

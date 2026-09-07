@@ -2,6 +2,7 @@ import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
 import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGridPremium /> - Columns', () => {
   const { render } = createRenderer();

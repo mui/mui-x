@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import { type ChartAnyPluginSignature } from '@mui/x-charts/internals';
-import { type ChartPremiumApi } from '../context';
-import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { type PremiumPluginsPerSeriesType } from '../context/ChartPremiumApi';
+import type { ChartAnyPluginSignature } from '@mui/x-charts/internals';
+import type { ChartPremiumApi } from '../context';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { PremiumPluginsPerSeriesType } from '../context/ChartPremiumApi';
 
 /**
  * Hook that instantiates a [[ChartPremiumApiRef]].

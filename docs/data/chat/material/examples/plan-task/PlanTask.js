@@ -7,7 +7,7 @@ import {
   createChunkStream,
   randomId,
   splitText,
-} from 'docs/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 
 // --- Task types --------------------------------------------------------------
 

@@ -37,12 +37,14 @@ export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
     instance.setLastUpdateSource('pointer');
+    instance.setHoveredItem(data);
     instance.setTooltipItem(data);
     instance.setHighlight(data);
   });
 
   const onPointerLeave = useEventCallback(() => {
     interactionActive.current = false;
+    instance.clearHoveredItem(data);
     instance.removeTooltipItem(data);
     instance.clearHighlight();
   });
@@ -81,6 +83,7 @@ export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
       return;
     }
     instance.setLastUpdateSource('pointer');
+    instance.setHoveredItem(item);
     instance.setTooltipItem(item);
     instance.setHighlight(item);
   }
@@ -89,6 +92,7 @@ export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
     if (!item) {
       return;
     }
+    instance.clearHoveredItem(item);
     instance.removeTooltipItem(item);
     instance.clearHighlight();
   }

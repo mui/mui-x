@@ -20,7 +20,7 @@ export default function ColumnSizingPersistWidthOrder() {
   const inputColumns = React.useMemo(
     () => [
       { field: 'id' },
-      { field: 'username', width: 200, key: index },
+      { field: 'username', width: 200, key: index, rowHeader: true },
       { field: 'age', disableReorder: true },
     ],
     [index],

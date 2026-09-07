@@ -1,25 +1,6 @@
-import { getLabel } from '../../internals/getLabel';
+import { getLineLikeTooltip } from '../../internals/getLineLikeTooltip';
 import type { TooltipGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
-const tooltipGetter: TooltipGetter<'scatter'> = (params) => {
-  const { series, getColor, identifier } = params;
-
-  if (!identifier || identifier.dataIndex === undefined) {
-    return null;
-  }
-
-  const label = getLabel(series.label, 'tooltip');
-  const value = series.data[identifier.dataIndex];
-  const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
-
-  return {
-    identifier,
-    color: getColor(identifier.dataIndex),
-    label,
-    value,
-    formattedValue,
-    markType: series.labelMarkType,
-  };
-};
+const tooltipGetter: TooltipGetter<'scatter'> = (params) => getLineLikeTooltip(params);
 
 export default tooltipGetter;

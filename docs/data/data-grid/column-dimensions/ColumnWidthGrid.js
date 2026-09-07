@@ -12,7 +12,10 @@ export default function ColumnWidthGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
       <DataGrid
-        columns={[{ field: 'username', width: 200 }, { field: 'age' }]}
+        columns={[
+          { field: 'username', width: 200, rowHeader: true },
+          { field: 'age' },
+        ]}
         rows={rows}
       />
     </div>

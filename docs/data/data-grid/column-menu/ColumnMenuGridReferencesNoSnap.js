@@ -33,7 +33,6 @@ function PlanIcon(props) {
     <a
       href={planProps.href}
       target="_blank"
-      rel="noopener"
       aria-label={planProps.title}
       title={planProps.title}
     >
@@ -75,6 +74,7 @@ const columns = [
   {
     field: 'slot',
     headerName: 'Slot',
+    rowHeader: true,
     width: 240,
     renderCell: (params) => (
       <ComponentTag value={params.value} plan={params.row.plan} />

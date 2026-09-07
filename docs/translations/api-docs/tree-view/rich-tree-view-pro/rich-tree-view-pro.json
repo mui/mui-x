@@ -47,7 +47,7 @@
     "disableSelection": { "description": "Whether selection is disabled." },
     "disableVirtualization": { "description": "If <code>true</code>, virtualization is disabled." },
     "domStructure": {
-      "description": "When equal to &#39;flat&#39;, the tree is rendered as a flat list (children are rendered as siblings of their parents). When equal to &#39;nested&#39;, the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children). Nested DOM structure is not compatible with collapse / expansion animations."
+      "description": "When <code>&#39;flat&#39;</code>, the tree is rendered as a flat list (children are rendered as siblings of their parent). When <code>&#39;nested&#39;</code>, children are rendered inside their parent&#39;s groupTransition slot. Collapse/expansion animations that rely on the groupTransition slot only work with the nested DOM structure. Nested DOM structure is not compatible with virtualization."
     },
     "expandedItems": {
       "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
@@ -118,6 +118,9 @@
     },
     "itemsReordering": {
       "description": "If <code>true</code>, the reordering of items is enabled."
+    },
+    "loading": {
+      "description": "If <code>true</code>, a loading UI is displayed instead of the tree items. The loading UI is also shown automatically while <code>dataSource</code> is fetching root items. Setting <code>loading={false}</code> does not suppress the loading UI during an active <code>dataSource</code> root fetch."
     },
     "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {
@@ -284,6 +287,8 @@
     "endIcon": "The default icon displayed next to an end item. This is applied to all Tree Items and can be overridden by the TreeItem <code>icon</code> slot prop.",
     "expandIcon": "The default icon used to expand the item.",
     "item": "Custom component to render a Tree Item.",
+    "itemLoader": "Component rendered for each loading row. It also renders for the children of an item while they load lazily. Wrap custom content in <code>TreeItemLoader</code> to keep the row semantically correct.",
+    "loading": "Component rendered instead of the default loading rows. It renders inside the tree root while the tree is loading, which keeps the <code>role=&quot;tree&quot;</code> and <code>aria-busy</code> attributes, and inside a lazily loading item while its children load. Compose it with <code>TreeItemLoader</code> to keep the rows semantically correct.",
     "root": "Element rendered at the root."
   }
 }

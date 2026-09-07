@@ -1,4 +1,5 @@
-import { type AxisTooltipGetter, getLabel, type TooltipGetter } from '@mui/x-charts/internals';
+import { getLabel } from '@mui/x-charts/internals';
+import type { AxisTooltipGetter, TooltipGetter } from '@mui/x-charts/internals';
 
 const tooltipGetter: TooltipGetter<'rangeBar'> = (params) => {
   const { series, getColor, identifier } = params;

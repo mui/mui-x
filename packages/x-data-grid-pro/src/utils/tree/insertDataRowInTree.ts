@@ -1,10 +1,10 @@
-import {
-  GRID_ROOT_GROUP_ID,
-  type GridGroupNode,
-  type GridLeafNode,
-  type GridRowId,
-  type GridRowTreeConfig,
-  type GridDataSourceGroupNode,
+import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import type {
+  GridGroupNode,
+  GridLeafNode,
+  GridRowId,
+  GridRowTreeConfig,
+  GridDataSourceGroupNode,
 } from '@mui/x-data-grid';
 import type { GridTreeDepths } from '@mui/x-data-grid/internals';
 import {
@@ -105,7 +105,7 @@ export const insertDataRowInTree = ({
             groupingKey: key,
             groupingField: field,
             children: [],
-            childrenFromPath: {},
+            childrenFromPath: Object.create(null),
             childrenExpanded: false,
             serverChildrenCount,
           };
@@ -172,7 +172,7 @@ export const insertDataRowInTree = ({
         groupingKey: key,
         groupingField: field,
         children: [],
-        childrenFromPath: {},
+        childrenFromPath: Object.create(null),
         childrenExpanded: false,
       };
 
@@ -207,7 +207,7 @@ export const insertDataRowInTree = ({
           groupingKey: key,
           groupingField: field,
           children: [],
-          childrenFromPath: {},
+          childrenFromPath: Object.create(null),
           childrenExpanded: false,
         };
         tree[existingNodeIdWithPartialPath] = updateGroupDefaultExpansion(

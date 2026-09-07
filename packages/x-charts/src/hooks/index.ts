@@ -34,3 +34,4 @@ export {
 export * from './useAxisTicks';
 export { type TickItem } from './useTicks';
 export * from './getValueToPositionMapper';
+export { usePolarGeometry } from './usePolarGeometry';

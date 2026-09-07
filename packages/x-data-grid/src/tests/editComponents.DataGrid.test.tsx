@@ -1,14 +1,9 @@
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  type GridApi,
-  type DataGridProps,
-  useGridApiRef,
-  DataGrid,
-  renderEditLongTextCell,
-} from '@mui/x-data-grid';
+import type { RefObject } from '@mui/x-internals/types';
+import { useGridApiRef, DataGrid, renderEditLongTextCell } from '@mui/x-data-grid';
+import type { GridApi, DataGridProps } from '@mui/x-data-grid';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { getCell, openLongTextEditPopup, spyApi } from 'test/utils/helperFn';
-import { spy } from 'sinon';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 describe('<DataGrid /> - Edit components', () => {
   const { render } = createRenderer();
@@ -54,7 +49,7 @@ describe('<DataGrid /> - Edit components', () => {
       await user.clear(textarea);
       await user.type(textarea, 'New text');
 
-      expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
+      expect(spiedSetEditCellValue.mock.lastCall?.[0]).to.deep.equal({
         id: 0,
         field: 'bio',
         value: 'New text',
@@ -106,7 +101,7 @@ describe('<DataGrid /> - Edit components', () => {
     });
 
     it('should call onValueChange if defined', async () => {
-      const onValueChange = spy();
+      const onValueChange = vi.fn();
 
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditLongTextCell({ ...params, onValueChange });
@@ -120,8 +115,8 @@ describe('<DataGrid /> - Edit components', () => {
       await user.clear(textarea);
       await user.type(textarea, 'New');
 
-      expect(onValueChange.callCount).to.be.greaterThan(0);
-      expect(onValueChange.lastCall.args[1]).to.equal('New');
+      expect(onValueChange.mock.calls.length).to.be.greaterThan(0);
+      expect(onValueChange.mock.lastCall?.[1]).to.equal('New');
     });
 
     it('should focus textarea when edit mode starts', async () => {

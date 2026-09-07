@@ -19,6 +19,7 @@ const renderSingleSelectOptions = ({
   getOptionValue,
   isSelectNative,
   baseSelectOptionProps,
+  blankOptionLabel,
 }: {
   column: GridSingleSelectColDef;
   OptionComponent: React.ElementType;
@@ -26,12 +27,24 @@ const renderSingleSelectOptions = ({
   getOptionValue: NonNullable<GridSingleSelectColDef['getOptionValue']>;
   isSelectNative: boolean;
   baseSelectOptionProps: GridSlotsComponentsProps['baseSelectOption'];
+  blankOptionLabel: string;
 }) => {
-  const iterableColumnValues = ['', ...(getValueOptions(column) || [])];
+  const valueOptions = getValueOptions(column) || [];
 
-  return iterableColumnValues.map((option) => {
-    const value = getOptionValue(option);
-    let label = getOptionLabel(option);
+  // A column that declares its own blank entry already offers a way to reset the filter.
+  // Prepending another one would render two options sharing the same `''` key.
+  const declaresBlankOption = valueOptions.some((option) => {
+    const optionValue = getOptionValue(option);
+    return optionValue === '' || optionValue === null || optionValue === undefined;
+  });
+
+  const iterableColumnValues = declaresBlankOption ? valueOptions : ['', ...valueOptions];
+
+  return iterableColumnValues.map((option, index) => {
+    // The prepended entry is ours, not a value option, so it skips the column accessors.
+    const isBlankOption = !declaresBlankOption && index === 0;
+    const value = isBlankOption ? '' : getOptionValue(option);
+    let label = isBlankOption ? blankOptionLabel : getOptionLabel(option);
     if (label === '') {
       label = ' '; // To force the height of the empty option
     }
@@ -60,6 +73,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     clearButton,
     headerFilterMenu,
     slotProps,
+    disableDebounce,
     ...other
   } = props;
   const filterValue = item.value ?? '';
@@ -80,10 +94,12 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
-      let value = event.target.value;
-
-      // NativeSelect casts the value to a string.
-      value = getValueFromValueOptions(value, currentValueOptions, getOptionValue);
+      // NativeSelect casts the value to a string, convert it back to the original type.
+      const value = getValueFromValueOptions(
+        event.target.value,
+        currentValueOptions,
+        getOptionValue,
+      );
       applyValue({ ...item, value });
     },
     [currentValueOptions, getOptionValue, applyValue, item],
@@ -127,6 +143,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           getOptionValue,
           isSelectNative,
           baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
+          blankOptionLabel: apiRef.current.getLocaleText('filterValueAny'),
         })}
       </rootProps.slots.baseSelect>
       {headerFilterMenu}
@@ -135,7 +152,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   );
 }
 
-GridFilterInputSingleSelect.propTypes = {
+GridFilterInputSingleSelect.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -147,6 +164,11 @@ GridFilterInputSingleSelect.propTypes = {
   className: PropTypes.string,
   clearButton: PropTypes.node,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, filter value changes are applied immediately without debouncing.
+   * @default false
+   */
+  disableDebounce: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,

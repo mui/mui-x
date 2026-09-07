@@ -1,11 +1,8 @@
 'use client';
 import * as React from 'react';
-import {
-  type ChartPlugin,
-  type ZoomData,
-  selectorChartZoomOptionsLookup,
-} from '@mui/x-charts/internals';
-import { type UseChartProZoomSignature } from '../useChartProZoom.types';
+import { selectorChartZoomOptionsLookup } from '@mui/x-charts/internals';
+import type { ChartPlugin, ZoomData } from '@mui/x-charts/internals';
+import type { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { selectorZoomInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
 export const useZoomOnDoubleTapReset = (

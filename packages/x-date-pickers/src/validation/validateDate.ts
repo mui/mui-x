@@ -1,14 +1,14 @@
 import type { MakeRequired } from '@mui/x-internals/types';
-import { Validator } from './useValidation';
-import {
+import type { Validator } from './useValidation';
+import type {
   BaseDateValidationProps,
   DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
 } from '../internals/models/validation';
-import { DateValidationError } from '../models';
+import type { DateValidationError } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { PickerValue } from '../internals/models';
+import type { PickerValue } from '../internals/models';
 
 /**
  * Validation props used by the Date Picker, Date Field and Date Calendar components.

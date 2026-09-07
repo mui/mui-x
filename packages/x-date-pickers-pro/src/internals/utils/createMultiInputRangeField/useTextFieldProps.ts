@@ -1,15 +1,16 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { PickersTextField, PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
+import type { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   PickerFieldUIContext,
   useNullablePickerContext,
   mergeSlotProps,
 } from '@mui/x-date-pickers/internals';
-import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import { MultiInputRangeFieldSlotProps } from './createMultiInputRangeField.types';
+import type { FieldOwnerState } from '@mui/x-date-pickers/models';
+import type { MultiInputRangeFieldSlotProps } from './createMultiInputRangeField.types';
 import { useNullablePickerRangePositionContext } from '../../hooks/useNullablePickerRangePositionContext';
 
 export function useTextFieldProps({

@@ -1,21 +1,21 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { act } from '@mui/internal-test-utils';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { FieldRef } from '@mui/x-date-pickers/models';
+import type { FieldRef } from '@mui/x-date-pickers/models';
 import {
   createPickerRenderer,
   adapterToUse,
   getFieldInputRoot,
   expectFieldValue,
 } from 'test/utils/pickers';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DateField /> - fieldRef', () => {
   const { render } = createPickerRenderer();
 
   it('should allow to clear the value programmatically', () => {
-    const onChange = spy();
+    const onChange = vi.fn();
     const fieldRef = React.createRef<FieldRef<PickerValue>>();
     render(
       <DateField
@@ -31,8 +31,8 @@ describe('<DateField /> - fieldRef', () => {
       fieldRef.current?.clearValue();
     });
 
-    expect(onChange.calledOnce).to.equal(true);
-    expect(onChange.lastCall.args[0]).to.equal(null);
+    expect(onChange.mock.calls.length).to.equal(1);
+    expect(onChange.mock.lastCall?.[0]).to.equal(null);
     expectFieldValue(fieldRoot, 'MM/DD/YYYY');
   });
 

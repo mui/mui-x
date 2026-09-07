@@ -1,10 +1,10 @@
 'use client';
 import {
   GridGenericColumnMenu,
-  type GridColumnMenuProps,
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from '@mui/x-data-grid';
+import type { GridColumnMenuProps } from '@mui/x-data-grid';
 import type { GridColumnMenuComponent } from '@mui/x-data-grid/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridColumnMenuPinningItem } from './GridColumnMenuPinningItem';

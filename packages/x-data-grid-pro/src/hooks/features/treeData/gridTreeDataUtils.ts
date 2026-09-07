@@ -7,10 +7,10 @@ import type {
   GridRowModel,
   GridColDef,
 } from '@mui/x-data-grid';
-import {
-  type GridAggregatedFilterItemApplier,
-  type GridAggregatedFilterItemApplierResult,
-  passFilterLogic,
+import { passFilterLogic } from '@mui/x-data-grid/internals';
+import type {
+  GridAggregatedFilterItemApplier,
+  GridAggregatedFilterItemApplierResult,
 } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 

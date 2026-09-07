@@ -47,7 +47,7 @@ const GridGenericColumnMenu = forwardRef<HTMLUListElement, GridGenericColumnMenu
   },
 );
 
-GridGenericColumnMenu.propTypes = {
+GridGenericColumnMenu.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -96,7 +96,7 @@ const GridColumnMenu = forwardRef<HTMLUListElement, GridColumnMenuProps>(
 GridColumnMenu.defaultSlots = GRID_COLUMN_MENU_SLOTS;
 GridColumnMenu.defaultSlotProps = GRID_COLUMN_MENU_SLOT_PROPS;
 
-GridColumnMenu.propTypes = {
+GridColumnMenu.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

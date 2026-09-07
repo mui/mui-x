@@ -1,5 +1,6 @@
 import path from 'path';
 import jscodeshift from 'jscodeshift';
+import { describe, it, expect } from 'vitest';
 import transform from './index';
 import readFile from '../../../util/readFile';
 

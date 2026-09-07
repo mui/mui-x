@@ -41,8 +41,8 @@ import { startOfWeek } from 'date-fns-jalali/startOfWeek';
 import { startOfYear } from 'date-fns-jalali/startOfYear';
 import { isWithinInterval } from 'date-fns-jalali/isWithinInterval';
 import { faIR as defaultLocale } from 'date-fns-jalali/locale/fa-IR';
-import { Locale as DateFnsLocale } from 'date-fns-jalali/locale';
-import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
+import type { Locale as DateFnsLocale } from 'date-fns-jalali/locale';
+import type { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
 const defaultFormats: AdapterFormats = {
@@ -123,6 +123,8 @@ export class AdapterDateFnsJalali
     /* v8 ignore start */
     if (process.env.NODE_ENV !== 'production') {
       if (typeof addDays !== 'function') {
+        // TODO: fix mui/no-guarded-throw
+        // eslint-disable-next-line mui/no-guarded-throw
         throw new Error(
           [
             'MUI: The `date-fns-jalali` package v2.x is not compatible with this adapter.',
@@ -131,6 +133,8 @@ export class AdapterDateFnsJalali
         );
       }
       if (!longFormatters) {
+        // TODO: fix mui/no-guarded-throw
+        // eslint-disable-next-line mui/no-guarded-throw
         throw new Error(
           'MUI: The minimum supported `date-fns-jalali` package version compatible with this adapter is `3.2.x`.',
         );

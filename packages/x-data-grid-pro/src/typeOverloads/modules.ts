@@ -1,4 +1,4 @@
-import type { GridRowId, GridPinnedColumnFields } from '@mui/x-data-grid';
+import type { GridRowId, GridPinnedColumnFields, GridColTypeDef } from '@mui/x-data-grid';
 import type {
   GridRowScrollEndParams,
   GridRowOrderChangeParams,
@@ -8,6 +8,7 @@ import type { GridRenderHeaderFilterProps } from '../components/headerFiltering/
 import type { GridColumnPinningInternalCache } from '../hooks/features/columnPinning/gridColumnPinningInterface';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 import type { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
+import type { GridMultiSelectInternalCache } from '../hooks/features/multiSelect/gridMultiSelectInterfaces';
 
 export interface GridColDefPro {
   /**
@@ -57,6 +58,7 @@ export interface GridPipeProcessingLookupPro {
 export interface GridApiCachesPro {
   columnPinning: GridColumnPinningInternalCache;
   pinnedRows: GridRowPinningInternalCache;
+  multiSelect: GridMultiSelectInternalCache;
 }
 
 declare module '@mui/x-data-grid' {
@@ -65,6 +67,10 @@ declare module '@mui/x-data-grid' {
   interface GridControlledStateEventLookup extends GridControlledStateEventLookupPro {}
 
   interface GridPipeProcessingLookup extends GridPipeProcessingLookupPro {}
+
+  interface GridColumnTypesRecord {
+    multiSelect?: GridColTypeDef;
+  }
 }
 
 declare module '@mui/x-data-grid/internals' {

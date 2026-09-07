@@ -121,6 +121,7 @@ const rows = [
 const columns = [
   {
     field: 'country',
+    rowHeader: true,
     headerName: 'Country',
     width: 200,
     editable: true,

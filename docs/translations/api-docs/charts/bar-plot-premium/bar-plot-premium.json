@@ -1,0 +1,28 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "borderRadius": { "description": "Defines the border radius of the bar element." },
+    "className": { "description": "A CSS class name applied to the root element." },
+    "onItemClick": {
+      "description": "Callback fired when a bar item is clicked.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event source of the callback." },
+        "barItemIdentifier": {
+          "name": "barItemIdentifier",
+          "description": "The bar item identifier."
+        }
+      }
+    },
+    "renderer": {
+      "description": "<p>The type of renderer to use for the bar plot.</p>\n<ul>\n<li><code>svg-single</code>: Renders every bar in a <code>&lt;rect /&gt;</code> element.</li>\n<li><code>svg-batch</code>: Batch renders bars in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.</li>\n<li><code>webgl</code>: Renders bars using WebGL for better performance with very large datasets, at the cost of some limitations.\n         Read more: <a href=\"https://mui.com/x/react-charts/bars/#performance\">https://mui.com/x/react-charts/bars/#performance</a></li>\n</ul>\n"
+    },
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "bar": "The component that renders the bar.",
+    "barLabel": "The component that renders the bar label."
+  }
+}

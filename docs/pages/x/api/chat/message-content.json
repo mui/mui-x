@@ -1,10 +1,7 @@
 {
   "props": {},
   "name": "MessageContent",
-  "imports": [
-    "import { MessageContent } from '@mui/x-chat/headless';",
-    "import { MessageContent } from '@mui/x-chat/headless';"
-  ],
+  "imports": ["import { MessageContent } from '@mui/x-chat/headless';"],
   "slots": [
     { "name": "content", "description": "", "class": null },
     { "name": "bubble", "description": "", "class": null }
@@ -13,6 +10,5 @@
   "muiName": "MuiMessageContent",
   "filename": "/packages/x-chat-headless/src/message/MessageContent.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/messages/\">Chat - Headless messages</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/messages/\">Chat - Headless messages</a></li></ul>"
 }

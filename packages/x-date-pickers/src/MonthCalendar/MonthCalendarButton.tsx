@@ -4,17 +4,14 @@ import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import {
+import type {
   MonthCalendarSlotProps,
   MonthCalendarSlots,
   MonthButtonOwnerState,
 } from './MonthCalendar.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import {
-  getMonthCalendarUtilityClass,
-  monthCalendarClasses,
-  MonthCalendarClasses,
-} from './monthCalendarClasses';
+import type { MonthCalendarClasses } from './monthCalendarClasses';
+import { getMonthCalendarUtilityClass, monthCalendarClasses } from './monthCalendarClasses';
 
 export interface MonthCalendarButtonProps {
   value: number;

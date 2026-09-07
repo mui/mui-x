@@ -4,8 +4,10 @@ import {
   ConformanceOptions,
   MuiRenderResult,
   RenderOptions,
+  act,
   createDescribe,
   describeRef,
+  flushMicrotasks,
   testPropsSpread,
   testRootClass,
 } from '@mui/internal-test-utils';
@@ -54,9 +56,32 @@ function describeConformanceFn(
 
   afterAll(runAfterHook);
 
+  // Series/axes processors may be asynchronous (they resolve in a microtask and
+  // then write back to the store). Wrap the provided `render` so that, after
+  // rendering, those microtasks are flushed inside `act`. This keeps the shared
+  // conformance assertions deterministic and avoids "not wrapped in act"
+  // warnings. For synchronous-processor charts this is a no-op.
+  const wrappedGetOptions = () => {
+    const options = getOptions();
+    const originalRender = options.render;
+    return {
+      ...options,
+      render: async (
+        element: React.ReactElement<ConformantComponentProps, any>,
+        renderOptions?: RenderOptions,
+      ) => {
+        const result = await originalRender(element, renderOptions);
+        await act(async () => {
+          await flushMicrotasks();
+        });
+        return result;
+      },
+    };
+  };
+
   filteredTests.forEach((testKey) => {
     const test = fullSuite[testKey];
-    test(minimalElement, getOptions as any);
+    test(minimalElement, wrappedGetOptions as any);
   });
 }
 

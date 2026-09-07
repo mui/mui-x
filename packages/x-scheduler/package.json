@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler",
-  "version": "9.0.0-alpha.2",
+  "version": "9.0.0-beta.11",
   "author": "MUI Team",
   "description": "The community edition of the Scheduler component (MUI X).",
   "license": "MIT",
@@ -13,9 +13,14 @@
     "url": "https://opencollective.com/mui-org"
   },
   "exports": {
+    ".": "./src/index.ts",
     "./agenda-view": "./src/agenda-view/index.ts",
+    "./compact-day-view": "./src/compact-day-view/index.ts",
+    "./compact-three-day-view": "./src/compact-three-day-view/index.ts",
+    "./compact-week-view": "./src/compact-week-view/index.ts",
     "./day-view": "./src/day-view/index.ts",
     "./event-calendar": "./src/event-calendar/index.ts",
+    "./event-dialog": "./src/event-dialog/index.ts",
     "./models": "./src/models/index.ts",
     "./month-view": "./src/month-view/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
@@ -47,7 +52,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "build": "code-infra build --tsgo --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -61,7 +66,8 @@
     "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:^",
-    "@mui/x-scheduler-headless": "workspace:^",
+    "@mui/x-scheduler-internals": "workspace:^",
+    "@mui/x-tree-view": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },
@@ -91,6 +97,7 @@
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-transition-group": "catalog:",
     "rimraf": "catalog:"
   },
   "engines": {

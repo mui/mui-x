@@ -86,6 +86,20 @@ export function getStyleString(style: SVGCSSProperties) {
 }
 
 /**
+ * Applies a style to a measurement element.
+ * Uses the CSS Object Model (CSSOM) to comply with Content Security Policy (CSP).
+ * https://en.wikipedia.org/wiki/Content_Security_Policy
+ */
+function applyStyle(element: SVGTextElement, style: SVGCSSProperties) {
+  for (const styleKey of Object.keys(style as Record<string, any>)) {
+    (element.style as Record<string, any>)[camelCaseToDashCase(styleKey)] = convertPixelValue(
+      styleKey,
+      (style as Record<string, any>)[styleKey],
+    );
+  }
+}
+
+/**
  *
  * @param text The string to estimate
  * @param style The style applied
@@ -109,13 +123,7 @@ export const getStringSize = (text: string | number, style: SVGCSSProperties = {
     const measurementSpanContainer = getMeasurementContainer();
     const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-    // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
-    // https://en.wikipedia.org/wiki/Content_Security_Policy
-    Object.keys(style as Record<string, any>).map((styleKey) => {
-      (measurementElem!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
-        convertPixelValue(styleKey, (style as Record<string, any>)[styleKey]);
-      return styleKey;
-    });
+    applyStyle(measurementElem, style);
 
     measurementElem.textContent = str;
 
@@ -166,19 +174,14 @@ export function batchMeasureStrings(
   }
 
   const measurementContainer = getMeasurementContainer();
-  // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
-  // https://en.wikipedia.org/wiki/Content_Security_Policy
-  const measurementSpanStyle: Record<string, any> = { ...style };
 
-  Object.keys(measurementSpanStyle).map((styleKey) => {
-    (measurementContainer!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
-      convertPixelValue(styleKey, measurementSpanStyle[styleKey]);
-    return styleKey;
-  });
-
+  // The style goes on each text element rather than on the shared container. Styling the container
+  // leaks into every later measurement, because a call that omits one of those properties keeps the
+  // previous call's value and measures the wrong font.
   const measurementElements: SVGTextElement[] = [];
   for (const string of textToMeasure) {
     const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    applyStyle(measurementElem, style);
     measurementElem.textContent = `${string}`;
     measurementElements.push(measurementElem);
   }

@@ -1,11 +1,11 @@
-import { TimeClockClasses } from './timeClockClasses';
-import {
+import type { TimeClockClasses } from './timeClockClasses';
+import type {
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
-import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
-import { TimeView } from '../models';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
+import type { TimeView } from '../models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 export interface ExportedTimeClockProps extends ExportedBaseClockProps {
   /**

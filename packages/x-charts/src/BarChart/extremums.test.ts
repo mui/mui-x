@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { getExtremumX, getExtremumY } from './seriesConfig/bar/extremums';
 import type { CartesianExtremumGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 

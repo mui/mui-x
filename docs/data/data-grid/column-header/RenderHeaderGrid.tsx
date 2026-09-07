@@ -3,6 +3,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 const columns: GridColDef[] = [
   {
     field: 'date',
+    rowHeader: true,
     width: 150,
     type: 'date',
     renderHeader: () => (

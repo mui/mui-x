@@ -125,10 +125,12 @@ export default function DynamicResourceProperty() {
       resource: {
         getter: (event) => event[resourceProperty],
         setter: (event, newValue) => {
-          if (newValue == null) {
+          // Demo only supports a single resource per event; take the first id if an array is passed.
+          const value = Array.isArray(newValue) ? newValue[0] : newValue;
+          if (value == null) {
             delete event[resourceProperty];
           } else {
-            event[resourceProperty] = newValue;
+            event[resourceProperty] = value;
           }
           return event;
         },

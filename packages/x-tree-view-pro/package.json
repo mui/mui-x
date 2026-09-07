@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view-pro",
-  "version": "9.0.2",
+  "version": "9.13.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Tree View components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -28,7 +28,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat",
+    "build": "code-infra build --tsgo",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -44,12 +44,7 @@
     "@mui/x-license": "workspace:^",
     "@mui/x-tree-view": "workspace:^",
     "@mui/x-virtualizer": "workspace:*",
-    "@types/react-transition-group": "catalog:",
-    "clsx": "catalog:",
-    "prop-types": "catalog:",
-    "react-transition-group": "catalog:",
-    "reselect": "catalog:",
-    "use-sync-external-store": "catalog:"
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
@@ -72,7 +67,6 @@
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
-    "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"

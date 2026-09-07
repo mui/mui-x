@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
-import { DefaultizedProps } from '@mui/x-internals/types';
-import { ValidateDateProps, validateDate } from '../validation';
-import { PickerValidDate, TimezoneProps } from '../models';
+import type { DefaultizedProps } from '@mui/x-internals/types';
+import type { ValidateDateProps } from '../validation';
+import { validateDate } from '../validation';
+import type { PickerValidDate, TimezoneProps } from '../models';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 
 export const useIsDateDisabled = ({

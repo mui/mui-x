@@ -61,6 +61,5 @@
   "muiName": "MuiChartsContainerPro",
   "filename": "/packages/x-charts-pro/src/ChartsContainerPro/ChartsContainerPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li></ul>"
 }

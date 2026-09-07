@@ -25,13 +25,15 @@ interface GridParsedSortItem {
 
 export const sanitizeSortModel = (model: GridSortModel, disableMultipleColumnsSorting: boolean) => {
   if (disableMultipleColumnsSorting && model.length > 1) {
-    warnOnce(
-      [
-        'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
-        'If you are using the community version of the Data Grid, this prop is always `true`.',
-      ],
-      'error',
-    );
+    if (process.env.NODE_ENV !== 'production') {
+      warnOnce(
+        [
+          'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
+          'If you are using the community version of the Data Grid, this prop is always `true`.',
+        ],
+        'error',
+      );
+    }
     return [model[0]];
   }
 

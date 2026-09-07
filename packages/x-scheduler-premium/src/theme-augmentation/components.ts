@@ -1,4 +1,4 @@
-import {
+import type {
   ComponentsProps,
   ComponentsOverrides as MuiComponentsOverrides,
 } from '@mui/material/styles';

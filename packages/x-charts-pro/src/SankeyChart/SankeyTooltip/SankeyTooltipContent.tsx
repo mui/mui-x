@@ -9,7 +9,7 @@ import {
   useItemTooltip,
 } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLabelMark } from '@mui/x-charts/internals';
-import { type SankeyTooltipProps } from './SankeyTooltip.types';
+import type { SankeyTooltipProps } from './SankeyTooltip.types';
 import { useUtilityClasses } from './SankeyTooltip.classes';
 
 export interface SankeyTooltipContentProps extends Pick<SankeyTooltipProps, 'classes'> {}
@@ -46,7 +46,7 @@ export function SankeyTooltipContent(props: SankeyTooltipContentProps) {
   );
 }
 
-SankeyTooltipContent.propTypes = {
+SankeyTooltipContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
-import { DateFieldProps } from './DateField.types';
+import type { DateFieldProps } from './DateField.types';
 import { useDateField } from './useDateField';
 import {
   PickerFieldUI,
@@ -52,7 +52,7 @@ const DateField = React.forwardRef(function DateField(
   );
 }) as DateFieldComponent;
 
-DateField.propTypes = {
+DateField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -209,6 +209,7 @@ DateField.propTypes = {
   onFocus: PropTypes.func,
   onInput: PropTypes.func,
   onKeyDown: PropTypes.func,
+  onMouseDown: PropTypes.func,
   onPaste: PropTypes.func,
   /**
    * Callback fired when the selected sections change.

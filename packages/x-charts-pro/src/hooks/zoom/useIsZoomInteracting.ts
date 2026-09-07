@@ -1,7 +1,7 @@
 'use client';
 import { useStore } from '@mui/x-charts/internals';
 import { selectorChartZoomIsInteracting } from '../../internals/plugins/useChartProZoom';
-import { type UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom/useChartProZoom.types';
+import type { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom/useChartProZoom.types';
 
 /**
  * Get access to the zoom state.

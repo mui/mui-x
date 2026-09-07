@@ -13,7 +13,7 @@ import { GridData } from 'docs/data/data-grid/virtualization/ColumnVirtualizatio
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Brand ID' },
-  { field: 'brand', headerName: 'Brand name' },
+  { field: 'brand', headerName: 'Brand name', rowHeader: true },
   { field: 'rep', headerName: 'Representative' },
   {
     field: 'rating',

@@ -6,6 +6,7 @@ import type { ChatPartRenderer, ChatPartRendererProps } from '../../renderers/ch
 import type { ChatReasoningMessagePart } from '../../types/chat-message-parts';
 import type { ChatRole } from '../../types/chat-entities';
 import { useChatLocaleText } from '../../chat/internals/ChatLocaleContext';
+import { useMessageContentTabIndex } from '../../message-list/internals/MessageRovingContext';
 
 export interface ReasoningPartOwnerState {
   messageId: string;
@@ -70,10 +71,16 @@ export const ReasoningPart = React.forwardRef(function ReasoningPart(
       className,
     },
   });
+  // Inside a roving message list the summary leaves the tab order until the
+  // user drills into the message (Enter); it stays mouse-clickable.
+  const contentTabIndex = useMessageContentTabIndex();
   const summaryProps = useSlotProps({
     elementType: Summary,
     externalSlotProps: slotProps?.summary,
     ownerState,
+    additionalProps: {
+      tabIndex: contentTabIndex,
+    },
   });
   const contentProps = useSlotProps({
     elementType: Content,

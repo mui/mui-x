@@ -1,5 +1,5 @@
-import { createRenderer, screen } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { vi, describe, it, expect } from 'vitest';
 import * as React from 'react';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartsDataProvider } from '../ChartsDataProvider';
@@ -141,5 +141,71 @@ describe.for([
 
     await user.click(mark);
     expect(onClick).toHaveBeenCalled();
+  });
+});
+
+describe('MarkElement positioning', () => {
+  const { render } = createRenderer();
+
+  it('positions the mark with the SVG `transform` attribute instead of a CSS transform', () => {
+    render(
+      <TestWrapper>
+        <MarkElement
+          seriesId="s1"
+          dataIndex={0}
+          x={10}
+          y={20}
+          color="red"
+          shape="diamond"
+          data-testid="mark"
+        />
+      </TestWrapper>,
+    );
+
+    const mark = screen.getByTestId('mark');
+    // The `transform` attribute keeps the mark aligned in Safari under browser zoom.
+    // A CSS `px` transform puts it in the wrong place, see https://github.com/mui/mui-x/issues/23377
+    expect(mark.getAttribute('transform')).to.equal('translate(10 20)');
+    expect(mark.style.transform).to.equal('');
+  });
+
+  function PositionedMark(props: { x: number; y: number; skipAnimation?: boolean }) {
+    return (
+      <TestWrapper>
+        <MarkElement
+          seriesId="s1"
+          dataIndex={0}
+          color="red"
+          shape="diamond"
+          data-testid="mark"
+          {...props}
+        />
+      </TestWrapper>
+    );
+  }
+
+  it('animates the `transform` attribute in JavaScript so the animation also runs in Safari', async () => {
+    const { setProps } = render(<PositionedMark x={10} y={20} />);
+
+    const mark = screen.getByTestId('mark');
+    expect(mark.getAttribute('transform')).to.equal('translate(10 20)');
+
+    setProps({ x: 60, y: 70 });
+
+    // The position is not applied synchronously, it is interpolated over the animation frames.
+    expect(mark.getAttribute('transform')).to.equal('translate(10 20)');
+    await waitFor(() => {
+      expect(mark.getAttribute('transform')).to.equal('translate(60 70)');
+    });
+  });
+
+  it('does not animate when `skipAnimation` is true', () => {
+    const { setProps } = render(<PositionedMark x={10} y={20} skipAnimation />);
+
+    const mark = screen.getByTestId('mark');
+
+    setProps({ x: 60, y: 70 });
+
+    expect(mark.getAttribute('transform')).to.equal('translate(60 70)');
   });
 });

@@ -5,7 +5,11 @@ import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvide
 export const getFakeContextValue = (
   parameters: UseTreeViewStoreParameters<SimpleTreeViewStore<any>> = {},
 ): TreeViewContextValue<SimpleTreeViewStore<any>> => {
-  const store = new SimpleTreeViewStore({ ...parameters, isRtl: false });
+  const store = new SimpleTreeViewStore({
+    ...parameters,
+    isRtl: false,
+    defaultId: 'mui-tree-view-test',
+  });
 
   return {
     store,

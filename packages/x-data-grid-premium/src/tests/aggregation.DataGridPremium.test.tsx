@@ -1,20 +1,23 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { type SinonSpy, spy } from 'sinon';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
   GRID_AGGREGATION_FUNCTIONS,
-  type GridAggregationFunction,
-  type GridApi,
-  type GridRenderCellParams,
-  type GridGroupNode,
   useGridApiRef,
-  type GridColDef,
+} from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridAggregationFunction,
+  GridApi,
+  GridRenderCellParams,
+  GridGroupNode,
+  GridColDef,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, describe, it, expect } from 'vitest';
+import type { Mock } from 'vitest';
 
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
@@ -82,7 +85,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
     describe('prop: aggregationModel', () => {
       it('should not call onAggregationModelChange on initialisation or on aggregationModel prop change', async () => {
-        const onAggregationModelChange = spy();
+        const onAggregationModelChange = vi.fn();
 
         const { setProps } = await render(
           <Test
@@ -91,10 +94,10 @@ describe('<DataGridPremium /> - Aggregation', () => {
           />,
         );
 
-        expect(onAggregationModelChange.callCount).to.equal(0);
+        expect(onAggregationModelChange.mock.calls.length).to.equal(0);
         setProps({ id: 'min' });
 
-        expect(onAggregationModelChange.callCount).to.equal(0);
+        expect(onAggregationModelChange.mock.calls.length).to.equal(0);
       });
 
       it('should allow to update the aggregation model from the outside', async () => {
@@ -883,7 +886,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
 
     it('should pass aggregation meta with `hasCellUnit: true` if the aggregation function have no hasCellUnit property', async () => {
-      const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
+      const renderCell: Mock<(params: GridRenderCellParams) => string> = vi.fn(
+        (params) => `- ${params.value}`,
+      );
 
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
@@ -903,14 +908,17 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      const callForAggCell = renderCell
-        .getCalls()
-        .find((call) => call.firstArg.rowNode.type === 'pinnedRow' && call.firstArg.aggregation);
-      expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(true);
+      const callForAggCell = renderCell.mock.calls.find(
+        (call) => call[0].rowNode.type === 'pinnedRow' && call[0].aggregation,
+      );
+      expect(callForAggCell).not.to.equal(undefined);
+      expect(callForAggCell?.[0].aggregation?.hasCellUnit).to.equal(true);
     });
 
     it('should pass aggregation meta with `hasCellUnit: false` if the aggregation function have `hasCellUnit: false`', async () => {
-      const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
+      const renderCell: Mock<(params: GridRenderCellParams) => string> = vi.fn(
+        (params) => `- ${params.value}`,
+      );
 
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
@@ -931,10 +939,11 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      const callForAggCell = renderCell
-        .getCalls()
-        .find((call) => call.firstArg.rowNode.type === 'pinnedRow' && call.firstArg.aggregation);
-      expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(false);
+      const callForAggCell = renderCell.mock.calls.find(
+        (call) => call[0].rowNode.type === 'pinnedRow' && call[0].aggregation,
+      );
+      expect(callForAggCell).not.to.equal(undefined);
+      expect(callForAggCell?.[0].aggregation?.hasCellUnit).to.equal(false);
     });
   });
 
@@ -1050,30 +1059,32 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
 
     describe('`avg`', () => {
+      const applyAvgAggregation = (values: unknown[]) =>
+        GRID_AGGREGATION_FUNCTIONS.avg.apply({
+          values,
+          field: 'value',
+          groupId: 0,
+        });
+
       it('should work with numbers', () => {
-        expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply(
-            {
-              values: [0, 10, 12, 23],
-              field: 'value',
-              groupId: 0,
-            },
-            apiRef.current!,
-          ),
-        ).to.equal(11.25);
+        expect(applyAvgAggregation([0, 10, 12, 23])).to.equal(11.25);
       });
 
       it('should ignore non-numbers', () => {
         expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply(
-            {
-              values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
-              field: 'value',
-              groupId: 0,
-            },
-            apiRef.current!,
-          ),
+          applyAvgAggregation([0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true]),
         ).to.equal(11.25);
+      });
+
+      it('should return 0 when the numeric values average to 0', () => {
+        expect(applyAvgAggregation([-5, 5])).to.equal(0);
+        expect(applyAvgAggregation([0, 0])).to.equal(0);
+        expect(applyAvgAggregation([-10, 4, 6])).to.equal(0);
+        expect(applyAvgAggregation([0, 'a', '', undefined, null, NaN, {}, true])).to.equal(0);
+      });
+
+      it('should return null when there are no numeric values', () => {
+        expect(applyAvgAggregation(['a', '', undefined, null, NaN, {}, true])).to.equal(null);
       });
     });
 
@@ -1162,6 +1173,60 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
+  describe('colDef: multiSelect', () => {
+    it('should expose only `size` in the column menu Aggregation select', async () => {
+      const { user } = await render(
+        <Test
+          rows={[
+            { id: 0, tags: ['React'] },
+            { id: 1, tags: ['Vue'] },
+          ]}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'Vue'],
+            },
+          ]}
+        />,
+      );
+
+      await act(async () => apiRef.current?.showColumnMenu('tags'));
+      await user.click(screen.getByLabelText('Aggregation'));
+      const listbox = screen.getByRole('listbox', { name: 'Aggregation' });
+      const optionTexts = within(listbox)
+        .getAllByRole('option')
+        .map((o) => o.textContent);
+      // Listbox always renders an empty placeholder ("...") before the allowed functions.
+      expect(optionTexts).to.deep.equal(['...', 'size']);
+    });
+
+    it('should aggregate with `size` and render the count in the footer', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, tags: ['React'] },
+            { id: 1, tags: ['Vue', 'TypeScript'] },
+            { id: 2, tags: [] },
+          ]}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'Vue', 'TypeScript'],
+            },
+          ]}
+          initialState={{ aggregation: { model: { tags: 'size' } } }}
+        />,
+      );
+
+      const tagsValues = getColumnValues(1);
+      expect(tagsValues[tagsValues.length - 1]).to.equal('3');
+    });
+  });
+
   describe('"no rows" overlay', () => {
     it('should display "no rows" overlay and not show aggregation footer when there are no rows', async () => {
       await render(
@@ -1179,5 +1244,13 @@ describe('<DataGridPremium /> - Aggregation', () => {
       // Ensure aggregation footer is not present
       expect(getColumnValues(0)).to.deep.equal([]);
     });
+  });
+
+  // See https://github.com/mui/mui-x/issues/22831
+  it('should not throw when getting params for a field without a matching column', async () => {
+    await render(<Test />);
+
+    expect(() => apiRef.current!.getCellParams(0, 'does-not-exist')).not.to.throw();
+    expect(apiRef.current!.getCellParams(0, 'does-not-exist').value).to.equal(undefined);
   });
 });

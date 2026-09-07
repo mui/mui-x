@@ -69,6 +69,7 @@ export default function AddFilterHandler() {
     dataSet: 'Commodity',
     rowLength: 200,
     editable: true,
+    multiSelect: true,
   });
 
   const apiRef = useGridApiRef();

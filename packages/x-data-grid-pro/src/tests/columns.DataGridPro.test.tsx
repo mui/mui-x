@@ -1,19 +1,24 @@
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  type DataGridProProps,
   useGridApiRef,
   DataGridPro,
   gridClasses,
   gridColumnLookupSelector,
   gridColumnFieldsSelector,
-  type GridApi,
-  type GridAutosizeOptions,
+} from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridApi,
+  GridAutosizeOptions,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Columns', () => {
   const { render } = createRenderer();
@@ -108,7 +113,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     it('should call onColumnResize during resizing', async () => {
-      const onColumnResize = spy();
+      const onColumnResize = vi.fn();
       const { user } = render(<Test onColumnResize={onColumnResize} columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
 
@@ -119,17 +124,17 @@ describe('<DataGridPro /> - Columns', () => {
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
-      expect(onColumnResize.callCount).to.equal(2);
-      expect(onColumnResize.args[0][0].width).to.equal(110);
-      expect(onColumnResize.args[1][0].width).to.equal(120);
+      expect(onColumnResize.mock.calls.length).to.equal(2);
+      expect(onColumnResize.mock.calls[0][0].width).to.equal(110);
+      expect(onColumnResize.mock.calls[1][0].width).to.equal(120);
     });
 
     it('should call onColumnWidthChange after resizing', async () => {
-      const onColumnWidthChange = spy();
+      const onColumnWidthChange = vi.fn();
       const { user } = render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
 
-      expect(onColumnWidthChange.callCount).to.equal(0);
+      expect(onColumnWidthChange.mock.calls.length).to.equal(0);
 
       await user.pointer([
         { keys: '[MouseLeft>]', target: separator, coords: { x: 100 } },
@@ -137,16 +142,16 @@ describe('<DataGridPro /> - Columns', () => {
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
-      expect(onColumnWidthChange.callCount).to.equal(1);
-      expect(onColumnWidthChange.args[0][0].width).to.equal(120);
+      expect(onColumnWidthChange.mock.calls.length).to.equal(1);
+      expect(onColumnWidthChange.mock.calls[0][0].width).to.equal(120);
     });
 
     it('should call onColumnWidthChange with correct width after resizing and then clicking the separator', async () => {
-      const onColumnWidthChange = spy();
+      const onColumnWidthChange = vi.fn();
       const { user } = render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
 
-      expect(onColumnWidthChange.callCount).to.equal(0);
+      expect(onColumnWidthChange.mock.calls.length).to.equal(0);
 
       await user.pointer([
         { keys: '[MouseLeft>]', target: separator, coords: { x: 100 } },
@@ -154,15 +159,15 @@ describe('<DataGridPro /> - Columns', () => {
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
-      expect(onColumnWidthChange.callCount).to.equal(1);
-      expect(onColumnWidthChange.args[0][0].width).to.equal(120);
+      expect(onColumnWidthChange.mock.calls.length).to.equal(1);
+      expect(onColumnWidthChange.mock.calls[0][0].width).to.equal(120);
       await user.dblClick(separator);
 
-      expect(onColumnWidthChange.callCount).to.be.at.least(2);
-      const widthArgs = onColumnWidthChange.args.map((arg) => arg[0].width);
+      expect(onColumnWidthChange.mock.calls.length).to.be.at.least(2);
+      const widthArgs = onColumnWidthChange.mock.calls.map((arg) => arg[0].width);
       const isWidth120Present = widthArgs.some((width) => width === 120);
       expect(isWidth120Present).to.equal(true);
-      const colDefWidthArgs = onColumnWidthChange.args.map((arg) => arg[0].colDef.width);
+      const colDefWidthArgs = onColumnWidthChange.mock.calls.map((arg) => arg[0].colDef.width);
       const isColDefWidth120Present = colDefWidthArgs.some((width) => width === 120);
       expect(isColDefWidth120Present).to.equal(true);
     });
@@ -367,6 +372,14 @@ describe('<DataGridPro /> - Columns', () => {
           { id: 2, brand: 'Adidas' },
         ]),
       );
+
+      // `rowsSet` refreshes the resize hook's cell refs inside a rAF. Flush it so
+      // the new row joins the next resize step instead of racing the pointer move.
+      await act(async () => {
+        await new Promise((resolve) => {
+          requestAnimationFrame(() => resolve(undefined));
+        });
+      });
 
       // Verify that the new rows are added with the resized width
       expect(getCell(0, 0).getBoundingClientRect().width).to.equal(150);
@@ -604,7 +617,7 @@ describe('<DataGridPro /> - Columns', () => {
     ];
     const columns = [
       { field: 'id', headerName: 'This is the ID column' },
-      { field: 'brand', headerName: 'This is the brand column' },
+      { field: 'brand', headerName: 'This is the brand column', rowHeader: true },
     ];
 
     const getWidths = () => {
@@ -632,6 +645,81 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await waitFor(() => {
         expect(getWidths()).to.deep.equal([152, 174]);
+      });
+    });
+
+    // Regression test for https://github.com/mui/mui-x/issues/23298
+    it('should not reject when the grid unmounts while autosizing', async () => {
+      const { unmount } = render(<Test rows={rows} columns={columns} />);
+
+      let error: unknown;
+      await act(async () => {
+        // Not awaited on purpose: the grid unmounts while `autosizeColumns` is suspended on
+        // its internal `await`, which nulls the root element ref.
+        const promise = apiRef.current!.autosizeColumns().catch((err) => {
+          error = err;
+        });
+        unmount();
+        await promise;
+      });
+
+      expect(error).to.equal(undefined);
+    });
+
+    // Regression test for https://github.com/mui/mui-x/issues/22505
+    it('should wait for all rows to be rendered on mount when rows fit the viewport', async () => {
+      const shortValue = 'Nike';
+      const wideValue = 'Lululemon Athletica International Collection';
+
+      function DeferredCellContent({ value }: { value: string }) {
+        const [showValue, setShowValue] = React.useState(value === shortValue);
+
+        React.useEffect(() => {
+          if (!showValue) {
+            // Hack to make the test fail similar to https://github.com/mui/mui-x/issues/22505
+            // in our test env. We reveal the wide value a couple of microtasks after mount, so
+            // that the unfixed code (which autosizes on the first microtask) misses it. The
+            // commit is flushed synchronously so the wide value is reliably in the DOM before
+            // the autosize `requestAnimationFrame` fires, regardless of the React version's
+            // scheduler (a plain `setState` here is committed after the frame on React 18).
+            Promise.resolve().then(() => {
+              Promise.resolve().then(() => ReactDOM.flushSync(() => setShowValue(true)));
+            });
+          }
+        }, [showValue]);
+
+        return <span>{showValue ? value : shortValue}</span>;
+      }
+
+      const autosizeRows = [
+        { id: 0, brand: 'Nike' },
+        { id: 1, brand: 'Adidas' },
+        { id: 2, brand: 'Puma' },
+        { id: 3, brand: 'Reebok' },
+        { id: 4, brand: 'Asics' },
+        { id: 5, brand: 'New Balance' },
+        { id: 6, brand: wideValue },
+      ];
+      const autosizeColumns: GridColDef[] = [
+        {
+          field: 'brand',
+          renderCell: ({ value }) => <DeferredCellContent value={value} />,
+        },
+      ];
+
+      render(
+        <Test
+          rows={autosizeRows}
+          columns={autosizeColumns}
+          autosizeOnMount
+          autosizeOptions={{ columns: ['brand'], includeOutliers: true }}
+        />,
+      );
+
+      await waitFor(() => {
+        const wideCell = getCell(6, 0);
+        expect(wideCell.textContent).to.equal(wideValue);
+        expect(wideCell.scrollWidth).to.be.at.most(wideCell.clientWidth);
       });
     });
 
@@ -794,6 +882,38 @@ describe('<DataGridPro /> - Columns', () => {
       // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
+    });
+
+    it('should preserve a resized multiSelect column width across pipe re-application', () => {
+      let privateApi: GridPrivateApiContextRef;
+      function Footer() {
+        privateApi = useGridPrivateApiContext();
+        return null;
+      }
+      render(
+        <Test
+          rows={[{ id: 0, tags: ['React'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'Vue'],
+              width: 200,
+            },
+          ]}
+          slots={{ footer: Footer }}
+        />,
+      );
+
+      act(() => apiRef.current?.setColumnWidth('tags', 350));
+      expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
+      // Re-apply twice: the resized width must survive repeated hydration, which requires
+      // `hasBeenResized` to be carried over on each pass, not just the first.
+      // @ts-ignore
+      act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
+      // @ts-ignore
+      act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
+      expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
     });
   });
 

@@ -1,6 +1,10 @@
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
-import { TreeViewAnyStore } from '../../models';
+import type {
+  TreeViewItemId,
+  TreeViewItemSelectionStatus,
+  TreeViewSelectionPropagation,
+} from '../../../models';
+import type { TreeViewAnyStore } from '../../models';
 import { itemsSelectors } from '../items';
 import { selectionSelectors } from './selectors';
 import { useSelectionItemPlugin } from './itemPlugin';
@@ -12,7 +16,7 @@ import {
   getNonDisabledItemsInRange,
 } from '../../utils/tree';
 import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTreeViewStore';
-import { TreeViewSelectionValue } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
+import type { TreeViewSelectionValue } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
 
 export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
   private store: MinimalTreeViewStore<any, Multiple>;
@@ -59,10 +63,16 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
       cleanModel = newModel as TreeViewSelectionValue<Multiple>;
     }
 
+    // The store is updated before the callbacks are fired,
+    // so that the selection selectors and the `getItemSelection` API method
+    // return the new selection status when called from `onItemSelectionToggle` or `onSelectedItemsChange`.
+    if (selectedItems === undefined) {
+      this.store.set('selectedItems', cleanModel);
+    }
+
     if (onItemSelectionToggle) {
       if (isMultiSelectEnabled) {
         const changes = getAddedAndRemovedItems({
-          store: this.store,
           newModel: cleanModel as string[],
           oldModel: oldModel as string[],
         });
@@ -84,10 +94,6 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
           onItemSelectionToggle(event, cleanModel as string, true);
         }
       }
-    }
-
-    if (selectedItems === undefined) {
-      this.store.set('selectedItems', cleanModel);
     }
 
     onSelectedItemsChange?.(event, cleanModel);
@@ -119,10 +125,47 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     this.lastSelectedRange = getLookupFromArray(range);
   };
 
+  /**
+   * Get the selection status of an item.
+   * An item that is not selected is `indeterminate` when some of its selectable descendants are selected.
+   * @param {TreeViewItemId} itemId The id of the item to get the selection status of.
+   * @returns {TreeViewItemSelectionStatus} The selection status of the item.
+   */
+  private getItemSelection = (itemId: TreeViewItemId): TreeViewItemSelectionStatus =>
+    selectionSelectors.itemSelectionStatus(this.store.state, itemId);
+
   public buildPublicAPI = () => {
     return {
+      getItemSelection: this.getItemSelection,
       setItemSelection: this.setItemSelection,
     };
+  };
+
+  /**
+   * Select the items added below a selected parent when the selection propagates to the descendants.
+   * @param {TreeViewItemId | null} parentId The id of the item the new items were added to.
+   * @param {TreeViewItemId[]} newItemIds The ids of the items that were just added.
+   */
+  public propagateSelectionToNewItems = (
+    parentId: TreeViewItemId | null,
+    newItemIds: TreeViewItemId[],
+  ) => {
+    const { selectionPropagation = EMPTY_OBJECT as TreeViewSelectionPropagation } =
+      this.store.parameters;
+
+    if (
+      parentId == null ||
+      newItemIds.length === 0 ||
+      !selectionPropagation.descendants ||
+      !selectionSelectors.isMultiSelectEnabled(this.store.state) ||
+      !selectionSelectors.isItemSelected(this.store.state, parentId)
+    ) {
+      return;
+    }
+
+    // Only propagate to the new items, the rest of the parent's subtree is already up to date.
+    const newModel = selectionSelectors.selectedItems(this.store.state).concat(newItemIds);
+    this.setSelectedItems(null, newModel, newItemIds);
   };
 
   /**
@@ -150,7 +193,7 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
 
     let newSelected: TreeViewSelectionValue<boolean>;
     const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(this.store.state);
-    if (keepExistingSelection) {
+    if (keepExistingSelection && isMultiSelectEnabled) {
       const oldSelected = selectionSelectors.selectedItems(this.store.state);
       const isSelectedBefore = selectionSelectors.isItemSelected(this.store.state, itemId);
       if (isSelectedBefore && (shouldBeSelected === false || shouldBeSelected == null)) {
@@ -248,7 +291,9 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     let newSelectedItems = selectionSelectors.selectedItems(this.store.state).slice();
 
     if (Object.keys(this.lastSelectedRange).length === 0) {
-      newSelectedItems.push(nextItem);
+      if (!selectionSelectors.isItemSelected(this.store.state, nextItem)) {
+        newSelectedItems.push(nextItem);
+      }
       this.lastSelectedRange = { [currentItem]: true, [nextItem]: true };
     } else {
       if (!this.lastSelectedRange[currentItem]) {
@@ -259,7 +304,9 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
         newSelectedItems = newSelectedItems.filter((id) => id !== currentItem);
         delete this.lastSelectedRange[currentItem];
       } else {
-        newSelectedItems.push(nextItem);
+        if (!selectionSelectors.isItemSelected(this.store.state, nextItem)) {
+          newSelectedItems.push(nextItem);
+        }
         this.lastSelectedRange[nextItem] = true;
       }
     }
@@ -289,7 +336,6 @@ function propagateSelection({
   const newModelLookup = getLookupFromArray(newModel);
 
   const changes = getAddedAndRemovedItems({
-    store,
     newModel,
     oldModel,
   });
@@ -308,8 +354,10 @@ function propagateSelection({
     if (selectionPropagation.descendants) {
       const selectDescendants = (itemId: TreeViewItemId) => {
         if (itemId !== addedItemId) {
-          shouldRegenerateModel = true;
-          newModelLookup[itemId] = true;
+          if (selectionSelectors.canItemBeSelected(store.state, itemId)) {
+            shouldRegenerateModel = true;
+            newModelLookup[itemId] = true;
+          }
         }
 
         itemsSelectors.itemOrderedChildrenIds(store.state, itemId).forEach(selectDescendants);
@@ -319,13 +367,19 @@ function propagateSelection({
     }
 
     if (selectionPropagation.parents) {
-      const checkAllDescendantsSelected = (itemId: TreeViewItemId): boolean => {
+      const checkAllSelectableDescendantsSelected = (itemId: TreeViewItemId): boolean => {
+        if (!selectionSelectors.canItemBeSelected(store.state, itemId)) {
+          // Non-selectable items don't count; still recurse for isItemSelectionDisabled case
+          const children = itemsSelectors.itemOrderedChildrenIds(store.state, itemId);
+          return children.every(checkAllSelectableDescendantsSelected);
+        }
+
         if (!newModelLookup[itemId]) {
           return false;
         }
 
         const children = itemsSelectors.itemOrderedChildrenIds(store.state, itemId);
-        return children.every(checkAllDescendantsSelected);
+        return children.every(checkAllSelectableDescendantsSelected);
       };
 
       const selectParents = (itemId: TreeViewItemId) => {
@@ -335,9 +389,11 @@ function propagateSelection({
         }
 
         const siblings = itemsSelectors.itemOrderedChildrenIds(store.state, parentId);
-        if (siblings.every(checkAllDescendantsSelected)) {
-          shouldRegenerateModel = true;
-          newModelLookup[parentId] = true;
+        if (siblings.every(checkAllSelectableDescendantsSelected)) {
+          if (selectionSelectors.canItemBeSelected(store.state, parentId)) {
+            shouldRegenerateModel = true;
+            newModelLookup[parentId] = true;
+          }
           selectParents(parentId);
         }
       };
@@ -375,12 +431,13 @@ function propagateSelection({
   return shouldRegenerateModel ? Object.keys(newModelLookup) : newModel;
 }
 
+// This method only diffs the two models it receives,
+// it must not read the selection from the store,
+// otherwise the result would depend on whether the store has already been updated or not.
 function getAddedAndRemovedItems({
-  store,
   oldModel,
   newModel,
 }: {
-  store: TreeViewAnyStore;
   oldModel: TreeViewItemId[];
   newModel: TreeViewItemId[];
 }) {
@@ -389,8 +446,13 @@ function getAddedAndRemovedItems({
     newModelMap.set(id, true);
   });
 
+  const oldModelMap = new Map<TreeViewItemId, true>();
+  oldModel.forEach((id) => {
+    oldModelMap.set(id, true);
+  });
+
   return {
-    added: newModel.filter((itemId) => !selectionSelectors.isItemSelected(store.state, itemId)),
+    added: newModel.filter((itemId) => !oldModelMap.has(itemId)),
     removed: oldModel.filter((itemId) => !newModelMap.has(itemId)),
   };
 }

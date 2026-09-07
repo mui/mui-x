@@ -19,6 +19,9 @@
     "experimentalFeatures": {
       "description": "Options to enable features planned for the next major."
     },
+    "focusItemOnClick": {
+      "description": "If <code>true</code>, clicking an item immediately shows the keyboard focus indicator on it. By default, clicking sets the item that keyboard navigation starts from, but the focus indicator stays hidden until the user presses a key."
+    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
@@ -30,7 +33,7 @@
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
     "initialZoom": {
-      "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
+      "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it.<br>Each entry is either explicit zoom percentages (<code>{ axisId, start, end }</code>) or a range value (<code>{ axisId, value }</code>) resolved against the axis domain."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
@@ -135,7 +138,7 @@
     "baseMenuItem": "",
     "baseMenuList": "",
     "basePopper": "",
-    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps&gt;</code>.",
+    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
     "baseToggleButtonGroup": "",
     "baseTooltip": "",
     "cell": "The component that renders the heatmap cell.",

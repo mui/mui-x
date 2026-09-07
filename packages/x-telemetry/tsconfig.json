@@ -4,7 +4,7 @@
     "module": "esnext",
     "noEmit": true,
     "skipLibCheck": true,
-    "types": ["@mui/internal-test-utils/initMatchers", "vitest/globals", "node", "vite/client"]
+    "types": ["@mui/internal-test-utils/initMatchers", "node", "vite/client"]
   },
   "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
 }

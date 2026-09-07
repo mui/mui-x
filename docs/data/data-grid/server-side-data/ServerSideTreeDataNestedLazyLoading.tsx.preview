@@ -1,0 +1,9 @@
+<DataGridPro
+  columns={columns}
+  dataSource={dataSource}
+  treeData
+  apiRef={apiRef}
+  pageSizeOptions={pageSizeOptions}
+  initialState={initialStateWithPagination}
+  lazyLoading
+/>

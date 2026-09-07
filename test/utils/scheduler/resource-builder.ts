@@ -3,7 +3,7 @@ import {
   SchedulerResourceId,
   SchedulerEventColor,
   SchedulerEventSide,
-} from '@mui/x-scheduler-headless/models';
+} from '@mui/x-scheduler-internals/models';
 
 /**
  * Minimal resource builder for tests.

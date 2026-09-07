@@ -4,7 +4,8 @@ import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommuni
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
 import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector';
 import type { GridPreferencesPanelApi } from '../../../models/api/gridPreferencesPanelApi';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';

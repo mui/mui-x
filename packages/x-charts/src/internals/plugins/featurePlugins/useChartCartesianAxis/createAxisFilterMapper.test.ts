@@ -1,4 +1,5 @@
 import { scaleLinear, scaleTime } from '@mui/x-charts-vendor/d3-scale';
+import { describe, it, expect } from 'vitest';
 import {
   createContinuousScaleGetAxisFilter,
   createDiscreteScaleGetAxisFilter,

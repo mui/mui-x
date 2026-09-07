@@ -5,9 +5,11 @@ import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { shouldForwardProp } from '@mui/system/createStyled';
-import { BaseToolbarProps } from '../models/props/toolbar';
-import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
-import { PickerToolbarOwnerState, useToolbarOwnerState } from '../hooks/useToolbarOwnerState';
+import type { BaseToolbarProps } from '../models/props/toolbar';
+import type { PickersToolbarClasses } from './pickersToolbarClasses';
+import { getPickersToolbarUtilityClass } from './pickersToolbarClasses';
+import type { PickerToolbarOwnerState } from '../hooks/useToolbarOwnerState';
+import { useToolbarOwnerState } from '../hooks/useToolbarOwnerState';
 
 export interface PickersToolbarProps extends Pick<BaseToolbarProps, 'hidden' | 'titleId'> {
   className?: string;

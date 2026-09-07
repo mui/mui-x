@@ -20,5 +20,18 @@
       "description": "The labels text anchor or a function returning the text anchor for a given axis angle (in degree)."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "axisLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every radar axis label element"
+    },
+    "axisLine": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the radar axis line element"
+    },
+    "axisRoot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the radar axis root element"
+    }
+  }
 }

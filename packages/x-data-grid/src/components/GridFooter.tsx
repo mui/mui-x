@@ -7,10 +7,8 @@ import { gridRowSelectionCountSelector } from '../hooks/features/rowSelection/gr
 import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
-import {
-  GridFooterContainer,
-  type GridFooterContainerProps,
-} from './containers/GridFooterContainer';
+import { GridFooterContainer } from './containers/GridFooterContainer';
+import type { GridFooterContainerProps } from './containers/GridFooterContainer';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const GridFooter = forwardRef<HTMLDivElement, GridFooterContainerProps>(
@@ -53,7 +51,7 @@ const GridFooter = forwardRef<HTMLDivElement, GridFooterContainerProps>(
   },
 );
 
-GridFooter.propTypes = {
+GridFooter.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

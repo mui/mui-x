@@ -1,0 +1,16 @@
+<DataGridPro
+  {...data}
+  loading={loading}
+  rows={rows}
+  pagination
+  rowReordering
+  onRowOrderChange={handleRowOrderChange}
+  initialState={{
+    ...data.initialState,
+    pagination: { paginationModel: { pageSize: 5 } },
+  }}
+  pageSizeOptions={[5]}
+  slots={{
+    pagination: Pagination,
+  }}
+/>

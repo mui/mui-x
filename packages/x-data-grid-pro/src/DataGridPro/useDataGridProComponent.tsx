@@ -53,9 +53,9 @@ import {
   useGridListView,
   listViewStateInitializer,
   propsStateInitializer,
-  type GridConfiguration,
   useFirstRender,
 } from '@mui/x-data-grid/internals';
+import type { GridConfiguration } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 // Pro-only features
@@ -94,7 +94,11 @@ import {
   dataSourceStateInitializer,
 } from '../hooks/features/dataSource/useGridDataSourcePro';
 import { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
+import { useGridDataSourceNestedLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceNestedLazyLoader';
 import { useGridInfiniteLoadingIntersection } from '../hooks/features/serverSideLazyLoader/useGridInfiniteLoadingIntersection';
+import { registerMultiSelectColumnType } from '../colDef/registerMultiSelectColumnType';
+
+registerMultiSelectColumnType();
 
 export const useDataGridProComponent = (
   apiRef: RefObject<GridPrivateApiPro>,
@@ -179,6 +183,7 @@ export const useDataGridProComponent = (
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
   useGridDataSourceLazyLoader(apiRef, props);
+  useGridDataSourceNestedLazyLoader(apiRef, props);
   useGridInfiniteLoadingIntersection(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridCsvExport(apiRef, props);

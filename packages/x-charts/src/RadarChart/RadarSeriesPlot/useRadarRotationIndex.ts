@@ -2,7 +2,7 @@ import * as React from 'react';
 import { selectorChartPolarCenter } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { getChartPoint } from '../../internals/getChartPoint';
 import { generateSvg2rotation } from '../../internals/plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
-import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
+import { getRotationAxisIndex } from '../../internals/plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
 import { useStore } from '../../internals/store/useStore';
 import { useChartsLayerContainerRef } from '../../hooks/useChartsLayerContainerRef';
 import { useRotationAxis } from '../../hooks/useAxis';
@@ -33,7 +33,7 @@ export function useRadarRotationIndex() {
 
       const svgPoint = getChartPoint(element, event);
       const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y);
-      const rotationIndex = getAxisIndex(rotationAxis, rotation);
+      const rotationIndex = getRotationAxisIndex(rotationAxis, rotation);
 
       return rotationIndex;
     },

@@ -339,8 +339,7 @@ export type SankeyLinkIdentifierWithData<WithPosition extends boolean = true> =
 export type SankeyItemIdentifier = SankeyNodeIdentifier | SankeyLinkIdentifier;
 
 export type SankeyItemIdentifierWithData<WithPosition extends boolean = true> =
-  | SankeyNodeIdentifierWithData<WithPosition>
-  | SankeyLinkIdentifierWithData<WithPosition>;
+  SankeyNodeIdentifierWithData<WithPosition> | SankeyLinkIdentifierWithData<WithPosition>;
 
 export type SankeyValueFormatterContext =
   | {

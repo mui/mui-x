@@ -41,6 +41,7 @@ export default function GridPivotingCommodities() {
     dataSet: 'Commodity',
     rowLength: 1_000,
     editable: true,
+    multiSelect: true,
   });
 
   const [pivotActive, setPivotActive] = React.useState(false);

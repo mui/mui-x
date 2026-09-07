@@ -2,14 +2,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useGridPanelContext } from '@mui/x-data-grid-pro/internals';
 import {
   gridPreferencePanelStateSelector,
   GridPreferencePanelsValue,
-  type GridSlotProps,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
+import type { GridSlotProps } from '@mui/x-data-grid-pro';
 import { useForkRef } from '@mui/material/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -56,8 +57,8 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
       panelState.open && panelState.openedPanelValue === GridPreferencePanelsValue.aiAssistant;
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
-    const { aiAssistantPanelTriggerRef } = useGridPanelContext();
-    const handleRef = useForkRef(ref, aiAssistantPanelTriggerRef);
+    const { triggers } = useGridPanelContext();
+    const handleRef = useForkRef(ref, triggers.aiAssistantPanel.setRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open) {
@@ -97,7 +98,7 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
   },
 );
 
-AiAssistantPanelTrigger.propTypes = {
+AiAssistantPanelTrigger.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

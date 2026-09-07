@@ -2,7 +2,7 @@ import type { SeriesLayoutGetter, ChartSeriesTypeConfig } from '@mui/x-charts/in
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 import { tooltipGetter } from './tooltipGetter';
 import { calculateSankeyLayout } from '../calculateSankeyLayout';
-import tooltipItemPositionGetter from './tooltipPosition';
+import { selectorTooltipItemPosition } from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import identifierSerializer from './identifierSerializer';
 import identifierCleaner from './identifierCleaner';
@@ -32,7 +32,7 @@ export const sankeySeriesConfig: ChartSeriesTypeConfig<'sankey'> = {
   colorProcessor,
   legendGetter,
   tooltipGetter,
-  tooltipItemPositionGetter,
+  selectorTooltipItemPosition,
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer,

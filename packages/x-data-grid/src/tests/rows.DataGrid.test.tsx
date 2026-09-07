@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -10,20 +10,23 @@ import {
   fireEvent,
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
-import { spy, stub } from 'sinon';
+import { iconButtonClasses } from '@mui/material/IconButton';
 import Portal from '@mui/material/Portal';
+import SvgIcon, { svgIconClasses } from '@mui/material/SvgIcon';
 import {
   DataGrid,
-  type DataGridProps,
   GridActionsCellItem,
-  type GridRowIdGetter,
-  type GridRowClassNameParams,
-  type GridRowModel,
-  type GridRenderCellParams,
   useGridApiRef,
-  type GridApi,
   gridClasses,
   GridActionsCell,
+} from '@mui/x-data-grid';
+import type {
+  DataGridProps,
+  GridRowIdGetter,
+  GridRowClassNameParams,
+  GridRowModel,
+  GridRenderCellParams,
+  GridApi,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
@@ -38,8 +41,9 @@ import {
 import Dialog from '@mui/material/Dialog';
 import { isJSDOM } from 'test/utils/skipIf';
 
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
-import { type GridApiCommunity } from '../models/api/gridApiCommunity';
+import type { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
@@ -100,7 +104,7 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   it('should ignore events coming from a portal in the cell', async () => {
-    const handleRowClick = spy();
+    const handleRowClick = vi.fn();
     function InputCell() {
       return <input type="text" name="input" />;
     }
@@ -131,9 +135,9 @@ describe('<DataGrid /> - Rows', () => {
       </div>,
     );
     await user.click(document.querySelector('input[name="portal-input"]')!);
-    expect(handleRowClick.callCount).to.equal(0);
+    expect(handleRowClick.mock.calls.length).to.equal(0);
     await user.click(document.querySelector('input[name="input"]')!);
-    expect(handleRowClick.callCount).to.equal(1);
+    expect(handleRowClick.mock.calls.length).to.equal(1);
   });
 
   // https://github.com/mui/mui-x/issues/21063
@@ -298,10 +302,10 @@ describe('<DataGrid /> - Rows', () => {
       });
 
       it('should call getActions with the row params', () => {
-        const getActions = stub().returns([]);
+        const getActions = vi.fn().mockReturnValue([]);
         render(<TestCase getActions={getActions} />);
-        expect(getActions.args[0][0].id).to.equal(1);
-        expect(getActions.args[0][0].row).to.deep.equal({ id: 1 });
+        expect(getActions.mock.calls[0][0].id).to.equal(1);
+        expect(getActions.mock.calls[0][0].row).to.deep.equal({ id: 1 });
       });
 
       it('should always show the actions not marked as showInMenu', () => {
@@ -317,6 +321,27 @@ describe('<DataGrid /> - Rows', () => {
         expect(screen.queryByText('print')).to.equal(null);
       });
 
+      it('should let the icon inherit the action button size', () => {
+        render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem
+                key={1}
+                icon={<SvgIcon data-testid="delete-icon" />}
+                label="delete"
+                size="large"
+              />,
+            ]}
+          />,
+        );
+
+        const actionButton = screen.getByRole('menuitem', { name: 'delete' });
+        const icon = screen.getByTestId('delete-icon');
+
+        expect(actionButton).to.have.class(iconButtonClasses.sizeLarge);
+        expect(icon).to.have.class(svgIconClasses.fontSizeInherit);
+      });
+
       it('should show in a menu the actions marked as showInMenu', async () => {
         const { user } = render(
           <TestCase
@@ -330,7 +355,9 @@ describe('<DataGrid /> - Rows', () => {
 
       it('should not select the row when clicking in an action', async () => {
         const { user } = render(
-          <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
+          <TestCase
+            getActions={() => [<GridActionsCellItem key={1} icon={<span />} label="print" />]}
+          />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
         await user.click(screen.getByRole('menuitem', { name: 'print' }));
@@ -340,7 +367,9 @@ describe('<DataGrid /> - Rows', () => {
       it('should not select the row when clicking in a menu action', async () => {
         const { user } = render(
           <TestCase
-            getActions={() => [<GridActionsCellItem icon={<span />} label="print" showInMenu />]}
+            getActions={() => [
+              <GridActionsCellItem key={1} icon={<span />} label="print" showInMenu />,
+            ]}
           />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
@@ -353,7 +382,9 @@ describe('<DataGrid /> - Rows', () => {
 
       it('should not select the row when opening the menu', async () => {
         const { user } = render(
-          <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
+          <TestCase
+            getActions={() => [<GridActionsCellItem key={1} label="print" showInMenu />]}
+          />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
         await user.click(screen.getByRole('menuitem', { name: 'more' }));
@@ -364,7 +395,7 @@ describe('<DataGrid /> - Rows', () => {
         const { user } = render(
           <TestCase
             rows={[{ id: 1 }, { id: 2 }]}
-            getActions={() => [<GridActionsCellItem label="print" showInMenu />]}
+            getActions={() => [<GridActionsCellItem key={1} label="print" showInMenu />]}
           />,
         );
         expect(screen.queryAllByRole('menu')).to.have.length(2);
@@ -384,7 +415,9 @@ describe('<DataGrid /> - Rows', () => {
 
       it('should allow to move focus to another cell with the arrow keys', async () => {
         const { user } = render(
-          <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
+          <TestCase
+            getActions={() => [<GridActionsCellItem key={1} icon={<span />} label="print" />]}
+          />,
         );
         await user.click(getCell(0, 0));
         expect(getActiveCell()).to.equal('0-0');
@@ -401,8 +434,8 @@ describe('<DataGrid /> - Rows', () => {
         const { user } = render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="print" showInMenu />,
-              <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
+              <GridActionsCellItem key={1} icon={<span />} label="print" showInMenu />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" showInMenu />,
             ]}
           />,
         );
@@ -417,8 +450,8 @@ describe('<DataGrid /> - Rows', () => {
         const { user } = render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="print" />,
-              <GridActionsCellItem icon={<span />} label="delete" />,
+              <GridActionsCellItem key={1} icon={<span />} label="print" />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" />,
             ]}
           />,
         );
@@ -445,8 +478,8 @@ describe('<DataGrid /> - Rows', () => {
         const { user } = render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="print" />,
-              <GridActionsCellItem icon={<span />} label="delete" />,
+              <GridActionsCellItem key={1} icon={<span />} label="print" />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" />,
             ]}
           />,
         );
@@ -459,8 +492,8 @@ describe('<DataGrid /> - Rows', () => {
         const { user } = render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="print" />,
-              <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
+              <GridActionsCellItem key={1} icon={<span />} label="print" />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" showInMenu />,
             ]}
           />,
         );
@@ -491,8 +524,9 @@ describe('<DataGrid /> - Rows', () => {
               getActions={() =>
                 canDelete
                   ? [
-                      <GridActionsCellItem icon={<span />} label="print" />,
+                      <GridActionsCellItem key={1} icon={<span />} label="print" />,
                       <GridActionsCellItem
+                        key={2}
                         icon={<span />}
                         label="delete"
                         onClick={() => {
@@ -500,7 +534,7 @@ describe('<DataGrid /> - Rows', () => {
                         }}
                       />,
                     ]
-                  : [<GridActionsCellItem icon={<span />} label="print" />]
+                  : [<GridActionsCellItem key={1} icon={<span />} label="print" />]
               }
             />
           );
@@ -514,15 +548,17 @@ describe('<DataGrid /> - Rows', () => {
         const { setProps, user } = render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="print" />,
-              <GridActionsCellItem icon={<span />} label="delete" />,
+              <GridActionsCellItem key={1} icon={<span />} label="print" />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" />,
             ]}
           />,
         );
         await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
         expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
         await act(async () => {
-          setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
+          setProps({
+            getActions: () => [<GridActionsCellItem key={1} icon={<span />} label="print" />],
+          }); // Sets focusedButtonIndex=0
         });
         expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
       });
@@ -1078,10 +1114,14 @@ describe('<DataGrid /> - Rows', () => {
         const border = 1;
         const defaultRowHeight = 52;
         const measuredRowHeight = 101;
+        // The virtualizer renders one extra row past the visible viewport (see
+        // `getIndexesToRender`), so a single-row viewport measures the first
+        // two rows; the rest are left at the default height.
+        const measuredRowCount = 2;
         render(
           <TestCase
             columnHeaderHeight={columnHeaderHeight}
-            height={columnHeaderHeight + 20 + border * 2} // Force to only measure the first row
+            height={columnHeaderHeight + 20 + border * 2}
             getBioContentHeight={() => measuredRowHeight}
             getRowHeight={() => 'auto'}
             rowBufferPx={0}
@@ -1089,9 +1129,8 @@ describe('<DataGrid /> - Rows', () => {
         );
         const element = document.querySelector('.MuiDataGrid-contentFiller');
         const expectedHeight =
-          measuredRowHeight +
-          border + // Measured rows also include the border
-          (baselineProps.rows.length - 1) * defaultRowHeight;
+          measuredRowCount * (measuredRowHeight + border) + // Measured rows also include the border
+          (baselineProps.rows.length - measuredRowCount) * defaultRowHeight;
 
         await waitFor(() => {
           expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
@@ -1103,10 +1142,13 @@ describe('<DataGrid /> - Rows', () => {
         const border = 1;
         const measuredRowHeight = 100;
         const estimatedRowHeight = 90;
+        // See `getIndexesToRender` — a single-row viewport still measures the
+        // first two rows because of the trailing render-context safety row.
+        const measuredRowCount = 2;
         render(
           <TestCase
             columnHeaderHeight={columnHeaderHeight}
-            height={columnHeaderHeight + 20 + border * 2} // Force to only measure the first row
+            height={columnHeaderHeight + 20 + border * 2}
             getBioContentHeight={() => measuredRowHeight}
             getEstimatedRowHeight={() => estimatedRowHeight}
             getRowHeight={() => 'auto'}
@@ -1114,9 +1156,10 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         const element = document.querySelector('.MuiDataGrid-contentFiller');
-        const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
+        const measuredHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
-          firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
+          measuredRowCount * measuredHeight +
+          (baselineProps.rows.length - measuredRowCount) * estimatedRowHeight;
 
         await waitFor(() => {
           expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
@@ -1187,8 +1230,11 @@ describe('<DataGrid /> - Rows', () => {
         );
         const virtualScroller = grid('virtualScroller')!;
 
+        // With one row of viewport, `getIndexesToRender` still renders (and
+        // therefore measures) the next row past the visible area, so the first
+        // two rows are measured before any scroll happens.
         await waitFor(() => {
-          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52);
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52);
         });
 
         // It calculates the entire height of the scrollbar whenever the scroll event happens
@@ -1348,7 +1394,7 @@ describe('<DataGrid /> - Rows', () => {
     }
 
     it('should be called with the correct params', async () => {
-      const getRowSpacing = stub().returns({});
+      const getRowSpacing = vi.fn().mockReturnValue({});
       const { user } = render(
         <TestCase
           getRowSpacing={getRowSpacing}
@@ -1356,14 +1402,14 @@ describe('<DataGrid /> - Rows', () => {
           pageSizeOptions={[2]}
         />,
       );
-      expect(getRowSpacing.args[0][0]).to.deep.equal({
+      expect(getRowSpacing.mock.calls[0][0]).to.deep.equal({
         isFirstVisible: true,
         isLastVisible: false,
         indexRelativeToCurrentPage: 0,
         id: 0,
         model: rows[0],
       });
-      expect(getRowSpacing.args[1][0]).to.deep.equal({
+      expect(getRowSpacing.mock.calls[1][0]).to.deep.equal({
         isFirstVisible: false,
         isLastVisible: true,
         indexRelativeToCurrentPage: 1,
@@ -1371,17 +1417,17 @@ describe('<DataGrid /> - Rows', () => {
         model: rows[1],
       });
 
-      getRowSpacing.resetHistory();
+      getRowSpacing.mockClear();
       await user.click(screen.getByRole('button', { name: /next page/i }));
 
-      expect(getRowSpacing.args[0][0]).to.deep.equal({
+      expect(getRowSpacing.mock.calls[0][0]).to.deep.equal({
         isFirstVisible: true,
         isLastVisible: false,
         indexRelativeToCurrentPage: 0,
         id: 2,
         model: rows[2],
       });
-      expect(getRowSpacing.args[1][0]).to.deep.equal({
+      expect(getRowSpacing.mock.calls[1][0]).to.deep.equal({
         isFirstVisible: false,
         isLastVisible: true,
         indexRelativeToCurrentPage: 1,
@@ -1533,6 +1579,174 @@ describe('<DataGrid /> - Rows', () => {
           'Please remove one of these two props.',
         ].join('\n'),
       );
+    });
+
+    describe('prototype preservation on updateRows', () => {
+      it('should preserve the prototype of a class instance when updated with a plain-object partial', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          constructor(id: number, brand: string) {
+            this.id = id;
+            this.brand = brand;
+          }
+          getBrand() {
+            return this.brand;
+          }
+        }
+
+        const classRows = [
+          new BrandRow(0, 'Nike'),
+          new BrandRow(1, 'Adidas'),
+          new BrandRow(2, 'Puma'),
+        ];
+        const { rerender } = render(<TestCase rows={classRows} />);
+        // Plain-object partial update — oldRow is a class instance, partialRow is plain
+        await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        expect(updatedRow instanceof BrandRow).to.equal(true);
+        expect(typeof updatedRow.getBrand).to.equal('function');
+        expect(updatedRow.getBrand()).to.equal('Fila');
+        rerender(<TestCase rows={classRows} />);
+      });
+
+      it('should use the partialRow prototype when partialRow is a class instance', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          constructor(id: number, brand: string) {
+            this.id = id;
+            this.brand = brand;
+          }
+          getBrand() {
+            return this.brand;
+          }
+        }
+
+        const plainRows = [
+          { id: 0, brand: 'Nike' },
+          { id: 1, brand: 'Adidas' },
+          { id: 2, brand: 'Puma' },
+        ];
+        const { rerender } = render(<TestCase rows={plainRows} />);
+        // Class-instance partial update — oldRow is plain, partialRow is a class instance
+        await act(async () => apiRef.current?.updateRows([new BrandRow(1, 'Fila')]));
+
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        expect(updatedRow instanceof BrandRow).to.equal(true);
+        expect(typeof updatedRow.getBrand).to.equal('function');
+        expect(updatedRow.getBrand()).to.equal('Fila');
+        rerender(<TestCase rows={plainRows} />);
+      });
+
+      it('should produce a plain object when both oldRow and partialRow are plain objects', async () => {
+        render(<TestCase />);
+        await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+
+        const updatedRow = apiRef.current?.getRow(1);
+        expect(Object.getPrototypeOf(updatedRow)).to.equal(Object.prototype);
+        expect((updatedRow as any).brand).to.equal('Fila');
+      });
+    });
+
+    describe('_action: "replace" on updateRows', () => {
+      it('should store the row as-is, bypassing the Object.assign merge', async () => {
+        class Person {
+          id: number;
+          firstName: string;
+          #salary: number;
+          constructor(id: number, firstName: string, salary: number) {
+            this.id = id;
+            this.firstName = firstName;
+            this.#salary = salary;
+          }
+          get salaryBand() {
+            return this.#salary > 100_000 ? 'senior' : 'junior';
+          }
+        }
+
+        const rows = [new Person(0, 'Grace', 90_000), new Person(1, 'Ada', 80_000)];
+        render(<TestCase rows={rows} />);
+
+        const replacement = new Person(1, 'Ada', 120_000);
+        await act(async () =>
+          apiRef.current?.updateRows([{ _action: 'replace', row: replacement }]),
+        );
+
+        const updatedRow = apiRef.current?.getRow(1) as Person;
+        // Reference identity is preserved: it's literally the same instance, not a copy.
+        expect(updatedRow).to.equal(replacement);
+        // Reading a #private field would throw a brand-check TypeError on a merged copy.
+        expect(updatedRow.salaryBand).to.equal('senior');
+        // The marker lives on the envelope, the instance itself is never touched.
+        expect('_action' in replacement).to.equal(false);
+      });
+
+      it('should insert a new row as-is when the id does not exist yet', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          constructor(id: number, brand: string) {
+            this.id = id;
+            this.brand = brand;
+          }
+        }
+
+        render(<TestCase />);
+        const newRow = new BrandRow(99, 'Salomon');
+        await act(async () => apiRef.current?.updateRows([{ _action: 'replace', row: newRow }]));
+
+        expect(apiRef.current?.getRow(99)).to.equal(newRow);
+      });
+
+      it('should preserve identity when processRowUpdate returns a replace update after an edit', async () => {
+        class BrandRow {
+          id: number;
+          brand: string;
+          #revision: number;
+          constructor(id: number, brand: string, revision = 0) {
+            this.id = id;
+            this.brand = brand;
+            this.#revision = revision;
+          }
+          withBrand(brand: string) {
+            return new BrandRow(this.id, brand, this.#revision + 1);
+          }
+          get revision() {
+            return this.#revision;
+          }
+        }
+
+        const classRows = [new BrandRow(0, 'Nike'), new BrandRow(1, 'Adidas')];
+        let replacement: BrandRow | undefined;
+        render(
+          <TestCase
+            rows={classRows}
+            columns={[{ field: 'brand', editable: true }]}
+            processRowUpdate={(newRow, oldRow: BrandRow) => {
+              // The draft `newRow` is a plain object, so rebuild a proper instance from it.
+              replacement = oldRow.withBrand(newRow.brand);
+              return { _action: 'replace', row: replacement };
+            }}
+          />,
+        );
+
+        await act(async () => apiRef.current?.startCellEditMode({ id: 1, field: 'brand' }));
+        await act(async () =>
+          apiRef.current?.setEditCellValue({ id: 1, field: 'brand', value: 'Fila' }),
+        );
+        await act(async () => apiRef.current?.stopCellEditMode({ id: 1, field: 'brand' }));
+
+        await waitFor(() => {
+          // The instance returned in the envelope is stored verbatim.
+          expect(apiRef.current?.getRow(1)).to.equal(replacement);
+        });
+        const updatedRow = apiRef.current?.getRow(1) as BrandRow;
+        expect(updatedRow.brand).to.equal('Fila');
+        // #private state survives the edit because the stored row is the instance itself.
+        expect(updatedRow.revision).to.equal(1);
+      });
     });
   });
 

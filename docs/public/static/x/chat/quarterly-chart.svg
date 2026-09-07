@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200" role="img" aria-label="Quarterly revenue chart">
+  <rect width="320" height="200" fill="#f5f7fa" />
+  <line x1="40" y1="170" x2="300" y2="170" stroke="#9aa5b1" stroke-width="1" />
+  <line x1="40" y1="30" x2="40" y2="170" stroke="#9aa5b1" stroke-width="1" />
+  <rect x="70" y="120" width="36" height="50" fill="#1976d2" />
+  <rect x="130" y="90" width="36" height="80" fill="#1976d2" />
+  <rect x="190" y="60" width="36" height="110" fill="#1976d2" />
+  <rect x="250" y="40" width="36" height="130" fill="#1976d2" />
+  <text x="88" y="188" font-family="Arial, sans-serif" font-size="12" fill="#52606d" text-anchor="middle">Q1</text>
+  <text x="148" y="188" font-family="Arial, sans-serif" font-size="12" fill="#52606d" text-anchor="middle">Q2</text>
+  <text x="208" y="188" font-family="Arial, sans-serif" font-size="12" fill="#52606d" text-anchor="middle">Q3</text>
+  <text x="268" y="188" font-family="Arial, sans-serif" font-size="12" fill="#52606d" text-anchor="middle">Q4</text>
+  <text x="160" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#323f4b" text-anchor="middle">Quarterly revenue</text>
+</svg>

@@ -1,6 +1,5 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
     "shape": {
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
@@ -27,6 +26,5 @@
   "muiName": "MuiRadarGrid",
   "filename": "/packages/x-charts/src/RadarChart/RadarGrid/RadarGrid.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>"
 }

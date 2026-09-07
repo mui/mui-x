@@ -26,6 +26,7 @@ export default function DataGridPremiumDemo() {
     dataSet: 'Commodity',
     rowLength: 100,
     editable: true,
+    multiSelect: true,
     visibleFields,
   });
   const apiRef = useGridApiRef();

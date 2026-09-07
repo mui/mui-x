@@ -3,12 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import {
-  type SankeyLinkIdentifierWithData,
-  type SankeyNodeIdentifierWithData,
-} from './sankey.types';
+import { useRegisterItemActivation } from '@mui/x-charts/internals';
+import type { ChartsActivationEvent } from '@mui/x-charts/models';
+import type { SankeyLinkIdentifierWithData, SankeyNodeIdentifierWithData } from './sankey.types';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
+import { useUtilityClasses } from './sankeyClasses';
+import type { SankeyClasses } from './sankeyClasses';
 import { SankeyNodePlot } from './SankeyNodePlot';
 import { SankeyLinkPlot } from './SankeyLinkPlot';
 import { SankeyNodeLabelPlot } from './SankeyNodeLabelPlot';
@@ -29,7 +29,7 @@ export interface SankeyPlotProps {
    * @param {SankeyNodeIdentifierWithData} node The sankey node identifier.
    */
   onNodeClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: ChartsActivationEvent<SVGElement>,
     node: SankeyNodeIdentifierWithData,
   ) => void;
   /**
@@ -38,7 +38,7 @@ export interface SankeyPlotProps {
    * @param {SankeyLinkIdentifierWithData} link The sankey link identifier.
    */
   onLinkClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: ChartsActivationEvent<SVGElement>,
     link: SankeyLinkIdentifierWithData,
   ) => void;
 }
@@ -59,6 +59,47 @@ function SankeyPlot(props: SankeyPlotProps) {
   const sankeySeries = useSankeySeries()[0];
   const layout = useSankeyLayout();
 
+  useRegisterItemActivation(
+    { type: 'sankey' },
+    (onNodeClick || onLinkClick) &&
+      ((event, item) => {
+        if (item.subType === 'node') {
+          const node = layout?.nodes?.find((candidate) => candidate.id === item.nodeId);
+
+          if (!onNodeClick || !node) {
+            return;
+          }
+
+          onNodeClick(event, {
+            type: 'sankey',
+            seriesId: item.seriesId,
+            subType: 'node',
+            nodeId: node.id,
+            node,
+          });
+          return;
+        }
+
+        const link = layout?.links?.find(
+          (candidate) =>
+            candidate.source.id === item.sourceId && candidate.target.id === item.targetId,
+        );
+
+        if (!onLinkClick || !link) {
+          return;
+        }
+
+        onLinkClick(event, {
+          type: 'sankey',
+          seriesId: item.seriesId,
+          subType: 'link',
+          sourceId: link.source.id,
+          targetId: link.target.id,
+          link,
+        });
+      }),
+  );
+
   if (!sankeySeries) {
     throw new Error(
       `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartsDataProviderPro.`,
@@ -77,14 +118,13 @@ function SankeyPlot(props: SankeyPlotProps) {
     <SankeyPlotRoot className={clsx(classes.root, className)}>
       <SankeyLinkPlot classes={classes} onClick={onLinkClick} />
       <SankeyNodePlot classes={classes} onClick={onNodeClick} />
-
       {linkOptions?.showValues && <SankeyLinkLabelPlot classes={classes} />}
       {showNodeLabels && <SankeyNodeLabelPlot classes={classes} />}
     </SankeyPlotRoot>
   );
 }
 
-SankeyPlot.propTypes = {
+SankeyPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -93,6 +133,10 @@ SankeyPlot.propTypes = {
    * Classes applied to the various elements.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.

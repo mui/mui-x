@@ -9,7 +9,8 @@ import {
   selectorChartXAxisExtrema,
   selectorChartYAxisExtrema,
 } from './useChartAxisExtrema.selectors';
-import { computeAxisDomainsMap, type DomainDefinition } from './domain';
+import { computeAxisDomainsMap } from './domain';
+import type { DomainDefinition } from './domain';
 
 /**
  * Default tick number used for auto-size domain computation.

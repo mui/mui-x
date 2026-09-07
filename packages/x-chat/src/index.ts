@@ -5,6 +5,8 @@ export type {
   ChatBoxSlots,
   ChatBoxSlotProps,
   ChatBoxFeatures,
+  ChatBoxLayoutMode,
+  ChatBoxLayoutModeBreakpoints,
 } from './ChatBox/ChatBox.types';
 export type { ChatVariant, ChatDensity } from '@mui/x-chat-headless';
 export type {
@@ -97,7 +99,7 @@ export type {
 
 // ─── ChatMessage ──────────────────────────────────────────────────────────────
 export { ChatMessage } from './ChatMessage/ChatMessage';
-export type { ChatMessageProps } from './ChatMessage/ChatMessage';
+export type { ChatMessageProps, ChatMessageActionsResolveContext } from './ChatMessage/ChatMessage';
 export { ChatMessageAvatar } from './ChatMessage/ChatMessageAvatar';
 export type { ChatMessageAvatarProps } from './ChatMessage/ChatMessageAvatar';
 export { ChatMessageAuthorLabel } from './ChatMessage/ChatMessageAuthorLabel';
@@ -107,8 +109,13 @@ export type { ChatMessageContentProps } from './ChatMessage/ChatMessageContent';
 export { ChatMessageMeta } from './ChatMessage/ChatMessageMeta';
 export type { ChatMessageMetaProps } from './ChatMessage/ChatMessageMeta';
 export { ChatMessageInlineMeta } from './ChatMessage/ChatMessageInlineMeta';
+export type { ChatMessageInlineMetaProps } from './ChatMessage/ChatMessageInlineMeta';
 export { ChatMessageActions } from './ChatMessage/ChatMessageActions';
-export type { ChatMessageActionsProps } from './ChatMessage/ChatMessageActions';
+export type {
+  ChatMessageActionsProps,
+  ChatMessageExtraAction,
+  ChatMessageExtraActionContext,
+} from './ChatMessage/ChatMessageActions';
 export { ChatMessageGroup } from './ChatMessage/ChatMessageGroup';
 export type { ChatMessageGroupProps } from './ChatMessage/ChatMessageGroup';
 export { ChatDateDivider } from './ChatMessage/ChatDateDivider';
@@ -116,9 +123,22 @@ export type { ChatDateDividerProps } from './ChatMessage/ChatDateDivider';
 export { chatMessageClasses, getChatMessageUtilityClass } from './ChatMessage/chatMessageClasses';
 export type { ChatMessageClasses, ChatMessageClassKey } from './ChatMessage/chatMessageClasses';
 
+// ─── ChatMessageError ─────────────────────────────────────────────────────────
+export { ChatMessageError } from './ChatMessageError/ChatMessageError';
+export type { ChatMessageErrorProps } from './ChatMessageError/ChatMessageError';
+export {
+  chatMessageErrorClasses,
+  getChatMessageErrorUtilityClass,
+} from './ChatMessageError/chatMessageErrorClasses';
+export type {
+  ChatMessageErrorClasses,
+  ChatMessageErrorClassKey,
+} from './ChatMessageError/chatMessageErrorClasses';
+
 // ─── ChatMessageList ──────────────────────────────────────────────────────────
 export { ChatMessageList } from './ChatMessageList/ChatMessageList';
 export type { ChatMessageListProps } from './ChatMessageList/ChatMessageList';
+export type { ChatMessageListFeatures } from './ChatMessageList/DefaultMessageItem';
 export {
   chatMessageListClasses,
   getChatMessageListUtilityClass,
@@ -187,6 +207,16 @@ export type {
 } from './ChatMessageSkeleton';
 
 // ─── ChatIndicators ───────────────────────────────────────────────────────────
+export { ChatStreamingIndicator } from './ChatIndicators/ChatStreamingIndicator';
+export type { ChatStreamingIndicatorProps } from './ChatIndicators/ChatStreamingIndicator';
+export {
+  chatStreamingIndicatorClasses,
+  getChatStreamingIndicatorUtilityClass,
+} from './ChatIndicators/chatStreamingIndicatorClasses';
+export type {
+  ChatStreamingIndicatorClasses,
+  ChatStreamingIndicatorClassKey,
+} from './ChatIndicators/chatStreamingIndicatorClasses';
 export { ChatTypingIndicator } from './ChatIndicators/ChatTypingIndicator';
 export type { ChatTypingIndicatorProps } from './ChatIndicators/ChatTypingIndicator';
 export { ChatUnreadMarker } from './ChatIndicators/ChatUnreadMarker';
@@ -217,3 +247,15 @@ export type {
   ChatUnreadMarkerClasses,
   ChatUnreadMarkerClassKey,
 } from './ChatIndicators/chatUnreadMarkerClasses';
+
+// ─── Built-in adapters (re-exported for quickstart convenience) ───────────────
+export { createAiSdkAdapter, createEchoAdapter } from '@mui/x-chat-headless';
+export type {
+  AiSdkChatInstance,
+  AiSdkUIMessageChunk,
+  CreateAiSdkAdapterChatOptions,
+  CreateAiSdkAdapterOptions,
+  CreateAiSdkAdapterRequest,
+  CreateAiSdkAdapterStreamOptions,
+  CreateEchoAdapterOptions,
+} from '@mui/x-chat-headless';

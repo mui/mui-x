@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { GridEventListener } from '../../../models/events';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
@@ -20,16 +21,16 @@ import { GridSignature } from '../../../constants/signature';
 import { useGridEvent } from '../../utils/useGridEvent';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
-  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterPipeApplier,
 } from '../../core/pipeProcessing';
-import {
-  type GridColumnDimensions,
-  type GridColumnsInitialState,
-  type GridColumnsState,
-  type GridColumnVisibilityModel,
-  EMPTY_PINNED_COLUMN_FIELDS,
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
+import { EMPTY_PINNED_COLUMN_FIELDS } from './gridColumnsInterfaces';
+import type {
+  GridColumnDimensions,
+  GridColumnsInitialState,
+  GridColumnsState,
+  GridColumnVisibilityModel,
 } from './gridColumnsInterfaces';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
@@ -231,6 +232,10 @@ export function useGridColumns(
 
   const setColumnIndex = React.useCallback<GridColumnReorderApi['setColumnIndex']>(
     (field, targetIndexPosition) => {
+      const column = apiRef.current.getColumn(field);
+      if (!column) {
+        return;
+      }
       const allColumns = gridColumnFieldsSelector(apiRef);
       const oldIndexPosition = getColumnIndexRelativeToVisibleColumns(field);
       if (oldIndexPosition === targetIndexPosition) {
@@ -248,7 +253,7 @@ export function useGridColumns(
       });
 
       const params: GridColumnOrderChangeParams = {
-        column: apiRef.current.getColumn(field),
+        column,
         targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(field),
         oldIndex: oldIndexPosition,
       };
@@ -513,6 +518,25 @@ export function useGridColumns(
       apiRef.current.setColumnVisibilityModel(props.columnVisibilityModel);
     }
   }, [apiRef, logger, props.columnVisibilityModel]);
+
+  const checkMultiSelectColumns = React.useCallback(
+    (orderedFields: string[]) => {
+      if (props.signature !== GridSignature.DataGrid) {
+        return;
+      }
+      const lookup = gridColumnLookupSelector(apiRef);
+      if (orderedFields.some((field) => lookup[field]?.type === 'multiSelect')) {
+        warnOnce([
+          'MUI X: The `multiSelect` column type is available in Pro and Premium versions',
+          'Use `<DataGridPro />` or `<DataGridPremium />` to render it correctly.',
+          'For more details, see https://mui.com/x/react-data-grid/column-definition/#multi-select-keyboard-interactions',
+        ]);
+      }
+    },
+    [apiRef, props.signature],
+  );
+
+  useGridEvent(apiRef, 'columnsChange', checkMultiSelectColumns);
 }
 
 function mergeColumnsState(columnsState: GridColumnsState) {

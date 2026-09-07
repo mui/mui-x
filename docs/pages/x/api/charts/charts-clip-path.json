@@ -19,6 +19,5 @@
   "muiName": "MuiChartsClipPath",
   "filename": "/packages/x-charts/src/ChartsClipPath/ChartsClipPath.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/components/\">Charts - Custom components</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/components/\">Charts - Custom components</a></li></ul>"
 }

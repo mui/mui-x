@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
-  type GridSlotProps,
   useGridSelector,
   getDataGridUtilityClass,
   gridRowCountSelector,
 } from '@mui/x-data-grid-pro';
+import type { GridSlotProps } from '@mui/x-data-grid-pro';
 import { vars, NotRendered } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { SidebarHeader } from '../sidebar';

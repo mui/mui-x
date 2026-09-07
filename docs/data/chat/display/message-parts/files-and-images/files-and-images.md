@@ -1,20 +1,29 @@
 ---
 productId: x-chat
-title: Files & Images
+title: Files and images
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent
 ---
 
-# Chat - Files & Images
+# Chat - Files and images
 
-<p class="description">Display file attachments and inline image previews using the <code>ChatFileMessagePart</code> type.</p>
+<p class="description">Display file attachments and inline image previews in the chat thread.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-File parts represent file attachments within a message. When the file is an image, an inline preview is rendered. For other file types, a compact chip with a document icon and filename is displayed.
+File parts represent file attachments within a message.
+When the file is an image, an inline preview is rendered.
+For other file types, a compact chip with a document icon and filename is displayed.
 
-## The file part data model
+File parts can come from the assistant or a tool (for example, generated charts or documents), and from the user—attachments added in the composer are sent as file parts on the user message.
+See [Attachments](/x/react-chat/behavior/attachments/) for the upload flow.
+
+The demo below shows a message containing an image part and a document part:
+
+{{"demo": "ChatFilePartsDemo.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## File part structure
 
 A file part is represented by the `ChatFileMessagePart` interface:
 
@@ -62,14 +71,24 @@ const message: ChatMessage = {
 
 The built-in file part renderer automatically detects images by checking whether `mediaType` starts with `'image/'`:
 
-- **Images** — rendered as an `<img>` element with inline preview, wrapped in a link to the full-size resource.
-- **Other files** — rendered as a compact chip with a document icon and the filename (or URL as fallback), linking to the file.
+- **Images**—rendered as an `<img>` preview wrapped in a link to the full-size resource. In `ChatBox`, the preview is styled as a small thumbnail inside a compact chip; use the `preview` slot or `slotProps` to render a larger preview (see the customization demo below).
+- **Other files**—rendered as a compact chip with a document icon and the filename (or URL as fallback), linking to the file.
 
-Both variants open the file in a new tab (`target="_blank"`) when clicked.
+Both variants open the file in a new tab when clicked—the link sets `target="_blank"` together with `rel="noreferrer noopener"`.
 
-## Slots
+When using the headless `FilePart` directly, the default `img` element is unstyled and renders at its natural size—constrain it through the `preview` slot or CSS (for example, `max-width`).
+
+Always provide `filename` when possible: it becomes the image's `alt` text and the chip's visible label (the document icon is hidden from assistive technology), so it is what screen readers announce for the link.
+Inside the message list, the file link participates in the roving focus model—it is reachable with the keyboard after drilling into the message with Enter.
+See [Accessibility](/x/react-chat/accessibility/#keyboard-navigation).
+
+## Slots reference
 
 The `FilePart` component exposes four slots for customization:
+
+`FilePart` is a headless building block imported from `@mui/x-chat/headless`—it has no standalone API page.
+In `ChatBox`, you configure it through [ChatMessageContent](/x/api/chat/chat-message-content/) via `slotProps.messageContent.partProps.file`, as shown below.
+For building fully custom part renderers, see [Custom parts](/x/react-chat/display/message-parts/custom-parts/).
 
 | Slot       | Default element | Description                              |
 | :--------- | :-------------- | :--------------------------------------- |
@@ -78,7 +97,11 @@ The `FilePart` component exposes four slots for customization:
 | `link`     | `a`             | Clickable link wrapping the content      |
 | `filename` | `span`          | Filename text                            |
 
-### Customizing via ChatBox
+`FilePart` does not expose utility classes.
+Style it by passing `className`/`sx` through `slotProps` (for example `slotProps: { preview: { className: 'my-preview' } }`), by replacing a slot with a styled component, or via the owner state described below for conditional styling.
+When using `ChatBox`, the Material file-part slots also respond to theme `styleOverrides` on `MuiChatMessage` (slot keys `fileRoot`, `filePreview`, `fileLink`, `fileFilename`).
+
+### Customizing via `ChatBox`
 
 Override file part rendering through `slotProps.messageContent.partProps.file`:
 
@@ -99,9 +122,13 @@ Override file part rendering through `slotProps.messageContent.partProps.file`:
 />
 ```
 
+The demo below replaces the default chip with a card-style preview:
+
+{{"demo": "ChatFilePartCustomizationDemo.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Streaming
 
-File parts arrive as a single `file` chunk in the stream — they are not delivered incrementally like text parts:
+File parts arrive as a single `file` chunk in the stream—they are not delivered incrementally like text parts:
 
 ```ts
 interface ChatFileChunk {
@@ -113,7 +140,7 @@ interface ChatFileChunk {
 }
 ```
 
-The file part is added to the message's `parts` array as soon as the chunk is received.
+The runtime appends the file part to the message's `parts` array when the chunk arrives.
 
 ## Owner state
 
@@ -128,6 +155,6 @@ The `FilePart` component computes an owner state that slot components can use fo
 
 ## See also
 
-- [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the most common part type
-- [Sources & Citations](/x/react-chat/display/message-parts/sources-and-citations/) for reference links in RAG applications
-- [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom file viewers
+- [Text and Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the most common part type
+- [Sources and citations](/x/react-chat/display/message-parts/sources-and-citations/) for reference links in RAG applications
+- [Custom parts](/x/react-chat/display/message-parts/custom-parts/) for building custom file viewers

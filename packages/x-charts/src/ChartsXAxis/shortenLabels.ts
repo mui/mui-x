@@ -1,9 +1,9 @@
 import { clampAngle } from '../internals/clampAngle';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
-import { type TickItem } from '../hooks/useTicks';
-import { type ChartsXAxisProps } from '../models/axis';
-import { type ChartDrawingArea } from '../hooks/useDrawingArea';
+import type { TickItem } from '../hooks/useTicks';
+import type { ChartsXAxisProps } from '../models/axis';
+import type { ChartDrawingArea } from '../hooks/useDrawingArea';
 
 export function shortenLabels(
   visibleLabels: Set<TickItem>,

@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
-import { type ChartsAxisSlotProps, type ChartsAxisSlots } from '../models/axis';
+import type { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
 import { useXAxes, useYAxes } from '../hooks';
 
 export type { ChartsAxisSlots, ChartsAxisSlotProps };
@@ -58,7 +58,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   );
 }
 
-ChartsAxis.propTypes = {
+ChartsAxis.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

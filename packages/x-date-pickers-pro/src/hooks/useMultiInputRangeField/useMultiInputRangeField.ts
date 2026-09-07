@@ -1,18 +1,19 @@
 'use client';
-import {
+import type {
   PickerManagerFieldInternalProps,
-  useControlledValue,
-  useFieldInternalPropsWithDefaults,
   UseFieldReturnValue,
 } from '@mui/x-date-pickers/internals';
-import { useValidation } from '@mui/x-date-pickers/validation';
-import { UseTextFieldBaseForwardedProps, useTextFieldProps } from './useTextFieldProps';
-import { useMultiInputRangeFieldSelectedSections } from './useMultiInputRangeFieldSelectedSections';
-import { PickerAnyRangeManager } from '../../internals/models/managers';
 import {
-  useMultiInputRangeFieldRootProps,
-  UseMultiInputRangeFieldRootPropsReturnValue,
-} from './useMultiInputRangeFieldRootProps';
+  useControlledValue,
+  useFieldInternalPropsWithDefaults,
+} from '@mui/x-date-pickers/internals';
+import { useValidation } from '@mui/x-date-pickers/validation';
+import type { UseTextFieldBaseForwardedProps } from './useTextFieldProps';
+import { useTextFieldProps } from './useTextFieldProps';
+import { useMultiInputRangeFieldSelectedSections } from './useMultiInputRangeFieldSelectedSections';
+import type { PickerAnyRangeManager } from '../../internals/models/managers';
+import type { UseMultiInputRangeFieldRootPropsReturnValue } from './useMultiInputRangeFieldRootProps';
+import { useMultiInputRangeFieldRootProps } from './useMultiInputRangeFieldRootProps';
 
 /**
  * Basic example:

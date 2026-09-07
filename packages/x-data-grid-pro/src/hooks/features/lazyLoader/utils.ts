@@ -1,5 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { type GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
+import { gridRowNodeSelector } from '@mui/x-data-grid';
+import type { GridRowEntry } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 interface GridRowRenderContext {
@@ -29,8 +30,14 @@ export const adjustRowParams = <T extends { start: number | string; end: number 
 
   const adjustedStart = params.start - (params.start % pageSize);
   const pageAlignedEnd = params.end + pageSize - (params.end % pageSize) - 1;
-  // rowCount of -1 means "unknown/infinite", treat same as undefined (no capping)
-  const maxEnd = rowCount !== undefined && rowCount !== -1 ? Math.max(0, rowCount - 1) : Infinity;
+  // rowCount of -1 means "unknown/infinite", treat same as undefined (no capping).
+  // The first page is never capped: it's always fetched as `{start: 0, end: pageSize - 1}`
+  // (rowCount is typically unknown at that point), so capping it here once rowCount
+  // becomes known would produce a different range and bust the cache for the
+  // post-render revalidation request, causing a spurious second `getRows` call.
+  const shouldCapByRowCount =
+    rowCount !== undefined && rowCount !== -1 && (rowCount === 0 || adjustedStart > 0);
+  const maxEnd = shouldCapByRowCount ? Math.max(0, rowCount! - 1) : Infinity;
 
   return {
     ...params,
@@ -50,6 +57,16 @@ export const findSkeletonRowsSection = ({
 }) => {
   let { firstRowIndex, lastRowIndex } = range;
   const visibleRowsSection = visibleRows.slice(range.firstRowIndex, range.lastRowIndex);
+  if (visibleRowsSection.length === 0) {
+    return undefined;
+  }
+  // The slice may be shorter than `lastRowIndex - firstRowIndex` (e.g., after a
+  // collapse shrinks visible rows below the cached viewport range). Clamp down
+  // so the external indices stay in lockstep with the slice's bounds; otherwise
+  // the returned `lastRowIndex` would point past the slice while `endIndex` only
+  // reaches `visibleRowsSection.length - 1`, drifting the two apart in the loop
+  // below and making the caller fetch a wrong range.
+  lastRowIndex = firstRowIndex + visibleRowsSection.length;
   let startIndex = 0;
   let endIndex = visibleRowsSection.length - 1;
   let isSkeletonSectionFound = false;

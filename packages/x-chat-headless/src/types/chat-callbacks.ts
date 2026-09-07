@@ -11,6 +11,7 @@ import type {
   ChatUser,
 } from './chat-entities';
 import type { ChatMessageMetadata } from './chat-type-registry';
+import type { ChatError } from './chat-error';
 
 export interface ChatOnToolCallPayload {
   toolCall: ChatToolInvocation | ChatDynamicToolInvocation;
@@ -19,6 +20,8 @@ export interface ChatOnToolCallPayload {
 export type ChatOnToolCall = (payload: ChatOnToolCallPayload) => void | Promise<void>;
 
 export type ChatOnData = (part: ChatDataMessagePart) => void | Promise<void>;
+
+export type ChatOnError = (error: ChatError) => void;
 
 export interface ChatOnFinishPayload {
   message: ChatMessage;

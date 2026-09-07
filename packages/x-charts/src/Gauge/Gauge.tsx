@@ -3,11 +3,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
-import { GaugeContainer, type GaugeContainerProps } from './GaugeContainer';
+import { GaugeContainer } from './GaugeContainer';
+import type { GaugeContainerProps } from './GaugeContainer';
 import { GaugeValueArc } from './GaugeValueArc';
 import { GaugeReferenceArc } from './GaugeReferenceArc';
-import { type GaugeClasses, getGaugeUtilityClass } from './gaugeClasses';
-import { GaugeValueText, type GaugeValueTextProps } from './GaugeValueText';
+import { getGaugeUtilityClass } from './gaugeClasses';
+import type { GaugeClasses } from './gaugeClasses';
+import { GaugeValueText } from './GaugeValueText';
+import type { GaugeValueTextProps } from './GaugeValueText';
 
 export interface GaugeProps extends GaugeContainerProps, Pick<GaugeValueTextProps, 'text'> {
   classes?: Partial<GaugeClasses>;
@@ -36,7 +39,7 @@ const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref: React.Ref<
   );
 });
 
-Gauge.propTypes = {
+Gauge.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

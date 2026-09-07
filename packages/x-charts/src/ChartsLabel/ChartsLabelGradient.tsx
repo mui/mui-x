@@ -1,14 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, type SxProps, type Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
-import {
-  type ChartsLabelGradientClasses,
-  useUtilityClasses,
-  labelGradientClasses,
-} from './labelGradientClasses';
+import { useUtilityClasses, labelGradientClasses } from './labelGradientClasses';
+import type { ChartsLabelGradientClasses } from './labelGradientClasses';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 
 export interface ChartsLabelGradientProps {

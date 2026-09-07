@@ -1,13 +1,20 @@
-import { spy } from 'sinon';
+import { config } from 'react-transition-group';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  ResourceBuilder,
+  SchedulerStoreRunner,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
-import { screen, within } from '@mui/internal-test-utils';
+import { act, screen, within, waitFor } from '@mui/internal-test-utils';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
+import { vi, describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
@@ -24,6 +31,15 @@ describe('<MonthView />', () => {
     events,
     resources: [],
   };
+
+  const manyEvents = [
+    EventBuilder.new().singleDay('2025-05-01T08:00:00Z').title('Event 1').build(),
+    EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Event 2').build(),
+    EventBuilder.new().singleDay('2025-05-01T10:00:00Z').title('Event 3').build(),
+    EventBuilder.new().singleDay('2025-05-01T11:00:00Z').title('Event 4').build(),
+    EventBuilder.new().singleDay('2025-05-01T12:00:00Z').title('Event 5').build(),
+    EventBuilder.new().singleDay('2025-05-01T13:00:00Z').title('Event 6').build(),
+  ];
 
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
@@ -59,8 +75,8 @@ describe('<MonthView />', () => {
   });
 
   it('should move to the day view when a day is clicked', async () => {
-    const handleViewChange = spy();
-    const handleVisibleDateChange = spy();
+    const handleViewChange = vi.fn();
+    const handleVisibleDateChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
         {...standaloneDefaults}
@@ -75,10 +91,10 @@ describe('<MonthView />', () => {
     const button = screen.getByRole('button', { name: '15' });
     await user.click(button);
 
-    expect(handleViewChange.calledOnce).to.equal(true);
-    expect(handleViewChange.firstCall.firstArg).to.equal('day');
-    expect(handleVisibleDateChange.calledOnce).to.equal(true);
-    expect(handleVisibleDateChange.firstCall.firstArg).toEqualDateTime(
+    expect(handleViewChange.mock.calls.length).to.equal(1);
+    expect(handleViewChange.mock.calls[0][0]).to.equal('day');
+    expect(handleVisibleDateChange.mock.calls.length).to.equal(1);
+    expect(handleVisibleDateChange.mock.calls[0][0]).toEqualDateTime(
       adapter.date('2025-05-15T00:00:00Z', 'default'),
     );
   });
@@ -96,14 +112,6 @@ describe('<MonthView />', () => {
   });
 
   it('should show "+N more..." when there are more events than fit in a cell', () => {
-    const manyEvents = [
-      EventBuilder.new().singleDay('2025-05-01T08:00:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T14:09:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T14:11:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T13:09:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T15:09:00Z').build(),
-    ];
-
     render(
       <EventCalendarProvider events={manyEvents} resources={[]}>
         <EventDialogProvider>
@@ -112,6 +120,320 @@ describe('<MonthView />', () => {
       </EventCalendarProvider>,
     );
     expect(screen.getByText(/more/i)).not.to.equal(null);
+  });
+
+  describe('Event keyboard accessibility in "more events" popover', () => {
+    async function renderAndOpenPopover({
+      theme,
+      ...providerProps
+    }: Partial<React.ComponentProps<typeof EventCalendarProvider>> & { theme?: Theme } = {}) {
+      const calendar = (
+        <EventCalendarProvider events={manyEvents} resources={[]} {...providerProps}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>
+      );
+      // The theme goes in a wrapper so `setProps` still reaches the calendar provider.
+      const { user, setProps } = render(calendar, {
+        wrapper: theme
+          ? ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          : undefined,
+      });
+      const moreButton = await screen.findByRole('button', { name: /more/i });
+      await user.click(moreButton);
+      const popover = await screen.findByRole('presentation');
+      return { user, setProps, popover };
+    }
+
+    it('should have tabindex and role="button" on events in the popover', async () => {
+      const { popover } = await renderAndOpenPopover();
+
+      const eventButtons = within(popover).getAllByRole('button');
+      expect(eventButtons.length).to.be.greaterThan(0);
+
+      eventButtons.forEach((button) => {
+        expect(button).to.have.attribute('tabindex', '0');
+        expect(button).to.have.attribute('role', 'button');
+      });
+    });
+
+    it('should allow Enter key to activate events in the popover', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      firstEventButton.focus();
+      expect(firstEventButton).to.equal(document.activeElement);
+
+      await user.keyboard('{Enter}');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+    });
+
+    it('should open the event context menu on Space, and Edit from there activates the event', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      firstEventButton.focus();
+      expect(firstEventButton).to.equal(document.activeElement);
+
+      await user.keyboard(' ');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+      });
+      expect(screen.queryByRole('dialog')).to.equal(null);
+
+      await user.click(screen.getByRole('menuitem', { name: /edit/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+    });
+
+    it('should reference resolvable header IDs in each event aria-labelledby', async () => {
+      const { popover } = await renderAndOpenPopover();
+
+      const eventButtons = within(popover).getAllByRole('button');
+      expect(eventButtons.length).to.be.greaterThan(0);
+
+      eventButtons.forEach((button) => {
+        const tokens = (button.getAttribute('aria-labelledby') ?? '').split(' ').filter(Boolean);
+        expect(tokens.length).to.be.greaterThan(0);
+        tokens.forEach((token) => {
+          expect(document.getElementById(token), `aria-labelledby token "${token}"`).not.to.equal(
+            null,
+          );
+        });
+      });
+    });
+
+    it('should close the popover when `onEventEditingStart` cancels an activation from it', async () => {
+      const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
+        eventDetails.cancel(),
+      );
+      const { user, popover } = await renderAndOpenPopover({ onEventEditingStart });
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      expect(firstEventButton.isConnected).to.equal(false);
+      const moreButton = screen.getByRole('button', { name: /more/i });
+      expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(firstEventButton);
+      expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(moreButton);
+      expect(moreButton.isConnected).to.equal(true);
+    });
+
+    it('should keep the "+N more" button as `anchor` when the cancellation comes from the armed toolbar', async () => {
+      // A coarse pointer arms first instead of opening the dialog, so the callback only fires
+      // on the toolbar's Edit — after the popover item became the built-in toolbar's anchor.
+      const originalMatchMedia = window.matchMedia;
+      window.matchMedia = (() =>
+        ({
+          matches: true,
+          addEventListener: () => {},
+          removeEventListener: () => {},
+        }) as any) as any;
+      try {
+        const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
+          eventDetails.cancel(),
+        );
+        const { user, popover } = await renderAndOpenPopover({ onEventEditingStart });
+
+        const firstEventButton = within(popover).getAllByRole('button')[0];
+        await user.click(firstEventButton);
+        expect(onEventEditingStart.mock.calls.length).to.equal(0);
+
+        const editButton = screen.getByRole('button', { name: 'Edit event' });
+        await user.click(editButton);
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        await waitFor(() => {
+          expect(document.body.contains(popover)).to.equal(false);
+        });
+
+        expect(firstEventButton.isConnected).to.equal(false);
+        const moreButton = screen.getByRole('button', { name: /more/i });
+        expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(editButton);
+        expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(moreButton);
+        expect(moreButton.isConnected).to.equal(true);
+      } finally {
+        window.matchMedia = originalMatchMedia;
+      }
+    });
+
+    it('should stay open while editing and close once the editing surface closes', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      // Activating an event opens the editing dialog; the popover stays open behind it.
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(document.body.contains(popover)).to.equal(true);
+
+      // Closing the editing surface clears the store editing state, which closes the popover with it.
+      const dialog = screen.getByRole('dialog');
+      await user.click(within(dialog).getByRole('button', { name: /close/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+    });
+
+    it('should return focus to the trigger when the editing dialog is submitted', async () => {
+      const onEventsChange = vi.fn();
+      const { user, popover } = await renderAndOpenPopover({ onEventsChange });
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+      await screen.findByRole('dialog');
+
+      // Typed into the title field rather than sent to whatever holds focus, which the dialog's
+      // focus trap settles at different moments across React versions.
+      const titleInput = await screen.findByLabelText(/event title/i);
+      await user.type(titleInput, '{Enter}');
+
+      // The dialog closing is only meaningful if the form actually submitted.
+      await waitFor(() => {
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+      });
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).to.equal(null);
+      });
+
+      // The popover closes with the editing surface, taking the focused event with it.
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      // Focus has to land back on the calendar, or the next Tab goes to the browser chrome.
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(screen.getByRole('button', { name: /more/i }));
+      });
+    });
+
+    it('should return focus to the day cell when the trigger is gone by the time the dialog is submitted', async () => {
+      // Emptying the day on submit unmounts the "+N more" button. Assigned after the render
+      // because it needs `setProps`.
+      let emptyTheDay = () => {};
+      const { user, setProps, popover } = await renderAndOpenPopover({
+        onEventsChange: () => emptyTheDay(),
+      });
+      emptyTheDay = () => setProps({ events: manyEvents.slice(0, 1) });
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+      await screen.findByRole('dialog');
+
+      const titleInput = await screen.findByLabelText(/event title/i);
+      await user.type(titleInput, '{Enter}');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /more/i })).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      const may1Cell = screen
+        .getAllByRole('gridcell')
+        .find((cell) => within(cell).queryByText(/may 1/i));
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(may1Cell);
+      });
+    });
+
+    it('should leave focus alone when it moved out of the popover while it was closing', async () => {
+      // Re-enable transitions and force a duration: the popover's `auto` duration measures 0 in
+      // jsdom, and the exit has to last long enough to move focus while it plays.
+      config.disabled = false;
+      const { user, popover } = await renderAndOpenPopover({
+        theme: createTheme({
+          components: { MuiPopover: { defaultProps: { transitionDuration: 300 } } },
+        }),
+      });
+
+      await user.keyboard('{Escape}');
+
+      // The popover is on its way out but still mounted, and its focus trap is already released.
+      expect(document.body.contains(popover), 'the popover exited too fast to move focus').to.equal(
+        true,
+      );
+      const movedTo = screen.getByRole('button', { name: '15' });
+      await act(async () => {
+        movedTo.focus();
+      });
+
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+      expect(document.activeElement).to.equal(movedTo);
+    });
+
+    it('should return focus to the trigger when the popover is dismissed without editing', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      await user.keyboard('{Escape}');
+
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(screen.getByRole('button', { name: /more/i }));
+      });
+    });
+  });
+
+  describe('creation placeholder updates', () => {
+    it('should not re-fire `onEventEditingStart` when the built-in form updates the creation placeholder', async () => {
+      let store: AnyEventCalendarStore | null = null;
+      const onEventEditingStart = vi.fn();
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={[]} onEventEditingStart={onEventEditingStart}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getAllByRole('gridcell')[10]);
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+
+      // Mirrors the built-in form pushing a date change into the draft while the dialog is open.
+      const placeholder = store!.state.occurrencePlaceholder!;
+      await act(async () => {
+        store!.setOccurrencePlaceholder({
+          ...placeholder,
+          end: adapter.addHours(placeholder.end, -1),
+        });
+      });
+
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(screen.queryByRole('dialog')).not.to.equal(null);
+    });
   });
 
   describe('All day events', () => {
@@ -296,9 +618,58 @@ describe('<MonthView />', () => {
     });
   });
 
+  describe('multi-resource events', () => {
+    const resourceA = ResourceBuilder.new().title('Room A').build();
+    const resourceB = ResourceBuilder.new().title('Room B').build();
+
+    it('should render the event once when at least one of its assigned resources is visible', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .singleDay('2025-05-01T09:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      render(
+        <EventCalendarProvider
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceB.id]: false }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.getAllByText('Team Sync')).toHaveLength(1);
+    });
+
+    it('should not render the event when all of its assigned resources are hidden', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .singleDay('2025-05-01T09:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      render(
+        <EventCalendarProvider
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceA.id]: false, [resourceB.id]: false }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.queryByText('Team Sync')).to.equal(null);
+    });
+  });
+
   describe('time navigation', () => {
     it('should go to start of previous month when clicking on the Previous Month button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -312,13 +683,13 @@ describe('<MonthView />', () => {
       const toolbar = withinEventCalendarToolbar();
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /previous month/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
     it('should go to start of next month when clicking on the Next Month button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -332,9 +703,169 @@ describe('<MonthView />', () => {
       const toolbar = withinEventCalendarToolbar();
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /next month/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
+    });
+  });
+
+  describe('aria semantics', () => {
+    it('should set aria-rowcount and aria-colcount on the grid root and aria indexes on cells', () => {
+      render(
+        <EventCalendarProvider {...standaloneDefaults}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const grid = screen.getByRole('grid');
+      expect(grid.getAttribute('aria-colcount')).to.equal('7');
+      const rowCountAttr = Number(grid.getAttribute('aria-rowcount'));
+      expect(rowCountAttr).to.be.greaterThan(1);
+
+      const headerRow = within(grid)
+        .getAllByRole('row')
+        .find((row) => row.getAttribute('aria-rowindex') === '1');
+      expect(headerRow).not.to.equal(undefined);
+
+      const headerCells = within(headerRow!).getAllByRole('columnheader');
+      expect(headerCells.length).to.equal(7);
+      headerCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 1));
+      });
+
+      const dataRows = within(grid)
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+      dataRows.forEach((row, weekIdx) => {
+        expect(row.getAttribute('aria-rowindex')).to.equal(String(weekIdx + 2));
+        const dayCells = within(row).getAllByRole('gridcell');
+        dayCells.forEach((cell, dayIdx) => {
+          expect(cell.getAttribute('aria-colindex')).to.equal(String(dayIdx + 1));
+        });
+      });
+    });
+
+    it('should keep aria-colcount=7 when showWeekNumber=true and reference the week number via aria-labelledby', () => {
+      render(
+        <EventCalendarProvider
+          {...standaloneDefaults}
+          defaultPreferences={{ showWeekNumber: true }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const grid = screen.getByRole('grid');
+      expect(grid.getAttribute('aria-colcount')).to.equal('7');
+
+      const headerRow = within(grid)
+        .getAllByRole('row')
+        .find((row) => row.getAttribute('aria-rowindex') === '1');
+      const headerCells = within(headerRow!).getAllByRole('columnheader');
+      expect(headerCells.length).to.equal(7);
+      headerCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 1));
+      });
+
+      const weekNumberLabels = document.querySelectorAll<HTMLElement>(
+        `.${eventCalendarClasses.monthViewWeekNumberCell}`,
+      );
+      expect(weekNumberLabels.length).to.be.greaterThan(0);
+      weekNumberLabels.forEach((label) => {
+        expect(label.getAttribute('aria-hidden')).to.equal('true');
+        expect(label.getAttribute('role')).to.equal(null);
+        expect(label.id).to.have.length.greaterThan(0);
+      });
+
+      const dataRows = within(grid)
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+      dataRows.forEach((row, weekIdx) => {
+        const dayCells = within(row).getAllByRole('gridcell');
+        expect(dayCells.length).to.equal(7);
+        dayCells.forEach((cell, dayIdx) => {
+          expect(cell.getAttribute('aria-colindex')).to.equal(String(dayIdx + 1));
+          const labelledBy = cell.getAttribute('aria-labelledby') ?? '';
+          expect(labelledBy.split(' ')).to.include(weekNumberLabels[weekIdx].id);
+        });
+      });
+    });
+  });
+
+  describe('weekStartsOn preference', () => {
+    it('should start each week row on Monday when weekStartsOn=1', () => {
+      // May 2025: With weekStartsOn=1 the first week row starts on Monday Apr 28.
+      // All week rows must have exactly 7 cells and the first cell of each row must be a Monday.
+      render(
+        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 1 }}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const grid = screen.getByRole('grid');
+      const dataRows = within(grid)
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+
+      // Every row must have exactly 7 gridcells — not 6 (the old getWeekNumber bug).
+      dataRows.forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.length).to.equal(7);
+      });
+    });
+
+    it('should start each week row on Sunday when weekStartsOn=0', () => {
+      render(
+        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 0 }}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const grid = screen.getByRole('grid');
+      const dataRows = within(grid)
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+
+      dataRows.forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.length).to.equal(7);
+      });
+    });
+
+    it('should display correct ISO week numbers when weekStartsOn=1 and showWeekNumber=true', () => {
+      // May 2025 week 1 starts Mon Apr 28.
+      // ISO week containing May 1 (Thu) = week 18.
+      render(
+        <EventCalendarProvider
+          {...standaloneDefaults}
+          defaultPreferences={{ weekStartsOn: 1, showWeekNumber: true }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      // ISO week 18 of 2025: Mon Apr 28 – Sun May 4 (contains May 1).
+      // The week number label for that row must be "18".
+      const weekLabels = screen
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1')
+        .map((row) => {
+          const label = row.querySelector('[aria-hidden="true"]');
+          return label ? label.textContent : null;
+        })
+        .filter(Boolean);
+
+      expect(weekLabels[0]).to.equal('18');
     });
   });
 });

@@ -4,8 +4,8 @@ import {
   gridExpandedSortedRowIdsSelector,
   gridRowNodeSelector,
   gridExpandedSortedRowIndexLookupSelector,
-  type GridRowProApi,
 } from '@mui/x-data-grid';
+import type { GridRowProApi } from '@mui/x-data-grid';
 import { useGridRowsOverridableMethodsCommunity } from '@mui/x-data-grid/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import type { ReorderExecutionContext } from '../rowReorder/types';

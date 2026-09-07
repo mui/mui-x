@@ -10,7 +10,7 @@
   </Button>
 </Stack>
 <DateField
-  inputRef={inputRef}
+  fieldRef={fieldRef}
   selectedSections={selectedSections}
   onSelectedSectionsChange={setSelectedSections}
 />

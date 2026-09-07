@@ -1,22 +1,27 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const csCZDialog: Partial<EventDialogLocaleText> = {
+const csCZDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
+  // colorSectionLabel: 'Color',
   // dateTimeSectionLabel: 'Date & time',
   // resourceColorSectionLabel: 'Resource & color',
   // allDayLabel: 'All Day',
   // closeButtonAriaLabel: 'Close',
   // closeButtonLabel: 'Close',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   // deleteEvent: 'Delete event',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   // descriptionLabel: 'Description',
   // endDateLabel: 'End date',
   // endTimeLabel: 'End time',
@@ -39,7 +44,9 @@ const csCZDialog: Partial<EventDialogLocaleText> = {
   // recurrenceTabLabel: 'Recurrence',
   // recurrenceMainSelectCustomLabel: 'Recurrence',
   // recurrenceWeeklyFrequencyLabel: 'weeks',
-  // recurrenceWeeklyPresetLabel: weekday => `Repeats weekly on ${weekday}`,
+  // recurrenceWeeklyPresetLabel: ({
+  //   weekdayName
+  // }) => `Repeats weekly on ${weekdayName}`,
   // recurrenceMonthlyFrequencyLabel: 'months',
   // recurrenceMonthlyDayOfMonthLabel: dayNumber => `Day ${dayNumber}`,
   // recurrenceMonthlyLastWeekAriaLabel: weekDay => `${weekDay} of the last week of the month`,
@@ -51,12 +58,17 @@ const csCZDialog: Partial<EventDialogLocaleText> = {
   // recurrenceYearlyFrequencyLabel: 'years',
   // recurrenceYearlyPresetLabel: date => `Repeats annually on ${date}`,
   // noResourceAriaLabel: 'No specific resource',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   // resourceLabel: 'Resource',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
+  // requiredResourceError: 'A resource is required.',
   // saveChanges: 'Save',
-  // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
+  // startDateAfterEndDateError: 'End date cannot be before start date.',
   // startDateLabel: 'Start date',
+  // startTimeAfterEndTimeError: 'End time must be after start time.',
   // startTimeLabel: 'Start time',
-  // ScopeDialog
+  // RecurringScopeDialog
   // all: 'All events',
   // cancel: 'Cancel',
   // confirm: 'Confirm',
@@ -66,12 +78,9 @@ const csCZDialog: Partial<EventDialogLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const csCZCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  // hideEventsLabel: resourceName => `Hide events for ${resourceName}`,
+const csCZCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+  // ResourcesTree
   // resourcesLabel: 'Resources',
-  // resourcesLegendSectionLabel: 'Resource legend',
-  // showEventsLabel: resourceName => `Show events for ${resourceName}`,
   // ViewSwitcher
   // agenda: 'Agenda',
   // day: 'Day',
@@ -87,18 +96,23 @@ const csCZCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // DateNavigator
   // closeSidePanel: 'Close side panel',
   // openSidePanel: 'Open side panel',
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
   // Preferences menu
   // amPm12h: '12-hour (1:00PM)',
   // hour24h: '24-hour (13:00)',
-  // preferencesMenu: 'Settings',
+  // preferencesMenu: 'Preferences',
   // showWeekends: 'Show weekends',
   // showEmptyDaysInAgenda: 'Show empty days',
   // showWeekNumber: 'Show week number',
   // timeFormat: 'Time format',
   // viewSpecificOptions: view => `${view} view options`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
   // WeekView
   // allDay: 'All day',
-  // MonthView
   // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
   // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
@@ -111,11 +125,13 @@ const csCZCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // miniCalendarLabel: 'Calendar',
   // miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
   // miniCalendarGoToNextMonth: 'Show next month in calendar',
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const csCZTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const csCZTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

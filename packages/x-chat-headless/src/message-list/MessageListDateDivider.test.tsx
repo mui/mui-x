@@ -190,4 +190,108 @@ describe('MessageListDateDivider', () => {
     expect(screen.getByRole('separator')).not.to.equal(null);
     expect(screen.getByText('March 15, 2026')).not.to.equal(null);
   });
+
+  it('renders a divider between same-UTC-day messages when shouldShowDivider returns true', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          createMessage('m1', '2026-03-15T09:00:00.000Z'),
+          createMessage('m2', '2026-03-15T10:00:00.000Z'),
+        ]}
+      >
+        <MessageListDateDivider messageId="m2" shouldShowDivider={() => true} />
+      </ChatRoot>,
+    );
+
+    expect(screen.getByRole('separator')).not.to.equal(null);
+    expect(screen.getByText('March 15, 2026')).not.to.equal(null);
+  });
+
+  it('suppresses the divider across a day boundary when shouldShowDivider returns false', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          createMessage('m1', '2026-03-15T09:00:00.000Z'),
+          createMessage('m2', '2026-03-16T08:00:00.000Z'),
+        ]}
+      >
+        <MessageListDateDivider messageId="m2" shouldShowDivider={() => false} />
+      </ChatRoot>,
+    );
+
+    expect(screen.queryByRole('separator')).to.equal(null);
+  });
+
+  it('preserves the default by-day behavior when shouldShowDivider is omitted', () => {
+    const { rerender } = render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          createMessage('m1', '2026-03-15T09:00:00.000Z'),
+          createMessage('m2', '2026-03-15T10:00:00.000Z'),
+          createMessage('m3', '2026-03-16T08:00:00.000Z'),
+        ]}
+      >
+        <MessageListDateDivider messageId="m2" />
+      </ChatRoot>,
+    );
+
+    expect(screen.queryByRole('separator')).to.equal(null);
+
+    rerender(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          createMessage('m1', '2026-03-15T09:00:00.000Z'),
+          createMessage('m2', '2026-03-15T10:00:00.000Z'),
+          createMessage('m3', '2026-03-16T08:00:00.000Z'),
+        ]}
+      >
+        <MessageListDateDivider messageId="m3" />
+      </ChatRoot>,
+    );
+
+    expect(screen.getByRole('separator')).not.to.equal(null);
+    expect(screen.getByText('March 16, 2026')).not.to.equal(null);
+  });
+
+  it('passes the documented params to shouldShowDivider for the first message', () => {
+    let received:
+      | {
+          message: ChatMessage;
+          previousMessage: ChatMessage | null;
+          index: number;
+          date: Date | null;
+          previousDate: Date | null;
+        }
+      | undefined;
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          createMessage('m1', '2026-03-15T09:00:00.000Z'),
+          createMessage('m2', '2026-03-16T08:00:00.000Z'),
+        ]}
+      >
+        <MessageListDateDivider
+          messageId="m1"
+          shouldShowDivider={(params) => {
+            received = params;
+            return false;
+          }}
+        />
+      </ChatRoot>,
+    );
+
+    expect(received).not.to.equal(undefined);
+    expect(received!.message.id).to.equal('m1');
+    expect(received!.previousMessage).to.equal(null);
+    expect(received!.index).to.equal(0);
+    expect(received!.date).not.to.equal(null);
+    expect(received!.date!.toISOString()).to.equal('2026-03-15T09:00:00.000Z');
+    expect(received!.previousDate).to.equal(null);
+  });
 });

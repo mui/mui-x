@@ -12,6 +12,7 @@ export default function CustomHandlers() {
     dataSet: 'Commodity',
     rowLength: 200,
     editable: true,
+    multiSelect: true,
   });
 
   const apiRef = useGridApiRef();

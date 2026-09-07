@@ -2,8 +2,8 @@ import { useRotationScale } from '../../hooks/useScale';
 import { useRadarSeries } from '../../hooks/useRadarSeries';
 import { useRadiusAxes } from '../../hooks/useAxis';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
-import { type SeriesId } from '../../models/seriesType/common';
-import { type UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { SeriesId } from '../../models/seriesType/common';
+import type { UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 

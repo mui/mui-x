@@ -12,7 +12,9 @@ The brush interaction enables users to select chart regions by clicking and drag
 It captures the start and current positions of the selection, which you can use for:
 
 - Highlighting trends or clusters within a defined range
+
 <!-- - Zooming in on a selected region to focus on specific data points   -->
+
 - Selecting data points for further inspection, editing, or annotation
 - Triggering callbacks or custom events based on the selection area
 

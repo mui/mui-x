@@ -9,8 +9,8 @@ import {
   gridRowsLoadingSelector,
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
-  type GridGroupNode,
 } from '@mui/x-data-grid-pro';
+import type { GridGroupNode } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { GridAggregationRowOverlay } from './GridAggregationRowOverlay';
 import { useGridRootProps } from '../typeOverloads/reexports';
@@ -59,7 +59,7 @@ export function GridBottomContainer(props: GridBottomContainerProps) {
     <Element
       {...other}
       className={clsx(classes.root, gridClasses['container--bottom'])}
-      role="presentation"
+      role="none"
     >
       {hasAggregation && isLoading && aggregationPosition === 'footer' ? (
         <GridAggregationRowOverlay />

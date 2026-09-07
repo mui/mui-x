@@ -1,13 +1,15 @@
 'use client';
 import { useTheme } from '@mui/material/styles';
+import PropTypes from 'prop-types';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { usePieSeriesContext, usePieSeriesLayout } from '../hooks/usePieSeries';
-import { PieArc, type PieArcProps } from './PieArc';
+import { PieArc } from './PieArc';
+import type { PieArcProps } from './PieArc';
 import { useUtilityClasses } from './pieClasses';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { getModifiedArcProperties } from './dataTransform/getModifiedArcProperties';
 
-export function FocusedPieArc(
+function FocusedPieArc(
   props: Partial<
     Omit<
       PieArcProps,
@@ -44,6 +46,10 @@ export function FocusedPieArc(
 
   const item = series.data[focusedItem.dataIndex];
 
+  if (!item || item.hidden) {
+    return null;
+  }
+
   const { arcLabelRadius, ...arcSizes } = getModifiedArcProperties(
     series,
     pieSeriesLayout[focusedItem.seriesId],
@@ -73,3 +79,26 @@ export function FocusedPieArc(
     />
   );
 }
+
+FocusedPieArc.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  cornerRadius: PropTypes.number,
+  innerRadius: PropTypes.number,
+  outerRadius: PropTypes.number,
+  paddingAngle: PropTypes.number,
+  /**
+   * If `true`, the animation is disabled.
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * If `true`, the default event handlers are disabled.
+   * Those are used, for example, to display a tooltip or highlight the arc on hover.
+   */
+  skipInteraction: PropTypes.bool,
+} as any;
+
+export { FocusedPieArc };

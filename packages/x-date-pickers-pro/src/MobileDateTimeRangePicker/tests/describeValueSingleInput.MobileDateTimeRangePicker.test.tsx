@@ -1,5 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
-import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import type { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -9,6 +9,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
+import { describe } from 'vitest';
 
 describe('<MobileDateTimeRangePicker /> - Describe Value Single Input', () => {
   const { render } = createPickerRenderer();

@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
 const columns = [
-  { field: 'city' },
+  { field: 'city', rowHeader: true },
   { field: 'oct', type: 'number', valueFormatter: (value) => `${value} °C` },
   { field: 'nov', type: 'number', valueFormatter: (value) => `${value} °C` },
   { field: 'dec', type: 'number', valueFormatter: (value) => `${value} °C` },

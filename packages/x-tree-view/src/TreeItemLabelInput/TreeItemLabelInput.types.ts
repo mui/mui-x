@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { TreeViewCancellableEventHandler } from '../models';
+import type * as React from 'react';
+import type { TreeViewCancellableEventHandler } from '../models';
 
 export interface TreeItemLabelInputProps {
   value?: string;

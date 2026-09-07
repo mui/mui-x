@@ -1,4 +1,4 @@
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
+import type { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
 
 export type DateTimeRangePickerView = Exclude<DateOrTimeViewWithMeridiem, 'month' | 'year'>;
 

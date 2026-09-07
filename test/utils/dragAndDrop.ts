@@ -1,10 +1,5 @@
 export type DragEventTypes =
-  | 'dragStart'
-  | 'dragOver'
-  | 'dragEnter'
-  | 'dragLeave'
-  | 'dragEnd'
-  | 'drop';
+  'dragStart' | 'dragOver' | 'dragEnter' | 'dragLeave' | 'dragEnd' | 'drop';
 
 export class MockedDataTransfer implements DataTransfer {
   data: Record<string, string>;

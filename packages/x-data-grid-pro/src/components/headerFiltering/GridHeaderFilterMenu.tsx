@@ -2,14 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import capitalize from '@mui/utils/capitalize';
 import HTMLElementType from '@mui/utils/HTMLElementType';
-import {
-  useGridRootProps,
-  useGridApiContext,
-  GridMenu,
-  type GridFilterOperator,
-  type GridFilterItem,
-  type GridColDef,
-} from '@mui/x-data-grid';
+import { useGridRootProps, useGridApiContext, GridMenu } from '@mui/x-data-grid';
+import type { GridFilterOperator, GridFilterItem, GridColDef } from '@mui/x-data-grid';
 
 interface GridHeaderFilterMenuProps {
   field: GridColDef['field'];
@@ -92,7 +86,7 @@ function GridHeaderFilterMenu({
   );
 }
 
-GridHeaderFilterMenu.propTypes = {
+GridHeaderFilterMenu.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -123,6 +117,7 @@ GridHeaderFilterMenu.propTypes = {
         className: PropTypes.string,
         clearButton: PropTypes.node,
         disabled: PropTypes.bool,
+        disableDebounce: PropTypes.bool,
         focusElementRef: PropTypes.oneOfType([
           PropTypes.func,
           PropTypes.shape({

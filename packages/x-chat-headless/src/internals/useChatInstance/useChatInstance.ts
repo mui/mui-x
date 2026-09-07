@@ -3,12 +3,8 @@ import * as React from 'react';
 import { useStoreEffect } from '@mui/x-internals/store';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { chatSelectors } from '../../selectors';
-import {
-  ChatStore,
-  type ChatStoreParameters,
-  type ControlledModel,
-  type ChatStoreConstructor,
-} from '../../store';
+import { ChatStore } from '../../store';
+import type { ChatStoreParameters, ControlledModel, ChatStoreConstructor } from '../../store';
 import type { ChatInternalState } from '../../types';
 
 export function useChatInstance<Cursor = string>(
@@ -55,7 +51,9 @@ export function useChatInstance<Cursor = string>(
     warningPrefix: 'MUI X Chat',
     componentName: 'ChatProvider',
     propName: 'activeConversationId',
-    controlled: parameters.activeConversationId,
+    controlled: parameters.activeConversationIdControlled
+      ? (parameters.activeConversationId ?? null)
+      : undefined,
     defaultValue: parameters.initialActiveConversationId,
   });
   useAssertModelConsistency({
@@ -78,7 +76,7 @@ export function useChatInstance<Cursor = string>(
       syncingControlledModels.add('conversations');
     }
 
-    if (parameters.activeConversationId !== undefined) {
+    if (parameters.activeConversationIdControlled) {
       syncingControlledModels.add('activeConversationId');
     }
 
@@ -109,7 +107,7 @@ export function useChatInstance<Cursor = string>(
       syncingControlledModels.add('conversations');
     }
 
-    if (parameters.activeConversationId !== undefined) {
+    if (parameters.activeConversationIdControlled) {
       syncingControlledModels.add('activeConversationId');
     }
 

@@ -1,5 +1,5 @@
-import { ComponentNameToClassKey, ComponentsPropsList } from '@mui/material/styles';
-import { CSSObject, CSSInterpolation, Interpolation } from '@mui/system';
+import type { ComponentNameToClassKey, ComponentsPropsList } from '@mui/material/styles';
+import type { CSSObject, CSSInterpolation, Interpolation } from '@mui/system';
 /**
  * All standard components exposed by `material-ui` are `StyledComponents` with
  * certain `classes`, on which one can also set a top-level `className` and inline

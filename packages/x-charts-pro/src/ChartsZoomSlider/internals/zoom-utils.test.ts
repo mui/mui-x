@@ -1,5 +1,6 @@
+import { describe, it, expect } from 'vitest';
 import { calculateZoomEnd, calculateZoomStart, calculateZoomFromPointImpl } from './zoom-utils';
-import { type ZoomData } from '../../models';
+import type { ZoomData } from '../../models';
 
 describe('Zoom Utils', () => {
   describe('calculateZoomStart', () => {

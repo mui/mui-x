@@ -77,7 +77,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span>...</span>",
+      "default": "() => <span>…</span>",
       "signature": {
         "type": "function() => React.ReactNode",
         "describedArgs": [],
@@ -240,6 +240,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateCalendar/DateCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li>\n<li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li>\n<li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>"
 }

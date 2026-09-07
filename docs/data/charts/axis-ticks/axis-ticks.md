@@ -27,6 +27,20 @@ In this Demo the horizontal grid is customized with some CSS selectors.
 
 {{"demo": "GridDemo.js", "defaultCodeOpen": false}}
 
+### Labels on the grid
+
+When horizontal space is limited, you can remove the y-axis and display its values on the grid lines instead.
+
+Set the y-axis `width` to `0` so that it stops reserving space, then provide a component to the `yAxis` slot.
+The `useYAxisTicks()` hook returns the ticks of an axis, and `useDrawingArea()` returns the area in which the data is drawn.
+Together, they let you place one label above each grid line.
+
+:::info
+Setting `position: 'none'` also frees the space, but the axis is then removed from the chart, and the `yAxis` slot is no longer rendered.
+:::
+
+{{"demo": "GridLabels.js"}}
+
 ## Tick position
 
 ### Automatic tick position

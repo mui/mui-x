@@ -1,4 +1,4 @@
-import { TreeViewItemId } from '@mui/x-tree-view/models';
+import type { TreeViewItemId } from '@mui/x-tree-view/models';
 
 export type DataSource<R extends {}> = {
   /**

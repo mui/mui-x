@@ -39,3 +39,14 @@ The example below demonstrates two customizations:
 - **Markdown preview**: Renders markdown content as formatted HTML
 
 {{"demo": "LongTextCustomPopupContent.js", "disableAd": true, "bg": "inline"}}
+
+## Custom multi-select chips [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+To customize the chip appearance, customize the cell with the `GridMultiSelectCell` and `GridEditMultiSelectCell` components. Pass a function to `slotProps.chip` to derive chip props from each value.
+
+The demo below shows two customizations:
+
+- **Colored chips**: maps each tag to a different chip color
+- **Avatar chips**: adds an avatar to each assignee chip
+
+{{"demo": "MultiSelectCustomChips.js", "disableAd": true, "bg": "inline"}}

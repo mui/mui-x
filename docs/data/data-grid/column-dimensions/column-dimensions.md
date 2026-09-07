@@ -124,6 +124,8 @@ This example uses `ReactDOM.flushSync`. If used incorrectly it can hurt the perf
 
 ### Autosizing virtualized columns
 
+Autosizing measures the cells currently rendered in the DOM. When row virtualization is enabled and the rows do not all fit in the viewport, cells from off-screen rows are not measured.
+
 Use `autoSizeColumns({ disableColumnVirtualization: true})` to include columns that are not visible in the DOM due to column virtualization.
 
 :::warning

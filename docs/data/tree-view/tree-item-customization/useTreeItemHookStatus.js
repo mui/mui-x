@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import AdjustIcon from '@mui/icons-material/Adjust';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
 import ExpandCircleDownRoundedIcon from '@mui/icons-material/ExpandCircleDownRounded';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
@@ -24,7 +25,7 @@ import {
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemLabelInput } from '@mui/x-tree-view/TreeItemLabelInput';
-import { MUI_X_PRODUCTS } from './products';
+import { MUI_X_PRODUCTS } from '../datasets/disabledAndEditableProducts';
 
 function StatusLegend() {
   return (
@@ -49,6 +50,10 @@ function StatusLegend() {
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {STATUS_ICONS.selected}
           <Typography variant="body2">selected</Typography>
+        </Stack>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          {STATUS_ICONS.indeterminate}
+          <Typography variant="body2">indeterminate</Typography>
         </Stack>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {STATUS_ICONS.expandable}
@@ -86,6 +91,7 @@ function StatusLegend() {
 const STATUS_ICONS = {
   focused: <AdjustIcon color="primary" fontSize="small" />,
   selected: <CheckCircleOutlinedIcon color="success" fontSize="small" />,
+  indeterminate: <RemoveCircleOutlinedIcon color="success" fontSize="small" />,
   expandable: <ExpandCircleDownOutlinedIcon color="secondary" fontSize="small" />,
   expanded: <ExpandCircleDownRoundedIcon color="secondary" fontSize="small" />,
   disabled: <CancelOutlinedIcon color="action" fontSize="small" />,
@@ -150,7 +156,7 @@ export default function useTreeItemHookStatus() {
         <RichTreeView
           items={MUI_X_PRODUCTS}
           defaultExpandedItems={['pickers']}
-          defaultSelectedItems={'pickers'}
+          defaultSelectedItems={'pickers-pro'}
           slots={{ item: CustomTreeItem }}
           isItemDisabled={(item) => Boolean(item?.disabled)}
           isItemEditable={(item) => Boolean(item?.editable)}

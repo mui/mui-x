@@ -1,8 +1,7 @@
-import {
-  describeTreeView,
-  DescribeTreeViewRendererReturnValue,
-} from 'test/utils/tree-view/describeTreeView';
-import { TreeViewAnyStore } from '../models';
+import type { DescribeTreeViewRendererReturnValue } from 'test/utils/tree-view/describeTreeView';
+import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
+import { describe, it, expect } from 'vitest';
+import type { TreeViewAnyStore } from '../models';
 
 describeTreeView<TreeViewAnyStore>('TreeViewStyleContext component', ({ render }) => {
   describe('slots (expandIcon, collapseIcon, endIcon, icon)', () => {

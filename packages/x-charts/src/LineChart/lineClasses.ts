@@ -1,7 +1,6 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { type SeriesId } from '../models/seriesType/common';
 
 export interface LineClasses {
   /** Styles applied to the area element. */
@@ -24,15 +23,7 @@ export interface LineClasses {
 
 export type LineClassKey = keyof LineClasses;
 
-export interface MarkElementOwnerState {
-  seriesId: SeriesId;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<LineClasses>;
-  skipAnimation?: boolean;
-}
-
-export function getLineUtilityClass(slot: string) {
+function getLineUtilityClass(slot: string) {
   return generateUtilityClass('MuiLineChart', slot);
 }
 

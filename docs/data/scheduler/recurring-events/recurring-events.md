@@ -7,7 +7,7 @@ githubLabel: 'scope: scheduler'
 
 # Scheduler - Recurring Events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Define recurring events.</p>
+<p class="description">Use RRULE strings to create repeating events with daily, weekly, monthly, or yearly patterns.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -34,10 +34,12 @@ rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] }
 :::
 
 :::info
-**Standards compliance**: This scheduler follows the iCalendar **RRULE** standard from **RFC 5545**. We do not support every rule or combination yet. If you want more information about a specific rule, see **[RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10)**.
+**Standards compliance**: This scheduler follows the iCalendar RRULE standard from RFC 5545.
+It does not support every rule or combination yet.
+For more information about specific rules, see [RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10).
 :::
 
-The `EventCalendarPremium` and the `EventTimelinePremium` expand recurring events only for the visible range, keeps the original duration and handles all-day and multi-day spans.
+The `EventCalendarPremium` and `EventTimelinePremium` expand recurring events only for the visible range, keep the original duration, and handle all-day and multi-day spans.
 
 {{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -46,8 +48,9 @@ The `EventCalendarPremium` and the `EventTimelinePremium` expand recurring event
 The RRULE string is composed of semicolon-separated `KEY=VALUE` pairs.
 The two fundamental properties are:
 
-- **`FREQ`** — the base frequency of the rule: `DAILY`, `WEEKLY`, `MONTHLY`, or `YEARLY`.
-- **`INTERVAL`** _(optional, defaults to `1`)_ — at which intervals the recurrence repeats. For example, within a `DAILY` rule, a value of `8` means every eight days.
+- `FREQ`: the base frequency of the rule: `DAILY`, `WEEKLY`, `MONTHLY`, or `YEARLY`.
+- `INTERVAL` _(optional, defaults to `1`)_: at which intervals the recurrence repeats.
+  For example, within a `DAILY` rule, a value of `8` means every eight days.
 
 ### Daily frequency
 
@@ -141,5 +144,6 @@ Use either the `COUNT` or the `UNTIL` property if you want to put an end boundar
   ```
 
   :::success
-  The `UNTIL` property is inclusive. This means that if it matches the date of an event occurrence, this occurrence will be included.
+  The `UNTIL` property is inclusive.
+  This means that if it matches the date of an event occurrence, this occurrence will be included.
   :::

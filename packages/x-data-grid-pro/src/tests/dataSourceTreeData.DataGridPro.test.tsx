@@ -1,21 +1,19 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPro,
-  type DataGridProProps,
-  GRID_ROOT_GROUP_ID,
-  type GridApi,
-  type GridDataSource,
-  type GridGetRowsParams,
-  type GridGetRowsResponse,
-  type GridGroupNode,
-  useGridApiRef,
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPro, GRID_ROOT_GROUP_ID, useGridApiRef } from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridApi,
+  GridDataSource,
+  GridGetRowsParams,
+  GridGetRowsResponse,
+  GridGroupNode,
 } from '@mui/x-data-grid-pro';
-import { spy } from 'sinon';
-import { getCell, getRow } from 'test/utils/helperFn';
+import { actSleep, getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, onTestFinished, describe, it, expect } from 'vitest';
 
 const dataSetOptions = {
   dataSet: 'Employee' as const,
@@ -27,18 +25,34 @@ const pageSizeOptions = [5, 10, 50];
 
 const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 
+const SUPPORTS_ACTIVITY = 'Activity' in React;
+
 // Needs layout
 describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
-  const fetchRowsSpy = spy();
+  const fetchRowsSpy = vi.fn();
 
   let apiRef: RefObject<GridApi | null>;
   let mockServer: ReturnType<typeof useMockServer>;
 
+  // The mock server uses random data, so row 0 isn't guaranteed to be a
+  // parent — find the first one that is.
+  function findFirstParentRow() {
+    const tree = apiRef.current!.state.rows.tree;
+    const rootChildren = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
+    for (let i = 0; i < rootChildren.length; i += 1) {
+      const node = tree[rootChildren[i]];
+      if (node?.type === 'group') {
+        return { index: i, id: rootChildren[i] as string, cell: getCell(i, 0) };
+      }
+    }
+    throw new Error('No parent row found in root group');
+  }
+
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
     }, []);
     return null;
   }
@@ -114,46 +128,91 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   it('should fetch the data on initial render', async () => {
     render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
   });
 
   it('should re-fetch the data on filter change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
     setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
+    });
+  });
+
+  describe('incomplete filter items', () => {
+    it('should not send a filter item without a value to the data source', async () => {
+      render(<TestDataSource dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
+      });
+
+      await act(async () => {
+        apiRef.current!.upsertFilterItem({
+          id: 1,
+          field: 'name',
+          operator: 'contains',
+          value: 'John',
+        });
+      });
+      await waitFor(() => {
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
+      });
+
+      await act(async () => {
+        apiRef.current!.upsertFilterItem({ id: 1, field: 'name', operator: 'contains' });
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.mock.calls.length).to.equal(3);
+      });
+      const url = new URL(fetchRowsSpy.mock.lastCall?.[0]);
+      expect(JSON.parse(url.searchParams.get('filterModel')!).items).to.deep.equal([]);
+    });
+
+    it('should not re-fetch when the change only adds an incomplete item', async () => {
+      render(<TestDataSource dataSourceCache={null} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
+      });
+
+      await act(async () => {
+        apiRef.current!.upsertFilterItem({ id: 1, field: 'name', operator: 'contains' });
+      });
+      await actSleep(50);
+
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
   });
 
   it('should re-fetch the data on sort change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
     setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
   });
 
   it('should re-fetch the data on pagination change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
     setProps({ paginationModel: { page: 1, pageSize: 10 } });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
   });
 
   it('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
-    const localFetchRowsSpy = spy();
-    const { unmount } = render(
+    const localFetchRowsSpy = vi.fn();
+    const { setProps, unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -162,25 +221,26 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
 
     await waitFor(() => {
-      expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
-    vi.useFakeTimers();
-    localFetchRowsSpy.resetHistory();
+    const callCountAfterFirstFetch = localFetchRowsSpy.mock.calls.length;
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // With `dataSourceRevalidateMs` set, the grid refetches on an interval, so
+    // the call count keeps growing on its own without any further prop change.
+    await waitFor(() => {
+      expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(callCountAfterFirstFetch);
     });
 
-    expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
-
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should periodically revalidate expanded nested rows when dataSourceRevalidateMs is set', async () => {
-    const localFetchRowsSpy = spy();
-    const { user, unmount } = render(
+    const localFetchRowsSpy = vi.fn();
+    const { setProps, user, unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -189,53 +249,51 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
 
     await waitFor(() => {
-      expect(localFetchRowsSpy.callCount).to.equal(1);
+      expect(localFetchRowsSpy.mock.calls.length).to.equal(1);
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
-    const cell11 = getCell(0, 0);
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
     });
 
-    vi.useFakeTimers();
-    localFetchRowsSpy.resetHistory();
+    localFetchRowsSpy.mockClear();
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // The expanded group is revalidated on the interval; wait for one of those
+    // background nested requests (a call carrying `groupKeys`) to be issued.
+    await waitFor(() => {
+      const hasNestedGroupRequest = localFetchRowsSpy.mock.calls.some((call) => {
+        const url = new URL(call[0] as string);
+        const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+        return groupKeys.length > 0;
+      });
+      expect(hasNestedGroupRequest).to.equal(true);
     });
 
-    const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
-      const url = new URL(call.firstArg as string);
-      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
-      return groupKeys.length > 0;
-    });
-
-    expect(hasNestedGroupRequest).to.equal(true);
-
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should keep selected nested rows selected during background nested revalidation', async () => {
-    const { user, unmount } = render(
+    const { setProps, user, unmount } = render(
       <TestDataSource dataSourceCache={null} dataSourceRevalidateMs={1} />,
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
-    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
-    const cell11 = getCell(0, 0);
+    const { id: expandedRowId, cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
       const expandedNode = apiRef.current!.state.rows.tree[expandedRowId] as GridGroupNode;
       expect(expandedNode.children.length).to.be.greaterThan(0);
     });
@@ -247,29 +305,29 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
     expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
 
-    vi.useFakeTimers();
-    fetchRowsSpy.resetHistory();
+    fetchRowsSpy.mockClear();
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // Wait for a background nested revalidation (a call carrying `groupKeys`).
+    await waitFor(() => {
+      const hasNestedGroupRequest = fetchRowsSpy.mock.calls.some((call) => {
+        const url = new URL(call[0] as string);
+        const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+        return groupKeys.length > 0;
+      });
+      expect(hasNestedGroupRequest).to.equal(true);
     });
-
-    const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
-      const url = new URL(call.firstArg as string);
-      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
-      return groupKeys.length > 0;
-    });
-    expect(hasNestedGroupRequest).to.equal(true);
 
     expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
 
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should not set children loading state during background nested revalidation', async () => {
-    const localFetchRowsSpy = spy();
-    const { user, unmount } = render(
+    const localFetchRowsSpy = vi.fn();
+    const { setProps, user, unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -278,43 +336,42 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
 
     await waitFor(() => {
-      expect(localFetchRowsSpy.callCount).to.equal(1);
+      expect(localFetchRowsSpy.mock.calls.length).to.equal(1);
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
-    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
-    const cell11 = getCell(0, 0);
+    const { id: expandedRowId, cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
     });
 
-    const setChildrenLoadingSpy = spy(apiRef.current!.dataSource, 'setChildrenLoading');
+    const setChildrenLoadingSpy = vi.spyOn(apiRef.current!.dataSource, 'setChildrenLoading');
+    onTestFinished(() => setChildrenLoadingSpy.mockRestore());
 
-    vi.useFakeTimers();
-    localFetchRowsSpy.resetHistory();
-    setChildrenLoadingSpy.resetHistory();
+    localFetchRowsSpy.mockClear();
+    setChildrenLoadingSpy.mockClear();
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // Wait for a background nested revalidation (a call carrying `groupKeys`)...
+    await waitFor(() => {
+      const hasNestedGroupRequest = localFetchRowsSpy.mock.calls.some((call) => {
+        const url = new URL(call[0] as string);
+        const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+        return groupKeys.length > 0;
+      });
+      expect(hasNestedGroupRequest).to.equal(true);
     });
 
-    const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
-      const url = new URL(call.firstArg as string);
-      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
-      return groupKeys.length > 0;
-    });
-    expect(hasNestedGroupRequest).to.equal(true);
-
-    const hasLoadingTrueCall = setChildrenLoadingSpy
-      .getCalls()
-      .some((call) => call.args[0] === expandedRowId && call.args[1] === true);
-    setChildrenLoadingSpy.restore();
+    // ...and confirm it never put the expanded group into a loading state.
+    const hasLoadingTrueCall = setChildrenLoadingSpy.mock.calls.some(
+      (call) => call[0] === expandedRowId && call[1] === true,
+    );
     expect(hasLoadingTrueCall).to.equal(false);
 
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
@@ -342,18 +399,16 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
-    const cell11 = getCell(0, 0);
+    const { id: expandedRowId, cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
       expect(apiRef.current!.state.rows.tree[testRowId]).not.to.equal(undefined);
     });
 
@@ -362,7 +417,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(3);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(3);
       expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
     });
   });
@@ -374,22 +429,26 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       throw new Error('apiRef.current.state is not defined');
     }
 
-    expect(fetchRowsSpy.callCount).to.equal(1);
+    expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     await waitFor(() => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
-    const cell11 = getCell(0, 0);
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
 
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
   });
 
   it('should keep the nested data visible after the root level re-fetch and remove any stale rows', async () => {
@@ -411,7 +470,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
 
     await waitFor(() => {
@@ -421,19 +480,23 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     // the second row is part of the tree
     expect(apiRef.current!.state.rows.tree[testRowId]).not.to.equal(undefined);
 
-    // expand the first row
-    const cell11 = getCell(0, 0);
+    // expand the first parent row
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
 
     // children are part of the tree
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
 
     // refetch the root level
     act(() => {
@@ -441,49 +504,57 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(3);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(3);
     });
 
-    // children are still part of the tree
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
-
-    // test row is not part of the tree anymore
-    expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
+    // children are still part of the tree, and the stale test row has been
+    // removed once the background re-fetch settles.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+      expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
+    });
   });
 
   it('should collapse the nested data if refetching the root level with `keepChildrenExpanded` set to `false`', async () => {
     const { user } = render(<TestDataSource dataSourceCache={null} />);
 
-    expect(fetchRowsSpy.callCount).to.equal(1);
+    expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     await waitFor(() => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
-    const cell11 = getCell(0, 0);
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
     });
 
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
 
-    fetchRowsSpy.resetHistory();
+    fetchRowsSpy.mockClear();
 
     act(() => {
       apiRef.current?.dataSource.fetchRows(undefined, { keepChildrenExpanded: false });
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     });
 
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+    // Children collapse once the re-fetch settles, leaving only the root rows.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+    });
   });
 
   // https://github.com/mui/mui-x/issues/21269
@@ -556,6 +627,90 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
   });
 
+  // The `dataSourceKeepPreviousData` prop must be a no-op for tree-data, otherwise the
+  // existing tree is merged on top of the new response and rows render in stale order.
+  // Regression coverage for https://github.com/mui/mui-x/pull/21619 + the follow-up to
+  // https://github.com/mui/mui-x/pull/22465.
+  it('should still update root row order on params change with `dataSourceKeepPreviousData` enabled', async () => {
+    function TestComponent(props: { sortModel?: DataGridProProps['sortModel'] }) {
+      apiRef = useGridApiRef();
+      const { sortModel } = props;
+      const dataSource: GridDataSource = React.useMemo(() => {
+        const rootRows = [
+          { id: 'A', name: 'A', descendantCount: 1 },
+          { id: 'B', name: 'B', descendantCount: 0 },
+        ];
+        const childRows = [{ id: 'A-1', name: 'A1', descendantCount: 0 }];
+
+        return {
+          getRows: async (params: GridGetRowsParams) => {
+            if (params.groupKeys!.length === 0) {
+              const shouldReverse =
+                params.sortModel[0]?.field === 'name' && params.sortModel[0]?.sort === 'desc';
+              const rows = shouldReverse ? rootRows.toReversed() : rootRows;
+              return { rows, rowCount: rows.length };
+            }
+
+            if (params.groupKeys![0] === 'A') {
+              return { rows: childRows, rowCount: childRows.length };
+            }
+
+            return { rows: [], rowCount: 0 };
+          },
+          getGroupKey: (row) => row.name,
+          getChildrenCount: (row) => row.descendantCount,
+        };
+      }, []);
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }]}
+            dataSource={dataSource}
+            dataSourceKeepPreviousData
+            sortModel={sortModel}
+            treeData
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    // `dataSourceKeepPreviousData` is a no-op for tree data, so it also emits a dev warning.
+    let renderResult!: ReturnType<typeof render>;
+    await expect(async () => {
+      renderResult = render(<TestComponent />);
+      await waitFor(() => {
+        const rootChildren = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+          .children;
+        expect(rootChildren).to.deep.equal(['A', 'B']);
+      });
+    }).toWarnDev(
+      [
+        'MUI X: The `dataSourceKeepPreviousData` prop only applies to flat data.',
+        'It is ignored when tree data or row grouping is enabled, because the rows are always reset on refetch to keep their order consistent with the response.',
+        'For more details, see https://mui.com/x/react-data-grid/server-side-data/#keep-previous-data-while-fetching.',
+      ].join('\n'),
+    );
+
+    const { user, setProps } = renderResult;
+
+    await user.click(within(getCell(0, 0)).getByRole('button'));
+
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.tree['A-1']).not.to.equal(undefined);
+    });
+
+    setProps({ sortModel: [{ field: 'name', sort: 'desc' }] });
+
+    await waitFor(() => {
+      const rootChildren = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+        .children;
+      expect(rootChildren).to.deep.equal(['B', 'A']);
+    });
+  });
+
   it('should fetch nested data when calling API method `dataSource.fetchRows`', async () => {
     render(<TestDataSource />);
 
@@ -563,28 +718,30 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       throw new Error('apiRef.current.state is not defined');
     }
 
-    expect(fetchRowsSpy.callCount).to.equal(1);
+    expect(fetchRowsSpy.mock.calls.length).to.equal(1);
 
     await waitFor(() => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
-    const firstChildId = (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
+    const { id: firstChildId, cell: cell11 } = findFirstParentRow();
 
     await act(async () => {
       apiRef.current?.dataSource.fetchRows(firstChildId);
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
     });
 
-    const cell11 = getCell(0, 0);
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
   });
 
   // https://github.com/mui/mui-x/issues/21263
@@ -656,7 +813,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       throw new Error('apiRef.current.state is not defined');
     }
 
-    expect(fetchRowsSpy.callCount).to.equal(1);
+    expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     await waitFor(() => {
       expect(apiRef.current!.state.rows.groupsToFetch?.length).to.be.greaterThan(0);
     });
@@ -690,15 +847,124 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-    // Expand the first row
-    const cell = getCell(0, 0);
+    // Expand the first parent row
+    const { cell } = findFirstParentRow();
     await user.click(within(cell).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
     });
 
-    // Collapse the first row
+    // Collapse the first parent row
     await user.click(within(cell).getByRole('button'));
   });
+  if (SUPPORTS_ACTIVITY) {
+    // https://github.com/mui/mui-x/issues/23262
+    describe('Activity', () => {
+      const NESTED_DATA: Record<string, any[]> = {
+        '[]': [
+          { id: 'g1', name: 'Group 1', descendantCount: 50 },
+          { id: 'g2', name: 'Group 2', descendantCount: 50 },
+        ],
+        '["Group 1"]': Array.from({ length: 50 }, (_, i) => ({
+          id: `g1-c${i}`,
+          name: `G1 Child ${i}`,
+          descendantCount: 0,
+        })),
+        '["Group 2"]': Array.from({ length: 50 }, (_, i) => ({
+          id: `g2-c${i}`,
+          name: `G2 Child ${i}`,
+          descendantCount: 0,
+        })),
+      };
+
+      function countSkeletonRows(api: GridApi) {
+        return Object.values(api.state.rows.tree).filter((node) => node.type === 'skeletonRow')
+          .length;
+      }
+
+      function TestActivity(props: { activityMode?: 'visible' | 'hidden'; rowCount?: number }) {
+        const { activityMode = 'visible', rowCount } = props;
+        apiRef = useGridApiRef();
+
+        const dataSource: GridDataSource = React.useMemo(
+          () => ({
+            getRows: async (params: GridGetRowsParams) => {
+              const rows = NESTED_DATA[JSON.stringify(params.groupKeys)] ?? [];
+              const start = typeof params.start === 'number' ? params.start : 0;
+              const end = typeof params.end === 'number' ? params.end + 1 : rows.length;
+              return { rows: rows.slice(start, end), rowCount: rows.length };
+            },
+            getGroupKey: (row) => row.name,
+            getChildrenCount: (row) => row.descendantCount,
+          }),
+          [],
+        );
+
+        return (
+          <React.Activity mode={activityMode}>
+            <div style={{ width: 400, height: 400 }}>
+              <DataGridPro
+                apiRef={apiRef}
+                columns={[{ field: 'name', width: 200 }]}
+                dataSource={dataSource}
+                treeData
+                lazyLoading
+                disableVirtualization
+                rowCount={rowCount}
+              />
+            </div>
+          </React.Activity>
+        );
+      }
+
+      it('should keep the loaded children, the skeleton rows and the expansion state when it becomes visible', async () => {
+        const { setProps, user } = render(<TestActivity />);
+
+        await waitFor(() => {
+          expect(apiRef.current!.state.rows.tree.g1).not.to.equal(undefined);
+        });
+
+        await user.click(getCell(0, 0).querySelector('button')!);
+
+        await waitFor(() => {
+          const node = apiRef.current!.state.rows.tree.g1 as GridGroupNode;
+          expect(node.childrenExpanded).to.equal(true);
+          expect(node.children.length).to.be.greaterThan(0);
+        });
+
+        const childrenBefore = (apiRef.current!.state.rows.tree.g1 as GridGroupNode).children
+          .length;
+        const skeletonRowsBefore = countSkeletonRows(apiRef.current!);
+
+        await act(async () => {
+          setProps({ activityMode: 'hidden' });
+        });
+        await act(async () => {
+          setProps({ activityMode: 'visible' });
+        });
+
+        const node = apiRef.current!.state.rows.tree.g1 as GridGroupNode;
+        expect(node.children.length).to.equal(childrenBefore);
+        expect(node.childrenExpanded).to.equal(true);
+        expect(countSkeletonRows(apiRef.current!)).to.equal(skeletonRowsBefore);
+      });
+
+      it('should still apply a `rowCount` prop update when it becomes visible', async () => {
+        const { setProps } = render(<TestActivity />);
+
+        await waitFor(() => {
+          expect(apiRef.current!.state.rows.tree.g1).not.to.equal(undefined);
+        });
+
+        await act(async () => {
+          setProps({ rowCount: 99 });
+        });
+
+        await waitFor(() => {
+          expect(apiRef.current!.state.rows.totalRowCount).to.equal(99);
+        });
+      });
+    });
+  }
 });

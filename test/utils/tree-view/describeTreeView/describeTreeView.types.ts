@@ -7,6 +7,7 @@ import {
   TreeViewSlots,
   UseTreeViewStoreParameters,
 } from '@mui/x-tree-view/internals';
+import type { MuiRenderResult } from '@mui/internal-test-utils';
 
 export type DescribeTreeViewTestRunner<TStore extends TreeViewAnyStore> = (
   params: DescribeTreeViewTestRunnerParams<TStore>,
@@ -18,6 +19,10 @@ export interface TreeViewItemIdTreeElement {
 }
 
 export interface DescribeTreeViewRendererUtils {
+  /**
+   * A userEvent instance for simulating real user interactions.
+   */
+  user: MuiRenderResult['user'];
   /**
    * Returns the `root` slot of the Tree View.
    * @returns {HTMLElement} `root` slot of the Tree View.

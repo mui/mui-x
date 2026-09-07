@@ -8,5 +8,7 @@
     "shape": { "description": "The shape of the marker." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" }
+  }
 }

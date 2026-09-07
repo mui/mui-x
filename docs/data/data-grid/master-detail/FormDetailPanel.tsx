@@ -94,7 +94,7 @@ function DetailPanelContent({ row }: { row: Customer }) {
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Order ID' },
-  { field: 'customer', headerName: 'Customer', width: 200 },
+  { field: 'customer', headerName: 'Customer', width: 200, rowHeader: true },
   { field: 'email', headerName: 'Email', width: 200 },
 ];
 

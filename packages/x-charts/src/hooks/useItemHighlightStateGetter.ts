@@ -1,8 +1,8 @@
 'use client';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartsHighlightStateCallback } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.selectors';
-import { type UseChartHighlightSignature } from '../plugins';
-import { type ChartSeriesType } from '../models/seriesType/config';
+import type { UseChartHighlightSignature } from '../plugins';
+import type { ChartSeriesType } from '../models/seriesType/config';
 
 /**
  * A hook to get a callback that returns the highlight state of an item.

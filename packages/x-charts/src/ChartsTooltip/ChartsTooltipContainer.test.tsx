@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { clearWarningsCache } from '@mui/x-internals/warning';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('ChartsTooltipContainer', () => {
   const { render } = createRenderer();

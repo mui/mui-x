@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { DesktopDatePickerProps } from './DesktopDatePicker.types';
-import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
+import type { DesktopDatePickerProps } from './DesktopDatePicker.types';
+import type { DatePickerViewRenderers } from '../DatePicker/shared';
+import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { validateDate, extractValidationProps } from '../validation';
-import { DateView, PickerOwnerState } from '../models';
+import type { DateView, PickerOwnerState } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { DateField } from '../DateField';
 import { renderDateViewCalendar } from '../dateViewRenderers';
@@ -83,7 +84,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker(
   return renderPicker();
 }) as DesktopDatePickerComponent;
 
-DesktopDatePicker.propTypes = {
+DesktopDatePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -302,7 +303,7 @@ DesktopDatePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

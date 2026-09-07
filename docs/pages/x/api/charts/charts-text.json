@@ -16,6 +16,5 @@
   "muiName": "MuiChartsText",
   "filename": "/packages/x-charts/src/ChartsText/ChartsText.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li>\n<li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li>\n<li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>"
 }

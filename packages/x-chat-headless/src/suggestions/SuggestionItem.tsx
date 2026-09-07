@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { useSuggestionsContext } from './internals/SuggestionsContext';
-import { type SuggestionItemOwnerState } from './suggestions.types';
+import type { SuggestionItemOwnerState } from './suggestions.types';
 
 export interface SuggestionItemSlots {
   root: React.ElementType;
@@ -51,8 +51,17 @@ export const SuggestionItem = React.forwardRef(function SuggestionItem(
   );
 
   const handleClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
+    (
+      event: React.MouseEvent<HTMLButtonElement>,
+      externalOnClick?: React.MouseEventHandler<HTMLButtonElement>,
+    ) => {
       onClick?.(event);
+
+      if (event.defaultPrevented) {
+        return;
+      }
+
+      externalOnClick?.(event);
 
       if (!event.defaultPrevented) {
         context?.onSelect(value);
@@ -70,12 +79,21 @@ export const SuggestionItem = React.forwardRef(function SuggestionItem(
     additionalProps: {
       ref,
       type: 'button' as const,
-      onClick: handleClick,
       ...getDataAttributes({
         index,
       }),
     },
-  });
+  }) as React.ButtonHTMLAttributes<HTMLButtonElement> & React.RefAttributes<HTMLButtonElement>;
+  const externalOnClick = rootProps.onClick;
 
-  return <Root {...rootProps}>{children ?? displayLabel}</Root>;
+  return (
+    <Root
+      {...rootProps}
+      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+        handleClick(event, externalOnClick);
+      }}
+    >
+      {children ?? displayLabel}
+    </Root>
+  );
 }) as SuggestionItemComponent;

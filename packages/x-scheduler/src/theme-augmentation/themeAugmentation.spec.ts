@@ -38,5 +38,33 @@ createTheme({
         },
       },
     },
+    MuiEventSkeleton: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid MuiEventSkeleton class key
+        invalidClassKey: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+    MuiEventErrorContainer: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        alert: {
+          backgroundColor: 'green',
+        },
+        message: {
+          backgroundColor: 'yellow',
+        },
+        // @ts-expect-error invalid MuiEventErrorContainer class key
+        invalidClassKey: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
   },
 });

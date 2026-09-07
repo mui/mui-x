@@ -1,21 +1,14 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
+import { gridRowTreeSelector, useFirstRender } from '@mui/x-data-grid';
+import type { GridColDef, GridRenderCellParams, GridGroupNode, GridRowId } from '@mui/x-data-grid';
 import {
-  gridRowTreeSelector,
-  useFirstRender,
-  type GridColDef,
-  type GridRenderCellParams,
-  type GridGroupNode,
-  type GridRowId,
-} from '@mui/x-data-grid';
-import {
-  type GridPipeProcessor,
   GridStrategyGroup,
-  type GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
 } from '@mui/x-data-grid/internals';
+import type { GridPipeProcessor, GridStrategyProcessor } from '@mui/x-data-grid/internals';
 import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
