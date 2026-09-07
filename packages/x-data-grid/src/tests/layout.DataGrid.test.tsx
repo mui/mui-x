@@ -950,6 +950,10 @@ describe('<DataGrid /> - Layout & warnings', () => {
           const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
           expect(maxScrollLeft).to.be.greaterThan(scroller.clientWidth);
 
+          // The content is wider than the viewport, so the overlay sits at its static position
+          // rather than being pushed by the scroll. It has to cover the viewport already.
+          expectOverlayToCoverTheViewport(scroller, overlay);
+
           await act(async () => {
             // In RTL, `scrollLeft` goes from 0 (scrolled to the start) to `-maxScrollLeft`
             scroller.scrollLeft = direction === 'rtl' ? -maxScrollLeft : maxScrollLeft;
