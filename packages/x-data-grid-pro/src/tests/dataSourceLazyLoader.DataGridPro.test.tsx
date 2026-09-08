@@ -705,7 +705,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     // Context: https://github.com/mui/mui-x/issues/22730
     describe('row selection', () => {
       it('should keep a selected parent selected when its children load', async () => {
-        render(<TestNestedDataSourceLazyLoader dataSourceCache={null} onFetchRows={spy()} />);
+        render(<TestNestedDataSourceLazyLoader dataSourceCache={null} onFetchRows={vi.fn()} />);
         await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
         // Select the collapsed parent row A. Its children are skeleton rows.
@@ -725,7 +725,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       it('should not add skeleton rows to the selection model when selecting a collapsed parent', async () => {
-        render(<TestNestedDataSourceLazyLoader dataSourceCache={null} onFetchRows={spy()} />);
+        render(<TestNestedDataSourceLazyLoader dataSourceCache={null} onFetchRows={vi.fn()} />);
         await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
         await act(async () => apiRef.current?.selectRow('A', true, true));
@@ -739,7 +739,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         render(
           <TestNestedDataSourceLazyLoader
             dataSourceCache={null}
-            onFetchRows={spy()}
+            onFetchRows={vi.fn()}
             rowSelectionPropagation={{ parents: false, descendants: false }}
           />,
         );
@@ -760,7 +760,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         render(
           <TestNestedDataSourceLazyLoader
             dataSourceCache={null}
-            onFetchRows={spy()}
+            onFetchRows={vi.fn()}
             checkboxSelection
             rowSelectionPropagation={{ parents: true, descendants: true }}
           />,
