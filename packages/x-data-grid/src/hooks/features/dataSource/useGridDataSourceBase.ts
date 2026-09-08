@@ -132,7 +132,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         gridColumnLookupSelector(apiRef),
       );
 
-      if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
+      if (parentId != null && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
         options.fetchRowChildren?.([parentId], [fetchParams], showChildrenLoading);
         return;
       }

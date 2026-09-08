@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "9.12.0",
+  "version": "9.13.0",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Tree View components.",
   "license": "MIT",
@@ -41,10 +41,8 @@
     "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:^",
-    "@types/react-transition-group": "catalog:",
     "clsx": "catalog:",
-    "prop-types": "catalog:",
-    "react-transition-group": "catalog:"
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",

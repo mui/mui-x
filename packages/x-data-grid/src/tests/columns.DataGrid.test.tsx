@@ -198,4 +198,27 @@ describe('<DataGrid /> - Columns', () => {
       filterable: true,
     });
   });
+
+  describe('resize cleanup', () => {
+    // Regression test for https://github.com/mui/mui-x/pull/23431
+    it('should not crash when unmounting while the document has no body', async () => {
+      const { unmount } = render(<TestDataGrid />);
+
+      const { body } = document;
+      body.remove();
+
+      let error: unknown;
+      try {
+        await act(async () => {
+          unmount();
+        });
+      } catch (err) {
+        error = err;
+      } finally {
+        document.documentElement.appendChild(body);
+      }
+
+      expect(error).to.equal(undefined);
+    });
+  });
 });
