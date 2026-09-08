@@ -61,10 +61,12 @@ describe('dependencyArrowRouting', () => {
   });
 
   describe('buildDependencyArrowRoutes', () => {
-    it('should always end with a horizontal segment entering the target edge', () => {
-      // Whatever the type and the anchors (timeline edges included), the arrowhead
-      // must sit on a horizontal segment pointing into the target edge: rightwards
-      // into a start edge, leftwards into an end edge.
+    it('should always leave and enter horizontally through the right edges', () => {
+      // Whatever the type and the anchors (timeline edges included): the route leaves
+      // the source edge outwards, the arrowhead sits on a horizontal segment pointing
+      // into the target edge (rightwards into a start edge, leftwards into an end
+      // edge), every segment is orthogonal and every point stays inside the events
+      // area.
       const xs = [0, 5, 20, 50, 700, 1400, 1428, EVENTS_WIDTH];
       const ys = [5, 40];
       const types = ['FinishToStart', 'StartToStart', 'FinishToFinish', 'StartToFinish'] as const;
@@ -73,6 +75,7 @@ describe('dependencyArrowRouting', () => {
       const anchorsOf = (edge: 'start' | 'end') =>
         xs.filter((x) => (edge === 'start' ? x < EVENTS_WIDTH : x > 0));
       for (const type of types) {
+        const leavingDirection = type.startsWith('Finish') ? 1 : -1;
         const enteringDirection = type.endsWith('Start') ? 1 : -1;
         const sourceXs = anchorsOf(type.startsWith('Finish') ? 'end' : 'start');
         const targetXs = anchorsOf(type.endsWith('Start') ? 'start' : 'end');
@@ -88,13 +91,20 @@ describe('dependencyArrowRouting', () => {
                   EVENTS_WIDTH,
                 );
                 for (const points of routes) {
-                  const [before, last] = points.slice(-2);
                   const label = `${type} (${sourceX}, ${sourceY}) → (${targetX}, ${targetY})`;
+                  const [first, second] = points;
+                  expect(first.y, label).to.equal(second.y);
+                  expect(Math.sign(second.x - first.x), label).to.equal(leavingDirection);
+                  const [before, last] = points.slice(-2);
                   expect(last.y, label).to.equal(before.y);
                   expect(Math.sign(last.x - before.x), label).to.equal(enteringDirection);
-                  for (const point of points) {
+                  points.forEach((point) => {
                     expect(point.x, label).to.be.within(0, EVENTS_WIDTH);
-                  }
+                  });
+                  points.slice(1).forEach((point, index) => {
+                    const previous = points[index];
+                    expect(point.x === previous.x || point.y === previous.y, label).to.equal(true);
+                  });
                 }
               }
             }
@@ -212,7 +222,7 @@ describe('dependencyArrowRouting', () => {
       ]);
     });
 
-    it('should render a short straight arrow overlapping the predecessor between two adjacent events', () => {
+    it('should render a short straight arrow overlapping the source between two adjacent events', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: 50, y: 5 },
         { x: 50, y: 5 },

@@ -19,7 +19,7 @@ import {
 } from '@mui/x-scheduler/internals';
 
 // A release day: every dependency has a business reason, and each type and arrow
-// shape appears once, in its own stretch of the day so no route crosses another event.
+// shape appears once, in its own stretch of the day so the arrows stay apart.
 const resources: SchedulerResource[] = [
   { id: 'backend', title: 'Backend' },
   { id: 'frontend', title: 'Frontend' },

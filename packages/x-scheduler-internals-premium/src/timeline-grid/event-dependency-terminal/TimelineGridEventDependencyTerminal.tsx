@@ -12,7 +12,6 @@ import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { useEventDependencyDropTarget } from '../event/useEventDependencyDropTarget';
 import { TimelineGridEventDependencyTerminalDataAttributes } from './TimelineGridEventDependencyTerminalDataAttributes';
-import type { DependencyTerminalDragData } from './dependencyTerminalDragData';
 
 /**
  * The terminal on one edge of an event: dragging it onto another event or terminal
@@ -99,6 +98,4 @@ export namespace TimelineGridEventDependencyTerminal {
      */
     side?: SchedulerEventSide;
   }
-
-  export type DragData = DependencyTerminalDragData;
 }

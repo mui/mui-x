@@ -7,9 +7,9 @@ import {
   eventB,
   getOccurrences,
   LANE_1_CENTER,
-  LANE_METRICS,
-  RESOURCE_1,
-  RESOURCE_2,
+  laneMetrics,
+  resource1,
+  resource2,
 } from '../../tests/dependencyGeometryTestUtils';
 
 // Overlaps event-a → lane 2 of its row. 11:00–15:00 UTC → x 660 to 900.
@@ -17,7 +17,7 @@ const eventD = EventBuilder.new()
   .id('event-d')
   .singleDay('2024-01-15T11:00:00Z', 240)
   .toProcessed();
-const LANE_2_CENTER = LANE_1_CENTER + LANE_METRICS.laneMinHeight + LANE_METRICS.laneGap;
+const LANE_2_CENTER = LANE_1_CENTER + laneMetrics.laneMinHeight + laneMetrics.laneGap;
 
 describe('dependencyAnchorResolver', () => {
   describe('getAppearances', () => {
@@ -25,8 +25,8 @@ describe('dependencyAnchorResolver', () => {
       const [occurrence] = getOccurrences([eventA]);
       const resolver = buildResolver({
         resources: [
-          { resource: RESOURCE_1, occurrences: [occurrence] },
-          { resource: RESOURCE_2, occurrences: [occurrence] },
+          { resource: resource1, occurrences: [occurrence] },
+          { resource: resource2, occurrences: [occurrence] },
         ],
         rowPositions: [0, 62],
       });
@@ -40,7 +40,7 @@ describe('dependencyAnchorResolver', () => {
 
     it('should resolve an event outside the endpoint filter through the targeted scan', () => {
       const resolver = buildResolver({
-        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+        resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
         rowPositions: [0],
         endpointIds: new Set(['event-a']),
       });
@@ -60,7 +60,7 @@ describe('dependencyAnchorResolver', () => {
     it('should place the edges on the lane center of the appearance', () => {
       const [occurrenceA, occurrenceD] = getOccurrences([eventA, eventD]);
       const resolver = buildResolver({
-        resources: [{ resource: RESOURCE_1, occurrences: [occurrenceA, occurrenceD] }],
+        resources: [{ resource: resource1, occurrences: [occurrenceA, occurrenceD] }],
         rowPositions: [0],
       });
       const anchorA = { rowIndex: 0, resourceId: 'r1', occurrence: occurrenceA };
@@ -76,8 +76,8 @@ describe('dependencyAnchorResolver', () => {
       const [occurrence] = getOccurrences([eventB]);
       const resolver = buildResolver({
         resources: [
-          { resource: RESOURCE_1, occurrences: [] },
-          { resource: RESOURCE_2, occurrences: [occurrence] },
+          { resource: resource1, occurrences: [] },
+          { resource: resource2, occurrences: [occurrence] },
         ],
         rowPositions: [0, 62],
       });
@@ -90,7 +90,7 @@ describe('dependencyAnchorResolver', () => {
     it('should use the precomputed position of an occurrence when provided', () => {
       const [occurrence] = getOccurrences([eventA]);
       const resolver = buildResolver({
-        resources: [{ resource: RESOURCE_1, occurrences: [occurrence] }],
+        resources: [{ resource: resource1, occurrences: [occurrence] }],
         rowPositions: [0],
         positionByOccurrenceKey: new Map([
           [
@@ -110,7 +110,7 @@ describe('dependencyAnchorResolver', () => {
     it('should return the box of every occurrence of the row, cached per row', () => {
       const [occurrenceA, occurrenceD] = getOccurrences([eventA, eventD]);
       const resolver = buildResolver({
-        resources: [{ resource: RESOURCE_1, occurrences: [occurrenceA, occurrenceD] }],
+        resources: [{ resource: resource1, occurrences: [occurrenceA, occurrenceD] }],
         rowPositions: [0],
       });
 
@@ -128,8 +128,8 @@ describe('dependencyAnchorResolver', () => {
     it('should report a row the virtualizer has not measured yet', () => {
       const resolver = buildResolver({
         resources: [
-          { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-          { resource: RESOURCE_2, occurrences: getOccurrences([eventB]) },
+          { resource: resource1, occurrences: getOccurrences([eventA]) },
+          { resource: resource2, occurrences: getOccurrences([eventB]) },
         ],
         rowPositions: [0],
       });
@@ -146,8 +146,8 @@ describe('dependencyAnchorResolver', () => {
       const [occurrence] = getOccurrences([eventA]);
       const resolver = buildResolver({
         resources: [
-          { resource: RESOURCE_1, occurrences: [occurrence] },
-          { resource: RESOURCE_2, occurrences: [occurrence] },
+          { resource: resource1, occurrences: [occurrence] },
+          { resource: resource2, occurrences: [occurrence] },
         ],
         rowPositions: [0, 62],
       });
@@ -167,7 +167,7 @@ describe('dependencyAnchorResolver', () => {
 
     it('should anchor on the requested edge', () => {
       const resolver = buildResolver({
-        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA]) }],
+        resources: [{ resource: resource1, occurrences: getOccurrences([eventA]) }],
         rowPositions: [0],
       });
 
@@ -178,8 +178,8 @@ describe('dependencyAnchorResolver', () => {
     it('should return null when the appearance row is not laid out or the event is unknown', () => {
       const resolver = buildResolver({
         resources: [
-          { resource: RESOURCE_1, occurrences: [] },
-          { resource: RESOURCE_2, occurrences: getOccurrences([eventA]) },
+          { resource: resource1, occurrences: [] },
+          { resource: resource2, occurrences: getOccurrences([eventA]) },
         ],
         rowPositions: [0],
       });

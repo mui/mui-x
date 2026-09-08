@@ -13,8 +13,4 @@ export enum TimelineGridEventDependencyTerminalDataAttributes {
    * Always present; the event edge the terminal sits on: `"start"` or `"end"`.
    */
   side = 'data-side',
-  /**
-   * Present on the terminal the pending create-dependency gesture would drop on.
-   */
-  dropTarget = 'data-dependency-drop-target',
 }

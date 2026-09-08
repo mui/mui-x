@@ -8,13 +8,13 @@ import type {
 } from '@mui/x-scheduler-internals-premium/models';
 import { createDependencyAnchorResolver } from '../content/timeline-dependency-arrows/dependencyAnchorResolver';
 
-// Shared by the anchor resolver and the arrow geometry tests. Lives in `tests/` so
+// Shared by the dependency tests, the anchor resolver and the arrow geometry ones included. Lives in `tests/` so
 // the declaration build (which excludes that folder) never follows its `test/utils`
 // import outside the package.
 
 export const collectionStart = adapter.date('2024-01-15', 'default');
 export const collectionEnd = adapter.endOfDay(collectionStart);
-export const FULL_DAY_AXIS: TimelineAxis = {
+export const fullDayAxis: TimelineAxis = {
   start: collectionStart,
   end: collectionEnd,
   dayStartMinute: 0,
@@ -23,12 +23,12 @@ export const FULL_DAY_AXIS: TimelineAxis = {
 
 // 1440 minutes in the collection and eventsWidth = 1440 → 1px per minute.
 export const EVENTS_WIDTH = 1440;
-export const LANE_METRICS = { topPadding: 16, laneMinHeight: 30, laneGap: 4 };
+export const laneMetrics = { topPadding: 16, laneMinHeight: 30, laneGap: 4 };
 // One-lane rows: the anchor sits at rowPosition + topPadding + laneMinHeight / 2.
-export const LANE_1_CENTER = LANE_METRICS.topPadding + LANE_METRICS.laneMinHeight / 2;
+export const LANE_1_CENTER = laneMetrics.topPadding + laneMetrics.laneMinHeight / 2;
 
-export const RESOURCE_1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
-export const RESOURCE_2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
+export const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
+export const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
 
 // 10:00–12:00 UTC → x 600 to 720. 13:00–14:00 UTC → x 780 to 840.
 export const eventA = EventBuilder.new()
@@ -75,10 +75,10 @@ export function buildResolver(parameters: {
     adapter,
     resources: parameters.resources,
     rowPositions: parameters.rowPositions,
-    axis: parameters.axis ?? FULL_DAY_AXIS,
+    axis: parameters.axis ?? fullDayAxis,
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,
     eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
-    laneMetrics: LANE_METRICS,
+    laneMetrics,
     endpointIds: parameters.endpointIds,
   });
 }

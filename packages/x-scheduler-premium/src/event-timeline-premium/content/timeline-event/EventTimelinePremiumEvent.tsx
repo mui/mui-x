@@ -8,7 +8,6 @@ import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import type { SchedulerDependencySourceDescription } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
@@ -134,6 +133,15 @@ const EventTimelinePremiumEventResizeHandler = styled(TimelineGrid.EventResizeHa
   },
 });
 
+// TODO(dependencies public flip, #23420): move to localeText. Hardcoded while the feature has
+// no public API.
+const DEPENDENCY_SOURCE_DESCRIPTIONS: Record<SchedulerDependencyType, (title: string) => string> = {
+  FinishToStart: (title) => `Cannot start until ${title} finishes.`,
+  StartToStart: (title) => `Cannot start until ${title} starts.`,
+  FinishToFinish: (title) => `Cannot finish until ${title} finishes.`,
+  StartToFinish: (title) => `Cannot finish until ${title} starts.`,
+};
+
 export const EventTimelinePremiumEvent = React.forwardRef(function EventTimelinePremiumEvent(
   props: EventTimelinePremiumEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -235,7 +243,9 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         // through the self-referential `aria-labelledby`; the `aria-describedby`
         // reference still picks it up.
         <span id={`${id}-dependencies`} style={visuallyHidden} aria-hidden>
-          {dependencySources.map(describeDependencySource).join(' ')}
+          {dependencySources
+            .map((source) => DEPENDENCY_SOURCE_DESCRIPTIONS[source.type](source.title))
+            .join(' ')}
         </span>
       )}
       {isRecurring && (
@@ -250,16 +260,3 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     </TimelineGrid.Event>
   );
 });
-
-// TODO(dependencies public flip, #23420): move to localeText. Hardcoded while the feature has
-// no public API.
-const DEPENDENCY_SOURCE_DESCRIPTIONS: Record<SchedulerDependencyType, (title: string) => string> = {
-  FinishToStart: (title) => `Cannot start until ${title} finishes.`,
-  StartToStart: (title) => `Cannot start until ${title} starts.`,
-  FinishToFinish: (title) => `Cannot finish until ${title} finishes.`,
-  StartToFinish: (title) => `Cannot finish until ${title} starts.`,
-};
-
-function describeDependencySource(source: SchedulerDependencySourceDescription): string {
-  return DEPENDENCY_SOURCE_DESCRIPTIONS[source.type](source.title);
-}

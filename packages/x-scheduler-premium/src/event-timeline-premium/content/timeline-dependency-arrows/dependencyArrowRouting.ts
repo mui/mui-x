@@ -28,10 +28,8 @@ const DEPENDENCY_ARROW_TARGET_CLEARANCE =
  * right: the types leaving from the start edge mirror their anchors around the events
  * area, route, and mirror back. That leaves two shapes, opposite edges (FS, mirrored
  * SF) and same edges (FF, mirrored SS).
- * `detourOffset` is how far from the source anchor the detouring routes (the S route,
- * and the same-edges route between same-height anchors) run their horizontal detour —
- * it must clear the event's edge, otherwise the route overlaps the events and reads
- * as a knot instead of a detour.
+ * `detourOffset` is how far from the source anchor a detour runs: it must clear the
+ * event's edge, otherwise the route reads as a knot.
  * Routes stay inside `[0, eventsWidth]`: at a timeline edge the stubs ride over the
  * event instead of leaving the visible area.
  */
@@ -120,7 +118,8 @@ function routeOppositeEdges(
 
 /**
  * Exit to the right off the source, wrap past the rightmost anchor and enter the
- * target from the right. A target before or after the source only moves the wrap.
+ * target from the right. A target before or after the source only moves the wrap;
+ * same-height anchors detour below the events instead.
  */
 function routeSameEdges(
   source: DependencyArrowPoint,

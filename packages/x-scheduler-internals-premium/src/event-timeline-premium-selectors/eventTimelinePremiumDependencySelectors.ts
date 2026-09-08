@@ -26,9 +26,6 @@ const activeModelListSelector = createSelectorMemoized(
 );
 
 export interface SchedulerDependencySourceDescription {
-  /**
-   * The title of the source event.
-   */
   title: string;
   type: SchedulerDependencyType;
 }
@@ -117,6 +114,13 @@ export const eventTimelinePremiumDependencySelectors = {
    * and resolves normally.
    */
   selectedId: selectedIdSelector,
+  /**
+   * The selected dependency, or `null`.
+   */
+  selectedModel: (state: State) => {
+    const selectedId = selectedIdSelector(state);
+    return selectedId === null ? null : (state.dependencyModelLookup.get(selectedId) ?? null);
+  },
   /**
    * Whether the dependency cannot be deleted because one of its events is read-only.
    * Unknown ids resolve to `false`.

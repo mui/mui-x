@@ -13,6 +13,7 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-se
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import { getDependencyEdges } from '@mui/x-scheduler-internals-premium/internals';
 import type { SchedulerDependencyCreation } from '@mui/x-scheduler-internals-premium/models';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
@@ -50,12 +51,6 @@ const DependencyTerminalsLayer = styled('div', {
   // terminals win the ties and paint above the arrows and their click hit-areas
   // without lifting anything else with them. Below the pinned title cells (z-index 3).
   zIndex: 2,
-  // A selected arrow's delete button sits right where the target's edge terminal is:
-  // with a selection the terminals let the pointer through. Nothing is lost, pressing
-  // a terminal with a selection already deselects before any drag starts.
-  '&[data-dependency-selected] [data-dependency-terminal]': {
-    pointerEvents: 'none',
-  },
 });
 
 // TODO(dependencies public flip): add an `eventDependencyTerminal` utility class (the
@@ -112,6 +107,12 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
   '&[data-dependency-drop-target]': {
     backgroundColor: (theme.vars || theme).palette.success.main,
   },
+  // The selected arrow's delete button replaces its arrowhead right where the
+  // target's edge terminal sits: that terminal steps aside while the selection lasts.
+  '&[data-dependency-muted]': {
+    opacity: 0,
+    pointerEvents: 'none',
+  },
   '&[data-side="start"]': {
     '--terminal-anchor': '-100%',
     '&::before': {
@@ -124,6 +125,8 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
 
 const TERMINAL_SIDES: readonly SchedulerEventSide[] = ['start', 'end'];
 
+type TerminalGestureRole = 'source' | 'target' | 'drop' | null;
+
 interface DependencyTerminalProps {
   eventId: SchedulerEventId;
   occurrenceKey: string;
@@ -132,13 +135,14 @@ interface DependencyTerminalProps {
   color: string;
   left: number;
   top: number;
-  gestureRole: 'source' | 'target' | 'drop' | null;
+  gestureRole: TerminalGestureRole;
+  muted: boolean;
 }
 
 // Primitive props only, so the memo holds: a creation transition re-renders the
 // layer, and only the gesture's terminals (whose role changed) re-render with it.
 const DependencyTerminal = React.memo(function DependencyTerminal(props: DependencyTerminalProps) {
-  const { eventId, occurrenceKey, resourceId, side, color, left, top, gestureRole } = props;
+  const { eventId, occurrenceKey, resourceId, side, color, left, top, gestureRole, muted } = props;
   return (
     <EventTimelinePremiumDependencyTerminal
       eventId={eventId}
@@ -148,6 +152,7 @@ const DependencyTerminal = React.memo(function DependencyTerminal(props: Depende
       data-palette={color}
       data-visible={gestureRole === null ? undefined : ''}
       data-dependency-drop-target={gestureRole === 'drop' ? '' : undefined}
+      data-dependency-muted={muted ? '' : undefined}
       style={{ left, top }}
     />
   );
@@ -187,7 +192,7 @@ function DependencyTerminalsLayerImpl() {
   const store = useEventTimelinePremiumStoreContext();
 
   const creation = useStore(store, eventTimelinePremiumDependencySelectors.creation);
-  const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
+  const selected = useStore(store, eventTimelinePremiumDependencySelectors.selectedModel);
   // Subscribed (not read inline like the per-event flags) because a global `readOnly`
   // flip changes no event or occurrence, so nothing else would re-render the layer.
   useStore(store, (state) => state.readOnly);
@@ -350,6 +355,11 @@ function DependencyTerminalsLayerImpl() {
     return null;
   }
 
+  // The edge terminal of the selected arrow's target, which its delete button covers.
+  const mutedEdge =
+    selected === null
+      ? null
+      : { eventId: selected.target, side: getDependencyEdges(selected.type).target };
   const terminals: React.ReactElement[] = [];
   // `lastRowIndex` is exclusive, like the virtualizer's render range it comes from.
   const endRowIndex = Math.min(lastGeometryRowIndex, resources.length);
@@ -395,6 +405,9 @@ function DependencyTerminalsLayerImpl() {
             side={side}
             color={color}
             gestureRole={getTerminalGestureRole(creation, occurrence.key, rowResourceId, side)}
+            muted={
+              mutedEdge !== null && mutedEdge.eventId === occurrence.id && mutedEdge.side === side
+            }
             // Clamped at the collection edges: the outside circle would overflow the
             // events area and be clipped by the viewport, so it slides back over the
             // event to stay reachable.
@@ -411,11 +424,7 @@ function DependencyTerminalsLayerImpl() {
   }
 
   return (
-    <DependencyTerminalsLayer
-      ref={layerRef}
-      data-dependency-selected={selectedId === null ? undefined : ''}
-      style={{ width: eventsWidth, height }}
-    >
+    <DependencyTerminalsLayer ref={layerRef} style={{ width: eventsWidth, height }}>
       {terminals}
     </DependencyTerminalsLayer>
   );
@@ -431,7 +440,7 @@ function getTerminalGestureRole(
   occurrenceKey: string,
   resourceId: SchedulerResourceId,
   side: SchedulerEventSide,
-): 'source' | 'target' | 'drop' | null {
+): TerminalGestureRole {
   if (creation === null) {
     return null;
   }

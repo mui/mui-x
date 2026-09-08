@@ -20,8 +20,8 @@ import {
   EVENTS_WIDTH,
   getOccurrences,
   LANE_1_CENTER,
-  RESOURCE_1,
-  RESOURCE_2,
+  resource1,
+  resource2,
 } from '../../tests/dependencyGeometryTestUtils';
 
 // Mirrors the axis filter of the occurrence selector: visible ≡ non-zero width.
@@ -42,7 +42,7 @@ describe('dependencyArrowGeometry', () => {
     it('should return a straight arrow between two events in the same row and lane', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
         }),
         [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -61,7 +61,7 @@ describe('dependencyArrowGeometry', () => {
       // string building only pays for the arrows something actually renders.
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
         }),
         [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -74,7 +74,7 @@ describe('dependencyArrowGeometry', () => {
     it('should expose the start edge as the target edge of a FinishToStart arrow', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
         }),
         [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -89,8 +89,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([eventB]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([eventB]) },
           ],
           rowPositions: [0, 62],
         }),
@@ -112,8 +112,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([eventB]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([eventB]) },
           ],
           rowPositions: [0, 62],
         }),
@@ -134,8 +134,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([eventB]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([eventB]) },
           ],
           rowPositions: [0, 62],
         }),
@@ -159,7 +159,7 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventAdjacent]) },
+            { resource: resource1, occurrences: getOccurrences([eventA, eventAdjacent]) },
           ],
           rowPositions: [0],
         }),
@@ -180,7 +180,7 @@ describe('dependencyArrowGeometry', () => {
 
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventNear]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventNear]) }],
           rowPositions: [0],
         }),
         [buildDependency('dep-1', 'event-a', 'event-near')],
@@ -193,7 +193,7 @@ describe('dependencyArrowGeometry', () => {
     it('should trim the hit-area at both ends of a long straight arrow', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
         }),
         [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -217,7 +217,7 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA, crossedEvent, eventB]) },
+            { resource: resource1, occurrences: getOccurrences([eventA, crossedEvent, eventB]) },
           ],
           rowPositions: [0],
         }),
@@ -249,8 +249,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([crossedEvent]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([crossedEvent]) },
             { resource: resource3, occurrences: getOccurrences([eventT]) },
           ],
           rowPositions: [0, 62, 124],
@@ -275,7 +275,7 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA, coveringEvent, eventB]) },
+            { resource: resource1, occurrences: getOccurrences([eventA, coveringEvent, eventB]) },
           ],
           rowPositions: [0],
         }),
@@ -297,8 +297,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([earlyEvent]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([earlyEvent]) },
           ],
           rowPositions: [0, 62],
         }),
@@ -313,8 +313,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([eventC]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([eventC]) },
           ],
           rowPositions: [0, 62],
         }),
@@ -344,7 +344,7 @@ describe('dependencyArrowGeometry', () => {
 
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventD]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventD]) }],
           rowPositions: [0],
         }),
         [buildDependency('dep-1', 'event-a', 'event-d')],
@@ -381,8 +381,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([obstacle, eventT]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([obstacle, eventT]) },
           ],
           rowPositions: [0, 62],
         }),
@@ -410,8 +410,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([obstacle]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([obstacle]) },
             { resource: resource3, occurrences: getOccurrences([eventT]) },
           ],
           rowPositions: [0, 62, 124],
@@ -428,7 +428,7 @@ describe('dependencyArrowGeometry', () => {
     it('should skip a dependency when one of its events has no occurrence in any row', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
         }),
         [
@@ -446,8 +446,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: [...getOccurrences([eventA]), ...occurrencesB] },
-            { resource: RESOURCE_2, occurrences: occurrencesB },
+            { resource: resource1, occurrences: [...getOccurrences([eventA]), ...occurrencesB] },
+            { resource: resource2, occurrences: occurrencesB },
           ],
           rowPositions: [0, 62],
         }),
@@ -469,8 +469,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: [...occurrencesA, ...occurrencesB] },
-            { resource: RESOURCE_2, occurrences: [...occurrencesA, ...occurrencesB] },
+            { resource: resource1, occurrences: [...occurrencesA, ...occurrencesB] },
+            { resource: resource2, occurrences: [...occurrencesA, ...occurrencesB] },
           ],
           rowPositions: [0, 62],
         }),
@@ -492,8 +492,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: [...occurrencesA, ...occurrencesB] },
-            { resource: RESOURCE_2, occurrences: occurrencesB },
+            { resource: resource1, occurrences: [...occurrencesA, ...occurrencesB] },
+            { resource: resource2, occurrences: occurrencesB },
           ],
           rowPositions: [0, 62],
         }),
@@ -520,7 +520,7 @@ describe('dependencyArrowGeometry', () => {
       // two dependencies, and on the same row pair only the id type separates them.
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
         }),
         [
@@ -548,8 +548,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([lateEvent]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([earlyEvent]) },
+            { resource: resource1, occurrences: getOccurrences([lateEvent]) },
+            { resource: resource2, occurrences: getOccurrences([earlyEvent]) },
           ],
           rowPositions: [0, 62],
         }),
@@ -569,7 +569,7 @@ describe('dependencyArrowGeometry', () => {
     it('should return no arrow when the events area has no width', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
           eventsWidth: 0,
         }),
@@ -582,7 +582,7 @@ describe('dependencyArrowGeometry', () => {
     it('should return no arrow when there is no dependency', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA]) }],
           rowPositions: [0],
         }),
         [],
@@ -607,7 +607,7 @@ describe('dependencyArrowGeometry', () => {
         // (the full-day mapping would give 720 and 780).
         const arrows = computeDependencyArrows(
           buildResolver({
-            resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+            resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
             rowPositions: [0],
             axis: TRIMMED_AXIS,
             eventsWidth: TRIMMED_WIDTH,
@@ -633,7 +633,7 @@ describe('dependencyArrowGeometry', () => {
 
         const arrows = computeDependencyArrows(
           buildResolver({
-            resources: [{ resource: RESOURCE_1, occurrences }],
+            resources: [{ resource: resource1, occurrences }],
             rowPositions: [0],
             axis: TRIMMED_AXIS,
             eventsWidth: TRIMMED_WIDTH,
@@ -684,8 +684,8 @@ describe('dependencyArrowGeometry', () => {
         const arrows = computeDependencyArrows(
           buildResolver({
             resources: [
-              { resource: RESOURCE_1, occurrences: sourceRowOccurrences },
-              { resource: RESOURCE_2, occurrences: getTwoDayOccurrences([target]) },
+              { resource: resource1, occurrences: sourceRowOccurrences },
+              { resource: resource2, occurrences: getTwoDayOccurrences([target]) },
             ],
             rowPositions: [0, 62],
             axis: twoDayAxis,

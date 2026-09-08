@@ -14,8 +14,8 @@ import { computeOccurrencesFirstIndexLookup } from '@mui/x-scheduler-internals/u
 import type { EventsCellLaneMetrics } from '../rowGeometry';
 
 /**
- * Vertical clearance between the edge of the source event and the S route detour that
- * hugs it.
+ * Vertical clearance between the edge of the source event and the detour a route runs
+ * along it.
  */
 const DEPENDENCY_ARROW_DETOUR_CLEARANCE = 6;
 
