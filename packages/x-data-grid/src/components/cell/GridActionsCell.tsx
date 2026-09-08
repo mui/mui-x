@@ -13,6 +13,7 @@ import type { GridActionsColDef } from '../../models/colDef/gridColDef';
 import type { GridValidRowModel, GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { isEventTargetInPortal } from '../../utils/domUtils';
 import { GridActionsCellItem } from './GridActionsCellItem';
 import type { GridActionsCellItemProps } from './GridActionsCellItem';
 
@@ -214,7 +215,9 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
     };
 
   const handleRootKeyDown = (event: React.KeyboardEvent) => {
-    if (numberOfButtons <= 1) {
+    // The menu renders in a portal, but its key events still bubble through the React tree.
+    // They must not move the roving focus between the buttons behind the open menu.
+    if (numberOfButtons <= 1 || isEventTargetInPortal(event)) {
       return;
     }
 
@@ -251,17 +254,17 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
     }
   };
 
-  // role="menu" requires at least one child element
-  const attributes =
-    numberOfButtons > 0
-      ? {
-          role: 'menu',
-          onKeyDown: handleRootKeyDown,
-        }
-      : undefined;
-
   return (
-    <div ref={rootRef} tabIndex={-1} className={gridClasses.actionsCell} {...attributes} {...other}>
+    // The wrapper carries no role on purpose: the buttons are plain buttons inside the
+    // `gridcell`. It only relays the key events bubbling from them.
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    <div
+      ref={rootRef}
+      tabIndex={-1}
+      className={gridClasses.actionsCell}
+      onKeyDown={handleRootKeyDown}
+      {...other}
+    >
       {iconButtons.map((button, index) =>
         React.cloneElement(button, {
           key: index,
@@ -279,7 +282,6 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
           aria-haspopup="menu"
           aria-expanded={open}
           aria-controls={open ? menuId : undefined}
-          role="menuitem"
           size="small"
           onClick={toggleMenu}
           touchRippleRef={handleTouchRippleRef(buttonId)}
