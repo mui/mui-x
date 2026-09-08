@@ -1,5 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { HeatmapPlot, heatmapClasses } from '@mui/x-charts-pro/Heatmap';
+import type { HeatmapCellProps } from '@mui/x-charts-pro/Heatmap';
 import { describe, it, expect } from 'vitest';
 import { Heatmap } from './Heatmap';
 
@@ -80,5 +81,54 @@ describe('<HeatmapPlot />', () => {
     expect(cells.length).to.equal(2);
     expect(window.getComputedStyle(cells[0]).fill).to.equal('rgb(0, 0, 0)');
     expect(window.getComputedStyle(cells[1]).fill).to.equal('rgb(255, 0, 0)');
+  });
+
+  it('should pass `xIndex` and `yIndex` to the cell slot', () => {
+    // A Set because the render can run more than once per cell.
+    const received = new Set<string>();
+
+    function CustomCell({ xIndex, yIndex, ownerState, ...other }: HeatmapCellProps) {
+      received.add(`${xIndex},${yIndex}`);
+      return <rect {...other} data-testid="custom-cell" />;
+    }
+
+    render(
+      <Heatmap
+        series={[
+          {
+            data: [
+              [0, 0, 10],
+              [1, 0, 20],
+              [1, 1, 30],
+            ],
+          },
+        ]}
+        xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+        yAxis={[{ scaleType: 'band', data: ['X', 'Y'] }]}
+        slots={{ cell: CustomCell }}
+        width={200}
+        height={200}
+      />,
+    );
+
+    expect([...received].sort()).to.deep.equal(['0,0', '1,0', '1,1']);
+  });
+
+  it('should not forward `xIndex` and `yIndex` to the DOM', () => {
+    const { container } = render(
+      <Heatmap
+        series={[{ data: [[0, 0, 10]] }]}
+        xAxis={[{ scaleType: 'band', data: ['A'] }]}
+        yAxis={[{ scaleType: 'band', data: ['X'] }]}
+        width={200}
+        height={200}
+      />,
+    );
+
+    const cell = container.querySelector(`.${heatmapClasses.cell}`)!;
+    expect(cell.getAttribute('xIndex')).to.equal(null);
+    expect(cell.getAttribute('yIndex')).to.equal(null);
+    expect(cell.getAttribute('xindex')).to.equal(null);
+    expect(cell.getAttribute('yindex')).to.equal(null);
   });
 });

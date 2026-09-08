@@ -1,5 +1,8 @@
 {
-  "props": {},
+  "props": {
+    "xIndex": { "type": { "name": "number" }, "required": true },
+    "yIndex": { "type": { "name": "number" }, "required": true }
+  },
   "name": "HeatmapCell",
   "imports": [
     "import { HeatmapCell } from '@mui/x-charts-pro/Heatmap';",
