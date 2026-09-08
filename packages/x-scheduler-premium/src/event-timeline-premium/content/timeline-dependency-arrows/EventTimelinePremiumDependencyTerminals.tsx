@@ -53,7 +53,7 @@ const DependencyTerminalsLayer = styled('div', {
   zIndex: 2,
 });
 
-// TODO(dependencies public flip): add an `eventDependencyTerminal` utility class (the
+// TODO(dependencies public flip, #23420): add an `eventDependencyTerminal` utility class (the
 // key paired with the `EventDependencyTerminal` slot, like `eventResizeHandler`) and a
 // `dependencyTerminals` one for the layer; both only carry data attributes while the
 // feature has no public API.
