@@ -69,9 +69,8 @@ export namespace useEventDependencyDropTarget {
      */
     resourceId: SchedulerResourceId;
     /**
-     * The event edge a drop on this element targets. The event body targets the start
-     * edge, so dragging from an end terminal keeps creating `FinishToStart` without
-     * aiming at a terminal; the terminals target their own edge.
+     * The event edge a drop on this element targets: the event body targets the start
+     * edge, the terminals their own edge.
      * @default 'start'
      */
     side?: SchedulerEventSide;

@@ -50,10 +50,9 @@ const DependencyTerminalsLayer = styled('div', {
   // terminals win the ties and paint above the arrows and their click hit-areas
   // without lifting anything else with them. Below the pinned title cells (z-index 3).
   zIndex: 2,
-  // A selected arrow ends on its delete button, right where the target's edge
-  // terminal sits: while a dependency is selected the terminals stay visible but let
-  // the pointer through, so the button stays reachable. Nothing is lost — pressing a
-  // terminal with a selection already deselects before any drag starts.
+  // A selected arrow's delete button sits right where the target's edge terminal is:
+  // with a selection the terminals let the pointer through. Nothing is lost, pressing
+  // a terminal with a selection already deselects before any drag starts.
   '&[data-dependency-selected] [data-dependency-terminal]': {
     pointerEvents: 'none',
   },
@@ -238,10 +237,9 @@ function DependencyTerminalsLayerImpl() {
     },
   );
 
-  // A native drag suppresses pointer events, so the hover tracked before the gesture
-  // goes stale: at gesture start only the gesture's terminals (owned by the render)
-  // keep their reveal, at gesture end the tracking resets and the next pointerover
-  // rebuilds it.
+  // A native drag suppresses pointer events, so the hover goes stale: at gesture start
+  // only the gesture's terminals (owned by the render) keep their reveal, at gesture
+  // end the tracking resets and the next pointerover rebuilds it.
   React.useEffect(() => {
     if (creation === null) {
       revealTerminals([]);
@@ -424,9 +422,9 @@ function DependencyTerminalsLayerImpl() {
 }
 
 /**
- * The terminal's part in the pending gesture, or `null`. Render-driven (unlike the
- * hover reveal): the dragged edge of the source, and both edges of the hovered target
- * so the user can drop on either, the one the drop would land on flagged as `'drop'`.
+ * The terminal's part in the pending gesture, or `null`: the dragged edge of the
+ * source, and both edges of the hovered target, the one the drop would land on
+ * flagged as `'drop'`.
  */
 function getTerminalGestureRole(
   creation: SchedulerDependencyCreation | null,

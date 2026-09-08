@@ -25,10 +25,9 @@ const DEPENDENCY_ARROW_TARGET_CLEARANCE =
 /**
  * Builds the candidate orthogonal routes from the source anchor to the target anchor,
  * best first. Routes are computed in a canonical frame where the source exits to the
- * right: `StartToStart` and `StartToFinish` exit to the left, so their anchors are
- * mirrored around the events area, routed, and mirrored back. That leaves two shapes:
- * opposite edges (`FinishToStart`, mirrored `StartToFinish`) and same edges
- * (`FinishToFinish`, mirrored `StartToStart`).
+ * right: the types leaving from the start edge mirror their anchors around the events
+ * area, route, and mirror back. That leaves two shapes, opposite edges (FS, mirrored
+ * SF) and same edges (FF, mirrored SS).
  * `detourOffset` is how far from the source anchor the detouring routes (the S route,
  * and the same-edges route between same-height anchors) run their horizontal detour —
  * it must clear the event's edge, otherwise the route overlaps the events and reads
@@ -120,9 +119,8 @@ function routeOppositeEdges(
 }
 
 /**
- * Exit to the right off the source, wrap around the rightmost of the two anchors and
- * enter the target from the right. Whether the target sits before or after the source
- * only moves the wrap, so there is no backwards layout to speak of.
+ * Exit to the right off the source, wrap past the rightmost anchor and enter the
+ * target from the right. A target before or after the source only moves the wrap.
  */
 function routeSameEdges(
   source: DependencyArrowPoint,

@@ -18,12 +18,8 @@ import {
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
 
-// A release day. Every dependency has a business reason, and together they cover
-// each type and each arrow shape once, each in its own stretch of the day so no
-// route crosses another event: same-row adjacency and straight arrows, cross-row
-// elbows, the wraps of Start-to-Start and Finish-to-Finish, the backward S of a
-// violated Finish-to-Start, the mirrored S of Start-to-Finish, and a multi-resource
-// event fanning out to one arrow per row appearance.
+// A release day: every dependency has a business reason, and each type and arrow
+// shape appears once, in its own stretch of the day so no route crosses another event.
 const resources: SchedulerResource[] = [
   { id: 'backend', title: 'Backend' },
   { id: 'frontend', title: 'Frontend' },

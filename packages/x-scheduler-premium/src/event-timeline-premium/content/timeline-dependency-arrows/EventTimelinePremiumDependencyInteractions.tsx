@@ -118,12 +118,9 @@ function DependencyInteractionsLayer() {
       viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}
     >
       {orderedArrows.map((arrow) => {
-        // The button sits on the side of the tip the arrow comes from, so it never
-        // covers the target event. Clamped inside the viewBox on both axes: at a
-        // timeline edge the anchor sits on the boundary, and an arrow into a
-        // scrolled-out row has its tip above or below the rendered range — an
-        // unclamped button would be unreachable there even though the arrow is
-        // selected.
+        // On the side of the tip the arrow comes from, so it never covers the target
+        // event, and clamped inside the viewBox: at a timeline edge or into a
+        // scrolled-out row the button would otherwise be unreachable.
         const buttonDirection = arrow.targetEdge === 'start' ? -1 : 1;
         const buttonX = Math.min(
           Math.max(

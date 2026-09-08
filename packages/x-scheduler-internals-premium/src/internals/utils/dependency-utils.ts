@@ -40,8 +40,7 @@ export function getDependencyEdges(type: SchedulerDependencyType): SchedulerDepe
 }
 
 /**
- * Whether the value is one of the supported dependency types. Data can carry
- * anything, and an unknown type would break the geometry and the descriptions.
+ * Whether the value is one of the supported dependency types.
  */
 export function isDependencyType(type: unknown): type is SchedulerDependencyType {
   return typeof type === 'string' && Object.hasOwn(DEPENDENCY_EDGES, type);

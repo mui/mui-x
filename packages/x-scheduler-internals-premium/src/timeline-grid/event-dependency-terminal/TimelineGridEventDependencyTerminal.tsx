@@ -15,14 +15,11 @@ import { TimelineGridEventDependencyTerminalDataAttributes } from './TimelineGri
 import type { DependencyTerminalDragData } from './dependencyTerminalDragData';
 
 /**
- * The terminal on one edge of an event. Dragging it onto another event (or onto one
- * of its terminals) creates a dependency whose type follows the two edges: the
- * dragged one and the dropped one. It is also a drop target itself, so a gesture can
- * pick the target edge. Positioned by the caller (it does not live inside the event
- * element), which is also responsible for only rendering it when the dependencies
- * feature applies to its event. The drag lifecycle is handled by a global monitor
- * mounted by the grid root (not here) so the gesture survives this element being
- * unmounted by virtualization mid-drag.
+ * The terminal on one edge of an event: dragging it onto another event or terminal
+ * creates a dependency whose type follows the two edges. It is a drop target too, so
+ * a gesture can pick the target edge. Positioned by the caller, which only renders it
+ * when the feature applies to its event. The drag lifecycle lives in the grid root's
+ * monitor, so the gesture survives this element being unmounted mid-drag.
  */
 export const TimelineGridEventDependencyTerminal = React.forwardRef(
   function TimelineGridEventDependencyTerminal(
