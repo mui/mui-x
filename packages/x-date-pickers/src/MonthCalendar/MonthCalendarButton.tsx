@@ -66,6 +66,9 @@ const DefaultMonthButton = styled('button', {
   width: 72,
   borderRadius: 18,
   cursor: 'pointer',
+  // Not a ButtonBase, so the themed ring cannot arrive on its own. No fallback:
+  // without `theme.focusVisible` the button keeps its background-only focus.
+  ...(theme.focusVisible && { '&:focus-visible': theme.focusVisible }),
   '&:focus': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,
