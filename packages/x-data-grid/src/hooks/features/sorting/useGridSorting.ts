@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridEventListener } from '../../../models/events';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -18,7 +19,6 @@ import {
   gridSortModelSelector,
 } from './gridSortingSelector';
 import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
-import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import {
   useGridRegisterStrategyProcessor,
   GRID_DEFAULT_STRATEGY,
