@@ -15,7 +15,7 @@ const nativeNow = performance.now.bind(performance);
 // edge runs on a timer rather than a frame. Waiting a fixed number of frames therefore
 // races that timer, so drain until the DOM has been still for longer than that window.
 const QUIET_WINDOW_MS = 150;
-// Upper bound so a genuinely oscillating layout fails the test instead of hanging.
+// Upper bound so a genuinely oscillating layout throws instead of hanging.
 const MAX_DRAIN_MS = 1000;
 
 /**
@@ -60,16 +60,22 @@ export async function absorbObserverFrames() {
     // single long-running one would hide every update until the very end and read
     // as quiet throughout.
     /* eslint-disable no-await-in-loop */
-    do {
+    for (;;) {
       await act(async () => {
         await new Promise<void>((resolve) => {
           nativeRequestAnimationFrame!(() => resolve());
         });
       });
-    } while (
-      nativeNow() - lastMutationAt < QUIET_WINDOW_MS &&
-      nativeNow() - startedAt < MAX_DRAIN_MS
-    );
+      if (nativeNow() - lastMutationAt >= QUIET_WINDOW_MS) {
+        return;
+      }
+      if (nativeNow() - startedAt >= MAX_DRAIN_MS) {
+        throw new Error(
+          `absorbObserverFrames: the DOM did not settle within ${MAX_DRAIN_MS}ms. An ` +
+            'observer-driven update is most likely resizing an observed element in a loop.',
+        );
+      }
+    }
     /* eslint-enable no-await-in-loop */
   } finally {
     observer.disconnect();
