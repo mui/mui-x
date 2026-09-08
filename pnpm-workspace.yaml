@@ -6,7 +6,7 @@ packages:
   - bundle-size
 
 catalog:
-  '@atlaskit/pragmatic-drag-and-drop': ^3.0.0
+  '@atlaskit/pragmatic-drag-and-drop': ^3.1.0
   '@babel/cli': ^7.29.7
   '@babel/core': ^7.29.7
   '@babel/plugin-transform-modules-commonjs': ^7.29.7
@@ -21,7 +21,7 @@ catalog:
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.4.0
-  '@mui/internal-test-utils': 2.0.18-canary.34
+  '@mui/internal-test-utils': 2.0.18-canary.35
   '@mui/internal-core-docs': 9.1.2-canary.3
   '@mui/material': 9.4.0
   '@mui/stylis-plugin-rtl': 9.4.0
@@ -29,7 +29,7 @@ catalog:
   '@mui/types': 9.4.0
   '@mui/utils': ^9.4.0
   '@mui/x-internal-exceljs-fork': 5.0.0
-  '@playwright/test': 1.62.1
+  '@playwright/test': 1.63.0
   '@react-spring/web': ^10.1.2
   '@types/chance': ^1.1.8
   '@types/luxon': ^3.7.5
@@ -65,13 +65,13 @@ catalog:
   moment-hijri: ^3.0.0
   moment-jalaali: ^0.10.5
   moment-timezone: ^0.6.3
-  motion: ^13.1.1
-  playwright: 1.62.1
+  motion: ^13.2.0
+  playwright: 1.63.0
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
   react: 19.2.8
   react-dom: 19.2.8
-  react-router: ^8.3.0
+  react-router: ^8.3.1
   react-transition-group: ^4.4.5
   reselect: ^5.2.0
   rimraf: ^6.1.3

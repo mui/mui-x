@@ -36,7 +36,7 @@
     "@types/node": "22.20.1",
     "rimraf": "catalog:",
     "vitest": "catalog:",
-    "zod": "4.4.3"
+    "zod": "4.5.4"
   },
   "exports": {
     ".": "./src/index.ts"
