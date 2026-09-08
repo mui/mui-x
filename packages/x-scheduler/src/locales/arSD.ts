@@ -66,6 +66,7 @@ const arSDDialog: Partial<EventEditingLocaleText> = {
   startDateLabel: 'تاريخ البدأ',
   startTimeAfterEndTimeError: 'وقت الانتهاء يجب ان يكون بعد وقت البدأ..',
   startTimeLabel: 'وقت البدأ',
+
   // RecurringScopeDialog
   all: 'كل الاحداث',
   cancel: 'إلغاء',
@@ -79,6 +80,7 @@ const arSDDialog: Partial<EventEditingLocaleText> = {
 const arSDCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'الموارد',
+
   // ViewSwitcher
   agenda: 'جدول الأعمال',
   day: 'يوم',
@@ -91,11 +93,14 @@ const arSDCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   months: 'أشهر',
   weeks: 'أسابيع',
   years: 'سنوات',
+
   // DateNavigator
   closeSidePanel: 'إغلاق اللوحة الجانبية',
   openSidePanel: 'فتح اللوحة الجانبية',
+
   // SidePanelDrawer (small screens)
   openMenu: 'فتح القائمة',
+
   // Preferences menu
   amPm12h: 'نظام 12 ساعة (1:00 مساءً)',
   hour24h: 'نظام 24 ساعة (13:00)',
@@ -109,6 +114,7 @@ const arSDCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   weekdaySunday: 'الأحد',
   weekdayMonday: 'الاثنين',
   weekdaySaturday: 'السبت',
+
   // WeekView
   allDay: 'طوال اليوم',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} المزيد..`,
@@ -117,14 +123,18 @@ const arSDCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   resourceAriaLabel: (resourceName) => `المورد: ${resourceName}`,
   weekAbbreviation: 'W',
   weekNumberAriaLabel: (weekNumber) => `أسبوع ${weekNumber}`,
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `ينتهي في ${endDate}`,
+
   // MiniCalendar
   miniCalendarLabel: 'التقويم',
   miniCalendarGoToPreviousMonth: 'إظهار الشهر السابق في التقويم',
   miniCalendarGoToNextMonth: 'إظهار الشهر التالي في التقويم',
+
   // Main calendar region
   calendarContentAriaLabel: 'محتوى التقويم',
+
   // Timeline title sub grid
   timelineResourceTitleHeader: 'عنوان المورد',
 };
