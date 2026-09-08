@@ -24,6 +24,12 @@ const timeSensitiveSuites = [
   'RowSpanningClassSchedule',
   'ListView',
   'RowSpanningCalendar',
+  // The grid measures its container once on mount and then corrects that
+  // measurement through the resize debounce, so the overlay is one pixel short
+  // for the first ~60ms. Its content is centered, which turns that pixel into a
+  // half-pixel offset and moves the text to a different device row depending on
+  // whether the screenshot beat the correction.
+  'NoColumnsOverlay',
 ];
 
 interface RouteConfig {
