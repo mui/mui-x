@@ -1,0 +1,12 @@
+<Heatmap
+  xAxis={[{ data: xLabels }]}
+  yAxis={[{ data: yLabels }]}
+  series={[
+    {
+      data,
+      colorGetter: (value, { xIndex, yIndex }) => gradient(xIndex, yIndex),
+    },
+  ]}
+  hideLegend
+  height={300}
+/>

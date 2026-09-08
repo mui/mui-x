@@ -41,7 +41,7 @@ declare module '@mui/x-charts/internals' {
       itemIdentifier: HeatmapItemIdentifier;
       itemIdentifierWithData: HeatmapItemIdentifierWithData;
       valueType: HeatmapValueType;
-      colorGetter: (value: number | null) => string;
+      colorGetter: (value: number | null, context: { xIndex: number; yIndex: number }) => string;
       axisType: 'cartesian';
       highlightScope: CommonHighlightScope;
       descriptionGetterParams: {

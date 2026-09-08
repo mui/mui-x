@@ -10,7 +10,12 @@ type IsExact<A, B> =
 // Series declaring `colorGetter` in their config entry get that signature.
 type AssertPie = Assert<IsExact<ColorGetter<'pie'>, (dataIndex: number) => string>>;
 type AssertFunnel = Assert<IsExact<ColorGetter<'funnel'>, (dataIndex: number) => string>>;
-type AssertHeatmap = Assert<IsExact<ColorGetter<'heatmap'>, (value: number | null) => string>>;
+type AssertHeatmap = Assert<
+  IsExact<
+    ColorGetter<'heatmap'>,
+    (value: number | null, context: { xIndex: number; yIndex: number }) => string
+  >
+>;
 type AssertMapShape = Assert<IsExact<ColorGetter<'mapShape'>, (name?: string) => string | null>>;
 
 // Series that declare none fall back to the default.
