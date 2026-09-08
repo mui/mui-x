@@ -8,7 +8,7 @@ const capturedRequestAnimationFrame =
 const nativeRequestAnimationFrame = capturedRequestAnimationFrame?.bind(globalThis) ?? null;
 
 /**
- * Waits two native frames inside act, so pending ResizeObserver deliveries land as
+ * Waits two pairs of native frames inside separate act scopes, so ResizeObserver deliveries land as
  * acted updates instead of between test steps. Call it after rendering a scheduler
  * surface (prefer `renderSettled`) or after a scroll that mounts observed elements.
  * jsdom has no ResizeObserver and so no frames to absorb; there it flushes pending
@@ -29,11 +29,14 @@ export async function absorbObserverFrames() {
         'the live one. A test likely leaked fake timers without restoring them.',
     );
   }
-  // Two frames: one for layout, one for the delivery. A delivery chain (observer-driven
-  // state resizing an observed element) would need a third; nothing observed does today.
-  await act(async () => {
-    await new Promise<void>((resolve) => {
-      nativeRequestAnimationFrame!(() => nativeRequestAnimationFrame!(() => resolve()));
+  // React can flush observer-driven state updates when act exits, changing layout
+  // and scheduling another delivery. A second act scope absorbs that delivery;
+  // waiting more frames in the first scope would leave the update batched.
+  for (let pass = 0; pass < 2; pass += 1) {
+    await act(async () => {
+      await new Promise<void>((resolve) => {
+        nativeRequestAnimationFrame!(() => nativeRequestAnimationFrame!(() => resolve()));
+      });
     });
-  });
+  }
 }

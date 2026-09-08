@@ -7,7 +7,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { describe, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('absorbObserverFrames', () => {
   const { renderSettled } = createSchedulerRenderer({
@@ -30,6 +30,35 @@ describe('absorbObserverFrames', () => {
       await new Promise<void>((resolve) => {
         requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
       });
+    },
+  );
+
+  it.skipIf(isJSDOM)(
+    'should absorb a resize caused by an observer-driven React update',
+    async () => {
+      const widths: number[] = [];
+
+      function ResizingBox() {
+        const ref = React.useRef<HTMLDivElement>(null);
+        const [width, setWidth] = React.useState(100);
+
+        React.useLayoutEffect(() => {
+          const observer = new ResizeObserver(([entry]) => {
+            widths.push(entry.contentRect.width);
+            if (entry.contentRect.width < 300) {
+              setWidth(entry.contentRect.width + 100);
+            }
+          });
+          observer.observe(ref.current!);
+          return () => observer.disconnect();
+        }, []);
+
+        return <div ref={ref} style={{ width, height: 20 }} />;
+      }
+
+      await renderSettled(<ResizingBox />);
+
+      expect(widths).toEqual([100, 200, 300]);
     },
   );
 
