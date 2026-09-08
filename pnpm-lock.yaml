@@ -196,8 +196,8 @@ catalogs:
       specifier: 19.2.8
       version: 19.2.8
     react-router:
-      specifier: ^8.3.0
-      version: 8.3.0
+      specifier: ^8.3.1
+      version: 8.3.1
     react-transition-group:
       specifier: ^4.4.5
       version: 4.4.5
@@ -2235,7 +2235,7 @@ importers:
         version: 19.2.8(react@19.2.8)
       react-router:
         specifier: 'catalog:'
-        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 8.3.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -2352,7 +2352,7 @@ importers:
         version: 19.2.8(react@19.2.8)
       react-router:
         specifier: 'catalog:'
-        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 8.3.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -2484,7 +2484,7 @@ importers:
         version: 19.2.8(react@19.2.8)
       react-router:
         specifier: 'catalog:'
-        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 8.3.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -9901,8 +9901,8 @@ packages:
   react-is@19.2.8:
     resolution: {integrity: sha512-s5un28nYxKJw5gvUHyW5PCC28CvBqLu9r3cWgzHT4Vo/5fqqkFcdRYsGcKf50WMPpjjFZS5d76fn3YCo2njKwQ==}
 
-  react-router@8.3.0:
-    resolution: {integrity: sha512-qyPMvW83jGIct3yiieisxdk9M745anqhpIMKN5m1t6yBMfgVPpt77aHOqs5fUlEJRMCGffg9BaQLH9oPVOL7xQ==}
+  react-router@8.3.1:
+    resolution: {integrity: sha512-TEOpiO2g0TJHEOJeRVv4amUFun9v1npCKszvcquNvzETUtJ8udV86ah5eFoHT7g26bsBvT6EiIhqulR8eDF++A==}
     engines: {node: '>=22.22.0'}
     peerDependencies:
       react: '>=19.2.7'
@@ -19928,7 +19928,7 @@ snapshots:
 
   react-is@19.2.8: {}
 
-  react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  react-router@8.3.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       cookie-es: 3.1.1
       react: 19.2.8
