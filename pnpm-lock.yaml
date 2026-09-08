@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@atlaskit/pragmatic-drag-and-drop':
-      specifier: ^3.0.0
-      version: 3.0.0
+      specifier: ^3.1.0
+      version: 3.1.0
     '@babel/cli':
       specifier: ^7.29.7
       version: 7.29.7
@@ -235,8 +235,8 @@ importers:
   .:
     devDependencies:
       '@atlaskit/pragmatic-drag-and-drop-unit-testing':
-        specifier: 2.0.0
-        version: 2.0.0
+        specifier: 2.1.0
+        version: 2.1.0
       '@babel/core':
         specifier: 'catalog:'
         version: 7.29.7(supports-color@11.0.0)
@@ -482,7 +482,7 @@ importers:
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop':
         specifier: 'catalog:'
-        version: 3.0.0
+        version: 3.1.0
       '@babel/core':
         specifier: 'catalog:'
         version: 7.29.7(supports-color@11.0.0)
@@ -1789,10 +1789,10 @@ importers:
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop':
         specifier: 'catalog:'
-        version: 3.0.0
-      '@atlaskit/pragmatic-drag-and-drop-auto-scroll':
-        specifier: ^3.1.0
         version: 3.1.0
+      '@atlaskit/pragmatic-drag-and-drop-auto-scroll':
+        specifier: ^3.2.0
+        version: 3.2.0
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
@@ -1842,7 +1842,7 @@ importers:
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop':
         specifier: 'catalog:'
-        version: 3.0.0
+        version: 3.1.0
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
@@ -2609,14 +2609,14 @@ packages:
     resolution: {integrity: sha512-93Z1N+BQNXysodoicpOIyNh2drHfz/CTf9nnT0FEx72GJcIiwgydD7tGAr78j41LsYn3hlRn+LdGPuBLn1Bl8Q==}
     engines: {node: ^22.13.0 || >=24.0.0}
 
-  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.1.0':
-    resolution: {integrity: sha512-YfxLci5SA2MwdJKIVpnEZfbiOGWQIQnD1NvUgqFq96v33PGVWQy13k07KxeSkR/M8E6VBiYRoglelyCdRmyyBQ==}
+  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.2.0':
+    resolution: {integrity: sha512-vuL+AJae6c6lkmFd63v7c/7J7seyi7ZA8uMLNe9GvvApySToun3Zlv8SfyZU0d+wcNG4+Ix6qpRb8jOobZgNNg==}
 
-  '@atlaskit/pragmatic-drag-and-drop-unit-testing@2.0.0':
-    resolution: {integrity: sha512-79DAU8v6HrLd44L9jhhq7TcNBJWeTjqbXaSlyEeVYonyo+FNns/9ZZLi3scV+eFKb7MX7+h5f5Wjvh1XrIb8oA==}
+  '@atlaskit/pragmatic-drag-and-drop-unit-testing@2.1.0':
+    resolution: {integrity: sha512-wgJ6NI5trVtZhtBep9sOBqRbNBdnjFrOc30bWJWitZuZe+H31UB21w2ry1UthpHdFeIesu3Arev8tU3GqDFa3g==}
 
-  '@atlaskit/pragmatic-drag-and-drop@3.0.0':
-    resolution: {integrity: sha512-EEKBELv757wrvhMHBAoFcXjfzGZ4Y2FJ2xnSsWovsOKywkN1Q4IWRH52hQpPmJnATLcmO9viVhoXWSXFBLKSLQ==}
+  '@atlaskit/pragmatic-drag-and-drop@3.1.0':
+    resolution: {integrity: sha512-VU+2Oh6OgvC6D1xiX3lfm1gZJsaSPD+ZKjAHodOQ9IO6RfOvAyReLlK5ut9gIUpPmbD8d09wlCs7y4A6/I8c5Q==}
 
   '@babel/cli@7.29.7':
     resolution: {integrity: sha512-/75HwRbAYPqXv/Ax1h7Fg3IZfXgdU98jnA8H93/m/QBaPV3Hp5ICoLqzGYye1yHBCgpmXvtqgSUN8oOKX5tojQ==}
@@ -11618,16 +11618,16 @@ snapshots:
       is-potential-custom-element-name: 1.0.1
       lru-cache: 11.5.2
 
-  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.1.0':
+  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.2.0':
     dependencies:
-      '@atlaskit/pragmatic-drag-and-drop': 3.0.0
+      '@atlaskit/pragmatic-drag-and-drop': 3.1.0
       '@babel/runtime': 7.29.7
 
-  '@atlaskit/pragmatic-drag-and-drop-unit-testing@2.0.0':
+  '@atlaskit/pragmatic-drag-and-drop-unit-testing@2.1.0':
     dependencies:
       '@babel/runtime': 7.29.7
 
-  '@atlaskit/pragmatic-drag-and-drop@3.0.0':
+  '@atlaskit/pragmatic-drag-and-drop@3.1.0':
     dependencies:
       '@babel/runtime': 7.29.7
       bind-event-listener: 3.0.0
