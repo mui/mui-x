@@ -38,10 +38,10 @@ interface RouteConfig {
    */
   viewport?: { width: number; height: number };
   /**
-   * Wait for these selectors before screenshotting, on top of the testcase
+   * Wait for this selector before screenshotting, on top of the testcase
    * `aria-busy` gate (which only tracks font loading, not async demo data).
    */
-  waitForSelector?: string | string[];
+  waitForSelector?: string;
 }
 
 interface RouteRule extends RouteConfig {
@@ -96,25 +96,17 @@ const TEST_RULES: RouteRule[] = [
 
   {
     test: '/test-regressions-data-grid/DataGridScrollRestoration',
-    // The grid restores its scroll to top:2000/left:2000 after an async remount.
-    // `aria-rowindex` is the absolute dataset position, so a mid-viewport row for
-    // the restored scroll (top:2000, 52px rows => row ~41 => aria-rowindex 43)
-    // only enters the DOM once the virtualizer has rendered the scrolled window.
-    // `rowheader` cells are kept mounted outside the horizontal render context at
-    // zero size, and the Commodity dataset marks one as such. Playwright only
-    // checks the first match for visibility, so exclude them to land on a cell
-    // that the virtualizer actually laid out.
-    //
-    // That first selector only proves the *vertical* restore: rows are rendered
-    // for `top: 2000` while the horizontal render context can still be empty,
-    // which paints row separators but no column headers and no cell contents.
-    // `maturityDate` sits inside the column window for `left: 2000` and outside
-    // the one for `left: 0`, so waiting for its header pins the horizontal
-    // restore too.
-    waitForSelector: [
-      '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell:not([role="rowheader"])',
-      '.MuiDataGrid-columnHeader[data-field="maturityDate"]',
-    ],
+    // The grid restores its scroll to top:2000/left:2000 after an async remount,
+    // and the cell has to pin both axes. `aria-rowindex` is the absolute dataset
+    // position, so the row for the restored vertical scroll (top:2000, 52px rows
+    // => row ~41 => aria-rowindex 43) only enters the DOM once the virtualizer
+    // has rendered the scrolled window. Rows are rendered for that window while
+    // the horizontal render context can still be empty though, which paints row
+    // separators but no column headers and no cell contents, so pin the column
+    // too: `maturityDate` is inside the column window for left:2000 and outside
+    // the one for left:0.
+    waitForSelector:
+      '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell[data-field="maturityDate"]',
   },
   {
     test: '/docs-data-grid-components-toolbar/GridToolbarCustom',
@@ -275,16 +267,10 @@ async function main() {
             );
 
             if (routeConfig?.waitForSelector) {
-              const selectors = Array.isArray(routeConfig.waitForSelector)
-                ? routeConfig.waitForSelector
-                : [routeConfig.waitForSelector];
-              for (const selector of selectors) {
-                // Scope the wait to this route's testcase: pooled pages keep the
-                // previous route's DOM around briefly, and a global selector could
-                // match a leftover grid instead of the one being screenshotted.
-                // eslint-disable-next-line no-await-in-loop
-                await testcase.waitForSelector(selector);
-              }
+              // Scope the wait to this route's testcase: pooled pages keep the
+              // previous route's DOM around briefly, and a global selector could
+              // match a leftover grid instead of the one being screenshotted.
+              await testcase.waitForSelector(routeConfig.waitForSelector);
             }
 
             await page.evaluate(async () => {
