@@ -8,7 +8,10 @@ import {
   TREE_VIEW_ROOT_PARENT_ID,
 } from './utils';
 import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTreeViewStore';
-import type { MinimalTreeViewParameters } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
+import type {
+  MinimalTreeViewParameters,
+  MinimalTreeViewState,
+} from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
 
 export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
   private store: MinimalTreeViewStore<R, any>;
@@ -264,41 +267,60 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
   };
 
   /**
-   * Add an array of items to the tree.
-   * @param {SetItemChildrenParameters<R>} args The items to add to the tree and information about their ancestors.
+   * Set the children of an item.
+   * @param {SetItemChildrenParameters<R>} parameters The children to set and information about their parent.
    */
   public setItemChildren = ({
     items,
     parentId,
     getChildrenCount,
-  }: {
-    items: readonly R[];
-    parentId: TreeViewItemId | null;
-    getChildrenCount: (item: R) => number;
-  }) => {
-    const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+    recursive = false,
+  }: SetItemChildrenParameters<R>) => {
     const parentDepth =
       parentId == null ? -1 : itemsSelectors.itemDepth(this.store.state, parentId);
-
-    const { metaLookup, modelLookup, orderedChildrenIds, childrenIndexes } = buildItemsLookups({
+    const existingItemMetaLookup = itemsSelectors.itemMetaLookup(this.store.state);
+    const buildParameters = {
       storeParameters: this.store.parameters,
       items,
       parentId,
       depth: parentDepth + 1,
-      isItemExpandable: getChildrenCount ? (item) => getChildrenCount(item) !== 0 : () => false,
-      otherItemsMetaLookup: itemsSelectors.itemMetaLookup(this.store.state),
-    });
+      isItemExpandable: getChildrenCount ? (item: R) => getChildrenCount(item) !== 0 : () => false,
+    };
 
+    let lookups: Pick<
+      MinimalTreeViewState<R, any>,
+      | 'itemMetaLookup'
+      | 'itemModelLookup'
+      | 'itemOrderedChildrenIdsLookup'
+      | 'itemChildrenIndexesLookup'
+    >;
+    if (recursive) {
+      lookups = buildItemsLookupsRecursively({ ...buildParameters, existingItemMetaLookup });
+    } else {
+      const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+      const { metaLookup, modelLookup, orderedChildrenIds, childrenIndexes } = buildItemsLookups({
+        ...buildParameters,
+        otherItemsMetaLookup: existingItemMetaLookup,
+      });
+      lookups = {
+        itemMetaLookup: metaLookup,
+        itemModelLookup: modelLookup,
+        itemOrderedChildrenIdsLookup: { [parentIdWithDefault]: orderedChildrenIds },
+        itemChildrenIndexesLookup: { [parentIdWithDefault]: childrenIndexes },
+      };
+    }
+
+    // A single update, so the listeners are notified once no matter how many groups of items were added.
     this.store.update({
-      itemModelLookup: { ...this.store.state.itemModelLookup, ...modelLookup },
-      itemMetaLookup: { ...this.store.state.itemMetaLookup, ...metaLookup },
+      itemModelLookup: { ...this.store.state.itemModelLookup, ...lookups.itemModelLookup },
+      itemMetaLookup: { ...this.store.state.itemMetaLookup, ...lookups.itemMetaLookup },
       itemOrderedChildrenIdsLookup: {
         ...this.store.state.itemOrderedChildrenIdsLookup,
-        [parentIdWithDefault]: orderedChildrenIds,
+        ...lookups.itemOrderedChildrenIdsLookup,
       },
       itemChildrenIndexesLookup: {
         ...this.store.state.itemChildrenIndexesLookup,
-        [parentIdWithDefault]: childrenIndexes,
+        ...lookups.itemChildrenIndexesLookup,
       },
     });
   };
@@ -309,13 +331,13 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
    */
   public removeChildren = (parentId: TreeViewItemId | null) => {
     const itemMetaLookup = this.store.state.itemMetaLookup;
-    const newMetaMap = Object.keys(itemMetaLookup).reduce((acc, key) => {
-      const item = itemMetaLookup[key];
-      if (item.parentId === parentId) {
-        return acc;
+    const newItemMetaLookup: typeof itemMetaLookup = {};
+    for (const itemId of Object.keys(itemMetaLookup)) {
+      const itemMeta = itemMetaLookup[itemId];
+      if (itemMeta.parentId !== parentId) {
+        newItemMetaLookup[itemId] = itemMeta;
       }
-      return { ...acc, [item.id]: item };
-    }, {});
+    }
 
     const newItemOrderedChildrenIdsLookup = { ...this.store.state.itemOrderedChildrenIdsLookup };
     const newItemChildrenIndexesLookup = { ...this.store.state.itemChildrenIndexesLookup };
@@ -324,7 +346,7 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
     delete newItemOrderedChildrenIdsLookup[cleanId];
 
     this.store.update({
-      itemMetaLookup: newMetaMap,
+      itemMetaLookup: newItemMetaLookup,
       itemOrderedChildrenIdsLookup: newItemOrderedChildrenIdsLookup,
       itemChildrenIndexesLookup: newItemChildrenIndexesLookup,
     });
@@ -338,6 +360,30 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
   public handleItemClick = (event: React.MouseEvent, itemId: TreeViewItemId) => {
     this.store.parameters.onItemClick?.(event, itemId);
   };
+}
+
+interface SetItemChildrenParameters<R extends TreeViewValidItem<R>> {
+  /**
+   * The children to set.
+   */
+  items: readonly R[];
+  /**
+   * The id of the item to set the children of.
+   * If `null`, the root's children are set.
+   */
+  parentId: TreeViewItemId | null;
+  /**
+   * The function used to determine whether an item is expandable.
+   * @param {R} item The item to check.
+   * @returns {number} The number of children of the item, `0` if it has none.
+   */
+  getChildrenCount: (item: R) => number;
+  /**
+   * Whether the inline children of the items should also be added to the tree.
+   * All the items are written to the state in a single update.
+   * @default false
+   */
+  recursive?: boolean;
 }
 
 export interface AddItemsParameters<R extends TreeViewValidItem<R>> {
