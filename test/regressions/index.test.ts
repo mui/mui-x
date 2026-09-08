@@ -38,10 +38,10 @@ interface RouteConfig {
    */
   viewport?: { width: number; height: number };
   /**
-   * Wait for this selector before screenshotting, on top of the testcase
+   * Wait for these selectors before screenshotting, on top of the testcase
    * `aria-busy` gate (which only tracks font loading, not async demo data).
    */
-  waitForSelector?: string;
+  waitForSelector?: string | string[];
 }
 
 interface RouteRule extends RouteConfig {
@@ -104,8 +104,17 @@ const TEST_RULES: RouteRule[] = [
     // zero size, and the Commodity dataset marks one as such. Playwright only
     // checks the first match for visibility, so exclude them to land on a cell
     // that the virtualizer actually laid out.
-    waitForSelector:
+    //
+    // That first selector only proves the *vertical* restore: rows are rendered
+    // for `top: 2000` while the horizontal render context can still be empty,
+    // which paints row separators but no column headers and no cell contents.
+    // `maturityDate` sits inside the column window for `left: 2000` and outside
+    // the one for `left: 0`, so waiting for its header pins the horizontal
+    // restore too.
+    waitForSelector: [
       '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell:not([role="rowheader"])',
+      '.MuiDataGrid-columnHeader[data-field="maturityDate"]',
+    ],
   },
   {
     test: '/docs-data-grid-components-toolbar/GridToolbarCustom',
@@ -266,10 +275,16 @@ async function main() {
             );
 
             if (routeConfig?.waitForSelector) {
-              // Scope the wait to this route's testcase: pooled pages keep the
-              // previous route's DOM around briefly, and a global selector could
-              // match a leftover grid instead of the one being screenshotted.
-              await testcase.waitForSelector(routeConfig.waitForSelector);
+              const selectors = Array.isArray(routeConfig.waitForSelector)
+                ? routeConfig.waitForSelector
+                : [routeConfig.waitForSelector];
+              for (const selector of selectors) {
+                // Scope the wait to this route's testcase: pooled pages keep the
+                // previous route's DOM around briefly, and a global selector could
+                // match a leftover grid instead of the one being screenshotted.
+                // eslint-disable-next-line no-await-in-loop
+                await testcase.waitForSelector(selector);
+              }
             }
 
             await page.evaluate(async () => {
