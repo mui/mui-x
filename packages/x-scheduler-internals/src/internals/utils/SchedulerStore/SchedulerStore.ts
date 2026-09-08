@@ -25,6 +25,7 @@ import type {
   SchedulerRenderableEventOccurrence,
   SchedulerEventOccurrence,
   SchedulerEventOccurrencePlaceholder,
+  SchedulerProcessedEvent,
 } from '../../../models';
 import type {
   SchedulerState,
@@ -578,6 +579,51 @@ export class SchedulerStore<
   };
 
   /**
+   * Drops `start` and `end` from an update whose event cannot move its dates.
+   * `eventModelStructure` may declare them with a getter and no setter, in which case the new
+   * dates cannot be written back to the consumer's model — without this they would be written
+   * under the built-in key name instead, next to the custom fields, while the real field keeps
+   * the old value.
+   * The remaining changes still apply: the event dialog always submits `start` / `end`, even when
+   * it rendered those fields locked, so refusing the whole update would break a title edit.
+   */
+  private removeImmovableDates(
+    changes: SchedulerEventUpdatedProperties,
+    original: SchedulerProcessedEvent,
+  ): SchedulerEventUpdatedProperties {
+    const hasDateChange = 'start' in changes || 'end' in changes;
+    if (!hasDateChange || schedulerEventSelectors.canMoveDates(this.state, changes.id)) {
+      return changes;
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      const { adapter } = this.state;
+      // The dialog resubmits the unchanged dates on every save, so only a real move is worth a
+      // warning. Compared as instants, which is independent from the timezone the caller used.
+      const isMovingDates = (['start', 'end'] as const).some((property) => {
+        if (!(property in changes)) {
+          return false;
+        }
+        const value = changes[property];
+        return (
+          value == null || adapter.getTime(value) !== original.dataTimezone[property].timestamp
+        );
+      });
+
+      if (isMovingDates) {
+        warnOnce([
+          `MUI X Scheduler: The \`start\` and \`end\` dates of the event with id="${String(changes.id)}" were not updated.`,
+          '`eventModelStructure` declares them with a getter but no setter, so the new dates cannot be written back to your event model and the change was dropped.',
+          'Add a `setter` to `eventModelStructure.start` and `eventModelStructure.end` to make the dates editable.',
+        ]);
+      }
+    }
+
+    const { start, end, ...changesWithoutDates } = changes;
+    return changesWithoutDates;
+  }
+
+  /**
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
@@ -590,19 +636,21 @@ export class SchedulerStore<
       );
     }
 
-    if (this.state.recurringEventsPlugin == null && calendarEvent.rrule != null) {
+    const changes = this.removeImmovableDates(calendarEvent, original);
+
+    if (this.state.recurringEventsPlugin == null && changes.rrule != null) {
       if (process.env.NODE_ENV !== 'production') {
         warnOnce([
           'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
           'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
         ]);
       }
-      this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] });
+      this.updateEvents({ updated: [{ ...changes, rrule: undefined }] });
       return;
     }
 
     this.updateEvents({
-      updated: [calendarEvent],
+      updated: [changes],
     });
   };
 
@@ -803,6 +851,22 @@ export class SchedulerStore<
         cleanChanges.start,
         original.dataTimezone.end.timestamp - original.dataTimezone.start.timestamp,
       );
+    }
+
+    // A cut moves the original event's dates, a copy writes the whole model — including `start`
+    // and `end` — into a brand new one. Neither can be represented when `eventModelStructure`
+    // declares a date with a getter and no setter, so the paste is refused instead of corrupting
+    // the model. The cut is still allowed when it moves no date (a resource-only paste).
+    const canMoveDates = schedulerEventSelectors.canMoveDates(this.state, copiedEvent.id);
+    if (!canMoveDates && (copiedEvent.action === 'copy' || cleanChanges.start != null)) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          `MUI X Scheduler: The event with id="${String(copiedEvent.id)}" was not pasted.`,
+          '`eventModelStructure` declares `start` and / or `end` with a getter but no setter, so the pasted dates cannot be written back to your event model.',
+          'Add a `setter` to `eventModelStructure.start` and `eventModelStructure.end` to make the dates editable.',
+        ]);
+      }
+      return null;
     }
 
     if (copiedEvent.action === 'cut') {

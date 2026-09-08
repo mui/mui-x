@@ -375,7 +375,8 @@ describe('schedulerEventSelectors', () => {
       expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'end')).to.equal(false);
     });
 
-    it('should return false for the "start" side when the event start property is read-only', () => {
+    // A resize commits both dates, so a getter-only `start` blocks the "end" handle as well.
+    it('should return false for both sides when the event start property is read-only', () => {
       const state = getEventCalendarStateFromParameters({
         events: [defaultEvent],
         areEventsResizable: true,
@@ -384,10 +385,10 @@ describe('schedulerEventSelectors', () => {
         },
       });
       expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'start')).to.equal(false);
-      expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'end')).to.equal(true);
+      expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'end')).to.equal(false);
     });
 
-    it('should return false for the "end" side when the event end property is read-only', () => {
+    it('should return false for both sides when the event end property is read-only', () => {
       const state = getEventCalendarStateFromParameters({
         events: [defaultEvent],
         areEventsResizable: true,
@@ -395,7 +396,7 @@ describe('schedulerEventSelectors', () => {
           end: { getter: (event) => event.end },
         },
       });
-      expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'start')).to.equal(true);
+      expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'start')).to.equal(false);
       expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'end')).to.equal(false);
     });
 
@@ -873,6 +874,88 @@ describe('schedulerEventSelectors', () => {
         readOnly: false,
       });
       expect(schedulerEventSelectors.isReadOnly(state, event.id)).to.equal(true);
+    });
+  });
+
+  describe('canMoveDates', () => {
+    it('should return true by default', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+      });
+      expect(schedulerEventSelectors.canMoveDates(state, defaultEvent.id)).to.equal(true);
+    });
+
+    it('should return false when the event is read-only', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [readOnlyEvent],
+      });
+      expect(schedulerEventSelectors.canMoveDates(state, readOnlyEvent.id)).to.equal(false);
+    });
+
+    it('should return false when resource.areEventsReadOnly is true', () => {
+      const resource = ResourceBuilder.new().areEventsReadOnly().build();
+      const event = EventBuilder.new().resource(resource).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [event],
+        resources: [resource],
+      });
+      expect(schedulerEventSelectors.canMoveDates(state, event.id)).to.equal(false);
+    });
+
+    it('should return false when the calendar is read-only', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        readOnly: true,
+      });
+      expect(schedulerEventSelectors.canMoveDates(state, defaultEvent.id)).to.equal(false);
+    });
+
+    it('should return false when the start property is declared without a setter', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventModelStructure: {
+          start: { getter: (event) => event.start },
+        },
+      });
+      expect(schedulerEventSelectors.canMoveDates(state, defaultEvent.id)).to.equal(false);
+    });
+
+    it('should return false when the end property is declared without a setter', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventModelStructure: {
+          end: { getter: (event) => event.end },
+        },
+      });
+      expect(schedulerEventSelectors.canMoveDates(state, defaultEvent.id)).to.equal(false);
+    });
+
+    it('should return true when both date properties declare a setter', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventModelStructure: {
+          start: {
+            getter: (event) => event.start,
+            setter: (event, value) => ({ ...event, start: value }),
+          },
+          end: {
+            getter: (event) => event.end,
+            setter: (event, value) => ({ ...event, end: value }),
+          },
+        },
+      });
+      expect(schedulerEventSelectors.canMoveDates(state, defaultEvent.id)).to.equal(true);
+    });
+
+    // An absent key means "read and write the built-in property", not "read-only".
+    it('should return true when the structure does not declare the date properties', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventModelStructure: {
+          title: { getter: (event) => event.title },
+        },
+      });
+      expect(schedulerEventSelectors.canMoveDates(state, defaultEvent.id)).to.equal(true);
     });
   });
 });

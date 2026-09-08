@@ -186,6 +186,147 @@ storeClasses.forEach((storeClass) => {
         expect(duplicated.priority).to.equal('high');
       });
 
+      describe('dates declared without a setter', () => {
+        // `start` is readable but not writable, so the store must never move the event's dates:
+        // there is nowhere to write them, and the built-in key would land next to `myStart`.
+        const readOnlyStartStructure: SchedulerEventModelStructure<MyEvent> = {
+          ...eventModelStructure,
+          start: { getter: (event) => event.myStart },
+        };
+
+        const UNCHANGED_EVENT: MyEvent = {
+          myId: '1',
+          myTitle: 'Event 1',
+          myStart: '2025-07-01T09:00:00.000Z',
+          myEnd: '2025-07-01T10:00:00.000Z',
+          allDay: false,
+        };
+
+        const UPDATE_WARNING =
+          'MUI X Scheduler: The `start` and `end` dates of the event with id="1" were not updated.';
+        const PASTE_WARNING = 'MUI X Scheduler: The event with id="1" was not pasted.';
+
+        const createStore = (onEventsChange: (...args: any[]) => void) =>
+          new storeClass.Value(
+            {
+              resources: TEST_RESOURCES,
+              events: [{ ...UNCHANGED_EVENT }],
+              eventModelStructure: readOnlyStartStructure,
+              onEventsChange,
+            },
+            adapter,
+          );
+
+        it('should drop start/end from updateEvent and never write the built-in keys', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+
+          expect(() => {
+            store.updateEvent({
+              id: '1',
+              title: 'Event 1 updated',
+              start: adapter.date('2025-07-02T09:00:00.000Z', 'default'),
+              end: adapter.date('2025-07-02T10:00:00.000Z', 'default'),
+            });
+          }).toWarnDev([UPDATE_WARNING]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
+            { ...UNCHANGED_EVENT, myTitle: 'Event 1 updated' },
+          ]);
+        });
+
+        // The event dialog resubmits the locked dates unchanged on every save.
+        it('should not warn when updateEvent resubmits the current dates', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+
+          expect(() => {
+            store.updateEvent({
+              id: '1',
+              title: 'Event 1 updated',
+              start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
+              end: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
+            });
+          }).not.toWarnDev();
+
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
+            { ...UNCHANGED_EVENT, myTitle: 'Event 1 updated' },
+          ]);
+        });
+
+        // The dates are compared as instants: 11:00 in Paris is the stored 09:00Z, not a move.
+        it('should not warn when the resubmitted dates use another timezone', () => {
+          const store = createStore(vi.fn());
+
+          expect(() => {
+            store.updateEvent({
+              id: '1',
+              title: 'Event 1 updated',
+              start: adapter.date('2025-07-01T11:00:00.000Z', 'Europe/Paris'),
+              end: adapter.date('2025-07-01T12:00:00.000Z', 'Europe/Paris'),
+            });
+          }).not.toWarnDev();
+        });
+
+        it('should refuse to paste a cut event onto a new date and keep it in the clipboard', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+          store.cutEvent('1');
+
+          expect(() => {
+            expect(
+              store.pasteEvent({ start: adapter.date('2025-07-02T09:00:00.000Z', 'default') }),
+            ).to.equal(null);
+          }).toWarnDev([PASTE_WARNING]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.copiedEvent).to.deep.equal({ id: '1', action: 'cut' });
+        });
+
+        it('should still paste a cut event when the paste moves no date', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+          store.cutEvent('1');
+
+          expect(() => {
+            store.pasteEvent({ allDay: true });
+          }).not.toWarnDev();
+
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
+            { ...UNCHANGED_EVENT, allDay: true },
+          ]);
+        });
+
+        // A copy writes the whole model into a new event, dates included, so it is always refused.
+        it('should refuse to paste a copied event onto a new date', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+          store.copyEvent('1');
+
+          expect(() => {
+            expect(
+              store.pasteEvent({ start: adapter.date('2025-07-02T09:00:00.000Z', 'default') }),
+            ).to.equal(null);
+          }).toWarnDev([PASTE_WARNING]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+
+        it('should refuse to paste a copied event even when the paste moves no date', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+          store.copyEvent('1');
+
+          expect(() => {
+            expect(store.pasteEvent({ allDay: true })).to.equal(null);
+          }).toWarnDev([PASTE_WARNING]);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+      });
+
       it('should only re-compute event models affected by updated processing parameters', () => {
         interface MyEvent2 {
           myId: string;

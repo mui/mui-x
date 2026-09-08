@@ -189,6 +189,10 @@ function Calendar() {
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
+A property declared with a `getter` but no `setter` is read-only: the Event Calendar can display it but never writes it back to your model.
+
+When `start` or `end` is read-only, the event's dates cannot move at all—it can't be dragged or resized, a cut event can't be pasted onto another date, and `updateEvent()` ignores the new dates and updates the rest of the properties.
+
 ## Event constraints 🚧
 
 :::warning

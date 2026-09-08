@@ -50,6 +50,29 @@ const isEventReadOnlySelector = (state: State, eventId: SchedulerEventId) => {
   });
 };
 
+const isPropertyMissingSetter = (
+  eventModelStructure: State['eventModelStructure'],
+  property: keyof SchedulerEvent,
+) => Boolean(eventModelStructure?.[property] && !eventModelStructure[property].setter);
+
+/**
+ * Whether an event's dates can be moved: the event, its resources and the scheduler are all
+ * editable, and `eventModelStructure` can write both `start` and `end` back to the model.
+ * A `start` / `end` entry declaring a getter but no setter makes the date unrepresentable in the
+ * consumer's model, so no writer may move it — not only the drag and resize gestures.
+ */
+const canMoveDatesSelector = (state: State, eventId: SchedulerEventId) => {
+  if (isEventReadOnlySelector(state, eventId)) {
+    return false;
+  }
+
+  const { eventModelStructure } = state;
+  return (
+    !isPropertyMissingSetter(eventModelStructure, 'start') &&
+    !isPropertyMissingSetter(eventModelStructure, 'end')
+  );
+};
+
 export const schedulerEventSelectors = {
   creationConfig: createSelectorMemoized(
     (state: State) => state.readOnly,
@@ -117,6 +140,7 @@ export const schedulerEventSelectors = {
     return event;
   },
   isReadOnly: isEventReadOnlySelector,
+  canMoveDates: canMoveDatesSelector,
   /**
    * Resolves an event's color. `resourceId` picks which resource's `eventColor` counts when the
    * event itself has none — pass the row's resource id on a resource-row surface (the Event
@@ -152,13 +176,8 @@ export const schedulerEventSelectors = {
         return () => true;
       }
 
-      return (property: keyof SchedulerEvent) => {
-        if (eventModelStructure?.[property] && !eventModelStructure?.[property].setter) {
-          return true;
-        }
-
-        return false;
-      };
+      return (property: keyof SchedulerEvent) =>
+        isPropertyMissingSetter(eventModelStructure, property);
     },
   ),
   processedEventList: createSelectorMemoized(
@@ -173,16 +192,7 @@ export const schedulerEventSelectors = {
     state.canDragEventsFromTheOutside && !state.readOnly,
   canDropEventsToTheOutside: (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
   isDraggable: (state: State, eventId: SchedulerEventId) => {
-    if (isEventReadOnlySelector(state, eventId)) {
-      return false;
-    }
-
-    const eventModelStructure = state.eventModelStructure;
-    if (eventModelStructure?.start && !eventModelStructure?.start.setter) {
-      return false;
-    }
-
-    if (eventModelStructure?.end && !eventModelStructure?.end.setter) {
+    if (!canMoveDatesSelector(state, eventId)) {
       return false;
     }
 
@@ -200,16 +210,9 @@ export const schedulerEventSelectors = {
     });
   },
   isResizable: (state: State, eventId: SchedulerEventId, side: SchedulerEventSide) => {
-    if (isEventReadOnlySelector(state, eventId)) {
-      return false;
-    }
-
-    const eventModelStructure = state.eventModelStructure;
-    if (side === 'start' && eventModelStructure?.start && !eventModelStructure?.start.setter) {
-      return false;
-    }
-
-    if (side === 'end' && eventModelStructure?.end && !eventModelStructure?.end.setter) {
+    // A resize commits both dates (`{ id, start, end }`), so it needs the same all-or-nothing
+    // gate as a drag: a getter-only `start` blocks the "end" handle too.
+    if (!canMoveDatesSelector(state, eventId)) {
       return false;
     }
 
