@@ -8,11 +8,11 @@ const capturedRequestAnimationFrame =
 const nativeRequestAnimationFrame = capturedRequestAnimationFrame?.bind(globalThis) ?? null;
 
 /**
- * Waits two pairs of native frames inside separate act scopes, so ResizeObserver deliveries land as
- * acted updates instead of between test steps. Call it after rendering a scheduler
- * surface (prefer `renderSettled`) or after a scroll that mounts observed elements.
- * jsdom has no ResizeObserver and so no frames to absorb; there it flushes pending
- * microtasks inside act instead.
+ * Absorbs native observer frames inside act until React stops changing the DOM.
+ * Call after rendering a scheduler surface (prefer `renderSettled`) or scrolling
+ * to mount observed elements. Each pass allows React to commit observer-driven
+ * updates before waiting for the resulting layout deliveries.
+ * In jsdom, flush pending microtasks inside act without waiting for native frames.
  */
 export async function absorbObserverFrames() {
   if (typeof ResizeObserver === 'undefined' || nativeRequestAnimationFrame === null) {
@@ -29,13 +29,39 @@ export async function absorbObserverFrames() {
         'the live one. A test likely leaked fake timers without restoring them.',
     );
   }
-  // React can flush observer-driven state updates when act exits, changing layout
-  // and scheduling another delivery. A second act scope absorbs that delivery;
-  // waiting more frames in the first scope would leave the update batched.
   const waitForFramePair = () =>
     new Promise<void>((resolve) => {
       nativeRequestAnimationFrame!(() => nativeRequestAnimationFrame!(() => resolve()));
     });
-  await act(waitForFramePair);
-  await act(waitForFramePair);
+  let didMutate = false;
+  const observer = new MutationObserver(() => {
+    didMutate = true;
+  });
+  observer.observe(document.body, {
+    attributes: true,
+    childList: true,
+    characterData: true,
+    subtree: true,
+  });
+
+  async function waitForSettledDom(pass: number): Promise<void> {
+    didMutate = false;
+    // React commits at the end of each act scope; the next pass must follow it.
+    await act(waitForFramePair);
+    if (!didMutate && observer.takeRecords().length === 0) {
+      return;
+    }
+    if (pass === 10) {
+      throw new Error(
+        'absorbObserverFrames: the DOM did not settle after 10 observer frame pairs.',
+      );
+    }
+    await waitForSettledDom(pass + 1);
+  }
+
+  try {
+    await waitForSettledDom(1);
+  } finally {
+    observer.disconnect();
+  }
 }

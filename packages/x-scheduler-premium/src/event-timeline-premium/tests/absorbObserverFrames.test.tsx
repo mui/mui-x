@@ -9,8 +9,32 @@ import {
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { describe, expect, it, vi } from 'vitest';
 
+function ResizingBox({
+  maximumWidth,
+  onResize,
+}: {
+  maximumWidth: number;
+  onResize?: (width: number) => void;
+}) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [width, setWidth] = React.useState(100);
+
+  React.useLayoutEffect(() => {
+    const observer = new ResizeObserver(([entry]) => {
+      onResize?.(entry.contentRect.width);
+      if (entry.contentRect.width < maximumWidth) {
+        setWidth(entry.contentRect.width + 100);
+      }
+    });
+    observer.observe(ref.current!);
+    return () => observer.disconnect();
+  }, [maximumWidth, onResize]);
+
+  return <div ref={ref} style={{ width, height: 20 }} />;
+}
+
 describe('absorbObserverFrames', () => {
-  const { renderSettled } = createSchedulerRenderer({
+  const { render, renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
@@ -38,29 +62,24 @@ describe('absorbObserverFrames', () => {
     async () => {
       const widths: number[] = [];
 
-      function ResizingBox() {
-        const ref = React.useRef<HTMLDivElement>(null);
-        const [width, setWidth] = React.useState(100);
+      await renderSettled(
+        <ResizingBox maximumWidth={600} onResize={(width) => widths.push(width)} />,
+      );
 
-        React.useLayoutEffect(() => {
-          const observer = new ResizeObserver(([entry]) => {
-            widths.push(entry.contentRect.width);
-            if (entry.contentRect.width < 300) {
-              setWidth(entry.contentRect.width + 100);
-            }
-          });
-          observer.observe(ref.current!);
-          return () => observer.disconnect();
-        }, []);
-
-        return <div ref={ref} style={{ width, height: 20 }} />;
-      }
-
-      await renderSettled(<ResizingBox />);
-
-      expect(widths).toEqual([100, 200, 300]);
+      expect(widths).toEqual([100, 200, 300, 400, 500, 600]);
     },
   );
+
+  it.skipIf(isJSDOM)('should fail when observer-driven layout never settles', async () => {
+    const view = render(<ResizingBox maximumWidth={Infinity} />);
+    try {
+      await expect(absorbObserverFrames()).rejects.toThrow(
+        'the DOM did not settle after 10 observer frame pairs',
+      );
+    } finally {
+      view.unmount();
+    }
+  });
 
   it.skipIf(isJSDOM)('should resolve while fake timers are installed', async () => {
     // Fake timers replace the global rAF; the absorb must ride the capture instead.
