@@ -128,7 +128,7 @@ The demo below exhibits the behavior of the nested lazy loading with row groupin
 
 ### Row selection propagation
 
-[Row selection propagation](/x/react-data-grid/row-selection/#selection-propagation) works with partially loaded groups.
+[Row selection propagation](/x/react-data-grid/row-grouping/#automatic-parent-and-child-selection) works with partially loaded groups.
 Skeleton rows are not selectable and stay neutral for the parent derivation.
 When the selected rows of a group are its only loaded children, the Data Grid derives the group as selected.
 Rows that load later inherit the selection state of their selected parent.
