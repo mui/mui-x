@@ -6,11 +6,12 @@ export const createProxy = <T extends UserGesture>(target: T): T => {
       if (prop === 'setup') {
         return (options: UserGestureOptions) => {
           const mode = Reflect.get(obj, 'pointerManager').mode;
+          const Constructor = obj.constructor;
 
           // Calling setup pretty much clears this proxy by creating a new instance
           // This new instance will NOT be a proxy.
           // @ts-expect-error, constructor is a function...
-          return new obj.constructor(mode).setup(options);
+          return new Constructor(mode).setup(options);
         };
       }
 
@@ -26,8 +27,9 @@ export const createProxy = <T extends UserGesture>(target: T): T => {
       // This is useful for tests where we want to ensure no pointers are left hanging in the pointer manager.
       return async (...args: unknown[]) => {
         const mode = Reflect.get(obj, 'pointerManager').mode;
+        const Constructor = obj.constructor;
         // @ts-expect-error, constructor is a function...
-        return new obj.constructor(mode)[prop](...args);
+        return new Constructor(mode)[prop](...args);
       };
     },
   });
