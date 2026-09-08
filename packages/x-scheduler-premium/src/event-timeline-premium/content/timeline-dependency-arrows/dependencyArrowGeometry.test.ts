@@ -22,7 +22,7 @@ import {
   LANE_1_CENTER,
   RESOURCE_1,
   RESOURCE_2,
-} from './dependencyGeometryTestUtils';
+} from '../../tests/dependencyGeometryTestUtils';
 
 // Mirrors the axis filter of the occurrence selector: visible ≡ non-zero width.
 const filterVisibleOccurrences = (axis: TimelineAxis, occurrences: SchedulerEventOccurrence[]) =>

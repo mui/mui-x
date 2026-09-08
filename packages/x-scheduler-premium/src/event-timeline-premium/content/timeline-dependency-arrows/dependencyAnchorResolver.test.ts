@@ -10,7 +10,7 @@ import {
   LANE_METRICS,
   RESOURCE_1,
   RESOURCE_2,
-} from './dependencyGeometryTestUtils';
+} from '../../tests/dependencyGeometryTestUtils';
 
 // Overlaps event-a → lane 2 of its row. 11:00–15:00 UTC → x 660 to 900.
 const eventD = EventBuilder.new()

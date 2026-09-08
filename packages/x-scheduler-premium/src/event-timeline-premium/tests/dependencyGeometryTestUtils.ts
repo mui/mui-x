@@ -6,9 +6,11 @@ import type {
   SchedulerDependency,
   SchedulerDependencyType,
 } from '@mui/x-scheduler-internals-premium/models';
-import { createDependencyAnchorResolver } from './dependencyAnchorResolver';
+import { createDependencyAnchorResolver } from '../content/timeline-dependency-arrows/dependencyAnchorResolver';
 
-// Shared by the anchor resolver and the arrow geometry tests.
+// Shared by the anchor resolver and the arrow geometry tests. Lives in `tests/` so
+// the declaration build (which excludes that folder) never follows its `test/utils`
+// import outside the package.
 
 export const collectionStart = adapter.date('2024-01-15', 'default');
 export const collectionEnd = adapter.endOfDay(collectionStart);
