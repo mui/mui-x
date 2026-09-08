@@ -66,8 +66,6 @@ export async function absorbObserverFrames() {
           nativeRequestAnimationFrame!(() => resolve());
         });
       });
-      // Let the observer deliver the records for what the commit just changed.
-      await Promise.resolve();
     } while (
       nativeNow() - lastMutationAt < QUIET_WINDOW_MS &&
       nativeNow() - startedAt < MAX_DRAIN_MS
