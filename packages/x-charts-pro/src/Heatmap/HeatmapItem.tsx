@@ -59,6 +59,8 @@ function HeatmapItem(props: HeatmapItemProps) {
     isHighlighted = false,
     isFaded = false,
     borderRadius,
+    xIndex,
+    yIndex,
     slotProps = {},
     slots = {},
     ...other
@@ -70,6 +72,8 @@ function HeatmapItem(props: HeatmapItemProps) {
     isFaded,
     isHighlighted,
     value,
+    xIndex,
+    yIndex,
   };
 
   const classes = useUtilityClasses(ownerState);

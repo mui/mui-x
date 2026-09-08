@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { shouldForwardProp } from '@mui/system/createStyled';
 import type { SeriesId } from '../models';
 import type { HeatmapClasses } from './heatmapClasses';
 
@@ -12,6 +11,14 @@ export interface HeatmapCellOwnerState {
   isHighlighted: boolean;
   classes?: Partial<HeatmapClasses>;
   value: number;
+  /**
+   * The x index of the cell.
+   */
+  xIndex: number;
+  /**
+   * The y index of the cell.
+   */
+  yIndex: number;
 }
 
 /**
@@ -24,14 +31,6 @@ export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
   y: number;
   width: number;
   height: number;
-  /**
-   * The x index of the cell.
-   */
-  xIndex: number;
-  /**
-   * The y index of the cell.
-   */
-  yIndex: number;
   ownerState: HeatmapCellOwnerState;
 }
 
@@ -39,8 +38,6 @@ const HeatmapCellRoot = styled('rect', {
   name: 'MuiHeatmap',
   slot: 'Cell',
   overridesResolver: (_, styles) => styles.cell,
-  // `xIndex`/`yIndex` are not valid DOM attributes, keep them off the `rect`.
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'xIndex' && prop !== 'yIndex',
 })<HeatmapCellProps>(({ ownerState }) => ({
   filter:
     (ownerState.isHighlighted && 'saturate(120%)') ||
@@ -78,18 +75,12 @@ HeatmapCell.propTypes /* remove-proptypes */ = {
     isHighlighted: PropTypes.bool.isRequired,
     seriesId: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
+    xIndex: PropTypes.number.isRequired,
+    yIndex: PropTypes.number.isRequired,
   }).isRequired,
   width: PropTypes.number.isRequired,
   x: PropTypes.number.isRequired,
-  /**
-   * The x index of the cell.
-   */
-  xIndex: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
-  /**
-   * The y index of the cell.
-   */
-  yIndex: PropTypes.number.isRequired,
 } as any;
 
 export { HeatmapCell };

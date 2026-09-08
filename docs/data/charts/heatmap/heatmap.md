@@ -123,8 +123,7 @@ Customize it with `slots.legend` and `slotProps.legend`.
 
 Use the `cell` slot to replace the default cell shape or add labels.
 
-The slot receives the cell's `xIndex` and `yIndex`, so the rendering can depend on the position in the grid.
-Neither is a valid DOM attribute, so remove them from the props you spread onto an SVG element.
+The slot's `ownerState` carries the cell's `xIndex` and `yIndex`, so the rendering can depend on the position in the grid.
 
 {{"demo": "CustomItem.js"}}
 

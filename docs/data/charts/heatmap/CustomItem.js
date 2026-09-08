@@ -4,11 +4,10 @@ import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { data } from './dumbData';
 
 function CustomCell(props) {
-  // `xIndex` and `yIndex` are not valid DOM attributes, keep them out of `other`.
-  const { x, y, width, height, xIndex, yIndex, ownerState, ...other } = props;
+  const { x, y, width, height, ownerState, ...other } = props;
 
   // Cells on the diagonal are rendered as circles.
-  const isDiagonal = xIndex === yIndex;
+  const isDiagonal = ownerState.xIndex === ownerState.yIndex;
 
   return (
     <React.Fragment>

@@ -83,12 +83,12 @@ describe('<HeatmapPlot />', () => {
     expect(window.getComputedStyle(cells[1]).fill).to.equal('rgb(255, 0, 0)');
   });
 
-  it('should pass `xIndex` and `yIndex` to the cell slot', () => {
+  it('should expose `xIndex` and `yIndex` on the cell slot `ownerState`', () => {
     // A Set because the render can run more than once per cell.
     const received = new Set<string>();
 
-    function CustomCell({ xIndex, yIndex, ownerState, ...other }: HeatmapCellProps) {
-      received.add(`${xIndex},${yIndex}`);
+    function CustomCell({ ownerState, ...other }: HeatmapCellProps) {
+      received.add(`${ownerState.xIndex},${ownerState.yIndex}`);
       return <rect {...other} data-testid="custom-cell" />;
     }
 
@@ -114,20 +114,33 @@ describe('<HeatmapPlot />', () => {
     expect([...received].sort()).to.deep.equal(['0,0', '1,0', '1,1']);
   });
 
-  it('should not forward `xIndex` and `yIndex` to the DOM', () => {
+  // The indices live on `ownerState` so that a custom cell spreading the rest props onto an
+  // SVG element does not start forwarding them to the DOM.
+  it('should keep the cell indices out of the props spread by a custom cell', () => {
+    const restPropKeys: string[] = [];
+
+    function CustomCell({ ownerState, ...other }: HeatmapCellProps) {
+      restPropKeys.push(...Object.keys(other));
+      return <rect {...other} />;
+    }
+
     const { container } = render(
       <Heatmap
         series={[{ data: [[0, 0, 10]] }]}
         xAxis={[{ scaleType: 'band', data: ['A'] }]}
         yAxis={[{ scaleType: 'band', data: ['X'] }]}
+        slots={{ cell: CustomCell }}
         width={200}
         height={200}
       />,
     );
 
-    const cell = container.querySelector(`.${heatmapClasses.cell}`)!;
-    expect(cell.getAttribute('xIndex')).to.equal(null);
-    expect(cell.getAttribute('yIndex')).to.equal(null);
+    // `x` is forwarded, so an empty collection cannot make the assertions below pass.
+    expect(restPropKeys).to.include('x');
+    expect(restPropKeys).not.to.include('xIndex');
+    expect(restPropKeys).not.to.include('yIndex');
+
+    const cell = container.querySelector('rect')!;
     expect(cell.getAttribute('xindex')).to.equal(null);
     expect(cell.getAttribute('yindex')).to.equal(null);
   });
