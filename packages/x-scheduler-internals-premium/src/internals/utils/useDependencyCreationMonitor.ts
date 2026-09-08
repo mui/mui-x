@@ -52,7 +52,7 @@ function getDependencyDropTarget(
   return null;
 }
 
-// TODO(dependencies public flip): source these messages from the locale text so the
+// TODO(dependencies public flip, #23420): source these messages from the locale text so the
 // feedback is translatable.
 // The `Record` is exhaustive on the rejection union: a new reason fails to compile
 // until it brings a message.

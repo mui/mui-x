@@ -251,7 +251,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   );
 });
 
-// TODO(dependencies public flip): move to localeText. Hardcoded while the feature has
+// TODO(dependencies public flip, #23420): move to localeText. Hardcoded while the feature has
 // no public API.
 const DEPENDENCY_SOURCE_DESCRIPTIONS: Record<SchedulerDependencyType, (title: string) => string> = {
   FinishToStart: (title) => `Cannot start until ${title} finishes.`,
