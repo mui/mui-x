@@ -32,11 +32,10 @@ export async function absorbObserverFrames() {
   // React can flush observer-driven state updates when act exits, changing layout
   // and scheduling another delivery. A second act scope absorbs that delivery;
   // waiting more frames in the first scope would leave the update batched.
-  for (let pass = 0; pass < 2; pass += 1) {
-    await act(async () => {
-      await new Promise<void>((resolve) => {
-        nativeRequestAnimationFrame!(() => nativeRequestAnimationFrame!(() => resolve()));
-      });
+  const waitForFramePair = () =>
+    new Promise<void>((resolve) => {
+      nativeRequestAnimationFrame!(() => nativeRequestAnimationFrame!(() => resolve()));
     });
-  }
+  await act(waitForFramePair);
+  await act(waitForFramePair);
 }
