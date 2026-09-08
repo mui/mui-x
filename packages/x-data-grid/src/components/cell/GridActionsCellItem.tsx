@@ -42,7 +42,6 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
     return (
       <rootProps.slots.baseIconButton
         size="small"
-        role="menuitem"
         aria-label={label}
         {...other}
         onClick={handleClick}
