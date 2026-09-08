@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import type {
   YearButtonOwnerState,
   YearCalendarSlotProps,
@@ -66,7 +67,13 @@ const DefaultYearButton = styled('button', {
   cursor: 'pointer',
   // Not a ButtonBase, so the themed ring cannot arrive on its own. No fallback:
   // without `theme.focusVisible` the button keeps its background-only focus.
-  ...(theme.focusVisible && { '&:focus-visible': theme.focusVisible }),
+  // Inset it: the year list is an `overflowY: auto` scroller, and keyboard
+  // navigation parks the focused year flush against an edge, where an outset
+  // ring is cut in half.
+  ...(theme.focusVisible && {
+    ...applyInsetFocusVisible(1),
+    '&:focus-visible': theme.focusVisible,
+  }),
   '&:focus': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,
