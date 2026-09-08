@@ -81,13 +81,13 @@ const MOCK_EVENT_STATE = {
 };
 
 /**
- * `dataSource` is a Premium-only parameter (see `SchedulerLazyLoadingParameters`), so it is not
- * declared on `SchedulerParameters`. The shared store only needs to know whether one is present
- * to pick the right initial event and loading state; the fetching itself lives in the Premium
- * `SchedulerLazyLoadingPlugin`.
+ * Reads the Premium-only `dataSource` parameter (see `SchedulerLazyLoadingParameters`).
+ * Must stay a truthiness check to match the Premium plugin guards: on a falsy value
+ * (`dataSource={isEnabled && source}`) they skip fetching, so treating it as a data source here
+ * would leave the scheduler loading with nothing to resolve it.
  */
 function hasDataSource(parameters: object): boolean {
-  return (parameters as { dataSource?: unknown }).dataSource != null;
+  return Boolean((parameters as { dataSource?: unknown }).dataSource);
 }
 
 /**

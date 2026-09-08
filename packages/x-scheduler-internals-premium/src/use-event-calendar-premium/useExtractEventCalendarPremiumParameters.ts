@@ -1,27 +1,24 @@
 /* eslint-disable react-compiler/react-compiler -- intentional `react-hooks/exhaustive-deps` disable below */
 import * as React from 'react';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import type { SchedulerDataSource } from '@mui/x-scheduler-internals/internals';
 import type { EventCalendarPremiumParameters } from './EventCalendarPremiumStore.types';
 
 /**
  * Extracts the Event Calendar Premium parameters from the props.
- * Wraps the community extraction hook and pulls the Premium-only `dataSource` out of the
- * forwarded props, so it reaches the Premium store instead of landing on the DOM.
+ * Wraps the community hook, taking care of the Premium-only parameters it does not know about.
  */
 export function useExtractEventCalendarPremiumParameters<
   TEvent extends object,
   TResource extends object,
   P extends EventCalendarPremiumParameters<TEvent, TResource>,
 >(props: P): UseExtractEventCalendarPremiumParametersReturnValue<TEvent, TResource, P> {
-  const { parameters: baseParameters, forwardedProps: baseForwardedProps } =
-    useExtractEventCalendarParameters<TEvent, TResource, P>(props);
+  const { dataSource, ...communityProps } = props;
 
-  // `Omit<P, keyof EventCalendarParameters>` is opaque for a generic `P`, so the Premium-only
-  // key is re-surfaced with a local cast before being destructured.
-  const { dataSource, ...forwardedProps } = baseForwardedProps as {
-    dataSource?: SchedulerDataSource<TEvent>;
-  } & Omit<P, keyof EventCalendarPremiumParameters<TEvent, TResource>>;
+  const { parameters: baseParameters, forwardedProps } = useExtractEventCalendarParameters<
+    TEvent,
+    TResource,
+    Omit<P, 'dataSource'>
+  >(communityProps);
 
   const parameters: EventCalendarPremiumParameters<TEvent, TResource> = React.useMemo(
     () => ({ ...baseParameters, dataSource }),
@@ -35,6 +32,8 @@ export function useExtractEventCalendarPremiumParameters<
 
   return {
     parameters,
+    // Already `Omit<Omit<P, 'dataSource'>, keyof EventCalendarParameters>`, which TypeScript
+    // cannot reduce to the equivalent flat `Omit` while `P` is generic.
     forwardedProps: forwardedProps as Omit<
       P,
       keyof EventCalendarPremiumParameters<TEvent, TResource>

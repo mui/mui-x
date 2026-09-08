@@ -2,8 +2,6 @@ import type { SchedulerDataSource } from '@mui/x-scheduler-internals/internals';
 
 /**
  * Parameters to enable lazy loading through a data source.
- * Lazy loading is a Premium-only feature: the fetching logic lives in
- * `SchedulerLazyLoadingPlugin`, which is only attached by the Premium stores.
  */
 export interface SchedulerLazyLoadingParameters<TEvent extends object> {
   /**

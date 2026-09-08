@@ -43,8 +43,6 @@ const StandaloneWeekViewPremium = React.forwardRef(function StandaloneWeekViewPr
   const { localeText, slots, slotProps, ...other } = forwardedProps;
 
   return (
-    // `parameters` carries the Premium-only `dataSource`, which the community provider
-    // parameters do not declare: it rides through this spread into `storeClass`.
     <EventCalendarProvider
       {...parameters}
       storeClass={EventCalendarPremiumStore}

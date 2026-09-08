@@ -10,7 +10,7 @@ import type {
 import { buildEventsState } from '@mui/x-scheduler-internals/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { SchedulerDataManager } from '../utils/queue';
-import type { SchedulerLazyLoadingParameters } from '../../models/lazyLoading';
+import type { SchedulerLazyLoadingParameters } from '../../models';
 
 export class SchedulerLazyLoadingPlugin<
   TEvent extends object,

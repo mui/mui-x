@@ -44,8 +44,6 @@ const StandaloneCompactDayViewPremium = React.forwardRef(function StandaloneComp
 
   return (
     <ResponsiveTypographyContainer>
-      {/* `parameters` carries the Premium-only `dataSource`, which the community provider
-          parameters do not declare: it rides through this spread into `storeClass`. */}
       <EventCalendarProvider
         {...parameters}
         storeClass={EventCalendarPremiumStore}
