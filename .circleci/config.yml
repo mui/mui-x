@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/ecaf36c894f9e8bc68959b23bf33e45aefeb319c/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/428843a303d23c4c904fc740058e33e1a8b95c85/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -111,7 +111,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.62.1-noble
+      playwright-img-version: v1.63.0-noble
     resource_class: xlarge.gen2
     steps:
       - checkout
@@ -197,7 +197,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.62.1-noble
+      playwright-img-version: v1.63.0-noble
     resource_class: medium
     steps:
       - checkout
@@ -213,7 +213,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.62.1-noble
+      playwright-img-version: v1.63.0-noble
     resource_class: medium
     steps:
       - checkout
@@ -238,7 +238,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.62.1-noble
+      playwright-img-version: v1.63.0-noble
     resource_class: large.gen2
     steps:
       - checkout
@@ -255,7 +255,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.62.1-noble
+      playwright-img-version: v1.63.0-noble
     resource_class: medium
     steps:
       - checkout
