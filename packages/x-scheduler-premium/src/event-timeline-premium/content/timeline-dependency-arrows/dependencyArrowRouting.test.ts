@@ -61,6 +61,48 @@ describe('dependencyArrowRouting', () => {
   });
 
   describe('buildDependencyArrowRoutes', () => {
+    it('should always end with a horizontal segment entering the target edge', () => {
+      // Whatever the type and the anchors (timeline edges included), the arrowhead
+      // must sit on a horizontal segment pointing into the target edge: rightwards
+      // into a start edge, leftwards into an end edge.
+      const xs = [0, 5, 20, 50, 700, 1400, 1428, EVENTS_WIDTH];
+      const ys = [5, 40];
+      const types = ['FinishToStart', 'StartToStart', 'FinishToFinish', 'StartToFinish'] as const;
+      // A visible event never has its start edge at the timeline end nor its end edge
+      // at the timeline start.
+      const anchorsOf = (edge: 'start' | 'end') =>
+        xs.filter((x) => (edge === 'start' ? x < EVENTS_WIDTH : x > 0));
+      for (const type of types) {
+        const enteringDirection = type.endsWith('Start') ? 1 : -1;
+        const sourceXs = anchorsOf(type.startsWith('Finish') ? 'end' : 'start');
+        const targetXs = anchorsOf(type.endsWith('Start') ? 'start' : 'end');
+        for (const sourceX of sourceXs) {
+          for (const targetX of targetXs) {
+            for (const sourceY of ys) {
+              for (const targetY of ys) {
+                const routes = buildDependencyArrowRoutes(
+                  { x: sourceX, y: sourceY },
+                  { x: targetX, y: targetY },
+                  type,
+                  DETOUR_OFFSET,
+                  EVENTS_WIDTH,
+                );
+                for (const points of routes) {
+                  const [before, last] = points.slice(-2);
+                  const label = `${type} (${sourceX}, ${sourceY}) → (${targetX}, ${targetY})`;
+                  expect(last.y, label).to.equal(before.y);
+                  expect(Math.sign(last.x - before.x), label).to.equal(enteringDirection);
+                  for (const point of points) {
+                    expect(point.x, label).to.be.within(0, EVENTS_WIDTH);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
     it('should return a straight segment when the anchors share the same height and the target is forward', () => {
       const [points] = buildDependencyArrowRoutes(
         { x: 10, y: 5 },
@@ -351,6 +393,46 @@ describe('dependencyArrowRouting', () => {
         ]);
       });
 
+      it('should ride the entry onto the target when it ends at the timeline end at the same height', () => {
+        // The entry clearance would leave the events area: the vertical clamps and
+        // the arrowhead rides over the target's tail, still entering horizontally.
+        const [points] = buildDependencyArrowRoutes(
+          { x: 100, y: 20 },
+          { x: EVENTS_WIDTH, y: 20 },
+          'FinishToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 100, y: 20 },
+          { x: 108, y: 20 },
+          { x: 108, y: 20 + DETOUR_OFFSET },
+          { x: 1440, y: 20 + DETOUR_OFFSET },
+          { x: 1440, y: 20 },
+          { x: 1428, y: 20 },
+        ]);
+      });
+
+      it('should ride the exit onto the source when it ends at the timeline end at the same height', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: EVENTS_WIDTH, y: 20 },
+          { x: 1400, y: 20 },
+          'FinishToFinish',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 1432, y: 20 },
+          { x: 1440, y: 20 },
+          { x: 1440, y: 20 + DETOUR_OFFSET },
+          { x: 1412, y: 20 + DETOUR_OFFSET },
+          { x: 1412, y: 20 },
+          { x: 1400, y: 20 },
+        ]);
+      });
+
       it('should ride both stubs onto the events when the wrap clamps at the timeline end', () => {
         const [points] = buildDependencyArrowRoutes(
           { x: EVENTS_WIDTH, y: 5 },
@@ -420,6 +502,25 @@ describe('dependencyArrowRouting', () => {
           { x: 38, y: 5 + DETOUR_OFFSET },
           { x: 38, y: 5 },
           { x: 50, y: 5 },
+        ]);
+      });
+
+      it('should ride the entry onto the target when it starts at the timeline start at the same height', () => {
+        const [points] = buildDependencyArrowRoutes(
+          { x: 30, y: 20 },
+          { x: 0, y: 20 },
+          'StartToStart',
+          DETOUR_OFFSET,
+          EVENTS_WIDTH,
+        );
+
+        expect(points).to.deep.equal([
+          { x: 30, y: 20 },
+          { x: 22, y: 20 },
+          { x: 22, y: 20 + DETOUR_OFFSET },
+          { x: 0, y: 20 + DETOUR_OFFSET },
+          { x: 0, y: 20 },
+          { x: 12, y: 20 },
         ]);
       });
 

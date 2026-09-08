@@ -133,16 +133,17 @@ function routeSameEdges(
 
   if (source.y === target.y) {
     // Same height: the wrap would fold onto itself, so the route detours below the
-    // events between the exit and the entry, like the S route.
+    // events between the exit and the entry, like the S route — stubs riding over
+    // the events at the timeline end included.
     const detourY = source.y + detourOffset;
     return [
       [
-        source,
+        { x: exitX - DEPENDENCY_ARROW_STUB, y: source.y },
         { x: exitX, y: source.y },
         { x: exitX, y: detourY },
         { x: entryX, y: detourY },
         { x: entryX, y: target.y },
-        target,
+        { x: entryX - DEPENDENCY_ARROW_TARGET_CLEARANCE, y: target.y },
       ],
     ];
   }
