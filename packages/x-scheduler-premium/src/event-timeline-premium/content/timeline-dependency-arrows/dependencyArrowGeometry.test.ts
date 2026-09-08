@@ -1,29 +1,28 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type {
-  SchedulerProcessedEvent,
   SchedulerEventOccurrence,
+  SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
-  getOccurrencesFromEvents,
   computeElementPositionInCollection,
+  getOccurrencesFromEvents,
 } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
-import type {
-  SchedulerDependency,
-  SchedulerDependencyType,
-} from '@mui/x-scheduler-internals-premium/models';
 import { describe, it, expect } from 'vitest';
-import { createDependencyAnchorResolver, getEventEdgeAnchor } from './dependencyAnchorResolver';
 import { computeDependencyArrows } from './dependencyArrowGeometry';
-
-const collectionStart = adapter.date('2024-01-15', 'default');
-const collectionEnd = adapter.endOfDay(collectionStart);
-const FULL_DAY_AXIS = {
-  start: collectionStart,
-  end: collectionEnd,
-  dayStartMinute: 0,
-  dayEndMinute: 1440,
-};
+import {
+  buildDependency,
+  buildResolver,
+  collectionEnd,
+  collectionStart,
+  eventA,
+  eventB,
+  EVENTS_WIDTH,
+  getOccurrences,
+  LANE_1_CENTER,
+  RESOURCE_1,
+  RESOURCE_2,
+} from './dependencyGeometryTestUtils';
 
 // Mirrors the axis filter of the occurrence selector: visible ≡ non-zero width.
 const filterVisibleOccurrences = (axis: TimelineAxis, occurrences: SchedulerEventOccurrence[]) =>
@@ -36,60 +35,8 @@ const filterVisibleOccurrences = (axis: TimelineAxis, occurrences: SchedulerEven
       }).duration > 0,
   );
 
-// 1440 minutes in the collection and eventsWidth = 1440 → 1px per minute.
-const EVENTS_WIDTH = 1440;
-const LANE_METRICS = { topPadding: 16, laneMinHeight: 30, laneGap: 4 };
-// One-lane rows: the anchor sits at rowPosition + topPadding + laneMinHeight / 2.
-const LANE_1_CENTER = LANE_METRICS.topPadding + LANE_METRICS.laneMinHeight / 2;
-
-const RESOURCE_1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
-const RESOURCE_2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
-
-function getOccurrences(events: SchedulerProcessedEvent[]) {
-  return getOccurrencesFromEvents({
-    adapter,
-    start: collectionStart,
-    end: collectionEnd,
-    events,
-    displayTimezone: 'default',
-    visibleResources: {},
-    recurringEventsPlugin: null,
-  });
-}
-
-function buildDependency(
-  id: string,
-  source: string,
-  target: string,
-  type: SchedulerDependencyType = 'FinishToStart',
-): SchedulerDependency {
-  return { id, source, target, type };
-}
-
-function buildResolver(parameters: {
-  resources: Parameters<typeof createDependencyAnchorResolver>[0]['resources'];
-  rowPositions: readonly number[];
-  axis?: TimelineAxis;
-  eventsWidth?: number;
-}) {
-  return createDependencyAnchorResolver({
-    adapter,
-    resources: parameters.resources,
-    rowPositions: parameters.rowPositions,
-    axis: parameters.axis ?? FULL_DAY_AXIS,
-    eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
-    laneMetrics: LANE_METRICS,
-  });
-}
-
 describe('dependencyArrowGeometry', () => {
   describe('computeDependencyArrows', () => {
-    // 10:00–12:00 UTC → end x = 720. 13:00–14:00 UTC → start x = 780.
-    const eventA = EventBuilder.new()
-      .id('event-a')
-      .singleDay('2024-01-15T10:00:00Z', 120)
-      .toProcessed();
-    const eventB = EventBuilder.new().id('event-b').singleDay('2024-01-15T13:00:00Z').toProcessed();
     const eventC = EventBuilder.new().id('event-c').singleDay('2024-01-15T13:00:00Z').toProcessed();
 
     it('should return a straight arrow between two events in the same row and lane', () => {
@@ -642,52 +589,6 @@ describe('dependencyArrowGeometry', () => {
       );
 
       expect(arrows).to.deep.equal([]);
-    });
-
-    it('should resolve an event outside the endpoint filter through the targeted scan', () => {
-      const resolver = createDependencyAnchorResolver({
-        adapter,
-        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
-        rowPositions: [0],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: EVENTS_WIDTH,
-        laneMetrics: LANE_METRICS,
-        endpointIds: new Set(['event-a']),
-      });
-
-      // Filtered id: indexed by the build pass.
-      expect(resolver.getAppearances('event-a')).to.have.length(1);
-      // Off-filter id (the in-flight creation's event): targeted scan, cached.
-      const first = resolver.getAppearances('event-b');
-      expect(first).to.have.length(1);
-      expect(resolver.getAppearances('event-b')).to.equal(first);
-      // Unknown off-filter id caches its empty result too.
-      expect(resolver.getAppearances('nope')).to.have.length(0);
-    });
-
-    it('should anchor the rubber band on the appearance matching the resource', () => {
-      // A multi-resource event repeats the very same occurrence — key included — on
-      // each of its rows, so only the resource tells its appearances apart.
-      const [occurrence] = getOccurrences([eventA]);
-      const resolver = buildResolver({
-        resources: [
-          { resource: RESOURCE_1, occurrences: [occurrence] },
-          { resource: RESOURCE_2, occurrences: [occurrence] },
-        ],
-        rowPositions: [0, 62],
-      });
-
-      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', occurrence.key, 'r2')!.y).to.equal(
-        62 + LANE_1_CENTER,
-      );
-      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', occurrence.key, 'r1')!.y).to.equal(
-        LANE_1_CENTER,
-      );
-      // An unknown (or absent) key silently falls back to the first appearance.
-      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', 'unknown-key')!.y).to.equal(
-        LANE_1_CENTER,
-      );
-      expect(getEventEdgeAnchor(resolver, 'event-a', 'end')!.y).to.equal(LANE_1_CENTER);
     });
 
     describe('trimmed hour window', () => {
