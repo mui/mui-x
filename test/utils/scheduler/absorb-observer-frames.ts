@@ -60,21 +60,18 @@ export async function absorbObserverFrames() {
     // single long-running one would hide every update until the very end and read
     // as quiet throughout.
     /* eslint-disable no-await-in-loop */
-    for (;;) {
-      await act(async () => {
-        await new Promise<void>((resolve) => {
-          nativeRequestAnimationFrame!(() => resolve());
-        });
-      });
-      if (nativeNow() - lastMutationAt >= QUIET_WINDOW_MS) {
-        return;
-      }
+    while (nativeNow() - lastMutationAt < QUIET_WINDOW_MS) {
       if (nativeNow() - startedAt >= MAX_DRAIN_MS) {
         throw new Error(
           `absorbObserverFrames: the DOM did not settle within ${MAX_DRAIN_MS}ms. An ` +
             'observer-driven update is most likely resizing an observed element in a loop.',
         );
       }
+      await act(async () => {
+        await new Promise<void>((resolve) => {
+          nativeRequestAnimationFrame!(() => resolve());
+        });
+      });
     }
     /* eslint-enable no-await-in-loop */
   } finally {
