@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "eventsource-parser": "^3.1.1",
+    "eventsource-parser": "^4.1.0",
     "p-queue": "^9.3.3"
   },
   "peerDependencies": {
@@ -42,6 +42,6 @@
     ".": "./src/index.ts"
   },
   "engines": {
-    "node": ">=20.19"
+    "node": ">=22.12"
   }
 }
