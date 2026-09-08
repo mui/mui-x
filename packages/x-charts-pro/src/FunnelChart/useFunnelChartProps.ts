@@ -6,7 +6,7 @@ import type { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
 import { defaultizeMargin } from '@mui/x-charts/internals';
 import type { XAxis, YAxis } from '@mui/x-charts/internals';
 import type { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { FUNNEL_CHART_PLUGINS } from './FunnelChart.plugins';
@@ -43,12 +43,11 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
       ((categoryAxis?.position === 'left' || categoryAxis?.position === 'right') && isHorizontal) ||
       ((categoryAxis?.position === 'top' || categoryAxis?.position === 'bottom') && !isHorizontal)
     ) {
-      warnOnce(
+      warn(
         [
           `MUI X Charts: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
           `Ensure that the categoryAxis position is set to '${isHorizontal ? 'top' : 'left'}' or '${isHorizontal ? 'bottom' : 'right'}' for ${isHorizontal ? 'horizontal' : 'vertical'} layout.\n`,
-        ],
-        'warning',
+        ].join('\n'),
       );
     }
   }

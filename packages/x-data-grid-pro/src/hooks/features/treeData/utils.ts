@@ -8,7 +8,7 @@ import type {
   GridLeafNode,
   GridRowTreeConfig,
 } from '@mui/x-data-grid';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import type { ReorderExecutionContext } from '../rowReorder/types';
 import {
   BatchRowUpdater,
@@ -32,10 +32,9 @@ export const buildTreeDataPath = (node: GridTreeNode, tree: GridRowTreeConfig): 
 
 export function displaySetTreeDataPathWarning(operationName: string): void {
   if (process.env.NODE_ENV !== 'production') {
-    warnOnce(
+    warn(
       `MUI X: ${operationName} requires \`setTreeDataPath()\` prop to update row data paths. ` +
         'Please provide a `setTreeDataPath()` function to enable this feature.',
-      'warning',
     );
   }
 }

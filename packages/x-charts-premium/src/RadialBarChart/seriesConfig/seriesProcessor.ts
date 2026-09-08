@@ -1,5 +1,5 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import { getStackingGroups } from '@mui/x-charts/internals';
 import type {
   SeriesProcessorParams,
@@ -72,7 +72,7 @@ function seriesProcessor(
           dataset.forEach((entry, index) => {
             const value = entry[dataKey];
             if (value != null && typeof value !== 'number') {
-              warnOnce(
+              warn(
                 `MUI X Charts: your dataset key "${dataKey}" is used for plotting radial bars, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
 Radial bar plots only support numeric and null values.`,
               );

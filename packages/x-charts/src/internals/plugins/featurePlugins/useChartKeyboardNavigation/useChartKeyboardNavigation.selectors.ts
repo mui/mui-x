@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
+import { fastObjectShallowCompare } from '@base-ui/utils/fastObjectShallowCompare';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import type { ChartState } from '../../models/chart';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';

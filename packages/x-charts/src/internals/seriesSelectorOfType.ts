@@ -1,4 +1,4 @@
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import type { ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
 import type { SeriesId } from '../models/seriesType/common';
@@ -44,10 +44,12 @@ export const selectorSeriesOfType = createSelectorMemoized(
     if (process.env.NODE_ENV !== 'production' && failedIds.length > 0) {
       const formattedIds = failedIds.map((v) => JSON.stringify(v)).join(', ');
       const fnName = `use${seriesType.charAt(0).toUpperCase()}${seriesType.slice(1)}Series`;
-      warnOnce([
-        `MUI X Charts: The following ids provided to "${fnName}" could not be found: ${formattedIds}.`,
-        `Make sure that they exist and their series are using the "${seriesType}" series type.`,
-      ]);
+      warn(
+        [
+          `MUI X Charts: The following ids provided to "${fnName}" could not be found: ${formattedIds}.`,
+          `Make sure that they exist and their series are using the "${seriesType}" series type.`,
+        ].join('\n'),
+      );
     }
     return result;
   },

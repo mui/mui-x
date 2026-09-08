@@ -1,5 +1,5 @@
 import { Store } from '@mui/x-internals/store';
-import { warnOnce } from '@mui/x-internals/warning';
+import { error as logError } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
   DisposableStack,
@@ -128,7 +128,7 @@ export class MinimalTreeViewStore<
         const initialIsControlled = this.initialParameters?.[controlledProp] !== undefined;
 
         if (initialIsControlled !== isControlled) {
-          warnOnce(
+          logError(
             [
               `MUI X Tree View: A component is changing the ${
                 initialIsControlled ? '' : 'un'
@@ -137,16 +137,14 @@ export class MinimalTreeViewStore<
               `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
               "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
               'More info: https://fb.me/react-controlled-components',
-            ],
-            'error',
+            ].join('\n'),
           );
         } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-          warnOnce(
+          logError(
             [
               `MUI X Tree View: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
               `To suppress this warning opt to use a controlled ${this.instanceName}.`,
-            ],
-            'error',
+            ].join('\n'),
           );
         }
       }

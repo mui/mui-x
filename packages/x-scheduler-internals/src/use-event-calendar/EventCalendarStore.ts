@@ -1,5 +1,4 @@
-import { warn } from '@base-ui/utils/warn';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
@@ -59,11 +58,13 @@ function warnIfShouldEventRequireResourceMisconfigured(
   resources: readonly unknown[] | undefined,
 ) {
   if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
-    warnOnce([
-      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
-      'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
-      'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
-    ]);
+    warn(
+      [
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+        'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+        'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
+      ].join('\n'),
+    );
   }
 }
 

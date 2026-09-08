@@ -18,7 +18,7 @@ import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { defaultGridFilterLookup, getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector } from './gridFilterSelector';
-import { useFirstRender } from '../../utils/useFirstRender';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import { gridRowsLookupSelector } from '../rows';
 import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import type { GridPipeProcessor } from '../../core/pipeProcessing';
@@ -506,7 +506,7 @@ export const useGridFilter = (
   /**
    * 1ST RENDER
    */
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     if (props.signature === 'DataGrid') {
       updateFilteredRows();
     }

@@ -13,7 +13,7 @@ import {
   EMPTY_RENDER_CONTEXT,
 } from '@mui/x-virtualizer';
 import type { VirtualizerParams } from '@mui/x-virtualizer';
-import { useFirstRender } from '../utils/useFirstRender';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
 import { useGridSelector } from '../utils/useGridSelector';
@@ -352,7 +352,7 @@ export function useGridVirtualizer() {
   // initialization code runs between those two moments.
   //
   // TODO(v9): Remove this
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     apiRef.current.store.state.dimensions = addGridDimensions(
       virtualizer.store.state.dimensions,
       headerHeight,

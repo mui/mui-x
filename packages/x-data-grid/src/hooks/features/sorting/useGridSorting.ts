@@ -18,7 +18,7 @@ import {
   gridSortModelSelector,
 } from './gridSortingSelector';
 import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
-import { useFirstRender } from '../../utils/useFirstRender';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import {
   useGridRegisterStrategyProcessor,
   GRID_DEFAULT_STRATEGY,
@@ -377,7 +377,7 @@ export const useGridSorting = (
   /**
    * 1ST RENDER
    */
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     if (props.signature === 'DataGrid') {
       apiRef.current.applySorting();
     }

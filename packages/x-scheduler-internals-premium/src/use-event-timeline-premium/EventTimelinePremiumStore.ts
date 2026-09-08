@@ -1,6 +1,5 @@
 import type * as React from 'react';
-import { warn } from '@base-ui/utils/warn';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
@@ -95,11 +94,13 @@ function validatePresetConfig(presetConfig: EventTimelinePremiumPresetConfig) {
       const hourConfig = presetConfig[preset];
       if (hourConfig) {
         if (!PRESET_ZOOM_ORDER.includes(preset)) {
-          warnOnce([
-            `MUI X Scheduler: \`presetConfig.${preset}\` is not a known preset, so the configuration is ignored.`,
-            `Use one of the built-in presets (${PRESET_ZOOM_ORDER.join(', ')}), or remove the entry from \`presetConfig\`.`,
-            'See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.',
-          ]);
+          warn(
+            [
+              `MUI X Scheduler: \`presetConfig.${preset}\` is not a known preset, so the configuration is ignored.`,
+              `Use one of the built-in presets (${PRESET_ZOOM_ORDER.join(', ')}), or remove the entry from \`presetConfig\`.`,
+              'See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.',
+            ].join('\n'),
+          );
         }
         getDisplayedHourRange(hourConfig.startTime, hourConfig.endTime, `presetConfig.${preset}`);
       }
@@ -127,11 +128,13 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameters) => {
   const enabled = parameters.dependencies !== undefined;
   if (!enabled && parameters.onDependenciesChange !== undefined) {
-    warnOnce([
-      'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
-      'The `dependencies` prop is fully controlled, so without it the handler could never display anything and the dependencies feature stays disabled.',
-      'Pass a `dependencies` array next to the handler — an empty one enables the feature.',
-    ]);
+    warn(
+      [
+        'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
+        'The `dependencies` prop is fully controlled, so without it the handler could never display anything and the dependencies feature stays disabled.',
+        'Pass a `dependencies` array next to the handler — an empty one enables the feature.',
+      ].join('\n'),
+    );
   }
   return enabled;
 };
@@ -143,11 +146,13 @@ function warnIfShouldEventRequireResourceMisconfigured(
   resources: readonly unknown[] | undefined,
 ) {
   if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
-    warnOnce([
-      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
-      'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
-      'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
-    ]);
+    warn(
+      [
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+        'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+        'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
+      ].join('\n'),
+    );
   }
 }
 

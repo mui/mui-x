@@ -11,7 +11,7 @@ import isBetweenPlugin from 'dayjs/plugin/isBetween.js';
 import advancedFormatPlugin from 'dayjs/plugin/advancedFormat.js';
 /* v8 ignore stop */
 /* eslint-enable import/extensions */
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import type {
   FieldFormatTokenMap,
   MuiPickersAdapter,
@@ -239,12 +239,14 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     if (localeObject === undefined) {
       /* v8 ignore start */
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X: Your locale has not been found.',
-          'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale.',
-          "Or you forget to import the locale from 'dayjs/locale/{localeUsed}'",
-          'fallback on English locale.',
-        ]);
+        warn(
+          [
+            'MUI X: Your locale has not been found.',
+            'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale.',
+            "Or you forget to import the locale from 'dayjs/locale/{localeUsed}'",
+            'fallback on English locale.',
+          ].join('\n'),
+        );
       }
       /* v8 ignore stop */
       localeObject = locales.en;

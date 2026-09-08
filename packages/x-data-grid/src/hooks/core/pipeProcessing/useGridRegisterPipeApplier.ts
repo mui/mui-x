@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { useFirstRender } from '../../utils/useFirstRender';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import type { GridPipeProcessorGroup } from './gridPipeProcessingApi';
 
@@ -20,7 +20,7 @@ export const useGridRegisterPipeApplier = <
     cleanup.current = apiRef.current.registerPipeApplier(group, id.current, callback);
   }, [apiRef, callback, group]);
 
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     registerPreProcessor();
   });
 

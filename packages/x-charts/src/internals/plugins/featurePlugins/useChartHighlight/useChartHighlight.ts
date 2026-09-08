@@ -1,8 +1,8 @@
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
+import { fastObjectShallowCompare } from '@base-ui/utils/fastObjectShallowCompare';
 import type { ChartPluginOptions, ChartResponse, ChartPlugin } from '../../models';
 import type { UseChartHighlightSignature } from './useChartHighlight.types';
 import type {
@@ -58,7 +58,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
     }
     if (process.env.NODE_ENV !== 'production') {
       if (params.highlightedItem !== undefined && !store.state.highlight.isControlled) {
-        warnOnce(
+        warn(
           [
             'MUI X Charts: The `highlightedItem` switched between controlled and uncontrolled state.',
             'To remove the highlight when using controlled state, you must provide `null` to the `highlightedItem` prop instead of `undefined`.',
