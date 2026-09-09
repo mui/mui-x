@@ -192,7 +192,10 @@ const EventTimelinePremiumViewport = styled('div', {
   display: 'inline-block',
   position: 'sticky',
   top: 0,
+  // The viewport spans the scrollport exactly, so both 0-insets resolve to the same
+  // offset and it stays pinned in LTR and RTL alike.
   left: 0,
+  right: 0,
   overflow: 'hidden',
 });
 
