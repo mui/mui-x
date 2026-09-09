@@ -15,9 +15,6 @@
     "canDropEventsToTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "collapsedResources": { "type": { "name": "object" } },
-    "dataSource": {
-      "type": { "name": "shape", "description": "{ getEvents: func, persistEvents: func }" }
-    },
     "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
     "defaultCollapsedResources": {
       "type": { "name": "object" },
