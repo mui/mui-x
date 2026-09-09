@@ -10,8 +10,9 @@ If the row or column index is not present, the Data Grid will not do any movemen
 
 Indexes are zero-based.
 The `rowIndex` is an index into the full filtered and sorted row list, not relative to the current page, and it must fall within the range of rows displayed on the current page.
+With `paginationMode="server"` the Data Grid only holds the rows of the current page, so the absolute index is `page * pageSize` plus the index of the row within the loaded rows.
 The `colIndex` is an index into the visible columns.
-When an index is out of bounds, the Data Grid logs a warning in development and `scrollToIndexes` returns `false` without scrolling.
+When an index is out of bounds, the Data Grid logs a warning in development and ignores that axis, so `scrollToIndexes` scrolls the other one and returns `false` if nothing moved.
 
 The following demo explores the usage of this API:
 
