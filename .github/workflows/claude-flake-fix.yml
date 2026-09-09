@@ -1,11 +1,13 @@
 name: Claude CI flake fix
 
 # Runs mui-public's reusable flake-fix workflow against this repo's CircleCI: it triages recent
-# failures and, unless report-only, opens a draft PR proposing a fix. Dispatch-only while we try it
-# out. This repo already has the four ANTHROPIC_* variables set; Actions must also be allowed to
-# create pull requests (Settings → Actions → General).
+# failures and, unless report-only, opens a draft PR proposing a fix. Runs weekly, and can be
+# dispatched by hand. This repo already has the four ANTHROPIC_* variables set; Actions must also be
+# allowed to create pull requests (Settings → Actions → General).
 
 on:
+  schedule:
+    - cron: '0 7 * * 1' # Monday 07:00 UTC
   workflow_dispatch:
     inputs:
       report-only:
