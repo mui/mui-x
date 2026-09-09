@@ -208,10 +208,15 @@ export function createCustomClipboardPasteHistoryHandler(
 
         if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
-            apiRef.current.setCellFocus(firstNewRowId, columnOrder[differentFieldIndex]);
+            const focusField = columnOrder[differentFieldIndex];
+            const colIndex = apiRef.current.getColumnIndex(focusField);
+            apiRef.current.setCellFocus(firstNewRowId, focusField);
             apiRef.current.scrollToIndexes({
+              // Server-side pagination would need `page * pageSize` added to this.
               rowIndex: gridExpandedSortedRowIndexLookupSelector(apiRef)[firstNewRowId],
-              colIndex: differentFieldIndex,
+              // `differentFieldIndex` indexes all columns, so a hidden column before it
+              // would push it past the visible ones.
+              colIndex: colIndex === -1 ? undefined : colIndex,
             });
           });
         }
@@ -248,10 +253,15 @@ export function createCustomClipboardPasteHistoryHandler(
 
         if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
-            apiRef.current.setCellFocus(firstNewRowId, columnOrder[differentFieldIndex]);
+            const focusField = columnOrder[differentFieldIndex];
+            const colIndex = apiRef.current.getColumnIndex(focusField);
+            apiRef.current.setCellFocus(firstNewRowId, focusField);
             apiRef.current.scrollToIndexes({
+              // Server-side pagination would need `page * pageSize` added to this.
               rowIndex: gridExpandedSortedRowIndexLookupSelector(apiRef)[firstNewRowId],
-              colIndex: differentFieldIndex,
+              // `differentFieldIndex` indexes all columns, so a hidden column before it
+              // would push it past the visible ones.
+              colIndex: colIndex === -1 ? undefined : colIndex,
             });
           });
         }

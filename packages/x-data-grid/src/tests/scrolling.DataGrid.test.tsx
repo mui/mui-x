@@ -79,6 +79,73 @@ describe('<DataGrid /> - Scrolling', () => {
       expect(result).to.equal(false);
     });
 
+    it('should still scroll the valid axis when the other index is invalid', () => {
+      const apiRef = React.createRef<GridApiCommunity>();
+
+      render(
+        <div style={{ width: 300, height: 200 }}>
+          <DataGrid
+            apiRef={apiRef}
+            columns={[{ field: 'id' }]}
+            rows={Array.from({ length: 50 }, (_, id) => ({ id }))}
+            paginationModel={{ page: 0, pageSize: 50 }}
+            pageSizeOptions={[50]}
+          />
+        </div>,
+      );
+
+      let result: boolean | undefined;
+      expect(() => {
+        result = apiRef.current?.scrollToIndexes({ rowIndex: 40, colIndex: 99 });
+      }).toWarnDev(
+        [
+          'MUI X: The `colIndex` value passed to `scrollToIndexes` is invalid.',
+          'Use an integer between 0 and 0.',
+        ].join('\n'),
+      );
+      expect(result).to.equal(true);
+      expect(apiRef.current?.getScrollPosition().top).to.be.greaterThan(0);
+    });
+
+    it('should warn about both axes when both indexes are invalid', () => {
+      const apiRef = React.createRef<GridApiCommunity>();
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid apiRef={apiRef} columns={[{ field: 'id' }]} rows={[{ id: 1 }]} />
+        </div>,
+      );
+
+      let result: boolean | undefined;
+      expect(() => {
+        result = apiRef.current?.scrollToIndexes({ rowIndex: 5, colIndex: 5 });
+      }).toWarnDev([
+        [
+          'MUI X: The `rowIndex` value passed to `scrollToIndexes` is invalid.',
+          'Use an integer between 0 and 0 for the current page.',
+        ].join('\n'),
+        [
+          'MUI X: The `colIndex` value passed to `scrollToIndexes` is invalid.',
+          'Use an integer between 0 and 0.',
+        ].join('\n'),
+      ]);
+      expect(result).to.equal(false);
+    });
+
+    it('should treat a `null` row index as a header scroll', () => {
+      const apiRef = React.createRef<GridApiCommunity>();
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid apiRef={apiRef} columns={[{ field: 'id' }]} rows={[{ id: 1 }]} />
+        </div>,
+      );
+
+      expect(() => {
+        apiRef.current?.scrollToIndexes({ rowIndex: null as any, colIndex: 0 });
+      }).not.toWarnDev();
+    });
+
     it('should warn for a non-integer row index', () => {
       const apiRef = React.createRef<GridApiCommunity>();
 
