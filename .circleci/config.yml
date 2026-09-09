@@ -55,6 +55,11 @@ default-job: &default-job
     # Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
     # For example, when creating v9 from v8, `master -> v8.x`
     BASE_BRANCH: v8.x
+    # Pins the Argos baseline to this release line. CircleCI exposes no pull request base
+    # branch, so a build that starts before its pull request exists would otherwise fall
+    # back to the repository default branch and diff against the wrong major version.
+    # #target-branch-reference
+    ARGOS_REFERENCE_BRANCH: v8.x
   working_directory: /tmp/mui
   executor: code-infra/mui-node
 # CircleCI has disabled the cache across forks for security reasons.
