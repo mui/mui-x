@@ -82,9 +82,7 @@ const MOCK_EVENT_STATE = {
 
 /**
  * Reads the Premium-only `dataSource` parameter (see `SchedulerLazyLoadingParameters`).
- * Must stay a truthiness check to match the Premium plugin guards: on a falsy value
- * (`dataSource={isEnabled && source}`) they skip fetching, so treating it as a data source here
- * would leave the scheduler loading with nothing to resolve it.
+ * Truthiness on purpose, to match the Premium plugin guards.
  */
 function hasDataSource(parameters: object): boolean {
   return Boolean((parameters as { dataSource?: unknown }).dataSource);

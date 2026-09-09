@@ -632,9 +632,6 @@ describe('EventCalendar', () => {
 
   describe('data source', () => {
     // Lazy loading is Premium-only, so `dataSource` is not part of the community props.
-    // A JavaScript consumer can still pass it: it must fall through to the root element
-    // (React warns about the unknown prop) and leave the `events` prop rendering as usual,
-    // instead of pinning the calendar in a loading state that nothing ever resolves.
     it('should keep rendering the events prop when a dataSource is passed through JavaScript', () => {
       const dataSource = {
         getEvents: () => new Promise<never[]>(() => {}),

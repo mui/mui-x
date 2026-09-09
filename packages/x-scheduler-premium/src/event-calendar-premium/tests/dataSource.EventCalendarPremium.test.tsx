@@ -9,11 +9,8 @@ import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { vi, describe, it, expect } from 'vitest';
 
-// These render the component rather than constructing the store directly, so they cover the
-// `useExtractEventCalendarPremiumParameters` wiring: `dataSource` must be pulled out of the props
-// into the store parameters. Extracting it with the community hook instead would leave the prop in
-// `forwardedProps`, so it would land on the root element (React logs an unknown-prop error, which
-// the console setup turns into a failure) and the store would never receive a data source.
+// Renders the component rather than constructing the store, to cover the
+// `useExtractEventCalendarPremiumParameters` wiring.
 describe('<EventCalendarPremium /> - Data Source', () => {
   const { renderSettled } = createSchedulerRenderer();
 
