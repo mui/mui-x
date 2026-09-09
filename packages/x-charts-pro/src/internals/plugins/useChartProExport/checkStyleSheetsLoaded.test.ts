@@ -26,12 +26,8 @@ describe('checkStyleSheetsLoaded', () => {
   });
 
   it('does not throw when the styles were applied', () => {
-    const exportDocument = document.implementation.createHTMLDocument('');
-    const style = exportDocument.createElement('style');
-    style.textContent = 'body { margin: 0; }';
-    exportDocument.head.appendChild(style);
+    const exportDocument = createDocumentWithStyle('body { margin: 0; }', {} as CSSStyleSheet);
 
-    expect(style.sheet).not.to.equal(null);
     expect(() => checkStyleSheetsLoaded(exportDocument)).not.to.throw();
   });
 
