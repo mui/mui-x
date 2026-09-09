@@ -20,9 +20,6 @@
     "collapsedResources": {
       "description": "The collapsed resources. A resource is expanded unless included here with a <code>true</code> value."
     },
-    "dataSource": {
-      "description": "Data source for fetching events asynchronously. When provided, events are fetched through the data source instead of the <code>events</code> prop."
-    },
     "dateLocale": {
       "description": "The locale object from <code>date-fns</code> used to format dates. This affects day names, month names, week start day, and other locale-dependent formatting. Import a locale from <code>date-fns/locale</code> and pass it to this prop."
     },
