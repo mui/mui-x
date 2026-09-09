@@ -2,7 +2,7 @@
   "version": "9.13.0",
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
+    "preinstall": "npx only-allow@1.2.2 pnpm",
     "start": "pnpm i && pnpm docs:dev",
     "docs:dev": "pnpm --filter docs dev",
     "docs:serve": "pnpm --filter docs serve",
