@@ -225,6 +225,34 @@ describe('<DataGrid /> - Scrolling', () => {
       expect(result).to.equal(false);
     });
 
+    it('should scroll to the page offset in server mode', () => {
+      const apiRef = React.createRef<GridApiCommunity>();
+
+      render(
+        <div style={{ width: 300, height: 200 }}>
+          <DataGrid
+            apiRef={apiRef}
+            columns={[{ field: 'id' }]}
+            rows={[{ id: 3 }, { id: 4 }, { id: 5 }]}
+            rowCount={6}
+            paginationMode="server"
+            paginationModel={{ page: 1, pageSize: 3 }}
+            pageSizeOptions={[3]}
+          />
+        </div>,
+      );
+
+      // `rowIndex` is absolute, so the last loaded row is index 5 and sits at position 2 of
+      // the page. Without the offset the lookup would fall off the end of `rowsMeta`.
+      let result: boolean | undefined;
+      expect(() => {
+        result = apiRef.current?.scrollToIndexes({ rowIndex: 5 });
+      }).not.toWarnDev();
+
+      expect(result).to.equal(true);
+      expect(apiRef.current?.getScrollPosition().top).to.be.greaterThan(0);
+    });
+
     it('should not warn when navigating with the keyboard in server mode', async () => {
       const { user } = render(
         <div style={{ width: 300, height: 300 }}>
