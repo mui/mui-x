@@ -9,10 +9,8 @@ import {
   gridColumnPositionsSelector,
   gridVisibleColumnDefinitionsSelector,
 } from '../columns/gridColumnsSelector';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
-  gridPageSelector,
-  gridPageSizeSelector,
+  gridPaginationSelector,
   gridPaginationRowRangeSelector,
 } from '../pagination/gridPaginationSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -47,7 +45,7 @@ function scrollIntoView(dimensions: {
   return undefined;
 }
 
-function warnIfIndexIsInvalid(
+function isIndexInvalid(
   indexName: 'rowIndex' | 'colIndex',
   index: number | undefined,
   min: number,
@@ -74,10 +72,7 @@ function warnIfIndexIsInvalid(
  * @requires useGridFilter (state)
  * @requires useGridColumnSpanning (method)
  */
-export const useGridScroll = (
-  apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination'>,
-): void => {
+export const useGridScroll = (apiRef: RefObject<GridPrivateApiCommunity>): void => {
   const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersContainerRef;
@@ -88,83 +83,94 @@ export const useGridScroll = (
       const dimensions = gridDimensionsSelector(apiRef);
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
       const visibleSortedRows = gridExpandedSortedRowEntriesSelector(apiRef);
-      const scrollToHeader = params.rowIndex == null;
+      // `null` behaves like an absent index.
+      const rowIndex = params.rowIndex ?? undefined;
+      const colIndex = params.colIndex ?? undefined;
+      const scrollToHeader = rowIndex === undefined;
       if ((!scrollToHeader && visibleSortedRows.length === 0) || visibleColumns.length === 0) {
         return false;
       }
 
+      // State, not `props.pagination`: the state is what `getRowIndexRelativeToAllRows` reads
+      // to build these indexes, and the props lead it by a render.
+      const pagination = gridPaginationSelector(apiRef);
+      const isPaginated = pagination.enabled;
+
       let firstRowIndex = 0;
       let lastRowIndex = visibleSortedRows.length - 1;
       let rowIndexOffset = 0;
-      let rowIndexInVisibleSortedRows = params.rowIndex;
+      let rowIndexInVisibleSortedRows = rowIndex;
 
-      if (params.rowIndex !== undefined && props.pagination) {
-        const paginationRange = gridPaginationRowRangeSelector(apiRef);
-
-        if (paginationRange) {
-          firstRowIndex = paginationRange.firstRowIndex;
-          lastRowIndex = paginationRange.lastRowIndex;
-          rowIndexOffset = paginationRange.firstRowIndex;
-        } else {
-          // Server-side pagination: the row range selector is empty, so fall back to the
-          // page offset and the rows currently held for the page.
-          const page = gridPageSelector(apiRef);
-          const pageSize = gridPageSizeSelector(apiRef);
+      if (rowIndex !== undefined && isPaginated) {
+        if (pagination.paginationMode === 'server') {
+          // Only the current page is loaded, so the offset maps the absolute index onto it.
+          const { page, pageSize } = pagination.paginationModel;
           rowIndexOffset = page * pageSize;
           firstRowIndex = rowIndexOffset;
           lastRowIndex = firstRowIndex + visibleSortedRows.length - 1;
-          rowIndexInVisibleSortedRows = params.rowIndex - rowIndexOffset;
+          rowIndexInVisibleSortedRows = rowIndex - rowIndexOffset;
+        } else {
+          // Expanded groups make a page span more rows than `pageSize`, so `page * pageSize`
+          // is not its first row.
+          const paginationRange = gridPaginationRowRangeSelector(apiRef);
+
+          if (paginationRange) {
+            firstRowIndex = paginationRange.firstRowIndex;
+            lastRowIndex = paginationRange.lastRowIndex;
+            rowIndexOffset = paginationRange.firstRowIndex;
+          }
         }
       }
 
-      if (
-        warnIfIndexIsInvalid(
-          'rowIndex',
-          params.rowIndex,
-          firstRowIndex,
-          lastRowIndex,
-          props.pagination,
-        ) ||
-        warnIfIndexIsInvalid('colIndex', params.colIndex, 0, visibleColumns.length - 1)
-      ) {
-        return false;
+      // Per axis, so an invalid index cancels only its own axis and both warnings are emitted.
+      const hasInvalidRowIndex = isIndexInvalid(
+        'rowIndex',
+        rowIndex,
+        firstRowIndex,
+        lastRowIndex,
+        isPaginated,
+      );
+      const hasInvalidColIndex = isIndexInvalid('colIndex', colIndex, 0, visibleColumns.length - 1);
+
+      const targetRowIndex = hasInvalidRowIndex ? undefined : rowIndex;
+      const targetColIndex = hasInvalidColIndex ? undefined : colIndex;
+
+      if (hasInvalidRowIndex) {
+        rowIndexInVisibleSortedRows = undefined;
       }
 
-      logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
+      logger.debug(`Scrolling to cell at row ${targetRowIndex}, col: ${targetColIndex} `);
 
       let scrollCoordinates: Partial<GridScrollParams> = {};
 
-      if (params.colIndex !== undefined && visibleColumns[params.colIndex]) {
+      if (targetColIndex !== undefined) {
         const columnPositions = gridColumnPositionsSelector(apiRef);
 
         let cellWidth: number | undefined;
 
-        if (typeof rowIndexInVisibleSortedRows !== 'undefined') {
+        if (rowIndexInVisibleSortedRows !== undefined) {
           const rowId = visibleSortedRows[rowIndexInVisibleSortedRows]?.id;
-          const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
-            rowId,
-            params.colIndex,
-          );
+          const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, targetColIndex);
           if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
             cellWidth = cellColSpanInfo.cellProps.width;
           }
         }
 
-        if (typeof cellWidth === 'undefined') {
-          cellWidth = visibleColumns[params.colIndex].computedWidth;
+        if (cellWidth === undefined) {
+          cellWidth = visibleColumns[targetColIndex].computedWidth;
         }
         // When using RTL, `scrollLeft` becomes negative, so we must ensure that we only compare values.
         scrollCoordinates.left = scrollIntoView({
           containerSize: dimensions.viewportOuterSize.width,
           scrollPosition: Math.abs(virtualScrollerRef.current?.scrollLeft ?? 0),
           elementSize: cellWidth,
-          elementOffset: columnPositions[params.colIndex],
+          elementOffset: columnPositions[targetColIndex],
         });
       }
 
-      if (params.rowIndex !== undefined) {
+      if (targetRowIndex !== undefined) {
         const rowsMeta = gridRowsMetaSelector(apiRef);
-        const elementIndex = params.rowIndex - rowIndexOffset;
+        const elementIndex = targetRowIndex - rowIndexOffset;
 
         const targetOffsetHeight = rowsMeta.positions[elementIndex + 1]
           ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex]
@@ -181,7 +187,7 @@ export const useGridScroll = (
       scrollCoordinates = apiRef.current.unstable_applyPipeProcessors(
         'scrollToIndexes',
         scrollCoordinates,
-        params,
+        { rowIndex: targetRowIndex, colIndex: targetColIndex },
       );
 
       if (
@@ -194,7 +200,7 @@ export const useGridScroll = (
 
       return false;
     },
-    [logger, apiRef, virtualScrollerRef, props.pagination],
+    [logger, apiRef, virtualScrollerRef],
   );
 
   const scroll = React.useCallback<GridScrollApi['scroll']>(
