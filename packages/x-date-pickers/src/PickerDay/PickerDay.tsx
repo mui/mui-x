@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { CSSInterpolation } from '@mui/material/styles';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
@@ -42,6 +42,29 @@ const useUtilityClasses = (
 
   return composeClasses(slots, getPickerDayUtilityClass, classes);
 };
+
+/**
+ * Opts the day cell out of the `theme.focusVisible` ring that `ButtonBase` would
+ * otherwise draw on it.
+ *
+ * A day cell already spends `outline` on the "today" marker, and `outline` is a
+ * single property — core's ring is `&.Mui-focusVisible` (specificity 0,2,0)
+ * against the today variant's (0,1,0), so the ring wins and a focused "today"
+ * becomes indistinguishable from any other focused day. Suppressing the ring
+ * keeps the marker and leaves focus to the existing `:focus` background, i.e.
+ * day cells render exactly as they do without `theme.focusVisible`.
+ *
+ * `internalDisabledThemeFocusVisible` is core's own gate for this (`SwitchBase`,
+ * `StepButton` use it) but is not part of its public API, hence the cast. It is
+ * applied only when `theme.focusVisible` is set — which implies `@mui/material`
+ * v9.4+, where `ButtonBase` destructures the prop instead of spreading it onto
+ * the DOM. On the v7 range MUI X still peers, it is never passed.
+ *
+ * Replace with the supported opt-out once core exposes one.
+ */
+const SUPPRESS_THEME_FOCUS_RING = {
+  internalDisabledThemeFocusVisible: true,
+} as Record<string, unknown>;
 
 const PickerDayRoot = styled(ButtonBase, {
   name: 'MuiPickerDay',
@@ -157,6 +180,9 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
     name: 'MuiPickerDay',
   });
 
+  const theme = useTheme();
+  const suppressThemeFocusRing = theme.focusVisible ? SUPPRESS_THEME_FOCUS_RING : null;
+
   const adapter = usePickerAdapter();
 
   const {
@@ -266,6 +292,7 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
       onMouseEnter={(event) => onMouseEnter(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
+      {...suppressThemeFocusRing}
       {...other}
       // compat with PickerDay for tests
       data-testid={(other as any)['data-testid'] ?? 'day'}

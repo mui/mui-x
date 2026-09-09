@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
@@ -138,6 +138,16 @@ const selectedDayStyles = (theme: Theme) => ({
 });
 
 const DISABLED_DAY_OPACITY = 0.6;
+
+/**
+ * Same opt-out as `PickerDay` — see the comment there. A range day cell also
+ * spends `outline` on the "today" marker, so core's `theme.focusVisible` ring
+ * would override it and make a focused "today" indistinguishable from any other
+ * focused day. Suppressing keeps the marker and the existing `:focus` background.
+ */
+const SUPPRESS_THEME_FOCUS_RING = {
+  internalDisabledThemeFocusVisible: true,
+} as Record<string, unknown>;
 
 const DateRangePickerDayRoot = styled(ButtonBase, {
   name: 'MuiDateRangePickerDay',
@@ -432,6 +442,9 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     name: 'MuiDateRangePickerDay',
   });
 
+  const theme = useTheme();
+  const suppressThemeFocusRing = theme.focusVisible ? SUPPRESS_THEME_FOCUS_RING : null;
+
   useLicenseVerifier({
     releaseDate: '__RELEASE_INFO__',
     version: process.env.MUI_VERSION!,
@@ -579,6 +592,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
       onMouseEnter={(event) => onMouseEnter(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
+      {...suppressThemeFocusRing}
       {...other}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
