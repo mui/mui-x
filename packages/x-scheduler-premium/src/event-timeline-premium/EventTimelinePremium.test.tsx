@@ -21,7 +21,15 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
-import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import type {
+  EventTimelineLocaleText,
+  EventTimelineSlotProps,
+  EventTimelineSlots,
+  TimelineEventContentProps,
+  TimelineEventContentPropsOverrides,
+  TimelineResourceTitleProps,
+  TimelineResourceTitlePropsOverrides,
+} from '@mui/x-scheduler/models';
 import { vi, describe, it, expect } from 'vitest';
 
 const engineering = ResourceBuilder.new().build();
@@ -60,6 +68,8 @@ describe('<EventTimelinePremium />', () => {
     onCollapsedResourcesChange?: (collapsedResources: Record<string, boolean>) => void;
     defaultVisibleResources?: Record<string, boolean>;
     onEventEditingStart?: React.ComponentProps<typeof EventTimelinePremium>['onEventEditingStart'];
+    slots?: EventTimelineSlots;
+    slotProps?: EventTimelineSlotProps;
   }) {
     const view = await renderSettled(
       <EventTimelinePremium
@@ -78,6 +88,8 @@ describe('<EventTimelinePremium />', () => {
         onCollapsedResourcesChange={options?.onCollapsedResourcesChange}
         defaultVisibleResources={options?.defaultVisibleResources}
         onEventEditingStart={options?.onEventEditingStart}
+        slots={options?.slots}
+        slotProps={options?.slotProps}
       />,
     );
     return view;
@@ -567,6 +579,64 @@ describe('<EventTimelinePremium />', () => {
 
       expect(eventPosition2).to.be.greaterThanOrEqual(200); // 2026
       expect(eventPosition2).to.be.lessThanOrEqual(400); // 2026
+    });
+  });
+
+  describe('content slots', () => {
+    it('should render the timelineEventContent slot with the occurrence and the row resource', async () => {
+      function CustomEventContent(props: TimelineEventContentProps & { marker?: string }) {
+        return (
+          <span data-testid="custom-event-content" data-resource={props.resourceId}>
+            {props.marker} {props.occurrence.title}
+          </span>
+        );
+      }
+
+      await renderTimeline({
+        events: [event1],
+        slots: {
+          // The overrides interface is only populated through module augmentation on the consumer side.
+          timelineEventContent: CustomEventContent as React.ComponentType<
+            TimelineEventContentProps & TimelineEventContentPropsOverrides
+          >,
+        },
+        slotProps: {
+          timelineEventContent: { marker: 'custom' } as TimelineEventContentPropsOverrides,
+        },
+      });
+
+      const content = screen.getByTestId('custom-event-content');
+      expect(content.textContent).to.equal(`custom ${event1.title}`);
+      expect(content.getAttribute('data-resource')).to.equal(String(engineering.id));
+      expect(content.closest(`.${eventTimelinePremiumClasses.event}`)).not.to.equal(null);
+    });
+
+    it('should render the timelineResourceTitle slot with the resource', async () => {
+      function CustomResourceTitle(props: TimelineResourceTitleProps & { marker?: string }) {
+        return (
+          <span data-testid="custom-resource-title">
+            {props.marker} {props.resource.title}
+          </span>
+        );
+      }
+
+      await renderTimeline({
+        resources: [engineering],
+        events: [],
+        slots: {
+          // The overrides interface is only populated through module augmentation on the consumer side.
+          timelineResourceTitle: CustomResourceTitle as React.ComponentType<
+            TimelineResourceTitleProps & TimelineResourceTitlePropsOverrides
+          >,
+        },
+        slotProps: {
+          timelineResourceTitle: { marker: 'custom' } as TimelineResourceTitlePropsOverrides,
+        },
+      });
+
+      const content = screen.getByTestId('custom-resource-title');
+      expect(content.textContent).to.equal(`custom ${engineering.title}`);
+      expect(content.closest(`.${eventTimelinePremiumClasses.titleCell}`)).not.to.equal(null);
     });
   });
 

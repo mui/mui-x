@@ -10,7 +10,7 @@ import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
-import { getPaletteVariants } from '@mui/x-scheduler/internals';
+import { getPaletteVariants, useSchedulerSlots } from '@mui/x-scheduler/internals';
 import { Virtualization } from '@mui/x-virtualizer';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
@@ -133,6 +133,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
   const reportTitleWidth = useReportTitleWidth();
+  const { slots, slotProps } = useSchedulerSlots();
 
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
@@ -166,6 +167,8 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
     observer.observe(content);
     return () => observer.disconnect();
   }, [resourceId, reportTitleWidth]);
+
+  const ResourceTitle = slots.timelineResourceTitle;
 
   const handleToggleCollapse = useStableCallback((event: React.SyntheticEvent) => {
     store.toggleResourceCollapse(resourceId, event.nativeEvent);
@@ -209,7 +212,11 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
           <ResourceCollapseSpacer aria-hidden />
         )}
         <ResourceLegendColor className={classes.titleCellLegendColor} />
-        {resource!.title}
+        {ResourceTitle ? (
+          <ResourceTitle resource={resource!} {...slotProps.timelineResourceTitle} />
+        ) : (
+          resource!.title
+        )}
       </EventTimelinePremiumTitleCellContent>
     </EventTimelinePremiumTitleCellRoot>
   );

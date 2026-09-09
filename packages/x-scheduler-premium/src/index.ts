@@ -4,6 +4,12 @@ export type {
   SchedulerSlots,
   SchedulerSlotProps,
   EventDialogGeneralTabPropsOverrides,
+  EventTimelineSlots,
+  EventTimelineSlotProps,
+  TimelineEventContentProps,
+  TimelineEventContentPropsOverrides,
+  TimelineResourceTitleProps,
+  TimelineResourceTitlePropsOverrides,
 } from '@mui/x-scheduler/models';
 
 export * from './agenda-view-premium';

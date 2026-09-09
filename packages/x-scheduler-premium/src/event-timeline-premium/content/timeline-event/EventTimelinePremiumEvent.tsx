@@ -9,7 +9,11 @@ import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
-import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
+import {
+  EventDragPreview,
+  getPaletteVariants,
+  useSchedulerSlots,
+} from '@mui/x-scheduler/internals';
 import type { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
@@ -151,6 +155,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const { classes } = useEventTimelinePremiumStyledContext();
+  const { slots, slotProps } = useSchedulerSlots();
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(
@@ -170,6 +175,17 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Feature hooks
   const id = useId(idProp);
+
+  const EventContent = slots.timelineEventContent;
+  const content = EventContent ? (
+    <EventContent
+      occurrence={occurrence}
+      resourceId={resourceId}
+      {...slotProps.timelineEventContent}
+    />
+  ) : (
+    occurrence.title
+  );
 
   const sharedProps = {
     id,
@@ -195,7 +211,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         className={clsx(sharedProps.className, classes.eventPlaceholder)}
       >
         <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
-          {occurrence.title}
+          {content}
         </EventTimelinePremiumEventLinesClamp>
         {isRecurring && (
           <EventTimelinePremiumEventRecurringIcon
@@ -226,7 +242,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         />
       )}
       <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
-        {occurrence.title}
+        {content}
       </EventTimelinePremiumEventLinesClamp>
       {dependsOnTitles.length > 0 && (
         // `aria-hidden` keeps the description out of the name-from-content computed

@@ -1,16 +1,18 @@
 'use client';
 import * as React from 'react';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import type { SchedulerSlots, SchedulerSlotProps } from '../../models/slots';
+import type { EventTimelineSlots, EventTimelineSlotProps } from '../../models/slots';
 
+// The context carries the superset of every surface's slots; each public component
+// narrows what it accepts through its own props type.
 export interface SchedulerSlotsContextValue {
-  slots: SchedulerSlots;
-  slotProps: SchedulerSlotProps;
+  slots: EventTimelineSlots;
+  slotProps: EventTimelineSlotProps;
 }
 
 const EMPTY_SLOTS: SchedulerSlotsContextValue = {
-  slots: EMPTY_OBJECT as SchedulerSlots,
-  slotProps: EMPTY_OBJECT as SchedulerSlotProps,
+  slots: EMPTY_OBJECT as EventTimelineSlots,
+  slotProps: EMPTY_OBJECT as EventTimelineSlotProps,
 };
 
 // Defaults to the empty set rather than throwing: the dialog renders its built-in content when
@@ -22,8 +24,8 @@ export function useSchedulerSlots(): SchedulerSlotsContextValue {
 }
 
 export interface SchedulerSlotsProviderProps {
-  slots: SchedulerSlots | undefined;
-  slotProps: SchedulerSlotProps | undefined;
+  slots: EventTimelineSlots | undefined;
+  slotProps: EventTimelineSlotProps | undefined;
   children: React.ReactNode;
 }
 
@@ -33,16 +35,35 @@ export function SchedulerSlotsProvider(props: SchedulerSlotsProviderProps) {
   // Memoized on the individual slot references rather than on the `slots` / `slotProps`
   // containers, which are usually inline object literals with a new identity on every render.
   const eventDialogGeneralTab = slots?.eventDialogGeneralTab;
+  const timelineEventContent = slots?.timelineEventContent;
+  const timelineResourceTitle = slots?.timelineResourceTitle;
   const eventDialogGeneralTabProps = slotProps?.eventDialogGeneralTab;
+  const timelineEventContentProps = slotProps?.timelineEventContent;
+  const timelineResourceTitleProps = slotProps?.timelineResourceTitle;
 
   const value = React.useMemo(
     () => ({
-      slots: eventDialogGeneralTab ? { eventDialogGeneralTab } : (EMPTY_OBJECT as SchedulerSlots),
-      slotProps: eventDialogGeneralTabProps
-        ? { eventDialogGeneralTab: eventDialogGeneralTabProps }
-        : (EMPTY_OBJECT as SchedulerSlotProps),
+      slots:
+        eventDialogGeneralTab || timelineEventContent || timelineResourceTitle
+          ? { eventDialogGeneralTab, timelineEventContent, timelineResourceTitle }
+          : (EMPTY_OBJECT as EventTimelineSlots),
+      slotProps:
+        eventDialogGeneralTabProps || timelineEventContentProps || timelineResourceTitleProps
+          ? {
+              eventDialogGeneralTab: eventDialogGeneralTabProps,
+              timelineEventContent: timelineEventContentProps,
+              timelineResourceTitle: timelineResourceTitleProps,
+            }
+          : (EMPTY_OBJECT as EventTimelineSlotProps),
     }),
-    [eventDialogGeneralTab, eventDialogGeneralTabProps],
+    [
+      eventDialogGeneralTab,
+      timelineEventContent,
+      timelineResourceTitle,
+      eventDialogGeneralTabProps,
+      timelineEventContentProps,
+      timelineResourceTitleProps,
+    ],
   );
 
   return <SchedulerSlotsContext.Provider value={value}>{children}</SchedulerSlotsContext.Provider>;

@@ -32,6 +32,28 @@ const resources = [
 
 On the Event Timeline, events without resource are not rendered at all.
 
+## Custom resource title
+
+Use the `timelineResourceTitle` slot to replace the text rendered inside a resource title cell.
+The slot receives the `resource` and is placed next to the legend color and the collapse toggle.
+
+{{"demo": "ResourceTitleSlot.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+On a resource with children, the whole title cell toggles the collapse on click, <kbd class="key">Enter</kbd> and <kbd class="key">Space</kbd>.
+Interactive content rendered by the slot on those rows must stop the propagation of these events to keep the row from collapsing as well.
+:::
+
+Type the extra props passed through `slotProps.timelineResourceTitle` by augmenting `TimelineResourceTitlePropsOverrides`:
+
+```ts
+declare module '@mui/x-scheduler/models' {
+  interface TimelineResourceTitlePropsOverrides {
+    showOwner?: boolean;
+  }
+}
+```
+
 ## Nested resources
 
 Use the `children` property to create hierarchical resource structures:

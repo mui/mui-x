@@ -191,6 +191,23 @@ function Timeline() {
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Custom event content
+
+Use the `timelineEventContent` slot to replace the text rendered inside an event block.
+The slot receives the `occurrence` and the `resourceId` of the row it is rendered in, and is placed inside the block, so the block keeps its geometry, drag and resize handles and button semantics.
+
+{{"demo": "EventContentSlot.js", "bg": "inline", "defaultCodeOpen": false}}
+
+Type the extra props passed through `slotProps.timelineEventContent` by augmenting `TimelineEventContentPropsOverrides`:
+
+```ts
+declare module '@mui/x-scheduler/models' {
+  interface TimelineEventContentPropsOverrides {
+    showCode?: boolean;
+  }
+}
+```
+
 ## Event constraints 🚧
 
 :::warning
