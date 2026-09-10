@@ -68,7 +68,7 @@ describe('pieExtractor', () => {
     expect(table.rows[0].label).to.equal(null);
   });
 
-  it('skips slices hidden through the legend, since visibility is per item here', () => {
+  it('includes slices hidden through the legend by default, dropping them only when asked', () => {
     const series = {
       s1: {
         id: 's1',
@@ -79,15 +79,18 @@ describe('pieExtractor', () => {
       },
     };
 
-    expect(pieExtractor(createParams(series))[0].rows.map((row) => row.id)).to.deep.equal(['a']);
+    expect(pieExtractor(createParams(series))[0].rows.map((row) => row.id)).to.deep.equal([
+      'a',
+      'b',
+    ]);
 
-    const [included] = pieExtractor(
+    const [screenOnly] = pieExtractor(
       createParams(series, {
-        options: { ...DEFAULT_CHART_EXCEL_OPTIONS, includeHiddenSeries: true },
+        options: { ...DEFAULT_CHART_EXCEL_OPTIONS, includeHiddenSeries: false },
       }),
     );
 
-    expect(included.rows.map((row) => row.id)).to.deep.equal(['a', 'b']);
+    expect(screenOnly.rows.map((row) => row.id)).to.deep.equal(['a']);
   });
 
   it('reuses the formatted value pie already computed while defaultizing', () => {

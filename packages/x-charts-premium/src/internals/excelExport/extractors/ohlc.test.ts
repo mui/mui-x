@@ -100,9 +100,20 @@ describe('ohlcExtractor', () => {
     expect(table.rows[0].formattedClose).to.equal('close:104');
   });
 
-  it('returns no table when nothing is visible', () => {
+  it('includes a hidden series by default, and drops it only when asked', () => {
+    const series = { s1: { id: 's1', label: 'AAPL', hidden: true, data: [[1, 2, 3, 4]] } };
+
+    expect(ohlcExtractor(createParams(series))[0].rows.length).to.equal(1);
     expect(
-      ohlcExtractor(createParams({ s1: { id: 's1', hidden: true, data: [[1, 2, 3, 4]] } })),
+      ohlcExtractor(
+        createParams(series, {
+          options: { ...DEFAULT_CHART_EXCEL_OPTIONS, includeHiddenSeries: false },
+        }),
+      ),
     ).to.deep.equal([]);
+  });
+
+  it('returns no table when there are no series', () => {
+    expect(ohlcExtractor(createParams({}))).to.deep.equal([]);
   });
 });

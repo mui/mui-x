@@ -35,7 +35,13 @@ export interface ChartExcelTable {
 }
 
 export interface ResolvedChartExcelOptions {
-  /** Include series and items hidden through the legend. */
+  /**
+   * Include series and items hidden through the legend.
+   *
+   * On by default: hiding a series is a way of reading the chart, not a statement about
+   * the data, and silently dropping rows from an export is the harder failure to notice.
+   * Set to `false` to export only what is on screen.
+   */
   includeHiddenSeries: boolean;
   /** Add a `formatted*` column next to each formatted value. */
   includeFormattedValues: boolean;
@@ -44,7 +50,7 @@ export interface ResolvedChartExcelOptions {
 }
 
 export const DEFAULT_CHART_EXCEL_OPTIONS: ResolvedChartExcelOptions = {
-  includeHiddenSeries: false,
+  includeHiddenSeries: true,
   includeFormattedValues: false,
   escapeFormulas: true,
 };

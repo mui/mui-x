@@ -100,15 +100,38 @@ describe('scatterExtractor', () => {
     expect(table.columns.map((column) => column.key)).to.not.include('z');
   });
 
-  it('skips hidden series', () => {
-    const [table] = scatterExtractor(
-      createParams({
-        s1: { id: 's1', label: 'A', data: [{ x: 1, y: 2 }] },
-        s2: { id: 's2', label: 'B', hidden: true, data: [{ x: 3, y: 4 }] },
+  it('includes hidden series by default, and drops them only when asked', () => {
+    const series = {
+      s1: { id: 's1', label: 'A', data: [{ x: 1, y: 2 }] },
+      s2: { id: 's2', label: 'B', hidden: true, data: [{ x: 3, y: 4 }] },
+    };
+
+    expect(scatterExtractor(createParams(series))[0].rows.map((row) => row.series)).to.deep.equal([
+      'A',
+      'B',
+    ]);
+
+    const [screenOnly] = scatterExtractor(
+      createParams(series, {
+        options: { ...DEFAULT_CHART_EXCEL_OPTIONS, includeHiddenSeries: false },
       }),
     );
 
-    expect(table.rows.map((row) => row.series)).to.deep.equal(['A']);
+    expect(screenOnly.rows.map((row) => row.series)).to.deep.equal(['A']);
+  });
+
+  it('ignores a hidden series when deciding which channel columns to add', () => {
+    const [screenOnly] = scatterExtractor(
+      createParams(
+        {
+          s1: { id: 's1', label: 'A', data: [{ x: 1, y: 2 }] },
+          s2: { id: 's2', label: 'B', hidden: true, data: [{ x: 3, y: 4, colorValue: 7 }] },
+        },
+        { options: { ...DEFAULT_CHART_EXCEL_OPTIONS, includeHiddenSeries: false } },
+      ),
+    );
+
+    expect(screenOnly.columns.map((column) => column.key)).to.not.include('colorValue');
   });
 
   it('formats the whole point into a single column', () => {

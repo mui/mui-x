@@ -98,9 +98,16 @@ describe('rangeBarExtractor', () => {
     expect(table.rows[0].formattedValue).to.equal('4 to 12');
   });
 
-  it('skips hidden series', () => {
+  it('includes hidden series by default, and drops them only when asked', () => {
+    const series = { s1: { id: 's1', label: 'T', hidden: true, data: [[1, 2]] } };
+
+    expect(rangeBarExtractor(createParams(series))[0].rows.length).to.equal(1);
     expect(
-      rangeBarExtractor(createParams({ s1: { id: 's1', hidden: true, data: [[1, 2]] } })),
+      rangeBarExtractor(
+        createParams(series, {
+          options: { ...DEFAULT_CHART_EXCEL_OPTIONS, includeHiddenSeries: false },
+        }),
+      ),
     ).to.deep.equal([]);
   });
 });

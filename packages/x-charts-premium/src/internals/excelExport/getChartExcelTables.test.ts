@@ -81,10 +81,14 @@ describe('collectChartExcelTables', () => {
     expect(collect({})).to.deep.equal([]);
   });
 
-  it('returns nothing when every series is hidden', () => {
-    expect(collect({ bar: group({ b1: { id: 'b1', hidden: true, data: [1] } }) })).to.deep.equal(
-      [],
-    );
+  it('still exports a chart whose every series is hidden', () => {
+    // Hidden series are included by default, so this is a table rather than nothing.
+    const tables = collect({
+      bar: group({ b1: { id: 'b1', label: 'A', hidden: true, data: [1] } }),
+    });
+
+    expect(tables.length).to.equal(1);
+    expect(tables[0].rows.length).to.equal(1);
   });
 
   it('ignores a series type that has no extractor', () => {

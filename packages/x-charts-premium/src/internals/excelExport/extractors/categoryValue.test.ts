@@ -83,23 +83,23 @@ describe('barExtractor', () => {
     expect(table.rows.map((row) => row.value)).to.deep.equal([1, null]);
   });
 
-  it('skips hidden series unless asked for them', () => {
+  it('includes hidden series by default, and drops them only when asked', () => {
     const series = {
       s1: { id: 's1', label: 'Visible', data: [1] },
       s2: { id: 's2', label: 'Hidden', hidden: true, data: [2] },
     };
 
-    const [hiddenExcluded] = barExtractor(createParams(series));
+    const [byDefault] = barExtractor(createParams(series));
 
-    expect(hiddenExcluded.rows.map((row) => row.series)).to.deep.equal(['Visible']);
+    expect(byDefault.rows.map((row) => row.series)).to.deep.equal(['Visible', 'Hidden']);
 
-    const [hiddenIncluded] = barExtractor(
+    const [screenOnly] = barExtractor(
       createParams(series, {
-        options: { ...DEFAULT_CHART_EXCEL_OPTIONS, includeHiddenSeries: true },
+        options: { ...DEFAULT_CHART_EXCEL_OPTIONS, includeHiddenSeries: false },
       }),
     );
 
-    expect(hiddenIncluded.rows.map((row) => row.series)).to.deep.equal(['Visible', 'Hidden']);
+    expect(screenOnly.rows.map((row) => row.series)).to.deep.equal(['Visible']);
   });
 
   it('exports the raw value of a stacked series, not its stacked bounds', () => {
@@ -147,11 +147,16 @@ describe('barExtractor', () => {
     expect(withFormatted.rows[0].formattedValue).to.equal('1000 EUR');
   });
 
-  it('returns no table when there is nothing visible to export', () => {
+  it('returns no table when there is nothing to export', () => {
     expect(barExtractor(createParams({}))).to.deep.equal([]);
-    expect(barExtractor(createParams({ s1: { id: 's1', hidden: true, data: [1] } }))).to.deep.equal(
-      [],
-    );
+    expect(
+      barExtractor(
+        createParams(
+          { s1: { id: 's1', hidden: true, data: [1] } },
+          { options: { ...DEFAULT_CHART_EXCEL_OPTIONS, includeHiddenSeries: false } },
+        ),
+      ),
+    ).to.deep.equal([]);
   });
 });
 

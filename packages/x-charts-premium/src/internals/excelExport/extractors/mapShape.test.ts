@@ -51,21 +51,30 @@ describe('mapShapeExtractor', () => {
     expect(table.rows[0].value).to.equal(null);
   });
 
-  it('skips items hidden through the legend', () => {
-    const [table] = mapShapeExtractor(
-      createParams({
-        s1: {
-          id: 's1',
-          label: 'P',
-          data: [
-            { name: 'a', value: 1 },
-            { name: 'b', value: 2, hidden: true },
-          ],
-        },
+  it('includes items hidden through the legend by default, dropping them only when asked', () => {
+    const series = {
+      s1: {
+        id: 's1',
+        label: 'P',
+        data: [
+          { name: 'a', value: 1 },
+          { name: 'b', value: 2, hidden: true },
+        ],
+      },
+    };
+
+    expect(mapShapeExtractor(createParams(series))[0].rows.map((row) => row.name)).to.deep.equal([
+      'a',
+      'b',
+    ]);
+
+    const [screenOnly] = mapShapeExtractor(
+      createParams(series, {
+        options: { ...DEFAULT_CHART_EXCEL_OPTIONS, includeHiddenSeries: false },
       }),
     );
 
-    expect(table.rows.map((row) => row.name)).to.deep.equal(['a']);
+    expect(screenOnly.rows.map((row) => row.name)).to.deep.equal(['a']);
   });
 
   it('formats the whole entry into one column', () => {
