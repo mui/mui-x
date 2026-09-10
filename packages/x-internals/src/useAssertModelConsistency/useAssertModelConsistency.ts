@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { warnOnce } from '../warning';
+import { error } from '../warning';
 
 /**
  * Make sure a controlled prop is used correctly.
@@ -39,7 +39,7 @@ function useAssertModelConsistencyOutsideOfProduction<T>(parameters: {
   });
 
   if (isControlled !== (controlled !== undefined)) {
-    warnOnce(
+    error(
       [
         `${warningPrefix}: A component is changing the ${
           isControlled ? '' : 'un'
@@ -49,18 +49,16 @@ function useAssertModelConsistencyOutsideOfProduction<T>(parameters: {
           'element for the lifetime of the component.',
         "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
         'More info: https://fb.me/react-controlled-components',
-      ],
-      'error',
+      ].join('\n'),
     );
   }
 
   if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-    warnOnce(
+    error(
       [
         `${warningPrefix}: A component is changing the default ${propName} state of an uncontrolled ${componentName} after being initialized. ` +
           `To suppress this warning opt to use a controlled ${componentName}.`,
-      ],
-      'error',
+      ].join('\n'),
     );
   }
 }

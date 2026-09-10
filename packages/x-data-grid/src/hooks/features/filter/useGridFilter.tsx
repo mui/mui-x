@@ -3,6 +3,7 @@ import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import type { RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridEventListener } from '../../../models/events';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -18,7 +19,6 @@ import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { defaultGridFilterLookup, getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector } from './gridFilterSelector';
-import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowsLookupSelector } from '../rows';
 import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import type { GridPipeProcessor } from '../../core/pipeProcessing';
@@ -506,7 +506,7 @@ export const useGridFilter = (
   /**
    * 1ST RENDER
    */
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     if (props.signature === 'DataGrid') {
       updateFilteredRows();
     }

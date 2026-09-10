@@ -1,11 +1,8 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  gridColumnLookupSelector,
-  gridRowTreeSelector,
-  useFirstRender,
-} from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector, gridRowTreeSelector } from '@mui/x-data-grid-pro';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridRowId } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -254,7 +251,7 @@ export const useGridRowGroupingPreProcessors = (
     getVisibleRowsLookup,
   );
 
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     setStrategyAvailability(apiRef, props.disableRowGrouping, props.dataSource);
   });
 

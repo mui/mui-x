@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
 import useId from '@mui/utils/useId';
-import { warnOnce } from '@mui/x-internals/warning';
+import { error } from '@mui/x-internals/warning';
 import type { GridRowParams } from '../../models/params/gridRowParams';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
@@ -117,10 +117,9 @@ function GridActionsCell<
         actions.push(child);
       } else if (process.env.NODE_ENV !== 'production') {
         const childType = typeof child.type === 'function' ? child.type.name : child.type;
-        warnOnce(
+        error(
           `MUI X: Invalid child type in \`GridActionsCell\`. Expected \`GridActionsCellItem\` or \`React.Fragment\`, got \`${childType}\`.
 If this is intentional, you can suppress this warning by passing the \`suppressChildrenValidation\` prop to \`GridActionsCell\`.`,
-          'error',
         );
       }
     }

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import {
   GridCellEditStartReasons,
   GridCellModes,
@@ -123,15 +123,19 @@ export const useGridFormula = (
           getFormulaFields(gridColumnLookupSelector(apiRef)).length > 0
         ) {
           if (props.dataSource) {
-            warnOnce([
-              'MUI X Data Grid: Formulas are not supported with the `dataSource` prop.',
-              'The `allowFormulas` column option is ignored and `=` cell values render as raw strings.',
-            ]);
+            warn(
+              [
+                'MUI X Data Grid: Formulas are not supported with the `dataSource` prop.',
+                'The `allowFormulas` column option is ignored and `=` cell values render as raw strings.',
+              ].join('\n'),
+            );
           } else if (gridPivotActiveSelector(apiRef)) {
-            warnOnce([
-              'MUI X Data Grid: Formulas are not supported while pivoting is active.',
-              'Formula evaluation is paused and resumes when pivoting is deactivated.',
-            ]);
+            warn(
+              [
+                'MUI X Data Grid: Formulas are not supported while pivoting is active.',
+                'Formula evaluation is paused and resumes when pivoting is deactivated.',
+              ].join('\n'),
+            );
           }
         }
 

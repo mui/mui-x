@@ -1,6 +1,6 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
 import { generateId } from '@base-ui/utils/generateId';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import type {
   SchedulerSchedulingPluginInterface,
   SchedulerState,
@@ -69,11 +69,13 @@ export class SchedulerSchedulingPlugin<
   private updateDependencies(newDependencies: SchedulerDependency[]) {
     if (process.env.NODE_ENV !== 'production') {
       if (!this.store.parameters.onDependenciesChange) {
-        warnOnce([
-          'MUI X Scheduler: A dependency update was ignored because no `onDependenciesChange` handler is provided.',
-          'The `dependencies` prop is fully controlled, so without it the changes are lost and the UI does not update.',
-          'Pass an `onDependenciesChange` handler that updates the `dependencies` prop.',
-        ]);
+        warn(
+          [
+            'MUI X Scheduler: A dependency update was ignored because no `onDependenciesChange` handler is provided.',
+            'The `dependencies` prop is fully controlled, so without it the changes are lost and the UI does not update.',
+            'Pass an `onDependenciesChange` handler that updates the `dependencies` prop.',
+          ].join('\n'),
+        );
       }
     }
 
@@ -219,16 +221,20 @@ export class SchedulerSchedulingPlugin<
         const status = classifyDependencyEvent(processedEventLookup, eventId);
         if (status === 'unknownEvent') {
           if (!hasDataSource) {
-            warnOnce([
-              `MUI X Scheduler: The dependency "${String(dependency.id)}" references the unknown event "${String(eventId)}".`,
-              'It is kept in the data but ignored by the timeline.',
-            ]);
+            warn(
+              [
+                `MUI X Scheduler: The dependency "${String(dependency.id)}" references the unknown event "${String(eventId)}".`,
+                'It is kept in the data but ignored by the timeline.',
+              ].join('\n'),
+            );
           }
         } else if (status === 'recurringEvent') {
-          warnOnce([
-            `MUI X Scheduler: The dependency "${String(dependency.id)}" references the recurring event "${String(eventId)}".`,
-            'Dependencies on recurring events are not supported, so it is ignored by the timeline.',
-          ]);
+          warn(
+            [
+              `MUI X Scheduler: The dependency "${String(dependency.id)}" references the recurring event "${String(eventId)}".`,
+              'Dependencies on recurring events are not supported, so it is ignored by the timeline.',
+            ].join('\n'),
+          );
         }
       }
     }

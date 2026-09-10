@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
@@ -176,11 +176,13 @@ export function FormContent(props: FormContentProps) {
     if (process.env.NODE_ENV !== 'production') {
       for (const key of Object.keys(customProperties)) {
         if (BUILT_IN_FORM_KEYS.has(key)) {
-          warnOnce([
-            `MUI X Scheduler: The event model contains a custom property "${key}" that collides with a built-in form key.`,
-            'The form seeds that key from the event dates and resource, so the custom property cannot be read or written through the form.',
-            'Rename the property in the event model to avoid the collision.',
-          ]);
+          warn(
+            [
+              `MUI X Scheduler: The event model contains a custom property "${key}" that collides with a built-in form key.`,
+              'The form seeds that key from the event dates and resource, so the custom property cannot be read or written through the form.',
+              'Rename the property in the event model to avoid the collision.',
+            ].join('\n'),
+          );
         }
       }
     }
@@ -262,11 +264,13 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   // built-in section, leaving the stored error with no visible field.
   const warnUnvalidatedField = (field: string, problem: string) => {
     if (process.env.NODE_ENV !== 'production' && !formStore.hasValidator(field)) {
-      warnOnce([
-        `MUI X Scheduler: ${problem} but no field of the event dialog validates the "${field}" field.`,
-        'Saving is still blocked, but the end user may have no visible field to fix it.',
-        'Render the missing section in the General tab, or register a validator for the field.',
-      ]);
+      warn(
+        [
+          `MUI X Scheduler: ${problem} but no field of the event dialog validates the "${field}" field.`,
+          'Saving is still blocked, but the end user may have no visible field to fix it.',
+          'Render the missing section in the General tab, or register a validator for the field.',
+        ].join('\n'),
+      );
     }
   };
 
@@ -331,11 +335,13 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // Checked on submit rather than on mount: the registry is only complete once
       // every section has run its effects, whatever the composition.
       if (shouldEventRequireResource && !formStore.hasValidator('resourceIds')) {
-        warnOnce([
-          'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
-          'Saving without a resource is still blocked, but the end user has no visible field to fix it.',
-          'Render the resource section in the General tab, or register a validator for the "resourceIds" field.',
-        ]);
+        warn(
+          [
+            'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
+            'Saving without a resource is still blocked, but the end user has no visible field to fix it.',
+            'Render the resource section in the General tab, or register a validator for the "resourceIds" field.',
+          ].join('\n'),
+        );
       }
     }
 
@@ -351,11 +357,13 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           setTabValue('general');
         }
         if (process.env.NODE_ENV !== 'production') {
-          warnOnce([
-            'MUI X Scheduler: A form field validator threw or rejected during the submit.',
-            'The submit was aborted and no error was stored on the form.',
-            'Handle failures inside the validator and return the error message instead.',
-          ]);
+          warn(
+            [
+              'MUI X Scheduler: A form field validator threw or rejected during the submit.',
+              'The submit was aborted and no error was stored on the form.',
+              'Handle failures inside the validator and return the error message instead.',
+            ].join('\n'),
+          );
         }
         return;
       }

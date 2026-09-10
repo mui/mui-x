@@ -3,7 +3,7 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import { parseSelectedSections } from './useField.utils';
 import type {
   UseFieldDOMGetters,
@@ -44,12 +44,14 @@ export const useField = <
 
   if (process.env.NODE_ENV !== 'production') {
     if ((forwardedProps as any).enableAccessibleFieldDOMStructure != null) {
-      warnOnce([
-        'MUI X: The `enableAccessibleFieldDOMStructure` prop has been removed.',
-        'The accessible DOM structure is now the default and only option.',
-        'You can safely remove the prop from your code.',
-        'For more information, please have a look at the migration guide (https://mui.com/x/migration/migration-pickers-v8/).',
-      ]);
+      warn(
+        [
+          'MUI X: The `enableAccessibleFieldDOMStructure` prop has been removed.',
+          'The accessible DOM structure is now the default and only option.',
+          'You can safely remove the prop from your code.',
+          'For more information, please have a look at the migration guide (https://mui.com/x/migration/migration-pickers-v8/).',
+        ].join('\n'),
+      );
     }
   }
 

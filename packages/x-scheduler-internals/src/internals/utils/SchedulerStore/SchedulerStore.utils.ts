@@ -1,6 +1,6 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { generateId } from '@base-ui/utils/generateId';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerProcessedEvent,
@@ -450,10 +450,12 @@ export function buildEventsState<TEvent extends object, TResource extends object
 
     if (alreadySeen) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          `MUI X Scheduler: Two or more events share the same id "${String(id)}".`,
-          'Event ids must be unique. Only the last event with a given id is kept, the others are ignored.',
-        ]);
+        warn(
+          [
+            `MUI X Scheduler: Two or more events share the same id "${String(id)}".`,
+            'Event ids must be unique. Only the last event with a given id is kept, the others are ignored.',
+          ].join('\n'),
+        );
       }
     } else {
       if (

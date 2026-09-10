@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import type { ChatAdapter } from '../../adapters';
 import type { ChatStore } from '../../store';
 import type { ChatFeatures } from '../../ChatProvider';
@@ -10,11 +10,13 @@ export interface TypingActionsRuntimeRef<Cursor = string> {
 }
 
 function warnSetTypingFailed(): void {
-  warnOnce([
-    'MUI X Chat: An `adapter.setTyping()` call failed while sending an outbound typing signal.',
-    'Typing signals are advisory and best-effort, so the failure was swallowed and the call is not retried.',
-    'Make `setTyping()` resilient (handle network errors) if the remote "is typing…" state must stay accurate.',
-  ]);
+  warn(
+    [
+      'MUI X Chat: An `adapter.setTyping()` call failed while sending an outbound typing signal.',
+      'Typing signals are advisory and best-effort, so the failure was swallowed and the call is not retried.',
+      'Make `setTyping()` resilient (handle network errors) if the remote "is typing…" state must stay accurate.',
+    ].join('\n'),
+  );
 }
 
 /**

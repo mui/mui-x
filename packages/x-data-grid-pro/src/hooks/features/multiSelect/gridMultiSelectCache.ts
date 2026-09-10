@@ -1,4 +1,4 @@
-import { fastArrayCompare } from '@mui/x-internals/fastArrayCompare';
+import { areArraysEqual } from '@base-ui/utils/areArraysEqual';
 import type {
   GridMultiSelectInternalCache,
   GridMultiSelectOverflowMetrics,
@@ -27,7 +27,7 @@ export class GridMultiSelectCache implements GridMultiSelectInternalCache {
     if (
       prev &&
       prev.gap === next.gap &&
-      fastArrayCompare(prev.overflowChipWidths, next.overflowChipWidths)
+      areArraysEqual(prev.overflowChipWidths, next.overflowChipWidths)
     ) {
       return;
     }

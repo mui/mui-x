@@ -28,7 +28,7 @@ import {
   getTreeNodeDescendants,
 } from '@mui/x-data-grid/internals';
 import type { GridDataSourceBaseOptions, GridStrategyProcessor } from '@mui/x-data-grid/internals';
-import { warnOnce } from '@mui/x-internals/warning';
+import { error as logError } from '@mui/x-internals/warning';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { NestedDataManager, RequestStatus, getGroupKeys } from './utils';
@@ -239,13 +239,12 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
             }),
           );
         } else if (process.env.NODE_ENV !== 'production') {
-          warnOnce(
+          logError(
             [
               'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',
               'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
               'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
-            ],
-            'error',
+            ].join('\n'),
           );
         }
       } finally {

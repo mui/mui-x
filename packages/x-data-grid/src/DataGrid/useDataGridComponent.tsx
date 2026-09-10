@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { useFirstRender } from '@mui/x-internals/useFirstRender';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import type { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
@@ -134,7 +134,7 @@ export const useDataGridComponent = (
   useGridDataSource(apiRef, props);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     apiRef.current.runAppliersForPendingProcessors();
   });
   React.useEffect(() => {

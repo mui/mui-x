@@ -1,5 +1,5 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import type { DefaultizedBarSeriesType } from '../../../models';
 import { getStackingGroups } from '../../../internals/stacking';
 import type { DatasetElementType, DatasetType } from '../../../models/seriesType/config';
@@ -65,7 +65,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
           dataset.forEach((entry, index) => {
             const value = entry[dataKey];
             if (value != null && typeof value !== 'number') {
-              warnOnce(
+              warn(
                 `MUI X Charts: your dataset key "${dataKey}" is used for plotting bars, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
 Bar plots only support numeric and null values.`,
               );

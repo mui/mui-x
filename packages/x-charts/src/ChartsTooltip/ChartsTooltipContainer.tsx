@@ -11,7 +11,7 @@ import type { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import type { WithDataAttributes } from '@mui/utils/types';
-import { warnOnce } from '@mui/x-internals/warning';
+import { error } from '@mui/x-internals/warning';
 import { useIsFineMainPointer } from './utils';
 import type { TriggerOptions } from './utils';
 import { useUtilityClasses } from './chartsTooltipClasses';
@@ -179,21 +179,19 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     const isAxisControlled = store.state.controlledCartesianAxisTooltip !== undefined;
 
     if (trigger !== 'item' && isItemControlled) {
-      warnOnce(
+      error(
         [
           `MUI X Charts: The \`tooltipItem\` prop is provided, but the tooltip trigger is set to '${trigger}'.`,
           "The `tooltipItem` prop only has an effect when the tooltip trigger is 'item'.",
-        ],
-        'error',
+        ].join('\n'),
       );
     }
     if (trigger !== 'axis' && isAxisControlled) {
-      warnOnce(
+      error(
         [
           `MUI X Charts: The \`tooltipAxis\` prop is provided, but the tooltip trigger is set to '${trigger}'.`,
           "The `tooltipAxis` prop only has an effect when the tooltip trigger is 'axis'.",
-        ],
-        'error',
+        ].join('\n'),
       );
     }
   }
