@@ -38,6 +38,21 @@ describe('<AgendaView />', () => {
     });
   });
 
+  // Regression test for https://github.com/mui/mui-x/issues/23565
+  it('should render an empty agenda when hiding empty days and no event is in the horizon', () => {
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        view="agenda"
+        defaultPreferences={{ showEmptyDaysInAgenda: false }}
+      />,
+    );
+
+    expect(document.querySelector(`.${eventCalendarClasses.agendaView}`)).not.to.equal(null);
+    expect(document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`)).to.have.length(0);
+  });
+
   it('should reference resolvable header IDs in each event aria-labelledby', () => {
     const event = EventBuilder.new().title('My Event').build();
 

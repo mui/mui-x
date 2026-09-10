@@ -34,6 +34,19 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     });
   }
 
+  it('should return an empty map when no days are given', () => {
+    const result = innerGetEventOccurrencesGroupedByDay({
+      adapter,
+      days: [],
+      events: [],
+      visibleResources: visible,
+      displayTimezone: 'default',
+      recurringEventsPlugin: null,
+    });
+
+    expect(result.size).to.equal(0);
+  });
+
   it('should return empty arrays when no events exist', () => {
     const result = run([]);
 
