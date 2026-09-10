@@ -2,7 +2,7 @@
 
 Exporting the data behind a chart to Excel, for [#14246](https://github.com/mui/mui-x/issues/14246).
 
-[Open in StackBlitz](https://stackblitz.com/edit/uxb9htlq?file=src%2FApp.tsx)
+[Open in StackBlitz](https://stackblitz.com/edit/xj4keswu?file=src%2FApp.tsx)
 
 That project holds a copy of these files and installs the library from npm, so it boots in
 seconds. Importing this folder through `stackblitz.com/github/...` instead would make
@@ -45,13 +45,16 @@ The chart plugin that reads this off a live chart does not exist yet, so this ex
 series data to the extractors directly rather than rendering a chart and exporting it. That
 is why no chart is drawn here.
 
-The dependency points at a preview build of the pull request rather than a release:
+The dependency points at a preview build rather than a release, pinned to a commit:
 
 ```json
-"@mui/x-charts-premium": "https://pkg.pr.new/mui/mui-x/@mui/x-charts-premium@23569"
+"@mui/x-charts-premium": "https://pkg.pr.new/mui/mui-x/@mui/x-charts-premium@1b2c6a03659e0c23422d1c3f030e757688bf114f"
 ```
 
-Swap it for a normal version range once the feature ships.
+The commit hash matters. Pinning to the pull request instead, `@23569`, points at a URL
+whose contents are replaced on every push, so any lockfile referring to it fails with
+`EINTEGRITY` as soon as the next commit lands. Re-pin to a newer commit to pick up later
+changes, and swap the whole thing for a normal version range once the feature ships.
 
 ## Running it locally
 

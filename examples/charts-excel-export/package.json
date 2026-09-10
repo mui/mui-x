@@ -13,7 +13,7 @@
     "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.2.10",
     "@mui/material": "^9.0.0",
-    "@mui/x-charts-premium": "https://pkg.pr.new/mui/mui-x/@mui/x-charts-premium@23569",
+    "@mui/x-charts-premium": "https://pkg.pr.new/mui/mui-x/@mui/x-charts-premium@1b2c6a03659e0c23422d1c3f030e757688bf114f",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
