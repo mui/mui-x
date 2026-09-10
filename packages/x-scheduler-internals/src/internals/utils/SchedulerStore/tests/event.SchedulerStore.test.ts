@@ -2,6 +2,7 @@ import {
   adapter,
   adapterFr,
   EventBuilder,
+  premiumStoreClasses,
   ResourceBuilder,
   storeClasses,
 } from 'test/utils/scheduler';
@@ -978,7 +979,15 @@ storeClasses.forEach((storeClass) => {
           'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
         ]);
       });
+    });
+  });
+});
 
+// `dataSource` is a Premium-only parameter: only the Premium stores attach the lazy-loading
+// plugin, so the community store is not expected to honor it.
+premiumStoreClasses.forEach((storeClass) => {
+  describe(`Event - ${storeClass.name}`, () => {
+    describe('dev warnings', () => {
       it('should not warn about a missing onEventsChange when a dataSource is provided', () => {
         const event = EventBuilder.new().build();
         const dataSource = {

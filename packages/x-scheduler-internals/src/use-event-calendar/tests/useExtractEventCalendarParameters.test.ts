@@ -10,7 +10,6 @@ const allParameters: Record<keyof EventCalendarParameters<any, any>, unknown> = 
   canDragEventsFromTheOutside: 'canDragEventsFromTheOutside',
   canDropEventsToTheOutside: 'canDropEventsToTheOutside',
   collapsedResources: 'collapsedResources',
-  dataSource: 'dataSource',
   dateLocale: 'dateLocale',
   defaultCollapsedResources: 'defaultCollapsedResources',
   defaultPreferences: 'defaultPreferences',

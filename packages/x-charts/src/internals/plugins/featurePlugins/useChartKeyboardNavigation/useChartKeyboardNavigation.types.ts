@@ -68,6 +68,12 @@ export interface UseChartKeyboardNavigationInstance {
     scope: ItemActivationScope,
     handler: ItemActivationHandler,
   ) => () => void;
+  /**
+   * Asks for the visible zoom range to be announced to screen readers.
+   * Called by the plugin owning keyboard zoom and pan, on each change the user makes with the keys.
+   * @returns {void}
+   */
+  announceZoomChange: () => void;
 }
 
 export interface UseChartKeyboardNavigationState {
@@ -89,6 +95,12 @@ export interface UseChartKeyboardNavigationState {
      * Indicates whether keyboard navigation is enabled or not.
      */
     enabled: boolean;
+    /**
+     * Incremented on each zoom change the user makes with the keyboard, and reset when the chart
+     * loses focus. The live region reads the visible range when it changes, so a zoom coming from
+     * the pointer or from the application is not announced.
+     */
+    zoomAnnouncement: number;
   };
 }
 
