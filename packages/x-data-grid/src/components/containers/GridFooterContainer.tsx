@@ -33,14 +33,7 @@ const GridFooterContainerRoot = styled('div', {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  // Definite rather than a minimum, so `GridPaginationRoot`'s
-  // `maxHeight: calc(100% + 1px)` resolves on the first layout pass. With only a
-  // minimum the height is indefinite while the footer sizes to its content, that
-  // percentage cap does not apply, and the 52px tall pagination plus this 1px
-  // border makes the footer 53px until flex-shrink reclaims the pixel. Everything
-  // derived from the viewport height moves with that correction.
-  height: 52,
-  flexShrink: 0,
+  minHeight: 52,
   borderTop: '1px solid',
 });
 
