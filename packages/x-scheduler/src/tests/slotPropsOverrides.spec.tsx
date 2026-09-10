@@ -42,11 +42,12 @@ declare module '@mui/x-scheduler/models' {
 
 function CustomEventContent({
   occurrence,
-  resourceId,
+  resource,
+  variant,
   customEventContentProp,
 }: PropsFromSlot<EventTimelineSlots['timelineEventContent']>) {
   return (
-    <span data-prop={customEventContentProp} data-resource={resourceId}>
+    <span data-prop={customEventContentProp} data-resource={resource.id} data-variant={variant}>
       {occurrence.title}
     </span>
   );

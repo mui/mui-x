@@ -43,18 +43,12 @@ export function SchedulerSlotsProvider(props: SchedulerSlotsProviderProps) {
 
   const value = React.useMemo(
     () => ({
-      slots:
-        eventDialogGeneralTab || timelineEventContent || timelineResourceTitle
-          ? { eventDialogGeneralTab, timelineEventContent, timelineResourceTitle }
-          : (EMPTY_OBJECT as EventTimelineSlots),
-      slotProps:
-        eventDialogGeneralTabProps || timelineEventContentProps || timelineResourceTitleProps
-          ? {
-              eventDialogGeneralTab: eventDialogGeneralTabProps,
-              timelineEventContent: timelineEventContentProps,
-              timelineResourceTitle: timelineResourceTitleProps,
-            }
-          : (EMPTY_OBJECT as EventTimelineSlotProps),
+      slots: { eventDialogGeneralTab, timelineEventContent, timelineResourceTitle },
+      slotProps: {
+        eventDialogGeneralTab: eventDialogGeneralTabProps,
+        timelineEventContent: timelineEventContentProps,
+        timelineResourceTitle: timelineResourceTitleProps,
+      },
     }),
     [
       eventDialogGeneralTab,

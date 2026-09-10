@@ -3,8 +3,7 @@ import FlagRounded from '@mui/icons-material/FlagRounded';
 import BuildRounded from '@mui/icons-material/BuildRounded';
 
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-
-const defaultVisibleDate = new Date('2025-07-01T00:00:00');
+import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 const resources = [
   { id: 'web-app', title: 'Web App', eventColor: 'purple' },

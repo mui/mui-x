@@ -583,10 +583,30 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('content slots', () => {
-    it('should render the timelineEventContent slot with the occurrence and the row resource', async () => {
+    const child = ResourceBuilder.new().title('Child').build();
+    const parent = ResourceBuilder.new().title('Parent').children([child]).build();
+
+    const getTitleCell = (resourceId: string) =>
+      document.querySelector(`[id$="-EventTimelinePremiumTitleCell-${resourceId}"]`) as HTMLElement;
+
+    // The overrides interfaces are only populated through module augmentation on the consumer side.
+    const asEventContentSlot = (component: React.ComponentType<any>) =>
+      component as React.ComponentType<
+        TimelineEventContentProps & TimelineEventContentPropsOverrides
+      >;
+    const asResourceTitleSlot = (component: React.ComponentType<any>) =>
+      component as React.ComponentType<
+        TimelineResourceTitleProps & TimelineResourceTitlePropsOverrides
+      >;
+
+    it('should render the timelineEventContent slot instead of the title, with the row resource and the variant', async () => {
       function CustomEventContent(props: TimelineEventContentProps & { marker?: string }) {
         return (
-          <span data-testid="custom-event-content" data-resource={props.resourceId}>
+          <span
+            data-testid="custom-event-content"
+            data-resource={props.resource.id}
+            data-variant={props.variant}
+          >
             {props.marker} {props.occurrence.title}
           </span>
         );
@@ -594,12 +614,7 @@ describe('<EventTimelinePremium />', () => {
 
       await renderTimeline({
         events: [event1],
-        slots: {
-          // The overrides interface is only populated through module augmentation on the consumer side.
-          timelineEventContent: CustomEventContent as React.ComponentType<
-            TimelineEventContentProps & TimelineEventContentPropsOverrides
-          >,
-        },
+        slots: { timelineEventContent: asEventContentSlot(CustomEventContent) },
         slotProps: {
           timelineEventContent: { marker: 'custom' } as TimelineEventContentPropsOverrides,
         },
@@ -608,10 +623,33 @@ describe('<EventTimelinePremium />', () => {
       const content = screen.getByTestId('custom-event-content');
       expect(content.textContent).to.equal(`custom ${event1.title}`);
       expect(content.getAttribute('data-resource')).to.equal(String(engineering.id));
-      expect(content.closest(`.${eventTimelinePremiumClasses.event}`)).not.to.equal(null);
+      expect(content.getAttribute('data-variant')).to.equal('regular');
+      expect(content.closest(`.${eventTimelinePremiumClasses.eventLinesClamp}`)).not.to.equal(null);
+      expect(screen.queryByText(event1.title, { exact: true })).to.equal(null);
     });
 
-    it('should render the timelineResourceTitle slot with the resource', async () => {
+    it('should pass the resource of each row to the timelineEventContent slot of a multi-resource event', async () => {
+      function CustomEventContent(props: TimelineEventContentProps) {
+        return <span data-testid="custom-event-content" data-resource={props.resource.id} />;
+      }
+      const multiResourceEvent = EventBuilder.new()
+        .singleDay('2025-07-03T09:00:00Z')
+        .resources([engineering, design])
+        .build();
+
+      await renderTimeline({
+        events: [multiResourceEvent],
+        slots: { timelineEventContent: asEventContentSlot(CustomEventContent) },
+      });
+
+      const resourceIds = screen
+        .getAllByTestId('custom-event-content')
+        .map((element) => element.getAttribute('data-resource'))
+        .sort();
+      expect(resourceIds).to.deep.equal([engineering.id, design.id].sort());
+    });
+
+    it('should render the timelineResourceTitle slot instead of the title', async () => {
       function CustomResourceTitle(props: TimelineResourceTitleProps & { marker?: string }) {
         return (
           <span data-testid="custom-resource-title">
@@ -623,12 +661,7 @@ describe('<EventTimelinePremium />', () => {
       await renderTimeline({
         resources: [engineering],
         events: [],
-        slots: {
-          // The overrides interface is only populated through module augmentation on the consumer side.
-          timelineResourceTitle: CustomResourceTitle as React.ComponentType<
-            TimelineResourceTitleProps & TimelineResourceTitlePropsOverrides
-          >,
-        },
+        slots: { timelineResourceTitle: asResourceTitleSlot(CustomResourceTitle) },
         slotProps: {
           timelineResourceTitle: { marker: 'custom' } as TimelineResourceTitlePropsOverrides,
         },
@@ -636,7 +669,127 @@ describe('<EventTimelinePremium />', () => {
 
       const content = screen.getByTestId('custom-resource-title');
       expect(content.textContent).to.equal(`custom ${engineering.title}`);
-      expect(content.closest(`.${eventTimelinePremiumClasses.titleCell}`)).not.to.equal(null);
+      expect(content.closest(`.${eventTimelinePremiumClasses.titleCellContent}`)).not.to.equal(
+        null,
+      );
+      expect(screen.queryByText(engineering.title, { exact: true })).to.equal(null);
+    });
+
+    it('should toggle the collapse when clicking the text of the timelineResourceTitle slot', async () => {
+      const onCollapsedResourcesChange = vi.fn();
+      function CustomResourceTitle(props: TimelineResourceTitleProps) {
+        return (
+          <span data-testid={`custom-title-${props.resource.id}`}>{props.resource.title}</span>
+        );
+      }
+
+      const { user } = await renderTimeline({
+        resources: [parent],
+        events: [],
+        onCollapsedResourcesChange,
+        slots: { timelineResourceTitle: asResourceTitleSlot(CustomResourceTitle) },
+      });
+
+      await user.click(screen.getByTestId(`custom-title-${parent.id}`));
+
+      expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
+    });
+
+    it('should leave clicks and keys to interactive content rendered by the timelineResourceTitle slot', async () => {
+      const onCollapsedResourcesChange = vi.fn();
+      const onButtonClick = vi.fn();
+      function CustomResourceTitle(props: TimelineResourceTitleProps) {
+        return (
+          <button type="button" data-testid="title-button" onClick={onButtonClick}>
+            {props.resource.title}
+          </button>
+        );
+      }
+
+      const { user } = await renderTimeline({
+        resources: [parent],
+        events: [],
+        onCollapsedResourcesChange,
+        slots: { timelineResourceTitle: asResourceTitleSlot(CustomResourceTitle) },
+      });
+
+      const button = within(getTitleCell(parent.id)).getByTestId('title-button');
+      await user.click(button);
+      expect(onButtonClick.mock.calls.length).to.equal(1);
+
+      act(() => {
+        button.focus();
+      });
+      await user.keyboard('{Enter}');
+      expect(onButtonClick.mock.calls.length).to.equal(2);
+
+      expect(onCollapsedResourcesChange.mock.calls.length).to.equal(0);
+      expect(getTitleCell(parent.id).getAttribute('aria-expanded')).to.equal('true');
+    });
+
+    it('should leave the arrow keys to an input rendered by the timelineResourceTitle slot', async () => {
+      function CustomResourceTitle() {
+        return <input data-testid="title-input" />;
+      }
+
+      const { user } = await renderTimeline({
+        resources: [engineering, design],
+        events: [],
+        slots: { timelineResourceTitle: asResourceTitleSlot(CustomResourceTitle) },
+      });
+
+      const input = within(getTitleCell(engineering.id)).getByTestId('title-input');
+      act(() => {
+        input.focus();
+      });
+      await user.keyboard('{ArrowDown}{ArrowRight}{ArrowLeft}{ArrowUp}');
+
+      expect(document.activeElement).to.equal(input);
+    });
+
+    it('should leave the arrow keys to an input rendered by the timelineEventContent slot', async () => {
+      function CustomEventContent() {
+        return <input data-testid="event-input" />;
+      }
+
+      const { user } = await renderTimeline({
+        events: [event1],
+        slots: { timelineEventContent: asEventContentSlot(CustomEventContent) },
+      });
+
+      const input = screen.getByTestId('event-input');
+      act(() => {
+        input.focus();
+      });
+      await user.keyboard('{ArrowDown}{ArrowRight}{ArrowLeft}{ArrowUp}');
+
+      expect(document.activeElement).to.equal(input);
+    });
+
+    it('should not start editing from interactive content rendered by the timelineEventContent slot', async () => {
+      const onEventEditingStart = vi.fn();
+      const onButtonClick = vi.fn();
+      function CustomEventContent(props: TimelineEventContentProps) {
+        return (
+          <React.Fragment>
+            <span data-testid="event-text">{props.occurrence.title}</span>
+            <button type="button" data-testid="event-button" onClick={onButtonClick} />
+          </React.Fragment>
+        );
+      }
+
+      const { user } = await renderTimeline({
+        events: [event1],
+        onEventEditingStart,
+        slots: { timelineEventContent: asEventContentSlot(CustomEventContent) },
+      });
+
+      await user.click(screen.getByTestId('event-button'));
+      expect(onButtonClick.mock.calls.length).to.equal(1);
+      expect(onEventEditingStart.mock.calls.length).to.equal(0);
+
+      await user.click(screen.getByTestId('event-text'));
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
     });
   });
 

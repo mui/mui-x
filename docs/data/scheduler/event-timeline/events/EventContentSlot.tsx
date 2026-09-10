@@ -7,13 +7,12 @@ import {
   TimelineEventContentProps,
 } from '@mui/x-scheduler/models';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 interface DemoEvent extends SchedulerEvent {
   kind: 'milestone' | 'task';
   code: string;
 }
-
-const defaultVisibleDate = new Date('2025-07-01T00:00:00');
 
 const resources: SchedulerResource[] = [
   { id: 'web-app', title: 'Web App', eventColor: 'purple' },

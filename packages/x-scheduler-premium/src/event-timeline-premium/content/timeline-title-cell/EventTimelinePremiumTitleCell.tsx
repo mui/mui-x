@@ -10,6 +10,7 @@ import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
+import { isEventFromNestedInteractiveElement } from '@mui/x-scheduler-internals/internals';
 import { getPaletteVariants, useSchedulerSlots } from '@mui/x-scheduler/internals';
 import { Virtualization } from '@mui/x-virtualizer';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
@@ -170,12 +171,20 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
 
   const ResourceTitle = slots.timelineResourceTitle;
 
+  // Interactive content rendered by the title slot keeps its own clicks.
   const handleToggleCollapse = useStableCallback((event: React.SyntheticEvent) => {
+    if (isEventFromNestedInteractiveElement(event)) {
+      return;
+    }
     store.toggleResourceCollapse(resourceId, event.nativeEvent);
   });
 
   const handleKeyDown = useStableCallback((event: React.KeyboardEvent) => {
-    if (hasVisibleChildren && (event.key === 'Enter' || event.key === ' ')) {
+    if (
+      hasVisibleChildren &&
+      event.target === event.currentTarget &&
+      (event.key === 'Enter' || event.key === ' ')
+    ) {
       event.preventDefault();
       store.toggleResourceCollapse(resourceId, event.nativeEvent);
     }

@@ -228,7 +228,11 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
   it('should render the timelineEventContent slot in the drag placeholder', async () => {
     function CustomEventContent(props: TimelineEventContentProps) {
-      return <span data-testid="custom-event-content">{props.occurrence.title}</span>;
+      return (
+        <span data-testid="custom-event-content" data-variant={props.variant}>
+          {props.occurrence.title}
+        </span>
+      );
     }
     const event = EventBuilder.new()
       .title('Team Standup')
@@ -269,18 +273,22 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       });
       // pragmatic-drag-and-drop delivers `onDrag` on the next animation frame.
       await new Promise<void>((resolve) => {
-        setTimeout(resolve, 50);
+        requestAnimationFrame(() => resolve());
       });
     });
 
-    const placeholder = document.querySelector('.MuiEventTimeline-eventPlaceholder')!;
-    expect(placeholder).not.to.equal(null);
-    expect(
-      within(placeholder as HTMLElement).getByTestId('custom-event-content').textContent,
-    ).to.equal('Team Standup');
+    try {
+      const placeholder = document.querySelector<HTMLElement>('.MuiEventTimeline-eventPlaceholder');
+      expect(placeholder).not.to.equal(null);
+      const content = within(placeholder!).getByTestId('custom-event-content');
+      expect(content.textContent).to.equal('Team Standup');
+      expect(content.getAttribute('data-variant')).to.equal('placeholder');
+    } finally {
+      // Finish the held drag even when an assertion fails, so it does not leak into the next test.
+      fireEvent.dragEnd(eventElement);
+    }
 
-    // Finish the held drag so it does not leak into the next test.
-    fireEvent.dragEnd(eventElement);
+    expect(document.querySelector('.MuiEventTimeline-eventPlaceholder')).to.equal(null);
   });
 
   it('should resize an event end to a later time', async () => {

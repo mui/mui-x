@@ -10,6 +10,7 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { isEventFromNestedInteractiveElement } from '@mui/x-scheduler-internals/internals';
 import type {
   CompactEventEditingProviderProps,
   EventEditingContextValue,
@@ -135,6 +136,10 @@ export function useEventEditingTriggerProps(
   return {
     ref,
     onClick: (event: React.MouseEvent<HTMLElement>) => {
+      // A link or a button rendered inside the event keeps its own clicks.
+      if (isEventFromNestedInteractiveElement(event)) {
+        return;
+      }
       const started = startEditing(ref, occurrence, event.nativeEvent, stableAnchor);
       if (!started) {
         onEditingCanceled?.();

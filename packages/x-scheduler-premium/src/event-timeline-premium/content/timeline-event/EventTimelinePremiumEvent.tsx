@@ -6,7 +6,10 @@ import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
@@ -172,6 +175,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget,
     occurrence.id,
   );
+  const rowResource = useStore(store, schedulerResourceSelectors.processedResource, resourceId);
 
   // Feature hooks
   const id = useId(idProp);
@@ -180,7 +184,8 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   const content = EventContent ? (
     <EventContent
       occurrence={occurrence}
-      resourceId={resourceId}
+      resource={rowResource!}
+      variant={variant}
       {...slotProps.timelineEventContent}
     />
   ) : (

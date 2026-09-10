@@ -7,8 +7,7 @@ import {
   TimelineResourceTitleProps,
 } from '@mui/x-scheduler/models';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-
-const defaultVisibleDate = new Date('2025-07-01T00:00:00');
+import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 const resourceDetails: Record<string, { code: string; owner: string }> = {
   'web-app': { code: 'WEB', owner: 'Alice' },
@@ -44,7 +43,8 @@ function ResourceTitle({ resource }: TimelineResourceTitleProps) {
   const details = resourceDetails[resource.id];
 
   return (
-    <Tooltip title={details ? `Owner: ${details.owner}` : ''}>
+    // `describeChild` keeps the tooltip out of the accessible name of the events in the row.
+    <Tooltip title={details ? `Owner: ${details.owner}` : ''} describeChild>
       <span>
         <Link href={`#${resource.id}`} underline="hover" color="inherit">
           {resource.title}
