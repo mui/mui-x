@@ -26,6 +26,7 @@ import {
   gridClasses,
   gridFocusCellSelector,
   GRID_REORDER_COL_DEF,
+  gridRowNodeSelector,
   gridSortedRowIdsSelector,
   gridDimensionsSelector,
   GridCellModes,
@@ -43,6 +44,7 @@ import type { GridCellSelectionApi, GridCellSelectionModel } from './gridCellSel
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { CellValueUpdater } from '../clipboard/useGridClipboardImport';
+import { GRID_FORMULA_ROW_NUMBER_FIELD } from '../formula/gridFormulaPositionContext';
 
 export const cellSelectionStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'cellSelectionModel' | 'initialState'>
@@ -70,6 +72,26 @@ function getSelectedOrFocusedCells(
     }
   }
   return selectedCells;
+}
+
+// Answers "is more than one cell selected" without the cost of
+// `getSelectedCellsAsArray`, which allocates one object per selected cell
+function hasMultipleSelectedCells(apiRef: RefObject<GridPrivateApiPremium>): boolean {
+  const cellSelectionModel = apiRef.current.getCellSelectionModel();
+  const visibleRows = getVisibleRows(apiRef);
+  let selectedCellCount = 0;
+  for (let i = 0; i < visibleRows.rows.length && selectedCellCount < 2; i += 1) {
+    const fieldsMap = cellSelectionModel[visibleRows.rows[i].id];
+    if (fieldsMap !== undefined) {
+      const fields = Object.keys(fieldsMap);
+      for (let j = 0; j < fields.length && selectedCellCount < 2; j += 1) {
+        if (fieldsMap[fields[j]]) {
+          selectedCellCount += 1;
+        }
+      }
+    }
+  }
+  return selectedCellCount >= 2;
 }
 
 interface FillSourceState {
@@ -186,6 +208,39 @@ export const useGridCellSelection = (
     [apiRef, props.cellSelection],
   );
 
+  const isSelectableField = React.useCallback(
+    (field: string) => {
+      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        return false;
+      }
+
+      if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+        return false;
+      }
+
+      if (field === GRID_REORDER_COL_DEF.field) {
+        return false;
+      }
+
+      if (field === GRID_FORMULA_ROW_NUMBER_FIELD) {
+        return false;
+      }
+
+      const column = apiRef.current.getColumn(field);
+      return column?.type !== GRID_ACTIONS_COLUMN_TYPE;
+    },
+    [apiRef],
+  );
+
+  const isSelectableRow = React.useCallback(
+    (id: GridRowId) => {
+      const rowNode = gridRowNodeSelector(apiRef, id);
+      // Skeleton rows have no data and footer rows only contain aggregated values
+      return !!rowNode && rowNode.type !== 'skeletonRow' && rowNode.type !== 'footer';
+    },
+    [apiRef],
+  );
+
   const selectCellRange = React.useCallback<GridCellSelectionApi['selectCellRange']>(
     (start, end, keepOtherSelected = false) => {
       const startRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(start.id);
@@ -210,23 +265,31 @@ export const useGridCellSelection = (
 
       const visibleColumns = apiRef.current.getVisibleColumns();
       const visibleRows = getVisibleRows(apiRef);
-      const rowsInRange = visibleRows.rows.slice(finalStartRowIndex, finalEndRowIndex + 1);
-      const columnsInRange = visibleColumns.slice(finalStartColumnIndex, finalEndColumnIndex + 1);
+      const rowsInRange = visibleRows.rows
+        .slice(finalStartRowIndex, finalEndRowIndex + 1)
+        .filter((row) => isSelectableRow(row.id));
+      const columnsInRange = visibleColumns
+        .slice(finalStartColumnIndex, finalEndColumnIndex + 1)
+        .filter((column) => isSelectableField(column.field));
 
       const newModel = keepOtherSelected ? { ...apiRef.current.getCellSelectionModel() } : {};
 
-      rowsInRange.forEach((row) => {
-        if (!newModel[row.id]) {
-          newModel[row.id] = {};
-        }
-        columnsInRange.forEach((column) => {
-          newModel[row.id][column.field] = true;
-        }, {});
-      });
+      // Without this check, a range with only non-selectable columns would add
+      // empty row entries to the model
+      if (columnsInRange.length > 0) {
+        rowsInRange.forEach((row) => {
+          if (!newModel[row.id]) {
+            newModel[row.id] = {};
+          }
+          columnsInRange.forEach((column) => {
+            newModel[row.id][column.field] = true;
+          });
+        });
+      }
 
       apiRef.current.setCellSelectionModel(newModel);
     },
-    [apiRef],
+    [apiRef, isSelectableField, isSelectableRow],
   );
 
   const getSelectedCellsAsArray = React.useCallback<
@@ -272,22 +335,6 @@ export const useGridCellSelection = (
   };
 
   useGridApiMethod(apiRef, cellSelectionApi, 'public');
-
-  const isSelectableField = React.useCallback(
-    (field: string) => {
-      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
-        return false;
-      }
-
-      if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
-        return false;
-      }
-
-      const column = apiRef.current.getColumn(field);
-      return column?.type !== GRID_ACTIONS_COLUMN_TYPE;
-    },
-    [apiRef],
-  );
 
   const hasClickedValidCellForRangeSelection = React.useCallback(
     (params: GridCellParams) => {
@@ -523,6 +570,9 @@ export const useGridCellSelection = (
 
     const newModel: GridCellSelectionModel = {};
     visibleRows.rows.forEach((row) => {
+      if (!isSelectableRow(row.id)) {
+        return;
+      }
       const rowModel: GridCellSelectionModel[GridRowId] = {};
       selectableColumns.forEach((column) => {
         rowModel[column.field] = true;
@@ -1679,16 +1729,16 @@ export const useGridCellSelection = (
 
   const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(
     (value) => {
-      if (apiRef.current.getSelectedCellsAsArray().length <= 1) {
+      if (!hasMultipleSelectedCells(apiRef)) {
         return value;
       }
-      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
+
       const cellSelectionModel = apiRef.current.getCellSelectionModel();
-      const unsortedSelectedRowIds = Object.keys(cellSelectionModel);
-      const sortedSelectedRowIds = sortedRowIds.filter((id) =>
-        unsortedSelectedRowIds.includes(`${id}`),
+      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
+      const sortedSelectedRowIds = sortedRowIds.filter(
+        (id) => cellSelectionModel[id] !== undefined,
       );
-      const copyData = sortedSelectedRowIds.reduce<string>((acc, rowId) => {
+      const rowStrings = sortedSelectedRowIds.map((rowId) => {
         const fieldsMap = cellSelectionModel[rowId];
         const rowValues = Object.keys(fieldsMap).map((field) => {
           let cellData: string;
@@ -1706,11 +1756,10 @@ export const useGridCellSelection = (
             cellData = '';
           }
           return cellData;
-        }, '');
-        const rowString = rowValues.join(clipboardCopyCellDelimiter);
-        return acc === '' ? rowString : [acc, rowString].join('\r\n');
-      }, '');
-      return copyData;
+        });
+        return rowValues.join(clipboardCopyCellDelimiter);
+      });
+      return rowStrings.join('\r\n');
     },
     [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
   );

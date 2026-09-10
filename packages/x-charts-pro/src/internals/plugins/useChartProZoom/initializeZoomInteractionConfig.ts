@@ -19,6 +19,7 @@ export const initializeZoomInteractionConfig = (
     defaultizedConfig.zoom = {
       wheel: { type: 'wheel', requiredKeys: [], mouse: {}, touch: {} },
       pinch: { type: 'pinch', requiredKeys: [], mouse: {}, touch: {} },
+      keyboard: { type: 'keyboard', requiredKeys: [], mouse: {}, touch: {} },
     };
   } else {
     defaultizedConfig.zoom = initializeFor('zoom', zoomInteractionConfig.zoom);
@@ -28,6 +29,7 @@ export const initializeZoomInteractionConfig = (
   if (!zoomInteractionConfig?.pan) {
     defaultizedConfig.pan = {
       drag: { type: 'drag', requiredKeys: [], mouse: {}, touch: {} },
+      keyboard: { type: 'keyboard', requiredKeys: [], mouse: {}, touch: {} },
     };
 
     let hasXZoom = false;

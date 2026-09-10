@@ -435,7 +435,7 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
@@ -642,7 +642,7 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
   zoomInteractionConfig: PropTypes.shape({
     pan: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
+        PropTypes.oneOf(['drag', 'keyboard', 'pressAndDrag', 'wheel']),
         PropTypes.shape({
           allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
           pointerMode: PropTypes.any,
@@ -659,11 +659,16 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
         }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['keyboard']).isRequired,
+        }),
       ]).isRequired,
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
+        PropTypes.oneOf(['brush', 'doubleTapReset', 'keyboard', 'pinch', 'tapAndDrag', 'wheel']),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
@@ -678,6 +683,11 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['keyboard']).isRequired,
         }),
         PropTypes.shape({
           pointerMode: PropTypes.any,

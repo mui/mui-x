@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { EventCalendarProvider } from '../../EventCalendarProvider';
 import { EventDialogFormProvider, useEventDialogFormContext } from './EventDialogFormContext';
 import { useEventDialogFormField } from '../../../../event-dialog/useEventDialogFormField';
@@ -241,8 +240,8 @@ describe('EventDialogForm', () => {
     });
 
     it('should not re-render a field bound to another key when a field is written', async () => {
-      const onTitleRender = spy();
-      const onPriorityRender = spy();
+      const onTitleRender = vi.fn();
+      const onPriorityRender = vi.fn();
       const { user } = render(
         <EventDialogFormProvider {...sessionParameters} initialValues={{ title: '', priority: '' }}>
           <FieldProbe fieldKey="title" onRender={onTitleRender} />
@@ -250,11 +249,11 @@ describe('EventDialogForm', () => {
         </EventDialogFormProvider>,
       );
 
-      const priorityRendersAfterMount = onPriorityRender.callCount;
+      const priorityRendersAfterMount = onPriorityRender.mock.calls.length;
       await user.type(screen.getByLabelText('title'), 'S');
 
-      expect(onTitleRender.callCount).to.be.greaterThan(1);
-      expect(onPriorityRender.callCount).to.equal(priorityRendersAfterMount);
+      expect(onTitleRender.mock.calls.length).to.be.greaterThan(1);
+      expect(onPriorityRender.mock.calls.length).to.equal(priorityRendersAfterMount);
     });
 
     it('should warn when the key is a built-in event property not handled by the form', () => {

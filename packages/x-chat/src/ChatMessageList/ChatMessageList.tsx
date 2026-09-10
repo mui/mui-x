@@ -2,26 +2,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import {
-  MessageListRoot,
-  type MessageListRootProps,
-  type MessageListRootSlots,
-  type MessageListRootSlotProps,
-  type MessageListRootHandle,
-  useChatDensity,
+import type { SxProps, Theme } from '@mui/system';
+import { MessageListRoot, useChatDensity } from '@mui/x-chat-headless';
+import type {
+  MessageListRootProps,
+  MessageListRootSlots,
+  MessageListRootSlotProps,
+  MessageListRootHandle,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
-import {
-  useChatMessageListUtilityClasses,
-  type ChatMessageListClasses,
-} from './chatMessageListClasses';
-import {
-  DefaultMessageItem,
-  type ChatMessageRowSlots,
-  type ChatMessageRowSlotProps,
-  type ChatMessageListFeatures,
+import { useChatMessageListUtilityClasses } from './chatMessageListClasses';
+import type { ChatMessageListClasses } from './chatMessageListClasses';
+import { DefaultMessageItem } from './DefaultMessageItem';
+import type {
+  ChatMessageRowSlots,
+  ChatMessageRowSlotProps,
+  ChatMessageListFeatures,
 } from './DefaultMessageItem';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageList');

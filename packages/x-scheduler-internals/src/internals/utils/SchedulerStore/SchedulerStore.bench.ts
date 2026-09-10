@@ -1,4 +1,4 @@
-import { bench, describe } from 'vitest';
+import { describe, test } from 'vitest';
 import { adapter } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '../../../models';
 import { buildEventsState } from './SchedulerStore.utils';
@@ -22,16 +22,19 @@ eventsWithOneChange[Math.floor(EVENT_COUNT / 2)] = {
 };
 
 describe('buildEventsState', () => {
-  bench('10,000 new events', () => {
-    buildEventsState({ events, adapter, displayTimezone });
-  });
-
-  bench('one changed event among 10,000', () => {
-    buildEventsState({
-      events: eventsWithOneChange,
-      adapter,
-      displayTimezone,
-      previousState: initialState,
-    });
+  test('event state rebuild', { timeout: 0 }, async ({ bench }) => {
+    await bench.compare(
+      bench('10,000 new events', () => {
+        buildEventsState({ events, adapter, displayTimezone });
+      }),
+      bench('one changed event among 10,000', () => {
+        buildEventsState({
+          events: eventsWithOneChange,
+          adapter,
+          displayTimezone,
+          previousState: initialState,
+        });
+      }),
+    );
   });
 });

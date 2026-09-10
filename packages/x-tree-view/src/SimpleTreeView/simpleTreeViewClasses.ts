@@ -4,7 +4,7 @@ import type { TreeViewClasses } from '../internals/TreeViewProvider/TreeViewStyl
 
 export interface SimpleTreeViewClasses extends Omit<
   TreeViewClasses,
-  'itemDragAndDropOverlay' | 'itemLabelInput' | 'itemErrorIcon' | 'itemLoadingIcon'
+  'itemDragAndDropOverlay' | 'itemLabelInput' | 'itemErrorIcon' | 'itemLoadingIcon' | 'itemLoader'
 > {}
 
 export type SimpleTreeViewClassKey = keyof SimpleTreeViewClasses;

@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import {
   adapter,
   createSchedulerRenderer,
@@ -9,7 +8,7 @@ import {
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 
@@ -226,7 +225,7 @@ describe('<WeekView />', () => {
 
   describe('time navigation', () => {
     it('should go to start of previous week when clicking on the Previous Week button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -238,13 +237,13 @@ describe('<WeekView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /previous week/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addWeeks(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
     it('should go to start of next week when clicking on the Next Week button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -256,7 +255,7 @@ describe('<WeekView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /next week/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addWeeks(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });

@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useMessageError } from '../hooks/useMessageError';
 import { useChatRuntimeContext } from '../internals/useChatRuntimeContext';
 import { useMessageContext } from './internals/MessageContext';
-import { type MessageErrorOwnerState } from './message.types';
+import type { MessageErrorOwnerState } from './message.types';
 
 export interface MessageErrorSlots {
   /**

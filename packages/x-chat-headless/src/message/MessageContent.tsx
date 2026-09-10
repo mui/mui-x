@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChatPartRenderer } from '../hooks/useChatPartRenderer';
 import type { ChatMessagePart, ChatStepStartMessagePart } from '../types/chat-message-parts';
 import type { ChatPartRenderer } from '../renderers/chatPartRenderer';
@@ -9,15 +9,17 @@ import { useChatOnToolCall } from '../hooks/useChatOnToolCall';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import type { ChatLocaleText } from '../chat/internals/chatLocaleText';
 import { useMessageContext } from './internals/MessageContext';
-import { type MessageContentOwnerState } from './message.types';
-import { FilePart, type FilePartExternalProps } from './parts/FilePart';
-import { ReasoningPart, type ReasoningPartExternalProps } from './parts/ReasoningPart';
-import {
-  SourceDocumentPart,
-  type SourceDocumentPartExternalProps,
-} from './parts/SourceDocumentPart';
-import { SourceUrlPart, type SourceUrlPartExternalProps } from './parts/SourceUrlPart';
-import { ToolPart, type ToolPartExternalProps } from './parts/ToolPart';
+import type { MessageContentOwnerState } from './message.types';
+import { FilePart } from './parts/FilePart';
+import type { FilePartExternalProps } from './parts/FilePart';
+import { ReasoningPart } from './parts/ReasoningPart';
+import type { ReasoningPartExternalProps } from './parts/ReasoningPart';
+import { SourceDocumentPart } from './parts/SourceDocumentPart';
+import type { SourceDocumentPartExternalProps } from './parts/SourceDocumentPart';
+import { SourceUrlPart } from './parts/SourceUrlPart';
+import type { SourceUrlPartExternalProps } from './parts/SourceUrlPart';
+import { ToolPart } from './parts/ToolPart';
+import type { ToolPartExternalProps } from './parts/ToolPart';
 
 export interface MessageContentSlots {
   content: React.ElementType;

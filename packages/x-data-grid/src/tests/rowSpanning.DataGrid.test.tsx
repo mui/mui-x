@@ -1,12 +1,11 @@
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import type { DataGridProps, GridApi } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { getCell, getActiveCell, microtasks } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
   const { render } = createRenderer();
@@ -262,7 +261,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
 
   describe('rows update', () => {
     it('should update the row spanning state when the rows are updated', () => {
-      const rowSpanValueGetter = spy((value) => value);
+      const rowSpanValueGetter = vi.fn((value) => value);
       let rowSpanningStateUpdates = 0;
       let spannedCells = {};
       render(
