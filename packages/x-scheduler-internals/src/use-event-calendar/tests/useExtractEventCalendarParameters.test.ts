@@ -4,6 +4,7 @@ import { useExtractEventCalendarParameters } from '../useExtractEventCalendarPar
 import type { EventCalendarParameters } from '../EventCalendarStore.types';
 
 // One entry per parameter. TypeScript fails if a key is added to the type but not here.
+// The values are irrelevant, the hooks only route keys.
 const allParameters: Record<keyof EventCalendarParameters<any, any>, unknown> = {
   areEventsDraggable: 'areEventsDraggable',
   areEventsResizable: 'areEventsResizable',

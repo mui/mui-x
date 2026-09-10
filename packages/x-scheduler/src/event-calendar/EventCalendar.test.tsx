@@ -164,22 +164,8 @@ describe('EventCalendar', () => {
   );
 
   describe('Preferences Menu', () => {
-    it('should call onPreferencesChange when a preference is toggled from the UI', async () => {
+    it('should call onPreferencesChange and apply the change when preferences are controlled', async () => {
       const onPreferencesChange = vi.fn();
-      const { user } = render(
-        <EventCalendar events={[]} onPreferencesChange={onPreferencesChange} />,
-      );
-
-      await openPreferencesMenu(user);
-      await toggleShowWeekends(user);
-      await user.keyboard('{Escape}');
-      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
-
-      expect(onPreferencesChange.mock.calls.length).to.equal(1);
-      expect(onPreferencesChange.mock.lastCall?.[0]).to.deep.equal({ showWeekends: false });
-    });
-
-    it('should apply the preference toggled from the UI when preferences are controlled', async () => {
       function ControlledCalendar() {
         const [preferences, setPreferences] = React.useState<Partial<EventCalendarPreferences>>({
           showWeekends: true,
@@ -188,7 +174,10 @@ describe('EventCalendar', () => {
           <EventCalendar
             events={[]}
             preferences={preferences}
-            onPreferencesChange={setPreferences}
+            onPreferencesChange={(next, eventDetails) => {
+              onPreferencesChange(next, eventDetails);
+              setPreferences(next);
+            }}
           />
         );
       }
@@ -202,6 +191,8 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
+      expect(onPreferencesChange.mock.calls.length).to.equal(1);
+      expect(onPreferencesChange.mock.lastCall?.[0]).to.deep.equal({ showWeekends: false });
       expect(screen.queryByRole('columnheader', { name: /Sunday 25/i })).to.equal(null);
     });
 

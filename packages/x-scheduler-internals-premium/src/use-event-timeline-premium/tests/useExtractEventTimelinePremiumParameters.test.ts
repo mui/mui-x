@@ -5,6 +5,7 @@ import { useExtractEventTimelinePremiumParameters } from '../useExtractEventTime
 import type { EventTimelinePremiumParameters } from '../EventTimelinePremiumStore.types';
 
 // One entry per parameter. TypeScript fails if a key is added to the type but not here.
+// The values are irrelevant, the hooks only route keys.
 const allParameters: Record<keyof EventTimelinePremiumParameters<any, any>, unknown> = {
   areEventsDraggable: 'areEventsDraggable',
   areEventsResizable: 'areEventsResizable',

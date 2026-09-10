@@ -52,6 +52,7 @@ describe('Preferences - EventCalendarStore', () => {
       expect(() => store.setPreferences({ showWeekends: false }, {} as any)).toWarnDev(
         'MUI X Scheduler: EventCalendar is controlled (received a `preferences` prop) but `onPreferencesChange` is not provided',
       );
+      expect(store.state.preferences).to.deep.equal({ showWeekends: true });
     });
 
     it('should NOT mutate store when onPreferencesChange cancels the change', () => {
