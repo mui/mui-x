@@ -2,14 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { ALLOWED_SPECIFIERS, CHAT_DOCS_DIR, ENTRY_POINTS, workspaceRoot } from './entryPoints';
-import { type ExportSurface, getExportSurfaces } from './exportSurface';
-import {
-  extractCodeFences,
-  extractFrontmatter,
-  isTsLikeLang,
-  type Frontmatter,
-} from './extractMarkdown';
-import { extractChatImports, type ChatImport } from './extractImports';
+import { getExportSurfaces } from './exportSurface';
+import type { ExportSurface } from './exportSurface';
+import { extractCodeFences, extractFrontmatter, isTsLikeLang } from './extractMarkdown';
+import type { Frontmatter } from './extractMarkdown';
+import { extractChatImports } from './extractImports';
+import type { ChatImport } from './extractImports';
 
 interface Violation {
   /** Workspace-relative file path. */

@@ -79,7 +79,7 @@ const EventCalendarRootStyled = styled('div', {
   },
 }));
 
-const EventCalendarSidePanel = styled('aside', {
+const EventCalendarSidePanel = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'SidePanel',
 })(({ theme }) => ({
@@ -159,6 +159,11 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
     // `isSidePanelOpen` (default open), so it never covers the calendar on load.
     const [isCompactDrawerOpen, setIsCompactDrawerOpen] = React.useState(false);
 
+    // Delays hiding the panel from AT until the Collapse's exit transition finishes, so
+    // focusable content is never inside an aria-hidden subtree mid-animation (axe
+    // aria-hidden-focus).
+    const [isSidePanelHidden, setIsSidePanelHidden] = React.useState(!isSidePanelOpen);
+
     let content: React.ReactNode;
 
     switch (view) {
@@ -206,11 +211,17 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
 
         <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
           <EventCalendarSidePanelCollapse
+            component="aside"
+            id={`${schedulerId}-side-panel`}
             in={isSidePanelOpen}
+            aria-hidden={!isSidePanelOpen && isSidePanelHidden ? true : undefined}
+            onEnter={() => setIsSidePanelHidden(false)}
+            onEntered={() => setIsSidePanelHidden(false)}
+            onExited={() => setIsSidePanelHidden(true)}
             orientation="horizontal"
             className={classes.sidePanelCollapse}
           >
-            <EventCalendarSidePanel id={`${schedulerId}-side-panel`} className={classes.sidePanel}>
+            <EventCalendarSidePanel className={classes.sidePanel}>
               <MiniCalendar />
               <Divider className={classes.sidePanelDivider} />
               <ResourcesTree />

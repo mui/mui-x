@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
-import { MUI_X_PRODUCTS } from './products';
+import { MUI_X_PRODUCTS } from '../../datasets/disabledAndEditableProducts';
 
 export default function GetParentIdPublicAPI() {
   const apiRef = useRichTreeViewApiRef();

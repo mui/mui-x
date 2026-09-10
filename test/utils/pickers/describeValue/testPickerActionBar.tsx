@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
@@ -34,9 +33,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   describe('Picker action bar', () => {
     describe('clear action', () => {
       it('should call onClose, onChange with empty value and onAccept with empty value', async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { user } = render(
           <ElementToTest
@@ -51,17 +50,17 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Clear the date
         await user.click(screen.getByText(/clear/i));
-        expect(onChange.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onChange.lastCall.firstArg, emptyValue);
-        expect(onAccept.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onAccept.lastCall.firstArg, emptyValue);
-        expect(onClose.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(1);
+        expectPickerChangeHandlerValue(pickerParams.type, onChange.mock.lastCall?.[0], emptyValue);
+        expect(onAccept.mock.calls.length).to.equal(1);
+        expectPickerChangeHandlerValue(pickerParams.type, onAccept.mock.lastCall?.[0], emptyValue);
+        expect(onClose.mock.calls.length).to.equal(1);
       });
 
       it('should not call onChange or onAccept if the value is already empty value', async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { user } = render(
           <ElementToTest
@@ -76,17 +75,17 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Clear the date
         await user.click(screen.getByText(/clear/i));
-        expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(0);
+        expect(onAccept.mock.calls.length).to.equal(0);
+        expect(onClose.mock.calls.length).to.equal(1);
       });
     });
 
     describe('cancel action', () => {
       it('should call onClose and onChange with the initial value', async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { selectSection, pressKey, user } = renderWithProps({
           onChange,
@@ -108,24 +107,24 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Cancel the modifications
         await user.click(screen.getByText(/cancel/i));
-        expect(onChange.callCount).to.equal(
+        expect(onChange.mock.calls.length).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams) + 1,
         );
         if (isRangeType) {
           (values[0] as PickerRangeValue).forEach((value, index) => {
-            expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+            expect(onChange.mock.lastCall?.[0][index]).toEqualDateTime(value);
           });
         } else {
-          expect(onChange.lastCall.args[0]).toEqualDateTime(values[0] as any);
+          expect(onChange.mock.lastCall?.[0]).toEqualDateTime(values[0] as any);
         }
-        expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(1);
+        expect(onAccept.mock.calls.length).to.equal(0);
+        expect(onClose.mock.calls.length).to.equal(1);
       });
 
       it('should not call onChange if no prior value modification', async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { user } = render(
           <ElementToTest
@@ -141,17 +140,17 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Cancel the modifications
         await user.click(screen.getByText(/cancel/i));
-        expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(0);
+        expect(onAccept.mock.calls.length).to.equal(0);
+        expect(onClose.mock.calls.length).to.equal(1);
       });
     });
 
     describe('confirm action', () => {
       it('should call onClose and onAccept with the live value', async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { selectSection, pressKey, user } = renderWithProps({
           onChange,
@@ -173,17 +172,17 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Accept the modifications
         await user.click(screen.getAllByRole('button', { name: 'OK' })[0]);
-        expect(onChange.callCount).to.equal(
+        expect(onChange.mock.calls.length).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams),
         ); // The accepted value as already been committed, don't call onChange again
-        expect(onAccept.callCount).to.equal(1);
-        expect(onClose.callCount).to.equal(1);
+        expect(onAccept.mock.calls.length).to.equal(1);
+        expect(onClose.mock.calls.length).to.equal(1);
       });
 
       it('should call onChange, onClose and onAccept when validating the default value', async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { user } = render(
           <ElementToTest
@@ -199,15 +198,15 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Accept the modifications
         await user.click(screen.getByText(/ok/i));
-        expect(onChange.callCount).to.equal(1);
-        expect(onAccept.callCount).to.equal(1);
-        expect(onClose.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(onAccept.mock.calls.length).to.equal(1);
+        expect(onClose.mock.calls.length).to.equal(1);
       });
 
       it('should call onClose but not onAccept when validating an already validated value', async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { user } = render(
           <ElementToTest
@@ -223,9 +222,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Accept the modifications
         await user.click(screen.getByText(/ok/i));
-        expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(0);
+        expect(onAccept.mock.calls.length).to.equal(0);
+        expect(onClose.mock.calls.length).to.equal(1);
       });
     });
 
@@ -239,9 +238,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
       });
 
       it("should call onClose, onChange with today's value and onAccept with today's value", async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { user } = render(
           <ElementToTest
@@ -265,11 +264,19 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           startOfToday = adapterToUse.date();
         }
 
-        expect(onChange.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onChange.lastCall.firstArg, startOfToday);
-        expect(onAccept.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onAccept.lastCall.firstArg, startOfToday);
-        expect(onClose.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(1);
+        expectPickerChangeHandlerValue(
+          pickerParams.type,
+          onChange.mock.lastCall?.[0],
+          startOfToday,
+        );
+        expect(onAccept.mock.calls.length).to.equal(1);
+        expectPickerChangeHandlerValue(
+          pickerParams.type,
+          onAccept.mock.lastCall?.[0],
+          startOfToday,
+        );
+        expect(onClose.mock.calls.length).to.equal(1);
       });
     });
   });

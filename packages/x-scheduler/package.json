@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler",
-  "version": "9.0.0-beta.10",
+  "version": "9.0.0-beta.11",
   "author": "MUI Team",
   "description": "The community edition of the Scheduler component (MUI X).",
   "license": "MIT",
@@ -51,7 +51,7 @@
     "big-calendar"
   ],
   "scripts": {
-    "typescript": "tsgo -p tsconfig.json",
+    "typescript": "tsc -p tsconfig.json",
     "build": "code-infra build --tsgo --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },

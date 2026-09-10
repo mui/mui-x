@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import { useId } from '@base-ui/utils/useId';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
-import { useEventCalendarPremium } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
+import {
+  useEventCalendarPremium,
+  useExtractEventCalendarPremiumParameters,
+} from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import {
   EventEditingStyledContext,
   EventDialogProvider,
@@ -46,7 +48,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
   const {
     parameters,
     forwardedProps: { className, classes: classesProp, ...forwardedProps },
-  } = useExtractEventCalendarParameters<TEvent, TResource, typeof props>(props);
+  } = useExtractEventCalendarPremiumParameters<TEvent, TResource, typeof props>(props);
 
   // Use premium store with lazy loading
   const store = useEventCalendarPremium(parameters);
