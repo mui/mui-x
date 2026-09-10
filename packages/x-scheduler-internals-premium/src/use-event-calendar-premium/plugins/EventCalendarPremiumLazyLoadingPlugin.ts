@@ -42,8 +42,7 @@ export class EventCalendarPremiumLazyLoadingPlugin<
 }
 
 /**
- * Returns the range covered by the registered view, or `null` when there is nothing to fetch.
- * Views that can have no visible day provide their own range through `visibleRangeSelector`.
+ * Returns the range to fetch for the registered view, or `null` when there is nothing to fetch.
  */
 function getRangeToFetch(state: EventCalendarPremiumState): EventCalendarVisibleRange | null {
   const { viewDefinition, adapter } = state;

@@ -70,8 +70,8 @@ const visibleDays = createSelectorMemoized(
 
     let daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
 
-    // While loading, keep the days already known to have events (the lazy loading plugin fetches
-    // their range); with none known yet, show the plain days so the skeletons have rows.
+    // While loading, keep the known event days so the fetched range stays put.
+    // With none, show the base days so the skeletons have rows.
     if (isLoading && daysWithEvents.length === 0) {
       return accumulatedDays;
     }
@@ -122,14 +122,12 @@ const visibleDays = createSelectorMemoized(
 
 export const eventCalendarAgendaSelectors = {
   /**
-   * The days the agenda view shows when it does not hide the empty days.
-   * Also what it shows while loading with no known event, and the range the data source is asked
-   * for when no day has events, so the fetched range does not move with the loading state.
+   * The days from the visible date, before hiding the empty ones.
    */
   baseVisibleDays,
   visibleDays,
   /**
-   * The range the agenda view covers: its visible days, or the base days when none has events.
+   * The range to fetch: the visible days, or the base days when none has events.
    */
   visibleRange: createSelectorMemoized(
     visibleDays,

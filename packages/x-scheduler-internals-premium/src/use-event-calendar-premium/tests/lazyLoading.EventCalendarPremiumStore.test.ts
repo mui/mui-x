@@ -230,7 +230,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       ),
       persistEvents: noopPersistEvents,
     };
-    // Like `defaultVisibleDate={new Date()}`: the day view builds its days from this instant as is
+    // The day view keeps the time of `visibleDate` in its days
     const morning = adapter.date('2025-07-03T10:00:00Z', 'default');
     const store = new EventCalendarPremiumStore(
       { ...DEFAULT_PARAMS, dataSource, defaultVisibleDate: morning },
@@ -252,7 +252,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
   });
 
   describe('view without visible days', () => {
-    // The agenda view hiding the empty days: its day list can be empty, so it provides its range.
+    // The agenda view can have no visible day, so it provides its own range
     const agendaViewDefinition: any = {
       siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
       visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,

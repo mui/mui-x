@@ -93,15 +93,14 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
       await waitFor(() => {
         expect(getSkeletons()).to.have.length(0);
       });
-      // The standalone views do not render the error container, so the failure is only visible
-      // through the absence of both the rows and the empty state.
+      // Standalone views render no error container: the failure only shows as no rows and no empty state
       expect(getEvents.mock.calls).to.have.length(1);
       expect(getRows()).to.have.length(0);
       expect(screen.queryByRole('status')).to.equal(null);
     });
 
     it('should settle on the empty state when the default window ends on a weekend and weekends are hidden', async () => {
-      // Tuesday: the 12-day window ends on a Saturday, so the weekday list ends earlier than the window
+      // Tuesday: the 12-day window ends on a Saturday
       const getEvents = vi.fn(async () => []);
       renderWithDataSource(getEvents, {
         defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
@@ -127,7 +126,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
 
       renderWithDataSource(getEvents, hideEmptyDays);
 
-      // The first fetch covers the default window, the second the 12 weekly occurrences.
+      // First fetch: the base window. Second: the 12 weekly occurrences
       await waitFor(() => {
         expect(getEvents.mock.calls).to.have.length(2);
       });
