@@ -25,6 +25,6 @@ jobs:
       contents: write # push the fix branch (publish job)
       pull-requests: write # open the draft PR (publish job)
       issues: write # rolling tracking issue (publish job)
-    uses: mui/mui-public/.github/workflows/claude-flake-fix.yml@c13d72d8221b544497ea5dc8cbf44eb9782bd558 # #1737
+    uses: mui/mui-public/.github/workflows/claude-flake-fix.yml@79d7516597d92832e134471e503c7810ec94cfc2 # mui-public#1849 (test)
     with:
       report-only: ${{ inputs.report-only || false }}
