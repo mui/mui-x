@@ -107,6 +107,11 @@ export const checkboxPropsSelector = createSelector(
         return;
       }
       const node = rowTree[itemToTraverseId];
+      // Skeleton rows are placeholders for rows that are not loaded yet.
+      // They have no selection state, so they do not affect the parent checkbox state.
+      if (node?.type === 'skeletonRow') {
+        return;
+      }
       if (node?.type === 'group') {
         node.children.forEach(traverseDescendants);
       }
