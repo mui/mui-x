@@ -21,6 +21,7 @@ import type {
   SchedulerDependencyId,
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
+  SchedulerLazyLoadingParameters,
 } from '../../models';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors/eventTimelinePremiumDependencySelectors';
 import { computeAutoSchedulingCascade } from '../utils/auto-scheduling';
@@ -38,7 +39,9 @@ import {
 export class SchedulerSchedulingPlugin<
   TEvent extends object,
   State extends SchedulerState & SchedulerDependenciesState,
-  Parameters extends SchedulerParameters<TEvent, any> & SchedulerDependenciesParameters,
+  Parameters extends SchedulerParameters<TEvent, any> &
+    SchedulerDependenciesParameters &
+    SchedulerLazyLoadingParameters<TEvent>,
 > implements SchedulerSchedulingPluginInterface {
   protected store: SchedulerStore<TEvent, any, State, Parameters>;
 

@@ -39,7 +39,7 @@ import {
   DataSourceRowsUpdateStrategy,
   useGridDataSourceFilterModelChange,
 } from '@mui/x-data-grid/internals';
-import type { GridStrategyProcessor } from '@mui/x-data-grid/internals';
+import type { GridStrategyProcessor, GridTreeDepths } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -100,6 +100,22 @@ const deleteRowAndDescendants = (
   }
   delete tree[rowId];
   delete dataRowIdToModelLookup[rowId];
+};
+
+/**
+ * Counts the nodes of the tree per depth. The loader builds the tree by hand, so it must also
+ * keep `treeDepths` in sync. Features like row selection propagation read the maximum tree
+ * depth from it.
+ */
+const computeTreeDepths = (tree: GridRowTreeConfig) => {
+  const treeDepths: GridTreeDepths = {};
+  Object.values(tree).forEach((node) => {
+    if (node.id === GRID_ROOT_GROUP_ID) {
+      return;
+    }
+    treeDepths[node.depth] = (treeDepths[node.depth] ?? 0) + 1;
+  });
+  return treeDepths;
 };
 
 /**
@@ -419,6 +435,7 @@ export const useGridDataSourceNestedLazyLoader = (
         rows: {
           ...state.rows,
           tree,
+          treeDepths: computeTreeDepths(tree),
         },
       }),
       'addSkeletonRows',
@@ -603,6 +620,7 @@ export const useGridDataSourceNestedLazyLoader = (
         rows: {
           ...state.rows,
           tree,
+          treeDepths: computeTreeDepths(tree),
           dataRowIdToModelLookup,
           dataRowIds: state.rows.dataRowIds.filter((id) => !deletedIds.has(id)),
         },
@@ -808,6 +826,7 @@ export const useGridDataSourceNestedLazyLoader = (
           dataRowIdToModelLookup,
           dataRowIds,
           tree: { ...tree },
+          treeDepths: computeTreeDepths(tree),
           totalRowCount:
             parentId === GRID_ROOT_GROUP_ID ? (response.rowCount ?? -1) : state.rows.totalRowCount,
         },
@@ -869,6 +888,7 @@ export const useGridDataSourceNestedLazyLoader = (
           rows: {
             ...state.rows,
             tree,
+            treeDepths: computeTreeDepths(tree),
             dataRowIdToModelLookup,
           },
         }));
