@@ -138,7 +138,7 @@ const SCENARIOS: Scenario[] = [
     },
   },
   {
-    name: 'scatter with a colour channel',
+    name: 'scatter with a color channel',
     note: 'One point defining colorValue anywhere adds the column for the whole table.',
     processedSeries: {
       scatter: group({

@@ -18,7 +18,7 @@ GDP    | France   | 2.8
 ```
 
 Every one of the 13 series types appears, along with the cases that are easy to get wrong:
-a scatter series whose points carry an optional colour channel, a sparse heatmap, a range
+a scatter series whose points carry an optional color channel, a sparse heatmap, a range
 bar whose start sits above its end, OHLC with real dates, a map feature with no value,
 sankey's two sheets, and text that Excel would otherwise evaluate as a formula.
 
