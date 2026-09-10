@@ -2,7 +2,11 @@
 
 Exporting the data behind a chart to Excel, for [#14246](https://github.com/mui/mui-x/issues/14246).
 
-[Open in StackBlitz](https://stackblitz.com/github/JCQuintas/mui-x/tree/charts-excel-data-model/examples/charts-excel-export)
+[Open in StackBlitz](https://stackblitz.com/edit/uxb9htlq?file=src%2FApp.tsx)
+
+That project holds a copy of these files and installs the library from npm, so it boots in
+seconds. Importing this folder through `stackblitz.com/github/...` instead would make
+StackBlitz clone the whole monorepo first, which is far too slow to be usable.
 
 ## What it shows
 
