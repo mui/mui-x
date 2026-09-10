@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
-import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerProcessedDate,
+  TemporalSupportedObject,
+} from '@mui/x-scheduler-internals/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
 
@@ -217,5 +220,65 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     resolveA(eventsA);
     await flushEffect();
     expect(store.state.eventIdList).to.include('b');
+  });
+
+  describe('view without visible days', () => {
+    const emptyViewDefinition = (): any => ({
+      siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
+      visibleDaysSelector: (): SchedulerProcessedDate[] => [],
+    });
+
+    it('should fetch the default agenda window when the view has no visible day', async () => {
+      const dataSource = {
+        getEvents: vi.fn(
+          async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
+        ),
+        persistEvents: noopPersistEvents,
+      };
+      const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      store.setViewDefinition(emptyViewDefinition());
+
+      await flushEffect();
+      await flushDebounce();
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(1);
+      const [start, end] = dataSource.getEvents.mock.calls[0];
+      expect(adapter.isSameDay(start, DEFAULT_TESTING_VISIBLE_DATE)).to.equal(true);
+      expect(adapter.isSameDay(end, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 11))).to.equal(
+        true,
+      );
+    });
+
+    it('should end the default agenda window on the last weekday when weekends are hidden', async () => {
+      const dataSource = {
+        getEvents: vi.fn(
+          async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
+        ),
+        persistEvents: noopPersistEvents,
+      };
+      // Tuesday: the 12-day window ends on a Saturday
+      const visibleDate = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const store = new EventCalendarPremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          dataSource,
+          defaultVisibleDate: visibleDate,
+          defaultPreferences: { showWeekends: false },
+        },
+        adapter,
+      );
+
+      store.setViewDefinition(emptyViewDefinition());
+
+      await flushEffect();
+      await flushDebounce();
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(1);
+      const [, end] = dataSource.getEvents.mock.calls[0];
+      expect(adapter.isSameDay(end, adapter.date('2025-07-11T00:00:00Z', 'default'))).to.equal(
+        true,
+      );
+    });
   });
 });

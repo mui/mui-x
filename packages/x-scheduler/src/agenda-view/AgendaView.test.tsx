@@ -45,19 +45,18 @@ describe('<AgendaView />', () => {
         <EventCalendar events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} view="agenda" />,
       );
 
-      await openPreferencesMenu(user);
-      await toggleShowEmptyDaysInAgenda(user);
-      await user.keyboard('{Escape}');
-      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+      async function toggleEmptyDaysFromMenu() {
+        await openPreferencesMenu(user);
+        await toggleShowEmptyDaysInAgenda(user);
+        await user.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+      }
 
+      await toggleEmptyDaysFromMenu();
       expect(document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`)).to.have.length(0);
       expect(screen.getByRole('status')).to.have.text('No upcoming events');
 
-      await openPreferencesMenu(user);
-      await toggleShowEmptyDaysInAgenda(user);
-      await user.keyboard('{Escape}');
-      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
-
+      await toggleEmptyDaysFromMenu();
       expect(document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`)).to.have.length(
         12,
       );

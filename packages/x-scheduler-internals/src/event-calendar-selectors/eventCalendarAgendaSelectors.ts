@@ -11,10 +11,27 @@ import type { SchedulerProcessedDate } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayList } from '../get-day-list';
 
+const defaultVisibleDays = createSelectorMemoized(
+  (state: State) => state.adapter,
+  schedulerOtherSelectors.visibleDate,
+  eventCalendarPreferenceSelectors.showWeekends,
+  (adapter, visibleDate, showWeekends) =>
+    getDayList({
+      adapter,
+      start: visibleDate,
+      end: adapter.addDays(visibleDate, AGENDA_VIEW_DAYS_AMOUNT - 1),
+      excludeWeekends: !showWeekends,
+    }),
+);
+
 export const eventCalendarAgendaSelectors = {
+  /**
+   * The days the agenda view shows when it does not hide the empty days.
+   */
+  defaultVisibleDays,
   visibleDays: createSelectorMemoized(
     (state: State) => state.adapter,
-    schedulerOtherSelectors.visibleDate,
+    defaultVisibleDays,
     schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showWeekends,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
@@ -24,7 +41,7 @@ export const eventCalendarAgendaSelectors = {
     schedulerOtherSelectors.isLoading,
     (
       adapter,
-      visibleDate,
+      defaultDays,
       displayTimezone,
       showWeekends,
       showEmptyDaysInAgenda,
@@ -36,12 +53,7 @@ export const eventCalendarAgendaSelectors = {
       const amount = AGENDA_VIEW_DAYS_AMOUNT;
 
       // 1) First chunk of days
-      let accumulatedDays = getDayList({
-        adapter,
-        start: visibleDate,
-        end: adapter.addDays(visibleDate, amount - 1),
-        excludeWeekends: !showWeekends,
-      });
+      let accumulatedDays = defaultDays;
 
       // 2) If we show empty days, just return the amount days
       if (showEmptyDaysInAgenda) {
@@ -64,9 +76,8 @@ export const eventCalendarAgendaSelectors = {
       // 3) If we hide empty days, keep extending forward in blocks until we fill `amount` days with events
       let daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
 
-      // While loading with nothing known yet, return the plain days so the skeletons have rows to render in.
-      // Once some days have events, keep them: the lazy loading plugin derives the range to fetch from
-      // the visible days, so switching lists while loading would make it request a different range.
+      // While loading, keep the days already known to have events (the lazy loading plugin fetches
+      // their range); with none known yet, show the plain days so the skeletons have rows.
       if (isLoading && daysWithEvents.length === 0) {
         return accumulatedDays;
       }
@@ -87,7 +98,7 @@ export const eventCalendarAgendaSelectors = {
         }
 
         // Extend forward by one more chunk and recompute occurrences over the accumulated range
-        const nextStart = adapter.addDays(last ?? visibleDate, 1);
+        const nextStart = adapter.addDays(last ?? defaultDays[0].value, 1);
 
         const more = getDayList({
           adapter,

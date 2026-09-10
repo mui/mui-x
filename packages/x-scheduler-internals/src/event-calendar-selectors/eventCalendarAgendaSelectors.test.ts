@@ -6,6 +6,24 @@ import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import type { EventCalendarState } from '../use-event-calendar';
 
 describe('eventCalendarEventSelectors', () => {
+  describe('defaultVisibleDays', () => {
+    it('should return AGENDA_VIEW_DAYS_AMOUNT days from the visible date, skipping weekends when hidden', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        visibleDate: adapter.date('2025-07-01', 'default'), // Tuesday
+        defaultPreferences: { showWeekends: false },
+      });
+
+      const days = eventCalendarAgendaSelectors.defaultVisibleDays(state);
+
+      expect(days).to.have.length(9);
+      expect(days[0]).to.deep.equal(processDate(adapter.date('2025-07-01Z', 'default'), adapter));
+      expect(days[days.length - 1]).to.deep.equal(
+        processDate(adapter.date('2025-07-11Z', 'default'), adapter),
+      );
+    });
+  });
+
   describe('visibleDays', () => {
     it('should return exactly AGENDA_VIEW_DAYS_AMOUNT days and fills occurrences with [] when there are no events and showEmptyDaysInAgenda=true', () => {
       const state = getEventCalendarStateFromParameters({

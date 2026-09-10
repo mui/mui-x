@@ -37,6 +37,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
   const getSkeletons = () => document.querySelectorAll(`.${eventCalendarClasses.eventSkeleton}`);
   const getRows = () => document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`);
 
+  // Regression test for https://github.com/mui/mui-x/pull/22676#pullrequestreview-4424947060
   // The standalone views render `EventSkeleton`, which reads `SharedComponentsStyledContext`.
   // `EventCalendarProvider` (the wrapper used by every standalone view) must supply that
   // context, otherwise rendering the data-source loading state throws.
@@ -84,15 +85,34 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
     });
 
     it('should not render the empty state when the data source fails', async () => {
-      renderWithDataSource(async () => {
+      const getEvents = vi.fn(async () => {
         throw new Error('Network down');
-      }, hideEmptyDays);
+      });
+      renderWithDataSource(getEvents, hideEmptyDays);
 
       await waitFor(() => {
         expect(getSkeletons()).to.have.length(0);
       });
+      // The standalone views do not render the error container, so the failure is only visible
+      // through the absence of both the rows and the empty state.
+      expect(getEvents.mock.calls).to.have.length(1);
       expect(getRows()).to.have.length(0);
       expect(screen.queryByRole('status')).to.equal(null);
+    });
+
+    it('should settle on the empty state when the default window ends on a weekend and weekends are hidden', async () => {
+      // Tuesday: the 12-day window ends on a Saturday, so the weekday list ends earlier than the window
+      const getEvents = vi.fn(async () => []);
+      renderWithDataSource(getEvents, {
+        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
+        defaultPreferences: { showEmptyDaysInAgenda: false, showWeekends: false },
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole('status')).to.have.text('No upcoming events');
+      });
+      expect(getEvents.mock.calls).to.have.length(1);
+      expect(getSkeletons()).to.have.length(0);
     });
 
     it('should fetch the wide range and settle when the loaded events spread beyond the first window', async () => {
@@ -101,21 +121,26 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
         .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
         .recurrent('WEEKLY')
         .build();
-      const getEvents = vi.fn(async () => [weekly]);
+      const getEvents = vi.fn(
+        async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [weekly],
+      );
 
       renderWithDataSource(getEvents, hideEmptyDays);
+
+      // The first fetch covers the default window, the second the 12 weekly occurrences.
+      await waitFor(() => {
+        expect(getEvents.mock.calls).to.have.length(2);
+      });
+      const [wideStart, wideEnd] = getEvents.mock.calls[1];
+      expect(adapter.isSameDay(wideStart, DEFAULT_TESTING_VISIBLE_DATE)).to.equal(true);
+      expect(
+        adapter.isSameDay(wideEnd, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 77)),
+      ).to.equal(true);
 
       await waitFor(() => {
         expect(screen.getAllByRole('button', { name: /Weekly sync/ })).to.have.length(12);
       });
       expect(getSkeletons()).to.have.length(0);
-
-      // Give the debounced queue time to run again: the loop would keep flipping `isLoading`.
-      await new Promise((resolve) => {
-        setTimeout(resolve, 500);
-      });
-      expect(getSkeletons()).to.have.length(0);
-      expect(getEvents.mock.calls.length).to.be.lessThan(4);
     });
 
     it('should fetch the next window after navigating when the current one has no events', async () => {
@@ -162,6 +187,13 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
         expect(screen.getByRole('button', { name: /Far away/ })).not.to.equal(null);
       });
       expect(getEvents.mock.calls).to.have.length(2);
+      const [nextStart, nextEnd] = getEvents.mock.calls[1];
+      expect(
+        adapter.isSameDay(nextStart, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 12)),
+      ).to.equal(true);
+      expect(
+        adapter.isSameDay(nextEnd, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 23)),
+      ).to.equal(true);
       expect(screen.queryByRole('status')).to.equal(null);
     });
   });

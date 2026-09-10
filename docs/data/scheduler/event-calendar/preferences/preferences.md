@@ -32,7 +32,7 @@ Available properties:
 - `showWeekends`: Whether the calendar shows weekends.
 - `showWeekNumber`: Whether the calendar shows the week number.
 - `isSidePanelOpen`: Whether the side panel is open.
-- `showEmptyDaysInAgenda`: Whether the agenda view shows days with no events. When hidden and no upcoming day has events, the agenda view shows a message instead, customizable through `localeText.agendaViewEmptyStateLabel`.
+- `showEmptyDaysInAgenda`: Whether the agenda view shows days with no events. When set to `false` and no upcoming day has events, the agenda view shows a message instead, customizable through `localeText.agendaViewEmptyStateLabel`.
 
 {{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
 

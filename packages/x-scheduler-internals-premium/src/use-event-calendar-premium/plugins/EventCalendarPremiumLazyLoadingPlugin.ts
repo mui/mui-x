@@ -1,5 +1,5 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-internals/constants';
+import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
 import type {
@@ -44,18 +44,21 @@ export class EventCalendarPremiumLazyLoadingPlugin<
 
 /**
  * Returns the range covered by the visible days of the registered view.
- * The agenda view has no visible day when it hides the empty days and nothing is cached for the
- * current range, so it falls back to the default agenda window to keep fetching on navigation.
+ * The agenda view has no visible day when it hides the empty days and no loaded event falls in its
+ * horizon, so it falls back to the default agenda window to keep fetching on navigation.
+ * That window is the same list the agenda shows while loading, so the range stays stable across
+ * `isLoading` flips.
  */
 function getRangeToFetch(state: EventCalendarPremiumState): {
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
 } {
-  const { viewDefinition, adapter, visibleDate } = state;
-  const days = viewDefinition?.visibleDaysSelector(state as EventCalendarState) ?? [];
-  if (days.length > 0) {
-    return { start: days[0].value, end: days[days.length - 1].value };
-  }
+  const calendarState = state as EventCalendarState;
+  const visibleDays = state.viewDefinition?.visibleDaysSelector(calendarState) ?? [];
+  const days =
+    visibleDays.length > 0
+      ? visibleDays
+      : eventCalendarAgendaSelectors.defaultVisibleDays(calendarState);
 
-  return { start: visibleDate, end: adapter.addDays(visibleDate, AGENDA_VIEW_DAYS_AMOUNT - 1) };
+  return { start: days[0].value, end: days[days.length - 1].value };
 }
