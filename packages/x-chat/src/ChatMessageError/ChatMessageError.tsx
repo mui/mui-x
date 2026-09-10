@@ -2,22 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
+import type { SxProps, Theme } from '@mui/system';
 import Button from '@mui/material/Button';
-import {
-  MessageError,
-  type MessageErrorProps,
-  type MessageErrorOwnerState,
-  useChatLocaleText,
-  useChatStatus,
-  useMessage,
-} from '@mui/x-chat-headless';
+import { MessageError, useChatLocaleText, useChatStatus, useMessage } from '@mui/x-chat-headless';
+import type { MessageErrorProps, MessageErrorOwnerState } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
-import {
-  useChatMessageErrorUtilityClasses,
-  type ChatMessageErrorClasses,
-} from './chatMessageErrorClasses';
+import { useChatMessageErrorUtilityClasses } from './chatMessageErrorClasses';
+import type { ChatMessageErrorClasses } from './chatMessageErrorClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageError');
 

@@ -150,10 +150,16 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
 
     const itemIdWithDefault = itemId ?? TREE_VIEW_ROOT_PARENT_ID;
     const loading = { ...this.store.state.lazyLoadedItems.loading };
-    if (isLoading === false) {
+    if (!isLoading) {
       delete loading[itemIdWithDefault];
     } else {
-      loading[itemIdWithDefault] = isLoading;
+      // Store the expected children count, so the loading UI can render a matching number
+      // of loading rows. `-1` when the count is unknown.
+      const itemModel = itemId == null ? null : this.store.state.itemModelLookup[itemId];
+      loading[itemIdWithDefault] =
+        itemModel == null
+          ? -1
+          : (this.store.parameters.dataSource.getChildrenCount(itemModel) ?? -1);
     }
 
     this.store.set('lazyLoadedItems', { ...this.store.state.lazyLoadedItems, loading });
@@ -250,19 +256,10 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
     }
   };
 
+  // Seeds the cache with the inline nested children, so expanding them requires no extra network call.
   private cacheInlineChildren = (items: readonly R[]) => {
-    // Only the cache is seeded; these items already live in the tree state on mount.
     this.forEachInlineChildren(items, (itemId, children) => {
       this.cache.set(itemId, children);
-    });
-  };
-
-  private processNestedItemChildren = (items: R[]) => {
-    const { getChildrenCount } = this.store.parameters.dataSource!;
-
-    this.forEachInlineChildren(items, (itemId, children) => {
-      this.cache.set(itemId, children);
-      this.store.items.setItemChildren({ items: children, parentId: itemId, getChildrenCount });
     });
   };
 
@@ -349,12 +346,16 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       if (lazyLoadingSelectors.itemError(this.store.state, itemId)) {
         this.setItemError(itemId, null);
       }
-      // save the response in the cache
+      // save the response and its inline nested children in the cache
       this.cache.set(cacheKey, response);
-      // update the items in the state
-      this.store.items.setItemChildren({ items: response, parentId: itemId, getChildrenCount });
-      // pre-cache any inline nested children so expanding them requires no extra network call
-      this.processNestedItemChildren(response);
+      this.cacheInlineChildren(response);
+      // update the items in the state, inline nested children included, with a single store write
+      this.store.items.setItemChildren({
+        items: response,
+        parentId: itemId,
+        getChildrenCount,
+        recursive: true,
+      });
       // notify the user that new items have been loaded
       this.callOnItemsLazyLoaded(response, itemId, false);
     } catch (error) {

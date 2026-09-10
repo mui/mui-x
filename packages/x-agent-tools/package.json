@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-agent-tools",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "MUI Team",
   "description": "Shared tooling behind MUI's agent integrations (MCP server, CLI, ACP).",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "directory": "build"
   },
   "scripts": {
-    "typescript": "tsgo -p tsconfig.json",
+    "typescript": "tsc -p tsconfig.json",
     "build": "code-infra build --tsgo",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
     "test": "vitest run --config vitest.config.node.mts"
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "eventsource-parser": "^3.1.0",
+    "eventsource-parser": "^4.1.0",
     "p-queue": "^9.3.3"
   },
   "peerDependencies": {
@@ -36,12 +36,12 @@
     "@types/node": "22.20.1",
     "rimraf": "catalog:",
     "vitest": "catalog:",
-    "zod": "4.4.3"
+    "zod": "4.5.4"
   },
   "exports": {
     ".": "./src/index.ts"
   },
   "engines": {
-    "node": ">=20.19"
+    "node": ">=22.12"
   }
 }

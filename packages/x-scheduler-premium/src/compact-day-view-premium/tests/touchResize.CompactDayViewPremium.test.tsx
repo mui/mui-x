@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
@@ -16,7 +15,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 /**
  * Resizing a recurring event commits through the recurring scope dialog. Whichever scope is chosen,
@@ -62,7 +61,7 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
   }
 
   function renderResizableRecurringEvent() {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Daily Standup')
@@ -81,8 +80,8 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
 
   // Whatever the scope, some resulting event must carry the resized 16:00 end — else the re-key/detach
   // dropped it.
-  function expectResizedEndCommitted(onEventsChange: ReturnType<typeof spy>) {
-    const updatedEvents: SchedulerEvent[] = onEventsChange.lastCall.args[0];
+  function expectResizedEndCommitted(onEventsChange: ReturnType<typeof vi.fn>) {
+    const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall?.[0];
     const committedResizedEnd = updatedEvents.some(
       (item) => new Date(item.end).getUTCHours() === 16,
     );

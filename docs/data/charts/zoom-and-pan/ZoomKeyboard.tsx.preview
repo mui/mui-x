@@ -1,0 +1,6 @@
+<LineChartPro
+  height={300}
+  xAxis={[{ data: randomData.map((v, i) => i), zoom: true }]}
+  yAxis={[{ zoom: true, width: 50 }]}
+  series={series}
+/>

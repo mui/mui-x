@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
@@ -68,7 +67,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
   it('should fire the initial fetch when a view becomes available', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -79,13 +78,13 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
     expect(store.state.eventIdList).to.have.length(1);
   });
 
   it('should fire the initial fetch without waiting for the debounce window', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -95,12 +94,12 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     await flushEffect();
     await vi.advanceTimersByTimeAsync(50);
 
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
   });
 
   it('should NOT fetch before a view registers (visibleDays empty)', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -111,12 +110,12 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.called).to.equal(false);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(0);
   });
 
   it('should fetch a new range when visibleDate moves outside of the cached range', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -124,18 +123,18 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledTwice).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
   });
 
   it('should coalesce multiple range-changing updates within the same tick into a single fetch', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -143,7 +142,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     // Two synchronous navigations within the same tick. Without coalescing, the
     // effect schedules two microtasks producing a wasted fetch for the
@@ -154,7 +153,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledTwice).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
 
     // Third navigation AFTER the microtask drained. Catches regressions where
     // `isFetchScheduled` isn't reset and the lazy loader freezes after the first batch.
@@ -162,7 +161,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.callCount).to.equal(3);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(3);
   });
 
   it('should not overwrite the visible range with a late-arriving fetch from a stale range', async () => {
@@ -186,7 +185,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     ];
     let callIndex = 0;
     const dataSource = {
-      getEvents: spy(
+      getEvents: vi.fn(
         () =>
           new Promise<TestEvent[]>((resolve) => {
             callIndex += 1;
@@ -208,7 +207,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     store.goToDate(adapter.date('2025-09-15T00:00:00Z', 'default'), noopUIEvent);
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledTwice).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
 
     resolveB(eventsB);
     await flushEffect();

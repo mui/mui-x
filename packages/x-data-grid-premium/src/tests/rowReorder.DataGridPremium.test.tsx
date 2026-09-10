@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import {
   createRenderer,
   fireEvent,
@@ -24,7 +23,7 @@ import type {
   GridValidRowModel,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 // Helper function to create drag over event with coordinates
 function createDragOverEvent(target: ChildNode, dropPosition: 'above' | 'below' = 'above') {
@@ -196,7 +195,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
     describe('Valid reorder cases', () => {
       it('should reorder leaves within same parent group', async () => {
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
@@ -218,7 +217,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify new order: A2, A3, A1
@@ -232,7 +231,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should move leaf between different parent groups', async () => {
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
@@ -253,7 +252,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify group counts updated
@@ -273,7 +272,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should reorder groups at the same level when groups are expanded and the source group is drop on "above" portion of the target group', async () => {
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
@@ -289,7 +288,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify new group order: B, A, C
@@ -303,7 +302,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should handle leaf to group "above" when previous leaf exists', async () => {
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
@@ -320,7 +319,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify Item C1 is now the last item in Category A
@@ -334,7 +333,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should handle leaf to group "below" when group is expanded', async () => {
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
@@ -351,7 +350,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify Item A1 is now the first item in Category B
@@ -365,7 +364,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should reorder group rows with collapsed groups', async () => {
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium
@@ -395,7 +394,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify new order: B, C, A
@@ -416,7 +415,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(2);
+          expect(onRowOrderChange.mock.calls.length).to.equal(2);
         });
 
         // Verify new order: C, B, A
@@ -582,7 +581,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
     describe('Usage with `groupingValueSetter`', () => {
       it('should call groupingValueSetter when moving leaf between groups with complex category data', async () => {
-        const groupingValueSetter = spy((groupingValue, row, _column, _apiRef) => {
+        const groupingValueSetter = vi.fn((groupingValue, row, _column, _apiRef) => {
           // Update category with complex nested data structure
           return {
             ...row,
@@ -629,7 +628,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           autoHeight: isJSDOM,
         };
 
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         const apiRef = React.createRef<GridApi>();
         render(
           <div style={{ width: 500, height: 500 }}>
@@ -662,15 +661,15 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify groupingValueSetter was called
-        expect(groupingValueSetter.callCount).to.equal(1);
-        expect(groupingValueSetter.firstCall.args[0]).to.equal('Clothing'); // groupingValue should be 'Clothing'
+        expect(groupingValueSetter.mock.calls.length).to.equal(1);
+        expect(groupingValueSetter.mock.calls[0][0]).to.equal('Clothing'); // groupingValue should be 'Clothing'
 
         // Verify the row passed to the setter matches iPhone data
-        const passedRow = groupingValueSetter.firstCall.args[1];
+        const passedRow = groupingValueSetter.mock.calls[0][1];
         expect(passedRow.name).to.equal('iPhone');
         expect(passedRow.price).to.equal(999);
 
@@ -711,7 +710,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
     describe('Valid reorder cases', () => {
       it('should reorder leaves within same department', async () => {
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
@@ -733,7 +732,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify new order
@@ -745,7 +744,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should move leaf between departments in same company', async () => {
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
@@ -770,7 +769,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify John is now before Alice in Sales
@@ -784,7 +783,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should reorder department groups within company', async () => {
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium {...baselineProps} onRowOrderChange={onRowOrderChange} />
@@ -807,7 +806,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify department order changed
@@ -820,7 +819,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should reorder group rows with collapsed groups', async () => {
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium
@@ -861,7 +860,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify new order: Microsoft, Apple, Google
@@ -995,7 +994,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
     describe('Usage with `groupingValueSetter`', () => {
       it('should call groupingValueSetter for multiple grouping levels when moving between groups', async () => {
-        const companyValueSetter = spy((groupingValue, row, _column, _apiRef) => {
+        const companyValueSetter = vi.fn((groupingValue, row, _column, _apiRef) => {
           return {
             ...row,
             company: groupingValue,
@@ -1004,7 +1003,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           };
         });
 
-        const deptValueSetter = spy((groupingValue, row, _column, _apiRef) => {
+        const deptValueSetter = vi.fn((groupingValue, row, _column, _apiRef) => {
           return {
             ...row,
             dept: groupingValue,
@@ -1041,7 +1040,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         };
 
         const apiRef = React.createRef<GridApi>();
-        const onRowOrderChange = spy();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium
@@ -1073,22 +1072,22 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(johnRow, bobRow, 'above');
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // Verify both setters were called in the correct order
-        expect(companyValueSetter.callCount).to.equal(1);
-        expect(deptValueSetter.callCount).to.equal(1);
+        expect(companyValueSetter.mock.calls.length).to.equal(1);
+        expect(deptValueSetter.mock.calls.length).to.equal(1);
 
         // Verify company setter was called with correct parameters
-        expect(companyValueSetter.firstCall.args[0]).to.equal('Google'); // target company
-        const companySetterRow = companyValueSetter.firstCall.args[1];
+        expect(companyValueSetter.mock.calls[0][0]).to.equal('Google'); // target company
+        const companySetterRow = companyValueSetter.mock.calls[0][1];
         expect(companySetterRow.company).to.equal('Microsoft'); // Original company
         expect(companySetterRow.dept).to.equal('Engineering'); // Original dept
 
         // Verify dept setter was called with correct parameters
-        expect(deptValueSetter.firstCall.args[0]).to.equal('Engineering'); // target dept (Google has Engineering)
-        const deptSetterRow = deptValueSetter.firstCall.args[1];
+        expect(deptValueSetter.mock.calls[0][0]).to.equal('Engineering'); // target dept (Google has Engineering)
+        const deptSetterRow = deptValueSetter.mock.calls[0][1];
         expect(deptSetterRow.company).to.equal('Google'); // Already updated by company setter
 
         // Verify the final row data was updated correctly
@@ -1107,7 +1106,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
   describe('Edge cases', () => {
     it('should handle null grouping values', async () => {
-      const onRowOrderChange = spy();
+      const onRowOrderChange = vi.fn();
       render(
         <div style={{ width: 500, height: 500 }}>
           <DataGridPremium
@@ -1147,7 +1146,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
       await waitFor(() => {
         // Verify callback was called
-        expect(onRowOrderChange.callCount).to.equal(1);
+        expect(onRowOrderChange.mock.calls.length).to.equal(1);
       });
 
       // Verify order changed
@@ -1159,7 +1158,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
     });
 
     it('should call onRowOrderChange with correct parameters', async () => {
-      const onRowOrderChange = spy();
+      const onRowOrderChange = vi.fn();
 
       render(
         <div style={{ width: 500, height: 500 }}>
@@ -1192,10 +1191,10 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
       await waitFor(() => {
         // Verify callback was called
-        expect(onRowOrderChange.callCount).to.equal(1);
+        expect(onRowOrderChange.mock.calls.length).to.equal(1);
       });
 
-      const params = onRowOrderChange.firstCall.args[0];
+      const params = onRowOrderChange.mock.calls[0][0];
       expect(params.row.id).to.equal(1); // Item A1
       expect(params.oldIndex).to.be.a('number');
       expect(params.targetIndex).to.be.a('number');
@@ -1323,7 +1322,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       };
 
       it('should call processRowUpdate when reordering between different parent groups', async () => {
-        const processRowUpdate = spy((newRow, _oldRow, _params) => ({
+        const processRowUpdate = vi.fn((newRow, _oldRow, _params) => ({
           ...newRow,
           category: newRow.category, // Preserve the new category from grouping rules
         }));
@@ -1342,11 +1341,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         // Wait for async processRowUpdate to complete
         await waitFor(() => {
-          expect(processRowUpdate.callCount).to.equal(1);
+          expect(processRowUpdate.mock.calls.length).to.equal(1);
         });
 
         // Verify processRowUpdate was called with correct parameters
-        const args = processRowUpdate.firstCall.args;
+        const args = processRowUpdate.mock.calls[0];
         expect(args.length).to.equal(3);
         const [newRow, oldRow, params] = args;
         expect(newRow.id).to.equal(1);
@@ -1357,7 +1356,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should handle processRowUpdate returning modified data', async () => {
-        const processRowUpdate = spy((newRow, _oldRow, _params) => ({
+        const processRowUpdate = vi.fn((newRow, _oldRow, _params) => ({
           ...newRow,
           name: `${newRow.name} (Modified)`,
         }));
@@ -1375,7 +1374,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(itemA1Row, itemB1Row, 'above');
 
         await waitFor(() => {
-          expect(processRowUpdate.callCount).to.equal(1);
+          expect(processRowUpdate.mock.calls.length).to.equal(1);
         });
 
         // Verify the modified name is displayed in the grid
@@ -1386,7 +1385,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should handle processRowUpdate returning a Promise', async () => {
-        const processRowUpdate = spy(async (newRow, _oldRow, _params) => {
+        const processRowUpdate = vi.fn(async (newRow, _oldRow, _params) => {
           // Simulate async operation
           await new Promise<void>((resolve) => {
             setTimeout(resolve, 10);
@@ -1409,7 +1408,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(itemA1Row, itemB1Row, 'above');
 
         await waitFor(() => {
-          expect(processRowUpdate.callCount).to.equal(1);
+          expect(processRowUpdate.mock.calls.length).to.equal(1);
         });
 
         // Verify async result is applied
@@ -1420,10 +1419,10 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should call onProcessRowUpdateError when processRowUpdate throws an error', async () => {
-        const processRowUpdate = spy((_newRow, _oldRow, _params) => {
+        const processRowUpdate = vi.fn((_newRow, _oldRow, _params) => {
           throw new Error('Validation failed');
         });
-        const onProcessRowUpdateError = spy();
+        const onProcessRowUpdateError = vi.fn();
 
         render(
           <div style={{ width: 500, height: 500 }}>
@@ -1448,15 +1447,15 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(itemA1Row, itemB1Row, 'above');
 
         await waitFor(() => {
-          expect(processRowUpdate.callCount).to.equal(1);
+          expect(processRowUpdate.mock.calls.length).to.equal(1);
         });
 
         await waitFor(() => {
-          expect(onProcessRowUpdateError.callCount).to.equal(1);
+          expect(onProcessRowUpdateError.mock.calls.length).to.equal(1);
         });
 
         // Verify error was passed to handler
-        const error = onProcessRowUpdateError.firstCall.args[0];
+        const error = onProcessRowUpdateError.mock.calls[0][0];
         expect(error.message).to.equal('Validation failed');
 
         // Verify row order was not changed due to error
@@ -1468,10 +1467,10 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should call onProcessRowUpdateError when processRowUpdate Promise rejects', async () => {
-        const processRowUpdate = spy(async (_newRow, _oldRow, _params) => {
+        const processRowUpdate = vi.fn(async (_newRow, _oldRow, _params) => {
           throw new Error('Async validation failed');
         });
-        const onProcessRowUpdateError = spy();
+        const onProcessRowUpdateError = vi.fn();
 
         render(
           <div style={{ width: 500, height: 500 }}>
@@ -1489,21 +1488,21 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(itemA1Row, itemB1Row, 'above');
 
         await waitFor(() => {
-          expect(processRowUpdate.callCount).to.equal(1);
+          expect(processRowUpdate.mock.calls.length).to.equal(1);
         });
 
         await waitFor(() => {
-          expect(onProcessRowUpdateError.callCount).to.equal(1);
+          expect(onProcessRowUpdateError.mock.calls.length).to.equal(1);
         });
 
         // Verify error was passed to handler
-        const error = onProcessRowUpdateError.firstCall.args[0];
+        const error = onProcessRowUpdateError.mock.calls[0][0];
         expect(error.message).to.equal('Async validation failed');
       });
 
       it('should not call processRowUpdate when reordering within same parent group', async () => {
-        const processRowUpdate = spy();
-        const onRowOrderChange = spy();
+        const processRowUpdate = vi.fn();
+        const onRowOrderChange = vi.fn();
         render(
           <div style={{ width: 500, height: 500 }}>
             <DataGridPremium
@@ -1522,11 +1521,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify callback was called
-          expect(onRowOrderChange.callCount).to.equal(1);
+          expect(onRowOrderChange.mock.calls.length).to.equal(1);
         });
 
         // processRowUpdate should not be called for same-parent reorders
-        expect(processRowUpdate.callCount).to.equal(0);
+        expect(processRowUpdate.mock.calls.length).to.equal(0);
       });
     });
 
@@ -1550,8 +1549,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       };
 
       it('should call dataSource.editRow when reordering between different parent groups', async () => {
-        const editRowSpy = spy();
-        const getRowsSpy = spy();
+        const editRowSpy = vi.fn();
+        const getRowsSpy = vi.fn();
         const dataSource: GridDataSource = {
           getRows: async (params) => {
             getRowsSpy(params);
@@ -1587,7 +1586,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         );
 
         await waitFor(() => {
-          expect(getRowsSpy.callCount).to.equal(5);
+          expect(getRowsSpy.mock.calls.length).to.equal(5);
         });
 
         await waitFor(() => {
@@ -1614,11 +1613,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(itemA1Row, itemB1Row, 'above');
 
         await waitFor(() => {
-          expect(editRowSpy.callCount).to.equal(1);
+          expect(editRowSpy.mock.calls.length).to.equal(1);
         });
 
         // Verify correct parameters were passed
-        const params = editRowSpy.firstCall.args[0];
+        const params = editRowSpy.mock.calls[0][0];
         expect(params.rowId).to.equal(1);
         expect(params.previousRow.id).to.equal(1);
         expect(params.previousRow.category).to.equal('A');
@@ -1627,8 +1626,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should not call dataSource.editRow when reordering within same parent group', async () => {
-        const editRowSpy = spy();
-        const getRowsSpy = spy();
+        const editRowSpy = vi.fn();
+        const getRowsSpy = vi.fn();
         const dataSource: GridDataSource = {
           getRows: async (params) => {
             getRowsSpy(params);
@@ -1664,7 +1663,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         );
 
         await waitFor(() => {
-          expect(getRowsSpy.callCount).to.equal(5);
+          expect(getRowsSpy.mock.calls.length).to.equal(5);
         });
 
         await waitFor(() => {
@@ -1706,13 +1705,13 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         });
 
         // Should not call editRow since group hasn't changed
-        expect(editRowSpy.callCount).to.equal(0);
+        expect(editRowSpy.mock.calls.length).to.equal(0);
       });
 
       it('should call dataSource.setGroupKey when available instead of direct field assignment', async () => {
-        const editRowSpy = spy();
-        const getRowsSpy = spy();
-        const setGroupKeySpy = spy((row, groupKey) => {
+        const editRowSpy = vi.fn();
+        const getRowsSpy = vi.fn();
+        const setGroupKeySpy = vi.fn((row, groupKey) => {
           const split = groupKey.split('-');
           const category = split[split.length - 1];
           return {
@@ -1757,7 +1756,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         );
 
         await waitFor(() => {
-          expect(getRowsSpy.callCount).to.equal(5);
+          expect(getRowsSpy.mock.calls.length).to.equal(5);
         });
 
         await waitFor(() => {
@@ -1785,24 +1784,24 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(itemA1Row, itemB1Row, 'above');
 
         await waitFor(() => {
-          expect(setGroupKeySpy.callCount).to.equal(1);
+          expect(setGroupKeySpy.mock.calls.length).to.equal(1);
         });
 
         // Verify `setGroupKey()` was called with correct parameters
-        expect(setGroupKeySpy.firstCall.args[0]).to.deep.include({
+        expect(setGroupKeySpy.mock.calls[0][0]).to.deep.include({
           id: 1,
           category: 'A',
           name: 'Item A1',
           value: 10,
         });
-        expect(setGroupKeySpy.firstCall.args[1]).to.equal('autogenerated-parent-category-B'); // Group key of the target row's parent group
+        expect(setGroupKeySpy.mock.calls[0][1]).to.equal('autogenerated-parent-category-B'); // Group key of the target row's parent group
 
         await waitFor(() => {
-          expect(editRowSpy.callCount).to.equal(1);
+          expect(editRowSpy.mock.calls.length).to.equal(1);
         });
 
         // Verify updateRow was called with the result from `setGroupKey()`
-        const updateRowParams = editRowSpy.firstCall.args[0];
+        const updateRowParams = editRowSpy.mock.calls[0][0];
         expect(updateRowParams.updatedRow).to.deep.include({
           id: 1,
           category: 'B',
@@ -2224,7 +2223,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           },
         ];
 
-        const processRowUpdate = spy((newRow: any) => ({
+        const processRowUpdate = vi.fn((newRow: any) => ({
           ...newRow,
           lastModified: Date.now(),
         }));
@@ -2270,7 +2269,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify processRowUpdate was called for each leaf row (Alice and Bob)
-          expect(processRowUpdate.callCount).to.equal(2);
+          expect(processRowUpdate.mock.calls.length).to.equal(2);
         });
 
         await waitFor(() => {
@@ -2310,7 +2309,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           { id: 5, company: 'Company C', department: 'Engineering', name: 'Eve' },
         ];
 
-        const processRowUpdate = spy((newRow: any) => newRow);
+        const processRowUpdate = vi.fn((newRow: any) => newRow);
         const apiRef: RefObject<GridApi | null> = { current: null };
 
         render(
@@ -2378,7 +2377,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // If processRowUpdate was called, the functionality is working
-          expect(processRowUpdate.callCount).to.be.greaterThan(0);
+          expect(processRowUpdate.mock.calls.length).to.be.greaterThan(0);
         });
 
         // Basic verification that the operation completed successfully
@@ -2397,14 +2396,14 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         ];
 
         // processRowUpdate that fails for Bob (id: 2)
-        const processRowUpdate = spy((newRow: any) => {
+        const processRowUpdate = vi.fn((newRow: any) => {
           if (newRow.id === 2) {
             throw new Error('Update failed for Bob');
           }
           return newRow;
         });
 
-        const onProcessRowUpdateError = spy();
+        const onProcessRowUpdateError = vi.fn();
 
         const apiRef: RefObject<GridApi | null> = { current: null };
 
@@ -2444,12 +2443,12 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify processRowUpdate was called 3 times (for Alice, Bob, Charlie)
-          expect(processRowUpdate.callCount).to.equal(3);
+          expect(processRowUpdate.mock.calls.length).to.equal(3);
         });
 
         await waitFor(() => {
           // Verify error callback was called for Bob
-          expect(onProcessRowUpdateError.callCount).to.equal(1);
+          expect(onProcessRowUpdateError.mock.calls.length).to.equal(1);
         });
 
         await waitFor(() => {
@@ -2497,14 +2496,14 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         ];
 
         // processRowUpdate that fails for Bob (id: 2)
-        const processRowUpdate = spy((newRow: any) => {
+        const processRowUpdate = vi.fn((newRow: any) => {
           if (newRow.id === 2) {
             throw new Error('Update failed for Bob');
           }
           return newRow;
         });
 
-        const onProcessRowUpdateError = spy();
+        const onProcessRowUpdateError = vi.fn();
         const apiRef: RefObject<GridApi | null> = { current: null };
 
         render(
@@ -2542,11 +2541,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(marketingRow, salesRow, 'above');
 
         await waitFor(() => {
-          expect(processRowUpdate.callCount).to.equal(3);
+          expect(processRowUpdate.mock.calls.length).to.equal(3);
         });
 
         await waitFor(() => {
-          expect(onProcessRowUpdateError.callCount).to.equal(1);
+          expect(onProcessRowUpdateError.mock.calls.length).to.equal(1);
         });
 
         // Verify duplicate Marketing groups exist under different companies
@@ -2607,14 +2606,14 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         ];
 
         // processRowUpdate that fails for Alice (id: 1)
-        const processRowUpdate = spy((newRow: any) => {
+        const processRowUpdate = vi.fn((newRow: any) => {
           if (newRow.id === 1) {
             throw new Error('Update failed for Alice');
           }
           return newRow;
         });
 
-        const onProcessRowUpdateError = spy();
+        const onProcessRowUpdateError = vi.fn();
         const apiRef: RefObject<GridApi | null> = { current: null };
 
         render(
@@ -2656,11 +2655,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(engineeringARow, salesBRow, 'above');
 
         await waitFor(() => {
-          expect(processRowUpdate.callCount).to.equal(2);
+          expect(processRowUpdate.mock.calls.length).to.equal(2);
         });
 
         await waitFor(() => {
-          expect(onProcessRowUpdateError.callCount).to.equal(1);
+          expect(onProcessRowUpdateError.mock.calls.length).to.equal(1);
         });
 
         // Verify both companies now have Engineering departments (duplication allowed)
@@ -3163,7 +3162,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           },
         ];
 
-        const regionGroupingValueSetter = spy((groupingValue, row) => ({
+        const regionGroupingValueSetter = vi.fn((groupingValue, row) => ({
           ...row,
           metadata: {
             ...row.metadata,
@@ -3219,12 +3218,12 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify groupingValueSetter was called
-          expect(regionGroupingValueSetter.callCount).to.equal(1);
+          expect(regionGroupingValueSetter.mock.calls.length).to.equal(1);
         });
 
         await waitFor(() => {
           // Verify the setter was called with correct parameters
-          expect(regionGroupingValueSetter.firstCall.args[0]).to.equal('EU'); // target region
+          expect(regionGroupingValueSetter.mock.calls[0][0]).to.equal('EU'); // target region
         });
 
         await waitFor(() => {
@@ -3289,7 +3288,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         ];
 
         const apiRef: RefObject<GridApi | null> = { current: null };
-        const processRowUpdate = spy((newRow) => newRow);
+        const processRowUpdate = vi.fn((newRow) => newRow);
 
         render(
           <div style={{ width: 600, height: 500 }}>
@@ -3335,7 +3334,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         // Wait for state update
         await waitFor(() => {
-          expect(processRowUpdate.callCount).to.be.greaterThan(0);
+          expect(processRowUpdate.mock.calls.length).to.be.greaterThan(0);
         });
 
         // After moving Avatar to Warner Bros:
@@ -3357,7 +3356,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(jamesCameronGroup).to.equal(undefined, 'James Cameron group should be removed');
 
         // Verify Avatar was moved successfully
-        const updatedAvatarRow = processRowUpdate.lastCall?.args[0];
+        const updatedAvatarRow = processRowUpdate.mock.lastCall?.[0];
         expect(updatedAvatarRow?.company).to.equal(
           'Warner Bros',
           'Avatar should be moved to Warner Bros',
@@ -3380,7 +3379,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         ];
 
         const apiRef: RefObject<GridApi | null> = { current: null };
-        const processRowUpdate = spy((newRow) => newRow);
+        const processRowUpdate = vi.fn((newRow) => newRow);
 
         render(
           <div style={{ width: 600, height: 500 }}>
@@ -3431,7 +3430,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         // Wait for state update
         await waitFor(() => {
-          expect(processRowUpdate.callCount).to.be.greaterThan(0);
+          expect(processRowUpdate.mock.calls.length).to.be.greaterThan(0);
         });
 
         // After moving Analytics department to TechCorp:
@@ -3450,7 +3449,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(dataCorpGroup).to.equal(undefined, 'DataCorp group should be removed');
 
         // Verify David was moved successfully
-        const updatedRows = processRowUpdate.getCalls().map((call) => call.args[0]);
+        const updatedRows = processRowUpdate.mock.calls.map((call) => call[0]);
         const davidRow = updatedRows.find((row: any) => row.name === 'David');
         expect(davidRow?.company).to.equal('TechCorp', 'David should be moved to TechCorp');
       });

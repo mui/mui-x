@@ -5,7 +5,10 @@ import type { TreeViewClasses } from '../internals/TreeViewProvider/TreeViewStyl
 export interface RichTreeViewClasses extends Omit<
   TreeViewClasses,
   'itemDragAndDropOverlay' | 'itemErrorIcon' | 'itemLoadingIcon'
-> {}
+> {
+  /** Styles applied to each item loader element. */
+  itemLoader: string;
+}
 
 export type RichTreeViewClassKey = keyof RichTreeViewClasses;
 
@@ -22,4 +25,5 @@ export const richTreeViewClasses: RichTreeViewClasses = generateUtilityClasses('
   'itemLabel',
   'itemCheckbox',
   'itemLabelInput',
+  'itemLoader',
 ]);

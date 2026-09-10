@@ -1,4 +1,5 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { act, screen, waitFor } from '@mui/internal-test-utils';
 import { gridClasses, GridRowId } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
@@ -57,19 +58,25 @@ export async function actSleep(duration: number) {
   });
 }
 
-export function spyApi(api: GridApiCommon, methodName: string) {
+type ApiMethod = (...args: any[]) => any;
+
+/** The recording wrapper `spyApi` swaps onto the API, plus the fields the grid reads back. */
+export type SpiedApiMethod = Mock<ApiMethod> & { spying: boolean; target: ApiMethod };
+
+export function spyApi(api: GridApiCommon, methodName: string): SpiedApiMethod {
   const methodKey = methodName as keyof GridApiCommon;
   const privateApi = unwrapPrivateAPI(api);
-  const method = privateApi[methodKey];
+  const method = privateApi[methodKey] as ApiMethod;
 
-  const spyFn = spy((...args: any[]) => {
-    return spyFn.target(...args);
-  }) as any;
-  spyFn.spying = true;
-  spyFn.target = method;
+  const spyFn: SpiedApiMethod = Object.assign(
+    vi.fn((...args: any[]) => spyFn.target(...args)),
+    { spying: true, target: method },
+  );
 
-  api[methodKey] = spyFn;
-  privateApi[methodKey] = spyFn;
+  // Indexing with `keyof GridApiCommon` collapses to an intersection of every method
+  // signature, so the write itself needs the escape hatch, not the spy.
+  Object.assign(api, { [methodKey]: spyFn });
+  Object.assign(privateApi, { [methodKey]: spyFn });
 
   return spyFn;
 }

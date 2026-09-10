@@ -33,7 +33,7 @@ const state = {
   },
 } as any;
 
-function test(
+function move(
   direction: 'ArrowRight' | 'ArrowLeft',
   initialFocus: FocusedItemIdentifier<'scatter'> | null,
 ) {
@@ -42,7 +42,7 @@ function test(
 
 describe('<Scatter /> - keyboard navigation', () => {
   it('should move to the next item', () => {
-    expect(test('ArrowRight', { type: 'scatter', seriesId: 'short', dataIndex: 0 })).to.deep.equal({
+    expect(move('ArrowRight', { type: 'scatter', seriesId: 'short', dataIndex: 0 })).to.deep.equal({
       type: 'scatter',
       seriesId: 'short',
       dataIndex: 1,
@@ -50,7 +50,7 @@ describe('<Scatter /> - keyboard navigation', () => {
   });
 
   it('should keep focus on the last item of a shorter series', () => {
-    expect(test('ArrowRight', { type: 'scatter', seriesId: 'short', dataIndex: 1 })).to.deep.equal({
+    expect(move('ArrowRight', { type: 'scatter', seriesId: 'short', dataIndex: 1 })).to.deep.equal({
       type: 'scatter',
       seriesId: 'short',
       dataIndex: 1,
@@ -58,7 +58,7 @@ describe('<Scatter /> - keyboard navigation', () => {
   });
 
   it('should not move left from the first item', () => {
-    expect(test('ArrowLeft', { type: 'scatter', seriesId: 'short', dataIndex: 0 })).to.deep.equal({
+    expect(move('ArrowLeft', { type: 'scatter', seriesId: 'short', dataIndex: 0 })).to.deep.equal({
       type: 'scatter',
       seriesId: 'short',
       dataIndex: 0,

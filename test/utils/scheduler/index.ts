@@ -1,5 +1,6 @@
 import type { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 
+export * from './absorb-observer-frames';
 export * from './createSchedulerRenderer';
 export * from './describeConformance';
 export * from './adapters';

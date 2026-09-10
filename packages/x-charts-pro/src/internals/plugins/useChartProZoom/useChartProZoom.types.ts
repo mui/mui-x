@@ -6,6 +6,7 @@ import type {
   ZoomData,
   AxisId,
   UseChartBrushSignature,
+  UseChartKeyboardNavigationSignature,
 } from '@mui/x-charts/internals';
 import type {
   ZoomInteractionConfig,
@@ -128,4 +129,5 @@ export type UseChartProZoomSignature = ChartPluginSignature<{
   publicAPI: UseChartProZoomPublicApi;
   instance: UseChartProZoomInstance;
   dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature, UseChartBrushSignature];
+  optionalDependencies: [UseChartKeyboardNavigationSignature];
 }>;

@@ -2,12 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  ChatRoot,
-  ChatVariantProvider,
-  ChatDensityProvider,
-  type ChatVariant,
-} from '@mui/x-chat-headless';
+import { ChatRoot, ChatVariantProvider, ChatDensityProvider } from '@mui/x-chat-headless';
+import type { ChatVariant } from '@mui/x-chat-headless';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { ChatSlotsProvider } from '../internals/ChatSlotsContext';

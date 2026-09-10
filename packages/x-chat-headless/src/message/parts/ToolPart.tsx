@@ -13,7 +13,8 @@ import { useChat } from '../../hooks/useChat';
 import { useChatLocaleText } from '../../chat/internals/ChatLocaleContext';
 import { useMessageContentTabIndex } from '../../message-list/internals/MessageRovingContext';
 import { formatStructuredValue } from './partUtils';
-import { type ChatToolExpand, ToolDisclosureContext } from './toolDisclosure';
+import { ToolDisclosureContext } from './toolDisclosure';
+import type { ChatToolExpand } from './toolDisclosure';
 
 type ToolPart = ChatToolMessagePart | ChatDynamicToolMessagePart;
 

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { ChatMessage } from '../types/chat-entities';
-import { type MessageListRootOwnerState } from './messageList.types';
+import type { MessageListRootOwnerState } from './messageList.types';
 
 type ScrollAnchor = {
   id: string;

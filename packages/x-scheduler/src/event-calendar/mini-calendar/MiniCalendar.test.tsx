@@ -1,8 +1,7 @@
-import { spy } from 'sinon';
 import { screen, waitFor, within } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('MiniCalendar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26T10:00:00Z') });
@@ -96,7 +95,7 @@ describe('MiniCalendar', () => {
     });
 
     it('should call onVisibleDateChange when clicking a day', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
       const { user } = render(
         <EventCalendar events={[]} onVisibleDateChange={onVisibleDateChange} defaultView="week" />,
       );
@@ -109,11 +108,11 @@ describe('MiniCalendar', () => {
       expect(day15Button).not.to.equal(undefined);
       await user.click(day15Button!);
 
-      expect(onVisibleDateChange.calledOnce).to.equal(true);
+      expect(onVisibleDateChange.mock.calls.length).to.equal(1);
     });
 
     it('should not change the view when clicking a day', async () => {
-      const onViewChange = spy();
+      const onViewChange = vi.fn();
       const { user } = render(
         <EventCalendar events={[]} onViewChange={onViewChange} defaultView="week" />,
       );
@@ -126,7 +125,7 @@ describe('MiniCalendar', () => {
       await user.click(day15Button!);
 
       // onViewChange should NOT be called (view should remain week)
-      expect(onViewChange.called).to.equal(false);
+      expect(onViewChange.mock.calls.length).to.equal(0);
     });
 
     it('should sync mini calendar month when scheduler visibleDate changes', async () => {

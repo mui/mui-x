@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { useStoreEffect } from '@mui/x-internals/store';
 import type { ChatAdapter } from '../../adapters';
-import { asCursorAgnosticChatStore, type ChatStore } from '../../store';
+import { asCursorAgnosticChatStore } from '../../store';
+import type { ChatStore } from '../../store';
 import type {
   ChatAddToolApproveResponseInput,
   ChatMessage,

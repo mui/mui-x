@@ -8,7 +8,6 @@ import {
   reactMajor,
   act,
 } from '@mui/internal-test-utils';
-import { stub, spy } from 'sinon';
 import { DataGrid, gridClasses, useGridApiRef } from '@mui/x-data-grid';
 import type { DataGridProps, GridColDef, GridApi } from '@mui/x-data-grid';
 import { ptBR } from '@mui/x-data-grid/locales';
@@ -25,7 +24,8 @@ import {
   sleep,
 } from 'test/utils/helperFn';
 import { isJSDOM, isOSX } from 'test/utils/skipIf';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import type { MockInstance } from 'vitest';
 
 const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
@@ -247,13 +247,14 @@ describe('<DataGrid /> - Layout & warnings', () => {
     });
 
     describe('swallow warnings', () => {
+      let consoleError: MockInstance;
+
       beforeEach(() => {
-        stub(console, 'error');
+        consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
       });
 
       afterEach(() => {
-        // @ts-expect-error beforeEach side effect
-        console.error.restore();
+        consoleError.mockRestore();
       });
 
       it('should have a stable height if the parent container has no intrinsic height', () => {
@@ -909,6 +910,101 @@ describe('<DataGrid /> - Layout & warnings', () => {
       expect(overlayWrapper).toHaveComputedStyle({ height: `${expectedHeight}px` });
     });
 
+    // See https://github.com/mui/mui-x/issues/14289
+    describe('overlay position', () => {
+      const renderGrid = (
+        direction: 'ltr' | 'rtl',
+        columns: GridColDef[],
+        props?: Partial<DataGridProps>,
+      ) => {
+        render(
+          <ThemeProvider theme={createTheme({ direction })}>
+            <div dir={direction} style={{ width: 300, height: 300 }}>
+              <DataGrid rows={[]} columns={columns} hideFooter {...props} />
+            </div>
+          </ThemeProvider>,
+        );
+        return { scroller: grid('virtualScroller')!, overlay: grid('overlayWrapperInner')! };
+      };
+
+      const expectOverlayToCoverTheViewport = (scroller: HTMLElement, overlay: HTMLElement) => {
+        const scrollerRect = scroller.getBoundingClientRect();
+        const overlayRect = overlay.getBoundingClientRect();
+        expect(Math.round(overlayRect.left)).to.equal(Math.round(scrollerRect.left));
+        expect(Math.round(overlayRect.right)).to.equal(Math.round(scrollerRect.right));
+      };
+
+      describe('columns wider than the viewport', () => {
+        // The columns are more than twice as wide as the viewport, so the overlay has to travel
+        // further than a single viewport width to stay in place.
+        const wideColumns: GridColDef[] = Array.from({ length: 10 }, (_, index) => ({
+          field: `col${index}`,
+          width: 100,
+        }));
+
+        const expectOverlayToStayInTheViewport = async (
+          direction: 'ltr' | 'rtl',
+          props?: Partial<DataGridProps>,
+        ) => {
+          const { scroller, overlay } = renderGrid(direction, wideColumns, props);
+          const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+          expect(maxScrollLeft).to.be.greaterThan(scroller.clientWidth);
+
+          // The content is wider than the viewport, so the overlay sits at its static position
+          // rather than being pushed by the scroll. It has to cover the viewport already.
+          expectOverlayToCoverTheViewport(scroller, overlay);
+
+          await act(async () => {
+            // In RTL, `scrollLeft` goes from 0 (scrolled to the start) to `-maxScrollLeft`
+            scroller.scrollLeft = direction === 'rtl' ? -maxScrollLeft : maxScrollLeft;
+            scroller.dispatchEvent(new Event('scroll'));
+          });
+
+          await waitFor(() => {
+            expectOverlayToCoverTheViewport(scroller, overlay);
+          });
+        };
+
+        it('should keep the overlay in the viewport in LTR', async () => {
+          await expectOverlayToStayInTheViewport('ltr');
+        });
+
+        it('should keep the overlay in the viewport in RTL', async () => {
+          await expectOverlayToStayInTheViewport('rtl');
+        });
+
+        // The controlled layout mode pins the whole viewport instead of the overlay alone.
+        const controlledLayout: Partial<DataGridProps> = {
+          experimentalFeatures: { virtualizerLayoutMode: 'controlled' },
+        };
+
+        it('should keep the overlay in the viewport in LTR with a controlled layout', async () => {
+          await expectOverlayToStayInTheViewport('ltr', controlledLayout);
+        });
+
+        it('should keep the overlay in the viewport in RTL with a controlled layout', async () => {
+          await expectOverlayToStayInTheViewport('rtl', controlledLayout);
+        });
+      });
+
+      describe('columns narrower than the viewport', () => {
+        // The columns leave empty space next to them, which the overlay has to cover as well.
+        const narrowColumns: GridColDef[] = [{ field: 'col0', width: 100 }];
+
+        it('should cover the viewport in LTR', () => {
+          const { scroller, overlay } = renderGrid('ltr', narrowColumns);
+          expect(scroller.scrollWidth).to.equal(scroller.clientWidth);
+          expectOverlayToCoverTheViewport(scroller, overlay);
+        });
+
+        it('should cover the viewport in RTL', () => {
+          const { scroller, overlay } = renderGrid('rtl', narrowColumns);
+          expect(scroller.scrollWidth).to.equal(scroller.clientWidth);
+          expectOverlayToCoverTheViewport(scroller, overlay);
+        });
+      });
+    });
+
     it('should respect the maxHeight of the flex parent', () => {
       render(
         <div
@@ -1175,7 +1271,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   it('should not render the "no rows" overlay when transitioning the loading prop from false to true', () => {
-    const NoRowsOverlay = spy(() => null);
+    const NoRowsOverlay = vi.fn(() => null);
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
@@ -1184,13 +1280,13 @@ describe('<DataGrid /> - Layout & warnings', () => {
       );
     }
     const { setProps } = render(<TestCase rows={[]} loading />);
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
     setProps({ loading: false, rows: [{ id: 1 }] });
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
   });
 
   it('should render the "no rows" overlay when changing the loading to false but not changing the rows prop', () => {
-    const NoRowsOverlay = spy(() => null);
+    const NoRowsOverlay = vi.fn(() => null);
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
@@ -1200,9 +1296,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
     }
     const rows: DataGridProps['rows'] = [];
     const { setProps } = render(<TestCase rows={rows} loading />);
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
     setProps({ loading: false });
-    expect(NoRowsOverlay.callCount).not.to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).not.to.equal(0);
   });
 
   // Doesn't work with mocked window.getComputedStyle
@@ -1405,7 +1501,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
     async () => {
       // Stub performance.now to drive the oscillation detector's elapsed-time check.
       let mockTime = 1000;
-      const performanceNowStub = stub(performance, 'now').callsFake(() => mockTime);
+      const performanceNowStub = vi.spyOn(performance, 'now').mockImplementation(() => mockTime);
       try {
         function TestCase({ height }: { height: number }) {
           return (
@@ -1435,7 +1531,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
         });
       } finally {
-        performanceNowStub.restore();
+        performanceNowStub.mockRestore();
       }
     },
   );

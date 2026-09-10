@@ -21,6 +21,7 @@ import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
 import { TreeItemLabelInput } from '../TreeItemLabelInput';
 import { useTreeViewStyleContext } from '../internals/TreeViewProvider';
+import { TREE_ITEM_ICON_CONTAINER_WIDTH_PX } from '../internals/constants';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -119,7 +120,7 @@ export const TreeItemIconContainer = styled('div', {
   name: 'MuiTreeItem',
   slot: 'IconContainer',
 })({
-  width: 16,
+  width: TREE_ITEM_ICON_CONTAINER_WIDTH_PX,
   display: 'flex',
   flexShrink: 0,
   justifyContent: 'center',

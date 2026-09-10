@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
@@ -106,7 +105,7 @@ describe('highlight', () => {
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
   it.skipIf(isJSDOM)('should call onHighlightChange when leaving the highlightedItem', async () => {
-    const handleHighlight = spy();
+    const handleHighlight = vi.fn();
     const { container, user } = render(
       <BarChart
         height={400}
@@ -127,17 +126,17 @@ describe('highlight', () => {
 
     await user.pointer({ target: bars[0], coords: getCenter(bars[0]) });
 
-    expect(handleHighlight.callCount).to.equal(0);
+    expect(handleHighlight.mock.calls.length).to.equal(0);
 
     // Moving pointer to between the two bars should trigger the exist of the first item highlight
     await user.pointer({ target: container, coords: { clientX: 200, clientY: 200 } });
-    expect(handleHighlight.callCount).to.equal(1);
-    expect(handleHighlight.lastCall.args[0]).to.deep.equal(null);
+    expect(handleHighlight.mock.calls.length).to.equal(1);
+    expect(handleHighlight.mock.lastCall?.[0]).to.deep.equal(null);
 
     // Moving pointer to the second bar should trigger the highlight of the second item
     await user.pointer({ target: bars[3], coords: getCenter(bars[3]) });
-    expect(handleHighlight.callCount).to.equal(2);
-    expect(handleHighlight.lastCall.args[0]).to.deep.equal({
+    expect(handleHighlight.mock.calls.length).to.equal(2);
+    expect(handleHighlight.mock.lastCall?.[0]).to.deep.equal({
       type: 'bar',
       seriesId: 'id-b',
       dataIndex: 1,
@@ -145,7 +144,7 @@ describe('highlight', () => {
 
     // Moving pointer back to the same item as the controlled one should not trigger any highlight change
     await user.pointer({ target: bars[0], coords: getCenter(bars[0]) });
-    expect(handleHighlight.callCount).to.equal(2);
+    expect(handleHighlight.mock.calls.length).to.equal(2);
   });
 
   it('should warn but not crash when switching highlightedItem from controlled to uncontrolled', () => {

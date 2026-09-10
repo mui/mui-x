@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useMessageIds } from '../hooks/useMessage';
 import { useChatComposer } from '../hooks/useChatComposer';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { SuggestionsContext } from './internals/SuggestionsContext';
 import { SuggestionItem } from './SuggestionItem';
-import { type ChatSuggestion, type SuggestionsRootOwnerState } from './suggestions.types';
+import type { ChatSuggestion, SuggestionsRootOwnerState } from './suggestions.types';
 
 function normalizeSuggestion(item: ChatSuggestion | string): ChatSuggestion {
   return typeof item === 'string' ? { value: item } : item;

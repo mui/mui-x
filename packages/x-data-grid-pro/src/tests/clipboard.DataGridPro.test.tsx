@@ -2,11 +2,10 @@ import type { RefObject } from '@mui/x-internals/types';
 import { useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
-import type { SinonSpy } from 'sinon';
+import type { MockInstance } from 'vitest';
 import { getCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { describe, it, expect, afterEach } from 'vitest';
+import { vi, describe, it, expect, afterEach } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -42,23 +41,23 @@ describe('<DataGridPro /> - Clipboard', () => {
   }
 
   describe('copy to clipboard', () => {
-    let writeText: SinonSpy | undefined;
+    let writeText: MockInstance<typeof navigator.clipboard.writeText> | undefined;
 
     afterEach(function afterEachHook() {
-      writeText?.restore();
+      writeText?.mockRestore();
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should copy the selected rows to the clipboard when ${key} + C is pressed`, () => {
         render(<Test disableRowSelectionOnClick />);
 
-        writeText = spy(navigator.clipboard, 'writeText');
+        writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
         act(() => apiRef.current?.selectRows([0, 1]));
         const cell = getCell(0, 0);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
-        expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
+        expect(writeText.mock.calls[0][0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
       });
     });
 
@@ -71,14 +70,14 @@ describe('<DataGridPro /> - Clipboard', () => {
         />,
       );
 
-      writeText = spy(navigator.clipboard, 'writeText');
+      writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
       cell.focus();
       fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.lastCall.firstArg).to.equal('1 " 1');
+      expect(writeText.mock.lastCall?.[0]).to.equal('1 " 1');
     });
 
     it('should not escape double quotes when copying rows to clipboard', () => {
@@ -93,13 +92,13 @@ describe('<DataGridPro /> - Clipboard', () => {
         />,
       );
 
-      writeText = spy(navigator.clipboard, 'writeText');
+      writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
       act(() => apiRef.current?.selectRows([0, 1]));
       const cell = getCell(0, 0);
       fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.firstCall.args[0]).to.equal(['1 " 1', '2'].join('\r\n'));
+      expect(writeText.mock.calls[0][0]).to.equal(['1 " 1', '2'].join('\r\n'));
     });
   });
 });

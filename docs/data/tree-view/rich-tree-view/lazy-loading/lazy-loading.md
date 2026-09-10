@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 title: Rich Tree View - Lazy loading
-components: RichTreeViewPro, TreeItem
+components: RichTreeViewPro, TreeItem, TreeItemLoader
 packageName: '@mui/x-tree-view-pro'
 githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -33,6 +33,35 @@ The following demo uses `fetchQuery` from `react-query` to load data.
 
 {{"demo": "FetchingWithReactQuery.js"}}
 
+## Loading indicators
+
+While `getTreeItems()` fetches the root items, the tree displays the same loading rows as the [`loading` prop](/x/react-tree-view/rich-tree-view/items/#loading-state).
+Use the `itemsCount` value in `slotProps.loading` to control the number of rows.
+
+While an item fetches its children, the loading UI depends on the DOM structure:
+
+- With `domStructure="nested"` and `disableVirtualization`, the item opens and displays loading rows in place of its children.
+  The number of rows matches `getChildrenCount()` when the count is known.
+- With the default flat structure, a circular progress indicator replaces the expansion icon.
+
+You can customize the loading rows with the same [slots and classes](/x/react-tree-view/rich-tree-view/items/#customize-the-loading-ui) as the `loading` prop.
+
+{{"demo": "ChildrenLoadingRows.js"}}
+
+### Customized loading UI
+
+The demo below combines the customization options and adds transitions:
+
+- The `loading` slot replaces the loading rows.
+  It renders while the root items load and while an item fetches its children.
+  Each custom row is wrapped in the `TreeItemLoader` component, which keeps the `role`, `aria` attributes, indentation, and height of a tree item.
+- The `loadingIcon` slot of `TreeItem` replaces the circular progress indicator of an item whose children load.
+- The `groupTransition` slot of `TreeItem` animates the expansion with a spring.
+- The loading rows and the items share a staggered entrance animation.
+  This makes the transition from the loading state to the loaded items read as one continuous motion.
+
+{{"demo": "CustomizedLazyLoading.js"}}
+
 ## Data caching
 
 ### Custom cache
@@ -63,6 +92,8 @@ Because those children are pre-cached by the tree view, expanding them requires 
 {{"demo": "AutoExpandLazyLoadedItems.js"}}
 
 ## Error management
+
+When the fetch of an item's children fails, the item closes again and displays an error indicator in its icon container.
 
 {{"demo": "ErrorManagement.js"}}
 

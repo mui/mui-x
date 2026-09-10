@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
 import type { RefObject } from '@mui/x-internals/types';
 import {
   useGridApiRef,
@@ -19,7 +18,7 @@ import type {
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Columns', () => {
   const { render } = createRenderer();
@@ -114,7 +113,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     it('should call onColumnResize during resizing', async () => {
-      const onColumnResize = spy();
+      const onColumnResize = vi.fn();
       const { user } = render(<Test onColumnResize={onColumnResize} columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
 
@@ -125,17 +124,17 @@ describe('<DataGridPro /> - Columns', () => {
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
-      expect(onColumnResize.callCount).to.equal(2);
-      expect(onColumnResize.args[0][0].width).to.equal(110);
-      expect(onColumnResize.args[1][0].width).to.equal(120);
+      expect(onColumnResize.mock.calls.length).to.equal(2);
+      expect(onColumnResize.mock.calls[0][0].width).to.equal(110);
+      expect(onColumnResize.mock.calls[1][0].width).to.equal(120);
     });
 
     it('should call onColumnWidthChange after resizing', async () => {
-      const onColumnWidthChange = spy();
+      const onColumnWidthChange = vi.fn();
       const { user } = render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
 
-      expect(onColumnWidthChange.callCount).to.equal(0);
+      expect(onColumnWidthChange.mock.calls.length).to.equal(0);
 
       await user.pointer([
         { keys: '[MouseLeft>]', target: separator, coords: { x: 100 } },
@@ -143,16 +142,16 @@ describe('<DataGridPro /> - Columns', () => {
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
-      expect(onColumnWidthChange.callCount).to.equal(1);
-      expect(onColumnWidthChange.args[0][0].width).to.equal(120);
+      expect(onColumnWidthChange.mock.calls.length).to.equal(1);
+      expect(onColumnWidthChange.mock.calls[0][0].width).to.equal(120);
     });
 
     it('should call onColumnWidthChange with correct width after resizing and then clicking the separator', async () => {
-      const onColumnWidthChange = spy();
+      const onColumnWidthChange = vi.fn();
       const { user } = render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
 
-      expect(onColumnWidthChange.callCount).to.equal(0);
+      expect(onColumnWidthChange.mock.calls.length).to.equal(0);
 
       await user.pointer([
         { keys: '[MouseLeft>]', target: separator, coords: { x: 100 } },
@@ -160,15 +159,15 @@ describe('<DataGridPro /> - Columns', () => {
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
-      expect(onColumnWidthChange.callCount).to.equal(1);
-      expect(onColumnWidthChange.args[0][0].width).to.equal(120);
+      expect(onColumnWidthChange.mock.calls.length).to.equal(1);
+      expect(onColumnWidthChange.mock.calls[0][0].width).to.equal(120);
       await user.dblClick(separator);
 
-      expect(onColumnWidthChange.callCount).to.be.at.least(2);
-      const widthArgs = onColumnWidthChange.args.map((arg) => arg[0].width);
+      expect(onColumnWidthChange.mock.calls.length).to.be.at.least(2);
+      const widthArgs = onColumnWidthChange.mock.calls.map((arg) => arg[0].width);
       const isWidth120Present = widthArgs.some((width) => width === 120);
       expect(isWidth120Present).to.equal(true);
-      const colDefWidthArgs = onColumnWidthChange.args.map((arg) => arg[0].colDef.width);
+      const colDefWidthArgs = onColumnWidthChange.mock.calls.map((arg) => arg[0].colDef.width);
       const isColDefWidth120Present = colDefWidthArgs.some((width) => width === 120);
       expect(isColDefWidth120Present).to.equal(true);
     });

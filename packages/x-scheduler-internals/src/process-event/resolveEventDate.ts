@@ -7,6 +7,9 @@ import type { SchedulerEventId } from '../models';
  *
  * - Strings ending with `"Z"` are treated as instants (UTC).
  * - Strings without `"Z"` are treated as wall-time and interpreted in `dataTimezone`.
+ *
+ * The result carries the `dataTimezone` label, so day and weekday math runs in the
+ * event's timezone for both formats.
  */
 export function resolveEventDate(
   value: string,
@@ -15,7 +18,7 @@ export function resolveEventDate(
   eventId?: SchedulerEventId,
 ): TemporalSupportedObject {
   const date = value.endsWith('Z')
-    ? adapter.date(value, 'default')
+    ? adapter.setTimezone(adapter.date(value, 'default'), dataTimezone)
     : adapter.date(value, dataTimezone);
 
   if (!adapter.isValid(date)) {

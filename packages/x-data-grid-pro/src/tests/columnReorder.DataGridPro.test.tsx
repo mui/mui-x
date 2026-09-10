@@ -9,8 +9,7 @@ import {
 import { useGridApiRef, DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
 import type { GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { spy } from 'sinon';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -196,7 +195,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   });
 
   it('should call onColumnOrderChange after the column has been reordered', () => {
-    const onColumnOrderChange = spy();
+    const onColumnOrderChange = vi.fn();
     function Test() {
       const data = useBasicDemoData(1, 3);
 
@@ -219,8 +218,8 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const dragEndEvent = createDragEndEvent(dragCol);
     fireEvent(dragCol, dragEndEvent);
 
-    expect(onColumnOrderChange.callCount).to.equal(1);
-    expect(onColumnOrderChange.lastCall.args[2].api.state.columns.orderedFields).to.deep.equal([
+    expect(onColumnOrderChange.mock.calls.length).to.equal(1);
+    expect(onColumnOrderChange.mock.lastCall?.[2].api.state.columns.orderedFields).to.deep.equal([
       'currencyPair',
       'price1M',
       'id',
@@ -362,10 +361,10 @@ describe('<DataGridPro /> - Columns reorder', () => {
   });
 
   it('should prevent drag events propagation', () => {
-    const handleDragStart = spy();
-    const handleDragEnter = spy();
-    const handleDragOver = spy();
-    const handleDragEnd = spy();
+    const handleDragStart = vi.fn();
+    const handleDragEnter = vi.fn();
+    const handleDragOver = vi.fn();
+    const handleDragEnd = vi.fn();
     function Test() {
       const data = useBasicDemoData(3, 3);
 
@@ -395,10 +394,10 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const dragEndColEvent = createDragEndEvent(dragCol);
     fireEvent(dragCol, dragEndColEvent);
 
-    expect(handleDragStart.callCount).to.equal(0);
-    expect(handleDragEnter.callCount).to.equal(0);
-    expect(handleDragOver.callCount).to.equal(0);
-    expect(handleDragEnd.callCount).to.equal(0);
+    expect(handleDragStart.mock.calls.length).to.equal(0);
+    expect(handleDragEnter.mock.calls.length).to.equal(0);
+    expect(handleDragOver.mock.calls.length).to.equal(0);
+    expect(handleDragEnd.mock.calls.length).to.equal(0);
   });
 
   describe('reorder with column grouping', () => {

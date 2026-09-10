@@ -2,12 +2,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
+import type { SxProps, Theme } from '@mui/system';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import {
-  useChatConfirmationUtilityClasses,
-  type ChatConfirmationClasses,
-} from './chatConfirmationClasses';
+import { useChatConfirmationUtilityClasses } from './chatConfirmationClasses';
+import type { ChatConfirmationClasses } from './chatConfirmationClasses';
 
 export interface ChatConfirmationProps {
   /**

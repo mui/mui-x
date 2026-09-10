@@ -2,7 +2,10 @@ import * as React from 'react';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { TreeViewProviderProps } from './TreeViewProvider.types';
 import { TreeViewContext } from './TreeViewContext';
-import type { TreeViewSlotProps, TreeViewSlots } from './TreeViewStyleContext';
+import type {
+  TreeViewStyleContextSlotProps,
+  TreeViewStyleContextSlots,
+} from './TreeViewStyleContext';
 import { TreeViewStyleContext } from './TreeViewStyleContext';
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
 import type { TreeViewAnyStore } from '../models';
@@ -20,8 +23,8 @@ export function TreeViewProvider<TStore extends TreeViewAnyStore>(
     apiRef,
     rootRef,
     classes = EMPTY_OBJECT,
-    slots = EMPTY_OBJECT as TreeViewSlots,
-    slotProps = EMPTY_OBJECT as TreeViewSlotProps,
+    slots = EMPTY_OBJECT as TreeViewStyleContextSlots,
+    slotProps = EMPTY_OBJECT as TreeViewStyleContextSlotProps,
     children,
   } = props;
 
@@ -34,11 +37,15 @@ export function TreeViewProvider<TStore extends TreeViewAnyStore>(
         collapseIcon: slots.collapseIcon,
         expandIcon: slots.expandIcon,
         endIcon: slots.endIcon,
+        loading: slots.loading,
+        itemLoader: slots.itemLoader,
       },
       slotProps: {
         collapseIcon: slotProps.collapseIcon,
         expandIcon: slotProps.expandIcon,
         endIcon: slotProps.endIcon,
+        loading: slotProps.loading,
+        itemLoader: slotProps.itemLoader,
       },
     }),
     [
@@ -46,9 +53,13 @@ export function TreeViewProvider<TStore extends TreeViewAnyStore>(
       slots.collapseIcon,
       slots.expandIcon,
       slots.endIcon,
+      slots.loading,
+      slots.itemLoader,
       slotProps.collapseIcon,
       slotProps.expandIcon,
       slotProps.endIcon,
+      slotProps.loading,
+      slotProps.itemLoader,
     ],
   );
 

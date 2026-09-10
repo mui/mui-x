@@ -92,6 +92,15 @@ export const useGridColumnReorder = (
     (params, event): void => {
       const dragColField = gridColumnReorderDragColSelector(apiRef);
       if (props.disableColumnReorder || !dragColField) {
+        // The reorder can get disabled while a drag is in progress. The reorder
+        // state must not stay set in that case, because components like the
+        // scroll areas derive their visibility from it.
+        if (dragColField) {
+          apiRef.current.setState((state) => ({
+            ...state,
+            columnReorder: { ...state.columnReorder, dragCol: '' },
+          }));
+        }
         return;
       }
 

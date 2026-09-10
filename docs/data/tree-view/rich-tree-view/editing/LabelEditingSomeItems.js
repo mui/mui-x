@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { MUI_X_PRODUCTS } from './editableProducts';
+import { MUI_X_PRODUCTS } from '../../datasets/editableProducts';
 
 export default function LabelEditingSomeItems() {
   return (

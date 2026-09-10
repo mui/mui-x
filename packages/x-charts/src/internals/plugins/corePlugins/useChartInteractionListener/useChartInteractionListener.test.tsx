@@ -7,8 +7,8 @@ type Listener = { type: string; callback: unknown };
 
 /**
  * Listeners currently registered on `target`, to assert a mount/unmount cycle leaves none behind.
- * Patches the descriptor rather than using `sinon.spy`: in jsdom `window === globalThis`, where
- * `addEventListener` is an accessor property that sinon refuses to wrap.
+ * Patches the descriptor rather than spying: in jsdom `window === globalThis`, where
+ * `addEventListener` is an accessor property.
  */
 function trackListeners(target: EventTarget) {
   const active: Listener[] = [];

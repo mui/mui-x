@@ -176,11 +176,13 @@ function TimelineHost({
  * Binds the dependency timeline harness to a renderer created with
  * `createSchedulerRenderer` inside the suite.
  */
-export function createDependencyTimelineRenderer(render: (element: React.ReactElement) => any) {
-  function renderTimeline(parameters: RenderTimelineParameters) {
+export function createDependencyTimelineRenderer(
+  renderSettled: (element: React.ReactElement) => Promise<any>,
+) {
+  async function renderTimeline(parameters: RenderTimelineParameters) {
     let store!: EventTimelinePremiumStore<any, any>;
 
-    const view = render(
+    const view = await renderSettled(
       <TimelineHost
         {...parameters}
         onStoreReady={(mountedStore) => {

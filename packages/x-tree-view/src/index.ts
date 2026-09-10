@@ -9,6 +9,7 @@ export * from './TreeItemIcon';
 export * from './TreeItemProvider';
 export * from './TreeItemDragAndDropOverlay';
 export * from './TreeItemLabelInput';
+export * from './TreeItemLoader';
 
 export * from './models';
 export * from './icons';

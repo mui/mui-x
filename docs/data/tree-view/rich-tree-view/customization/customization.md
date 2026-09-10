@@ -52,6 +52,25 @@ The DOM structure affects which styling patterns are available: nested DOM lets 
 
 {{"demo": "CustomStylingRichTreeViewPro.js", "defaultCodeOpen": false}}
 
+### Sticky headers
+
+Make expanded items stick to the top of the scroll container while their children are visible, using the `--TreeView-itemDepth` CSS variable to stack nested levels below each other.
+Use a solid, theme-aware background color (rather than one with transparency) so the sticky items don't show content scrolling behind them.
+The sticky offsets assume a fixed row height, so pass the `itemHeight` prop to enforce it.
+
+:::info
+This recipe relies on the nested DOM structure, where the children of an item render inside its DOM element.
+It has no effect with the flat DOM structure.
+`RichTreeViewPro` uses a flat DOM structure by default, so disable virtualization and set `domStructure="nested"`:
+
+```tsx
+<RichTreeViewPro items={ITEMS} disableVirtualization domStructure="nested" />
+```
+
+:::
+
+{{"demo": "StickyHeaders.js"}}
+
 ### Custom Tree Item
 
 You can use the `TreeItem` customization API to build new layouts and manage behaviors.

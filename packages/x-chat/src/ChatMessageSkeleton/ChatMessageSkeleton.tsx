@@ -2,14 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { keyframes, SxProps, Theme } from '@mui/system';
+import type { SxProps, Theme } from '@mui/system';
+import { keyframes } from '@mui/system';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import {
-  useChatMessageSkeletonUtilityClasses,
-  type ChatMessageSkeletonClasses,
-} from './chatMessageSkeletonClasses';
+import { useChatMessageSkeletonUtilityClasses } from './chatMessageSkeletonClasses';
+import type { ChatMessageSkeletonClasses } from './chatMessageSkeletonClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageSkeleton');
 

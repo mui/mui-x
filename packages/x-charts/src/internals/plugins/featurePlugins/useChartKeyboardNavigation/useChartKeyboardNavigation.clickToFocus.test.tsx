@@ -9,7 +9,7 @@ import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { chartsSvgLayerClasses } from '@mui/x-charts/ChartsSvgLayer';
 import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterChart, scatterClasses } from '@mui/x-charts/ScatterChart';
 
 describe('useChartKeyboardNavigation - click to focus', () => {
   const { render } = createRenderer();
@@ -395,6 +395,41 @@ describe('useChartKeyboardNavigation - click to focus', () => {
       await user.keyboard('[ArrowRight]');
 
       expect(getFocusIndicator(container)).not.to.equal(null);
+    });
+
+    // Without the hit area the markers report the interaction themselves, and what they report is
+    // the whole data point. Its `id` is undefined when the data carries none, which must not read
+    // as an incomplete identifier.
+    it('focuses a marker of id-less data when the hit area is disabled', async () => {
+      const { container, user } = render(
+        <ScatterChart
+          {...scatterProps}
+          disableHitArea
+          series={[
+            {
+              id: 'A',
+              data: [
+                { x: 2, y: 2 },
+                { x: 5, y: 5 },
+                { x: 8, y: 8 },
+              ],
+            },
+          ]}
+        />,
+      );
+
+      const markers = Array.from(
+        container.querySelectorAll<SVGElement>(`.${scatterClasses.marker}`),
+      );
+      // The marker reports the hovered item on enter, so the pointer has to land on it.
+      const middle = getCenter(markers[1]);
+      await user.pointer([{ target: markers[1], coords: middle }]);
+      await user.pointer([{ keys: '[MouseLeft]', target: markers[1], coords: middle }]);
+      await user.keyboard('[ArrowRight]');
+
+      // The click stored the middle point, so the key moves on to the last one.
+      const indicator = getCenter(getFocusIndicator(container)!);
+      expect(Math.abs(indicator.clientX - getCenter(markers[2]).clientX)).to.be.lessThan(2);
     });
   });
 

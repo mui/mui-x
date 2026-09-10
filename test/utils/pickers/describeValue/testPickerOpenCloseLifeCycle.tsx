@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { config } from 'react-transition-group';
 import { screen, waitFor } from '@mui/internal-test-utils';
 import { PickerRangeValue, PickerValidValue } from '@mui/x-date-pickers/internals';
@@ -11,7 +10,7 @@ import {
   openPicker,
   PickerRangeComponentType,
 } from 'test/utils/pickers';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidValue, 'picker'> = (
@@ -40,25 +39,25 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     });
 
     it('should not open when `prop.disabled` is true ', async () => {
-      const onOpen = spy();
+      const onOpen = vi.fn();
       const { user } = render(<ElementToTest disabled onOpen={onOpen} />);
 
       await openPicker(user, pickerParams);
-      expect(onOpen.callCount).to.equal(0);
+      expect(onOpen.mock.calls.length).to.equal(0);
     });
 
     it('should not open when `prop.readOnly` is true ', async () => {
-      const onOpen = spy();
+      const onOpen = vi.fn();
       const { user } = render(<ElementToTest readOnly onOpen={onOpen} />);
 
       await openPicker(user, pickerParams);
-      expect(onOpen.callCount).to.equal(0);
+      expect(onOpen.mock.calls.length).to.equal(0);
     });
 
     it('should call onChange, onClose and onAccept (if Desktop Date Picker or Desktop Date Range Picker) when selecting a value', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { selectSection, pressKey, user } = renderWithProps(
         {
@@ -71,9 +70,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         { componentFamily },
       );
 
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       // Change the value
       let newValue = await setNewValue(values[0], {
@@ -82,7 +81,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         selectSection,
         pressKey,
       });
-      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
+      expect(onChange.mock.calls.length).to.equal(
+        getExpectedOnChangeCount(componentFamily, pickerParams),
+      );
       if (isRangeType) {
         newValue = await setNewValue(newValue, {
           isOpened: true,
@@ -92,14 +93,14 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
           pressKey,
         });
         (newValue as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          expect(onChange.mock.lastCall?.[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(newValue);
       }
 
-      expect(onAccept.callCount).to.equal(!shouldCloseOnSelect ? 0 : 1);
-      expect(onClose.callCount).to.equal(!shouldCloseOnSelect ? 0 : 1);
+      expect(onAccept.mock.calls.length).to.equal(!shouldCloseOnSelect ? 0 : 1);
+      expect(onClose.mock.calls.length).to.equal(!shouldCloseOnSelect ? 0 : 1);
     });
 
     it.skipIf(pickerParams.variant !== 'mobile')(
@@ -123,9 +124,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     );
 
     it('should call onChange, onClose and onAccept when selecting a value and `props.closeOnSelect` is true', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { selectSection, pressKey, user } = renderWithProps(
         {
@@ -139,9 +140,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         { componentFamily },
       );
 
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       // Change the value
       let newValue = await setNewValue(values[0], {
@@ -150,7 +151,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         selectSection,
         pressKey,
       });
-      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
+      expect(onChange.mock.calls.length).to.equal(
+        getExpectedOnChangeCount(componentFamily, pickerParams),
+      );
       if (isRangeType) {
         newValue = await setNewValue(newValue, {
           isOpened: true,
@@ -160,19 +163,19 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
           pressKey,
         });
         (newValue as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          expect(onChange.mock.lastCall?.[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(newValue);
       }
-      expect(onAccept.callCount).to.equal(1);
-      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.mock.calls.length).to.equal(1);
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     it('should not call onChange or onAccept when selecting the same value', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { selectSection, pressKey, user } = renderWithProps(
         {
@@ -205,15 +208,15 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         });
       }
 
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { selectSection, pressKey, user } = renderWithProps(
         {
@@ -235,7 +238,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         pressKey,
       });
       const initialChangeCount = getExpectedOnChangeCount(componentFamily, pickerParams);
-      expect(onChange.callCount).to.equal(initialChangeCount);
+      expect(onChange.mock.calls.length).to.equal(initialChangeCount);
       if (isRangeType) {
         newValue = await setNewValue(newValue, {
           isOpened: true,
@@ -245,13 +248,13 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
           pressKey,
         });
         (newValue as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          expect(onChange.mock.lastCall?.[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(newValue);
       }
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       // Change the value
       let newValueBis = await setNewValue(newValue, {
@@ -261,7 +264,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         pressKey,
       });
       if (isRangeType) {
-        expect(onChange.callCount).to.equal(
+        expect(onChange.mock.calls.length).to.equal(
           initialChangeCount +
             getExpectedOnChangeCount(componentFamily, pickerParams) * 2 -
             (pickerParams.type === 'date-time-range' || pickerParams.type === 'time-range' ? 1 : 0),
@@ -274,25 +277,25 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
           pressKey,
         });
         (newValueBis as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          expect(onChange.mock.lastCall?.[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.callCount).to.equal(
+        expect(onChange.mock.calls.length).to.equal(
           initialChangeCount +
             getExpectedOnChangeCount(componentFamily, pickerParams) -
             // meridiem does not change this time in case of multi section digital clock
             (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
         );
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(newValueBis);
       }
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
     });
 
     it('should call onClose and onAccept with the live value when pressing Escape', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { selectSection, pressKey, user } = renderWithProps(
         {
@@ -316,25 +319,27 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
       // Dismiss the picker
       await user.keyboard('[Escape]');
-      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
-      expect(onAccept.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(
+        getExpectedOnChangeCount(componentFamily, pickerParams),
+      );
+      expect(onAccept.mock.calls.length).to.equal(1);
       if (isRangeType) {
         (newValue as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          expect(onChange.mock.lastCall?.[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
+        expect(onChange.mock.lastCall?.[0]).toEqualDateTime(newValue);
       }
-      expect(onClose.callCount).to.equal(1);
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     // TODO: Fix this test and enable it on mobile and date-range
     it.skipIf(pickerParams.variant === 'mobile' || isRangeType)(
       'should call onClose when clicking outside of the picker without prior change',
       async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { user } = render(
           <ElementToTest
@@ -349,9 +354,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
         // Dismiss the picker
         await user.click(document.body);
-        expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(1);
+        expect(onChange.mock.calls.length).to.equal(0);
+        expect(onAccept.mock.calls.length).to.equal(0);
+        expect(onClose.mock.calls.length).to.equal(1);
       },
     );
 
@@ -359,9 +364,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     it.skipIf(pickerParams.variant === 'mobile' || isRangeType)(
       'should call onClose and onAccept with the live value when clicking outside of the picker',
       async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { selectSection, pressKey, user } = renderWithProps(
           {
@@ -385,19 +390,19 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
         // Dismiss the picker
         await user.keyboard('{Escape}');
-        expect(onChange.callCount).to.equal(
+        expect(onChange.mock.calls.length).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams),
         );
-        expect(onAccept.callCount).to.equal(1);
-        expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue);
-        expect(onClose.callCount).to.equal(1);
+        expect(onAccept.mock.calls.length).to.equal(1);
+        expect(onAccept.mock.lastCall?.[0]).toEqualDateTime(newValue);
+        expect(onClose.mock.calls.length).to.equal(1);
       },
     );
 
     it('should not call onClose or onAccept when clicking outside of the picker if not opened', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <ElementToTest
@@ -410,15 +415,15 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
       // Dismiss the picker
       await user.click(document.body);
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
     });
 
     it('should not call onClose or onAccept when pressing escape when picker is not opened', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <ElementToTest onChange={onChange} onAccept={onAccept} onClose={onClose} />,
@@ -426,9 +431,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
       // Dismiss the picker
       await user.keyboard('{Escape}');
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
     });
   });
 
@@ -484,9 +489,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
   )(
     'should close a Desktop Picker when clicking outside of the picker after selecting a value with "Enter" key',
     async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = renderWithProps(
         {
@@ -503,9 +508,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       await user.keyboard('{Enter}');
 
       await user.click(document.body);
-      expect(onChange.callCount).to.equal(1);
-      expect(onClose.callCount).to.equal(1);
-      expect(onAccept.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onClose.mock.calls.length).to.equal(1);
+      expect(onAccept.mock.calls.length).to.equal(1);
       await waitFor(() => expect(screen.queryByRole(viewWrapperRole)).to.equal(null));
     },
   );

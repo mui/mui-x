@@ -381,17 +381,16 @@ export const useTreeItem = <TStore extends TreeViewAnyStore = DefaultStore>(
   ): UseTreeItemGroupTransitionSlotProps<ExternalProps> => {
     const externalEventHandlers = extractEventHandlers(externalProps);
 
-    const response: UseTreeItemGroupTransitionSlotProps<ExternalProps> = {
+    return {
       ...externalEventHandlers,
       unmountOnExit: true,
       component: 'ul',
       role: 'group',
-      in: status.expanded,
+      // The group also opens while the children load lazily, to show the loading rows.
+      in: status.expanded || status.loading,
       children,
       ...externalProps,
     };
-
-    return response;
   };
 
   const getDragAndDropOverlayProps = <ExternalProps extends Record<string, any> = {}>(
