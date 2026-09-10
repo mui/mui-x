@@ -71,8 +71,8 @@ const ruRUDialog: Partial<EventEditingLocaleText> = {
   recurrenceTabLabel: 'Повторение',
   recurrenceMainSelectCustomLabel: 'Повторение',
   recurrenceWeeklyFrequencyLabel: 'нед.',
-  recurrenceWeeklyPresetLabel: ({ weekdayName }) =>
-    `Повторяется еженедельно ${recurringWeekdayNames[weekdayName]}`,
+  recurrenceWeeklyPresetLabel: ({ weekday }) =>
+    `Повторяется еженедельно ${recurringWeekdayNames[weekday]}`,
   recurrenceMonthlyFrequencyLabel: 'мес.',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `${dayNumber}-е число месяца`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) =>
