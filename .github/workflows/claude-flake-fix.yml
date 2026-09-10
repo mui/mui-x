@@ -25,7 +25,7 @@ jobs:
       contents: write # push the fix branch (publish job)
       pull-requests: write # open the draft PR (publish job)
       issues: write # rolling tracking issue (publish job)
-    uses: mui/mui-public/.github/workflows/claude-flake-fix.yml@abbbfb00fa3c038949a8709defa06d1e30eb4e8d # mui-public#1849 (test)
+    uses: mui/mui-public/.github/workflows/claude-flake-fix.yml@flake-fix-full-output # mui-public#1849 (test branch — tracks head)
     with:
       report-only: ${{ inputs.report-only || false }}
       debug: true # test branch: always show the agent's full output
