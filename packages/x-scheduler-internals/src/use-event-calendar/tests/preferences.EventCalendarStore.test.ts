@@ -43,6 +43,17 @@ describe('Preferences - EventCalendarStore', () => {
       });
     });
 
+    it('should warn in dev when controlled without an onPreferencesChange handler', () => {
+      const store = new EventCalendarStore(
+        { ...DEFAULT_PARAMS, preferences: { showWeekends: true } },
+        adapter,
+      );
+
+      expect(() => store.setPreferences({ showWeekends: false }, {} as any)).toWarnDev(
+        'MUI X Scheduler: EventCalendar is controlled (received a `preferences` prop) but `onPreferencesChange` is not provided',
+      );
+    });
+
     it('should NOT mutate store when onPreferencesChange cancels the change', () => {
       const store = new EventCalendarStore(
         {
