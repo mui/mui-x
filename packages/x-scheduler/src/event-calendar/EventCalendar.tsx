@@ -123,14 +123,6 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    */
   collapsedResources: PropTypes.object,
   /**
-   * Data source for fetching events asynchronously.
-   * When provided, events are fetched through the data source instead of the `events` prop.
-   */
-  dataSource: PropTypes.shape({
-    getEvents: PropTypes.func.isRequired,
-    persistEvents: PropTypes.func.isRequired,
-  }),
-  /**
    * The locale object from `date-fns` used to format dates.
    * This affects day names, month names, week start day, and other locale-dependent formatting.
    * Import a locale from `date-fns/locale` and pass it to this prop.

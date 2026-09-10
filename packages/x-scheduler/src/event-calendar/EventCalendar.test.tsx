@@ -629,4 +629,23 @@ describe('EventCalendar', () => {
       });
     });
   });
+
+  describe('data source', () => {
+    // Lazy loading is Premium-only, so `dataSource` is not part of the community props.
+    it('should keep rendering the events prop when a dataSource is passed through JavaScript', () => {
+      const dataSource = {
+        getEvents: () => new Promise<never[]>(() => {}),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      expect(() => {
+        render(<EventCalendar events={[event1]} {...({ dataSource } as any)} />);
+      }).toErrorDev('React does not recognize the `dataSource` prop on a DOM element.');
+
+      expect(screen.getByRole('button', { name: /Running/i })).not.to.equal(null);
+      expect(document.querySelectorAll(`.${eventCalendarClasses.eventSkeleton}`).length).to.equal(
+        0,
+      );
+    });
+  });
 });
