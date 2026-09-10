@@ -120,7 +120,7 @@ const nnNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // weekAbbreviation: 'W',
   // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
   // AgendaView
-  // noEventsInAgenda: 'No events to display',
+  // noEventsInAgenda: 'No upcoming events',
   // EventItem
   // eventItemMultiDayLabel: endDate => `Ends ${endDate}`,
   // MiniCalendar

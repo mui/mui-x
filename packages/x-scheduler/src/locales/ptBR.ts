@@ -125,7 +125,7 @@ const ptBRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
 
   // AgendaView
-  // noEventsInAgenda: 'No events to display',
+  // noEventsInAgenda: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Termina em ${endDate}`,

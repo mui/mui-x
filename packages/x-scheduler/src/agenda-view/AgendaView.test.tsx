@@ -50,7 +50,7 @@ describe('<AgendaView />', () => {
     );
 
     expect(document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`)).to.have.length(0);
-    expect(screen.getByText('No events to display')).to.have.class(
+    expect(screen.getByText('No upcoming events')).to.have.class(
       eventCalendarClasses.agendaViewEmptyState,
     );
   });
@@ -74,7 +74,7 @@ describe('<AgendaView />', () => {
         document.querySelectorAll(`.${eventCalendarClasses.eventSkeleton}`).length,
       ).to.be.greaterThan(0);
     });
-    expect(screen.queryByText('No events to display')).to.equal(null);
+    expect(screen.queryByText('No upcoming events')).to.equal(null);
   });
 
   it('should reference resolvable header IDs in each event aria-labelledby', () => {
