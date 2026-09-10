@@ -174,6 +174,7 @@ const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
       AGENDA_VIEW_DAYS_AMOUNT * delta,
     ),
   visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
+  visibleRangeSelector: eventCalendarAgendaSelectors.visibleRange,
 };
 
 /**

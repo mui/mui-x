@@ -25,7 +25,7 @@ export class SchedulerLazyLoadingPlugin<
   private isFetchScheduled = false;
   private pendingIsInstantLoad = false;
   private pendingComputeRange:
-    (() => { start: TemporalSupportedObject; end: TemporalSupportedObject }) | null = null;
+    (() => { start: TemporalSupportedObject; end: TemporalSupportedObject } | null) | null = null;
 
   /**
    * Range key of the most recently requested fetch. Used to skip stale fetches:
@@ -42,7 +42,7 @@ export class SchedulerLazyLoadingPlugin<
    * `computeRange` wins; `isInstantLoad=true` is sticky across coalesced calls.
    */
   protected scheduleFetch = (
-    computeRange: () => { start: TemporalSupportedObject; end: TemporalSupportedObject },
+    computeRange: () => { start: TemporalSupportedObject; end: TemporalSupportedObject } | null,
     isInstantLoad: boolean,
   ) => {
     if (isInstantLoad) {
@@ -69,6 +69,9 @@ export class SchedulerLazyLoadingPlugin<
           return;
         }
         const range = compute();
+        if (range === null) {
+          return;
+        }
         await this.queueDataFetchForRange(range, instantLoad);
       } catch (error) {
         if (process.env.NODE_ENV !== 'production') {

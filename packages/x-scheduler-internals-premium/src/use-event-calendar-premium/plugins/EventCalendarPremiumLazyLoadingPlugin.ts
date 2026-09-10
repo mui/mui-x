@@ -1,6 +1,5 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { EventCalendarVisibleRange } from '@mui/x-scheduler-internals/models';
 import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
 import type {
   EventCalendarPremiumState,
@@ -21,16 +20,16 @@ export class EventCalendarPremiumLazyLoadingPlugin<
     this.disposables.defer(
       store.registerStoreEffect(
         (state) => {
-          if (!state.viewDefinition) {
+          const range = getRangeToFetch(state);
+          if (range === null) {
             return null;
           }
 
-          const range = getRangeToFetch(state);
           return `${state.adapter.getTime(range.start)}:${state.adapter.getTime(range.end)}`;
         },
 
         (previousKey, nextKey) => {
-          // `null` means no view is registered, so there is no range to fetch.
+          // `null` means no view is registered or it has no range to fetch.
           if (previousKey === nextKey || nextKey === null || !store.parameters.dataSource) {
             return;
           }
@@ -43,22 +42,24 @@ export class EventCalendarPremiumLazyLoadingPlugin<
 }
 
 /**
- * Returns the range covered by the visible days of the registered view.
- * The agenda view has no visible day when it hides the empty days and no loaded event falls in its
- * horizon, so it falls back to the default agenda window to keep fetching on navigation.
- * That window is the same list the agenda shows while loading, so the range stays stable across
- * `isLoading` flips.
+ * Returns the range covered by the registered view, or `null` when there is nothing to fetch.
+ * Views that can have no visible day provide their own range through `visibleRangeSelector`.
  */
-function getRangeToFetch(state: EventCalendarPremiumState): {
-  start: TemporalSupportedObject;
-  end: TemporalSupportedObject;
-} {
-  const calendarState = state as EventCalendarState;
-  const visibleDays = state.viewDefinition?.visibleDaysSelector(calendarState) ?? [];
-  const days =
-    visibleDays.length > 0
-      ? visibleDays
-      : eventCalendarAgendaSelectors.defaultVisibleDays(calendarState);
+function getRangeToFetch(state: EventCalendarPremiumState): EventCalendarVisibleRange | null {
+  const { viewDefinition, adapter } = state;
+  if (!viewDefinition) {
+    return null;
+  }
 
-  return { start: days[0].value, end: days[days.length - 1].value };
+  const calendarState = state as EventCalendarState;
+  if (viewDefinition.visibleRangeSelector) {
+    return viewDefinition.visibleRangeSelector(calendarState);
+  }
+
+  const days = viewDefinition.visibleDaysSelector(calendarState);
+  if (days.length === 0) {
+    return null;
+  }
+
+  return { start: adapter.startOfDay(days[0].value), end: days[days.length - 1].value };
 }

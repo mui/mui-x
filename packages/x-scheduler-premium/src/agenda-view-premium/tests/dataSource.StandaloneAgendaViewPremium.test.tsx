@@ -141,6 +141,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
         expect(screen.getAllByRole('button', { name: /Weekly sync/ })).to.have.length(12);
       });
       expect(getSkeletons()).to.have.length(0);
+      expect(getEvents.mock.calls).to.have.length(2);
     });
 
     it('should fetch the next window after navigating when the current one has no events', async () => {

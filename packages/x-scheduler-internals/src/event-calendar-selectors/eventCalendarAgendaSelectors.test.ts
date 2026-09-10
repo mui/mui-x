@@ -6,7 +6,7 @@ import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import type { EventCalendarState } from '../use-event-calendar';
 
 describe('eventCalendarEventSelectors', () => {
-  describe('defaultVisibleDays', () => {
+  describe('baseVisibleDays', () => {
     it('should return AGENDA_VIEW_DAYS_AMOUNT days from the visible date, skipping weekends when hidden', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
@@ -14,7 +14,7 @@ describe('eventCalendarEventSelectors', () => {
         defaultPreferences: { showWeekends: false },
       });
 
-      const days = eventCalendarAgendaSelectors.defaultVisibleDays(state);
+      const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
 
       expect(days).to.have.length(9);
       expect(days[0]).to.deep.equal(processDate(adapter.date('2025-07-01Z', 'default'), adapter));
@@ -37,6 +37,7 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
+      expect(visibleDays).to.equal(eventCalendarAgendaSelectors.baseVisibleDays(state));
     });
 
     it('should extend forward until it fills AGENDA_VIEW_DAYS_AMOUNT days that contain events when showEmptyDaysInAgenda=false', () => {
@@ -178,7 +179,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
+      expect(visibleDays).to.equal(eventCalendarAgendaSelectors.baseVisibleDays(state));
     });
 
     it('should keep the days with events while loading when some are already known and showEmptyDaysInAgenda=false', () => {
