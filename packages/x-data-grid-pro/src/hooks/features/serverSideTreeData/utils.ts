@@ -25,7 +25,8 @@ export function skipSorting(rowTree: GridRowTreeConfig) {
 
 /**
  * Retrieves the parent path for a row from the previous tree state.
- * Used during full tree updates to maintain correct hierarchy.
+ * Used when a row update doesn't carry explicit `groupKeys`, that is during full tree updates
+ * and partial updates coming from `apiRef.current.updateRows()`, to maintain correct hierarchy.
  *
  * Uses the parent node's `path` property, which stores the group keys
  * representing the full path to the parent (i.e. the keys used to fetch the current node).
@@ -35,7 +36,6 @@ export function getParentPath(
   treeCreationParams: GridRowTreeCreationParams,
 ): string[] {
   if (
-    treeCreationParams.updates.type !== 'full' ||
     !treeCreationParams.previousTree?.[rowId] ||
     treeCreationParams.previousTree[rowId].depth < 1
   ) {

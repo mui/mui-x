@@ -276,6 +276,10 @@ The keys require [keyboard navigation](/x/react-charts/accessibility/#keyboard-s
 Charts rendered with `disableKeyboardNavigation` have no keyboard zoom.
 :::
 
+The visible range is announced to screen readers each time it changes from the keyboard.
+The default message reads `Showing 5% to 95% of the horizontal axis`, and can be customized with the `zoomRangeDescription` [localization key](/x/react-charts/localization/#localize-text).
+A zoom coming from the pointer or from the application is not announced, because it is not the user driving the chart from the keyboard.
+
 {{"demo": "ZoomKeyboard.js"}}
 
 ### Key modifiers
