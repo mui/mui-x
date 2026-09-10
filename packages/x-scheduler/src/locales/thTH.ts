@@ -119,6 +119,8 @@ const thTHCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
   // weekAbbreviation: 'W',
   // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
+  // AgendaView
+  // noEventsInAgenda: 'No events to display',
   // EventItem
   // eventItemMultiDayLabel: endDate => `Ends ${endDate}`,
   // MiniCalendar

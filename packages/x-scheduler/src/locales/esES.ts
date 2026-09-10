@@ -124,6 +124,9 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
 
+  // AgendaView
+  noEventsInAgenda: 'No hay eventos que mostrar',
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Finaliza ${endDate}`,
 

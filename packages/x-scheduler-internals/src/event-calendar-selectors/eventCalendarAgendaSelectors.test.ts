@@ -113,5 +113,38 @@ describe('eventCalendarEventSelectors', () => {
         processDate(adapter.date('2025-10-20Z', 'default'), adapter),
       ]);
     });
+
+    it('should return an empty list when no day in the horizon has events and showEmptyDaysInAgenda=false', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        visibleDate: adapter.date('2024-01-01', 'default'),
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays).to.have.length(0);
+    });
+
+    it('should return AGENDA_VIEW_DAYS_AMOUNT days while loading even when showEmptyDaysInAgenda=false', () => {
+      const state = getEventCalendarStateFromParameters({
+        dataSource: {
+          getEvents: () => new Promise<object[]>(() => {}),
+          persistEvents: async () => ({ success: true }),
+        },
+        visibleDate: adapter.date('2024-01-01', 'default'),
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
+    });
   });
 });

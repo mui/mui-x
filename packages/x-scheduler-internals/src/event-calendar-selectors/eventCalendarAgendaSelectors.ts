@@ -21,6 +21,7 @@ export const eventCalendarAgendaSelectors = {
     schedulerEventSelectors.processedEventList,
     schedulerResourceSelectors.visibleMap,
     schedulerOtherSelectors.recurringEventsPlugin,
+    schedulerOtherSelectors.isLoading,
     (
       adapter,
       visibleDate,
@@ -30,6 +31,7 @@ export const eventCalendarAgendaSelectors = {
       events,
       visibleResources,
       recurringEventsPlugin,
+      isLoading,
     ) => {
       const amount = AGENDA_VIEW_DAYS_AMOUNT;
 
@@ -54,8 +56,9 @@ export const eventCalendarAgendaSelectors = {
       const hasEvents = (day: SchedulerProcessedDate) =>
         (occurrenceMap.get(day.key)?.length ?? 0) > 0;
 
-      // 2) If we show empty days, just return the amount days
-      if (showEmptyDaysInAgenda) {
+      // 2) If we show empty days, just return the amount days.
+      // While loading there are no events yet, so also return them to give the skeletons a place to render.
+      if (showEmptyDaysInAgenda || isLoading) {
         return accumulatedDays;
       }
 

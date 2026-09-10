@@ -156,6 +156,17 @@ const AgendaViewWeekNumberRow = styled('div', {
   }),
 }));
 
+const AgendaViewEmptyState = styled('p', {
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewEmptyState',
+})(({ theme }) => ({
+  margin: 0,
+  padding: theme.spacing(4, 2),
+  textAlign: 'center',
+  fontSize: '0.875rem',
+  color: (theme.vars || theme).palette.text.secondary,
+}));
+
 const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addDays(
@@ -216,6 +227,11 @@ export const AgendaView = React.memo(
         ref={handleRef}
         className={clsx(props.className, classes.agendaView)}
       >
+        {!isLoading && days.length === 0 && (
+          <AgendaViewEmptyState className={classes.agendaViewEmptyState}>
+            {localeText.noEventsInAgenda}
+          </AgendaViewEmptyState>
+        )}
         {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber }) => (
           <React.Fragment key={date.key}>
             {showWeekNumber && isFirstDayOfWeek && (

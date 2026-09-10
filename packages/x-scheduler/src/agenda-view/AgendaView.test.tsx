@@ -49,8 +49,32 @@ describe('<AgendaView />', () => {
       />,
     );
 
-    expect(document.querySelector(`.${eventCalendarClasses.agendaView}`)).not.to.equal(null);
     expect(document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`)).to.have.length(0);
+    expect(screen.getByText('No events to display')).to.have.class(
+      eventCalendarClasses.agendaViewEmptyState,
+    );
+  });
+
+  it('should render the loading skeletons instead of the empty state when hiding empty days while events are loading', async () => {
+    const dataSource = {
+      getEvents: () => new Promise<SchedulerEvent[]>(() => {}),
+      persistEvents: async () => ({ success: true }),
+    };
+
+    render(
+      <StandaloneAgendaView
+        dataSource={dataSource}
+        defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        defaultPreferences={{ showEmptyDaysInAgenda: false }}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(
+        document.querySelectorAll(`.${eventCalendarClasses.eventSkeleton}`).length,
+      ).to.be.greaterThan(0);
+    });
+    expect(screen.queryByText('No events to display')).to.equal(null);
   });
 
   it('should reference resolvable header IDs in each event aria-labelledby', () => {

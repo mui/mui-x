@@ -124,6 +124,9 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   weekAbbreviation: 'W',
   weekNumberAriaLabel: (weekNumber) => `Woche ${weekNumber}`,
 
+  // AgendaView
+  // noEventsInAgenda: 'No events to display',
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Endet am ${endDate}`,
 

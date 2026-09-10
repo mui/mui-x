@@ -117,6 +117,11 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "agenda view day number cell elements"
     },
+    "agendaViewEmptyState": {
+      "description": "Styles applied to {{nodeName}}, {{conditions}}.",
+      "nodeName": "the agenda view empty state element",
+      "conditions": "rendered when no day has events"
+    },
     "agendaViewEventListItem": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the agenda view event list item elements"
