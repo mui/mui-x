@@ -23,10 +23,10 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     [resourceB.id]: true,
   };
 
-  function run(events: SchedulerProcessedEvent[]) {
+  function run(events: SchedulerProcessedEvent[], visibleDays: SchedulerProcessedDate[] = days) {
     return innerGetEventOccurrencesGroupedByDay({
       adapter,
-      days,
+      days: visibleDays,
       events,
       visibleResources: visible,
       displayTimezone: 'default',
@@ -35,14 +35,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   }
 
   it('should return an empty map when no days are given', () => {
-    const result = innerGetEventOccurrencesGroupedByDay({
-      adapter,
-      days: [],
-      events: [],
-      visibleResources: visible,
-      displayTimezone: 'default',
-      recurringEventsPlugin: null,
-    });
+    const result = run([], []);
 
     expect(result.size).to.equal(0);
   });

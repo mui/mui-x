@@ -125,7 +125,7 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   weekNumberAriaLabel: (weekNumber) => `Săptămâna ${weekNumber}`,
 
   // AgendaView
-  // noEventsInAgenda: 'No upcoming events',
+  // agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Se termină pe ${endDate}`,

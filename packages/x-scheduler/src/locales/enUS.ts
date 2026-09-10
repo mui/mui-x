@@ -126,7 +126,7 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> 
   weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,
 
   // AgendaView
-  noEventsInAgenda: 'No upcoming events',
+  agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Ends ${endDate}`,

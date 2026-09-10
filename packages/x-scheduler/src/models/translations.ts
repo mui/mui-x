@@ -134,7 +134,7 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText {
   weekNumberAriaLabel: (weekNumber: number) => string;
 
   // AgendaView
-  noEventsInAgenda: string;
+  agendaViewEmptyStateLabel: string;
 
   // EventItem
   eventItemMultiDayLabel: (endDate: string) => string;

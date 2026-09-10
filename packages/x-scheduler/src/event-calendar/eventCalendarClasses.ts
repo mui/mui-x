@@ -96,7 +96,7 @@ export interface EventCalendarClasses
   agendaViewWeekNumberLabel: string;
   /** Styles applied to agenda view week number row elements. */
   agendaViewWeekNumberRow: string;
-  /** Styles applied to the agenda view empty state element, rendered when no day has events. */
+  /** Styles applied to the agenda view empty state element. */
   agendaViewEmptyState: string;
   /** Styles applied to the month view root element. */
   monthView: string;

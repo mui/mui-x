@@ -120,7 +120,7 @@ const faIRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // weekAbbreviation: 'W',
   // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
   // AgendaView
-  // noEventsInAgenda: 'No upcoming events',
+  // agendaViewEmptyStateLabel: 'No upcoming events',
   // EventItem
   // eventItemMultiDayLabel: endDate => `Ends ${endDate}`,
   // MiniCalendar

@@ -125,7 +125,7 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   weekNumberAriaLabel: (weekNumber) => `Uke ${weekNumber}`,
 
   // AgendaView
-  // noEventsInAgenda: 'No upcoming events',
+  // agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Slutter ${endDate}`,

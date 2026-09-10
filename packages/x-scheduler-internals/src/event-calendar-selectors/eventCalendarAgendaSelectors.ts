@@ -43,6 +43,11 @@ export const eventCalendarAgendaSelectors = {
         excludeWeekends: !showWeekends,
       });
 
+      // 2) If we show empty days, just return the amount days
+      if (showEmptyDaysInAgenda) {
+        return accumulatedDays;
+      }
+
       // Compute occurrences for the current accumulated range
       let occurrenceMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
@@ -56,14 +61,15 @@ export const eventCalendarAgendaSelectors = {
       const hasEvents = (day: SchedulerProcessedDate) =>
         (occurrenceMap.get(day.key)?.length ?? 0) > 0;
 
-      // 2) If we show empty days, just return the amount days.
-      // While loading there are no events yet, so also return them to give the skeletons a place to render.
-      if (showEmptyDaysInAgenda || isLoading) {
-        return accumulatedDays;
-      }
-
       // 3) If we hide empty days, keep extending forward in blocks until we fill `amount` days with events
       let daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
+
+      // While loading with nothing known yet, return the plain days so the skeletons have rows to render in.
+      // Once some days have events, keep them: the lazy loading plugin derives the range to fetch from
+      // the visible days, so switching lists while loading would make it request a different range.
+      if (isLoading && daysWithEvents.length === 0) {
+        return accumulatedDays;
+      }
 
       while (daysWithEvents.length < amount) {
         // Stop if the calendar span already reaches the horizon

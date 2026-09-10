@@ -163,7 +163,7 @@ const AgendaViewEmptyState = styled('p', {
   margin: 0,
   padding: theme.spacing(4, 2),
   textAlign: 'center',
-  fontSize: '0.875rem',
+  fontSize: theme.typography.body2.fontSize,
   color: (theme.vars || theme).palette.text.secondary,
 }));
 
@@ -204,6 +204,7 @@ export const AgendaView = React.memo(
 
     // Selector hooks
     const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
+    const errors = useStore(store, schedulerOtherSelectors.errors);
 
     const daysWithOccurrences = React.useMemo(
       () =>
@@ -227,9 +228,9 @@ export const AgendaView = React.memo(
         ref={handleRef}
         className={clsx(props.className, classes.agendaView)}
       >
-        {!isLoading && days.length === 0 && (
-          <AgendaViewEmptyState className={classes.agendaViewEmptyState}>
-            {localeText.noEventsInAgenda}
+        {days.length === 0 && errors.length === 0 && (
+          <AgendaViewEmptyState className={classes.agendaViewEmptyState} role="status">
+            {localeText.agendaViewEmptyStateLabel}
           </AgendaViewEmptyState>
         )}
         {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber }) => (

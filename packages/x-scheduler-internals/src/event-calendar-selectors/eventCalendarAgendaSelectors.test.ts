@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { processDate } from '../process-date';
 import { eventCalendarAgendaSelectors } from './eventCalendarAgendaSelectors';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
+import type { EventCalendarState } from '../use-event-calendar';
 
 describe('eventCalendarEventSelectors', () => {
   describe('visibleDays', () => {
@@ -129,8 +130,23 @@ describe('eventCalendarEventSelectors', () => {
       expect(visibleDays).to.have.length(0);
     });
 
-    it('should return AGENDA_VIEW_DAYS_AMOUNT days while loading even when showEmptyDaysInAgenda=false', () => {
-      const state = {
+    it('should return an empty list when all the events are before the visible date and showEmptyDaysInAgenda=false', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().fullDay('2023-12-01Z').build()],
+        visibleDate: adapter.date('2024-01-01', 'default'),
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays).to.have.length(0);
+    });
+
+    it('should return AGENDA_VIEW_DAYS_AMOUNT days while loading when no day has events yet and showEmptyDaysInAgenda=false', () => {
+      const state: EventCalendarState = {
         ...getEventCalendarStateFromParameters({
           events: [],
           visibleDate: adapter.date('2024-01-01', 'default'),
@@ -145,6 +161,30 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
+    });
+
+    it('should keep the days with events while loading when some are already known and showEmptyDaysInAgenda=false', () => {
+      const state: EventCalendarState = {
+        ...getEventCalendarStateFromParameters({
+          events: [
+            EventBuilder.new().fullDay('2024-01-01Z').build(),
+            EventBuilder.new().fullDay('2024-01-08Z').build(),
+          ],
+          visibleDate: adapter.date('2024-01-01', 'default'),
+          defaultPreferences: {
+            showWeekends: true,
+            showEmptyDaysInAgenda: false,
+          },
+        }),
+        isLoading: true,
+      };
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays).to.deep.equal([
+        processDate(adapter.date('2024-01-01Z', 'default'), adapter),
+        processDate(adapter.date('2024-01-08Z', 'default'), adapter),
+      ]);
     });
   });
 });

@@ -157,7 +157,7 @@
     {
       "key": "agendaViewEmptyState",
       "className": "MuiEventCalendar-agendaViewEmptyState",
-      "description": "Styles applied to the agenda view empty state element, rendered when no day has events.",
+      "description": "Styles applied to the agenda view empty state element.",
       "isGlobal": false
     },
     {
