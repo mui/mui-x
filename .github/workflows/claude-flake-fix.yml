@@ -14,10 +14,6 @@ on:
         description: Classify and report, but never open a PR.
         type: boolean
         default: false
-      debug:
-        description: Print the agent's full output to the run log.
-        type: boolean
-        default: false
 
 permissions: {}
 
@@ -29,7 +25,7 @@ jobs:
       contents: write # push the fix branch (publish job)
       pull-requests: write # open the draft PR (publish job)
       issues: write # rolling tracking issue (publish job)
-    uses: mui/mui-public/.github/workflows/claude-flake-fix.yml@b134cf291c6fccd8d298a144d5e49238661a03c1 # mui-public#1849 (test)
+    uses: mui/mui-public/.github/workflows/claude-flake-fix.yml@eb4b2c76ed1d6ec5e9d707667ee3d060572fae60 # mui-public#1849 (test)
     with:
       report-only: ${{ inputs.report-only || false }}
-      debug: ${{ inputs.debug || false }}
+      debug: true # test branch: always show the agent's full output
