@@ -96,16 +96,17 @@ const TEST_RULES: RouteRule[] = [
 
   {
     test: '/test-regressions-data-grid/DataGridScrollRestoration',
-    // The grid restores its scroll to top:2000/left:2000 after an async remount.
-    // `aria-rowindex` is the absolute dataset position, so a mid-viewport row for
-    // the restored scroll (top:2000, 52px rows => row ~41 => aria-rowindex 43)
-    // only enters the DOM once the virtualizer has rendered the scrolled window.
-    // `rowheader` cells are kept mounted outside the horizontal render context at
-    // zero size, and the Commodity dataset marks one as such. Playwright only
-    // checks the first match for visibility, so exclude them to land on a cell
-    // that the virtualizer actually laid out.
+    // The grid restores its scroll to top:2000/left:2000 after an async remount,
+    // and the cell has to pin both axes. `aria-rowindex` is the absolute dataset
+    // position, so the row for the restored vertical scroll (top:2000, 52px rows
+    // => row ~41 => aria-rowindex 43) only enters the DOM once the virtualizer
+    // has rendered the scrolled window. Rows are rendered for that window while
+    // the horizontal render context can still be empty though, which paints row
+    // separators but no column headers and no cell contents, so pin the column
+    // too: `maturityDate` is inside the column window for left:2000 and outside
+    // the one for left:0.
     waitForSelector:
-      '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell:not([role="rowheader"])',
+      '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell[data-field="maturityDate"]',
   },
   {
     test: '/docs-data-grid-components-toolbar/GridToolbarCustom',
