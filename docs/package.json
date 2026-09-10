@@ -80,7 +80,7 @@
     "react-hook-form": "^7.87.0",
     "react-runner": "^1.0.5",
     "react-simple-code-editor": "^0.14.1",
-    "rifm": "1.0.0",
+    "rifm": "1.1.0",
     "rimraf": "catalog:",
     "rxjs": "^7.8.2",
     "semver": "7.8.5",
