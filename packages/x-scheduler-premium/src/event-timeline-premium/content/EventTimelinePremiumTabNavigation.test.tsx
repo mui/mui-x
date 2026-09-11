@@ -14,7 +14,7 @@ import type {
   EventTimelineSlots,
   TimelineEventContentProps,
   TimelineEventContentPropsOverrides,
-} from '@mui/x-scheduler/models';
+} from '@mui/x-scheduler-premium/models';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 

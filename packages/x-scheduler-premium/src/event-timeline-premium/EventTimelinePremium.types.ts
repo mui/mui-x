@@ -5,10 +5,8 @@ import type {
   EventTimelinePremiumStore,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
-import type {
-  EventTimelineLocaleText,
-  EventTimelineSlotsAndSlotProps,
-} from '@mui/x-scheduler/models';
+import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import type { EventTimelineSlotsAndSlotProps } from '../models/slots';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 
 export type EventTimelinePremiumApiRef<

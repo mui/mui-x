@@ -12,8 +12,8 @@ import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { isEventFromNestedInteractiveElement } from '@mui/x-scheduler-internals/internals';
 import { getPaletteVariants, useSchedulerSlots } from '@mui/x-scheduler/internals';
-import type { EventTimelineSlots, EventTimelineSlotProps } from '@mui/x-scheduler/models';
 import { Virtualization } from '@mui/x-virtualizer';
+import type { EventTimelineSlots, EventTimelineSlotProps } from '../../../models/slots';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 import { useReportTitleWidth } from '../useTitleColumnWidth';

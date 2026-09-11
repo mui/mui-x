@@ -16,7 +16,7 @@ import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import type {
   TimelineEventContentProps,
   TimelineEventContentPropsOverrides,
-} from '@mui/x-scheduler/models';
+} from '@mui/x-scheduler-premium/models';
 import { vi, describe, it, expect } from 'vitest';
 
 const engineering = ResourceBuilder.new().build();

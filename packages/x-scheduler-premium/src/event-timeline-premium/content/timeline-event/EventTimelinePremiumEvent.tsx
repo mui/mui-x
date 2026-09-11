@@ -17,7 +17,7 @@ import {
   getPaletteVariants,
   useSchedulerSlots,
 } from '@mui/x-scheduler/internals';
-import type { EventTimelineSlots, EventTimelineSlotProps } from '@mui/x-scheduler/models';
+import type { EventTimelineSlots, EventTimelineSlotProps } from '../../../models/slots';
 import type { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';

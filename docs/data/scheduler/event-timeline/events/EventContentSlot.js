@@ -3,6 +3,7 @@ import FlagRounded from '@mui/icons-material/FlagRounded';
 import BuildRounded from '@mui/icons-material/BuildRounded';
 
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 const resources = [

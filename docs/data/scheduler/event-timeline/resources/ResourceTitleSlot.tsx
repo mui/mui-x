@@ -1,12 +1,9 @@
 import * as React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import Link from '@mui/material/Link';
-import {
-  SchedulerEvent,
-  SchedulerResource,
-  TimelineResourceTitleProps,
-} from '@mui/x-scheduler/models';
+import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { TimelineResourceTitleProps } from '@mui/x-scheduler-premium/models';
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 const resourceDetails: Record<string, { code: string; owner: string }> = {

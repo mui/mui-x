@@ -250,7 +250,7 @@ Links, buttons, and inputs rendered by the slot keep their own clicks and keys: 
 Pass extra props to the slot through `slotProps.timelineResourceTitle` and type them by augmenting the `TimelineResourceTitlePropsOverrides` interface:
 
 ```tsx
-declare module '@mui/x-scheduler/models' {
+declare module '@mui/x-scheduler-premium/models' {
   interface TimelineResourceTitlePropsOverrides {
     showOwner?: boolean;
   }

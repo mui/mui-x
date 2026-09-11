@@ -21,15 +21,15 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import type {
-  EventTimelineLocaleText,
   EventTimelineSlotProps,
   EventTimelineSlots,
   TimelineEventContentProps,
   TimelineEventContentPropsOverrides,
   TimelineResourceTitleProps,
   TimelineResourceTitlePropsOverrides,
-} from '@mui/x-scheduler/models';
+} from '@mui/x-scheduler-premium/models';
 import { vi, describe, it, expect } from 'vitest';
 
 const engineering = ResourceBuilder.new().build();
