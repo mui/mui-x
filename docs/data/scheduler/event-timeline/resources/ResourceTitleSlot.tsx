@@ -35,12 +35,10 @@ const initialEvents: SchedulerEvent[] = [
   },
 ];
 
-// Defined at module scope: an inline slot component remounts whenever the timeline's owner rerenders.
 function ResourceTitle({ resource }: TimelineResourceTitleProps) {
   const details = resourceDetails[resource.id];
 
   return (
-    // `describeChild` keeps the tooltip out of the accessible name of the events in the row.
     <Tooltip title={details ? `Owner: ${details.owner}` : ''} describeChild>
       <span>
         <Link href={`#${resource.id}`} underline="hover" color="inherit">

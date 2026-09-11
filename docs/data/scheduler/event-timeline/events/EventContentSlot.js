@@ -46,7 +46,6 @@ const initialEvents = [
 
 const eventLookup = new Map(initialEvents.map((event) => [event.id, event]));
 
-// Defined at module scope: an inline slot component remounts whenever the timeline's owner rerenders.
 function EventContent({ occurrence }) {
   const event = eventLookup.get(occurrence.id);
   const Icon = event?.kind === 'milestone' ? FlagRounded : BuildRounded;
