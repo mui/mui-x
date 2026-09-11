@@ -146,6 +146,15 @@ export interface GridPrintExportOptions extends GridExportOptions {
    */
   copyStyles?: boolean;
   /**
+   * Callback function that is called when a stylesheet fails to load in the print window, for
+   * example if the request fails or a Content Security Policy blocks it.
+   * The stylesheet is skipped and the export continues, so the result may be missing styles.
+   * If not provided, the failure is logged as a warning in development.
+   * @param {HTMLLinkElement} element The stylesheet link element that failed to load.
+   * @returns {void}
+   */
+  onStylesheetError?: (element: HTMLLinkElement) => void;
+  /**
    * One or more classes passed to the print window.
    */
   bodyClassName?: string;

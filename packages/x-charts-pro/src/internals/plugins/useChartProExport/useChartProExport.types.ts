@@ -33,6 +33,15 @@ export interface ChartExportOptions {
    * If provided, this nonce will be added to any style elements created during the export process.
    */
   nonce?: string;
+  /**
+   * Callback function that is called when a stylesheet fails to load in the export document, for
+   * example if the request fails or a Content Security Policy blocks it.
+   * The stylesheet is skipped and the export continues, so the result may be missing styles.
+   * If not provided, the failure is logged as a warning in development.
+   * @param {HTMLLinkElement} element The stylesheet link element that failed to load.
+   * @returns {void}
+   */
+  onStylesheetError?: (element: HTMLLinkElement) => void;
 }
 
 /**
