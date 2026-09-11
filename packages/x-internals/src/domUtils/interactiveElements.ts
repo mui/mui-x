@@ -1,7 +1,7 @@
 import type * as React from 'react';
+import { getTarget } from './getTarget';
 
-// Elements that own the keyboard and pointer events targeted at them, such as the content
-// rendered by a slot inside a cell or an event.
+// Elements that own the keyboard and pointer events targeted at them.
 const INTERACTIVE_ELEMENT_SELECTOR =
   'a[href], button, input, select, textarea, [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])';
 
@@ -12,8 +12,9 @@ const TABBABLE_ELEMENT_SELECTOR =
  * Whether the event comes from an interactive element nested inside `currentTarget`.
  */
 export function isEventFromNestedInteractiveElement(event: React.SyntheticEvent): boolean {
-  const target = event.target as Element | null;
-  const interactive = target?.closest(INTERACTIVE_ELEMENT_SELECTOR);
+  const target = getTarget(event.nativeEvent);
+  const interactive =
+    target instanceof Element ? target.closest(INTERACTIVE_ELEMENT_SELECTOR) : null;
   return (
     interactive != null &&
     interactive !== event.currentTarget &&

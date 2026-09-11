@@ -10,7 +10,7 @@ import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
-import { isEventFromNestedInteractiveElement } from '@mui/x-scheduler-internals/internals';
+import { isEventFromNestedInteractiveElement } from '@mui/x-internals/domUtils';
 import { getPaletteVariants, useSchedulerSlots } from '@mui/x-scheduler/internals';
 import { Virtualization } from '@mui/x-virtualizer';
 import type {

@@ -10,7 +10,7 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { isEventFromNestedInteractiveElement } from '@mui/x-scheduler-internals/internals';
+import { isEventFromNestedInteractiveElement } from '@mui/x-internals/domUtils';
 import type {
   CompactEventEditingProviderProps,
   EventEditingContextValue,

@@ -6,9 +6,9 @@ import type {
   SchedulerResource,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import { getTabbableDescendants } from '@mui/x-internals/domUtils';
 import {
   computeElementPositionInCollection,
-  getTabbableDescendants,
   getTimelineAxisDurationMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
