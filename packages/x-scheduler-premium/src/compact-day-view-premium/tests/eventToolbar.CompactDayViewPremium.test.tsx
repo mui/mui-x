@@ -91,7 +91,7 @@ describe('CompactDayViewPremium - event toolbar (recurring)', () => {
     const { user } = render(
       <StandaloneCompactDayViewPremium
         events={[event]}
-        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        visibleDate={adapter.date('2025-07-03T00:00:00', 'America/New_York')}
         displayTimezone="America/New_York"
         onEventsChange={onEventsChange}
       />,
