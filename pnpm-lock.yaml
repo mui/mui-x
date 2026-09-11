@@ -151,8 +151,8 @@ catalogs:
       specifier: ^1.11.23
       version: 1.11.23
     es-toolkit:
-      specifier: ^1.51.0
-      version: 1.51.0
+      specifier: ^1.52.0
+      version: 1.52.0
     execa:
       specifier: 10.0.1
       version: 10.0.1
@@ -383,7 +383,7 @@ importers:
         version: date-fns@2.30.0
       es-toolkit:
         specifier: 'catalog:'
-        version: 1.51.0
+        version: 1.52.0
       eslint:
         specifier: 10.10.0
         version: 10.10.0(jiti@2.7.0)(supports-color@11.0.0)
@@ -620,7 +620,7 @@ importers:
         version: 1.11.23
       es-toolkit:
         specifier: 'catalog:'
-        version: 1.51.0
+        version: 1.52.0
       jscodeshift:
         specifier: 'catalog:'
         version: 17.4.0(@babel/preset-env@7.29.7(@babel/core@7.29.7(supports-color@11.0.0))(supports-color@11.0.0))(supports-color@11.0.0)
@@ -7293,9 +7293,6 @@ packages:
   es-to-primitive@1.3.0:
     resolution: {integrity: sha512-w+5mJ3GuFL+NjVtJlvydShqE1eN3h3PbI7/5LAsYJP/2qtuMXjfL2LpHSRqo4b4eSF5K/DH1JXKUAHSB2UW50g==}
     engines: {node: '>= 0.4'}
-
-  es-toolkit@1.51.0:
-    resolution: {integrity: sha512-zC2lQGkM7QX+Gm6iM3+WIdZJzthsEd14LvRNJneSO2hzyz/zNBENR8+YXWo1cKxgPBtV6ksPYHELbcwBRzmdCw==}
 
   es-toolkit@1.52.0:
     resolution: {integrity: sha512-XTNEJQh1tY1ZJVcf6ayP/2n4ZPyaHlW2FWs7xvw5ddPuhUVjLD3olQVQS7kf58JbAB48iL0uL/jerTrjtV3lDA==}
@@ -16721,8 +16718,6 @@ snapshots:
       is-callable: 1.2.7
       is-date-object: 1.1.0
       is-symbol: 1.1.1
-
-  es-toolkit@1.51.0: {}
 
   es-toolkit@1.52.0: {}
 
