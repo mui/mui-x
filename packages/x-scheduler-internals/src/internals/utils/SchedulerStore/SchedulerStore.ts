@@ -82,6 +82,14 @@ const MOCK_EVENT_STATE = {
 };
 
 /**
+ * Reads the Premium-only `dataSource` parameter (see `SchedulerLazyLoadingParameters`).
+ * Truthiness on purpose, to match the Premium plugin guards.
+ */
+function hasDataSource(parameters: object): boolean {
+  return Boolean((parameters as { dataSource?: unknown }).dataSource);
+}
+
+/**
  * Instance shared by the Event Calendar and the Event Timeline Premium components.
  */
 export class SchedulerStore<
@@ -123,7 +131,7 @@ export class SchedulerStore<
 
     const schedulerInitialState: Omit<SchedulerState<TEvent>, 'shouldEventRequireResource'> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
-      ...(parameters.dataSource
+      ...(hasDataSource(parameters)
         ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
         : buildEventsState({
             events: parameters.events,
@@ -150,7 +158,7 @@ export class SchedulerStore<
         parameters.defaultVisibleDate ??
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
       errors: [],
-      isLoading: !!parameters.dataSource,
+      isLoading: hasDataSource(parameters),
       recurringEventsPlugin,
     };
 
@@ -253,7 +261,7 @@ export class SchedulerStore<
     ) as Partial<State>;
 
     if (
-      !parameters.dataSource &&
+      !hasDataSource(parameters) &&
       (parameters.events !== this.parameters.events ||
         parameters.eventModelStructure !== this.parameters.eventModelStructure ||
         adapter !== this.state.adapter ||
@@ -532,7 +540,7 @@ export class SchedulerStore<
     this.schedulingPlugin?.handleEventsUpdate(parameters);
 
     if (process.env.NODE_ENV !== 'production') {
-      if (!this.parameters.onEventsChange && !this.parameters.dataSource) {
+      if (!this.parameters.onEventsChange && !hasDataSource(this.parameters)) {
         warnOnce([
           'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
           'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',

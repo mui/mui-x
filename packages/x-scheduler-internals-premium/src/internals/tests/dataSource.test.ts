@@ -1024,6 +1024,19 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(store.state.errors[1]).to.equal(entries[1]);
       });
     });
+
+    // The store and the lazy-loading plugin must agree on what counts as a data source.
+    describe('falsy dataSource', () => {
+      it('should behave as if no data source was provided', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, events: [buildTestEvent('1')], dataSource: false } as any,
+          adapter,
+        );
+
+        expect(store.state.isLoading).to.equal(false);
+        expect(store.state.eventIdList).toHaveLength(1);
+      });
+    });
   });
 });
 
