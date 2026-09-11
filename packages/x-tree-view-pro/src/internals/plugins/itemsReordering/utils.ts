@@ -32,11 +32,14 @@ export const isAncestor = (
 };
 
 /**
- * Transforms a CSS string `itemChildrenIndentation` into a number representing the indentation in number.
- * @param {string | null} itemChildrenIndentation The indentation as passed to the `itemChildrenIndentation` prop.
+ * Transforms the `itemChildrenIndentation` prop into a number representing the indentation in pixels.
+ * When the value is not a pixel value (e.g. `2rem`), it is measured with a temporary DOM element,
+ * which forces a synchronous layout. Callers should cache the result instead of calling this on every event.
+ * @param {string | number} itemChildrenIndentation The indentation as passed to the `itemChildrenIndentation` prop.
  * @param {HTMLElement} contentElement The DOM element to which the indentation will be applied.
+ * @returns {number} The indentation in pixels.
  */
-const parseItemChildrenIndentation = (
+export const parseItemChildrenIndentation = (
   itemChildrenIndentation: string | number,
   contentElement: HTMLElement,
 ) => {
@@ -61,30 +64,24 @@ const parseItemChildrenIndentation = (
 };
 
 interface GetNewPositionParameters {
-  itemChildrenIndentation: string | number;
+  itemChildrenIndentationPx: number;
   validActions: TreeViewItemItemReorderingValidActions;
   targetHeight: number;
   targetDepth: number;
   cursorY: number;
   cursorX: number;
-  contentElement: HTMLDivElement;
 }
 
 export const chooseActionToApply = ({
-  itemChildrenIndentation,
+  itemChildrenIndentationPx,
   validActions,
   targetHeight,
   targetDepth,
   cursorX,
   cursorY,
-  contentElement,
 }: GetNewPositionParameters) => {
   let action: TreeViewItemsReorderingAction | null;
 
-  const itemChildrenIndentationPx = parseItemChildrenIndentation(
-    itemChildrenIndentation,
-    contentElement,
-  );
   // If we can move the item to the parent of the target, then we allocate the left offset to this action
   // Support moving to other ancestors
   if (validActions['move-to-parent'] && cursorX < itemChildrenIndentationPx * targetDepth) {
