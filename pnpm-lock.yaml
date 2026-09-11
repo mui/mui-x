@@ -905,6 +905,9 @@ importers:
       '@mui/x-charts-vendor':
         specifier: workspace:^
         version: link:../x-charts-vendor/build
+      '@mui/x-internal-exceljs-fork':
+        specifier: 'catalog:'
+        version: 5.0.0
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
