@@ -132,6 +132,60 @@ describe('<AdapterDayjs />', () => {
           false,
         );
       });
+
+      // See https://github.com/mui/mui-x/issues/23301
+      describe('startOf / endOf / getDaysInMonth', () => {
+        // The wall clock of this date in `Asia/Kolkata` is `1883-08-15 12:30:00`.
+        const getAncientDate = () =>
+          adapter.setYear(adapter.date('2026-08-15T12:30:00', 'Asia/Kolkata') as Dayjs, 1883);
+
+        const expectWallClock = (value: Dayjs, expected: string) => {
+          expect(adapter.formatByString(value, 'YYYY-MM-DD HH:mm:ss.SSS')).to.equal(expected);
+        };
+
+        it('startOfYear: should return the first instant of the year', () => {
+          expectWallClock(adapter.startOfYear(getAncientDate()), '1883-01-01 00:00:00.000');
+        });
+
+        it('startOfMonth: should return the first instant of the month', () => {
+          expectWallClock(adapter.startOfMonth(getAncientDate()), '1883-08-01 00:00:00.000');
+        });
+
+        it('startOfDay: should return the first instant of the day', () => {
+          expectWallClock(adapter.startOfDay(getAncientDate()), '1883-08-15 00:00:00.000');
+        });
+
+        it('startOfWeek: should return the first instant of the week', () => {
+          expectWallClock(adapter.startOfWeek(getAncientDate()), '1883-08-12 00:00:00.000');
+        });
+
+        it('endOfYear: should return the last instant of the year', () => {
+          expectWallClock(adapter.endOfYear(getAncientDate()), '1883-12-31 23:59:59.999');
+        });
+
+        it('endOfMonth: should return the last instant of the month', () => {
+          expectWallClock(adapter.endOfMonth(getAncientDate()), '1883-08-31 23:59:59.999');
+        });
+
+        it('endOfDay: should return the last instant of the day', () => {
+          expectWallClock(adapter.endOfDay(getAncientDate()), '1883-08-15 23:59:59.999');
+        });
+
+        it('endOfWeek: should return the last instant of the week', () => {
+          expectWallClock(adapter.endOfWeek(getAncientDate()), '1883-08-18 23:59:59.999');
+        });
+
+        it('getDaysInMonth: should return the number of days in the month', () => {
+          expect(adapter.getDaysInMonth(getAncientDate())).to.equal(31);
+        });
+
+        it('should keep years that cannot round-trip through the ISO format valid', () => {
+          const farFuture = adapter.setYear(getAncientDate(), 10000);
+
+          expect(adapter.isValid(adapter.startOfMonth(farFuture))).to.equal(true);
+          expect(adapter.isValid(adapter.endOfMonth(farFuture))).to.equal(true);
+        });
+      });
     });
   });
 

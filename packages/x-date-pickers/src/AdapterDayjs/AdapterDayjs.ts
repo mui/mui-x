@@ -284,25 +284,41 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   /**
-   * On dates predating the timezone standardization, IANA falls back on the Local Mean Time of the
-   * location, whose offset is not a round number of minutes (`Asia/Kolkata` is `GMT+05:53:28`).
-   * `dayjs` then moves the day of the month when only the year or the month was meant to change.
+   * Before a timezone was standardized, IANA falls back on the Local Mean Time of the location, whose
+   * offset is not a round number of minutes (`Asia/Kolkata` is `GMT+05:53:28`). `dayjs` mishandles those
+   * offsets. `system` and `UTC` values keep an offset that matches their instant, so they are immune.
+   */
+  private isAffectedByLocalMeanTime = (value: Dayjs) => {
+    const timezone = this.getTimezone(value);
+
+    return this.hasUTCPlugin() && timezone !== 'system' && timezone !== 'UTC';
+  };
+
+  /**
+   * The wall clock of the value, as a plain UTC value on which `dayjs` is reliable.
+   * Returns `null` when the value cannot round-trip through the ISO format: years above 9999 don't,
+   * and an invalid value formats to `Invalid Date`.
+   */
+  private getWallClock = (value: Dayjs) => {
+    const wallClock = this.setLocaleToValue(dayjs.utc(value.format('YYYY-MM-DDTHH:mm:ss.SSS')));
+
+    return wallClock.isValid() ? wallClock : null;
+  };
+
+  /**
+   * On the dates described by `isAffectedByLocalMeanTime`, `dayjs` moves the day of the month when only
+   * the year or the month was meant to change.
    * `daysInMonth()` is unusable on such a value because it derives from the equally broken
-   * `endOf('month')`, hence computing it on a plain UTC value instead.
+   * `endOf('month')`, hence computing it on the wall clock instead.
    * See https://github.com/mui/mui-x/issues/23163
    */
   private restoreDayOfMonth = (value: Dayjs, reference: Dayjs) => {
-    const timezone = this.getTimezone(value);
-    // `system` and `UTC` values keep an offset that matches their instant, so they are never affected.
-    if (!this.hasUTCPlugin() || timezone === 'system' || timezone === 'UTC') {
+    if (!this.isAffectedByLocalMeanTime(value)) {
       return value;
     }
 
-    const wallClock = dayjs.utc(value.format('YYYY-MM-DDTHH:mm:ss.SSS'));
-
-    // Years above 9999 don't round-trip through the ISO format, and an invalid value formats to
-    // `Invalid Date`. Both would make the comparison below `NaN`.
-    if (!wallClock.isValid()) {
+    const wallClock = this.getWallClock(value);
+    if (wallClock === null) {
       return value;
     }
 
@@ -313,6 +329,47 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     }
 
     return value.set('date', expectedDayOfMonth);
+  };
+
+  /**
+   * `dayjs` computes `startOf` and `endOf` on a value bound to a timezone by formatting it, applying the
+   * change in the system timezone, then converting back. That last conversion is unreliable on the dates
+   * described by `isAffectedByLocalMeanTime`: `startOf('day')` keeps the seconds of the offset, and
+   * `endOf('month')` returns the first instant of the next month.
+   *
+   * The setters are not affected, so we compute the expected wall clock on a plain UTC value and rebuild
+   * the result with them whenever `dayjs` returned something else. `dayjs` stays in charge on every
+   * other date, which keeps the DST handling it already does.
+   * See https://github.com/mui/mui-x/issues/23301
+   */
+  private alignToWallClock = (
+    value: Dayjs,
+    result: Dayjs,
+    getExpectedWallClock: (wallClock: Dayjs) => Dayjs,
+  ) => {
+    if (!this.isAffectedByLocalMeanTime(value)) {
+      return result;
+    }
+
+    const wallClock = this.getWallClock(value);
+    const resultWallClock = this.getWallClock(result);
+    if (wallClock === null || resultWallClock === null) {
+      return result;
+    }
+
+    const expectedWallClock = getExpectedWallClock(wallClock);
+    if (resultWallClock.valueOf() === expectedWallClock.valueOf()) {
+      return result;
+    }
+
+    let alignedValue = this.setYear(value, expectedWallClock.year());
+    alignedValue = this.setMonth(alignedValue, expectedWallClock.month());
+    alignedValue = this.setDate(alignedValue, expectedWallClock.date());
+    alignedValue = this.setHours(alignedValue, expectedWallClock.hour());
+    alignedValue = this.setMinutes(alignedValue, expectedWallClock.minute());
+    alignedValue = this.setSeconds(alignedValue, expectedWallClock.second());
+
+    return this.setMilliseconds(alignedValue, expectedWallClock.millisecond());
   };
 
   public date = <T extends string | null | undefined>(
@@ -522,35 +579,55 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public startOfYear = (value: Dayjs) => {
-    return this.adjustOffset(value.startOf('year'));
+    return this.alignToWallClock(value, this.adjustOffset(value.startOf('year')), (wallClock) =>
+      wallClock.startOf('year'),
+    );
   };
 
   public startOfMonth = (value: Dayjs) => {
-    return this.adjustOffset(value.startOf('month'));
+    return this.alignToWallClock(value, this.adjustOffset(value.startOf('month')), (wallClock) =>
+      wallClock.startOf('month'),
+    );
   };
 
   public startOfWeek = (value: Dayjs) => {
-    return this.adjustOffset(this.setLocaleToValue(value).startOf('week'));
+    return this.alignToWallClock(
+      value,
+      this.adjustOffset(this.setLocaleToValue(value).startOf('week')),
+      (wallClock) => wallClock.startOf('week'),
+    );
   };
 
   public startOfDay = (value: Dayjs) => {
-    return this.adjustOffset(value.startOf('day'));
+    return this.alignToWallClock(value, this.adjustOffset(value.startOf('day')), (wallClock) =>
+      wallClock.startOf('day'),
+    );
   };
 
   public endOfYear = (value: Dayjs) => {
-    return this.adjustOffset(value.endOf('year'));
+    return this.alignToWallClock(value, this.adjustOffset(value.endOf('year')), (wallClock) =>
+      wallClock.endOf('year'),
+    );
   };
 
   public endOfMonth = (value: Dayjs) => {
-    return this.adjustOffset(value.endOf('month'));
+    return this.alignToWallClock(value, this.adjustOffset(value.endOf('month')), (wallClock) =>
+      wallClock.endOf('month'),
+    );
   };
 
   public endOfWeek = (value: Dayjs) => {
-    return this.adjustOffset(this.setLocaleToValue(value).endOf('week'));
+    return this.alignToWallClock(
+      value,
+      this.adjustOffset(this.setLocaleToValue(value).endOf('week')),
+      (wallClock) => wallClock.endOf('week'),
+    );
   };
 
   public endOfDay = (value: Dayjs) => {
-    return this.adjustOffset(value.endOf('day'));
+    return this.alignToWallClock(value, this.adjustOffset(value.endOf('day')), (wallClock) =>
+      wallClock.endOf('day'),
+    );
   };
 
   public addYears = (value: Dayjs, amount: number) => {
@@ -638,6 +715,15 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public getDaysInMonth = (value: Dayjs) => {
+    // `daysInMonth()` derives from `endOf('month')`, which is broken on the dates described by
+    // `isAffectedByLocalMeanTime` and returns `1` there.
+    if (this.isAffectedByLocalMeanTime(value)) {
+      const wallClock = this.getWallClock(value);
+      if (wallClock !== null) {
+        return wallClock.daysInMonth();
+      }
+    }
+
     return value.daysInMonth();
   };
 
