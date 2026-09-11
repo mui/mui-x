@@ -1,7 +1,7 @@
 import type { ChartExcelColumn, ChartExcelTable } from '../chartExcelData.types';
 import { toCell, toSafeCell } from '../cell';
 import type { ChartExcelExtractor } from './types';
-import { getSeriesLabel, withFormattedColumn } from './utils';
+import { getSeriesLabel, toTables, withFormattedValueColumn } from './utils';
 
 /**
  * Scatter is the only cartesian series that is not indexed against its axis: each point
@@ -58,10 +58,6 @@ export const scatterExtractor: ChartExcelExtractor<'scatter'> = (params) => {
     });
   }
 
-  if (rows.length === 0) {
-    return [];
-  }
-
   let columns: ChartExcelColumn[] = [
     { key: 'series', header: 'series' },
     { key: 'id', header: 'id' },
@@ -76,8 +72,8 @@ export const scatterExtractor: ChartExcelExtractor<'scatter'> = (params) => {
     columns.push({ key: 'sizeValue', header: 'sizeValue' });
   }
   if (includeFormattedValues) {
-    columns = withFormattedColumn(columns, 'y', 'formattedValue', 'formattedValue');
+    columns = withFormattedValueColumn(columns, 'y');
   }
 
-  return [{ id: 'scatter', columns, rows }];
+  return toTables('scatter', columns, rows);
 };

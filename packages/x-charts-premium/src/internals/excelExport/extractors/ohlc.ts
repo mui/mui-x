@@ -2,7 +2,7 @@ import type { ChartExcelColumn, ChartExcelTable } from '../chartExcelData.types'
 import { toCell, toSafeCell } from '../cell';
 import type { OHLCField } from '../../../models';
 import type { ChartExcelExtractor } from './types';
-import { getCategory, getSeriesLabel } from './utils';
+import { getCategory, getSeriesLabel, toTables } from './utils';
 
 const FIELDS: OHLCField[] = ['open', 'high', 'low', 'close'];
 
@@ -65,9 +65,5 @@ export const ohlcExtractor: ChartExcelExtractor<'ohlc'> = (params) => {
     });
   }
 
-  if (rows.length === 0) {
-    return [];
-  }
-
-  return [{ id: 'ohlc', columns: includeFormattedValues ? FORMATTED_COLUMNS : BASE_COLUMNS, rows }];
+  return toTables('ohlc', includeFormattedValues ? FORMATTED_COLUMNS : BASE_COLUMNS, rows);
 };

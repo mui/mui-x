@@ -3,7 +3,7 @@ import type { SeriesId } from '@mui/x-charts/models';
 import type { ChartExcelColumn, ChartExcelTable } from '../chartExcelData.types';
 import { toCell, toSafeCell } from '../cell';
 import type { ChartExcelExtractor, ChartExcelExtractorParams } from './types';
-import { getCategory, getSeriesLabel, withFormattedColumn } from './utils';
+import { getCategory, getSeriesLabel, toTables, withFormattedValueColumn } from './utils';
 
 /**
  * The single-measure, index-aligned series: bar, line, radar, radialLine and radialBar.
@@ -69,15 +69,11 @@ function createCategoryValueExtractor(resolveAxis: ResolveAxis) {
       });
     }
 
-    if (rows.length === 0) {
-      return [];
-    }
-
     const columns = includeFormattedValues
-      ? withFormattedColumn(BASE_COLUMNS, 'value', 'formattedValue', 'formattedValue')
+      ? withFormattedValueColumn(BASE_COLUMNS, 'value')
       : BASE_COLUMNS;
 
-    return [{ id: 'category', columns, rows }];
+    return toTables('category', columns, rows);
   };
 }
 

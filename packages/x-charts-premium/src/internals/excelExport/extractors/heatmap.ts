@@ -1,7 +1,7 @@
 import type { ChartExcelColumn, ChartExcelTable } from '../chartExcelData.types';
 import { toCell, toSafeCell } from '../cell';
 import type { ChartExcelExtractor } from './types';
-import { getCategory, getSeriesLabel, withFormattedColumn } from './utils';
+import { getCategory, getSeriesLabel, toTables, withFormattedValueColumn } from './utils';
 
 const BASE_COLUMNS: ChartExcelColumn[] = [
   { key: 'series', header: 'series' },
@@ -53,13 +53,9 @@ export const heatmapExtractor: ChartExcelExtractor<'heatmap'> = (params) => {
     }
   }
 
-  if (rows.length === 0) {
-    return [];
-  }
-
   const columns = includeFormattedValues
-    ? withFormattedColumn(BASE_COLUMNS, 'value', 'formattedValue', 'formattedValue')
+    ? withFormattedValueColumn(BASE_COLUMNS, 'value')
     : BASE_COLUMNS;
 
-  return [{ id: 'heatmap', columns, rows }];
+  return toTables('heatmap', columns, rows);
 };

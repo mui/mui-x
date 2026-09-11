@@ -1,7 +1,7 @@
 import type { ChartExcelColumn, ChartExcelTable } from '../chartExcelData.types';
 import { toCell, toSafeCell } from '../cell';
 import type { ChartExcelExtractor } from './types';
-import { withFormattedColumn } from './utils';
+import { withFormattedValueColumn } from './utils';
 
 const NODE_COLUMNS: ChartExcelColumn[] = [
   { key: 'series', header: 'series' },
@@ -94,7 +94,7 @@ export const sankeyExtractor: ChartExcelExtractor<'sankey'> = (params) => {
     tables.push({
       id: 'sankeyNodes',
       columns: includeFormattedValues
-        ? withFormattedColumn(NODE_COLUMNS, 'value', 'formattedValue', 'formattedValue')
+        ? withFormattedValueColumn(NODE_COLUMNS, 'value')
         : NODE_COLUMNS,
       rows: nodeRows,
     });
@@ -104,7 +104,7 @@ export const sankeyExtractor: ChartExcelExtractor<'sankey'> = (params) => {
     tables.push({
       id: 'sankeyLinks',
       columns: includeFormattedValues
-        ? withFormattedColumn(LINK_COLUMNS, 'value', 'formattedValue', 'formattedValue')
+        ? withFormattedValueColumn(LINK_COLUMNS, 'value')
         : LINK_COLUMNS,
       rows: linkRows,
     });

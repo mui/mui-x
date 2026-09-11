@@ -1,7 +1,7 @@
 import type { ChartExcelColumn, ChartExcelTable } from '../chartExcelData.types';
 import { toCell, toSafeCell } from '../cell';
 import type { ChartExcelExtractor } from './types';
-import { getSeriesLabel, withFormattedColumn } from './utils';
+import { getSeriesLabel, toTables, withFormattedValueColumn } from './utils';
 
 const BASE_COLUMNS: ChartExcelColumn[] = [
   { key: 'series', header: 'series' },
@@ -55,13 +55,9 @@ export const mapShapeExtractor: ChartExcelExtractor<'mapShape'> = (params) => {
     });
   }
 
-  if (rows.length === 0) {
-    return [];
-  }
-
   const columns = includeFormattedValues
-    ? withFormattedColumn(BASE_COLUMNS, 'value', 'formattedValue', 'formattedValue')
+    ? withFormattedValueColumn(BASE_COLUMNS, 'value')
     : BASE_COLUMNS;
 
-  return [{ id: 'mapShape', columns, rows }];
+  return toTables('mapShape', columns, rows);
 };

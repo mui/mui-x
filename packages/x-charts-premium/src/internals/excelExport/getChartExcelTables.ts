@@ -42,8 +42,10 @@ function createAxisGetter(axes: AxesResult | undefined): AxisGetter {
     if (!axes) {
       return undefined;
     }
-    // The first id is what a series falls back to when it names no axis. Read here rather
-    // than through `selectorChartDefault*AxisId`, which throws when there is no axis.
+    // The first id is what a series falls back to when it names no axis, which is exactly
+    // what `selectorChartDefaultXAxisId` returns. It is read from `axisIds` instead so that
+    // one getter serves both directions: the polar axes have no default-id selector, so
+    // `useDescription` falls back to `rotationAxisIds[0]` the same way.
     const id = axisId ?? axes.axisIds[0];
     return id === undefined ? undefined : axes.axis[id];
   };
