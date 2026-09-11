@@ -1,7 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { clearWarningsCache } from '../warning';
 import { loadStyleSheets } from './loadStyleSheets';
 
 describe('loadStyleSheets', () => {
+  beforeEach(() => clearWarningsCache());
+
   function createTargetDocument() {
     return document.implementation.createHTMLDocument('');
   }
@@ -23,9 +26,13 @@ describe('loadStyleSheets', () => {
     expect(promises.length).to.equal(1);
 
     /* A stylesheet blocked by the Content Security Policy fires `error` instead of `load`. */
-    targetDocument.head.querySelectorAll('link').forEach((link) => {
-      link.dispatchEvent(new Event('error'));
-    });
+    expect(() => {
+      targetDocument.head.querySelectorAll('link').forEach((link) => {
+        link.dispatchEvent(new Event('error'));
+      });
+    }).toWarnDev(
+      'MUI X: Failed to load the stylesheet "https://example.com/missing.css" in the export document.',
+    );
 
     await expect(Promise.all(promises)).resolves.toBeDefined();
   });

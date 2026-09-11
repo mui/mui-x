@@ -1,3 +1,5 @@
+import { warnOnce } from '../warning';
+
 /**
  * Loads all stylesheets from the given root element into the document.
  * @returns an array of promises that resolve when each stylesheet is loaded
@@ -38,7 +40,12 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot,
           newHeadStyleElement.addEventListener('load', () => resolve());
           /* A stylesheet blocked by the Content Security Policy, or that fails to load, only fires
            * `error`. Without this the export would wait for a `load` event that never comes. */
-          newHeadStyleElement.addEventListener('error', () => resolve());
+          newHeadStyleElement.addEventListener('error', () => {
+            warnOnce(
+              `MUI X: Failed to load the stylesheet "${node.getAttribute('href')}" in the export document. The export continues without it, so the result may be missing styles.\nThis can happen if the request fails, or if a Content Security Policy blocks the stylesheet.`,
+            );
+            resolve();
+          });
         }),
       );
     }
