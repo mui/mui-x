@@ -20,8 +20,7 @@ const EMPTY_SLOTS: SchedulerSlotsContextValue = {
 // mounted without a scheduler root, which is how most of the tests exercise it.
 export const SchedulerSlotsContext = React.createContext<SchedulerSlotsContextValue>(EMPTY_SLOTS);
 
-// The context holds whatever the surface received. Each consumer reads it as the slots
-// interface of its own surface, like `useChartsSlots`.
+// Each surface reads the slots declared by its own props type.
 export function useSchedulerSlots<
   TSlots extends SchedulerSlots = SchedulerSlots,
   TSlotProps extends SchedulerSlotProps = SchedulerSlotProps,
