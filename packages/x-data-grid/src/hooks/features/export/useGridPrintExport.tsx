@@ -51,6 +51,7 @@ type PrintWindowOnLoad = (
     | 'hideFooter'
     | 'includeCheckboxes'
     | 'getRowsToExport'
+    | 'onStylesheetError'
   >,
 ) => void;
 
@@ -234,7 +235,9 @@ export const useGridPrintExport = (
             ? (rootCandidate as ShadowRoot)
             : doc.current;
 
-        stylesheetLoadPromises = loadStyleSheets(printDoc, root!);
+        stylesheetLoadPromises = loadStyleSheets(printDoc, root!, {
+          onStylesheetError: normalizeOptions.onStylesheetError,
+        });
       }
 
       // Trigger print

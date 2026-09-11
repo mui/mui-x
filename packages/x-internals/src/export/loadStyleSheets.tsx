@@ -1,13 +1,32 @@
 import { warnOnce } from '../warning';
 
+export interface LoadStyleSheetsOptions {
+  /**
+   * Optional nonce to set on style elements for CSP compliance.
+   */
+  nonce?: string;
+  /**
+   * Called when a stylesheet fails to load. The stylesheet is skipped either way, so this is a
+   * notification, not a way to stop the export.
+   * @param {HTMLLinkElement} element The stylesheet link element that failed to load.
+   * @returns {void}
+   */
+  onStylesheetError?: (element: HTMLLinkElement) => void;
+}
+
 /**
  * Loads all stylesheets from the given root element into the document.
  * @returns an array of promises that resolve when each stylesheet is loaded
  * @param document Document to load stylesheets into
  * @param root Document or ShadowRoot to load stylesheets from
- * @param nonce Optional nonce to set on style elements for CSP compliance
+ * @param options Options to apply while copying the stylesheets
  */
-export function loadStyleSheets(document: Document, root: Document | ShadowRoot, nonce?: string) {
+export function loadStyleSheets(
+  document: Document,
+  root: Document | ShadowRoot,
+  options: LoadStyleSheetsOptions = {},
+) {
+  const { nonce, onStylesheetError } = options;
   const stylesheetLoadPromises: Promise<void>[] = [];
   const headStyleElements = root.querySelectorAll("style, link[rel='stylesheet']");
 
@@ -41,9 +60,13 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot,
           /* A stylesheet blocked by the Content Security Policy, or that fails to load, only fires
            * `error`. Without this the export would wait for a `load` event that never comes. */
           newHeadStyleElement.addEventListener('error', () => {
-            warnOnce(
-              `MUI X: Failed to load the stylesheet "${node.getAttribute('href')}" in the export document. The export continues without it, so the result may be missing styles.\nThis can happen if the request fails, or if a Content Security Policy blocks the stylesheet.`,
-            );
+            if (onStylesheetError) {
+              onStylesheetError(newHeadStyleElement as HTMLLinkElement);
+            } else {
+              warnOnce(
+                `MUI X: Failed to load the stylesheet "${node.getAttribute('href')}" in the export document. The export continues without it, so the result may be missing styles.\nThis can happen if the request fails, or if a Content Security Policy blocks the stylesheet.\nPass \`onStylesheetError\` to the export to handle this yourself.`,
+              );
+            }
             resolve();
           });
         }),

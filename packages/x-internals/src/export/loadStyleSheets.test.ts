@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { clearWarningsCache } from '../warning';
 import { loadStyleSheets } from './loadStyleSheets';
 
@@ -37,6 +37,24 @@ describe('loadStyleSheets', () => {
     await expect(Promise.all(promises)).resolves.toBeDefined();
   });
 
+  it('calls onStylesheetError instead of warning when a stylesheet fails to load', async () => {
+    const targetDocument = createTargetDocument();
+    const sourceDocument = createSourceDocument(
+      '<link rel="stylesheet" href="https://example.com/missing.css" />',
+    );
+    const onStylesheetError = vi.fn();
+
+    const promises = loadStyleSheets(targetDocument, sourceDocument, { onStylesheetError });
+
+    targetDocument.head.querySelectorAll('link').forEach((link) => {
+      link.dispatchEvent(new Event('error'));
+    });
+
+    await expect(Promise.all(promises)).resolves.toBeDefined();
+    expect(onStylesheetError.mock.calls.length).to.equal(1);
+    expect(onStylesheetError.mock.calls[0][0].href).to.equal('https://example.com/missing.css');
+  });
+
   it('resolves when a stylesheet loads', async () => {
     const targetDocument = createTargetDocument();
     const sourceDocument = createSourceDocument(
@@ -58,7 +76,7 @@ describe('loadStyleSheets', () => {
       '<style>body { margin: 0; }</style><link rel="stylesheet" href="https://example.com/styles.css" />',
     );
 
-    loadStyleSheets(targetDocument, sourceDocument, 'the-nonce');
+    loadStyleSheets(targetDocument, sourceDocument, { nonce: 'the-nonce' });
 
     const nonces = Array.from(targetDocument.head.querySelectorAll<HTMLElement>('style, link')).map(
       (element) => element.nonce || element.getAttribute('nonce'),

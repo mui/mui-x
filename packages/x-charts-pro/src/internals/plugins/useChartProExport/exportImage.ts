@@ -30,6 +30,7 @@ export async function exportImage(
     onBeforeExport = defaultOnBeforeExport,
     copyStyles = true,
     nonce,
+    onStylesheetError,
     pixelRatio,
   } = params ?? {};
   if (
@@ -88,7 +89,7 @@ export async function exportImage(
       rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
     if (copyStyles) {
-      await Promise.all(loadStyleSheets(exportDoc, root, nonce));
+      await Promise.all(loadStyleSheets(exportDoc, root, { nonce, onStylesheetError }));
     }
 
     await copyCanvasesContent(element, elementClone);
