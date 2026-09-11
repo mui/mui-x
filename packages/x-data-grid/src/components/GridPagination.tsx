@@ -20,6 +20,14 @@ const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>, 
 })({
   maxHeight: 'calc(100% + 1px)', // border width
   flexGrow: 1,
+  // Leave room for the footer's 1px border inside its 52px minimum. Without this the
+  // toolbar's own 52px minimum plus that border makes the footer 53px on the first
+  // layout pass, and flex-shrink only reclaims the pixel once the height is definite
+  // enough for `maxHeight` above to resolve. Everything sized from the viewport
+  // height moves with that late correction.
+  '& .MuiToolbar-root': {
+    minHeight: 51,
+  },
 });
 
 function GridPagination() {
