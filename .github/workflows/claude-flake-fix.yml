@@ -20,6 +20,7 @@ permissions: {}
 jobs:
   flake-fix:
     permissions:
+      actions: read # read this run's referenced_workflows (resolve-ref job)
       id-token: write # Anthropic WIF (triage job)
       contents: write # push the fix branch (publish job)
       pull-requests: write # open the draft PR (publish job)
