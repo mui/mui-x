@@ -2,10 +2,12 @@ import { screen, within, act } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { StandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
 import {
+  adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  utcJuly4AllDayBuilder,
   ResourceBuilder,
   simulateDragAndDrop,
   mockElementBounds,
@@ -219,6 +221,114 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     // The event should have moved to a different time
     const newStart = new Date(updatedEvents[0].start);
     expect(newStart.getUTCDate()).to.not.equal(3);
+  });
+
+  it('should exclude the dragged occurrence of its own day when moved from another timezone', async () => {
+    const handleEventsChange = vi.fn();
+    // A UTC all-day weekly series whose display bounds normalize to New York July 3rd.
+    const event = utcJuly4AllDayBuilder()
+      .title('Weekly sync')
+      .recurrent('WEEKLY')
+      .resource(engineering)
+      .draggable(true)
+      .build();
+
+    const { user } = await renderSettled(
+      <EventTimelinePremium
+        resources={resources}
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        displayTimezone="America/New_York"
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    mockAllEventRowBounds();
+    const eventElement = screen.getAllByText('Weekly sync')[0];
+    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getEventRow(engineering.id),
+        sourceClientX: 160,
+        targetClientX: 1000,
+      });
+    });
+
+    // A recurring drop opens the scope dialog.
+    await user.click(await screen.findByText(/Only this event/i));
+    await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+    // The exception lands on the occurrence's own July 4th, not the displayed July 3rd.
+    const updatedEvents = handleEventsChange.mock.lastCall?.[0];
+    const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
+    expect(series.exDates).to.have.length(1);
+    expect(
+      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
+    ).to.equal('2025-07-04');
+
+    // The dragged occurrence detaches as a one-off keeping its all-day span. The landing
+    // day depends on the pointer-to-axis math, so it is pinned in the month view instead,
+    // where the drop targets a cell.
+    const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
+    expect(detached.rrule).to.equal(undefined);
+    expect(detached.allDay).to.equal(true);
+  });
+
+  it('should exclude the dragged occurrence of its own day when dragged from a secondary resource row', async () => {
+    const handleEventsChange = vi.fn();
+    // The same cross-timezone weekly occurrence renders once per resource row; the
+    // appearance does not change which occurrence identity the drag carries.
+    const event = utcJuly4AllDayBuilder()
+      .title('Weekly sync')
+      .recurrent('WEEKLY')
+      .resources([engineering, design])
+      .draggable(true)
+      .build();
+
+    const { user } = await renderSettled(
+      <EventTimelinePremium
+        resources={resources}
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        displayTimezone="America/New_York"
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    mockAllEventRowBounds();
+    const eventElement = within(getEventRow(design.id)).getAllByText('Weekly sync')[0];
+    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getEventRow(design.id),
+        sourceClientX: 160,
+        targetClientX: 1000,
+      });
+    });
+
+    await user.click(await screen.findByText(/Only this event/i));
+    await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+    const updatedEvents = handleEventsChange.mock.lastCall?.[0];
+    const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
+    expect(series.exDates).to.have.length(1);
+    expect(
+      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
+    ).to.equal('2025-07-04');
+
+    // Dragging a secondary appearance detaches the occurrence without dropping the
+    // resources it belongs to: the key does not identify which row it was dragged from.
+    const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
+    expect(detached.rrule).to.equal(undefined);
+    expect(detached.resource).to.deep.equal([engineering.id, design.id]);
   });
 
   it('should resize an event end to a later time', async () => {

@@ -1,6 +1,13 @@
-import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  adapter,
+  EventBuilder,
+  ResourceBuilder,
+  utcJuly4AllDayBuilder,
+} from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import {
+  generateOccurrenceFromEvent,
+  getOccurrenceDataTimezone,
   getDaysTheOccurrenceIsVisibleOn,
   getEventResourceIds,
   getOccurrencesFromEvents,
@@ -209,6 +216,59 @@ describe('event-utils', () => {
       });
 
       expect(result.map((o) => o.id)).toEqual([event.id]);
+    });
+  });
+
+  describe('getOccurrenceDataTimezone', () => {
+    it('should return the dataTimezone of an event occurrence', () => {
+      const occurrence = utcJuly4AllDayBuilder()
+        .withDisplayTimezone('America/New_York')
+        .toOccurrence();
+
+      expect(getOccurrenceDataTimezone(occurrence)).to.equal(occurrence.dataTimezone);
+    });
+
+    it('should return undefined for a placeholder occurrence', () => {
+      const { dataTimezone, ...placeholder } = EventBuilder.new().toOccurrence();
+
+      expect(getOccurrenceDataTimezone(placeholder as any)).to.equal(undefined);
+    });
+  });
+
+  describe('generateOccurrenceFromEvent', () => {
+    it('should carry the dataTimezone next to the display segment bounds', () => {
+      const processed = utcJuly4AllDayBuilder()
+        .withDisplayTimezone('America/New_York')
+        .toProcessed();
+
+      const occurrence = generateOccurrenceFromEvent({
+        event: processed,
+        eventId: processed.id,
+        occurrenceKey: 'key',
+        start: processed.displayTimezone.start,
+        end: processed.displayTimezone.end,
+        dataTimezone: processed.dataTimezone,
+      });
+
+      // Display bounds normalize to New York July 3rd; the data identity stays July 4th.
+      expect(occurrence.displayTimezone.start).to.equal(processed.displayTimezone.start);
+      expect(occurrence.dataTimezone.start.timestamp).to.equal(
+        adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
+      );
+    });
+
+    it('should default the dataTimezone bounds to the display bounds when not provided', () => {
+      const processed = EventBuilder.new().singleDay('2025-07-04T09:00:00Z', 30).toProcessed();
+
+      const occurrence = generateOccurrenceFromEvent({
+        event: processed,
+        eventId: processed.id,
+        occurrenceKey: 'key',
+        start: processed.displayTimezone.start,
+        end: processed.displayTimezone.end,
+      });
+
+      expect(occurrence.dataTimezone.start).to.equal(processed.displayTimezone.start);
     });
   });
 });

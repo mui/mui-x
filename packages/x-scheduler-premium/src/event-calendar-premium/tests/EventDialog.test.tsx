@@ -5,6 +5,7 @@ import {
   adapter,
   createSchedulerRenderer,
   EventBuilder,
+  utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
   StateWatcher,
@@ -1849,6 +1850,15 @@ describe('<EventDialogContent open />', () => {
         .recurrent('DAILY')
         .toOccurrence();
 
+      // A UTC all-day weekly series viewed from New York: resending the display-day
+      // range on a rename used to shift the series and realign its BYDAY. The builder
+      // is not mutated after setup, so the fixture is shared by the cross-timezone tests.
+      const weeklyBuilder = utcJuly4AllDayBuilder()
+        .title('Weekly sync')
+        .recurrent('WEEKLY')
+        .withDisplayTimezone('America/New_York');
+      const weeklyEvent = weeklyBuilder.build();
+
       it('should not call updateRecurringEvent if the user cancels the scope dialog', async () => {
         let updateRecurringEventSpy, selectRecurringEventScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
@@ -1968,6 +1978,557 @@ describe('<EventDialogContent open />', () => {
 
         expect(selectRecurringEventScopeSpy?.mock.calls.length).to.equal(1);
         expect(selectRecurringEventScopeSpy?.mock.lastCall?.[0]).to.equal('all');
+      });
+
+      it('should apply a rename to the whole series without resending or moving its dates', async () => {
+        let updateRecurringEventSpy;
+        const onEventsChange = vi.fn();
+        const { user } = render(
+          <EventCalendarProvider
+            events={[weeklyEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <StoreSpy
+              Context={SchedulerStoreContext}
+              method="updateRecurringEvent"
+              onSpyReady={(sp) => {
+                updateRecurringEventSpy = sp;
+              }}
+            />
+
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={weeklyBuilder.toOccurrence()}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        await user.type(screen.getByLabelText(/event title/i), ' renamed');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        // An untouched range must not enter the pattern-based recurring update:
+        // a start re-read in the display timezone could shift the series' days.
+        expect(updateRecurringEventSpy?.mock.calls.length).to.equal(1);
+        const payload = updateRecurringEventSpy.mock.lastCall[0];
+        expect(payload.changes).to.not.have.property('start');
+        expect(payload.changes).to.not.have.property('end');
+
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (event: SchedulerEvent) => event.id === weeklyEvent.id,
+        )!;
+        expect(updated.title).to.equal('Weekly sync renamed');
+        expect(updated.start).to.equal(weeklyEvent.start);
+        expect(updated.end).to.equal(weeklyEvent.end);
+        expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
+      });
+
+      it("should detach the renamed occurrence on its own day with scope 'only this' from another timezone", async () => {
+        const onEventsChange = vi.fn();
+        const { user } = render(
+          <EventCalendarProvider
+            events={[weeklyEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={weeklyBuilder.toOccurrence()}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        await user.type(screen.getByLabelText(/event title/i), ' renamed');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/Only this event/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        // The occurrence is identified by its data-timezone start: the exception and
+        // the detached event must land on the event's own July 4th, not on the day
+        // its display bounds normalize to in New York.
+        const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall?.[0];
+        const series = newEvents.find((event) => event.id === weeklyEvent.id)!;
+        expect(series.exDates).to.have.length(1);
+        expect(
+          adapter.formatByString(adapter.date(String(series.exDates![0]), 'UTC'), 'yyyy-MM-dd'),
+        ).to.equal('2025-07-04');
+
+        const detached = newEvents.find((event) => event.id !== weeklyEvent.id)!;
+        expect(detached.title).to.equal('Weekly sync renamed');
+        expect(detached.rrule).to.equal(undefined);
+        expect(
+          adapter.formatByString(adapter.date(String(detached.start), 'UTC'), 'yyyy-MM-dd'),
+        ).to.equal('2025-07-04');
+      });
+
+      it("should move the whole series to the edited day as displayed with scope 'all'", async () => {
+        const onEventsChange = vi.fn();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[weeklyEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={weeklyBuilder.toOccurrence()}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        // The dialog shows the series on New York July 3rd → 4th; move it one day later.
+        const startDateInput = screen.getByLabelText(/start date/i);
+        await user.clear(startDateInput);
+        await user.type(startDateInput, '2025-07-04');
+        const endDateInput = screen.getByLabelText(/end date/i);
+        await user.clear(endDateInput);
+        await user.type(endDateInput, '2025-07-05');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        // The picked days mean the days the user was looking at: the series start
+        // lands on New York July 4th.
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (event: SchedulerEvent) => event.id === weeklyEvent.id,
+        )!;
+        const updatedStartInNewYork = adapter.setTimezone(
+          adapter.date(String(updated.start), 'UTC'),
+          'America/New_York',
+        );
+        expect(adapter.formatByString(updatedStartInNewYork, 'yyyy-MM-dd')).to.equal('2025-07-04');
+        const updatedEndInNewYork = adapter.setTimezone(
+          adapter.date(String(updated.end), 'UTC'),
+          'America/New_York',
+        );
+        expect(adapter.formatByString(updatedEndInNewYork, 'yyyy-MM-dd')).to.equal('2025-07-05');
+        // The start's data-timezone day is unchanged, so the BYDAY stays put.
+        expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
+      });
+
+      it('should anchor the BYDAY to the data-timezone day when moved as displayed from a timezone ahead of UTC', async () => {
+        const onEventsChange = vi.fn();
+        // Tokyo is ahead of UTC: the displayed day maps to the previous UTC day, so a
+        // BYDAY computed from the display day would hop weekdays (New York, being
+        // behind, shares the calendar day and cannot catch that).
+        const tokyoBuilder = utcJuly4AllDayBuilder()
+          .title('Weekly sync')
+          .recurrent('WEEKLY')
+          .withDisplayTimezone('Asia/Tokyo');
+        const tokyoEvent = tokyoBuilder.build();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[tokyoEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="Asia/Tokyo"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={tokyoBuilder.toOccurrence()}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        // The dialog shows the series on Tokyo July 4th → 5th; move it one day later.
+        const startDateInput = screen.getByLabelText(/start date/i);
+        await user.clear(startDateInput);
+        await user.type(startDateInput, '2025-07-05');
+        const endDateInput = screen.getByLabelText(/end date/i);
+        await user.clear(endDateInput);
+        await user.type(endDateInput, '2025-07-06');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (event: SchedulerEvent) => event.id === tokyoEvent.id,
+        )!;
+        // The picked Tokyo July 5th is still UTC July 4th — a Friday: the day did not
+        // move in the data timezone, so the BYDAY stays FR (not the display day's SA).
+        expect(updated.rrule).to.deep.equal(tokyoEvent.rrule);
+        const updatedStartInTokyo = adapter.setTimezone(
+          adapter.date(String(updated.start), 'UTC'),
+          'Asia/Tokyo',
+        );
+        expect(adapter.formatByString(updatedStartInTokyo, 'yyyy-MM-dd')).to.equal('2025-07-05');
+      });
+
+      it("should keep the untouched end byte-identical when only the start date is edited with scope 'all'", async () => {
+        const onEventsChange = vi.fn();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[weeklyEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={weeklyBuilder.toOccurrence()}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        // The mirror of the end-only case: the recurring payload gates each bound on its
+        // own, and a missing end must default to the occurrence's, not to the series'.
+        const startDateInput = screen.getByLabelText(/start date/i);
+        await user.clear(startDateInput);
+        await user.type(startDateInput, '2025-07-02');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (event: SchedulerEvent) => event.id === weeklyEvent.id,
+        )!;
+        expect(updated.end).to.equal(weeklyEvent.end);
+      });
+
+      it("should keep the untouched start byte-identical when only the end date is edited with scope 'all'", async () => {
+        const onEventsChange = vi.fn();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[weeklyEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={weeklyBuilder.toOccurrence()}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        // The dialog shows the series on New York July 3rd → 4th; extend only the end.
+        const endDateInput = screen.getByLabelText(/end date/i);
+        await user.clear(endDateInput);
+        await user.type(endDateInput, '2025-07-05');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (event: SchedulerEvent) => event.id === weeklyEvent.id,
+        )!;
+        // The untouched start must not enter the pattern math: no DTSTART move,
+        // no BYDAY realign onto the displayed Thursday.
+        expect(updated.start).to.equal(weeklyEvent.start);
+        expect(updated.rrule).to.deep.equal(weeklyEvent.rrule);
+        // The edited end applies as the day the user was looking at.
+        const updatedEndInNewYork = adapter.setTimezone(
+          adapter.date(String(updated.end), 'UTC'),
+          'America/New_York',
+        );
+        expect(adapter.formatByString(updatedEndInNewYork, 'yyyy-MM-dd')).to.equal('2025-07-05');
+      });
+
+      it('should delete the occurrence of its own day when deleted from another timezone', async () => {
+        let deleteRecurringEventSpy;
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[weeklyEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            onEventsChange={() => {}}
+            displayTimezone="America/New_York"
+          >
+            <StoreSpy
+              Context={SchedulerStoreContext}
+              method="deleteRecurringEvent"
+              onSpyReady={(sp) => {
+                deleteRecurringEventSpy = sp;
+              }}
+            />
+
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={weeklyBuilder.toOccurrence()}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        await user.click(screen.getByRole('button', { name: /delete/i }));
+
+        // The occurrence is identified by its data-timezone start, not by the day its
+        // display bounds normalize to in New York.
+        expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
+        const payload = deleteRecurringEventSpy.mock.lastCall[0];
+        expect(adapter.getTime(payload.occurrenceStart)).to.equal(
+          adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
+        );
+      });
+
+      it("should split the series on its own day with scope 'this and following' from another timezone", async () => {
+        const onEventsChange = vi.fn();
+        const { user } = render(
+          <EventCalendarProvider
+            events={[weeklyEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={weeklyBuilder.toOccurrence('2025-07-11T00:00:00Z')}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        await user.type(screen.getByLabelText(/event title/i), ' renamed');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/This and following events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        // The split boundary derives from the occurrence's own July 11th, not the
+        // July 10th its display bounds normalize to in New York: the original series
+        // truncates the day before, and the split series starts on the 11th.
+        const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall?.[0];
+        const series = newEvents.find((event) => event.id === weeklyEvent.id)!;
+        expect(
+          adapter.formatByString(
+            adapter.date(String((series.rrule as any).until), 'UTC'),
+            'yyyy-MM-dd',
+          ),
+        ).to.equal('2025-07-10');
+
+        const split = newEvents.find((event) => event.id !== weeklyEvent.id)!;
+        expect(split.title).to.equal('Weekly sync renamed');
+        expect(split.rrule).to.not.equal(undefined);
+        expect(
+          adapter.formatByString(adapter.date(String(split.start), 'UTC'), 'yyyy-MM-dd'),
+        ).to.equal('2025-07-11');
+      });
+
+      it('should identify an occurrence across a DST transition by its data-timezone start', async () => {
+        // A DST-observing data timezone: the series starts in EDT (UTC-4) and the
+        // targeted occurrence falls after the 2025-11-02 fall-back (EST, UTC-5), so a
+        // conversion that cancels out at a fixed offset cannot pass this test.
+        const dstBuilder = EventBuilder.new(adapter)
+          .title('Weekly sync')
+          .withDataTimezone('America/New_York')
+          .span('2025-10-31T00:00:00', '2025-10-31T23:59:59.999', { allDay: true })
+          .recurrent('WEEKLY')
+          .withDisplayTimezone('UTC');
+        const dstEvent = dstBuilder.build();
+
+        let deleteRecurringEventSpy;
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[dstEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            onEventsChange={() => {}}
+            displayTimezone="UTC"
+          >
+            <StoreSpy
+              Context={SchedulerStoreContext}
+              method="deleteRecurringEvent"
+              onSpyReady={(sp) => {
+                deleteRecurringEventSpy = sp;
+              }}
+            />
+
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={dstBuilder.toOccurrence('2025-11-07T05:00:00Z')}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        await user.click(screen.getByRole('button', { name: /delete/i }));
+
+        // November 7th midnight in New York is 05:00Z (EST), not the display day's
+        // 00:00Z nor the pre-transition offset's 04:00Z.
+        expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
+        const payload = deleteRecurringEventSpy!.mock.lastCall![0];
+        expect(adapter.getTime(payload.occurrenceStart)).to.equal(
+          adapter.getTime(adapter.date('2025-11-07T00:00:00', 'America/New_York')),
+        );
+      });
+
+      it('should keep a series in a DST-observing timezone byte-identical on a rename across the transition', async () => {
+        const dstBuilder = EventBuilder.new(adapter)
+          .title('Weekly sync')
+          .withDataTimezone('America/New_York')
+          .span('2025-10-31T00:00:00', '2025-10-31T23:59:59.999', { allDay: true })
+          .recurrent('WEEKLY')
+          .withDisplayTimezone('UTC');
+        const dstEvent = dstBuilder.build();
+        const onEventsChange = vi.fn();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[dstEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="UTC"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={dstBuilder.toOccurrence('2025-11-07T05:00:00Z')}
+            />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        const titleInput = screen.getByLabelText(/title/i);
+        await user.clear(titleInput);
+        await user.type(titleInput, 'Renamed weekly');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        await screen.findByText(/Apply this change to:/i);
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (event: SchedulerEvent) => event.id === dstEvent.id,
+        )!;
+        expect(updated.title).to.equal('Renamed weekly');
+        expect(updated.start).to.equal(dstEvent.start);
+        expect(updated.end).to.equal(dstEvent.end);
+        expect(updated.rrule).to.deep.equal(dstEvent.rrule);
+      });
+
+      it('should resend both bounds of a series when the display timezone moved since the form was seeded', async () => {
+        let updateRecurringEventSpy;
+        const utcBuilder = utcJuly4AllDayBuilder()
+          .title('Weekly sync')
+          .recurrent('WEEKLY')
+          .withDisplayTimezone('UTC');
+        const { user, setProps } = render(
+          <EventCalendarProvider
+            events={[utcBuilder.build()]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="UTC"
+            onEventsChange={() => {}}
+          >
+            <StoreSpy
+              Context={SchedulerStoreContext}
+              method="updateRecurringEvent"
+              onSpyReady={(sp) => {
+                updateRecurringEventSpy = sp;
+              }}
+            />
+
+            <TestEventDialogContent open {...defaultProps} occurrence={utcBuilder.toOccurrence()} />
+
+            <RecurringScopeDialog />
+          </EventCalendarProvider>,
+        );
+
+        // The form was seeded in UTC; the host moves the display timezone while it is open.
+        setProps({ displayTimezone: 'America/New_York' });
+        const endDateInput = screen.getByLabelText(/end date/i);
+        await user.clear(endDateInput);
+        await user.type(endDateInput, '2025-07-05');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        // The range was validated as a pair in New York, so the untouched start follows the
+        // edited end instead of keeping its UTC instant next to a New York end.
+        const payload = updateRecurringEventSpy!.mock.lastCall![0];
+        expect(payload.changes).to.have.property('start');
+        expect(payload.changes).to.have.property('end');
+      });
+
+      it('should anchor a rule added to a non-recurring event on its data-timezone weekday', async () => {
+        const onEventsChange = vi.fn();
+        // A UTC all-day Friday viewed from New York, where it shows on Thursday.
+        const fridayBuilder = utcJuly4AllDayBuilder()
+          .title('Independence day')
+          .withDisplayTimezone('America/New_York');
+        const fridayEvent = fridayBuilder.build();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[fridayEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={fridayBuilder.toOccurrence()}
+            />
+          </EventCalendarProvider>,
+        );
+
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        // The preset reads "weekly on Thursday" in New York; stored against the untouched
+        // Friday UTC start, the rule must expand on Fridays UTC to keep showing on Thursdays.
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (event: SchedulerEvent) => event.id === fridayEvent.id,
+        )!;
+        expect(updated.start).to.equal(fridayEvent.start);
+        expect(updated.rrule).to.deep.include({ freq: 'WEEKLY', byDay: ['FR'] });
       });
 
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {
@@ -3002,8 +3563,10 @@ describe('<EventDialogContent open />', () => {
         expect(payload.description).to.equal('new description');
         expect(payload.resource).to.deep.equal([workResource.id]);
         expect(payload.allDay).to.equal(false);
-        expect(payload.start).toEqualDateTime(adapter.date('2025-06-12T14:00:00', 'default'));
-        expect(payload.end).toEqualDateTime(adapter.date('2025-06-12T15:00:00', 'default'));
+        // The date fields were not edited, so the payload leaves the range out
+        // and the stored dates cannot shift.
+        expect(payload.start).to.equal(undefined);
+        expect(payload.end).to.equal(undefined);
         expect(payload.rrule).to.equal(undefined);
       });
 

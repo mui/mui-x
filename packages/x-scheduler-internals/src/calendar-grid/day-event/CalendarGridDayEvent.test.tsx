@@ -15,6 +15,7 @@ describe('<CalendarGrid.DayEvent />', () => {
     <CalendarGrid.DayEvent
       eventId="fake-id"
       occurrenceKey="fake-key"
+      dataTimezone={undefined}
       start={eventStart}
       end={eventEnd}
       renderDragPreview={() => null}
@@ -49,6 +50,7 @@ describe('<CalendarGrid.DayEvent />', () => {
                 <CalendarGrid.DayEvent
                   eventId="fake-id"
                   occurrenceKey="fake-key"
+                  dataTimezone={undefined}
                   start={processDate(adapter.date(start, 'default'), adapter)}
                   end={processDate(adapter.date(end, 'default'), adapter)}
                   renderDragPreview={() => null}

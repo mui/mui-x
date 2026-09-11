@@ -1,26 +1,14 @@
-import { screen, within, act } from '@mui/internal-test-utils';
+import { screen, act } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
   EventBuilder,
+  getMonthViewCell,
   simulateDragAndDrop,
   mockElementBounds,
   getResizeHandle,
 } from 'test/utils/scheduler';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 import { vi, describe, it, expect } from 'vitest';
-
-/**
- * Returns the MonthView grid cell for a given day-of-month number.
- * Finds the cell by looking for the day number text within gridcell elements.
- */
-function getMonthViewCell(dayOfMonth: number): HTMLElement {
-  const cells = screen.getAllByRole('gridcell');
-  const cell = cells.find((c) => within(c).queryByText(new RegExp(`^${dayOfMonth}$`)));
-  if (!cell) {
-    throw new Error(`Could not find MonthView cell for day ${dayOfMonth}`);
-  }
-  return cell;
-}
 
 describe('MonthView - Drag and Drop', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
