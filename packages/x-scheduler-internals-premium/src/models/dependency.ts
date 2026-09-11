@@ -17,13 +17,15 @@ declare module '@mui/x-scheduler-internals/models' {
 }
 
 /**
- * The other PDM types (`StartToStart`, `FinishToFinish`, `StartToFinish`) will widen this union when implemented.
+ * The PDM dependency types: which edge of the predecessor constrains which edge of
+ * the successor.
  */
-export type SchedulerDependencyType = 'FinishToStart';
+export type SchedulerDependencyType =
+  'FinishToStart' | 'StartToStart' | 'FinishToFinish' | 'StartToFinish';
 
 /**
  * A dependency between two events, referencing them by id.
- * For `"FinishToStart"`, `source` is the predecessor and `target` the successor.
+ * `source` is the predecessor and `target` the successor, whatever the type.
  */
 export interface SchedulerDependency {
   /**
@@ -51,7 +53,8 @@ export interface SchedulerDependency {
 export type SchedulerDependencyCreationProperties = Omit<SchedulerDependency, 'id'>;
 
 /**
- * State of the pending create-dependency drag gesture, from a terminal to a target event.
+ * State of the pending create-dependency drag gesture, from a terminal to a target
+ * event or one of its terminals.
  */
 export interface SchedulerDependencyCreation {
   /**
@@ -87,6 +90,12 @@ export interface SchedulerDependencyCreation {
    * same way `sourceResourceId` qualifies the source.
    */
   targetResourceId: SchedulerResourceId | null;
+  /**
+   * The edge of the hovered target the drop would land on: the hovered terminal's, or
+   * the start edge on the event body. Together with `sourceSide`, it determines the
+   * created dependency's type.
+   */
+  targetSide: SchedulerEventSide | null;
 }
 
 export type SchedulerDependencyEventRejectionReason =

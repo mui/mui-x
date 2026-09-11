@@ -18,102 +18,123 @@ import {
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
 
+// A release day: every dependency has a business reason, and each type and arrow
+// shape appears once, in its own stretch of the day so the arrows stay apart.
 const resources: SchedulerResource[] = [
   { id: 'backend', title: 'Backend' },
   { id: 'frontend', title: 'Frontend' },
   { id: 'qa', title: 'QA' },
   { id: 'docs', title: 'Docs' },
+  { id: 'devops', title: 'DevOps' },
+  { id: 'support', title: 'Support' },
 ];
 
-// The dataset covers every arrow shape: same-row straight, cross-row elbow (with an
-// event blocking the default turn), adjacent events, and backward S routes. `Handoff`
-// is assigned to two resources, so it renders one appearance per row and its
-// dependencies fan out to one arrow per pair of appearances.
-// Early hours so every arrow is inside the initial viewport without scrolling.
 const initialEvents: SchedulerEvent[] = [
   {
     id: 'api',
     title: 'API design',
-    start: '2025-07-03T01:00:00',
-    end: '2025-07-03T03:00:00',
+    start: '2025-07-03T08:15:00',
+    end: '2025-07-03T09:45:00',
     resource: 'backend',
   },
   {
-    id: 'impl',
-    title: 'Implementation',
-    start: '2025-07-03T07:00:00',
-    end: '2025-07-03T09:30:00',
+    id: 'backend-impl',
+    title: 'Backend',
+    start: '2025-07-03T09:45:00',
+    end: '2025-07-03T12:15:00',
+    resource: 'backend',
+  },
+  {
+    id: 'ui',
+    title: 'UI',
+    start: '2025-07-03T10:15:00',
+    end: '2025-07-03T13:00:00',
     resource: 'frontend',
   },
   {
-    id: 'test',
+    id: 'polish',
+    title: 'Polish',
+    start: '2025-07-03T13:55:00',
+    end: '2025-07-03T14:35:00',
+    resource: 'frontend',
+  },
+  {
+    id: 'test-plan',
+    title: 'Test plan',
+    start: '2025-07-03T08:45:00',
+    end: '2025-07-03T09:45:00',
+    resource: 'qa',
+  },
+  {
+    id: 'testing',
     title: 'Testing',
+    start: '2025-07-03T13:15:00',
+    end: '2025-07-03T15:15:00',
+    resource: 'qa',
+  },
+  {
+    id: 'guide',
+    title: 'Guide',
+    start: '2025-07-03T10:30:00',
+    end: '2025-07-03T13:30:00',
+    resource: 'docs',
+  },
+  {
+    id: 'notes',
+    title: 'Notes',
+    start: '2025-07-03T15:00:00',
+    end: '2025-07-03T16:00:00',
+    resource: 'docs',
+  },
+  {
+    id: 'staging',
+    title: 'Staging',
+    start: '2025-07-03T13:00:00',
+    end: '2025-07-03T14:00:00',
+    resource: 'devops',
+  },
+  {
+    id: 'prod',
+    title: 'Deploy',
+    start: '2025-07-03T16:45:00',
+    end: '2025-07-03T17:45:00',
+    resource: 'devops',
+  },
+  {
+    id: 'on-call',
+    title: 'On-call shift',
     start: '2025-07-03T10:00:00',
-    end: '2025-07-03T11:00:00',
-    resource: 'qa',
+    end: '2025-07-03T17:00:00',
+    resource: 'support',
   },
+  // Assigned to three teams: one appearance per row, one arrow per appearance.
   {
-    id: 'draft',
-    title: 'Docs draft',
-    start: '2025-07-03T01:00:00',
-    end: '2025-07-03T02:00:00',
-    resource: 'docs',
-  },
-  {
-    id: 'review',
-    title: 'Docs review',
-    start: '2025-07-03T03:00:00',
-    end: '2025-07-03T04:00:00',
-    resource: 'docs',
-  },
-  {
-    id: 'publish',
-    title: 'Publish',
-    start: '2025-07-03T04:00:00',
-    end: '2025-07-03T05:00:00',
-    resource: 'docs',
-  },
-  {
-    id: 'hotfix',
-    title: 'Hotfix',
-    start: '2025-07-03T07:00:00',
-    end: '2025-07-03T09:00:00',
-    resource: 'backend',
-  },
-  {
-    id: 'retro',
-    title: 'Retro notes',
-    start: '2025-07-03T02:00:00',
-    end: '2025-07-03T03:00:00',
-    resource: 'qa',
-  },
-  {
-    id: 'spike',
-    title: 'Spike',
-    start: '2025-07-03T02:00:00',
-    end: '2025-07-03T06:30:00',
-    resource: 'frontend',
-  },
-  {
-    id: 'handoff',
-    title: 'Handoff',
-    start: '2025-07-03T04:00:00',
-    end: '2025-07-03T05:30:00',
-    resource: ['backend', 'qa'],
+    id: 'sync',
+    title: 'Sync',
+    start: '2025-07-03T15:30:00',
+    end: '2025-07-03T16:00:00',
+    resource: ['frontend', 'qa', 'devops'],
   },
 ];
 
 const initialDependencies: SchedulerDependency[] = [
-  { id: 'd1', source: 'api', target: 'impl', type: 'FinishToStart' },
-  { id: 'd2', source: 'impl', target: 'test', type: 'FinishToStart' },
-  { id: 'd3', source: 'draft', target: 'review', type: 'FinishToStart' },
-  { id: 'd4', source: 'review', target: 'publish', type: 'FinishToStart' },
-  { id: 'd5', source: 'hotfix', target: 'retro', type: 'FinishToStart' },
-  { id: 'd6', source: 'spike', target: 'impl', type: 'FinishToStart' },
-  // Both endpoints of a multi-resource event: one arrow leaves each of its rows, and
-  // one arrow reaches each of them.
-  { id: 'd7', source: 'handoff', target: 'impl', type: 'FinishToStart' },
-  { id: 'd8', source: 'review', target: 'handoff', type: 'FinishToStart' },
+  // Adjacent events in the same row: the short arrow over the junction.
+  { id: 'd1', source: 'api', target: 'backend-impl', type: 'FinishToStart' },
+  // Across rows: the forward elbow.
+  { id: 'd2', source: 'api', target: 'ui', type: 'FinishToStart' },
+  // The test plan starts once the API design has started: wraps around the left.
+  { id: 'd3', source: 'api', target: 'test-plan', type: 'StartToStart' },
+  { id: 'd4', source: 'backend-impl', target: 'staging', type: 'FinishToStart' },
+  // Same row, forward: the straight arrow.
+  { id: 'd5', source: 'ui', target: 'polish', type: 'FinishToStart' },
+  // The guide cannot be finished before the UI is: wraps around the right.
+  { id: 'd6', source: 'ui', target: 'guide', type: 'FinishToFinish' },
+  // Violated: the notes were started before testing finished. Backward S route.
+  { id: 'd7', source: 'testing', target: 'notes', type: 'FinishToStart' },
+  // Multi-resource source: one arrow out of each of its rows.
+  { id: 'd8', source: 'sync', target: 'prod', type: 'FinishToStart' },
+  // The on-call shift cannot end until the production deploy has started.
+  { id: 'd9', source: 'prod', target: 'on-call', type: 'StartToFinish' },
 ];
 
 const styledContextValue = {
@@ -143,6 +164,8 @@ export default function TimelineDependencyArrows() {
     onDependenciesChange: setDependencies,
     defaultVisibleDate: new Date('2025-07-03T00:00:00'),
     defaultPreset: 'dayAndHour',
+    // Working hours only, so every arrow fits the initial viewport.
+    presetConfig: { dayAndHour: { startTime: 8, endTime: 18 } },
     areEventsDraggable: true,
     areEventsResizable: true,
   };
@@ -157,7 +180,7 @@ export default function TimelineDependencyArrows() {
     <div
       className="experiment-dependency-arrows-host"
       style={{
-        height: 420,
+        height: 460,
         width: '100%',
         display: 'flex',
         flexDirection: 'column',

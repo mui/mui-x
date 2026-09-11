@@ -10,7 +10,7 @@ import {
   orderArrowsWithSelectedLast,
   useDependencyGeometry,
 } from './EventTimelinePremiumDependencyGeometry';
-import { DEPENDENCY_ARROW_HIT_STROKE_WIDTH } from './dependencyArrowGeometry';
+import { DEPENDENCY_ARROW_HIT_STROKE_WIDTH } from './dependencyArrowHitArea';
 import { useDependencySelectionInteraction } from './useDependencySelectionInteraction';
 
 // The hit paths never ride over an event the route crosses (the geometry cuts them
@@ -27,7 +27,7 @@ const DEPENDENCY_DELETE_BUTTON_CROSS_RADIUS = 2.5;
  * The interaction layer: the arrows' invisible click hit-areas and the selected
  * arrow's delete button. Separate from the visual overlay so the pointer-enabled
  * surface stays out of the `pointerEvents: 'none'` svg.
- * TODO(dependencies public flip): add a `dependencyInteractions` utility class; the
+ * TODO(dependencies public flip, #23420): add a `dependencyInteractions` utility class; the
  * layer only carries data attributes while the feature has no public API. Same z-index as the arrows
  * overlay and after it in the DOM, so it paints above the arrow strokes — but before
  * the terminals overlay, whose revealed terminals must win the clicks over a crossing
@@ -118,13 +118,16 @@ function DependencyInteractionsLayer() {
       viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}
     >
       {orderedArrows.map((arrow) => {
-        // Clamped inside the viewBox on both axes: at the timeline's left edge the
-        // anchor sits at x = 0, and an arrow into a scrolled-out row has its tip above
-        // or below the rendered range — an unclamped button would be unreachable there
-        // even though the arrow is selected.
-        const buttonX = Math.max(
-          arrow.endPoint.x - DEPENDENCY_DELETE_BUTTON_RADIUS,
-          DEPENDENCY_DELETE_BUTTON_RADIUS,
+        // On the side of the tip the arrow comes from, so it never covers the target
+        // event, and clamped inside the viewBox: at a timeline edge or into a
+        // scrolled-out row the button would otherwise be unreachable.
+        const buttonDirection = arrow.targetEdge === 'start' ? -1 : 1;
+        const buttonX = Math.min(
+          Math.max(
+            arrow.endPoint.x + buttonDirection * DEPENDENCY_DELETE_BUTTON_RADIUS,
+            DEPENDENCY_DELETE_BUTTON_RADIUS,
+          ),
+          eventsWidth - DEPENDENCY_DELETE_BUTTON_RADIUS,
         );
         const buttonY = Math.min(
           Math.max(arrow.endPoint.y, offsetTop + DEPENDENCY_DELETE_BUTTON_RADIUS),

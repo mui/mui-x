@@ -1,31 +1,28 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type {
-  SchedulerProcessedEvent,
   SchedulerEventOccurrence,
+  SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
 import {
-  getOccurrencesFromEvents,
   computeElementPositionInCollection,
+  getOccurrencesFromEvents,
 } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
-import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { describe, it, expect } from 'vitest';
+import { computeDependencyArrows } from './dependencyArrowGeometry';
 import {
-  buildDependencyArrowRoutes,
-  buildRoundedOrthogonalPath,
-  computeDependencyArrows,
-  createDependencyAnchorResolver,
-  getEventEdgeAnchor,
-} from './dependencyArrowGeometry';
-
-const collectionStart = adapter.date('2024-01-15', 'default');
-const collectionEnd = adapter.endOfDay(collectionStart);
-const FULL_DAY_AXIS = {
-  start: collectionStart,
-  end: collectionEnd,
-  dayStartMinute: 0,
-  dayEndMinute: 1440,
-};
+  buildDependency,
+  buildResolver,
+  collectionEnd,
+  collectionStart,
+  eventA,
+  eventB,
+  EVENTS_WIDTH,
+  getOccurrences,
+  LANE_1_CENTER,
+  resource1,
+  resource2,
+} from '../../tests/dependencyGeometryTestUtils';
 
 // Mirrors the axis filter of the occurrence selector: visible ≡ non-zero width.
 const filterVisibleOccurrences = (axis: TimelineAxis, occurrences: SchedulerEventOccurrence[]) =>
@@ -38,323 +35,14 @@ const filterVisibleOccurrences = (axis: TimelineAxis, occurrences: SchedulerEven
       }).duration > 0,
   );
 
-// 1440 minutes in the collection and eventsWidth = 1440 → 1px per minute.
-const EVENTS_WIDTH = 1440;
-const LANE_METRICS = { topPadding: 16, laneMinHeight: 30, laneGap: 4 };
-// Offset the S route detours below same-height anchors (laneMinHeight / 2 + clearance).
-const DETOUR_OFFSET = 21;
-// One-lane rows: the anchor sits at rowPosition + topPadding + laneMinHeight / 2.
-const LANE_1_CENTER = LANE_METRICS.topPadding + LANE_METRICS.laneMinHeight / 2;
-
-const RESOURCE_1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
-const RESOURCE_2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
-
-function getOccurrences(events: SchedulerProcessedEvent[]) {
-  return getOccurrencesFromEvents({
-    adapter,
-    start: collectionStart,
-    end: collectionEnd,
-    events,
-    displayTimezone: 'default',
-    visibleResources: {},
-    recurringEventsPlugin: null,
-  });
-}
-
-function buildDependency(id: string, source: string, target: string): SchedulerDependency {
-  return { id, source, target, type: 'FinishToStart' };
-}
-
-function buildResolver(parameters: {
-  resources: Parameters<typeof createDependencyAnchorResolver>[0]['resources'];
-  rowPositions: readonly number[];
-  axis?: TimelineAxis;
-  eventsWidth?: number;
-}) {
-  return createDependencyAnchorResolver({
-    adapter,
-    resources: parameters.resources,
-    rowPositions: parameters.rowPositions,
-    axis: parameters.axis ?? FULL_DAY_AXIS,
-    eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
-    laneMetrics: LANE_METRICS,
-  });
-}
-
 describe('dependencyArrowGeometry', () => {
-  describe('buildRoundedOrthogonalPath', () => {
-    it('should return a straight path for two points', () => {
-      expect(
-        buildRoundedOrthogonalPath(
-          [
-            { x: 0, y: 0 },
-            { x: 10, y: 0 },
-          ],
-          4,
-        ),
-      ).to.equal('M 0 0 L 10 0');
-    });
-
-    it('should soften a corner with a quadratic curve', () => {
-      expect(
-        buildRoundedOrthogonalPath(
-          [
-            { x: 0, y: 0 },
-            { x: 10, y: 0 },
-            { x: 10, y: 20 },
-          ],
-          4,
-        ),
-      ).to.equal('M 0 0 L 6 0 Q 10 0 10 4 L 10 20');
-    });
-
-    it('should clamp the corner radius to half of the shortest adjacent segment', () => {
-      expect(
-        buildRoundedOrthogonalPath(
-          [
-            { x: 0, y: 0 },
-            { x: 2, y: 0 },
-            { x: 2, y: 10 },
-          ],
-          4,
-        ),
-      ).to.equal('M 0 0 L 1 0 Q 2 0 2 1 L 2 10');
-    });
-
-    it('should collapse consecutive duplicated points', () => {
-      expect(
-        buildRoundedOrthogonalPath(
-          [
-            { x: 0, y: 0 },
-            { x: 0, y: 0 },
-            { x: 5, y: 0 },
-          ],
-          4,
-        ),
-      ).to.equal('M 0 0 L 5 0');
-    });
-  });
-
-  describe('buildDependencyArrowRoutes', () => {
-    it('should return a straight segment when the anchors share the same height and the target is forward', () => {
-      const [points] = buildDependencyArrowRoutes(
-        { x: 10, y: 5 },
-        { x: 50, y: 5 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(points).to.deep.equal([
-        { x: 10, y: 5 },
-        { x: 50, y: 5 },
-      ]);
-    });
-
-    it('should return a two-corner elbow for a forward arrow between different heights', () => {
-      const [points] = buildDependencyArrowRoutes(
-        { x: 10, y: 5 },
-        { x: 50, y: 40 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(points).to.deep.equal([
-        { x: 10, y: 5 },
-        { x: 18, y: 5 },
-        { x: 18, y: 40 },
-        { x: 50, y: 40 },
-      ]);
-    });
-
-    it('should route the S detour below the source when the target starts before the source ends', () => {
-      const [points] = buildDependencyArrowRoutes(
-        { x: 50, y: 5 },
-        { x: 20, y: 40 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(points).to.deep.equal([
-        { x: 50, y: 5 },
-        { x: 58, y: 5 },
-        { x: 58, y: 5 + DETOUR_OFFSET },
-        { x: 8, y: 5 + DETOUR_OFFSET },
-        { x: 8, y: 40 },
-        { x: 20, y: 40 },
-      ]);
-    });
-
-    it('should route the S detour above the source when the target is higher', () => {
-      const [points] = buildDependencyArrowRoutes(
-        { x: 50, y: 40 },
-        { x: 20, y: 5 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(points).to.deep.equal([
-        { x: 50, y: 40 },
-        { x: 58, y: 40 },
-        { x: 58, y: 40 - DETOUR_OFFSET },
-        { x: 8, y: 40 - DETOUR_OFFSET },
-        { x: 8, y: 5 },
-        { x: 20, y: 5 },
-      ]);
-    });
-
-    it('should route the S detour below the events when the anchors share the same height', () => {
-      const [points] = buildDependencyArrowRoutes(
-        { x: 50, y: 5 },
-        { x: 20, y: 5 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(points).to.deep.equal([
-        { x: 50, y: 5 },
-        { x: 58, y: 5 },
-        { x: 58, y: 5 + DETOUR_OFFSET },
-        { x: 8, y: 5 + DETOUR_OFFSET },
-        { x: 8, y: 5 },
-        { x: 20, y: 5 },
-      ]);
-    });
-
-    it('should route the S detour when the target starts too close after the source ends', () => {
-      // forwardX = 5: forward, but the stub and the entry clearance do not fit.
-      const [points] = buildDependencyArrowRoutes(
-        { x: 50, y: 5 },
-        { x: 55, y: 40 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(points).to.deep.equal([
-        { x: 50, y: 5 },
-        { x: 58, y: 5 },
-        { x: 58, y: 5 + DETOUR_OFFSET },
-        { x: 43, y: 5 + DETOUR_OFFSET },
-        { x: 43, y: 40 },
-        { x: 55, y: 40 },
-      ]);
-    });
-
-    it('should render a short straight arrow overlapping the predecessor between two adjacent events', () => {
-      const [points] = buildDependencyArrowRoutes(
-        { x: 50, y: 5 },
-        { x: 50, y: 5 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(points).to.deep.equal([
-        { x: 34, y: 5 },
-        { x: 50, y: 5 },
-      ]);
-    });
-
-    it('should return a second elbow candidate turning right before the target', () => {
-      const routes = buildDependencyArrowRoutes(
-        { x: 10, y: 5 },
-        { x: 50, y: 40 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(routes).to.have.length(2);
-      expect(routes[1]).to.deep.equal([
-        { x: 10, y: 5 },
-        { x: 38, y: 5 },
-        { x: 38, y: 40 },
-        { x: 50, y: 40 },
-      ]);
-    });
-
-    it('should ride the entry onto the target when it starts too close to the timeline start', () => {
-      // The entry elbow would land at x = -7, under the pinned title column: the
-      // vertical clamps to x = 0 and the arrowhead rides over the target's start.
-      const [points] = buildDependencyArrowRoutes(
-        { x: 50, y: 5 },
-        { x: 5, y: 40 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(points).to.deep.equal([
-        { x: 50, y: 5 },
-        { x: 58, y: 5 },
-        { x: 58, y: 5 + DETOUR_OFFSET },
-        { x: 0, y: 5 + DETOUR_OFFSET },
-        { x: 0, y: 40 },
-        { x: 12, y: 40 },
-      ]);
-    });
-
-    it('should ride the exit onto the source when it ends at the timeline end', () => {
-      const [points] = buildDependencyArrowRoutes(
-        { x: EVENTS_WIDTH, y: 5 },
-        { x: 30, y: 40 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(points).to.deep.equal([
-        { x: 1432, y: 5 },
-        { x: 1440, y: 5 },
-        { x: 1440, y: 5 + DETOUR_OFFSET },
-        { x: 18, y: 5 + DETOUR_OFFSET },
-        { x: 18, y: 40 },
-        { x: 30, y: 40 },
-      ]);
-    });
-
-    it('should clamp the short adjacent arrow at the timeline start', () => {
-      const [points] = buildDependencyArrowRoutes(
-        { x: 10, y: 5 },
-        { x: 10, y: 5 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(points).to.deep.equal([
-        { x: 0, y: 5 },
-        { x: 10, y: 5 },
-      ]);
-    });
-
-    it('should return a single elbow candidate when both turns collapse to the same x', () => {
-      // forwardX = 20: the early turn (source + stub) and the late turn (target −
-      // clearance) land on the same vertical.
-      const routes = buildDependencyArrowRoutes(
-        { x: 10, y: 5 },
-        { x: 30, y: 40 },
-        DETOUR_OFFSET,
-        EVENTS_WIDTH,
-      );
-
-      expect(routes).to.have.length(1);
-      expect(routes[0]).to.deep.equal([
-        { x: 10, y: 5 },
-        { x: 18, y: 5 },
-        { x: 18, y: 40 },
-        { x: 30, y: 40 },
-      ]);
-    });
-  });
-
   describe('computeDependencyArrows', () => {
-    // 10:00–12:00 UTC → end x = 720. 13:00–14:00 UTC → start x = 780.
-    const eventA = EventBuilder.new()
-      .id('event-a')
-      .singleDay('2024-01-15T10:00:00Z', 120)
-      .toProcessed();
-    const eventB = EventBuilder.new().id('event-b').singleDay('2024-01-15T13:00:00Z').toProcessed();
     const eventC = EventBuilder.new().id('event-c').singleDay('2024-01-15T13:00:00Z').toProcessed();
 
     it('should return a straight arrow between two events in the same row and lane', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
         }),
         [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -368,6 +56,99 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].maxRowIndex).to.equal(0);
     });
 
+    it('should build the path and the hit-area lazily', () => {
+      // Every row re-measure recomputes all the arrows, most of them off-screen: the
+      // string building only pays for the arrows something actually renders.
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
+
+      expect(Object.getOwnPropertyDescriptor(arrows[0], 'd')!.get).to.be.a('function');
+      expect(Object.getOwnPropertyDescriptor(arrows[0], 'hitD')!.get).to.be.a('function');
+    });
+
+    it('should expose the start edge as the target edge of a FinishToStart arrow', () => {
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
+
+      expect(arrows[0].targetEdge).to.equal('start');
+    });
+
+    it('should connect the end edges of both events for a FinishToFinish dependency', () => {
+      // event-a ends at x = 720 (row 0), event-b ends at x = 840 (row 1): the route
+      // wraps 12px past the later end and enters event-b from the right.
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([eventB]) },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b', 'FinishToFinish')],
+      );
+
+      expect(arrows[0].d).to.equal(
+        'M 720 31 L 848 31 Q 852 31 852 35 L 852 89 Q 852 93 848 93 L 840 93',
+      );
+      // 14:00 → 14 / 24 × 1440 lands a hair below 840 in floating point.
+      expect(arrows[0].endPoint.x).to.be.closeTo(840, 1e-9);
+      expect(arrows[0].endPoint.y).to.equal(93);
+      expect(arrows[0].targetEdge).to.equal('end');
+    });
+
+    it('should connect the start edges of both events for a StartToStart dependency', () => {
+      // event-a starts at x = 600 (row 0), event-b at x = 780 (row 1): the route wraps
+      // 8px before the earlier start and enters event-b from the left.
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([eventB]) },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b', 'StartToStart')],
+      );
+
+      expect(arrows[0].d).to.equal(
+        'M 600 31 L 596 31 Q 592 31 592 35 L 592 89 Q 592 93 596 93 L 780 93',
+      );
+      expect(arrows[0].endPoint).to.deep.equal({ x: 780, y: 93 });
+      expect(arrows[0].targetEdge).to.equal('start');
+    });
+
+    it('should connect the source start to the target end for a StartToFinish dependency', () => {
+      // event-b starts at x = 780 (row 1), event-a ends at x = 720 (row 0): the
+      // mirrored forward elbow turns 8px before the source start and enters event-a
+      // from the right.
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([eventB]) },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-b', 'event-a', 'StartToFinish')],
+      );
+
+      expect(arrows[0].d).to.equal(
+        'M 780 93 L 776 93 Q 772 93 772 89 L 772 35 Q 772 31 768 31 L 720 31',
+      );
+      expect(arrows[0].endPoint).to.deep.equal({ x: 720, y: 31 });
+      expect(arrows[0].targetEdge).to.equal('end');
+    });
+
     it('should keep a clickable hit-area between two adjacent events', () => {
       // event-adj starts exactly when event-a ends → the 16px adjacent-events route.
       const eventAdjacent = EventBuilder.new()
@@ -378,7 +159,7 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventAdjacent]) },
+            { resource: resource1, occurrences: getOccurrences([eventA, eventAdjacent]) },
           ],
           rowPositions: [0],
         }),
@@ -399,7 +180,7 @@ describe('dependencyArrowGeometry', () => {
 
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventNear]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventNear]) }],
           rowPositions: [0],
         }),
         [buildDependency('dep-1', 'event-a', 'event-near')],
@@ -412,7 +193,7 @@ describe('dependencyArrowGeometry', () => {
     it('should trim the hit-area at both ends of a long straight arrow', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
         }),
         [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -436,7 +217,7 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA, crossedEvent, eventB]) },
+            { resource: resource1, occurrences: getOccurrences([eventA, crossedEvent, eventB]) },
           ],
           rowPositions: [0],
         }),
@@ -468,8 +249,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([crossedEvent]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([crossedEvent]) },
             { resource: resource3, occurrences: getOccurrences([eventT]) },
           ],
           rowPositions: [0, 62, 124],
@@ -494,7 +275,7 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA, coveringEvent, eventB]) },
+            { resource: resource1, occurrences: getOccurrences([eventA, coveringEvent, eventB]) },
           ],
           rowPositions: [0],
         }),
@@ -516,8 +297,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([earlyEvent]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([earlyEvent]) },
           ],
           rowPositions: [0, 62],
         }),
@@ -532,8 +313,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([eventC]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([eventC]) },
           ],
           rowPositions: [0, 62],
         }),
@@ -563,7 +344,7 @@ describe('dependencyArrowGeometry', () => {
 
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventD]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventD]) }],
           rowPositions: [0],
         }),
         [buildDependency('dep-1', 'event-a', 'event-d')],
@@ -600,8 +381,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([obstacle, eventT]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([obstacle, eventT]) },
           ],
           rowPositions: [0, 62],
         }),
@@ -629,8 +410,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([obstacle]) },
+            { resource: resource1, occurrences: getOccurrences([eventA]) },
+            { resource: resource2, occurrences: getOccurrences([obstacle]) },
             { resource: resource3, occurrences: getOccurrences([eventT]) },
           ],
           rowPositions: [0, 62, 124],
@@ -647,7 +428,7 @@ describe('dependencyArrowGeometry', () => {
     it('should skip a dependency when one of its events has no occurrence in any row', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
         }),
         [
@@ -665,8 +446,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: [...getOccurrences([eventA]), ...occurrencesB] },
-            { resource: RESOURCE_2, occurrences: occurrencesB },
+            { resource: resource1, occurrences: [...getOccurrences([eventA]), ...occurrencesB] },
+            { resource: resource2, occurrences: occurrencesB },
           ],
           rowPositions: [0, 62],
         }),
@@ -688,8 +469,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: [...occurrencesA, ...occurrencesB] },
-            { resource: RESOURCE_2, occurrences: [...occurrencesA, ...occurrencesB] },
+            { resource: resource1, occurrences: [...occurrencesA, ...occurrencesB] },
+            { resource: resource2, occurrences: [...occurrencesA, ...occurrencesB] },
           ],
           rowPositions: [0, 62],
         }),
@@ -704,12 +485,42 @@ describe('dependencyArrowGeometry', () => {
       ]);
     });
 
+    it('should route every appearance pair of a FinishToFinish dependency on the end edges', () => {
+      const occurrencesA = getOccurrences([eventA]);
+      const occurrencesB = getOccurrences([eventB]);
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: resource1, occurrences: [...occurrencesA, ...occurrencesB] },
+            { resource: resource2, occurrences: occurrencesB },
+          ],
+          rowPositions: [0, 62],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b', 'FinishToFinish')],
+      );
+
+      expect(arrows.map((arrow) => arrow.key)).to.deep.equal([
+        'string:dep-1:0:0',
+        'string:dep-1:0:1',
+      ]);
+      expect(arrows.map((arrow) => arrow.targetEdge)).to.deep.equal(['end', 'end']);
+      // Both arrows end on event-b's end edge, each on its own row.
+      expect(arrows.map((arrow) => arrow.endPoint.y)).to.deep.equal([
+        LANE_1_CENTER,
+        62 + LANE_1_CENTER,
+      ]);
+      arrows.forEach((arrow) => {
+        expect(arrow.endPoint.x).to.be.closeTo(840, 1e-9);
+      });
+    });
+
     it('should give distinct keys to dependencies whose ids differ only in type', () => {
       // `SchedulerDependencyId` accepts both strings and numbers: `1` and `"1"` are
       // two dependencies, and on the same row pair only the id type separates them.
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
         }),
         [
@@ -737,8 +548,8 @@ describe('dependencyArrowGeometry', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
           resources: [
-            { resource: RESOURCE_1, occurrences: getOccurrences([lateEvent]) },
-            { resource: RESOURCE_2, occurrences: getOccurrences([earlyEvent]) },
+            { resource: resource1, occurrences: getOccurrences([lateEvent]) },
+            { resource: resource2, occurrences: getOccurrences([earlyEvent]) },
           ],
           rowPositions: [0, 62],
         }),
@@ -758,7 +569,7 @@ describe('dependencyArrowGeometry', () => {
     it('should return no arrow when the events area has no width', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
           rowPositions: [0],
           eventsWidth: 0,
         }),
@@ -771,59 +582,13 @@ describe('dependencyArrowGeometry', () => {
     it('should return no arrow when there is no dependency', () => {
       const arrows = computeDependencyArrows(
         buildResolver({
-          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA]) }],
+          resources: [{ resource: resource1, occurrences: getOccurrences([eventA]) }],
           rowPositions: [0],
         }),
         [],
       );
 
       expect(arrows).to.deep.equal([]);
-    });
-
-    it('should resolve an event outside the endpoint filter through the targeted scan', () => {
-      const resolver = createDependencyAnchorResolver({
-        adapter,
-        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
-        rowPositions: [0],
-        axis: FULL_DAY_AXIS,
-        eventsWidth: EVENTS_WIDTH,
-        laneMetrics: LANE_METRICS,
-        endpointIds: new Set(['event-a']),
-      });
-
-      // Filtered id: indexed by the build pass.
-      expect(resolver.getAppearances('event-a')).to.have.length(1);
-      // Off-filter id (the in-flight creation's event): targeted scan, cached.
-      const first = resolver.getAppearances('event-b');
-      expect(first).to.have.length(1);
-      expect(resolver.getAppearances('event-b')).to.equal(first);
-      // Unknown off-filter id caches its empty result too.
-      expect(resolver.getAppearances('nope')).to.have.length(0);
-    });
-
-    it('should anchor the rubber band on the appearance matching the resource', () => {
-      // A multi-resource event repeats the very same occurrence — key included — on
-      // each of its rows, so only the resource tells its appearances apart.
-      const [occurrence] = getOccurrences([eventA]);
-      const resolver = buildResolver({
-        resources: [
-          { resource: RESOURCE_1, occurrences: [occurrence] },
-          { resource: RESOURCE_2, occurrences: [occurrence] },
-        ],
-        rowPositions: [0, 62],
-      });
-
-      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', occurrence.key, 'r2')!.y).to.equal(
-        62 + LANE_1_CENTER,
-      );
-      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', occurrence.key, 'r1')!.y).to.equal(
-        LANE_1_CENTER,
-      );
-      // An unknown (or absent) key silently falls back to the first appearance.
-      expect(getEventEdgeAnchor(resolver, 'event-a', 'end', 'unknown-key')!.y).to.equal(
-        LANE_1_CENTER,
-      );
-      expect(getEventEdgeAnchor(resolver, 'event-a', 'end')!.y).to.equal(LANE_1_CENTER);
     });
 
     describe('trimmed hour window', () => {
@@ -842,7 +607,7 @@ describe('dependencyArrowGeometry', () => {
         // (the full-day mapping would give 720 and 780).
         const arrows = computeDependencyArrows(
           buildResolver({
-            resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+            resources: [{ resource: resource1, occurrences: getOccurrences([eventA, eventB]) }],
             rowPositions: [0],
             axis: TRIMMED_AXIS,
             eventsWidth: TRIMMED_WIDTH,
@@ -868,7 +633,7 @@ describe('dependencyArrowGeometry', () => {
 
         const arrows = computeDependencyArrows(
           buildResolver({
-            resources: [{ resource: RESOURCE_1, occurrences }],
+            resources: [{ resource: resource1, occurrences }],
             rowPositions: [0],
             axis: TRIMMED_AXIS,
             eventsWidth: TRIMMED_WIDTH,
@@ -919,8 +684,8 @@ describe('dependencyArrowGeometry', () => {
         const arrows = computeDependencyArrows(
           buildResolver({
             resources: [
-              { resource: RESOURCE_1, occurrences: sourceRowOccurrences },
-              { resource: RESOURCE_2, occurrences: getTwoDayOccurrences([target]) },
+              { resource: resource1, occurrences: sourceRowOccurrences },
+              { resource: resource2, occurrences: getTwoDayOccurrences([target]) },
             ],
             rowPositions: [0, 62],
             axis: twoDayAxis,
