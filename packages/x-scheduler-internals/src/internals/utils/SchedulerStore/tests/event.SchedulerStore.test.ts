@@ -7,6 +7,7 @@ import {
 } from 'test/utils/scheduler';
 import type {
   SchedulerEvent,
+  SchedulerEventId,
   SchedulerEventModelStructure,
 } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
@@ -187,8 +188,9 @@ storeClasses.forEach((storeClass) => {
       });
 
       describe('dates declared without a setter', () => {
-        // `start` is readable but not writable, so the store must never move the event's dates:
-        // there is nowhere to write them, and the built-in key would land next to `myStart`.
+        // `start` is readable but not writable, so it can never be moved: there is nowhere to
+        // write it, and the built-in key would land next to `myStart`. `end` keeps its setter, so
+        // a mixed structure like this still lets a resize of the end handle through.
         const readOnlyStartStructure: SchedulerEventModelStructure<MyEvent> = {
           ...eventModelStructure,
           start: { getter: (event) => event.myStart },
@@ -202,8 +204,8 @@ storeClasses.forEach((storeClass) => {
           allDay: false,
         };
 
-        const UPDATE_WARNING =
-          'MUI X Scheduler: The `start` and `end` dates of the event with id="1" were not updated.';
+        const START_WARNING =
+          'MUI X Scheduler: The `start` date of the event with id="1" was not updated.';
         const PASTE_WARNING = 'MUI X Scheduler: The event with id="1" was not pasted.';
 
         const createStore = (onEventsChange: (...args: any[]) => void) =>
@@ -217,7 +219,7 @@ storeClasses.forEach((storeClass) => {
             adapter,
           );
 
-        it('should drop start/end from updateEvent and never write the built-in keys', () => {
+        it('should drop only the date without a setter and keep the rest of the update', () => {
           const onEventsChange = vi.fn();
           const store = createStore(onEventsChange);
 
@@ -228,11 +230,34 @@ storeClasses.forEach((storeClass) => {
               start: adapter.date('2025-07-02T09:00:00.000Z', 'default'),
               end: adapter.date('2025-07-02T10:00:00.000Z', 'default'),
             });
-          }).toWarnDev([UPDATE_WARNING]);
+          }).toWarnDev([START_WARNING]);
 
           expect(onEventsChange.mock.calls.length).to.equal(1);
           expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
-            { ...UNCHANGED_EVENT, myTitle: 'Event 1 updated' },
+            {
+              ...UNCHANGED_EVENT,
+              myTitle: 'Event 1 updated',
+              // `start` is dropped (kept at its old value); `end` has a setter and applies.
+              myEnd: '2025-07-02T10:00:00.000Z',
+            },
+          ]);
+        });
+
+        // Mirrors a resize of the end handle alone: `start` is absent from the change entirely,
+        // so there is nothing to drop and nothing to warn about.
+        it('should not warn when the update only touches the writable date', () => {
+          const onEventsChange = vi.fn();
+          const store = createStore(onEventsChange);
+
+          expect(() => {
+            store.updateEvent({
+              id: '1',
+              end: adapter.date('2025-07-01T11:00:00.000Z', 'default'),
+            });
+          }).not.toWarnDev();
+
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
+            { ...UNCHANGED_EVENT, myEnd: '2025-07-01T11:00:00.000Z' },
           ]);
         });
 
@@ -324,6 +349,36 @@ storeClasses.forEach((storeClass) => {
           }).toWarnDev([PASTE_WARNING]);
 
           expect(onEventsChange.mock.calls.length).to.equal(0);
+        });
+      });
+
+      describe('refused creation', () => {
+        it('should refuse to create an event when a date has no setter and warn', () => {
+          const onEventsChange = vi.fn();
+          const store = new storeClass.Value(
+            {
+              resources: TEST_RESOURCES,
+              events: [],
+              eventModelStructure: {
+                ...eventModelStructure,
+                start: { getter: (event) => event.myStart },
+              },
+              onEventsChange,
+            },
+            adapter,
+          );
+
+          let createdId: SchedulerEventId | undefined;
+          expect(() => {
+            createdId = store.createEvent({
+              title: 'New event',
+              start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
+              end: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
+            });
+          }).toWarnDev(['MUI X Scheduler: The event "New event" was not created.']);
+
+          expect(createdId).to.equal(undefined);
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
         });
       });
 
@@ -516,6 +571,113 @@ storeClasses.forEach((storeClass) => {
         expect(store.state.processedEventLookup.get('2')).to.equal(
           processedEventsBeforeReorder.get('2'),
         );
+      });
+    });
+
+    // A normal (fully writable) structure throughout, so every case here isolates the `readOnly`
+    // business rule from the `eventModelStructure` one covered above.
+    describe('read-only event', () => {
+      const READ_ONLY_EVENT = EventBuilder.new()
+        .id('1')
+        .title('Event 1')
+        .span('2025-07-01T09:00:00.000Z', '2025-07-01T10:00:00.000Z')
+        .readOnly()
+        .build();
+
+      const createStore = (onEventsChange: (...args: any[]) => void, extra?: object) =>
+        new storeClass.Value(
+          {
+            resources: TEST_RESOURCES,
+            events: [READ_ONLY_EVENT],
+            onEventsChange,
+            ...extra,
+          },
+          adapter,
+        );
+
+      // `readOnly` has always been a UI-only gate (it disables the drag/resize gestures and the
+      // dialog's fields) — `updateEvent()` itself doesn't enforce it, matching every other
+      // property. Only a date `eventModelStructure` can't write back is refused by the store.
+      it('should still apply a direct updateEvent call on a read-only event', () => {
+        const onEventsChange = vi.fn();
+        const store = createStore(onEventsChange);
+
+        store.updateEvent({
+          id: '1',
+          start: adapter.date('2025-07-02T09:00:00.000Z', 'default'),
+          end: adapter.date('2025-07-02T10:00:00.000Z', 'default'),
+        });
+
+        const updated = onEventsChange.mock.lastCall?.[0][0];
+        expect(updated.start).to.equal('2025-07-02T09:00:00.000Z');
+        expect(updated.end).to.equal('2025-07-02T10:00:00.000Z');
+      });
+
+      it('should refuse to paste a cut of the event onto a new date', () => {
+        const onEventsChange = vi.fn();
+        const store = createStore(onEventsChange);
+        store.cutEvent('1');
+
+        expect(() => {
+          expect(
+            store.pasteEvent({ start: adapter.date('2025-07-02T09:00:00.000Z', 'default') }),
+          ).to.equal(null);
+        }).toWarnDev(['MUI X Scheduler: The event with id="1" was not pasted.']);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+      });
+
+      it('should still paste a cut of the event when the paste moves no date', () => {
+        const onEventsChange = vi.fn();
+        const store = createStore(onEventsChange);
+        store.cutEvent('1');
+
+        expect(() => {
+          store.pasteEvent({ allDay: true });
+        }).not.toWarnDev();
+
+        expect(onEventsChange.mock.lastCall?.[0][0].allDay).to.equal(true);
+      });
+
+      // A copy never touches the source event, so its own `readOnly` flag doesn't gate it — this
+      // is the fix: master created the copy, and it must keep doing so.
+      it('should still paste a copy of a read-only event', () => {
+        const onEventsChange = vi.fn();
+        const store = createStore(onEventsChange);
+        store.copyEvent('1');
+
+        expect(() => {
+          store.pasteEvent({ start: adapter.date('2025-07-02T09:00:00.000Z', 'default') });
+        }).not.toWarnDev();
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        const pasted = onEventsChange.mock.lastCall?.[0].find((event: any) => event.id !== '1');
+        expect(pasted.start).to.equal('2025-07-02T09:00:00.000Z');
+      });
+
+      it('should refuse to paste a copy when the scheduler itself is read-only', () => {
+        const onEventsChange = vi.fn();
+        const store = createStore(onEventsChange, { readOnly: true });
+        store.copyEvent('1');
+
+        expect(() => {
+          expect(store.pasteEvent({ allDay: true })).to.equal(null);
+        }).toWarnDev(['MUI X Scheduler: The event with id="1" was not pasted.']);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+      });
+
+      it('should refuse to paste a copy when the destination resource is read-only', () => {
+        const readOnlyResource = ResourceBuilder.new().areEventsReadOnly().build();
+        const onEventsChange = vi.fn();
+        const store = createStore(onEventsChange, { resources: [readOnlyResource] });
+        store.copyEvent('1');
+
+        expect(() => {
+          expect(store.pasteEvent({ resource: readOnlyResource.id })).to.equal(null);
+        }).toWarnDev(['MUI X Scheduler: The event with id="1" was not pasted.']);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
       });
     });
 

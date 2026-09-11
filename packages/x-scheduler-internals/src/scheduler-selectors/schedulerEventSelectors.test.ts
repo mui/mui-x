@@ -61,6 +61,30 @@ describe('schedulerEventSelectors', () => {
       });
       expect(schedulerEventSelectors.creationConfig(state)).to.equal(false);
     });
+
+    // A new event has no old date to fall back to, so either date being read-only refuses
+    // creation entirely, unlike an update which can drop just that date.
+    it('should return false when the start property is declared without a setter', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventCreation: true,
+        eventModelStructure: {
+          start: { getter: (event) => event.start },
+        },
+      });
+      expect(schedulerEventSelectors.creationConfig(state)).to.equal(false);
+    });
+
+    it('should return false when the end property is declared without a setter', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventCreation: true,
+        eventModelStructure: {
+          end: { getter: (event) => event.end },
+        },
+      });
+      expect(schedulerEventSelectors.creationConfig(state)).to.equal(false);
+    });
   });
 
   describe('canHaveMultipleResources', () => {
@@ -375,8 +399,9 @@ describe('schedulerEventSelectors', () => {
       expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'end')).to.equal(false);
     });
 
-    // A resize commits both dates, so a getter-only `start` blocks the "end" handle as well.
-    it('should return false for both sides when the event start property is read-only', () => {
+    // A resize only commits the side being resized, so a getter-only `start` only blocks the
+    // "start" handle — the writable "end" side stays resizable.
+    it('should return false for the "start" side when the event start property is read-only', () => {
       const state = getEventCalendarStateFromParameters({
         events: [defaultEvent],
         areEventsResizable: true,
@@ -385,10 +410,10 @@ describe('schedulerEventSelectors', () => {
         },
       });
       expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'start')).to.equal(false);
-      expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'end')).to.equal(false);
+      expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'end')).to.equal(true);
     });
 
-    it('should return false for both sides when the event end property is read-only', () => {
+    it('should return false for the "end" side when the event end property is read-only', () => {
       const state = getEventCalendarStateFromParameters({
         events: [defaultEvent],
         areEventsResizable: true,
@@ -396,7 +421,7 @@ describe('schedulerEventSelectors', () => {
           end: { getter: (event) => event.end },
         },
       });
-      expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'start')).to.equal(false);
+      expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'start')).to.equal(true);
       expect(schedulerEventSelectors.isResizable(state, defaultEvent.id, 'end')).to.equal(false);
     });
 
@@ -956,6 +981,108 @@ describe('schedulerEventSelectors', () => {
         },
       });
       expect(schedulerEventSelectors.canMoveDates(state, defaultEvent.id)).to.equal(true);
+    });
+  });
+
+  describe('canWriteEventDates', () => {
+    it('should return true by default', () => {
+      const state = getEventCalendarStateFromParameters({ events: [defaultEvent] });
+      expect(schedulerEventSelectors.canWriteEventDates(state)).to.equal(true);
+    });
+
+    it('should return false when the start property is declared without a setter', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventModelStructure: {
+          start: { getter: (event) => event.start },
+        },
+      });
+      expect(schedulerEventSelectors.canWriteEventDates(state)).to.equal(false);
+    });
+
+    it('should return false when the end property is declared without a setter', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventModelStructure: {
+          end: { getter: (event) => event.end },
+        },
+      });
+      expect(schedulerEventSelectors.canWriteEventDates(state)).to.equal(false);
+    });
+
+    // Structural only: no event is read-only in this state, so any event's dates could not move.
+    it('should not fold in whether any particular event is read-only', () => {
+      const state = getEventCalendarStateFromParameters({ events: [readOnlyEvent] });
+      expect(schedulerEventSelectors.canWriteEventDates(state)).to.equal(true);
+    });
+  });
+
+  describe('isDateWritable', () => {
+    it('should return true by default for both properties', () => {
+      const state = getEventCalendarStateFromParameters({ events: [defaultEvent] });
+      expect(schedulerEventSelectors.isDateWritable(state, 'start')).to.equal(true);
+      expect(schedulerEventSelectors.isDateWritable(state, 'end')).to.equal(true);
+    });
+
+    // Per-property, unlike `canWriteEventDates`: a getter-only `start` doesn't affect `end`.
+    it('should return false only for the property declared without a setter', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventModelStructure: {
+          start: { getter: (event) => event.start },
+        },
+      });
+      expect(schedulerEventSelectors.isDateWritable(state, 'start')).to.equal(false);
+      expect(schedulerEventSelectors.isDateWritable(state, 'end')).to.equal(true);
+    });
+  });
+
+  describe('isResourceReadOnly', () => {
+    it('should return false by default', () => {
+      const state = getEventCalendarStateFromParameters({ events: [] });
+      expect(schedulerEventSelectors.isResourceReadOnly(state, 'does-not-exist')).to.equal(false);
+    });
+
+    it('should return true when the resource has areEventsReadOnly set', () => {
+      const resource = ResourceBuilder.new().areEventsReadOnly().build();
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        resources: [resource],
+      });
+      expect(schedulerEventSelectors.isResourceReadOnly(state, resource.id)).to.equal(true);
+    });
+
+    it('should inherit areEventsReadOnly from a parent resource', () => {
+      const childResource = ResourceBuilder.new().build();
+      const parentResource = ResourceBuilder.new()
+        .areEventsReadOnly()
+        .children([childResource])
+        .build();
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        resources: [parentResource],
+      });
+      expect(schedulerEventSelectors.isResourceReadOnly(state, childResource.id)).to.equal(true);
+    });
+
+    it('should fall back to the scheduler readOnly when there is no resource', () => {
+      const state = getEventCalendarStateFromParameters({ events: [], readOnly: true });
+      expect(schedulerEventSelectors.isResourceReadOnly(state, undefined)).to.equal(true);
+    });
+
+    it('should resolve the first id of a multi-resource assignment', () => {
+      const readOnlyResource = ResourceBuilder.new().areEventsReadOnly().build();
+      const writableResource = ResourceBuilder.new().build();
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        resources: [readOnlyResource, writableResource],
+      });
+      expect(
+        schedulerEventSelectors.isResourceReadOnly(state, [
+          readOnlyResource.id,
+          writableResource.id,
+        ]),
+      ).to.equal(true);
     });
   });
 });

@@ -417,6 +417,39 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(days).to.include('2025-02-28');
       expect(days).to.not.include('2025-03-01');
     });
+
+    // `selectRecurringEventScope` feeds the plugin's split straight into `updateEvents`, bypassing
+    // `updateEvent()` / `createEvent()` entirely — this is the direct caller the generic guard in
+    // `updateEvents` is meant to cover, not just the public methods.
+    it('should refuse the event created by an "only-this" scope change when start has no setter', () => {
+      const onEventsChange = vi.fn();
+      const store = new storeClass.Value(
+        {
+          ...DEFAULT_PARAMS,
+          events: [RECURRING_EVENT],
+          eventModelStructure: { start: { getter: (event) => event.start } },
+          onEventsChange,
+        },
+        adapter,
+      );
+      const idsBefore = store.state.eventIdList.length;
+
+      store.updateRecurringEvent({
+        occurrenceStart: dayA,
+        changes: {
+          id: 'standup',
+          start: adapter.addMinutes(dayA, 30),
+          end: adapter.addMinutes(dayA, 90),
+        },
+      });
+
+      expect(() => {
+        store.selectRecurringEventScope('only-this');
+      }).toWarnDev([`MUI X Scheduler: The event "${RECURRING_EVENT.title}" was not created.`]);
+
+      // The detached one-off event was refused: no new event landed in the state.
+      expect(store.state.eventIdList.length).to.equal(idsBefore);
+    });
   });
 });
 
