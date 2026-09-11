@@ -176,4 +176,17 @@ When omitted, the export uses the larger of `window.devicePixelRatio` and `2`, g
 apiRef.current?.exportAsImage({ pixelRatio: 3 });
 ```
 
+### Handling export errors
+
+`exportAsPrint()` and `exportAsImage()` return a promise that rejects when the export fails, for example when a [Content Security Policy](/x/react-charts/content-security-policy/) blocks the styles the export needs.
+Handle the rejection to report the failure to your users.
+
+```tsx
+try {
+  await apiRef.current?.exportAsImage();
+} catch (error) {
+  // Report the failed export.
+}
+```
+
 {{"demo": "ExportChartAsImage.js"}}

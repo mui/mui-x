@@ -6,7 +6,7 @@
     },
     "fileName": { "description": "The name of the file without the extension." },
     "nonce": {
-      "description": "A nonce to be used for Content Security Policy (CSP) compliance.<br />If provided, this nonce will be added to any style elements created during the export process."
+      "description": "A nonce to be used for Content Security Policy (CSP) compliance.<br />If provided, this nonce will be added to any style elements created during the export process.<br />Required when the CSP restricts styles with a nonce, otherwise the export fails because the<br />copied styles are blocked."
     },
     "onBeforeExport": {
       "description": "Callback function that is called before the export is triggered.<br />It can be used to modify the iframe or perform any other actions before the export, such as updating styles,<br />removing elements, etc."

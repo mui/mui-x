@@ -74,4 +74,65 @@ describe.skipIf(isJSDOM)('exportImage', () => {
     expect(exportedSize?.width).to.equal(400);
     expect(exportedSize?.height).to.equal(300);
   });
+
+  it('sets the provided nonce on the copied styles', async () => {
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+    let exportedNonces: (string | null)[] = [];
+
+    render(<Chart apiRef={apiRef} />);
+
+    await act(async () => {
+      await apiRef.current!.exportAsImage({
+        nonce: 'export-nonce',
+        onBeforeExport: (iframe) => {
+          exportedNonces = Array.from(iframe.contentDocument!.head.querySelectorAll('style')).map(
+            (element) => element.nonce || element.getAttribute('nonce'),
+          );
+        },
+      });
+    });
+
+    expect(exportedNonces.length).to.be.greaterThan(0);
+    expect(exportedNonces.every((nonce) => nonce === 'export-nonce')).to.equal(true);
+  });
+
+  async function exportAndCatch(apiRef: React.RefObject<ChartProApi<'bar'> | undefined>) {
+    let error: Error | undefined;
+
+    await act(async () => {
+      await apiRef
+        .current!.exportAsImage({
+          onBeforeExport: () => {
+            throw new Error('Export interrupted');
+          },
+        })
+        .catch((exportError) => {
+          error = exportError;
+        });
+    });
+
+    return error;
+  }
+
+  it('rejects when the export fails', async () => {
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+
+    render(<Chart apiRef={apiRef} />);
+
+    const error = await exportAndCatch(apiRef);
+
+    expect(error?.message).to.equal('Export interrupted');
+  });
+
+  it('removes the export iframe when the export fails', async () => {
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+
+    render(<Chart apiRef={apiRef} />);
+
+    const iframeCount = document.querySelectorAll('iframe').length;
+
+    await exportAndCatch(apiRef);
+
+    expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+  });
 });

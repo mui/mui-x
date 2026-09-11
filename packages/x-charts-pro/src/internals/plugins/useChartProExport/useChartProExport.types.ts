@@ -31,6 +31,8 @@ export interface ChartExportOptions {
   /**
    * A nonce to be used for Content Security Policy (CSP) compliance.
    * If provided, this nonce will be added to any style elements created during the export process.
+   * Required when the CSP restricts styles with a nonce, otherwise the export fails because the
+   * copied styles are blocked.
    */
   nonce?: string;
 }
@@ -74,17 +76,17 @@ export interface UseChartProExportPublicApi {
   /**
    * Opens the browser's print dialog, which can be used to print the chart or export it as PDF.
    * @param {ChartPrintExportOptions} options Options to customize the print export.
-   * @returns {void}
+   * @returns {Promise<void>} A promise that rejects if the export fails.
    */
-  exportAsPrint: (options?: ChartPrintExportOptions) => void;
+  exportAsPrint: (options?: ChartPrintExportOptions) => Promise<void>;
   /**
    * Exports the chart as an image.
    * If the provided `type` is not supported by the browser, it will default to `image/png`.
    *
    * @param {ChartPrintExportOptions} options Options to customize the print export.
-   * @returns {void}
+   * @returns {Promise<void>} A promise that rejects if the export fails.
    */
-  exportAsImage: (options?: ChartImageExportOptions) => void;
+  exportAsImage: (options?: ChartImageExportOptions) => Promise<void>;
 }
 
 export interface UseChartProExportInstance extends UseChartProExportPublicApi {}

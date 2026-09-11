@@ -78,7 +78,14 @@ export default function PrintChart() {
             <MenuItem value="sankey">Sankey</MenuItem>
           </Select>
         </FormControl>
-        <Button onClick={() => apiRef.current!.exportAsPrint()} variant="contained">
+        <Button
+          onClick={() =>
+            apiRef.current!.exportAsPrint().catch((error) => {
+              console.error(error);
+            })
+          }
+          variant="contained"
+        >
           Print
         </Button>
       </Stack>
