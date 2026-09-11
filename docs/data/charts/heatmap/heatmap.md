@@ -55,6 +55,15 @@ See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) 
 
 {{"demo": "ColorConfig.js"}}
 
+### Color based on the cell position
+
+To color a cell from something other than its value, provide a `colorGetter` to the series.
+It receives the cell value and its `xIndex` and `yIndex`, and takes precedence over the `zAxis` color mapping.
+
+Because the legend keeps displaying the `zAxis` color scale, hide it when the returned colors no longer match that scale.
+
+{{"demo": "ColorGetter.js"}}
+
 ## Highlight
 
 Set `highlightScope.highlight` to `'item'` to highlight the hovered cell.
@@ -113,6 +122,8 @@ Customize it with `slots.legend` and `slotProps.legend`.
 ## Custom cells
 
 Use the `cell` slot to replace the default cell shape or add labels.
+
+The slot's `ownerState` carries the cell's `xIndex` and `yIndex`, so the rendering can depend on the position in the grid.
 
 {{"demo": "CustomItem.js"}}
 
