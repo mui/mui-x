@@ -1,16 +1,17 @@
 import { renderHook } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
-import { useExtractEventCalendarParameters } from '../useExtractEventCalendarParameters';
-import type { EventCalendarParameters } from '../EventCalendarStore.types';
+import { useExtractEventCalendarPremiumParameters } from '../useExtractEventCalendarPremiumParameters';
+import type { EventCalendarPremiumParameters } from '../EventCalendarPremiumStore.types';
 
 // One entry per parameter. TypeScript fails if a key is added to the type but not here.
 // The values are irrelevant, the hooks only route keys.
-const allParameters: Record<keyof EventCalendarParameters<any, any>, unknown> = {
+const allParameters: Record<keyof EventCalendarPremiumParameters<any, any>, unknown> = {
   areEventsDraggable: 'areEventsDraggable',
   areEventsResizable: 'areEventsResizable',
   canDragEventsFromTheOutside: 'canDragEventsFromTheOutside',
   canDropEventsToTheOutside: 'canDropEventsToTheOutside',
   collapsedResources: 'collapsedResources',
+  dataSource: 'dataSource',
   dateLocale: 'dateLocale',
   defaultCollapsedResources: 'defaultCollapsedResources',
   defaultPreferences: 'defaultPreferences',
@@ -43,39 +44,24 @@ const allParameters: Record<keyof EventCalendarParameters<any, any>, unknown> = 
   visibleResources: 'visibleResources',
 };
 
-describe('useExtractEventCalendarParameters', () => {
-  it('should forward `shouldEventRequireResource` to the parameters object', () => {
+describe('useExtractEventCalendarPremiumParameters', () => {
+  it('should forward `dataSource` to the parameters object instead of the forwarded props', () => {
+    const dataSource = {
+      getEvents: async () => [],
+      persistEvents: async () => ({ success: true }),
+    };
     const { result } = renderHook(() =>
-      useExtractEventCalendarParameters({ events: [], shouldEventRequireResource: true }),
+      useExtractEventCalendarPremiumParameters({ events: [], dataSource }),
     );
 
-    expect(result.current.parameters.shouldEventRequireResource).to.equal(true);
-  });
-
-  it('should forward `onEventEditingStart` to the parameters object instead of the forwarded props', () => {
-    const onEventEditingStart = () => {};
-    const { result } = renderHook(() =>
-      useExtractEventCalendarParameters({ events: [], onEventEditingStart }),
-    );
-
-    expect(result.current.parameters.onEventEditingStart).to.equal(onEventEditingStart);
-    expect(result.current.forwardedProps).to.not.have.property('onEventEditingStart');
-  });
-
-  it('should forward `onPreferencesChange` to the parameters object instead of the forwarded props', () => {
-    const onPreferencesChange = () => {};
-    const { result } = renderHook(() =>
-      useExtractEventCalendarParameters({ events: [], onPreferencesChange }),
-    );
-
-    expect(result.current.parameters.onPreferencesChange).to.equal(onPreferencesChange);
-    expect(result.current.forwardedProps).to.not.have.property('onPreferencesChange');
+    expect(result.current.parameters.dataSource).to.equal(dataSource);
+    expect(result.current.forwardedProps).to.not.have.property('dataSource');
   });
 
   it('should not forward any parameter to the forwarded props', () => {
     const { result } = renderHook(() =>
-      useExtractEventCalendarParameters({
-        ...(allParameters as EventCalendarParameters<any, any>),
+      useExtractEventCalendarPremiumParameters({
+        ...(allParameters as EventCalendarPremiumParameters<any, any>),
         'data-testid': 'forwarded',
       }),
     );
