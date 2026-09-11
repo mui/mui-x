@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, it, expect } from 'vitest';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import { useGridSelector } from './useGridSelector';
 
 type TestState = {

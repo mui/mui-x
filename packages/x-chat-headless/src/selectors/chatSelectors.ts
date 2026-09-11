@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { resolveMessageAuthor } from '../internals/messageAuthor';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';

@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
-import { useStoreEffect } from '@mui/x-internals/store';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import {
   useVirtualizer,
   Dimensions,

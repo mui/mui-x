@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { useChatStore } from '../hooks/useChatStore';

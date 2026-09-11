@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { geoPath } from '@mui/x-charts-vendor/d3-geo';
 import type {
   ExtendedFeatureCollection,

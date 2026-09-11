@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector } from '@base-ui/utils/store';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { getBandSize } from '../../../../internals/getBandSize';

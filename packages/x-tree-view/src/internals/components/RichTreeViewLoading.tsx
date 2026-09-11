@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import { TreeItemLoader } from '../../TreeItemLoader';
 import type { TreeItemLoaderOwnerState } from '../../TreeItemLoader';

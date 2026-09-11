@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { createGetBarDimensions } from '../../../internals/createGetBarDimensions';
 import { selectorChartsTooltipItem } from '../../../internals/plugins/featurePlugins/useChartTooltip/useChartTooltip.selectors';
 import { selectorChartSeriesProcessed } from '../../../internals/plugins/corePlugins/useChartSeries';

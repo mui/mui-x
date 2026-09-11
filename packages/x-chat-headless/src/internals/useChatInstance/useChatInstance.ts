@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStoreEffect } from '@mui/x-internals/store';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { chatSelectors } from '../../selectors';
 import { ChatStore } from '../../store';

@@ -193,7 +193,7 @@ export class ExtendableEventCalendarStore<
       this.update({
         ...(canSetVisibleDate ? { visibleDate } : undefined),
         ...(canSetView ? { view } : undefined),
-      });
+      } as Pick<EventCalendarState, 'visibleDate' | 'view'>);
     }
   };
 
