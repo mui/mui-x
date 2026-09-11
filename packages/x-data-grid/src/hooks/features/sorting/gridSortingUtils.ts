@@ -193,10 +193,17 @@ export const gridStringOrNumberComparator: GridComparatorFn = (value1, value2) =
     return nillResult;
   }
 
-  if (typeof value1 === 'string') {
-    return collator.compare(value1!.toString(), value2!.toString());
+  if (typeof value1 === 'number' && typeof value2 === 'number') {
+    return value1 - value2;
   }
-  return (value1 as any) - (value2 as any);
+  // Order all numbers before all strings so a mixed column keeps a consistent total order.
+  if (typeof value1 === 'number') {
+    return -1;
+  }
+  if (typeof value2 === 'number') {
+    return 1;
+  }
+  return collator.compare(String(value1), String(value2));
 };
 
 export const gridNumberComparator: GridComparatorFn = (value1, value2) => {
