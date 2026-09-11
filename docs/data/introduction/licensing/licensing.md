@@ -124,6 +124,8 @@ This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#aut
 When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
 
+You can also use the [MUI Console](/x/introduction/mui-console/) to manage your licenses and access service API keys.
+
 {{"component": "modules/components/V9LicenseUpgradeWarning.js"}}
 
 :::warning
