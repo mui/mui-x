@@ -25,6 +25,7 @@ import type {
   SchedulerRenderableEventOccurrence,
   SchedulerEventOccurrence,
   SchedulerEventOccurrencePlaceholder,
+  SchedulerProcessedEvent,
 } from '../../../models';
 import type {
   SchedulerState,
@@ -484,13 +485,14 @@ export class SchedulerStore<
           continue;
         }
         if (updated.has(eventId)) {
-          const processedEvent = this.state.processedEventLookup.get(eventId);
+          const processedEvent = this.state.processedEventLookup.get(eventId)!;
+          const changes = this.removeUnwritableDates(updated.get(eventId)!, processedEvent);
           const newEvent = getUpdatedEventModelFromChanges<TEvent>(
             originalEventModelLookup.get(eventId),
-            updated.get(eventId)!,
+            changes,
             this.state.eventModelStructure,
             this.state.adapter,
-            processedEvent!.modelInBuiltInFormat,
+            processedEvent.modelInBuiltInFormat,
           );
           newEvents.push(newEvent);
           updatedEvents.push(newEvent);
@@ -502,9 +504,24 @@ export class SchedulerStore<
       newEvents.push(...schedulerEventSelectors.modelList(this.state));
     }
 
+    // Structural, so the same for every item in the batch: a new event has no old date to fall
+    // back to, so a date `eventModelStructure` can't write back refuses the creation outright —
+    // unlike an updated event, which can drop just that date and keep the rest of the changes.
+    const canWriteEventDates = schedulerEventSelectors.canWriteEventDates(this.state);
     const createdIds: SchedulerEventId[] = [];
     const createdEvents: TEvent[] = [];
     for (const createdEvent of created) {
+      if (!canWriteEventDates) {
+        if (process.env.NODE_ENV !== 'production') {
+          warnOnce([
+            `MUI X Scheduler: The event "${createdEvent.title}" was not created.`,
+            '`eventModelStructure` declares `start` and / or `end` with a getter but no setter, so its dates cannot be written back to your event model.',
+            'Add a `setter` to `eventModelStructure.start` and `eventModelStructure.end` to make event creation possible.',
+          ]);
+        }
+        continue;
+      }
+
       // Events created from an existing one (split, duplicate, paste) inherit its custom fields.
       const source =
         createdEvent.extractedFromId == null
@@ -584,6 +601,52 @@ export class SchedulerStore<
     }
     return this.updateEvents({ created: [calendarEvent] }).created[0];
   };
+
+  /**
+   * Drops from `changes` the date whose `eventModelStructure` entry has no setter: it can't be
+   * written back to the consumer's model, and without this it would be written under the
+   * built-in key name instead, next to the custom fields, while the real field keeps the old
+   * value. Checked independently per property, so a mixed structure — a getter-only `start` next
+   * to a writable `end` — still applies the writable date, e.g. a resize of the end handle alone.
+   * The remaining changes still apply: the event dialog always submits `start` / `end`, even when
+   * it rendered those fields locked, so refusing the whole update would break a title edit.
+   * This is the net under every writer that reaches `updateEvents`, not only `updateEvent()` — the
+   * recurring scopes and a future auto-scheduling cascade feed it directly.
+   */
+  private removeUnwritableDates(
+    changes: SchedulerEventUpdatedProperties,
+    original: SchedulerProcessedEvent,
+  ): SchedulerEventUpdatedProperties {
+    let result = changes;
+
+    for (const property of ['start', 'end'] as const) {
+      if (!(property in result) || schedulerEventSelectors.isDateWritable(this.state, property)) {
+        continue;
+      }
+
+      if (process.env.NODE_ENV !== 'production') {
+        const { adapter } = this.state;
+        // The dialog resubmits the unchanged dates on every save, so only a real move is worth a
+        // warning. Compared as instants, which is independent from the timezone the caller used.
+        const value = result[property];
+        const isRealChange =
+          value == null || adapter.getTime(value) !== original.dataTimezone[property].timestamp;
+
+        if (isRealChange) {
+          warnOnce([
+            `MUI X Scheduler: The \`${property}\` date of the event with id="${String(changes.id)}" was not updated.`,
+            `\`eventModelStructure.${property}\` declares a getter but no setter, so the new date cannot be written back to your event model and the change was dropped.`,
+            `Add a \`setter\` to \`eventModelStructure.${property}\` to make the date editable.`,
+          ]);
+        }
+      }
+
+      const { [property]: removedDate, ...rest } = result;
+      result = rest;
+    }
+
+    return result;
+  }
 
   /**
    * Updates an event in the calendar.
@@ -813,11 +876,63 @@ export class SchedulerStore<
       );
     }
 
+    const canWriteDates = schedulerEventSelectors.canWriteEventDates(this.state);
+    const isMovingDates = cleanChanges.start != null;
+    const missingSetterWarning = [
+      `MUI X Scheduler: The event with id="${String(copiedEvent.id)}" was not pasted.`,
+      '`eventModelStructure` declares `start` and / or `end` with a getter but no setter, so the pasted dates cannot be written back to your event model.',
+      'Add a `setter` to `eventModelStructure.start` and `eventModelStructure.end` to make the dates editable.',
+    ];
+
     if (copiedEvent.action === 'cut') {
+      // A cut moves the original event's dates, so — like a drag — it needs both dates writable
+      // and the event (through its own flag, its resource, or the scheduler) not read-only. A
+      // paste that moves no date (e.g. only the resource changes) needs neither: it never touches
+      // `start` / `end`.
+      if (isMovingDates) {
+        const isSourceReadOnly = schedulerEventSelectors.isReadOnly(this.state, copiedEvent.id);
+        if (isSourceReadOnly || !canWriteDates) {
+          if (process.env.NODE_ENV !== 'production') {
+            warnOnce(
+              isSourceReadOnly
+                ? [
+                    `MUI X Scheduler: The event with id="${String(copiedEvent.id)}" was not pasted.`,
+                    'The event is read-only, so it cannot be moved to a new date.',
+                  ]
+                : missingSetterWarning,
+            );
+          }
+          return null;
+        }
+      }
+
       const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
       const result = this.updateEvents({ updated: [updatedEvent] }).updated[0];
       this.set('copiedEvent', null);
       return result;
+    }
+
+    // A copy writes the whole model — including `start` and `end` — into a brand new event, so it
+    // always needs both dates writable, whether or not this particular paste moves them. It never
+    // touches the source event, so the source's own `readOnly` flag doesn't gate it — only the
+    // destination (the resource the copy lands on, or the scheduler) can.
+    const destinationResource = cleanChanges.resource ?? original.modelInBuiltInFormat.resource;
+    const isDestinationReadOnly = schedulerEventSelectors.isResourceReadOnly(
+      this.state,
+      destinationResource,
+    );
+    if (isDestinationReadOnly || !canWriteDates) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce(
+          isDestinationReadOnly
+            ? [
+                `MUI X Scheduler: The event with id="${String(copiedEvent.id)}" was not pasted.`,
+                'The destination is read-only, so a copy cannot be created there.',
+              ]
+            : missingSetterWarning,
+        );
+      }
+      return null;
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
