@@ -18,7 +18,7 @@ export const eventCalendarAgendaSelectors = {
     schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showWeekends,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
-    schedulerEventSelectors.processedEventList,
+    schedulerEventSelectors.processedEventRangeIndex,
     schedulerResourceSelectors.visibleMap,
     schedulerOtherSelectors.recurringEventsPlugin,
     (
@@ -27,7 +27,7 @@ export const eventCalendarAgendaSelectors = {
       displayTimezone,
       showWeekends,
       showEmptyDaysInAgenda,
-      events,
+      eventRangeIndex,
       visibleResources,
       recurringEventsPlugin,
     ) => {
@@ -45,7 +45,7 @@ export const eventCalendarAgendaSelectors = {
       let occurrenceMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
         days: accumulatedDays,
-        events,
+        eventRangeIndex,
         visibleResources,
         displayTimezone,
         recurringEventsPlugin,
@@ -92,7 +92,7 @@ export const eventCalendarAgendaSelectors = {
         occurrenceMap = innerGetEventOccurrencesGroupedByDay({
           adapter,
           days: accumulatedDays,
-          events,
+          eventRangeIndex,
           visibleResources,
           displayTimezone,
           recurringEventsPlugin,
