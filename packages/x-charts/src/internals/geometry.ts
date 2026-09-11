@@ -43,3 +43,15 @@ export function getMinXTranslation(width: number, height: number, angle: number 
   }
   return height / Math.sin(radAngle);
 }
+
+/**
+ * Return the minimal translation along the y-axis to avoid overflow of a rectangle of a given width, height, and rotation.
+ * This is the vertical counterpart of {@link getMinXTranslation}, used when labels are stacked along the y-axis.
+ * It is obtained by swapping the rectangle's width and height.
+ * @param width the side along the x-axis.
+ * @param height the side along the y-axis.
+ * @param angle the rotation in degrees.
+ */
+export function getMinYTranslation(width: number, height: number, angle: number = 0) {
+  return getMinXTranslation(height, width, angle);
+}
