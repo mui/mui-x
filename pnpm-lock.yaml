@@ -1744,7 +1744,7 @@ importers:
         specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-scheduler-internals':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../x-scheduler-internals/build
       '@mui/x-tree-view':
         specifier: workspace:^
@@ -1859,7 +1859,7 @@ importers:
         specifier: workspace:^
         version: link:../x-internals/build
       '@mui/x-scheduler-internals':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../x-scheduler-internals/build
       prop-types:
         specifier: 'catalog:'
@@ -1918,13 +1918,13 @@ importers:
         specifier: workspace:^
         version: link:../x-license/build
       '@mui/x-scheduler':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../x-scheduler/build
       '@mui/x-scheduler-internals':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../x-scheduler-internals/build
       '@mui/x-scheduler-internals-premium':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../x-scheduler-internals-premium/build
       '@mui/x-virtualizer':
         specifier: workspace:^

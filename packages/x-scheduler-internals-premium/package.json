@@ -54,7 +54,7 @@
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",
     "@mui/x-internals": "workspace:^",
-    "@mui/x-scheduler-internals": "workspace:^",
+    "@mui/x-scheduler-internals": "workspace:*",
     "prop-types": "catalog:"
   },
   "peerDependencies": {
