@@ -92,6 +92,12 @@ If the view defined in `openTo` is not the first view, then the views before wil
 (for example view the default behaviors, the `year` is only accessible when clicking on the toolbar).
 :::
 
+On desktop, selecting a day automatically advances to the next view in the `views` array (`hours` by default), so the calendar is shown before the clock without any extra configuration. This works the same way with a custom `viewRenderers`, as shown in [Choose time view renderer](#choose-time-view-renderer) below.
+
+:::info
+On mobile, the date and time views are split into separate tabs by design, so selecting a day does not automatically switch to the time tab. Use the tabs (`slotProps={{ tabs: { hidden: false } }}`) to switch between them.
+:::
+
 ## Landscape orientation
 
 By default, the Date Time Picker component automatically sets the orientation based on the `window.orientation` value.
