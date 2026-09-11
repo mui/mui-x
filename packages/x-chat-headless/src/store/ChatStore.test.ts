@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { disposeSymbol } from '@mui/x-internals/disposable';
 import { ChatStore } from './ChatStore';
 import type { ChatConversation, ChatDraftAttachment, ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
@@ -619,15 +620,14 @@ describe('ChatStore', () => {
     expect(store.state.activeStreamAbortController).toBeNull();
   });
 
-  it('disposeEffect aborts and clears active streaming state', () => {
+  it('disposeSymbol aborts and clears active streaming state', () => {
     const store = new ChatStore();
     const abortController = new AbortController();
 
     store.setActiveStreamAbortController(abortController);
     store.setStreaming(true);
 
-    const cleanup = store.disposeEffect();
-    cleanup();
+    store[disposeSymbol]();
 
     expect(abortController.signal.aborted).toBe(true);
     expect(store.state.activeStreamAbortController).toBeNull();

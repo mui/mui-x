@@ -55,9 +55,7 @@ export class MinimalTreeViewStore<
 
   public parameters: Parameters;
 
-  public timeoutManager = this.disposables.adopt(new TimeoutManager(), (manager) =>
-    manager.clearAll(),
-  );
+  public timeoutManager = this.disposables.use(new TimeoutManager());
 
   public itemPluginManager = new TreeViewItemPluginManager<this>();
 
