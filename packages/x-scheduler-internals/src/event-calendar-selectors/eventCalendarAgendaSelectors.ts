@@ -7,42 +7,100 @@ import {
 } from '../scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import type { SchedulerProcessedDate } from '../models';
+import type { EventCalendarVisibleRange, SchedulerProcessedDate } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayList } from '../get-day-list';
 
-export const eventCalendarAgendaSelectors = {
-  visibleDays: createSelectorMemoized(
-    (state: State) => state.adapter,
-    schedulerOtherSelectors.visibleDate,
-    schedulerOtherSelectors.displayTimezone,
-    eventCalendarPreferenceSelectors.showWeekends,
-    eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
-    schedulerEventSelectors.processedEventList,
-    schedulerResourceSelectors.visibleMap,
-    schedulerOtherSelectors.recurringEventsPlugin,
-    (
+const baseVisibleDays = createSelectorMemoized(
+  (state: State) => state.adapter,
+  schedulerOtherSelectors.visibleDate,
+  eventCalendarPreferenceSelectors.showWeekends,
+  (adapter, visibleDate, showWeekends) =>
+    getDayList({
       adapter,
-      visibleDate,
-      displayTimezone,
-      showWeekends,
-      showEmptyDaysInAgenda,
+      start: visibleDate,
+      end: adapter.addDays(visibleDate, AGENDA_VIEW_DAYS_AMOUNT - 1),
+      excludeWeekends: !showWeekends,
+    }),
+);
+
+/**
+ * The last day the agenda scans for events when hiding the empty days.
+ */
+const horizonEnd = createSelectorMemoized(
+  (state: State) => state.adapter,
+  schedulerOtherSelectors.visibleDate,
+  (adapter, visibleDate) =>
+    adapter.startOfDay(adapter.addDays(visibleDate, AGENDA_MAX_HORIZON_DAYS - 1)),
+);
+
+const visibleDays = createSelectorMemoized(
+  (state: State) => state.adapter,
+  schedulerOtherSelectors.visibleDate,
+  baseVisibleDays,
+  horizonEnd,
+  schedulerOtherSelectors.displayTimezone,
+  eventCalendarPreferenceSelectors.showWeekends,
+  eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
+  schedulerEventSelectors.processedEventList,
+  schedulerResourceSelectors.visibleMap,
+  schedulerOtherSelectors.recurringEventsPlugin,
+  (
+    adapter,
+    visibleDate,
+    baseDays,
+    horizon,
+    displayTimezone,
+    showWeekends,
+    showEmptyDaysInAgenda,
+    events,
+    visibleResources,
+    recurringEventsPlugin,
+  ) => {
+    const amount = AGENDA_VIEW_DAYS_AMOUNT;
+
+    // 1) First chunk of days
+    let accumulatedDays = baseDays;
+
+    // 2) If we show empty days, just return the amount days
+    if (showEmptyDaysInAgenda) {
+      return accumulatedDays;
+    }
+
+    // Compute occurrences for the current accumulated range
+    let occurrenceMap = innerGetEventOccurrencesGroupedByDay({
+      adapter,
+      days: accumulatedDays,
       events,
       visibleResources,
+      displayTimezone,
       recurringEventsPlugin,
-    ) => {
-      const amount = AGENDA_VIEW_DAYS_AMOUNT;
+    });
 
-      // 1) First chunk of days
-      let accumulatedDays = getDayList({
+    const hasEvents = (day: SchedulerProcessedDate) =>
+      (occurrenceMap.get(day.key)?.length ?? 0) > 0;
+
+    let daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
+
+    // 3) If we hide empty days, keep extending forward in blocks until we fill `amount` days with events
+    // The scanned span is tracked apart from the day list, which skips the hidden weekends.
+    let scannedUntil = adapter.startOfDay(adapter.addDays(visibleDate, amount - 1));
+    while (daysWithEvents.length < amount && adapter.isBefore(scannedUntil, horizon)) {
+      // Extend forward by one more chunk, without passing the horizon
+      const nextStart = adapter.addDays(scannedUntil, 1);
+      const nextEnd = adapter.addDays(nextStart, amount - 1);
+      scannedUntil = adapter.isBefore(nextEnd, horizon) ? nextEnd : horizon;
+
+      const more = getDayList({
         adapter,
-        start: visibleDate,
-        end: adapter.addDays(visibleDate, amount - 1),
+        start: nextStart,
+        end: scannedUntil,
         excludeWeekends: !showWeekends,
       });
 
-      // Compute occurrences for the current accumulated range
-      let occurrenceMap = innerGetEventOccurrencesGroupedByDay({
+      accumulatedDays = accumulatedDays.concat(more);
+
+      occurrenceMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
         days: accumulatedDays,
         events,
@@ -51,57 +109,29 @@ export const eventCalendarAgendaSelectors = {
         recurringEventsPlugin,
       });
 
-      const hasEvents = (day: SchedulerProcessedDate) =>
-        (occurrenceMap.get(day.key)?.length ?? 0) > 0;
+      daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
+    }
 
-      // 2) If we show empty days, just return the amount days
-      if (showEmptyDaysInAgenda) {
-        return accumulatedDays;
-      }
+    return daysWithEvents;
+  },
+);
 
-      // 3) If we hide empty days, keep extending forward in blocks until we fill `amount` days with events
-      let daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
-
-      while (daysWithEvents.length < amount) {
-        // Stop if the calendar span already reaches the horizon
-        const first = accumulatedDays[0]?.value;
-        const last = accumulatedDays[accumulatedDays.length - 1]?.value;
-
-        if (first && last) {
-          const spanDays =
-            adapter.differenceInDays(adapter.startOfDay(last), adapter.startOfDay(first)) + 1;
-
-          // Hard stop to avoid scanning too far into the future
-          if (spanDays >= AGENDA_MAX_HORIZON_DAYS) {
-            break;
-          }
-        }
-
-        // Extend forward by one more chunk and recompute occurrences over the accumulated range
-        const nextStart = adapter.addDays(last ?? visibleDate, 1);
-
-        const more = getDayList({
-          adapter,
-          start: nextStart,
-          end: adapter.addDays(nextStart, amount),
-          excludeWeekends: !showWeekends,
-        });
-
-        accumulatedDays = accumulatedDays.concat(more);
-
-        occurrenceMap = innerGetEventOccurrencesGroupedByDay({
-          adapter,
-          days: accumulatedDays,
-          events,
-          visibleResources,
-          displayTimezone,
-          recurringEventsPlugin,
-        });
-
-        daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
-      }
-
-      return daysWithEvents;
-    },
+export const eventCalendarAgendaSelectors = {
+  /**
+   * The days from the visible date, before hiding the empty ones.
+   */
+  baseVisibleDays,
+  visibleDays,
+  /**
+   * The range to fetch: the base days, or the whole horizon when hiding the empty days.
+   */
+  visibleRange: createSelectorMemoized(
+    baseVisibleDays,
+    horizonEnd,
+    eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
+    (baseDays, horizon, showEmptyDaysInAgenda): EventCalendarVisibleRange => ({
+      start: baseDays[0].value,
+      end: showEmptyDaysInAgenda ? baseDays[baseDays.length - 1].value : horizon,
+    }),
   ),
 };

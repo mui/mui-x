@@ -3,8 +3,27 @@ import { describe, it, expect } from 'vitest';
 import { processDate } from '../process-date';
 import { eventCalendarAgendaSelectors } from './eventCalendarAgendaSelectors';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
+import type { EventCalendarState } from '../use-event-calendar';
 
 describe('eventCalendarEventSelectors', () => {
+  describe('baseVisibleDays', () => {
+    it('should return AGENDA_VIEW_DAYS_AMOUNT days from the visible date, skipping weekends when hidden', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        visibleDate: adapter.date('2025-07-01', 'default'), // Tuesday
+        defaultPreferences: { showWeekends: false },
+      });
+
+      const days = eventCalendarAgendaSelectors.baseVisibleDays(state);
+
+      expect(days).to.have.length(9);
+      expect(days[0]).to.deep.equal(processDate(adapter.date('2025-07-01Z', 'default'), adapter));
+      expect(days[days.length - 1]).to.deep.equal(
+        processDate(adapter.date('2025-07-11Z', 'default'), adapter),
+      );
+    });
+  });
+
   describe('visibleDays', () => {
     it('should return exactly AGENDA_VIEW_DAYS_AMOUNT days and fills occurrences with [] when there are no events and showEmptyDaysInAgenda=true', () => {
       const state = getEventCalendarStateFromParameters({
@@ -18,6 +37,7 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
+      expect(visibleDays).to.equal(eventCalendarAgendaSelectors.baseVisibleDays(state));
     });
 
     it('should extend forward until it fills AGENDA_VIEW_DAYS_AMOUNT days that contain events when showEmptyDaysInAgenda=false', () => {
@@ -112,6 +132,193 @@ describe('eventCalendarEventSelectors', () => {
         processDate(adapter.date('2025-10-17Z', 'default'), adapter),
         processDate(adapter.date('2025-10-20Z', 'default'), adapter),
       ]);
+    });
+
+    it('should return an empty list when no day in the horizon has events and showEmptyDaysInAgenda=false', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        visibleDate: adapter.date('2024-01-01', 'default'),
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays).to.have.length(0);
+    });
+
+    it('should return an empty list when all the events are before the visible date and showEmptyDaysInAgenda=false', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().fullDay('2023-12-01Z').build()],
+        visibleDate: adapter.date('2024-01-01', 'default'),
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays).to.have.length(0);
+    });
+
+    it('should return an empty list regardless of the loading state when no day has events and showEmptyDaysInAgenda=false', () => {
+      const state: EventCalendarState = {
+        ...getEventCalendarStateFromParameters({
+          events: [],
+          visibleDate: adapter.date('2024-01-01', 'default'),
+          defaultPreferences: {
+            showWeekends: true,
+            showEmptyDaysInAgenda: false,
+          },
+        }),
+        isLoading: true,
+      };
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays).to.have.length(0);
+    });
+
+    it('should scan the days right after the base window when the visible date is a weekend day and weekends are hidden', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().fullDay('2025-07-17Z').build()], // Thursday, visible date + 12 days
+        visibleDate: adapter.date('2025-07-05', 'default'), // Saturday
+        defaultPreferences: {
+          showWeekends: false,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays).to.deep.equal([
+        processDate(adapter.date('2025-07-17Z', 'default'), adapter),
+      ]);
+    });
+
+    it('should find an event on the last day of the horizon when showEmptyDaysInAgenda=false', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().fullDay('2024-06-28Z').build()], // 2024-01-01 + 179 days
+        visibleDate: adapter.date('2024-01-01', 'default'),
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays).to.deep.equal([
+        processDate(adapter.date('2024-06-28Z', 'default'), adapter),
+      ]);
+    });
+
+    it('should not find an event past the horizon when showEmptyDaysInAgenda=false', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().fullDay('2024-06-29Z').build()], // 2024-01-01 + 180 days
+        visibleDate: adapter.date('2024-01-01', 'default'),
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays).to.have.length(0);
+    });
+    it('should stop at the horizon when weekends are hidden and showEmptyDaysInAgenda=false', () => {
+      const build = (eventDate: string) =>
+        getEventCalendarStateFromParameters({
+          events: [EventBuilder.new().fullDay(eventDate).build()],
+          visibleDate: adapter.date('2025-07-05', 'default'), // Saturday
+          defaultPreferences: {
+            showWeekends: false,
+            showEmptyDaysInAgenda: false,
+          },
+        });
+
+      // 2025-07-05 + 179 days is a Wednesday, + 180 days a Thursday
+      expect(eventCalendarAgendaSelectors.visibleDays(build('2025-12-31Z'))).to.have.length(1);
+      expect(eventCalendarAgendaSelectors.visibleDays(build('2026-01-01Z'))).to.have.length(0);
+    });
+  });
+
+  describe('visibleRange', () => {
+    it('should end on the last weekday of the base days when weekends are hidden and showEmptyDaysInAgenda=true', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        visibleDate: adapter.date('2025-07-01', 'default'), // Tuesday, the 12-day window ends on a Saturday
+        defaultPreferences: {
+          showWeekends: false,
+          showEmptyDaysInAgenda: true,
+        },
+      });
+
+      const range = eventCalendarAgendaSelectors.visibleRange(state);
+
+      expect(adapter.isSameDay(range.end, adapter.date('2025-07-11Z', 'default'))).to.equal(true);
+    });
+
+    it('should span the base days when showEmptyDaysInAgenda=true', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        visibleDate: adapter.date('2024-01-01', 'default'),
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: true,
+        },
+      });
+
+      const range = eventCalendarAgendaSelectors.visibleRange(state);
+
+      expect(adapter.isSameDay(range.start, adapter.date('2024-01-01Z', 'default'))).to.equal(true);
+      expect(adapter.isSameDay(range.end, adapter.date('2024-01-12Z', 'default'))).to.equal(true);
+    });
+
+    it('should span the whole horizon when showEmptyDaysInAgenda=false', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        visibleDate: adapter.date('2024-01-01', 'default'),
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const range = eventCalendarAgendaSelectors.visibleRange(state);
+
+      expect(adapter.isSameDay(range.start, adapter.date('2024-01-01Z', 'default'))).to.equal(true);
+      expect(adapter.isSameDay(range.end, adapter.date('2024-06-28Z', 'default'))).to.equal(true);
+    });
+
+    it('should not depend on the events or the loading state when showEmptyDaysInAgenda=false', () => {
+      const parameters = {
+        visibleDate: adapter.date('2024-01-01', 'default'),
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: false,
+        },
+      };
+      const emptyState = getEventCalendarStateFromParameters({ ...parameters, events: [] });
+      const stateWithEvents = getEventCalendarStateFromParameters({
+        ...parameters,
+        events: [
+          EventBuilder.new().fullDay('2024-03-01Z').build(),
+          EventBuilder.new().fullDay('2024-04-10Z').build(),
+        ],
+      });
+      const loadingState: EventCalendarState = { ...stateWithEvents, isLoading: true };
+
+      const reference = eventCalendarAgendaSelectors.visibleRange(emptyState);
+      for (const state of [stateWithEvents, loadingState]) {
+        const range = eventCalendarAgendaSelectors.visibleRange(state);
+        expect(adapter.isEqual(range.start, reference.start)).to.equal(true);
+        expect(adapter.isEqual(range.end, reference.end)).to.equal(true);
+      }
     });
   });
 });

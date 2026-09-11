@@ -13,6 +13,16 @@ export interface EventCalendarViewDefinition {
     parameters: SiblingVisibleDateGetterParameters,
   ) => TemporalSupportedObject;
   visibleDaysSelector: (state: EventCalendarState) => SchedulerProcessedDate[];
+  /**
+   * The range to fetch from the data source.
+   * Defaults to the span of the visible days.
+   */
+  visibleRangeSelector?: (state: EventCalendarState) => EventCalendarVisibleRange;
+}
+
+export interface EventCalendarVisibleRange {
+  start: TemporalSupportedObject;
+  end: TemporalSupportedObject;
 }
 
 interface SiblingVisibleDateGetterParameters {
