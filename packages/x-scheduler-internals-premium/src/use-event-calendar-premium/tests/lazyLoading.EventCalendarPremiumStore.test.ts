@@ -223,6 +223,45 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     expect(store.state.eventIdList).to.include('b');
   });
 
+  it('should keep loading when a stale fetch resolves while the latest one is pending', async () => {
+    let resolveA: (events: TestEvent[]) => void = () => {};
+    let resolveB: (events: TestEvent[]) => void = () => {};
+    let callIndex = 0;
+    const dataSource = {
+      getEvents: vi.fn(
+        () =>
+          new Promise<TestEvent[]>((resolve) => {
+            callIndex += 1;
+            if (callIndex === 1) {
+              resolveA = resolve;
+            } else {
+              resolveB = resolve;
+            }
+          }),
+      ),
+      persistEvents: noopPersistEvents,
+    };
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    store.setViewDefinition(buildViewDefinition());
+    await flushEffect();
+    await flushDebounce();
+
+    // Navigate to B before A resolves.
+    store.goToDate(adapter.date('2025-09-15T00:00:00Z', 'default'), noopUIEvent);
+    await flushEffect();
+    await flushDebounce();
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
+    expect(store.state.isLoading).to.equal(true);
+
+    resolveA([]);
+    await flushEffect();
+    expect(store.state.isLoading).to.equal(true);
+
+    resolveB([]);
+    await flushEffect();
+    expect(store.state.isLoading).to.equal(false);
+  });
+
   it('should not fetch again when the visible date moves within the same day', async () => {
     const dataSource = {
       getEvents: vi.fn(
@@ -341,12 +380,23 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
 
       expect(dataSource.getEvents.mock.calls).to.have.length(2);
       const [start, end] = dataSource.getEvents.mock.calls[1];
-      expect(adapter.isSameDay(start, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 180))).to.equal(
-        true,
-      );
-      expect(adapter.isSameDay(end, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 191))).to.equal(
-        true,
-      );
+      expect(
+        adapter.isEqual(
+          start,
+          adapter.startOfDay(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 180)),
+        ),
+      ).to.equal(true);
+      expect(
+        adapter.isEqual(end, adapter.endOfDay(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 191))),
+      ).to.equal(true);
+
+      // Navigating back to the cached horizon fetches nothing
+      store.goToDate(DEFAULT_TESTING_VISIBLE_DATE, noopUIEvent);
+      await flushEffect();
+      await flushDebounce();
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(2);
+      expect(store.state.isLoading).to.equal(false);
     });
 
     it('should keep the same range across the loading flip when the agenda hides empty days and weekends', async () => {

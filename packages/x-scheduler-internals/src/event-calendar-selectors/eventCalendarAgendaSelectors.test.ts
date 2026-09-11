@@ -164,7 +164,7 @@ describe('eventCalendarEventSelectors', () => {
       expect(visibleDays).to.have.length(0);
     });
 
-    it('should return an empty list while loading when no day has events and showEmptyDaysInAgenda=false', () => {
+    it('should return an empty list regardless of the loading state when no day has events and showEmptyDaysInAgenda=false', () => {
       const state: EventCalendarState = {
         ...getEventCalendarStateFromParameters({
           events: [],
@@ -230,9 +230,39 @@ describe('eventCalendarEventSelectors', () => {
 
       expect(visibleDays).to.have.length(0);
     });
+    it('should stop at the horizon when weekends are hidden and showEmptyDaysInAgenda=false', () => {
+      const build = (eventDate: string) =>
+        getEventCalendarStateFromParameters({
+          events: [EventBuilder.new().fullDay(eventDate).build()],
+          visibleDate: adapter.date('2025-07-05', 'default'), // Saturday
+          defaultPreferences: {
+            showWeekends: false,
+            showEmptyDaysInAgenda: false,
+          },
+        });
+
+      // 2025-07-05 + 179 days is a Wednesday, + 180 days a Thursday
+      expect(eventCalendarAgendaSelectors.visibleDays(build('2025-12-31Z'))).to.have.length(1);
+      expect(eventCalendarAgendaSelectors.visibleDays(build('2026-01-01Z'))).to.have.length(0);
+    });
   });
 
   describe('visibleRange', () => {
+    it('should end on the last weekday of the base days when weekends are hidden and showEmptyDaysInAgenda=true', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        visibleDate: adapter.date('2025-07-01', 'default'), // Tuesday, the 12-day window ends on a Saturday
+        defaultPreferences: {
+          showWeekends: false,
+          showEmptyDaysInAgenda: true,
+        },
+      });
+
+      const range = eventCalendarAgendaSelectors.visibleRange(state);
+
+      expect(adapter.isSameDay(range.end, adapter.date('2025-07-11Z', 'default'))).to.equal(true);
+    });
+
     it('should span the base days when showEmptyDaysInAgenda=true', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],

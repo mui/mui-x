@@ -52,12 +52,13 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
   describe('showEmptyDaysInAgenda=false', () => {
     const hideEmptyDays = { defaultPreferences: { showEmptyDaysInAgenda: false } };
 
-    it('should render the loading skeletons instead of the empty state while events are loading', async () => {
+    it('should render the loading skeletons on the base days instead of the empty state while events are loading', async () => {
       renderWithDataSource(pendingGetEvents, hideEmptyDays);
 
       await waitFor(() => {
-        expect(getSkeletons().length).to.be.greaterThan(0);
+        expect(getSkeletons()).to.have.length(12);
       });
+      expect(getRows()).to.have.length(12);
       expect(screen.queryByRole('status')).to.equal(null);
     });
 
@@ -195,6 +196,11 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
       expect(
         adapter.isSameDay(nextEnd, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 191)),
       ).to.equal(true);
+
+      await waitFor(() => {
+        expect(screen.getByRole('status')).to.have.text('No upcoming events');
+      });
+      expect(getSkeletons()).to.have.length(0);
     });
   });
 });
