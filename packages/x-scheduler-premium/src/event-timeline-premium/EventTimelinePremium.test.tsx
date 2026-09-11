@@ -23,8 +23,8 @@ import type {
 import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import type {
-  EventTimelineSlotProps,
-  EventTimelineSlots,
+  EventTimelinePremiumSlotProps,
+  EventTimelinePremiumSlots,
   TimelineEventContentProps,
   TimelineEventContentPropsOverrides,
   TimelineResourceTitleProps,
@@ -68,8 +68,8 @@ describe('<EventTimelinePremium />', () => {
     onCollapsedResourcesChange?: (collapsedResources: Record<string, boolean>) => void;
     defaultVisibleResources?: Record<string, boolean>;
     onEventEditingStart?: React.ComponentProps<typeof EventTimelinePremium>['onEventEditingStart'];
-    slots?: EventTimelineSlots;
-    slotProps?: EventTimelineSlotProps;
+    slots?: EventTimelinePremiumSlots;
+    slotProps?: EventTimelinePremiumSlotProps;
   }) {
     const view = await renderSettled(
       <EventTimelinePremium

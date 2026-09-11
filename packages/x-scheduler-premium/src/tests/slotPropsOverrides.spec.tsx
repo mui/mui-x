@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import type { EventTimelineSlots, PropsFromSlot } from '@mui/x-scheduler-premium/models';
+import type { EventTimelinePremiumSlots, PropsFromSlot } from '@mui/x-scheduler-premium/models';
 
 declare module '@mui/x-scheduler-premium/models' {
   interface TimelineEventContentPropsOverrides {
@@ -16,7 +16,7 @@ function CustomEventContent({
   resource,
   variant,
   customEventContentProp,
-}: PropsFromSlot<EventTimelineSlots['timelineEventContent']>) {
+}: PropsFromSlot<EventTimelinePremiumSlots['timelineEventContent']>) {
   return (
     <span data-prop={customEventContentProp} data-resource={resource.id} data-variant={variant}>
       {occurrence.title}
@@ -27,7 +27,7 @@ function CustomEventContent({
 function CustomResourceTitle({
   resource,
   customResourceTitleProp,
-}: PropsFromSlot<EventTimelineSlots['timelineResourceTitle']>) {
+}: PropsFromSlot<EventTimelinePremiumSlots['timelineResourceTitle']>) {
   return <span data-prop={customResourceTitleProp}>{resource.title}</span>;
 }
 

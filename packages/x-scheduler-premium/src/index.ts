@@ -6,8 +6,8 @@ export type {
   EventDialogGeneralTabPropsOverrides,
 } from '@mui/x-scheduler/models';
 export type {
-  EventTimelineSlots,
-  EventTimelineSlotProps,
+  EventTimelinePremiumSlots,
+  EventTimelinePremiumSlotProps,
   TimelineEventContentProps,
   TimelineEventContentPropsOverrides,
   TimelineResourceTitleProps,

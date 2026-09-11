@@ -17,7 +17,10 @@ import {
   getPaletteVariants,
   useSchedulerSlots,
 } from '@mui/x-scheduler/internals';
-import type { EventTimelineSlots, EventTimelineSlotProps } from '../../../models/slots';
+import type {
+  EventTimelinePremiumSlots,
+  EventTimelinePremiumSlotProps,
+} from '../../../models/slots';
 import type { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
@@ -159,7 +162,10 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const { classes } = useEventTimelinePremiumStyledContext();
-  const { slots, slotProps } = useSchedulerSlots<EventTimelineSlots, EventTimelineSlotProps>();
+  const { slots, slotProps } = useSchedulerSlots<
+    EventTimelinePremiumSlots,
+    EventTimelinePremiumSlotProps
+  >();
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(

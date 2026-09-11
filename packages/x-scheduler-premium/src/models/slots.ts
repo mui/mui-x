@@ -42,7 +42,7 @@ export interface TimelineResourceTitleProps {
   resource: Omit<SchedulerResource, 'children'>;
 }
 
-export interface EventTimelineSlots extends SchedulerSlots {
+export interface EventTimelinePremiumSlots extends SchedulerSlots {
   /**
    * The content of an event block.
    * It replaces the title text and is rendered inside the block, so the block keeps its
@@ -64,7 +64,7 @@ export interface EventTimelineSlots extends SchedulerSlots {
   >;
 }
 
-export interface EventTimelineSlotProps extends SchedulerSlotProps {
+export interface EventTimelinePremiumSlotProps extends SchedulerSlotProps {
   /**
    * Props forwarded to the `timelineEventContent` slot.
    */
@@ -75,15 +75,15 @@ export interface EventTimelineSlotProps extends SchedulerSlotProps {
   timelineResourceTitle?: TimelineResourceTitlePropsOverrides;
 }
 
-export interface EventTimelineSlotsAndSlotProps {
+export interface EventTimelinePremiumSlotsAndSlotProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: EventTimelineSlots;
+  slots?: EventTimelinePremiumSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: EventTimelineSlotProps;
+  slotProps?: EventTimelinePremiumSlotProps;
 }

@@ -16,7 +16,7 @@ function getSlotInterfaceName(name: string): string | undefined {
     return undefined;
   }
   if (name === 'EventTimelinePremium') {
-    return 'EventTimelineSlots';
+    return 'EventTimelinePremiumSlots';
   }
   return 'SchedulerSlots';
 }

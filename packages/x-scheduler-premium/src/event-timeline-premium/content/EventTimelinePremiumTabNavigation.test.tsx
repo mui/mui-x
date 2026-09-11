@@ -11,7 +11,7 @@ import {
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPresetConfig } from '@mui/x-scheduler-internals-premium/models';
 import type {
-  EventTimelineSlots,
+  EventTimelinePremiumSlots,
   TimelineEventContentProps,
   TimelineEventContentPropsOverrides,
 } from '@mui/x-scheduler-premium/models';
@@ -56,7 +56,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
       events?: SchedulerEvent[];
       presetConfig?: EventTimelinePremiumPresetConfig;
       hostWidth?: number;
-      slots?: EventTimelineSlots;
+      slots?: EventTimelinePremiumSlots;
     } = {},
   ) {
     const view = await renderSettled(
