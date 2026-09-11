@@ -1,64 +1,48 @@
 'use client';
 import * as React from 'react';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import type { EventTimelineSlots, EventTimelineSlotProps } from '../../models/slots';
+import type { SchedulerSlots, SchedulerSlotProps } from '../../models/slots';
 
-// The context carries the superset of every surface's slots; each public component
-// narrows what it accepts through its own props type.
-export interface SchedulerSlotsContextValue {
-  slots: EventTimelineSlots;
-  slotProps: EventTimelineSlotProps;
+export interface SchedulerSlotsContextValue<
+  TSlots extends SchedulerSlots = SchedulerSlots,
+  TSlotProps extends SchedulerSlotProps = SchedulerSlotProps,
+> {
+  slots: TSlots;
+  slotProps: TSlotProps;
 }
 
 const EMPTY_SLOTS: SchedulerSlotsContextValue = {
-  slots: EMPTY_OBJECT as EventTimelineSlots,
-  slotProps: EMPTY_OBJECT as EventTimelineSlotProps,
+  slots: EMPTY_OBJECT as SchedulerSlots,
+  slotProps: EMPTY_OBJECT as SchedulerSlotProps,
 };
 
 // Defaults to the empty set rather than throwing: the dialog renders its built-in content when
 // mounted without a scheduler root, which is how most of the tests exercise it.
 export const SchedulerSlotsContext = React.createContext<SchedulerSlotsContextValue>(EMPTY_SLOTS);
 
-export function useSchedulerSlots(): SchedulerSlotsContextValue {
-  return React.useContext(SchedulerSlotsContext);
+// The context holds whatever the surface received. Each consumer reads it as the slots
+// interface of its own surface, like `useChartsSlots`.
+export function useSchedulerSlots<
+  TSlots extends SchedulerSlots = SchedulerSlots,
+  TSlotProps extends SchedulerSlotProps = SchedulerSlotProps,
+>(): SchedulerSlotsContextValue<TSlots, TSlotProps> {
+  return React.useContext(SchedulerSlotsContext) as SchedulerSlotsContextValue<TSlots, TSlotProps>;
 }
 
 export interface SchedulerSlotsProviderProps {
-  slots: EventTimelineSlots | undefined;
-  slotProps: EventTimelineSlotProps | undefined;
+  slots: SchedulerSlots | undefined;
+  slotProps: SchedulerSlotProps | undefined;
   children: React.ReactNode;
 }
 
 export function SchedulerSlotsProvider(props: SchedulerSlotsProviderProps) {
-  const { slots, slotProps, children } = props;
+  const {
+    slots = EMPTY_OBJECT as SchedulerSlots,
+    slotProps = EMPTY_OBJECT as SchedulerSlotProps,
+    children,
+  } = props;
 
-  // Memoized on the individual slot references rather than on the `slots` / `slotProps`
-  // containers, which are usually inline object literals with a new identity on every render.
-  const eventDialogGeneralTab = slots?.eventDialogGeneralTab;
-  const timelineEventContent = slots?.timelineEventContent;
-  const timelineResourceTitle = slots?.timelineResourceTitle;
-  const eventDialogGeneralTabProps = slotProps?.eventDialogGeneralTab;
-  const timelineEventContentProps = slotProps?.timelineEventContent;
-  const timelineResourceTitleProps = slotProps?.timelineResourceTitle;
-
-  const value = React.useMemo(
-    () => ({
-      slots: { eventDialogGeneralTab, timelineEventContent, timelineResourceTitle },
-      slotProps: {
-        eventDialogGeneralTab: eventDialogGeneralTabProps,
-        timelineEventContent: timelineEventContentProps,
-        timelineResourceTitle: timelineResourceTitleProps,
-      },
-    }),
-    [
-      eventDialogGeneralTab,
-      timelineEventContent,
-      timelineResourceTitle,
-      eventDialogGeneralTabProps,
-      timelineEventContentProps,
-      timelineResourceTitleProps,
-    ],
-  );
+  const value = React.useMemo(() => ({ slots, slotProps }), [slots, slotProps]);
 
   return <SchedulerSlotsContext.Provider value={value}>{children}</SchedulerSlotsContext.Provider>;
 }

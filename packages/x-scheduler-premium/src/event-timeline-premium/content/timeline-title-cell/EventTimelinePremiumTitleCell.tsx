@@ -12,6 +12,7 @@ import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { isEventFromNestedInteractiveElement } from '@mui/x-scheduler-internals/internals';
 import { getPaletteVariants, useSchedulerSlots } from '@mui/x-scheduler/internals';
+import type { EventTimelineSlots, EventTimelineSlotProps } from '@mui/x-scheduler/models';
 import { Virtualization } from '@mui/x-virtualizer';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
@@ -134,7 +135,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
   const reportTitleWidth = useReportTitleWidth();
-  const { slots, slotProps } = useSchedulerSlots();
+  const { slots, slotProps } = useSchedulerSlots<EventTimelineSlots, EventTimelineSlotProps>();
 
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
