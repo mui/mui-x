@@ -23,7 +23,7 @@
     "@babel/runtime": "catalog:",
     "@modelcontextprotocol/sdk": "^1.30.0",
     "@mui/x-agent-tools": "workspace:^",
-    "zod": "^4.4.3"
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "22.20.1",
