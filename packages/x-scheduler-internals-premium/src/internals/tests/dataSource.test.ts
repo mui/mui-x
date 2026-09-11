@@ -1069,6 +1069,51 @@ describe('SchedulerDataSourceCacheDefault', () => {
     ).to.deep.equal(['1', '3']);
   });
 
+  describe('getMissingRange', () => {
+    it('should return null when the range is fully covered', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+
+      expect(cache.getMissingRange(100, 900)).to.equal(null);
+    });
+
+    it('should return the whole range when nothing overlaps it', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+
+      expect(cache.getMissingRange(2000, 3000)).to.deep.equal({ start: 2000, end: 3000 });
+    });
+
+    it('should trim the covered edges and return the part that is missing', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+      cache.setRange(3000, 4000, []);
+
+      expect(cache.getMissingRange(500, 3500)).to.deep.equal({ start: 1001, end: 2999 });
+    });
+
+    it('should return the smallest range covering every gap', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(1000, 2000, []);
+      cache.setRange(3000, 4000, []);
+
+      expect(cache.getMissingRange(0, 5000)).to.deep.equal({ start: 0, end: 5000 });
+    });
+
+    it('should treat expired ranges as missing', () => {
+      vi.useFakeTimers();
+      try {
+        const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 1000 });
+        cache.setRange(0, 1000, []);
+        vi.advanceTimersByTime(1001);
+
+        expect(cache.getMissingRange(0, 1000)).to.deep.equal({ start: 0, end: 1000 });
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+  });
+
   it('upsert should throw when the resolved event id is missing', () => {
     const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
     const eventWithoutId = {

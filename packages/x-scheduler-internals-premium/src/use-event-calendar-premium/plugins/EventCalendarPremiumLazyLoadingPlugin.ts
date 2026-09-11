@@ -42,7 +42,8 @@ export class EventCalendarPremiumLazyLoadingPlugin<
 }
 
 /**
- * Returns the range to fetch for the registered view, or `null` when there is nothing to fetch.
+ * Returns the range to fetch for the registered view, spanning whole days,
+ * or `null` when there is nothing to fetch.
  */
 function getRangeToFetch(state: EventCalendarPremiumState): EventCalendarVisibleRange | null {
   const { viewDefinition, adapter } = state;
@@ -51,14 +52,16 @@ function getRangeToFetch(state: EventCalendarPremiumState): EventCalendarVisible
   }
 
   const calendarState = state as EventCalendarState;
+  let range: EventCalendarVisibleRange;
   if (viewDefinition.visibleRangeSelector) {
-    return viewDefinition.visibleRangeSelector(calendarState);
+    range = viewDefinition.visibleRangeSelector(calendarState);
+  } else {
+    const days = viewDefinition.visibleDaysSelector(calendarState);
+    if (days.length === 0) {
+      return null;
+    }
+    range = { start: days[0].value, end: days[days.length - 1].value };
   }
 
-  const days = viewDefinition.visibleDaysSelector(calendarState);
-  if (days.length === 0) {
-    return null;
-  }
-
-  return { start: adapter.startOfDay(days[0].value), end: days[days.length - 1].value };
+  return { start: adapter.startOfDay(range.start), end: adapter.endOfDay(range.end) };
 }

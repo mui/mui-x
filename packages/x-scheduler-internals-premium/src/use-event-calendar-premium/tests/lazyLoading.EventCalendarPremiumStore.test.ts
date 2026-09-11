@@ -251,6 +251,26 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     expect(dataSource.getEvents.mock.calls).to.have.length(1);
   });
 
+  it('should request the range until the end of the last visible day', async () => {
+    const dataSource = {
+      getEvents: vi.fn(
+        async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
+      ),
+      persistEvents: noopPersistEvents,
+    };
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    store.setViewDefinition(buildViewDefinition(7));
+
+    await flushEffect();
+    await flushDebounce();
+
+    const [start, end] = dataSource.getEvents.mock.calls[0];
+    expect(adapter.isEqual(start, adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE))).to.equal(true);
+    expect(
+      adapter.isEqual(end, adapter.endOfDay(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 6))),
+    ).to.equal(true);
+  });
+
   describe('view without visible days', () => {
     // The agenda view can have no visible day, so it provides its own range
     const agendaViewDefinition: any = {
@@ -274,7 +294,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       expect(dataSource.getEvents.mock.calls).to.have.length(0);
     });
 
-    it('should fetch the base agenda window when the agenda view has no visible day', async () => {
+    it('should fetch the whole horizon when the agenda hides the empty days', async () => {
       const dataSource = {
         getEvents: vi.fn(
           async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
@@ -294,38 +314,37 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       expect(dataSource.getEvents.mock.calls).to.have.length(1);
       const [start, end] = dataSource.getEvents.mock.calls[0];
       expect(adapter.isSameDay(start, DEFAULT_TESTING_VISIBLE_DATE)).to.equal(true);
-      expect(adapter.isSameDay(end, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 11))).to.equal(
+      expect(adapter.isSameDay(end, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 179))).to.equal(
         true,
       );
     });
 
-    it('should end the base agenda window on the last weekday when weekends are hidden', async () => {
+    it('should only fetch the uncovered part of the horizon after navigating', async () => {
       const dataSource = {
         getEvents: vi.fn(
           async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
         ),
         persistEvents: noopPersistEvents,
       };
-      // Tuesday: the 12-day window ends on a Saturday
-      const visibleDate = adapter.date('2025-07-01T00:00:00Z', 'default');
       const store = new EventCalendarPremiumStore(
-        {
-          ...DEFAULT_PARAMS,
-          dataSource,
-          defaultVisibleDate: visibleDate,
-          defaultPreferences: { showEmptyDaysInAgenda: false, showWeekends: false },
-        },
+        { ...DEFAULT_PARAMS, dataSource, defaultPreferences: { showEmptyDaysInAgenda: false } },
         adapter,
       );
 
       store.setViewDefinition(agendaViewDefinition);
-
       await flushEffect();
       await flushDebounce();
 
-      expect(dataSource.getEvents.mock.calls).to.have.length(1);
-      const [, end] = dataSource.getEvents.mock.calls[0];
-      expect(adapter.isSameDay(end, adapter.date('2025-07-11T00:00:00Z', 'default'))).to.equal(
+      store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 12), noopUIEvent);
+      await flushEffect();
+      await flushDebounce();
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(2);
+      const [start, end] = dataSource.getEvents.mock.calls[1];
+      expect(adapter.isSameDay(start, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 180))).to.equal(
+        true,
+      );
+      expect(adapter.isSameDay(end, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 191))).to.equal(
         true,
       );
     });

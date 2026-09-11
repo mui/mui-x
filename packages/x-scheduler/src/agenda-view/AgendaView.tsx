@@ -200,12 +200,15 @@ export const AgendaView = React.memo(
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
     // Feature hooks
-    const { days } = useEventCalendarView(AGENDA_VIEW_DEFINITION);
-    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
+    const { days: visibleDays } = useEventCalendarView(AGENDA_VIEW_DEFINITION);
 
     // Selector hooks
     const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
-    const errors = useStore(store, schedulerOtherSelectors.errors);
+    const baseVisibleDays = useStore(store, eventCalendarAgendaSelectors.baseVisibleDays);
+
+    // While loading with no day to show, render the base days so the skeletons have rows.
+    const days = isLoading && visibleDays.length === 0 ? baseVisibleDays : visibleDays;
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     const daysWithOccurrences = React.useMemo(
       () =>
@@ -229,7 +232,7 @@ export const AgendaView = React.memo(
         ref={handleRef}
         className={clsx(props.className, classes.agendaView)}
       >
-        {days.length === 0 && errors.length === 0 && (
+        {!isLoading && days.length === 0 && (
           <AgendaViewEmptyState className={classes.agendaViewEmptyState} role="status">
             {localeText.agendaViewEmptyStateLabel}
           </AgendaViewEmptyState>

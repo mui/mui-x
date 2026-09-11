@@ -117,24 +117,22 @@ export class SchedulerLazyLoadingPlugin<
     try {
       if (this.dataManager) {
         const { adapter } = this.store.state;
-        this.latestRequestedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
+
+        // Only request the part of the range the cache does not cover yet.
+        // A fully covered range still goes through the queue so the cache-hit branch runs.
+        const rangeToFetch = this.getMissingRange(range) ?? range;
+        this.latestRequestedRangeKey = `${adapter.getTime(rangeToFetch.start)}:${adapter.getTime(adapter.endOfDay(rangeToFetch.end))}`;
 
         // Flip `isLoading` synchronously so the skeleton shows immediately,
         // before any debounce delay on the queued path.
-        if (
-          this.cache &&
-          !this.cache.hasCoverage(
-            adapter.getTime(range.start),
-            adapter.getTime(adapter.endOfDay(range.end)),
-          )
-        ) {
+        if (rangeToFetch !== range) {
           this.store.set('isLoading', true);
         }
 
         if (immediate) {
-          await this.dataManager.queueImmediate([range]);
+          await this.dataManager.queueImmediate([rangeToFetch]);
         } else {
-          await this.dataManager.queue([range]);
+          await this.dataManager.queue([rangeToFetch]);
         }
       }
     } catch (error) {
@@ -145,6 +143,38 @@ export class SchedulerLazyLoadingPlugin<
       this.store.set('isLoading', false);
     }
   };
+
+  /**
+   * Returns the smallest range covering the parts of `range` that are not cached,
+   * `null` when the cache already covers it, or the whole range when there is no cache.
+   */
+  private getMissingRange(range: {
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
+  }): { start: TemporalSupportedObject; end: TemporalSupportedObject } | null {
+    if (!this.cache) {
+      return range;
+    }
+
+    const { adapter } = this.store.state;
+    const end = adapter.endOfDay(range.end);
+    const startTime = adapter.getTime(range.start);
+    const endTime = adapter.getTime(end);
+    const missing = this.cache.getMissingRange(startTime, endTime);
+    if (missing === null) {
+      return null;
+    }
+
+    // Only the trimmed edges are rebuilt, the others keep the value the view provided.
+    return {
+      start:
+        missing.start === startTime
+          ? range.start
+          : adapter.addMilliseconds(range.start, missing.start - startTime),
+      end:
+        missing.end === endTime ? range.end : adapter.addMilliseconds(end, missing.end - endTime),
+    };
+  }
 
   /**
    * Loads events from the data source.

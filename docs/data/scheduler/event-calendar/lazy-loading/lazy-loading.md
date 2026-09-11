@@ -36,6 +36,9 @@ When you provide `dataSource`, you don't need the `events` prop—events are fet
 
 The `persistEvents` method runs whenever events are created, updated, or deleted, letting you persist the changes back to the server.
 
+Fetched ranges are cached, so navigating to a range that is already loaded doesn't call `getEvents` again, and a range that is partially loaded only requests the missing part.
+When the agenda view hides the days with no events, it requests the 180 days after the visible date instead of the visible days only.
+
 {{"demo": "BasicDataSource.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info

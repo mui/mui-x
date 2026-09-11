@@ -84,19 +84,18 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
       expect(screen.queryByRole('status')).to.equal(null);
     });
 
-    it('should not render the empty state when the data source fails', async () => {
+    it('should render the empty state when the data source fails', async () => {
       const getEvents = vi.fn(async () => {
         throw new Error('Network down');
       });
       renderWithDataSource(getEvents, hideEmptyDays);
 
       await waitFor(() => {
-        expect(getSkeletons()).to.have.length(0);
+        expect(screen.getByRole('status')).to.have.text('No upcoming events');
       });
-      // Standalone views render no error container: the failure only shows as no rows and no empty state
       expect(getEvents.mock.calls).to.have.length(1);
+      expect(getSkeletons()).to.have.length(0);
       expect(getRows()).to.have.length(0);
-      expect(screen.queryByRole('status')).to.equal(null);
     });
 
     it('should settle on the empty state when the default window ends on a weekend and weekends are hidden', async () => {
@@ -114,7 +113,7 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
       expect(getSkeletons()).to.have.length(0);
     });
 
-    it('should fetch the wide range and settle when the loaded events spread beyond the first window', async () => {
+    it('should fetch the whole horizon in one request and render the events beyond the first window', async () => {
       const weekly = EventBuilder.new()
         .title('Weekly sync')
         .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
@@ -126,35 +125,38 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
 
       renderWithDataSource(getEvents, hideEmptyDays);
 
-      // First fetch: the base window. Second: the 12 weekly occurrences
-      await waitFor(() => {
-        expect(getEvents.mock.calls).to.have.length(2);
-      });
-      const [wideStart, wideEnd] = getEvents.mock.calls[1];
-      expect(adapter.isSameDay(wideStart, DEFAULT_TESTING_VISIBLE_DATE)).to.equal(true);
-      expect(
-        adapter.isSameDay(wideEnd, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 77)),
-      ).to.equal(true);
-
       await waitFor(() => {
         expect(screen.getAllByRole('button', { name: /Weekly sync/ })).to.have.length(12);
       });
       expect(getSkeletons()).to.have.length(0);
-      expect(getEvents.mock.calls).to.have.length(2);
+      expect(getEvents.mock.calls).to.have.length(1);
+      const [start, end] = getEvents.mock.calls[0];
+      expect(adapter.isSameDay(start, DEFAULT_TESTING_VISIBLE_DATE)).to.equal(true);
+      expect(adapter.isSameDay(end, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 179))).to.equal(
+        true,
+      );
     });
 
-    it('should fetch the next window after navigating when the current one has no events', async () => {
+    it('should render an event beyond the first window without navigating', async () => {
       // 20 days after the default visible date, outside the first 12-day window
       const farEvent = EventBuilder.new()
         .title('Far away')
         .singleDay('2025-07-23T10:00:00Z')
         .build();
-      const farEventStart = adapter.date('2025-07-23T10:00:00Z', 'default');
+      const getEvents = vi.fn(async () => [farEvent]);
+
+      renderWithDataSource(getEvents, hideEmptyDays);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /Far away/ })).not.to.equal(null);
+      });
+      expect(getEvents.mock.calls).to.have.length(1);
+      expect(screen.queryByRole('status')).to.equal(null);
+    });
+
+    it('should only fetch the days past the cached horizon when navigating forward', async () => {
       const getEvents = vi.fn(
-        async (start: TemporalSupportedObject, end: TemporalSupportedObject) =>
-          adapter.isBefore(farEventStart, end) && adapter.isAfter(farEventStart, start)
-            ? [farEvent]
-            : [],
+        async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
       );
 
       function Test() {
@@ -184,17 +186,15 @@ describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
       await user.click(screen.getByRole('button', { name: 'Next' }));
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /Far away/ })).not.to.equal(null);
+        expect(getEvents.mock.calls).to.have.length(2);
       });
-      expect(getEvents.mock.calls).to.have.length(2);
       const [nextStart, nextEnd] = getEvents.mock.calls[1];
       expect(
-        adapter.isSameDay(nextStart, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 12)),
+        adapter.isSameDay(nextStart, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 180)),
       ).to.equal(true);
       expect(
-        adapter.isSameDay(nextEnd, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 23)),
+        adapter.isSameDay(nextEnd, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 191)),
       ).to.equal(true);
-      expect(screen.queryByRole('status')).to.equal(null);
     });
   });
 });
