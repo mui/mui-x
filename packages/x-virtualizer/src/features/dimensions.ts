@@ -178,6 +178,23 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     lastFlipTimestamp: 0,
   });
 
+  // Deferred vertical scrollbar commit. A content-height change (detail panel
+  // expansion, added rows) updates the dimensions before the root has been
+  // re-measured. When the container previously hugged the content exactly, the
+  // layout is auto-growing: the root will grow to fit and no scrollbar will
+  // appear. Reserving the scrollbar width in that window shrinks the flex
+  // columns for one paint and snaps them back after the (throttled) resize,
+  // which is visible as a jump. The flip is deferred instead, and a rAF
+  // callback checks the real overflow to commit the scrollbar when the
+  // container turned out not to grow (fixed-height layout after all).
+  // https://github.com/mui/mui-x/issues/23573
+  const scrollYDeferral = React.useRef({
+    pending: false,
+    skip: false,
+    rafId: 0,
+    confirm: () => {},
+  });
+
   const {
     layout,
     dimensions: {
@@ -276,40 +293,61 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           }
         }
 
+        const osc = scrollYOscillation.current;
+        const heightsChanged =
+          rowsMeta.currentPageTotalHeight !== osc.heights.content ||
+          rowsMeta.pinnedTopRowsTotalHeight !== osc.heights.pinnedTop ||
+          rowsMeta.pinnedBottomRowsTotalHeight !== osc.heights.pinnedBottom;
+
         // Detect vertical scrollbar oscillation — caused by stale rootSize or
         // the horizontal scrollbar's height cascading. See scrollYOscillation.
-        {
-          const osc = scrollYOscillation.current;
-          const heightsChanged =
-            rowsMeta.currentPageTotalHeight !== osc.heights.content ||
-            rowsMeta.pinnedTopRowsTotalHeight !== osc.heights.pinnedTop ||
-            rowsMeta.pinnedBottomRowsTotalHeight !== osc.heights.pinnedBottom;
+        if (heightsChanged) {
+          osc.counter = 0;
+          osc.heights = {
+            content: rowsMeta.currentPageTotalHeight,
+            pinnedTop: rowsMeta.pinnedTopRowsTotalHeight,
+            pinnedBottom: rowsMeta.pinnedBottomRowsTotalHeight,
+          };
+        }
 
-          if (heightsChanged) {
+        if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
+          // performance.now is monotonic; Date.now can jump (NTP, clock change).
+          const now = performance.now();
+          if (now - osc.lastFlipTimestamp > OSCILLATION_FLIP_WINDOW_MS) {
             osc.counter = 0;
-            osc.heights = {
-              content: rowsMeta.currentPageTotalHeight,
-              pinnedTop: rowsMeta.pinnedTopRowsTotalHeight,
-              pinnedBottom: rowsMeta.pinnedBottomRowsTotalHeight,
-            };
           }
+          osc.lastFlipTimestamp = now;
+          if (!heightsChanged) {
+            osc.counter += 1;
+          }
+          if (osc.counter >= 2) {
+            hasScrollY = false;
+            // Recompute hasScrollX without the vertical scrollbar's width impact,
+            // otherwise the cascade (hasScrollY → narrower viewport → hasScrollX)
+            // keeps the horizontal scrollbar/filler alive and the root keeps resizing.
+            hasScrollX = hasScrollXIfNoYScrollBar;
+          }
+        }
 
-          if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
-            // performance.now is monotonic; Date.now can jump (NTP, clock change).
-            const now = performance.now();
-            if (now - osc.lastFlipTimestamp > OSCILLATION_FLIP_WINDOW_MS) {
-              osc.counter = 0;
-            }
-            osc.lastFlipTimestamp = now;
-            if (!heightsChanged) {
-              osc.counter += 1;
-            }
-            if (osc.counter >= 2) {
-              hasScrollY = false;
-              // Recompute hasScrollX without the vertical scrollbar's width impact,
-              // otherwise the cascade (hasScrollY → narrower viewport → hasScrollX)
-              // keeps the horizontal scrollbar/filler alive and the root keeps resizing.
-              hasScrollX = hasScrollXIfNoYScrollBar;
+        // See scrollYDeferral. The container hugged the content on the last
+        // update, so this flip is based on a content height the root has not
+        // been re-measured against yet.
+        if (hasScrollY && !scrollYDeferral.current.skip && prevDimensions.isReady) {
+          const deferral = scrollYDeferral.current;
+          const prevHuggedContent =
+            !prevDimensions.hasScrollY &&
+            Math.abs(
+              prevDimensions.viewportOuterSize.height -
+                (prevDimensions.minimumSize.height +
+                  (prevDimensions.hasScrollX ? prevDimensions.scrollbarSize : 0)),
+            ) <= 1;
+
+          if ((heightsChanged && prevHuggedContent) || deferral.pending) {
+            hasScrollY = false;
+            hasScrollX = hasScrollXIfNoYScrollBar;
+            deferral.pending = true;
+            if (deferral.rafId === 0 && typeof requestAnimationFrame !== 'undefined') {
+              deferral.rafId = requestAnimationFrame(() => deferral.confirm());
             }
           }
         }
@@ -395,6 +433,43 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     [resizeThrottleMs, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
+
+  const confirmDeferredScrollY = useEventCallback(() => {
+    const deferral = scrollYDeferral.current;
+    deferral.rafId = 0;
+    if (!deferral.pending) {
+      return;
+    }
+    deferral.pending = false;
+
+    // Layout has run at this point, so the scroller's overflow is ground
+    // truth. When the container grew to fit the content there is no overflow
+    // and the resize observer delivers the new root size. Otherwise the
+    // container is fixed-size and the scrollbar must be committed now.
+    const scroller = layout.refs.scroller.current;
+    const hasRealOverflow = scroller ? scroller.scrollHeight > scroller.clientHeight + 1 : true;
+    if (!hasRealOverflow) {
+      return;
+    }
+
+    deferral.skip = true;
+    try {
+      updateDimensionCallback();
+    } finally {
+      deferral.skip = false;
+    }
+  });
+  scrollYDeferral.current.confirm = confirmDeferredScrollY;
+
+  useLayoutEffect(() => {
+    const deferral = scrollYDeferral.current;
+    return () => {
+      if (deferral.rafId !== 0 && typeof cancelAnimationFrame !== 'undefined') {
+        cancelAnimationFrame(deferral.rafId);
+        deferral.rafId = 0;
+      }
+    };
+  }, []);
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
