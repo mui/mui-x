@@ -4,6 +4,7 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type { TimelineGridColumnType } from '../../models/timelineGrid';
 import { useTimelineGridRootContext } from '../../timeline-grid/root/TimelineGridRootContext';
 import { useTimelineGridBodyRowContext } from '../../timeline-grid/body-row/TimelineGridBodyRowContext';
+import { TimelineGridEventDataAttributes } from '../../timeline-grid/event/TimelineGridEventDataAttributes';
 
 /**
  * Handles arrow-key navigation and focus syncing for a timeline grid row cell.
@@ -54,6 +55,16 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
   React.useEffect(() => clearOnUnmount, [clearOnUnmount]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): boolean => {
+    // Keys typed inside content nested in the cell or in an event (a slot rendering an input,
+    // for instance) are left to that content.
+    const target = event.target as HTMLElement;
+    if (
+      target !== event.currentTarget &&
+      !target.hasAttribute(TimelineGridEventDataAttributes.occurrenceKey)
+    ) {
+      return false;
+    }
+
     const typeIndex = columnTypes.indexOf(columnType);
 
     if (event.key === 'ArrowUp') {

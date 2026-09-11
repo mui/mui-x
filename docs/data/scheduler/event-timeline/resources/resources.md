@@ -232,6 +232,36 @@ Use the `resourceColumnLabel` prop to customize the header of the resource colum
 
 When both are provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
 
+## Custom resource title
+
+Use the `timelineResourceTitle` slot to replace the text rendered inside a resource title cell.
+The slot receives the `resource` and is placed next to the legend color and the collapse toggle.
+
+{{"demo": "ResourceTitleSlot.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The title cell labels every event of its row, so the content of the slot is part of their accessible name.
+Keep some text in it, and describe rather than label it when adding a tooltip, as the demo does with `describeChild`.
+
+On a collapsible resource, the cell toggles the collapse on click, <kbd class="key">Enter</kbd> and <kbd class="key">Space</kbd>.
+Links, buttons, and inputs rendered by the slot keep their own clicks and keys: activating them doesn't toggle the collapse, and the arrow keys don't move the focus to another cell.
+
+### Typing custom slot props
+
+Pass extra props to the slot through `slotProps.timelineResourceTitle` and type them by augmenting the `TimelineResourceTitlePropsOverrides` interface:
+
+```tsx
+declare module '@mui/x-scheduler-premium/models' {
+  interface TimelineResourceTitlePropsOverrides {
+    showOwner?: boolean;
+  }
+}
+
+<EventTimelinePremium
+  slots={{ timelineResourceTitle: ResourceTitle }}
+  slotProps={{ timelineResourceTitle: { showOwner: true } }}
+/>;
+```
+
 ## Store data in custom properties
 
 Use the `resourceModelStructure` prop to define how to read resource properties when your data doesn't match the expected model:
