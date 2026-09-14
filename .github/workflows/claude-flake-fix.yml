@@ -14,6 +14,10 @@ on:
         description: Classify and report, but never open a PR.
         type: boolean
         default: false
+      model:
+        description: The Claude model the agent runs on.
+        type: string
+        default: claude-sonnet-5
 
 permissions: {}
 
@@ -28,4 +32,5 @@ jobs:
     uses: mui/mui-public/.github/workflows/claude-flake-fix.yml@flake-fix-full-output # mui-public#1849 (test branch — tracks head)
     with:
       report-only: ${{ inputs.report-only || false }}
+      model: ${{ inputs.model || 'claude-sonnet-5' }}
       debug: true # test branch: always show the agent's full output
