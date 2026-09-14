@@ -62,13 +62,13 @@ describe('useChartsContainerPremiumProps', () => {
 
     render(<ScatterChartPremium {...scatterProps} apiRef={apiRef} onZoomChange={onZoomChange} />);
 
-    expect(apiRef.current).not.to.equal(undefined);
+    expect(apiRef.current).toBeDefined();
 
     await act(async () => {
       apiRef.current!.setZoomData([{ axisId: 'x', start: 25, end: 75 }]);
     });
 
-    expect(onZoomChange.mock.lastCall![0]).to.deep.equal([{ axisId: 'x', start: 25, end: 75 }]);
+    expect(onZoomChange).toHaveBeenLastCalledWith([{ axisId: 'x', start: 25, end: 75 }]);
   });
 
   it('should forward `initialZoom` on ScatterChartPremium', () => {
@@ -80,7 +80,7 @@ describe('useChartsContainerPremiumProps', () => {
       </ScatterChartPremium>,
     );
 
-    expect(onZoomData.mock.lastCall![0]).to.deep.equal({ axisId: 'x', start: 10, end: 40 });
+    expect(onZoomData).toHaveBeenLastCalledWith({ axisId: 'x', start: 10, end: 40 });
   });
 
   it('should forward `zoomData` on ScatterChartPremium', () => {
@@ -96,7 +96,7 @@ describe('useChartsContainerPremiumProps', () => {
       </ScatterChartPremium>,
     );
 
-    expect(onZoomData.mock.lastCall![0]).to.deep.equal({ axisId: 'x', start: 10, end: 40 });
+    expect(onZoomData).toHaveBeenLastCalledWith({ axisId: 'x', start: 10, end: 40 });
   });
 
   it('should forward `apiRef` and `onZoomChange` on CandlestickChart', async () => {
@@ -105,12 +105,12 @@ describe('useChartsContainerPremiumProps', () => {
 
     render(<CandlestickChart {...candlestickProps} apiRef={apiRef} onZoomChange={onZoomChange} />);
 
-    expect(apiRef.current).not.to.equal(undefined);
+    expect(apiRef.current).toBeDefined();
 
     await act(async () => {
       apiRef.current!.setZoomData([{ axisId: 'x', start: 25, end: 75 }]);
     });
 
-    expect(onZoomChange.mock.lastCall![0]).to.deep.equal([{ axisId: 'x', start: 25, end: 75 }]);
+    expect(onZoomChange).toHaveBeenLastCalledWith([{ axisId: 'x', start: 25, end: 75 }]);
   });
 });
