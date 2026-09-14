@@ -74,34 +74,19 @@ const canWriteEventDatesSelector = (eventModelStructure: State['eventModelStruct
 const canMoveDatesSelector = (state: State, eventId: SchedulerEventId) =>
   !isEventReadOnlySelector(state, eventId) && canWriteEventDatesSelector(state.eventModelStructure);
 
-/**
- * Whether events landing on `resourceId` are read-only, resolved through the resource hierarchy
- * and falling back to the scheduler's `readOnly`. Unlike `isReadOnly`, there is no event to check
- * for its own override — for a destination that doesn't have an event yet, such as a paste target.
- */
-const isResourceReadOnlySelector = (
-  state: State,
-  resourceId: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
-) =>
-  resolveResourceProperty(
-    state,
-    getPrimaryResourceId(resourceId),
-    (r) => r.areEventsReadOnly,
-    state.readOnly ?? false,
-  );
-
 export const schedulerEventSelectors = {
   creationConfig: createSelectorMemoized(
     (state: State) => state.readOnly,
     (state: State) => state.eventCreation,
-    (state: State) => state.eventModelStructure,
-    (isSchedulerReadOnly, creationConfig, eventModelStructure) => {
+    // Keyed on the boolean it derives, not the `eventModelStructure` reference: an inline prop is
+    // a new object every render, which would otherwise invalidate the memo on every render.
+    (state: State) => canWriteEventDatesSelector(state.eventModelStructure),
+    (isSchedulerReadOnly, creationConfig, canWriteEventDates) => {
       if (isSchedulerReadOnly) {
         return false;
       }
-      // A new event has no old date to fall back to, so either date being read-only refuses
-      // creation entirely — unlike an update, which can drop just that date and keep the rest.
-      if (!canWriteEventDatesSelector(eventModelStructure)) {
+      // Unlike an update, a creation has no old date to fall back to, so it's refused entirely.
+      if (!canWriteEventDates) {
         return false;
       }
       if (creationConfig === false) {
@@ -163,12 +148,7 @@ export const schedulerEventSelectors = {
     return event;
   },
   isReadOnly: isEventReadOnlySelector,
-  canMoveDates: canMoveDatesSelector,
-  /**
-   * Whether `eventModelStructure` can write both `start` and `end` back to the model. Structural,
-   * with no event or resource involved — used by writers where no event exists yet (a creation)
-   * or that write the whole model into a new one (a copy).
-   */
+  /** Used by writers where no event exists yet (a creation), or that write the whole model into a new one (a copy). */
   canWriteEventDates: (state: State) => canWriteEventDatesSelector(state.eventModelStructure),
   /**
    * Whether `eventModelStructure` can write a single date back to the model. Used by the
@@ -177,7 +157,6 @@ export const schedulerEventSelectors = {
    */
   isDateWritable: (state: State, property: SchedulerEventSide) =>
     !isPropertyMissingSetter(state.eventModelStructure, property),
-  isResourceReadOnly: isResourceReadOnlySelector,
   /**
    * Resolves an event's color. `resourceId` picks which resource's `eventColor` counts when the
    * event itself has none — pass the row's resource id on a resource-row surface (the Event
@@ -251,8 +230,8 @@ export const schedulerEventSelectors = {
       return false;
     }
 
-    // Per-side, unlike a drag: a resize only commits the side being resized (`{ id, [side]:
-    // value }`), so a getter-only `start` only blocks the "start" handle, not "end".
+    // Per-side, unlike a drag: only the handle for an unwritable side is disabled, so a
+    // getter-only `start` blocks the "start" handle but leaves a writable "end" resizable.
     if (isPropertyMissingSetter(state.eventModelStructure, side)) {
       return false;
     }

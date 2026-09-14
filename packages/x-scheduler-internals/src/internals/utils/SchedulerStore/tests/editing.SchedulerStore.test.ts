@@ -11,7 +11,7 @@ import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/us
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { vi, describe, it, expect } from 'vitest';
-import { schedulerOtherSelectors } from '../../../../scheduler-selectors';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../../../scheduler-selectors';
 import { processDate } from '../../../../process-date';
 import { getOccurrenceKey, getRecurringOccurrenceKey } from '../../event-utils';
 
@@ -420,35 +420,120 @@ premiumStoreClasses.forEach((storeClass) => {
 
     // `selectRecurringEventScope` feeds the plugin's split straight into `updateEvents`, bypassing
     // `updateEvent()` / `createEvent()` entirely — this is the direct caller the generic guard in
-    // `updateEvents` is meant to cover, not just the public methods.
-    it('should refuse the event created by an "only-this" scope change when start has no setter', () => {
-      const onEventsChange = vi.fn();
-      const store = new storeClass.Value(
-        {
-          ...DEFAULT_PARAMS,
-          events: [RECURRING_EVENT],
-          eventModelStructure: { start: { getter: (event) => event.start } },
-          onEventsChange,
-        },
-        adapter,
-      );
-      const idsBefore = store.state.eventIdList.length;
+    // `updateEvents` is meant to cover, not just the public methods. The whole call is refused,
+    // not only the creation: `only-this` / `this-and-following` also update or delete the
+    // original series in the same call, and applying that half while dropping the detached
+    // occurrence would corrupt the series instead of leaving it untouched.
+    describe('refused because a date has no setter', () => {
+      function createStore(onEventsChange: (...args: any[]) => void) {
+        return new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            events: [RECURRING_EVENT],
+            eventModelStructure: { start: { getter: (event) => event.start } },
+            onEventsChange,
+          },
+          adapter,
+        );
+      }
 
-      store.updateRecurringEvent({
-        occurrenceStart: dayA,
-        changes: {
-          id: 'standup',
-          start: adapter.addMinutes(dayA, 30),
-          end: adapter.addMinutes(dayA, 90),
-        },
+      it('should refuse an "only-this" split and leave the series untouched', () => {
+        const onEventsChange = vi.fn();
+        const store = createStore(onEventsChange);
+        const seriesBefore = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayA, 30),
+            end: adapter.addMinutes(dayA, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('only-this');
+        }).toWarnDev([`MUI X Scheduler: The event "${RECURRING_EVENT.title}" was not created.`]);
+
+        // Refused as a whole: no detached event, and no exDate excluding the edited occurrence.
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.eventIdList).to.deep.equal(['standup']);
+        const seriesAfter = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+        expect(seriesAfter.dataTimezone.exDates).to.deep.equal(seriesBefore.dataTimezone.exDates);
       });
 
-      expect(() => {
-        store.selectRecurringEventScope('only-this');
-      }).toWarnDev([`MUI X Scheduler: The event "${RECURRING_EVENT.title}" was not created.`]);
+      it('should refuse a "this-and-following" split and leave the series untouched', () => {
+        const onEventsChange = vi.fn();
+        const store = createStore(onEventsChange);
+        const seriesBefore = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
 
-      // The detached one-off event was refused: no new event landed in the state.
-      expect(store.state.eventIdList.length).to.equal(idsBefore);
+        store.updateRecurringEvent({
+          occurrenceStart: dayB,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayB, 30),
+            end: adapter.addMinutes(dayB, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('this-and-following');
+        }).toWarnDev([`MUI X Scheduler: The event "${RECURRING_EVENT.title}" was not created.`]);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.eventIdList).to.deep.equal(['standup']);
+        const seriesAfter = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+        expect(seriesAfter.dataTimezone.rrule).to.deep.equal(seriesBefore.dataTimezone.rrule);
+      });
+
+      // "this-and-following" on the very first occurrence has no remaining series to truncate, so
+      // the plugin's split is `{ created: [...], deleted: [originalEvent.id] }` — the whole series
+      // would be lost, not just the detached occurrence, if the refusal weren't atomic.
+      it('should refuse a "this-and-following" split on the first occurrence and keep the series', () => {
+        const onEventsChange = vi.fn();
+        const store = createStore(onEventsChange);
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayA, 30),
+            end: adapter.addMinutes(dayA, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('this-and-following');
+        }).toWarnDev([`MUI X Scheduler: The event "${RECURRING_EVENT.title}" was not created.`]);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.eventIdList).to.deep.equal(['standup']);
+      });
+
+      // `createdIds` comes back empty on a refusal, so the fallback that would otherwise call
+      // `setEditingOccurrenceTimes` with the (never applied) new times must not run either.
+      it('should leave the editing surface untouched after a refused split', () => {
+        const store = createStore(vi.fn());
+        armOccurrence(store, dayA);
+        const editingOccurrenceBefore = schedulerOtherSelectors.editingOccurrence(store.state);
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayA, 30),
+            end: adapter.addMinutes(dayA, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('only-this');
+        }).toWarnDev([`MUI X Scheduler: The event "${RECURRING_EVENT.title}" was not created.`]);
+
+        expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(
+          editingOccurrenceBefore,
+        );
+      });
     });
   });
 });
