@@ -56,7 +56,7 @@ benchmark(
       height={300}
       initialZoom={[
         { axisId: 'x', start: 50, end: 50.1 },
-        { axisId: 'y', start: 50, end: 50.1 },
+        { axisId: 'y', start: 60, end: 80 },
       ]}
       renderer="webgl"
       skipAnimation
