@@ -18,7 +18,11 @@ const weekdays = [
 ];
 
 function localizeWeekday(value: string, abbreviated = false): string {
-  const normalized = value.trim().toLowerCase().replace(/^יום\s+/, '').replace(/['’׳.]/g, '');
+  const normalized = value
+    .trim()
+    .toLowerCase()
+    .replace(/^יום\s+/, '')
+    .replace(/['’׳.]/g, '');
   const weekday = weekdays.filter((names) => names.indexOf(normalized) !== -1)[0];
   if (!weekday) {
     return value;
@@ -105,7 +109,8 @@ const heILDialog: EventEditingLocaleText = {
   recurrenceTabLabel: 'חזרה',
   recurrenceMainSelectCustomLabel: 'חזרה',
   recurrenceWeeklyFrequencyLabel: 'שבועות',
-  recurrenceWeeklyPresetLabel: ({ weekday, weekdayName }) => `מדי שבוע ב${localizeWeekday(weekday ?? weekdayName)}`,
+  recurrenceWeeklyPresetLabel: ({ weekday, weekdayName }) =>
+    `מדי שבוע ב${localizeWeekday(weekday ?? weekdayName)}`,
   recurrenceMonthlyFrequencyLabel: 'חודשים',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `ב־${dayNumber} בחודש`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => monthlyWeekday(-1, weekDay),
@@ -128,7 +133,7 @@ const heILDialog: EventEditingLocaleText = {
   startTimeAfterEndTimeError: 'שעת הסיום חייבת להיות אחרי שעת ההתחלה.',
   startTimeLabel: 'שעת התחלה',
 
-  // RecurringScopeDialog: all choices apply to the current recurring series.
+  // RecurringScopeDialog
   all: 'כל האירועים בסדרה',
   cancel: 'ביטול',
   confirm: 'אישור',
@@ -155,9 +160,11 @@ const heILCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> 
   weeks: 'שבועות',
   years: 'שנים',
 
-  // DateNavigator and SidePanelDrawer
+  // DateNavigator
   closeSidePanel: 'סגירת חלונית הצד',
   openSidePanel: 'פתיחת חלונית הצד',
+
+  // SidePanelDrawer (small screens)
   openMenu: 'פתיחת התפריט',
 
   // Preferences menu
@@ -174,11 +181,23 @@ const heILCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> 
   weekdayMonday: 'יום שני',
   weekdaySaturday: 'יום שבת',
 
-  // Calendar grids and date navigation
+  // WeekView
   allDay: 'כל היום',
   hiddenEvents: (count) => (count === 1 ? 'אירוע נוסף' : `עוד ${count} אירועים`),
-  nextTimeSpan: (view) => ({ day: 'היום הבא', week: 'השבוע הבא', month: 'החודש הבא', agenda: 'התקופה הבאה' })[view],
-  previousTimeSpan: (view) => ({ day: 'היום הקודם', week: 'השבוע הקודם', month: 'החודש הקודם', agenda: 'התקופה הקודמת' })[view],
+  nextTimeSpan: (view) =>
+    ({
+      day: 'היום הבא',
+      week: 'השבוע הבא',
+      month: 'החודש הבא',
+      agenda: 'התקופה הבאה',
+    })[view],
+  previousTimeSpan: (view) =>
+    ({
+      day: 'היום הקודם',
+      week: 'השבוע הקודם',
+      month: 'החודש הקודם',
+      agenda: 'התקופה הקודמת',
+    })[view],
   resourceAriaLabel: (resourceName) => `משאב: ${resourceName}`,
   weekAbbreviation: 'שב׳',
   weekNumberAriaLabel: (weekNumber) => `שבוע ${weekNumber}`,
