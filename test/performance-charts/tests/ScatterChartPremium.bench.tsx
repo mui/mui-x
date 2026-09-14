@@ -10,7 +10,8 @@ import { benchWebGLInteraction } from '../utils';
 const dataLength = 10_000;
 const data = Array.from({ length: dataLength }).map((_, i) => ({
   x: i,
-  y: 50 + Math.sin(i / 5) * 25 + Math.cos(i / 37) * 10,
+  // Ensure the narrow x/y zoom benchmark has a visible point.
+  y: i === dataLength / 2 ? 50.025 : 50 + Math.sin(i / 5) * 25 + Math.cos(i / 37) * 10,
 }));
 
 const xData = data.map((d) => d.x);
@@ -56,7 +57,7 @@ benchmark(
       height={300}
       initialZoom={[
         { axisId: 'x', start: 50, end: 50.1 },
-        { axisId: 'y', start: 60, end: 80 },
+        { axisId: 'y', start: 50, end: 50.1 },
       ]}
       renderer="webgl"
       skipAnimation
