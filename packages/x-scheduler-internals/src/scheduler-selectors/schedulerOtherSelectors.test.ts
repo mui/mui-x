@@ -139,6 +139,39 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('isDeleteConfirmationDialogOpen', () => {
+      it('should return false when no deletion is pending', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        expect(schedulerOtherSelectors.isDeleteConfirmationDialogOpen(store.state)).to.equal(false);
+      });
+
+      it('should return true once a deletion has been requested', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.requestEventDeletion({ eventId: 'event-1' });
+        expect(schedulerOtherSelectors.isDeleteConfirmationDialogOpen(store.state)).to.equal(true);
+      });
+
+      it('should return false again once the deletion is resolved', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.requestEventDeletion({ eventId: 'event-1' });
+        store.resolveEventDeletion(false);
+        expect(schedulerOtherSelectors.isDeleteConfirmationDialogOpen(store.state)).to.equal(false);
+      });
+    });
+
+    describe('isConfirmationDialogOpen', () => {
+      it('should return false when neither the scope dialog nor the delete confirmation is open', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        expect(schedulerOtherSelectors.isConfirmationDialogOpen(store.state)).to.equal(false);
+      });
+
+      it('should return true while the delete confirmation dialog is open', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.requestEventDeletion({ eventId: 'event-1' });
+        expect(schedulerOtherSelectors.isConfirmationDialogOpen(store.state)).to.equal(true);
+      });
+    });
+
     describe('shouldEventRequireResource', () => {
       it('should return true when set and resources are configured', () => {
         const store = new storeClass.Value(

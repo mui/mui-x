@@ -19,6 +19,7 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Slett hendelse',
+  // deleteConfirmationTitle: 'Delete this event?',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',

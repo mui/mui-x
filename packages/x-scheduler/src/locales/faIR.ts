@@ -19,6 +19,7 @@ const faIRDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   // deleteEvent: 'Delete event',
+  // deleteConfirmationTitle: 'Delete this event?',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',

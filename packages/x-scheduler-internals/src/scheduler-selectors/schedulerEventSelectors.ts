@@ -8,7 +8,7 @@ import type {
 } from '../models';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { resolveResourceProperty } from './schedulerResourceSelectors';
-import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
+import { DEFAULT_EVENT_CREATION_CONFIG, DEFAULT_EVENT_DELETION_CONFIG } from '../constants';
 import { getPrimaryResourceId } from '../internals/utils/event-utils';
 
 /**
@@ -69,6 +69,18 @@ export const schedulerEventSelectors = {
         ...creationConfig,
       };
     },
+  ),
+  /**
+   * Normalizes `eventDeletion` into a full config, filling in defaults for any key the
+   * consumer didn't set. Unlike `creationConfig`, deletion cannot be disabled entirely (there is
+   * no `false` case) — only `confirmation` can be turned off.
+   */
+  deletionConfig: createSelectorMemoized(
+    (state: State) => state.eventDeletion,
+    (eventDeletion) => ({
+      ...DEFAULT_EVENT_DELETION_CONFIG,
+      ...eventDeletion,
+    }),
   ),
   /**
    * Gets the default duration (in minutes) for newly created events.

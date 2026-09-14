@@ -39,9 +39,12 @@ export function AnchoredEventToolbar(props: AnchoredEventToolbarProps) {
   const store = useSchedulerStoreContext();
   const nodeRef = React.useRef<HTMLDivElement>(null);
 
-  // The scope dialog stacks above the still-armed toolbar and owns its own dismissal and scrolling,
-  // so both global handlers stand down.
-  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isRecurringScopeDialogOpen);
+  // The scope dialog and the delete confirmation dialog both stack above the still-armed toolbar
+  // and own their own dismissal and scrolling, so both global handlers stand down while either is open.
+  const isConfirmationDialogOpen = useStore(
+    store,
+    schedulerOtherSelectors.isConfirmationDialogOpen,
+  );
 
   useAnchoredPosition({ anchor, popupRef: nodeRef });
 
@@ -49,7 +52,7 @@ export function AnchoredEventToolbar(props: AnchoredEventToolbarProps) {
   // puts `role="dialog"` on the paper only and its backdrop would look "outside".
   useDisarmOnOutsidePointer({
     ref: nodeRef,
-    active: !isScopeDialogOpen,
+    active: !isConfirmationDialogOpen,
     onDisarm: stopEditing,
     ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}, .${modalClasses.root}`,
     global: true,
@@ -58,7 +61,7 @@ export function AnchoredEventToolbar(props: AnchoredEventToolbarProps) {
   // Block scrolling everywhere while armed, so nothing scrolls out from under the toolbar. Only the
   // resize handle is spared, so the armed event can still be resized.
   useBlockScrollWhileArmed({
-    active: !isScopeDialogOpen,
+    active: !isConfirmationDialogOpen,
     ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}`,
   });
 

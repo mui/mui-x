@@ -78,7 +78,8 @@ export function useEventContextMenuItems(
   };
 
   // Mirrors EventToolbar's delete / FormContent's delete: recurring events open the scope dialog;
-  // single events delete immediately. No confirmation step here either — see #18025.
+  // non-recurring events go through the delete confirmation dialog (unless
+  // `eventDeletion={{ confirmation: false }}`).
   const handleDelete = () => {
     onRequestClose();
     if (areRecurringEventsAvailable && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
@@ -92,8 +93,16 @@ export function useEventContextMenuItems(
 
     // Captured before the delete unmounts `anchorEl` — see `getFocusFallback`.
     const focusFallback = getFocusFallback(anchorEl);
-    store.deleteEvent(occurrence.id);
-    focusFallback?.focus();
+    store.requestEventDeletion({
+      eventId: occurrence.id,
+      onSubmit: () => {
+        // `onSubmit` fires synchronously from the confirmation dialog's own click handler, while
+        // the dialog (and its focus trap) is still mounted — an immediate `.focus()` call here
+        // gets pulled straight back into the trap. Deferring past the current task lets the
+        // dialog actually close first, so the fallback focus sticks.
+        setTimeout(() => focusFallback?.focus());
+      },
+    });
   };
 
   const items: React.ReactNode[] = [
