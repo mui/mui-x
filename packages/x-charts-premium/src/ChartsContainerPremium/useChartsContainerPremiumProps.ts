@@ -26,15 +26,12 @@ export function useChartsContainerPremiumProps<
 >(
   props: ChartsContainerPremiumProps<SeriesType, TSignatures>,
 ): UseChartsContainerPremiumPropsReturnValue<SeriesType, TSignatures> {
-  const {
-    initialZoom,
-    zoomData,
-    onZoomChange,
-    zoomInteractionConfig,
-    plugins,
-    apiRef,
-    ...baseProps
-  } = props as ChartsContainerPremiumProps<SeriesType, AllPluginSignatures<SeriesType>>;
+  // Only `plugins` is handled here. The remaining Pro props (zoom, `apiRef`, ...) are
+  // forwarded untouched so that `useChartsContainerProProps` can process them.
+  const { plugins, ...baseProps } = props as ChartsContainerPremiumProps<
+    SeriesType,
+    AllPluginSignatures<SeriesType>
+  >;
 
   const { chartsDataProviderProProps, chartsSurfaceProps, children } =
     useChartsContainerProProps<SeriesType>(baseProps);
