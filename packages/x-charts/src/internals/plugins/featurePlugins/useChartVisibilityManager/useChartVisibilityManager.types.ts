@@ -98,8 +98,7 @@ export interface UseChartVisibilityManagerParameters<SeriesType extends ChartSer
    * ```
    */
   initialHiddenItems?: (
-    | VisibilityIdentifier<SeriesType>
-    | VisibilityIdentifierWithType<SeriesType>
+    VisibilityIdentifier<SeriesType> | VisibilityIdentifierWithType<SeriesType>
   )[];
 }
 

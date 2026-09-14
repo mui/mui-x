@@ -9,12 +9,7 @@ import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { usePickerContext } from '../hooks';
 
 export type PickersActionBarAction =
-  | 'clear'
-  | 'cancel'
-  | 'accept'
-  | 'today'
-  | 'next'
-  | 'nextOrAccept';
+  'clear' | 'cancel' | 'accept' | 'today' | 'next' | 'nextOrAccept';
 
 export interface PickersActionBarProps extends DialogActionsProps {
   /**

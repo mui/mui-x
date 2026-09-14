@@ -12,7 +12,7 @@ export const useChartsRadialDataProviderPremiumProps = <
   props: ChartsRadialDataProviderPremiumProps<SeriesType, TSignatures>,
 ) => {
   const { chartProviderProps, localeText, slots, slotProps, children } =
-    useChartsRadialDataProviderProps(props);
+    useChartsRadialDataProviderProps<SeriesType, TSignatures>(props);
 
   return {
     children,

@@ -1,5 +1,7 @@
 import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
-import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import { describe, it, expect } from 'vitest';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
@@ -179,6 +181,118 @@ storeClasses.forEach((storeClass) => {
 
         expect(store.state.nowUpdatedEveryMinute).to.not.equal(before);
         expect(adapter.getTimezone(store.state.nowUpdatedEveryMinute)).to.equal('America/New_York');
+      });
+    });
+
+    describe('selection', () => {
+      // No selectable type is registered in the base package, so the union is empty:
+      // the cast mirrors how augmenting packages produce selections.
+      const selectionA = { type: 'a', id: 1 } as never;
+      const selectionB = { type: 'b', id: 1 } as never;
+
+      it('should keep one selection across types and skip the write when unchanged', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.setSelection(selectionA);
+        expect(store.state.selection).to.equal(selectionA);
+
+        // Selecting an entity of another type replaces the previous selection.
+        store.setSelection(selectionB);
+        expect(store.state.selection).to.equal(selectionB);
+
+        // A value-equal selection does not write.
+        const stateBefore = store.state;
+        store.setSelection({ type: 'b', id: 1 } as never);
+        expect(store.state).to.equal(stateBefore);
+
+        store.setSelection(null);
+        expect(store.state.selection).to.equal(null);
+      });
+    });
+
+    describe('errors', () => {
+      // Pinned to a minute boundary: the store schedules its `nowUpdatedEveryMinute`
+      // tick for the next one, counted from wherever the clock starts. On the real
+      // time a run in the last seconds of a minute lets these tests advance across
+      // the boundary and pick up a state write they do not test. Keep the advances
+      // below one minute.
+      const { clock } = createRenderer({
+        clock: 'fake',
+        clockConfig: new Date(2012, 4, 3, 14, 30, 0, 0),
+      });
+
+      it('should stack repeated non-transient errors and keep them until dismissed', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.pushError(new Error('boom'));
+        const secondKey = store.pushError(new Error('boom'));
+
+        expect(store.state.errors).to.have.length(2);
+
+        store.dismissError(secondKey);
+        expect(store.state.errors).to.have.length(1);
+      });
+
+      it('should replace a transient error carrying the same message instead of stacking it', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.pushError(new Error('rejected'), { transient: true });
+        store.pushError(new Error('rejected'), { transient: true });
+
+        expect(store.state.errors).to.have.length(1);
+      });
+
+      it('should not replace a non-transient error with a transient one carrying the same message', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.pushError(new Error('boom'));
+        store.pushError(new Error('boom'), { transient: true });
+
+        expect(store.state.errors).to.have.length(2);
+      });
+
+      it('should auto-dismiss a transient error and leave the non-transient ones alone', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.pushError(new Error('boom'));
+        store.pushError(new Error('rejected'), { transient: true });
+        expect(store.state.errors).to.have.length(2);
+
+        clock.tick(5000);
+
+        expect(store.state.errors).to.have.length(1);
+        expect(store.state.errors[0].error.message).to.equal('boom');
+      });
+
+      it('should refresh the auto-dismiss timer when a transient error is replaced', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        store.pushError(new Error('rejected'), { transient: true });
+        clock.tick(3000);
+        store.pushError(new Error('rejected'), { transient: true });
+
+        // 3s after the replacement the original timer would have fired.
+        clock.tick(3000);
+        expect(store.state.errors).to.have.length(1);
+
+        clock.tick(2000);
+        expect(store.state.errors).to.have.length(0);
+      });
+
+      it('should cancel the auto-dismiss timer when a transient error is dismissed manually', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+
+        const transientKey = store.pushError(new Error('rejected'), { transient: true });
+        store.dismissError(transientKey);
+        const laterKey = store.pushError(new Error('kept'));
+
+        const stateBefore = store.state;
+        clock.tick(5000);
+
+        expect(store.state.errors).to.have.length(1);
+        expect(store.state.errors[0].key).to.equal(laterKey);
+        // The canceled timer must not even produce a state write.
+        expect(store.state).to.equal(stateBefore);
       });
     });
   });

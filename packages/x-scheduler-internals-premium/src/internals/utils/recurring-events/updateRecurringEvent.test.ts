@@ -1,11 +1,12 @@
 import { adapter, adapterFr, EventBuilder } from 'test/utils/scheduler';
-import {
+import type {
   SchedulerEventUpdatedProperties,
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { mergeDateAndTime } from '@mui/x-scheduler-internals/internals';
+import { describe, it, expect } from 'vitest';
 import {
   adjustRRuleForAllMove,
   applyRecurringUpdateAll,
@@ -796,6 +797,22 @@ describe('recurring-events/updateRecurringEvent', () => {
       ]);
     });
 
+    it('should keep the occurrence date when changes omit start/end instead of using DTSTART', () => {
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
+
+      const updatedEvents = applyRecurringUpdateOnlyThis(adapter, defaultEvent, occurrenceStart, {
+        id: defaultEvent.id,
+        title: 'Edit only this',
+      });
+
+      const createdEvent = updatedEvents.created![0];
+      expect(createdEvent.start).to.equal(occurrenceStart.toISOString());
+      expect(createdEvent.end).to.equal(adapter.addMinutes(occurrenceStart, 60).toISOString());
+      expect(updatedEvents.updated).to.deep.equal([
+        { id: defaultEvent.id, exDates: [adapter.startOfDay(occurrenceStart)] },
+      ]);
+    });
+
     it('should accumulate previous exDates', () => {
       const original = EventBuilder.new()
         .singleDay('2025-01-01T09:00:00Z')
@@ -905,10 +922,13 @@ describe('recurring-events/updateRecurringEvent', () => {
         title: 'Edit only this',
       });
 
-      // EXDATE should match America/New_York startOfDay, not the display timezone shifted date
-      expect(
-        adapter.isSameDay(updated.updated![0].exDates![0], adapter.startOfDay(occurrenceStart)),
-      ).to.equal(true);
+      // EXDATE should match America/New_York startOfDay, not the day of the zone the
+      // instant happens to carry.
+      expect(adapter.getTime(updated.updated![0].exDates![0])).to.equal(
+        adapter.getTime(
+          adapter.startOfDay(adapter.setTimezone(occurrenceStart, 'America/New_York')),
+        ),
+      );
     });
 
     it('should delete the original series when only-this empties a finite series', () => {

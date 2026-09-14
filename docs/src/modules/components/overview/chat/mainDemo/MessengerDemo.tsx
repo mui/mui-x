@@ -16,7 +16,7 @@ import {
   createTextResponseChunks,
   randomId,
   syncConversationPreview,
-} from '../../../../../../data/chat/material/examples/shared/demoUtils';
+} from '../../../../../../data/chat/core/examples/shared/demoUtils';
 
 // --- Avatar helper -----------------------------------------------------------
 

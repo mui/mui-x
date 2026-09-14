@@ -4,6 +4,7 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect, vi, afterEach, onTestFinished } from 'vitest';
 import { reactToWebComponent } from './web-components';
 
 describe.skipIf(isJSDOM)('Web Components', () => {

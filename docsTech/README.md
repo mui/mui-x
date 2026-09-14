@@ -65,4 +65,5 @@ Here you will find more precision about how some features are designed.
 - [filtering](./filtering.md)
 - [virtualization](./virtualization.md)
 - [processing](./processing.md)
+- [formulas](./data-grid-formula-feature.md)
 - print (TODO)

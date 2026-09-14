@@ -1,4 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
+import { describe, it, expect } from 'vitest';
 import {
   mergeDateAndTime,
   normalizeAllDayBounds,
@@ -6,7 +8,6 @@ import {
   getEndOfWeek,
   getWeekNumber,
 } from './date-utils';
-import { TemporalAdapter } from '../../base-ui-copy/types';
 
 const wednesday = adapter.date('2025-01-08T12:00:00.000Z', 'UTC');
 

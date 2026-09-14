@@ -76,7 +76,13 @@ function DetailPanelContent({ row: rowProp }) {
 
   const columns = React.useMemo(
     () => [
-      { field: 'name', headerName: 'Product', flex: 1, editable: true },
+      {
+        field: 'name',
+        headerName: 'Product',
+        flex: 1,
+        editable: true,
+        rowHeader: true,
+      },
       {
         field: 'quantity',
         headerName: 'Quantity',

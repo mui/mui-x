@@ -31,8 +31,7 @@ export interface ValidateDateTimeProps extends ValidateDateProps, ValidateTimePr
  * Name of the props that should be defaulted before being passed to the validateDateTime method.
  */
 export type ValidateDateTimePropsToDefault =
-  | ValidateDatePropsToDefault
-  | ValidateTimePropsToDefault;
+  ValidateDatePropsToDefault | ValidateTimePropsToDefault;
 
 export const validateDateTime: Validator<
   PickerValue,

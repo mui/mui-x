@@ -9,7 +9,7 @@ import type {
   ChatMessageChunk,
   ChatPartRendererMap,
 } from '@mui/x-chat/headless';
-import { createChunkStream } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createChunkStream } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 // --- Step delimiter renderer -------------------------------------------------
 // This is the exact Material UI renderer documented under

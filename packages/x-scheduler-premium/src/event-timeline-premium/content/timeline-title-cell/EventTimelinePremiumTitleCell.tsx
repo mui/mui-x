@@ -1,10 +1,13 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
+import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
 import { useStore } from '@base-ui/utils/store';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
-import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
@@ -12,6 +15,13 @@ import { Virtualization } from '@mui/x-virtualizer';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 import { useReportTitleWidth } from '../useTitleColumnWidth';
+
+// Shared footprint for the collapse toggle and the leaf-row spacer. Also drives
+// the per-depth indent so a child's toggle lines up under its parent's dot.
+const TOGGLE_SIZE = 20;
+
+// Diameter of the resource legend dot.
+const DOT_SIZE = 10;
 
 const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   name: 'MuiEventTimeline',
@@ -23,7 +33,9 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflow: 'hidden',
   padding: theme.spacing(2),
-  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ${theme.spacing(2)})`,
+  // Indent each level so a child's toggle center lines up under its parent's
+  // legend dot center: half the toggle + the gap + half the dot.
+  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ((${TOGGLE_SIZE}px + ${DOT_SIZE}px) / 2 + ${theme.spacing(1)}))`,
   alignContent: 'start',
   fontSize: theme.typography.body2.fontSize,
   display: 'flex',
@@ -37,6 +49,9 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   // while the browser still handles vertical row scrolling.
   touchAction: 'pan-y',
   variants: getPaletteVariants(theme),
+  '&[data-collapsible]': {
+    cursor: 'pointer',
+  },
   '&:focus-visible': {
     outline: 'none',
     boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
@@ -58,20 +73,56 @@ const EventTimelinePremiumTitleCellContent = styled('span', {
   width: 'max-content',
   flexShrink: 0,
   whiteSpace: 'nowrap',
-  // Shared horizontal scroll for all title cells (the header title cell
-  // is not wrapped in this element and therefore does not move).
-  transform: 'translateX(calc(-1 * var(--title-scroll-left, 0) * 1px))',
+  // Shared horizontal scroll for all title cells (the header title cell is not
+  // wrapped in this element and therefore does not move). Uses `left` rather than
+  // `transform` so the text isn't promoted to its own compositing layer — that
+  // caused a sub-pixel vertical shift of the label on Windows when rows relaid
+  // out on collapse/expand.
+  position: 'relative',
+  left: 'calc(-1 * var(--title-scroll-left, 0) * 1px)',
 }));
 
 const ResourceLegendColor = styled('span', {
   name: 'MuiEventTimeline',
   slot: 'TitleCellLegendColor',
 })({
-  width: 10,
-  height: 10,
+  width: DOT_SIZE,
+  height: DOT_SIZE,
   borderRadius: '50%',
   flexShrink: 0,
   backgroundColor: 'var(--event-surface-accent)',
+});
+
+// Decorative chevron; the whole cell is the interactive control.
+const ResourceCollapseChevron = styled('span', {
+  name: 'MuiEventTimeline',
+  slot: 'TitleCellCollapseChevron',
+})(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: TOGGLE_SIZE,
+  height: TOGGLE_SIZE,
+  flexShrink: 0,
+  color: (theme.vars || theme).palette.action.active,
+  '& > svg': {
+    fontSize: 18,
+  },
+}));
+
+// Reserves the toggle's footprint on leaf resources so the legend colors and
+// titles stay aligned with collapsible siblings. Removed on a flat timeline
+// (no nested resources), where the content root sets `data-flat`.
+const ResourceCollapseSpacer = styled('span', {
+  name: 'MuiEventTimeline',
+  slot: 'TitleCellCollapseSpacer',
+})({
+  width: TOGGLE_SIZE,
+  height: TOGGLE_SIZE,
+  flexShrink: 0,
+  '[data-flat] &': {
+    display: 'none',
+  },
 });
 
 export default function EventTimelinePremiumTitleCell(props: { resourceId: SchedulerResourceId }) {
@@ -87,6 +138,12 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
   const resource = useStore(store, schedulerResourceSelectors.processedResource, resourceId);
   const depth = useStore(store, schedulerResourceSelectors.resourceDepth, resourceId);
+  const hasVisibleChildren = useStore(
+    store,
+    schedulerResourceSelectors.resourceHasVisibleChildren,
+    resourceId,
+  );
+  const isCollapsed = useStore(store, schedulerResourceSelectors.isResourceCollapsed, resourceId);
   const pinnedLeftOffset = virtualizerStore.use(Virtualization.selectors.pinnedLeftOffsetSelector);
 
   // Ref hooks
@@ -110,6 +167,17 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
     return () => observer.disconnect();
   }, [resourceId, reportTitleWidth]);
 
+  const handleToggleCollapse = useStableCallback((event: React.SyntheticEvent) => {
+    store.toggleResourceCollapse(resourceId, event.nativeEvent);
+  });
+
+  const handleKeyDown = useStableCallback((event: React.KeyboardEvent) => {
+    if (hasVisibleChildren && (event.key === 'Enter' || event.key === ' ')) {
+      event.preventDefault();
+      store.toggleResourceCollapse(resourceId, event.nativeEvent);
+    }
+  });
+
   return (
     <EventTimelinePremiumTitleCellRoot
       ref={rootRef}
@@ -118,12 +186,28 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       style={
         {
           '--resource-depth': depth,
-          transform: `translateX(${pinnedLeftOffset}px)`,
+          // Only apply the pinning transform while actually scrolled. At rest the
+          // transform would still promote the label to its own compositing layer,
+          // causing a sub-pixel vertical shift on Windows when rows relaid out on
+          // collapse/expand.
+          transform: pinnedLeftOffset ? `translateX(${pinnedLeftOffset}px)` : undefined,
         } as React.CSSProperties
       }
       data-palette={eventColor}
+      // The whole cell toggles a collapsible resource, via click or Enter/Space.
+      data-collapsible={hasVisibleChildren || undefined}
+      aria-expanded={hasVisibleChildren ? !isCollapsed : undefined}
+      onClick={hasVisibleChildren ? handleToggleCollapse : undefined}
+      onKeyDown={handleKeyDown}
     >
       <EventTimelinePremiumTitleCellContent ref={contentRef} className={classes.titleCellContent}>
+        {hasVisibleChildren ? (
+          <ResourceCollapseChevron aria-hidden>
+            {isCollapsed ? <ChevronRightRounded /> : <ExpandMoreRounded />}
+          </ResourceCollapseChevron>
+        ) : (
+          <ResourceCollapseSpacer aria-hidden />
+        )}
         <ResourceLegendColor className={classes.titleCellLegendColor} />
         {resource!.title}
       </EventTimelinePremiumTitleCellContent>

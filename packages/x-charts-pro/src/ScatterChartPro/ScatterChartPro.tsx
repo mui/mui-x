@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { FocusedScatterMark, ScatterPlot } from '@mui/x-charts/ScatterChart';
 import type {
@@ -44,7 +45,9 @@ export interface ScatterChartProSlotProps
    * Slot props for the tooltip component.
    * @default {}
    */
-  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides;
+  tooltip?: WithDataAttributes<
+    Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides
+  >;
 }
 
 export interface ScatterChartProProps
@@ -222,8 +225,16 @@ ScatterChartPro.propTypes /* remove-proptypes */ = {
    * Options to enable features planned for the next major.
    */
   experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
     progressiveRendering: PropTypes.bool,
   }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -399,7 +410,7 @@ ScatterChartPro.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
@@ -617,7 +628,7 @@ ScatterChartPro.propTypes /* remove-proptypes */ = {
   zoomInteractionConfig: PropTypes.shape({
     pan: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
+        PropTypes.oneOf(['drag', 'keyboard', 'pressAndDrag', 'wheel']),
         PropTypes.shape({
           allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
           pointerMode: PropTypes.any,
@@ -634,11 +645,16 @@ ScatterChartPro.propTypes /* remove-proptypes */ = {
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
         }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['keyboard']).isRequired,
+        }),
       ]).isRequired,
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
+        PropTypes.oneOf(['brush', 'doubleTapReset', 'keyboard', 'pinch', 'tapAndDrag', 'wheel']),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
@@ -653,6 +669,11 @@ ScatterChartPro.propTypes /* remove-proptypes */ = {
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['keyboard']).isRequired,
         }),
         PropTypes.shape({
           pointerMode: PropTypes.any,

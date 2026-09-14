@@ -28,8 +28,7 @@ export interface ValidateDateTimeRangeProps
   extends ValidateDateRangeProps, ValidateTimeRangeProps {}
 
 export type ValidateDateTimeRangePropsToDefault =
-  | ValidateDateRangePropsToDefault
-  | ValidateTimeRangePropsToDefault;
+  ValidateDateRangePropsToDefault | ValidateTimeRangePropsToDefault;
 
 export const validateDateTimeRange: Validator<
   PickerRangeValue,

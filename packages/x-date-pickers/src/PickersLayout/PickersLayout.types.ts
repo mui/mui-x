@@ -1,6 +1,6 @@
 import type * as React from 'react';
 import type { SxProps, Theme } from '@mui/material/styles';
-import type { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps, WithDataAttributes } from '@mui/utils/types';
 import type { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
 import type { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import type { ExportedBaseTabsProps } from '../internals/models/props/tabs';
@@ -60,7 +60,7 @@ export interface ExportedPickersLayoutSlotProps<TValue extends PickerValidValue>
   /**
    * Props passed down to the layoutRoot component.
    */
-  layout?: Partial<PickersLayoutProps<TValue>>;
+  layout?: WithDataAttributes<Partial<PickersLayoutProps<TValue>>>;
 }
 
 export interface PickersLayoutSlots<
@@ -83,11 +83,11 @@ export interface PickersLayoutSlotProps<
   /**
    * Props passed down to the tabs component.
    */
-  tabs?: ExportedBaseTabsProps;
+  tabs?: WithDataAttributes<ExportedBaseTabsProps>;
   /**
    * Props passed down to the toolbar component.
    */
-  toolbar?: ExportedBaseToolbarProps;
+  toolbar?: WithDataAttributes<ExportedBaseToolbarProps>;
 }
 
 export interface PickersLayoutProps<TValue extends PickerValidValue> extends Omit<

@@ -6,18 +6,14 @@ import {
   disposeSymbol,
   unwrapSuppressedErrors,
 } from '@mui/x-internals/disposable';
-import {
+import type {
   TreeViewModelUpdater,
   MinimalTreeViewParameters,
   TreeViewParametersToStateMapper,
   MinimalTreeViewState,
 } from './MinimalTreeViewStore.types';
-import { TreeViewValidItem } from '../../models';
-import {
-  createMinimalInitialState,
-  createTreeViewDefaultId,
-  deriveStateFromParameters,
-} from './MinimalTreeViewStore.utils';
+import type { TreeViewValidItem } from '../../models';
+import { createMinimalInitialState, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationPlugin } from '../plugins/keyboardNavigation';
 import { TreeViewFocusPlugin } from '../plugins/focus/TreeViewFocusPlugin';
@@ -25,7 +21,7 @@ import { TreeViewItemsPlugin } from '../plugins/items/TreeViewItemsPlugin';
 import { TreeViewSelectionPlugin } from '../plugins/selection/TreeViewSelectionPlugin';
 import { TreeViewExpansionPlugin } from '../plugins/expansion';
 import { TreeViewItemPluginManager } from './TreeViewItemPluginManager';
-import {
+import type {
   TreeViewEventEvent,
   TreeViewEventListener,
   TreeViewEventParameters,
@@ -161,8 +157,8 @@ export class MinimalTreeViewStore<
     updateModel(newMinimalState, 'expandedItems', 'defaultExpandedItems');
     updateModel(newMinimalState, 'selectedItems', 'defaultSelectedItems');
 
-    if (this.state.providedTreeId !== parameters.id || this.state.treeId === undefined) {
-      newMinimalState.treeId = createTreeViewDefaultId();
+    if (this.state.treeId !== parameters.defaultId) {
+      newMinimalState.treeId = parameters.defaultId;
     }
 
     if (

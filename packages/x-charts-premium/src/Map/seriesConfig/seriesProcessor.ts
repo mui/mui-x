@@ -42,13 +42,25 @@ const seriesProcessor: SeriesProcessor<'mapShape'> = (
       data = input.data ?? [];
     }
 
+    const lookupByName = new Map<string, number>();
+    data.forEach((item, index) => {
+      if (lookupByName.has(item.name)) {
+        throw new Error(
+          `MUI X Charts: Series "${seriesId}" has a duplicated name "${item.name}".\n` +
+            `Map shapes are identified by their name, so duplicates cannot be told apart for coloring, tooltips, and highlighting.\n` +
+            `Ensure each data entry has a unique name.`,
+        );
+      }
+      lookupByName.set(item.name, index);
+    });
     defaultizedSeries[seriesId] = {
       labelMarkType: 'square',
       ...input,
-      data: data.map((item, dataIndex) => ({
+      data: data.map((item) => ({
         ...item,
-        hidden: !isItemVisible?.({ type: 'mapShape', seriesId, dataIndex }),
+        hidden: !isItemVisible?.({ type: 'mapShape', seriesId, name: item.name }),
       })),
+      lookupByName,
       hidden: !isItemVisible?.({ type: 'mapShape', seriesId }),
       valueFormatter: input.valueFormatter ?? defaultValueFormatter,
     };

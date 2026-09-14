@@ -135,7 +135,7 @@ export default function ToolApprovalFlow() {
       suggestions={['Clean up /tmp/cache']}
       suggestionsAutoSubmit
       sx={{
-        height: 480,
+        height: 500,
         border: '1px solid',
         borderColor: 'divider',
         borderRadius: 1,

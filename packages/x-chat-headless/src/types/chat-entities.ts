@@ -8,13 +8,7 @@ import type {
 export type ChatRole = 'system' | 'user' | 'assistant';
 
 export type ChatMessageStatus =
-  | 'pending'
-  | 'sending'
-  | 'streaming'
-  | 'sent'
-  | 'read'
-  | 'error'
-  | 'cancelled';
+  'pending' | 'sending' | 'streaming' | 'sent' | 'read' | 'error' | 'cancelled';
 
 export type ConversationReadState = 'read' | 'unread';
 

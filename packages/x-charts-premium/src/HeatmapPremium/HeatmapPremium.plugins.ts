@@ -38,15 +38,16 @@ export type HeatmapPremiumPluginSignatures = [
   UseChartKeyboardNavigationSignature,
 ];
 
-export const HEATMAP_PREMIUM_PLUGINS = [
-  useChartZAxis,
-  useChartTooltip,
-  useChartInteraction,
-  useChartCartesianAxis,
-  useChartHighlight,
-  useChartProExport,
-  useChartBrush,
-  useChartProZoom,
-  useChartItemClick,
-  useChartKeyboardNavigation,
-] as ConvertSignaturesIntoPlugins<HeatmapPremiumPluginSignatures>;
+export const HEATMAP_PREMIUM_PLUGINS: ConvertSignaturesIntoPlugins<HeatmapPremiumPluginSignatures> =
+  [
+    useChartZAxis,
+    useChartTooltip,
+    useChartInteraction,
+    useChartCartesianAxis,
+    useChartHighlight,
+    useChartProExport,
+    useChartBrush,
+    useChartProZoom,
+    useChartItemClick,
+    useChartKeyboardNavigation,
+  ];

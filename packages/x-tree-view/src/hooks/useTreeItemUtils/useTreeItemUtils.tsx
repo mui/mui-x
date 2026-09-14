@@ -1,17 +1,17 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
-import { TreeViewCancellableEvent } from '../../models';
+import type { TreeViewCancellableEvent } from '../../models';
 import { useTreeViewContext } from '../../internals/TreeViewProvider';
 import type { UseTreeItemStatus } from '../../useTreeItem';
-import { TreeViewPublicAPI, TreeViewAnyStore } from '../../internals/models';
+import type { TreeViewPublicAPI, TreeViewAnyStore } from '../../internals/models';
 import { expansionSelectors } from '../../internals/plugins/expansion/selectors';
 import { focusSelectors } from '../../internals/plugins/focus/selectors';
 import { itemsSelectors } from '../../internals/plugins/items/selectors';
 import { selectionSelectors } from '../../internals/plugins/selection/selectors';
 import { lazyLoadingSelectors } from '../../internals/plugins/lazyLoading/selectors';
 import { labelSelectors } from '../../internals/plugins/labelEditing/selectors';
-import { TreeViewLabelEditingPlugin } from '../../internals/plugins/labelEditing';
+import type { TreeViewLabelEditingPlugin } from '../../internals/plugins/labelEditing';
 
 export interface UseTreeItemInteractions {
   handleExpansion: (event: React.MouseEvent) => void;
@@ -60,6 +60,7 @@ export const useTreeItemUtils = <
   const isExpanded = useStore(store, expansionSelectors.isItemExpanded, itemId);
   const isFocused = useStore(store, focusSelectors.isItemFocused, itemId);
   const isSelected = useStore(store, selectionSelectors.isItemSelected, itemId);
+  const isIndeterminate = useStore(store, selectionSelectors.isItemIndeterminate, itemId);
   const isDisabled = useStore(store, itemsSelectors.isItemDisabled, itemId);
   const isEditing = useStore(store, labelSelectors.isItemBeingEdited, itemId);
   const isEditable = useStore(store, labelSelectors.isItemEditable, itemId);
@@ -69,6 +70,7 @@ export const useTreeItemUtils = <
     expanded: isExpanded,
     focused: isFocused,
     selected: isSelected,
+    indeterminate: isIndeterminate,
     disabled: isDisabled,
     editing: isEditing,
     editable: isEditable,

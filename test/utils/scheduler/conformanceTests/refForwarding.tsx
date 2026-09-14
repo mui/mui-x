@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import type {
   ConformantComponentProps,
   SchedulerPrimitivesConformanceTestsOptions,

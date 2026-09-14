@@ -3,16 +3,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { warnOnce } from '@mui/x-internals/warning';
-import { SxProps, Theme } from '@mui/system';
+import type { SxProps, Theme } from '@mui/system';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import {
-  MessageActions,
-  useChatActions,
-  type ChatMessage,
-  type ChatRuntimeActions,
-  type MessageActionsProps,
-} from '@mui/x-chat-headless';
+import { MessageActions, useChatActions } from '@mui/x-chat-headless';
+import type { ChatMessage, ChatRuntimeActions, MessageActionsProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
@@ -61,6 +56,10 @@ const ChatMessageActionsStyled = styled('div', {
 })<{ ownerState?: { role?: string; isOwnMessage?: boolean } }>(({ theme, ownerState }) => ({
   gridArea: 'actions',
   display: 'inline-flex',
+  // Grid items default to `justify-self: stretch`, which would blockify the
+  // chip into a full-width bar; `start` keeps it hugging its buttons so it
+  // reads as the small elevated chip anchored under the bubble.
+  justifySelf: 'start',
   alignItems: 'center',
   gap: theme.spacing(0.25),
   // `visibility: hidden` (not just opacity) removes the action buttons from

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useTreeViewContext } from './TreeViewContext';
 import { escapeOperandAttributeSelector } from '../utils/utils';
 import { itemsSelectors } from '../plugins/items/selectors';
-import { SimpleTreeViewStore } from '../SimpleTreeViewStore';
+import type { SimpleTreeViewStore } from '../SimpleTreeViewStore';
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);
@@ -43,8 +43,8 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
     const childrenElements = rootRef.current.querySelectorAll(
       `${itemId == null ? '' : `*[id="${escapedIdAttr}"] `}[role="treeitem"]:not(*[id="${escapedIdAttr}"] [role="treeitem"] [role="treeitem"])`,
     );
-    const childrenIds = Array.from(childrenElements).map(
-      (child) => childrenIdAttrToIdRef.current.get(child.id)!,
+    const childrenIds = Array.from(childrenElements).map((child) =>
+      childrenIdAttrToIdRef.current.get(child.id)!,
     );
 
     const hasChanged =

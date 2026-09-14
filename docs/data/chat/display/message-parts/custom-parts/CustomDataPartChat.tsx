@@ -9,7 +9,7 @@ import type {
 import {
   createChunkStream,
   randomId,
-} from 'docs/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 
 // Register the payload type for the `data-ticket-status` part. This merges with
 // the docs-wide augmentation, so the `data` field is typed everywhere below.

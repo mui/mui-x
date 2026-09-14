@@ -1,6 +1,6 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
-import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { getDateKey, TimeoutManager } from '@mui/x-scheduler-internals/internals';
 
 const MAX_CONCURRENT_REQUESTS = 3;

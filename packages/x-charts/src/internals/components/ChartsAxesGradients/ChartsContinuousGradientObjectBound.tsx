@@ -26,8 +26,7 @@ export default function ChartsContinuousGradientObjectBound(
   const { isReversed, gradientId, colorScale, colorMap } = props;
 
   const extremumValues = [colorMap.min ?? 0, colorMap.max ?? 100] as
-    | [number, number]
-    | [Date, Date];
+    [number, number] | [Date, Date];
 
   const interpolator =
     typeof extremumValues[0] === 'number'

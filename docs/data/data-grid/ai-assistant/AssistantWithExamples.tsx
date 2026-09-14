@@ -4,6 +4,7 @@ import {
   GridAiAssistantPanel,
   GridPreferencePanelsValue,
   unstable_gridDefaultPromptResolver as promptResolver,
+  useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import {
   randomBoolean,
@@ -72,6 +73,9 @@ const VISIBLE_FIELDS = [
 ];
 
 export default function AssistantWithExamples() {
+  const apiRef = useGridApiRef();
+  const demoRef = React.useRef<HTMLDivElement>(null);
+  const shouldClosePanelRef = React.useRef(true);
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
@@ -87,9 +91,52 @@ export default function AssistantWithExamples() {
     [data.columns],
   );
 
+  // Keep the initially open panel visible when interacting with the surrounding docs page.
+  React.useEffect(() => {
+    const handlePointerUp = (event: PointerEvent) => {
+      const target = event.target;
+      const demoElement = demoRef.current;
+      let targetElement: Element | null = null;
+
+      if (target instanceof Element) {
+        targetElement = target;
+      } else if (target instanceof Node) {
+        targetElement = target.parentElement;
+      }
+
+      shouldClosePanelRef.current =
+        target instanceof Node &&
+        demoElement !== null &&
+        demoElement.contains(target) &&
+        !targetElement?.closest('[role="toolbar"]');
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        shouldClosePanelRef.current = true;
+      }
+    };
+
+    document.addEventListener('pointerup', handlePointerUp, true);
+    document.addEventListener('keydown', handleKeyDown, true);
+
+    return () => {
+      document.removeEventListener('pointerup', handlePointerUp, true);
+      document.removeEventListener('keydown', handleKeyDown, true);
+    };
+  }, []);
+
+  const handlePanelClose = React.useCallback(() => {
+    if (shouldClosePanelRef.current) {
+      apiRef.current?.hidePreferences();
+    }
+    shouldClosePanelRef.current = true;
+  }, [apiRef]);
+
   return (
-    <div style={{ height: 500, width: '100%' }}>
+    <div ref={demoRef} style={{ height: 500, width: '100%' }}>
       <DataGridPremium
+        apiRef={apiRef}
         {...data}
         columns={columns}
         initialState={{
@@ -107,8 +154,23 @@ export default function AssistantWithExamples() {
         aiAssistant
         onPrompt={processPrompt}
         showToolbar
+        sx={{
+          '& [aria-label="AI Assistant"] .MuiSvgIcon-root': {
+            color: 'primary.main',
+          },
+        }}
         slots={{
           aiAssistantPanel: GridAiAssistantPanel,
+        }}
+        slotProps={{
+          panel: {
+            onClose: handlePanelClose,
+          },
+          baseTextField: {
+            material: {
+              autoFocus: false,
+            },
+          },
         }}
       />
     </div>

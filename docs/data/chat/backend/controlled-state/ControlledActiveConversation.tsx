@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import SendIcon from '@mui/icons-material/Send';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -68,19 +69,6 @@ const initialMessages = [
     parts: [{ type: 'text' as const, text: 'Where do I add my team members?' }],
   },
 ];
-
-function SendIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-      style={{ width: '1em', height: '1em' }}
-    >
-      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-    </svg>
-  );
-}
 
 export default function ControlledActiveConversation() {
   const [activeId, setActiveId] = React.useState<string | undefined>(BILLING_ID);

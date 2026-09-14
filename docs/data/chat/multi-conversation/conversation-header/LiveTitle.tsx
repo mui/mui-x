@@ -24,9 +24,6 @@ const conversations: ChatConversationType[] = [
     title: 'Design crit',
     metadata: {
       memberCount: 4,
-      channel: 'support',
-      slaMinutes: 45,
-      escalated: false,
     },
   },
 ];

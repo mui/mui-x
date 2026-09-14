@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, EventBuilder } from 'test/utils/scheduler';
 import { disposeSymbol } from '@mui/x-internals/disposable';
@@ -13,7 +12,7 @@ import {
 } from '../../internals/tests/disposeTestHelpers';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
 
-const buildViewConfig = (): any => ({
+const buildViewDefinition = (): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
   visibleDaysSelector: (state: any): SchedulerProcessedDate[] => {
     const days: SchedulerProcessedDate[] = [];
@@ -45,16 +44,16 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       resolveFetch = resolve;
     });
     const dataSource = {
-      getEvents: spy(() => fetchPromise),
+      getEvents: vi.fn(() => fetchPromise),
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
     expect(store.state.eventIdList).to.have.length(0);
 
     store[disposeSymbol]();
@@ -68,16 +67,16 @@ describe('Dispose - EventCalendarPremiumStore', () => {
 
   it('should not fetch when the debounce timer fires after dispose', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     // Initial fetch is immediate; let it settle.
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     // A subsequent navigation goes through the debounced path.
     store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
@@ -89,16 +88,16 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushDebounce();
     await flushEffect();
 
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
   });
 
   it('should not call dataSource.persistEvents when an eventsUpdated is published after dispose', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
-      persistEvents: spy(noopPersistEvents),
+      getEvents: vi.fn(async () => buildEvents()),
+      persistEvents: vi.fn(noopPersistEvents),
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
@@ -119,20 +118,20 @@ describe('Dispose - EventCalendarPremiumStore', () => {
 
     await flushEffect();
 
-    expect(dataSource.persistEvents.called).to.equal(false);
+    expect(dataSource.persistEvents.mock.calls.length).to.equal(0);
   });
 
   it('should not start a new fetch when state changes after dispose', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     store[disposeSymbol]();
 
@@ -141,16 +140,16 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
   });
 
   it('should be safe to dispose twice', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
@@ -161,16 +160,16 @@ describe('Dispose - EventCalendarPremiumStore', () => {
 
   it('should not crash when disposing after a cache-hit navigation', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     // First fetch hydrates the cache for the initial range.
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     // Navigate away and back: the second navigation hits the cache.
     store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
@@ -182,7 +181,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
 
     expect(() => store[disposeSymbol]()).not.to.throw();
     // No third fetch: the return navigation was served from the cache.
-    expect(dataSource.getEvents.callCount).to.equal(2);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
   });
 
   it('should not pushError when persistEvents rejects after dispose', async () => {
@@ -193,11 +192,11 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       rejectPersist = reject;
     });
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
-      persistEvents: spy(() => persistPromise),
+      getEvents: vi.fn(async () => buildEvents()),
+      persistEvents: vi.fn(() => persistPromise),
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
@@ -216,7 +215,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
 
     // Let `persistEvents` start before we dispose.
     await flushEffect();
-    expect(dataSource.persistEvents.calledOnce).to.equal(true);
+    expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
 
     store[disposeSymbol]();
 

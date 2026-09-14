@@ -1,6 +1,6 @@
 'use client';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { EventCalendarStore } from '../use-event-calendar';
+import type { EventCalendarStore } from '../use-event-calendar';
 
 export function useEventCalendarStoreContext<TEvent extends object, TResource extends object>() {
   const context = useSchedulerStoreContext();

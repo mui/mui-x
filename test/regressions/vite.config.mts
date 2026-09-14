@@ -7,6 +7,9 @@ import generateReleaseInfo from '../../scripts/generateReleaseInfo.mjs';
 import { alias } from '../../vitest.shared.mts';
 
 export default defineConfig({
+  // Serve `docs/public` so demos can reference their `/static/...` assets
+  // (e.g. the Map raster base images) the same way they do on the docs site.
+  publicDir: path.resolve(import.meta.dirname, '../../docs/public'),
   build: {
     outDir: 'build',
   },
@@ -73,7 +76,6 @@ export default defineConfig({
     },
   ],
   test: {
-    globals: true,
     testTimeout: 20000,
     hookTimeout: 20000,
     maxConcurrency: 4,

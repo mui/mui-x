@@ -2,6 +2,7 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { createPickerRenderer } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<MultiInputDateRangeField /> - slotProps', () => {
   const { render } = createPickerRenderer();

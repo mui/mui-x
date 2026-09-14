@@ -67,12 +67,7 @@ function useApplyDefaultValuesToDateTimeFieldInternalProps(
 }
 
 type SharedDateTimeAndDateTimeRangeValidationProps =
-  | 'disablePast'
-  | 'disableFuture'
-  | 'minTime'
-  | 'maxTime'
-  | 'minDate'
-  | 'maxDate';
+  'disablePast' | 'disableFuture' | 'minTime' | 'maxTime' | 'minDate' | 'maxDate';
 
 export function useApplyDefaultValuesToDateTimeValidationProps(
   props: Pick<

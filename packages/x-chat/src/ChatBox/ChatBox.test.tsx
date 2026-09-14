@@ -2,7 +2,8 @@ import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createEchoAdapter, useChatStatus, type ChatAdapter } from '@mui/x-chat-headless';
+import { createEchoAdapter, useChatStatus } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from './ChatBox';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -1115,8 +1116,7 @@ describe('ChatBox', () => {
       const layout = chatBox.firstElementChild as HTMLElement;
       const layoutChildren = Array.from(layout.children) as HTMLElement[];
       const threadPane = layoutChildren.find((element) => element.style.width === '100%') as
-        | HTMLElement
-        | undefined;
+        HTMLElement | undefined;
 
       expect(threadPane).not.toBe(undefined);
       expect(threadPane!.style.width).toBe('100%');

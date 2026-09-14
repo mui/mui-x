@@ -1,5 +1,6 @@
 import { screen, createRenderer } from '@mui/internal-test-utils';
 import * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import { ChartsContainer } from '../ChartsContainer';
 import { BarPlot } from './BarPlot';
 import { barClasses } from './barClasses';

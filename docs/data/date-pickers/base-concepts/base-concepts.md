@@ -60,16 +60,16 @@ If you don't have your own requirements or don't manipulate dates outside of MUI
 
 Here is the weight added to your gzipped bundle size by each of these libraries when used inside the Date and Time Pickers:
 
-| Library           | Gzipped size |
-| :---------------- | -----------: |
-| `dayjs@1.11.5`    |      6.77 kB |
-| `date-fns@2.29.3` |     19.39 kB |
-| `luxon@3.0.4`     |     23.26 kB |
-| `moment@2.29.4`   |     20.78 kB |
+| Library          | Gzipped size |
+| :--------------- | -----------: |
+| `dayjs@1.11.21`  |      7.52 kB |
+| `date-fns@4.4.0` |     11.07 kB |
+| `luxon@3.7.2`    |     23.57 kB |
+| `moment@2.30.1`  |     21.45 kB |
 
 :::info
-The results above were obtained in October 2022 with the latest version of each library.
-The bundling of the JavaScript modules was done by a Create React App, and no locale was loaded for any of the libraries.
+The results above were obtained in July 2026 with the latest version of each library, bundled by Vite in production mode.
+Each value is the weight of the corresponding adapter with its date library included; React and Material UI are treated as external because they are already in your bundle, and only the default English locale is loaded.
 
 The results may vary in your application depending on the version of each library, the locale, and the bundler used.
 :::

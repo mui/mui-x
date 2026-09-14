@@ -20,7 +20,7 @@ export default function VisibleColumnsBasicExample() {
     <div style={{ height: 250, width: '100%' }}>
       <DataGrid
         columns={[
-          { field: 'username', hideable: false },
+          { field: 'username', hideable: false, rowHeader: true },
           { field: 'age' },
           { field: 'desk' },
         ]}

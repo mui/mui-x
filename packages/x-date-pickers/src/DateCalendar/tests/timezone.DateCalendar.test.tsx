@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { vi, describe, it, expect } from 'vitest';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
@@ -10,14 +10,14 @@ describe('<DateCalendar /> - Timezone', () => {
   describeAdapters('Timezone prop', DateCalendar, ({ adapter, render }) => {
     describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const { user } = render(<DateCalendar onChange={onChange} />);
 
         await user.click(screen.getByRole('gridcell', { name: '25' }));
         const expectedDate = adapter.setDate(adapter.date(undefined, 'default'), 25);
 
         // Check the `onChange` value (uses default timezone, for example: UTC, see TZ env variable)
-        const actualDate = onChange.lastCall.firstArg;
+        const actualDate = onChange.mock.lastCall?.[0];
 
         // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.
         // In a real world scenario, this should probably never occur.
@@ -28,7 +28,7 @@ describe('<DateCalendar /> - Timezone', () => {
       });
 
       it('should use "default" timezone for onChange when provided', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const value = adapter.date('2022-04-25T15:30');
 
         const { user } = render(
@@ -39,7 +39,7 @@ describe('<DateCalendar /> - Timezone', () => {
         const expectedDate = adapter.setDate(value, 25);
 
         // Check the `onChange` value (uses timezone prop)
-        const actualDate = onChange.lastCall.firstArg;
+        const actualDate = onChange.mock.lastCall?.[0];
         expect(adapter.getTimezone(actualDate)).to.equal(
           adapter.lib === 'dayjs' ? 'UTC' : 'system',
         );
@@ -83,7 +83,7 @@ describe('<DateCalendar /> - Timezone', () => {
       TIMEZONE_TO_TEST.forEach((timezone) => {
         describe(`Timezone: ${timezone}`, () => {
           it('should use timezone prop for onChange when no value is provided', async () => {
-            const onChange = spy();
+            const onChange = vi.fn();
             const { user } = render(<DateCalendar onChange={onChange} timezone={timezone} />);
             await user.click(screen.getByRole('gridcell', { name: '25' }));
             const expectedDate = adapter.setDate(
@@ -92,13 +92,13 @@ describe('<DateCalendar /> - Timezone', () => {
             );
 
             // Check the `onChange` value (uses timezone prop)
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.lastCall?.[0];
             expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });
 
           it('should use value timezone for onChange when a value is provided', async () => {
-            const onChange = spy();
+            const onChange = vi.fn();
             const value = adapter.date('2022-04-25T15:30', timezone);
 
             const { user } = render(
@@ -109,7 +109,7 @@ describe('<DateCalendar /> - Timezone', () => {
             const expectedDate = adapter.setDate(value, 25);
 
             // Check the `onChange` value (uses timezone prop)
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.lastCall?.[0];
             expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });

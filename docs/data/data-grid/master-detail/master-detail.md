@@ -109,6 +109,13 @@ The demo below shows how to implement this behavior using [react-hook-form](http
 
 {{"demo": "FormDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Conditional detail panels
+
+If only some rows have a detail panel, return `null` (or `undefined`) from `getDetailPanelContent` for the rows that don't.
+The default toggle button already disables itself when there's no content for the row, so no custom toggle column is needed just to hide it:
+
+{{"demo": "DetailPanelConditional.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Customizing the detail panel toggle
 
 To change the icon used for the toggle, you can provide a different component for the [icon slot](/x/react-data-grid/components/#icons) as shown here:

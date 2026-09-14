@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 import { useSeries } from './useSeries';
 import { ChartsProvider } from '../context/ChartsProvider';
 import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';

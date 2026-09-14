@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { renderHook } from '@mui/internal-test-utils';
 import { adapter } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { CalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useCalendarGridGetDateFromPositionInColumn } from './useCalendarGridDateFromPositionInTimeColumn';
 
@@ -14,10 +15,13 @@ describe('useCalendarGridDateFromPositionInTimeColumn', () => {
         hasFocus: false,
         start: START,
         end: adapter.addHours(START, 12),
+        dayStartMinute: 0,
+        dayEndMinute: 12 * 60,
         getCursorPositionInElementMs: ({ input }: any) => {
           const y = 'clientY' in input ? input.clientY : 0;
           return y * 60_000;
         },
+        getDateAtPointer: () => null,
       }),
       [],
     );

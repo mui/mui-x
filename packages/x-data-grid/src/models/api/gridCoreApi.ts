@@ -90,9 +90,9 @@ export interface GridCorePrivateApi<
   headerFiltersElementRef?: React.RefObject<HTMLDivElement | null>;
   register: <
     V extends 'public' | 'private',
-    T extends V extends 'public'
+    T extends (V extends 'public'
       ? Partial<GridPublicApi>
-      : Partial<Omit<GridPrivateApi, keyof GridPublicApi>>,
+      : Partial<Omit<GridPrivateApi, keyof GridPublicApi>>),
   >(
     visibility: V,
     methods: T,

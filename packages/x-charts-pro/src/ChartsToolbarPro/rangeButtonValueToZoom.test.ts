@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest';
 import { rangeButtonValueToZoom } from './rangeButtonValueToZoom';
 import type { RangeButtonFunctionParams } from './rangeButtonValueToZoom';
 

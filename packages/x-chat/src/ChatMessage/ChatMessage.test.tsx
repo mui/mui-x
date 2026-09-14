@@ -8,6 +8,8 @@ import { ChatMessage } from './ChatMessage';
 
 const { render } = createRenderer();
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   return {
     async sendMessage() {
@@ -336,6 +338,70 @@ describe('ChatMessage', () => {
     expect(document.body.textContent).toContain('Custom');
   });
 
+  it.skipIf(isJSDOM)('renders the actions bar as a chip hugging its buttons, not stretched', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slotProps={{
+          messageActions: { extraActions: [{ id: 'x', label: 'X', onClick: () => {} }] },
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const actions = document.querySelector('.MuiChatMessage-actions') as HTMLElement;
+    const content = document.querySelector('.MuiChatMessage-content') as HTMLElement;
+    const actionsRect = actions.getBoundingClientRect();
+    const contentRect = content.getBoundingClientRect();
+    // The chip must not stretch across the content column (the grid-item
+    // default `justify-self: stretch` would turn the paper chip into a
+    // full-width bar) and stays anchored to the bubble's start edge.
+    expect(actionsRect.width).toBeLessThan(contentRect.width);
+    expect(actionsRect.left).toBe(contentRect.left);
+  });
+
+  it.skipIf(isJSDOM)('places the actions bar under the bubble in the compact variant', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        variant="compact"
+        members={[{ id: 'alice', displayName: 'Alice' }]}
+        initialMessages={[
+          {
+            id: 'a1',
+            role: 'assistant',
+            author: { id: 'alice' },
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slotProps={{
+          messageActions: { extraActions: [{ id: 'x', label: 'X', onClick: () => {} }] },
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const actions = document.querySelector('.MuiChatMessage-actions') as HTMLElement;
+    const content = document.querySelector('.MuiChatMessage-content') as HTMLElement;
+    const actionsRect = actions.getBoundingClientRect();
+    const contentRect = content.getBoundingClientRect();
+    // The compact grid must define the `actions` area; without it the bar is
+    // auto-placed on implicit lines outside the explicit grid (far right).
+    expect(actionsRect.left).toBe(contentRect.left);
+    expect(actionsRect.top).toBeGreaterThanOrEqual(contentRect.bottom);
+  });
+
   it('renders the group author label inside compact messages', () => {
     render(
       <ChatBox
@@ -358,5 +424,49 @@ describe('ChatMessage', () => {
     // The compact author label is delivered via `groupAuthorName` and rendered by
     // the slot-driven message tree.
     expect(document.body.textContent).toContain('Alice');
+  });
+
+  // The status ticks are module-local inline SVGs, so the package stays free of an
+  // `@mui/icons-material` dependency. https://github.com/mui/mui-x/issues/23248
+  it('renders distinct inline SVG status ticks for sent and read messages', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          { id: 'm1', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'S' }] },
+          { id: 'm2', role: 'user', status: 'read', parts: [{ type: 'text', text: 'R' }] },
+        ]}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const paths = Array.from(document.querySelectorAll('.MuiChatMessage-inlineMeta svg path')).map(
+      (path) => path.getAttribute('d'),
+    );
+    expect(paths).toHaveLength(2);
+    // "read" is a double tick, "sent" a single one.
+    expect(new Set(paths).size).toBe(2);
+  });
+
+  it('renders distinct inline SVG status ticks in the compact variant', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        variant="compact"
+        initialMessages={[
+          { id: 'm1', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'S' }] },
+          { id: 'm2', role: 'user', status: 'read', parts: [{ type: 'text', text: 'R' }] },
+        ]}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const paths = Array.from(document.querySelectorAll('.MuiChatMessage-meta svg path')).map(
+      (path) => path.getAttribute('d'),
+    );
+    expect(paths).toHaveLength(2);
+    expect(new Set(paths).size).toBe(2);
   });
 });

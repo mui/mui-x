@@ -1,4 +1,4 @@
-import { MinimalTreeViewStore } from '../MinimalTreeViewStore';
+import type { MinimalTreeViewStore } from '../MinimalTreeViewStore';
 
 export interface TreeViewItemMeta {
   id: string;

@@ -5,7 +5,7 @@ import type { ChartSeriesTypeConfig } from '../../internals/plugins/corePlugins/
 import legendGetter from './legend';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
-import tooltipItemPositionGetter from './tooltipPosition';
+import { selectorTooltipItemPosition } from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
@@ -20,7 +20,7 @@ export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   seriesProcessor,
   legendGetter,
   tooltipGetter,
-  tooltipItemPositionGetter,
+  selectorTooltipItemPosition,
   axisTooltipGetter,
   getSeriesWithDefaultValues,
   radiusExtremumGetter,

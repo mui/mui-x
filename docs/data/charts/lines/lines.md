@@ -269,6 +269,10 @@ The highlighted point always shows a mark, whether its index is even or odd.
 
 {{"demo": "MarkOptimization.js"}}
 
+For large datasets, set the `sampling` prop on `LineChartPro` to reduce the line when zoomed out,
+with a choice of algorithms (`'m4'`, `'minmax'`, `'lttb'`). See [Charts—Performance](/x/react-charts/performance/#sampling)
+for details and a live demo.
+
 ### CSS
 
 You can customize the line chart elements using CSS selectors.
@@ -303,6 +307,16 @@ The gradient is defined as a child of the chart (`myGradient` referenced in `fil
 The next example shows how to apply a dashed stroke to the chart line, legend mark, and tooltip mark for each series using the `[data-series]` attribute selector.
 
 {{"demo": "StyledLineChart.js"}}
+
+#### Mark size
+
+Neither the line series nor the `mark` slot accepts a size property, so you set the mark size with CSS on the `lineClasses.mark` class.
+
+The default `'circle'` shape renders an SVG `circle` element, so use the `r` (radius) property, which defaults to `5`.
+The other shapes render an SVG `path` element that `r` does not affect.
+For those, use the `scale` property, which resizes the mark around its own center.
+
+{{"demo": "MarkSize.js"}}
 
 ## Animation
 

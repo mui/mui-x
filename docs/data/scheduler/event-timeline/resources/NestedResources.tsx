@@ -17,6 +17,12 @@ export default function NestedResources() {
         defaultVisibleDate={defaultVisibleDate}
         resources={resources}
         defaultPreset="dayAndWeek"
+        // Give the resource column a fixed floor so expanding nested rows
+        // doesn't grow it and shift the layout. The floor goes on the cell
+        // content, which is what the column measures itself against: setting
+        // it on the cell instead would widen the cell past the column and
+        // misalign it from the header.
+        sx={{ '& .MuiEventTimeline-titleCellContent': { minWidth: 240 } }}
       />
     </div>
   );

@@ -71,7 +71,7 @@ export default function ChatTypingIndicatorPlayground() {
         >
           <TypingEffect conversationId={emptyConversation.id} userIds={userIds} />
           <Box sx={{ width: '100%' }}>
-            <ChatTypingIndicator sx={indicatorSx as any} />
+            <ChatTypingIndicator sx={indicatorSx} />
             <Typography
               variant="caption"
               color="text.secondary"

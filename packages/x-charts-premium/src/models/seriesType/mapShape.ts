@@ -100,7 +100,7 @@ export interface MapShapeSeriesType extends Omit<CommonSeriesType<'mapShape'>, '
 export type MapShapeItemIdentifier = {
   type: 'mapShape';
   seriesId: SeriesId;
-  dataIndex: number;
+  name: string;
 };
 
 export type DefaultizedMapShapeValueType = MapShapeValueType & {
@@ -113,4 +113,5 @@ export interface DefaultizedMapShapeSeriesType extends Omit<
 > {
   hidden: boolean;
   data: ReadonlyArray<DefaultizedMapShapeValueType>;
+  lookupByName: ReadonlyMap<string, number>;
 }

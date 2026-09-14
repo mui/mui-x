@@ -9,12 +9,12 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
   minimalConversation,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 // A handful of short messages so the list overflows and there is room to scroll
 // up while a reply streams in.

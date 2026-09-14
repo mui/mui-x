@@ -18,8 +18,7 @@ export const getAxisTriggerTooltip = <SeriesType extends PolarChartSeriesType>(
     const series = formattedSeries[chartType]?.series ?? {};
     const tooltipAxes = (
       seriesConfig[chartType].axisTooltipGetter as
-        | AxisTooltipGetter<SeriesType, 'radius' | 'rotation'>
-        | undefined
+        AxisTooltipGetter<SeriesType, 'radius' | 'rotation'> | undefined
     )?.(series);
 
     if (tooltipAxes === undefined) {

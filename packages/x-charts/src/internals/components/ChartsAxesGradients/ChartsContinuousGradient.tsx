@@ -24,8 +24,7 @@ export default function ChartsContinuousGradient(props: ChartsContinuousGradient
     props;
 
   const extremumValues = [colorMap.min ?? 0, colorMap.max ?? 100] as
-    | [number, number]
-    | [Date, Date];
+    [number, number] | [Date, Date];
   const extremumPositions = extremumValues.map(scale).filter((p): p is number => p !== undefined);
 
   if (extremumPositions.length !== 2) {

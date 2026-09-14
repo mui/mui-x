@@ -1,4 +1,5 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { act, screen, waitFor } from '@mui/internal-test-utils';
 import { gridClasses, GridRowId } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
@@ -50,19 +51,32 @@ export function microtasks() {
   return act(() => Promise.resolve()) as unknown as Promise<void>;
 }
 
-export function spyApi(api: GridApiCommon, methodName: string) {
+// `sleep` inside `act`, so updates settling during the wait don't warn about missing `act`.
+export async function actSleep(duration: number) {
+  await act(async () => {
+    await sleep(duration);
+  });
+}
+
+type ApiMethod = (...args: any[]) => any;
+
+/** The recording wrapper `spyApi` swaps onto the API, plus the fields the grid reads back. */
+export type SpiedApiMethod = Mock<ApiMethod> & { spying: boolean; target: ApiMethod };
+
+export function spyApi(api: GridApiCommon, methodName: string): SpiedApiMethod {
   const methodKey = methodName as keyof GridApiCommon;
   const privateApi = unwrapPrivateAPI(api);
-  const method = privateApi[methodKey];
+  const method = privateApi[methodKey] as ApiMethod;
 
-  const spyFn = spy((...args: any[]) => {
-    return spyFn.target(...args);
-  }) as any;
-  spyFn.spying = true;
-  spyFn.target = method;
+  const spyFn: SpiedApiMethod = Object.assign(
+    vi.fn((...args: any[]) => spyFn.target(...args)),
+    { spying: true, target: method },
+  );
 
-  api[methodKey] = spyFn;
-  privateApi[methodKey] = spyFn;
+  // Indexing with `keyof GridApiCommon` collapses to an intersection of every method
+  // signature, so the write itself needs the escape hatch, not the spy.
+  Object.assign(api, { [methodKey]: spyFn });
+  Object.assign(privateApi, { [methodKey]: spyFn });
 
   return spyFn;
 }
@@ -85,10 +99,15 @@ export async function raf() {
  */
 export function getActiveCell(): string | null {
   let activeElement: Element | null;
-  if (document.activeElement && document.activeElement.getAttribute('role') === 'gridcell') {
+  if (
+    document.activeElement &&
+    ['gridcell', 'rowheader'].includes(document.activeElement.getAttribute('role') ?? '')
+  ) {
     activeElement = document.activeElement;
   } else {
-    activeElement = document.activeElement && document.activeElement.closest('[role="gridcell"]');
+    activeElement =
+      document.activeElement &&
+      document.activeElement.closest('[role="gridcell"], [role="rowheader"]');
   }
 
   if (!activeElement) {
@@ -121,13 +140,17 @@ export function getActiveColumnHeader() {
 
 export function getColumnValues(colIndex: number, container: ParentNode = document) {
   return Array.from(
-    container.querySelectorAll(`[role="gridcell"][data-colindex="${colIndex}"]`),
+    container.querySelectorAll(
+      `:is([role="gridcell"], [role="rowheader"])[data-colindex="${colIndex}"]`,
+    ),
   ).map((node) => node!.textContent);
 }
 
 export function getRowValues(rowIndex: number) {
   return Array.from(
-    document.querySelectorAll(`[data-rowindex="${rowIndex}"] [role="gridcell"]`),
+    document.querySelectorAll(
+      `[data-rowindex="${rowIndex}"] :is([role="gridcell"], [role="rowheader"])`,
+    ),
   ).map((node) => node!.textContent);
 }
 
@@ -151,13 +174,15 @@ export function getColumnHeadersTextContent() {
 
 export function getRowsFieldContent(field: string) {
   return Array.from(document.querySelectorAll('[role="row"][data-rowindex]')).map(
-    (node) => node.querySelector(`[role="gridcell"][data-field="${field}"]`)?.textContent,
+    (node) =>
+      node.querySelector(`:is([role="gridcell"], [role="rowheader"])[data-field="${field}"]`)
+        ?.textContent,
   );
 }
 
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   const cell = document.querySelector<HTMLElement>(
-    `[role="row"][data-rowindex="${rowIndex}"] [role="gridcell"][data-colindex="${colIndex}"]`,
+    `[role="row"][data-rowindex="${rowIndex}"] :is([role="gridcell"], [role="rowheader"])[data-colindex="${colIndex}"]`,
   );
   if (cell == null) {
     throw new Error(`Cell ${rowIndex} ${colIndex} not found`);

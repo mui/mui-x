@@ -19,6 +19,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps } from '@mui/x-charts/internals';
+import type { SamplingMethod } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import type {
@@ -47,8 +48,17 @@ export interface LineChartProProps
     Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       ChartsContainerProProps<'line', LineChartProPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'sampling'
     > {
+  /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every point (no sampling).
+   * - `'minmax'`: keep the min and max per bucket.
+   * - `'m4'`: pixel-accurate—keep the first, min, max, and last per bucket.
+   * - `'lttb'`: Largest-Triangle-Three-Buckets, preserves the visual shape.
+   * @default 'none'
+   */
+  sampling?: SamplingMethod;
   /**
    * Overridable component slots.
    * @default {}
@@ -76,7 +86,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, sampling, ...other } = props;
   const {
     chartsWrapperProps,
     chartsContainerProps,
@@ -96,14 +106,17 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'line',
     LineChartProPluginSignatures
-  >({
-    ...chartsContainerProps,
-    initialZoom,
-    zoomData,
-    onZoomChange,
-    apiRef,
-    plugins: LINE_CHART_PRO_PLUGINS,
-  });
+  >(
+    {
+      ...chartsContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: LINE_CHART_PRO_PLUGINS,
+    },
+    { seriesType: 'line', method: sampling },
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -209,7 +222,15 @@ LineChartPro.propTypes /* remove-proptypes */ = {
    */
   experimentalFeatures: PropTypes.shape({
     enablePositionBasedPointerInteraction: PropTypes.bool,
+    keyboardActivation: PropTypes.bool,
   }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -393,7 +414,7 @@ LineChartPro.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
@@ -444,6 +465,15 @@ LineChartPro.propTypes /* remove-proptypes */ = {
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
   onZoomChange: PropTypes.func,
+  /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every point (no sampling).
+   * - `'minmax'`: keep the min and max per bucket.
+   * - `'m4'`: pixel-accurate—keep the first, min, max, and last per bucket.
+   * - `'lttb'`: Largest-Triangle-Three-Buckets, preserves the visual shape.
+   * @default 'none'
+   */
+  sampling: PropTypes.oneOf(['lttb', 'm4', 'minmax', 'none']),
   /**
    * The series to display in the line chart.
    * An array of [[LineSeries]] objects.
@@ -610,7 +640,7 @@ LineChartPro.propTypes /* remove-proptypes */ = {
   zoomInteractionConfig: PropTypes.shape({
     pan: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
+        PropTypes.oneOf(['drag', 'keyboard', 'pressAndDrag', 'wheel']),
         PropTypes.shape({
           allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
           pointerMode: PropTypes.any,
@@ -627,11 +657,16 @@ LineChartPro.propTypes /* remove-proptypes */ = {
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
         }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['keyboard']).isRequired,
+        }),
       ]).isRequired,
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
+        PropTypes.oneOf(['brush', 'doubleTapReset', 'keyboard', 'pinch', 'tapAndDrag', 'wheel']),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
@@ -646,6 +681,11 @@ LineChartPro.propTypes /* remove-proptypes */ = {
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['keyboard']).isRequired,
         }),
         PropTypes.shape({
           pointerMode: PropTypes.any,

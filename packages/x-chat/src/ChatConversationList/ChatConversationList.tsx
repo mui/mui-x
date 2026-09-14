@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
+import type { SxProps, Theme } from '@mui/system';
 import {
   ConversationListRoot,
   markChatLayoutPane,
@@ -13,26 +13,27 @@ import {
   ConversationListTimestamp,
   ConversationListUnreadBadge,
   ConversationListItemActions,
-  type ConversationListRootProps,
-  type ConversationListRootSlots,
-  type ConversationListRootSlotProps,
-  type ConversationListItemProps,
-  type ConversationListItemAvatarProps,
-  type ConversationListItemContentProps,
-  type ConversationListTitleProps,
-  type ConversationListPreviewProps,
-  type ConversationListTimestampProps,
-  type ConversationListUnreadBadgeProps,
-  type ConversationListItemActionsProps,
-  type ConversationListItemOwnerState,
-  type ConversationListVariant,
 } from '@mui/x-chat-headless';
+import type {
+  ConversationListRootProps,
+  ConversationListRootSlots,
+  ConversationListRootSlotProps,
+  ConversationListItemProps,
+  ConversationListItemAvatarProps,
+  ConversationListItemContentProps,
+  ConversationListTitleProps,
+  ConversationListPreviewProps,
+  ConversationListTimestampProps,
+  ConversationListUnreadBadgeProps,
+  ConversationListItemActionsProps,
+  ConversationListItemOwnerState,
+  ConversationListVariant,
+} from '@mui/x-chat-headless';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import {
-  useChatConversationListUtilityClasses,
-  type ChatConversationListClasses,
-} from './chatConversationListClasses';
-import { mergeSlotProps, resolveSlotProps } from '../internals/mergeSlotProps';
+import { useChatConversationListUtilityClasses } from './chatConversationListClasses';
+import type { ChatConversationListClasses } from './chatConversationListClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationList');
 
@@ -747,19 +748,23 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
       root: rootSlotProps,
       scroller: mergeSlotProps({ className: classes.scroller }, slotProps?.scroller) as any,
       item: (ownerState: ConversationListItemOwnerState) => {
-        return resolveSlotProps(
-          mergeSlotProps(
-            {
-              className: clsx(
-                classes.item,
-                ownerState.selected && classes.itemSelected,
-                ownerState.unread && classes.itemUnread,
-                ownerState.focused && classes.itemFocused,
-              ),
-            },
-            slotProps?.item,
-          ),
-          ownerState,
+        // `resolveComponentProps` types its return as `T | undefined`, but `mergeSlotProps`
+        // never returns `undefined` here, so `?? {}` only satisfies the type.
+        return (
+          resolveComponentProps(
+            mergeSlotProps(
+              {
+                className: clsx(
+                  classes.item,
+                  ownerState.selected && classes.itemSelected,
+                  ownerState.unread && classes.itemUnread,
+                  ownerState.focused && classes.itemFocused,
+                ),
+              },
+              slotProps?.item,
+            ),
+            ownerState,
+          ) ?? {}
         );
       },
       itemAvatar: mergeSlotProps({ className: classes.itemAvatar }, slotProps?.itemAvatar) as any,

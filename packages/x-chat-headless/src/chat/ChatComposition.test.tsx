@@ -15,11 +15,8 @@ import {
   MessageRoot,
 } from '../message';
 import { MessageGroup } from '../message-group';
-import {
-  MessageListDateDivider,
-  MessageListRoot,
-  type MessageListRootProps,
-} from '../message-list';
+import { MessageListDateDivider, MessageListRoot } from '../message-list';
+import type { MessageListRootProps } from '../message-list';
 import {
   ConversationHeader,
   ConversationHeaderInfo,

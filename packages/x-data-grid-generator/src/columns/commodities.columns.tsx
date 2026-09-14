@@ -75,6 +75,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
   {
     field: 'commodity',
     headerName: 'Commodity',
+    rowHeader: true,
     generateData: randomCommodity,
     width: 180,
     editable,

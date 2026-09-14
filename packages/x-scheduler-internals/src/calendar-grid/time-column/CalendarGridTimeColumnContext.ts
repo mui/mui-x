@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { TemporalSupportedObject } from '../../models';
+import type { TemporalSupportedObject } from '../../models';
 
 export interface CalendarGridTimeColumnContext {
   /**
@@ -11,6 +11,16 @@ export interface CalendarGridTimeColumnContext {
    * The end date and time of the column.
    */
   end: TemporalSupportedObject;
+  /**
+   * First displayed minute of the day, as an offset from midnight.
+   * Equal to `0` unless the view limits its visible hour range.
+   */
+  dayStartMinute: number;
+  /**
+   * End of the displayed window of the day, as an exclusive offset from midnight (1440 for the full day).
+   * Equal to `1440` unless the view limits its visible hour range.
+   */
+  dayEndMinute: number;
   /**
    * The index of the column in the grid.
    */
@@ -35,6 +45,12 @@ export interface CalendarGridTimeColumnContext {
     input: { clientY: number };
     elementRef: React.RefObject<HTMLElement | null>;
   }) => number;
+  /**
+   * Maps a pointer position to a precision-rounded date within this column (vertical axis), used by the pointer-based resize.
+   * @param {{ clientX: number, clientY: number }} input The pointer coordinates.
+   * @returns {TemporalSupportedObject | null} The date under the pointer, or `null` when the column isn't measurable yet.
+   */
+  getDateAtPointer: (input: { clientX: number; clientY: number }) => TemporalSupportedObject | null;
 }
 
 export const CalendarGridTimeColumnContext = React.createContext<

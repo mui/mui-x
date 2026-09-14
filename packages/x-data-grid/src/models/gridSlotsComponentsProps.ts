@@ -3,7 +3,7 @@ import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
 import type { GridColumnsPanelProps } from '../components/panel/GridColumnsPanel';
-import type { GridFilterPanelProps } from '../components/panel/filterPanel/GridFilterPanel';
+import type { GridFilterPanelProps } from '../components/panel/filterPanel/GridFilterPanelBase';
 import type { GridFooterContainerProps } from '../components/containers/GridFooterContainer';
 import type { GridOverlayProps } from '../components/containers/GridOverlay';
 import type { GridPanelProps } from '../components/panel/GridPanel';

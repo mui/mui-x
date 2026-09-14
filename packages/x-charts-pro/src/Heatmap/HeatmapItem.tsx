@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useUtilityClasses } from './heatmapClasses';
 import { HeatmapCell } from './HeatmapCell';
@@ -16,7 +17,7 @@ export interface HeatmapItemSlots {
 }
 
 export interface HeatmapItemSlotProps {
-  cell?: Partial<HeatmapCellProps> & CellPropsOverrides;
+  cell?: WithDataAttributes<Partial<HeatmapCellProps> & CellPropsOverrides>;
 }
 
 export interface HeatmapItemProps {

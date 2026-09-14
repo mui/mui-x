@@ -2,11 +2,11 @@
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import { TreeViewCancellableEvent } from '../../../models';
-import { TreeViewItemPlugin } from '../../models';
+import type { TreeViewCancellableEvent } from '../../../models';
+import type { TreeViewItemPlugin } from '../../models';
 import { labelSelectors } from './selectors';
-import { ExtendableRichTreeViewStore } from '../../RichTreeViewStore';
-import { TreeItemLabelInputProps } from '../../../TreeItemLabelInput';
+import type { ExtendableRichTreeViewStore } from '../../RichTreeViewStore';
+import type { TreeItemLabelInputProps } from '../../../TreeItemLabelInput';
 
 export const useLabelEditingItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { store } = useTreeViewContext<ExtendableRichTreeViewStore<any, any, any, any>>();

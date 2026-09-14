@@ -3,13 +3,13 @@ import {
   TREE_VIEW_ROOT_PARENT_ID,
   itemsSelectors,
 } from '@mui/x-tree-view/internals';
-import {
+import type {
   TreeViewItemId,
   TreeViewItemsReorderingAction,
   TreeViewValidItem,
 } from '@mui/x-tree-view/models';
-import { TreeViewItemItemReorderingValidActions, TreeViewItemReorderPosition } from './types';
-import { RichTreeViewProState, RichTreeViewProStore } from '../../RichTreeViewProStore';
+import type { TreeViewItemItemReorderingValidActions, TreeViewItemReorderPosition } from './types';
+import type { RichTreeViewProState, RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 /**
  * Checks if the item with the id itemIdB is an ancestor of the item with the id itemIdA.

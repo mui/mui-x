@@ -17,14 +17,14 @@ This guide is also available in <a href="https://raw.githubusercontent.com/mui/m
 
 ## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `latest`.
+In `package.json`, change the version of the date pickers package to `^8.0.0`.
 
 ```diff
 -"@mui/x-date-pickers": "7.x.x",
-+"@mui/x-date-pickers": "latest",
++"@mui/x-date-pickers": "^8.0.0",
 
 -"@mui/x-date-pickers-pro": "7.x.x",
-+"@mui/x-date-pickers-pro": "latest",
++"@mui/x-date-pickers-pro": "^8.0.0",
 ```
 
 Since `v8` is a major release, it contains changes that affect the public API.
@@ -379,9 +379,7 @@ const theme = createTheme({
   components: {
     MuiDateCalendar: {
       styleOverrides: {
-        root: ({ ownerState }) => ({
-          /** Style based on the ownerState */
-        }),
+        root: ({ ownerState }) => ({/** Style based on the ownerState */}),
       },
     },
   },
@@ -393,9 +391,7 @@ const theme = createTheme({
 ```tsx
 <DatePicker
   slotProps={{
-    actionBar: (ownerState) => ({
-      /** Props based on the ownerState */
-    }),
+    actionBar: (ownerState) => ({/** Props based on the ownerState */}),
   }}
 />
 ```

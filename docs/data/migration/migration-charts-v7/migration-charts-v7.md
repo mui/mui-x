@@ -24,14 +24,14 @@ This guide is also available in <a href="https://raw.githubusercontent.com/mui/m
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `latest`.
+In `package.json`, change the version of the charts package to `^8.0.0`.
 
 ```diff
 -"@mui/x-charts": "^7.x.x",
-+"@mui/x-charts": "latest",
++"@mui/x-charts": "^8.0.0",
 
 -"@mui/x-charts-pro": "^7.x.x",
-+"@mui/x-charts-pro": "latest",
++"@mui/x-charts-pro": "^8.0.0",
 ```
 
 Since `v8` is a major release, it contains changes that affect the public API.

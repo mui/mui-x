@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { DescribeHijriAdapterTestSuite } from './describeHijriAdapter.types';
 import { TEST_DATE_ISO_STRING } from '../describeGregorianAdapter';
 

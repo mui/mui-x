@@ -8,14 +8,13 @@ import {
   useChatStore,
   useChatVariant,
   useStreamingIndicatorVisibility,
-  type ChatMessage,
-  type MessageOwnerState,
-  type StreamingIndicatorMode,
 } from '@mui/x-chat-headless';
+import type { ChatMessage, MessageOwnerState, StreamingIndicatorMode } from '@mui/x-chat-headless';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { styled } from '../internals/zero-styled';
-import { resolveSlotProps } from '../internals/mergeSlotProps';
 import { ChatMessageAvatar } from '../ChatMessage/ChatMessageAvatar';
-import { ChatStreamingIndicator, type ChatStreamingIndicatorProps } from './ChatStreamingIndicator';
+import { ChatStreamingIndicator } from './ChatStreamingIndicator';
+import type { ChatStreamingIndicatorProps } from './ChatStreamingIndicator';
 import { useChatStreamingIndicatorUtilityClasses } from './chatStreamingIndicatorClasses';
 
 export interface ChatStreamingIndicatorRowProps {
@@ -179,7 +178,7 @@ function ChatStreamingIndicatorRow(props: ChatStreamingIndicatorRowProps) {
           messageId={messageId}
           index={index}
           items={items}
-          {...resolveSlotProps(slotProps ?? {}, { messageId, index, items })}
+          {...resolveComponentProps(slotProps ?? {}, { messageId, index, items })}
         />
       </ChatStreamingIndicatorBubbleStyled>
     </ChatStreamingIndicatorRowStyled>

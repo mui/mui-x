@@ -24,9 +24,7 @@ export const DATE_VALIDATION_PROP_NAMES: (
 ];
 
 export const TIME_VALIDATION_PROP_NAMES: (
-  | keyof BaseTimeValidationProps
-  | keyof TimeValidationProps
-  | 'ampm'
+  keyof BaseTimeValidationProps | keyof TimeValidationProps | 'ampm'
 )[] = [
   'disablePast',
   'disableFuture',

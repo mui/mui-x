@@ -35,9 +35,7 @@ export interface UseChartHighlightParameters<SeriesType extends ChartSeriesType>
    * Used when the highlight is controlled.
    */
   highlightedItem?:
-    | HighlightItemIdentifier<SeriesType>
-    | HighlightItemIdentifierWithType<SeriesType>
-    | null;
+    HighlightItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType> | null;
   /**
    * The callback fired when the highlighted item changes.
    *

@@ -6,14 +6,14 @@ import { useToolbarContext } from './ToolbarContext';
 
 interface ToolbarItemProps extends Pick<
   React.ComponentProps<'button'>,
-  'onKeyDown' | 'onFocus' | 'aria-disabled' | 'disabled'
+  'onKeyDown' | 'onFocus' | 'onBlur' | 'aria-disabled' | 'disabled'
 > {}
 
 export function useRegisterToolbarButton(
   props: ToolbarItemProps,
   ref: React.RefObject<HTMLButtonElement | null>,
 ) {
-  const { onKeyDown, onFocus, disabled, 'aria-disabled': ariaDisabled } = props;
+  const { onKeyDown, onFocus, onBlur, disabled, 'aria-disabled': ariaDisabled } = props;
 
   const id = useId();
   const {
@@ -22,6 +22,7 @@ export function useRegisterToolbarButton(
     unregisterItem,
     onItemKeyDown,
     onItemFocus,
+    onItemBlur,
     onItemDisabled,
   } = useToolbarContext();
 
@@ -35,6 +36,11 @@ export function useRegisterToolbarButton(
     onFocus?.(event);
   };
 
+  const handleBlur = (event: React.FocusEvent<HTMLButtonElement>) => {
+    onItemBlur(id!, event);
+    onBlur?.(event);
+  };
+
   React.useEffect(() => {
     registerItem(id!, ref);
     return () => unregisterItem(id!);
@@ -43,7 +49,7 @@ export function useRegisterToolbarButton(
   const previousDisabled = React.useRef(disabled);
   React.useEffect(() => {
     if (previousDisabled.current !== disabled && disabled === true) {
-      onItemDisabled(id!, disabled);
+      onItemDisabled(id!);
     }
     previousDisabled.current = disabled;
   }, [disabled, id, onItemDisabled]);
@@ -51,7 +57,7 @@ export function useRegisterToolbarButton(
   const previousAriaDisabled = React.useRef(ariaDisabled);
   React.useEffect(() => {
     if (previousAriaDisabled.current !== ariaDisabled && ariaDisabled === true) {
-      onItemDisabled(id!, true);
+      onItemDisabled(id!);
     }
     previousAriaDisabled.current = ariaDisabled;
   }, [ariaDisabled, id, onItemDisabled]);
@@ -62,5 +68,6 @@ export function useRegisterToolbarButton(
     'aria-disabled': ariaDisabled,
     onKeyDown: handleKeyDown,
     onFocus: handleFocus,
+    onBlur: handleBlur,
   };
 }

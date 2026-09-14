@@ -1,5 +1,5 @@
-import { TreeViewParametersToStateMapper } from '../MinimalTreeViewStore';
-import { RichTreeViewStoreParameters, RichTreeViewState } from './RichTreeViewStore.types';
+import type { TreeViewParametersToStateMapper } from '../MinimalTreeViewStore';
+import type { RichTreeViewStoreParameters, RichTreeViewState } from './RichTreeViewStore.types';
 
 const deriveStateFromParameters = (parameters: RichTreeViewStoreParameters<any, any>) => ({
   isItemEditable: parameters.isItemEditable ?? false,

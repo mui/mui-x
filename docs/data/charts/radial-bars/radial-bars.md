@@ -47,14 +47,41 @@ The demo below sets an `'ordinal'` color map on the `radiusAxis` to build a heal
 
 ## Click events
 
-The `RadialBarChart` provides an `onAxisClick` handler that fires when the user clicks anywhere in the chart area.
-Its signature matches the bar chart:
+The `RadialBarChart` provides two click handlers:
+
+- `onItemClick` for clicks on a specific bar
+- `onAxisClick` for clicks anywhere in the chart area
+
+They both provide the following signature:
 
 ```js
 const clickHandler = (
-  event, // The native mouse event emitted by the SVG component.
-  params, // An object that identifies the clicked axis item and its series values.
+  event, // The mouse event.
+  params, // An object that identifies the clicked elements.
 ) => {};
 ```
 
 {{"demo": "RadialBarClick.js"}}
+
+:::info
+There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
+
+- For `onItemClick` the event is a React synthetic mouse event emitted by the chart container.
+  Radial bars have no per-element click handler, so the clicked bar is resolved from the pointer position.
+- For `onAxisClick` the event is a native mouse event emitted by the SVG component.
+
+:::
+
+## Custom annotations and overlays
+
+For advanced customizations like reference lines, custom markers, or data overlays, use the [`usePolarGeometry` hook](/x/react-charts/hooks/use-polar-geometry/).
+This hook provides access to the chart's coordinate transformations, allowing you to position custom SVG elements precisely within the polar coordinate space.
+
+Common use cases include:
+
+- **Reference rings** — Visual targets or threshold indicators
+- **Data annotations** — Labels and markers for specific points
+- **Period overlays** — Comparing current data with historical periods
+- **Custom markers** — Icons or shapes at specific coordinates
+
+See the [usePolarGeometry hook documentation](/x/react-charts/hooks/use-polar-geometry/) for detailed examples and API reference.

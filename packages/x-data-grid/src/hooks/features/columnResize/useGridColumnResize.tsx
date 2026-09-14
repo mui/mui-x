@@ -677,6 +677,9 @@ export const useGridColumnResize = (
     ) as HTMLDivElement;
     const field = getFieldFromHeaderElem(columnHeaderElement);
     const colDef = apiRef.current.getColumn(field);
+    if (!colDef) {
+      return;
+    }
 
     logger.debug(`Start Resize on col ${colDef.field}`);
     apiRef.current.publishEvent('columnResizeStart', { field }, event);
@@ -690,7 +693,10 @@ export const useGridColumnResize = (
 
   const stopListening = React.useCallback(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current);
-    doc.body.style.removeProperty('cursor');
+    // Also runs as this effect's unmount cleanup, which can execute against a
+    // document that no longer has a body. The cursor is only ever set while a
+    // resize is in progress, so there is nothing to clear in that case.
+    doc.body?.style.removeProperty('cursor');
     doc.removeEventListener('mousemove', handleResizeMouseMove);
     doc.removeEventListener('mouseup', handleResizeMouseUp);
     doc.removeEventListener('touchmove', handleTouchMove);
@@ -809,6 +815,11 @@ export const useGridColumnResize = (
         if (!props.disableVirtualization && options.disableColumnVirtualization) {
           apiRef.current.unstable_setColumnVirtualization(false);
           await columnVirtualizationDisabled();
+
+          // The grid may have unmounted while awaiting, which nulls the root element ref.
+          if (!apiRef.current.rootElementRef?.current) {
+            return;
+          }
         }
 
         const widthByField = extractColumnWidths(apiRef, options, columns);

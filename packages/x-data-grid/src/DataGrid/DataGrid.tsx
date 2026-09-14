@@ -31,6 +31,7 @@ const configuration: GridConfiguration = {
     useIsCellEditable,
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
+    useColumnHeaderAdornment: () => null,
   },
 };
 
@@ -179,6 +180,7 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
     renderEditCell: PropTypes.func,
     renderHeader: PropTypes.func,
     resizable: PropTypes.bool,
+    rowHeader: PropTypes.bool,
     rowSpanValueGetter: PropTypes.func,
     sortable: PropTypes.bool,
     sortComparator: PropTypes.func,
@@ -249,6 +251,13 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
     get: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
+  /**
+   * If `true`, the previously displayed rows are kept visible while new rows are being fetched after pagination, sorting, or filtering changes.
+   * The loading overlay is rendered on top of the previous rows.
+   * Only applies to flat data; tree data and row grouping always reset the rows on refetch to keep the order consistent with the new response.
+   * @default false
+   */
+  dataSourceKeepPreviousData: PropTypes.bool,
   /**
    * If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.
    * If the refetched rows are different from the current rows, the grid will update the rows.
@@ -791,7 +800,7 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
    * @param {{ rowId: GridRowId }} params Additional parameters.
-   * @returns {Promise<R> | R} The final values to update the row.
+   * @returns {Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>} The final values to update the row, or a `{ _action: 'replace', row }` update to store `row` as the new row without merging.
    */
   processRowUpdate: PropTypes.func,
   /**

@@ -5,6 +5,7 @@ import { isOrdinalScale } from '../internals/scaleGuards';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsHighlightYAxisValue,
+  selectorChartHighlightBucketSize,
   selectorChartYAxis,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
@@ -12,6 +13,7 @@ import { useDrawingArea } from '../hooks';
 import type { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 import type { ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
 import { ChartsAxisHighlightPath } from './ChartsAxisHighlightPath';
+import { getSampledBandHighlight } from './getSampledBandHighlight';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 /**
@@ -28,12 +30,14 @@ export default function ChartsYHighlight(props: {
   const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const axisYValues = store.use(selectorChartsHighlightYAxisValue);
   const yAxes = store.use(selectorChartYAxis);
+  const bucketSizeByAxis = store.use(selectorChartHighlightBucketSize);
 
   if (axisYValues.length === 0) {
     return null;
   }
 
-  return axisYValues.map(({ axisId, value }) => {
+  return axisYValues.map((axisValue) => {
+    const { axisId, value } = axisValue;
     const yAxis = yAxes.axis[axisId];
     const yScale = yAxis.scale;
     const getYPosition = getValueToPositionMapper(yScale);
@@ -54,13 +58,23 @@ export default function ChartsYHighlight(props: {
       }
     }
 
+    let bandStart = 0;
+    let bandSize = 0;
+    if (isYScaleOrdinal) {
+      ({ bandStart, bandSize } = getSampledBandHighlight({
+        scale: yScale,
+        value,
+        dataIndex: axisValue.dataIndex,
+        data: yAxis.data,
+        bucketSize: bucketSizeByAxis.get(axisId) ?? 1,
+      }));
+    }
+
     return (
       <React.Fragment key={`${axisId}-${value}`}>
         {isYScaleOrdinal && yScale(value) !== undefined && (
           <ChartsAxisHighlightPath
-            d={`M ${left} ${
-              yScale(value)! - (yScale.step() - yScale.bandwidth()) / 2
-            } l 0 ${yScale.step()} l ${width} 0 l 0 ${-yScale.step()} Z`}
+            d={`M ${left} ${bandStart} l 0 ${bandSize} l ${width} 0 l 0 ${-bandSize} Z`}
             className={classes.root}
             ownerState={{ axisHighlight: 'band' }}
           />

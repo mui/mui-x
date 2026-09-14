@@ -7,6 +7,7 @@ import {
   describeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
+import { describe } from 'vitest';
 
 describe('<DateTimeField /> - Describe Value', () => {
   const { render } = createPickerRenderer();

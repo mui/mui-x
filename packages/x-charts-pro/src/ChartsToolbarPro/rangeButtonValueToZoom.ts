@@ -4,15 +4,7 @@ import { warnOnce } from '@mui/x-internals/warning';
  * A calendar interval unit for range buttons.
  */
 export type RangeButtonIntervalUnit =
-  | 'microsecond'
-  | 'millisecond'
-  | 'second'
-  | 'minute'
-  | 'hour'
-  | 'day'
-  | 'week'
-  | 'month'
-  | 'year';
+  'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day' | 'week' | 'month' | 'year';
 
 /**
  * Parameters passed to a range button function value.

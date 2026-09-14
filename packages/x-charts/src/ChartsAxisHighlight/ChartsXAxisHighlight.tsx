@@ -5,6 +5,7 @@ import { isOrdinalScale } from '../internals/scaleGuards';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsHighlightXAxisValue,
+  selectorChartHighlightBucketSize,
   selectorChartXAxis,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
@@ -12,6 +13,7 @@ import { useDrawingArea } from '../hooks';
 import type { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 import type { ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
 import { ChartsAxisHighlightPath } from './ChartsAxisHighlightPath';
+import { getSampledBandHighlight } from './getSampledBandHighlight';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 /**
@@ -28,12 +30,14 @@ export default function ChartsXHighlight(props: {
   const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const axisXValues = store.use(selectorChartsHighlightXAxisValue);
   const xAxes = store.use(selectorChartXAxis);
+  const bucketSizeByAxis = store.use(selectorChartHighlightBucketSize);
 
   if (axisXValues.length === 0) {
     return null;
   }
 
-  return axisXValues.map(({ axisId, value }) => {
+  return axisXValues.map((axisValue) => {
+    const { axisId, value } = axisValue;
     const xAxis = xAxes.axis[axisId];
 
     const xScale = xAxis.scale;
@@ -55,13 +59,23 @@ export default function ChartsXHighlight(props: {
       }
     }
 
+    let bandStart = 0;
+    let bandSize = 0;
+    if (isXScaleOrdinal) {
+      ({ bandStart, bandSize } = getSampledBandHighlight({
+        scale: xScale,
+        value,
+        dataIndex: axisValue.dataIndex,
+        data: xAxis.data,
+        bucketSize: bucketSizeByAxis.get(axisId) ?? 1,
+      }));
+    }
+
     return (
       <React.Fragment key={`${axisId}-${value}`}>
         {isXScaleOrdinal && xScale(value) !== undefined && (
           <ChartsAxisHighlightPath
-            d={`M ${xScale(value)! - (xScale.step() - xScale.bandwidth()) / 2} ${
-              top
-            } l ${xScale.step()} 0 l 0 ${height} l ${-xScale.step()} 0 Z`}
+            d={`M ${bandStart} ${top} l ${bandSize} 0 l 0 ${height} l ${-bandSize} 0 Z`}
             className={classes.root}
             ownerState={{ axisHighlight: 'band' }}
           />

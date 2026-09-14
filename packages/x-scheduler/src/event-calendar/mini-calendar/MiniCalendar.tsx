@@ -16,8 +16,11 @@ import {
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
 import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
-import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import { MiniCalendarProps } from './MiniCalendar.types';
+import type {
+  SchedulerProcessedDate,
+  TemporalSupportedObject,
+} from '@mui/x-scheduler-internals/models';
+import type { MiniCalendarProps } from './MiniCalendar.types';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 import { formatMonthFullLetterAndYear } from '../../internals/utils/date-utils';
 

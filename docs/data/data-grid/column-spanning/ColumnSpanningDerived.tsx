@@ -13,13 +13,7 @@ const slotTimesLookup = {
 };
 
 type Subject =
-  | 'Maths'
-  | 'English'
-  | 'Lab'
-  | 'Chemistry'
-  | 'Physics'
-  | 'Music'
-  | 'Dance';
+  'Maths' | 'English' | 'Lab' | 'Chemistry' | 'Physics' | 'Music' | 'Dance';
 
 type Row = { id: number; day: string; slots: Array<Subject | ''> };
 
@@ -94,6 +88,7 @@ const slotColumnCommonFields: Partial<GridColDef> = {
 const columns: GridColDef<Row>[] = [
   {
     field: 'day',
+    rowHeader: true,
     headerName: 'Day',
   },
   {

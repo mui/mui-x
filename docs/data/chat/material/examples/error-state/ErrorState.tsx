@@ -6,7 +6,7 @@ import {
   minimalConversation,
   minimalMessages,
   demoUsers,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const demoMembers = [demoUsers.you, demoUsers.agent];

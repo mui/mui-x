@@ -109,6 +109,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
     className,
     classes: classesProp,
     sx,
+    ...other
   } = props;
 
   const translations = usePickerTranslations();
@@ -179,6 +180,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
 
   return (
     <DateTimeRangePickerTabsRoot
+      {...other}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
       sx={sx}

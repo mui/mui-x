@@ -14,12 +14,7 @@ import {
 } from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 type ClassKey =
-  | 'root'
-  | 'icon'
-  | 'message'
-  | 'actions'
-  | 'confirmButton'
-  | 'cancelButton';
+  'root' | 'icon' | 'message' | 'actions' | 'confirmButton' | 'cancelButton';
 
 const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
   { name: 'root', description: 'The confirmation card.' },
@@ -100,7 +95,7 @@ export default function ChatConfirmationPlayground() {
             cancelLabel={cancelLabel}
             onConfirm={() => setResolution('confirm')}
             onCancel={() => setResolution('cancel')}
-            sx={cardSx as any}
+            sx={cardSx}
           />
           <Snackbar
             open={resolution !== null}

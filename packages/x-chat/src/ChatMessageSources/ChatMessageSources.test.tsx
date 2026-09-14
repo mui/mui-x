@@ -5,6 +5,8 @@ import { ChatMessageSources } from './ChatMessageSources';
 import { ChatMessageSource } from './ChatMessageSource';
 
 const { render } = createRenderer();
+// eslint-disable-next-line no-script-url
+const unsafeUrl = 'javascript:alert(document.domain)';
 
 describe('ChatMessageSources', () => {
   it('renders default "Sources" label', () => {
@@ -40,6 +42,12 @@ describe('ChatMessageSource', () => {
     const link = screen.getByRole('link');
     expect(link).not.toBe(null);
     expect(link.getAttribute('href')).toBe('https://example.com');
+  });
+
+  it('does not expose an unsafe URL as the link target', () => {
+    render(<ChatMessageSource href={unsafeUrl} title="Example" />);
+
+    expect(screen.getByText('Example').closest('a')!.getAttribute('href')).toBe(null);
   });
 
   it('renders title as link text', () => {

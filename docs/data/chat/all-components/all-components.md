@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # All components
 
-<p class="description">Browse every component shipped with the Chat package.</p>
+<p class="description">Browse the components that make up the MUI X Chat UI, grouped by the part of the surface they build.</p>
 
 Start with `ChatBox` for a complete drop-in surface, or compose `ChatConversation`, `ChatMessageList`, and `ChatComposer` yourself; everything below the compound level is a slot you can replace. New to the package? Read the [Overview](/x/react-chat/) and [Quickstart](/x/react-chat/quickstart/), then see [Structure](/x/react-chat/customization/structure/) for slots and composition. All components implement the shared keyboard-navigation and screen-reader model—see [Accessibility](/x/react-chat/accessibility/).
 

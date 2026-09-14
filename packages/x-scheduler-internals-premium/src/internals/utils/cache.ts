@@ -1,4 +1,4 @@
-import { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { checkSchedulerEventIdIsValid } from '@mui/x-scheduler-internals/internals';
 
 type SchedulerDataSourceCacheConfig<TEvent extends object> = {

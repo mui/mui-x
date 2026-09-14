@@ -33,6 +33,7 @@ const COMPONENT_API_PAGES = [
 
   'src/components/panel/filterPanel/GridFilterForm.tsx',
   'src/components/panel/filterPanel/GridFilterPanel.tsx',
+  'src/components/panel/filterPanel/GridFilterPanelBase.tsx',
   'src/components/toolbar/GridToolbarQuickFilter.tsx',
 
   'src/components/toolbarV8/Toolbar.tsx',

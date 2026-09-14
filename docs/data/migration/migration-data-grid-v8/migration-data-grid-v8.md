@@ -109,6 +109,19 @@ npx @mui/x-codemod@latest v9.0.0/data-grid/remove-stabilized-experimentalFeature
    />
   ```
 
+### Accessibility
+
+- The actions cell no longer sets the `menu` role on its container. The always-visible action buttons no longer have the `menuitem` role. They are plain buttons inside the `gridcell` element. The popup opened by the "more actions" button keeps its `menu` and `menuitem` roles.
+
+  If you have tests that query the visible actions by role, update them accordingly:
+
+  ```diff
+  -screen.getByRole('menuitem', { name: 'Delete' });
+  +screen.getByRole('button', { name: 'Delete' });
+  ```
+
+- Arrow keys pressed while the actions popup is open no longer move the roving focus between the buttons behind it. The previous behavior was a bug: the popup bubbled its keydown events to the cell container.
+
 ### DOM changes
 
 - The `.MuiDataGrid-virtualScrollerContent` node has been moved to be a direct child of `.MuiDataGrid-virtualScroller`. If you were using it to target the rows container, you can switch to `.MuiDataGrid-virtualScrollerRenderZone`.

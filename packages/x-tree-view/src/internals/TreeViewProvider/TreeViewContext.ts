@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { TreeViewAnyStore } from '../models';
-import { TreeViewContextValue } from './TreeViewProvider.types';
+import type { TreeViewAnyStore } from '../models';
+import type { TreeViewContextValue } from './TreeViewProvider.types';
 
 /**
  * @ignore - internal component.

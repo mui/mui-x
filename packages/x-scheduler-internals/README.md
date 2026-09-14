@@ -11,15 +11,6 @@ Install the package in your project directory with:
 npm install @mui/x-scheduler-internals
 ```
 
-This component has the following peer dependencies that you need to install as well.
-
-```json
-"peerDependencies": {
-  "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
-  "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
-},
-```
-
 ## Documentation
 
 Visit [https://mui.com/x/react-scheduler/](https://mui.com/x/react-scheduler/) to view the full documentation.

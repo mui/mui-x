@@ -1,4 +1,5 @@
 import type * as React from 'react';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { FunnelSectionProps } from './FunnelSection';
 import type { FunnelSectionLabelProps } from './FunnelSectionLabel';
 import type {
@@ -22,8 +23,10 @@ export interface FunnelPlotSlots {
 }
 
 export interface FunnelPlotSlotProps {
-  funnelSection?: Partial<FunnelSectionProps> & FunnelSectionPropsOverrides;
-  funnelSectionLabel?: Partial<FunnelSectionLabelProps> & FunnelSectionLabelPropsOverrides;
+  funnelSection?: WithDataAttributes<Partial<FunnelSectionProps> & FunnelSectionPropsOverrides>;
+  funnelSectionLabel?: WithDataAttributes<
+    Partial<FunnelSectionLabelProps> & FunnelSectionLabelPropsOverrides
+  >;
 }
 
 export interface FunnelPlotSlotExtension {

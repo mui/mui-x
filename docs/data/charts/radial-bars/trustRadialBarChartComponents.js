@@ -3,8 +3,8 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useDrawingArea, useRotationAxis, useRadiusAxis } from '@mui/x-charts/hooks';
 import { ChartsTooltipContainer, useAxesTooltip } from '@mui/x-charts/ChartsTooltip';
+import { usePolarGeometry } from '@mui/x-charts/hooks';
 import {
   euAverageTrust2025,
   europeanYouthTrust,
@@ -84,7 +84,8 @@ export function PreviousTrustData({ currentColor, previousColor }) {
     return null;
   }
 
-  const { cx, cy, angleScale, bandwidth, radiusScale, point } = geometry;
+  const { cx, cy, angleScale, radiusScale, point } = geometry;
+  const bandwidth = angleScale.bandwidth();
 
   return (
     <g transform={`translate(${cx} ${cy})`}>
@@ -258,28 +259,4 @@ export function EuAverageRing() {
       </text>
     </g>
   );
-}
-
-/**
- * Reads the polar scales through chart hooks and exposes helpers to place
- * custom SVG relative to the chart center. Returns `null` before the scales
- * are ready.
- */
-export function usePolarGeometry() {
-  const { left, top, width, height } = useDrawingArea();
-  const rotationAxis = useRotationAxis();
-  const radiusAxis = useRadiusAxis();
-
-  if (!rotationAxis || !radiusAxis) {
-    return null;
-  }
-
-  return {
-    cx: left + width / 2,
-    cy: top + height / 2,
-    angleScale: rotationAxis.scale,
-    bandwidth: rotationAxis.scale.bandwidth(),
-    radiusScale: radiusAxis.scale,
-    point: (radius, angle) => [radius * Math.sin(angle), -radius * Math.cos(angle)],
-  };
 }

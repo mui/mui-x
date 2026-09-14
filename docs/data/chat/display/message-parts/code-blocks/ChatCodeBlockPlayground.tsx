@@ -33,7 +33,7 @@ pnpm add @mui/material @emotion/react`,
 
 type Language = keyof typeof SAMPLES;
 
-type HighlighterChoice = 'none' | 'tokens' | 'rainbow';
+type HighlighterChoice = 'none' | 'tokens';
 
 // Simple demo "highlighter" — splits on whitespace and shades the tokens.
 function tokensHighlighter(code: string): React.ReactNode {
@@ -70,30 +70,12 @@ function tokensHighlighter(code: string): React.ReactNode {
   });
 }
 
-const RAINBOW_PALETTE = [
-  '#f87171',
-  '#fb923c',
-  '#fbbf24',
-  '#34d399',
-  '#60a5fa',
-  '#a78bfa',
-];
-
-function rainbowHighlighter(code: string): React.ReactNode {
-  return code.split('').map((char, i) => (
-    <span key={i} style={{ color: RAINBOW_PALETTE[i % RAINBOW_PALETTE.length] }}>
-      {char}
-    </span>
-  ));
-}
-
 const HIGHLIGHTERS: Record<
   HighlighterChoice,
   ((code: string, language: string) => React.ReactNode) | undefined
 > = {
   none: undefined,
   tokens: tokensHighlighter,
-  rainbow: rainbowHighlighter,
 };
 
 type ClassKey = 'root' | 'header' | 'languageLabel' | 'copyButton' | 'pre' | 'code';
@@ -142,7 +124,7 @@ export default function ChatCodeBlockPlayground() {
   return (
     <PlaygroundCard
       title="ChatCodeBlock"
-      description="Default markdown ``` block — divider border + caption font."
+      description="Standalone ChatCodeBlock — switch the language and plug in a syntax highlighter."
       previewMinHeight={260}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}
@@ -163,7 +145,6 @@ export default function ChatCodeBlockPlayground() {
             options={[
               { value: 'none', label: 'none (raw)' },
               { value: 'tokens', label: 'tokens (realistic reference)' },
-              { value: 'rainbow', label: 'rainbow (demo only)' },
             ]}
             onChange={setHighlighter}
             helperText="Hook to plug in Shiki/Prism/Highlight.js."
@@ -182,7 +163,7 @@ export default function ChatCodeBlockPlayground() {
           <ChatCodeBlock
             language={language}
             highlighter={HIGHLIGHTERS[highlighter]}
-            sx={blockSx as any}
+            sx={blockSx}
           >
             {code}
           </ChatCodeBlock>

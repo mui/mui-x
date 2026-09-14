@@ -59,7 +59,7 @@ Divider slot customizations only take effect while the feature is enabled. Witho
 
 The demo below enables the feature on a conversation spanning three days — a divider appears at each day boundary:
 
-{{"demo": "DateDividerThread.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "../../material/message-list/DateDividerFormat.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Customizing divider placement
 

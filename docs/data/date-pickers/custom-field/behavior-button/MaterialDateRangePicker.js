@@ -13,6 +13,8 @@ import {
 
 function ButtonDateRangeField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
+  // `slots`, `slotProps` and `inputRef` target the default text field, not a `<button>`.
+  const { slots, slotProps, inputRef, ...buttonProps } = forwardedProps;
 
   const pickerContext = usePickerContext();
   const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
@@ -32,7 +34,7 @@ function ButtonDateRangeField(props) {
 
   return (
     <Button
-      {...forwardedProps}
+      {...buttonProps}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       ref={handleRef}

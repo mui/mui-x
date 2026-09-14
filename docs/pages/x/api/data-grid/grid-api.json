@@ -93,7 +93,7 @@
       "required": true
     },
     "getColumn": {
-      "type": { "description": "(field: string) =&gt; GridStateColDef" },
+      "type": { "description": "(field: string) =&gt; GridStateColDef | undefined" },
       "required": true
     },
     "getColumnGroupPath": {
@@ -596,7 +596,9 @@
       "required": true
     },
     "updateRows": {
-      "type": { "description": "(updates: GridRowModelUpdate[]) =&gt; void" },
+      "type": {
+        "description": "(updates: Array&lt;GridRowModelUpdate | GridRowModelReplace&gt;) =&gt; void"
+      },
       "required": true
     },
     "upsertFilterItem": {

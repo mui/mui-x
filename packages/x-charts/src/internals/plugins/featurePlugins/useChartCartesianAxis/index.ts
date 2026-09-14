@@ -12,4 +12,6 @@ export { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
 export * from './computeAxisValue';
 export * from './createZoomLookup';
 export * from './zoom.types';
+export * from './sampling.selectors';
+export type * from './sampling.types';
 export { computeAxisAutoSize } from './computeAxisAutoSize';

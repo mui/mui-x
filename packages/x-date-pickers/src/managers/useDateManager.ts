@@ -56,10 +56,7 @@ function useApplyDefaultValuesToDateFieldInternalProps(
 }
 
 type SharedDateAndDateRangeValidationProps =
-  | 'disablePast'
-  | 'disableFuture'
-  | 'minDate'
-  | 'maxDate';
+  'disablePast' | 'disableFuture' | 'minDate' | 'maxDate';
 
 export function useApplyDefaultValuesToDateValidationProps(
   props: Pick<ExportedValidateDateProps, SharedDateAndDateRangeValidationProps>,

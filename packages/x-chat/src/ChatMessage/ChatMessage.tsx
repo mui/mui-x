@@ -2,30 +2,35 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import {
-  MessageRoot,
-  type ChatMessageStatus,
-  type ChatRole,
-  type ChatMessage as ChatMessageEntity,
-  type MessageRootProps,
-  type MessageGroupSlotProps,
-  useChatVariant,
-  useMessage,
+import type { SxProps, Theme } from '@mui/system';
+import { MessageRoot, useChatVariant, useMessage } from '@mui/x-chat-headless';
+import type {
+  ChatMessageStatus,
+  ChatRole,
+  ChatMessage as ChatMessageEntity,
+  MessageRootProps,
+  MessageGroupSlotProps,
 } from '@mui/x-chat-headless';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { mergeSlotProps, resolveSlotProps } from '../internals/mergeSlotProps';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
-import { ChatMessageError, type ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
-import { ChatMessageAvatar, type ChatMessageAvatarProps } from './ChatMessageAvatar';
-import { ChatMessageContent, type ChatMessageContentProps } from './ChatMessageContent';
-import { ChatMessageMeta, type ChatMessageMetaProps } from './ChatMessageMeta';
-import { ChatMessageInlineMeta, type ChatMessageInlineMetaProps } from './ChatMessageInlineMeta';
-import { ChatMessageActions, type ChatMessageActionsProps } from './ChatMessageActions';
-import {
-  ChatStreamingIndicator,
-  type ChatStreamingIndicatorProps,
-} from '../ChatIndicators/ChatStreamingIndicator';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import type { ChatMessageClasses } from './chatMessageClasses';
+import { ChatMessageError } from '../ChatMessageError/ChatMessageError';
+import type { ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
+import { ChatMessageAvatar } from './ChatMessageAvatar';
+import type { ChatMessageAvatarProps } from './ChatMessageAvatar';
+import { ChatMessageContent } from './ChatMessageContent';
+import type { ChatMessageContentProps } from './ChatMessageContent';
+import { ChatMessageMeta } from './ChatMessageMeta';
+import type { ChatMessageMetaProps } from './ChatMessageMeta';
+import { ChatMessageInlineMeta } from './ChatMessageInlineMeta';
+import type { ChatMessageInlineMetaProps } from './ChatMessageInlineMeta';
+import { ChatMessageActions } from './ChatMessageActions';
+import type { ChatMessageActionsProps } from './ChatMessageActions';
+import { ChatStreamingIndicator } from '../ChatIndicators/ChatStreamingIndicator';
+import type { ChatStreamingIndicatorProps } from '../ChatIndicators/ChatStreamingIndicator';
 
 const useThemeProps = createUseThemeProps('MuiChatMessage');
 
@@ -90,16 +95,18 @@ export interface ChatMessageActionsResolveContext {
 
 export interface ChatMessageSlotProps {
   root?: any;
-  avatar?: Partial<ChatMessageAvatarProps>;
-  content?: Partial<ChatMessageContentProps>;
-  meta?: Partial<ChatMessageMetaProps>;
-  inlineMeta?: Partial<ChatMessageInlineMetaProps>;
-  error?: Partial<ChatMessageErrorProps>;
+  avatar?: WithDataAttributes<Partial<ChatMessageAvatarProps>>;
+  content?: WithDataAttributes<Partial<ChatMessageContentProps>>;
+  meta?: WithDataAttributes<Partial<ChatMessageMetaProps>>;
+  inlineMeta?: WithDataAttributes<Partial<ChatMessageInlineMetaProps>>;
+  error?: WithDataAttributes<Partial<ChatMessageErrorProps>>;
   actions?:
-    | Partial<ChatMessageActionsProps>
-    | ((context: ChatMessageActionsResolveContext) => Partial<ChatMessageActionsProps>);
+    | WithDataAttributes<Partial<ChatMessageActionsProps>>
+    | ((
+        context: ChatMessageActionsResolveContext,
+      ) => WithDataAttributes<Partial<ChatMessageActionsProps>>);
   authorName?: MessageGroupSlotProps['authorName'];
-  streamingIndicator?: Partial<ChatStreamingIndicatorProps>;
+  streamingIndicator?: WithDataAttributes<Partial<ChatStreamingIndicatorProps>>;
 }
 
 export interface ChatMessageProps extends Omit<MessageRootProps, 'slots' | 'slotProps'> {
@@ -171,21 +178,22 @@ const ChatMessageStyled = styled('div', {
       ...(isGrouped
         ? {
             gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
-            gridTemplateRows: 'auto auto',
-            gridTemplateAreas: '". content meta" ". error ."',
+            gridTemplateRows: 'auto auto auto',
+            gridTemplateAreas: '". content meta" ". error ." ". actions ."',
           }
         : {
             gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
-            gridTemplateRows: 'auto auto auto',
-            gridTemplateAreas: '"avatar authorName meta" "avatar content ." ". error ."',
+            gridTemplateRows: 'auto auto auto auto',
+            gridTemplateAreas:
+              '"avatar authorName meta" "avatar content ." ". error ." ". actions ."',
           }),
       // Avatar-less layout: collapse the reserved avatar grid track so the bubble
       // and meta lane reclaim the row. Applies to both grouped and first-in-group.
       '&.MuiChatMessage-noAvatar': {
         gridTemplateColumns: '1fr auto',
         gridTemplateAreas: isGrouped
-          ? '"content meta" "error ."'
-          : '"authorName meta" "content ." "error ."',
+          ? '"content meta" "error ." "actions ."'
+          : '"authorName meta" "content ." "error ." "actions ."',
       },
     };
   }
@@ -317,7 +325,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
         status: message?.status,
         streaming: message?.status === 'streaming',
       };
-      const resolvedActionsProps = resolveSlotProps(
+      const resolvedActionsProps = resolveComponentProps(
         slotProps?.actions ?? {},
         actionsContext,
       ) as Partial<ChatMessageActionsProps>;
@@ -334,7 +342,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
               (StreamingIndicatorSlot ?? ChatStreamingIndicator) as React.ElementType,
               {
                 message,
-                ...resolveSlotProps(slotProps?.streamingIndicator ?? {}, actionsContext),
+                ...resolveComponentProps(slotProps?.streamingIndicator ?? {}, actionsContext),
               },
             )
           : undefined;

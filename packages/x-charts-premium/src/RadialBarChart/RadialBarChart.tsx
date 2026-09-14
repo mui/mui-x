@@ -203,7 +203,16 @@ RadialBarChart.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * Option to display a radial grid in the background.
    */
@@ -335,7 +344,7 @@ RadialBarChart.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
@@ -350,6 +359,13 @@ RadialBarChart.propTypes /* remove-proptypes */ = {
    * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The callback fired when an item is clicked.
+   *
+   * @param {ChartsActivationEvent<HTMLDivElement>} event The click event.
+   * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
+   */
+  onItemClick: PropTypes.func,
   /**
    * The callback fired when the tooltip item changes.
    *

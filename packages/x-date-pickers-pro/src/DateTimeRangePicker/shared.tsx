@@ -1,5 +1,6 @@
 import type * as React from 'react';
 import type { DefaultizedProps } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { useThemeProps } from '@mui/material/styles';
 import type { LocalizedComponent } from '@mui/x-date-pickers/locales';
 import type {
@@ -66,11 +67,11 @@ export interface BaseDateTimeRangePickerSlotProps
   /**
    * Props passed down to the tabs component.
    */
-  tabs?: ExportedDateTimeRangePickerTabsProps;
+  tabs?: WithDataAttributes<ExportedDateTimeRangePickerTabsProps>;
   /**
    * Props passed down to the toolbar component.
    */
-  toolbar?: ExportedDateTimeRangePickerToolbarProps;
+  toolbar?: WithDataAttributes<ExportedDateTimeRangePickerToolbarProps>;
 }
 
 type DateTimeRangePickerRenderers<TView extends DateOrTimeViewWithMeridiem> =

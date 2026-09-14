@@ -44,14 +44,7 @@ const series = [
 ];
 
 type ChartType =
-  | 'scatter'
-  | 'line'
-  | 'bar'
-  | 'pie'
-  | 'heatmap'
-  | 'funnel'
-  | 'radar'
-  | 'sankey';
+  'scatter' | 'line' | 'bar' | 'pie' | 'heatmap' | 'funnel' | 'radar' | 'sankey';
 
 export default function PrintChart() {
   const [chartType, setChartType] = React.useState<ChartType>('scatter');

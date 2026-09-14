@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { stub, spy } from 'sinon';
-import type { SinonStub } from 'sinon';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { RefObject } from '@mui/x-internals/types';
-import { spyApi, getCell, grid } from 'test/utils/helperFn';
+import { spyApi, getCell, grid, microtasks } from 'test/utils/helperFn';
 import { createRenderer, act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DataGridPremium, useGridApiRef, gridClasses } from '@mui/x-data-grid-premium';
 import type { DataGridPremiumProps, GridApi, GridColDef } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM, isOSX } from 'test/utils/skipIf';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import type { MockInstance } from 'vitest';
 
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
@@ -123,6 +123,166 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
   });
 
+  // https://github.com/mui/mui-x/issues/23388
+  describe('Ctrl + A', () => {
+    const fullSelectionModel = {
+      '0': { id: true, currencyPair: true, price1M: true },
+      '1': { id: true, currencyPair: true, price1M: true },
+      '2': { id: true, currencyPair: true, price1M: true },
+      '3': { id: true, currencyPair: true, price1M: true },
+    };
+
+    it('should select all visible cells', async () => {
+      const { user } = render(<TestDataGridSelection />);
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(apiRef.current?.getCellSelectionModel()).to.deep.equal(fullSelectionModel);
+    });
+
+    it('should call onCellSelectionModelChange', async () => {
+      const onCellSelectionModelChange = vi.fn();
+      const { user } = render(
+        <TestDataGridSelection onCellSelectionModelChange={onCellSelectionModelChange} />,
+      );
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      onCellSelectionModelChange.mockClear();
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(onCellSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onCellSelectionModelChange.mock.lastCall?.[0]).to.deep.equal(fullSelectionModel);
+    });
+
+    it('should only select the cells of the current page', async () => {
+      const { user } = render(
+        <TestDataGridSelection
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 3 }, rowCount: 4 } }}
+          rowLength={30}
+          pagination
+          pageSizeOptions={[3]}
+          hideFooter={false}
+        />,
+      );
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(Object.keys(apiRef.current!.getCellSelectionModel())).to.deep.equal(['0', '1', '2']);
+    });
+
+    it('should select cells instead of rows when row selection is enabled', async () => {
+      const { user } = render(
+        <TestDataGridSelection rowSelection checkboxSelection disableRowSelectionOnClick />,
+      );
+      const cell = getCell(0, 1);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(apiRef.current?.getSelectedRows().size).to.equal(0);
+      const cellSelectionModel = apiRef.current!.getCellSelectionModel();
+      expect(Object.keys(cellSelectionModel)).to.have.length(4);
+      expect(cellSelectionModel['0']).to.deep.equal({
+        id: true,
+        currencyPair: true,
+        price1M: true,
+      });
+    });
+
+    it('should not select the row reordering cells', async () => {
+      const { user } = render(<TestDataGridSelection rowReordering />);
+      const cell = getCell(0, 1);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      const cellSelectionModel = apiRef.current!.getCellSelectionModel();
+      expect(Object.keys(cellSelectionModel)).to.have.length(4);
+      expect(cellSelectionModel['0']).to.deep.equal({
+        id: true,
+        currencyPair: true,
+        price1M: true,
+      });
+    });
+
+    it('should not select skeleton rows when rows are loaded lazily', async () => {
+      const { user } = render(
+        <TestDataGridSelection
+          sortingMode="server"
+          filterMode="server"
+          paginationMode="server"
+          rowsLoadingMode="server"
+          rowCount={10}
+        />,
+      );
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(Object.keys(apiRef.current!.getCellSelectionModel())).to.deep.equal([
+        '0',
+        '1',
+        '2',
+        '3',
+      ]);
+    });
+
+    it('should not select group footer rows', async () => {
+      const columns: GridColDef[] = [
+        { field: 'id' },
+        { field: 'category' },
+        { field: 'value', type: 'number' },
+      ];
+      const rows = [
+        { id: 0, category: 'Cat A', value: 5 },
+        { id: 1, category: 'Cat A', value: 10 },
+        { id: 2, category: 'Cat B', value: 15 },
+      ];
+      const { user } = render(
+        <TestDataGridSelection
+          columns={columns}
+          rows={rows}
+          initialState={{
+            rowGrouping: { model: ['category'] },
+            aggregation: { model: { value: 'sum' } },
+          }}
+          getAggregationPosition={() => 'footer'}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      const cell = getCell(0, 1);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(Object.keys(apiRef.current!.getCellSelectionModel())).to.deep.equal([
+        '0',
+        '1',
+        '2',
+        'auto-generated-row-category/Cat A',
+        'auto-generated-row-category/Cat B',
+      ]);
+    });
+
+    it('should reset the selection when a cell is clicked afterwards', async () => {
+      const { user } = render(<TestDataGridSelection />);
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(apiRef.current?.getCellSelectionModel()).to.deep.equal(fullSelectionModel);
+      await user.click(getCell(1, 1));
+      expect(apiRef.current?.getCellSelectionModel()).to.deep.equal({
+        '1': { currencyPair: true },
+      });
+    });
+
+    it('should not change the selection when the cell is in edit mode', async () => {
+      const columns = [{ field: 'id' }, { field: 'name', editable: true }, { field: 'age' }];
+      const rows = [
+        { id: 0, name: 'Alice', age: 30 },
+        { id: 1, name: 'Bob', age: 25 },
+      ];
+      const { user } = render(<TestDataGridSelection columns={columns} rows={rows} />);
+      const cell = getCell(0, 1);
+      await user.dblClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(apiRef.current?.getCellSelectionModel()).to.deep.equal({ '0': { name: true } });
+    });
+  });
+
   describe('Shift + click', () => {
     it('should select all cells between two cells', async () => {
       const { user } = render(<TestDataGridSelection />);
@@ -146,8 +306,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       await user.keyboard('{Shift>}');
       await user.click(getCell(2, 1));
       await user.keyboard('{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({
+      expect(spiedSelectCellsBetweenRange.mock.lastCall?.[0]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall?.[1]).to.deep.equal({
         id: 2,
         field: 'currencyPair',
       });
@@ -252,8 +412,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       cell.focus();
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 1, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall?.[0]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall?.[1]).to.deep.equal({ id: 1, field: 'id' });
     });
 
     it('should call selectCellRange when ArrowUp is pressed', async () => {
@@ -265,8 +425,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowUp}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 1, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall?.[0]).to.deep.equal({ id: 1, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall?.[1]).to.deep.equal({ id: 0, field: 'id' });
     });
 
     it('should call selectCellRange when ArrowLeft is pressed', async () => {
@@ -276,11 +436,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
       cell.focus();
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowLeft}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({
+      expect(spiedSelectCellsBetweenRange.mock.lastCall?.[0]).to.deep.equal({
         id: 0,
         field: 'currencyPair',
       });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall?.[1]).to.deep.equal({ id: 0, field: 'id' });
     });
 
     it('should call selectCellRange when ArrowRight is pressed', async () => {
@@ -290,8 +450,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       cell.focus();
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({
+      expect(spiedSelectCellsBetweenRange.mock.lastCall?.[0]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall?.[1]).to.deep.equal({
         id: 0,
         field: 'currencyPair',
       });
@@ -309,8 +469,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
   describe('Fill down', () => {
     it('should emit clipboard paste events once for a multi-column Ctrl+D fill', async () => {
-      const onClipboardPasteStart = spy();
-      const onClipboardPasteEnd = spy();
+      const onClipboardPasteStart = vi.fn();
+      const onClipboardPasteEnd = vi.fn();
       const columns: GridColDef[] = [
         { field: 'id' },
         { field: 'name', editable: true },
@@ -340,11 +500,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
       fireEvent.keyDown(startCell, { key: 'd', keyCode: 68, ctrlKey: true });
 
       await waitFor(() => {
-        expect(onClipboardPasteStart.callCount).to.equal(1);
-        expect(onClipboardPasteEnd.callCount).to.equal(1);
+        expect(onClipboardPasteStart.mock.calls.length).to.equal(1);
+        expect(onClipboardPasteEnd.mock.calls.length).to.equal(1);
       });
 
-      expect(onClipboardPasteStart.lastCall.args[0]).to.deep.equal({
+      expect(onClipboardPasteStart.mock.lastCall?.[0]).to.deep.equal({
         data: [['Keyboard', '10']],
       });
       expect(getCell(1, 1)).to.have.text('Keyboard');
@@ -387,7 +547,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
   describe('onCellSelectionModelChange', () => {
     it('should update the selection state when a cell is selected', async () => {
-      const onCellSelectionModelChange = spy();
+      const onCellSelectionModelChange = vi.fn();
       const { user } = render(
         <TestDataGridSelection
           cellSelectionModel={{}}
@@ -396,13 +556,13 @@ describe('<DataGridPremium /> - Cell selection', () => {
       );
       await user.click(getCell(0, 0));
 
-      expect(onCellSelectionModelChange.callCount).to.equal(1);
-      expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({ '0': { id: true } });
+      expect(onCellSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onCellSelectionModelChange.mock.lastCall?.[0]).to.deep.equal({ '0': { id: true } });
     });
 
     // Context: https://github.com/mui/mui-x/issues/14184
     it('should add the new cell selection range to the existing state', async () => {
-      const onCellSelectionModelChange = spy();
+      const onCellSelectionModelChange = vi.fn();
       const { user } = render(
         <TestDataGridSelection
           cellSelectionModel={{ '0': { id: true } }}
@@ -422,7 +582,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       ]);
       await user.keyboard(isOSX ? '{/Meta}' : '{/Control}');
 
-      expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({
+      expect(onCellSelectionModelChange.mock.lastCall?.[0]).to.deep.equal({
         '0': { id: true },
         '2': { id: true },
         '3': { id: true },
@@ -497,6 +657,61 @@ describe('<DataGridPremium /> - Cell selection', () => {
         expect(getCell(2, 1)).to.have.class('Mui-selected');
         expect(getCell(2, 2)).to.have.class('Mui-selected');
       });
+
+      it('should not select cells of non-selectable columns inside the range', async () => {
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          { field: 'actions', type: 'actions', getActions: () => [] },
+          { field: 'name' },
+        ];
+        const rows = [
+          { id: 0, name: 'Alice' },
+          { id: 1, name: 'Bob' },
+        ];
+        render(<TestDataGridSelection columns={columns} rows={rows} />);
+        act(() =>
+          apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 1, field: 'name' }),
+        );
+        expect(apiRef.current?.getCellSelectionModel()).to.deep.equal({
+          '0': { id: true, name: true },
+          '1': { id: true, name: true },
+        });
+      });
+
+      it('should not select cells of group footer rows inside the range', async () => {
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          { field: 'category' },
+          { field: 'value', type: 'number' },
+        ];
+        const rows = [
+          { id: 0, category: 'Cat A', value: 5 },
+          { id: 1, category: 'Cat A', value: 10 },
+          { id: 2, category: 'Cat B', value: 15 },
+        ];
+        render(
+          <TestDataGridSelection
+            columns={columns}
+            rows={rows}
+            initialState={{
+              rowGrouping: { model: ['category'] },
+              aggregation: { model: { value: 'sum' } },
+            }}
+            getAggregationPosition={() => 'footer'}
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+        await microtasks();
+        await act(() =>
+          apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'value' }),
+        );
+        expect(Object.keys(apiRef.current!.getCellSelectionModel())).to.deep.equal([
+          '0',
+          '1',
+          '2',
+          'auto-generated-row-category/Cat B',
+        ]);
+      });
     });
 
     describe('getSelectedCellsAsArray', () => {
@@ -516,12 +731,14 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
   // JSDOM doesn't support scroll events
   describe.skipIf(isJSDOM)('Auto-scroll', () => {
+    let rafStub: MockInstance;
+
     beforeEach(() => {
-      stub(window, 'requestAnimationFrame').callsFake(() => 0);
+      rafStub = vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 0);
     });
 
     afterEach(() => {
-      (window.requestAnimationFrame as SinonStub).restore();
+      rafStub.mockRestore();
     });
 
     it('should auto-scroll when the mouse approaches the bottom edge', async () => {
@@ -726,7 +943,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
     describe('Ctrl+D - Fill down', () => {
       it('should fill down from focused cell when no selection exists', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -746,11 +963,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
         await waitFor(() => {
           expect(getCell(2, 1).textContent).to.equal('Bob');
         });
-        expect(processRowUpdateSpy.callCount).to.equal(1);
+        expect(processRowUpdateSpy.mock.calls.length).to.equal(1);
       });
 
       it('should fill the cell below with the selected cell value', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -767,11 +984,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
         await waitFor(() => {
           expect(getCell(1, 1).textContent).to.equal('Alice');
         });
-        expect(processRowUpdateSpy.callCount).to.equal(1);
+        expect(processRowUpdateSpy.mock.calls.length).to.equal(1);
       });
 
       it('should move selection to the filled cell after single-cell fill', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -793,7 +1010,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
 
       it('should not fill if the column is not editable', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -807,12 +1024,12 @@ describe('<DataGridPremium /> - Cell selection', () => {
         await user.click(cell);
         fireEvent.keyDown(cell, { key: 'd', keyCode: 68, ctrlKey: true });
 
-        expect(processRowUpdateSpy.callCount).to.equal(0);
+        expect(processRowUpdateSpy.mock.calls.length).to.equal(0);
         expect(getCell(1, 0).textContent).to.equal('1');
       });
 
       it('should not fill if the cell is in the last visible row', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -826,11 +1043,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
         await user.click(cell);
         fireEvent.keyDown(cell, { key: 'd', keyCode: 68, ctrlKey: true });
 
-        expect(processRowUpdateSpy.callCount).to.equal(0);
+        expect(processRowUpdateSpy.mock.calls.length).to.equal(0);
       });
 
       it('should fill all rows below the top row when multiple cells are selected', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -854,11 +1071,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
           expect(getCell(1, 1).textContent).to.equal('Alice');
         });
         expect(getCell(2, 1).textContent).to.equal('Alice');
-        expect(processRowUpdateSpy.callCount).to.equal(2);
+        expect(processRowUpdateSpy.mock.calls.length).to.equal(2);
       });
 
       it('should skip non-editable columns when filling with Ctrl+D', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -886,7 +1103,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
 
       it('should fill down when a single row with multiple columns is selected', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -910,11 +1127,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
           expect(getCell(1, 1).textContent).to.equal('Alice');
         });
         expect(getCell(1, 2).textContent).to.equal('10');
-        expect(processRowUpdateSpy.callCount).to.equal(1);
+        expect(processRowUpdateSpy.mock.calls.length).to.equal(1);
       });
 
       it('should skip non-editable columns when filling single-row multi-column with Ctrl+D', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -944,7 +1161,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
     describe('Ctrl+R - Fill right', () => {
       it('should fill the cell to the right with the selected cell value', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -962,11 +1179,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
         await waitFor(() => {
           expect(getCell(0, 3).textContent).to.equal('10');
         });
-        expect(processRowUpdateSpy.callCount).to.equal(1);
+        expect(processRowUpdateSpy.mock.calls.length).to.equal(1);
       });
 
       it('should move selection to the filled cell after single-cell fill right', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -989,7 +1206,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
 
       it('should not fill right if the target column is not editable', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -1004,12 +1221,12 @@ describe('<DataGridPremium /> - Cell selection', () => {
         await user.click(cell);
         fireEvent.keyDown(cell, { key: 'r', keyCode: 82, ctrlKey: true });
 
-        expect(processRowUpdateSpy.callCount).to.equal(0);
+        expect(processRowUpdateSpy.mock.calls.length).to.equal(0);
         expect(getCell(0, 4).textContent).to.equal('x');
       });
 
       it('should fill all columns to the right of the leftmost column when multiple cells are selected', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -1035,7 +1252,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
 
       it('should fill right when a single column with multiple rows is selected', async () => {
-        const processRowUpdateSpy = spy((newRow) => newRow);
+        const processRowUpdateSpy = vi.fn((newRow) => newRow);
         const { user } = render(
           <TestDataGridSelection
             columns={fillColumns}
@@ -1106,7 +1323,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
       describe('Vertical fill', () => {
         it('should fill down when dragging the fill handle downward', async () => {
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={fillColumns}
@@ -1128,11 +1345,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
             expect(getCell(1, 1).textContent).to.equal('Alice');
           });
           expect(getCell(2, 1).textContent).to.equal('Alice');
-          expect(processRowUpdateSpy.callCount).to.equal(2);
+          expect(processRowUpdateSpy.mock.calls.length).to.equal(2);
         });
 
         it('should start fill drag from the bottom-left corner in RTL', async () => {
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = renderRtl(
             <TestDataGridSelection
               columns={fillColumns}
@@ -1154,11 +1371,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
             expect(getCell(1, 1).textContent).to.equal('Alice');
           });
           expect(getCell(2, 1).textContent).to.equal('Alice');
-          expect(processRowUpdateSpy.callCount).to.equal(2);
+          expect(processRowUpdateSpy.mock.calls.length).to.equal(2);
         });
 
         it('should cycle source values when filling with multiple source rows', async () => {
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={fillColumns}
@@ -1191,7 +1408,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
         });
 
         it('should extend selection to include filled cells', async () => {
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={fillColumns}
@@ -1218,7 +1435,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
         });
 
         it('should fill multiple columns simultaneously', async () => {
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={fillColumns}
@@ -1252,7 +1469,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
       describe('Horizontal fill', () => {
         it('should fill right when dragging the fill handle to the right', async () => {
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={fillColumns}
@@ -1277,7 +1494,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
         });
 
         it('should only fill selected rows when horizontal filling with gaps', async () => {
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={fillColumns}
@@ -1305,12 +1522,12 @@ describe('<DataGridPremium /> - Cell selection', () => {
           });
           expect(getCell(2, 3).textContent).to.equal('30');
           // Row 1 should NOT be filled (it was not selected)
-          expect(processRowUpdateSpy.callCount).to.equal(2);
+          expect(processRowUpdateSpy.mock.calls.length).to.equal(2);
           expect(getCell(1, 3).textContent).to.equal('B');
         });
 
         it('should map source columns to target columns by offset', async () => {
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={fillColumns}
@@ -1342,7 +1559,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
       describe('Fill preview', () => {
         it('should remove fill preview classes after mouse release', async () => {
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={fillColumns}
@@ -1374,7 +1591,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
       describe('Non-editable columns', () => {
         it('should not update non-editable columns during fill', async () => {
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={fillColumns}
@@ -1410,7 +1627,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
       describe('processRowUpdate integration', () => {
         it('should call processRowUpdate for each affected row', async () => {
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={fillColumns}
@@ -1429,20 +1646,20 @@ describe('<DataGridPremium /> - Cell selection', () => {
           await simulateFillDrag(handleCell, getCell(2, 1));
 
           await waitFor(() => {
-            expect(processRowUpdateSpy.callCount).to.equal(2);
+            expect(processRowUpdateSpy.mock.calls.length).to.equal(2);
           });
           // First call: row 1
-          expect(processRowUpdateSpy.args[0][0].name).to.equal('Alice');
-          expect((processRowUpdateSpy.args[0] as any)[1].name).to.equal('Bob');
+          expect(processRowUpdateSpy.mock.calls[0][0].name).to.equal('Alice');
+          expect((processRowUpdateSpy.mock.calls[0] as any)[1].name).to.equal('Bob');
           // Second call: row 2
-          expect(processRowUpdateSpy.args[1][0].name).to.equal('Alice');
-          expect((processRowUpdateSpy.args[1] as any)[1].name).to.equal('Charlie');
+          expect(processRowUpdateSpy.mock.calls[1][0].name).to.equal('Alice');
+          expect((processRowUpdateSpy.mock.calls[1] as any)[1].name).to.equal('Charlie');
         });
       });
 
       describe('pastedValueParser', () => {
         it('should use pastedValueParser when filling a number column', async () => {
-          const pastedValueParserSpy = spy((value: string) => Number(value) || 0);
+          const pastedValueParserSpy = vi.fn((value: string) => Number(value) || 0);
           const columnsWithParser = [
             { field: 'id', type: 'number' as const },
             { field: 'name', editable: true },
@@ -1454,7 +1671,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
             },
             { field: 'category', editable: true },
           ];
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={columnsWithParser}
@@ -1473,13 +1690,13 @@ describe('<DataGridPremium /> - Cell selection', () => {
           await simulateFillDrag(handleCell, getCell(1, 2));
 
           await waitFor(() => {
-            expect(pastedValueParserSpy.callCount).to.be.greaterThan(0);
+            expect(pastedValueParserSpy.mock.calls.length).to.be.greaterThan(0);
           });
-          expect(processRowUpdateSpy.callCount).to.equal(1);
+          expect(processRowUpdateSpy.mock.calls.length).to.equal(1);
         });
 
         it('should use valueParser as fallback when pastedValueParser is not defined', async () => {
-          const valueParserSpy = spy((value: string) => Number(value) || 0);
+          const valueParserSpy = vi.fn((value: string) => Number(value) || 0);
           const columnsWithValueParser = [
             { field: 'id', type: 'number' as const },
             { field: 'name', editable: true },
@@ -1491,7 +1708,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
             },
             { field: 'category', editable: true },
           ];
-          const processRowUpdateSpy = spy((newRow) => newRow);
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
             <TestDataGridSelection
               columns={columnsWithValueParser}
@@ -1510,9 +1727,9 @@ describe('<DataGridPremium /> - Cell selection', () => {
           await simulateFillDrag(handleCell, getCell(1, 2));
 
           await waitFor(() => {
-            expect(valueParserSpy.callCount).to.be.greaterThan(0);
+            expect(valueParserSpy.mock.calls.length).to.be.greaterThan(0);
           });
-          expect(processRowUpdateSpy.callCount).to.equal(1);
+          expect(processRowUpdateSpy.mock.calls.length).to.equal(1);
         });
       });
     });

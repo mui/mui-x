@@ -163,17 +163,20 @@ export function AggregationSelect({
     [apiRef, getActualFieldName],
   );
 
-  const availableAggregationFunctions = React.useMemo(
-    () => [
+  const availableAggregationFunctions = React.useMemo(() => {
+    const column = colDef(field);
+
+    return [
       ...(pivotActive ? [] : [AGGREGATION_FUNCTION_NONE]),
-      ...getAvailableAggregationFunctions({
-        aggregationFunctions: rootProps.aggregationFunctions,
-        colDef: colDef(field),
-        isDataSource: !!rootProps.dataSource,
-      }),
-    ],
-    [colDef, field, pivotActive, rootProps.aggregationFunctions, rootProps.dataSource],
-  );
+      ...(column
+        ? getAvailableAggregationFunctions({
+            aggregationFunctions: rootProps.aggregationFunctions,
+            colDef: column,
+            isDataSource: !!rootProps.dataSource,
+          })
+        : []),
+    ];
+  }, [colDef, field, pivotActive, rootProps.aggregationFunctions, rootProps.dataSource]);
 
   const handleClick = React.useCallback(
     (func: string) => {

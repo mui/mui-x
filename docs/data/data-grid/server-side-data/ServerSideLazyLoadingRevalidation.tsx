@@ -159,7 +159,7 @@ function FlashOnChange({
 
 const columns: GridColDef<StockRow>[] = [
   { field: 'symbol', headerName: 'Symbol', width: 100 },
-  { field: 'name', headerName: 'Company', flex: 1, minWidth: 180 },
+  { field: 'name', headerName: 'Company', flex: 1, minWidth: 180, rowHeader: true },
   {
     field: 'price',
     headerName: 'Price',

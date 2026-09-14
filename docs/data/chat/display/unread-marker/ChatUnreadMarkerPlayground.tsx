@@ -113,7 +113,7 @@ export default function ChatUnreadMarkerPlayground() {
                   <ChatUnreadMarker
                     messageId={message.id}
                     label={label || undefined}
-                    sx={markerSx as any}
+                    sx={markerSx}
                   />
                 ) : null}
                 <MessageBubble messageId={message.id} />

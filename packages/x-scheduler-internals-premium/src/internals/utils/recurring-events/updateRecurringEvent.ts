@@ -1,5 +1,5 @@
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import {
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type {
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
   RecurringEventScope,
@@ -62,6 +62,7 @@ export function updateRecurringEvent(
  * Applies a "this and following" update to a recurring series by splitting it into:
  * - the original series truncated up to the day before the edited occurrence, and
  * - a new series starting at the edited occurrence with the requested changes.
+ * Expects `occurrenceStart` and the dates in `changes` labeled in the event's data timezone.
  * @returns The updated list of events with the split applied.
  */
 export function applyRecurringUpdateFollowing(
@@ -149,6 +150,7 @@ export function applyRecurringUpdateFollowing(
  *   events follow the new pattern.
  * - If the edited occurrence is the first of the series, updates DTSTART/DTEND directly.
  * - When only the time changes, merges the new time into the original date.
+ * Expects `occurrenceStart` and the dates in `changes` labeled in the event's data timezone.
  * @returns The updated list of events.
  */
 export function applyRecurringUpdateAll(
@@ -243,6 +245,7 @@ export function applyRecurringUpdateAll(
  * Applies a "only-this" update to a recurring series by:
  *  - creating a detached one-off event with the requested changes, and
  *  - adding an EXDATE to the original event to exclude the occurrence from the series.
+ * Expects `occurrenceStart` and the dates in `changes` labeled in the event's data timezone.
  * @returns The updated list of events.
  */
 export function applyRecurringUpdateOnlyThis(
@@ -254,22 +257,17 @@ export function applyRecurringUpdateOnlyThis(
   const originalModel = originalEvent.modelInBuiltInFormat;
   const dataTimezone = originalModel.timezone ?? 'default';
   const stringifiedChanges: Partial<SchedulerEventCreationProperties> = { ...changes };
-  if (changes.start != null) {
-    stringifiedChanges.start = dateToEventString(
-      adapter,
-      changes.start,
-      originalModel.start,
-      dataTimezone,
-    );
-  }
-  if (changes.end != null) {
-    stringifiedChanges.end = dateToEventString(
-      adapter,
-      changes.end,
-      originalModel.end,
-      dataTimezone,
-    );
-  }
+  // default start/end to the edited occurrence so the detached event keeps its own day, not DTSTART
+  const newStart = changes.start ?? occurrenceStart;
+  stringifiedChanges.start = dateToEventString(
+    adapter,
+    newStart,
+    originalModel.start,
+    dataTimezone,
+  );
+  const occurrenceEnd = getOccurrenceEnd({ adapter, event: originalEvent, occurrenceStart });
+  const newEnd = changes.end ?? occurrenceEnd;
+  stringifiedChanges.end = dateToEventString(adapter, newEnd, originalModel.end, dataTimezone);
 
   const exDates = [
     ...(originalEvent.dataTimezone.exDates ?? []),

@@ -1,6 +1,5 @@
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import { stub } from 'sinon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import type { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
@@ -16,6 +15,7 @@ import 'dayjs/locale/de';
 // We import the plugins here just to have the typing
 import 'dayjs/plugin/utc';
 import 'dayjs/plugin/timezone';
+import { vi, onTestFinished, describe, it, expect } from 'vitest';
 
 describe('<AdapterDayjs />', () => {
   const commonParams = {
@@ -58,16 +58,80 @@ describe('<AdapterDayjs />', () => {
       // comparisons against plain `dayjs()` dates (for which `getTimezone()`
       // returns `'system'`) went through an unnecessary `setTimezone` conversion
       // that could shift the day across midnight. CI runs in UTC, so the non-UTC
-      // branch is only reachable by stubbing `dayjs.tz.guess()`. The Sinon
-      // default sandbox is restored by the global `afterEach` in
-      // `test/setupVitest.ts`, so no manual cleanup is needed.
-      stub(dayjs.tz, 'guess').returns('America/New_York');
+      // branch is only reachable by stubbing `dayjs.tz.guess()`.
+      const guess = vi.spyOn(dayjs.tz, 'guess').mockReturnValue('America/New_York');
+      onTestFinished(() => guess.mockRestore());
 
       const adapter = new AdapterDayjs();
       const resolvedDate = adapter.date(TEST_DATE_ISO_STRING, 'system') as Dayjs;
 
       expect(adapter.getTimezone(resolvedDate)).to.equal('system');
       expect(adapter.isSameDay(resolvedDate, dayjs(TEST_DATE_ISO_STRING))).to.equal(true);
+    });
+
+    // `Asia/Kolkata` is used because the affected zones depend on the system timezone, and the tests
+    // run with `TZ=UTC`. See https://github.com/mui/mui-x/issues/23163
+    describe('Dates predating the timezone standardization', () => {
+      const adapter = new AdapterDayjs();
+      // The wall clock of this date in `Asia/Kolkata` is `2026-08-06 01:41`.
+      const getDate = () => adapter.date('2026-08-05T20:11:00Z', 'Asia/Kolkata') as Dayjs;
+
+      it('setYear: should only change the year', () => {
+        expect(
+          adapter.formatByString(adapter.setYear(getDate(), 202), 'YYYY-MM-DD HH:mm'),
+        ).to.equal('0202-08-06 01:41');
+      });
+
+      it('setMonth: should only change the month', () => {
+        expect(
+          adapter.formatByString(
+            adapter.setMonth(adapter.setYear(getDate(), 202), 2),
+            'YYYY-MM-DD HH:mm',
+          ),
+        ).to.equal('0202-03-06 01:41');
+      });
+
+      it('addYears: should keep the day of the month', () => {
+        expect(
+          adapter.formatByString(
+            adapter.addYears(adapter.setYear(getDate(), 202), 1),
+            'YYYY-MM-DD HH:mm',
+          ),
+        ).to.equal('0203-08-06 01:41');
+      });
+
+      it('addMonths: should keep the day of the month', () => {
+        expect(
+          adapter.formatByString(
+            adapter.addMonths(adapter.setYear(getDate(), 202), 1),
+            'YYYY-MM-DD HH:mm',
+          ),
+        ).to.equal('0202-09-06 01:41');
+      });
+
+      it('setMonth: should still clamp the day of the month on a shorter month', () => {
+        const endOfJanuary = adapter.setDate(
+          adapter.setMonth(adapter.setYear(getDate(), 202), 0),
+          31,
+        );
+
+        expect(adapter.formatByString(adapter.setMonth(endOfJanuary, 1), 'YYYY-MM-DD')).to.equal(
+          '0202-02-28',
+        );
+      });
+
+      it('setYear: should support years that do not round-trip through the ISO format', () => {
+        const result = adapter.setYear(getDate(), 10000);
+
+        expect(adapter.isValid(result)).to.equal(true);
+        expect(adapter.formatByString(result, 'MM-DD HH:mm')).to.equal('08-06 01:41');
+      });
+
+      it('setYear: should keep an invalid date invalid', () => {
+        expect(adapter.isValid(adapter.setYear(adapter.getInvalidDate() as Dayjs, 2020))).to.equal(
+          false,
+        );
+      });
     });
   });
 

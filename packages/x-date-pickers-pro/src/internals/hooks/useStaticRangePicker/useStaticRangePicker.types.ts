@@ -1,3 +1,4 @@
+import type { WithDataAttributes } from '@mui/utils/types';
 import type {
   BasePickerProps,
   UsePickerParameters,
@@ -16,7 +17,7 @@ import type { PickerRangeStep } from '../../utils/createRangePickerStepNavigatio
 export interface UseStaticRangePickerSlots extends ExportedPickersLayoutSlots<PickerRangeValue> {}
 
 export interface UseStaticRangePickerSlotProps extends ExportedPickersLayoutSlotProps<PickerRangeValue> {
-  toolbar?: ExportedBaseToolbarProps;
+  toolbar?: WithDataAttributes<ExportedBaseToolbarProps>;
 }
 
 export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps, UseRangePositionProps {}

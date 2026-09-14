@@ -5,11 +5,10 @@ import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { useMessageContentTabIndex } from '@mui/x-chat-headless';
+import { safeUri } from '@mui/x-chat-headless/internals';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import {
-  useChatMessageSourceUtilityClasses,
-  type ChatMessageSourceClasses,
-} from './chatMessageSourceClasses';
+import { useChatMessageSourceUtilityClasses } from './chatMessageSourceClasses';
+import type { ChatMessageSourceClasses } from './chatMessageSourceClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageSource');
 
@@ -138,7 +137,7 @@ const ChatMessageSource = React.forwardRef(function ChatMessageSource(
     externalSlotProps: slotProps?.link,
     ownerState: {},
     additionalProps: {
-      href,
+      href: safeUri(href) || undefined,
       target: '_blank',
       rel: 'noreferrer noopener',
       className: classes.link,

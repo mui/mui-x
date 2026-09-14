@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { DefaultizedProps } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { useThemeProps } from '@mui/material/styles';
 import type { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import type {
@@ -31,7 +32,7 @@ export interface BaseDateRangePickerSlots extends DateRangeCalendarSlots {
 }
 
 export interface BaseDateRangePickerSlotProps extends DateRangeCalendarSlotProps {
-  toolbar?: ExportedDateRangePickerToolbarProps;
+  toolbar?: WithDataAttributes<ExportedDateRangePickerToolbarProps>;
 }
 
 export interface BaseDateRangePickerProps

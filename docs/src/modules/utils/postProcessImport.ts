@@ -1,11 +1,5 @@
 export type AdapterLibrary =
-  | 'date-fns'
-  | 'date-fns-jalali'
-  | 'dayjs'
-  | 'luxon'
-  | 'moment'
-  | 'moment-hijri'
-  | 'moment-jalaali';
+  'date-fns' | 'date-fns-jalali' | 'dayjs' | 'luxon' | 'moment' | 'moment-hijri' | 'moment-jalaali';
 
 export const ADAPTER_TO_LIBRARY: Record<string, AdapterLibrary> = {
   AdapterDateFns: 'date-fns',

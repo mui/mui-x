@@ -94,7 +94,7 @@ const rows: GridRowsProp = [
 ];
 
 const columns: GridColDef[] = [
-  { field: 'jobTitle', headerName: 'Job Title', width: 200 },
+  { field: 'jobTitle', headerName: 'Job Title', width: 200, rowHeader: true },
   {
     field: 'recruitmentDate',
     headerName: 'Recruitment Date',

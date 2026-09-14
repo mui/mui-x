@@ -1,4 +1,8 @@
 import * as React from 'react';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import PinIcon from '@mui/icons-material/PushPin';
+import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -21,62 +25,6 @@ import {
 } from 'docs/src/modules/components/chat-playground/controls';
 import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 import { users } from 'docs/src/modules/components/chat-playground/data';
-
-function MoreIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="1em"
-      height="1em"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M12 8a2 2 0 1 0-2-2 2 2 0 0 0 2 2zm0 2a2 2 0 1 0 2 2 2 2 0 0 0-2-2zm0 6a2 2 0 1 0 2 2 2 2 0 0 0-2-2z" />
-    </svg>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="1em"
-      height="1em"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79L19 20.49 20.49 19zM10 14a4 4 0 1 1 4-4 4 4 0 0 1-4 4z" />
-    </svg>
-  );
-}
-
-function PinIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="1em"
-      height="1em"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M16 9V4h1c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1h1v5c0 1.66-1.34 3-3 3v2h5.97v7l1 1 1-1v-7H19v-2c-1.66 0-3-1.34-3-3z" />
-    </svg>
-  );
-}
-
-function ArchiveIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="1em"
-      height="1em"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z" />
-    </svg>
-  );
-}
 
 const DEFAULTS = {
   title: 'Styling questions',

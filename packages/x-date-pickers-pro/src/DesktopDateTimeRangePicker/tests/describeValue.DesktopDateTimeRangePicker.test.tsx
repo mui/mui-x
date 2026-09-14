@@ -9,6 +9,7 @@ import {
 } from 'test/utils/pickers';
 import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
+import { describe } from 'vitest';
 
 describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();

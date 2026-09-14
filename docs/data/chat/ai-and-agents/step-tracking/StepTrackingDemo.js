@@ -4,7 +4,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
 
-import { createChunkStream } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createChunkStream } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 // --- Step delimiter renderer -------------------------------------------------
 // This is the exact Material UI renderer documented under

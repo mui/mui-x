@@ -18,7 +18,7 @@ import type {
 import {
   demoUsers,
   createTextMessage,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const noopAdapter: ChatAdapter = {
   async sendMessage() {

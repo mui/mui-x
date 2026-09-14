@@ -17,11 +17,11 @@ import {
   createChunkStream,
   createTextResponseChunks,
   randomId,
-} from 'docs/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const CONVERSATION_ID = 'split-conv';
 

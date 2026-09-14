@@ -8,6 +8,7 @@ import {
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
 import { formatMeridiem } from '@mui/x-date-pickers/internals';
+import { describe, expect } from 'vitest';
 
 describe('<MultiSectionDigitalClock /> - Describe Value', () => {
   const { render } = createPickerRenderer();

@@ -20,14 +20,12 @@ export function GaugeReferenceArc({ className, ...other }: React.ComponentProps<
     <StyledPath
       className={clsx(gaugeClasses.referenceArc, className)}
       transform={`translate(${cx}, ${cy})`}
-      d={
-        d3Arc().cornerRadius(cornerRadius)({
-          startAngle,
-          endAngle,
-          innerRadius,
-          outerRadius,
-        })!
-      }
+      d={d3Arc().cornerRadius(cornerRadius)({
+        startAngle,
+        endAngle,
+        innerRadius,
+        outerRadius,
+      })!}
       {...other}
     />
   );
