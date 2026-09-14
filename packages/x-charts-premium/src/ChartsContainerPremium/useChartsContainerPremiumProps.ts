@@ -26,8 +26,6 @@ export function useChartsContainerPremiumProps<
 >(
   props: ChartsContainerPremiumProps<SeriesType, TSignatures>,
 ): UseChartsContainerPremiumPropsReturnValue<SeriesType, TSignatures> {
-  // Only `plugins` is handled here. The remaining Pro props (zoom, `apiRef`, ...) are
-  // forwarded untouched so that `useChartsContainerProProps` can process them.
   const { plugins, ...baseProps } = props as ChartsContainerPremiumProps<
     SeriesType,
     AllPluginSignatures<SeriesType>
