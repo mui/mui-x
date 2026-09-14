@@ -18,6 +18,12 @@ export interface DayTimeGridProps extends ExportedDayTimeGridProps {
    */
   endTime?: number;
   /**
+   * Hour of the day the grid scrolls to on mount, resolved against the displayed hour
+   * range by `getVisibleStartTime`.
+   * @default 7
+   */
+  visibleStartTime?: number;
+  /**
    * Name of the prop the hour range came from, interpolated in the invalid-range warning.
    * @default 'viewConfig'
    */

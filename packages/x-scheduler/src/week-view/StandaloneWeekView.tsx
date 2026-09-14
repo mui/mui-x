@@ -295,6 +295,7 @@ StandaloneWeekView.propTypes /* remove-proptypes */ = {
     week: PropTypes.shape({
       endTime: PropTypes.number,
       startTime: PropTypes.number,
+      visibleStartTime: PropTypes.number,
     }),
   }),
   /**

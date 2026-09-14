@@ -28,6 +28,12 @@ Use the `viewConfig` prop to limit the hours displayed in the time grid with `st
 `startTime` and `endTime` must be whole hours (integers between `0` and `24`) with `startTime` lower than `endTime`. Minute-level precision isn't supported yet. An invalid range falls back to the full day and logs a warning in development.
 :::
 
+By default, the time grid scrolls to 7 AM when it mounts.
+Use `visibleStartTime` to scroll to a different hour of the day (fractions are allowed, so `7.5` is 07:30).
+The value must be within the displayed hour range; otherwise the grid stays at `startTime` and logs a warning in development.
+
+{{"demo": "WeekViewVisibleStartTime.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Day view
 
 The `day` view lets users manage events for a single day.
@@ -41,6 +47,8 @@ The `viewConfig` prop also limits the hours displayed in the day view with `star
 :::warning
 `startTime` and `endTime` must be whole hours (integers between `0` and `24`) with `startTime` lower than `endTime`. Minute-level precision isn't supported yet. An invalid range falls back to the full day and logs a warning in development.
 :::
+
+`visibleStartTime` also works on the day view through `viewConfig.day`, with the same rules as the week view.
 
 ### Month view
 

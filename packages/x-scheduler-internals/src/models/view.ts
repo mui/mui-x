@@ -41,6 +41,13 @@ export interface EventCalendarTimeGridViewConfig {
    * @default 24
    */
   endTime?: number;
+  /**
+   * Hour of the day the time grid scrolls to when it mounts (fractions allowed, `7.5`
+   * is 07:30). Must be within the displayed hour range; otherwise the grid stays at
+   * `startTime` and a warning is logged in development.
+   * @default 7
+   */
+  visibleStartTime?: number;
 }
 
 /**

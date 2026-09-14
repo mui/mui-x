@@ -315,6 +315,7 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
     day: PropTypes.shape({
       endTime: PropTypes.number,
       startTime: PropTypes.number,
+      visibleStartTime: PropTypes.number,
     }),
   }),
   /**

@@ -99,7 +99,7 @@
     "viewConfig": {
       "type": {
         "name": "shape",
-        "description": "{ day?: { endTime?: number, startTime?: number } }"
+        "description": "{ day?: { endTime?: number, startTime?: number, visibleStartTime?: number } }"
       }
     },
     "views": {

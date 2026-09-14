@@ -35,6 +35,7 @@ export const WeekView = React.memo(
         days={days}
         startTime={config?.startTime}
         endTime={config?.endTime}
+        visibleStartTime={config?.visibleStartTime}
         hourRangeSource="viewConfig.week"
         {...props}
       />

@@ -20,7 +20,7 @@ import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getDisplayedHourRange } from '@mui/x-scheduler-internals/internals';
+import { getDisplayedHourRange, getVisibleStartTime } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
@@ -341,12 +341,18 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     className,
     startTime: startTimeProp,
     endTime: endTimeProp,
+    visibleStartTime: visibleStartTimeProp,
     hourRangeSource = 'viewConfig',
     ...other
   } = props;
 
   const { startTime, endTime } = getDisplayedHourRange(startTimeProp, endTimeProp, hourRangeSource);
   const hoursCount = endTime - startTime;
+  const visibleStartTime = getVisibleStartTime(
+    visibleStartTimeProp,
+    { startTime, endTime },
+    hourRangeSource,
+  );
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -421,6 +427,15 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   useIsoLayoutEffect(updateHasScroll, [occurrencesMap, updateHasScroll]);
 
   useResizeObserver(bodyRef, updateHasScroll);
+
+  // Initial scroll only: navigating to another period keeps the user's scroll position.
+  const initialScrollTopRef = React.useRef((visibleStartTime - startTime) * HOUR_HEIGHT);
+  useIsoLayoutEffect(() => {
+    const scrollRoot = scrollRootRef.current;
+    if (scrollRoot) {
+      scrollRoot.scrollTop = initialScrollTopRef.current;
+    }
+  }, []);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 
