@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import useId from '@mui/utils/useId';
 import type { GridChartsConfigurationOptions } from '@mui/x-internals/types';
+import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import { useGridSelector, vars } from '@mui/x-data-grid-pro/internals';
 import { GridMenu, GridOverlay } from '@mui/x-data-grid-pro';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
@@ -57,7 +58,7 @@ const GridChartsPanelTitle = styled('div', {
 const GridChartsPanelChartSelection = styled('button', {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelChartSelection',
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing(0.25),
@@ -73,7 +74,13 @@ const GridChartsPanelChartSelection = styled('button', {
   '&:hover, &:focus-visible': {
     backgroundColor: vars.colors.interactive.hover,
   },
-});
+  // No ring today — focus is indistinguishable from hover. Add one when the app
+  // opts in; inset, since the grid root clips. No fallback: nothing to fall back to.
+  ...(theme.focusVisible && {
+    ...applyInsetFocusVisible(1),
+    '&:focus-visible': theme.focusVisible,
+  }),
+}));
 
 function GridChartsPanelChartSelector(props: {
   activeChartId: string;

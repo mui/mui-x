@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { vars } from '@mui/x-data-grid-pro/internals';
+import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import clsx from 'clsx';
@@ -26,7 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const CollapsibleTriggerRoot = styled('button', {
   name: 'MuiDataGrid',
   slot: 'CollapsibleTrigger',
-})<{ ownerState: OwnerState }>(({ ownerState }) => ({
+})<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
@@ -44,7 +45,10 @@ const CollapsibleTriggerRoot = styled('button', {
     backgroundColor: vars.colors.interactive.hover,
     cursor: 'pointer',
   },
-  '&:focus-visible': {
+  // Inset: the grid root is `overflow: hidden`, so an outset ring on a panel
+  // control can be cut at the edge.
+  ...(theme.focusVisible && applyInsetFocusVisible(1)),
+  '&:focus-visible': theme.focusVisible || {
     outline: `2px solid ${vars.colors.interactive.selected}`,
     outlineOffset: -2,
   },
