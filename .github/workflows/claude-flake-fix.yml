@@ -29,7 +29,7 @@ jobs:
       contents: write # push the fix branch (publish job)
       pull-requests: write # open the draft PR (publish job)
       issues: write # rolling tracking issue (publish job)
-    uses: mui/mui-public/.github/workflows/claude-flake-fix.yml@331f040cacc12a9593a3c7f260b9d5d89af0f76d # master
+    uses: mui/mui-public/.github/workflows/claude-flake-fix.yml@b296c98bc17f685db974504d2c00094a59d1698d # master
     with:
       report-only: ${{ inputs.report-only || false }}
       model: ${{ inputs.model || 'claude-opus-4-8' }}
