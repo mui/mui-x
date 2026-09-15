@@ -705,4 +705,103 @@ describe('<DataGridPro /> - Detail panel', () => {
       color: 'yellow',
     });
   });
+
+  // https://github.com/mui/mui-x/issues/23573
+  describe('flex column width in auto-growing layouts', () => {
+    function GrowingTestCase({
+      containerStyle,
+      ...other
+    }: Partial<DataGridProProps> & { containerStyle?: React.CSSProperties }) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 400, ...containerStyle }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[
+              { field: 'id', width: 100 },
+              { field: 'name', flex: 1 },
+            ]}
+            rows={[
+              { id: 0, name: 'A' },
+              { id: 1, name: 'B' },
+              { id: 2, name: 'C' },
+            ]}
+            getDetailPanelContent={() => <div style={{ height: 100 }} />}
+            getDetailPanelHeight={() => 100}
+            {...other}
+          />
+        </div>
+      );
+    }
+
+    const getFlexHeader = () =>
+      document.querySelector<HTMLElement>('[role="columnheader"][data-field="name"]')!;
+
+    // Samples the flex column width on every frame, so a width change that is
+    // painted and reverted later is still observed.
+    const sampleFlexWidthPerFrame = (frames: number) =>
+      new Promise<number[]>((resolve) => {
+        const widths: number[] = [];
+        const tick = () => {
+          widths.push(getFlexHeader().offsetWidth);
+          if (widths.length >= frames) {
+            resolve(widths);
+          } else {
+            requestAnimationFrame(tick);
+          }
+        };
+        requestAnimationFrame(tick);
+      });
+
+    it.skipIf(isJSDOM)(
+      'should not shrink the flex column when expanding a detail panel in a growing layout',
+      async () => {
+        const { user } = render(<GrowingTestCase />);
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRootDimensions().isReady).to.equal(true);
+        });
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+        const initialWidth = getFlexHeader().offsetWidth;
+
+        await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+        // 15 frames cover the resize throttle window, during which the
+        // transient scrollbar reservation used to be visible.
+        const widths = await act(() => sampleFlexWidthPerFrame(15));
+
+        expect(widths, `sampled widths: ${widths.join(', ')}`).to.deep.equal(
+          widths.map(() => initialWidth),
+        );
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'should still show the vertical scrollbar when the container cannot grow',
+      async () => {
+        // The container hugs the content exactly but has a fixed height, so the
+        // deferred scrollbar must still be committed after the expansion.
+        const { user, setProps } = render(<GrowingTestCase />);
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRootDimensions().isReady).to.equal(true);
+        });
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+
+        // Pin the container to its natural height: same layout, but it can no
+        // longer grow with the content.
+        const naturalHeight = document
+          .querySelector<HTMLElement>(`.${gridClasses.root}`)!
+          .getBoundingClientRect().height;
+        setProps({ containerStyle: { height: naturalHeight } });
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+
+        await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(true);
+        });
+      },
+    );
+  });
 });
