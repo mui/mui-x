@@ -1,0 +1,18 @@
+{
+  "interfaceDescription": "The options to apply on the Excel export.",
+  "propertiesDescriptions": {
+    "escapeFormulas": {
+      "description": "If <code>true</code>, text cells starting with <code>=</code>, <code>+</code>, <code>-</code> or <code>@</code> are escaped so Excel does not evaluate them as formulas."
+    },
+    "fileName": { "description": "The name of the file without the extension." },
+    "includeFormattedValues": {
+      "description": "If <code>true</code>, a <code>formatted*</code> column is added next to each value, using the series <code>valueFormatter</code>."
+    },
+    "includeHeaders": {
+      "description": "If <code>true</code>, a header row is written on each sheet."
+    },
+    "includeHiddenSeries": {
+      "description": "If <code>true</code>, series and items hidden through the legend are exported."
+    }
+  }
+}
