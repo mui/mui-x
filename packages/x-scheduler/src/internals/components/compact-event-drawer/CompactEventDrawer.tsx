@@ -17,6 +17,7 @@ import {
   useEventEditingStyledContext,
   FormContent,
 } from '../event-editing';
+import { DeleteConfirmationDialog } from '../delete-confirmation-dialog';
 import { CompactReadonlyContent } from './CompactReadonlyContent';
 
 const CompactEventDrawerRoot = styled(SwipeableDrawer, {
@@ -129,6 +130,7 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
           </CompactEventDrawerContent>
         )}
       </CompactEventDrawerRoot>
+      <DeleteConfirmationDialog />
       {RecurringScopeDialogRenderer && <RecurringScopeDialogRenderer />}
     </React.Fragment>
   );

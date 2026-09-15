@@ -581,6 +581,94 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('Method: requestEventDeletion / resolveEventDeletion', () => {
+      it('should open the delete confirmation dialog instead of deleting immediately by default', () => {
+        const onEventsChange = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        store.requestEventDeletion({ eventId: event.id });
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.pendingDeleteConfirmation).to.deep.equal({
+          eventId: event.id,
+          onSubmit: undefined,
+        });
+      });
+
+      it('should delete the event and call onSubmit once the deletion is confirmed', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+        store.resolveEventDeletion(true);
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+        expect(onSubmit.mock.calls.length).to.equal(1);
+        expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
+      it('should keep the event and not call onSubmit when the deletion is canceled', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+        store.resolveEventDeletion(false);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(onSubmit.mock.calls.length).to.equal(0);
+        expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
+      it('should be a no-op when resolved with no pending deletion', () => {
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [], onEventsChange },
+          adapter,
+        );
+
+        store.resolveEventDeletion(true);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+      });
+
+      it('should delete immediately and skip the dialog when eventDeletion.confirmation is false', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value(
+          {
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+            eventDeletion: { confirmation: false },
+          },
+          adapter,
+        );
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+        expect(onSubmit.mock.calls.length).to.equal(1);
+        expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+    });
+
     describe('Method: createEvent', () => {
       it('should append the new event and emit onEventsChange with the updated list', () => {
         const onEventsChange = vi.fn();

@@ -74,6 +74,21 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
     return { user };
   }
 
+  function renderResizableEvent() {
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('One-off Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .resizable(true)
+      .build();
+
+    const { user } = render(<ControlledView initialEvent={event} />);
+
+    mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
+
+    return { user };
+  }
+
   // The scope dialog leaves the background `aria-hidden` while closing, so read from the DOM rather
   // than through role queries (which skip `aria-hidden` subtrees).
   function getEventElement(): HTMLElement {
@@ -146,6 +161,48 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
 
       const wheelEvent = new Event('wheel', { bubbles: true, cancelable: true });
       screen.getByText(/Apply this change to:/i).dispatchEvent(wheelEvent);
+
+      expect(wheelEvent.defaultPrevented).to.equal(false);
+    });
+
+    // Deleting a recurring event must not additionally prompt through the (non-recurring) delete
+    // confirmation dialog — the scope dialog is the only confirmation shown.
+    it('should not also open the delete confirmation dialog', async () => {
+      await armAndOpenScopeDialog();
+
+      expect(screen.queryByRole('dialog', { name: /delete this event\?/i })).to.equal(null);
+    });
+  });
+
+  // The event stays armed under the delete confirmation dialog too, for the same reason as the
+  // scope dialog above.
+  describe('delete confirmation dialog stacked on the armed toolbar', () => {
+    async function armAndOpenDeleteConfirmation() {
+      renderResizableEvent();
+
+      fireEvent.click(getEventElement());
+      fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+
+      await screen.findByRole('dialog', { name: /delete this event\?/i });
+    }
+
+    it('should close on a click outside the dialog paper', async () => {
+      await armAndOpenDeleteConfirmation();
+
+      const container = document.querySelector<HTMLElement>('.MuiDialog-container')!;
+      fireEvent.mouseDown(container);
+      fireEvent.click(container);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog', { name: /delete this event\?/i })).to.equal(null);
+      });
+    });
+
+    it('should not block scrolling inside the dialog', async () => {
+      await armAndOpenDeleteConfirmation();
+
+      const wheelEvent = new Event('wheel', { bubbles: true, cancelable: true });
+      screen.getByRole('dialog', { name: /delete this event\?/i }).dispatchEvent(wheelEvent);
 
       expect(wheelEvent.defaultPrevented).to.equal(false);
     });

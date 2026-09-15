@@ -1,4 +1,4 @@
-import { screen, fireEvent } from '@mui/internal-test-utils';
+import { screen, fireEvent, waitFor, within } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import { vi, describe, it, expect, afterEach } from 'vitest';
@@ -99,16 +99,79 @@ describe('DayView - event toolbar', () => {
     expect(screen.getByRole('textbox', { name: /Event title/i })).not.to.equal(null);
   });
 
-  it('should delete the event from the toolbar without opening the editing dialog', () => {
+  it('should open the delete confirmation dialog instead of deleting immediately when the toolbar Delete is tapped', () => {
     window.matchMedia = createMatchMedia(true);
     const { onEventsChange } = renderEvent();
 
     fireEvent.click(getEvent());
     fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
 
+    expect(screen.getByRole('dialog', { name: /delete this event/i })).not.to.equal(null);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    // The toolbar stays armed/mounted behind the confirmation dialog (which leaves it
+    // `aria-hidden`, so it's queried by DOM presence rather than through a role query).
+    expect(document.querySelector('[role="toolbar"]')).not.to.equal(null);
+  });
+
+  it('should delete the event and close the toolbar once Delete event is confirmed', async () => {
+    window.matchMedia = createMatchMedia(true);
+    const { onEventsChange } = renderEvent();
+
+    fireEvent.click(getEvent());
+    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+    // The toolbar's own delete button shares the same accessible name, so the confirm click is
+    // scoped to the dialog.
+    const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Delete event' }));
+
     expect(onEventsChange.mock.calls.length).to.equal(1);
     expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
     // The delete and edit flows are independent: deleting must not open the editing dialog.
+    expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+    });
+  });
+
+  it('should keep the event and the toolbar armed when Cancel is clicked in the confirmation dialog', async () => {
+    window.matchMedia = createMatchMedia(true);
+    const { onEventsChange } = renderEvent();
+
+    fireEvent.click(getEvent());
+    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+    });
+    expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
+  });
+
+  it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', () => {
+    window.matchMedia = createMatchMedia(true);
+    const onEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .build();
+
+    render(
+      <StandaloneDayView
+        events={[event]}
+        resources={[]}
+        onEventsChange={onEventsChange}
+        eventDeletion={{ confirmation: false }}
+      />,
+    );
+
+    fireEvent.click(getEvent());
+    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
+    expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
   });

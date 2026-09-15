@@ -20,6 +20,8 @@ export interface EventEditingLocaleText {
   deleteEventButtonAriaLabel: string;
   eventActionsToolbarAriaLabel: string;
   deleteEvent: string;
+  // DeleteConfirmationDialog
+  deleteConfirmationTitle: string;
   // EventContextMenu (shown on right-click of an event, or on Space while it is focused)
   editEvent: string;
   // Replaces `editEvent` on a read-only event: opens the same non-editable view, so the label

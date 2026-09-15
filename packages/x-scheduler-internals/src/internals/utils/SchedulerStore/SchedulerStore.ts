@@ -37,6 +37,7 @@ import type {
   SchedulerInstanceName,
   SchedulerEditingMode,
   SchedulerEventEditingStartEventDetails,
+  RequestEventDeletionParameters,
 } from './SchedulerStore.types';
 import { processDate } from '../../../process-date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
@@ -159,6 +160,10 @@ export class SchedulerStore<
       errors: [],
       isLoading: hasDataSource(parameters),
       recurringEventsPlugin,
+      // Left as-is (including `undefined`); `schedulerEventSelectors.deletionConfig` fills in
+      // the defaults, mirroring how `eventCreation` is normalized.
+      eventDeletion: parameters.eventDeletion,
+      pendingDeleteConfirmation: null,
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -751,6 +756,36 @@ export class SchedulerStore<
    */
   public deleteEvent = (eventId: SchedulerEventId) => {
     this.updateEvents({ deleted: [eventId] });
+  };
+
+  /**
+   * Requests deletion of an event, opening the confirmation dialog when configured.
+   */
+  public requestEventDeletion = ({ eventId, onSubmit }: RequestEventDeletionParameters) => {
+    const { confirmation } = schedulerEventSelectors.deletionConfig(this.state);
+    if (!confirmation) {
+      this.deleteEvent(eventId);
+      onSubmit?.();
+      return;
+    }
+
+    this.set('pendingDeleteConfirmation', { eventId, onSubmit });
+  };
+
+  /**
+   * Resolves the pending event deletion request, deleting the event if confirmed.
+   */
+  public resolveEventDeletion = (confirmed: boolean) => {
+    const pending = this.state.pendingDeleteConfirmation;
+    if (!pending) {
+      return;
+    }
+
+    this.set('pendingDeleteConfirmation', null);
+    if (confirmed) {
+      this.deleteEvent(pending.eventId);
+      pending.onSubmit?.();
+    }
   };
 
   /**
