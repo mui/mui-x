@@ -64,8 +64,9 @@ export async function exportImage(
   }
 
   const drawDocumentPromise = getDrawDocument();
-  /* The import starts before the export document is ready, so it can settle while another step
-   * fails. Keep it handled to avoid an unhandled rejection when it's never awaited. */
+  /* The import starts before the export document is ready. This only marks the promise as handled:
+   * an import failure still rejects the export when the promise is awaited below. It's only dropped
+   * when an earlier step already failed, which avoids an unhandled rejection on top of that error. */
   drawDocumentPromise.catch(() => {});
   const doc = ownerDocument(element);
 

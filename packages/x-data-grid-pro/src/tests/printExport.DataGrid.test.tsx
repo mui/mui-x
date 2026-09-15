@@ -1,6 +1,7 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridPrintExportMenuItem, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
+import MenuList from '@mui/material/MenuList';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 import { vi, describe, it, expect, onTestFinished } from 'vitest';
@@ -218,9 +219,76 @@ describe('<DataGridPro /> - Print export', () => {
       link.dispatchEvent(new Event('error'));
     }
 
+    async function waitUntil(condition: () => boolean) {
+      while (!condition()) {
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+      }
+    }
+
     const initialState = {
       columns: { columnVisibilityModel: { currencyPair: true, id: false } },
     };
+
+    async function printAndWaitForTheError(
+      onStylesheetError: ReturnType<typeof vi.fn>,
+      clickPrint: () => void,
+    ) {
+      await act(async () => {
+        clickPrint();
+        await failStylesheetLoad();
+        await waitUntil(
+          () => onStylesheetError.mock.calls.length > 0 && !document.querySelector('iframe'),
+        );
+        /* Let the trigger's `catch` run. */
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+      });
+    }
+
+    it('logs the error when the print is stopped from the default toolbar', async () => {
+      addMissingStylesheet();
+      const onStylesheetError = vi.fn(() => {
+        throw new Error('Stop the print');
+      });
+
+      render(<Test showToolbar slotProps={{ toolbar: { printOptions: { onStylesheetError } } }} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      const printItem = screen.getByRole('menuitem', { name: 'Print' });
+
+      await expect(() =>
+        printAndWaitForTheError(onStylesheetError, () => {
+          fireEvent.click(printItem);
+        }),
+      ).toErrorDev('MUI X Data Grid: Error exporting the grid as print:');
+    });
+
+    it('logs the error when the print is stopped from `GridPrintExportMenuItem`', async () => {
+      addMissingStylesheet();
+      const onStylesheetError = vi.fn(() => {
+        throw new Error('Stop the print');
+      });
+
+      function PrintToolbar() {
+        return (
+          <MenuList>
+            <GridPrintExportMenuItem options={{ onStylesheetError }} />
+          </MenuList>
+        );
+      }
+
+      render(<Test showToolbar slots={{ toolbar: PrintToolbar }} />);
+      const printItem = screen.getByRole('menuitem', { name: 'Print' });
+
+      await expect(() =>
+        printAndWaitForTheError(onStylesheetError, () => {
+          fireEvent.click(printItem);
+        }),
+      ).toErrorDev('MUI X Data Grid: Error exporting the grid as print:');
+    });
 
     it('rejects, restores the grid, and removes the print window when `onStylesheetError` throws', async () => {
       addMissingStylesheet();

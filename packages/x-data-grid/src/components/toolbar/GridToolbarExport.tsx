@@ -88,7 +88,9 @@ function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
   return (
     <rootProps.slots.baseMenuItem
       onClick={() => {
-        apiRef.current.exportDataAsPrint(options);
+        apiRef.current.exportDataAsPrint(options).catch((error) => {
+          console.error('MUI X Data Grid: Error exporting the grid as print:', error);
+        });
         hideMenu?.();
       }}
       {...other}
