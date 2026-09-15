@@ -2,6 +2,8 @@ import { useHeatmapProps } from '@mui/x-charts-pro/internals';
 import type { HeatmapPremiumProps } from './HeatmapPremium';
 import type { HeatmapPlotPremiumProps } from './HeatmapPlotPremium';
 import { HEATMAP_PREMIUM_PLUGINS } from './HeatmapPremium.plugins';
+import type { HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
+import type { ChartsDataProviderPremiumProps } from '../ChartsDataProviderPremium';
 
 export type UseHeatmapPremiumProps = HeatmapPremiumProps;
 
@@ -13,14 +15,20 @@ export function useHeatmapPremiumProps(props: UseHeatmapPremiumProps) {
     renderer: props.renderer ?? 'svg-single',
   };
 
+  // Pro's hook hardcodes the Pro plugin list and types `apiRef` against it.
+  // Annotated so the declaration build can name the type.
+  const chartsDataProviderPremiumProps: ChartsDataProviderPremiumProps<
+    'heatmap',
+    HeatmapPremiumPluginSignatures
+  > = {
+    ...chartsDataProviderProProps,
+    apiRef: props.apiRef,
+    plugins: HEATMAP_PREMIUM_PLUGINS,
+  };
+
   return {
     ...other,
     heatmapPlotPremiumProps,
-    // Pro's hook hardcodes the Pro plugin list and types `apiRef` against it.
-    chartsDataProviderPremiumProps: {
-      ...chartsDataProviderProProps,
-      apiRef: props.apiRef,
-      plugins: HEATMAP_PREMIUM_PLUGINS,
-    },
+    chartsDataProviderPremiumProps,
   };
 }
