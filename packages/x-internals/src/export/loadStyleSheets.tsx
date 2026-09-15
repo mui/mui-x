@@ -1,11 +1,38 @@
+import { warnOnce } from '../warning';
+
+export interface LoadStyleSheetsOptions {
+  /**
+   * Optional nonce to set on style elements for CSP compliance.
+   */
+  nonce?: string;
+  /**
+   * Called when a stylesheet fails to load.
+   * Return or resolve to skip the stylesheet and continue, throw or reject to stop the export.
+   * @param {HTMLLinkElement} element The stylesheet link element that failed to load.
+   * @returns {Promise<void> | void} A promise or void. If a promise is returned, the export waits for it to settle before proceeding.
+   */
+  onStylesheetError?: (element: HTMLLinkElement) => Promise<void> | void;
+}
+
 /**
  * Loads all stylesheets from the given root element into the document.
- * @returns an array of promises that resolve when each stylesheet is loaded
+ * @returns an array of promises that resolve when each stylesheet is loaded or skipped, and reject when `onStylesheetError` stops the export
  * @param document Document to load stylesheets into
  * @param root Document or ShadowRoot to load stylesheets from
- * @param nonce Optional nonce to set on style elements for CSP compliance
+ * @param options Options to apply while copying the stylesheets
  */
-export function loadStyleSheets(document: Document, root: Document | ShadowRoot, nonce?: string) {
+export function loadStyleSheets(
+  document: Document,
+  root: Document | ShadowRoot,
+  options: LoadStyleSheetsOptions = {},
+) {
+  const {
+    nonce,
+    onStylesheetError: handleStylesheetError = (element) =>
+      warnOnce(
+        `MUI X: Failed to load the stylesheet "${element.getAttribute('href')}" in the export document. The export continues without it, so the result may be missing styles.\nThis can happen if the request fails, or if a Content Security Policy blocks the stylesheet.\nPass \`onStylesheetError\` to the export to handle this yourself.`,
+      ),
+  } = options;
   const stylesheetLoadPromises: Promise<void>[] = [];
   const headStyleElements = root.querySelectorAll("style, link[rel='stylesheet']");
 
@@ -34,8 +61,16 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot,
       }
 
       stylesheetLoadPromises.push(
-        new Promise((resolve) => {
+        new Promise((resolve, reject) => {
           newHeadStyleElement.addEventListener('load', () => resolve());
+          /* A stylesheet blocked by the Content Security Policy, or that fails to load, only fires
+           * `error`. Without this the export would wait for a `load` event that never comes. */
+          newHeadStyleElement.addEventListener('error', () => {
+            /* The chain turns a synchronous throw into a rejection, so the promise always settles. */
+            Promise.resolve()
+              .then(() => handleStylesheetError(newHeadStyleElement as HTMLLinkElement))
+              .then(() => resolve(), reject);
+          });
         }),
       );
     }

@@ -6,10 +6,13 @@
     },
     "fileName": { "description": "The name of the file without the extension." },
     "nonce": {
-      "description": "A nonce to be used for Content Security Policy (CSP) compliance.<br />If provided, this nonce will be added to any style elements created during the export process."
+      "description": "A nonce to be used for Content Security Policy (CSP) compliance.<br />If provided, this nonce will be added to any style elements created during the export process.<br />Required when the CSP restricts styles with a nonce, otherwise the export fails because the<br />copied styles are blocked."
     },
     "onBeforeExport": {
       "description": "Callback function that is called before the export is triggered.<br />It can be used to modify the iframe or perform any other actions before the export, such as updating styles,<br />removing elements, etc."
+    },
+    "onStylesheetError": {
+      "description": "Callback function that is called when a stylesheet fails to load in the export document, for<br />example if the request fails or a Content Security Policy blocks it.<br />Return or resolve to skip the stylesheet and continue the export, so the result may be missing styles.<br />Throw or reject to stop the export.<br />If not provided, the stylesheet is skipped and the failure is logged as a warning in development."
     }
   }
 }

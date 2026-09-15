@@ -129,6 +129,32 @@ You can disable this behavior by setting the `copyStyles` property to `false` in
 <BarChartPro slotProps={{ toolbar: { printOptions: { copyStyles: false } } }} />
 ```
 
+### Stylesheets that fail to load
+
+A stylesheet that fails to load in the export iframe, for example because the request fails or a [Content Security Policy](/x/react-charts/content-security-policy/) blocks it, is skipped.
+The export continues without it, so the result may be missing styles, and a warning is logged in development.
+
+To handle the failure yourself, use the `onStylesheetError` callback.
+It receives the `<link>` element that failed to load:
+
+- Return or resolve to skip the stylesheet and continue the export.
+- Throw an error or reject to stop the export. The promise returned by `exportAsImage()` or `exportAsPrint()` rejects with that error, see [Handling export errors](#handling-export-errors).
+- Return a promise to make the export wait for it, for example while you add replacement styles to `link.ownerDocument`.
+
+```tsx
+<BarChartPro
+  slotProps={{
+    toolbar: {
+      printOptions: {
+        onStylesheetError: (link) => {
+          throw new Error(`The stylesheet ${link.href} failed to load.`);
+        },
+      },
+    },
+  }}
+/>
+```
+
 ## Exporting composed charts
 
 MUI X Charts may be [self-contained](/x/react-charts/quickstart/#self-contained-charts) or [composed of various subcomponents](/x/react-charts/quickstart/#composable-charts).
@@ -174,6 +200,19 @@ When omitted, the export uses the larger of `window.devicePixelRatio` and `2`, g
 
 ```tsx
 apiRef.current?.exportAsImage({ pixelRatio: 3 });
+```
+
+### Handling export errors
+
+`exportAsPrint()` and `exportAsImage()` return a promise that rejects when the export fails, for example when a [Content Security Policy](/x/react-charts/content-security-policy/) blocks the styles the export needs, or when [`onStylesheetError`](#stylesheets-that-fail-to-load) stops the export.
+Handle the rejection to report the failure to your users.
+
+```tsx
+try {
+  await apiRef.current?.exportAsImage();
+} catch (error) {
+  // Report the failed export.
+}
 ```
 
 {{"demo": "ExportChartAsImage.js"}}

@@ -31,8 +31,20 @@ export interface ChartExportOptions {
   /**
    * A nonce to be used for Content Security Policy (CSP) compliance.
    * If provided, this nonce will be added to any style elements created during the export process.
+   * Required when the CSP restricts styles with a nonce, otherwise the export fails because the
+   * copied styles are blocked.
    */
   nonce?: string;
+  /**
+   * Callback function that is called when a stylesheet fails to load in the export document, for
+   * example if the request fails or a Content Security Policy blocks it.
+   * Return or resolve to skip the stylesheet and continue the export, so the result may be missing styles.
+   * Throw or reject to stop the export.
+   * If not provided, the stylesheet is skipped and the failure is logged as a warning in development.
+   * @param {HTMLLinkElement} element The stylesheet link element that failed to load.
+   * @returns {Promise<void> | void} A promise or void. If a promise is returned, the export waits for it to settle before proceeding.
+   */
+  onStylesheetError?: (element: HTMLLinkElement) => Promise<void> | void;
 }
 
 /**
@@ -74,17 +86,17 @@ export interface UseChartProExportPublicApi {
   /**
    * Opens the browser's print dialog, which can be used to print the chart or export it as PDF.
    * @param {ChartPrintExportOptions} options Options to customize the print export.
-   * @returns {void}
+   * @returns {Promise<void>} A promise that rejects if the export fails.
    */
-  exportAsPrint: (options?: ChartPrintExportOptions) => void;
+  exportAsPrint: (options?: ChartPrintExportOptions) => Promise<void>;
   /**
    * Exports the chart as an image.
    * If the provided `type` is not supported by the browser, it will default to `image/png`.
    *
    * @param {ChartPrintExportOptions} options Options to customize the print export.
-   * @returns {void}
+   * @returns {Promise<void>} A promise that rejects if the export fails.
    */
-  exportAsImage: (options?: ChartImageExportOptions) => void;
+  exportAsImage: (options?: ChartImageExportOptions) => Promise<void>;
 }
 
 export interface UseChartProExportInstance extends UseChartProExportPublicApi {}
