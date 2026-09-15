@@ -39,9 +39,5 @@ describe('exportImage when `rasterizehtml` fails to import', () => {
         },
       }),
     ).rejects.toBe(error);
-    /* An unhandled rejection from the import would fail the test run. */
-    await new Promise((resolve) => {
-      setTimeout(resolve, 0);
-    });
   });
 });
