@@ -18,6 +18,7 @@ interface CategorySeriesShape {
   xAxisId?: AxisId;
   yAxisId?: AxisId;
   rotationAxisId?: AxisId;
+  radiusAxisId?: AxisId;
   data: readonly (number | null)[];
   valueFormatter?: (value: number | null, context: { dataIndex: number }) => string | null;
 }
@@ -97,6 +98,9 @@ export const radialLineExtractor = createCategoryValueExtractor((series, params)
   params.getRotationAxis(series.rotationAxisId),
 ) as ChartExcelExtractor<'radialLine'>;
 
+/** Radial bar plots its category on the radius axis when laid out horizontally. */
 export const radialBarExtractor = createCategoryValueExtractor((series, params) =>
-  params.getRotationAxis(series.rotationAxisId),
+  series.layout === 'horizontal'
+    ? params.getRadiusAxis(series.radiusAxisId)
+    : params.getRotationAxis(series.rotationAxisId),
 ) as ChartExcelExtractor<'radialBar'>;

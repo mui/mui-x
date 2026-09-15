@@ -188,4 +188,18 @@ describe('radialLineExtractor and radialBarExtractor', () => {
     expect(radialLineExtractor(params)[0].rows[0].category).to.equal('right');
     expect(radialBarExtractor(params)[0].rows[0].category).to.equal('right');
   });
+
+  it('reads a horizontal radial bar category off the radius axis', () => {
+    const [table] = radialBarExtractor(
+      createParams(
+        { s1: { id: 's1', label: 'S', layout: 'horizontal', data: [1, 2] } },
+        {
+          getRotationAxis: () => axis(['wrong', 'wrong']),
+          getRadiusAxis: () => axis(['France', 'Spain']),
+        },
+      ),
+    );
+
+    expect(table.rows.map((row) => row.category)).to.deep.equal(['France', 'Spain']);
+  });
 });
