@@ -1,21 +1,27 @@
 import * as React from 'react';
 import { screen, waitFor } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import { createSchedulerRenderer, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 // The scroll position is real layout (`scrollTop` is clamped to the overflow), which jsdom does not implement.
 describe.skipIf(isJSDOM)('<DayTimeGrid /> - viewConfig (initialScrollTime)', () => {
+  // `render` on purpose, not `renderSettled`: the synchronous tests assert before the first
+  // ResizeObserver frame, which proves the mount layout effect scrolled on its own.
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03') });
 
   beforeEach(() => {
     clearWarningsCache();
   });
 
-  // 2025-07-03 is a Thursday.
-  const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
+  // Lets the deferred ResizeObserver callback run after a layout change.
+  async function waitForObserverFrame() {
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+  }
 
   function getScrollContainer() {
     return document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGrid}`)!;
@@ -41,7 +47,7 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> - viewConfig (initialScrollTime)', () 
     return render(
       <EventCalendar
         events={[]}
-        defaultVisibleDate={visibleDate}
+        defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         view="week"
         style={{ height: 400, ...style }}
         {...props}
@@ -65,7 +71,8 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> - viewConfig (initialScrollTime)', () 
   });
 
   it('should stay at the top when initialScrollTime equals startTime', () => {
-    renderCalendar({ viewConfig: { week: { startTime: 8, endTime: 20, initialScrollTime: 8 } } });
+    // A range starting before 7 AM, so the default would scroll and only the explicit value stays at 0.
+    renderCalendar({ viewConfig: { week: { startTime: 3, endTime: 20, initialScrollTime: 3 } } });
     expect(getScrollContainer().scrollTop).to.equal(0);
   });
 
@@ -94,10 +101,37 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> - viewConfig (initialScrollTime)', () 
     expect(getScrollContainer().scrollTop).to.equal(0);
 
     view.setProps({ style: { height: 400 } });
+    expect(getHourHeight()).to.be.greaterThan(0);
 
     await waitFor(() => {
       expect(getScrollContainer().scrollTop).to.equal(7 * getHourHeight());
     });
+  });
+
+  it('should scroll once the grid can scroll when it mounts without a fixed height', async () => {
+    const view = renderCalendar({ style: { height: undefined } });
+    const container = getScrollContainer();
+    expect(container.scrollHeight).to.equal(container.clientHeight);
+    expect(container.scrollTop).to.equal(0);
+
+    view.setProps({ style: { height: 400 } });
+
+    await waitFor(() => {
+      expect(getScrollContainer().scrollTop).to.equal(7 * getHourHeight());
+    });
+  });
+
+  it('should keep the scroll position when the container resizes', async () => {
+    const view = renderCalendar();
+    const container = getScrollContainer();
+    const initialClientHeight = container.clientHeight;
+    container.scrollTop = 300;
+
+    view.setProps({ style: { height: 500 } });
+    await waitForObserverFrame();
+
+    expect(container.clientHeight).to.be.greaterThan(initialClientHeight);
+    expect(container.scrollTop).to.equal(300);
   });
 
   it('should read the config of the rendered view', () => {
@@ -144,9 +178,11 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> - viewConfig (initialScrollTime)', () 
 
   it('should fall back to the default and warn when initialScrollTime is outside the displayed range', () => {
     expect(() => {
-      renderCalendar({ viewConfig: { week: { startTime: 8, endTime: 20, initialScrollTime: 6 } } });
+      renderCalendar({
+        viewConfig: { week: { startTime: 3, endTime: 20, initialScrollTime: 25 } },
+      });
     }).toWarnDev(['MUI X Scheduler: `viewConfig.week` received an invalid `initialScrollTime`']);
-    // The default (7 AM) is clamped to startTime, so the grid stays at the top.
-    expect(getScrollContainer().scrollTop).to.equal(0);
+    // The default (7 AM) applies, 4 rows below the 3 AM start.
+    expect(getScrollContainer().scrollTop).to.equal(4 * getHourHeight());
   });
 });

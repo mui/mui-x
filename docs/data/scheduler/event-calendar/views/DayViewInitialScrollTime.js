@@ -1,11 +1,10 @@
 import * as React from 'react';
 
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
-import {
-  initialEvents,
-  defaultVisibleDate,
-  resources,
-} from '../../datasets/personal-agenda';
+import { initialEvents, resources } from '../../datasets/personal-agenda';
+
+// A day with morning events, so the 9 AM start is visible.
+const defaultVisibleDate = new Date('2025-07-02T00:00:00');
 
 export default function DayViewInitialScrollTime() {
   const [events, setEvents] = React.useState(initialEvents);

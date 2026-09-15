@@ -133,5 +133,15 @@ describe('<CompactDayView />', () => {
         });
       }).toWarnDev(['MUI X Scheduler: `viewConfig.day` received an invalid hour range']);
     });
+
+    it('should forward `initialScrollTime` from the `day` key', () => {
+      // The scroll itself needs layout (browser tests of DayTimeGrid); the warning proves the wiring.
+      clearWarningsCache();
+      expect(() => {
+        renderWithProviders(<CompactDayView />, [], {
+          viewConfig: { day: { startTime: 8, endTime: 20, initialScrollTime: 6 } },
+        });
+      }).toWarnDev(['MUI X Scheduler: `viewConfig.day` received an invalid `initialScrollTime`']);
+    });
   });
 });

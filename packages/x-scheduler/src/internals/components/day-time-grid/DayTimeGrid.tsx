@@ -424,12 +424,17 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   useIsoLayoutEffect(updateHasScroll, [occurrencesMap, updateHasScroll]);
 
-  // Applied once, the first time the grid has a height: a hidden host clamps `scrollTop` to 0.
-  // Navigating to another period keeps the user's scroll position.
+  // Applied once, the first time the grid can scroll: a hidden host or an unconstrained height
+  // would clamp `scrollTop` to 0. Reads the config current at that time. Navigating to another
+  // period keeps the user's scroll position.
   const isInitialScrollAppliedRef = React.useRef(false);
   const applyInitialScroll = useStableCallback(() => {
     const scrollRoot = scrollRootRef.current;
-    if (isInitialScrollAppliedRef.current || !scrollRoot || scrollRoot.clientHeight === 0) {
+    if (
+      isInitialScrollAppliedRef.current ||
+      !scrollRoot ||
+      scrollRoot.scrollHeight <= scrollRoot.clientHeight
+    ) {
       return;
     }
     // Measured rather than `HOUR_HEIGHT` so a `--hour-height` override keeps the hours aligned.

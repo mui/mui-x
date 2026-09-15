@@ -89,11 +89,11 @@ describe('getInitialScrollTime', () => {
       expect(result).to.equal(7);
     });
 
-    it('should warn once per source so one surface cannot mask another', () => {
+    it('should warn once per source and value so one surface cannot mask another', () => {
       expect(() => {
         getInitialScrollTime(30, fullDay, 'viewConfig.week');
         getInitialScrollTime(30, fullDay, 'viewConfig.day');
-        // The repeated source must not warn a second time.
+        // The repeated source and value must not warn a second time.
         getInitialScrollTime(30, fullDay, 'viewConfig.week');
       }).toWarnDev([
         'MUI X Scheduler: `viewConfig.week` received an invalid `initialScrollTime`',

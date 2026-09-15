@@ -96,5 +96,15 @@ describe('<CompactWeekView />', () => {
         });
       }).toWarnDev(['MUI X Scheduler: `viewConfig.week` received an invalid hour range']);
     });
+
+    it('should forward `initialScrollTime` from the `week` key', () => {
+      // The scroll itself needs layout (browser tests of DayTimeGrid); the warning proves the wiring.
+      clearWarningsCache();
+      expect(() => {
+        renderWithProviders(<CompactWeekView />, [], {
+          viewConfig: { week: { startTime: 8, endTime: 20, initialScrollTime: 6 } },
+        });
+      }).toWarnDev(['MUI X Scheduler: `viewConfig.week` received an invalid `initialScrollTime`']);
+    });
   });
 });

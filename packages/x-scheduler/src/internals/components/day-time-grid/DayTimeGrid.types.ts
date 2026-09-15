@@ -18,9 +18,9 @@ export interface DayTimeGridProps extends ExportedDayTimeGridProps {
    */
   endTime?: number;
   /**
-   * Whole hour the grid scrolls to the first time it has a height, resolved against the
-   * displayed hour range by `getInitialScrollTime`.
-   * @default 7, clamped into the displayed hour range
+   * Hour the grid scrolls to the first time it can scroll (a displayed hour, validated by
+   * `getInitialScrollTime`).
+   * @default 7 when it is a displayed hour, otherwise `startTime`
    */
   initialScrollTime?: number;
   /**

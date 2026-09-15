@@ -28,14 +28,14 @@ Use the `viewConfig` prop to limit the hours displayed in the time grid with `st
 `startTime` and `endTime` must be whole hours (integers between `0` and `24`) with `startTime` lower than `endTime`. Minute-level precision isn't supported yet. An invalid range falls back to the full day and logs a warning in development.
 :::
 
-By default, the time grid scrolls to 7 AM (or to `startTime` when the range starts later) when it mounts.
+By default, the time grid scrolls to 7 AM when it mounts (or to `startTime` when 7 AM isn't a displayed hour).
 Use `initialScrollTime` to scroll to a different hour.
-Navigating to another week keeps the current scroll position; switching between the day and week views scrolls again.
+Navigating to another week keeps the current scroll position; switching to another view and back scrolls again.
 
 {{"demo": "WeekViewInitialScrollTime.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-`initialScrollTime` must be a whole hour within the displayed range. An invalid value falls back to the default and logs a warning in development.
+`initialScrollTime` must be a displayed hour (`startTime` to `endTime - 1`). An invalid value falls back to the default and logs a warning in development.
 :::
 
 ### Day view
@@ -52,14 +52,14 @@ The `viewConfig` prop also limits the hours displayed in the day view with `star
 `startTime` and `endTime` must be whole hours (integers between `0` and `24`) with `startTime` lower than `endTime`. Minute-level precision isn't supported yet. An invalid range falls back to the full day and logs a warning in development.
 :::
 
-By default, the time grid scrolls to 7 AM (or to `startTime` when the range starts later) when it mounts.
+By default, the time grid scrolls to 7 AM when it mounts (or to `startTime` when 7 AM isn't a displayed hour).
 Use `initialScrollTime` to scroll to a different hour.
-Navigating to another day keeps the current scroll position; switching between the day and week views scrolls again.
+Navigating to another day keeps the current scroll position; switching to another view and back scrolls again.
 
 {{"demo": "DayViewInitialScrollTime.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-`initialScrollTime` must be a whole hour within the displayed range. An invalid value falls back to the default and logs a warning in development.
+`initialScrollTime` must be a displayed hour (`startTime` to `endTime - 1`). An invalid value falls back to the default and logs a warning in development.
 :::
 
 ### Month view

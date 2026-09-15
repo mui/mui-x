@@ -42,11 +42,11 @@ export interface EventCalendarTimeGridViewConfig {
    */
   endTime?: number;
   /**
-   * Whole hour the time grid scrolls to when it mounts. Navigating to another period
-   * keeps the current scroll position; switching between the day and week views scrolls
-   * again. Must be within the displayed hour range; otherwise the default applies and a
-   * warning is logged in development.
-   * @default 7, clamped into the displayed hour range
+   * Hour the time grid scrolls to when it mounts (navigating to another period keeps
+   * the scroll position; switching to another view and back scrolls again).
+   * Must be a displayed hour (`startTime` to `endTime - 1`); otherwise the default
+   * applies and a warning is logged in development.
+   * @default 7 when it is a displayed hour, otherwise `startTime`
    */
   initialScrollTime?: number;
 }
