@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import Excel from '@mui/x-internal-exceljs-fork';
 import { buildChartExcelWorkbook } from './buildChartExcelWorkbook';
 import type { ChartExcelTable } from './chartExcelData.types';
 
@@ -57,15 +58,25 @@ describe('buildChartExcelWorkbook', () => {
     ]);
   });
 
-  it('keeps numbers and dates typed, so Excel formats them itself', async () => {
+  it('writes dates with a date format, so Excel does not show serial numbers', async () => {
     const date = new Date('2026-01-02T00:00:00Z');
     const workbook = await buildChartExcelWorkbook([
-      categoryTable([{ series: 'A', category: date, value: 1.5 }]),
+      categoryTable([
+        { series: 'A', category: date, value: 1.5 },
+        { series: 'A', category: 'France', value: 2 },
+      ]),
     ]);
 
-    const worksheet = workbook!.worksheets[0];
+    // Round-trip through the written file: the in-memory cell is a Date either way.
+    const buffer = await workbook!.xlsx.writeBuffer();
+    const reloaded = new Excel.Workbook();
+    await reloaded.xlsx.load(buffer);
+    const worksheet = reloaded.worksheets[0];
 
     expect(worksheet.getCell('B2').value instanceof Date).to.equal(true);
+    expect(worksheet.getCell('B2').numFmt).to.equal('dd.mm.yyyy hh:mm');
+    expect(worksheet.getCell('B3').value).to.equal('France');
+    expect(worksheet.getCell('B3').numFmt).to.equal(undefined);
     expect(typeof worksheet.getCell('C2').value).to.equal('number');
   });
 

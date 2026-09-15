@@ -2,6 +2,9 @@ import type * as Excel from '@mui/x-internal-exceljs-fork';
 import type { ChartExcelTable } from './chartExcelData.types';
 import { DEFAULT_SHEET_NAMES, sanitizeSheetName } from './sheetName';
 
+/** Same as the Data Grid's datetime columns. */
+const DATE_NUM_FMT = 'dd.mm.yyyy hh:mm';
+
 /** Lazy so exceljs never reaches the bundle of a chart that is not exported. */
 const getExcelJs = async () => {
   const excelJsModule = await import('@mui/x-internal-exceljs-fork');
@@ -43,11 +46,18 @@ export async function buildChartExcelWorkbook(
     worksheet.columns = table.columns.map((column) => ({
       key: column.key,
       header: includeHeaders ? column.header : undefined,
-      style: column.numFmt ? { numFmt: column.numFmt } : undefined,
     }));
 
     for (const row of table.rows) {
-      worksheet.addRow(row);
+      const excelRow = worksheet.addRow(row);
+
+      // exceljs writes an unstyled Date as a serial number. Per cell, since a merged column
+      // can mix dates and strings.
+      table.columns.forEach((column, columnIndex) => {
+        if (row[column.key] instanceof Date) {
+          excelRow.getCell(columnIndex + 1).numFmt = DATE_NUM_FMT;
+        }
+      });
     }
   }
 

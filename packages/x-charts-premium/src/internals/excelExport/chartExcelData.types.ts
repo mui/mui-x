@@ -8,8 +8,6 @@ export interface ChartExcelColumn {
   key: string;
   /** Text written on the header row. */
   header: string;
-  /** Excel number format, e.g. `yyyy-mm-dd`. */
-  numFmt?: string;
 }
 
 /**
