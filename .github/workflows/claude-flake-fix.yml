@@ -17,7 +17,7 @@ on:
       model:
         description: The Claude model the agent runs on.
         type: string
-        default: claude-sonnet-5
+        default: claude-opus-4-8
 
 permissions: {}
 
@@ -32,5 +32,5 @@ jobs:
     uses: mui/mui-public/.github/workflows/claude-flake-fix.yml@331f040cacc12a9593a3c7f260b9d5d89af0f76d # mui-public#1849
     with:
       report-only: ${{ inputs.report-only || false }}
-      model: ${{ inputs.model || 'claude-sonnet-5' }}
+      model: ${{ inputs.model || 'claude-opus-4-8' }}
       debug: true # always surface the agent's full output in the run log
