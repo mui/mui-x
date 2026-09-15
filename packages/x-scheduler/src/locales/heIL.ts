@@ -71,7 +71,7 @@ const viewNames = {
   agenda: 'סדר יום',
 };
 
-const heILDialog: EventEditingLocaleText = {
+const heILDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'צבע האירוע',
   colorSectionLabel: 'צבע',
@@ -109,8 +109,7 @@ const heILDialog: EventEditingLocaleText = {
   recurrenceTabLabel: 'חזרה',
   recurrenceMainSelectCustomLabel: 'חזרה',
   recurrenceWeeklyFrequencyLabel: 'שבועות',
-  recurrenceWeeklyPresetLabel: ({ weekday, weekdayName }) =>
-    `מדי שבוע ב${localizeWeekday(weekday ?? weekdayName)}`,
+  recurrenceWeeklyPresetLabel: ({ weekday }) => `מדי שבוע ב${localizeWeekday(weekday)}`,
   recurrenceMonthlyFrequencyLabel: 'חודשים',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `ב־${dayNumber} בחודש`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => monthlyWeekday(-1, weekDay),
@@ -143,7 +142,7 @@ const heILDialog: EventEditingLocaleText = {
   title: 'על אילו אירועים להחיל את השינוי?',
 };
 
-const heILCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> = {
+const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'משאבים',
 
@@ -217,7 +216,7 @@ const heILCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> 
   timelineResourceTitleHeader: 'שם המשאב',
 };
 
-const heILTimeline: Omit<EventTimelineLocaleText, keyof EventEditingLocaleText> = {
+const heILTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'שם המשאב',
 };
