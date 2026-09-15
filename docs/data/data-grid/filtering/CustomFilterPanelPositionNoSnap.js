@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridSlotProps,
   Toolbar,
   ToolbarButton,
   FilterPanelTrigger,
@@ -12,15 +11,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-declare module '@mui/x-data-grid' {
-  interface ToolbarPropsOverrides {
-    setFilterButtonEl: React.Dispatch<
-      React.SetStateAction<HTMLButtonElement | null>
-    >;
-  }
-}
-
-function CustomToolbar({ setFilterButtonEl }: GridSlotProps['toolbar']) {
+function CustomToolbar({ setFilterButtonEl }) {
   return (
     <Toolbar>
       <Tooltip title="Filters">
@@ -32,15 +23,14 @@ function CustomToolbar({ setFilterButtonEl }: GridSlotProps['toolbar']) {
   );
 }
 
-export default function CustomFilterPanelPosition() {
+export default function CustomFilterPanelPositionNoSnap() {
   const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
   });
 
-  const [filterButtonEl, setFilterButtonEl] =
-    React.useState<HTMLButtonElement | null>(null);
+  const [filterButtonEl, setFilterButtonEl] = React.useState(null);
 
   return (
     <div style={{ height: 400, width: '100%' }}>

@@ -25,7 +25,7 @@ export interface GridPanelClasses {
 
 export interface GridPanelProps extends Pick<
   GridSlotProps['basePopper'],
-  'id' | 'className' | 'target' | 'flip'
+  'id' | 'className' | 'target' | 'flip' | 'placement' | 'transition' | 'focusTrap'
 > {
   ref?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
@@ -35,6 +35,8 @@ export interface GridPanelProps extends Pick<
   classes?: Partial<GridPanelClasses>;
   open: boolean;
   onClose?: () => void;
+  /** @default 'bottom-end' */
+  placement?: GridSlotProps['basePopper']['placement'];
 }
 
 export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('MuiDataGrid', [
@@ -62,7 +64,14 @@ const GridPanelContent = styled('div', {
 });
 
 const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
-  const { children, className, classes: classesProp, onClose, ...other } = props;
+  const {
+    children,
+    className,
+    classes: classesProp,
+    onClose,
+    placement = 'bottom-end',
+    ...other
+  } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
@@ -102,7 +111,7 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
     <GridPanelRoot
       as={rootProps.slots.basePopper}
       ownerState={rootProps}
-      placement="bottom-end"
+      placement={placement}
       className={clsx(classes.panel, className, variablesClass)}
       flip
       onDidShow={onDidShow}
@@ -135,10 +144,32 @@ GridPanel.propTypes /* remove-proptypes */ = {
   classes: PropTypes.object,
   className: PropTypes.string,
   flip: PropTypes.bool,
+  focusTrap: PropTypes.bool,
   id: PropTypes.string,
   onClose: PropTypes.func,
   open: PropTypes.bool.isRequired,
+  /**
+   * @default 'bottom-end'
+   */
+  placement: PropTypes.oneOf([
+    'auto-end',
+    'auto-start',
+    'auto',
+    'bottom-end',
+    'bottom-start',
+    'bottom',
+    'left-end',
+    'left-start',
+    'left',
+    'right-end',
+    'right-start',
+    'right',
+    'top-end',
+    'top-start',
+    'top',
+  ]),
   target: PropTypes /* @typescript-to-proptypes-ignore */.any,
+  transition: PropTypes.bool,
 } as any;
 
 export { GridPanel };
