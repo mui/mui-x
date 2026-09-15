@@ -25,12 +25,12 @@ import type {
   UseProgressiveRenderingSignature,
 } from '@mui/x-charts/internals';
 import { useChartProExport, useChartProZoom } from '@mui/x-charts-pro/plugins';
-import { useChartPremiumExport } from './useChartPremiumExport';
-import type { UseChartPremiumExportSignature } from './useChartPremiumExport';
 import type {
   UseChartProExportSignature,
   UseChartProZoomSignature,
 } from '@mui/x-charts-pro/plugins';
+import { useChartPremiumExport } from './useChartPremiumExport';
+import type { UseChartPremiumExportSignature } from './useChartPremiumExport';
 
 export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
