@@ -11,6 +11,14 @@ export interface HeatmapCellOwnerState {
   isHighlighted: boolean;
   classes?: Partial<HeatmapClasses>;
   value: number;
+  /**
+   * The x index of the cell.
+   */
+  xIndex: number;
+  /**
+   * The y index of the cell.
+   */
+  yIndex: number;
 }
 
 /**
@@ -67,6 +75,8 @@ HeatmapCell.propTypes /* remove-proptypes */ = {
     isHighlighted: PropTypes.bool.isRequired,
     seriesId: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
+    xIndex: PropTypes.number.isRequired,
+    yIndex: PropTypes.number.isRequired,
   }).isRequired,
   width: PropTypes.number.isRequired,
   x: PropTypes.number.isRequired,

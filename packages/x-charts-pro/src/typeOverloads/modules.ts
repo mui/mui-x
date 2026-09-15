@@ -41,6 +41,7 @@ declare module '@mui/x-charts/internals' {
       itemIdentifier: HeatmapItemIdentifier;
       itemIdentifierWithData: HeatmapItemIdentifierWithData;
       valueType: HeatmapValueType;
+      colorGetter: (value: number | null, context: { xIndex: number; yIndex: number }) => string;
       axisType: 'cartesian';
       highlightScope: CommonHighlightScope;
       descriptionGetterParams: {
@@ -66,6 +67,7 @@ declare module '@mui/x-charts/internals' {
       itemIdentifier: FunnelItemIdentifier;
       itemIdentifierWithData: FunnelItemIdentifier;
       valueType: MakeRequired<FunnelValueType, 'id' | 'color'>;
+      colorGetter: (dataIndex: number) => string;
       axisType: 'cartesian';
       highlightScope: CommonHighlightScope;
       descriptionGetterParams: {
