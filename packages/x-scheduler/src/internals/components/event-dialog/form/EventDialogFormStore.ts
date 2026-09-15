@@ -361,16 +361,16 @@ export class EventDialogFormStore<
   };
 
   /**
-   * Returns the values written or changed since seeding, minus `excludeKeys`.
+   * Returns the values written or changed since seeding.
    */
-  public getDirtyValues = (excludeKeys?: ReadonlySet<string>): Record<string, unknown> => {
+  public getDirtyValues = (): Record<string, unknown> => {
     const { values } = this.state;
     const dirty: Record<string, unknown> = {};
     for (const key of Object.keys(values)) {
       const isDirty =
         this.writtenDefaultKeys.has(key) ||
         !Object.is(values[key], getOwn(this.initialValues, key));
-      if (!excludeKeys?.has(key) && isDirty) {
+      if (isDirty) {
         setOwn(dirty, key, values[key]);
       }
     }

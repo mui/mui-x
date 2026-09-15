@@ -5,12 +5,13 @@ import {
   createMatchMedia,
   createSchedulerRenderer,
   EventBuilder,
+  utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
@@ -88,6 +89,223 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     // Pin the other side of the "hide the resource select when there are no resources"
     // condition: with resources configured, the select must still render.
     expect(screen.getByRole('combobox', { name: 'Resource' })).not.to.equal(null);
+  });
+
+  describe('events viewed from another display timezone', () => {
+    function renderEditDialog(builder: EventBuilder, displayTimezone: TemporalTimezone) {
+      const onEventsChange = vi.fn();
+      const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[event]}
+          displayTimezone={displayTimezone}
+          onEventsChange={onEventsChange}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+        </EventCalendarProvider>,
+      );
+
+      function getUpdatedEvent(): SchedulerEvent {
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        return onEventsChange.mock.calls[0][0].find(
+          (updated: SchedulerEvent) => updated.id === event.id,
+        )!;
+      }
+
+      return { user, event, getUpdatedEvent };
+    }
+
+    // The builder mutates in place, so each test builds its own instance.
+    const independenceDay = () => utcJuly4AllDayBuilder().title('Independence day');
+
+    it('should keep the dates of an all-day event untouched when only the title is edited', async () => {
+      // New York is behind UTC: the dialog shows this event as July 3rd → 4th.
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        independenceDay(),
+        'America/New_York',
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.title).to.equal('Independence day (renamed)');
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should keep the dates of a multi-day all-day event untouched when only the title is edited', async () => {
+      // Tokyo is ahead of UTC: the dialog shows this two-day event as July 4th → 6th.
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        EventBuilder.new()
+          .title('Conference')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T00:00:00', '2025-07-05T23:59:59.999', { allDay: true }),
+        'Asia/Tokyo',
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should keep the dates of a timed event untouched when only the title is edited', async () => {
+      // Seconds the `HH:mm` form fields cannot carry: a resend of the displayed range would
+      // drop them, so byte-identity proves the range was left out of the payload.
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        EventBuilder.new()
+          .title('Standup')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T09:00:30', '2025-07-04T09:30:30'),
+        'America/New_York',
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should interpret an edited day in the display timezone', async () => {
+      const { user, getUpdatedEvent } = renderEditDialog(independenceDay(), 'America/New_York');
+
+      const startDateInput = screen.getByLabelText(/start date/i);
+      await user.clear(startDateInput);
+      await user.type(startDateInput, '2025-07-05');
+      const endDateInput = screen.getByLabelText(/end date/i);
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-07-05');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      // The picked day means the day the user was looking at (New York's July 5th),
+      // matching how the grid renders all-day events in the display timezone.
+      const updated = getUpdatedEvent();
+      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-05T04:00:00', 'UTC')),
+      );
+      // Wall-time serialization has second resolution; the read-time normalization
+      // restores the inclusive end-of-day.
+      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-06T03:59:59', 'UTC')),
+      );
+    });
+
+    it('should ignore a time edit orphaned by toggling all-day back on', async () => {
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        independenceDay(),
+        'America/New_York',
+      );
+
+      // The time typed while all-day was off stays dirty after the toggle reverts,
+      // but an all-day range does not read it — the dates must not move.
+      const allDaySwitch = screen.getByRole('switch', { name: /all day/i });
+      await user.click(allDaySwitch);
+      const startTimeInput = screen.getByLabelText(/start time/i);
+      await user.clear(startTimeInput);
+      await user.type(startTimeInput, '09:00');
+      await user.click(allDaySwitch);
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should keep the untouched end byte-identical when only the start date is edited', async () => {
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        independenceDay(),
+        'America/New_York',
+      );
+
+      // The mirror of the end-only case: the two bounds are gated independently, so a
+      // mis-wired spread would only show up from this direction.
+      const startDateInput = screen.getByLabelText(/start date/i);
+      await user.clear(startDateInput);
+      await user.type(startDateInput, '2025-07-02');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.end).to.equal(event.end);
+      // The picked day means the day the user was looking at (New York July 2nd).
+      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-02T04:00:00', 'UTC')),
+      );
+    });
+
+    it('should submit only the edited bound of the displayed range', async () => {
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        independenceDay(),
+        'America/New_York',
+      );
+
+      const endDateInput = screen.getByLabelText(/end date/i);
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-07-05');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      // The untouched start keeps its stored value: re-anchoring it to the display
+      // timezone would move the event for anyone reading it from another one.
+      expect(updated.start).to.equal(event.start);
+      // The edited end applies as the day the user was looking at (New York July 5th).
+      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-06T03:59:59', 'UTC')),
+      );
+      // The built-in form keys never leak onto the event model as custom fields.
+      expect(updated).to.not.have.property('startDate');
+      expect(updated).to.not.have.property('endDate');
+    });
+
+    it('should convert an all-day event to timed with the entered display times', async () => {
+      const { user, getUpdatedEvent } = renderEditDialog(independenceDay(), 'America/New_York');
+
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
+      const startTimeInput = screen.getByLabelText(/start time/i);
+      await user.clear(startTimeInput);
+      await user.type(startTimeInput, '09:00');
+      const endTimeInput = screen.getByLabelText(/end time/i);
+      await user.clear(endTimeInput);
+      await user.type(endTimeInput, '10:00');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      // The typed times mean the times the user was looking at: the seeded New York
+      // days (July 3rd → 4th) at 09:00 and 10:00 New York time.
+      const updated = getUpdatedEvent();
+      expect(Boolean(updated.allDay)).to.equal(false);
+      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-03T13:00:00', 'UTC')),
+      );
+      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-04T14:00:00', 'UTC')),
+      );
+    });
+  });
+
+  it('should delete the event and close the dialog when Delete is pressed on a non-recurring event', async () => {
+    const onEventsChange = vi.fn();
+    const onClose = vi.fn();
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        resources={resources}
+        onEventsChange={onEventsChange}
+      >
+        <EventDialogContent open {...defaultProps} onClose={onClose} />
+      </EventCalendarProvider>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Delete event' }));
+
+    // Without the recurring plugin the delete applies immediately and the dialog closes.
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+    expect(onClose.mock.calls.length).to.equal(1);
   });
 
   it('should not render the resource select when there are no resources, but should keep the color picker', () => {
@@ -1395,6 +1613,42 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
             defaultValue: 'Acme',
             validate: () => deferred.promise,
           });
+          const startTime = useEventDialogFormField('startTime');
+          return (
+            <button type="button" onClick={() => startTime.setValue('07:45')}>
+              Shift start
+            </button>
+          );
+        }
+        const { user, setProps } = renderWithSlot(
+          { eventDialogGeneralTab: AsyncValidatedSection },
+          { onEventsChange, displayTimezone: 'UTC' },
+        );
+
+        // The start was seeded as 07:30 UTC and edited to 07:45; while the validation
+        // is pending, the display timezone changes, so the edited wall time must
+        // serialize as a New York time.
+        await user.click(screen.getByRole('button', { name: 'Shift start' }));
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+        setProps({ displayTimezone: 'America/New_York' });
+        await act(async () => deferred.resolve(null));
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        const updated = onEventsChange.mock.calls[0][0][0];
+        expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:45:00.000Z');
+        // The untouched end was validated as a New York time too: persisting its stored
+        // 08:15Z would invert the range, so it follows the start into the new timezone.
+        expect(new Date(updated.end).toISOString()).to.equal('2025-05-26T12:15:00.000Z');
+      });
+
+      it('should keep an untouched range byte-identical when the display timezone changes while the async validation is pending', async () => {
+        const onEventsChange = vi.fn();
+        const deferred = createDeferred();
+        function AsyncValidatedSection() {
+          useEventDialogFormField('client', {
+            defaultValue: 'Acme',
+            validate: () => deferred.promise,
+          });
           return null;
         }
         const { user, setProps } = renderWithSlot(
@@ -1402,15 +1656,16 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
           { onEventsChange, displayTimezone: 'UTC' },
         );
 
-        // The wall-time fields were seeded as 07:30–08:15 UTC; while the validation
-        // is pending, the same wall times start displaying as New York times.
+        // No range field was edited: the flip while the validation is pending must not
+        // re-anchor the stored dates to the new display timezone.
         await user.click(screen.getByRole('button', { name: 'Save' }));
         setProps({ displayTimezone: 'America/New_York' });
         await act(async () => deferred.resolve(null));
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
         const updated = onEventsChange.mock.calls[0][0][0];
-        expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:30:00.000Z');
+        expect(updated.start).to.equal(DEFAULT_EVENT.start);
+        expect(updated.end).to.equal(DEFAULT_EVENT.end);
       });
 
       it('should enforce a resource requirement enabled while the async validation was pending', async () => {

@@ -19,8 +19,9 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 /**
  * Resizing a recurring event commits through the recurring scope dialog. Whichever scope is chosen,
- * the resized occurrence must stay armed afterwards (toolbar + selection outline), even when the scope
- * detaches it onto a freshly-created event whose occurrence key differs from the original.
+ * a same-day resize keeps the resized occurrence armed afterwards (toolbar + selection outline), even
+ * when the scope detaches it onto a freshly-created event whose occurrence key differs from the
+ * original. (An `all` change that moves the occurrence off its day disarms it instead.)
  */
 describe('CompactDayViewPremium - touch resize (recurring)', () => {
   const { render } = createSchedulerRenderer({

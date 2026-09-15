@@ -1,6 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { findInvalidRangeField } from './utils';
+import { findInvalidRangeField, getEditedRangeBounds } from './utils';
 
 describe('findInvalidRangeField', () => {
   const base = {
@@ -58,6 +58,54 @@ describe('findInvalidRangeField', () => {
 
     it('should ignore the time fields of an all-day range', () => {
       expect(run({ startTime: '24:00', allDay: true })).to.equal(null);
+    });
+  });
+});
+
+describe('getEditedRangeBounds', () => {
+  it('should report no edited bound when no range key is dirty', () => {
+    expect(getEditedRangeBounds({ title: 'Renamed' }, false)).to.deep.equal({
+      startEdited: false,
+      endEdited: false,
+    });
+  });
+
+  it('should report only the bound whose date was edited', () => {
+    expect(getEditedRangeBounds({ endDate: '2025-07-05' }, false)).to.deep.equal({
+      startEdited: false,
+      endEdited: true,
+    });
+    expect(getEditedRangeBounds({ startDate: '2025-07-01' }, true)).to.deep.equal({
+      startEdited: true,
+      endEdited: false,
+    });
+  });
+
+  it('should count a time edit only when the range is not all-day', () => {
+    expect(getEditedRangeBounds({ startTime: '09:00' }, false)).to.deep.equal({
+      startEdited: true,
+      endEdited: false,
+    });
+    expect(getEditedRangeBounds({ endTime: '10:00' }, false)).to.deep.equal({
+      startEdited: false,
+      endEdited: true,
+    });
+    // A time left over from toggling all-day off and back on is orphaned: the
+    // submitted all-day range never reads it.
+    expect(getEditedRangeBounds({ startTime: '09:00' }, true)).to.deep.equal({
+      startEdited: false,
+      endEdited: false,
+    });
+    expect(getEditedRangeBounds({ endTime: '10:00' }, true)).to.deep.equal({
+      startEdited: false,
+      endEdited: false,
+    });
+  });
+
+  it('should mark both bounds edited when the all-day mode itself changed', () => {
+    expect(getEditedRangeBounds({ allDay: false }, false)).to.deep.equal({
+      startEdited: true,
+      endEdited: true,
     });
   });
 });

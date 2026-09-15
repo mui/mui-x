@@ -279,10 +279,11 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   if (originalOccurrence.displayTimezone.rrule) {
     store.updateRecurringEvent({
-      occurrenceStart: originalOccurrence.displayTimezone.start.value,
+      occurrenceStart: originalOccurrence.dataTimezone.start.value,
       changes,
     });
-    // Editing surface is refreshed in `selectRecurringEventScope` once the user confirms a scope.
+    // Editing surface is refreshed (or disarmed) in `selectRecurringEventScope` once the user
+    // confirms a scope.
     return;
   }
 

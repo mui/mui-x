@@ -58,6 +58,21 @@ export function shouldUpdateOccurrencePlaceholder(
 
 export const DEFAULT_EVENT_MODEL_STRUCTURE: SchedulerEventModelStructure<any> = {};
 
+type RequiredEventProperty = {
+  [P in keyof SchedulerEvent]-?: {} extends Pick<SchedulerEvent, P> ? never : P;
+}[keyof SchedulerEvent];
+
+/**
+ * The properties an event always has, so an update cannot remove them. Typed off
+ * `SchedulerEvent` so a new required property has to be listed here too.
+ */
+const ALWAYS_PRESENT_EVENT_PROPERTIES: { [P in RequiredEventProperty]: true } = {
+  id: true,
+  title: true,
+  start: true,
+  end: true,
+};
+
 const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
   id: true,
   title: true,
@@ -211,7 +226,7 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
 }
 
 /**
- * Create an event model from a processed event using the provided model structure.
+ * Creates an event model from the creation properties using the provided model structure.
  */
 export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,
@@ -268,11 +283,23 @@ function createOrUpdateEventModelFromBuiltInEventModel<
   for (const key in changes) {
     if (Object.prototype.hasOwnProperty.call(changes, key)) {
       const typedKey = key as keyof SchedulerEvent;
+      // An event always has these, so an explicit `undefined` reads as "unchanged"
+      // instead of removing them — checked before the setter dispatch so a custom
+      // event model cannot receive the `undefined` either.
+      if (
+        changes[key] === undefined &&
+        ALWAYS_PRESENT_EVENT_PROPERTIES.hasOwnProperty(key) &&
+        oldModel != null
+      ) {
+        continue;
+      }
       const setter = eventModelStructure?.[typedKey]?.setter;
       if (setter) {
         // @ts-ignore
         propertiesWithSetter.push([setter, changes[key]]);
       } else if (changes[key] === undefined) {
+        // An explicit `undefined` removes the property, e.g. `rrule: undefined` clears
+        // the recurrence.
         // @ts-ignore
         delete eventModel[key];
       }

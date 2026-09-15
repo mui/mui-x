@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
@@ -23,7 +24,7 @@ describe('CompactDayView - touch resize', () => {
     )!;
   }
 
-  function renderResizableEvent(onEventsChange = vi.fn()) {
+  function renderResizableEvent({ onEventsChange = vi.fn(), controlled = false } = {}) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -31,8 +32,27 @@ describe('CompactDayView - touch resize', () => {
       .resizable(true)
       .build();
 
+    // Feeds the changes back into the `events` prop, like a real host does.
+    function ControlledHost() {
+      const [events, setEvents] = React.useState([event]);
+      return (
+        <StandaloneCompactDayView
+          events={events}
+          resources={[]}
+          onEventsChange={(next: typeof events) => {
+            onEventsChange(next);
+            setEvents(next);
+          }}
+        />
+      );
+    }
+
     const { user } = render(
-      <StandaloneCompactDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />,
+      controlled ? (
+        <ControlledHost />
+      ) : (
+        <StandaloneCompactDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />
+      ),
     );
 
     // Geometry resolver maps pointer Y to a time via the column's bounds.
@@ -92,7 +112,9 @@ describe('CompactDayView - touch resize', () => {
   });
 
   it('should keep a prior armed resize when an unrelated field is then edited from the form', async () => {
-    const { onEventsChange, user } = renderResizableEvent();
+    // Controlled: the form only resends the fields the user edited, so the resized
+    // end survives through the model, not through the form echoing it back.
+    const { onEventsChange, user } = renderResizableEvent({ controlled: true });
     const eventElement = armEvent();
 
     const endHandle = getResizeHandle(eventElement, 'end');
@@ -102,6 +124,8 @@ describe('CompactDayView - touch resize', () => {
 
     // Open the editing form from the armed toolbar and change only the title.
     fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+    // The form must be seeded with the resized end, not the pre-resize model value.
+    expect(screen.getByLabelText(/end time/i)).to.have.value('16:00');
     fireEvent.change(screen.getByRole('textbox', { name: /Event title/i }), {
       target: { value: 'Renamed Meeting' },
     });
