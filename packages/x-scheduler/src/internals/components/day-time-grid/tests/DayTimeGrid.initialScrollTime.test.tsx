@@ -6,10 +6,9 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { describe, it, expect, beforeEach } from 'vitest';
 
-// The scroll position is real layout (`scrollTop` is clamped to the overflow), which jsdom does not implement.
+// Needs real layout: jsdom does not clamp `scrollTop`.
 describe.skipIf(isJSDOM)('<DayTimeGrid /> - viewConfig (initialScrollTime)', () => {
-  // `render` on purpose, not `renderSettled`: the synchronous tests assert before the first
-  // ResizeObserver frame, which proves the mount layout effect scrolled on its own.
+  // `render`, not `renderSettled`: the sync tests assert before the first ResizeObserver frame.
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03') });
 
   beforeEach(() => {
@@ -31,15 +30,14 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> - viewConfig (initialScrollTime)', () 
     return document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridHeaderCell}`)!;
   }
 
-  // Read the rendered row height rather than hardcoding the constant, so the assertions follow the layout.
+  // Measured, so the assertions follow the rendered row height.
   function getHourHeight() {
     return document
       .querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridTimeAxisCell}`)!
       .getBoundingClientRect().height;
   }
 
-  // The calendar is the rendered root so `setProps` targets it; the height keeps the time grid
-  // short enough to overflow and actually scroll.
+  // The calendar is the root so `setProps` reaches it; 400px makes the grid overflow.
   function renderCalendar({
     style,
     ...props
@@ -71,7 +69,7 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> - viewConfig (initialScrollTime)', () 
   });
 
   it('should stay at the top when initialScrollTime equals startTime', () => {
-    // A range starting before 7 AM, so the default would scroll and only the explicit value stays at 0.
+    // The default (7 AM) would scroll here, so 0 proves the explicit value.
     renderCalendar({ viewConfig: { week: { startTime: 3, endTime: 20, initialScrollTime: 3 } } });
     expect(getScrollContainer().scrollTop).to.equal(0);
   });

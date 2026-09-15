@@ -98,7 +98,7 @@ describe('<CompactWeekView />', () => {
     });
 
     it('should forward `initialScrollTime` from the `week` key', () => {
-      // The scroll itself needs layout (browser tests of DayTimeGrid); the warning proves the wiring.
+      // The warning proves the prop reaches the grid.
       clearWarningsCache();
       expect(() => {
         renderWithProviders(<CompactWeekView />, [], {

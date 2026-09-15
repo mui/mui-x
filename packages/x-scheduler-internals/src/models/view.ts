@@ -42,10 +42,9 @@ export interface EventCalendarTimeGridViewConfig {
    */
   endTime?: number;
   /**
-   * Hour the time grid scrolls to when it mounts (navigating to another period keeps
-   * the scroll position; switching to another view and back scrolls again).
-   * Must be a displayed hour (`startTime` to `endTime - 1`); otherwise the default
-   * applies and a warning is logged in development.
+   * Hour the time grid scrolls to when it mounts.
+   * Must be a displayed hour (`startTime` to `endTime - 1`); otherwise the default applies
+   * and a warning is logged in development.
    * @default 7 when it is a displayed hour, otherwise `startTime`
    */
   initialScrollTime?: number;
