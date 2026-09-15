@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
@@ -20,7 +21,7 @@ import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getDisplayedHourRange, getVisibleStartTime } from '@mui/x-scheduler-internals/internals';
+import { getDisplayedHourRange, getInitialScrollTime } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
@@ -341,18 +342,15 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     className,
     startTime: startTimeProp,
     endTime: endTimeProp,
-    visibleStartTime: visibleStartTimeProp,
+    initialScrollTime: initialScrollTimeProp,
     hourRangeSource = 'viewConfig',
     ...other
   } = props;
 
-  const { startTime, endTime } = getDisplayedHourRange(startTimeProp, endTimeProp, hourRangeSource);
+  const range = getDisplayedHourRange(startTimeProp, endTimeProp, hourRangeSource);
+  const { startTime, endTime } = range;
   const hoursCount = endTime - startTime;
-  const visibleStartTime = getVisibleStartTime(
-    visibleStartTimeProp,
-    { startTime, endTime },
-    hourRangeSource,
-  );
+  const initialScrollTime = getInitialScrollTime(initialScrollTimeProp, range, hourRangeSource);
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -426,16 +424,26 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   useIsoLayoutEffect(updateHasScroll, [occurrencesMap, updateHasScroll]);
 
-  useResizeObserver(bodyRef, updateHasScroll);
-
-  // Initial scroll only: navigating to another period keeps the user's scroll position.
-  const initialScrollTopRef = React.useRef((visibleStartTime - startTime) * HOUR_HEIGHT);
-  useIsoLayoutEffect(() => {
+  // Applied once, the first time the grid has a height: a hidden host clamps `scrollTop` to 0.
+  // Navigating to another period keeps the user's scroll position.
+  const isInitialScrollAppliedRef = React.useRef(false);
+  const applyInitialScroll = useStableCallback(() => {
     const scrollRoot = scrollRootRef.current;
-    if (scrollRoot) {
-      scrollRoot.scrollTop = initialScrollTopRef.current;
+    if (isInitialScrollAppliedRef.current || !scrollRoot || scrollRoot.clientHeight === 0) {
+      return;
     }
-  }, []);
+    // Measured rather than `HOUR_HEIGHT` so a `--hour-height` override keeps the hours aligned.
+    const hourHeight = scrollRoot.scrollHeight / hoursCount;
+    scrollRoot.scrollTop = (initialScrollTime - startTime) * hourHeight;
+    isInitialScrollAppliedRef.current = true;
+  });
+
+  useIsoLayoutEffect(applyInitialScroll, [applyInitialScroll]);
+
+  useResizeObserver(bodyRef, () => {
+    updateHasScroll();
+    applyInitialScroll();
+  });
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 

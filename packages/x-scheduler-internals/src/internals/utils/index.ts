@@ -20,4 +20,4 @@ export * from './useEventCreation';
 export * from './useKeyboardEventCreation';
 export * from './getNavigationTarget';
 export * from './getDisplayedHourRange';
-export * from './getVisibleStartTime';
+export * from './getInitialScrollTime';

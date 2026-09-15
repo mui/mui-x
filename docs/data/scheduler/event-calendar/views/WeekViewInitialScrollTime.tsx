@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import {
   initialEvents,
@@ -7,8 +7,8 @@ import {
   resources,
 } from '../../datasets/personal-agenda';
 
-export default function WeekViewVisibleStartTime() {
-  const [events, setEvents] = React.useState(initialEvents);
+export default function WeekViewInitialScrollTime() {
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '500px', width: '100%' }}>
@@ -17,7 +17,7 @@ export default function WeekViewVisibleStartTime() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        viewConfig={{ week: { startTime: 6, endTime: 22, visibleStartTime: 9 } }}
+        viewConfig={{ week: { startTime: 6, endTime: 22, initialScrollTime: 9 } }}
       />
     </div>
   );
