@@ -44,6 +44,10 @@ const buildTreeViewDragInteractions = (dataTransfer: DataTransfer) => {
   const dragEnd = createFireEvent('dragEnd');
 
   return {
+    dragStart,
+    dragEnter,
+    dragOver,
+    dragEnd,
     fullDragSequence: (
       draggedItem: HTMLElement,
       targetItem: HTMLElement,
@@ -264,6 +268,28 @@ describeTreeView<RichTreeViewProStore<any, any>>(
           ]);
         });
       });
+
+      describe('itemChildrenIndentation prop', () => {
+        it('should not measure a non-pixel indentation on every dragover event', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }],
+            itemsReordering: true,
+            itemChildrenIndentation: '2rem',
+          });
+
+          const targetContent = view.getItemContent('2');
+          dragEvents.dragStart(view.getItemRoot('1'));
+          dragEvents.dragEnter(targetContent);
+          dragEvents.dragOver(targetContent);
+
+          // Measuring a non-pixel value appends a temporary element to the content element.
+          // Once measured, the following dragover events must reuse the value.
+          const appendChildSpy = vi.spyOn(targetContent, 'appendChild');
+          dragEvents.dragOver(targetContent);
+          dragEvents.dragOver(targetContent);
+          expect(appendChildSpy).not.toHaveBeenCalled();
+        });
+      });
     });
   },
 );
@@ -282,16 +308,13 @@ describe('getNewPosition util', () => {
     'move-to-parent': { parentId: null, index: 2 },
   };
 
-  const FAKE_CONTENT_ELEMENT = {} as HTMLDivElement;
-
   const COMMON_PROPERTIES = {
-    itemChildrenIndentation: 12,
+    itemChildrenIndentationPx: 12,
     validActions: ALL_ACTIONS,
     targetHeight: 100,
     targetDepth: 1,
     cursorY: 50,
     cursorX: 100,
-    contentElement: FAKE_CONTENT_ELEMENT,
   };
 
   it('should choose the "reorder-above" action when the cursor is in the top quarter of the target item', () => {

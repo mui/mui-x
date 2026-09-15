@@ -3,11 +3,23 @@ import { itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import type { TreeViewItemItemReorderingValidActions, TreeViewItemReorderPosition } from './types';
 import type { RichTreeViewProStore } from '../../RichTreeViewProStore/RichTreeViewProStore';
 import { itemsReorderingSelectors } from './selectors';
-import { chooseActionToApply, isAncestor, moveItemInTree } from './utils';
+import {
+  chooseActionToApply,
+  isAncestor,
+  moveItemInTree,
+  parseItemChildrenIndentation,
+} from './utils';
 import { useTreeViewItemsReorderingItemPlugin } from './itemPlugin';
 
 export class TreeViewItemsReorderingPlugin {
   private store: RichTreeViewProStore<any, any>;
+
+  /**
+   * Cached pixel value of the `itemChildrenIndentation` prop.
+   * A non-pixel value (e.g. `2rem`) can only be resolved by measuring a DOM element, which forces a synchronous layout.
+   * It is measured once per drag-and-drop operation instead of on every `dragover` event.
+   */
+  private itemChildrenIndentationPxCache: { value: string | number; px: number } | null = null;
 
   constructor(store: RichTreeViewProStore<any, any>) {
     this.store = store;
@@ -123,6 +135,10 @@ export class TreeViewItemsReorderingPlugin {
       return;
     }
 
+    // The pixel value of a non-pixel indentation depends on the environment (font size, container width, ...),
+    // so it is measured again for each new drag-and-drop operation.
+    this.itemChildrenIndentationPxCache = null;
+
     this.store.set('currentReorder', {
       targetItemId: itemId,
       draggedItemId: itemId,
@@ -187,6 +203,17 @@ export class TreeViewItemsReorderingPlugin {
     });
   };
 
+  private getItemChildrenIndentationPx = (contentElement: HTMLElement) => {
+    const value = this.store.state.itemChildrenIndentation;
+    let cache = this.itemChildrenIndentationPxCache;
+    if (cache == null || cache.value !== value) {
+      cache = { value, px: parseItemChildrenIndentation(value, contentElement) };
+      this.itemChildrenIndentationPxCache = cache;
+    }
+
+    return cache.px;
+  };
+
   /**
    * Set the new target item for the ongoing reordering.
    * The action will be determined based on the position of the cursor inside the target and the valid actions for this target.
@@ -219,13 +246,12 @@ export class TreeViewItemsReorderingPlugin {
     }
 
     const action = chooseActionToApply({
-      itemChildrenIndentation: this.store.state.itemChildrenIndentation,
+      itemChildrenIndentationPx: this.getItemChildrenIndentationPx(contentElement),
       validActions,
       targetHeight,
       targetDepth: this.store.state.itemMetaLookup[itemId].depth!,
       cursorY,
       cursorX,
-      contentElement,
     });
 
     const newPosition = action == null ? null : validActions[action]!;
