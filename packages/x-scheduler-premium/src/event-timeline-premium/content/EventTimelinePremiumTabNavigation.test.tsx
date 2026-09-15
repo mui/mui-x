@@ -10,6 +10,11 @@ import {
 } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPresetConfig } from '@mui/x-scheduler-internals-premium/models';
+import type {
+  EventTimelinePremiumSlots,
+  TimelineEventContentProps,
+  TimelineEventContentPropsOverrides,
+} from '@mui/x-scheduler-premium/models';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 
@@ -51,6 +56,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
       events?: SchedulerEvent[];
       presetConfig?: EventTimelinePremiumPresetConfig;
       hostWidth?: number;
+      slots?: EventTimelinePremiumSlots;
     } = {},
   ) {
     const view = await renderSettled(
@@ -62,6 +68,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
           preset="dayAndHour"
           presets={['dayAndHour']}
           presetConfig={options.presetConfig}
+          slots={options.slots}
         />
       </div>,
     );
@@ -93,6 +100,53 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
 
     await user.keyboard('{Tab}');
     expect(document.activeElement).to.equal(getEvent('evt-d3-h5'));
+  });
+
+  it('should reach the focusable content of an event before moving to the next event', async () => {
+    function EventContentWithLink(props: TimelineEventContentProps) {
+      return (
+        <React.Fragment>
+          {props.occurrence.title}
+          <a href="#details" data-testid={`link-${props.occurrence.title}`}>
+            details
+          </a>
+        </React.Fragment>
+      );
+    }
+    const { user } = await renderTimeline({
+      slots: {
+        // The overrides interface is only populated through module augmentation on the consumer side.
+        timelineEventContent: EventContentWithLink as React.ComponentType<
+          TimelineEventContentProps & TimelineEventContentPropsOverrides
+        >,
+      },
+    });
+
+    // The link text is part of the accessible name, so the roots are resolved from the links.
+    const getLink = (title: string) => screen.getByTestId(`link-${title}`);
+    const getRoot = (title: string) =>
+      getLink(title).closest<HTMLElement>('[data-occurrence-key]')!;
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('link-evt-d3-h1')).not.to.equal(null);
+      expect(screen.queryByTestId('link-evt-d3-h5')).not.to.equal(null);
+    });
+
+    act(() => {
+      getRoot('evt-d3-h1').focus();
+    });
+
+    await user.keyboard('{Tab}');
+    expect(document.activeElement).to.equal(getLink('evt-d3-h1'));
+
+    await user.keyboard('{Tab}');
+    expect(document.activeElement).to.equal(getRoot('evt-d3-h5'));
+
+    await user.keyboard('{Shift>}{Tab}{/Shift}');
+    expect(document.activeElement).to.equal(getLink('evt-d3-h1'));
+
+    await user.keyboard('{Shift>}{Tab}{/Shift}');
+    expect(document.activeElement).to.equal(getRoot('evt-d3-h1'));
   });
 
   it('should scroll-then-focus an event that is virtualized out', async () => {
