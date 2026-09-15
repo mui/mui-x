@@ -92,12 +92,29 @@ describe('scatterExtractor', () => {
     expect(table.rows[1].colorValue).to.equal(7);
   });
 
-  it('ignores the deprecated z channel', () => {
+  it('exports the deprecated z as the color value, like the renderer', () => {
     const [table] = scatterExtractor(
-      createParams({ s1: { id: 's1', label: 'A', data: [{ x: 1, y: 2, z: 5 }] } }),
+      createParams({ s1: { id: 's1', label: 'A', data: [{ x: 1, y: 2, z: 42 }] } }),
     );
 
-    expect(table.columns.map((column) => column.key)).to.not.include('z');
+    expect(table.columns.map((column) => column.key)).to.deep.equal([
+      'series',
+      'id',
+      'x',
+      'y',
+      'colorValue',
+    ]);
+    expect(table.rows[0].colorValue).to.equal(42);
+  });
+
+  it('prefers colorValue over z when a point has both', () => {
+    const [table] = scatterExtractor(
+      createParams({
+        s1: { id: 's1', label: 'A', data: [{ x: 1, y: 2, colorValue: 7, z: 42 }] },
+      }),
+    );
+
+    expect(table.rows[0].colorValue).to.equal(7);
   });
 
   it('includes hidden series by default, and drops them only when asked', () => {

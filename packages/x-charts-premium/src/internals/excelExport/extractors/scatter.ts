@@ -22,7 +22,8 @@ export const scatterExtractor: ChartExcelExtractor<'scatter'> = (params) => {
 
   for (const item of visibleSeries) {
     for (const point of item.data) {
-      hasColorValue ||= point.colorValue !== undefined;
+      // Renderer colours by `colorValue ?? z`; `z` is deprecated but still honoured.
+      hasColorValue ||= (point.colorValue ?? point.z) !== undefined;
       hasSizeValue ||= point.sizeValue !== undefined;
     }
   }
@@ -41,7 +42,7 @@ export const scatterExtractor: ChartExcelExtractor<'scatter'> = (params) => {
       };
 
       if (hasColorValue) {
-        row.colorValue = toSafeCell(point.colorValue, escapeFormulas);
+        row.colorValue = toSafeCell(point.colorValue ?? point.z, escapeFormulas);
       }
       if (hasSizeValue) {
         row.sizeValue = toSafeCell(point.sizeValue, escapeFormulas);
