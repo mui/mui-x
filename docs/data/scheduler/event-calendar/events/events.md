@@ -189,6 +189,10 @@ function Calendar() {
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
+A property declared with a `getter` but no `setter` is not writable: the Event Calendar can display it but never writes it back to your model.
+
+When `start` or `end` is not writable, that date can't move: dragging is disabled, and only the other side's resize handle stays enabled. Saving other changes in the event dialog leaves that date unchanged. Creating a new event is refused when either date is not writable, since a new event has no old date to fall back to.
+
 ## Event constraints 🚧
 
 :::warning
