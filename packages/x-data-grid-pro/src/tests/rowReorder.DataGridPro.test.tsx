@@ -443,6 +443,48 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
 
+  // Regression test for https://github.com/mui/mui-x/issues/23596
+  it('should move the row to the end when dropping it in the empty space below the last row', async () => {
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+    const columns = [{ field: 'brand' }];
+
+    function Test() {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro rows={rows} columns={columns} rowReordering />
+        </div>
+      );
+    }
+
+    render(<Test />);
+
+    const rowReorderCell = getCell(0, 0).firstChild! as Element;
+    fireDragStart(rowReorderCell);
+
+    const lastRowRect = getCell(2, 0).closest('[data-id]')!.getBoundingClientRect();
+    const clientX = lastRowRect.left + 10;
+    const clientY = lastRowRect.bottom + 20;
+    const emptySpace = document.elementFromPoint(clientX, clientY)!;
+    expect(emptySpace.closest(`.${gridClasses.virtualScroller}`)).not.to.equal(null);
+
+    const dragOverEvent = createEvent.dragOver(emptySpace);
+    Object.defineProperty(dragOverEvent, 'clientX', { value: clientX });
+    Object.defineProperty(dragOverEvent, 'clientY', { value: clientY });
+    Object.defineProperty(dragOverEvent, 'dataTransfer', { value: { dropEffect: 'none' } });
+    fireEvent(emptySpace, dragOverEvent);
+    expect((dragOverEvent as DragEvent).dataTransfer!.dropEffect).to.equal('copy');
+
+    fireEvent(rowReorderCell, createDragEndEvent(rowReorderCell));
+
+    await waitFor(() => {
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Puma', 'Nike']);
+    });
+  });
+
   // Regression test for https://github.com/mui/mui-x/issues/22057
   it('should reorder rows correctly when a filter hides rows between source and target', async () => {
     const initialRows = [
