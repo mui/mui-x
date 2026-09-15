@@ -245,7 +245,7 @@ To handle the failure yourself, use the `onStylesheetError` callback.
 It receives the `<link>` element that failed to load:
 
 - Return or resolve to skip the stylesheet and continue the print.
-- Throw an error or reject to stop the print. The print dialog doesn't open and the Data Grid is restored.
+- Throw an error or reject to stop the print. The print dialog doesn't open, the Data Grid is restored, and the promise returned by `apiRef.current.exportDataAsPrint()` rejects with that error.
 - Return a promise to make the print wait for it, for example while you add replacement styles to `link.ownerDocument`.
 
 ```jsx

@@ -56,7 +56,7 @@
       "isPremiumPlan": true
     },
     "exportDataAsPrint": {
-      "type": { "description": "(options?: GridPrintExportOptions) =&gt; void" },
+      "type": { "description": "(options?: GridPrintExportOptions) =&gt; Promise&lt;void&gt;" },
       "required": true
     },
     "exportState": {

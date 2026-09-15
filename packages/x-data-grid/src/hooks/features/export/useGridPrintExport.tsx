@@ -53,7 +53,7 @@ type PrintWindowOnLoad = (
     | 'getRowsToExport'
     | 'onStylesheetError'
   >,
-) => Promise<void> | void;
+) => Promise<void>;
 
 function buildPrintWindow(title?: string): HTMLIFrameElement {
   const iframeEl = document.createElement('iframe');
@@ -135,7 +135,7 @@ export const useGridPrintExport = (
   );
 
   const handlePrintWindowLoad: PrintWindowOnLoad = React.useCallback(
-    (printWindow, options): Promise<void> | void => {
+    async (printWindow, options) => {
       const normalizeOptions = {
         copyStyles: true,
         hideToolbar: false,
@@ -147,7 +147,7 @@ export const useGridPrintExport = (
       const printDoc = printWindow.contentDocument;
 
       if (!printDoc) {
-        return undefined;
+        return;
       }
 
       const gridRootElement = apiRef.current.rootElementRef.current;
@@ -240,15 +240,13 @@ export const useGridPrintExport = (
         });
       }
 
+      // wait for remote stylesheets to load
+      await Promise.all(stylesheetLoadPromises);
+
       // Trigger print
       if (process.env.NODE_ENV !== 'test' && !DEBUG_MODE) {
-        // wait for remote stylesheets to load
-        return Promise.all(stylesheetLoadPromises).then(() => {
-          printWindow.contentWindow!.print();
-        });
+        printWindow.contentWindow!.print();
       }
-
-      return undefined;
     },
     [apiRef, doc],
   );
@@ -332,26 +330,31 @@ export const useGridPrintExport = (
       const printWindow = buildPrintWindow(options?.fileName);
       if (process.env.NODE_ENV === 'test') {
         doc.current!.body.appendChild(printWindow);
-        // In test env, run the all pipeline without waiting for loading
-        handlePrintWindowLoad(printWindow, options);
-        handlePrintWindowAfterPrint(printWindow);
+        // In test env, run the all pipeline without waiting for the iframe to load or the print dialog
+        try {
+          await handlePrintWindowLoad(printWindow, options);
+        } finally {
+          handlePrintWindowAfterPrint(printWindow);
+        }
       } else {
-        printWindow.onload = () => {
-          handlePrintWindowLoad(printWindow, options)?.catch((error) => {
-            // `onStylesheetError` stopped the export, so the print dialog never opens
-            handlePrintWindowAfterPrint(printWindow);
-            throw error;
-          });
+        await new Promise<void>((resolve, reject) => {
+          printWindow.onload = () => {
+            const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
+            mediaQueryList.addEventListener('change', (mql) => {
+              const isAfterPrint = mql.matches === false;
+              if (isAfterPrint) {
+                handlePrintWindowAfterPrint(printWindow);
+              }
+            });
 
-          const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
-          mediaQueryList.addEventListener('change', (mql) => {
-            const isAfterPrint = mql.matches === false;
-            if (isAfterPrint) {
+            handlePrintWindowLoad(printWindow, options).then(resolve, (error) => {
+              // The print dialog never opens, so restore the grid here
               handlePrintWindowAfterPrint(printWindow);
-            }
-          });
-        };
-        doc.current!.body.appendChild(printWindow);
+              reject(error);
+            });
+          };
+          doc.current!.body.appendChild(printWindow);
+        });
       }
     },
     [
