@@ -1,34 +1,206 @@
-import { waitFor } from '@mui/internal-test-utils';
-import { createSchedulerRenderer, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
+import * as React from 'react';
+import { screen, waitFor } from '@mui/internal-test-utils';
+import {
+  adapter,
+  createSchedulerRenderer,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  DEFAULT_TESTING_VISIBLE_DATE_STR,
+  EventBuilder,
+} from 'test/utils/scheduler';
 import { StandaloneAgendaViewPremium } from '@mui/x-scheduler-premium/agenda-view-premium';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
-import { describe, it, expect } from 'vitest';
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('<StandaloneAgendaViewPremium /> - Data Source', () => {
   const { render } = createSchedulerRenderer();
+
+  const pendingGetEvents = () => new Promise<SchedulerEvent[]>(() => {});
+
+  function renderWithDataSource(
+    getEvents: (
+      start: TemporalSupportedObject,
+      end: TemporalSupportedObject,
+    ) => Promise<SchedulerEvent[]>,
+    props: Partial<React.ComponentProps<typeof StandaloneAgendaViewPremium>> = {},
+  ) {
+    return render(
+      <StandaloneAgendaViewPremium
+        dataSource={{ getEvents, persistEvents: async () => ({ success: true }) }}
+        defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        {...props}
+      />,
+    );
+  }
+
+  const getSkeletons = () => document.querySelectorAll(`.${eventCalendarClasses.eventSkeleton}`);
+  const getRows = () => document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`);
 
   // Regression test for https://github.com/mui/mui-x/pull/22676#pullrequestreview-4424947060
   // The standalone views render `EventSkeleton`, which reads `SharedComponentsStyledContext`.
   // `EventCalendarProvider` (the wrapper used by every standalone view) must supply that
   // context, otherwise rendering the data-source loading state throws.
   it('should render the skeleton in a standalone view while events are loading', async () => {
-    const dataSource = {
-      getEvents: () => new Promise<SchedulerEvent[]>(() => {}),
-      persistEvents: async () => ({ success: true }),
-    };
-
-    render(
-      <StandaloneAgendaViewPremium
-        dataSource={dataSource}
-        defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-      />,
-    );
+    renderWithDataSource(pendingGetEvents);
 
     await waitFor(() => {
+      expect(getSkeletons().length).to.be.greaterThan(0);
+    });
+  });
+
+  describe('showEmptyDaysInAgenda=false', () => {
+    const hideEmptyDays = { defaultPreferences: { showEmptyDaysInAgenda: false } };
+
+    it('should render the loading skeletons on the base days instead of the empty state while events are loading', async () => {
+      renderWithDataSource(pendingGetEvents, hideEmptyDays);
+
+      await waitFor(() => {
+        expect(getSkeletons()).to.have.length(12);
+      });
+      expect(getRows()).to.have.length(12);
+      expect(screen.queryByRole('status')).to.equal(null);
+    });
+
+    it('should replace the loading skeletons with the empty state once the data source resolves without events', async () => {
+      renderWithDataSource(async () => [], hideEmptyDays);
+
+      await waitFor(() => {
+        expect(screen.getByRole('status')).to.have.text('No upcoming events');
+      });
+      expect(getSkeletons()).to.have.length(0);
+    });
+
+    it('should render the days with events and no empty state once the data source resolves with events', async () => {
+      const event = EventBuilder.new()
+        .title('Kickoff')
+        .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+        .build();
+      renderWithDataSource(async () => [event], hideEmptyDays);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /Kickoff/ })).not.to.equal(null);
+      });
+      expect(getRows()).to.have.length(1);
+      expect(screen.queryByRole('status')).to.equal(null);
+    });
+
+    it('should render the empty state when the data source fails', async () => {
+      const getEvents = vi.fn(async () => {
+        throw new Error('Network down');
+      });
+      renderWithDataSource(getEvents, hideEmptyDays);
+
+      await waitFor(() => {
+        expect(screen.getByRole('status')).to.have.text('No upcoming events');
+      });
+      expect(getEvents.mock.calls).to.have.length(1);
+      expect(getSkeletons()).to.have.length(0);
+      expect(getRows()).to.have.length(0);
+    });
+
+    it('should settle on the empty state when the default window ends on a weekend and weekends are hidden', async () => {
+      // Tuesday: the 12-day window ends on a Saturday
+      const getEvents = vi.fn(async () => []);
+      renderWithDataSource(getEvents, {
+        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
+        defaultPreferences: { showEmptyDaysInAgenda: false, showWeekends: false },
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole('status')).to.have.text('No upcoming events');
+      });
+      expect(getEvents.mock.calls).to.have.length(1);
+      expect(getSkeletons()).to.have.length(0);
+    });
+
+    it('should fetch the whole horizon in one request and render the events beyond the first window', async () => {
+      const weekly = EventBuilder.new()
+        .title('Weekly sync')
+        .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+        .recurrent('WEEKLY')
+        .build();
+      const getEvents = vi.fn(
+        async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [weekly],
+      );
+
+      renderWithDataSource(getEvents, hideEmptyDays);
+
+      await waitFor(() => {
+        expect(screen.getAllByRole('button', { name: /Weekly sync/ })).to.have.length(12);
+      });
+      expect(getSkeletons()).to.have.length(0);
+      expect(getEvents.mock.calls).to.have.length(1);
+      const [start, end] = getEvents.mock.calls[0];
+      expect(adapter.isSameDay(start, DEFAULT_TESTING_VISIBLE_DATE)).to.equal(true);
+      expect(adapter.isSameDay(end, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 179))).to.equal(
+        true,
+      );
+    });
+
+    it('should render an event beyond the first window without navigating', async () => {
+      // 20 days after the default visible date, outside the first 12-day window
+      const farEvent = EventBuilder.new()
+        .title('Far away')
+        .singleDay('2025-07-23T10:00:00Z')
+        .build();
+      const getEvents = vi.fn(async () => [farEvent]);
+
+      renderWithDataSource(getEvents, hideEmptyDays);
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /Far away/ })).not.to.equal(null);
+      });
+      expect(getEvents.mock.calls).to.have.length(1);
+      expect(screen.queryByRole('status')).to.equal(null);
+    });
+
+    it('should only fetch the days past the cached horizon when navigating forward', async () => {
+      const getEvents = vi.fn(
+        async (_start: TemporalSupportedObject, _end: TemporalSupportedObject) => [],
+      );
+
+      function Test() {
+        const [visibleDate, setVisibleDate] = React.useState(DEFAULT_TESTING_VISIBLE_DATE);
+        return (
+          <React.Fragment>
+            <StandaloneAgendaViewPremium
+              dataSource={{ getEvents, persistEvents: async () => ({ success: true }) }}
+              visibleDate={visibleDate}
+              onVisibleDateChange={setVisibleDate}
+              defaultPreferences={{ showEmptyDaysInAgenda: false }}
+            />
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 12))}>
+              Next
+            </button>
+          </React.Fragment>
+        );
+      }
+
+      const { user } = render(<Test />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('status')).to.have.text('No upcoming events');
+      });
+      expect(getEvents.mock.calls).to.have.length(1);
+
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+
+      await waitFor(() => {
+        expect(getEvents.mock.calls).to.have.length(2);
+      });
+      const [nextStart, nextEnd] = getEvents.mock.calls[1];
       expect(
-        document.querySelectorAll(`.${eventCalendarClasses.eventSkeleton}`).length,
-      ).to.be.greaterThan(0);
+        adapter.isSameDay(nextStart, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 180)),
+      ).to.equal(true);
+      expect(
+        adapter.isSameDay(nextEnd, adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 191)),
+      ).to.equal(true);
+
+      await waitFor(() => {
+        expect(screen.getByRole('status')).to.have.text('No upcoming events');
+      });
+      expect(getSkeletons()).to.have.length(0);
     });
   });
 });

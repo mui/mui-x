@@ -168,6 +168,81 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.eventIdList).toHaveLength(1);
     });
 
+    it('should only request the days after the cached range when extending it forward', async () => {
+      const dataSource = {
+        getEvents: vi.fn(async (_start: Date, _end: Date): Promise<TestEvent[]> => []),
+        persistEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const day = (offset: number) =>
+        adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
+
+      await store.lazyLoading?.queueDataFetchForRange({ start: day(0), end: day(9) }, true);
+      await store.lazyLoading?.queueDataFetchForRange({ start: day(5), end: day(14) }, true);
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(2);
+      const [start, end] = dataSource.getEvents.mock.calls[1];
+      expect(adapter.isEqual(start, adapter.startOfDay(day(10)))).to.equal(true);
+      expect(adapter.isEqual(end, day(14))).to.equal(true);
+    });
+
+    it('should only request the days before the cached range when extending it backward', async () => {
+      const dataSource = {
+        getEvents: vi.fn(async (_start: Date, _end: Date): Promise<TestEvent[]> => []),
+        persistEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const day = (offset: number) =>
+        adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
+
+      await store.lazyLoading?.queueDataFetchForRange({ start: day(10), end: day(19) }, true);
+      await store.lazyLoading?.queueDataFetchForRange({ start: day(5), end: day(14) }, true);
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(2);
+      const [start, end] = dataSource.getEvents.mock.calls[1];
+      expect(adapter.isEqual(start, day(5))).to.equal(true);
+      expect(adapter.isEqual(end, adapter.endOfDay(day(9)))).to.equal(true);
+    });
+
+    it('should request the smallest range covering the gaps between cached ranges', async () => {
+      const dataSource = {
+        getEvents: vi.fn(async (_start: Date, _end: Date): Promise<TestEvent[]> => []),
+        persistEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const day = (offset: number) =>
+        adapter.addDays(adapter.date('2025-09-01T00:00:00Z', 'default'), offset);
+
+      await store.lazyLoading?.queueDataFetchForRange({ start: day(0), end: day(4) }, true);
+      await store.lazyLoading?.queueDataFetchForRange({ start: day(20), end: day(24) }, true);
+      await store.lazyLoading?.queueDataFetchForRange({ start: day(2), end: day(22) }, true);
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(3);
+      const [start, end] = dataSource.getEvents.mock.calls[2];
+      expect(adapter.isEqual(start, adapter.startOfDay(day(5)))).to.equal(true);
+      expect(adapter.isEqual(end, adapter.endOfDay(day(19)))).to.equal(true);
+    });
+
+    it('should not flip isLoading when the requested range is already cached', async () => {
+      const dataSource = {
+        getEvents: vi.fn(async () => []),
+        persistEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+      const start = adapter.date('2025-09-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-09-10T00:00:00Z', 'default');
+
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      expect(store.state.isLoading).to.equal(false);
+
+      const pending = store.lazyLoading?.queueDataFetchForRange({ start, end });
+      expect(store.state.isLoading).to.equal(false);
+      await pending;
+
+      expect(dataSource.getEvents.mock.calls).to.have.length(1);
+      expect(store.state.isLoading).to.equal(false);
+    });
+
     it('should pass full event objects to dataSource.persistEvents on create', async () => {
       const mockPersistEvents = async (_params: PersistEventsParams) => ({ success: true });
       const persistEventsSpy = vi.fn(mockPersistEvents);
@@ -1067,6 +1142,67 @@ describe('SchedulerDataSourceCacheDefault', () => {
         .map((event) => event.id)
         .sort(),
     ).to.deep.equal(['1', '3']);
+  });
+
+  describe('getMissingRange', () => {
+    it('should return null when the range is fully covered', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+
+      expect(cache.getMissingRange(100, 900)).to.equal(null);
+    });
+
+    it('should return null when adjacent ranges cover the whole range', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+      cache.setRange(1001, 2000, []);
+
+      expect(cache.getMissingRange(0, 2000)).to.equal(null);
+      expect(cache.getMissingRange(500, 1500)).to.equal(null);
+    });
+
+    it('should return null when the range matches a cached range exactly', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+
+      expect(cache.getMissingRange(0, 1000)).to.equal(null);
+    });
+
+    it('should return the whole range when nothing overlaps it', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+
+      expect(cache.getMissingRange(2000, 3000)).to.deep.equal({ start: 2000, end: 3000 });
+    });
+
+    it('should trim the covered edges and return the part that is missing', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(0, 1000, []);
+      cache.setRange(3000, 4000, []);
+
+      expect(cache.getMissingRange(500, 3500)).to.deep.equal({ start: 1001, end: 2999 });
+    });
+
+    it('should return the smallest range covering every gap', () => {
+      const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+      cache.setRange(1000, 2000, []);
+      cache.setRange(3000, 4000, []);
+
+      expect(cache.getMissingRange(0, 5000)).to.deep.equal({ start: 0, end: 5000 });
+    });
+
+    it('should treat expired ranges as missing', () => {
+      vi.useFakeTimers();
+      try {
+        const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 1000 });
+        cache.setRange(0, 1000, []);
+        vi.advanceTimersByTime(1001);
+
+        expect(cache.getMissingRange(0, 1000)).to.deep.equal({ start: 0, end: 1000 });
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 
   it('upsert should throw when the resolved event id is missing', () => {

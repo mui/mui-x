@@ -1,4 +1,4 @@
-import { screen, within } from '@mui/internal-test-utils';
+import { screen, waitFor, within } from '@mui/internal-test-utils';
 import {
   adapter,
   createSchedulerRenderer,
@@ -8,9 +8,61 @@ import {
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { vi, describe, it, expect } from 'vitest';
+import { openPreferencesMenu, toggleShowEmptyDaysInAgenda } from '../internals/utils/test-utils';
 
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();
+
+  describe('empty state', () => {
+    it('should render the empty state instead of day rows when hiding empty days and no event is in the horizon', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+          defaultPreferences={{ showEmptyDaysInAgenda: false }}
+        />,
+      );
+
+      expect(document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`)).to.have.length(0);
+      expect(screen.getByRole('status')).to.have.class(eventCalendarClasses.agendaViewEmptyState);
+      expect(screen.getByRole('status')).to.have.text('No upcoming events');
+    });
+
+    it('should render the day rows and no empty state when showing empty days and no event is in the horizon', () => {
+      render(
+        <EventCalendar events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} view="agenda" />,
+      );
+
+      expect(document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`)).to.have.length(
+        12,
+      );
+      expect(screen.queryByRole('status')).to.equal(null);
+    });
+
+    it('should toggle between the empty state and the day rows when changing the preference from the UI', async () => {
+      const { user } = render(
+        <EventCalendar events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} view="agenda" />,
+      );
+
+      async function toggleEmptyDaysFromMenu() {
+        await openPreferencesMenu(user);
+        await toggleShowEmptyDaysInAgenda(user);
+        await user.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+      }
+
+      await toggleEmptyDaysFromMenu();
+      expect(document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`)).to.have.length(0);
+      expect(screen.getByRole('status')).to.have.text('No upcoming events');
+
+      await toggleEmptyDaysFromMenu();
+      expect(document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`)).to.have.length(
+        12,
+      );
+      expect(screen.queryByRole('status')).to.equal(null);
+    });
+  });
 
   it('should reference resolvable header IDs in each event aria-labelledby', () => {
     const event = EventBuilder.new().title('My Event').build();

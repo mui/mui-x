@@ -73,6 +73,10 @@ export function innerGetEventOccurrencesGroupedByDay(
     days.map((day) => [day.key, []]),
   );
 
+  if (days.length === 0) {
+    return occurrenceMap;
+  }
+
   const start = adapter.startOfDay(days[0].value);
   const end = adapter.endOfDay(days[days.length - 1].value);
   const occurrences = getOccurrencesFromEvents({
