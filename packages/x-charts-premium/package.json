@@ -38,6 +38,7 @@
     "@mui/x-charts": "workspace:^",
     "@mui/x-charts-pro": "workspace:^",
     "@mui/x-charts-vendor": "workspace:^",
+    "@mui/x-internal-exceljs-fork": "catalog:",
     "@mui/x-internals": "workspace:^",
     "@mui/x-license": "workspace:^",
     "clsx": "catalog:",
