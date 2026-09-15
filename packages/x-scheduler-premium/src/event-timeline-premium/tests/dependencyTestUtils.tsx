@@ -14,22 +14,18 @@ import {
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
   SharedComponentsStyledContext,
 } from '@mui/x-scheduler/internals';
-import { DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
+import { DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
+import { buildDependency, resource1, resource2 } from './dependencyGeometryTestUtils';
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 
-export const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
-export const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
+export { buildDependency, resource1, resource2 };
 
 // Module scope so the identity survives re-renders: the store compares the resources
 // parameter by reference, and a fresh array on every render would rebuild the whole
 // resource state a real consumer keeps.
 const defaultResources = [resource1, resource2];
-
-export function buildDependency(id: string, source: string, target: string): SchedulerDependency {
-  return { id, source, target, type: 'FinishToStart' };
-}
 
 const styledContextValue = {
   schedulerId: 'test-timeline',

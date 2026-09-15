@@ -24,6 +24,7 @@ import {
   classifyDependencyEvent,
   groupRetainedDependenciesBySource,
   isDependencyReadOnly,
+  isDependencyType,
 } from '../utils/dependency-utils';
 
 /**
@@ -145,11 +146,14 @@ export class SchedulerSchedulingPlugin<
 
     // Duplicate before cycle: on data that already contains a cycle, re-adding an
     // existing pair must report the duplicate (and select its arrow), not the cycle.
-    // Only `source`/`target` define identity while the type union has a single member;
-    // TODO(#22853): include `type` in the identity when the type union widens.
+    // The type is part of the identity: two events can be linked by several
+    // dependencies of different types.
     const duplicate = dependenciesBySource
       .get(properties.source)
-      ?.find((dependency) => dependency.target === properties.target);
+      ?.find(
+        (dependency) =>
+          dependency.target === properties.target && dependency.type === properties.type,
+      );
     if (duplicate) {
       return { status: 'rejected', reason: 'duplicateDependency', dependencyId: duplicate.id };
     }
@@ -215,6 +219,12 @@ export class SchedulerSchedulingPlugin<
     const hasDataSource = this.store.parameters.dataSource != null;
 
     for (const dependency of dependencyModelList) {
+      if (!isDependencyType(dependency.type)) {
+        warnOnce([
+          `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown type "${String(dependency.type)}".`,
+          'It is kept in the data but ignored by the timeline.',
+        ]);
+      }
       for (const eventId of [dependency.source, dependency.target]) {
         const status = classifyDependencyEvent(processedEventLookup, eventId);
         if (status === 'unknownEvent') {

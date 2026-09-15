@@ -1,13 +1,64 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventId,
+  SchedulerEventSide,
+  SchedulerProcessedEvent,
+} from '@mui/x-scheduler-internals/models';
 import type {
   SchedulerDependency,
   SchedulerDependenciesState,
   SchedulerDependencyId,
   SchedulerDependencyEventRejectionReason,
+  SchedulerDependencyType,
 } from '../../models';
+
+export interface SchedulerDependencyEdges {
+  /**
+   * The edge of the predecessor the dependency starts from.
+   */
+  source: SchedulerEventSide;
+  /**
+   * The edge of the successor the dependency ends on.
+   */
+  target: SchedulerEventSide;
+}
+
+const DEPENDENCY_EDGES: Record<SchedulerDependencyType, SchedulerDependencyEdges> = {
+  FinishToStart: { source: 'end', target: 'start' },
+  StartToStart: { source: 'start', target: 'start' },
+  FinishToFinish: { source: 'end', target: 'end' },
+  StartToFinish: { source: 'start', target: 'end' },
+};
+
+/**
+ * The event edges a dependency type connects.
+ */
+export function getDependencyEdges(type: SchedulerDependencyType): SchedulerDependencyEdges {
+  return DEPENDENCY_EDGES[type];
+}
+
+/**
+ * Whether the value is one of the supported dependency types.
+ */
+export function isDependencyType(type: unknown): type is SchedulerDependencyType {
+  return typeof type === 'string' && Object.hasOwn(DEPENDENCY_EDGES, type);
+}
+
+/**
+ * The dependency type created by dragging from `sourceSide` of the predecessor and
+ * dropping on `targetSide` of the successor.
+ */
+export function getDependencyType(
+  sourceSide: SchedulerEventSide,
+  targetSide: SchedulerEventSide,
+): SchedulerDependencyType {
+  if (sourceSide === 'end') {
+    return targetSide === 'start' ? 'FinishToStart' : 'FinishToFinish';
+  }
+  return targetSide === 'start' ? 'StartToStart' : 'StartToFinish';
+}
 
 // `updateStateFromParameters` runs on every render, so an unchanged `dependencies`
 // parameter must map to the same state slice instance.
