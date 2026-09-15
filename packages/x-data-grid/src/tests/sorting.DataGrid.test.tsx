@@ -791,6 +791,42 @@ describe('<DataGrid /> - Sorting', () => {
     });
   });
 
+  describe('gridStringOrNumberComparator', () => {
+    const compare = (a: any, b: any) => gridStringOrNumberComparator(a, b, {} as any, {} as any);
+
+    it('keeps numeric order for number values', () => {
+      expect([3, 10, 2].sort(compare)).to.deep.equal([2, 3, 10]);
+    });
+
+    it('keeps collation order for string values', () => {
+      expect(['banana', 'apple', 'cherry'].sort(compare)).to.deep.equal([
+        'apple',
+        'banana',
+        'cherry',
+      ]);
+    });
+
+    it('is a consistent total order for mixed number/string values', () => {
+      // Antisymmetric: cmp(a, b) and cmp(b, a) must have opposite signs.
+      expect(Math.sign(compare(10, '9'))).to.equal(-Math.sign(compare('9', 10)));
+      // A number compared with a non-numeric string must not return NaN.
+      expect(Number.isNaN(compare(5, 'apple'))).to.equal(false);
+      // A mixed column sorts deterministically instead of being left unsorted.
+      expect([5, 'apple', 3, 'banana', 10, '9'].sort(compare)).to.deep.equal([
+        3,
+        5,
+        10,
+        '9',
+        'apple',
+        'banana',
+      ]);
+      // Transitive across the number/string boundary: every number sorts before any string,
+      // even when the numeric order of two numbers disagrees with a bridging string's collation.
+      expect(Math.sign(compare(2, '15'))).to.equal(Math.sign(compare(10, '15')));
+      expect([10, '15', 2].sort(compare)).to.deep.equal([2, 10, '15']);
+    });
+  });
+
   describe('Header class names', () => {
     it('should have the sortable class when the column is sortable', () => {
       render(
