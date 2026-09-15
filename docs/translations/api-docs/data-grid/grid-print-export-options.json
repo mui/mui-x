@@ -25,7 +25,7 @@
       "description": "If <code>true</code>, the selection checkboxes will be included when printing."
     },
     "onStylesheetError": {
-      "description": "Callback function that is called when a stylesheet fails to load in the print window, for<br />example if the request fails or a Content Security Policy blocks it.<br />The stylesheet is skipped and the export continues, so the result may be missing styles.<br />If not provided, the failure is logged as a warning in development."
+      "description": "Callback function that is called when a stylesheet fails to load in the print window, for<br />example if the request fails or a Content Security Policy blocks it.<br />Return or resolve to skip the stylesheet and continue the export, so the result may be missing styles.<br />Throw or reject to stop the export.<br />If not provided, the stylesheet is skipped and the failure is logged as a warning in development."
     },
     "pageStyle": { "description": "Provide Print specific styles to the print window." }
   }

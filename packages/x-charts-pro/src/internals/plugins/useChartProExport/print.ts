@@ -29,7 +29,13 @@ export function printChart(
       rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
     if (copyStyles) {
-      await Promise.all(loadStyleSheets(printDoc, root, { nonce, onStylesheetError }));
+      try {
+        await Promise.all(loadStyleSheets(printDoc, root, { nonce, onStylesheetError }));
+      } catch (error) {
+        /* `onStylesheetError` stopped the export. */
+        doc.body.removeChild(printWindow);
+        throw error;
+      }
     }
 
     await copyCanvasesContent(element, elementClone);

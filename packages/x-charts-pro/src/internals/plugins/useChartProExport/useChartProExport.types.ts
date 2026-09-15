@@ -36,12 +36,13 @@ export interface ChartExportOptions {
   /**
    * Callback function that is called when a stylesheet fails to load in the export document, for
    * example if the request fails or a Content Security Policy blocks it.
-   * The stylesheet is skipped and the export continues, so the result may be missing styles.
-   * If not provided, the failure is logged as a warning in development.
+   * Return or resolve to skip the stylesheet and continue the export, so the result may be missing styles.
+   * Throw or reject to stop the export.
+   * If not provided, the stylesheet is skipped and the failure is logged as a warning in development.
    * @param {HTMLLinkElement} element The stylesheet link element that failed to load.
-   * @returns {void}
+   * @returns {Promise<void> | void} A promise or void. If a promise is returned, the export waits for it to settle before proceeding.
    */
-  onStylesheetError?: (element: HTMLLinkElement) => void;
+  onStylesheetError?: (element: HTMLLinkElement) => Promise<void> | void;
 }
 
 /**

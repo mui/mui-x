@@ -74,4 +74,31 @@ describe.skipIf(isJSDOM)('exportImage', () => {
     expect(exportedSize?.width).to.equal(400);
     expect(exportedSize?.height).to.equal(300);
   });
+
+  it('stops the export and removes the iframe when `onStylesheetError` throws', async () => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/missing-stylesheet.css';
+    document.head.appendChild(link);
+    onTestFinished(() => link.remove());
+
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+    const onBeforeExport = vi.fn();
+
+    render(<Chart apiRef={apiRef} />);
+
+    await expect(() =>
+      act(async () => {
+        await apiRef.current!.exportAsImage({
+          onBeforeExport,
+          onStylesheetError: () => {
+            throw new Error('Stop the export');
+          },
+        });
+      }),
+    ).toErrorDev('MUI X Charts: Error exporting chart as image:');
+
+    expect(onBeforeExport.mock.calls.length).to.equal(0);
+    expect(document.querySelector('iframe')).to.equal(null);
+  });
 });

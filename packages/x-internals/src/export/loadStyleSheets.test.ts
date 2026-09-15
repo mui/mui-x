@@ -9,6 +9,12 @@ describe('loadStyleSheets', () => {
     return document.implementation.createHTMLDocument('');
   }
 
+  function dispatchError(targetDocument: Document) {
+    targetDocument.head.querySelectorAll('link').forEach((link) => {
+      link.dispatchEvent(new Event('error'));
+    });
+  }
+
   function createSourceDocument(head: string) {
     const sourceDocument = document.implementation.createHTMLDocument('');
     sourceDocument.head.innerHTML = head;
@@ -26,15 +32,12 @@ describe('loadStyleSheets', () => {
     expect(promises.length).to.equal(1);
 
     /* A stylesheet blocked by the Content Security Policy fires `error` instead of `load`. */
-    expect(() => {
-      targetDocument.head.querySelectorAll('link').forEach((link) => {
-        link.dispatchEvent(new Event('error'));
-      });
+    await expect(async () => {
+      dispatchError(targetDocument);
+      await expect(Promise.all(promises)).resolves.toBeDefined();
     }).toWarnDev(
       'MUI X: Failed to load the stylesheet "https://example.com/missing.css" in the export document.',
     );
-
-    await expect(Promise.all(promises)).resolves.toBeDefined();
   });
 
   it('calls onStylesheetError instead of warning when a stylesheet fails to load', async () => {
@@ -45,14 +48,67 @@ describe('loadStyleSheets', () => {
     const onStylesheetError = vi.fn();
 
     const promises = loadStyleSheets(targetDocument, sourceDocument, { onStylesheetError });
-
-    targetDocument.head.querySelectorAll('link').forEach((link) => {
-      link.dispatchEvent(new Event('error'));
-    });
+    dispatchError(targetDocument);
 
     await expect(Promise.all(promises)).resolves.toBeDefined();
     expect(onStylesheetError.mock.calls.length).to.equal(1);
     expect(onStylesheetError.mock.calls[0][0].href).to.equal('https://example.com/missing.css');
+  });
+
+  it('rejects when onStylesheetError throws', async () => {
+    const targetDocument = createTargetDocument();
+    const sourceDocument = createSourceDocument(
+      '<link rel="stylesheet" href="https://example.com/missing.css" />',
+    );
+    const onStylesheetError = () => {
+      throw new Error('Stop the export');
+    };
+
+    const promises = loadStyleSheets(targetDocument, sourceDocument, { onStylesheetError });
+    dispatchError(targetDocument);
+
+    await expect(Promise.all(promises)).rejects.toThrow('Stop the export');
+  });
+
+  it('rejects when onStylesheetError rejects', async () => {
+    const targetDocument = createTargetDocument();
+    const sourceDocument = createSourceDocument(
+      '<link rel="stylesheet" href="https://example.com/missing.css" />',
+    );
+    const onStylesheetError = () => Promise.reject(new Error('Stop the export'));
+
+    const promises = loadStyleSheets(targetDocument, sourceDocument, { onStylesheetError });
+    dispatchError(targetDocument);
+
+    await expect(Promise.all(promises)).rejects.toThrow('Stop the export');
+  });
+
+  it('waits for onStylesheetError to resolve before resolving', async () => {
+    const targetDocument = createTargetDocument();
+    const sourceDocument = createSourceDocument(
+      '<link rel="stylesheet" href="https://example.com/missing.css" />',
+    );
+    let resolveCallback!: () => void;
+    const onStylesheetError = () =>
+      new Promise<void>((resolve) => {
+        resolveCallback = resolve;
+      });
+    let settled = false;
+
+    const promises = loadStyleSheets(targetDocument, sourceDocument, { onStylesheetError });
+    const allPromise = Promise.all(promises).then(() => {
+      settled = true;
+    });
+    dispatchError(targetDocument);
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(settled).to.equal(false);
+
+    resolveCallback();
+    await allPromise;
+
+    expect(settled).to.equal(true);
   });
 
   it('resolves when a stylesheet loads', async () => {

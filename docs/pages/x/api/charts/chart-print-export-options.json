@@ -15,7 +15,7 @@
       "isProPlan": true
     },
     "onStylesheetError": {
-      "type": { "description": "(element: HTMLLinkElement) =&gt; void" },
+      "type": { "description": "(element: HTMLLinkElement) =&gt; Promise&lt;void&gt; | void" },
       "isProPlan": true
     }
   }

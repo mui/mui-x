@@ -53,7 +53,7 @@ type PrintWindowOnLoad = (
     | 'getRowsToExport'
     | 'onStylesheetError'
   >,
-) => void;
+) => Promise<void> | void;
 
 function buildPrintWindow(title?: string): HTMLIFrameElement {
   const iframeEl = document.createElement('iframe');
@@ -135,7 +135,7 @@ export const useGridPrintExport = (
   );
 
   const handlePrintWindowLoad: PrintWindowOnLoad = React.useCallback(
-    (printWindow, options): void => {
+    (printWindow, options): Promise<void> | void => {
       const normalizeOptions = {
         copyStyles: true,
         hideToolbar: false,
@@ -147,7 +147,7 @@ export const useGridPrintExport = (
       const printDoc = printWindow.contentDocument;
 
       if (!printDoc) {
-        return;
+        return undefined;
       }
 
       const gridRootElement = apiRef.current.rootElementRef.current;
@@ -243,10 +243,12 @@ export const useGridPrintExport = (
       // Trigger print
       if (process.env.NODE_ENV !== 'test' && !DEBUG_MODE) {
         // wait for remote stylesheets to load
-        Promise.all(stylesheetLoadPromises).then(() => {
+        return Promise.all(stylesheetLoadPromises).then(() => {
           printWindow.contentWindow!.print();
         });
       }
+
+      return undefined;
     },
     [apiRef, doc],
   );
@@ -335,7 +337,11 @@ export const useGridPrintExport = (
         handlePrintWindowAfterPrint(printWindow);
       } else {
         printWindow.onload = () => {
-          handlePrintWindowLoad(printWindow, options);
+          handlePrintWindowLoad(printWindow, options)?.catch((error) => {
+            // `onStylesheetError` stopped the export, so the print dialog never opens
+            handlePrintWindowAfterPrint(printWindow);
+            throw error;
+          });
 
           const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
           mediaQueryList.addEventListener('change', (mql) => {
