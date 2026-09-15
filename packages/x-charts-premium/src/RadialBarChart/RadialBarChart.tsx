@@ -168,8 +168,10 @@ RadialBarChart.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      exportAsExcel: PropTypes.func.isRequired,
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      getDataAsExcel: PropTypes.func.isRequired,
     }),
   }),
   /**
