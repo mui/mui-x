@@ -29,7 +29,7 @@ import {
   areDatesEqual,
   useApplyDefaultValuesToDateValidationProps,
 } from '@mui/x-date-pickers/internals';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import type { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
@@ -568,10 +568,12 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   const visibleMonths = React.useMemo(() => {
     if (process.env.NODE_ENV !== 'production') {
       if (currentMonthCalendarPosition > calendars || currentMonthCalendarPosition < 1) {
-        warnOnce([
-          'MUI X: The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
-          'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
-        ]);
+        warn(
+          [
+            'MUI X: The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
+            'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
+          ].join('\n'),
+        );
       }
     }
 

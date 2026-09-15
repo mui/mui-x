@@ -1,5 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { warnOnce } from '@mui/x-internals/warning';
+import { error } from '@mui/x-internals/warning';
 import type { GridSortingModelApplier } from './gridSortingState';
 import type { GridRowId, GridTreeNode } from '../../../models';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -26,12 +26,11 @@ interface GridParsedSortItem {
 export const sanitizeSortModel = (model: GridSortModel, disableMultipleColumnsSorting: boolean) => {
   if (disableMultipleColumnsSorting && model.length > 1) {
     if (process.env.NODE_ENV !== 'production') {
-      warnOnce(
+      error(
         [
           'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
           'If you are using the community version of the Data Grid, this prop is always `true`.',
-        ],
-        'error',
+        ].join('\n'),
       );
     }
     return [model[0]];

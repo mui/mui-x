@@ -4,7 +4,7 @@ import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
+import { fastObjectShallowCompare } from '@base-ui/utils/fastObjectShallowCompare';
 import type { TreeItemProps } from '../../TreeItem';
 import { TreeItem } from '../../TreeItem';
 import type { TreeViewItemId } from '../../models';

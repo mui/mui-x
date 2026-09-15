@@ -3,12 +3,12 @@ import * as React from 'react';
  * More info: https://github.com/mui/mui-x/issues/18303#issuecomment-2958392341 */
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
-import reactMajor from '../reactMajor';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 import type { ReadonlyStore } from './Store';
 
 /* Some tests fail in R18 with the raw useSyncExternalStore. It may be possible to make it work
  * but for now we only enable it for R19+. */
-const canUseRawUseSyncExternalStore = reactMajor >= 19;
+const canUseRawUseSyncExternalStore = isReactVersionAtLeast(19);
 const useStoreImplementation = canUseRawUseSyncExternalStore ? useStoreR19 : useStoreLegacy;
 
 export function useStore<State, Value>(

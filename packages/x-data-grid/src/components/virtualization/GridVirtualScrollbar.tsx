@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { iOSMediaQuery } from '@mui/x-internals/platform';
+import { platform } from '@base-ui/utils/platform';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -52,7 +52,7 @@ const Scrollbar = styled('div', {
   // [iOS-scrollbar-swap]
   // On iOS, native scrollbars of the `GridVirtualScroller` are shown instead,
   // so hide these to avoid a duplicate thumb.
-  [iOSMediaQuery]: {
+  [platform.mediaQuery.iOS]: {
     display: 'none',
   },
 });

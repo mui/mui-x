@@ -1,4 +1,4 @@
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 
 /**
  * A calendar interval unit for range buttons.
@@ -117,10 +117,12 @@ export function rangeButtonValueToZoom(
   if (typeof value === 'function') {
     const result = value(params);
     if (process.env.NODE_ENV !== 'production' && result.end < result.start) {
-      warnOnce([
-        `MUI X Charts: Range button function returned an end value (${result.end}) lower than the start value (${result.start}).`,
-        'This likely produces an unexpected zoom range.',
-      ]);
+      warn(
+        [
+          `MUI X Charts: Range button function returned an end value (${result.end}) lower than the start value (${result.start}).`,
+          'This likely produces an unexpected zoom range.',
+        ].join('\n'),
+      );
     }
     return { start: result.start, end: result.end };
   }
@@ -138,10 +140,12 @@ export function rangeButtonValueToZoom(
     const endIndex = ordinalData.findIndex((item) => item === value[1]);
     if (startIndex !== -1 && endIndex !== -1) {
       if (process.env.NODE_ENV !== 'production' && endIndex < startIndex) {
-        warnOnce([
-          'MUI X Charts: Range button received a range whose end value comes before its start value.',
-          'This produces an empty zoom range.',
-        ]);
+        warn(
+          [
+            'MUI X Charts: Range button received a range whose end value comes before its start value.',
+            'This produces an empty zoom range.',
+          ].join('\n'),
+        );
       }
       // Band items span [i/L, (i+1)/L] along the axis; point items sit at i/(L-1).
       // For band, the end index is inclusive, so the right edge of the band is `(endIndex + 1) / L`.
@@ -174,10 +178,12 @@ export function rangeButtonValueToZoom(
       const startTarget = toTimestamp(value[0]) ?? Number.NaN;
       const endTarget = toTimestamp(value[1]) ?? Number.NaN;
       if (process.env.NODE_ENV !== 'production' && endTarget < startTarget) {
-        warnOnce([
-          'MUI X Charts: Range button received a date range whose end is before its start.',
-          'This produces an empty zoom range.',
-        ]);
+        warn(
+          [
+            'MUI X Charts: Range button received a date range whose end is before its start.',
+            'This produces an empty zoom range.',
+          ].join('\n'),
+        );
       }
       const firstGte = timestamps.findIndex((ts) => !Number.isNaN(ts) && ts >= startTarget);
       const lastLte = timestamps.findLastIndex((ts) => !Number.isNaN(ts) && ts <= endTarget);
@@ -202,10 +208,12 @@ export function rangeButtonValueToZoom(
   }
 
   if (process.env.NODE_ENV !== 'production' && ordinalData !== undefined) {
-    warnOnce([
-      'MUI X Charts: Range button received a value for an ordinal axis whose data could not be matched.',
-      'The zoom range may not match the intended selection. Provide axis values that exist on the axis, date-like axis data, or use a function value.',
-    ]);
+    warn(
+      [
+        'MUI X Charts: Range button received a value for an ordinal axis whose data could not be matched.',
+        'The zoom range may not match the intended selection. Provide axis values that exist on the axis, date-like axis data, or use a function value.',
+      ].join('\n'),
+    );
   }
 
   const domainRange = domainMax - domainMin;
@@ -218,10 +226,12 @@ export function rangeButtonValueToZoom(
     const rangeStart = toTimestamp(value[0]) ?? domainMin;
     const rangeEnd = toTimestamp(value[1]) ?? domainMax;
     if (process.env.NODE_ENV !== 'production' && rangeEnd < rangeStart) {
-      warnOnce([
-        'MUI X Charts: Range button received a date range whose end is before its start.',
-        'This produces an empty zoom range.',
-      ]);
+      warn(
+        [
+          'MUI X Charts: Range button received a date range whose end is before its start.',
+          'This produces an empty zoom range.',
+        ].join('\n'),
+      );
     }
     const startPercent = ((rangeStart - domainMin) / domainRange) * 100;
     const endPercent = ((rangeEnd - domainMin) / domainRange) * 100;

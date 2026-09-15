@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import type { ChatAdapter } from '../../adapters';
 import { processStream } from '../../stream';
 import type { ProcessStreamResult } from '../../stream';
@@ -349,11 +349,13 @@ export function createSendMessageActions<Cursor = string>(params: {
 
     if (!resolution) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X Chat: `regenerate()` could not resolve the target message.',
-          'The id must reference an assistant reply (or the user message that prompted it); regeneration is skipped, so the UI will not change.',
-          'Pass the `message.id` of an assistant message that follows a user message in the active conversation.',
-        ]);
+        warn(
+          [
+            'MUI X Chat: `regenerate()` could not resolve the target message.',
+            'The id must reference an assistant reply (or the user message that prompted it); regeneration is skipped, so the UI will not change.',
+            'Pass the `message.id` of an assistant message that follows a user message in the active conversation.',
+          ].join('\n'),
+        );
       }
       return;
     }

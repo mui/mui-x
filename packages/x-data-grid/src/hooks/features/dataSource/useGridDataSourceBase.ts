@@ -4,7 +4,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
-import { warnOnce } from '@mui/x-internals/warning';
+import { error as logError, warn } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GRID_ROOT_GROUP_ID, getReplaceRow, isReplaceUpdate } from '../rows/gridRowsUtils';
 import type { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
@@ -198,13 +198,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
               }),
             );
           } else if (process.env.NODE_ENV !== 'production') {
-            warnOnce(
+            logError(
               [
                 'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',
                 'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
                 'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
-              ],
-              'error',
+              ].join('\n'),
             );
           }
         }
@@ -389,13 +388,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
             }),
           );
         } else if (process.env.NODE_ENV !== 'production') {
-          warnOnce(
+          logError(
             [
               'MUI X: A call to `dataSource.updateRow()` threw an error which was not handled because `onDataSourceError()` is missing.',
               'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
               'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
-            ],
-            'error',
+            ].join('\n'),
           );
         }
         throw errorThrown; // Let the caller handle the error further
@@ -546,11 +544,13 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       (currentStrategy === DataSourceRowsUpdateStrategy.GroupedData ||
         currentStrategy === DataSourceRowsUpdateStrategy.LazyLoadedGroupedData)
     ) {
-      warnOnce([
-        'MUI X: The `dataSourceKeepPreviousData` prop only applies to flat data.',
-        'It is ignored when tree data or row grouping is enabled, because the rows are always reset on refetch to keep their order consistent with the response.',
-        'For more details, see https://mui.com/x/react-data-grid/server-side-data/#keep-previous-data-while-fetching.',
-      ]);
+      warn(
+        [
+          'MUI X: The `dataSourceKeepPreviousData` prop only applies to flat data.',
+          'It is ignored when tree data or row grouping is enabled, because the rows are always reset on refetch to keep their order consistent with the response.',
+          'For more details, see https://mui.com/x/react-data-grid/server-side-data/#keep-previous-data-while-fetching.',
+        ].join('\n'),
+      );
     }
   }, [props.dataSourceKeepPreviousData, currentStrategy]);
 

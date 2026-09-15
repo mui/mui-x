@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import type { GridEventListener } from '../../../models/events';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
@@ -526,11 +526,13 @@ export function useGridColumns(
       }
       const lookup = gridColumnLookupSelector(apiRef);
       if (orderedFields.some((field) => lookup[field]?.type === 'multiSelect')) {
-        warnOnce([
-          'MUI X: The `multiSelect` column type is available in Pro and Premium versions',
-          'Use `<DataGridPro />` or `<DataGridPremium />` to render it correctly.',
-          'For more details, see https://mui.com/x/react-data-grid/column-definition/#multi-select-keyboard-interactions',
-        ]);
+        warn(
+          [
+            'MUI X: The `multiSelect` column type is available in Pro and Premium versions',
+            'Use `<DataGridPro />` or `<DataGridPremium />` to render it correctly.',
+            'For more details, see https://mui.com/x/react-data-grid/column-definition/#multi-select-keyboard-interactions',
+          ].join('\n'),
+        );
       }
     },
     [apiRef, props.signature],
