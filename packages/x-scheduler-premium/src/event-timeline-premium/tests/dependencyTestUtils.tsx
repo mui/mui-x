@@ -14,10 +14,42 @@ import {
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
   SharedComponentsStyledContext,
 } from '@mui/x-scheduler/internals';
-import { DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  DEFAULT_TESTING_VISIBLE_DATE,
+  mockElementBounds,
+  ResourceBuilder,
+} from 'test/utils/scheduler';
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
+
+/**
+ * Applies mock bounds to all timeline event rows, so jsdom drops resolve positions.
+ */
+export function mockAllEventRowBounds(width = 6720) {
+  const rows = document.querySelectorAll<HTMLElement>(
+    `.MuiEventTimeline-eventsCell[data-drop-target-for-element]`,
+  );
+  for (const row of rows) {
+    mockElementBounds(row, { left: 0, width, height: 40 });
+  }
+  return rows;
+}
+
+/**
+ * Returns the timeline event row for a given resource id.
+ */
+export function getEventRow(resourceId: string): HTMLElement {
+  const row = document.querySelector<HTMLElement>(
+    `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
+  );
+  if (!row) {
+    throw /* minify-error-disabled */ new Error(
+      `Could not find event row for resource "${resourceId}"`,
+    );
+  }
+  return row;
+}
 
 export const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
 export const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
