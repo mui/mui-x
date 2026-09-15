@@ -75,6 +75,7 @@ ChartsToolbarImageExportTrigger.propTypes /* remove-proptypes */ = {
     fileName: PropTypes.string,
     nonce: PropTypes.string,
     onBeforeExport: PropTypes.func,
+    onStylesheetError: PropTypes.func,
     pixelRatio: PropTypes.number,
     quality: PropTypes.number,
     type: PropTypes.string.isRequired,

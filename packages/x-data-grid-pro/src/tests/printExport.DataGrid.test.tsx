@@ -3,7 +3,8 @@ import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, onTestFinished } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Print export', () => {
   const { render } = createRenderer();
@@ -188,6 +189,101 @@ describe('<DataGridPro /> - Print export', () => {
         currencyPair: true,
         id: true,
       });
+    });
+  });
+
+  describe('stylesheets that fail to load', () => {
+    function addMissingStylesheet() {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/missing-stylesheet.css';
+      document.head.appendChild(link);
+      onTestFinished(() => link.remove());
+    }
+
+    /* Browsers fire `error` for the missing stylesheet on their own, JSDOM doesn't load resources. */
+    async function failStylesheetLoad() {
+      if (!isJSDOM) {
+        return;
+      }
+
+      let link: HTMLLinkElement | null | undefined;
+      while (!link) {
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+        link = document.querySelector('iframe')?.contentDocument?.head.querySelector('link');
+      }
+      link.dispatchEvent(new Event('error'));
+    }
+
+    const initialState = {
+      columns: { columnVisibilityModel: { currencyPair: true, id: false } },
+    };
+
+    it('rejects, restores the grid, and removes the print window when `onStylesheetError` throws', async () => {
+      addMissingStylesheet();
+      const onColumnVisibilityModelChange = vi.fn();
+      const error = new Error('Stop the print');
+
+      render(
+        <Test
+          initialState={initialState}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      await act(async () => {
+        const printPromise = apiRef.current!.exportDataAsPrint({
+          fields: ['id'],
+          onStylesheetError: () => {
+            throw error;
+          },
+        });
+        await failStylesheetLoad();
+        await expect(printPromise).rejects.toBe(error);
+      });
+
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+        currencyPair: true,
+        id: false,
+      });
+      expect(document.querySelector('iframe')).to.equal(null);
+    });
+
+    it('resolves and restores the grid when `onStylesheetError` returns', async () => {
+      addMissingStylesheet();
+      const onColumnVisibilityModelChange = vi.fn();
+      const onStylesheetError = vi.fn();
+
+      render(
+        <Test
+          initialState={initialState}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      await act(async () => {
+        const printPromise = apiRef.current!.exportDataAsPrint({
+          fields: ['id'],
+          onStylesheetError,
+        });
+        await failStylesheetLoad();
+        await printPromise;
+      });
+
+      expect(onStylesheetError.mock.calls.length).to.equal(1);
+      expect(onStylesheetError.mock.calls[0][0].getAttribute('href')).to.equal(
+        '/missing-stylesheet.css',
+      );
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+        currencyPair: true,
+        id: false,
+      });
+      expect(document.querySelector('iframe')).to.equal(null);
     });
   });
 });

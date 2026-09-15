@@ -11,6 +11,7 @@ export function printChart(
     onBeforeExport = defaultOnBeforeExport,
     copyStyles = true,
     nonce,
+    onStylesheetError,
   }: ChartPrintExportOptions = {},
 ): Promise<void> {
   const printWindow = createExportIframe(fileName);
@@ -30,7 +31,7 @@ export function printChart(
           rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
         if (copyStyles) {
-          await Promise.all(loadStyleSheets(printDoc, root, nonce));
+          await Promise.all(loadStyleSheets(printDoc, root, { nonce, onStylesheetError }));
         }
 
         await copyCanvasesContent(element, elementClone);

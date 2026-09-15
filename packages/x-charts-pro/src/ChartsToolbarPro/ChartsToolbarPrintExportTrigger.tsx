@@ -80,6 +80,7 @@ ChartsToolbarPrintExportTrigger.propTypes /* remove-proptypes */ = {
     fileName: PropTypes.string,
     nonce: PropTypes.string,
     onBeforeExport: PropTypes.func,
+    onStylesheetError: PropTypes.func,
   }),
   /**
    * A function to customize the rendering of the component.

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { act, createRenderer } from '@mui/internal-test-utils';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, onTestFinished } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import type { ChartProApi } from '@mui/x-charts-pro/context';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -61,5 +61,61 @@ describe.skipIf(isJSDOM)('printChart', () => {
 
     expect(error?.message).to.equal('Print interrupted');
     expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+  });
+
+  function addMissingStylesheet() {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/missing-stylesheet.css';
+    document.head.appendChild(link);
+    onTestFinished(() => link.remove());
+  }
+
+  it('rejects and removes the iframe when `onStylesheetError` throws', async () => {
+    addMissingStylesheet();
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+    const onBeforeExport = vi.fn();
+    const error = new Error('Stop the print');
+
+    render(<Chart apiRef={apiRef} />);
+
+    const iframeCount = document.querySelectorAll('iframe').length;
+
+    await act(async () => {
+      await expect(
+        apiRef.current!.exportAsPrint({
+          onBeforeExport,
+          onStylesheetError: () => {
+            throw error;
+          },
+        }),
+      ).rejects.toBe(error);
+    });
+
+    expect(onBeforeExport.mock.calls.length).to.equal(0);
+    expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+  });
+
+  it('continues the print when `onStylesheetError` returns', async () => {
+    addMissingStylesheet();
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+    const onStylesheetError = vi.fn();
+    let printed = false;
+
+    render(<Chart apiRef={apiRef} />);
+
+    await act(async () => {
+      await apiRef.current!.exportAsPrint({
+        onStylesheetError,
+        onBeforeExport: (iframe) => {
+          iframe.contentWindow!.print = () => {
+            printed = true;
+          };
+        },
+      });
+    });
+
+    expect(onStylesheetError.mock.calls.length).to.equal(1);
+    expect(printed).to.equal(true);
   });
 });

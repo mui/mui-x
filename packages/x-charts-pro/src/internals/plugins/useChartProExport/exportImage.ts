@@ -49,6 +49,7 @@ export async function exportImage(
     onBeforeExport = defaultOnBeforeExport,
     copyStyles = true,
     nonce,
+    onStylesheetError,
     pixelRatio,
   } = params ?? {};
   if (
@@ -107,7 +108,7 @@ export async function exportImage(
         exportDoc.body.style.height = 'fit-content';
 
         if (copyStyles) {
-          await Promise.all(loadStyleSheets(exportDoc, root, nonce));
+          await Promise.all(loadStyleSheets(exportDoc, root, { nonce, onStylesheetError }));
           checkStyleSheetsLoaded(exportDoc);
         }
 

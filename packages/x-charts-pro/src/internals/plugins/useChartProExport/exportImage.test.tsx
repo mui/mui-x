@@ -135,4 +135,55 @@ describe.skipIf(isJSDOM)('exportImage', () => {
 
     expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
   });
+
+  it('rejects and removes the iframe when `onStylesheetError` throws', async () => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/missing-stylesheet.css';
+    document.head.appendChild(link);
+    onTestFinished(() => link.remove());
+
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+    const onBeforeExport = vi.fn();
+    const error = new Error('Stop the export');
+
+    render(<Chart apiRef={apiRef} />);
+
+    const iframeCount = document.querySelectorAll('iframe').length;
+
+    await act(async () => {
+      await expect(
+        apiRef.current!.exportAsImage({
+          onBeforeExport,
+          onStylesheetError: () => {
+            throw error;
+          },
+        }),
+      ).rejects.toBe(error);
+    });
+
+    expect(onBeforeExport.mock.calls.length).to.equal(0);
+    expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+  });
+
+  it('continues the export when `onStylesheetError` returns', async () => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/missing-stylesheet.css';
+    document.head.appendChild(link);
+    onTestFinished(() => link.remove());
+
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+    const onStylesheetError = vi.fn();
+    const onBeforeExport = vi.fn();
+
+    render(<Chart apiRef={apiRef} />);
+
+    await act(async () => {
+      await apiRef.current!.exportAsImage({ onStylesheetError, onBeforeExport });
+    });
+
+    expect(onStylesheetError.mock.calls.length).to.equal(1);
+    expect(onBeforeExport.mock.calls.length).to.equal(1);
+  });
 });

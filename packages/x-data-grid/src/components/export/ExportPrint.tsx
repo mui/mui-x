@@ -78,6 +78,7 @@ ExportPrint.propTypes /* remove-proptypes */ = {
     hideFooter: PropTypes.bool,
     hideToolbar: PropTypes.bool,
     includeCheckboxes: PropTypes.bool,
+    onStylesheetError: PropTypes.func,
     pageStyle: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   }),
   /**

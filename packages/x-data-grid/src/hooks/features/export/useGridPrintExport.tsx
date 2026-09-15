@@ -51,8 +51,9 @@ type PrintWindowOnLoad = (
     | 'hideFooter'
     | 'includeCheckboxes'
     | 'getRowsToExport'
+    | 'onStylesheetError'
   >,
-) => void;
+) => Promise<void>;
 
 function buildPrintWindow(title?: string): HTMLIFrameElement {
   const iframeEl = document.createElement('iframe');
@@ -134,7 +135,7 @@ export const useGridPrintExport = (
   );
 
   const handlePrintWindowLoad: PrintWindowOnLoad = React.useCallback(
-    (printWindow, options): void => {
+    async (printWindow, options) => {
       const normalizeOptions = {
         copyStyles: true,
         hideToolbar: false,
@@ -234,15 +235,17 @@ export const useGridPrintExport = (
             ? (rootCandidate as ShadowRoot)
             : doc.current;
 
-        stylesheetLoadPromises = loadStyleSheets(printDoc, root!);
+        stylesheetLoadPromises = loadStyleSheets(printDoc, root!, {
+          onStylesheetError: normalizeOptions.onStylesheetError,
+        });
       }
+
+      // wait for remote stylesheets to load
+      await Promise.all(stylesheetLoadPromises);
 
       // Trigger print
       if (process.env.NODE_ENV !== 'test' && !DEBUG_MODE) {
-        // wait for remote stylesheets to load
-        Promise.all(stylesheetLoadPromises).then(() => {
-          printWindow.contentWindow!.print();
-        });
+        printWindow.contentWindow!.print();
       }
     },
     [apiRef, doc],
@@ -327,22 +330,31 @@ export const useGridPrintExport = (
       const printWindow = buildPrintWindow(options?.fileName);
       if (process.env.NODE_ENV === 'test') {
         doc.current!.body.appendChild(printWindow);
-        // In test env, run the all pipeline without waiting for loading
-        handlePrintWindowLoad(printWindow, options);
-        handlePrintWindowAfterPrint(printWindow);
+        // In test env, run the all pipeline without waiting for the iframe to load or the print dialog
+        try {
+          await handlePrintWindowLoad(printWindow, options);
+        } finally {
+          handlePrintWindowAfterPrint(printWindow);
+        }
       } else {
-        printWindow.onload = () => {
-          handlePrintWindowLoad(printWindow, options);
+        await new Promise<void>((resolve, reject) => {
+          printWindow.onload = () => {
+            const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
+            mediaQueryList.addEventListener('change', (mql) => {
+              const isAfterPrint = mql.matches === false;
+              if (isAfterPrint) {
+                handlePrintWindowAfterPrint(printWindow);
+              }
+            });
 
-          const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
-          mediaQueryList.addEventListener('change', (mql) => {
-            const isAfterPrint = mql.matches === false;
-            if (isAfterPrint) {
+            handlePrintWindowLoad(printWindow, options).then(resolve, (error) => {
+              // The print dialog never opens, so restore the grid here
               handlePrintWindowAfterPrint(printWindow);
-            }
-          });
-        };
-        doc.current!.body.appendChild(printWindow);
+              reject(error);
+            });
+          };
+          doc.current!.body.appendChild(printWindow);
+        });
       }
     },
     [
