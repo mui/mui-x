@@ -19,11 +19,12 @@ describe('exportImage when `rasterizehtml` fails to import', () => {
 
   it('rejects with the import error', async () => {
     const { element, svg } = createChart();
+    const iframeCount = document.querySelectorAll('iframe').length;
 
     await expect(exportImage(element, svg, { copyStyles: false })).rejects.toThrow(
       "MUI X Charts: Failed to import 'rasterizehtml' module.",
     );
-    expect(document.querySelector('iframe')).to.equal(null);
+    expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
   });
 
   it('rejects with the error of an earlier step, without an unhandled rejection from the import', async () => {

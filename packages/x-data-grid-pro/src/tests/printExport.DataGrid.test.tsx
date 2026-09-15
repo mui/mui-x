@@ -236,11 +236,15 @@ describe('<DataGridPro /> - Print export', () => {
       onStylesheetError: ReturnType<typeof vi.fn>,
       clickPrint: () => void,
     ) {
+      const iframeCount = document.querySelectorAll('iframe').length;
+
       await act(async () => {
         clickPrint();
         await failStylesheetLoad();
         await waitUntil(
-          () => onStylesheetError.mock.calls.length > 0 && !document.querySelector('iframe'),
+          () =>
+            onStylesheetError.mock.calls.length > 0 &&
+            document.querySelectorAll('iframe').length === iframeCount,
         );
         /* Let the trigger's `catch` run. */
         await new Promise((resolve) => {
@@ -302,6 +306,8 @@ describe('<DataGridPro /> - Print export', () => {
         />,
       );
 
+      const iframeCount = document.querySelectorAll('iframe').length;
+
       await act(async () => {
         const printPromise = apiRef.current!.exportDataAsPrint({
           fields: ['id'],
@@ -318,7 +324,7 @@ describe('<DataGridPro /> - Print export', () => {
         currencyPair: true,
         id: false,
       });
-      expect(document.querySelector('iframe')).to.equal(null);
+      expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
     });
 
     it('resolves and restores the grid when `onStylesheetError` returns', async () => {
@@ -332,6 +338,8 @@ describe('<DataGridPro /> - Print export', () => {
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
         />,
       );
+
+      const iframeCount = document.querySelectorAll('iframe').length;
 
       await act(async () => {
         const printPromise = apiRef.current!.exportDataAsPrint({
@@ -351,7 +359,7 @@ describe('<DataGridPro /> - Print export', () => {
         currencyPair: true,
         id: false,
       });
-      expect(document.querySelector('iframe')).to.equal(null);
+      expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
     });
   });
 });
