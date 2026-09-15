@@ -485,6 +485,100 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     });
   });
 
+  it('should drop on the row under the scroll area when dropping over the scroll area', async () => {
+    const rows = Array.from({ length: 20 }, (_, id) => ({ id, brand: `Brand ${id}` }));
+    const columns = [{ field: 'brand' }];
+    let apiRef: React.RefObject<GridApi | null>;
+
+    function Test() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} rowReordering hideFooter />
+        </div>
+      );
+    }
+
+    render(<Test />);
+
+    const rowReorderCell = getCell(0, 0).firstChild! as Element;
+    fireDragStart(rowReorderCell);
+
+    const scrollArea = document.querySelector(`.${gridClasses['scrollArea--down']}`)!;
+    expect(scrollArea).not.to.equal(null);
+    const scrollAreaRect = scrollArea.getBoundingClientRect();
+    const clientX = scrollAreaRect.left + 50;
+    const clientY = scrollAreaRect.bottom - 2;
+    const rowUnderScrollArea = document
+      .elementsFromPoint(clientX, clientY)
+      .find((element) => element.matches('[role="row"]'))!;
+    const targetId = Number(rowUnderScrollArea.getAttribute('data-id'));
+    const rowRect = rowUnderScrollArea.getBoundingClientRect();
+    const dropBelow = clientY - rowRect.top >= rowRect.height / 2;
+
+    const dragOverEvent = createEvent.dragOver(scrollArea);
+    Object.defineProperty(dragOverEvent, 'clientX', { value: clientX });
+    Object.defineProperty(dragOverEvent, 'clientY', { value: clientY });
+    Object.defineProperty(dragOverEvent, 'dataTransfer', { value: { dropEffect: 'none' } });
+    fireEvent(scrollArea, dragOverEvent);
+    expect((dragOverEvent as DragEvent).dataTransfer!.dropEffect).to.equal('copy');
+
+    fireEvent(rowReorderCell, createDragEndEvent(rowReorderCell));
+
+    const expected = rows.map((row) => row.id).filter((id) => id !== 0);
+    expected.splice(expected.indexOf(targetId) + (dropBelow ? 1 : 0), 0, 0);
+    await waitFor(() => {
+      expect(apiRef.current!.getSortedRowIds()).to.deep.equal(expected);
+    });
+  });
+
+  it('should drop on the last drop target when releasing below the grid within its horizontal bounds', async () => {
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+    const columns = [{ field: 'brand' }];
+
+    function Test() {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro rows={rows} columns={columns} rowReordering />
+        </div>
+      );
+    }
+
+    render(<Test />);
+
+    const rowReorderCell = getCell(0, 0).firstChild! as Element;
+    const targetCell = getCell(1, 0);
+    fireDragStart(rowReorderCell);
+    fireEvent(targetCell, createDragOverEvent(targetCell, 'below'));
+
+    const gridRect = document.querySelector(`.${gridClasses.root}`)!.getBoundingClientRect();
+    const createOutsideDragOver = (clientX: number) => {
+      const event = createEvent.dragOver(document.body);
+      Object.defineProperty(event, 'clientX', { value: clientX });
+      Object.defineProperty(event, 'clientY', { value: gridRect.bottom + 50 });
+      Object.defineProperty(event, 'dataTransfer', { value: { dropEffect: 'none' } });
+      return event as DragEvent;
+    };
+
+    const outsideHorizontally = createOutsideDragOver(gridRect.right + 50);
+    fireEvent(document.body, outsideHorizontally);
+    expect(outsideHorizontally.dataTransfer!.dropEffect).to.equal('none');
+
+    const belowGrid = createOutsideDragOver(gridRect.left + 50);
+    fireEvent(document.body, belowGrid);
+    expect(belowGrid.dataTransfer!.dropEffect).to.equal('copy');
+
+    fireEvent(rowReorderCell, createDragEndEvent(rowReorderCell));
+
+    await waitFor(() => {
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    });
+  });
+
   // Regression test for https://github.com/mui/mui-x/issues/22057
   it('should reorder rows correctly when a filter hides rows between source and target', async () => {
     const initialRows = [

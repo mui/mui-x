@@ -7,6 +7,7 @@ import {
   useGridLogger,
   useGridEvent,
   getDataGridUtilityClass,
+  gridClasses,
   useGridSelector,
   gridSortModelSelector,
   useGridEventPriority,
@@ -295,10 +296,10 @@ export const useGridRowReorder = (
     (
       rowId: GridRowId,
       event: MuiEvent<React.DragEvent<HTMLElement>> | DragEvent,
-      forcedDropPosition?: RowReorderDropPosition,
-    ) => {
+      dropPosition: RowReorderDropPosition,
+    ): boolean => {
       if (dragRowId === '') {
-        return;
+        return false;
       }
 
       const targetNode = gridRowNodeSelector(apiRef, rowId);
@@ -311,14 +312,11 @@ export const useGridRowReorder = (
         targetNode.type === 'pinnedRow' ||
         !event.target
       ) {
-        return;
+        return false;
       }
 
       logger.debug(`Dragging over row ${rowId}`);
       event.preventDefault();
-      // Prevent drag events propagation.
-      // For more information check here https://github.com/mui/mui-x/issues/2680.
-      event.stopPropagation();
 
       if (
         timeoutInfoRef.current &&
@@ -332,8 +330,6 @@ export const useGridRowReorder = (
         timeout.clear();
         timeoutInfoRef.current = EMPTY_TIMEOUT_INFO;
       }
-
-      const dropPosition = forcedDropPosition ?? calculateDropPosition(event);
 
       if (
         targetNode.type === 'group' &&
@@ -352,7 +348,7 @@ export const useGridRowReorder = (
           clientY: event.clientY,
           clientX: event.clientX,
         };
-        return;
+        return true;
       }
 
       const sortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
@@ -429,44 +425,101 @@ export const useGridRowReorder = (
       if (event.dataTransfer) {
         event.dataTransfer.dropEffect = dropTarget.current.targetRowId === null ? 'none' : 'copy';
       }
+      return true;
     },
-    [dragRowId, apiRef, logger, timeout, calculateDropPosition],
+    [dragRowId, apiRef, logger, timeout],
   );
 
   const handleDragOver = React.useCallback<GridEventListener<'cellDragOver' | 'rowDragOver'>>(
-    (params, event) => handleDragOverRow(params.id, event),
-    [handleDragOverRow],
+    (params, event) => {
+      if (dragRowId === '' || !event.target) {
+        return;
+      }
+      if (handleDragOverRow(params.id, event, calculateDropPosition(event))) {
+        // Prevent drag events propagation.
+        // For more information check here https://github.com/mui/mui-x/issues/2680.
+        event.stopPropagation();
+      }
+    },
+    [dragRowId, handleDragOverRow, calculateDropPosition],
   );
 
-  // Rows and cells only cover the rendered rows. When the rows don't fill the viewport,
-  // dragging over the empty space below them must drop below the last row of the page,
-  // otherwise the drop is rejected.
+  // Rows and cells only receive drag events where nothing covers them.
+  // - The scroll areas overlay the first and last visible rows while the grid can still scroll:
+  //   resolve the row under the pointer so the drop lands there.
+  // - When the rows don't fill the viewport, the empty space below them drops below the last row.
   React.useEffect(() => {
-    const virtualScroller = apiRef.current.virtualScrollerRef?.current;
-    if (dragRowId === '' || !virtualScroller) {
+    const mainElement = apiRef.current.mainElementRef?.current;
+    if (dragRowId === '' || !mainElement) {
       return undefined;
     }
 
-    const handleEmptySpaceDragOver = (event: DragEvent) => {
-      // Rows handle their own drag over events
-      if ((event.target as Element).closest('[role="row"]')) {
+    const handleDragOverOutsideRows = (event: DragEvent) => {
+      const target = event.target as Element;
+      if (target.closest('[role="row"]')) {
         return;
       }
       const { rows } = getVisibleRows(apiRef);
+
+      if (target.closest(`.${gridClasses.scrollArea}`)) {
+        const elementUnderScrollArea = document
+          .elementsFromPoint(event.clientX, event.clientY)
+          .find(
+            (element) =>
+              mainElement.contains(element) &&
+              !element.closest(`.${gridClasses.scrollArea}`) &&
+              element.closest('[role="row"]'),
+          );
+        const rowElementId = elementUnderScrollArea
+          ?.closest('[role="row"]')!
+          .getAttribute('data-id');
+        const row = rows.find((visibleRow) => String(visibleRow.id) === rowElementId);
+        if (row) {
+          const dropPosition = calculateDropPosition({
+            target: elementUnderScrollArea!,
+            clientY: event.clientY,
+          });
+          // Let the event reach the scroll area so it keeps scrolling
+          handleDragOverRow(row.id, event, dropPosition);
+        }
+        return;
+      }
+
       const lastRowId = rows[rows.length - 1]?.id;
       const lastRowElement =
         lastRowId === undefined ? null : apiRef.current.getRowElement(lastRowId);
       if (!lastRowElement || event.clientY <= lastRowElement.getBoundingClientRect().bottom) {
         return;
       }
-      handleDragOverRow(lastRowId!, event, 'below');
+      if (handleDragOverRow(lastRowId!, event, 'below')) {
+        event.stopPropagation();
+      }
     };
 
-    virtualScroller.addEventListener('dragover', handleEmptySpaceDragOver);
-    return () => {
-      virtualScroller.removeEventListener('dragover', handleEmptySpaceDragOver);
+    // Below the rows area (footer, page content) but within its horizontal bounds:
+    // keep the last drop target so releasing there still drops the row.
+    const handleDragOverBelowGrid = (event: DragEvent) => {
+      if (dropTarget.current.targetRowId === null) {
+        return;
+      }
+      const rect = mainElement.getBoundingClientRect();
+      if (event.clientY <= rect.bottom || event.clientX < rect.left || event.clientX > rect.right) {
+        return;
+      }
+      event.preventDefault();
+      if (event.dataTransfer) {
+        event.dataTransfer.dropEffect = 'copy';
+      }
     };
-  }, [apiRef, dragRowId, handleDragOverRow]);
+
+    const ownerDocument = mainElement.ownerDocument;
+    mainElement.addEventListener('dragover', handleDragOverOutsideRows);
+    ownerDocument.addEventListener('dragover', handleDragOverBelowGrid);
+    return () => {
+      mainElement.removeEventListener('dragover', handleDragOverOutsideRows);
+      ownerDocument.removeEventListener('dragover', handleDragOverBelowGrid);
+    };
+  }, [apiRef, dragRowId, handleDragOverRow, calculateDropPosition]);
 
   // A drag session can end without a valid drop: no drop target, a rejected drop,
   // or a reorder that got disabled during the drag. The reorder state must not stay
