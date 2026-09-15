@@ -91,6 +91,16 @@ describe('collectChartExcelTables', () => {
     expect(tables[0].rows.length).to.equal(1);
   });
 
+  it('merges a table too large to spread into a single push', () => {
+    const size = 200_000;
+    const tables = collect({
+      bar: group({ b1: { id: 'b1', label: 'A', data: [1] } }),
+      line: group({ l1: { id: 'l1', label: 'B', data: new Array(size).fill(1) } }),
+    });
+
+    expect(tables[0].rows.length).to.equal(size + 1);
+  });
+
   it('ignores a series type that has no extractor', () => {
     expect(collect({ somethingElse: group({ x: { id: 'x', data: [1] } }) })).to.deep.equal([]);
   });

@@ -59,7 +59,10 @@ function mergeTablesById(tables: ChartExcelTable[]): ChartExcelTable[] {
     const existing = merged.get(table.id);
 
     if (existing) {
-      existing.rows.push(...table.rows);
+      // Not `push(...rows)`: spreading overflows the argument limit on large series.
+      for (const row of table.rows) {
+        existing.rows.push(row);
+      }
     } else {
       // Copy both arrays: extractors hand back module-level column constants, which must
       // not become shared mutable state on the returned tables.
