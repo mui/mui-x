@@ -532,18 +532,16 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     });
   });
 
-  it('should drop on the last drop target when releasing below the grid within its horizontal bounds', async () => {
-    const rows = [
-      { id: 0, brand: 'Nike' },
-      { id: 1, brand: 'Adidas' },
-      { id: 2, brand: 'Puma' },
-    ];
+  it('should drop below the last row when releasing below a scrollable grid within its horizontal bounds', async () => {
+    const rows = Array.from({ length: 20 }, (_, id) => ({ id, brand: `Brand ${id}` }));
     const columns = [{ field: 'brand' }];
+    let apiRef: React.RefObject<GridApi | null>;
 
     function Test() {
+      apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGridPro rows={rows} columns={columns} rowReordering />
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} rowReordering />
         </div>
       );
     }
@@ -574,8 +572,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
 
     fireEvent(rowReorderCell, createDragEndEvent(rowReorderCell));
 
+    // The last row is not rendered, and the last hovered position (below row 1) is ignored
+    expect(apiRef!.current!.getRowElement(19)).to.equal(null);
     await waitFor(() => {
-      expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+      expect(apiRef.current!.getSortedRowIds()).to.deep.equal([
+        ...rows.map((row) => row.id).filter((id) => id !== 0),
+        0,
+      ]);
     });
   });
 

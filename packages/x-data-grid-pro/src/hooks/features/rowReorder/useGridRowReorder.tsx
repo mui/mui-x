@@ -497,18 +497,15 @@ export const useGridRowReorder = (
     };
 
     // Below the rows area (footer, page content) but within its horizontal bounds:
-    // keep the last drop target so releasing there still drops the row.
+    // drop below the last row of the page, even if it is not rendered.
     const handleDragOverBelowGrid = (event: DragEvent) => {
-      if (dropTarget.current.targetRowId === null) {
-        return;
-      }
       const rect = mainElement.getBoundingClientRect();
       if (event.clientY <= rect.bottom || event.clientX < rect.left || event.clientX > rect.right) {
         return;
       }
-      event.preventDefault();
-      if (event.dataTransfer) {
-        event.dataTransfer.dropEffect = 'copy';
+      const { rows } = getVisibleRows(apiRef);
+      if (rows.length > 0) {
+        handleDragOverRow(rows[rows.length - 1].id, event, 'below');
       }
     };
 
