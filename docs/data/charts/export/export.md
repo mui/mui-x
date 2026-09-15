@@ -129,6 +129,32 @@ You can disable this behavior by setting the `copyStyles` property to `false` in
 <BarChartPro slotProps={{ toolbar: { printOptions: { copyStyles: false } } }} />
 ```
 
+### Stylesheets that fail to load
+
+A stylesheet that fails to load in the export iframe, for example because the request fails or a [Content Security Policy](/x/react-charts/content-security-policy/) blocks it, is skipped.
+The export continues without it, so the result may be missing styles, and a warning is logged in development.
+
+To handle the failure yourself, use the `onStylesheetError` callback.
+It receives the `<link>` element that failed to load:
+
+- Return or resolve to skip the stylesheet and continue the export.
+- Throw an error or reject to stop the export.
+- Return a promise to make the export wait for it, for example while you add replacement styles to `link.ownerDocument`.
+
+```tsx
+<BarChartPro
+  slotProps={{
+    toolbar: {
+      printOptions: {
+        onStylesheetError: (link) => {
+          throw new Error(`The stylesheet ${link.href} failed to load.`);
+        },
+      },
+    },
+  }}
+/>
+```
+
 ## Exporting composed charts
 
 MUI X Charts may be [self-contained](/x/react-charts/quickstart/#self-contained-charts) or [composed of various subcomponents](/x/react-charts/quickstart/#composable-charts).

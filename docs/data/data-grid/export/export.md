@@ -236,6 +236,36 @@ If rows are selected when exporting, the checkboxes will not be included in the 
 <ExportPrint options={{ includeCheckboxes: true }} />
 ```
 
+### Stylesheets that fail to load
+
+A stylesheet that fails to load in the print window, for example because the request fails or a Content Security Policy blocks it, is skipped.
+The print continues without it, so the result may be missing styles, and a warning is logged in development.
+
+To handle the failure yourself, use the `onStylesheetError` callback.
+It receives the `<link>` element that failed to load:
+
+- Return or resolve to skip the stylesheet and continue the print.
+- Throw an error or reject to stop the print. The print dialog doesn't open and the Data Grid is restored.
+- Return a promise to make the print wait for it, for example while you add replacement styles to `link.ownerDocument`.
+
+```jsx
+// Default toolbar:
+<DataGrid
+  slotProps={{
+    toolbar: {
+      printOptions: {
+        onStylesheetError: (link) => {
+          throw new Error(`The stylesheet ${link.href} failed to load.`);
+        },
+      },
+    },
+  }}
+/>
+
+// Custom trigger:
+<ExportPrint options={{ onStylesheetError: (link) => console.warn(link.href) }} />
+```
+
 For more options to customize the print export, please visit the [`printOptions` API page](/x/api/data-grid/grid-print-export-options/).
 
 ## Custom export format
