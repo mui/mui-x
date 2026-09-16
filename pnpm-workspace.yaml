@@ -79,7 +79,7 @@ catalog:
   stylis: ^4.4.0
   tsx: ^4.23.12
   use-sync-external-store: ^1.7.0
-  vite: ^8.2.2
+  vite: ^8.3.0
   vitest: ^5.0.0
   yargs: ^18.1.0
 
