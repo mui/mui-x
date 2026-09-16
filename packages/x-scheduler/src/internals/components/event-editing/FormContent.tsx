@@ -251,10 +251,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       isSessionAliveRef.current = false;
     };
   }, []);
-  // The ref guards synchronous re-entry; the store's isSubmitting drives the
-  // action buttons without re-rendering the sections (a section re-render would
-  // churn its inline validator identities mid-validation).
-  const isSubmittingRef = React.useRef(false);
 
   // Dev companion to the submit-level blocks: a custom General tab can omit any
   // built-in section, leaving the stored error with no visible field.
@@ -321,7 +317,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (isSubmittingRef.current) {
+    if (formStore.state.isSubmitting) {
       return;
     }
 
@@ -337,7 +333,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       }
     }
 
-    isSubmittingRef.current = true;
     formStore.setSubmitting(true);
     try {
       let isValid: boolean;
@@ -458,7 +453,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
       onClose();
     } finally {
-      isSubmittingRef.current = false;
       // A store write is safe after unmount, unlike the React state update it
       // replaced (React 17, still supported, warns on those).
       formStore.setSubmitting(false);
