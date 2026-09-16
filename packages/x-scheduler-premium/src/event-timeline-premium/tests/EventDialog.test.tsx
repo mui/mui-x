@@ -266,6 +266,26 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     expect(currentDialog.getByLabelText(/start time/i)).to.have.value('11:00');
   });
 
+  it('should show the General tab when a save submitted from the Recurrence tab is vetoed', async () => {
+    const { user, currentDialog, onEventsChange } = await renderEditDialog();
+
+    await user.clear(currentDialog.getByLabelText(/start time/i));
+    await user.type(currentDialog.getByLabelText(/start time/i), '11:00');
+    await user.clear(currentDialog.getByLabelText(/end time/i));
+    await user.type(currentDialog.getByLabelText(/end time/i), '12:00');
+
+    const generalPanel = currentDialog.getByRole('tabpanel', { name: /general/i });
+    await user.click(currentDialog.getByRole('tab', { name: /recurrence/i }));
+    expect(generalPanel).to.have.attribute('hidden');
+
+    await user.click(currentDialog.getByRole('button', { name: /save/i }));
+
+    // The rejection sits on a General tab field, so the dialog switches back to it.
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    expect(generalPanel).not.to.have.attribute('hidden');
+    expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
+  });
+
   it('should save after the vetoed dates are edited back into a valid range', async () => {
     const { user, currentDialog, onClose, onEventsChange } = await renderEditDialog();
 

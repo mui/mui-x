@@ -473,6 +473,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           const rejectedField = values.allDay ? 'endDate' : 'endTime';
           warnUnvalidatedField(rejectedField, 'The scheduling plugin rejected the save');
           formStore.setError(rejectedField, result.rejection.message);
+          setTabValue('general');
           return;
         }
       }
