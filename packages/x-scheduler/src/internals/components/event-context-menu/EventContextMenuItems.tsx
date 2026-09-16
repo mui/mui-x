@@ -8,11 +8,9 @@ import EditRounded from '@mui/icons-material/EditRounded';
 import DeleteRounded from '@mui/icons-material/DeleteRounded';
 import SearchRounded from '@mui/icons-material/SearchRounded';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import {
-  schedulerEventSelectors,
-  schedulerOtherSelectors,
-} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { deleteEventOccurrence } from '../../utils/event-utils';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 
 interface UseEventContextMenuItemsParameters {
@@ -58,10 +56,6 @@ export function useEventContextMenuItems(
   const { startEditing } = useEventEditingContext();
 
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
-  const areRecurringEventsAvailable = useStore(
-    store,
-    schedulerOtherSelectors.areRecurringEventsAvailable,
-  );
 
   const handleEdit = (event: React.MouseEvent) => {
     onRequestClose();
@@ -76,23 +70,13 @@ export function useEventContextMenuItems(
     }
   };
 
-  // Mirrors EventToolbar's delete / FormContent's delete: recurring events open the scope dialog;
-  // single events delete immediately. No confirmation step here either — see #18025.
   const handleDelete = () => {
     onRequestClose();
-    if (areRecurringEventsAvailable && occurrence.displayTimezone.rrule) {
-      store.deleteRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
-        eventId: occurrence.id,
-        onSubmit: () => {},
-      });
-      return;
-    }
-
     // Captured before the delete unmounts `anchorEl` — see `getFocusFallback`.
     const focusFallback = getFocusFallback(anchorEl);
-    store.deleteEvent(occurrence.id);
-    focusFallback?.focus();
+    if (deleteEventOccurrence(store, occurrence, () => {})) {
+      focusFallback?.focus();
+    }
   };
 
   const items: React.ReactNode[] = [
