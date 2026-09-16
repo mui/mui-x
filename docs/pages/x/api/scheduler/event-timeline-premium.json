@@ -132,6 +132,18 @@
       "description": "The content of the \"General\" tab of the event editing surface:\nthe dialog on regular views, the compact editing drawer on compact views.\nIt is rendered inside the tab panel, so it must not render a tab panel of its own.\nReturn a fragment rather than a wrapper element to keep the spacing between the sections.",
       "default": "EventDialogGeneralTabContent",
       "class": null
+    },
+    {
+      "name": "timelineEventContent",
+      "description": "The content of an event block.\nIt replaces the title text and is rendered inside the block, so the block keeps its\ngeometry, its drag and resize handles, and its button semantics.\nThe content is part of the accessible name of the event.",
+      "default": "the occurrence title",
+      "class": null
+    },
+    {
+      "name": "timelineResourceTitle",
+      "description": "The content of a resource title cell.\nIt replaces the title text and is rendered next to the legend color and the collapse toggle.\nThe content is part of the accessible name of every event in the row.",
+      "default": "the resource title",
+      "class": null
     }
   ],
   "classes": [
