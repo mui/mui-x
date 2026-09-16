@@ -2,8 +2,6 @@
 
 ## 9.14.0
 
-<!-- generated comparing v9.13.0..master -->
-
 _Sep 16, 2026_
 
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
