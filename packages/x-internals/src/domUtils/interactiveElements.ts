@@ -18,7 +18,9 @@ export function isEventFromNestedInteractiveElement(event: React.SyntheticEvent)
     if (node === event.currentTarget) {
       return false;
     }
-    if (node instanceof Element && node.matches(INTERACTIVE_ELEMENT_SELECTOR)) {
+    // `nodeType` instead of `instanceof Element`: nodes portaled into an iframe belong to
+    // another realm and fail the `instanceof` check.
+    if ((node as Node).nodeType === 1 && (node as Element).matches(INTERACTIVE_ELEMENT_SELECTOR)) {
       return true;
     }
   }

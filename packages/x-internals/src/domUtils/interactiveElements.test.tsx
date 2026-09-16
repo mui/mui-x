@@ -57,4 +57,22 @@ describe('isEventFromNestedInteractiveElement', () => {
     fireEvent.click(screen.getByTestId('link-text'));
     expect(results).to.deep.equal([true]);
   });
+
+  it('should return true when the nested button belongs to another document', () => {
+    const results = setupProbe();
+    const trigger = screen.getByTestId('trigger');
+
+    // A button portaled into an iframe: its constructors belong to that realm, so it fails
+    // an `instanceof Element` guard while behaving like any other element. Standing one in
+    // avoids mounting a second document just to prove the guard does not depend on the realm.
+    const foreignButton = {
+      nodeType: 1,
+      matches: (selector: string) => selector.includes('button'),
+    };
+    const event = new MouseEvent('click', { bubbles: true });
+    Object.defineProperty(event, 'composedPath', { value: () => [foreignButton, trigger] });
+    trigger.dispatchEvent(event);
+
+    expect(results).to.deep.equal([true]);
+  });
 });
