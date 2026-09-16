@@ -1,5 +1,136 @@
 # Changelog
 
+## 9.14.0
+
+<!-- generated comparing v9.13.0..master -->
+
+_Sep 16, 2026_
+
+We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Hebrew (he-IL) locale to the Scheduler
+- 📅 Scheduler time grid now opens at 7 AM by default, configurable with the new `initialScrollTime` prop
+- ♿️ Charts announce the visible zoom range to screen readers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@eterry1388, @jamesDin, @kareem-ib, @mustafajw07
+
+The following team members contributed to this release:
+@arminmeh, @bernardobelchior, @brijeshb42, @hasdfa, @Janpot, @JCQuintas, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.14.0`
+
+- [DataGrid] Do not crash on unmount when the document has no body (#23431) @eterry1388
+- [DataGrid] Fix `MissingRowIdError` on cell mousedown/mouseup after row removal (#23261) @kareem-ib
+- [DataGrid] Keep overlays sticky in RTL mode (#23492) @arminmeh
+- [DataGrid] Prevent scroll area state update before mount (#23478) @michelengelen
+- [DataGrid] Remove `'menu'` role from the actions cell (#23437) @michelengelen
+
+#### `@mui/x-data-grid-pro@9.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.14.0`, plus:
+
+- [DataGridPro] Fix data integrity issue in nested server data (#23518) @MBilalShafi
+- [DataGridPro] Keep parent selection when lazily loaded children arrive (#23421) @michelengelen
+
+#### `@mui/x-data-grid-premium@9.14.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.14.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.14.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@9.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.14.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.14.0`
+
+- [charts] Announce the visible zoom range to screen readers (#23371) @JCQuintas
+- [charts] Fix Premium chart zoom props and `apiRef` forwarding (#23590) @bernardobelchior
+
+#### `@mui/x-charts-pro@9.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.14.0`.
+
+#### `@mui/x-charts-premium@9.14.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.14.0`, plus:
+
+- [charts-premium] Add the Excel data extraction layer (#23569) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@9.14.0`
+
+- [tree view] Optimize lazy loading store writes for nested children (#23489) @noraleonte
+
+#### `@mui/x-tree-view-pro@9.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.14.0`.
+
+### Scheduler
+
+#### Breaking changes
+
+- The `dataSource` prop has been removed from the Community Event Calendar components:
+  `EventCalendar`, `StandaloneDayView`, `StandaloneWeekView`, `StandaloneMonthView`,
+  `StandaloneAgendaView`, `StandaloneCompactDayView`, `StandaloneCompactThreeDayView` and
+  `StandaloneCompactWeekView`.
+
+  Lazy loading has always been Premium-only, and the prop never had any effect on these
+  components: it left the calendar in a permanent loading state. To load events through a data
+  source, use `EventCalendarPremium` (or the Premium standalone views) and `EventTimelinePremium`,
+  where `dataSource` is unchanged.
+
+  ```diff
+  -import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+  +import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+
+  -<EventCalendar dataSource={dataSource} />
+  +<EventCalendarPremium dataSource={dataSource} />
+  ```
+
+#### `@mui/x-scheduler@9.0.0-beta.12`
+
+- [l10n] Add Hebrew (he-IL) locale (#23577) @jamesDin
+- [scheduler] Fix `onPreferencesChange` never being called on `EventCalendar` (#23568) @rita-codes
+- [scheduler] Fix flaky timeline observer absorb (#23523) @JCQuintas
+- [scheduler] Open the time grid at 7 AM by default and add `initialScrollTime` (#23594) @rita-codes
+- [scheduler] Pin sibling scheduler packages to exact versions (#23574) @rita-codes
+- [scheduler] Remove `dataSource` from the Community components (#23483) @mustafajw07
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.12` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.12`.
+
+### Docs
+
+- [docs] Add recipe for getting the tree view's root DOM element via `ref` (#22941) @michelengelen
+
+### Core
+
+- [code-infra] Gate the DataGridScrollRestoration screenshot on the horizontal restore (#23527) @JCQuintas
+- [code-infra] Let the NoColumnsOverlay demo settle before screenshotting (#23529) @JCQuintas
+- [code-infra] Pin the only-allow version in the preinstall hook (#23551) @Janpot
+- [code-infra] Remove disabled Discord release announcement workflow (#23554) @Janpot
+- [code-infra] Trial: Claude CI flake-fix caller (#23556) @Janpot
+
+### Miscellaneous
+
+- [chat] Add feedback form to the docs (#23403) @hasdfa
+- [ci] Grant actions: read to the flake-fix caller (#23560) @Janpot
+- [ci] Update flake-fix caller to mui-public#1849 (#23571) @Janpot
+
 ## 9.13.0
 
 <!-- generated comparing v9.12.0..master -->
