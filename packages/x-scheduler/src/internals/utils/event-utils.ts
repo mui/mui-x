@@ -25,7 +25,7 @@ export function isOccurrenceAllDayOrMultipleDay(
 export function deleteEventOccurrence(
   store: SchedulerStoreInContext<any, any>,
   occurrence: SchedulerRenderableEventOccurrence,
-  onSubmit: () => void,
+  onSubmit?: () => void,
 ): boolean {
   if (
     schedulerOtherSelectors.areRecurringEventsAvailable(store.state) &&

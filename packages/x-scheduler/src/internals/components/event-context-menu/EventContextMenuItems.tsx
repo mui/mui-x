@@ -74,7 +74,7 @@ export function useEventContextMenuItems(
     onRequestClose();
     // Captured before the delete unmounts `anchorEl` — see `getFocusFallback`.
     const focusFallback = getFocusFallback(anchorEl);
-    if (deleteEventOccurrence(store, occurrence, () => {})) {
+    if (deleteEventOccurrence(store, occurrence)) {
       focusFallback?.focus();
     }
   };
