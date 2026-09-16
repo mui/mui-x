@@ -643,3 +643,69 @@ describe('<DataGrid /> - Filter panel', () => {
     });
   });
 });
+
+describe('<DataGrid /> - Column header filter icon', () => {
+  const { render } = createRenderer();
+
+  const rows = [{ id: 0, brand: 'Nike', country: 'United States' }];
+  const columns = [{ field: 'brand' }, { field: 'country', filterable: false }];
+
+  it('should hide the icon on unfiltered columns by default', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} autoHeight={isJSDOM} disableVirtualization />
+      </div>,
+    );
+    expect(document.querySelectorAll('button[aria-label="Show filters"]')).to.have.length(0);
+  });
+
+  it('should show the icon on unfiltered filterable columns when hideIconIfNoFilterAdded is false', async () => {
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          autoHeight={isJSDOM}
+          disableVirtualization
+          slotProps={{ columnHeaderFilterIconButton: { hideIconIfNoFilterAdded: false } }}
+        />
+      </div>,
+    );
+    const buttons = document.querySelectorAll('button[aria-label="Show filters"]');
+    expect(buttons).to.have.length(1);
+    expect(getColumnHeaderCell(0).contains(buttons[0])).to.equal(true);
+    expect(getColumnHeaderCell(1).querySelector('button[aria-label="Show filters"]')).to.equal(
+      null,
+    );
+
+    await user.click(buttons[0]);
+    expect(getSelectByName('Column')).to.have.value('brand');
+  });
+
+  it('should open the panel with a filter for the clicked column when another column is filtered', async () => {
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          rows={[{ id: 0, brand: 'Nike', country: 'United States' }]}
+          columns={[{ field: 'brand' }, { field: 'country' }]}
+          autoHeight={isJSDOM}
+          disableVirtualization
+          initialState={{
+            filter: {
+              filterModel: { items: [{ field: 'brand', operator: 'contains', value: 'a' }] },
+            },
+          }}
+          slotProps={{ columnHeaderFilterIconButton: { hideIconIfNoFilterAdded: false } }}
+        />
+      </div>,
+    );
+    const countryButton = getColumnHeaderCell(1).querySelector(
+      'button[aria-label="Show filters"]',
+    )!;
+    await user.click(countryButton);
+
+    // The MIT Data Grid holds a single filter item, so the brand filter is
+    // replaced, the same as adding a filter from the column menu.
+    expect(getSelectByName('Column')).to.have.value('country');
+  });
+});

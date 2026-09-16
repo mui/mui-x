@@ -18,6 +18,13 @@ import type { GridColumnHeaderParams } from '../../models/params/gridColumnHeade
 export interface ColumnHeaderFilterIconButtonProps {
   field: string;
   counter?: number;
+  /**
+   * If `true`, the icon is hidden when the column has no active filter.
+   * Set it to `false` to show the icon on every filterable column, so a filter
+   * can be added from the column header.
+   * @default true
+   */
+  hideIconIfNoFilterAdded?: boolean;
   onClick?: (params: GridColumnHeaderParams, event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -36,7 +43,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 function GridColumnHeaderFilterIconButtonWrapped(props: ColumnHeaderFilterIconButtonProps) {
-  if (!props.counter) {
+  const { counter, hideIconIfNoFilterAdded = true } = props;
+  if (!counter && hideIconIfNoFilterAdded) {
     return null;
   }
   return <GridColumnHeaderFilterIconButton {...props} />;
@@ -49,6 +57,13 @@ GridColumnHeaderFilterIconButtonWrapped.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   counter: PropTypes.number,
   field: PropTypes.string.isRequired,
+  /**
+   * If `true`, the icon is hidden when the column has no active filter.
+   * Set it to `false` to show the icon on every filterable column, so a filter
+   * can be added from the column header.
+   * @default true
+   */
+  hideIconIfNoFilterAdded: PropTypes.bool,
   onClick: PropTypes.func,
 } as any;
 
@@ -72,17 +87,18 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
         apiRef.current.hideFilterPanel();
       } else {
-        apiRef.current.showFilterPanel(undefined, panelId, labelId);
+        // An unfiltered column gets a fresh filter item for itself.
+        apiRef.current.showFilterPanel(counter ? undefined : field, panelId, labelId);
       }
 
       if (onClick) {
         onClick(apiRef.current.getColumnHeaderParams(field), event);
       }
     },
-    [apiRef, field, onClick, panelId, labelId],
+    [apiRef, counter, field, onClick, panelId, labelId],
   );
 
-  if (!counter) {
+  if (!counter && !apiRef.current.getColumn(field)?.filterable) {
     return null;
   }
 
@@ -105,21 +121,23 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
   return (
     <rootProps.slots.baseTooltip
       title={
-        apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
-          counter,
-        ) as React.ReactElement<any>
+        counter
+          ? (apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
+              counter,
+            ) as React.ReactElement<any>)
+          : apiRef.current.getLocaleText('columnHeaderFiltersLabel')
       }
       enterDelay={1000}
       {...rootProps.slotProps?.baseTooltip}
     >
       <GridIconButtonContainer>
-        {counter > 1 && (
+        {counter && counter > 1 ? (
           <rootProps.slots.baseBadge badgeContent={counter} color="default">
             {iconButton}
           </rootProps.slots.baseBadge>
+        ) : (
+          iconButton
         )}
-
-        {counter === 1 && iconButton}
       </GridIconButtonContainer>
     </rootProps.slots.baseTooltip>
   );
@@ -132,6 +150,13 @@ GridColumnHeaderFilterIconButton.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   counter: PropTypes.number,
   field: PropTypes.string.isRequired,
+  /**
+   * If `true`, the icon is hidden when the column has no active filter.
+   * Set it to `false` to show the icon on every filterable column, so a filter
+   * can be added from the column header.
+   * @default true
+   */
+  hideIconIfNoFilterAdded: PropTypes.bool,
   onClick: PropTypes.func,
 } as any;
 
