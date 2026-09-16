@@ -26,6 +26,7 @@ export function useExtractEventCalendarParameters<
     onCollapsedResourcesChange,
     onEventEditingStart,
     onEventsChange,
+    onPreferencesChange,
     onViewChange,
     onVisibleDateChange,
     onVisibleResourcesChange,
@@ -65,6 +66,7 @@ export function useExtractEventCalendarParameters<
       onCollapsedResourcesChange,
       onEventEditingStart,
       onEventsChange,
+      onPreferencesChange,
       onViewChange,
       onVisibleDateChange,
       onVisibleResourcesChange,
@@ -101,6 +103,7 @@ export function useExtractEventCalendarParameters<
       onCollapsedResourcesChange,
       onEventEditingStart,
       onEventsChange,
+      onPreferencesChange,
       onViewChange,
       onVisibleDateChange,
       onVisibleResourcesChange,
@@ -117,7 +120,7 @@ export function useExtractEventCalendarParameters<
       visibleDate,
       visibleResources,
     ],
-  );
+  ) satisfies Record<keyof EventCalendarParameters<TEvent, TResource>, unknown>;
 
   return {
     parameters,

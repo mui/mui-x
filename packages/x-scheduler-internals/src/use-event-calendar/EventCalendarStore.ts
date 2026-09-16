@@ -256,6 +256,15 @@ export class ExtendableEventCalendarStore<
    */
   public setPreferences = (partialPreferences: Partial<EventCalendarPreferences>, event: Event) => {
     const { preferences: preferencesProp, onPreferencesChange } = this.parameters;
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      preferencesProp !== undefined &&
+      !onPreferencesChange
+    ) {
+      warn(
+        'MUI X Scheduler: EventCalendar is controlled (received a `preferences` prop) but `onPreferencesChange` is not provided. Preference changes will be silently ignored.',
+      );
+    }
 
     const updated = {
       ...this.state.preferences,
