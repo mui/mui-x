@@ -1,5 +1,5 @@
 import BezierEasing from 'bezier-easing';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import { EPSILON } from '../../utils/epsilon';
 import type { CurveType } from '../../models/curve';
 import { getCurveFactory } from '../../internals/getCurve';
@@ -117,7 +117,7 @@ function evaluateSegmentYAtX(segment: CurveSegment, targetX: number): number {
   const nx1 = (segment.cpx1 - segment.x0) / dx;
   const nx2 = (segment.cpx2 - segment.x0) / dx;
   if (process.env.NODE_ENV !== 'production' && (nx1 < 0 || nx1 > 1 || nx2 < 0 || nx2 > 1)) {
-    warnOnce(
+    warn(
       `MUI X Charts: a curve segment has control points outside its x range. ` +
         `Please report the curve type and data at https://github.com/mui/mui-x/issues ` +
         `so we can support it natively.`,

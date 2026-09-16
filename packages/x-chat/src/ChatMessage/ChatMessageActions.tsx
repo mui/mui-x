@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { warnOnce } from '@mui/x-internals/warning';
+import { warn } from '@mui/x-internals/warning';
 import type { SxProps, Theme } from '@mui/system';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -123,11 +123,13 @@ const ChatMessageActions = React.forwardRef<HTMLDivElement, ChatMessageActionsPr
     const hasExtraActions = (extraActions?.length ?? 0) > 0;
 
     if (process.env.NODE_ENV !== 'production' && hasExtraActions && chat == null) {
-      warnOnce([
-        'MUI X Chat: `extraActions` on the message actions bar require a `<ChatProvider>` (or `<ChatBox>`/`<ChatRoot>`).',
-        'Without a runtime the action buttons cannot drive `chat.regenerate`/`chat.retry`, so they render disabled.',
-        'Render the actions inside a chat provider to enable them.',
-      ]);
+      warn(
+        [
+          'MUI X Chat: `extraActions` on the message actions bar require a `<ChatProvider>` (or `<ChatBox>`/`<ChatRoot>`).',
+          'Without a runtime the action buttons cannot drive `chat.regenerate`/`chat.retry`, so they render disabled.',
+          'Render the actions inside a chat provider to enable them.',
+        ].join('\n'),
+      );
     }
 
     return (

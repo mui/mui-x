@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { warnOnce } from '@mui/x-internals/warning';
+import { error } from '@mui/x-internals/warning';
 import { styled, useThemeProps } from '@mui/material/styles';
 import type { SxProps, Theme } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
@@ -88,9 +88,8 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
           'type' in child &&
           child.type === ChartsSurface
         ) {
-          warnOnce(
+          error(
             'MUI X Charts: ChartsSurface should not be used inside ChartsLayerContainer. Render a ChartsSvgLayer instead.',
-            'error',
           );
         }
       });
