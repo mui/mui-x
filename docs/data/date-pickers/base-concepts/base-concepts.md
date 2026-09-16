@@ -50,7 +50,7 @@ The Date and Time Pickers currently support the following date libraries:
 :::warning
 Moment.js is a legacy project in maintenance mode.
 For new projects, consider using one of the other supported libraries.
-For more details, see the [Moment.js project status](https://momentjs.com/docs/#/-project-status/).
+For more details, see the [Moment.js project status](https://momentjs.com/news/).
 :::
 
 :::info
