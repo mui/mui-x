@@ -136,23 +136,14 @@ export function FormContent(props: FormContentProps) {
   const store = useSchedulerStoreContext();
   const pushPlaceholder = usePushPlaceholder();
 
-  const canHaveMultipleResources = useStore(
-    store,
-    schedulerEventSelectors.canHaveMultipleResources,
-  );
-  const isCreating = useStore(store, schedulerOccurrencePlaceholderSelectors.isCreating);
-
-  const defaultRecurrencePresetKey = useStore(
-    store,
-    schedulerRecurringEventSelectors.defaultPresetKey,
-    occurrence.displayTimezone.rrule,
-    occurrence.displayTimezone.start,
-  );
-
   // Captured once per editing session, like `initialValues` below.
   // See `getResourceSelectionMode` for the creating-vs-editing rule.
   const resourceSelectionMode = useRefWithInit(() =>
-    getResourceSelectionMode(occurrence.resource, canHaveMultipleResources, isCreating),
+    getResourceSelectionMode(
+      occurrence.resource,
+      schedulerEventSelectors.canHaveMultipleResources(store.state),
+      schedulerOccurrencePlaceholderSelectors.isCreating(store.state),
+    ),
   ).current;
 
   // Built once: the provider ignores later values anyway.
@@ -195,7 +186,11 @@ export function FormContent(props: FormContentProps) {
       resourceIds: getEventResourceIds(occurrence.resource),
       allDay: !!occurrence.allDay,
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
-      recurrenceSelection: defaultRecurrencePresetKey,
+      recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
+        store.state,
+        occurrence.displayTimezone.rrule,
+        occurrence.displayTimezone.start,
+      ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
         interval: base?.interval ?? 1,

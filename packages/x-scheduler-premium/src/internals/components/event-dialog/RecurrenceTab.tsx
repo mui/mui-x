@@ -34,9 +34,9 @@ import {
   useEventEditingStyledContext,
   useEventDialogFormContext,
   getEndsSelectionFromRRule,
-  formatDayOfMonthAndMonthFullLetter,
   EventDialogTabPanel,
   EventDialogTabContent,
+  getRecurrenceLabel,
   getWeekdayToken,
 } from '@mui/x-scheduler/internals';
 import {
@@ -355,35 +355,13 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(rruleDraft);
 
   const weekday = getWeekdayToken(adapter, occurrence.displayTimezone.start.value);
-  const weekdayName = adapter.format(occurrence.displayTimezone.start.value, 'weekday');
-  const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(
-    occurrence.displayTimezone.start.value,
-    adapter,
-  );
 
-  const recurrenceOptions: {
-    label: string;
-    value: RecurringEventPresetKey | null | 'custom';
-  }[] = [
-    { label: `${localeText.recurrenceNoRepeat}`, value: null },
-    { label: `${localeText.recurrenceDailyPresetLabel}`, value: 'DAILY' },
-    {
-      label: `${localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName })}`,
-      value: 'WEEKLY',
-    },
-    {
-      label: `${localeText.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.displayTimezone.start.value))}`,
-      value: 'MONTHLY',
-    },
-    {
-      label: `${localeText.recurrenceYearlyPresetLabel(dateForYearlyOption)}`,
-      value: 'YEARLY',
-    },
-    {
-      label: `${localeText.recurrenceCustomRepeat}`,
-      value: 'custom',
-    },
-  ];
+  const recurrenceOptions = ([null, 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY', 'custom'] as const).map(
+    (value) => ({
+      value,
+      label: getRecurrenceLabel(adapter, occurrence.displayTimezone.start, value, localeText),
+    }),
+  );
 
   const recurrenceFrequencyOptions: {
     label: string;
