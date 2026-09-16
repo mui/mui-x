@@ -2558,8 +2558,7 @@ describe('<EventDialogContent open />', () => {
           </EventCalendarProvider>,
         );
 
-        // Same displayed Thursday, but 10:00 in New York is Thursday 14:00 UTC: the data-timezone
-        // weekday moves from Friday to Thursday.
+        // Still Thursday as displayed, but Thursday 14:00 UTC instead of Friday 00:00 UTC.
         await user.clear(screen.getByLabelText(/start time/i));
         await user.type(screen.getByLabelText(/start time/i), '10:00');
         await user.clear(screen.getByLabelText(/end time/i));
@@ -2575,8 +2574,7 @@ describe('<EventDialogContent open />', () => {
         expect(adapter.date(updated.start, 'UTC')).toEqualDateTime(
           adapter.date('2025-07-03T14:00:00', 'UTC'),
         );
-        // "Weekly on Thursday" as displayed must expand on Thursdays UTC against the new start,
-        // not on the Fridays the stored start used to fall on.
+        // Projected against the new start, not the Friday the stored one fell on.
         expect(updated.rrule).to.deep.include({ freq: 'WEEKLY', byDay: ['TH'] });
       });
 
@@ -2597,7 +2595,7 @@ describe('<EventDialogContent open />', () => {
         };
         let store: AnyEventCalendarStore;
         const resizedEnd = adapter.date('2025-05-26T16:00:00', 'UTC');
-        // The snapshot the resize left behind, as the store would hand it to the dialog.
+        // The snapshot after the resize, as the store hands it to the dialog.
         const resizedOccurrence = EventBuilder.new()
           .id(event.id)
           .title(event.title)
@@ -2642,8 +2640,7 @@ describe('<EventDialogContent open />', () => {
         await waitFor(() => expect(persistCalls).to.have.length(2));
         const renamed = persistCalls[1].updated[0];
         expect(renamed.title).to.equal('Renamed');
-        // Left out of the submission, the untouched end would be rebuilt from the stale model
-        // and undo the resize once this write lands last.
+        // Without the end, the write would carry the stale 11:00 and undo the resize.
         expect(adapter.date(renamed.end, 'UTC')).toEqualDateTime(resizedEnd);
       });
 

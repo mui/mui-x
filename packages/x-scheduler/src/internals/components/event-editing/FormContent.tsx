@@ -412,10 +412,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // seeding, an untouched bound's stored instant no longer matches, so editing either bound
       // resends both.
       const displayTimezoneMoved = current.displayTimezone !== occurrence.displayTimezone.timezone;
-      // A drag or resize moves the editing snapshot at once, but with a `dataSource` the stored
-      // model only follows once the write lands. A bound the snapshot is ahead on is resent, or
-      // the update would rebuild it from the stale model and undo the move. Recurring events
-      // are compared against the series' own bounds, so they are left out.
+      // With a `dataSource`, a resize updates the snapshot before the stored model: resend a
+      // bound that differs, or the update rebuilds it from the stale model.
       const liveEvent = schedulerEventSelectors.processedEvent(store.state, occurrence.id);
       const boundPending = (bound: 'start' | 'end') =>
         liveEvent != null &&

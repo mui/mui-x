@@ -68,8 +68,7 @@ export function projectRRuleFromDisplayToData(
   const displayTz = originalEvent.displayTimezone.timezone;
   const dataTz = originalEvent.dataTimezone.timezone;
 
-  // The weekday shift between the two timezones depends on the time of day, so the
-  // start the rule will be stored with is the one to project from.
+  // The weekday shift depends on the time of day, so project from the start the rule is stored with.
   const dtStartDisplay =
     ruleStart ?? adapter.setTimezone(originalEvent.dataTimezone.start.value, displayTz);
 
