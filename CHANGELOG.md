@@ -116,6 +116,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.12`.
 ### Docs
 
 - [docs] Add recipe for getting the tree view's root DOM element via `ref` (#22941) @michelengelen
+- [docs][pickers] Mention `Moment.js` maintenance mode (#23601) @mateuseap
 
 ### Core
 
