@@ -69,6 +69,21 @@ export function projectRRuleFromDisplayToData(
   // any other value, and the ordinal BYDAY form, are kept as-is since projecting them
   // would result in unstable or misleading rules.
   if (displayRRule.freq === 'MONTHLY') {
+    // A selection read back from the stored rule and left as is keeps the stored value:
+    // the display value alone cannot tell a projected day from a custom one that happens
+    // to be the display start's own day.
+    const storedRule = originalEvent.dataTimezone.rrule;
+    const readRule = originalEvent.displayTimezone.rrule;
+    if (
+      storedRule?.freq === 'MONTHLY' &&
+      readRule?.freq === 'MONTHLY' &&
+      isSameMonthDaySelection(displayRRule.byMonthDay, readRule.byMonthDay)
+    ) {
+      return displayRRule.byMonthDay == null
+        ? displayRRule
+        : { ...displayRRule, byMonthDay: storedRule.byMonthDay };
+    }
+
     const startDisplayDay = adapter.getDate(dtStartDisplay);
     if (displayRRule.byMonthDay?.includes(startDisplayDay)) {
       const startDataDay = adapter.getDate(adapter.setTimezone(dtStartDisplay, dataTz));
@@ -107,4 +122,13 @@ export function projectRRuleFromDisplayToData(
     ...displayRRule,
     byDay: Array.from(new Set(projectedByDay)),
   };
+}
+
+function isSameMonthDaySelection(a: number[] | undefined, b: number[] | undefined): boolean {
+  if (a == null || b == null) {
+    return a == null && b == null;
+  }
+  const sortedA = [...a].sort((x, y) => x - y);
+  const sortedB = [...b].sort((x, y) => x - y);
+  return sortedA.length === sortedB.length && sortedA.every((day, index) => day === sortedB[index]);
 }

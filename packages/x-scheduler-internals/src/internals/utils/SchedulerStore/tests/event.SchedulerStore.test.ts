@@ -5,6 +5,7 @@ import {
   premiumStoreClasses,
   ResourceBuilder,
   storeClasses,
+  utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import type {
   SchedulerEvent,
@@ -1217,6 +1218,48 @@ storeClasses.forEach((storeClass) => {
 // plugin, so the community store is not expected to honor it.
 premiumStoreClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
+    describe('Method: updateRecurringEvent', () => {
+      it('should keep the stored BYMONTHDAY when only the count changes from another timezone', () => {
+        // Stored on the 3rd with a July 4 UTC start, read from New York where the start also
+        // shows on the 3rd. Saving the rule with a new count must round-trip the 3rd as is.
+        const event = utcJuly4AllDayBuilder()
+          .id('report')
+          .recurrent('MONTHLY', { byMonthDay: [3] })
+          .build();
+        const onEventsChange = vi.fn();
+        const store = new storeClass.Value(
+          {
+            resources: TEST_RESOURCES,
+            events: [event],
+            displayTimezone: 'America/New_York',
+            onEventsChange,
+          },
+          adapter,
+        );
+        const occurrence = schedulerEventSelectors.processedEventRequired(store.state, 'report');
+        expect(occurrence.displayTimezone.rrule!.byMonthDay).to.deep.equal([3]);
+
+        store.updateRecurringEvent({
+          occurrenceStart: occurrence.dataTimezone.start.value,
+          changes: {
+            id: 'report',
+            rrule: { ...occurrence.displayTimezone.rrule!, count: 5 },
+          },
+        });
+        store.selectRecurringEventScope('all');
+
+        const updated = onEventsChange.mock.lastCall![0].find(
+          (item: SchedulerEvent) => item.id === 'report',
+        );
+        expect(updated.rrule).to.deep.equal({
+          freq: 'MONTHLY',
+          interval: 1,
+          byMonthDay: [3],
+          count: 5,
+        });
+      });
+    });
+
     describe('dev warnings', () => {
       it('should not warn about a missing onEventsChange when a dataSource is provided', () => {
         const event = EventBuilder.new().build();
