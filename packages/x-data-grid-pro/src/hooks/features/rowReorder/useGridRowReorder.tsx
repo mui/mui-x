@@ -297,9 +297,9 @@ export const useGridRowReorder = (
       rowId: GridRowId,
       event: MuiEvent<React.DragEvent<HTMLElement>> | DragEvent,
       dropPosition: RowReorderDropPosition,
-    ): boolean => {
+    ) => {
       if (dragRowId === '') {
-        return false;
+        return;
       }
 
       const targetNode = gridRowNodeSelector(apiRef, rowId);
@@ -312,11 +312,14 @@ export const useGridRowReorder = (
         targetNode.type === 'pinnedRow' ||
         !event.target
       ) {
-        return false;
+        return;
       }
 
       logger.debug(`Dragging over row ${rowId}`);
       event.preventDefault();
+      // Prevent drag events propagation.
+      // For more information check here https://github.com/mui/mui-x/issues/2680.
+      event.stopPropagation();
 
       if (
         timeoutInfoRef.current &&
@@ -348,7 +351,7 @@ export const useGridRowReorder = (
           clientY: event.clientY,
           clientX: event.clientX,
         };
-        return true;
+        return;
       }
 
       const sortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
@@ -425,29 +428,21 @@ export const useGridRowReorder = (
       if (event.dataTransfer) {
         event.dataTransfer.dropEffect = dropTarget.current.targetRowId === null ? 'none' : 'copy';
       }
-      return true;
     },
     [dragRowId, apiRef, logger, timeout],
   );
 
   const handleDragOver = React.useCallback<GridEventListener<'cellDragOver' | 'rowDragOver'>>(
     (params, event) => {
-      if (dragRowId === '' || !event.target) {
-        return;
-      }
-      if (handleDragOverRow(params.id, event, calculateDropPosition(event))) {
-        // Prevent drag events propagation.
-        // For more information check here https://github.com/mui/mui-x/issues/2680.
-        event.stopPropagation();
+      if (dragRowId !== '') {
+        handleDragOverRow(params.id, event, calculateDropPosition(event));
       }
     },
     [dragRowId, handleDragOverRow, calculateDropPosition],
   );
 
-  // Rows and cells only receive drag events where nothing covers them.
-  // - The scroll areas overlay the first and last visible rows while the grid can still scroll:
-  //   resolve the row under the pointer so the drop lands there.
-  // - When the rows don't fill the viewport, the empty space below them drops below the last row.
+  // Rows and cells stop the propagation of the drag over events they handle,
+  // so this listener only receives the ones happening outside of the rows.
   React.useEffect(() => {
     const mainElement = apiRef.current.mainElementRef?.current;
     if (dragRowId === '' || !mainElement) {
@@ -455,14 +450,17 @@ export const useGridRowReorder = (
     }
 
     const handleDragOverOutsideRows = (event: DragEvent) => {
-      const target = event.target as Element;
-      if (target.closest('[role="row"]')) {
+      const { rows } = getVisibleRows(apiRef);
+      if (rows.length === 0) {
         return;
       }
-      const { rows } = getVisibleRows(apiRef);
 
-      if (target.closest(`.${gridClasses.scrollArea}`)) {
-        const elementUnderScrollArea = document
+      // The scroll areas cover the first and last visible rows: drop on the row under the pointer
+      if (
+        mainElement.contains(event.target as Node) &&
+        (event.target as Element).closest(`.${gridClasses.scrollArea}`)
+      ) {
+        const elementUnder = document
           .elementsFromPoint(event.clientX, event.clientY)
           .find(
             (element) =>
@@ -470,51 +468,39 @@ export const useGridRowReorder = (
               !element.closest(`.${gridClasses.scrollArea}`) &&
               element.closest('[role="row"]'),
           );
-        const rowElementId = elementUnderScrollArea
-          ?.closest('[role="row"]')!
-          .getAttribute('data-id');
-        const row = rows.find((visibleRow) => String(visibleRow.id) === rowElementId);
+        const rowId = elementUnder?.closest('[role="row"]')!.getAttribute('data-id');
+        const row = rows.find((visibleRow) => String(visibleRow.id) === rowId);
         if (row) {
-          const dropPosition = calculateDropPosition({
-            target: elementUnderScrollArea!,
-            clientY: event.clientY,
-          });
-          // Let the event reach the scroll area so it keeps scrolling
-          handleDragOverRow(row.id, event, dropPosition);
+          handleDragOverRow(
+            row.id,
+            event,
+            calculateDropPosition({ target: elementUnder!, clientY: event.clientY }),
+          );
         }
         return;
       }
 
-      const lastRowId = rows[rows.length - 1]?.id;
-      const lastRowElement =
-        lastRowId === undefined ? null : apiRef.current.getRowElement(lastRowId);
-      if (!lastRowElement || event.clientY <= lastRowElement.getBoundingClientRect().bottom) {
-        return;
-      }
-      if (handleDragOverRow(lastRowId!, event, 'below')) {
-        event.stopPropagation();
-      }
-    };
-
-    // Below the rows area (footer, page content) but within its horizontal bounds:
-    // drop below the last row of the page, even if it is not rendered.
-    const handleDragOverBelowGrid = (event: DragEvent) => {
-      const rect = mainElement.getBoundingClientRect();
-      if (event.clientY <= rect.bottom || event.clientX < rect.left || event.clientX > rect.right) {
-        return;
-      }
-      const { rows } = getVisibleRows(apiRef);
-      if (rows.length > 0) {
-        handleDragOverRow(rows[rows.length - 1].id, event, 'below');
+      // Empty space below the rows, footer or page below the grid, within the grid's
+      // horizontal bounds: drop below the last row of the page, even if it is not rendered
+      const lastRowId = rows[rows.length - 1].id;
+      const mainRect = mainElement.getBoundingClientRect();
+      const rowsBottom = Math.min(
+        mainRect.bottom,
+        apiRef.current.getRowElement(lastRowId)?.getBoundingClientRect().bottom ?? Infinity,
+      );
+      if (
+        event.clientY > rowsBottom &&
+        event.clientX >= mainRect.left &&
+        event.clientX <= mainRect.right
+      ) {
+        handleDragOverRow(lastRowId, event, 'below');
       }
     };
 
     const ownerDocument = mainElement.ownerDocument;
-    mainElement.addEventListener('dragover', handleDragOverOutsideRows);
-    ownerDocument.addEventListener('dragover', handleDragOverBelowGrid);
+    ownerDocument.addEventListener('dragover', handleDragOverOutsideRows);
     return () => {
-      mainElement.removeEventListener('dragover', handleDragOverOutsideRows);
-      ownerDocument.removeEventListener('dragover', handleDragOverBelowGrid);
+      ownerDocument.removeEventListener('dragover', handleDragOverOutsideRows);
     };
   }, [apiRef, dragRowId, handleDragOverRow, calculateDropPosition]);
 
