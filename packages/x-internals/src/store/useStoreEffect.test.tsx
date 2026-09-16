@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { Store } from './Store';
