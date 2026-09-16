@@ -58,19 +58,34 @@ export function projectRRuleFromDisplayToData(
   originalEvent: SchedulerProcessedEvent,
   ruleStart?: TemporalSupportedObject,
 ): SchedulerProcessedEventRecurrenceRule {
-  // Only WEEKLY BYDAY values are projected back from display to data timezone.
-  // MONTHLY ordinals are intentionally preserved as-is, since projecting them
-  // would result in unstable or misleading rules.
-  if (displayRRule.freq !== 'WEEKLY' || !displayRRule.byDay?.length) {
-    return displayRRule;
-  }
-
   const displayTz = originalEvent.displayTimezone.timezone;
   const dataTz = originalEvent.dataTimezone.timezone;
 
-  // The weekday shift depends on the time of day, so project from the start the rule is stored with.
+  // The day shift depends on the time of day, so project from the start the rule is stored with.
   const dtStartDisplay =
     ruleStart ?? adapter.setTimezone(originalEvent.dataTimezone.start.value, displayTz);
+
+  // A MONTHLY BYMONTHDAY on the start's own day follows the start into the data timezone;
+  // any other value, and the ordinal BYDAY form, are kept as-is since projecting them
+  // would result in unstable or misleading rules.
+  if (displayRRule.freq === 'MONTHLY') {
+    const startDisplayDay = adapter.getDate(dtStartDisplay);
+    if (displayRRule.byMonthDay?.includes(startDisplayDay)) {
+      const startDataDay = adapter.getDate(adapter.setTimezone(dtStartDisplay, dataTz));
+      return {
+        ...displayRRule,
+        byMonthDay: displayRRule.byMonthDay.map((day) =>
+          day === startDisplayDay ? startDataDay : day,
+        ),
+      };
+    }
+    return displayRRule;
+  }
+
+  // Only WEEKLY BYDAY values are projected back from display to data timezone.
+  if (displayRRule.freq !== 'WEEKLY' || !displayRRule.byDay?.length) {
+    return displayRRule;
+  }
 
   const startDisplayCode = getWeekDayCode(adapter, dtStartDisplay);
   const startDisplayIndex = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(startDisplayCode)!;

@@ -36,6 +36,22 @@ export function projectRRuleToTimezone(
     // Keeping the original rule avoids misleading UI representations.
   }
 
+  // A MONTHLY BYMONTHDAY on the series start's own day follows the start into the target
+  // timezone, so the dialog reads it back as the preset it was picked from. Other values
+  // are kept as-is for the same reason as the ordinals.
+  if (rrule.freq === 'MONTHLY' && rrule.byMonthDay?.length) {
+    const startDataDay = adapter.getDate(seriesStartDataTimezone);
+    if (rrule.byMonthDay.includes(startDataDay)) {
+      const startTargetDay = adapter.getDate(
+        adapter.setTimezone(seriesStartDataTimezone, targetTimezone),
+      );
+      nextRule = {
+        ...nextRule,
+        byMonthDay: rrule.byMonthDay.map((day) => (day === startDataDay ? startTargetDay : day)),
+      };
+    }
+  }
+
   return nextRule;
 }
 

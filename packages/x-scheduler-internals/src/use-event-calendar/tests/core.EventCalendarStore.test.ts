@@ -261,7 +261,7 @@ describe('Core - EventCalendarStore', () => {
         expect(store.state.editingOccurrence).to.equal(null);
       });
 
-      it('should refresh the display bounds without touching the data ones', () => {
+      it('should keep the data bounds on the committed instants', () => {
         const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
         const edited = EventBuilder.new(adapter)
           .withDataTimezone('UTC')
@@ -277,10 +277,10 @@ describe('Core - EventCalendarStore', () => {
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
         expect(editing.displayTimezone.start.timestamp).to.equal(adapter.getTime(start));
         expect(editing.displayTimezone.end.timestamp).to.equal(adapter.getTime(end));
-        // Only the non-recurring commit reaches this method, and nothing reads the data
-        // bounds for a non-recurring occurrence — deriving them from the display bounds
-        // would misreport an all-day event, whose display bounds are normalized.
-        expect(editing.dataTimezone.start.timestamp).to.equal(edited.dataTimezone.start.timestamp);
+        // A rule added from the dialog projects its weekdays from the data-timezone start.
+        expect(editing.dataTimezone.start.timestamp).to.equal(adapter.getTime(start));
+        expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        expect(adapter.getTimezone(editing.dataTimezone.start.value)).to.equal('UTC');
       });
     });
 

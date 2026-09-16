@@ -1045,9 +1045,10 @@ export class SchedulerStore<
   };
 
   /**
-   * Refreshes the edited occurrence's display times so a later edit (e.g. opening the form from
-   * the armed toolbar) reflects a just-committed change such as a resize. The data-timezone
-   * bounds are left untouched. No-op when nothing is being edited.
+   * Refreshes the edited occurrence's times so a later edit (e.g. opening the form from the
+   * armed toolbar) reflects a just-committed change such as a resize. The data-timezone bounds
+   * follow the same instants: a rule added from the form projects its weekdays from them.
+   * No-op when nothing is being edited.
    */
   public setEditingOccurrenceTimes = (
     start: TemporalSupportedObject,
@@ -1067,6 +1068,21 @@ export class SchedulerStore<
           start: processDate(start, adapter),
           end: processDate(end, adapter),
         },
+        ...(isEventOccurrence(occurrence)
+          ? {
+              dataTimezone: {
+                ...occurrence.dataTimezone,
+                start: processDate(
+                  adapter.setTimezone(start, occurrence.dataTimezone.timezone),
+                  adapter,
+                ),
+                end: processDate(
+                  adapter.setTimezone(end, occurrence.dataTimezone.timezone),
+                  adapter,
+                ),
+              },
+            }
+          : {}),
       },
     });
   };

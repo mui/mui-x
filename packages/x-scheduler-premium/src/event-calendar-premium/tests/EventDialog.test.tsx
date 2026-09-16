@@ -17,7 +17,9 @@ import type {
   SchedulerEventOccurrence,
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-internals/models';
+import { useStore } from '@base-ui/utils/store';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
@@ -3721,6 +3723,104 @@ describe('<EventDialogContent open />', () => {
           freq: 'DAILY',
           interval: 1,
         });
+      });
+
+      it('should anchor a new monthly rule on the untouched start as stored from another timezone', async () => {
+        // July 4 00:00 UTC shows on July 3 in New York: the rule is picked against the 3rd
+        // but stored with the untouched July 4 start, so it must repeat on the 4th.
+        const builder = utcJuly4AllDayBuilder()
+          .title('Holiday')
+          .withDisplayTimezone('America/New_York');
+        const event = builder.build();
+        const onEventsChange = vi.fn();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[event]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+          </EventCalendarProvider>,
+        );
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: /repeats monthly/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        const updated = onEventsChange.mock.lastCall![0].find(
+          (item: SchedulerEvent) => item.id === event.id,
+        );
+        expect(updated.start).to.equal(event.start);
+        expect(updated.rrule).to.deep.equal({ freq: 'MONTHLY', interval: 1, byMonthDay: [4] });
+      });
+
+      it('should anchor a new weekly rule on the resized start when edited from the armed toolbar', async () => {
+        // Tuesday 19:00 in New York is Tuesday 23:00 UTC; resized to 21:00 it is Wednesday 01:00 UTC.
+        const builder = EventBuilder.new(adapter)
+          .id('evening-call')
+          .title('Evening call')
+          .withDataTimezone('UTC')
+          .withDisplayTimezone('America/New_York')
+          .singleDay('2025-07-08T23:00:00Z', 60);
+        const event = builder.build();
+        const resizedStart = adapter.date('2025-07-08T21:00:00', 'America/New_York');
+        const resizedEnd = adapter.date('2025-07-08T22:00:00', 'America/New_York');
+        const onEventsChange = vi.fn();
+
+        // A resize committed from the armed state, as the drop target applies it.
+        const commitResize = (store: AnyEventCalendarStore) => {
+          store.startEditing(builder.toOccurrence(), 'armed');
+          store.updateEvent({ id: event.id, start: resizedStart, end: resizedEnd });
+          store.setEditingOccurrenceTimes(resizedStart, resizedEnd);
+          store.setEditingMode('edit');
+        };
+
+        function EditedOccurrenceDialog() {
+          const store = React.useContext(SchedulerStoreContext)!;
+          const occurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
+          const mode = useStore(store, schedulerOtherSelectors.editingMode);
+          if (mode !== 'edit' || occurrence == null) {
+            return null;
+          }
+          return <TestEventDialogContent open {...defaultProps} occurrence={occurrence} />;
+        }
+
+        function Calendar() {
+          const [events, setEvents] = React.useState<SchedulerEvent[]>([event]);
+          return (
+            <EventCalendarProvider
+              events={events}
+              resources={resources}
+              storeClass={PremiumTestStore}
+              displayTimezone="America/New_York"
+              onEventsChange={(next) => {
+                setEvents(next);
+                onEventsChange(next);
+              }}
+            >
+              <SchedulerStoreRunner<AnyEventCalendarStore>
+                context={SchedulerStoreContext}
+                onMount={commitResize}
+              />
+              <EditedOccurrenceDialog />
+            </EventCalendarProvider>
+          );
+        }
+
+        const { user } = render(<Calendar />);
+        await user.click(await screen.findByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        const updated = onEventsChange.mock.lastCall![0].find(
+          (item: SchedulerEvent) => item.id === event.id,
+        );
+        expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['WE'] });
       });
     });
 

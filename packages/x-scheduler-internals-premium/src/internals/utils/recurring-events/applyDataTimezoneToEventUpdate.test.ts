@@ -1,4 +1,4 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { adapter, EventBuilder, utcJuly4AllDayBuilder } from 'test/utils/scheduler';
 import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
 import { applyDataTimezoneToEventUpdate } from './applyDataTimezoneToEventUpdate';
@@ -87,5 +87,40 @@ describe('applyDataTimezoneToEventUpdate', () => {
     });
 
     expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byDay).to.deep.equal(['TH']);
+  });
+
+  it('should project a BYMONTHDAY anchored on the start to the data-timezone day', () => {
+    // July 4 00:00 UTC shows on July 3 in New York.
+    const originalEvent = utcJuly4AllDayBuilder()
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [3] },
+      },
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([4]);
+  });
+
+  it('should keep a BYMONTHDAY not anchored on the start as is', () => {
+    const originalEvent = utcJuly4AllDayBuilder()
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [15] },
+      },
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([15]);
   });
 });

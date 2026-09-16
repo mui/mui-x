@@ -495,7 +495,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           ...(submitEnd ? { end } : {}),
           rrule: rruleToSubmit,
         };
-        // A rule added here is built on the display weekday; the plugin projects it into the
+        // A rule added here is built on the display day; the plugin projects it into the
         // data timezone the series expands in (the bounds it relabels keep their instant).
         // An edited start is the one the rule gets stored with, so it anchors the projection.
         const { recurringEventsPlugin } = current;
