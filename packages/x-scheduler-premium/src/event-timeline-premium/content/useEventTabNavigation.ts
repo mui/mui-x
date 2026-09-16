@@ -78,13 +78,18 @@ export function useEventTabNavigation(params: {
     const el = scroller.querySelector<HTMLElement>(
       `[data-resource-id="${CSS.escape(resourceId)}"] [data-occurrence-key="${CSS.escape(key)}"]`,
     );
-    if (el) {
-      const tabbables = direction === -1 ? getTabbableDescendants(el) : [];
-      const target = tabbables.length > 0 ? tabbables[tabbables.length - 1] : el;
-      target.focus({ preventScroll: true });
-      return true;
+    if (!el) {
+      return false;
     }
-    return false;
+    const tabbables = direction === -1 ? getTabbableDescendants(el) : [];
+    const target = tabbables.length > 0 ? tabbables[tabbables.length - 1] : el;
+    target.focus({ preventScroll: true });
+    // The selector cannot tell an element hidden by CSS from a visible one, so the root
+    // takes the focus when the content refused it.
+    if (document.activeElement !== target) {
+      el.focus({ preventScroll: true });
+    }
+    return true;
   };
 
   const scrollEventIntoView = useStableCallback((occurrence: SchedulerEventOccurrence) => {

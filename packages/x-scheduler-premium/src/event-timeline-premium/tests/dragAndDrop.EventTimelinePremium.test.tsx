@@ -283,6 +283,9 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       const content = within(placeholder!).getByTestId('custom-event-content');
       expect(content.textContent).to.equal('Team Standup');
       expect(content.getAttribute('data-variant')).to.equal('placeholder');
+      // The placeholder is a preview: its content is neither announced nor focusable.
+      expect(placeholder!.getAttribute('aria-hidden')).to.equal('true');
+      expect(placeholder!.hasAttribute('inert')).to.equal(true);
     } finally {
       // Finish the held drag even when an assertion fails, so it does not leak into the next test.
       fireEvent.dragEnd(eventElement);

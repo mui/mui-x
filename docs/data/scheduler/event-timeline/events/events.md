@@ -202,7 +202,7 @@ It is placed inside the block, so the block keeps its geometry, its drag and res
 The slot also renders in the placeholder that previews a drag, a resize or a creation, with `variant` set to `"placeholder"` and an `occurrence` carrying the pending dates.
 
 The content of the slot is part of the accessible name of the event, so keep some text in it.
-Links, buttons, and inputs rendered by the slot keep their own clicks and keys: activating them doesn't open the editing surface, <kbd class="key">Tab</kbd> reaches them before moving to the next event, and the arrow keys don't move the focus to another row.
+The block is a button, so keep the content presentational (text, icons, a tooltip) rather than adding links or buttons of its own.
 
 ### Typing custom slot props
 

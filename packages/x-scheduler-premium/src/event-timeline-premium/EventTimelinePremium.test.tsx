@@ -727,6 +727,32 @@ describe('<EventTimelinePremium />', () => {
       expect(getTitleCell(parent.id).getAttribute('aria-expanded')).to.equal('true');
     });
 
+    it('should not toggle the collapse when clicking the label of an input rendered by the timelineResourceTitle slot', async () => {
+      const onCollapsedResourcesChange = vi.fn();
+      function CustomResourceTitle(props: TimelineResourceTitleProps) {
+        return (
+          <label>
+            <input type="checkbox" data-testid="title-checkbox" />
+            {props.resource.title}
+          </label>
+        );
+      }
+
+      const { user } = await renderTimeline({
+        resources: [parent],
+        events: [],
+        onCollapsedResourcesChange,
+        slots: { timelineResourceTitle: asResourceTitleSlot(CustomResourceTitle) },
+      });
+
+      await user.click(within(getTitleCell(parent.id)).getByText(parent.title));
+      expect(
+        within(getTitleCell(parent.id)).getByTestId<HTMLInputElement>('title-checkbox').checked,
+      ).to.equal(true);
+      expect(onCollapsedResourcesChange.mock.calls.length).to.equal(0);
+      expect(getTitleCell(parent.id).getAttribute('aria-expanded')).to.equal('true');
+    });
+
     it('should leave the arrow keys to an input rendered by the timelineResourceTitle slot', async () => {
       function CustomResourceTitle() {
         return <input data-testid="title-input" />;

@@ -149,6 +149,37 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     expect(document.activeElement).to.equal(getRoot('evt-d3-h1'));
   });
 
+  it('should focus the event root with Shift+Tab when its content ends with a hidden input', async () => {
+    function EventContentWithHiddenInput(props: TimelineEventContentProps) {
+      return (
+        <React.Fragment>
+          {props.occurrence.title}
+          <input type="hidden" value={props.occurrence.id} />
+        </React.Fragment>
+      );
+    }
+    const { user } = await renderTimeline({
+      slots: {
+        // The overrides interface is only populated through module augmentation on the consumer side.
+        timelineEventContent: EventContentWithHiddenInput as React.ComponentType<
+          TimelineEventContentProps & TimelineEventContentPropsOverrides
+        >,
+      },
+    });
+
+    await waitFor(() => {
+      expect(getEvent('evt-d3-h1')).not.to.equal(null);
+      expect(getEvent('evt-d3-h5')).not.to.equal(null);
+    });
+
+    act(() => {
+      getEvent('evt-d3-h5')!.focus();
+    });
+
+    await user.keyboard('{Shift>}{Tab}{/Shift}');
+    expect(document.activeElement).to.equal(getEvent('evt-d3-h1'));
+  });
+
   it('should scroll-then-focus an event that is virtualized out', async () => {
     const { user } = await renderTimeline();
 
