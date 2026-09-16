@@ -97,7 +97,7 @@ export function projectRRuleFromDisplayToData({
     return projected;
   }
   const storedStart = originalEvent.dataTimezone.start.value;
-  if (displayRRule.freq === 'WEEKLY' && displayRRule.byDay != null && storedRule.byDay != null) {
+  if (displayRRule.byDay != null && storedRule.byDay != null) {
     return {
       ...projected,
       byDay: mergeReadSelection(

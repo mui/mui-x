@@ -206,6 +206,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   // Selector hooks
   const inputsDisabled = recurrenceSelection === null || rruleReadOnly;
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
   const monthlyRef = React.useMemo(
     () => getMonthlyReference(adapter, occurrence.displayTimezone.start),
@@ -279,7 +280,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           recurrenceSelection: 'custom',
           rruleDraft: {
             ...prev.rruleDraft,
-            until: adapter.date(prev.endDate, 'default'),
+            until: adapter.endOfDay(adapter.date(prev.endDate, displayTimezone)),
             count: undefined,
           },
         }));
@@ -319,7 +320,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const untilValue = event.currentTarget.value;
     formStore.setValues((prev) => ({
       recurrenceSelection: 'custom',
-      rruleDraft: { ...prev.rruleDraft, until: adapter.date(untilValue, 'default') },
+      // The chosen day is the last one the series runs on, as the user sees it.
+      rruleDraft: {
+        ...prev.rruleDraft,
+        until: adapter.endOfDay(adapter.date(untilValue, displayTimezone)),
+      },
     }));
   };
 

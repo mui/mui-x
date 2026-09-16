@@ -1835,6 +1835,61 @@ describe('<EventDialogContent open />', () => {
       expect(payload.start).toEqualDateTime(expectedStart);
       expect(payload.end).toEqualDateTime(expectedEnd);
     });
+
+    it("should anchor a weekly rule on the created event's own weekday from another timezone", async () => {
+      // Friday July 4 00:00 UTC is Thursday 20:00 in New York; the event is stored in the
+      // default (UTC) timezone, so "weekly" picked on Thursday must repeat on Fridays.
+      const displayTimezone = 'America/New_York';
+      const start = adapter.date('2025-07-04T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-04T01:00:00Z', 'default');
+      const placeholder: SchedulerOccurrencePlaceholderCreation = {
+        type: 'creation',
+        surfaceType: 'time-grid' as const,
+        start,
+        end,
+        lockSurfaceType: false,
+        resourceId: null,
+      };
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('placeholder-id')
+        .withDisplayTimezone(displayTimezone)
+        .span(start.toISOString(), end.toISOString())
+        .title('')
+        .toOccurrence();
+      let createEventSpy;
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[]}
+          resources={resources}
+          onEventsChange={() => {}}
+          displayTimezone={displayTimezone}
+          storeClass={PremiumTestStore}
+        >
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
+          />
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="createEvent"
+            onSpyReady={(sp) => {
+              createEventSpy = sp;
+            }}
+          />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      await user.type(screen.getByLabelText(/event title/i), 'My event');
+      await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+      await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+      await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      const payload = createEventSpy!.mock.lastCall![0];
+      expect(payload.rrule.byDay).to.deep.equal(['FR']);
+    });
   });
   describe('Event editing', () => {
     describe('Recurring events', () => {
@@ -3206,7 +3261,40 @@ describe('<EventDialogContent open />', () => {
 
           expect(updated.rrule).to.deep.include({ freq: 'YEARLY', interval: 3 });
           expect(updated.rrule?.count ?? undefined).to.equal(undefined);
-          expect(updated.rrule?.until).to.equal('2025-07-20T00:00:00.000Z');
+          expect(updated.rrule?.until).to.equal('2025-07-20T23:59:59.999Z');
+        });
+
+        it('should end the series at the end of the "Until" day in the display timezone', async () => {
+          const onEventsChange = vi.fn();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              displayTimezone="Asia/Tokyo"
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+          const dateInput = endsFieldset.querySelector('input[type="date"]') as HTMLInputElement;
+          await user.click(dateInput);
+          await user.clear(dateInput);
+          await user.type(dateInput, '2025-07-20');
+
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          // July 20 23:59:59.999 in Tokyo, so the July 20 occurrences seen there are kept.
+          const updated = onEventsChange.mock.calls[0][0][0];
+          expect(updated.rrule?.until).to.equal('2025-07-20T14:59:59.999Z');
         });
 
         it('should block saving a custom recurrence with Ends: until and no date', async () => {
@@ -3727,6 +3815,42 @@ describe('<EventDialogContent open />', () => {
           freq: 'DAILY',
           interval: 1,
         });
+      });
+
+      it('should anchor an ordinal monthly rule on the untouched start as stored from another timezone', async () => {
+        // Friday July 4 00:00 UTC shows on Thursday July 3 in New York: "first Thursday" picked
+        // there must be stored as the first Friday the series actually falls on.
+        const builder = utcJuly4AllDayBuilder()
+          .title('Holiday')
+          .withDisplayTimezone('America/New_York');
+        const event = builder.build();
+        const onEventsChange = vi.fn();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[event]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+          </EventCalendarProvider>,
+        );
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: /custom/i }));
+        const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+        await user.click(within(repeatGroup).getByRole('combobox'));
+        await user.click(await screen.findByRole('option', { name: /months/i }));
+        await user.click(screen.getByRole('button', { name: /thu.*week 1/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        const updated = onEventsChange.mock.lastCall![0].find(
+          (item: SchedulerEvent) => item.id === event.id,
+        );
+        expect(updated.start).to.equal(event.start);
+        expect(updated.rrule).to.deep.equal({ freq: 'MONTHLY', interval: 1, byDay: ['1FR'] });
       });
 
       it('should anchor a new monthly rule on the untouched start as stored from another timezone', async () => {

@@ -440,11 +440,21 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // creation keystroke and would re-render the whole dialog.
       const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
       if (rawPlaceholder?.type === 'creation') {
+        // The rule is built on the display day; the event is stored in the default timezone.
+        const { recurringEventsPlugin } = current;
         store.createEvent({
           ...metaChanges,
           start,
           end,
-          rrule: rruleToSubmit,
+          rrule:
+            rruleToSubmit != null && recurringEventsPlugin != null
+              ? recurringEventsPlugin.projectRRuleToTimezone(
+                  current.adapter,
+                  rruleToSubmit,
+                  'default',
+                  start,
+                )
+              : rruleToSubmit,
         });
       } else if (
         current.showRecurrence &&

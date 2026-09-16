@@ -6,6 +6,7 @@ import type {
   RecurringEventWeekDayCode,
 } from '@mui/x-scheduler-internals/models';
 import { getWeekDayCode, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
+import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 
 export function projectRRuleToTimezone(
   adapter: Adapter,
@@ -30,10 +31,25 @@ export function projectRRuleToTimezone(
       };
     }
 
-    // Monthly BYDAY with ordinals (e.g. 1MO, -1FR) is intentionally NOT projected.
-    // Ordinals represent a calendar position in the event timezone and do not map
-    // to a stable or meaningful rule in the display timezone.
-    // Keeping the original rule avoids misleading UI representations.
+    // A MONTHLY ordinal BYDAY (e.g. 1MO, -1FR) on the series start's own position follows the
+    // start into the target timezone, so the dialog reads it back as the preset it was picked
+    // from. Other ordinals are kept as-is: a calendar position in one timezone does not map to
+    // a stable one in another.
+    if (rrule.freq === 'MONTHLY') {
+      const startValue = getMonthlyByDayValue(adapter, seriesStartDataTimezone);
+      if (rrule.byDay.includes(startValue)) {
+        const startTargetValue = getMonthlyByDayValue(
+          adapter,
+          adapter.setTimezone(seriesStartDataTimezone, targetTimezone),
+        );
+        nextRule = {
+          ...nextRule,
+          byDay: Array.from(
+            new Set(rrule.byDay.map((value) => (value === startValue ? startTargetValue : value))),
+          ),
+        };
+      }
+    }
   }
 
   // A MONTHLY BYMONTHDAY on the series start's own day follows the start into the target
@@ -83,4 +99,12 @@ function projectWeeklyByDay(
   });
 
   return Array.from(new Set(projected));
+}
+
+/** The ordinal BYDAY value (e.g. 1MO, -1FR) of a date's own position in its month. */
+function getMonthlyByDayValue(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+): RecurringEventByDayValue {
+  return `${computeMonthlyOrdinal(adapter, date)}${getWeekDayCode(adapter, date)}` as RecurringEventByDayValue;
 }
