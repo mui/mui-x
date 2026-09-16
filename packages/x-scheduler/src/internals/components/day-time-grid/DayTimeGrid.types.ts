@@ -18,7 +18,13 @@ export interface DayTimeGridProps extends ExportedDayTimeGridProps {
    */
   endTime?: number;
   /**
-   * Name of the prop the hour range came from, interpolated in the invalid-range warning.
+   * Hour the grid scrolls to the first time it can scroll (a displayed hour, validated by
+   * `getInitialScrollTime`).
+   * @default 7 when it is a displayed hour, otherwise `startTime`
+   */
+  initialScrollTime?: number;
+  /**
+   * Name of the prop the hour range came from, interpolated in the `viewConfig` validation warnings.
    * @default 'viewConfig'
    */
   hourRangeSource?: string;
