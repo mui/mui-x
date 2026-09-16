@@ -83,7 +83,6 @@ describe('applyDataTimezoneToEventUpdate', () => {
         start: editedStart,
         rrule: { freq: 'WEEKLY' as const, byDay: ['TH' as const] },
       },
-      ruleStart: editedStart,
     });
 
     expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byDay).to.deep.equal(['TH']);
@@ -151,7 +150,6 @@ describe('applyDataTimezoneToEventUpdate', () => {
         start: editedStart,
         rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [3] },
       },
-      ruleStart: editedStart,
     });
 
     expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([3]);
@@ -176,7 +174,6 @@ describe('applyDataTimezoneToEventUpdate', () => {
         start: editedStart,
         rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [3] },
       },
-      ruleStart: editedStart,
     });
 
     expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([3]);
@@ -200,7 +197,6 @@ describe('applyDataTimezoneToEventUpdate', () => {
         start: editedStart,
         rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [3] },
       },
-      ruleStart: editedStart,
     });
 
     expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([3]);
@@ -222,6 +218,171 @@ describe('applyDataTimezoneToEventUpdate', () => {
     });
 
     expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([4]);
+  });
+
+  it('should anchor a rule on the edited occurrence instead of the series start', () => {
+    // A daily series from July 4 00:00 UTC; the July 20 occurrence shows on July 19 in New
+    // York, so a monthly rule picked from it on the 19th must repeat on the 20th.
+    const originalEvent = utcJuly4AllDayBuilder()
+      .recurrent('DAILY')
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [19] },
+      },
+      occurrenceStart: adapter.date('2025-07-20T00:00:00', 'UTC'),
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([20]);
+  });
+
+  it('should keep the stored BYDAY when the selection was left as read across a DST change', () => {
+    // Stored on Fridays 04:30 UTC from January: Thursday 23:30 in New York, read as [TH].
+    // The July occurrence is Friday 00:30 New York (no day shift). Editing its time and the
+    // count without touching the weekday must keep the series on Fridays.
+    const originalEvent = EventBuilder.new(adapter)
+      .startAt('2025-01-10T04:30:00Z')
+      .recurrent('WEEKLY', { byDay: ['FR'] })
+      .withDataTimezone('UTC')
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+    expect(originalEvent.displayTimezone.rrule!.byDay).to.deep.equal(['TH']);
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        start: adapter.date('2025-07-11T10:00:00', 'America/New_York'),
+        rrule: { freq: 'WEEKLY' as const, byDay: ['TH' as const], count: 5 },
+      },
+      occurrenceStart: adapter.date('2025-07-11T04:30:00', 'UTC'),
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byDay).to.deep.equal(['FR']);
+  });
+
+  it('should keep the stored BYMONTHDAY when the selection was left as read across a DST change', () => {
+    // Stored on the 15th at 04:30 UTC from January (the 14th 23:30 in New York, read as [14]).
+    // The July occurrence is the 15th 00:30 New York. Editing its time and the count must keep
+    // the series on the 15th.
+    const originalEvent = EventBuilder.new(adapter)
+      .startAt('2025-01-15T04:30:00Z')
+      .recurrent('MONTHLY', { byMonthDay: [15] })
+      .withDataTimezone('UTC')
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+    expect(originalEvent.displayTimezone.rrule!.byMonthDay).to.deep.equal([14]);
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        start: adapter.date('2025-07-15T10:00:00', 'America/New_York'),
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [14], count: 5 },
+      },
+      occurrenceStart: adapter.date('2025-07-15T04:30:00', 'UTC'),
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([15]);
+  });
+
+  it('should keep the read BYDAY and project only the added one across a DST change', () => {
+    // Stored on Fridays 04:30 UTC from January, read as [TH] in New York. From the July
+    // occurrence (Friday 00:30 New York) the user adds Wednesday: Friday must stay.
+    const originalEvent = EventBuilder.new(adapter)
+      .startAt('2025-01-10T04:30:00Z')
+      .recurrent('WEEKLY', { byDay: ['FR'] })
+      .withDataTimezone('UTC')
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        rrule: { freq: 'WEEKLY' as const, byDay: ['TH' as const, 'WE' as const] },
+      },
+      occurrenceStart: adapter.date('2025-07-11T04:30:00', 'UTC'),
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byDay).to.deep.equal([
+      'FR',
+      'WE',
+    ]);
+  });
+
+  it('should keep the read BYMONTHDAY and project only the added one across a DST change', () => {
+    // Stored on the 15th at 04:30 UTC from January, read as [14] in New York. From the July
+    // occurrence (the 15th 00:30 New York) the user adds the 20th: the 15th must stay.
+    const originalEvent = EventBuilder.new(adapter)
+      .startAt('2025-01-15T04:30:00Z')
+      .recurrent('MONTHLY', { byMonthDay: [15] })
+      .withDataTimezone('UTC')
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [14, 20] },
+      },
+      occurrenceStart: adapter.date('2025-07-15T04:30:00', 'UTC'),
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([
+      15, 20,
+    ]);
+  });
+
+  it('should merge a BYMONTHDAY that projects onto another selected day', () => {
+    // July 4 00:00 UTC shows on July 3 in New York: the 3rd projects onto the 4th.
+    const originalEvent = utcJuly4AllDayBuilder()
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [3, 4] },
+      },
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([4]);
+  });
+
+  it('should keep an ordinal BYDAY as is', () => {
+    const originalEvent = utcJuly4AllDayBuilder()
+      .recurrent('MONTHLY', { byDay: ['1FR'] })
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byDay: ['1FR' as const], count: 5 },
+      },
+    });
+
+    expect(result.rrule).to.deep.equal({
+      freq: 'MONTHLY',
+      interval: 1,
+      byDay: ['1FR'],
+      count: 5,
+    });
   });
 
   it('should keep a BYMONTHDAY not anchored on the start as is', () => {

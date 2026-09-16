@@ -81,10 +81,10 @@ export interface SchedulerRecurringEventsPluginInterface {
     originalEvent: SchedulerProcessedEvent;
     changes: SchedulerEventUpdatedProperties;
     /**
-     * The edited start the rule was picked against.
+     * The start of the edited occurrence, in the data timezone.
      * Defaults to the event's stored start.
      */
-    ruleStart?: TemporalSupportedObject;
+    occurrenceStart?: TemporalSupportedObject;
   }): SchedulerEventUpdatedProperties;
 
   /**

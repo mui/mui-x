@@ -111,32 +111,34 @@ describe('CompactDayView - touch resize', () => {
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(11);
   });
 
-  it('should keep a prior armed resize when an unrelated field is then edited from the form', async () => {
-    // Controlled: the form only resends the fields the user edited, so the resized
-    // end survives through the model, not through the form echoing it back.
-    const { onEventsChange, user } = renderResizableEvent({ controlled: true });
-    const eventElement = armEvent();
+  // Controlled, the resized end survives through the model; uncontrolled (the host has not
+  // fed the change back yet), the form resends the bound the snapshot is ahead on.
+  [true, false].forEach((controlled) => {
+    it(`should keep a prior armed resize when an unrelated field is then edited from the form (${controlled ? 'controlled' : 'uncontrolled'})`, async () => {
+      const { onEventsChange, user } = renderResizableEvent({ controlled });
+      const eventElement = armEvent();
 
-    const endHandle = getResizeHandle(eventElement, 'end');
-    await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      const endHandle = getResizeHandle(eventElement, 'end');
+      await act(async () => {
+        simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      });
+
+      // Open the editing form from the armed toolbar and change only the title.
+      fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+      // The form must be seeded with the resized end, not the pre-resize model value.
+      expect(screen.getByLabelText(/end time/i)).to.have.value('16:00');
+      fireEvent.change(screen.getByRole('textbox', { name: /Event title/i }), {
+        target: { value: 'Renamed Meeting' },
+      });
+      // The form validates asynchronously before submitting, so let the submit settle.
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updatedEvents = onEventsChange.mock.lastCall?.[0];
+      // Saving the form must preserve the resized end time, not revert it to the pre-resize value.
+      expect(updatedEvents[0].title).to.equal('Renamed Meeting');
+      expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
+      expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
     });
-
-    // Open the editing form from the armed toolbar and change only the title.
-    fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
-    // The form must be seeded with the resized end, not the pre-resize model value.
-    expect(screen.getByLabelText(/end time/i)).to.have.value('16:00');
-    fireEvent.change(screen.getByRole('textbox', { name: /Event title/i }), {
-      target: { value: 'Renamed Meeting' },
-    });
-    // The form validates asynchronously before submitting, so let the submit settle.
-    await user.click(screen.getByRole('button', { name: 'Save' }));
-
-    const updatedEvents = onEventsChange.mock.lastCall?.[0];
-    // Saving the form must preserve the resized end time, not revert it to the pre-resize value.
-    expect(updatedEvents[0].title).to.equal('Renamed Meeting');
-    expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
-    expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
   });
 
   it('should remove the resize handles once the armed event is opened in the editing form', () => {

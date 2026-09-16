@@ -2492,8 +2492,12 @@ describe('<EventDialogContent open />', () => {
         // The range was validated as a pair in New York, so the untouched start follows the
         // edited end instead of keeping its UTC instant next to a New York end.
         const payload = updateRecurringEventSpy!.mock.lastCall![0];
-        expect(payload.changes).to.have.property('start');
-        expect(payload.changes).to.have.property('end');
+        expect(payload.changes.start).toEqualDateTime(
+          adapter.date('2025-07-04T00:00:00', 'America/New_York'),
+        );
+        expect(payload.changes.end).toEqualDateTime(
+          adapter.date('2025-07-05T23:59:59.999', 'America/New_York'),
+        );
       });
 
       it('should anchor a rule added to a non-recurring event on its data-timezone weekday', async () => {

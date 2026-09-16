@@ -655,8 +655,8 @@ export class SchedulerStore<
     occurrence: SchedulerRenderableEventOccurrence,
     onDelete?: () => void,
   ): boolean => {
-    // The store is the truth once the host fed the event back; until then (a `dataSource`
-    // persist still in flight after a scope change) the snapshot is all there is.
+    // Falls back to the snapshot while a `dataSource` persist is still in flight (the event is
+    // not in the store yet).
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     const isRecurring =
       this.state.recurringEventsPlugin != null &&
@@ -716,8 +716,6 @@ export class SchedulerStore<
     );
 
     let updatedEvents: UpdateEventsParameters;
-    // Assigned on the update path only, which is also the only path that reconciles the
-    // editing surface below.
     let changesInDataTimezone: SchedulerEventUpdatedProperties | null = null;
     if (pendingRecurringEventOperation.kind === 'delete') {
       updatedEvents = recurringEventsPlugin.deleteRecurringEvent(
@@ -727,12 +725,11 @@ export class SchedulerStore<
         scope,
       );
     } else {
-      // An edited start is the one the rule gets stored with, so it anchors the projection.
       changesInDataTimezone = recurringEventsPlugin.applyDataTimezoneToEventUpdate({
         adapter,
         originalEvent: original,
         changes: pendingRecurringEventOperation.changes,
-        ruleStart: pendingRecurringEventOperation.changes.start,
+        occurrenceStart: occurrenceStartInDataTimezone,
       });
       updatedEvents = recurringEventsPlugin.updateRecurringEvent(
         adapter,
@@ -1049,7 +1046,7 @@ export class SchedulerStore<
   /**
    * Refreshes the edited occurrence's times so a later edit (e.g. opening the form from the
    * armed toolbar) reflects a just-committed change such as a resize. The data-timezone bounds
-   * follow the same instants: a rule added from the form projects its weekdays from them.
+   * follow the same instants: a rule added from the form projects from them.
    * No-op when nothing is being edited.
    */
   public setEditingOccurrenceTimes = (
@@ -1092,8 +1089,8 @@ export class SchedulerStore<
   /**
    * Keeps the armed occurrence in sync after a confirmed recurring scope change: it follows the
    * occurrence onto the event `only-this` / `this-and-following` created, stays in place on an
-   * `all` change that keeps the occurrence on its day, and is dropped otherwise. No-op when the
-   * changed occurrence is not the armed one.
+   * `all` change that keeps the occurrence on its day and leaves the rule alone, and is dropped
+   * otherwise. No-op when the changed occurrence is not the armed one.
    */
   private reconcileEditingOccurrence = (parameters: {
     original: SchedulerProcessedEvent;

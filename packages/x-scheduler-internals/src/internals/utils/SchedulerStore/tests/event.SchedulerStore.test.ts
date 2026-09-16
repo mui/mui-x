@@ -1299,6 +1299,43 @@ premiumStoreClasses.forEach((storeClass) => {
             updatedEvents.find((item) => item.id === 'report')!;
           expect(updated.rrule).to.deep.equal({ freq: 'MONTHLY', interval: 1, byMonthDay: [3] });
         });
+
+        it(`should anchor a monthly rule on the edited occurrence with scope '${scope}' from another timezone`, () => {
+          // The July 20 occurrence of a daily UTC series shows on July 19 in New York. A
+          // monthly rule picked from it on the 19th, with its start untouched, must repeat on
+          // the 20th: the series start is not the day the rule was picked against.
+          const event = EventBuilder.new()
+            .id('report')
+            .withDataTimezone('UTC')
+            .singleDay('2025-07-04T00:00:00Z', 60)
+            .recurrent('DAILY')
+            .build();
+          const onEventsChange = vi.fn();
+          const store = new storeClass.Value(
+            {
+              resources: TEST_RESOURCES,
+              events: [event],
+              displayTimezone: 'America/New_York',
+              onEventsChange,
+            },
+            adapter,
+          );
+
+          store.updateRecurringEvent({
+            occurrenceStart: adapter.date('2025-07-20T00:00:00', 'UTC'),
+            changes: {
+              id: 'report',
+              rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [19] },
+            },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated =
+            updatedEvents.find((item) => item.rrule != null && item.id !== 'report') ??
+            updatedEvents.find((item) => item.id === 'report')!;
+          expect(updated.rrule).to.deep.equal({ freq: 'MONTHLY', interval: 1, byMonthDay: [20] });
+        });
       });
     });
 

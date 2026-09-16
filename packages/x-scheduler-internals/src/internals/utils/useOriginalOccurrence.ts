@@ -33,9 +33,8 @@ export namespace useOriginalOccurrence {
     start: SchedulerProcessedDate;
     end: SchedulerProcessedDate;
     /**
-     * The occurrence in the data timezone — the identity recurring scope operations target. The
-     * rendered display bounds cannot stand in for it: a cross-timezone all-day occurrence displays
-     * on a different day. `undefined` only for placeholders.
+     * The occurrence bounds in the data timezone, which identify a recurring occurrence.
+     * `undefined` for placeholders.
      */
     dataTimezone: SchedulerEventOccurrence['dataTimezone'] | undefined;
   }

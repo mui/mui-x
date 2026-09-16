@@ -403,13 +403,15 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // resends both.
       const displayTimezoneMoved = current.displayTimezone !== occurrence.displayTimezone.timezone;
       // With a `dataSource`, a resize updates the snapshot before the stored model: resend a
-      // bound that differs, or the update rebuilds it from the stale model.
+      // bound that differs, or the update rebuilds it from the stale model. Compared as data
+      // instants, since the display bounds of an all-day event are normalized to whole days.
       const liveEvent = schedulerEventSelectors.processedEvent(store.state, occurrence.id);
       const boundPending = (bound: 'start' | 'end') =>
         liveEvent != null &&
         liveEvent.dataTimezone.rrule == null &&
         !displayTimezoneMoved &&
-        occurrence.displayTimezone[bound].timestamp !== liveEvent.displayTimezone[bound].timestamp;
+        isEventOccurrence(occurrence) &&
+        occurrence.dataTimezone[bound].timestamp !== liveEvent.dataTimezone[bound].timestamp;
       const submitStart =
         startEdited || (endEdited && displayTimezoneMoved) || boundPending('start');
       const submitEnd = endEdited || (startEdited && displayTimezoneMoved) || boundPending('end');
@@ -478,15 +480,12 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         const changes: SchedulerEventUpdatedProperties = {
           ...metaChanges,
           id: occurrence.id,
-          // Per-bound here too: an untouched bound must keep its stored value instead of
-          // being re-anchored to the display timezone, which is a different instant.
           ...(submitStart ? { start } : {}),
           ...(submitEnd ? { end } : {}),
           rrule: rruleToSubmit,
         };
         // A rule added here is built on the display day; the plugin projects it into the
         // data timezone the series expands in (the bounds it relabels keep their instant).
-        // An edited start is the one the rule gets stored with, so it anchors the projection.
         const { recurringEventsPlugin } = current;
         store.updateEvent(
           recurringEventsPlugin != null && rruleToSubmit != null && isEventOccurrence(occurrence)
@@ -494,7 +493,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
                 adapter: current.adapter,
                 originalEvent: occurrence,
                 changes,
-                ruleStart: submitStart ? start : undefined,
               })
             : changes,
         );

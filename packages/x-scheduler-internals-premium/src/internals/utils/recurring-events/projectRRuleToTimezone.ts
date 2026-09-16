@@ -47,7 +47,9 @@ export function projectRRuleToTimezone(
       );
       nextRule = {
         ...nextRule,
-        byMonthDay: rrule.byMonthDay.map((day) => (day === startDataDay ? startTargetDay : day)),
+        byMonthDay: Array.from(
+          new Set(rrule.byMonthDay.map((day) => (day === startDataDay ? startTargetDay : day))),
+        ),
       };
     }
   }

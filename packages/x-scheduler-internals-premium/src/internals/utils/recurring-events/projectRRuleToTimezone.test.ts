@@ -58,6 +58,19 @@ describe('recurring-events/projectRRuleToTimezone', () => {
     expect(projected.byMonthDay).to.deep.equal([3]);
   });
 
+  it('should merge a MONTHLY BYMONTHDAY that projects onto another selected day', () => {
+    // July 4 00:00 UTC shows on July 3 in New York: the 4th projects onto the 3rd.
+    const seriesStart = adapter.date('2025-07-04T00:00:00', 'UTC');
+    const result = projectRRuleToTimezone(
+      adapter,
+      { freq: 'MONTHLY', interval: 1, byMonthDay: [3, 4] },
+      'America/New_York',
+      seriesStart,
+    );
+
+    expect(result.byMonthDay).to.deep.equal([3]);
+  });
+
   it('should keep a MONTHLY BYMONTHDAY not anchored on the start as is', () => {
     const rrule: SchedulerProcessedEventRecurrenceRule = {
       freq: 'MONTHLY',

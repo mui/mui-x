@@ -13,6 +13,7 @@ import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
@@ -149,6 +150,50 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.click(screen.getByRole('button', { name: 'Save' }));
 
       const updated = getUpdatedEvent();
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should keep the dates of an all-day event untouched when its snapshot sits on a raw drop instant', async () => {
+      // An all-day drop keeps the instant it landed on (10:15 in Tokyo) in the armed snapshot,
+      // while the event displays from the start of the day. That difference is not a pending
+      // resize, so a rename must not resend the bounds.
+      const displayTimezone = 'Asia/Tokyo';
+      const builder = EventBuilder.new()
+        .title('Offsite')
+        .withDataTimezone('UTC')
+        .span('2025-07-04T01:15:00', '2025-07-04T02:15:00', { allDay: true });
+      const onEventsChange = vi.fn();
+      const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
+      const occurrence = builder.toOccurrence();
+      const rawStart = adapter.setTimezone(occurrence.dataTimezone.start.value, displayTimezone);
+      const rawEnd = adapter.setTimezone(occurrence.dataTimezone.end.value, displayTimezone);
+      const snapshot = {
+        ...occurrence,
+        displayTimezone: {
+          ...occurrence.displayTimezone,
+          start: processDate(rawStart, adapter),
+          end: processDate(rawEnd, adapter),
+        },
+      };
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[event]}
+          displayTimezone={displayTimezone}
+          onEventsChange={onEventsChange}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={snapshot} />
+        </EventCalendarProvider>,
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = onEventsChange.mock.calls[0][0].find(
+        (item: SchedulerEvent) => item.id === event.id,
+      )!;
+      expect(updated.title).to.equal('Offsite (renamed)');
       expect(updated.start).to.equal(event.start);
       expect(updated.end).to.equal(event.end);
     });
