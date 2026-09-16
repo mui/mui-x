@@ -18,7 +18,7 @@ export function applyDataTimezoneToEventUpdate({
   originalEvent: SchedulerProcessedEvent;
   changes: SchedulerEventUpdatedProperties;
   /**
-   * The display-timezone start the rule's weekdays were picked against.
+   * The edited start the rule was picked against.
    * Defaults to the event's stored start.
    */
   ruleStart?: TemporalSupportedObject;
@@ -62,8 +62,8 @@ export function projectRRuleFromDisplayToData(
   const dataTz = originalEvent.dataTimezone.timezone;
 
   // The day shift depends on the time of day, so project from the start the rule is stored with.
-  const dtStartDisplay =
-    ruleStart ?? adapter.setTimezone(originalEvent.dataTimezone.start.value, displayTz);
+  const storedStartDisplay = adapter.setTimezone(originalEvent.dataTimezone.start.value, displayTz);
+  const dtStartDisplay = ruleStart ? adapter.setTimezone(ruleStart, displayTz) : storedStartDisplay;
 
   // A MONTHLY BYMONTHDAY on the start's own day follows the start into the data timezone;
   // any other value, and the ordinal BYDAY form, are kept as-is since projecting them
@@ -71,13 +71,18 @@ export function projectRRuleFromDisplayToData(
   if (displayRRule.freq === 'MONTHLY') {
     // A selection read back from the stored rule and left as is keeps the stored value:
     // the display value alone cannot tell a projected day from a custom one that happens
-    // to be the display start's own day.
+    // to be the display start's own day. That only holds while the start lands on the same
+    // data-timezone day as before; an edit that moves it across the day boundary gives the
+    // read value a new meaning, so it is projected again.
     const storedRule = originalEvent.dataTimezone.rrule;
     const readRule = originalEvent.displayTimezone.rrule;
+    const shiftsDay = (start: TemporalSupportedObject) =>
+      adapter.getDate(start) !== adapter.getDate(adapter.setTimezone(start, dataTz));
     if (
       storedRule?.freq === 'MONTHLY' &&
       readRule?.freq === 'MONTHLY' &&
-      isSameMonthDaySelection(displayRRule.byMonthDay, readRule.byMonthDay)
+      isSameMonthDaySelection(displayRRule.byMonthDay, readRule.byMonthDay) &&
+      shiftsDay(dtStartDisplay) === shiftsDay(storedStartDisplay)
     ) {
       return displayRRule.byMonthDay == null
         ? displayRRule

@@ -134,6 +134,78 @@ describe('applyDataTimezoneToEventUpdate', () => {
     });
   });
 
+  it('should project a BYMONTHDAY anchored on the edited start instead of the stored one', () => {
+    // July 4 00:00 UTC shows on July 3 in New York; edited to July 3 10:00 New York it is
+    // July 3 14:00 UTC, so the 3rd picked against it stays the 3rd.
+    const originalEvent = utcJuly4AllDayBuilder()
+      .recurrent('DAILY')
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+    const editedStart = adapter.date('2025-07-03T10:00:00', 'America/New_York');
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        start: editedStart,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [3] },
+      },
+      ruleStart: editedStart,
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([3]);
+  });
+
+  it('should project the read BYMONTHDAY again when the edited start moves onto its display day', () => {
+    // Stored on the 4th with a July 4 UTC start, read as the 3rd from New York. Moving the
+    // start to July 3 10:00 New York (July 3 UTC) makes the untouched 3rd the start's own
+    // day in both timezones, so the stored 4th must not be kept.
+    const originalEvent = utcJuly4AllDayBuilder()
+      .recurrent('MONTHLY', { byMonthDay: [4] })
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+    expect(originalEvent.displayTimezone.rrule!.byMonthDay).to.deep.equal([3]);
+    const editedStart = adapter.date('2025-07-03T10:00:00', 'America/New_York');
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        start: editedStart,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [3] },
+      },
+      ruleStart: editedStart,
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([3]);
+  });
+
+  it('should keep the stored BYMONTHDAY when the edited start stays on its data-timezone day', () => {
+    // Stored on the 3rd (a custom day) with a July 4 UTC start. Moving the start to July 3
+    // 21:00 New York (July 4 01:00 UTC) keeps it on the 4th in UTC, so the read 3rd still
+    // stands for the stored 3rd.
+    const originalEvent = utcJuly4AllDayBuilder()
+      .recurrent('MONTHLY', { byMonthDay: [3] })
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+    const editedStart = adapter.date('2025-07-03T21:00:00', 'America/New_York');
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        start: editedStart,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [3] },
+      },
+      ruleStart: editedStart,
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([3]);
+  });
+
   it('should project a BYMONTHDAY selection that changed from the read one', () => {
     const originalEvent = utcJuly4AllDayBuilder()
       .recurrent('MONTHLY', { byMonthDay: [15] })

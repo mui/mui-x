@@ -727,10 +727,12 @@ export class SchedulerStore<
         scope,
       );
     } else {
+      // An edited start is the one the rule gets stored with, so it anchors the projection.
       changesInDataTimezone = recurringEventsPlugin.applyDataTimezoneToEventUpdate({
         adapter,
         originalEvent: original,
         changes: pendingRecurringEventOperation.changes,
+        ruleStart: pendingRecurringEventOperation.changes.start,
       });
       updatedEvents = recurringEventsPlugin.updateRecurringEvent(
         adapter,

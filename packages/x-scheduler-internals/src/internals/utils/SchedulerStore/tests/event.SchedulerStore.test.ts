@@ -1258,6 +1258,48 @@ premiumStoreClasses.forEach((storeClass) => {
           count: 5,
         });
       });
+
+      (['all', 'this-and-following'] as const).forEach((scope) => {
+        it(`should anchor a monthly rule on the edited start with scope '${scope}' from another timezone`, () => {
+          // A daily series starting July 4 00:00 UTC shows on July 3 20:00 in New York.
+          // Edited to July 3 10:00 New York (July 3 14:00 UTC) and switched to monthly on
+          // the 3rd, the rule must repeat on the 3rd: the stored start no longer anchors it.
+          const event = EventBuilder.new()
+            .id('report')
+            .withDataTimezone('UTC')
+            .singleDay('2025-07-04T00:00:00Z', 60)
+            .recurrent('DAILY')
+            .build();
+          const onEventsChange = vi.fn();
+          const store = new storeClass.Value(
+            {
+              resources: TEST_RESOURCES,
+              events: [event],
+              displayTimezone: 'America/New_York',
+              onEventsChange,
+            },
+            adapter,
+          );
+          const occurrence = schedulerEventSelectors.processedEventRequired(store.state, 'report');
+
+          store.updateRecurringEvent({
+            occurrenceStart: occurrence.dataTimezone.start.value,
+            changes: {
+              id: 'report',
+              start: adapter.date('2025-07-03T10:00:00', 'America/New_York'),
+              end: adapter.date('2025-07-03T11:00:00', 'America/New_York'),
+              rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [3] },
+            },
+          });
+          store.selectRecurringEventScope(scope);
+
+          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+          const updated =
+            updatedEvents.find((item) => item.rrule != null && item.id !== 'report') ??
+            updatedEvents.find((item) => item.id === 'report')!;
+          expect(updated.rrule).to.deep.equal({ freq: 'MONTHLY', interval: 1, byMonthDay: [3] });
+        });
+      });
     });
 
     describe('dev warnings', () => {
