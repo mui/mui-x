@@ -114,7 +114,6 @@ interface ResolutionSettings {
   adapter: Adapter;
   displayTimezone: TemporalTimezone;
   shouldEventRequireResource: boolean;
-  recurringEventsPlugin: ReturnType<typeof schedulerOtherSelectors.recurringEventsPlugin>;
   showRecurrence: boolean;
   recurrencePresets: ReturnType<typeof schedulerRecurringEventSelectors.presets>;
 }
@@ -231,7 +230,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
   // Selector hooks — only what the render itself needs; the submit continuation
   // reads its own `ResolutionSettings` snapshot instead of subscribing here.
-  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
   const shouldEventRequireResource = useStore(
     store,
@@ -366,7 +364,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         adapter: store.state.adapter,
         displayTimezone: schedulerOtherSelectors.displayTimezone(store.state),
         shouldEventRequireResource: schedulerOtherSelectors.shouldEventRequireResource(store.state),
-        recurringEventsPlugin: schedulerOtherSelectors.recurringEventsPlugin(store.state),
         showRecurrence: schedulerOtherSelectors.areRecurringEventsAvailable(store.state),
         recurrencePresets: schedulerRecurringEventSelectors.presets(
           store.state,
@@ -427,11 +424,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           end,
           rrule: rruleToSubmit,
         });
-      } else if (
-        current.showRecurrence &&
-        current.recurringEventsPlugin &&
-        occurrence.displayTimezone.rrule
-      ) {
+      } else if (current.showRecurrence && occurrence.displayTimezone.rrule) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
           store.state,
           occurrence.displayTimezone.rrule,
@@ -467,7 +460,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+    if (showRecurrence && occurrence.displayTimezone.rrule) {
       store.deleteRecurringEvent({
         occurrenceStart: occurrence.displayTimezone.start.value,
         eventId: occurrence.id,
