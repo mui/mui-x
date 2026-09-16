@@ -1,4 +1,5 @@
 import { vi, describe, it, expect, onTestFinished } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
 import { exportImage } from './exportImage';
 
 vi.mock('rasterizehtml', () => ({
@@ -7,7 +8,9 @@ vi.mock('rasterizehtml', () => ({
   },
 }));
 
-describe('exportImage when `rasterizehtml` fails to import', () => {
+/* Browser tests share loaded modules across files, so `rasterizehtml` can already be loaded by another test and
+ * the mock wouldn't apply. */
+describe.skipIf(!isJSDOM)('exportImage when `rasterizehtml` fails to import', () => {
   function createChart() {
     const element = document.createElement('div');
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
