@@ -238,13 +238,13 @@ If rows are selected when exporting, the checkboxes will not be included in the 
 
 ### Stylesheets that fail to load
 
-A stylesheet that fails to load in the print window, for example because the request fails or a Content Security Policy blocks it, is skipped.
-The print continues without it, so the result may be missing styles, and a warning is logged in development.
+When a stylesheet, or a stylesheet it imports, fails to load in the print window, for example because a request fails or a Content Security Policy blocks it, the print continues.
+The result may be missing some styles, and a warning is logged in development.
 
 To handle the failure yourself, use the `onStylesheetError` callback.
-It receives the `<link>` element that failed to load:
+It receives the `<link>` element that failed to load, or whose import failed to load:
 
-- Return or resolve to skip the stylesheet and continue the print.
+- Return or resolve to continue the print.
 - Throw an error or reject to stop the print. The print dialog doesn't open, the Data Grid is restored, and the promise returned by `apiRef.current.exportDataAsPrint()` rejects with that error.
 - Return a promise to make the print wait for it, for example while you add replacement styles to `link.ownerDocument`.
 

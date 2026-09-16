@@ -6,9 +6,9 @@ export interface LoadStyleSheetsOptions {
    */
   nonce?: string;
   /**
-   * Called when a stylesheet fails to load.
-   * Return or resolve to skip the stylesheet and continue, throw or reject to stop the export.
-   * @param {HTMLLinkElement} element The stylesheet link element that failed to load.
+   * Called when a stylesheet, or a stylesheet it imports, fails to load.
+   * Return or resolve to continue, throw or reject to stop the export.
+   * @param {HTMLLinkElement} element The stylesheet link element that failed to load, or whose import failed to load.
    * @returns {Promise<void> | void} A promise or void. If a promise is returned, the export waits for it to settle before proceeding.
    */
   onStylesheetError?: (element: HTMLLinkElement) => Promise<void> | void;
@@ -30,7 +30,7 @@ export function loadStyleSheets(
     nonce,
     onStylesheetError: handleStylesheetError = (element) =>
       warnOnce(
-        `MUI X: Failed to load the stylesheet "${element.getAttribute('href')}" in the export document. The export continues without it, so the result may be missing styles.\nThis can happen if the request fails, or if a Content Security Policy blocks the stylesheet.\nPass \`onStylesheetError\` to the export to handle this yourself.`,
+        `MUI X: The stylesheet "${element.getAttribute('href')}", or a stylesheet it imports, failed to load in the export document. The export continues, so the result may be missing some styles.\nThis can happen if a request fails, or if a Content Security Policy blocks the stylesheet.\nPass \`onStylesheetError\` to the export to handle this yourself.`,
       ),
   } = options;
   const stylesheetLoadPromises: Promise<void>[] = [];
@@ -63,8 +63,8 @@ export function loadStyleSheets(
       stylesheetLoadPromises.push(
         new Promise((resolve, reject) => {
           newHeadStyleElement.addEventListener('load', () => resolve());
-          /* A stylesheet blocked by the Content Security Policy, or that fails to load, only fires
-           * `error`. Without this the export would wait for a `load` event that never comes. */
+          /* A stylesheet that is blocked by the Content Security Policy, fails to load, or has an `@import` that
+           * fails to load only fires `error`. Without this the export would wait for a `load` event that never comes. */
           newHeadStyleElement.addEventListener('error', () => {
             /* The chain turns a synchronous throw into a rejection, so the promise always settles. */
             Promise.resolve()

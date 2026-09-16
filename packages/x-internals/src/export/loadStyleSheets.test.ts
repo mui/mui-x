@@ -36,7 +36,7 @@ describe('loadStyleSheets', () => {
       dispatchError(targetDocument);
       await expect(Promise.all(promises)).resolves.toBeDefined();
     }).toWarnDev(
-      'MUI X: Failed to load the stylesheet "https://example.com/missing.css" in the export document.',
+      'MUI X: The stylesheet "https://example.com/missing.css", or a stylesheet it imports, failed to load in the export document.',
     );
   });
 

@@ -131,13 +131,13 @@ You can disable this behavior by setting the `copyStyles` property to `false` in
 
 ### Stylesheets that fail to load
 
-A stylesheet that fails to load in the export iframe, for example because the request fails or a [Content Security Policy](/x/react-charts/content-security-policy/) blocks it, is skipped.
-The export continues without it, so the result may be missing styles, and a warning is logged in development.
+When a stylesheet, or a stylesheet it imports, fails to load in the export iframe, for example because a request fails or a [Content Security Policy](/x/react-charts/content-security-policy/) blocks it, the export continues.
+The result may be missing some styles, and a warning is logged in development.
 
 To handle the failure yourself, use the `onStylesheetError` callback.
-It receives the `<link>` element that failed to load:
+It receives the `<link>` element that failed to load, or whose import failed to load:
 
-- Return or resolve to skip the stylesheet and continue the export.
+- Return or resolve to continue the export.
 - Throw an error or reject to stop the export. The promise returned by `exportAsImage()` or `exportAsPrint()` rejects with that error, see [Handling export errors](#handling-export-errors).
 - Return a promise to make the export wait for it, for example while you add replacement styles to `link.ownerDocument`.
 
