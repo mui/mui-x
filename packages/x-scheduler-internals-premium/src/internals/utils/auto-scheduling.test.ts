@@ -1007,6 +1007,36 @@ describe('computeAutoSchedulingCascade', () => {
     );
   });
 
+  it("should clamp an allDay-only flip landing on its predecessor's day to the next day", () => {
+    const eventA = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('UTC')
+      .span('2025-07-03T09:00:00', '2025-07-03T10:00:00')
+      .toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('UTC')
+      .span('2025-07-03T11:00:00', '2025-07-03T12:00:00')
+      .toProcessed();
+
+    // Same flip without the day bounds (an API call): the effective start still moves to
+    // midnight, before a's end, so it is placed like the dialog's version.
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'b', allDay: true }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(utcDate('2025-07-04T00:00:00')),
+    );
+    expect(adapter.getTime(result[0].end!)).to.equal(
+      adapter.getTime(utcDate('2025-07-04T23:59:59.999')),
+    );
+  });
+
   it('should clamp a timed event dropped onto an all-day predecessor to the next day', () => {
     const predecessor = EventBuilder.new()
       .id('a')
@@ -1421,5 +1451,47 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result!).to.have.length(1);
     expect(result![0].id).to.equal('b');
     expectDates(result![0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
+  });
+
+  it("should round a pushed successor's start up to the next second", () => {
+    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('UTC')
+      .span('2025-07-03T10:30:00', '2025-07-03T11:30:00')
+      .toProcessed();
+
+    // A wall-time successor serializes at second resolution: landing on the fractional
+    // end would leave it 500ms early once written.
+    const result = runCascade(
+      [predecessor, successor],
+      [fsDependency('a', 'b')],
+      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00.500Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expectDates(result[0], '2025-07-03T12:00:01Z', '2025-07-03T13:00:01Z');
+  });
+
+  it('should leave the successors of other dependency types alone', () => {
+    const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T10:30:00', '2025-07-03T11:30:00')
+      .toProcessed();
+    // The union widens with the other PDM types; only FS has a scheduling rule so far.
+    const startToStart: SchedulerDependency = {
+      ...fsDependency('a', 'b'),
+      type: 'StartToStart' as SchedulerDependency['type'],
+    };
+
+    const result = runCascade(
+      [predecessor, successor],
+      [startToStart],
+      [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
+    );
+
+    expect(result).to.deep.equal([]);
   });
 });

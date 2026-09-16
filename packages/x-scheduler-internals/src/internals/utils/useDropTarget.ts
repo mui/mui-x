@@ -293,9 +293,14 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     return;
   }
 
-  // Sync the editing surface (if this occurrence is being edited) with the committed times.
+  // Sync the editing surface (if this occurrence is being edited) with the committed times:
+  // the scheduling plugin can clamp the drop, and its dates come in the data timezone.
   if (schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)) {
-    store.setEditingOccurrenceTimes(start, end);
+    const { displayTimezone } = store.state;
+    store.setEditingOccurrenceTimes(
+      adapter.setTimezone(result.changes.start ?? start, displayTimezone),
+      adapter.setTimezone(result.changes.end ?? end, displayTimezone),
+    );
   }
 }
 

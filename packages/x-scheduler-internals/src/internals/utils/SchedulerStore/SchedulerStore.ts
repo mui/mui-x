@@ -81,8 +81,13 @@ const MOCK_EVENT_STATE = {
   eventModelList: [],
 };
 
-function toUpdateEventResult(result: { rejection: Error | null }): SchedulerUpdateEventResult {
-  return result.rejection ? { applied: false, rejection: result.rejection } : { applied: true };
+function toUpdateEventResult(result: {
+  updatedEntries: SchedulerEventUpdatedProperties[];
+  rejection: Error | null;
+}): SchedulerUpdateEventResult {
+  return result.rejection
+    ? { applied: false, rejection: result.rejection }
+    : { applied: true, changes: result.updatedEntries[0] };
 }
 
 /**
@@ -461,7 +466,8 @@ export class SchedulerStore<
   /**
    * Adds, updates and / or deletes events in the calendar.
    * A batch the scheduling plugin vetoes is not applied nor emitted: the result then
-   * carries the `rejection` for the caller to surface, and empty id lists.
+   * carries the `rejection` for the caller to surface, and empty lists. `updatedEntries`
+   * are the entries as applied, with the dates the plugin clamped or cascaded.
    */
   protected updateEvents(parameters: UpdateEventsParameters) {
     const eventDetails = createChangeEventDetails('none');
@@ -483,7 +489,13 @@ export class SchedulerStore<
 
     const contributions = this.schedulingPlugin?.handleEventsUpdate(parameters);
     if (contributions && 'rejected' in contributions) {
-      return { deleted: [], updated: [], created: [], rejection: contributions.error };
+      return {
+        deleted: [],
+        updated: [],
+        updatedEntries: [],
+        created: [],
+        rejection: contributions.error,
+      };
     }
     if (contributions?.updated) {
       for (const entry of contributions.updated) {
@@ -571,6 +583,7 @@ export class SchedulerStore<
     return {
       deleted: deletedParam ?? [],
       updated: Array.from(updated.keys()) as SchedulerEventId[],
+      updatedEntries: Array.from(updated.values()),
       created: createdIds,
       rejection: null,
     };

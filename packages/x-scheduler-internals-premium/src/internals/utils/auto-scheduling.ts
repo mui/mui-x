@@ -70,6 +70,7 @@ export interface AutoSchedulingCascadeResult {
  * Kahn pass over the subgraph reachable from the seeds. Cycles in the props data warn in
  * dev: a seedless cycle stays unmoved, a cycle through a seed is broken at that seed.
  * Only loaded events take part: with lazy loading, an unfetched successor is not pushed.
+ * Only Finish-to-Start dependencies take part: the other types have no scheduling rule yet.
  */
 export function computeAutoSchedulingCascade(
   parameters: ComputeAutoSchedulingCascadeParameters,
@@ -87,9 +88,10 @@ export function computeAutoSchedulingCascade(
   // Turning recurring in this batch: the active index predates the update and still
   // lists the event.
   const becomesRecurring = new Set<SchedulerEventId>();
-  // Seeds whose entry actually moves `start`: the user is placing them, so they are
+  // Seeds whose effective start actually moves: the user is placing them, so they are
   // the ones clamped. Checked against the current start: an entry can carry the same
-  // dates (a drop released in place, an API call) and those place nothing.
+  // dates (a drop released in place, an API call) and those place nothing, while an
+  // `allDay` flip moves the start without carrying it.
   const repositionedSeeds = new Set<SchedulerEventId>();
   // Repositioned seeds whose entry left `end` where it is (a start resize): the clamp
   // keeps their end.
@@ -142,7 +144,7 @@ export function computeAutoSchedulingCascade(
     if (startMoved || endTimestamp !== current.endTimestamp) {
       movedIds.add(entry.id);
     }
-    if (entry.start != null && startMoved) {
+    if (startMoved) {
       repositionedSeeds.add(entry.id);
       if (endTimestamp === current.endTimestamp) {
         startResizedSeeds.add(entry.id);
@@ -166,7 +168,7 @@ export function computeAutoSchedulingCascade(
     const eventId = discovery.pop()!;
     for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
       const { target } = dependency;
-      if (deleted.has(target) || becomesRecurring.has(target)) {
+      if (!isFinishToStart(dependency) || deleted.has(target) || becomesRecurring.has(target)) {
         continue;
       }
       inDegree.set(target, (inDegree.get(target) ?? 0) + 1);
@@ -218,7 +220,7 @@ export function computeAutoSchedulingCascade(
 
     for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
       const { target } = dependency;
-      if (!members.has(target)) {
+      if (!isFinishToStart(dependency) || !members.has(target)) {
         continue;
       }
       const remaining = inDegree.get(target)! - 1;
@@ -240,6 +242,10 @@ export function computeAutoSchedulingCascade(
   }
 
   return { updated: cascaded, blocked };
+
+  function isFinishToStart(dependency: SchedulerDependency) {
+    return dependency.type === 'FinishToStart';
+  }
 
   function resolveCurrentDates(eventId: SchedulerEventId): ResolvedDates | null {
     const processedEvent = processedEventLookup.get(eventId);
@@ -268,7 +274,12 @@ export function computeAutoSchedulingCascade(
     let required: ResolvedDates | null = null;
     for (const dependency of activeDependenciesByTarget.get(eventId) ?? []) {
       const sourceId = dependency.source;
-      if (sourceId === eventId || deleted.has(sourceId) || becomesRecurring.has(sourceId)) {
+      if (
+        !isFinishToStart(dependency) ||
+        sourceId === eventId ||
+        deleted.has(sourceId) ||
+        becomesRecurring.has(sourceId)
+      ) {
         continue;
       }
       let sourceDates: ResolvedDates | null = null;
@@ -322,9 +333,14 @@ export function computeAutoSchedulingCascade(
       };
     }
 
-    // After an all-day predecessor, start on the next day's first instant: the inclusive
-    // 23:59:59.999 end would not survive the second-resolution serialization.
-    const newStart = required.allDay ? adapter.addMilliseconds(required.end, 1) : required.end;
+    // Wall-time serialization is second-resolution: landing on a fractional end (the
+    // inclusive 23:59:59.999 of an all-day predecessor, or milliseconds in the data)
+    // would write the successor early, so start on the next whole second.
+    const endMilliseconds = adapter.getMilliseconds(required.end);
+    const newStart =
+      endMilliseconds === 0
+        ? required.end
+        : adapter.addMilliseconds(required.end, 1000 - endMilliseconds);
     const newStartTimestamp = adapter.getTime(newStart);
     const newEnd =
       startResizedSeeds.has(eventId) && newStartTimestamp < base.endTimestamp

@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import { applyInternalDragOrResizeOccurrencePlaceholder } from '@mui/x-scheduler-internals/internals';
+import type { SchedulerStoreInContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   flushDebounce,
   flushEffect,
@@ -124,6 +126,60 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       });
 
       expect(result.applied).to.equal(true);
+    });
+
+    it('should report the changes as applied, with the clamped dates', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, onEventsChange: () => {} },
+        adapter,
+      );
+
+      const result = store.updateEvent({
+        id: 'b',
+        start: date('2025-07-03T09:30:00Z'),
+        end: date('2025-07-03T10:30:00Z'),
+        title: 'Moved b',
+      });
+
+      expect(result.applied).to.equal(true);
+      const { changes } = result as Extract<typeof result, { applied: true }>;
+      expect(changes.title).to.equal('Moved b');
+      expect(adapter.getTime(changes.start!)).to.equal(
+        adapter.getTime(date('2025-07-03T10:00:00Z')),
+      );
+      expect(adapter.getTime(changes.end!)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+    });
+
+    it('should sync the armed occurrence with the clamped dates after a start resize', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, onEventsChange: () => {} },
+        adapter,
+      );
+      const occurrenceB = EventBuilder.new()
+        .id('b')
+        .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+        .toOccurrence();
+      store.startEditing(occurrenceB, 'armed');
+
+      // The drop helper is typed off the context store, which only adds the `update` hook.
+      applyInternalDragOrResizeOccurrencePlaceholder(
+        store as unknown as SchedulerStoreInContext<any, any>,
+        {
+          type: 'internal-resize',
+          surfaceType: 'timeline',
+          eventId: 'b',
+          occurrenceKey: occurrenceB.key,
+          originalOccurrence: occurrenceB,
+          sourceResourceId: null,
+          resourceId: null,
+          start: date('2025-07-03T09:30:00Z'),
+          end: date('2025-07-03T11:00:00Z'),
+        },
+      );
+
+      const edited = store.state.editingOccurrence!.occurrence.displayTimezone;
+      expect(edited.start.value).toEqualDateTime(date('2025-07-03T10:00:00Z'));
+      expect(edited.end.value).toEqualDateTime(date('2025-07-03T11:00:00Z'));
     });
 
     it('should keep a pushed all-day successor all-day and day-aligned once serialized', () => {
