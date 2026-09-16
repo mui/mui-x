@@ -14,8 +14,6 @@ export interface UseTimeGridEventReturnValue {
   isDraggable: boolean;
   isStartResizable: boolean;
   isEndResizable: boolean;
-  palette: PaletteName | undefined;
-  isLessThan15Minutes: boolean;
   isStacked: boolean;
   /**
    * Data attributes shared by both variants. Spread on the root of the styled wrapper.
@@ -96,8 +94,6 @@ export function useTimeGridEvent(
     isDraggable,
     isStartResizable,
     isEndResizable,
-    palette,
-    isLessThan15Minutes,
     isStacked: !isUnderHour,
     rootDataAttributes,
     rootPositionProps,
