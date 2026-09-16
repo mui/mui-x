@@ -137,7 +137,7 @@
     "rimraf": "catalog:",
     "serve": "catalog:",
     "string-replace-loader": "3.3.0",
-    "stylelint": "17.14.1",
+    "stylelint": "17.15.0",
     "supports-color": "11.0.0",
     "tsx": "catalog:",
     "typescript": "npm:@typescript/typescript6@6.0.2",
