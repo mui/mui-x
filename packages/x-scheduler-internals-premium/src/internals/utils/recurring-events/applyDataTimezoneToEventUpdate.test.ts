@@ -64,4 +64,28 @@ describe('applyDataTimezoneToEventUpdate', () => {
       'WE',
     ]);
   });
+
+  it('should project BYDAY from the given rule start instead of the stored one', () => {
+    // Friday 00:00 UTC shows on Thursday 20:00 in New York.
+    const originalEvent = EventBuilder.new(adapter)
+      .startAt('2025-07-04T00:00:00Z')
+      .withDataTimezone('UTC')
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+    // The edit moves it to Thursday 10:00 in New York, which is Thursday 14:00 UTC.
+    const editedStart = adapter.date('2025-07-03T10:00:00', 'America/New_York');
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        start: editedStart,
+        rrule: { freq: 'WEEKLY' as const, byDay: ['TH' as const] },
+      },
+      ruleStart: editedStart,
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byDay).to.deep.equal(['TH']);
+  });
 });

@@ -12,10 +12,16 @@ export function applyDataTimezoneToEventUpdate({
   adapter,
   originalEvent,
   changes,
+  ruleStart,
 }: {
   adapter: Adapter;
   originalEvent: SchedulerProcessedEvent;
   changes: SchedulerEventUpdatedProperties;
+  /**
+   * The display-timezone start the rule's weekdays were picked against.
+   * Defaults to the event's stored start.
+   */
+  ruleStart?: TemporalSupportedObject;
 }): SchedulerEventUpdatedProperties {
   const dataTz = originalEvent.dataTimezone.timezone;
 
@@ -40,7 +46,7 @@ export function applyDataTimezoneToEventUpdate({
     const { until, ...rule } = result.rrule;
     const relabeledRule =
       'until' in result.rrule ? { ...rule, until: until && toDataTz(until) } : rule;
-    result.rrule = projectRRuleFromDisplayToData(adapter, relabeledRule, originalEvent);
+    result.rrule = projectRRuleFromDisplayToData(adapter, relabeledRule, originalEvent, ruleStart);
   }
 
   return result;
@@ -50,6 +56,7 @@ export function projectRRuleFromDisplayToData(
   adapter: Adapter,
   displayRRule: SchedulerProcessedEventRecurrenceRule,
   originalEvent: SchedulerProcessedEvent,
+  ruleStart?: TemporalSupportedObject,
 ): SchedulerProcessedEventRecurrenceRule {
   // Only WEEKLY BYDAY values are projected back from display to data timezone.
   // MONTHLY ordinals are intentionally preserved as-is, since projecting them
@@ -61,7 +68,10 @@ export function projectRRuleFromDisplayToData(
   const displayTz = originalEvent.displayTimezone.timezone;
   const dataTz = originalEvent.dataTimezone.timezone;
 
-  const dtStartDisplay = adapter.setTimezone(originalEvent.dataTimezone.start.value, displayTz);
+  // The weekday shift between the two timezones depends on the time of day, so the
+  // start the rule will be stored with is the one to project from.
+  const dtStartDisplay =
+    ruleStart ?? adapter.setTimezone(originalEvent.dataTimezone.start.value, displayTz);
 
   const startDisplayCode = getWeekDayCode(adapter, dtStartDisplay);
   const startDisplayIndex = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(startDisplayCode)!;

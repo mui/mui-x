@@ -80,6 +80,11 @@ export interface SchedulerRecurringEventsPluginInterface {
     adapter: Adapter;
     originalEvent: SchedulerProcessedEvent;
     changes: SchedulerEventUpdatedProperties;
+    /**
+     * The display-timezone start the rule's weekdays were picked against.
+     * Defaults to the event's stored start.
+     */
+    ruleStart?: TemporalSupportedObject;
   }): SchedulerEventUpdatedProperties;
 
   /**

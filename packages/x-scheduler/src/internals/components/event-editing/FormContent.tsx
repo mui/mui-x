@@ -412,8 +412,19 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // seeding, an untouched bound's stored instant no longer matches, so editing either bound
       // resends both.
       const displayTimezoneMoved = current.displayTimezone !== occurrence.displayTimezone.timezone;
-      const submitStart = startEdited || (endEdited && displayTimezoneMoved);
-      const submitEnd = endEdited || (startEdited && displayTimezoneMoved);
+      // A drag or resize moves the editing snapshot at once, but with a `dataSource` the stored
+      // model only follows once the write lands. A bound the snapshot is ahead on is resent, or
+      // the update would rebuild it from the stale model and undo the move. Recurring events
+      // are compared against the series' own bounds, so they are left out.
+      const liveEvent = schedulerEventSelectors.processedEvent(store.state, occurrence.id);
+      const boundPending = (bound: 'start' | 'end') =>
+        liveEvent != null &&
+        liveEvent.dataTimezone.rrule == null &&
+        !displayTimezoneMoved &&
+        occurrence.displayTimezone[bound].timestamp !== liveEvent.displayTimezone[bound].timestamp;
+      const submitStart =
+        startEdited || (endEdited && displayTimezoneMoved) || boundPending('start');
+      const submitEnd = endEdited || (startEdited && displayTimezoneMoved) || boundPending('end');
 
       const metaChanges = {
         ...editedCustomValues,
@@ -488,6 +499,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         };
         // A rule added here is built on the display weekday; the plugin projects it into the
         // data timezone the series expands in (the bounds it relabels keep their instant).
+        // An edited start is the one the rule gets stored with, so it anchors the projection.
         const { recurringEventsPlugin } = current;
         store.updateEvent(
           recurringEventsPlugin != null && rruleToSubmit != null && isEventOccurrence(occurrence)
@@ -495,6 +507,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
                 adapter: current.adapter,
                 originalEvent: occurrence,
                 changes,
+                ruleStart: submitStart ? start : undefined,
               })
             : changes,
         );

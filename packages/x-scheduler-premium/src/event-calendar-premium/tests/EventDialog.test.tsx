@@ -20,6 +20,7 @@ import type {
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import {
@@ -2529,6 +2530,121 @@ describe('<EventDialogContent open />', () => {
         )!;
         expect(updated.start).to.equal(fridayEvent.start);
         expect(updated.rrule).to.deep.include({ freq: 'WEEKLY', byDay: ['FR'] });
+      });
+
+      it('should anchor a rule added to a non-recurring event on the edited start when the edit moves its data-timezone weekday', async () => {
+        const onEventsChange = vi.fn();
+        // A UTC event on Friday July 4th at 00:00, displayed on Thursday at 20:00 in New York.
+        const lateCallBuilder = EventBuilder.new()
+          .title('Late call')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T00:00:00', '2025-07-04T01:00:00')
+          .withDisplayTimezone('America/New_York');
+        const lateCallEvent = lateCallBuilder.build();
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[lateCallEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={lateCallBuilder.toOccurrence()}
+            />
+          </EventCalendarProvider>,
+        );
+
+        // Same displayed Thursday, but 10:00 in New York is Thursday 14:00 UTC: the data-timezone
+        // weekday moves from Friday to Thursday.
+        await user.clear(screen.getByLabelText(/start time/i));
+        await user.type(screen.getByLabelText(/start time/i), '10:00');
+        await user.clear(screen.getByLabelText(/end time/i));
+        await user.type(screen.getByLabelText(/end time/i), '11:00');
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (event: SchedulerEvent) => event.id === lateCallEvent.id,
+        )!;
+        expect(adapter.date(updated.start, 'UTC')).toEqualDateTime(
+          adapter.date('2025-07-03T14:00:00', 'UTC'),
+        );
+        // "Weekly on Thursday" as displayed must expand on Thursdays UTC against the new start,
+        // not on the Fridays the stored start used to fall on.
+        expect(updated.rrule).to.deep.include({ freq: 'WEEKLY', byDay: ['TH'] });
+      });
+
+      it('should resend a bound the editing snapshot moved while its persist is still pending', async () => {
+        const event = EventBuilder.new()
+          .title('Running')
+          .withDataTimezone('UTC')
+          .span('2025-05-26T10:00:00', '2025-05-26T11:00:00')
+          .build();
+        const persistCalls: { updated: SchedulerEvent[] }[] = [];
+        const dataSource = {
+          getEvents: async () => [event],
+          persistEvents: (params: { updated: SchedulerEvent[] }) => {
+            persistCalls.push(params);
+            // The host never answers within the test: every write stays in flight.
+            return new Promise<{ success: boolean }>(() => {});
+          },
+        };
+        let store: AnyEventCalendarStore;
+        const resizedEnd = adapter.date('2025-05-26T16:00:00', 'UTC');
+        // The snapshot the resize left behind, as the store would hand it to the dialog.
+        const resizedOccurrence = EventBuilder.new()
+          .id(event.id)
+          .title(event.title)
+          .withDataTimezone('UTC')
+          .span('2025-05-26T10:00:00', '2025-05-26T16:00:00')
+          .toOccurrence();
+
+        const { user } = render(
+          <EventCalendarProvider
+            {...({ dataSource } as {})}
+            resources={resources}
+            storeClass={EventCalendarPremiumStore}
+          >
+            <SchedulerStoreRunner<AnyEventCalendarStore>
+              context={SchedulerStoreContext}
+              onMount={(mountedStore) => {
+                store = mountedStore;
+                (mountedStore as any).lazyLoading.queueDataFetchForRange(
+                  {
+                    start: adapter.date('2025-05-26T00:00:00', 'UTC'),
+                    end: adapter.date('2025-05-26T00:00:00', 'UTC'),
+                  },
+                  true,
+                );
+              }}
+            />
+            <TestEventDialogContent open {...defaultProps} occurrence={resizedOccurrence} />
+          </EventCalendarProvider>,
+        );
+
+        await waitFor(() => expect(store.state.eventIdList).to.have.length(1));
+        // The resize: the write goes out, the stored model keeps 11:00 until the host answers.
+        await act(async () => {
+          store.updateEvent({ id: event.id, end: resizedEnd });
+        });
+        await waitFor(() => expect(persistCalls).to.have.length(1));
+
+        await user.clear(screen.getByLabelText(/event title/i));
+        await user.type(screen.getByLabelText(/event title/i), 'Renamed');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        await waitFor(() => expect(persistCalls).to.have.length(2));
+        const renamed = persistCalls[1].updated[0];
+        expect(renamed.title).to.equal('Renamed');
+        // Left out of the submission, the untouched end would be rebuilt from the stale model
+        // and undo the resize once this write lands last.
+        expect(adapter.date(renamed.end, 'UTC')).toEqualDateTime(resizedEnd);
       });
 
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {
