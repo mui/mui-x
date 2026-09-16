@@ -75,7 +75,7 @@
     "@base-ui/utils": "catalog:",
     "@emotion/cache": "catalog:",
     "@eslint/compat": "2.1.1",
-    "@inquirer/prompts": "8.7.1",
+    "@inquirer/prompts": "8.7.2",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.24",
     "@mui/internal-babel-plugin-minify-errors": "2.0.8-canary.31",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.91",
@@ -95,7 +95,7 @@
     "@sinonjs/fake-timers": "15.4.0",
     "@types/babel__core": "7.20.5",
     "@types/babel__traverse": "7.28.0",
-    "@types/node": "22.20.1",
+    "@types/node": "22.20.2",
     "@types/picomatch": "4.0.3",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
@@ -118,7 +118,7 @@
     "es-toolkit": "catalog:",
     "eslint": "10.10.0",
     "eslint-plugin-consistent-default-export-name": "0.0.15",
-    "eslint-plugin-jsdoc": "64.3.5",
+    "eslint-plugin-jsdoc": "64.3.10",
     "eslint-plugin-mui-x": "workspace:^",
     "execa": "catalog:",
     "globby": "16.2.4",
@@ -137,7 +137,7 @@
     "rimraf": "catalog:",
     "serve": "catalog:",
     "string-replace-loader": "3.3.0",
-    "stylelint": "17.14.1",
+    "stylelint": "17.15.0",
     "supports-color": "11.0.0",
     "tsx": "catalog:",
     "typescript": "npm:@typescript/typescript6@6.0.2",
@@ -146,14 +146,14 @@
     "vite": "catalog:",
     "vitest": "catalog:",
     "yargs": "catalog:",
-    "zod": "4.5.4"
+    "zod": "4.6.4"
   },
   "config": {
-    "valeVersion": "3.20.0"
+    "valeVersion": "3.21.0"
   },
-  "packageManager": "pnpm@11.25.0",
+  "packageManager": "pnpm@12.4.1",
   "engines": {
-    "pnpm": "11.25.0",
+    "pnpm": "12.4.1",
     "node": ">=22.23.2"
   }
 }
