@@ -1567,6 +1567,18 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--computed",
+      "className": "MuiDataGridPro-columnHeader--computed",
+      "description": "Styles applied to the column header if the column is a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeader--computedInvalid",
+      "className": "MuiDataGridPro-columnHeader--computedInvalid",
+      "description": "Styles applied to the column header if the formula of its computed column is invalid (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--dragging",
       "className": "MuiDataGridPro-columnHeader--dragging",
       "description": "Styles applied to the floating column header element when it is dragged.",
@@ -1756,6 +1768,12 @@
       "key": "columnsManagementSearchInput",
       "className": "MuiDataGridPro-columnsManagementSearchInput",
       "description": "Styles applied to the columns management search input element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnHeaderBadge",
+      "className": "MuiDataGridPro-computedColumnHeaderBadge",
+      "description": "Styles applied to the `ƒx` badge in the column header of a computed column (Premium computed columns).",
       "isGlobal": false
     },
     {

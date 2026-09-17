@@ -60,6 +60,28 @@ export interface GridLocaleText {
   formulaBarInputLabel: string;
   formulaBarAddressLabel: string;
 
+  // Computed columns (Premium)
+  computedColumnHeaderLabel: string;
+  computedColumnHeaderInvalidLabel: string;
+  computedColumnErrorNameRequired: string;
+  computedColumnErrorFieldRequired: string;
+  computedColumnErrorFieldInvalid: string;
+  computedColumnErrorFieldExists: (field: string) => string;
+  computedColumnErrorFieldA1Like: string;
+  computedColumnErrorFormulaRequired: string;
+  computedColumnErrorParse: (message: string) => string;
+  computedColumnErrorUnknownFunction: (name: string) => string;
+  computedColumnErrorUnsupportedReference: string;
+  computedColumnErrorUnknownField: (field: string) => string;
+  computedColumnErrorSelfReference: string;
+  computedColumnErrorCycle: (path: string) => string;
+  computedCellErrorDivByZero: string;
+  computedCellErrorValue: string;
+  computedCellErrorRef: string;
+  computedCellErrorName: string;
+  computedCellErrorCycle: string;
+  computedCellErrorGeneric: string;
+
   // Columns management text
   columnsManagementSearchTitle: string;
   columnsManagementNoColumns: string;

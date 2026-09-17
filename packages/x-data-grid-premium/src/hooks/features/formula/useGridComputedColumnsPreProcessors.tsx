@@ -14,6 +14,7 @@ import type { GridStatePremium } from '../../../models/gridStatePremium';
 import type { GridComputedColumnsModel } from '../computedColumns/gridComputedColumnsInterfaces';
 import { ensureFormulaInternalCache } from './gridFormulaUtils';
 import { ensureComputedColumnRecords } from './gridComputedColumnsRuntime';
+import { validateComputedColumnRecords } from './gridComputedColumnsValidation';
 
 const EMPTY_MODEL: GridComputedColumnsModel = [];
 
@@ -49,6 +50,7 @@ export const useGridComputedColumnsPreProcessors = (
     | 'dataSource'
     | 'computedColDef'
     | 'formulaFunctions'
+    | 'formulaA1Notation'
   >,
 ) => {
   const hasDataSource = !!props.dataSource;
@@ -90,6 +92,16 @@ export const useGridComputedColumnsPreProcessors = (
         apiRef,
         cache,
         enabled ? model : EMPTY_MODEL,
+        propsRef.current.computedColDef,
+      );
+      // Every change of the column set goes through this processor, so the definitions are
+      // validated against the columns being hydrated: a column whose formula reads a removed
+      // column is invalid in the same pass.
+      validateComputedColumnRecords(
+        apiRef,
+        cache,
+        columnsState.lookup,
+        !!props.formulaA1Notation,
         propsRef.current.computedColDef,
       );
       const { records } = cache.computedColumns;
@@ -153,7 +165,13 @@ export const useGridComputedColumnsPreProcessors = (
 
       return columnsState;
     },
-    [apiRef, props.disableFormulas, props.disableComputedColumns, hasDataSource],
+    [
+      apiRef,
+      props.disableFormulas,
+      props.disableComputedColumns,
+      props.formulaA1Notation,
+      hasDataSource,
+    ],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', injectComputedColumns);

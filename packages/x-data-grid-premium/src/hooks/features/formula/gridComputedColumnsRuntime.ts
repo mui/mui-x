@@ -273,7 +273,7 @@ function buildComputedColumnRecord(
       }
     : createComputedGetters(apiRef, definition.field);
 
-  const baseColDef = createComputedBaseColDef(definition, getters);
+  const baseColDef = createComputedBaseColDef(definition, getters, staticResult !== null);
   return {
     definition,
     ast: parse.ast,

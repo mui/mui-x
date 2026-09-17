@@ -160,8 +160,8 @@ export interface GridComputedColumnRecord {
    */
   dependencies: Set<string>;
   /**
-   * The result shared by every row when the formula cannot be evaluated at all
-   * (parse failure, references that are not same-row fields).
+   * The result shared by every row when the formula is invalid (parse failure,
+   * references that are not same-row fields, unknown field or function, cycle).
    * `null` when the formula is evaluated row by row.
    */
   staticResult: GridFormulaResult | null;

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import clsx from 'clsx';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
@@ -13,6 +14,7 @@ import type {
   GridCellParams,
   GridColDef,
   GridColTypeDef,
+  GridColumnHeaderClassNamePropType,
   GridComparatorFn,
   GridFilterOperator,
   GridValueGetter,
@@ -22,6 +24,7 @@ import type {
   GridComputedColumnDefinition,
   GridComputedColumnType,
 } from '../computedColumns/gridComputedColumnsInterfaces';
+import { GridComputedErrorCell } from '../../../components/GridComputedErrorCell';
 import { FORMULA_ERROR_CODES } from './engine';
 
 const COMPUTED_COLUMN_TYPE_COL_DEFS: Record<GridComputedColumnType, GridColTypeDef> = {
@@ -152,6 +155,20 @@ const computedCellClassName = (params: GridCellParams) =>
     isComputedErrorValue(params.value) && gridClasses['cell--computedError'],
   );
 
+function getComputedHeaderClassName(invalid: boolean): string {
+  return clsx(
+    gridClasses['columnHeader--computed'],
+    invalid && gridClasses['columnHeader--computedInvalid'],
+  );
+}
+
+/**
+ * The header of a computed column tells whether its formula is valid.
+ */
+export function withComputedHeaderClassName(baseColDef: GridColDef, invalid: boolean): GridColDef {
+  return { ...baseColDef, headerClassName: getComputedHeaderClassName(invalid) };
+}
+
 /**
  * Creates the read-only column of a computed column definition,
  * without the `computedColDef` overrides.
@@ -159,13 +176,14 @@ const computedCellClassName = (params: GridCellParams) =>
 export function createComputedBaseColDef(
   definition: GridComputedColumnDefinition,
   getters: GridComputedColumnGetters,
+  invalid: boolean = false,
 ): GridColDef {
   const typeColDef = COMPUTED_COLUMN_TYPE_COL_DEFS[definition.type] ?? GRID_STRING_COL_DEF;
   const numberFormatter = createNumberFormatter(definition);
   const typeValueFormatter = typeColDef.valueFormatter;
   const typeRenderCell = typeColDef.renderCell;
 
-  const colDef: GridColDef = {
+  return {
     ...typeColDef,
     field: definition.field,
     headerName: definition.headerName,
@@ -188,15 +206,15 @@ export function createComputedBaseColDef(
     filterOperators: createFilterOperators(definition.type, typeColDef),
     getApplyQuickFilterFn: createGetApplyQuickFilterFn(definition.type, typeColDef),
     cellClassName: computedCellClassName,
-  };
-
-  if (typeRenderCell) {
+    headerClassName: getComputedHeaderClassName(invalid),
     // Returning `undefined` makes the cell render its formatted value.
-    colDef.renderCell = (params) =>
-      isComputedErrorValue(params.value) ? undefined : typeRenderCell(params);
-  }
-
-  return colDef;
+    renderCell: (params) => {
+      if (isComputedErrorValue(params.value)) {
+        return <GridComputedErrorCell {...params} />;
+      }
+      return typeRenderCell ? typeRenderCell(params) : undefined;
+    },
+  };
 }
 
 function mergeCellClassNames(
@@ -208,6 +226,20 @@ function mergeCellClassNames(
   return (params) =>
     clsx(
       computedCellClassName(params),
+      typeof override === 'function' ? override(params) : override,
+    );
+}
+
+function mergeHeaderClassNames(
+  base: GridColumnHeaderClassNamePropType | undefined,
+  override: GridColumnHeaderClassNamePropType | undefined,
+): GridColumnHeaderClassNamePropType | undefined {
+  if (override === undefined) {
+    return base;
+  }
+  return (params) =>
+    clsx(
+      typeof base === 'function' ? base(params) : base,
       typeof override === 'function' ? override(params) : override,
     );
 }
@@ -237,5 +269,6 @@ export function applyComputedColDefOverrides(
     valueGetter: baseColDef.valueGetter,
     valueSetter: undefined,
     cellClassName: mergeCellClassNames(overrides.cellClassName),
+    headerClassName: mergeHeaderClassNames(baseColDef.headerClassName, overrides.headerClassName),
   } as GridColDef;
 }

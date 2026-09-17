@@ -909,6 +909,16 @@
       "nodeName": "the column header",
       "conditions": "<code>headerAlign=\"right\"</code>"
     },
+    "columnHeader--computed": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "the column is a computed column (Premium computed columns)"
+    },
+    "columnHeader--computedInvalid": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "the formula of its computed column is invalid (Premium computed columns)"
+    },
     "columnHeader--dragging": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the floating column header element",
@@ -1036,6 +1046,10 @@
     "columnsManagementSearchInput": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management search input element"
+    },
+    "computedColumnHeaderBadge": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the <code>ƒx</code> badge in the column header of a computed column (Premium computed columns)"
     },
     "container--bottom": {
       "description": "Styles applied to {{nodeName}}.",

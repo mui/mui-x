@@ -91,6 +91,10 @@ export interface GridClasses {
    */
   formulaColumnHeaderLetter: string;
   /**
+   * Styles applied to the `ƒx` badge in the column header of a computed column (Premium computed columns).
+   */
+  computedColumnHeaderBadge: string;
+  /**
    * Styles applied to the cells of the A1-notation row-number column (Premium formulas).
    */
   formulaRowNumberCell: string;
@@ -272,6 +276,14 @@ export interface GridClasses {
    * Styles applied to the column header if the column is sorted.
    */
   'columnHeader--sorted': string;
+  /**
+   * Styles applied to the column header if the column is a computed column (Premium computed columns).
+   */
+  'columnHeader--computed': string;
+  /**
+   * Styles applied to the column header if the formula of its computed column is invalid (Premium computed columns).
+   */
+  'columnHeader--computedInvalid': string;
   /**
    * Styles applied to the column header if the column has a filter applied to it.
    */
@@ -1134,6 +1146,8 @@ export const gridClassesOverrides = {
     'columnHeader--alignCenter',
     'columnHeader--alignLeft',
     'columnHeader--alignRight',
+    'columnHeader--computed',
+    'columnHeader--computedInvalid',
     'columnHeader--dragging',
     'columnHeader--emptyGroup',
     'columnHeader--filledGroup',
@@ -1232,6 +1246,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeaderLabel',
   'aggregationRowOverlayWrapper',
   'formulaColumnHeaderLetter',
+  'computedColumnHeaderBadge',
   'formulaRowNumberCell',
   'formulaBar',
   'mainContent',

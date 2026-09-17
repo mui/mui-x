@@ -60,6 +60,31 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   formulaBarInputLabel: 'Formula',
   formulaBarAddressLabel: 'Active cell',
 
+  // Computed columns (Premium)
+  computedColumnHeaderLabel: 'Computed column',
+  computedColumnHeaderInvalidLabel: 'Computed column with an invalid formula',
+  computedColumnErrorNameRequired: 'Enter a name.',
+  computedColumnErrorFieldRequired: 'Enter a field name.',
+  computedColumnErrorFieldInvalid:
+    'Use letters, digits and underscores, starting with a letter or an underscore.',
+  computedColumnErrorFieldExists: (field) => `A column with the field "${field}" already exists.`,
+  computedColumnErrorFieldA1Like: 'This field name reads as a cell address. Choose a longer name.',
+  computedColumnErrorFormulaRequired: 'Enter a formula.',
+  computedColumnErrorParse: (message) => `Formula error: ${message}`,
+  computedColumnErrorUnknownFunction: (name) => `Unknown function ${name}.`,
+  computedColumnErrorUnsupportedReference:
+    'Computed columns can only reference columns of the same row. Use bare field names.',
+  computedColumnErrorUnknownField: (field) => `Column "${field}" does not exist.`,
+  computedColumnErrorSelfReference: 'A computed column cannot reference itself.',
+  computedColumnErrorCycle: (path) => `Circular reference: ${path}.`,
+  computedCellErrorDivByZero:
+    'Division by zero in this row. Wrap the division in IFERROR(…, 0) to provide a fallback.',
+  computedCellErrorValue: 'A value in this row has the wrong type for this operation.',
+  computedCellErrorRef: 'A referenced column does not exist.',
+  computedCellErrorName: 'The formula uses an unknown function.',
+  computedCellErrorCycle: 'The formula depends on itself.',
+  computedCellErrorGeneric: 'The formula could not be evaluated for this row.',
+
   // Columns management text
   columnsManagementSearchTitle: 'Search',
   columnsManagementNoColumns: 'No columns',

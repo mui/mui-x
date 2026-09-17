@@ -17,6 +17,7 @@ import type {
   GridComputedColumnsModel,
 } from './gridComputedColumnsInterfaces';
 import {
+  gridComputedColumnDefinitionSelector,
   gridComputedColumnsPanelOpenSelector,
   gridComputedColumnsSelector,
 } from './gridComputedColumnsSelectors';
@@ -235,7 +236,13 @@ export const useGridComputedColumns = (
     GridComputedColumnsApi['validateComputedColumn']
   >(
     (definition) =>
-      apiRef.current.validateComputedColumnDefinition?.(definition) ?? {
+      // A definition whose field is already stored is validated as the replacement of the stored one.
+      apiRef.current.validateComputedColumnDefinition?.(
+        definition,
+        gridComputedColumnDefinitionSelector(apiRef, definition.field) === null
+          ? undefined
+          : { ignoreField: definition.field },
+      ) ?? {
         valid: false,
         issues: [
           {

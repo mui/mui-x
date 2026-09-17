@@ -82,7 +82,7 @@ describe('<DataGridPremium /> - Computed columns', () => {
   describe('column', () => {
     it('should add a read-only column after the columns of the `columns` prop', async () => {
       await render(<Test computedColumns={[total]} />);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['item', 'price', 'quantity', 'Total']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['item', 'price', 'quantity', 'ƒxTotal']);
       const column = getColumn('total');
       expect(column.computed).to.equal(true);
       expect(column.editable).to.equal(false);
@@ -236,7 +236,7 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getColumnValuesOf('total')).to.deep.equal(['5', '15', '6']);
 
       act(() => apiRef.current!.updateComputedColumn('total', { headerName: 'Sum' }));
-      expect(getColumnHeadersTextContent()).to.deep.equal(['item', 'price', 'quantity', 'Sum']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['item', 'price', 'quantity', 'ƒxSum']);
 
       act(() => apiRef.current!.removeComputedColumn('total'));
       expect(getFields()).to.deep.equal(['item', 'price', 'quantity']);

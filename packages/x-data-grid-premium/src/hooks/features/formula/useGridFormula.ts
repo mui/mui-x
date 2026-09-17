@@ -70,6 +70,11 @@ import {
   evictComputedResultsForRows,
   resetComputedResults,
 } from './gridComputedColumnsRuntime';
+import {
+  createComputedColumnValidationScope,
+  validateComputedColumnDefinition,
+} from './gridComputedColumnsValidation';
+import type { GridComputedColumnsPrivateApi } from '../computedColumns/gridComputedColumnsInterfaces';
 
 export const formulaStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'disableFormulas' | 'dataSource'>,
@@ -110,8 +115,13 @@ export const formulaStateInitializer: GridStateInitializer<
 
 export const useGridFormula = (
   apiRef: RefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'disableFormulas' | 'formulaFunctions' | 'dataSource'>,
+  props: Pick<
+    DataGridPremiumProcessedProps,
+    'disableFormulas' | 'formulaFunctions' | 'dataSource' | 'formulaA1Notation'
+  >,
 ) => {
+  const a1NotationActive = !!props.formulaA1Notation && !props.disableFormulas && !props.dataSource;
+
   const computeEffectiveFormulaFields = React.useCallback(() => {
     if (props.disableFormulas || props.dataSource || gridPivotActiveSelector(apiRef)) {
       return [];
@@ -373,6 +383,37 @@ export const useGridFormula = (
   };
 
   useGridApiMethod(apiRef, formulaPrivateApi, 'private');
+
+  const validateComputedColumnDefinitionMethod = React.useCallback<
+    GridComputedColumnsPrivateApi['validateComputedColumnDefinition']
+  >(
+    (definition, options) =>
+      validateComputedColumnDefinition(
+        definition,
+        createComputedColumnValidationScope(
+          apiRef,
+          apiRef.current.caches.formula!,
+          gridColumnLookupSelector(apiRef),
+          a1NotationActive,
+        ),
+        options,
+      ),
+    [apiRef, a1NotationActive],
+  );
+
+  const getComputedColumnIssues = React.useCallback<
+    GridComputedColumnsPrivateApi['getComputedColumnIssues']
+  >(
+    (field) => apiRef.current.caches.formula!.computedColumns.records.get(field)?.issues ?? [],
+    [apiRef],
+  );
+
+  const computedColumnsPrivateApi: GridComputedColumnsPrivateApi = {
+    validateComputedColumnDefinition: validateComputedColumnDefinitionMethod,
+    getComputedColumnIssues,
+  };
+
+  useGridApiMethod(apiRef, computedColumnsPrivateApi, 'private');
 
   /**
    * EVENTS
@@ -647,6 +688,9 @@ export const useGridFormula = (
     cache.registry = createFormulaFunctionRegistry(Object.values(effectiveFormulaFunctions));
     const computedColumnsChanged = cache.computedColumns.records.size > 0;
     if (computedColumnsChanged) {
+      // The validity of the computed columns depends on the registry (unknown functions),
+      // and the definitions are validated when the columns are hydrated.
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
       resetComputedResults(cache);
       bumpComputedColumnsRevision(apiRef);
     }
