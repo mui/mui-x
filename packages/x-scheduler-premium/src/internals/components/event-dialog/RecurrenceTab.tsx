@@ -222,7 +222,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     () => getEventTimezoneStart(adapter, occurrence),
     [adapter, occurrence],
   );
-  const recurrenceTimezoneName = getRecurrenceTimezoneName(eventTimezone, displayTimezone);
+  const recurrenceTimezoneName = getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone);
   const monthlyRef = React.useMemo(
     () => getMonthlyReference(adapter, eventTimezoneStart),
     [adapter, eventTimezoneStart],

@@ -311,12 +311,30 @@ export function getEventTimezoneStart(
 }
 
 /**
- * The IANA name of a timezone; the adapter aliases resolve to the system timezone.
+ * The IANA identifier of a timezone; the adapter aliases resolve to the system timezone.
  */
-function getTimezoneName(timezone: TemporalTimezone): string {
+function getTimezoneId(timezone: TemporalTimezone): string {
   return timezone === 'default' || timezone === 'system'
     ? Intl.DateTimeFormat().resolvedOptions().timeZone
     : timezone;
+}
+
+/**
+ * The localized generic name of a timezone (e.g. "Pacific Time"), or its identifier when the
+ * runtime has no name for it and would print an offset instead.
+ */
+function getTimezoneDisplayName(adapter: Adapter, timezoneId: string): string {
+  try {
+    const name = new Intl.DateTimeFormat(adapter.getCurrentLocaleCode(), {
+      timeZone: timezoneId,
+      timeZoneName: 'longGeneric',
+    })
+      .formatToParts(new Date())
+      .find((part) => part.type === 'timeZoneName')?.value;
+    return name == null || /^GMT([+-]|$)/.test(name) ? timezoneId : name;
+  } catch {
+    return timezoneId;
+  }
 }
 
 /**
@@ -324,11 +342,14 @@ function getTimezoneName(timezone: TemporalTimezone): string {
  * of its recurrence rule can be labeled; `null` when both timezones are the same.
  */
 export function getRecurrenceTimezoneName(
+  adapter: Adapter,
   eventTimezone: TemporalTimezone,
   displayTimezone: TemporalTimezone,
 ): string | null {
-  const eventTimezoneName = getTimezoneName(eventTimezone);
-  return eventTimezoneName === getTimezoneName(displayTimezone) ? null : eventTimezoneName;
+  const eventTimezoneId = getTimezoneId(eventTimezone);
+  return eventTimezoneId === getTimezoneId(displayTimezone)
+    ? null
+    : getTimezoneDisplayName(adapter, eventTimezoneId);
 }
 
 export function getEndsSelectionFromRRule(rrule?: {

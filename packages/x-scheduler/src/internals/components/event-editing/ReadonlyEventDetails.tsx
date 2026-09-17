@@ -134,6 +134,7 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   // Feature hook
   const formatTime = useFormatTime();
   const recurrenceTimezoneName = getRecurrenceTimezoneName(
+    adapter,
     getEventTimezone(occurrence),
     displayTimezone,
   );
