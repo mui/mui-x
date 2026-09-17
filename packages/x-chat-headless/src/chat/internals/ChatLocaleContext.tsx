@@ -10,12 +10,10 @@ export function ChatLocaleProvider(props: {
   localeText?: Partial<ChatLocaleText>;
 }) {
   const { children, localeText } = props;
+  const parentLocaleText = React.useContext(ChatLocaleContext);
   const value = React.useMemo<ChatLocaleText>(
-    () => ({
-      ...CHAT_DEFAULT_LOCALE_TEXT,
-      ...localeText,
-    }),
-    [localeText],
+    () => (localeText ? { ...parentLocaleText, ...localeText } : parentLocaleText),
+    [parentLocaleText, localeText],
   );
 
   return <ChatLocaleContext.Provider value={value}>{children}</ChatLocaleContext.Provider>;

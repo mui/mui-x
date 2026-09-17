@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { act, renderHook } from '@mui/internal-test-utils';
+import { act, createRenderer, renderHook, screen } from '@mui/internal-test-utils';
 import { useStore } from '@base-ui/utils/store';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { ChatAdapter } from './adapters';
@@ -14,6 +14,11 @@ import type { ChatConversation, ChatMessage } from './types/chat-entities';
 import { ChatProvider } from './ChatProvider';
 import type { ChatProviderProps } from './ChatProvider';
 import { useChatStoreContext } from './internals/useChatStoreContext';
+import { CHAT_DEFAULT_LOCALE_TEXT } from './chat/internals/chatLocaleText';
+import { useChatLocaleText } from './chat/internals/ChatLocaleContext';
+import { ComposerRoot } from './composer/ComposerRoot';
+import { ComposerSendButton } from './composer/ComposerSendButton';
+import { ComposerTextArea } from './composer/ComposerTextArea';
 
 const message1: ChatMessage = {
   id: 'm1',
@@ -64,6 +69,8 @@ function createProviderWrapper(initialProps: Omit<ChatProviderProps, 'children'>
     },
   };
 }
+
+const { render } = createRenderer();
 
 describe('ChatProvider', () => {
   beforeEach(() => {
@@ -602,6 +609,93 @@ describe('ChatProvider', () => {
         });
         unmount();
       }).not.toThrow();
+    });
+  });
+
+  describe('localeText', () => {
+    it('reuses the inherited locale text when no override is passed', () => {
+      const { Wrapper } = createProviderWrapper({ adapter: createAdapter() });
+      const { result } = renderHook(() => useChatLocaleText(), { wrapper: Wrapper });
+
+      expect(result.current).toBe(CHAT_DEFAULT_LOCALE_TEXT);
+    });
+
+    it('merges the overrides with the defaults and keeps function entries callable', () => {
+      const { Wrapper } = createProviderWrapper({
+        adapter: createAdapter(),
+        localeText: {
+          composerInputPlaceholder: 'Escribe un mensaje',
+          typingIndicatorLabel: (users) => `${users.length} escribiendo`,
+        },
+      });
+      const { result } = renderHook(() => useChatLocaleText(), { wrapper: Wrapper });
+
+      expect(result.current.composerInputPlaceholder).toBe('Escribe un mensaje');
+      expect(result.current.typingIndicatorLabel([{ id: 'u1' }])).toBe('1 escribiendo');
+      expect(result.current.retryButtonLabel).toBe(CHAT_DEFAULT_LOCALE_TEXT.retryButtonLabel);
+    });
+
+    it('applies the overrides to headless components rendered below', () => {
+      render(
+        <ChatProvider
+          adapter={createAdapter()}
+          localeText={{
+            composerInputPlaceholder: 'Escribe un mensaje',
+            composerInputAriaLabel: 'Mensaje',
+            composerSendButtonLabel: 'Enviar',
+          }}
+        >
+          <ComposerRoot>
+            <ComposerTextArea />
+            <ComposerSendButton />
+          </ComposerRoot>
+        </ChatProvider>,
+      );
+
+      expect(screen.getByRole('textbox', { name: 'Mensaje' })).to.have.attribute(
+        'placeholder',
+        'Escribe un mensaje',
+      );
+      expect(screen.getByRole('button', { name: 'Enviar' })).not.to.equal(null);
+    });
+
+    it('inherits the locale text of an outer provider when nested without an override', () => {
+      const { result } = renderHook(() => useChatLocaleText(), {
+        wrapper: ({ children }: React.PropsWithChildren) => (
+          <ChatProvider
+            adapter={createAdapter()}
+            localeText={{ composerInputPlaceholder: 'Escribe un mensaje' }}
+          >
+            <ChatProvider adapter={createAdapter()}>{children}</ChatProvider>
+          </ChatProvider>
+        ),
+      });
+
+      expect(result.current.composerInputPlaceholder).toBe('Escribe un mensaje');
+    });
+
+    it('lets a nested provider override only the keys it declares', () => {
+      const { result } = renderHook(() => useChatLocaleText(), {
+        wrapper: ({ children }: React.PropsWithChildren) => (
+          <ChatProvider
+            adapter={createAdapter()}
+            localeText={{
+              composerInputPlaceholder: 'Escribe un mensaje',
+              composerSendButtonLabel: 'Enviar',
+            }}
+          >
+            <ChatProvider
+              adapter={createAdapter()}
+              localeText={{ composerSendButtonLabel: 'Mandar' }}
+            >
+              {children}
+            </ChatProvider>
+          </ChatProvider>
+        ),
+      });
+
+      expect(result.current.composerSendButtonLabel).toBe('Mandar');
+      expect(result.current.composerInputPlaceholder).toBe('Escribe un mensaje');
     });
   });
 });

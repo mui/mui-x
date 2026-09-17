@@ -55,6 +55,7 @@
     "layoutModeBreakpoints": {
       "type": { "name": "shape", "description": "{ overlay?: number, split?: number }" }
     },
+    "localeText": { "type": { "name": "object" } },
     "members": {
       "type": {
         "name": "arrayOf",
