@@ -58,7 +58,6 @@ export function useEventContextMenuItems(
   const { startEditing } = useEventEditingContext();
 
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
-  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const areRecurringEventsAvailable = useStore(
     store,
     schedulerOtherSelectors.areRecurringEventsAvailable,
@@ -81,7 +80,7 @@ export function useEventContextMenuItems(
   // single events delete immediately. No confirmation step here either — see #18025.
   const handleDelete = () => {
     onRequestClose();
-    if (areRecurringEventsAvailable && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+    if (areRecurringEventsAvailable && occurrence.displayTimezone.rrule) {
       store.deleteRecurringEvent({
         occurrenceStart: occurrence.displayTimezone.start.value,
         eventId: occurrence.id,
