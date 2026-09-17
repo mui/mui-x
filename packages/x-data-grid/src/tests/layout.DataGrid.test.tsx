@@ -244,6 +244,16 @@ describe('<DataGrid /> - Layout & warnings', () => {
           'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty width',
         );
       });
+
+      it('should not error about an empty height when the height prop is set', () => {
+        expect(() => {
+          render(
+            <div style={{ width: 300, height: 0 }}>
+              <DataGrid {...baselineProps} height={300} />
+            </div>,
+          );
+        }).not.toErrorDev();
+      });
     });
 
     describe('swallow warnings', () => {
@@ -853,6 +863,51 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>,
         );
         expect(grid('root')).to.have.class(gridClasses.autoHeight);
+      });
+    });
+
+    describe('height prop', () => {
+      it('should resolve the root element to the given pixel height without a wrapper', () => {
+        render(<DataGrid {...baselineProps} height={300} />);
+        expect(getComputedStyle(grid('root')!).height).to.equal('300px');
+      });
+
+      it('should resolve the root element to the given CSS height value without a wrapper', () => {
+        render(<DataGrid {...baselineProps} height="150px" />);
+        expect(getComputedStyle(grid('root')!).height).to.equal('150px');
+      });
+
+      it('should let autoPageSize compute the page size from the height prop, without a wrapper', () => {
+        const nbRows = 27;
+        const height = 780;
+        const columnHeaderHeight = 56;
+        const rowHeight = 52;
+
+        function TestCase() {
+          const data = useBasicDemoData(nbRows, 10);
+          return (
+            <DataGrid
+              columns={data.columns}
+              rows={data.rows}
+              autoPageSize
+              height={height}
+              columnHeaderHeight={columnHeaderHeight}
+              rowHeight={rowHeight}
+            />
+          );
+        }
+
+        render(<TestCase />);
+        const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
+        const expectedFullPageRowsLength = Math.floor(
+          (height - columnHeaderHeight - footerHeight) / rowHeight,
+        );
+        expect(getColumnValues(0)).to.have.length(expectedFullPageRowsLength);
+      });
+
+      it('should let sx override the height prop', () => {
+        render(<DataGrid {...baselineProps} height={300} sx={{ height: 150 }} />);
+        expect(getComputedStyle(grid('root')!).height).to.equal('150px');
       });
     });
 
