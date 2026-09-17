@@ -1522,6 +1522,59 @@ describe('computeAutoSchedulingCascade', () => {
     expectDates(result[0], '2025-07-03T13:00:00Z', '2025-07-03T14:00:00Z');
   });
 
+  it('should cascade a timezone reset sent as an explicit `undefined`', () => {
+    const eventA = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('Europe/Paris')
+      .span('2025-07-03T13:00:00', '2025-07-03T14:00:00')
+      .toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z')
+      .toProcessed();
+
+    // The store drops the property: 14:00 Paris (12:00 UTC) now reads as 14:00 UTC.
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'a', timezone: undefined }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expectDates(result[0], '2025-07-03T14:00:00Z', '2025-07-03T15:00:00Z');
+  });
+
+  it('should return dates the store serializes to the clamped wall time after a timezone change', () => {
+    const eventA = EventBuilder.new()
+      .id('a')
+      .span('2025-07-03T13:00:00Z', '2025-07-03T14:00:00Z')
+      .toProcessed();
+    const eventB = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('America/New_York')
+      .span('2025-07-03T12:00:00', '2025-07-03T13:00:00')
+      .toProcessed();
+
+    // 12:00 wall time read as UTC lands before a's end, so b is clamped to 14:00 UTC.
+    // The store still serializes the entry in New York, so the returned instant is the
+    // one whose New York wall time is 14:00.
+    const result = runCascade(
+      [eventA, eventB],
+      [fsDependency('a', 'b')],
+      [{ id: 'b', timezone: 'UTC' }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(newYorkDate('2025-07-03T14:00:00')),
+    );
+    expect(adapter.getTime(result[0].end!)).to.equal(
+      adapter.getTime(newYorkDate('2025-07-03T15:00:00')),
+    );
+  });
+
   it('should push the successors of a seed sitting on a cycle, with a dev warning', () => {
     // The cycle is broken at the seed, so b is still pushed — and the bad data warns.
     const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();

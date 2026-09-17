@@ -1,6 +1,7 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
+  SchedulerEvent,
   SchedulerEventId,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
@@ -100,6 +101,12 @@ export function computeAutoSchedulingCascade(
   const startResizedSeeds = new Set<SchedulerEventId>();
   // Events whose end moves later in this pass; only these push their successors.
   const advancedIds = new Set<SchedulerEventId>();
+  // Seeds whose entry changes the data timezone: their emitted dates go through the
+  // store's serialization in the old timezone.
+  const timezoneChanges = new Map<
+    SchedulerEventId,
+    { model: SchedulerEvent; dataTimezone: TemporalTimezone; nextTimezone: TemporalTimezone }
+  >();
 
   // Whole-entry last-wins per id, mirroring the store's fold.
   const lastEntryById = new Map<SchedulerEventId, SchedulerEventUpdatedProperties>();
@@ -122,7 +129,8 @@ export function computeAutoSchedulingCascade(
     }
     const model = processedEvent.modelInBuiltInFormat;
     const dataTimezone = model.timezone ?? 'default';
-    const nextTimezone = entry.timezone ?? dataTimezone;
+    // An explicit `undefined` clears the property in the store (back to 'default').
+    const nextTimezone = 'timezone' in entry ? (entry.timezone ?? 'default') : dataTimezone;
     if (
       entry.start == null &&
       entry.end == null &&
@@ -130,6 +138,9 @@ export function computeAutoSchedulingCascade(
       nextTimezone === dataTimezone
     ) {
       continue;
+    }
+    if (nextTimezone !== dataTimezone) {
+      timezoneChanges.set(entry.id, { model, dataTimezone, nextTimezone });
     }
     const allDay = entry.allDay ?? processedEvent.allDay ?? false;
     // Mirrors the store: entries are serialized in the data timezone
@@ -228,7 +239,7 @@ export function computeAutoSchedulingCascade(
     const shifted = computeShift(eventId);
     if (shifted !== null) {
       newDates.set(eventId, shifted);
-      cascaded.push({ id: eventId, start: shifted.start, end: shifted.end });
+      cascaded.push({ id: eventId, ...toEntryDates(eventId, shifted) });
     }
     const settled = newDates.get(eventId);
     if (
@@ -265,6 +276,25 @@ export function computeAutoSchedulingCascade(
 
   function isFinishToStart(dependency: SchedulerDependency) {
     return dependency.type === 'FinishToStart';
+  }
+
+  // Inverse of `resolveEntryDate` for a seed changing timezone: the store serializes the
+  // entry in the old timezone and the model is then read in the new one, so the entry
+  // carries the instant whose old-zone wall time is the intended new-zone wall time.
+  function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
+    const timezoneChange = timezoneChanges.get(eventId);
+    if (timezoneChange === undefined) {
+      return { start: dates.start, end: dates.end };
+    }
+    const { model, dataTimezone, nextTimezone } = timezoneChange;
+    const encode = (value: TemporalSupportedObject, modelString: string) =>
+      resolveEventDate(
+        dateToEventString(adapter, value, modelString, nextTimezone),
+        dataTimezone,
+        adapter,
+        eventId,
+      );
+    return { start: encode(dates.start, model.start), end: encode(dates.end, model.end) };
   }
 
   function resolveCurrentDates(eventId: SchedulerEventId): ResolvedDates | null {

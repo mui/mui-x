@@ -211,6 +211,59 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(successor.start).to.equal('2025-07-06T00:00:00');
       expect(successor.end).to.equal('2025-07-06T23:59:59');
     });
+
+    it('should emit the clamped dates in the new timezone after a timezone change', () => {
+      const onEventsChange = vi.fn();
+      const predecessor = EventBuilder.new()
+        .id('a')
+        .span('2025-07-03T13:00:00Z', '2025-07-03T14:00:00Z')
+        .build();
+      const newYorkB = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('America/New_York')
+        .span('2025-07-03T12:00:00', '2025-07-03T13:00:00')
+        .build();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, events: [predecessor, newYorkB], onEventsChange },
+        adapter,
+      );
+
+      // 12:00 wall time now reads as UTC, before a's end: clamped to 14:00 UTC.
+      store.updateEvent({ id: 'b', timezone: 'UTC' });
+
+      const events: SchedulerEvent[] = onEventsChange.mock.calls[0][0];
+      const emittedB = events.find((event) => event.id === 'b')!;
+      expect(emittedB.timezone).to.equal('UTC');
+      expect(emittedB.start).to.equal('2025-07-03T14:00:00');
+      expect(emittedB.end).to.equal('2025-07-03T15:00:00');
+    });
+
+    it('should cascade a timezone reset', () => {
+      const onEventsChange = vi.fn();
+      const parisA = EventBuilder.new()
+        .id('a')
+        .withDataTimezone('Europe/Paris')
+        .span('2025-07-03T13:00:00', '2025-07-03T14:00:00')
+        .build();
+      const successor = EventBuilder.new()
+        .id('b')
+        .span('2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z')
+        .build();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, events: [parisA, successor], onEventsChange },
+        adapter,
+      );
+
+      // 14:00 Paris = 12:00 UTC; read in the default (UTC) timezone it ends at 14:00 UTC.
+      store.updateEvent({ id: 'a', timezone: undefined });
+
+      const events: SchedulerEvent[] = onEventsChange.mock.calls[0][0];
+      const emittedA = events.find((event) => event.id === 'a')!;
+      const emittedB = events.find((event) => event.id === 'b')!;
+      expect(emittedA).not.to.have.property('timezone');
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T14:00:00Z')));
+      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T15:00:00Z')));
+    });
   });
 
   describe('read-only veto', () => {
