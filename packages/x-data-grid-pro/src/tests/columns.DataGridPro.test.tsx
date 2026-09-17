@@ -35,11 +35,11 @@ describe('<DataGridPro /> - Columns', () => {
     columns: [{ field: 'brand' }],
   };
 
-  function Test(props: Partial<DataGridProProps> & { width?: number; height?: number }) {
+  function Test(props: Partial<DataGridProProps> & { width?: number; wrapperHeight?: number }) {
     apiRef = useGridApiRef();
-    const { width = 300, height = 500, ...otherProps } = props;
+    const { width = 300, wrapperHeight = 500, ...otherProps } = props;
     return (
-      <div style={{ width, height }}>
+      <div style={{ width, height: wrapperHeight }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...otherProps} />
       </div>
     );
