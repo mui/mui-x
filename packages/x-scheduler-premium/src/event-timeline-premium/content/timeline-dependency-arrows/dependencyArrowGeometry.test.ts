@@ -5,6 +5,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import {
   getOccurrencesFromEvents,
+  getTimelineAxisDurationMs,
   computeElementPositionInCollection,
 } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
@@ -76,6 +77,7 @@ function buildResolver(parameters: {
     resources: parameters.resources,
     rowPositions: parameters.rowPositions,
     axis: parameters.axis ?? FULL_DAY_AXIS,
+    durationMs: getTimelineAxisDurationMs(adapter, parameters.axis ?? FULL_DAY_AXIS),
     eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
     laneMetrics: LANE_METRICS,
   });
@@ -786,6 +788,7 @@ describe('dependencyArrowGeometry', () => {
         resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
         rowPositions: [0],
         axis: FULL_DAY_AXIS,
+        durationMs: getTimelineAxisDurationMs(adapter, FULL_DAY_AXIS),
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
         endpointIds: new Set(['event-a']),

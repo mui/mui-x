@@ -7,10 +7,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { getTabbableDescendants } from '@mui/x-internals/domUtils';
-import {
-  computeElementPositionInCollection,
-  getTimelineAxisDurationMs,
-} from '@mui/x-scheduler-internals/internals';
+import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 
 type ResourceWithOccurrences = {
@@ -37,21 +34,27 @@ export function useEventTabNavigation(params: {
   resources: readonly ResourceWithOccurrences[];
   scrollerRef: React.RefObject<HTMLDivElement | null>;
   axis: TimelineAxis;
+  durationMs: number;
   tickCount: number;
   tickWidth: number;
   titleColumnWidth: number;
 }) {
-  const { adapter, resources, scrollerRef, axis, tickCount, tickWidth, titleColumnWidth } = params;
+  const {
+    adapter,
+    resources,
+    scrollerRef,
+    axis,
+    durationMs,
+    tickCount,
+    tickWidth,
+    titleColumnWidth,
+  } = params;
 
   const pendingFocusRef = React.useRef<{
     key: string;
     resourceId: string;
     direction: 1 | -1;
   } | null>(null);
-
-  // Map an axis offset into [0, 1] of the events area, matching the rendered
-  // geometry (a trimmed hour window compresses the days).
-  const totalMs = React.useMemo(() => getTimelineAxisDurationMs(adapter, axis), [adapter, axis]);
 
   const eventsTotalWidth = tickCount * tickWidth;
 
@@ -60,7 +63,7 @@ export function useEventTabNavigation(params: {
       start: occurrence.displayTimezone.start,
       end: occurrence.displayTimezone.end,
       collection: axis,
-      durationMs: totalMs,
+      durationMs,
     });
     return { fractionStart: position, fractionEnd: position + duration };
   });
