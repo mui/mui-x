@@ -1,6 +1,9 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
-import { getOccurrencesFromEvents } from '@mui/x-scheduler-internals/internals';
+import {
+  getOccurrencesFromEvents,
+  getTimelineAxisDurationMs,
+} from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerDependency,
@@ -76,6 +79,7 @@ export function buildResolver(parameters: {
     resources: parameters.resources,
     rowPositions: parameters.rowPositions,
     axis: parameters.axis ?? fullDayAxis,
+    durationMs: getTimelineAxisDurationMs(adapter, parameters.axis ?? fullDayAxis),
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,
     eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
     laneMetrics,

@@ -196,15 +196,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
 
   const inBoundOccurrences = day.withPosition.filter((o) => o.position.index <= maxEvents);
-  const overflowOccurrences = day.withPosition.filter((o) => o.position.index > maxEvents);
+  const hasOverflow = inBoundOccurrences.length < day.withPosition.length;
 
-  const visibleOccurrences =
-    overflowOccurrences.length > 0
-      ? inBoundOccurrences.slice(0, maxEvents - 1)
-      : inBoundOccurrences;
+  const visibleOccurrences = hasOverflow
+    ? inBoundOccurrences.slice(0, maxEvents - 1)
+    : inBoundOccurrences;
 
-  const hiddenCount =
-    overflowOccurrences.length + (inBoundOccurrences.length - visibleOccurrences.length);
+  const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>

@@ -26,22 +26,22 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "eventsource-parser": "^3.1.1",
+    "eventsource-parser": "^4.1.0",
     "p-queue": "^9.3.3"
   },
   "peerDependencies": {
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@types/node": "22.20.1",
+    "@types/node": "22.20.2",
     "rimraf": "catalog:",
     "vitest": "catalog:",
-    "zod": "4.5.4"
+    "zod": "4.6.4"
   },
   "exports": {
     ".": "./src/index.ts"
   },
   "engines": {
-    "node": ">=20.19"
+    "node": ">=22.12"
   }
 }

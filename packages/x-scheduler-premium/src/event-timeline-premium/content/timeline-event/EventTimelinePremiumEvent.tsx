@@ -4,16 +4,31 @@ import { styled } from '@mui/material/styles';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
+import reactMajor from '@mui/x-internals/reactMajor';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
-import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
+import {
+  EventDragPreview,
+  getPaletteVariants,
+  useSchedulerSlots,
+} from '@mui/x-scheduler/internals';
+import type {
+  EventTimelinePremiumSlots,
+  EventTimelinePremiumSlotProps,
+} from '../../../models/slots';
 import type { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
+
+// React 18 drops `inert={true}` as an unknown boolean attribute and React 19 drops `inert=""`.
+const INERT_PROPS = (reactMajor >= 19 ? { inert: true } : { inert: '' }) as { inert?: boolean };
 
 const ARROW_DEPTH = 8; // px - depth of the chevron point
 const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
@@ -161,6 +176,10 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const { classes } = useEventTimelinePremiumStyledContext();
+  const { slots, slotProps } = useSchedulerSlots<
+    EventTimelinePremiumSlots,
+    EventTimelinePremiumSlotProps
+  >();
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(
@@ -177,9 +196,22 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     eventTimelinePremiumDependencySelectors.activeSourcesForTarget,
     occurrence.id,
   );
+  const rowResource = useStore(store, schedulerResourceSelectors.processedResource, resourceId);
 
   // Feature hooks
   const id = useId(idProp);
+
+  const EventContent = slots.timelineEventContent;
+  const content = EventContent ? (
+    <EventContent
+      occurrence={occurrence}
+      resource={rowResource!}
+      variant={variant}
+      {...slotProps.timelineEventContent}
+    />
+  ) : (
+    occurrence.title
+  );
 
   const sharedProps = {
     id,
@@ -201,11 +233,13 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       <TimelineGrid.EventPlaceholder
         render={<EventTimelinePremiumEventRoot />}
         aria-hidden={true}
+        // The slot content is a preview here, so it must not take the focus.
+        {...INERT_PROPS}
         {...sharedProps}
         className={clsx(sharedProps.className, classes.eventPlaceholder)}
       >
         <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
-          {occurrence.title}
+          {content}
         </EventTimelinePremiumEventLinesClamp>
         {isRecurring && (
           <EventTimelinePremiumEventRecurringIcon
@@ -236,7 +270,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         />
       )}
       <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
-        {occurrence.title}
+        {content}
       </EventTimelinePremiumEventLinesClamp>
       {dependencySources.length > 0 && (
         // `aria-hidden` keeps the description out of the name-from-content computed
