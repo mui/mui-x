@@ -2,17 +2,14 @@ import type { DeploySucceededEvent } from '@netlify/types';
 
 const DEPLOY_PREVIEW_CONTEXT = 'deploy-preview';
 
-// `deploy.branch` is just the head branch name (not a PR ref), and the old
-// `review_url` field this replaced no longer exists. Deploy Preview URLs are
-// hostnamed `deploy-preview-<n>--<site>.netlify.app` (documented at
-// https://docs.netlify.com/deploy/deploy-overview/), so the PR number can be
-// read straight off the deploy's own URL instead.
+// Uses `permalinkUrl` which is per-deploy and hostnamed `deploy-preview-<n>--<site>`
+// for PR previews (https://docs.netlify.com/deploy/deploy-overview/).
 const PREVIEW_URL_PR_RE = /^deploy-preview-(\d+)--/;
 
-function findPrNumber(sslUrl: URL): string {
-  const match = PREVIEW_URL_PR_RE.exec(sslUrl.hostname);
+function findPrNumber(deployURL: URL): string {
+  const match = PREVIEW_URL_PR_RE.exec(deployURL.hostname);
   if (!match) {
-    throw new Error(`Could not find a PR number in deploy URL: ${sslUrl.href}`);
+    throw new Error(`Could not find a PR number in deploy URL: ${deployURL.href}`);
   }
   return match[1];
 }
@@ -25,25 +22,26 @@ export default {
       return;
     }
 
-    let deploySslUrl: URL;
+    let deployPermalinkUrl: URL;
     try {
-      deploySslUrl = new URL(deploy.sslUrl);
+      deployPermalinkUrl = new URL(deploy.permalinkUrl);
     } catch {
-      throw new Error(`Invalid sslUrl: ${deploy.sslUrl}`);
+      throw new Error(`Invalid permalinkUrl: ${deploy.permalinkUrl}`);
     }
-    if (deploySslUrl.protocol !== 'https:') {
-      throw new Error(`Expected an https sslUrl, got: ${deploy.sslUrl}`);
+    if (deployPermalinkUrl.protocol !== 'https:') {
+      throw new Error(`Expected an https permalinkUrl, got: ${deploy.permalinkUrl}`);
     }
 
-    const prNumber = findPrNumber(deploySslUrl);
+    const prNumber = findPrNumber(deployPermalinkUrl);
 
     // eslint-disable-next-line no-console
     console.info(`PR:`, prNumber);
     // eslint-disable-next-line no-console
-    console.info(`url:`, deploySslUrl.href);
+    console.info(`url:`, deployPermalinkUrl.href);
 
     // for more details > https://circleci.com/docs/2.0/api-developers-guide/#
     // Repo is hardcoded: this function is only ever notified about mui/mui-x deploys.
+    // So no need to parse it from any field.
     await fetch(`https://circleci.com/api/v2/project/gh/mui/mui-x/pipeline`, {
       method: 'POST',
       headers: {
@@ -57,7 +55,7 @@ export default {
         parameters: {
           // the parameters defined in .circleci/config.yml
           workflow: 'e2e-website', // name of the workflow
-          'e2e-base-url': deploySslUrl.href, // deploy preview url
+          'e2e-base-url': deployPermalinkUrl.href, // deploy preview url
         },
       }),
     });
