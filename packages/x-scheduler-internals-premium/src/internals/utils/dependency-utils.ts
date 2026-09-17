@@ -1,5 +1,7 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
+import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   SchedulerEventId,
@@ -11,6 +13,7 @@ import type {
   SchedulerDependenciesState,
   SchedulerDependencyId,
   SchedulerDependencyEventRejectionReason,
+  SchedulerDependencyLagUnit,
   SchedulerDependencyType,
 } from '../../models';
 
@@ -44,6 +47,57 @@ export function getDependencyEdges(type: SchedulerDependencyType): SchedulerDepe
  */
 export function isDependencyType(type: unknown): type is SchedulerDependencyType {
   return typeof type === 'string' && Object.hasOwn(DEPENDENCY_EDGES, type);
+}
+
+const DEPENDENCY_LAG_ADDERS: Record<
+  SchedulerDependencyLagUnit,
+  (adapter: Adapter, date: TemporalSupportedObject, amount: number) => TemporalSupportedObject
+> = {
+  minute: (adapter, date, amount) => adapter.addMinutes(date, amount),
+  hour: (adapter, date, amount) => adapter.addHours(date, amount),
+  day: (adapter, date, amount) => adapter.addDays(date, amount),
+  week: (adapter, date, amount) => adapter.addWeeks(date, amount),
+};
+
+/**
+ * Whether the value is one of the supported lag units.
+ */
+export function isDependencyLagUnit(unit: unknown): unit is SchedulerDependencyLagUnit {
+  return typeof unit === 'string' && Object.hasOwn(DEPENDENCY_LAG_ADDERS, unit);
+}
+
+export interface SchedulerDependencyLag {
+  amount: number;
+  unit: SchedulerDependencyLagUnit;
+}
+
+/**
+ * The lag of a dependency as the engine applies it: days by default, and no lag at all
+ * for a negative or non-finite amount or an unknown unit.
+ */
+export function getDependencyLag(
+  dependency: Pick<SchedulerDependency, 'lag' | 'lagUnit'>,
+): SchedulerDependencyLag {
+  const unit = dependency.lagUnit ?? 'day';
+  const amount = dependency.lag ?? 0;
+  if (!isDependencyLagUnit(unit) || !Number.isFinite(amount) || amount <= 0) {
+    return { amount: 0, unit: 'day' };
+  }
+  return { amount, unit };
+}
+
+/**
+ * Adds a dependency lag to a date, in the timezone of the date.
+ */
+export function addDependencyLag(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  lag: SchedulerDependencyLag,
+): TemporalSupportedObject {
+  if (lag.amount === 0) {
+    return date;
+  }
+  return DEPENDENCY_LAG_ADDERS[lag.unit](adapter, date, lag.amount);
 }
 
 /**

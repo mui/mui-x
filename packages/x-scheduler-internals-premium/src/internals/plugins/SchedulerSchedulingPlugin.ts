@@ -29,6 +29,7 @@ import {
   classifyDependencyEvent,
   groupRetainedDependenciesBySource,
   isDependencyReadOnly,
+  isDependencyLagUnit,
   isDependencyType,
 } from '../utils/dependency-utils';
 
@@ -260,6 +261,18 @@ export class SchedulerSchedulingPlugin<
         warnOnce([
           `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown type "${String(dependency.type)}".`,
           'It is kept in the data but ignored by the timeline.',
+        ]);
+      }
+      if (dependency.lag != null && dependency.lag < 0) {
+        warnOnce([
+          `MUI X Scheduler: The dependency "${String(dependency.id)}" has a negative lag (${dependency.lag}).`,
+          'Lead (negative lag) is not supported yet, so the lag is treated as 0.',
+        ]);
+      }
+      if (dependency.lagUnit != null && !isDependencyLagUnit(dependency.lagUnit)) {
+        warnOnce([
+          `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown lag unit "${String(dependency.lagUnit)}".`,
+          'Its lag is ignored.',
         ]);
       }
       for (const eventId of [dependency.source, dependency.target]) {

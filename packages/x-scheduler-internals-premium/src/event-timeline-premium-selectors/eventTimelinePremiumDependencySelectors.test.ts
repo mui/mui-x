@@ -142,6 +142,41 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(eventTimelinePremiumDependencySelectors.activeModelList(state!)).to.deep.equal([DEP_1]);
   });
 
+  it('should keep a dependency with a negative lag active, with a dev warning', () => {
+    let state: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
+    const lagged: SchedulerDependency = { ...DEP_1, id: 'dep-lag', lag: -2 };
+    expect(() => {
+      state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        dependencies: [lagged],
+      });
+    }).toWarnDev(['MUI X Scheduler: The dependency "dep-lag" has a negative lag (-2).']);
+
+    expect(eventTimelinePremiumDependencySelectors.activeModelList(state!)).to.deep.equal([lagged]);
+  });
+
+  it('should keep a dependency with an unknown lag unit active, with a dev warning', () => {
+    let state: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
+    const lagged: SchedulerDependency = {
+      ...DEP_1,
+      id: 'dep-lag',
+      lag: 2,
+      lagUnit: 'fortnight' as any,
+    };
+    expect(() => {
+      state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        dependencies: [lagged],
+      });
+    }).toWarnDev([
+      'MUI X Scheduler: The dependency "dep-lag" has the unknown lag unit "fortnight".',
+    ]);
+
+    expect(eventTimelinePremiumDependencySelectors.activeModelList(state!)).to.deep.equal([lagged]);
+  });
+
   it('should group the source event titles and dependency types by target event id', () => {
     const state = getState();
 

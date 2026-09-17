@@ -10,6 +10,7 @@ import { dateToEventString, normalizeAllDayBounds } from '@mui/x-scheduler-inter
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerDependency } from '../../models';
+import { addDependencyLag, getDependencyEdges, getDependencyLag } from './dependency-utils';
 
 export interface ComputeAutoSchedulingCascadeParameters {
   adapter: Adapter;
@@ -46,9 +47,14 @@ interface ResolvedDates {
   allDay: boolean;
 }
 
+interface Bound {
+  date: TemporalSupportedObject;
+  timestamp: number;
+}
+
 export interface AutoSchedulingCascadeResult {
   /**
-   * The extra `{ id, start, end }` updates restoring the FS constraints.
+   * The extra `{ id, start, end }` updates restoring the dependency constraints.
    */
   updated: SchedulerEventUpdatedProperties[];
   /**
@@ -59,21 +65,24 @@ export interface AutoSchedulingCascadeResult {
 }
 
 /**
- * Computes the Finish-to-Start cascade for an `updateEvents` batch: the extra
- * `{ id, start, end }` updates restoring `successor.start >= predecessor.end`, transitively.
+ * Computes the dependency cascade for an `updateEvents` batch: the extra
+ * `{ id, start, end }` updates restoring the constraints, transitively.
+ *
+ * Each dependency bounds one edge of the successor by one edge of the predecessor plus
+ * the lag (FS: `start >= pred.end`, SS: `start >= pred.start`, FF: `end >= pred.end`,
+ * SF: `end >= pred.start`), the lag being added in the successor's timezone.
  *
  * Push-only: events only move later, and pre-existing violations stay as-is. A seed whose
  * entry moves `start` is being placed by the user and is clamped forward by all its
- * predecessors; everything else is pushed only by predecessors whose end advances in the
- * same batch. A `timezone` change moves the effective dates of wall-time events.
- * Timed events keep their duration (a start resize keeps its end instead), all-day events
- * shift by whole days, and a read-only event that would need to move is reported in
- * `blocked` so the caller rejects the batch.
+ * predecessors; everything else is pushed only by predecessors whose bounding edge
+ * advances in the same batch. A `timezone` change moves the effective dates of wall-time
+ * events. Timed events keep their duration (a start resize keeps its end instead, unless
+ * the end itself is bound), all-day events shift by whole days, and a read-only event that
+ * would need to move is reported in `blocked` so the caller rejects the batch.
  *
  * Kahn pass over the subgraph reachable from the seeds. Cycles in the props data warn in
  * dev: a seedless cycle stays unmoved, a cycle through a seed is broken at that seed.
  * Only loaded events take part: with lazy loading, an unfetched successor is not pushed.
- * Only Finish-to-Start dependencies take part: the other types have no scheduling rule yet.
  */
 export function computeAutoSchedulingCascade(
   parameters: ComputeAutoSchedulingCascadeParameters,
@@ -99,8 +108,10 @@ export function computeAutoSchedulingCascade(
   // Repositioned seeds whose entry left `end` where it is (a start resize): the clamp
   // keeps their end.
   const startResizedSeeds = new Set<SchedulerEventId>();
-  // Events whose end moves later in this pass; only these push their successors.
-  const advancedIds = new Set<SchedulerEventId>();
+  // Events whose start / end moves later in this pass; only these push the successors
+  // bound by that edge.
+  const advancedStartIds = new Set<SchedulerEventId>();
+  const advancedEndIds = new Set<SchedulerEventId>();
   // Seeds whose entry changes the data timezone: their emitted dates go through the
   // store's serialization in the old timezone.
   const timezoneChanges = new Map<
@@ -193,7 +204,7 @@ export function computeAutoSchedulingCascade(
     const eventId = discovery.pop()!;
     for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
       const { target } = dependency;
-      if (!isFinishToStart(dependency) || deleted.has(target) || becomesRecurring.has(target)) {
+      if (deleted.has(target) || becomesRecurring.has(target)) {
         continue;
       }
       inDegree.set(target, (inDegree.get(target) ?? 0) + 1);
@@ -242,16 +253,19 @@ export function computeAutoSchedulingCascade(
       cascaded.push({ id: eventId, ...toEntryDates(eventId, shifted) });
     }
     const settled = newDates.get(eventId);
-    if (
-      settled !== undefined &&
-      settled.endTimestamp > resolveCurrentDates(eventId)!.endTimestamp
-    ) {
-      advancedIds.add(eventId);
+    if (settled !== undefined) {
+      const current = resolveCurrentDates(eventId)!;
+      if (settled.startTimestamp > current.startTimestamp) {
+        advancedStartIds.add(eventId);
+      }
+      if (settled.endTimestamp > current.endTimestamp) {
+        advancedEndIds.add(eventId);
+      }
     }
 
     for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
       const { target } = dependency;
-      if (!isFinishToStart(dependency) || !members.has(target)) {
+      if (!members.has(target)) {
         continue;
       }
       const remaining = inDegree.get(target)! - 1;
@@ -273,10 +287,6 @@ export function computeAutoSchedulingCascade(
   }
 
   return { updated: cascaded, blocked };
-
-  function isFinishToStart(dependency: SchedulerDependency) {
-    return dependency.type === 'FinishToStart';
-  }
 
   // Inverse of `resolveEntryDate` for a seed changing timezone: the store serializes the
   // entry in the old timezone and the model is then read in the new one, so the entry
@@ -318,43 +328,52 @@ export function computeAutoSchedulingCascade(
   }
 
   function computeShift(eventId: SchedulerEventId): ResolvedDates | null {
+    const base = newDates.get(eventId) ?? resolveCurrentDates(eventId);
+    if (base === null) {
+      // Not loaded (lazy loading): nothing to move.
+      return null;
+    }
     // A repositioned seed is being placed by the user: every active predecessor
-    // constrains it. Anything else is pushed only by predecessors whose end advanced.
+    // constrains it. Anything else is pushed only by predecessors whose bounding edge
+    // advanced.
     const constrainedByAll = repositionedSeeds.has(eventId);
-    let required: ResolvedDates | null = null;
+    const timezone = adapter.getTimezone(base.start);
+    let requiredStart: Bound | null = null;
+    let requiredEnd: Bound | null = null;
     for (const dependency of activeDependenciesByTarget.get(eventId) ?? []) {
       const sourceId = dependency.source;
-      if (
-        !isFinishToStart(dependency) ||
-        sourceId === eventId ||
-        deleted.has(sourceId) ||
-        becomesRecurring.has(sourceId)
-      ) {
+      if (sourceId === eventId || deleted.has(sourceId) || becomesRecurring.has(sourceId)) {
         continue;
       }
+      const edges = getDependencyEdges(dependency.type);
+      const advancedIds = edges.source === 'end' ? advancedEndIds : advancedStartIds;
       let sourceDates: ResolvedDates | null = null;
       if (advancedIds.has(sourceId)) {
         sourceDates = newDates.get(sourceId)!;
       } else if (constrainedByAll) {
         sourceDates = newDates.get(sourceId) ?? resolveCurrentDates(sourceId);
       }
-      if (
-        sourceDates !== null &&
-        (required === null || sourceDates.endTimestamp > required.endTimestamp)
-      ) {
-        required = sourceDates;
+      if (sourceDates === null) {
+        continue;
+      }
+      const reference = adapter.setTimezone(
+        edges.source === 'end' ? sourceDates.end : sourceDates.start,
+        timezone,
+      );
+      const date = addDependencyLag(adapter, reference, getDependencyLag(dependency));
+      const bound: Bound = { date, timestamp: adapter.getTime(date) };
+      if (edges.target === 'start') {
+        if (requiredStart === null || bound.timestamp > requiredStart.timestamp) {
+          requiredStart = bound;
+        }
+      } else if (requiredEnd === null || bound.timestamp > requiredEnd.timestamp) {
+        requiredEnd = bound;
       }
     }
-    if (required === null) {
-      return null;
-    }
 
-    const base = newDates.get(eventId) ?? resolveCurrentDates(eventId);
-    if (base === null) {
-      // Not loaded (lazy loading): nothing to move.
-      return null;
-    }
-    if (base.startTimestamp >= required.endTimestamp) {
+    const startViolated = requiredStart !== null && base.startTimestamp < requiredStart.timestamp;
+    const endViolated = requiredEnd !== null && base.endTimestamp < requiredEnd.timestamp;
+    if (!startViolated && !endViolated) {
       return null;
     }
     if (isEventReadOnly(eventId)) {
@@ -362,18 +381,21 @@ export function computeAutoSchedulingCascade(
       return null;
     }
 
+    // A start resize keeps its end as long as the clamped start stays before it and the
+    // end itself is not the violated edge.
+    const keepsEnd = (newStartTimestamp: number) =>
+      startResizedSeeds.has(eventId) &&
+      newStartTimestamp < base.endTimestamp &&
+      (requiredEnd === null || base.endTimestamp >= requiredEnd.timestamp);
+
     if (base.allDay) {
-      // Minimal whole-day shift; the full-day count floors, so a DST day may need one more.
-      let dayCount = Math.max(1, adapter.differenceInDays(required.end, base.start));
-      while (adapter.getTime(adapter.addDays(base.start, dayCount)) < required.endTimestamp) {
-        dayCount += 1;
-      }
+      const dayCount = Math.max(
+        requiredStart === null ? 0 : minimalDayShift(base.start, requiredStart),
+        requiredEnd === null ? 0 : minimalDayShift(base.end, requiredEnd),
+      );
       const newStart = adapter.addDays(base.start, dayCount);
       const newStartTimestamp = adapter.getTime(newStart);
-      const newEnd =
-        startResizedSeeds.has(eventId) && newStartTimestamp < base.endTimestamp
-          ? base.end
-          : adapter.addDays(base.end, dayCount);
+      const newEnd = keepsEnd(newStartTimestamp) ? base.end : adapter.addDays(base.end, dayCount);
       return {
         start: newStart,
         end: newEnd,
@@ -383,19 +405,29 @@ export function computeAutoSchedulingCascade(
       };
     }
 
-    // Wall-time serialization is second-resolution: landing on a fractional end (the
+    const duration = base.endTimestamp - base.startTimestamp;
+    let candidate = requiredStart;
+    if (requiredEnd !== null) {
+      const fromEnd = adapter.addMilliseconds(requiredEnd.date, -duration);
+      const fromEndTimestamp = adapter.getTime(fromEnd);
+      if (candidate === null || fromEndTimestamp > candidate.timestamp) {
+        candidate = { date: fromEnd, timestamp: fromEndTimestamp };
+      }
+    }
+    // A violated edge always leaves a candidate.
+    const candidateDate = candidate!.date;
+    // Wall-time serialization is second-resolution: landing on a fractional start (the
     // inclusive 23:59:59.999 of an all-day predecessor, or milliseconds in the data)
     // would write the successor early, so start on the next whole second.
-    const endMilliseconds = adapter.getMilliseconds(required.end);
+    const milliseconds = adapter.getMilliseconds(candidateDate);
     const newStart =
-      endMilliseconds === 0
-        ? required.end
-        : adapter.addMilliseconds(required.end, 1000 - endMilliseconds);
+      milliseconds === 0
+        ? candidateDate
+        : adapter.addMilliseconds(candidateDate, 1000 - milliseconds);
     const newStartTimestamp = adapter.getTime(newStart);
-    const newEnd =
-      startResizedSeeds.has(eventId) && newStartTimestamp < base.endTimestamp
-        ? base.end
-        : adapter.addMilliseconds(newStart, base.endTimestamp - base.startTimestamp);
+    const newEnd = keepsEnd(newStartTimestamp)
+      ? base.end
+      : adapter.addMilliseconds(newStart, duration);
     return {
       start: newStart,
       end: newEnd,
@@ -403,5 +435,15 @@ export function computeAutoSchedulingCascade(
       endTimestamp: adapter.getTime(newEnd),
       allDay: false,
     };
+  }
+
+  // Minimal whole-day shift bringing `edge` to `bound`; the full-day count floors, so a
+  // DST day may need one more.
+  function minimalDayShift(edge: TemporalSupportedObject, bound: Bound): number {
+    let dayCount = Math.max(0, adapter.differenceInDays(bound.date, edge));
+    while (adapter.getTime(adapter.addDays(edge, dayCount)) < bound.timestamp) {
+      dayCount += 1;
+    }
+    return dayCount;
   }
 }
