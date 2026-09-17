@@ -114,7 +114,6 @@ interface ResolutionSettings {
   adapter: Adapter;
   displayTimezone: TemporalTimezone;
   shouldEventRequireResource: boolean;
-  recurringEventsPlugin: ReturnType<typeof schedulerOtherSelectors.recurringEventsPlugin>;
   showRecurrence: boolean;
   recurrencePresets: ReturnType<typeof schedulerRecurringEventSelectors.presets>;
 }
@@ -137,23 +136,14 @@ export function FormContent(props: FormContentProps) {
   const store = useSchedulerStoreContext();
   const pushPlaceholder = usePushPlaceholder();
 
-  const canHaveMultipleResources = useStore(
-    store,
-    schedulerEventSelectors.canHaveMultipleResources,
-  );
-  const isCreating = useStore(store, schedulerOccurrencePlaceholderSelectors.isCreating);
-
-  const defaultRecurrencePresetKey = useStore(
-    store,
-    schedulerRecurringEventSelectors.defaultPresetKey,
-    occurrence.displayTimezone.rrule,
-    occurrence.displayTimezone.start,
-  );
-
   // Captured once per editing session, like `initialValues` below.
   // See `getResourceSelectionMode` for the creating-vs-editing rule.
   const resourceSelectionMode = useRefWithInit(() =>
-    getResourceSelectionMode(occurrence.resource, canHaveMultipleResources, isCreating),
+    getResourceSelectionMode(
+      occurrence.resource,
+      schedulerEventSelectors.canHaveMultipleResources(store.state),
+      schedulerOccurrencePlaceholderSelectors.isCreating(store.state),
+    ),
   ).current;
 
   // Built once: the provider ignores later values anyway.
@@ -196,7 +186,11 @@ export function FormContent(props: FormContentProps) {
       resourceIds: getEventResourceIds(occurrence.resource),
       allDay: !!occurrence.allDay,
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
-      recurrenceSelection: defaultRecurrencePresetKey,
+      recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
+        store.state,
+        occurrence.displayTimezone.rrule,
+        occurrence.displayTimezone.start,
+      ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
         interval: base?.interval ?? 1,
@@ -231,7 +225,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
   // Selector hooks — only what the render itself needs; the submit continuation
   // reads its own `ResolutionSettings` snapshot instead of subscribing here.
-  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
   const shouldEventRequireResource = useStore(
     store,
@@ -253,10 +246,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       isSessionAliveRef.current = false;
     };
   }, []);
-  // The ref guards synchronous re-entry; the store's isSubmitting drives the
-  // action buttons without re-rendering the sections (a section re-render would
-  // churn its inline validator identities mid-validation).
-  const isSubmittingRef = React.useRef(false);
 
   // Dev companion to the submit-level blocks: a custom General tab can omit any
   // built-in section, leaving the stored error with no visible field.
@@ -323,7 +312,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (isSubmittingRef.current) {
+    if (formStore.state.isSubmitting) {
       return;
     }
 
@@ -339,7 +328,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       }
     }
 
-    isSubmittingRef.current = true;
     formStore.setSubmitting(true);
     try {
       let isValid: boolean;
@@ -371,7 +359,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         adapter: store.state.adapter,
         displayTimezone: schedulerOtherSelectors.displayTimezone(store.state),
         shouldEventRequireResource: schedulerOtherSelectors.shouldEventRequireResource(store.state),
-        recurringEventsPlugin: schedulerOtherSelectors.recurringEventsPlugin(store.state),
         showRecurrence: schedulerOtherSelectors.areRecurringEventsAvailable(store.state),
         recurrencePresets: schedulerRecurringEventSelectors.presets(
           store.state,
@@ -432,11 +419,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           end,
           rrule: rruleToSubmit,
         });
-      } else if (
-        current.showRecurrence &&
-        current.recurringEventsPlugin &&
-        occurrence.displayTimezone.rrule
-      ) {
+      } else if (current.showRecurrence && occurrence.displayTimezone.rrule) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
           store.state,
           occurrence.displayTimezone.rrule,
@@ -480,7 +463,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
       onClose();
     } finally {
-      isSubmittingRef.current = false;
       // A store write is safe after unmount, unlike the React state update it
       // replaced (React 17, still supported, warns on those).
       formStore.setSubmitting(false);
@@ -488,7 +470,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+    if (showRecurrence && occurrence.displayTimezone.rrule) {
       store.deleteRecurringEvent({
         occurrenceStart: occurrence.displayTimezone.start.value,
         eventId: occurrence.id,
