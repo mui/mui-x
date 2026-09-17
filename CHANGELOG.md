@@ -4,21 +4,23 @@
 
 <!-- generated comparing v9.13.0..master -->
 
-_Sep 16, 2026_
+_Sep 17, 2026_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 16 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Add Hebrew (he-IL) locale to the Scheduler
 - 📅 Scheduler time grid now opens at 7 AM by default, configurable with the new `initialScrollTime` prop
+- 🗓️ Auto-scheduling engine for finish-to-start dependencies in the Premium Event Timeline
+- 🧩 New content slots for the Event Timeline event block and resource title cell
 - ♿️ Charts announce the visible zoom range to screen readers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
 Special thanks go out to these community members for their valuable contributions:
-@eterry1388, @jamesDin, @kareem-ib, @mustafajw07
+@eterry1388, @jamesDin, @kareem-ib, @mateuseap, @mustafajw07
 
 The following team members contributed to this release:
-@arminmeh, @bernardobelchior, @brijeshb42, @hasdfa, @Janpot, @JCQuintas, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes
+@arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes
 
 ### Data Grid
 
@@ -26,6 +28,7 @@ The following team members contributed to this release:
 
 - [DataGrid] Do not crash on unmount when the document has no body (#23431) @eterry1388
 - [DataGrid] Fix `MissingRowIdError` on cell mousedown/mouseup after row removal (#23261) @kareem-ib
+- [DataGrid] Fix quick filter dropping a pending search on parser identity change (#23575) @michelengelen
 - [DataGrid] Keep overlays sticky in RTL mode (#23492) @arminmeh
 - [DataGrid] Prevent scroll area state update before mount (#23478) @michelengelen
 - [DataGrid] Remove `'menu'` role from the actions cell (#23437) @michelengelen
@@ -73,6 +76,7 @@ Same changes as in `@mui/x-charts-pro@9.14.0`, plus:
 #### `@mui/x-tree-view@9.14.0`
 
 - [tree view] Optimize lazy loading store writes for nested children (#23489) @noraleonte
+- [tree view] Prune stale children when replacing an item's children (#23598) @JCQuintas
 
 #### `@mui/x-tree-view-pro@9.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -103,19 +107,33 @@ Same changes as in `@mui/x-tree-view@9.14.0`.
 #### `@mui/x-scheduler@9.0.0-beta.12`
 
 - [l10n] Add Hebrew (he-IL) locale (#23577) @jamesDin
+- [scheduler] Add content slots for the Event Timeline event block and resource title cell (#23557) @rita-codes
 - [scheduler] Fix `onPreferencesChange` never being called on `EventCalendar` (#23568) @rita-codes
 - [scheduler] Fix flaky timeline observer absorb (#23523) @JCQuintas
 - [scheduler] Open the time grid at 7 AM by default and add `initialScrollTime` (#23594) @rita-codes
 - [scheduler] Pin sibling scheduler packages to exact versions (#23574) @rita-codes
+- [scheduler] Read form initialization settings without subscriptions (#23614) @flaviendelangle
 - [scheduler] Remove `dataSource` from the Community components (#23483) @mustafajw07
+- [scheduler] Remove redundant recurrence subscriptions (#23610) @flaviendelangle
+- [scheduler] Remove unused more-events popover count (#23619) @flaviendelangle
+- [scheduler] Remove unused refs (#23616) @flaviendelangle
+- [scheduler] Reuse precomputed timeline duration (#23620) @flaviendelangle
+- [scheduler] Reuse recurrence option labels (#23609) @flaviendelangle
+- [scheduler] Reuse recurrence presets for form drafts (#23615) @flaviendelangle
+- [scheduler] Simplify month-view overflow counting (#23617) @flaviendelangle
+- [scheduler] Use form store state to guard submissions (#23613) @flaviendelangle
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.12` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-scheduler@9.0.0-beta.12`.
+Same changes as in `@mui/x-scheduler@9.0.0-beta.12`, plus:
+
+- [scheduler-premium] Dependencies - Auto-scheduling engine (FS) (#23439) @rita-codes
 
 ### Docs
 
+- [DataGrid][docs] Fix "Apply filters on demand" demo (#23602) @mateuseap
 - [docs] Add recipe for getting the tree view's root DOM element via `ref` (#22941) @michelengelen
+- [docs][pickers] Mention Moment.js maintenance mode (#23601) @mateuseap
 
 ### Core
 
