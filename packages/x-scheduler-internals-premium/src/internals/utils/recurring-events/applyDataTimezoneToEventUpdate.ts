@@ -148,7 +148,7 @@ export function projectRRuleFromDisplayToData({
 
 /**
  * Maps a submitted selection back to the data timezone: a value the dialog read from the stored
- * rule returns its stored value, any other one is projected.
+ * rule returns every stored value it was read from, any other one is projected.
  */
 function mergeReadSelection<T>(
   submitted: T[],
@@ -156,14 +156,12 @@ function mergeReadSelection<T>(
   readValueOf: (storedValue: T) => T,
   projectValue: (submittedValue: T) => T,
 ): T[] {
-  const storedByReadValue = new Map<T, T>();
+  const storedByReadValue = new Map<T, T[]>();
   for (const storedValue of stored) {
     const readValue = readValueOf(storedValue);
-    if (!storedByReadValue.has(readValue)) {
-      storedByReadValue.set(readValue, storedValue);
-    }
+    storedByReadValue.set(readValue, [...(storedByReadValue.get(readValue) ?? []), storedValue]);
   }
   return Array.from(
-    new Set(submitted.map((value) => storedByReadValue.get(value) ?? projectValue(value))),
+    new Set(submitted.flatMap((value) => storedByReadValue.get(value) ?? [projectValue(value)])),
   );
 }

@@ -133,6 +133,29 @@ describe('applyDataTimezoneToEventUpdate', () => {
     });
   });
 
+  it('should keep every stored BYMONTHDAY read as the same day when the selection was left as read', () => {
+    // Stored on the 3rd and the 4th with a July 4 UTC start: the 4th is read as the 3rd from
+    // New York, so both collapse into one selected day. Editing only the count must keep both.
+    const originalEvent = utcJuly4AllDayBuilder()
+      .recurrent('MONTHLY', { byMonthDay: [3, 4] })
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+    expect(originalEvent.displayTimezone.rrule!.byMonthDay).to.deep.equal([3]);
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byMonthDay: [3], count: 5 },
+      },
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([
+      3, 4,
+    ]);
+  });
+
   it('should project a BYMONTHDAY anchored on the edited start instead of the stored one', () => {
     // July 4 00:00 UTC shows on July 3 in New York; edited to July 3 10:00 New York it is
     // July 3 14:00 UTC, so the 3rd picked against it stays the 3rd.
@@ -403,6 +426,30 @@ describe('applyDataTimezoneToEventUpdate', () => {
       byDay: ['1FR'],
       count: 5,
     });
+  });
+
+  it('should keep every stored ordinal BYDAY read as the same position when the selection was left as read', () => {
+    // Stored on 1FR and 1TH with a July 4 UTC start: 1FR is read as 1TH from New York, so
+    // both collapse into one selected position. Editing only the count must keep both.
+    const originalEvent = utcJuly4AllDayBuilder()
+      .recurrent('MONTHLY', { byDay: ['1FR', '1TH'] })
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+    expect(originalEvent.displayTimezone.rrule!.byDay).to.deep.equal(['1TH']);
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byDay: ['1TH' as const], count: 5 },
+      },
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byDay).to.deep.equal([
+      '1FR',
+      '1TH',
+    ]);
   });
 
   it('should keep an ordinal BYDAY not anchored on the start as is', () => {
