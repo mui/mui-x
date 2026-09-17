@@ -1,8 +1,7 @@
-import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { expectFieldValue } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DateField /> - Editing Keyboard', () => {
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {
@@ -291,7 +290,7 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -304,11 +303,11 @@ describe('<DateField /> - Editing Keyboard', () => {
       await view.user.keyboard('{Control>}a{/Control}');
 
       await view.user.keyboard('{Delete}');
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
     });
 
     it('should call `onChange` when clearing the first section', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -319,16 +318,16 @@ describe('<DateField /> - Editing Keyboard', () => {
       await view.selectSection('month');
 
       await view.user.keyboard('[Delete]');
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).to.equal(null);
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).to.equal(null);
 
       await view.user.keyboard('[ArrowRight][Delete]');
 
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
     });
 
     it('should not call `onChange` if the section is already empty', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -339,10 +338,10 @@ describe('<DateField /> - Editing Keyboard', () => {
       await view.selectSection('month');
 
       await view.user.keyboard('[Delete]');
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
 
       await view.user.keyboard('[Delete]');
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
     });
   });
 

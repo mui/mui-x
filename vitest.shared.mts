@@ -70,6 +70,12 @@ export default defineConfig({
     },
     // Required for some tests that contain early returns or conditional tests.
     passWithNoTests: true,
+    benchmark: {
+      // Benchmarks import source modules whose exports Vite's module runner wraps
+      // in getters. The resulting warning is advisory and `vitest-fail-on-console`
+      // turns it into a failure, so silence it.
+      suppressExportGetterWarnings: true,
+    },
     env: {
       NODE_ENV: 'test',
     },

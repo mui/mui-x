@@ -68,6 +68,8 @@ All other dialog features (editing title, dates, resources, colors, description,
 Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode.
 :::
 
+The General tab can be recomposed with built-in and custom sections through the `eventDialogGeneralTab` slot — see the [Event dialog component page](/x/react-scheduler/components/event-dialog/).
+
 ### Replace the dialog with your own UI
 
 Use the `onEventEditingStart` callback to intercept editing right before the built-in dialog opens.

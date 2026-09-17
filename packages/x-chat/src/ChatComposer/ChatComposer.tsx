@@ -2,21 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import {
-  ComposerRoot,
-  useChatVariant,
-  type ComposerRootProps,
-  type ChatAttachmentsConfig,
-  type ChatVariant,
-} from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { ComposerRoot, useChatVariant } from '@mui/x-chat-headless';
+import type { ComposerRootProps, ChatAttachmentsConfig, ChatVariant } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
-import {
-  chatComposerClasses,
-  useChatComposerUtilityClasses,
-  type ChatComposerClasses,
-} from './chatComposerClasses';
+import { chatComposerClasses, useChatComposerUtilityClasses } from './chatComposerClasses';
+import type { ChatComposerClasses } from './chatComposerClasses';
 import { ChatComposerTextArea } from './ChatComposerTextArea';
 import { ChatComposerToolbar } from './ChatComposerToolbar';
 import { ChatComposerSendButton } from './ChatComposerSendButton';

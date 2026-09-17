@@ -1,5 +1,5 @@
-import { spy } from 'sinon';
-import { screen, within, act } from '@mui/internal-test-utils';
+import * as React from 'react';
+import { screen, within, act, fireEvent } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { StandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
 import {
@@ -13,7 +13,12 @@ import {
   getResizeHandle,
 } from 'test/utils/scheduler';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
-import { describe, it, expect } from 'vitest';
+import type {
+  TimelineEventContentProps,
+  TimelineEventContentPropsOverrides,
+} from '@mui/x-scheduler-premium/models';
+import { vi, describe, it, expect } from 'vitest';
+import { getEventRow, mockAllEventRowBounds } from './dependencyTestUtils';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();
@@ -21,38 +26,13 @@ const marketing = ResourceBuilder.new().build();
 
 const resources: SchedulerResource[] = [engineering, design];
 
-/**
- * Returns the timeline event row for a given resource id.
- */
-function getEventRow(resourceId: string): HTMLElement {
-  const row = document.querySelector<HTMLElement>(
-    `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
-  );
-  if (!row) {
-    throw new Error(`Could not find event row for resource "${resourceId}"`);
-  }
-  return row;
-}
-
-/**
- * Applies mock bounds to all timeline event rows.
- */
-function mockAllEventRowBounds(width = 6720) {
-  const rows = document.querySelectorAll<HTMLElement>(
-    `.MuiEventTimeline-eventsCell[data-drop-target-for-element]`,
-  );
-  for (const row of rows) {
-    mockElementBounds(row, { left: 0, width, height: 40 });
-  }
-}
-
 describe('EventTimelinePremium - Drag and Drop', () => {
-  const { render } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
   it('should move an event to a different resource', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .title('Team Standup')
       .singleDay('2025-07-03T09:00:00Z', 60)
@@ -60,7 +40,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -87,13 +67,13 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].resource).to.equal(design.id);
   });
 
   it('should replace only the source resource when moving a multi-resource event to a different row', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .title('All Hands')
       .singleDay('2025-07-03T09:00:00Z', 60)
@@ -101,7 +81,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={[engineering, design, marketing]}
         events={[event]}
@@ -129,14 +109,14 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     // The engineering row was replaced by marketing; design is untouched.
     expect(updatedEvents[0].resource).to.deep.equal([marketing.id, design.id]);
   });
 
   it('should dedupe instead of duplicating the resource id when dropping onto a row the event already occupies', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .title('All Hands')
       .singleDay('2025-07-03T09:00:00Z', 60)
@@ -144,7 +124,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={[engineering, design]}
         events={[event]}
@@ -172,14 +152,14 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     // Engineering is dropped and design was already present: no duplicate entry.
     expect(updatedEvents[0].resource).to.deep.equal([design.id]);
   });
 
   it('should move an event to a different position on the same resource', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .title('Design Review')
       .singleDay('2025-07-03T09:00:00Z', 60)
@@ -187,7 +167,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .draggable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -215,15 +195,83 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     // The event should have moved to a different time
     const newStart = new Date(updatedEvents[0].start);
     expect(newStart.getUTCDate()).to.not.equal(3);
   });
 
+  it('should render the timelineEventContent slot in the drag placeholder', async () => {
+    function CustomEventContent(props: TimelineEventContentProps) {
+      return (
+        <span data-testid="custom-event-content" data-variant={props.variant}>
+          {props.occurrence.title}
+        </span>
+      );
+    }
+    const event = EventBuilder.new()
+      .title('Team Standup')
+      .singleDay('2025-07-03T09:00:00Z', 60)
+      .resource(engineering)
+      .draggable(true)
+      .build();
+
+    await renderSettled(
+      <EventTimelinePremium
+        resources={resources}
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
+        onEventsChange={() => {}}
+        slots={{
+          // The overrides interface is only populated through module augmentation on the consumer side.
+          timelineEventContent: CustomEventContent as React.ComponentType<
+            TimelineEventContentProps & TimelineEventContentPropsOverrides
+          >,
+        }}
+      />,
+    );
+
+    mockAllEventRowBounds();
+
+    const eventElement = screen.getByText('Team Standup');
+    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getEventRow(design.id),
+        sourceClientX: 160,
+        targetClientX: 160,
+        hold: true,
+      });
+      // pragmatic-drag-and-drop delivers `onDrag` on the next animation frame.
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+
+    try {
+      const placeholder = document.querySelector<HTMLElement>('.MuiEventTimeline-eventPlaceholder');
+      expect(placeholder).not.to.equal(null);
+      const content = within(placeholder!).getByTestId('custom-event-content');
+      expect(content.textContent).to.equal('Team Standup');
+      expect(content.getAttribute('data-variant')).to.equal('placeholder');
+      // The placeholder is a preview: its content is neither announced nor focusable.
+      expect(placeholder!.getAttribute('aria-hidden')).to.equal('true');
+      expect(placeholder!.hasAttribute('inert')).to.equal(true);
+    } finally {
+      // Finish the held drag even when an assertion fails, so it does not leak into the next test.
+      fireEvent.dragEnd(eventElement);
+    }
+
+    expect(document.querySelector('.MuiEventTimeline-eventPlaceholder')).to.equal(null);
+  });
+
   it('should resize an event end to a later time', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .title('Team Standup')
       .singleDay('2025-07-03T09:00:00Z', 60)
@@ -231,7 +279,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .resizable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -261,8 +309,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     // Start should remain unchanged
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(9);
     // End should have moved later
@@ -271,7 +319,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
   });
 
   it('should resize an event start to an earlier time', async () => {
-    const handleEventsChange = spy();
+    const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
       .title('Team Standup')
       .singleDay('2025-07-03T09:00:00Z', 60)
@@ -279,7 +327,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .resizable(true)
       .build();
 
-    render(
+    await renderSettled(
       <EventTimelinePremium
         resources={resources}
         events={[event]}
@@ -312,8 +360,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       });
     });
 
-    expect(handleEventsChange.callCount).to.equal(1);
-    const updatedEvents = handleEventsChange.firstCall.args[0];
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
     // Start should have moved earlier
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.not.equal(9);
     // End should remain unchanged
@@ -325,8 +373,11 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     // minutes. Rows are mocked at 2880px so 1px = 1 axis minute.
     const AXIS_WIDTH = 2880;
 
-    function renderTimeline(event: ReturnType<typeof EventBuilder.prototype.build>, spyFn: any) {
-      render(
+    async function renderTimeline(
+      event: ReturnType<typeof EventBuilder.prototype.build>,
+      spyFn: any,
+    ) {
+      const view = await renderSettled(
         <EventTimelinePremium
           resources={resources}
           events={[event]}
@@ -338,6 +389,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         />,
       );
       mockAllEventRowBounds(AXIS_WIDTH);
+      return view;
     }
 
     /**
@@ -359,7 +411,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     }
 
     it('should map a drop across the day seam through the compressed axis', async () => {
-      const handleEventsChange = spy();
+      const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
         .title('Team Standup')
         .singleDay('2025-07-03T10:00:00Z', 60)
@@ -367,7 +419,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .draggable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       // 10:00 sits 120 axis minutes after the first visible hour (8:00).
       const { element: eventElement, left } = mockEventBoundsFromRender('Team Standup');
@@ -387,15 +439,15 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         });
       });
 
-      expect(handleEventsChange.callCount).to.equal(1);
-      const updatedEvents = handleEventsChange.firstCall.args[0];
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
       const newStart = new Date(updatedEvents[0].start);
       expect(newStart.getUTCDate()).to.equal(4);
       expect(newStart.getUTCHours()).to.equal(10);
     });
 
     it('should resize the end of an event spanning the hidden gap without jumping', async () => {
-      const handleEventsChange = spy();
+      const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
         .title('Overnight Job')
         .span('2025-07-03T18:00:00Z', '2025-07-04T10:00:00Z')
@@ -403,7 +455,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .resizable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       // Rendered from axis minute 600 (18:00) with a 240 axis-minute span
       // (2h before the gap + 2h after it).
@@ -425,8 +477,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         });
       });
 
-      expect(handleEventsChange.callCount).to.equal(1);
-      const updatedEvents = handleEventsChange.firstCall.args[0];
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
       expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(18);
       const newEnd = new Date(updatedEvents[0].end);
       expect(newEnd.getUTCDate()).to.equal(4);
@@ -434,7 +486,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     });
 
     it('should shift a window-clipped start by the dragged amount instead of snapping it to the window edge', async () => {
-      const handleEventsChange = spy();
+      const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
         .title('Early Shift')
         .span('2025-07-03T07:00:00Z', '2025-07-03T18:00:00Z')
@@ -442,7 +494,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .draggable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       // The 07:00 start hides inside the hidden hours: the event renders clamped
       // to the window edge (axis minute 0).
@@ -461,14 +513,14 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         });
       });
 
-      expect(handleEventsChange.callCount).to.equal(1);
-      const updatedEvents = handleEventsChange.firstCall.args[0];
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
       expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(8);
       expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(19);
     });
 
     it('should not emit a change when the drag of a window-clipped event returns to its origin', async () => {
-      const handleEventsChange = spy();
+      const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
         .title('Early Shift')
         .span('2025-07-03T07:00:00Z', '2025-07-03T18:00:00Z')
@@ -476,7 +528,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .draggable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       const { element: eventElement } = mockEventBoundsFromRender('Early Shift');
       const sameRow = getEventRow(engineering.id);
@@ -492,11 +544,11 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       // The reconstructed dates equal the original ones, so the drop is a no-op
       // (the buggy clamped reconstruction used to commit 07:00 → 08:00 here).
-      expect(handleEventsChange.callCount).to.equal(0);
+      expect(handleEventsChange.mock.calls.length).to.equal(0);
     });
 
     it('should move an event spanning the hidden gap by the dragged amount and keep its real duration', async () => {
-      const handleEventsChange = spy();
+      const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
         .title('Overnight Job')
         .span('2025-07-03T18:00:00Z', '2025-07-04T10:00:00Z')
@@ -504,7 +556,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .draggable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       const { element: eventElement, left } = mockEventBoundsFromRender('Overnight Job');
       expect(left).to.be.closeTo(600, 0.001);
@@ -521,8 +573,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         });
       });
 
-      expect(handleEventsChange.callCount).to.equal(1);
-      const updatedEvents = handleEventsChange.firstCall.args[0];
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
       const newStart = new Date(updatedEvents[0].start);
       expect(newStart.getUTCDate()).to.equal(3);
       expect(newStart.getUTCHours()).to.equal(19);
@@ -532,7 +584,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     });
 
     it('should move an event starting before the collection without shifting it by the hidden hours', async () => {
-      const handleEventsChange = spy();
+      const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
         .title('Long Job')
         .span('2025-07-02T10:00:00Z', '2025-07-03T12:00:00Z')
@@ -540,7 +592,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .draggable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       // Starts before the collection: rendered from the row start.
       const { element: eventElement, left } = mockEventBoundsFromRender('Long Job');
@@ -557,8 +609,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         });
       });
 
-      expect(handleEventsChange.callCount).to.equal(1);
-      const updatedEvents = handleEventsChange.firstCall.args[0];
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
       const newStart = new Date(updatedEvents[0].start);
       expect(newStart.getUTCDate()).to.equal(2);
       expect(newStart.getUTCHours()).to.equal(11);
@@ -568,7 +620,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     });
 
     it('should resize the start of an event through the axis instead of real milliseconds', async () => {
-      const handleEventsChange = spy();
+      const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
         .title('Overnight Job')
         .span('2025-07-03T18:00:00Z', '2025-07-04T10:00:00Z')
@@ -576,7 +628,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .resizable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       const { element: eventElement, left } = mockEventBoundsFromRender('Overnight Job');
       expect(left).to.be.closeTo(600, 0.001);
@@ -595,8 +647,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         });
       });
 
-      expect(handleEventsChange.callCount).to.equal(1);
-      const updatedEvents = handleEventsChange.firstCall.args[0];
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
       const newStart = new Date(updatedEvents[0].start);
       expect(newStart.getUTCDate()).to.equal(3);
       expect(newStart.getUTCHours()).to.equal(17);
@@ -606,7 +658,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     });
 
     it('should not offer a resize handle on a bound hidden by the hour window', async () => {
-      const handleEventsChange = spy();
+      const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
         .title('Early Shift')
         .span('2025-07-03T06:00:00Z', '2025-07-03T12:00:00Z')
@@ -614,7 +666,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         .resizable(true)
         .build();
 
-      renderTimeline(event, handleEventsChange);
+      await renderTimeline(event, handleEventsChange);
 
       const eventElement = screen
         .getByText('Early Shift')
@@ -627,8 +679,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     });
 
     it('should drop a standalone event into a trimmed row through the axis', async () => {
-      const handleEventsChange = spy();
-      render(
+      const handleEventsChange = vi.fn();
+      await renderSettled(
         <div>
           <StandaloneEvent
             data={{ id: 'external-1', title: 'External Job', duration: 60 }}
@@ -662,8 +714,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         });
       });
 
-      expect(handleEventsChange.callCount).to.equal(1);
-      const updatedEvents = handleEventsChange.firstCall.args[0];
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
       expect(updatedEvents.length).to.equal(1);
       const newStart = new Date(updatedEvents[0].start);
       expect(newStart.getUTCDate()).to.equal(4);
@@ -672,8 +724,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     });
 
     it('should keep a drop on the exact right edge of the axis inside the collection', async () => {
-      const handleEventsChange = spy();
-      render(
+      const handleEventsChange = vi.fn();
+      await renderSettled(
         <div>
           <StandaloneEvent
             data={{ id: 'external-1', title: 'External Job', duration: 60 }}
@@ -708,8 +760,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         });
       });
 
-      expect(handleEventsChange.callCount).to.equal(1);
-      const updatedEvents = handleEventsChange.firstCall.args[0];
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
       const newStart = new Date(updatedEvents[0].start);
       expect(newStart.getUTCDate()).to.equal(6);
       expect(newStart.getUTCHours()).to.equal(19);
@@ -717,8 +769,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     });
 
     it('should keep a drop past the left edge of the axis inside the collection', async () => {
-      const handleEventsChange = spy();
-      render(
+      const handleEventsChange = vi.fn();
+      await renderSettled(
         <div>
           <StandaloneEvent
             data={{ id: 'external-1', title: 'External Job', duration: 60 }}
@@ -753,8 +805,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         });
       });
 
-      expect(handleEventsChange.callCount).to.equal(1);
-      const updatedEvents = handleEventsChange.firstCall.args[0];
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
       const newStart = new Date(updatedEvents[0].start);
       expect(newStart.getUTCDate()).to.equal(3);
       expect(newStart.getUTCHours()).to.equal(8);

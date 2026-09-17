@@ -56,6 +56,9 @@ export function useExtractRichTreeViewProParameters<
     onItemPositionChange,
     disableVirtualization,
 
+    // Render-only props
+    loading,
+
     // Forwarded props
     ...forwardedProps
   } = props;
@@ -155,5 +158,6 @@ export function useExtractRichTreeViewProParameters<
     slotProps,
     parameters,
     forwardedProps,
+    loading,
   };
 }

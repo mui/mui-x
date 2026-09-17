@@ -374,11 +374,6 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   readOnly?: boolean;
   /**
-   * Data source for fetching events asynchronously.
-   * When provided, events are fetched through the data source instead of the `events` prop.
-   */
-  dataSource?: SchedulerDataSource<TEvent>;
-  /**
    * Configures how events are created.
    * If `false`, event creation is disabled.
    * If `true`, event creation is enabled with default configuration.
@@ -505,6 +500,14 @@ export interface UpdateEventsParameters {
   created?: SchedulerEventCreationProperties[];
   updated?: SchedulerEventUpdatedProperties[];
 }
+
+/**
+ * Outcome of `updateEvent`: applied, with the changes as the batch applied them (the
+ * scheduling plugin can clamp the dates), or vetoed by that plugin with the error to surface.
+ */
+export type SchedulerUpdateEventResult =
+  | { applied: true; changes: SchedulerEventUpdatedProperties }
+  | { applied: false; rejection: Error };
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
 

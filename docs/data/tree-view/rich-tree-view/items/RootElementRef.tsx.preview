@@ -1,0 +1,10 @@
+<div>
+  <Button onClick={handleHighlight}>Highlight the root element</Button>
+</div>
+<Box sx={{ minWidth: 250 }}>
+  <RichTreeView
+    ref={rootRef}
+    items={MUI_X_PRODUCTS}
+    defaultExpandedItems={['grid']}
+  />
+</Box>

@@ -34,6 +34,21 @@ describe('<PreferencesMenu />', () => {
     expect(getPreferencesMenu()).not.to.equal(null);
   });
 
+  it('should expose aria-expanded reflecting the menu open state', async () => {
+    const { user } = render(
+      <EventCalendarProvider events={[]}>
+        <PreferencesMenu />
+      </EventCalendarProvider>,
+    );
+
+    const button = getPreferencesMenu()!;
+    expect(button).to.have.attribute('aria-expanded', 'false');
+
+    await openPreferencesMenu(user);
+
+    expect(button).to.have.attribute('aria-expanded', 'true');
+  });
+
   it('should not render the menu when the config equals false', async () => {
     render(
       <EventCalendarProvider events={[]} preferencesMenuConfig={false}>

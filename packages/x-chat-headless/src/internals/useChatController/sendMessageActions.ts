@@ -1,7 +1,8 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { ChatAdapter } from '../../adapters';
-import { processStream, type ProcessStreamResult } from '../../stream';
+import { processStream } from '../../stream';
+import type { ProcessStreamResult } from '../../stream';
 import type { ChatStore } from '../../store';
 import type {
   ChatMessage,

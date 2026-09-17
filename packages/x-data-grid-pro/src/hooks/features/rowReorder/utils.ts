@@ -7,6 +7,8 @@ import type {
   GridRowTreeConfig,
   GridKeyValue,
   GridValidRowModel,
+  GridRowModelUpdate,
+  GridRowModelReplace,
   GridUpdateRowParams,
 } from '@mui/x-data-grid';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -279,7 +281,9 @@ export class BatchRowUpdater {
 
   private failedRowIds = new Set<GridRowId>();
 
-  private pendingRowUpdates: GridValidRowModel[] = [];
+  // `processRowUpdate()` can return a `{ _action: 'replace', row }` update, which is passed
+  // through to `updateRows()` untouched.
+  private pendingRowUpdates: Array<GridRowModelUpdate | GridRowModelReplace> = [];
 
   constructor(
     private apiRef: RefObject<GridPrivateApiPro>,
@@ -300,7 +304,7 @@ export class BatchRowUpdater {
   async executeAll(): Promise<{
     successful: GridRowId[];
     failed: GridRowId[];
-    updates: GridValidRowModel[];
+    updates: Array<GridRowModelUpdate | GridRowModelReplace>;
   }> {
     const rowIds = Array.from(this.rowsToUpdate.keys());
 

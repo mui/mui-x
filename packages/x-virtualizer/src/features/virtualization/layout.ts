@@ -151,6 +151,11 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
             height: cssMax(height, viewportOuterSize.height - horizontalScrollbarSize),
             flex: '0 0 auto',
           } as React.CSSProperties;
+        } else if (needsHorizontalScrollbar) {
+          // As wide as the rows, so the content box isn't narrower than its own children.
+          // Sticky children never move past their containing block, and a viewport-wide box
+          // would cut their travel short.
+          style = { width: dimensions.rowWidth };
         }
 
         return {

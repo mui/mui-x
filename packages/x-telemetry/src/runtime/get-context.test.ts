@@ -17,6 +17,12 @@ vi.mock('../context', () => ({
   },
 }));
 
+// `isolate: false` shares the module registry, so `./get-context` may be cached bound to
+// another file's `vi.mock('../context')`.
+beforeEach(() => {
+  vi.resetModules();
+});
+
 function nodeHash(input: string): string {
   return createHash('sha256').update(input).digest('hex');
 }

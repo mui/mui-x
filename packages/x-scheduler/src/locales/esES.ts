@@ -58,6 +58,8 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   noResourceAriaLabel: 'Sin recurso',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Recurso',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   requiredResourceError: 'Debes seleccionar un recurso.',
   saveChanges: 'Guardar',
   startDateAfterEndDateError: 'La fecha de fin no puede ser anterior a la fecha de inicio.',
