@@ -137,7 +137,6 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
     legendProps,
     children,
   } = useRadialLineChartProps(props);
-  // The community hook does not know `apiRef` and would pass it on to the SVG surface.
   const { apiRef, ...containerProps } = chartsContainerProps;
   const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps<
     'radialLine',
