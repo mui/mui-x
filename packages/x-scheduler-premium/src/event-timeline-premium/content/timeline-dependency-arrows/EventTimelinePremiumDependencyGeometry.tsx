@@ -142,6 +142,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
         resources,
         rowPositions: rowsMeta.positions,
         axis: config,
+        durationMs: config.durationMs,
         positionByOccurrenceKey,
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),
