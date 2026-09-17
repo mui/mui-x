@@ -68,6 +68,7 @@ Same changes as in `@mui/x-charts@9.14.0`.
 Same changes as in `@mui/x-charts-pro@9.14.0`, plus:
 
 - [charts-premium] Add the Excel data extraction layer (#23569) @JCQuintas
+- [charts-premium] Forward `apiRef` on `RadialBarChart` and `RadialLineChart` (#23625) @JCQuintas
 
 ### Tree View
 
@@ -125,6 +126,7 @@ Same changes as in `@mui/x-tree-view@9.14.0`.
 
 Same changes as in `@mui/x-scheduler@9.0.0-beta.12`, plus:
 
+- [scheduler-premium] Dependencies - Arrows and terminals for SS, FF and SF (#23524) @rita-codes
 - [scheduler-premium] Dependencies - Auto-scheduling engine (FS) (#23439) @rita-codes
 
 ### Docs
