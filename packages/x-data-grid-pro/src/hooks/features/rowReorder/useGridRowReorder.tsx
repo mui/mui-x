@@ -519,11 +519,6 @@ export const useGridRowReorder = (
       ) {
         return null;
       }
-      // Bring the last row into view, so the drop indicator and the dropped row are visible
-      const virtualScroller = apiRef.current.virtualScrollerRef.current;
-      if (virtualScroller) {
-        apiRef.current.scroll({ top: virtualScroller.scrollHeight });
-      }
       return { rowId: lastRowId, dropPosition: 'below' };
     };
 
@@ -629,6 +624,10 @@ export const useGridRowReorder = (
             const oldParentNode = rowTree[oldParent] as GridGroupNode;
             const oldIndexInParent =
               oldParentNode.children.indexOf(dragRowId) ?? originRowIndex.current;
+            const { rows } = getVisibleRows(apiRef);
+            const isDropAfterLastRow =
+              dropTarget.current.dropPosition === 'below' &&
+              dropTarget.current.targetRowId === rows[rows.length - 1]?.id;
 
             await applyRowAnimation(async () => {
               await apiRef.current.setRowPosition(
@@ -660,6 +659,12 @@ export const useGridRowReorder = (
               resetRowDragState();
 
               apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
+
+              // The last row can be out of view when dropping below the grid: show the dropped row
+              const virtualScroller = apiRef.current.virtualScrollerRef.current;
+              if (isDropAfterLastRow && virtualScroller) {
+                apiRef.current.scroll({ top: virtualScroller.scrollHeight });
+              }
             });
           } catch {
             // The reorder failed: skip the `rowOrderChange` event.

@@ -573,11 +573,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     fireEvent(document.body, belowGrid);
     expect(belowGrid.dataTransfer!.dropEffect).to.equal('copy');
 
-    // Scrolls to the bottom to show the drop indicator on the last row
+    // Only scrolls once dropped
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
-    expect(virtualScroller.scrollTop).to.equal(
-      virtualScroller.scrollHeight - virtualScroller.clientHeight,
-    );
+    expect(virtualScroller.scrollTop).to.equal(0);
 
     fireEvent(rowReorderCell, createDragEndEvent(rowReorderCell));
 
@@ -586,6 +584,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
         ...rows.map((row) => row.id).filter((id) => id !== 0),
         0,
       ]);
+    });
+    // Scrolls to the bottom to show the dropped row
+    await waitFor(() => {
+      expect(virtualScroller.scrollTop).to.equal(
+        virtualScroller.scrollHeight - virtualScroller.clientHeight,
+      );
     });
   });
 
