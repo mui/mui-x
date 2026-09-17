@@ -5,7 +5,8 @@ import type {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
-import { normalizeAllDayBounds } from '@mui/x-scheduler-internals/internals';
+import { dateToEventString, normalizeAllDayBounds } from '@mui/x-scheduler-internals/internals';
+import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerDependency } from '../../models';
 
@@ -62,7 +63,8 @@ export interface AutoSchedulingCascadeResult {
  *
  * Push-only: events only move later, and pre-existing violations stay as-is. A seed whose
  * entry moves `start` is being placed by the user and is clamped forward by all its
- * predecessors; everything else is pushed only by predecessors moved in the same batch.
+ * predecessors; everything else is pushed only by predecessors whose end advances in the
+ * same batch. A `timezone` change moves the effective dates of wall-time events.
  * Timed events keep their duration (a start resize keeps its end instead), all-day events
  * shift by whole days, and a read-only event that would need to move is reported in
  * `blocked` so the caller rejects the batch.
@@ -96,8 +98,8 @@ export function computeAutoSchedulingCascade(
   // Repositioned seeds whose entry left `end` where it is (a start resize): the clamp
   // keeps their end.
   const startResizedSeeds = new Set<SchedulerEventId>();
-  // Events whose dates change in this pass; only these push their successors.
-  const movedIds = new Set<SchedulerEventId>();
+  // Events whose end moves later in this pass; only these push their successors.
+  const advancedIds = new Set<SchedulerEventId>();
 
   // Whole-entry last-wins per id, mirroring the store's fold.
   const lastEntryById = new Map<SchedulerEventId, SchedulerEventUpdatedProperties>();
@@ -113,26 +115,41 @@ export function computeAutoSchedulingCascade(
       becomesRecurring.add(entry.id);
       continue;
     }
-    if (entry.start == null && entry.end == null && entry.allDay == null) {
-      continue;
-    }
     const processedEvent = processedEventLookup.get(entry.id);
     if (processedEvent === undefined) {
       // Not loaded (lazy loading): its dependencies are inactive anyway.
       continue;
     }
+    const model = processedEvent.modelInBuiltInFormat;
+    const dataTimezone = model.timezone ?? 'default';
+    const nextTimezone = entry.timezone ?? dataTimezone;
+    if (
+      entry.start == null &&
+      entry.end == null &&
+      entry.allDay == null &&
+      nextTimezone === dataTimezone
+    ) {
+      continue;
+    }
     const allDay = entry.allDay ?? processedEvent.allDay ?? false;
-    // Entries arrive in the display timezone and the store applies them in the data
-    // timezone (`dateToEventString`): compare and normalize there.
-    const dataTimezone = processedEvent.modelInBuiltInFormat.timezone ?? 'default';
+    // Mirrors the store: entries are serialized in the data timezone
+    // (`dateToEventString`) and the model is then read in the (new) timezone.
+    const resolveEntryDate = (
+      value: TemporalSupportedObject | undefined,
+      modelString: string,
+      currentValue: TemporalSupportedObject,
+    ) => {
+      if (nextTimezone === dataTimezone) {
+        return value == null ? currentValue : adapter.setTimezone(value, dataTimezone);
+      }
+      const nextString =
+        value == null ? modelString : dateToEventString(adapter, value, modelString, dataTimezone);
+      return resolveEventDate(nextString, nextTimezone, adapter, entry.id);
+    };
     const { start, end } = normalizeAllDayBounds(
       adapter,
-      entry.start == null
-        ? processedEvent.dataTimezone.start.value
-        : adapter.setTimezone(entry.start, dataTimezone),
-      entry.end == null
-        ? processedEvent.dataTimezone.end.value
-        : adapter.setTimezone(entry.end, dataTimezone),
+      resolveEntryDate(entry.start, model.start, processedEvent.dataTimezone.start.value),
+      resolveEntryDate(entry.end, model.end, processedEvent.dataTimezone.end.value),
       allDay,
     );
     const startTimestamp = adapter.getTime(start);
@@ -141,9 +158,6 @@ export function computeAutoSchedulingCascade(
 
     const current = resolveCurrentDates(entry.id)!;
     const startMoved = startTimestamp !== current.startTimestamp;
-    if (startMoved || endTimestamp !== current.endTimestamp) {
-      movedIds.add(entry.id);
-    }
     if (startMoved) {
       repositionedSeeds.add(entry.id);
       if (endTimestamp === current.endTimestamp) {
@@ -214,8 +228,14 @@ export function computeAutoSchedulingCascade(
     const shifted = computeShift(eventId);
     if (shifted !== null) {
       newDates.set(eventId, shifted);
-      movedIds.add(eventId);
       cascaded.push({ id: eventId, start: shifted.start, end: shifted.end });
+    }
+    const settled = newDates.get(eventId);
+    if (
+      settled !== undefined &&
+      settled.endTimestamp > resolveCurrentDates(eventId)!.endTimestamp
+    ) {
+      advancedIds.add(eventId);
     }
 
     for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
@@ -269,7 +289,7 @@ export function computeAutoSchedulingCascade(
 
   function computeShift(eventId: SchedulerEventId): ResolvedDates | null {
     // A repositioned seed is being placed by the user: every active predecessor
-    // constrains it. Anything else is pushed only by predecessors that moved.
+    // constrains it. Anything else is pushed only by predecessors whose end advanced.
     const constrainedByAll = repositionedSeeds.has(eventId);
     let required: ResolvedDates | null = null;
     for (const dependency of activeDependenciesByTarget.get(eventId) ?? []) {
@@ -283,10 +303,10 @@ export function computeAutoSchedulingCascade(
         continue;
       }
       let sourceDates: ResolvedDates | null = null;
-      if (movedIds.has(sourceId)) {
+      if (advancedIds.has(sourceId)) {
         sourceDates = newDates.get(sourceId)!;
       } else if (constrainedByAll) {
-        sourceDates = resolveCurrentDates(sourceId);
+        sourceDates = newDates.get(sourceId) ?? resolveCurrentDates(sourceId);
       }
       if (
         sourceDates !== null &&
