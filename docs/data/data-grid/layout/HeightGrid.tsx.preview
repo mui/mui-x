@@ -1,0 +1,1 @@
+<DataGrid {...data} height={350} />
