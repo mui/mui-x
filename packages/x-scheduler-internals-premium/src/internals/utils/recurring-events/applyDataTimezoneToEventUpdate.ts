@@ -97,7 +97,8 @@ export function projectRRuleFromDisplayToData({
     return projected;
   }
   const storedStart = originalEvent.dataTimezone.start.value;
-  if (displayRRule.byDay != null && storedRule.byDay != null) {
+  // The dialog keeps both selector arrays on every rule, so an empty one is no selection.
+  if (displayRRule.byDay?.length && storedRule.byDay?.length) {
     return {
       ...projected,
       byDay: mergeReadSelection(
@@ -118,8 +119,8 @@ export function projectRRuleFromDisplayToData({
   }
   if (
     displayRRule.freq === 'MONTHLY' &&
-    displayRRule.byMonthDay != null &&
-    storedRule.byMonthDay != null
+    displayRRule.byMonthDay?.length &&
+    storedRule.byMonthDay?.length
   ) {
     return {
       ...projected,

@@ -316,6 +316,30 @@ describe('applyDataTimezoneToEventUpdate', () => {
     expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([15]);
   });
 
+  it('should keep the stored BYMONTHDAY when both rules carry an empty BYDAY', () => {
+    // The dialog stores every custom rule with both selector arrays, so a monthly rule saved
+    // from it carries `byDay: []`. That must not bypass the BYMONTHDAY read selection.
+    const originalEvent = EventBuilder.new(adapter)
+      .startAt('2025-01-15T04:30:00Z')
+      .recurrent('MONTHLY', { byDay: [], byMonthDay: [15] })
+      .withDataTimezone('UTC')
+      .withDisplayTimezone('America/New_York')
+      .toProcessed();
+    expect(originalEvent.displayTimezone.rrule!.byMonthDay).to.deep.equal([14]);
+
+    const result = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent,
+      changes: {
+        id: originalEvent.id,
+        rrule: { freq: 'MONTHLY' as const, interval: 1, byDay: [], byMonthDay: [14], count: 5 },
+      },
+      occurrenceStart: adapter.date('2025-07-15T04:30:00', 'UTC'),
+    });
+
+    expect((result.rrule as SchedulerProcessedEventRecurrenceRule).byMonthDay).to.deep.equal([15]);
+  });
+
   it('should keep the read BYDAY and project only the added one across a DST change', () => {
     // Stored on Fridays 04:30 UTC from January, read as [TH] in New York. From the July
     // occurrence (Friday 00:30 New York) the user adds Wednesday: Friday must stay.
