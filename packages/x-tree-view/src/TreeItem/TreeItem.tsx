@@ -64,22 +64,23 @@ export const TreeItemContent = styled('div', {
     backgroundColor: 'transparent',
     cursor: 'auto',
   },
-  '&[data-focused]': {
-    backgroundColor: (theme.vars || theme).palette.action.focus,
-  },
-  // The tab stop is the root `li`, but it wraps the whole subtree once expanded,
-  // so a ring there would enclose every descendant. Draw it on the content row
-  // instead — the same split core uses for its slot-drawn controls.
+  // The tab stop is the root `li`, but it wraps the whole subtree once expanded, so
+  // a ring there would enclose every descendant. Draw it on the content row instead
+  // — the same split core uses for its slot-drawn controls.
   //
-  // `[data-focused]` above is the roving-tabindex cursor and stays: it marks the
-  // current item however it was reached, while this ring is keyboard-only.
-  //
-  // Inset, because a tree is routinely placed inside a scrollable panel — the
-  // reason core insets `ListItemButton` too.
-  ...(theme.focusVisible && {
-    ...applyInsetFocusVisible(1),
-    [`.${treeItemClasses.root}:focus-visible > &`]: theme.focusVisible,
-  }),
+  // Inset, because a tree is routinely placed inside a scrollable panel — the reason
+  // core insets `ListItemButton` too. And as core does there, the ring replaces the
+  // focus tint rather than stacking on top of it.
+  ...(theme.focusVisible
+    ? {
+        ...applyInsetFocusVisible(1),
+        [`.${treeItemClasses.root}:focus-visible > &`]: theme.focusVisible,
+      }
+    : {
+        '&[data-focused]': {
+          backgroundColor: (theme.vars || theme).palette.action.focus,
+        },
+      }),
   '&[data-selected]': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.primary.main,
@@ -99,12 +100,16 @@ export const TreeItemContent = styled('div', {
       },
     },
   },
-  '&[data-selected][data-focused]': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.primary.main,
-      `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
-    ),
-  },
+  // Selected rows keep their own tint; only the extra focus layer goes away, so the
+  // ring reads against a single flat background.
+  ...(!theme.focusVisible && {
+    '&[data-selected][data-focused]': {
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
+      ),
+    },
+  }),
 }));
 
 export const TreeItemLabel = styled('div', {

@@ -184,15 +184,22 @@ const PromptChangesToggle = styled('button', {
     border: 'none',
     background: 'none',
     outline: 'none',
-    '&:hover, &:focus-visible': {
+    '&:hover': {
       textDecoration: 'underline',
     },
-    // Underline only today, so focus reads the same as hover. Inset — the prompt
+    // Without the theme ring, focus borrows the hover underline because there is
+    // nothing else to show. With it, the ring is the signal. Inset — the prompt
     // item that wraps this is `overflow: hidden`.
-    ...(focusRing && {
-      ...applyInsetFocusVisible(1),
-      '&:focus-visible': focusRing,
-    }),
+    ...(focusRing
+      ? {
+          ...applyInsetFocusVisible(1),
+          '&:focus-visible': focusRing,
+        }
+      : {
+          '&:focus-visible': {
+            textDecoration: 'underline',
+          },
+        }),
   };
 });
 

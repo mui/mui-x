@@ -71,15 +71,22 @@ const GridChartsPanelChartSelection = styled('button', {
   background: 'none',
   outline: 'none',
   marginRight: 'auto',
-  '&:hover, &:focus-visible': {
+  '&:hover': {
     backgroundColor: vars.colors.interactive.hover,
   },
-  // No ring today — focus is indistinguishable from hover. Add one when the app
-  // opts in; inset, since the grid root clips. No fallback: nothing to fall back to.
-  ...(theme.focusVisible && {
-    ...applyInsetFocusVisible(1),
-    '&:focus-visible': theme.focusVisible,
-  }),
+  // Without the theme ring, focus borrows the hover tint because there is nothing
+  // else to show. With it, the ring is the signal and the tint would only muddy it.
+  // Inset, since the grid root clips.
+  ...(theme.focusVisible
+    ? {
+        ...applyInsetFocusVisible(1),
+        '&:focus-visible': theme.focusVisible,
+      }
+    : {
+        '&:focus-visible': {
+          backgroundColor: vars.colors.interactive.hover,
+        },
+      }),
 }));
 
 function GridChartsPanelChartSelector(props: {

@@ -20,9 +20,9 @@ const TreeItemLabelInput = styled('input', {
   // it. The selector stays as-is because the input is only mounted while renaming
   // and is focused programmatically — `:focus-visible` may not match a
   // mouse-initiated rename, which would drop the ring exactly when it is needed.
-  '&:focus': theme.focusVisible || {
-    outline: `1px solid ${(theme.vars || theme).palette.primary.main}`,
-  },
+  '&:focus': theme.focusVisible
+    ? theme.focusVisible
+    : { outline: `1px solid ${(theme.vars || theme).palette.primary.main}` },
 }));
 
 export { TreeItemLabelInput };

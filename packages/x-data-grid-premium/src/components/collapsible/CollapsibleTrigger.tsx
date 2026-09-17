@@ -47,11 +47,17 @@ const CollapsibleTriggerRoot = styled('button', {
   },
   // Inset: the grid root is `overflow: hidden`, so an outset ring on a panel
   // control can be cut at the edge.
-  ...(theme.focusVisible && applyInsetFocusVisible(1)),
-  '&:focus-visible': theme.focusVisible || {
-    outline: `2px solid ${vars.colors.interactive.selected}`,
-    outlineOffset: -2,
-  },
+  ...(theme.focusVisible
+    ? {
+        ...applyInsetFocusVisible(1),
+        '&:focus-visible': theme.focusVisible,
+      }
+    : {
+        '&:focus-visible': {
+          outline: `2px solid ${vars.colors.interactive.selected}`,
+          outlineOffset: -2,
+        },
+      }),
 }));
 
 const CollapsibleIcon = styled('div', {

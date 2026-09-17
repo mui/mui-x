@@ -9,6 +9,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
+import { outsetFocusRing } from '@mui/x-internals/focusVisible';
 import { ClockPointer } from './ClockPointer';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
@@ -122,11 +123,14 @@ const ClockWrapper = styled('div', {
   '&:focus': {
     outline: 'none',
   },
-  // Outset, i.e. whatever the app configured. Measured in a real desktop picker
-  // popover: the Paper is `overflow: visible` and leaves 16px above the clock and
-  // 50px either side, while the default ring reaches 4px — so nothing clips, and
-  // a ring outside the face reads better than one cutting across it.
-  ...(theme.focusVisible && { '&:focus-visible': theme.focusVisible }),
+  // Outset, and pinned with `outsetFocusRing` so a clip-prone ancestor cannot
+  // inset it through the inherited vars. Measured in a real desktop picker popover:
+  // the Paper is `overflow: visible` and leaves 16px above the clock and 50px either
+  // side, while the default ring reaches 4px — so nothing clips, and a ring outside
+  // the face reads better than one cutting across it.
+  ...(theme.focusVisible && {
+    '&:focus-visible': { ...outsetFocusRing, ...theme.focusVisible },
+  }),
 }));
 
 const ClockSquareMask = styled('div', {
