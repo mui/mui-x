@@ -26,6 +26,7 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   schedulerOtherSelectors,
   schedulerPreferenceSelectors,
+  schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
@@ -217,24 +218,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     [adapter, visibleDate, weekStartsOn],
   );
 
-  // Form-state drafts: every preset carries both `byDay` and `byMonthDay` (empty when
-  // not used) so the `rruleDraft` value keeps a consistent shape as the user switches presets.
-  // Differs from `computePresets`, which only includes the fields each preset actually serializes.
-  const presetDraftMap = React.useMemo(
-    () => ({
-      DAILY: { freq: 'DAILY' as const, interval: 1, byDay: [], byMonthDay: [] },
-      WEEKLY: { freq: 'WEEKLY' as const, interval: 1, byDay: [monthlyRef.code], byMonthDay: [] },
-      MONTHLY: {
-        freq: 'MONTHLY' as const,
-        interval: 1,
-        byDay: [],
-        byMonthDay: [monthlyRef.dayOfMonth],
-      },
-      YEARLY: { freq: 'YEARLY' as const, interval: 1, byDay: [], byMonthDay: [] },
-    }),
-    [monthlyRef.code, monthlyRef.dayOfMonth],
-  );
-
   const handleRecurrenceSelectionChange = (
     newSelection: RecurringEventPresetKey | null | 'custom',
   ) => {
@@ -242,8 +225,16 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       formStore.setValue('recurrenceSelection', 'custom');
       return;
     }
+    // Keep both selector arrays in the form draft, including when the preset omits them.
     const newDraft = newSelection
-      ? presetDraftMap[newSelection]
+      ? {
+          byDay: [],
+          byMonthDay: [],
+          ...schedulerRecurringEventSelectors.presets(
+            store.state,
+            occurrence.displayTimezone.start,
+          )![newSelection],
+        }
       : { freq: 'WEEKLY' as const, interval: 1, byDay: [], byMonthDay: [] };
     formStore.setValues({ recurrenceSelection: newSelection, rruleDraft: newDraft });
   };

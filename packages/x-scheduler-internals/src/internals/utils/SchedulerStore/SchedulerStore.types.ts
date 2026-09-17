@@ -505,6 +505,14 @@ export interface UpdateEventsParameters {
   updated?: SchedulerEventUpdatedProperties[];
 }
 
+/**
+ * Outcome of `updateEvent`: applied, with the changes as the batch applied them (the
+ * scheduling plugin can clamp the dates), or vetoed by that plugin with the error to surface.
+ */
+export type SchedulerUpdateEventResult =
+  | { applied: true; changes: SchedulerEventUpdatedProperties }
+  | { applied: false; rejection: Error };
+
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
 
 /**

@@ -497,7 +497,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         // A rule added here is built on the display day; the plugin projects it into the
         // data timezone the series expands in (the bounds it relabels keep their instant).
         const { recurringEventsPlugin } = current;
-        store.updateEvent(
+        const result = store.updateEvent(
           recurringEventsPlugin != null && rruleToSubmit != null && isEventOccurrence(occurrence)
             ? recurringEventsPlugin.applyDataTimezoneToEventUpdate({
                 adapter: current.adapter,
@@ -506,6 +506,15 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
               })
             : changes,
         );
+        if (!result.applied) {
+          // A vetoed save keeps the dialog open; the rejection sits on the range field and
+          // editing the dates clears it.
+          const rejectedField = values.allDay ? 'endDate' : 'endTime';
+          warnUnvalidatedField(rejectedField, 'The scheduling plugin rejected the save');
+          formStore.setError(rejectedField, result.rejection.message);
+          setTabValue('general');
+          return;
+        }
       }
 
       onClose();

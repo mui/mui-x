@@ -5,10 +5,7 @@ import type {
   SchedulerResource,
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
-import {
-  computeElementPositionInCollection,
-  getTimelineAxisDurationMs,
-} from '@mui/x-scheduler-internals/internals';
+import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { computeOccurrencesFirstIndexLookup } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import type {
@@ -142,6 +139,7 @@ export interface DependencyAnchorResolverParameters {
    * The visible date range and daily hour window the arrows are positioned in.
    */
   axis: TimelineAxis;
+  durationMs: number;
   /**
    * Positions already computed by the axis filter, when the hour window is trimmed.
    */
@@ -211,6 +209,7 @@ export function createDependencyAnchorResolver(
     resources,
     rowPositions,
     axis,
+    durationMs,
     positionByOccurrenceKey,
     eventsWidth,
     laneMetrics,
@@ -266,8 +265,6 @@ export function createDependencyAnchorResolver(
     return laneLookup;
   };
 
-  // Derived once for the whole walk instead of per positioned occurrence.
-  const axisDurationMs = getTimelineAxisDurationMs(adapter, axis);
   const positionCache = new Map<string, ReturnType<typeof computeElementPositionInCollection>>();
   const getPosition = (occurrence: SchedulerEventOccurrence) => {
     const precomputed = positionByOccurrenceKey?.get(occurrence.key);
@@ -280,7 +277,7 @@ export function createDependencyAnchorResolver(
         start: occurrence.displayTimezone.start,
         end: occurrence.displayTimezone.end,
         collection: axis,
-        durationMs: axisDurationMs,
+        durationMs,
       });
       positionCache.set(occurrence.key, position);
     }
