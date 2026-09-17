@@ -6,4 +6,18 @@ export interface DataGridPremiumComponentNameToClassKey {
 
 declare module '@mui/material/styles' {
   interface ComponentNameToClassKey extends DataGridPremiumComponentNameToClassKey {}
+
+  interface PaletteDataGrid {
+    bg?: string;
+    headerBg?: string;
+    pinnedBg?: string;
+  }
+
+  interface CssVarsPalette {
+    DataGrid: PaletteDataGrid;
+  }
+
+  interface PaletteOptions {
+    DataGrid?: Partial<PaletteDataGrid>;
+  }
 }
