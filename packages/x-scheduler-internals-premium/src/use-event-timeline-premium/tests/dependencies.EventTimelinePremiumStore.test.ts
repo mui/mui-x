@@ -877,6 +877,24 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     expect(store.state.selection).to.equal(null);
   });
 
+  it('should clear the selection when the type of the selected dependency becomes unknown', () => {
+    const store = new EventTimelinePremiumStore(
+      { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+      adapter,
+    );
+    store.setSelectedDependencyId('dep-1');
+
+    // Same id, unsupported type: the arrows drop it, so the selection must go too.
+    expect(() => {
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, dependencies: [{ ...DEP_AB, type: 'FS' as any }] },
+        adapter,
+      );
+    }).toWarnDev(['MUI X Scheduler: The dependency "dep-1" has the unknown type "FS".']);
+
+    expect(store.state.selection).to.equal(null);
+  });
+
   describe('dev warnings', () => {
     it('should warn and keep the feature disabled when onDependenciesChange is provided without dependencies', () => {
       let store!: EventTimelinePremiumStore<any, any>;

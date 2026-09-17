@@ -169,3 +169,19 @@ export function classifyDependencyEvent(
   }
   return 'ok';
 }
+
+/**
+ * Whether the timeline renders the dependency: a supported type and two endpoint
+ * events that are known and non-recurring. Shared by the active-list selector and
+ * the selection cleanup, so a dependency the arrows drop can never stay selected.
+ */
+export function isDependencyActive(
+  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>,
+  dependency: SchedulerDependency,
+): boolean {
+  return (
+    isDependencyType(dependency.type) &&
+    classifyDependencyEvent(processedEventLookup, dependency.source) === 'ok' &&
+    classifyDependencyEvent(processedEventLookup, dependency.target) === 'ok'
+  );
+}

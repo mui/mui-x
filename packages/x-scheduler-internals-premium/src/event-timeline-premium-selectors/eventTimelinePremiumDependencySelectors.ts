@@ -9,10 +9,9 @@ import type {
 } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import {
-  classifyDependencyEvent,
   groupByEventId,
+  isDependencyActive,
   isDependencyReadOnly,
-  isDependencyType,
 } from '../internals/utils/dependency-utils';
 
 // Typed against the two slices they read, so the scheduling plugin (generic over
@@ -25,12 +24,8 @@ const activeModelListSelector = createSelectorMemoized(
   (dependencyModelLookup, processedEventLookup) =>
     // `dependencyModelLookup` already deduped duplicate ids (last wins) while
     // preserving insertion order, so no separate dedup pass is needed here.
-    Array.from(dependencyModelLookup.values()).filter(
-      (dependency) =>
-        isDependencyType(dependency.type) &&
-        [dependency.source, dependency.target].every(
-          (eventId) => classifyDependencyEvent(processedEventLookup, eventId) === 'ok',
-        ),
+    Array.from(dependencyModelLookup.values()).filter((dependency) =>
+      isDependencyActive(processedEventLookup, dependency),
     ),
 );
 

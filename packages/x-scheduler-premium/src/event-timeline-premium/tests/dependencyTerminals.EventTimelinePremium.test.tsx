@@ -1649,6 +1649,26 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.selection).to.equal(null);
     });
 
+    it('should clear the selection when the type of the selected dependency becomes unknown', async () => {
+      const dependency = buildDependency('dep-1', 'event-a', 'event-b');
+      const view = await renderTimeline({ events: [eventA, eventB], dependencies: [dependency] });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      expect(view.store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
+
+      // Same id, unsupported type: the arrows drop it and the terminals must not
+      // resolve the edges of a type they cannot draw.
+      expect(() => {
+        view.setProps({ dependencies: [{ ...dependency, type: 'FS' as any }] });
+      }).toWarnDev(['MUI X Scheduler: The dependency "dep-1" has the unknown type "FS".']);
+
+      await waitFor(() => {
+        expect(getArrowPaths()).to.have.length(0);
+      });
+      expect(document.querySelector('[data-dependency-delete-button]')).to.equal(null);
+      expect(view.store.state.selection).to.equal(null);
+    });
+
     it('should discard the creation gesture when the timeline unmounts mid-drag', async () => {
       const { store, unmount } = await renderTimeline({
         events: [eventA, eventB],
