@@ -56,7 +56,7 @@ export const GridRootStyles = styled('div', {
     });
     return overrides;
   },
-})<{ ownerState: OwnerState }>(() => {
+})<{ ownerState: OwnerState }>(({ ownerState }) => {
   const apiRef = useGridPrivateApiContext();
   const shouldShowBorderTopRightRadius = useGridSelector(
     apiRef,
@@ -182,7 +182,7 @@ export const GridRootStyles = styled('div', {
     color: vars.colors.foreground.base,
     font: vars.typography.font.body,
     outline: 'none',
-    height: '100%',
+    height: ownerState.height ?? '100%',
     display: 'flex',
     minWidth: 0, // See https://github.com/mui/mui-x/issues/8547
     minHeight: 0,
