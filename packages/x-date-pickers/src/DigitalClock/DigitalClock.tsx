@@ -85,16 +85,26 @@ export const DigitalClockItem = styled(MenuItem, {
   '&.Mui-selected': {
     backgroundColor: (theme.vars || theme).palette.primary.main,
     color: (theme.vars || theme).palette.primary.contrastText,
-    '&:focus-visible, &:hover': {
+    '&:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
+    ...(!theme.focusVisible && {
+      '&:focus-visible': {
+        backgroundColor: (theme.vars || theme).palette.primary.dark,
+      },
+    }),
   },
-  '&.Mui-focusVisible': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.primary.main,
-      (theme.vars || theme).palette.action.focusOpacity,
-    ),
-  },
+  // `MenuItem` is a core clip-prone family, so an opted-in app already gets the
+  // inset ring here. Drop the focus tint rather than stack it underneath, exactly
+  // as core's own `MenuItem` drops its `focusVisible` background.
+  ...(!theme.focusVisible && {
+    '&.Mui-focusVisible': {
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        (theme.vars || theme).palette.action.focusOpacity,
+      ),
+    },
+  }),
 }));
 
 type DigitalClockComponent = ((
