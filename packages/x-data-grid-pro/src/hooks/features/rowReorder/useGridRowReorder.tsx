@@ -450,7 +450,7 @@ export const useGridRowReorder = (
     }
 
     const handleDragOverOutsideRows = (event: DragEvent) => {
-      const { rows } = getVisibleRows(apiRef);
+      const { rows, rowIdToIndexMap } = getVisibleRows(apiRef);
       if (rows.length === 0) {
         return;
       }
@@ -468,11 +468,15 @@ export const useGridRowReorder = (
               !element.closest(`.${gridClasses.scrollArea}`) &&
               element.closest('[role="row"]'),
           );
-        const rowId = elementUnder?.closest('[role="row"]')!.getAttribute('data-id');
-        const row = rows.find((visibleRow) => String(visibleRow.id) === rowId);
-        if (row) {
+        const rowElementId = elementUnder?.closest('[role="row"]')!.getAttribute('data-id');
+        // `data-id` is always a string: numeric row ids are looked up by their number value
+        const rowId =
+          rowElementId == null
+            ? undefined
+            : [rowElementId, Number(rowElementId)].find((id) => rowIdToIndexMap.has(id));
+        if (rowId !== undefined) {
           handleDragOverRow(
-            row.id,
+            rowId,
             event,
             calculateDropPosition({ target: elementUnder!, clientY: event.clientY }),
           );
