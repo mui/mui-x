@@ -2,8 +2,6 @@
 
 ## 9.14.0
 
-<!-- generated comparing v9.13.0..master -->
-
 _Sep 17, 2026_
 
 We'd like to extend a big thank you to the 16 contributors who made this release possible. Here are some highlights ✨:
@@ -27,7 +25,7 @@ The following team members contributed to this release:
 #### `@mui/x-data-grid@9.14.0`
 
 - [DataGrid] Do not crash on unmount when the document has no body (#23431) @eterry1388
-- [DataGrid] Fix `MissingRowIdError` on cell mousedown/mouseup after row removal (#23261) @kareem-ib
+- [DataGrid] Fix `MissingRowIdError` on cell `mousedown`/`mouseup` after row removal (#23261) @kareem-ib
 - [DataGrid] Fix quick filter dropping a pending search on parser identity change (#23575) @michelengelen
 - [DataGrid] Keep overlays sticky in RTL mode (#23492) @arminmeh
 - [DataGrid] Prevent scroll area state update before mount (#23478) @michelengelen
@@ -133,12 +131,12 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.12`, plus:
 
 - [DataGrid][docs] Fix "Apply filters on demand" demo (#23602) @mateuseap
 - [docs] Add recipe for getting the tree view's root DOM element via `ref` (#22941) @michelengelen
-- [docs][pickers] Mention Moment.js maintenance mode (#23601) @mateuseap
+- [docs][pickers] Mention `Moment.js` maintenance mode (#23601) @mateuseap
 
 ### Core
 
-- [code-infra] Gate the DataGridScrollRestoration screenshot on the horizontal restore (#23527) @JCQuintas
-- [code-infra] Let the NoColumnsOverlay demo settle before screenshotting (#23529) @JCQuintas
+- [code-infra] Gate the `DataGridScrollRestoration` screenshot on the horizontal restore (#23527) @JCQuintas
+- [code-infra] Let the `NoColumnsOverlay` demo settle before screenshotting (#23529) @JCQuintas
 - [code-infra] Pin the only-allow version in the preinstall hook (#23551) @Janpot
 - [code-infra] Remove disabled Discord release announcement workflow (#23554) @Janpot
 - [code-infra] Trial: Claude CI flake-fix caller (#23556) @Janpot
