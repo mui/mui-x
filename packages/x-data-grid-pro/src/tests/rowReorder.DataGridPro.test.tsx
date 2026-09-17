@@ -7,9 +7,10 @@ import {
   useGridApiRef,
   gridDataRowIdsSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridApi } from '@mui/x-data-grid-pro';
+import type { GridApi, GridDataSource, GridGetRowsParams } from '@mui/x-data-grid-pro';
+import { gridRowDropTargetRowIdSelector } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
-import { useBasicDemoData } from '@mui/x-data-grid-generator';
+import { useBasicDemoData, useMockServer } from '@mui/x-data-grid-generator';
 import { vi, describe, it, expect } from 'vitest';
 
 function createDragOverEvent(target: ChildNode, dropPosition: 'above' | 'below' = 'above') {
@@ -566,20 +567,132 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     fireEvent(document.body, outsideHorizontally);
     expect(outsideHorizontally.dataTransfer!.dropEffect).to.equal('none');
 
+    // The last row is not rendered, and the last hovered position (below row 1) is ignored
+    expect(apiRef!.current!.getRowElement(19)).to.equal(null);
     const belowGrid = createOutsideDragOver(gridRect.left + 50);
     fireEvent(document.body, belowGrid);
     expect(belowGrid.dataTransfer!.dropEffect).to.equal('copy');
 
+    // Scrolls to the bottom to show the drop indicator on the last row
+    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+    expect(virtualScroller.scrollTop).to.equal(
+      virtualScroller.scrollHeight - virtualScroller.clientHeight,
+    );
+
     fireEvent(rowReorderCell, createDragEndEvent(rowReorderCell));
 
-    // The last row is not rendered, and the last hovered position (below row 1) is ignored
-    expect(apiRef!.current!.getRowElement(19)).to.equal(null);
     await waitFor(() => {
       expect(apiRef.current!.getSortedRowIds()).to.deep.equal([
         ...rows.map((row) => row.id).filter((id) => id !== 0),
         0,
       ]);
     });
+  });
+
+  it('should clear the drop target when dragging outside of the grid', () => {
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+    const columns = [{ field: 'brand' }];
+    let apiRef: React.RefObject<GridApi | null>;
+
+    function Test() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} rowReordering />
+        </div>
+      );
+    }
+
+    render(<Test />);
+
+    const rowReorderCell = getCell(0, 0).firstChild! as Element;
+    const targetCell = getCell(1, 0);
+    fireDragStart(rowReorderCell);
+    fireEvent(targetCell, createDragOverEvent(targetCell, 'below'));
+    expect(gridRowDropTargetRowIdSelector(apiRef!)).to.equal(1);
+
+    const gridRect = document.querySelector(`.${gridClasses.root}`)!.getBoundingClientRect();
+    const outside = createEvent.dragOver(document.body) as DragEvent;
+    Object.defineProperty(outside, 'clientX', { value: gridRect.right + 50 });
+    Object.defineProperty(outside, 'clientY', { value: gridRect.top + 50 });
+    Object.defineProperty(outside, 'dataTransfer', { value: { dropEffect: 'none' } });
+    fireEvent(document.body, outside);
+
+    expect(outside.dataTransfer!.dropEffect).to.equal('none');
+    expect(gridRowDropTargetRowIdSelector(apiRef!)).to.equal(null);
+    fireEvent(rowReorderCell, createDragEndEvent(rowReorderCell));
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+  });
+
+  it('should not drop below the last row while it is not loaded with lazy loading', async () => {
+    let apiRef: React.RefObject<GridApi | null>;
+
+    function Test() {
+      apiRef = useGridApiRef();
+      const { fetchRows, isReady, ...props } = useMockServer(
+        { rowLength: 100, maxColumns: 1 },
+        { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
+      );
+      const dataSource: GridDataSource = React.useMemo(
+        () => ({
+          getRows: async (params: GridGetRowsParams) => {
+            const urlParams = new URLSearchParams({
+              filterModel: JSON.stringify(params.filterModel),
+              sortModel: JSON.stringify(params.sortModel),
+              start: `${params.start}`,
+              end: `${params.end}`,
+            });
+            const response = await fetchRows(
+              `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+            );
+            return { rows: response.rows, rowCount: response.rowCount };
+          },
+        }),
+        [fetchRows],
+      );
+
+      if (!isReady) {
+        return null;
+      }
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            {...props}
+            apiRef={apiRef}
+            dataSource={dataSource}
+            lazyLoading
+            paginationModel={{ page: 0, pageSize: 10 }}
+            rowReordering
+          />
+        </div>
+      );
+    }
+
+    render(<Test />);
+
+    await waitFor(() => {
+      expect(document.querySelector(`.${gridClasses.rowReorderCell}`)).not.to.equal(null);
+    });
+    const lastRowId = apiRef!.current!.getSortedRowIds().at(-1)!;
+    expect(apiRef!.current!.getRowNode(lastRowId)!.type).to.equal('skeletonRow');
+
+    const rowReorderCell = document.querySelector(`.${gridClasses.rowReorderCell}`)!;
+    fireDragStart(rowReorderCell);
+
+    const gridRect = document.querySelector(`.${gridClasses.root}`)!.getBoundingClientRect();
+    const belowGrid = createEvent.dragOver(document.body);
+    Object.defineProperty(belowGrid, 'clientX', { value: gridRect.left + 50 });
+    Object.defineProperty(belowGrid, 'clientY', { value: gridRect.bottom + 50 });
+    Object.defineProperty(belowGrid, 'dataTransfer', { value: { dropEffect: 'none' } });
+    fireEvent(document.body, belowGrid);
+
+    expect((belowGrid as DragEvent).dataTransfer!.dropEffect).to.equal('none');
+    fireEvent(rowReorderCell, createDragEndEvent(rowReorderCell));
   });
 
   // Regression test for https://github.com/mui/mui-x/issues/22057

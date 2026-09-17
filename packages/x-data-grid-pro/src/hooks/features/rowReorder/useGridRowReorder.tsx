@@ -449,10 +449,29 @@ export const useGridRowReorder = (
       return undefined;
     }
 
-    const handleDragOverOutsideRows = (event: DragEvent) => {
+    // Removes the drop indicator when dragging where the row can't be dropped
+    const clearDropTarget = () => {
+      if (dropTarget.current.targetRowId === null) {
+        return;
+      }
+      dropTarget.current = { targetRowId: null, targetRowIndex: null, dropPosition: null };
+      previousReorderState.current = {
+        ...previousReorderState.current,
+        previousTargetId: null,
+        previousDropPosition: null,
+      };
+      apiRef.current.setState((state) => ({
+        ...state,
+        rowReorder: { ...state.rowReorder, dropTarget: undefined },
+      }));
+    };
+
+    const findDropTarget = (
+      event: DragEvent,
+    ): { rowId: GridRowId; dropPosition: RowReorderDropPosition } | null => {
       const { rows, rowIdToIndexMap } = getVisibleRows(apiRef);
       if (rows.length === 0) {
-        return;
+        return null;
       }
 
       // The scroll areas cover the first and last visible rows: drop on the row under the pointer
@@ -474,14 +493,15 @@ export const useGridRowReorder = (
           rowElementId == null
             ? undefined
             : [rowElementId, Number(rowElementId)].find((id) => rowIdToIndexMap.has(id));
-        if (rowId !== undefined) {
-          handleDragOverRow(
-            rowId,
-            event,
-            calculateDropPosition({ target: elementUnder!, clientY: event.clientY }),
-          );
-        }
-        return;
+        return rowId === undefined
+          ? null
+          : {
+              rowId,
+              dropPosition: calculateDropPosition({
+                target: elementUnder!,
+                clientY: event.clientY,
+              }),
+            };
       }
 
       // Empty space below the rows, footer or page below the grid, within the grid's
@@ -493,11 +513,27 @@ export const useGridRowReorder = (
         apiRef.current.getRowElement(lastRowId)?.getBoundingClientRect().bottom ?? Infinity,
       );
       if (
-        event.clientY > rowsBottom &&
-        event.clientX >= mainRect.left &&
-        event.clientX <= mainRect.right
+        event.clientY <= rowsBottom ||
+        event.clientX < mainRect.left ||
+        event.clientX > mainRect.right
       ) {
-        handleDragOverRow(lastRowId, event, 'below');
+        return null;
+      }
+      // Bring the last row into view, so the drop indicator and the dropped row are visible
+      const virtualScroller = apiRef.current.virtualScrollerRef.current;
+      if (virtualScroller) {
+        apiRef.current.scroll({ top: virtualScroller.scrollHeight });
+      }
+      return { rowId: lastRowId, dropPosition: 'below' };
+    };
+
+    const handleDragOverOutsideRows = (event: DragEvent) => {
+      const target = findDropTarget(event);
+      // Rows not loaded yet (lazy loading) are replaced once fetched, so they can't be targeted
+      if (target && gridRowNodeSelector(apiRef, target.rowId)?.type !== 'skeletonRow') {
+        handleDragOverRow(target.rowId, event, target.dropPosition);
+      } else {
+        clearDropTarget();
       }
     };
 
