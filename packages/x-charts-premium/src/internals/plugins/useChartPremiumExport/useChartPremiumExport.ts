@@ -1,5 +1,5 @@
 import type { ChartPlugin } from '@mui/x-charts/internals';
-import { DEFAULT_CHART_EXCEL_OPTIONS } from '../../excelExport/chartExcelData.types';
+import { DEFAULT_CHART_EXCEL_OPTIONS } from '../../excelExport/defaults';
 import { getChartExcelTables } from '../../excelExport/getChartExcelTables';
 import { buildChartExcelWorkbook } from '../../excelExport/buildChartExcelWorkbook';
 import type {
