@@ -6,9 +6,12 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
   SchedulerProcessedDate,
+  SchedulerRenderableEventOccurrence,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { isEventOccurrence } from '@mui/x-scheduler-internals/internals';
 import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
@@ -280,6 +283,52 @@ export function getRecurrenceLabel(
     default:
       return localeText.recurrenceNoRepeat;
   }
+}
+
+/**
+ * The timezone the occurrence's event is stored in, the one its recurrence rule is expressed in.
+ * A creation draft has no event yet: it is created in the `default` timezone.
+ */
+export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence): TemporalTimezone {
+  return isEventOccurrence(occurrence) ? occurrence.dataTimezone.timezone : 'default';
+}
+
+/**
+ * The occurrence's start in the event's timezone, the day and weekday its recurrence rule
+ * is picked against.
+ */
+export function getEventTimezoneStart(
+  adapter: Adapter,
+  occurrence: SchedulerRenderableEventOccurrence,
+): SchedulerProcessedDate {
+  if (isEventOccurrence(occurrence)) {
+    return occurrence.dataTimezone.start;
+  }
+  return processDate(
+    adapter.setTimezone(occurrence.displayTimezone.start.value, 'default'),
+    adapter,
+  );
+}
+
+/**
+ * The IANA name of a timezone; the adapter aliases resolve to the system timezone.
+ */
+function getTimezoneName(timezone: TemporalTimezone): string {
+  return timezone === 'default' || timezone === 'system'
+    ? Intl.DateTimeFormat().resolvedOptions().timeZone
+    : timezone;
+}
+
+/**
+ * The name of the event's timezone when it is not the display one, so the days and weekdays
+ * of its recurrence rule can be labeled; `null` when both timezones are the same.
+ */
+export function getRecurrenceTimezoneName(
+  eventTimezone: TemporalTimezone,
+  displayTimezone: TemporalTimezone,
+): string | null {
+  const eventTimezoneName = getTimezoneName(eventTimezone);
+  return eventTimezoneName === getTimezoneName(displayTimezone) ? null : eventTimezoneName;
 }
 
 export function getEndsSelectionFromRRule(rrule?: {

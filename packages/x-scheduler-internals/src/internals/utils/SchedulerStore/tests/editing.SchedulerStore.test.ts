@@ -30,7 +30,7 @@ function armRecurringOccurrence(store: any) {
   const editedOccurrence = {
     id: 'standup',
     key: 'standup::2025-07-07',
-    displayTimezone: { start, end, rrule: RRULE },
+    displayTimezone: { start, end },
     // Present on every real occurrence: without it the repoint skips the data-timezone
     // identity branch these tests are about.
     dataTimezone: { timezone: 'default', start, end, rrule: RRULE },
@@ -59,14 +59,14 @@ storeClasses.forEach((storeClass) => {
           dataEnd: newEnd,
         });
 
-        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
+        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
         expect(occurrence.id).to.equal('detached-event');
         // A detached one-off keys by the plain event id (no `::day` suffix)...
         expect(occurrence.key).to.equal(getOccurrenceKey('detached-event'));
         expect(occurrence.key).to.not.contain('::');
         // ...and drops its recurrence rule, so the toolbar's Delete removes it directly instead of
         // reopening the recurring scope dialog.
-        expect(occurrence.displayTimezone.rrule).to.equal(undefined);
+        expect(occurrence.dataTimezone.rrule).to.equal(undefined);
         expect(occurrence.displayTimezone.start.value).toEqualDateTime(newStart);
         expect(occurrence.displayTimezone.end.value).toEqualDateTime(newEnd);
       });
@@ -84,7 +84,7 @@ storeClasses.forEach((storeClass) => {
           dataEnd: newEnd,
         });
 
-        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
+        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
         expect(occurrence.id).to.equal('following-event');
         // The new series still keys per-occurrence (event id + day)...
         expect(occurrence.key).to.equal(
@@ -92,7 +92,7 @@ storeClasses.forEach((storeClass) => {
         );
         expect(occurrence.key).to.contain('::');
         // ...and stays recurring, so its Delete keeps offering the scope dialog.
-        expect(occurrence.displayTimezone.rrule).to.equal(RRULE);
+        expect(occurrence.dataTimezone.rrule).to.equal(RRULE);
         expect(occurrence.displayTimezone.start.value).toEqualDateTime(newStart);
         expect(occurrence.displayTimezone.end.value).toEqualDateTime(newEnd);
       });
@@ -431,7 +431,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       expect(occurrence.key).to.equal(armedKey);
       expect(occurrence.dataTimezone.start.value).toEqualDateTime(movedStart);
-      expect(occurrence.displayTimezone.rrule).to.not.equal(undefined);
+      expect(occurrence.dataTimezone.rrule).to.not.equal(undefined);
     });
 
     it("should keep the armed occurrence on an end-only same-day scope 'all' change", () => {
@@ -507,7 +507,6 @@ premiumStoreClasses.forEach((storeClass) => {
       // original series' ten the armed snapshot was taken with.
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       expect(occurrence.id).to.not.equal('standup');
-      expect(occurrence.displayTimezone.rrule.count).to.equal(7);
       expect(occurrence.dataTimezone.rrule.count).to.equal(7);
     });
 
@@ -533,7 +532,6 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
       expect(occurrence.dataTimezone.rrule.byDay).to.deep.equal(['TU']);
-      expect(occurrence.displayTimezone.rrule.byDay).to.deep.equal(['TU']);
     });
 
     it("should disarm when a scope 'all' change removes the recurrence", () => {
@@ -661,7 +659,7 @@ premiumStoreClasses.forEach((storeClass) => {
       // The occurrence moved onto the detached one-off event, keeping its own times.
       expect(occurrence.id).to.not.equal('standup');
       expect(occurrence.key).to.not.equal(armedKey);
-      expect(occurrence.displayTimezone.rrule).to.equal(undefined);
+      expect(occurrence.dataTimezone.rrule).to.equal(undefined);
       expect(occurrence.displayTimezone.start.value).toEqualDateTime(dayA);
       expect(occurrence.displayTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));
       expect(occurrence.dataTimezone.rrule).to.equal(undefined);
@@ -707,7 +705,7 @@ premiumStoreClasses.forEach((storeClass) => {
       );
       expect(occurrence.dataTimezone.timezone).to.equal('UTC');
       // A 'this-and-following' split stays recurring.
-      expect(occurrence.displayTimezone.rrule).to.not.equal(undefined);
+      expect(occurrence.dataTimezone.rrule).to.not.equal(undefined);
       expect(occurrence.dataTimezone.rrule).to.not.equal(undefined);
     });
 

@@ -107,6 +107,7 @@ const heILDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'כל',
   recurrenceRepeatLabel: 'תדירות החזרה',
   recurrenceTabLabel: 'חזרה',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
   recurrenceMainSelectCustomLabel: 'חזרה',
   recurrenceWeeklyFrequencyLabel: 'שבועות',
   recurrenceWeeklyPresetLabel: ({ weekday }) => `מדי שבוע ב${localizeWeekday(weekday)}`,

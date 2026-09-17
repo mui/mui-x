@@ -46,6 +46,7 @@ export interface EventEditingLocaleText {
   recurrenceEveryLabel: string;
   recurrenceRepeatLabel: string;
   recurrenceTabLabel: string;
+  recurrenceTimezoneLabel: (timezone: string) => string;
   recurrenceMainSelectCustomLabel: string;
   recurrenceWeeklyFrequencyLabel: string;
   recurrenceWeeklyPresetLabel: (params: {

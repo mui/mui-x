@@ -22,6 +22,7 @@ import type {
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { processDate } from '@mui/x-scheduler-internals/process-date';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
@@ -47,6 +48,8 @@ import {
   hasProp,
   BUILT_IN_FORM_KEYS,
   getEditedRangeBounds,
+  getEventTimezone,
+  getEventTimezoneStart,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
 import TitleSection from '../event-dialog/TitleSection';
@@ -117,8 +120,6 @@ interface ResolutionSettings {
   displayTimezone: TemporalTimezone;
   shouldEventRequireResource: boolean;
   showRecurrence: boolean;
-  recurringEventsPlugin: ReturnType<typeof schedulerOtherSelectors.recurringEventsPlugin>;
-  recurrencePresets: ReturnType<typeof schedulerRecurringEventSelectors.presets>;
 }
 
 interface FormContentProps {
@@ -154,7 +155,9 @@ export function FormContent(props: FormContentProps) {
     const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
-    const base = occurrence.displayTimezone.rrule;
+    // The rule is expressed in the event's timezone (RFC 5545 evaluates it as local time in
+    // the DTSTART timezone), so it is read and written there, not in the display timezone.
+    const base = isEventOccurrence(occurrence) ? occurrence.dataTimezone.rrule : undefined;
     // The occurrence only carries the built-in event properties — custom fields
     // come from the raw model. When creating an event there is no model yet.
     const model = schedulerEventSelectors.modelLookup(store.state).get(occurrence.id);
@@ -191,8 +194,8 @@ export function FormContent(props: FormContentProps) {
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
         store.state,
-        occurrence.displayTimezone.rrule,
-        occurrence.displayTimezone.start,
+        base,
+        getEventTimezoneStart(adapter, occurrence),
       ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
@@ -363,11 +366,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         displayTimezone: schedulerOtherSelectors.displayTimezone(store.state),
         shouldEventRequireResource: schedulerOtherSelectors.shouldEventRequireResource(store.state),
         showRecurrence: schedulerOtherSelectors.areRecurringEventsAvailable(store.state),
-        recurringEventsPlugin: schedulerOtherSelectors.recurringEventsPlugin(store.state),
-        recurrencePresets: schedulerRecurringEventSelectors.presets(
-          store.state,
-          occurrence.displayTimezone.start,
-        ),
       };
 
       const values = formStore.state.values;
@@ -425,45 +423,39 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         color: values.color === null ? undefined : values.color,
       };
 
+      // A preset is built on the start the event ends up with, in the event's timezone: the
+      // rule is expressed there (RFC 5545 evaluates it as local time in the DTSTART timezone).
+      const ruleStart = submitStart
+        ? processDate(
+            current.adapter.setTimezone(start, getEventTimezone(occurrence)),
+            current.adapter,
+          )
+        : getEventTimezoneStart(current.adapter, occurrence);
+      const recurrencePresets = current.showRecurrence
+        ? schedulerRecurringEventSelectors.presets(store.state, ruleStart)
+        : null;
       let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
-      if (!current.showRecurrence || !current.recurrencePresets) {
-        rruleToSubmit = undefined;
-      } else if (values.recurrenceSelection === null) {
+      if (recurrencePresets == null || values.recurrenceSelection === null) {
         rruleToSubmit = undefined;
       } else if (values.recurrenceSelection === 'custom') {
         rruleToSubmit = values.rruleDraft;
       } else {
-        rruleToSubmit = current.recurrencePresets[values.recurrenceSelection];
+        rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
       // Read directly instead of subscribing: the placeholder changes on every
       // creation keystroke and would re-render the whole dialog.
       const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
       if (rawPlaceholder?.type === 'creation') {
-        // The rule is built on the display day; the event is stored in the default timezone.
-        const { recurringEventsPlugin } = current;
-        store.createEvent({
-          ...metaChanges,
-          start,
-          end,
-          rrule:
-            rruleToSubmit != null && recurringEventsPlugin != null
-              ? recurringEventsPlugin.projectRRuleToTimezone(
-                  current.adapter,
-                  rruleToSubmit,
-                  'default',
-                  start,
-                )
-              : rruleToSubmit,
-        });
+        store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
       } else if (
         current.showRecurrence &&
         isEventOccurrence(occurrence) &&
-        occurrence.displayTimezone.rrule
+        occurrence.dataTimezone.rrule
       ) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
           store.state,
-          occurrence.displayTimezone.rrule,
+          occurrence.dataTimezone.rrule,
           rruleToSubmit,
         );
 
@@ -487,25 +479,13 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         // don't close the dialog
         return;
       } else {
-        const changes: SchedulerEventUpdatedProperties = {
+        const result = store.updateEvent({
           ...metaChanges,
           id: occurrence.id,
           ...(submitStart ? { start } : {}),
           ...(submitEnd ? { end } : {}),
           rrule: rruleToSubmit,
-        };
-        // A rule added here is built on the display day; the plugin projects it into the
-        // data timezone the series expands in (the bounds it relabels keep their instant).
-        const { recurringEventsPlugin } = current;
-        const result = store.updateEvent(
-          recurringEventsPlugin != null && rruleToSubmit != null && isEventOccurrence(occurrence)
-            ? recurringEventsPlugin.applyDataTimezoneToEventUpdate({
-                adapter: current.adapter,
-                originalEvent: occurrence,
-                changes,
-              })
-            : changes,
-        );
+        });
         if (!result.applied) {
           // A vetoed save keeps the dialog open; the rejection sits on the range field and
           // editing the dates clears it.

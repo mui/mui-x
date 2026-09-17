@@ -770,7 +770,6 @@ export class SchedulerStore<
         adapter,
         originalEvent: original,
         changes: pendingRecurringEventOperation.changes,
-        occurrenceStart: occurrenceStartInDataTimezone,
       });
       updatedEvents = recurringEventsPlugin.updateRecurringEvent(
         adapter,
@@ -1084,7 +1083,6 @@ export class SchedulerStore<
     if (mode === 'edit' && liveEvent != null && isEventOccurrence(occurrence)) {
       occurrence = {
         ...occurrence,
-        displayTimezone: { ...occurrence.displayTimezone, rrule: liveEvent.displayTimezone.rrule },
         dataTimezone: { ...occurrence.dataTimezone, rrule: liveEvent.dataTimezone.rrule },
       };
     }
@@ -1235,9 +1233,6 @@ export class SchedulerStore<
           ...occurrence.displayTimezone,
           start: processDate(start, adapter),
           end: processDate(end, adapter),
-          // Cleared by a `only-this` detach so the surface reads as non-recurring; otherwise the
-          // rule is the series' and the editor refreshes it from the store when it opens.
-          rrule: isRecurring ? occurrence.displayTimezone.rrule : undefined,
         },
         // Keep the data-timezone identity in sync too, so a later edit or delete
         // targets the day the occurrence actually lives on.
@@ -1247,6 +1242,8 @@ export class SchedulerStore<
                 ...occurrence.dataTimezone,
                 start: processDate(dataStart, adapter),
                 end: processDate(dataEnd, adapter),
+                // Cleared by a `only-this` detach so the surface reads as non-recurring; otherwise
+                // the rule is the series' and the editor refreshes it from the store when it opens.
                 rrule: isRecurring ? occurrence.dataTimezone.rrule : undefined,
               },
             }

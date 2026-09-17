@@ -42,6 +42,7 @@ const urPKDialog: Partial<EventEditingLocaleText> = {
   // recurrenceEveryLabel: 'Every',
   // recurrenceRepeatLabel: 'Repeat',
   // recurrenceTabLabel: 'Recurrence',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
   // recurrenceMainSelectCustomLabel: 'Recurrence',
   // recurrenceWeeklyFrequencyLabel: 'weeks',
   // recurrenceWeeklyPresetLabel: ({

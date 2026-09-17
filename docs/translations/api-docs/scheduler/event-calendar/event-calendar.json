@@ -466,6 +466,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog recurrence selector toggle group element"
     },
+    "eventDialogRecurrenceTimezoneLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog recurrence timezone label element"
+    },
     "eventDialogRepeatSectionContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog repeat section content element"

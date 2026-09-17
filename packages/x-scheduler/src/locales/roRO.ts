@@ -42,6 +42,7 @@ const roRODialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'La fiecare',
   recurrenceRepeatLabel: 'Repetă',
   recurrenceTabLabel: 'Recurență',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
   recurrenceMainSelectCustomLabel: 'Recurență',
   recurrenceWeeklyFrequencyLabel: 'săptămâni',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se repetă săptămânal în ${weekdayName}`,

@@ -11,6 +11,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import FormLabel from '@mui/material/FormLabel';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
@@ -38,6 +39,9 @@ import {
   EventDialogTabContent,
   getRecurrenceLabel,
   getWeekdayToken,
+  getEventTimezone,
+  getEventTimezoneStart,
+  getRecurrenceTimezoneName,
 } from '@mui/x-scheduler/internals';
 import {
   EventDialogSectionHeaderTitle,
@@ -209,9 +213,19 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
+
+  // The rule is expressed in the event's timezone, the one the series expands in, so the
+  // days and weekdays offered here are the occurrence's in that timezone. When it differs
+  // from the display timezone, the tab names it.
+  const eventTimezone = getEventTimezone(occurrence);
+  const eventTimezoneStart = React.useMemo(
+    () => getEventTimezoneStart(adapter, occurrence),
+    [adapter, occurrence],
+  );
+  const recurrenceTimezoneName = getRecurrenceTimezoneName(eventTimezone, displayTimezone);
   const monthlyRef = React.useMemo(
-    () => getMonthlyReference(adapter, occurrence.displayTimezone.start),
-    [adapter, occurrence.displayTimezone.start],
+    () => getMonthlyReference(adapter, eventTimezoneStart),
+    [adapter, eventTimezoneStart],
   );
   const weeklyDays = React.useMemo(
     () => getWeeklyDays(adapter, visibleDate, weekStartsOn),
@@ -230,10 +244,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       ? {
           byDay: [],
           byMonthDay: [],
-          ...schedulerRecurringEventSelectors.presets(
-            store.state,
-            occurrence.displayTimezone.start,
-          )![newSelection],
+          ...schedulerRecurringEventSelectors.presets(store.state, eventTimezoneStart)![
+            newSelection
+          ],
         }
       : { freq: 'WEEKLY' as const, interval: 1, byDay: [], byMonthDay: [] };
     formStore.setValues({ recurrenceSelection: newSelection, rruleDraft: newDraft });
@@ -271,7 +284,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           recurrenceSelection: 'custom',
           rruleDraft: {
             ...prev.rruleDraft,
-            until: adapter.endOfDay(adapter.date(prev.endDate, displayTimezone)),
+            // The displayed end day, as a day of the event's timezone.
+            until: adapter.endOfDay(
+              adapter.setTimezone(adapter.date(prev.endDate, displayTimezone), eventTimezone),
+            ),
             count: undefined,
           },
         }));
@@ -311,10 +327,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const untilValue = event.currentTarget.value;
     formStore.setValues((prev) => ({
       recurrenceSelection: 'custom',
-      // The chosen day is the last one the series runs on, as the user sees it.
+      // The chosen day is the last one the series runs on, in the event's timezone.
       rruleDraft: {
         ...prev.rruleDraft,
-        until: adapter.endOfDay(adapter.date(untilValue, displayTimezone)),
+        until: adapter.endOfDay(adapter.date(untilValue, eventTimezone)),
       },
     }));
   };
@@ -359,12 +375,12 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(rruleDraft);
 
-  const weekday = getWeekdayToken(adapter, occurrence.displayTimezone.start.value);
+  const weekday = getWeekdayToken(adapter, eventTimezoneStart.value);
 
   const recurrenceOptions = ([null, 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY', 'custom'] as const).map(
     (value) => ({
       value,
-      label: getRecurrenceLabel(adapter, occurrence.displayTimezone.start, value, localeText),
+      label: getRecurrenceLabel(adapter, eventTimezoneStart, value, localeText),
     }),
   );
 
@@ -458,6 +474,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               </MenuItem>
             ))}
           </Select>
+          {recurrenceTimezoneName != null && (
+            <FormHelperText className={classes.eventDialogRecurrenceTimezoneLabel}>
+              {localeText.recurrenceTimezoneLabel(recurrenceTimezoneName)}
+            </FormHelperText>
+          )}
         </FormControl>
 
         <RepeatSectionFieldset className={classes.eventDialogRepeatSectionFieldset}>

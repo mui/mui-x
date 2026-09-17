@@ -135,7 +135,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     }
 
     // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
-    if (event.displayTimezone.rrule) {
+    if (event.dataTimezone.rrule) {
       // Without the premium recurring-events plugin attached, recurring events
       // are not expanded into occurrences — they are treated as single non-recurring events.
       if (recurringEventsPlugin == null) {

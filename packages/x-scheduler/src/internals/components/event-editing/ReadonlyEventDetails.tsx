@@ -14,9 +14,15 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
+import { getPrimaryResourceId, isEventOccurrence } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
-import { getRecurrenceLabel, hasProp } from '../event-dialog/utils';
+import {
+  getEventTimezone,
+  getEventTimezoneStart,
+  getRecurrenceLabel,
+  getRecurrenceTimezoneName,
+  hasProp,
+} from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
@@ -114,19 +120,26 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     schedulerResourceSelectors.processedResource,
     getPrimaryResourceId(occurrence.resource),
   );
+  // The rule is read in the event's timezone, the one it is expressed in.
+  const eventTimezoneStart = getEventTimezoneStart(adapter, occurrence);
   const defaultRecurrenceKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
-    occurrence.displayTimezone.rrule,
-    occurrence.displayTimezone.start,
+    isEventOccurrence(occurrence) ? occurrence.dataTimezone.rrule : undefined,
+    eventTimezoneStart,
   );
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   // Feature hook
   const formatTime = useFormatTime();
+  const recurrenceTimezoneName = getRecurrenceTimezoneName(
+    getEventTimezone(occurrence),
+    displayTimezone,
+  );
   const recurrenceLabel = getRecurrenceLabel(
     adapter,
-    occurrence.displayTimezone.start,
+    eventTimezoneStart,
     defaultRecurrenceKey,
     localeText,
   );
@@ -194,7 +207,9 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
               color: 'text.secondary',
             }}
           >
-            {recurrenceLabel}
+            {recurrenceTimezoneName == null
+              ? recurrenceLabel
+              : `${recurrenceLabel} (${recurrenceTimezoneName})`}
           </Typography>
         </RecurrenceLabelContainer>
       )}

@@ -131,4 +131,7 @@ to happen at 09:00 local time in Europe/Paris.
 The Scheduler uses the event's `timezone` to interpret and expand
 the recurrence pattern correctly across DST boundaries.
 
+The event dialog reads and writes the recurrence rule in the event's `timezone` too: the weekday and day of month it offers are the ones of the event in that timezone, which can differ from the day the occurrence is displayed on.
+When the event's timezone is not the `displayTimezone`, the Recurrence tab and the read-only details name it.
+
 {{"demo": "TimezoneRecurringEvents.js", "bg": "inline", "defaultCodeOpen": false}}

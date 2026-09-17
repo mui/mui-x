@@ -42,6 +42,7 @@ const frFRDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Chaque',
   recurrenceRepeatLabel: 'Répéter',
   recurrenceTabLabel: 'Récurrence',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
   recurrenceMainSelectCustomLabel: 'Récurrence',
   recurrenceWeeklyFrequencyLabel: 'semaines',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se répète chaque semaine le ${weekdayName}`,

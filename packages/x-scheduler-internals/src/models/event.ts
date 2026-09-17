@@ -46,12 +46,6 @@ interface SchedulerProcessedEventBase {
      * */
     timezone: TemporalTimezone;
     /**
-     * Recurrence projected to the display timezone so the UI reflects
-     * what the user actually experiences (e.g. displayed weekdays).
-     * Must be converted back to the dataTimezone representation when persisted.
-     */
-    rrule?: SchedulerProcessedEventRecurrenceRule;
-    /**
      * Exception dates projected to the display timezone for UI purposes.
      * Must be converted back to the dataTimezone representation when persisted.
      */

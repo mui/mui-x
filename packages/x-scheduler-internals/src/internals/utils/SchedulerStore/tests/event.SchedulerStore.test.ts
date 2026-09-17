@@ -84,7 +84,6 @@ storeClasses.forEach((storeClass) => {
             start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
             end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
             timezone: 'default',
-            rrule: undefined,
             exDates: undefined,
           },
           allDay: false,
@@ -1145,13 +1144,13 @@ premiumStoreClasses.forEach((storeClass) => {
           adapter,
         );
         const occurrence = schedulerEventSelectors.processedEventRequired(store.state, 'report');
-        expect(occurrence.displayTimezone.rrule!.byMonthDay).to.deep.equal([3]);
+        expect(occurrence.dataTimezone.rrule!.byMonthDay).to.deep.equal([3]);
 
         store.updateRecurringEvent({
           occurrenceStart: occurrence.dataTimezone.start.value,
           changes: {
             id: 'report',
-            rrule: { ...occurrence.displayTimezone.rrule!, count: 5 },
+            rrule: { ...occurrence.dataTimezone.rrule!, count: 5 },
           },
         });
         store.selectRecurringEventScope('all');
@@ -1168,50 +1167,10 @@ premiumStoreClasses.forEach((storeClass) => {
       });
 
       (['all', 'this-and-following'] as const).forEach((scope) => {
-        it(`should anchor a monthly rule on the edited start with scope '${scope}' from another timezone`, () => {
-          // A daily series starting July 4 00:00 UTC shows on July 3 20:00 in New York.
-          // Edited to July 3 10:00 New York (July 3 14:00 UTC) and switched to monthly on
-          // the 3rd, the rule must repeat on the 3rd: the stored start no longer anchors it.
-          const event = EventBuilder.new()
-            .id('report')
-            .withDataTimezone('UTC')
-            .singleDay('2025-07-04T00:00:00Z', 60)
-            .recurrent('DAILY')
-            .build();
-          const onEventsChange = vi.fn();
-          const store = new storeClass.Value(
-            {
-              resources: TEST_RESOURCES,
-              events: [event],
-              displayTimezone: 'America/New_York',
-              onEventsChange,
-            },
-            adapter,
-          );
-          const occurrence = schedulerEventSelectors.processedEventRequired(store.state, 'report');
-
-          store.updateRecurringEvent({
-            occurrenceStart: occurrence.dataTimezone.start.value,
-            changes: {
-              id: 'report',
-              start: adapter.date('2025-07-03T10:00:00', 'America/New_York'),
-              end: adapter.date('2025-07-03T11:00:00', 'America/New_York'),
-              rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [3] },
-            },
-          });
-          store.selectRecurringEventScope(scope);
-
-          const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
-          const updated =
-            updatedEvents.find((item) => item.rrule != null && item.id !== 'report') ??
-            updatedEvents.find((item) => item.id === 'report')!;
-          expect(updated.rrule).to.deep.equal({ freq: 'MONTHLY', interval: 1, byMonthDay: [3] });
-        });
-
-        it(`should anchor a monthly rule on the edited occurrence with scope '${scope}' from another timezone`, () => {
-          // The July 20 occurrence of a daily UTC series shows on July 19 in New York. A
-          // monthly rule picked from it on the 19th, with its start untouched, must repeat on
-          // the 20th: the series start is not the day the rule was picked against.
+        it(`should store the submitted rule as is with scope '${scope}' from another timezone`, () => {
+          // The rule is picked in the data timezone (RFC 5545 evaluates it in the DTSTART
+          // timezone): the July 20 occurrence of a daily UTC series shows on July 19 in New
+          // York, and a monthly rule on the 20th picked from it is stored on the 20th.
           const event = EventBuilder.new()
             .id('report')
             .withDataTimezone('UTC')
@@ -1233,7 +1192,7 @@ premiumStoreClasses.forEach((storeClass) => {
             occurrenceStart: adapter.date('2025-07-20T00:00:00', 'UTC'),
             changes: {
               id: 'report',
-              rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [19] },
+              rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [20] },
             },
           });
           store.selectRecurringEventScope(scope);

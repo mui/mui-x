@@ -42,6 +42,7 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Cada',
   recurrenceRepeatLabel: 'Repetir',
   recurrenceTabLabel: 'Recurrencia',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
   recurrenceMainSelectCustomLabel: 'Recurrencia',
   recurrenceWeeklyFrequencyLabel: 'semanas',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se repite semanalmente el ${weekdayName}`,

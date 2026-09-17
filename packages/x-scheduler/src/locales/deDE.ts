@@ -42,6 +42,7 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Jede',
   recurrenceRepeatLabel: 'Wiederholen',
   recurrenceTabLabel: 'Wiederholung',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
   recurrenceMainSelectCustomLabel: 'Wiederholung',
   recurrenceWeeklyFrequencyLabel: 'Wochen',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Wird wöchentlich am ${weekdayName} wiederholt`,

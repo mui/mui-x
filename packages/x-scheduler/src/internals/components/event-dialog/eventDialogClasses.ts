@@ -119,6 +119,8 @@ export interface EventDialogClasses {
   eventDialogRecurrenceIcon: string;
   /** Styles applied to the event dialog recurrence label element. */
   eventDialogRecurrenceLabel: string;
+  /** Styles applied to the event dialog recurrence timezone label element. */
+  eventDialogRecurrenceTimezoneLabel: string;
   /** Styles applied to the event dialog description label element. */
   eventDialogDescriptionLabel: string;
 }
@@ -186,6 +188,7 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogDateTimeLabel',
   'eventDialogRecurrenceIcon',
   'eventDialogRecurrenceLabel',
+  'eventDialogRecurrenceTimezoneLabel',
   'eventDialogDescriptionLabel',
 ];
 
@@ -251,5 +254,6 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogDateTimeLabel: ['eventDialogDateTimeLabel'],
   eventDialogRecurrenceIcon: ['eventDialogRecurrenceIcon'],
   eventDialogRecurrenceLabel: ['eventDialogRecurrenceLabel'],
+  eventDialogRecurrenceTimezoneLabel: ['eventDialogRecurrenceTimezoneLabel'],
   eventDialogDescriptionLabel: ['eventDialogDescriptionLabel'],
 };

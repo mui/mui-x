@@ -1,6 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { findInvalidRangeField, getEditedRangeBounds } from './utils';
+import { findInvalidRangeField, getEditedRangeBounds, getRecurrenceTimezoneName } from './utils';
 
 describe('findInvalidRangeField', () => {
   const base = {
@@ -107,5 +107,23 @@ describe('getEditedRangeBounds', () => {
       startEdited: true,
       endEdited: true,
     });
+  });
+});
+
+describe('getRecurrenceTimezoneName', () => {
+  const systemTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  it("should return the event's timezone when it is not the display one", () => {
+    expect(getRecurrenceTimezoneName('UTC', 'America/New_York')).to.equal('UTC');
+  });
+
+  it('should return null when both timezones are the same', () => {
+    expect(getRecurrenceTimezoneName('Asia/Tokyo', 'Asia/Tokyo')).to.equal(null);
+  });
+
+  it('should resolve the adapter aliases to the system timezone', () => {
+    expect(getRecurrenceTimezoneName('default', 'system')).to.equal(null);
+    expect(getRecurrenceTimezoneName('default', systemTimezone)).to.equal(null);
+    expect(getRecurrenceTimezoneName('default', 'Pacific/Kiritimati')).to.equal(systemTimezone);
   });
 });

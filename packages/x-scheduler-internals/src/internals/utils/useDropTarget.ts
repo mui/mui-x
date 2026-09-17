@@ -277,7 +277,7 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     return;
   }
 
-  if (originalOccurrence.displayTimezone.rrule) {
+  if (originalOccurrence.dataTimezone.rrule) {
     store.updateRecurringEvent({
       occurrenceStart: originalOccurrence.dataTimezone.start.value,
       changes,
