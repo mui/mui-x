@@ -892,8 +892,12 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       ) {
         return;
       }
+      const heightChanged = rootSize.height !== store.state.rootSize.height;
       store.state.rootSize = rootSize;
-      if (isFirstSizing.current || !api.debouncedUpdateDimensions) {
+      // A growing container can invalidate the scrollbar prediction made when
+      // its content changed. Apply the observed height immediately so that
+      // prediction does not persist through the resize throttle window (https://github.com/mui/mui-x/issues/23573).
+      if (isFirstSizing.current || heightChanged || !api.debouncedUpdateDimensions) {
         // We want to initialize the grid dimensions as soon as possible to avoid flickering
         api.updateDimensions(isFirstSizing.current);
         isFirstSizing.current = false;

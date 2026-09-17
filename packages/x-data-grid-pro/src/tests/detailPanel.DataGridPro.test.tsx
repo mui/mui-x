@@ -708,6 +708,8 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   // https://github.com/mui/mui-x/issues/23573
   describe('flex column width in auto-growing layouts', () => {
+    const detailPanelHeight = 100;
+
     function GrowingTestCase({
       containerStyle,
       ...other
@@ -726,8 +728,10 @@ describe('<DataGridPro /> - Detail panel', () => {
               { id: 1, name: 'B' },
               { id: 2, name: 'C' },
             ]}
-            getDetailPanelContent={() => <div style={{ height: 100 }} />}
-            getDetailPanelHeight={() => 100}
+            scrollbarSize={15}
+            resizeThrottleMs={60}
+            getDetailPanelContent={() => <div style={{ height: detailPanelHeight }} />}
+            getDetailPanelHeight={() => detailPanelHeight}
             {...other}
           />
         </div>
@@ -737,42 +741,43 @@ describe('<DataGridPro /> - Detail panel', () => {
     const getFlexHeader = () =>
       document.querySelector<HTMLElement>('[role="columnheader"][data-field="name"]')!;
 
-    // Samples the flex column width on every frame, so a width change that is
-    // painted and reverted later is still observed.
-    const sampleFlexWidthPerFrame = (frames: number) =>
-      new Promise<number[]>((resolve) => {
-        const widths: number[] = [];
-        const tick = () => {
-          widths.push(getFlexHeader().offsetWidth);
-          if (widths.length >= frames) {
-            resolve(widths);
-          } else {
-            requestAnimationFrame(tick);
-          }
-        };
-        requestAnimationFrame(tick);
-      });
-
     it.skipIf(isJSDOM)(
-      'should not shrink the flex column when expanding a detail panel in a growing layout',
+      'should restore flex width on container growth without waiting for the resize throttle',
       async () => {
-        const { user } = render(<GrowingTestCase />);
-
-        await waitFor(() => {
+        // Freeze the resize throttle while allowing native layout and
+        // ResizeObserver deliveries to proceed.
+        // This ensures that the dimension correction is not delayed by the resize throttle.
+        vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+        const { unmount } = render(<GrowingTestCase />);
+        let observer: ResizeObserver | undefined;
+        try {
           expect(apiRef.current!.getRootDimensions().isReady).to.equal(true);
-        });
-        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
-        const initialWidth = getFlexHeader().offsetWidth;
+          expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+          const initialWidth = getFlexHeader().offsetWidth;
+          const expectedHeight =
+            apiRef.current!.getRootDimensions().root.height + detailPanelHeight;
+          const container = document.querySelector<HTMLElement>(`.${gridClasses.main}`)!;
+          const resized = new Promise<void>((resolve) => {
+            observer = new ResizeObserver(([entry]) => {
+              if (entry.contentRect.height === expectedHeight) {
+                resolve();
+              }
+            });
+            observer.observe(container);
+          });
 
-        await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
-        // 15 frames cover the resize throttle window, during which the
-        // transient scrollbar reservation used to be visible.
-        const widths = await act(() => sampleFlexWidthPerFrame(15));
+          act(() => apiRef.current!.toggleDetailPanel(0));
+          // Wait for the observed height change and let React commit the result.
+          // No throttle timers are advanced, and intermediate layouts are allowed.
+          await act(async () => resized);
 
-        expect(widths, `sampled widths: ${widths.join(', ')}`).to.deep.equal(
-          widths.map(() => initialWidth),
-        );
-        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+          expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+          expect(getFlexHeader().offsetWidth).to.equal(initialWidth);
+        } finally {
+          observer?.disconnect();
+          unmount();
+          vi.useRealTimers();
+        }
       },
     );
 
