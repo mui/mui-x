@@ -38,13 +38,14 @@ export interface ChartExportOptions {
   /**
    * Callback function that is called when a stylesheet, or a stylesheet it imports, fails to load in the export document,
    * for example if a request fails or a Content Security Policy blocks it.
-   * Return or resolve to continue the export, so the result may be missing some styles.
-   * Throw or reject to stop the export.
+   * Return or resolve to `false` to cancel the export without an error.
+   * Throw or reject to make the export fail with that error.
+   * Return anything else to continue the export, so the result may be missing some styles.
    * If not provided, the export continues and the failure is logged as a warning in development.
    * @param {HTMLLinkElement} element The stylesheet link element that failed to load, or whose import failed to load.
-   * @returns {Promise<void> | void} A promise or void. If a promise is returned, the export waits for it to settle before proceeding.
+   * @returns {Promise<boolean | void> | boolean | void} `false` to cancel the export. If a promise is returned, the export waits for it to settle before proceeding.
    */
-  onStylesheetError?: (element: HTMLLinkElement) => Promise<void> | void;
+  onStylesheetError?: (element: HTMLLinkElement) => Promise<boolean | void> | boolean | void;
 }
 
 /**

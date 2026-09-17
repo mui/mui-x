@@ -77,7 +77,8 @@ export async function exportImage(
   const root =
     rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
-  const iframeLoadPromise = new Promise<void>((resolve, reject) => {
+  /* Resolves to `false` when `onStylesheetError` cancels the export. */
+  const iframeLoadPromise = new Promise<boolean>((resolve, reject) => {
     iframe.onload = () => {
       (async () => {
         const exportDoc = iframe.contentDocument!;
@@ -109,11 +110,17 @@ export async function exportImage(
         exportDoc.body.style.height = 'fit-content';
 
         if (copyStyles) {
-          await Promise.all(loadStyleSheets(exportDoc, root, { nonce, onStylesheetError }));
+          const loaded = await Promise.all(
+            loadStyleSheets(exportDoc, root, { nonce, onStylesheetError }),
+          );
+          if (loaded.includes(false)) {
+            return false;
+          }
           checkStyleSheetsLoaded(exportDoc);
         }
 
         await copyCanvasesContent(element, elementClone);
+        return true;
       })().then(resolve, reject);
     };
   });
@@ -123,7 +130,9 @@ export async function exportImage(
   const canvas = document.createElement('canvas');
 
   try {
-    await iframeLoadPromise;
+    if (!(await iframeLoadPromise)) {
+      return;
+    }
     await onBeforeExport(iframe);
 
     const drawDocument = await drawDocumentPromise;

@@ -118,4 +118,24 @@ describe.skipIf(isJSDOM)('printChart', () => {
     expect(onStylesheetError.mock.calls.length).to.equal(1);
     expect(printed).to.equal(true);
   });
+
+  it('cancels the print without an error when `onStylesheetError` returns `false`', async () => {
+    addMissingStylesheet();
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+    const onBeforeExport = vi.fn();
+
+    render(<Chart apiRef={apiRef} />);
+
+    const iframeCount = document.querySelectorAll('iframe').length;
+
+    await act(async () => {
+      await apiRef.current!.exportAsPrint({
+        onBeforeExport,
+        onStylesheetError: () => false,
+      });
+    });
+
+    expect(onBeforeExport.mock.calls.length).to.equal(0);
+    expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+  });
 });

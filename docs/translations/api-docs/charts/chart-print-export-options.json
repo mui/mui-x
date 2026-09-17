@@ -12,7 +12,7 @@
       "description": "Callback function that is called before the export is triggered.<br />It can be used to modify the iframe or perform any other actions before the export, such as updating styles,<br />removing elements, etc."
     },
     "onStylesheetError": {
-      "description": "Callback function that is called when a stylesheet, or a stylesheet it imports, fails to load in the export document,<br />for example if a request fails or a Content Security Policy blocks it.<br />Return or resolve to continue the export, so the result may be missing some styles.<br />Throw or reject to stop the export.<br />If not provided, the export continues and the failure is logged as a warning in development."
+      "description": "Callback function that is called when a stylesheet, or a stylesheet it imports, fails to load in the export document,<br />for example if a request fails or a Content Security Policy blocks it.<br />Return or resolve to <code>false</code> to cancel the export without an error.<br />Throw or reject to make the export fail with that error.<br />Return anything else to continue the export, so the result may be missing some styles.<br />If not provided, the export continues and the failure is logged as a warning in development."
     }
   }
 }

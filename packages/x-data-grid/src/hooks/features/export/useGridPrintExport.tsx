@@ -53,7 +53,7 @@ type PrintWindowOnLoad = (
     | 'getRowsToExport'
     | 'onStylesheetError'
   >,
-) => Promise<void>;
+) => Promise<boolean>;
 
 function buildPrintWindow(title?: string): HTMLIFrameElement {
   const iframeEl = document.createElement('iframe');
@@ -147,7 +147,7 @@ export const useGridPrintExport = (
       const printDoc = printWindow.contentDocument;
 
       if (!printDoc) {
-        return;
+        return false;
       }
 
       const gridRootElement = apiRef.current.rootElementRef.current;
@@ -226,7 +226,7 @@ export const useGridPrintExport = (
         printDoc.body.classList.add(...normalizeOptions.bodyClassName.split(' '));
       }
 
-      let stylesheetLoadPromises: Promise<void>[] = [];
+      let stylesheetLoadPromises: Promise<boolean>[] = [];
 
       if (normalizeOptions.copyStyles) {
         const rootCandidate = gridRootElement!.getRootNode();
@@ -241,12 +241,17 @@ export const useGridPrintExport = (
       }
 
       // wait for remote stylesheets to load
-      await Promise.all(stylesheetLoadPromises);
+      const loaded = await Promise.all(stylesheetLoadPromises);
+      if (loaded.includes(false)) {
+        // `onStylesheetError` cancelled the print
+        return false;
+      }
 
       // Trigger print
       if (process.env.NODE_ENV !== 'test' && !DEBUG_MODE) {
         printWindow.contentWindow!.print();
       }
+      return true;
     },
     [apiRef, doc],
   );
@@ -347,11 +352,20 @@ export const useGridPrintExport = (
               }
             });
 
-            handlePrintWindowLoad(printWindow, options).then(resolve, (error) => {
-              // The print dialog never opens, so restore the grid here
-              handlePrintWindowAfterPrint(printWindow);
-              reject(error);
-            });
+            handlePrintWindowLoad(printWindow, options).then(
+              (printed) => {
+                if (!printed) {
+                  // The print dialog never opens, so restore the grid here
+                  handlePrintWindowAfterPrint(printWindow);
+                }
+                resolve();
+              },
+              (error) => {
+                // The print dialog never opens, so restore the grid here
+                handlePrintWindowAfterPrint(printWindow);
+                reject(error);
+              },
+            );
           };
           doc.current!.body.appendChild(printWindow);
         });

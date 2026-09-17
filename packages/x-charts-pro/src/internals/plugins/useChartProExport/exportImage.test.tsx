@@ -186,4 +186,30 @@ describe.skipIf(isJSDOM)('exportImage', () => {
     expect(onStylesheetError.mock.calls.length).to.equal(1);
     expect(onBeforeExport.mock.calls.length).to.equal(1);
   });
+
+  it('cancels the export without an error when `onStylesheetError` returns `false`', async () => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/missing-stylesheet.css';
+    document.head.appendChild(link);
+    onTestFinished(() => link.remove());
+
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+    const onBeforeExport = vi.fn();
+
+    render(<Chart apiRef={apiRef} />);
+
+    const iframeCount = document.querySelectorAll('iframe').length;
+
+    await act(async () => {
+      await apiRef.current!.exportAsImage({
+        onBeforeExport,
+        onStylesheetError: () => Promise.resolve(false),
+      });
+    });
+
+    expect(onBeforeExport.mock.calls.length).to.equal(0);
+    expect(vi.mocked(HTMLAnchorElement.prototype.click).mock.calls.length).to.equal(0);
+    expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+  });
 });

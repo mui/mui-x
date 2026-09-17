@@ -34,7 +34,7 @@ describe('loadStyleSheets', () => {
     /* A stylesheet blocked by the Content Security Policy fires `error` instead of `load`. */
     await expect(async () => {
       dispatchError(targetDocument);
-      await expect(Promise.all(promises)).resolves.toBeDefined();
+      await expect(Promise.all(promises)).resolves.to.deep.equal([true]);
     }).toWarnDev(
       'MUI X: The stylesheet "https://example.com/missing.css", or a stylesheet it imports, failed to load in the export document.',
     );
@@ -50,9 +50,37 @@ describe('loadStyleSheets', () => {
     const promises = loadStyleSheets(targetDocument, sourceDocument, { onStylesheetError });
     dispatchError(targetDocument);
 
-    await expect(Promise.all(promises)).resolves.toBeDefined();
+    await expect(Promise.all(promises)).resolves.to.deep.equal([true]);
     expect(onStylesheetError.mock.calls.length).to.equal(1);
     expect(onStylesheetError.mock.calls[0][0].href).to.equal('https://example.com/missing.css');
+  });
+
+  it('resolves to false when onStylesheetError returns false', async () => {
+    const targetDocument = createTargetDocument();
+    const sourceDocument = createSourceDocument(
+      '<link rel="stylesheet" href="https://example.com/missing.css" />',
+    );
+
+    const promises = loadStyleSheets(targetDocument, sourceDocument, {
+      onStylesheetError: () => false,
+    });
+    dispatchError(targetDocument);
+
+    await expect(Promise.all(promises)).resolves.to.deep.equal([false]);
+  });
+
+  it('resolves to false when onStylesheetError resolves to false', async () => {
+    const targetDocument = createTargetDocument();
+    const sourceDocument = createSourceDocument(
+      '<link rel="stylesheet" href="https://example.com/missing.css" />',
+    );
+
+    const promises = loadStyleSheets(targetDocument, sourceDocument, {
+      onStylesheetError: () => Promise.resolve(false),
+    });
+    dispatchError(targetDocument);
+
+    await expect(Promise.all(promises)).resolves.to.deep.equal([false]);
   });
 
   it('rejects when onStylesheetError throws', async () => {
@@ -123,7 +151,7 @@ describe('loadStyleSheets', () => {
       link.dispatchEvent(new Event('load'));
     });
 
-    await expect(Promise.all(promises)).resolves.toBeDefined();
+    await expect(Promise.all(promises)).resolves.to.deep.equal([true]);
   });
 
   it('sets the nonce on the copied elements', () => {

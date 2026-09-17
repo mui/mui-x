@@ -31,7 +31,14 @@ export function printChart(
           rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
         if (copyStyles) {
-          await Promise.all(loadStyleSheets(printDoc, root, { nonce, onStylesheetError }));
+          const loaded = await Promise.all(
+            loadStyleSheets(printDoc, root, { nonce, onStylesheetError }),
+          );
+          if (loaded.includes(false)) {
+            /* `onStylesheetError` cancelled the export. */
+            printWindow.remove();
+            return;
+          }
         }
 
         await copyCanvasesContent(element, elementClone);

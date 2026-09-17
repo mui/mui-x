@@ -137,9 +137,12 @@ The result may be missing some styles, and a warning is logged in development.
 To handle the failure yourself, use the `onStylesheetError` callback.
 It receives the `<link>` element that failed to load, or whose import failed to load:
 
-- Return or resolve to continue the export.
-- Throw an error or reject to stop the export. The promise returned by `exportAsImage()` or `exportAsPrint()` rejects with that error, see [Handling export errors](#handling-export-errors).
+- Return or resolve to `false` to cancel the export. Nothing is exported, no error is logged, and the promise returned by `exportAsImage()` or `exportAsPrint()` resolves.
+- Throw an error or reject to make the export fail. The promise returned by `exportAsImage()` or `exportAsPrint()` rejects with that error, see [Handling export errors](#handling-export-errors).
+- Return anything else to continue the export.
 - Return a promise to make the export wait for it, for example while you add replacement styles to `link.ownerDocument`.
+
+With the toolbar, the export is started for you, so cancel with `false` and report the failure from the callback:
 
 ```tsx
 <BarChartPro
@@ -147,7 +150,8 @@ It receives the `<link>` element that failed to load, or whose import failed to 
     toolbar: {
       printOptions: {
         onStylesheetError: (link) => {
-          throw new Error(`The stylesheet ${link.href} failed to load.`);
+          showNotification(`The stylesheet ${link.href} failed to load.`);
+          return false;
         },
       },
     },

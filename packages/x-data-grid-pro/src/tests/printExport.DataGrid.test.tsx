@@ -232,7 +232,7 @@ describe('<DataGridPro /> - Print export', () => {
       columns: { columnVisibilityModel: { currencyPair: true, id: false } },
     };
 
-    async function printAndWaitForTheError(
+    async function printAndWaitForTheResult(
       onStylesheetError: ReturnType<typeof vi.fn>,
       clickPrint: () => void,
     ) {
@@ -264,7 +264,7 @@ describe('<DataGridPro /> - Print export', () => {
       const printItem = screen.getByRole('menuitem', { name: 'Print' });
 
       await expect(() =>
-        printAndWaitForTheError(onStylesheetError, () => {
+        printAndWaitForTheResult(onStylesheetError, () => {
           fireEvent.click(printItem);
         }),
       ).toErrorDev('MUI X Data Grid: Error exporting the grid as print:');
@@ -288,7 +288,7 @@ describe('<DataGridPro /> - Print export', () => {
       const printItem = screen.getByRole('menuitem', { name: 'Print' });
 
       await expect(() =>
-        printAndWaitForTheError(onStylesheetError, () => {
+        printAndWaitForTheResult(onStylesheetError, () => {
           fireEvent.click(printItem);
         }),
       ).toErrorDev('MUI X Data Grid: Error exporting the grid as print:');
@@ -360,6 +360,54 @@ describe('<DataGridPro /> - Print export', () => {
         id: false,
       });
       expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+    });
+
+    it('resolves and restores the grid when `onStylesheetError` returns `false`', async () => {
+      addMissingStylesheet();
+      const onColumnVisibilityModelChange = vi.fn();
+      const onStylesheetError = vi.fn(() => false);
+
+      render(
+        <Test
+          initialState={initialState}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      const iframeCount = document.querySelectorAll('iframe').length;
+
+      await act(async () => {
+        const printPromise = apiRef.current!.exportDataAsPrint({
+          fields: ['id'],
+          onStylesheetError,
+        });
+        await failStylesheetLoad();
+        await printPromise;
+      });
+
+      expect(onStylesheetError.mock.calls.length).to.equal(1);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+        currencyPair: true,
+        id: false,
+      });
+      expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+    });
+
+    it('does not log when the print is cancelled from the default toolbar', async () => {
+      addMissingStylesheet();
+      const onStylesheetError = vi.fn(() => false);
+
+      render(<Test showToolbar slotProps={{ toolbar: { printOptions: { onStylesheetError } } }} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      const printItem = screen.getByRole('menuitem', { name: 'Print' });
+
+      /* Any `console.error` fails the test. */
+      await printAndWaitForTheResult(onStylesheetError, () => {
+        fireEvent.click(printItem);
+      });
+
+      expect(onStylesheetError.mock.calls.length).to.equal(1);
     });
   });
 });
