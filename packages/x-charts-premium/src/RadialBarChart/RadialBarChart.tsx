@@ -127,10 +127,12 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
     children,
   } = useRadialBarChartProps(props);
 
+  // The community hook does not know `apiRef` and would pass it on to the SVG surface.
+  const { apiRef, ...containerProps } = chartsContainerProps;
   const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps<
     'radialBar',
     RadialBarChartPluginSignatures
-  >(chartsContainerProps);
+  >(containerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
@@ -138,6 +140,7 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
   return (
     <ChartsRadialDataProviderPremium<'radialBar', RadialBarChartPluginSignatures>
       {...chartsDataProviderProps}
+      apiRef={apiRef}
       seriesConfig={seriesConfig}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
