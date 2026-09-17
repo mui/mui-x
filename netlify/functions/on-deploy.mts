@@ -1,31 +1,31 @@
-// Netlify builds PR deploy previews off the `refs/pull/<n>/head` ref, and
-// exposes it here as `deploy.branch === '<n>/head'`.
-// VERIFY: confirm this against a real deploy-succeeded payload in the
-// Netlify dashboard (Logs > Functions) before relying on it in production —
-// the old `review_url` field this replaced no longer exists in this event.
-
-const PR_HEAD_BRANCH_RE = /^(\d+)\/head$/;
+import type { DeploySucceededEvent } from '@netlify/types';
 
 const DEPLOY_PREVIEW_CONTEXT = 'deploy-preview';
 
+// `deploy.branch` is just the head branch name (not a PR ref), and the old
+// `review_url` field this replaced no longer exists. Deploy Preview URLs are
+// hostnamed `deploy-preview-<n>--<site>.netlify.app` (documented at
+// https://docs.netlify.com/deploy/deploy-overview/), so the PR number can be
+// read straight off the deploy's own URL instead.
+const PREVIEW_URL_PR_RE = /^deploy-preview-(\d+)--/;
+
+function findPrNumber(sslUrl: URL): string {
+  const match = PREVIEW_URL_PR_RE.exec(sslUrl.hostname);
+  if (!match) {
+    throw new Error(`Could not find a PR number in deploy URL: ${sslUrl.href}`);
+  }
+  return match[1];
+}
+
 export default {
-  /**
-   * @param {import('@netlify/functions').DeploySucceededEvent} event
-   */
-  async deploySucceeded(event) {
+  async deploySucceeded(event: DeploySucceededEvent) {
     const { deploy } = event;
 
     if (deploy.context !== DEPLOY_PREVIEW_CONTEXT) {
       return;
     }
 
-    const prMatch = PR_HEAD_BRANCH_RE.exec(deploy.branch ?? '');
-    if (!prMatch) {
-      throw new Error(`Could not find a PR number in deploy branch: ${deploy.branch}`);
-    }
-    const prNumber = prMatch[1];
-
-    let deploySslUrl;
+    let deploySslUrl: URL;
     try {
       deploySslUrl = new URL(deploy.sslUrl);
     } catch {
@@ -34,6 +34,8 @@ export default {
     if (deploySslUrl.protocol !== 'https:') {
       throw new Error(`Expected an https sslUrl, got: ${deploy.sslUrl}`);
     }
+
+    const prNumber = findPrNumber(deploySslUrl);
 
     // eslint-disable-next-line no-console
     console.info(`PR:`, prNumber);
@@ -47,7 +49,7 @@ export default {
       headers: {
         'Content-type': 'application/json',
         // Token from https://app.netlify.com/projects/material-ui-x/configuration/env#content
-        'Circle-Token': process.env.CIRCLE_CI_TOKEN,
+        'Circle-Token': process.env.CIRCLE_CI_TOKEN!,
       },
       body: JSON.stringify({
         // For PR, /head is needed. https://support.circleci.com/hc/en-us/articles/360049841151
