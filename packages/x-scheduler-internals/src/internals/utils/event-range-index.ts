@@ -2,6 +2,8 @@ import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal'
 import type { SchedulerProcessedEvent } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 
+export const EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD = 0.25;
+
 type EventRangeEntry = [event: SchedulerProcessedEvent, index: number, start: number, end: number];
 
 export interface SchedulerEventRangeIndex {
@@ -145,9 +147,7 @@ export function createEventRangeIndex(
         startTimestamp,
         matches,
       );
-      matches.push(...recurringEntries);
-
-      if (matches.length > events.length / 4) {
+      if (matches.length > rangeEntries.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD) {
         return events.filter(
           (event) =>
             (expandRecurringEvents && Boolean(event.displayTimezone.rrule)) ||
@@ -156,8 +156,9 @@ export function createEventRangeIndex(
         );
       }
 
-      matches.sort((a, b) => a[1] - b[1]);
-      return matches.map((entry) => entry[0]);
+      const allMatches = matches.concat(recurringEntries);
+      allMatches.sort((a, b) => a[1] - b[1]);
+      return allMatches.map((entry) => entry[0]);
     },
   };
 }

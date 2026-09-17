@@ -93,6 +93,7 @@ export function getDaysTheOccurrenceIsVisibleOn(
 
 /**
  * Returns the occurrences to render in the given date range, expanding recurring events.
+ * Build eventRangeIndex with expandRecurringEvents set to whether recurringEventsPlugin is non-null.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
   const {
@@ -116,7 +117,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       continue;
     }
 
-    // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
+    // STEP 2: Recurrent event processing, if it is recurrent expand it for the visible days
     if (event.displayTimezone.rrule) {
       // Without the premium recurring-events plugin attached, recurring events
       // are not expanded into occurrences — they are treated as single non-recurring events.

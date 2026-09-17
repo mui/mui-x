@@ -168,7 +168,6 @@ export const schedulerEventSelectors = {
       };
     },
   ),
-  processedEventList: processedEventListSelector,
   processedEventRangeIndex: createSelectorMemoized(
     (state: State) => state.adapter,
     processedEventListSelector,

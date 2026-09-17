@@ -5,6 +5,7 @@ import {
   getEventCalendarStateFromParameters,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 
@@ -26,6 +27,12 @@ describe('schedulerEventSelectors', () => {
           isLoading: !state.isLoading,
         }),
       ).to.equal(index);
+      expect(
+        schedulerEventSelectors.processedEventRangeIndex({
+          ...state,
+          recurringEventsPlugin: schedulerRecurringEventsPlugin,
+        }),
+      ).not.to.equal(index);
       const stateWithDifferentEvents = getEventCalendarStateFromParameters({
         events: [readOnlyEvent],
       });

@@ -1,6 +1,9 @@
-import { bench, describe } from 'vitest';
+import { test, describe, expect } from 'vitest';
 import { adapter, EventBuilder } from 'test/utils/scheduler';
-import { createEventRangeIndex } from './event-range-index';
+import {
+  createEventRangeIndex,
+  EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD,
+} from './event-range-index';
 
 const eventCount = 50_000;
 const firstDay = adapter.date('2020-01-01T00:00:00Z', 'default');
@@ -38,47 +41,59 @@ function numericLinearQuery(
 }
 
 describe('event range index', () => {
-  bench('build index of 50k events', () => {
-    createEventRangeIndex(events, adapter, false);
-  });
+  test('range queries', { timeout: 0 }, async ({ bench }) => {
+    // Keep the medium queries on either side of the index's 25% linear-scan threshold.
+    expect(
+      numericLinearQuery(shuffledEvents, mediumStart, mediumBelowThresholdEnd).length,
+    ).toBeLessThan(eventCount * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD);
+    expect(
+      numericLinearQuery(shuffledEvents, mediumStart, mediumAboveThresholdEnd).length,
+    ).toBeGreaterThan(eventCount * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD);
 
-  bench('linear narrow query of 50k events', () => {
-    numericLinearQuery(events, start, end);
-  });
+    await bench.compare(
+      bench('build index of 50k events', () => {
+        createEventRangeIndex(events, adapter, false);
+      }),
 
-  bench('indexed narrow query of 50k chronological events', () => {
-    eventRangeIndex.getEventsForRange(start, end);
-  });
+      bench('linear narrow query of 50k events', () => {
+        numericLinearQuery(events, start, end);
+      }),
 
-  bench('indexed narrow query of 50k shuffled events', () => {
-    shuffledEventRangeIndex.getEventsForRange(start, end);
-  });
+      bench('indexed narrow query of 50k chronological events', () => {
+        eventRangeIndex.getEventsForRange(start, end);
+      }),
 
-  bench('numeric linear query matching 20% of 50k shuffled events', () => {
-    numericLinearQuery(shuffledEvents, mediumStart, mediumBelowThresholdEnd);
-  });
+      bench('indexed narrow query of 50k shuffled events', () => {
+        shuffledEventRangeIndex.getEventsForRange(start, end);
+      }),
 
-  bench('indexed query matching 20% of 50k shuffled events', () => {
-    shuffledEventRangeIndex.getEventsForRange(mediumStart, mediumBelowThresholdEnd);
-  });
+      bench('numeric linear query matching 20% of 50k shuffled events', () => {
+        numericLinearQuery(shuffledEvents, mediumStart, mediumBelowThresholdEnd);
+      }),
 
-  bench('numeric linear query matching 30% of 50k shuffled events', () => {
-    numericLinearQuery(shuffledEvents, mediumStart, mediumAboveThresholdEnd);
-  });
+      bench('indexed query matching 20% of 50k shuffled events', () => {
+        shuffledEventRangeIndex.getEventsForRange(mediumStart, mediumBelowThresholdEnd);
+      }),
 
-  bench('indexed query matching 30% of 50k shuffled events', () => {
-    shuffledEventRangeIndex.getEventsForRange(mediumStart, mediumAboveThresholdEnd);
-  });
+      bench('numeric linear query matching 30% of 50k shuffled events', () => {
+        numericLinearQuery(shuffledEvents, mediumStart, mediumAboveThresholdEnd);
+      }),
 
-  bench('numeric linear broad query of 50k events', () => {
-    numericLinearQuery(shuffledEvents, broadStart, broadEnd);
-  });
+      bench('indexed query matching 30% of 50k shuffled events', () => {
+        shuffledEventRangeIndex.getEventsForRange(mediumStart, mediumAboveThresholdEnd);
+      }),
 
-  bench('indexed broad query of 50k chronological events', () => {
-    eventRangeIndex.getEventsForRange(broadStart, broadEnd);
-  });
+      bench('numeric linear broad query of 50k events', () => {
+        numericLinearQuery(shuffledEvents, broadStart, broadEnd);
+      }),
 
-  bench('indexed broad query of 50k shuffled events', () => {
-    shuffledEventRangeIndex.getEventsForRange(broadStart, broadEnd);
+      bench('indexed broad query of 50k chronological events', () => {
+        eventRangeIndex.getEventsForRange(broadStart, broadEnd);
+      }),
+
+      bench('indexed broad query of 50k shuffled events', () => {
+        shuffledEventRangeIndex.getEventsForRange(broadStart, broadEnd);
+      }),
+    );
   });
 });
