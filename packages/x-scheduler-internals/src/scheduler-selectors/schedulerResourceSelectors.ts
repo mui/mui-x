@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import type { SchedulerResource, SchedulerResourceId } from '../models';
@@ -88,11 +88,8 @@ const resourceHasVisibleChildrenLookupSelector = createSelectorMemoized(
 );
 
 export const schedulerResourceSelectors = {
-  processedResource: createSelector(
-    (state: State) => state.processedResourceLookup,
-    (processedResourceLookup, resourceId: string | null | undefined) =>
-      resourceId == null ? null : (processedResourceLookup.get(resourceId) ?? null),
-  ),
+  processedResource: (state: State, resourceId: string | null | undefined) =>
+    resourceId == null ? null : (state.processedResourceLookup.get(resourceId) ?? null),
   processedResourceList: createSelectorMemoized(
     (state: State) => state.resourceIdList,
     (state: State) => state.processedResourceLookup,
@@ -143,36 +140,24 @@ export const schedulerResourceSelectors = {
     },
   ),
   childrenIdLookup: (state: State) => state.resourceChildrenIdLookup,
-  // Single-function createSelector is unmemoized; keep the body returning a
-  // stable ref (a Map value or EMPTY_ARRAY), never a freshly-built array.
-  resourceChildrenIds: createSelector(
-    (state: State, resourceId: SchedulerResourceId) =>
-      state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
-  ),
+  // Unmemoized; keep the body returning a stable ref (a Map value or
+  // EMPTY_ARRAY), never a freshly-built array.
+  resourceChildrenIds: (state: State, resourceId: SchedulerResourceId) =>
+    state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
   // O(1) read from the memoized lookup; a resource with no entry (a leaf) has no
   // visible children.
-  resourceHasVisibleChildren: createSelector(
-    resourceHasVisibleChildrenLookupSelector,
-    (lookup, resourceId: SchedulerResourceId) => lookup.get(resourceId) ?? false,
-  ),
-  hasNestedResources: createSelector(
-    resourceParentIdLookupSelector,
-    (parentLookup) => parentLookup.size > 0,
-  ),
+  resourceHasVisibleChildren: (state: State, resourceId: SchedulerResourceId) =>
+    resourceHasVisibleChildrenLookupSelector(state).get(resourceId) ?? false,
+  hasNestedResources: (state: State) => resourceParentIdLookupSelector(state).size > 0,
   // Unmemoized (returns a primitive); don't change the body to build an object.
-  isResourceCollapsed: createSelector(
-    (state: State, resourceId: SchedulerResourceId) =>
-      state.collapsedResources[resourceId] === true,
-  ),
+  isResourceCollapsed: (state: State, resourceId: SchedulerResourceId) =>
+    state.collapsedResources[resourceId] === true,
   collapsedResources: (state: State) => state.collapsedResources,
   resourceParentIdLookup: resourceParentIdLookupSelector,
   resourceDepthLookup: resourceDepthLookupSelector,
-  resourceDepth: createSelector(
-    resourceDepthLookupSelector,
-    (resourceDepthLookup, resourceId: SchedulerResourceId) =>
-      resourceDepthLookup.get(resourceId) ?? 0,
-  ),
-  idList: createSelector((state: State) => state.resourceIdList),
+  resourceDepth: (state: State, resourceId: SchedulerResourceId) =>
+    resourceDepthLookupSelector(state).get(resourceId) ?? 0,
+  idList: (state: State) => state.resourceIdList,
   visibleMap: createSelectorMemoized(
     (state: State) => state.visibleResources,
     resourceParentIdLookupSelector,
@@ -220,13 +205,11 @@ export const schedulerResourceSelectors = {
    * Walks the resource hierarchy (child → parent → …) until a color is found,
    * falling back to the component-level default.
    */
-  defaultEventColor: createSelector(
-    (state: State, resourceId: SchedulerResourceId | null | undefined) => {
-      if (resourceId == null) {
-        return state.eventColor;
-      }
+  defaultEventColor: (state: State, resourceId: SchedulerResourceId | null | undefined) => {
+    if (resourceId == null) {
+      return state.eventColor;
+    }
 
-      return resolveResourceProperty(state, resourceId, (r) => r.eventColor, state.eventColor);
-    },
-  ),
+    return resolveResourceProperty(state, resourceId, (r) => r.eventColor, state.eventColor);
+  },
 };

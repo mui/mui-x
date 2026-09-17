@@ -20,7 +20,13 @@ import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
-import { ARROW_DEPTH, LEFT_ARROW_CLIP, RIGHT_ARROW_CLIP, BOTH_ARROWS_CLIP } from '../arrowClips';
+import {
+  ARROW_DEPTH,
+  LEFT_ARROW_CLIP,
+  RIGHT_ARROW_CLIP,
+  BOTH_ARROWS_CLIP,
+  getArrowFocusVisibleStyles,
+} from '../arrowClips';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -28,6 +34,7 @@ const EventItemCard = styled('div', {
 })<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
+  cursor: 'pointer',
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
@@ -37,7 +44,6 @@ const EventItemCard = styled('div', {
   },
   '&[data-variant="compact"], &[data-variant="regular"]': {
     containerType: 'inline-size',
-    cursor: 'pointer',
     height: 'fit-content',
   },
   '&[data-variant="filled"]': {
@@ -68,9 +74,7 @@ const EventItemCard = styled('div', {
     '&[data-starting-before-edge][data-ending-after-edge]': {
       clipPath: BOTH_ARROWS_CLIP,
     },
-  },
-  '&[data-variant="regular"]': {
-    cursor: 'pointer',
+    ...getArrowFocusVisibleStyles(theme.shape.borderRadius),
   },
   '&[data-editing]': {
     backgroundColor: 'var(--event-surface-selected)',
@@ -207,7 +211,7 @@ export const EventItem = React.forwardRef(function EventItem(
     schedulerResourceSelectors.processedResource,
     getPrimaryResourceId(occurrence.resource),
   );
-  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const formatTime = useFormatTime();

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { barSampler } from './barSampler';
 import { sampleBuckets } from './sampling.line';
 import { MIN_ELEMENT_SIZE_PX } from './sampling';

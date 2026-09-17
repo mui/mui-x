@@ -15,7 +15,9 @@ import { useId } from '@base-ui/utils/useId';
 import {
   ErrorContainer,
   SharedComponentsStyledContext,
+  SchedulerSlotsProvider,
   eventDialogSlots,
+  eventContextMenuSlots,
   EventEditingStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
@@ -62,6 +64,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     errorAlert: ['errorAlert'],
     errorMessage: ['errorMessage'],
     ...eventDialogSlots,
+    ...eventContextMenuSlots,
   };
 
   return composeClasses(slots, getEventTimelinePremiumUtilityClass, classes);
@@ -105,7 +108,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   const store = useEventTimelinePremium(parameters);
   const classes = useUtilityClasses(classesProp);
 
-  const { localeText, resourceColumnLabel, apiRef, ...other } = forwardedProps;
+  const { localeText, resourceColumnLabel, apiRef, slots, slotProps, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
   const schedulerId = useId();
@@ -132,15 +135,17 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
       <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-            <EventTimelinePremiumRoot
-              ref={forwardedRef}
-              className={clsx(classes.root, className)}
-              {...other}
-            >
-              <EventTimelinePremiumContent />
-              <ErrorContainer />
-              {watermark}
-            </EventTimelinePremiumRoot>
+            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              <EventTimelinePremiumRoot
+                ref={forwardedRef}
+                className={clsx(classes.root, className)}
+                {...other}
+              >
+                <EventTimelinePremiumContent />
+                <ErrorContainer />
+                {watermark}
+              </EventTimelinePremiumRoot>
+            </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
       </EventTimelinePremiumStyledContext.Provider>
@@ -293,6 +298,7 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
+      canHaveMultipleResources: PropTypes.bool,
       duration: PropTypes.number,
       interaction: PropTypes.oneOf(['click', 'double-click']),
     }),
@@ -306,6 +312,9 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
   eventModelStructure: PropTypes.object,
   /**
    * The events currently available in the calendar.
+   *
+   * Event models are compared by reference to avoid reprocessing unchanged events.
+   * Replace an event model with a new object when updating it instead of mutating it in place.
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
@@ -319,6 +328,15 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * Event handler called when the collapsed resources change.
    */
   onCollapsedResourcesChange: PropTypes.func,
+  /**
+   * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
+   * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
+   * `eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the
+   * occurrence is read-only (through the event, its resource or the `readOnly` prop) and the dialog
+   * opens in view-only mode, and `"edit"` otherwise.
+   * Call `eventDetails.cancel()` to keep it closed and handle the interaction in your own UI.
+   */
+  onEventEditingStart: PropTypes.func,
   /**
    * Callback fired when some event of the calendar change.
    */
@@ -346,6 +364,23 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * The preset currently displayed in the timeline.
    */
   preset: PropTypes.oneOf(['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']),
+  /**
+   * Configuration applied to each preset, keyed by the preset name.
+   * For the `dayAndHour` preset, `startTime` and `endTime` limit the hours displayed on
+   * each day: `startTime` is inclusive and `endTime` exclusive, so `{ startTime: 8,
+   * endTime: 20 }` renders the cells 8 AM through 7 PM and an event ending at 20:00 is
+   * still fully visible. Both must be whole hours between 0 and 24 with
+   * `startTime` lower than `endTime`; they default to 0 and 24, the full day, and an
+   * invalid range falls back to the full day with a warning in development.
+   * Presets that do not tick in hours ignore the configuration.
+   * @example { dayAndHour: { startTime: 8, endTime: 20 } }
+   */
+  presetConfig: PropTypes.shape({
+    dayAndHour: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+  }),
   /**
    * The presets available in the timeline.
    * The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally,
@@ -386,6 +421,16 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * @default true
    */
   showCurrentTimeIndicator: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

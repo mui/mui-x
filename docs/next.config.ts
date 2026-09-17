@@ -108,6 +108,9 @@ export default withDeploymentConfig({
     // Cuts peak docs-build RSS from ~10 GB to ~4 GB, keeping it well under the
     // Netlify build container limit that the static export was hitting.
     webpackBuildWorker: true,
+    // The TS7 side-by-side alias (@typescript/typescript6) ships no `tsc` bin,
+    // which the Next.js >= 16.3 CLI checker requires. Use the TS6 JS API instead.
+    useTypeScriptCli: false,
   },
   typescript: {
     tsconfigPath: './tsconfig.json',

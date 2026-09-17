@@ -96,6 +96,16 @@ const schedulerPages: MuiPage[] = [
         ],
       },
       {
+        pathname: '/x/react-scheduler/components-group',
+        title: 'Components',
+        children: [
+          {
+            pathname: '/x/react-scheduler/components/event-dialog',
+            title: 'Event dialog',
+          },
+        ],
+      },
+      {
         pathname: '/x/api/scheduler-group',
         title: 'API reference',
         children: [...schedulerComponentApi],
@@ -258,6 +268,27 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
           {
+            pathname: '/x/react-data-grid/formulas-group',
+            title: 'Formulas',
+            plan: 'premium',
+            newFeature: true,
+            children: [
+              { pathname: '/x/react-data-grid/formulas', title: 'Overview' },
+              {
+                pathname: '/x/react-data-grid/formula-syntax',
+                title: 'Syntax reference',
+              },
+              {
+                pathname: '/x/react-data-grid/formula-engine',
+                title: 'Formula engine',
+              },
+              {
+                pathname: '/x/react-data-grid/spreadsheet-playground',
+                title: 'Spreadsheet playground',
+              },
+            ],
+          },
+          {
             pathname: '/x/react-data-grid/pivoting-group',
             title: 'Pivoting',
             plan: 'premium',
@@ -354,6 +385,12 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/components/prompt-field',
             title: 'Prompt Field',
             plan: 'premium',
+          },
+          {
+            pathname: '/x/react-data-grid/components/formula-bar',
+            title: 'Formula Bar',
+            plan: 'premium',
+            newFeature: true,
           },
           {
             pathname: '/x/react-data-grid/components/pivot-panel',
@@ -912,6 +949,23 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-chat/quickstart', title: 'Quickstart' },
       { pathname: '/x/react-chat/all-components', title: 'Components' },
       { pathname: '/x/react-chat/accessibility', title: 'Accessibility' },
+      {
+        // Keep in sync with `FEEDBACK_FORM_URL` in
+        // `docs/src/modules/components/overview/chat/ChatFeedbackBanner.tsx`.
+        pathname: 'https://forms.gle/XSKycguxQYxQma829',
+        title: 'Share your feedback',
+        icon: CampaignIcon,
+        linkProps: {
+          target: '_blank',
+          rel: 'noopener noreferrer',
+          sx: {
+            paddingLeft: 'calc(10px + (var(--_depth) + 1) * 13px - (var(--_expandable) * 21px))',
+            '& > span:first-of-type': {
+              order: 1,
+            },
+          },
+        },
+      },
       {
         pathname: '/x/react-chat/main-features',
         subheader: 'Main features',

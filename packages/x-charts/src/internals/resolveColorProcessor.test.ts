@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { resolveColorProcessor } from './resolveColorProcessor';
 import { getColorScale } from './colorScale';
 

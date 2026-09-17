@@ -1,0 +1,12 @@
+<RichTreeView
+  items={[]}
+  loading
+  slots={{ itemLoader: CustomItemLoader }}
+  slotProps={{
+    loading: { itemsCount: 4 },
+    itemLoader: (ownerState) => ({
+      style: { opacity: 1 - ownerState.index * 0.2 },
+    }),
+  }}
+  sx={{ width: 300 }}
+/>

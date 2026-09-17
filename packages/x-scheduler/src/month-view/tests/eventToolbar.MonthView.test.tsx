@@ -1,14 +1,7 @@
-import { spy } from 'sinon';
 import { screen, fireEvent } from '@mui/internal-test-utils';
-import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
-
-const createMatchMedia = (matches: boolean) => () =>
-  ({
-    matches,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-  }) as any;
+import { vi, describe, it, expect, afterEach } from 'vitest';
 
 /**
  * On a coarse pointer, tapping an event arms it (toolbar) rather than opening the dialog; an outside
@@ -22,7 +15,7 @@ describe('MonthView - event toolbar', () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  function renderEvent(onEventsChange = spy()) {
+  function renderEvent(onEventsChange = vi.fn()) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')

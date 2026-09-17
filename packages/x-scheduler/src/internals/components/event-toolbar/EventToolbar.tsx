@@ -52,10 +52,9 @@ export function EventToolbar(props: EventToolbarProps) {
   const { occurrence } = props;
 
   const store = useSchedulerStoreContext();
-  const { stopEditing } = useEventEditingContext();
+  const { stopEditing, anchor, stableAnchorRef } = useEventEditingContext();
   const { classes, localeText } = useEventEditingStyledContext();
 
-  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const areRecurringEventsAvailable = useStore(
     store,
     schedulerOtherSelectors.areRecurringEventsAvailable,
@@ -64,14 +63,21 @@ export function EventToolbar(props: EventToolbarProps) {
   // Rendered only while armed (desktop anchored surface + mobile dock), so Escape here disarms both.
   useDisarmOnEscape({ active: true, onDisarm: stopEditing });
 
-  const handleEdit = () => {
-    store.setEditingMode('edit');
+  const handleEdit = (event: React.MouseEvent) => {
+    // A canceled edit disarms and unmounts this toolbar, so the activation's retained stable
+    // anchor (or the occurrence element the toolbar is anchored to) is the callback anchor.
+    store.setEditingMode(
+      'edit',
+      event.nativeEvent,
+      event.currentTarget as HTMLElement,
+      stableAnchorRef.current ?? anchor ?? undefined,
+    );
   };
 
   // Mirrors `FormContent`'s delete: recurring events open the scope dialog (which closes the surface
   // on submit); single events delete immediately and close.
   const handleDelete = () => {
-    if (areRecurringEventsAvailable && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+    if (areRecurringEventsAvailable && occurrence.displayTimezone.rrule) {
       store.deleteRecurringEvent({
         occurrenceStart: occurrence.displayTimezone.start.value,
         eventId: occurrence.id,

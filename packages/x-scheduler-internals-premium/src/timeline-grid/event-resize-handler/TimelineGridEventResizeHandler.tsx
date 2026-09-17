@@ -42,8 +42,8 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
 
     const enabled = isResizeHandlerEnabled({
       side,
-      doesEventStartBeforeCollectionStart: contextValue.doesEventStartBeforeCollectionStart,
-      doesEventEndAfterCollectionEnd: contextValue.doesEventEndAfterCollectionEnd,
+      isEventStartClipped: contextValue.isEventStartClipped,
+      isEventEndClipped: contextValue.isEventEndClipped,
     });
 
     const { state } = useEventResizeHandler({

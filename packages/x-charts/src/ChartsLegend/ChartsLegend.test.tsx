@@ -3,6 +3,7 @@ import { ChartsLegend, legendClasses } from '@mui/x-charts/ChartsLegend';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { describe } from 'vitest';
 
 describe('<ChartsLegend />', () => {
   const { render } = createRenderer();

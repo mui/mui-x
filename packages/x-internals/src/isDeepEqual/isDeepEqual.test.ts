@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { isDeepEqual } from './isDeepEqual';
 
 const testValues: [unknown, unknown, boolean][] = [

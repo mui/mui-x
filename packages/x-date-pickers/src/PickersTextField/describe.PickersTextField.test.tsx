@@ -1,6 +1,7 @@
 import { PickersTextField, pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 import { createPickerRenderer, PICKERS_TEXT_FIELD_STUB_PROPS } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<PickersTextField /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();

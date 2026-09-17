@@ -31,6 +31,7 @@ const configuration: GridConfiguration = {
     useIsCellEditable,
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
+    useColumnHeaderAdornment: () => null,
   },
 };
 
@@ -179,6 +180,7 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
     renderEditCell: PropTypes.func,
     renderHeader: PropTypes.func,
     resizable: PropTypes.bool,
+    rowHeader: PropTypes.bool,
     rowSpanValueGetter: PropTypes.func,
     sortable: PropTypes.bool,
     sortComparator: PropTypes.func,
@@ -798,7 +800,7 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
    * @param {{ rowId: GridRowId }} params Additional parameters.
-   * @returns {Promise<R> | R} The final values to update the row.
+   * @returns {Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>} The final values to update the row, or a `{ _action: 'replace', row }` update to store `row` as the new row without merging.
    */
   processRowUpdate: PropTypes.func,
   /**

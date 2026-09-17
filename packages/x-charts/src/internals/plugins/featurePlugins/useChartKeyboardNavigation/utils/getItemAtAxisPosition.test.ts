@@ -1,4 +1,5 @@
 import { scaleBand } from '@mui/x-charts-vendor/d3-scale';
+import { describe, it, expect } from 'vitest';
 import { getItemAtAxisPosition } from './getItemAtAxisPosition';
 
 const xAxis = {

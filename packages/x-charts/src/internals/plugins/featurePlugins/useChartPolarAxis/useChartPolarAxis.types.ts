@@ -11,6 +11,7 @@ import type {
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
+import type { ChartsActivationEvent } from '../../../../models/events';
 
 export interface UseChartPolarAxisInstance {
   /**
@@ -62,10 +63,10 @@ export interface UseChartPolarAxisParameters {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
-  onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
+  onAxisClick?: (event: ChartsActivationEvent, data: null | ChartsAxisData) => void;
 }
 
 export type UseChartPolarAxisDefaultizedParameters = UseChartPolarAxisParameters & {};

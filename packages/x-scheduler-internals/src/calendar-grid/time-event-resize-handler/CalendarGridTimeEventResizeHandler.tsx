@@ -65,8 +65,8 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
     // pointer handler serves touch/pen, so one handle resizes from whatever pointer the user has.
     const enabled = isResizeHandlerEnabled({
       side,
-      doesEventStartBeforeCollectionStart: contextValue.doesEventStartBeforeCollectionStart,
-      doesEventEndAfterCollectionEnd: contextValue.doesEventEndAfterCollectionEnd,
+      isEventStartClipped: contextValue.isEventStartClipped,
+      isEventEndClipped: contextValue.isEventEndClipped,
     });
 
     const { state } = useEventResizeHandler({

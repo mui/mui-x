@@ -1,0 +1,27 @@
+{
+  "componentDescription": "Semantic wrapper for one loading row of the Rich Tree View.\n\nIt renders a `li` element with the `role`, `aria` attributes, indentation and\nheight of a tree item, so custom loading UIs stay accessible and aligned.\nWithout children, it renders the default skeleton placeholders.",
+  "propDescriptions": {
+    "children": {
+      "description": "The content of the loading row. When not provided, the default skeleton placeholders are rendered."
+    },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "ownerState": {
+      "description": "State of the loading row, forwarded by the <code>itemLoader</code> slot. The component does not render it."
+    }
+  },
+  "classDescriptions": {
+    "checkbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the checkbox placeholder element of the default content"
+    },
+    "iconContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the icon gutter element of the default content"
+    },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the label placeholder element of the default content"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  }
+}

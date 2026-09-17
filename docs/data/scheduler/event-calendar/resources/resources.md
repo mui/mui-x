@@ -108,12 +108,40 @@ return (
 
 ## Require a resource
 
-By default, an event on the Event Calendar can be saved without a resource — the edit dialog includes a "No resource" option in the resource picker.
-Set `shouldEventRequireResource` to `true` to make the resource mandatory: the "No resource" option is hidden and the form cannot be submitted with an empty resource.
+By default, an event on the Event Calendar can be saved without a resource — deselecting every entry in the resource picker leaves the event unassigned.
+Set `shouldEventRequireResource` to `true` to make a resource mandatory: the form cannot be submitted with an empty selection.
 
 ```tsx
 <EventCalendar shouldEventRequireResource />
 ```
+
+## Multiple resources per event
+
+An event can be associated with more than one resource by passing an array to `resource`:
+
+```tsx
+const event = {
+  // ...
+  resource: ['team-a', 'team-b'],
+};
+```
+
+{{"demo": "MultipleResourcesPerEvent.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The resource picker in the edit dialog switches between a single-select and a multi-select depending on the event:
+
+- An event whose `resource` is a string is edited as single-resource — the picker shows one entry at a time.
+- An event whose `resource` is an array (including `[]`, meaning multi-resource with nothing selected yet) is edited as multi-resource.
+
+Saving an existing event never changes that shape: one that arrives as a string is always saved back as a string (or `undefined` once cleared), and one that arrives as an array is always saved back as an array (`[]` once cleared).
+
+For a new event, or an existing one whose `resource` is `null` or not set, there's no shape to preserve — `canHaveMultipleResources` on `eventCreation` decides the picker instead:
+
+```tsx
+<EventCalendar eventCreation={{ canHaveMultipleResources: true }} />
+```
+
+When `canHaveMultipleResources` isn't set, it's inferred from the `events` prop: the first event with a `resource` value determines the mode for new events (a string means single, an array means multiple), and data with no resource at all defaults to multiple.
 
 ## Resource properties
 
@@ -128,13 +156,13 @@ The available color palettes are shown below:
 Event colors can also be defined on the event or at the component level.
 The effective color resolves in the following order:
 
-1. The `color` property assigned to the event
+1. The `color` property assigned to the event. This always wins, even for a multi-resource event.
 
 ```tsx
 <EventCalendar events={[{ id: '1', title: 'Event 1', color: 'pink' }]} />
 ```
 
-2. The `eventColor` property assigned to the event's resource
+2. The `eventColor` property assigned to the event's resource. For a multi-resource event, this is the first resource in the `resource` array.
 
 ```tsx
 <EventCalendar resources={[{ id: '1', title: 'Resource 1', eventColor: 'pink' }]} />

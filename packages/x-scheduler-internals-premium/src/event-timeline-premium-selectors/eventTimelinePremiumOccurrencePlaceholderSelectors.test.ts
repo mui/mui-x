@@ -6,6 +6,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerOccurrencePlaceholderInternalDragOrResize } from '@mui/x-scheduler-internals/models';
+import { describe, it, expect } from 'vitest';
 import type { EventTimelinePremiumState } from '../use-event-timeline-premium';
 import { timelineOccurrencePlaceholderSelectors } from './eventTimelinePremiumOccurrencePlaceholderSelectors';
 

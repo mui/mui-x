@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 

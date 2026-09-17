@@ -55,6 +55,11 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI assistent',
 
+  // Formula bar (Premium formulas)
+  // formulaBarLabel: 'Formula bar',
+  // formulaBarInputLabel: 'Formula',
+  // formulaBarAddressLabel: 'Active cell',
+
   // Columns management text
   columnsManagementSearchTitle: 'Sök',
   columnsManagementNoColumns: 'Inga kolumner',

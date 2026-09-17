@@ -6,24 +6,36 @@ export interface EventEditingContextValue {
   /**
    * Begins editing `occurrence`, anchoring the editing surface to `anchorRef`. The initial editing
    * mode (armed vs edit) is resolved from the provider's surface.
+   * `stableAnchor` becomes `eventDetails.anchor` in `onEventEditingStart` — pass it when a
+   * cancellation would unmount the `anchorRef` element (it defaults to that element otherwise).
+   * Returns `false` when `onEventEditingStart` canceled the editing.
    */
   startEditing: (
     anchorRef: React.RefObject<HTMLElement | null>,
     occurrence: SchedulerRenderableEventOccurrence,
-  ) => void;
+    event?: Event,
+    stableAnchor?: HTMLElement | null,
+  ) => boolean;
   /**
    * Stops editing, closing the editing surface.
    */
   stopEditing: () => void;
   /**
    * The element the editing surface (desktop dialog / toolbar) anchors to. State and not a ref, so
-   * surfaces re-position when the anchored element is swapped.
+   * surfaces re-position when the anchored element is swapped. `null` means no surface is rendered.
    */
   anchor: HTMLElement | null;
   /**
-   * Re-anchors the editing surface to `node`.
+   * Offers `node` as an anchor and returns a cleanup that withdraws it. If the withdrawn node was
+   * the anchor, the surface moves to another registered element, or to `null` when none is left.
    */
-  setAnchor: (node: HTMLElement | null) => void;
+  registerAnchor: (node: HTMLElement) => () => void;
+  /**
+   * The `stableAnchor` of the activation that started the current editing, retained across the
+   * armed state (which fires no callback) so the toolbar's Edit can still forward it. `null` when
+   * the activation had a stable trigger.
+   */
+  stableAnchorRef: React.RefObject<HTMLElement | null>;
 }
 
 export interface EventEditingProviderProps {
@@ -39,6 +51,14 @@ export interface EventEditingTriggerProps {
   /** A single element. The trigger clones it and replaces its `ref`. */
   children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLElement>;
+  /** Called when an activation is canceled by `onEventEditingStart`. */
+  onEditingCanceled?: () => void;
+  /**
+   * Element exposed as `eventDetails.anchor` in `onEventEditingStart`. Pass it when a cancellation
+   * unmounts this trigger (e.g. it lives in the "+N more" popover, which the cancellation closes);
+   * it defaults to the trigger element itself.
+   */
+  stableAnchor?: HTMLElement | null;
 }
 
 export interface CompactEventEditingProviderProps {

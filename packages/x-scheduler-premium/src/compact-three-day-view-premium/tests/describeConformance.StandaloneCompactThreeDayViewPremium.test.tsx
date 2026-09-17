@@ -6,6 +6,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<StandaloneCompactThreeDayViewPremium /> - Describe Conformance', () => {
   const { render } = createSchedulerRenderer({

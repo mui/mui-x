@@ -25,11 +25,3 @@ export interface EventDialogProviderProps {
    */
   optionalRenderers?: EventEditingOptionalRenderers;
 }
-
-/**
- * Props shared by the General tab section components.
- * Sections read and write their fields through the form context (`useEventDialogFormField`).
- */
-export interface EventDialogSectionProps {
-  occurrence: SchedulerRenderableEventOccurrence;
-}

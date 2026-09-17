@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useChatStore } from '../hooks/useChatStore';
 import { useConversations } from '../hooks/useConversation';
@@ -17,36 +17,26 @@ import {
 } from '../internals/ScrollAreaSlots';
 import { mergeReactProps } from '../internals/mergeReactProps';
 import { useRovingFocus } from '../internals/useRovingFocus';
-import { ConversationListItem, type ConversationListItemProps } from './ConversationListItem';
-import {
-  ConversationListItemAvatar,
-  type ConversationListItemAvatarProps,
-} from './ConversationListItemAvatar';
-import {
-  ConversationListItemContent,
-  type ConversationListItemContentProps,
-} from './ConversationListItemContent';
-import { ConversationListTitle, type ConversationListTitleProps } from './ConversationListTitle';
-import {
-  ConversationListPreview,
-  type ConversationListPreviewProps,
-} from './ConversationListPreview';
-import {
-  ConversationListTimestamp,
-  type ConversationListTimestampProps,
-} from './ConversationListTimestamp';
-import {
-  ConversationListUnreadBadge,
-  type ConversationListUnreadBadgeProps,
-} from './ConversationListUnreadBadge';
-import {
-  ConversationListItemActions,
-  type ConversationListItemActionsProps,
-} from './ConversationListItemActions';
-import {
-  type ConversationListItemOwnerState,
-  type ConversationListRootOwnerState,
-  type ConversationListVariant,
+import { ConversationListItem } from './ConversationListItem';
+import type { ConversationListItemProps } from './ConversationListItem';
+import { ConversationListItemAvatar } from './ConversationListItemAvatar';
+import type { ConversationListItemAvatarProps } from './ConversationListItemAvatar';
+import { ConversationListItemContent } from './ConversationListItemContent';
+import type { ConversationListItemContentProps } from './ConversationListItemContent';
+import { ConversationListTitle } from './ConversationListTitle';
+import type { ConversationListTitleProps } from './ConversationListTitle';
+import { ConversationListPreview } from './ConversationListPreview';
+import type { ConversationListPreviewProps } from './ConversationListPreview';
+import { ConversationListTimestamp } from './ConversationListTimestamp';
+import type { ConversationListTimestampProps } from './ConversationListTimestamp';
+import { ConversationListUnreadBadge } from './ConversationListUnreadBadge';
+import type { ConversationListUnreadBadgeProps } from './ConversationListUnreadBadge';
+import { ConversationListItemActions } from './ConversationListItemActions';
+import type { ConversationListItemActionsProps } from './ConversationListItemActions';
+import type {
+  ConversationListItemOwnerState,
+  ConversationListRootOwnerState,
+  ConversationListVariant,
 } from './conversationList.types';
 
 export interface ConversationListRootSlots {

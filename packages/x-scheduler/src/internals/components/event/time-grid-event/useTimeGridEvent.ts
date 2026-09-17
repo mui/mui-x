@@ -55,7 +55,7 @@ export function useTimeGridEvent(
     useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'start') && !isEditedInForm;
   const isEndResizable =
     useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end') && !isEditedInForm;
-  const palette = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const palette = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
 
   const durationMs =
     occurrence.displayTimezone.end.timestamp - occurrence.displayTimezone.start.timestamp;

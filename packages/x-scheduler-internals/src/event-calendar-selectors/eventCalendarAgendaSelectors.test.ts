@@ -1,4 +1,5 @@
 import { adapter, EventBuilder, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { processDate } from '../process-date';
 import { eventCalendarAgendaSelectors } from './eventCalendarAgendaSelectors';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';

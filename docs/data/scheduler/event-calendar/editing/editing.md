@@ -68,6 +68,46 @@ All other dialog features (editing title, dates, resources, colors, description,
 Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode.
 :::
 
+The General tab can be recomposed with built-in and custom sections through the `eventDialogGeneralTab` slot — see the [Event dialog component page](/x/react-scheduler/components/event-dialog/).
+
+### Replace the dialog with your own UI
+
+Use the `onEventEditingStart` callback to intercept editing right before the built-in dialog opens.
+It fires for every entry point (pointer, keyboard, touch, and event creation).
+`eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the occurrence is read-only (through the event, its resource, or the `readOnly` prop) and the dialog opens in view-only mode, and `"edit"` otherwise.
+`eventDetails.occurrence` is typed by that reason, so narrowing on it gives you the persisted occurrence fields on `"edit"` and `"view"` and the draft on `"creation"`.
+`eventDetails.anchor` is an element that stays in the DOM after a cancellation, ready to anchor your own popover to; `eventDetails.trigger` identifies the exact activated element, but some flows unmount it right after a canceled activation (the armed toolbar's Edit button, an item inside the "+N more" popover, a creation placeholder), so don't position against it.
+Call `eventDetails.cancel()` to keep the built-in dialog closed and open your own editing UI instead:
+
+```tsx
+<EventCalendar
+  onEventEditingStart={(occurrence, eventDetails) => {
+    if (eventDetails.reason === 'view') {
+      // Read-only activation: keep the built-in view-only dialog.
+      // Cancel here only if you render your own read-only UI instead.
+      return;
+    }
+    eventDetails.cancel();
+    if (eventDetails.reason === 'creation') {
+      // Creation drafts have a synthetic `id` — use the proposed dates instead.
+      openYourCreationUI(eventDetails.occurrence.displayTimezone);
+    } else {
+      openYourEditingUI(eventDetails.occurrence.id);
+    }
+  }}
+/>
+```
+
+In the demo below, both clicking an event and clicking an empty cell open a custom dialog instead of the built-in one:
+
+{{"demo": "CustomEditingUI.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+Canceling `onEventEditingStart` replaces the built-in dialog (and its mobile drawer variant): your UI owns the editing form, the recurring event scope selection ("this event", "this and following events", "all events"), and persisting the changes (for example by updating your controlled `events` state).
+
+Everything else keeps the built-in behavior: drag and drop, resizing, the recurring scope dialog they trigger, and on touch devices the event toolbar with its edit, delete and resize affordances — there, the callback fires when the user taps the toolbar's Edit action, right before the dialog opens.
+:::
+
 ## Read-only
 
 Use the `readOnly` prop to disable all editing interactions (event creation, drag-and-drop, resizing, and popover editing):

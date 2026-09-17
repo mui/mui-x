@@ -129,6 +129,7 @@ const rows = [
 const columns: GridColDef[] = [
   {
     field: 'country',
+    rowHeader: true,
     headerName: 'Country',
     width: 200,
     editable: true,

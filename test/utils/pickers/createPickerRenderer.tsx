@@ -2,7 +2,7 @@ import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
+import { vi, beforeEach, afterEach } from 'vitest';
 import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from './adapters';
 
 type AdapterConstructor = new (...args: any) => MuiPickersAdapter;

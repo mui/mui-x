@@ -735,8 +735,14 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
   // element, which is exactly what we need.
   const canScrollY = computed?.overflowY === 'auto' || computed?.overflowY === 'scroll';
   const canScrollX = computed?.overflowX === 'auto' || computed?.overflowX === 'scroll';
-  const hasScrollY = canScrollY && htmlElement.scrollHeight > htmlElement.clientHeight;
-  const hasScrollX = canScrollX && htmlElement.scrollWidth > htmlElement.clientWidth;
+  // A collapsed element cannot render its scrollbar: measuring it directly would
+  // return a clamped size (usually 0) and poison the cache as authoritative.
+  const hasScrollY =
+    canScrollY &&
+    htmlElement.scrollHeight > htmlElement.clientHeight &&
+    htmlElement.offsetWidth > 0;
+  const hasScrollX =
+    canScrollX && htmlElement.scrollWidth > htmlElement.clientWidth && htmlElement.offsetHeight > 0;
 
   // `offsetWidth` / `offsetHeight` include borders, while `clientWidth` /
   // `clientHeight` do not. Subtract borders so direct measurement only returns

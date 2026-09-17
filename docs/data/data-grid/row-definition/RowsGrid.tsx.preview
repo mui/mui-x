@@ -1,5 +1,5 @@
 <DataGrid
-  columns={[{ field: 'name' }]}
+  columns={[{ field: 'name', rowHeader: true }]}
   rows={[
     { id: 1, name: 'React' },
     { id: 2, name: 'MUI' },

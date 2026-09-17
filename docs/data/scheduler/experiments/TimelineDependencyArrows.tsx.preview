@@ -8,6 +8,7 @@
     <EventEditingStyledContext.Provider value={styledContextValue}>
       <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
         <EventTimelinePremiumContent />
+        <ErrorContainer />
       </SharedComponentsStyledContext.Provider>
     </EventEditingStyledContext.Provider>
   </EventTimelinePremiumStyledContext.Provider>

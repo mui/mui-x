@@ -5,7 +5,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 const columns = [
   { field: 'id', headerName: 'Order ID' },
-  { field: 'customer', headerName: 'Customer', width: 200 },
+  { field: 'customer', headerName: 'Customer', width: 200, rowHeader: true },
   { field: 'hasNotes', headerName: 'Has notes', type: 'boolean' },
 ];
 

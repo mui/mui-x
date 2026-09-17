@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
@@ -20,13 +21,13 @@ import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getDisplayedHourRange, getInitialScrollTime } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
-import { getTimeGridHourRange } from '../../utils/getTimeGridHourRange';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
@@ -336,10 +337,20 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { days, className, startTime: startTimeProp, endTime: endTimeProp, ...other } = props;
+  const {
+    days,
+    className,
+    startTime: startTimeProp,
+    endTime: endTimeProp,
+    initialScrollTime: initialScrollTimeProp,
+    hourRangeSource = 'viewConfig',
+    ...other
+  } = props;
 
-  const { startTime, endTime } = getTimeGridHourRange(startTimeProp, endTimeProp);
+  const range = getDisplayedHourRange(startTimeProp, endTimeProp, hourRangeSource);
+  const { startTime, endTime } = range;
   const hoursCount = endTime - startTime;
+  const initialScrollTime = getInitialScrollTime(initialScrollTimeProp, range, hourRangeSource);
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -413,7 +424,30 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   useIsoLayoutEffect(updateHasScroll, [occurrencesMap, updateHasScroll]);
 
-  useResizeObserver(bodyRef, updateHasScroll);
+  // Applied once, the first time the grid can scroll (earlier, `scrollTop` would clamp to 0).
+  // Navigating to another period keeps the user's scroll position.
+  const isInitialScrollAppliedRef = React.useRef(false);
+  const applyInitialScroll = useStableCallback(() => {
+    const scrollRoot = scrollRootRef.current;
+    if (
+      isInitialScrollAppliedRef.current ||
+      !scrollRoot ||
+      scrollRoot.scrollHeight <= scrollRoot.clientHeight
+    ) {
+      return;
+    }
+    // Measured so a `--hour-height` override keeps the hours aligned.
+    const hourHeight = scrollRoot.scrollHeight / hoursCount;
+    scrollRoot.scrollTop = (initialScrollTime - startTime) * hourHeight;
+    isInitialScrollAppliedRef.current = true;
+  });
+
+  useIsoLayoutEffect(applyInitialScroll, [applyInitialScroll]);
+
+  useResizeObserver(bodyRef, () => {
+    updateHasScroll();
+    applyInitialScroll();
+  });
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 

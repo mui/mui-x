@@ -74,6 +74,7 @@ const columns = [
   {
     field: 'slot',
     headerName: 'Slot',
+    rowHeader: true,
     width: 240,
     renderCell: (params) => (
       <ComponentTag value={params.value} plan={params.row.plan} />

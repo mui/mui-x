@@ -6,7 +6,7 @@ import {
   TreeItemProps,
   TreeItemSlotProps,
 } from '@mui/x-tree-view/TreeItem';
-import { MUI_X_PRODUCTS } from './products';
+import { MUI_X_PRODUCTS } from '../datasets/disabledAndEditableProducts';
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   props: TreeItemProps,

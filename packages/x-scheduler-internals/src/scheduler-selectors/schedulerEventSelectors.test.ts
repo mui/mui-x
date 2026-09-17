@@ -3,6 +3,7 @@ import {
   ResourceBuilder,
   getEventCalendarStateFromParameters,
 } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 
@@ -59,6 +60,114 @@ describe('schedulerEventSelectors', () => {
         eventCreation: true,
       });
       expect(schedulerEventSelectors.creationConfig(state)).to.equal(false);
+    });
+  });
+
+  describe('canHaveMultipleResources', () => {
+    it('should return the configured value when eventCreation.canHaveMultipleResources is true', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        eventCreation: { canHaveMultipleResources: true },
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should return the configured value when eventCreation.canHaveMultipleResources is false', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        eventCreation: { canHaveMultipleResources: false },
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(false);
+    });
+
+    it('should infer from the data when eventCreation is the boolean `true` instead of an object', () => {
+      const resource = ResourceBuilder.new().build();
+      const eventWithArrayResource = EventBuilder.new().resources([resource]).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [eventWithArrayResource],
+        eventCreation: true,
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should infer from the data when eventCreation is not set', () => {
+      const resource = ResourceBuilder.new().build();
+      const eventWithStringResource = EventBuilder.new().resource(resource).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [eventWithStringResource],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(false);
+    });
+
+    it('should infer "multiple" from the first event with an array resource', () => {
+      const resource = ResourceBuilder.new().build();
+      const eventWithArrayResource = EventBuilder.new().resources([resource]).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [eventWithArrayResource],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should infer "single" from the first event with a string resource', () => {
+      const resource = ResourceBuilder.new().build();
+      const eventWithStringResource = EventBuilder.new().resource(resource).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [eventWithStringResource],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(false);
+    });
+
+    it('should scan events in order and stop at the first one with a resource (string first)', () => {
+      const resource = ResourceBuilder.new().build();
+      const stringFirst = EventBuilder.new().resource(resource).build();
+      const arraySecond = EventBuilder.new().resources([resource]).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [stringFirst, arraySecond],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(false);
+    });
+
+    it('should scan events in order and stop at the first one with a resource (array first)', () => {
+      const resource = ResourceBuilder.new().build();
+      const arrayFirst = EventBuilder.new().resources([resource]).build();
+      const stringSecond = EventBuilder.new().resource(resource).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [arrayFirst, stringSecond],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should skip events without a resource while scanning for the first shape', () => {
+      const resource = ResourceBuilder.new().build();
+      const noResource = EventBuilder.new().build();
+      const stringResource = EventBuilder.new().resource(resource).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [noResource, stringResource],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(false);
+    });
+
+    it('should default to "multiple" when no event in the data has a resource at all', () => {
+      const noResource = EventBuilder.new().build();
+      const state = getEventCalendarStateFromParameters({
+        events: [noResource],
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should default to "multiple" when there are no events at all', () => {
+      const state = getEventCalendarStateFromParameters({ events: [] });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
+    });
+
+    it('should still resolve via inference when the scheduler is read-only (creationConfig would be false)', () => {
+      const resource = ResourceBuilder.new().build();
+      const eventWithArrayResource = EventBuilder.new().resources([resource]).build();
+      const state = getEventCalendarStateFromParameters({
+        events: [eventWithArrayResource],
+        readOnly: true,
+      });
+      expect(schedulerEventSelectors.canHaveMultipleResources(state)).to.equal(true);
     });
   });
 
@@ -525,7 +634,7 @@ describe('schedulerEventSelectors', () => {
         events: [defaultEvent],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, defaultEvent.id)).to.equal('teal');
+      expect(schedulerEventSelectors.color(state, defaultEvent.id, undefined)).to.equal('teal');
     });
 
     it('should return event color when event has a color', () => {
@@ -534,7 +643,7 @@ describe('schedulerEventSelectors', () => {
         events: [event],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('red');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('red');
     });
 
     it('should return resource eventColor when event has no color', () => {
@@ -545,7 +654,7 @@ describe('schedulerEventSelectors', () => {
         resources: [resource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('purple');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('purple');
     });
 
     it('should use event color over resource eventColor when both are defined', () => {
@@ -556,7 +665,7 @@ describe('schedulerEventSelectors', () => {
         resources: [resource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('red');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('red');
     });
 
     it('should fall back to state eventColor when resource has no eventColor', () => {
@@ -567,7 +676,7 @@ describe('schedulerEventSelectors', () => {
         resources: [resource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('teal');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('teal');
     });
 
     it('should inherit eventColor from ancestor resource when child resource does not define it', () => {
@@ -582,7 +691,7 @@ describe('schedulerEventSelectors', () => {
         resources: [parentResource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('purple');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('purple');
     });
 
     it('should use child resource eventColor over parent resource when both are defined', () => {
@@ -597,7 +706,7 @@ describe('schedulerEventSelectors', () => {
         resources: [parentResource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('blue');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('blue');
     });
 
     it('should inherit eventColor from grandparent resource when parent and child do not define it', () => {
@@ -613,7 +722,7 @@ describe('schedulerEventSelectors', () => {
         resources: [grandparentResource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('purple');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('purple');
     });
 
     it('should use nearest ancestor eventColor over more distant ancestor', () => {
@@ -632,7 +741,7 @@ describe('schedulerEventSelectors', () => {
         resources: [grandparentResource],
         eventColor: 'teal',
       });
-      expect(schedulerEventSelectors.color(state, event.id)).to.equal('blue');
+      expect(schedulerEventSelectors.color(state, event.id, undefined)).to.equal('blue');
     });
   });
 

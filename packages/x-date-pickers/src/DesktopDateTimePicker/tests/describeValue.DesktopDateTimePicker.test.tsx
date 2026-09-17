@@ -8,6 +8,7 @@ import {
 } from 'test/utils/pickers';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe } from 'vitest';
 
 describe('<DesktopDateTimePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();

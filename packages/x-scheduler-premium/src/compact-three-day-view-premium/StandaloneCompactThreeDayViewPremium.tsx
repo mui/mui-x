@@ -1,8 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
+import {
+  EventCalendarPremiumStore,
+  useExtractEventCalendarPremiumParameters,
+} from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { CompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
 import {
   EventCalendarProvider,
@@ -30,13 +32,13 @@ const StandaloneCompactThreeDayViewPremium = React.forwardRef(
   ) {
     useLicenseVerifier(packageInfo);
 
-    const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    const { parameters, forwardedProps } = useExtractEventCalendarPremiumParameters<
       TEvent,
       TResource,
       typeof props
     >(props);
 
-    const { localeText, ...other } = forwardedProps;
+    const { localeText, slots, slotProps, ...other } = forwardedProps;
 
     return (
       <ResponsiveTypographyContainer>
@@ -44,6 +46,8 @@ const StandaloneCompactThreeDayViewPremium = React.forwardRef(
           {...parameters}
           storeClass={EventCalendarPremiumStore}
           localeText={localeText}
+          slots={slots}
+          slotProps={slotProps}
         >
           <EventEditingOptionalRenderersContext.Provider
             value={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}

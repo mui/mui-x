@@ -10,6 +10,9 @@
       "description": "If <code>true</code>, the cells of the column can be aggregated based."
     },
     "align": { "description": "Align cell content." },
+    "allowFormulas": {
+      "description": "If <code>true</code>, cell values that are strings starting with <code>=</code> are parsed and evaluated as formulas.<br />The evaluated value flows through rendering, sorting, filtering and export, while the formula<br />source remains the stored row-data value."
+    },
     "availableAggregationFunctions": {
       "description": "Limit the aggregation function usable on this column.<br />By default, the column will have all the aggregation functions that are compatible with its type."
     },
@@ -81,6 +84,9 @@
       "description": "Allows to render a component in the column header filter cell."
     },
     "resizable": { "description": "If <code>false</code>, disables resizing for this column." },
+    "rowHeader": {
+      "description": "If <code>true</code>, the cells in this column identify their respective rows and receive the <code>rowheader</code> ARIA role."
+    },
     "rowSpanValueGetter": {
       "description": "Function that returns a specific value to be used in row spanning."
     },

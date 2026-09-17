@@ -11,6 +11,7 @@ import { GridEditModes, GridCellModes } from '../../../models/gridEditRowModel';
 import type { GridEditingState, GridEditCellProps } from '../../../models/gridEditRowModel';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import type {
   GridCellEditingApi,
   GridStopCellEditModeParams,
@@ -273,6 +274,7 @@ export const useGridCellEditing = (
     if (onCellModesModelChange && isNewModelDifferentFromProp) {
       onCellModesModelChange(newModel, {
         api: apiRef.current,
+        apiRef: getPublicApiRef(apiRef),
       });
     }
 

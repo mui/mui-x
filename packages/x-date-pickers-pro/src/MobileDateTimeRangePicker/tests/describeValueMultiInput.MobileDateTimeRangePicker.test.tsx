@@ -10,6 +10,7 @@ import {
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
+import { describe } from 'vitest';
 
 describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
   const { render } = createPickerRenderer();

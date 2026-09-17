@@ -2,7 +2,7 @@ import { createRenderer, screen, waitFor } from '@mui/internal-test-utils/create
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { RadarChart } from '@mui/x-charts/RadarChart';
 import type { RadarChartProps } from '@mui/x-charts/RadarChart';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsTooltipClasses } from '../ChartsTooltip';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';

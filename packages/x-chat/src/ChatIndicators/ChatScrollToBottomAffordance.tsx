@@ -2,15 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
+import type { SxProps, Theme } from '@mui/system';
 import IconButton from '@mui/material/IconButton';
-import { ScrollToBottomAffordance, type ScrollToBottomAffordanceProps } from '@mui/x-chat-headless';
+import { ScrollToBottomAffordance } from '@mui/x-chat-headless';
+import type { ScrollToBottomAffordanceProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
-import {
-  useChatScrollToBottomAffordanceUtilityClasses,
-  type ChatScrollToBottomAffordanceClasses,
-} from './chatScrollToBottomAffordanceClasses';
+import { useChatScrollToBottomAffordanceUtilityClasses } from './chatScrollToBottomAffordanceClasses';
+import type { ChatScrollToBottomAffordanceClasses } from './chatScrollToBottomAffordanceClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatScrollToBottomAffordance');
 

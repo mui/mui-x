@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { packScatterSeriesCoords } from './scatterRenderData.selectors';
 
 const identity = (value: number | Date) => value as number;

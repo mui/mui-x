@@ -1,5 +1,6 @@
 import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
 import type { GridGroupNode, GridRowTreeConfig } from '@mui/x-data-grid';
+import { describe, it, expect } from 'vitest';
 import { createRowTree } from './createRowTree';
 
 const getGroupExpansion = (tree: GridRowTreeConfig) =>

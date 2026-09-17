@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { serializeIdentifier } from './serializeIdentifier';
 import { barSeriesConfig } from '../../../../../BarChart/seriesConfig';
 import type { ChartSeriesConfig } from '../types';

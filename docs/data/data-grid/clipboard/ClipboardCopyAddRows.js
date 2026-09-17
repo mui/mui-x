@@ -4,7 +4,7 @@ import { randomEmail, randomId, randomUserName } from '@mui/x-data-grid-generato
 import Button from '@mui/material/Button';
 
 const columns = [
-  { field: 'name', headerName: 'Name', width: 200, editable: true },
+  { field: 'name', headerName: 'Name', width: 200, editable: true, rowHeader: true },
   { field: 'email', headerName: 'Email', width: 250, editable: true },
 ];
 

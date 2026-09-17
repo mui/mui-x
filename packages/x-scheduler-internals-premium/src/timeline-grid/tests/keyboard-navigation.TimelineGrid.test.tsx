@@ -17,6 +17,7 @@ import {
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
+import { vi, describe, it, expect } from 'vitest';
 import { useTimelineGridRootContext } from '../root/TimelineGridRootContext';
 
 describe('TimelineGrid keyboard navigation', () => {
@@ -34,14 +35,18 @@ describe('TimelineGrid keyboard navigation', () => {
     onStoreMount,
     columnTypes,
     eventCreation,
+    onEventEditingStart,
     resources: resourcesProp = resources,
     children,
+    titleContent,
   }: {
     onStoreMount?: (store: AnyEventCalendarStore) => void;
     columnTypes?: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
     eventCreation?: boolean;
+    onEventEditingStart?: (occurrence: any, eventDetails: any) => void;
     resources?: typeof resources;
     children?: React.ReactNode;
+    titleContent?: React.ReactNode;
   } = {}) {
     return (
       <EventTimelinePremiumProvider
@@ -49,6 +54,7 @@ describe('TimelineGrid keyboard navigation', () => {
         resources={resourcesProp}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         eventCreation={eventCreation}
+        onEventEditingStart={onEventEditingStart}
       >
         <TimelineGrid.Root columnTypes={columnTypes}>
           <TimelineGrid.Row data-testid="header-row" aria-rowindex={1}>
@@ -63,7 +69,10 @@ describe('TimelineGrid keyboard navigation', () => {
                 data-testid={`row-${resourceId}`}
               >
                 <TimelineGrid.TitleRow data-testid={`title-${resourceId}`}>
-                  <TimelineGrid.Cell>{resourceId}</TimelineGrid.Cell>
+                  <TimelineGrid.Cell>
+                    {resourceId}
+                    {titleContent}
+                  </TimelineGrid.Cell>
                 </TimelineGrid.TitleRow>
                 <TimelineGrid.EventRow resourceId={resourceId} data-testid={`events-${resourceId}`}>
                   {() => (
@@ -215,6 +224,18 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(getEventsCells()[0]).toHaveFocus();
     });
 
+    it('should leave the arrow keys to interactive content nested in a cell', async () => {
+      const { user } = render(<Grid titleContent={<input data-testid="nested-input" />} />);
+
+      const input = within(getTitleCells()[0]).getByTestId('nested-input');
+      act(() => {
+        input.focus();
+      });
+      await user.keyboard('{ArrowRight}{ArrowDown}');
+
+      expect(document.activeElement).to.equal(input);
+    });
+
     it('should follow the order defined by a custom `columnTypes` prop', async () => {
       const { user } = render(<Grid columnTypes={['events', 'title']} />);
 
@@ -235,11 +256,13 @@ describe('TimelineGrid keyboard navigation', () => {
   describe('event creation', () => {
     it('should create a timeline event placeholder on Enter keypress', async () => {
       let store: AnyEventCalendarStore | null = null;
+      const onEventEditingStart = vi.fn();
       const { user } = render(
         <Grid
           onStoreMount={(s) => {
             store = s;
           }}
+          onEventEditingStart={onEventEditingStart}
         />,
       );
 
@@ -252,6 +275,13 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(store!.state.occurrencePlaceholder).not.to.equal(null);
       expect(store!.state.occurrencePlaceholder?.type).to.equal('creation');
       expect(store!.state.occurrencePlaceholder?.surfaceType).to.equal('timeline');
+
+      // The initiating keydown is stashed with the placeholder and reaches `onEventEditingStart`.
+      act(() => {
+        store!.startEditing(store!.state.occurrencePlaceholder as any);
+      });
+      expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('creation');
+      expect(onEventEditingStart.mock.lastCall?.[1].event.type).to.equal('keydown');
     });
 
     it('should not create a placeholder on Enter from a title cell', async () => {

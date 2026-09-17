@@ -6,6 +6,7 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { TreeViewAnyStore, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
+import { describe } from 'vitest';
 import {
   DescribeTreeViewTestRunner,
   DescribeTreeViewRenderer,

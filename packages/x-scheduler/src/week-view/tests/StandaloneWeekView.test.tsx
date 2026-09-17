@@ -3,6 +3,7 @@ import { createSchedulerRenderer, DEFAULT_TESTING_VISIBLE_DATE } from 'test/util
 import { screen } from '@mui/internal-test-utils';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import { esES } from '@mui/x-scheduler/locales';
+import { describe, it, expect } from 'vitest';
 
 describe('<StandaloneWeekView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: DEFAULT_TESTING_VISIBLE_DATE });

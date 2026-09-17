@@ -1,4 +1,3 @@
-import { createSelector } from '@base-ui/utils/store';
 import type {
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
@@ -43,7 +42,7 @@ function isResourceInPlaceholderTargetSet(
 }
 
 export const timelineOccurrencePlaceholderSelectors = {
-  placeholderInResource: createSelector((state: State, resourceId: SchedulerResourceId | null) => {
+  placeholderInResource: (state: State, resourceId: SchedulerResourceId | null) => {
     const placeholder = state.occurrencePlaceholder;
     if (
       placeholder === null ||
@@ -55,17 +54,17 @@ export const timelineOccurrencePlaceholderSelectors = {
       return null;
     }
 
-    const presetConfig = eventTimelinePremiumPresetSelectors.config(state);
+    const config = eventTimelinePremiumPresetSelectors.config(state);
     if (
-      state.adapter.isBefore(placeholder.end, presetConfig.start) ||
-      state.adapter.isAfter(placeholder.start, presetConfig.end)
+      state.adapter.isBefore(placeholder.end, config.start) ||
+      state.adapter.isAfter(placeholder.start, config.end)
     ) {
       return null;
     }
 
     return placeholder;
-  }),
-  isCreatingInResource: createSelector((state: State, resourceId: SchedulerResourceId | null) => {
+  },
+  isCreatingInResource: (state: State, resourceId: SchedulerResourceId | null) => {
     const placeholder = state.occurrencePlaceholder;
     if (
       placeholder === null ||
@@ -76,5 +75,5 @@ export const timelineOccurrencePlaceholderSelectors = {
       return false;
     }
     return true;
-  }),
+  },
 };

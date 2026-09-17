@@ -361,7 +361,7 @@ RadialLineChart.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
@@ -376,6 +376,13 @@ RadialLineChart.propTypes /* remove-proptypes */ = {
    * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The callback fired when an item is clicked.
+   *
+   * @param {ChartsActivationEvent<HTMLDivElement>} event The click event.
+   * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
+   */
+  onItemClick: PropTypes.func,
   /**
    * The callback fired when the tooltip item changes.
    *

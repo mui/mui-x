@@ -1,6 +1,7 @@
 import { YearCalendar, yearCalendarClasses as classes } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<YearCalendar /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();
