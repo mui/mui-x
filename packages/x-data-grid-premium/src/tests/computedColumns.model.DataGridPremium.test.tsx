@@ -222,6 +222,18 @@ describe('<DataGridPremium /> - Computed columns model', () => {
       expect(getModel()).to.deep.equal([total, doubled]);
     });
 
+    it('`addComputedColumn` should keep the requested index until the column is inserted', () => {
+      render(<Test />);
+      const getPendingIndexes = () =>
+        unwrapPrivateAPI<GridPrivateApiPremium, GridApi>(apiRef.current!).caches.computedColumns
+          .pendingColumnIndexes;
+      act(() => apiRef.current!.addComputedColumn(total, { columnIndex: 1 }));
+      expect(Array.from(getPendingIndexes())).to.deep.equal([['total', 1]]);
+
+      act(() => apiRef.current!.removeComputedColumn('total'));
+      expect(getPendingIndexes().size).to.equal(0);
+    });
+
     it('`addComputedColumn` should ignore a definition whose field is already computed and warn', () => {
       render(<Test />);
       act(() => apiRef.current!.addComputedColumn(total));

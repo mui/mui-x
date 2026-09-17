@@ -748,6 +748,16 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the icon of the boolean cell"
     },
+    "cell--computed": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "the cell belongs to a computed column (Premium computed columns)"
+    },
+    "cell--computedError": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "the formula of its computed column evaluates to an error for the row (Premium computed columns)"
+    },
     "cell--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",

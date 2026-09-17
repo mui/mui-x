@@ -64,7 +64,10 @@ export const computedColumnsStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'computedColumns' | 'initialState'>,
   GridPrivateApiPremium
 > = (state, props, apiRef) => {
-  apiRef.current.caches.computedColumns = { editorRequest: null };
+  apiRef.current.caches.computedColumns = {
+    editorRequest: null,
+    pendingColumnIndexes: new Map(),
+  };
 
   return {
     ...state,
@@ -121,20 +124,44 @@ export const useGridComputedColumns = (
       }));
 
       // The update is not applied when the model is controlled and the parent has not echoed it yet.
-      if (gridComputedColumnsSelector(apiRef) !== currentModel) {
-        apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
+      const appliedModel = gridComputedColumnsSelector(apiRef);
+      if (appliedModel === currentModel) {
+        return;
       }
+
+      // An index still pending for a field that is not part of the applied model
+      // belongs to an insertion the parent rejected.
+      const { pendingColumnIndexes } = apiRef.current.caches.computedColumns;
+      if (pendingColumnIndexes.size > 0) {
+        const fields = new Set(appliedModel.map((definition) => definition.field));
+        for (const field of Array.from(pendingColumnIndexes.keys())) {
+          if (!fields.has(field)) {
+            pendingColumnIndexes.delete(field);
+          }
+        }
+      }
+
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
     },
     [apiRef],
   );
 
   const addComputedColumn = React.useCallback<GridComputedColumnsApi['addComputedColumn']>(
     (definition, options) => {
-      apiRef.current.setComputedColumns((prev) => [...prev, definition]);
-
-      if (options?.columnIndex != null && apiRef.current.getColumn(definition.field)?.computed) {
-        apiRef.current.setColumnIndex(definition.field, options.columnIndex);
+      // The column is inserted by the formula feature once the model is applied,
+      // which a controlled model defers until the parent echoes it: the index
+      // waits in the cache instead of being applied with `setColumnIndex()` here.
+      const { pendingColumnIndexes } = apiRef.current.caches.computedColumns;
+      const isNewField = !gridComputedColumnsSelector(apiRef).some(
+        (item) => item.field === definition.field,
+      );
+      if (isNewField && options?.columnIndex != null) {
+        pendingColumnIndexes.set(definition.field, options.columnIndex);
+      } else {
+        pendingColumnIndexes.delete(definition.field);
       }
+
+      apiRef.current.setComputedColumns((prev) => [...prev, definition]);
     },
     [apiRef],
   );
@@ -155,6 +182,7 @@ export const useGridComputedColumns = (
 
   const removeComputedColumn = React.useCallback<GridComputedColumnsApi['removeComputedColumn']>(
     (field) => {
+      apiRef.current.caches.computedColumns.pendingColumnIndexes.delete(field);
       apiRef.current.setComputedColumns((prev) => {
         if (!prev.some((definition) => definition.field === field)) {
           return prev;

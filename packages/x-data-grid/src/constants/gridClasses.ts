@@ -116,6 +116,14 @@ export interface GridClasses {
    */
   'cell--editable': string;
   /**
+   * Styles applied to the cell element if the cell belongs to a computed column (Premium computed columns).
+   */
+  'cell--computed': string;
+  /**
+   * Styles applied to the cell element if the formula of its computed column evaluates to an error for the row (Premium computed columns).
+   */
+  'cell--computedError': string;
+  /**
    * Styles applied to the cell element if the cell is in edit mode.
    */
   'cell--editing': string;
@@ -1094,6 +1102,8 @@ export const gridClassesOverrides = {
     'actionsCell',
     'booleanCell',
     'cell',
+    'cell--computed',
+    'cell--computedError',
     'cell--editable',
     'cell--editing',
     'cell--flex',

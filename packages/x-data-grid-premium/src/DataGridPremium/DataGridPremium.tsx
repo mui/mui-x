@@ -31,6 +31,7 @@ import { useGridAriaAttributesPremium } from '../hooks/utils/useGridAriaAttribut
 import { useGridRowAriaAttributesPremium } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { gridCellFormulaResultSelector } from '../hooks/features/formula/gridFormulaSelectors';
+import { gridComputedColumnCellRevisionSelector } from '../hooks/features/computedColumns/gridComputedColumnsSelectors';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
@@ -54,6 +55,9 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
       // after an evaluation pass — the value itself flows through the params
       // overlay in `useGridParamsOverridableMethods`.
       useGridSelector(apiRef, gridCellFormulaResultSelector, { id, field });
+      // Computed cells read their value through the `valueGetter` of their column:
+      // the revision is what re-renders them when the row object did not change.
+      useGridSelector(apiRef, gridComputedColumnCellRevisionSelector, field);
       return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
     },
     useFilterValueGetter: (apiRef, props) => (row, column) => {

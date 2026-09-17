@@ -177,6 +177,11 @@ export const serializeRowUnsafe = (
         if (!value) {
           break;
         }
+        if (!(value instanceof Date)) {
+          // The error code of a formula, like `#DIV/0!`.
+          cellValue = String(value);
+          break;
+        }
         const utcDate = new Date(
           Date.UTC(
             value.getFullYear(),

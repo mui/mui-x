@@ -1,3 +1,4 @@
+import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import { createSelector, createRootSelector } from '@mui/x-data-grid-pro/internals';
 import type { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridSidebarStateSelector } from '../sidebar/gridSidebarSelector';
@@ -23,6 +24,18 @@ export const gridComputedColumnsSelector = createSelector(
 export const gridComputedColumnsRevisionSelector = createSelector(
   gridComputedColumnsStateSelector,
   (computedColumnsState) => computedColumnsState.revision,
+);
+
+/**
+ * Get the revision the cells of one column depend on: the revision of the computed
+ * results for a computed column, a constant for every other column.
+ * Subscribing to it re-renders the computed cells only.
+ * @ignore - do not document.
+ */
+export const gridComputedColumnCellRevisionSelector = createSelector(
+  gridColumnLookupSelector,
+  gridComputedColumnsRevisionSelector,
+  (lookup, revision, field: string) => (lookup[field]?.computed ? revision : 0),
 );
 
 /**

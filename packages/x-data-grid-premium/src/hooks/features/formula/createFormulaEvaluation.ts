@@ -49,7 +49,7 @@ import type { GridFormulaPositionSnapshot } from './gridFormulaPositionContext';
  * evaluation never consult positions, so building a real snapshot for them
  * would be wasted work.
  */
-const EMPTY_POSITION_CONTEXT: FormulaPositionContext = {
+export const EMPTY_POSITION_CONTEXT: FormulaPositionContext = {
   version: 0,
   rowCount: 0,
   columnCount: 0,

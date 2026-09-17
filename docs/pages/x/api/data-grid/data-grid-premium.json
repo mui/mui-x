@@ -1843,6 +1843,18 @@
       "isGlobal": false
     },
     {
+      "key": "cell--computed",
+      "className": "MuiDataGridPremium-cell--computed",
+      "description": "Styles applied to the cell element if the cell belongs to a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--computedError",
+      "className": "MuiDataGridPremium-cell--computedError",
+      "description": "Styles applied to the cell element if the formula of its computed column evaluates to an error for the row (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
       "key": "cell--editable",
       "className": "MuiDataGridPremium-cell--editable",
       "description": "Styles applied to the cell element if the cell is editable.",

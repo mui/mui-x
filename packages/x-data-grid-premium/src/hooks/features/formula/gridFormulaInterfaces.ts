@@ -6,7 +6,14 @@ import type {
 } from '@mui/x-data-grid-pro';
 import type { GridStateColDef } from '@mui/x-data-grid/internals';
 import type { FormulaExcelExportLayout, ExcelFormulaCell } from './gridFormulaExcelExport';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type {
+  GridComputedColumnDefinition,
+  GridComputedColumnsModel,
+  GridComputedColumnValidationIssue,
+} from '../computedColumns/gridComputedColumnsInterfaces';
+import type {
+  FormulaAstNode,
   FormulaBoundDependencies,
   FormulaCellKey,
   FormulaErrorCode,
@@ -139,11 +146,73 @@ export interface GridFormulaCellEditStartInfo {
   startedWithEquals: boolean;
 }
 
+/**
+ * The runtime record of one computed column, derived from its definition.
+ */
+export interface GridComputedColumnRecord {
+  definition: GridComputedColumnDefinition;
+  /**
+   * `null` when the formula could not be parsed.
+   */
+  ast: FormulaAstNode | null;
+  /**
+   * The fields the formula references directly.
+   */
+  dependencies: Set<string>;
+  /**
+   * The result shared by every row when the formula cannot be evaluated at all
+   * (parse failure, references that are not same-row fields).
+   * `null` when the formula is evaluated row by row.
+   */
+  staticResult: GridFormulaResult | null;
+  /**
+   * The validation issues of the stored definition.
+   */
+  issues: GridComputedColumnValidationIssue[];
+  /**
+   * The column definition without the `computedColDef` overrides. Its getters are
+   * created once per definition, so their identity only changes with the definition.
+   */
+  baseColDef: GridColDef;
+  /**
+   * The column definition injected into the columns state.
+   */
+  colDef: GridColDef;
+}
+
+export interface GridComputedColumnsRuntimeCache {
+  /**
+   * Keyed by field, in the order of the model.
+   */
+  records: Map<string, GridComputedColumnRecord>;
+  /**
+   * Memoized results. Same-row dependencies are captured by the row identity:
+   * an updated row is a new object, so its entry is dropped with the old one.
+   * An `undefined` result marks an evaluation in progress (cycle detection).
+   */
+  results: WeakMap<GridValidRowModel, Map<string, GridFormulaResult | undefined>>;
+  /**
+   * For each computed field, every field its value depends on, followed
+   * through the other computed columns.
+   */
+  dependencyClosure: Map<string, Set<string>>;
+  /**
+   * The union of `dependencyClosure`: every field a computed column reads.
+   */
+  referencedFields: Set<string>;
+  /**
+   * The inputs the records were last built from, compared by reference.
+   */
+  model: GridComputedColumnsModel | null;
+  computedColDef: DataGridPremiumProcessedProps['computedColDef'];
+}
+
 export interface GridFormulaInternalCache {
   /**
    * Interning parser: identical sources share one parse result.
    */
   parser: FormulaParser;
+  computedColumns: GridComputedColumnsRuntimeCache;
   registry: FormulaFunctionRegistry;
   /**
    * The `formulaFunctions` prop value `registry` was built from,

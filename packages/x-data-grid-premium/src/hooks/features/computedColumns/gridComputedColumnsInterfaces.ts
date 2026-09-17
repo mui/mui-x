@@ -104,6 +104,13 @@ export interface GridComputedColumnEditorRequest {
 
 export interface GridComputedColumnsInternalCache {
   editorRequest: GridComputedColumnEditorRequest | null;
+  /**
+   * The index requested through `addComputedColumn()` for columns that are not
+   * part of the columns state yet. Consumed by the formula feature when it
+   * inserts the column — with a controlled model, that only happens once the
+   * parent has echoed the new model back through the `computedColumns` prop.
+   */
+  pendingColumnIndexes: Map<string, number>;
 }
 
 /**
