@@ -782,6 +782,31 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
 
     it.skipIf(isJSDOM)(
+      'should show the vertical scrollbar when growth reaches maxHeight',
+      async () => {
+        const { setProps } = render(<GrowingTestCase />);
+        const initialWidth = getFlexHeader().offsetWidth;
+        const naturalHeight = document
+          .querySelector<HTMLElement>(`.${gridClasses.root}`)!
+          .getBoundingClientRect().height;
+        setProps({
+          containerStyle: {
+            display: 'flex',
+            flexDirection: 'column',
+            maxHeight: naturalHeight + detailPanelHeight / 2,
+          },
+        });
+
+        act(() => apiRef.current!.toggleDetailPanel(0));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(true);
+          expect(getFlexHeader().offsetWidth).to.equal(initialWidth - 15);
+        });
+      },
+    );
+
+    it.skipIf(isJSDOM)(
       'should still show the vertical scrollbar when the container cannot grow',
       async () => {
         // The container hugs the content exactly but has a fixed height, so the
