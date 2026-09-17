@@ -33,6 +33,10 @@ import type {
   GridPivotModel,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
 import type { GridSidebarValue } from '../hooks/features/sidebar/gridSidebarInterfaces';
+import type {
+  GridComputedColumnsInternalCache,
+  GridComputedColumnsModel,
+} from '../hooks/features/computedColumns/gridComputedColumnsInterfaces';
 
 export interface GridControlledStateEventLookupPremium {
   /**
@@ -72,6 +76,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the active chart id changes.
    */
   activeChartIdChange: { params: string };
+  /**
+   * Fired when the computed columns model changes.
+   */
+  computedColumnsChange: { params: GridComputedColumnsModel };
 }
 
 interface GridEventLookupPremium extends GridEventLookupPro {
@@ -159,6 +167,12 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * @default false
    */
   allowFormulas?: boolean;
+  /**
+   * If `true`, the column was generated from the `computedColumns` model.
+   * Set by the grid, do not set it on your own columns.
+   * @ignore - do not document.
+   */
+  computed?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -176,6 +190,7 @@ export interface GridApiCachesPremium extends GridApiCachesPro {
   rowGrouping: GridRowGroupingInternalCache;
   aggregation: GridAggregationInternalCache;
   formula?: GridFormulaInternalCache;
+  computedColumns: GridComputedColumnsInternalCache;
 }
 
 export interface GridPipeProcessingLookupPremium {

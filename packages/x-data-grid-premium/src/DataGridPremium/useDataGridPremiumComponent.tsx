@@ -126,6 +126,10 @@ import {
   useGridChartsIntegration,
 } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 import { historyStateInitializer, useGridHistory } from '../hooks/features/history/useGridHistory';
+import {
+  computedColumnsStateInitializer,
+  useGridComputedColumns,
+} from '../hooks/features/computedColumns/useGridComputedColumns';
 
 registerMultiSelectColumnType();
 
@@ -222,6 +226,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnPinningStateInitializer, apiRef, props, key);
   useGridInitializeState(columnsStateInitializer, apiRef, props, key);
   useGridInitializeState(sidebarStateInitializer, apiRef, props);
+  useGridInitializeState(computedColumnsStateInitializer, apiRef, props);
   useGridInitializeState(pivotingStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
@@ -250,6 +255,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(historyStateInitializer, apiRef, props);
 
   useGridSidebar(apiRef, props);
+  useGridComputedColumns(apiRef, props);
   useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);

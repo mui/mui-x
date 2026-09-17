@@ -89,6 +89,31 @@
     "description": "Get the summed width of all the visible columns."
   },
   {
+    "name": "gridComputedColumnDefinitionSelector",
+    "returnType": "GridComputedColumnDefinition | null",
+    "description": "Get the definition of one computed column, or `null` when the field is not a computed column."
+  },
+  {
+    "name": "gridComputedColumnsPanelOpenSelector",
+    "returnType": "boolean",
+    "description": "Get whether the sidebar currently shows the computed columns panel."
+  },
+  {
+    "name": "gridComputedColumnsRevisionSelector",
+    "returnType": "number",
+    "description": "Get the revision of the computed results.\nIt changes whenever the computed cells must read their value again."
+  },
+  {
+    "name": "gridComputedColumnsSelector",
+    "returnType": "GridComputedColumnsModel",
+    "description": "Get the computed columns model."
+  },
+  {
+    "name": "gridComputedColumnsStateSelector",
+    "returnType": "GridComputedColumnsState",
+    "description": ""
+  },
+  {
     "name": "gridDataRowIdsSelector",
     "returnType": "GridRowId[]",
     "category": "Rows",

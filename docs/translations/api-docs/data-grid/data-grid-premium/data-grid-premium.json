@@ -73,6 +73,12 @@
     "columnVisibilityModel": {
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
     },
+    "computedColDef": {
+      "description": "The column definition properties applied to the columns generated from the <code>computedColumns</code> model. Pass a function to return different properties for each computed column."
+    },
+    "computedColumns": {
+      "description": "Set the computed columns of the grid: read-only columns whose value is a formula evaluated for every row from the other fields of the same row. Has no effect unless the formula feature is provided through <code>featureDependencies</code>."
+    },
     "dataSource": { "description": "Data source object." },
     "dataSourceCache": { "description": "Data source cache object." },
     "dataSourceKeepPreviousData": {
@@ -113,6 +119,9 @@
     },
     "disableColumnSorting": {
       "description": "If <code>true</code>, the column sorting feature will be disabled."
+    },
+    "disableComputedColumns": {
+      "description": "If <code>true</code>, the computed columns are disabled: the columns of the <code>computedColumns</code> model are not added to the grid and the UI to manage them is hidden."
     },
     "disableDensitySelector": {
       "description": "If <code>true</code>, the density selector is disabled."
@@ -645,6 +654,13 @@
           "description": "With all properties from GridColumnResizeParams."
         },
         "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
+      }
+    },
+    "onComputedColumnsChange": {
+      "description": "Callback fired when the computed columns model changes.",
+      "typeDescriptions": {
+        "model": { "name": "model", "description": "The new computed columns model." },
         "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },

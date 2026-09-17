@@ -312,6 +312,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
     cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
     chartable: PropTypes.bool,
     colSpan: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+    computed: PropTypes.bool,
     description: PropTypes.string,
     disableColumnMenu: PropTypes.bool,
     disableExport: PropTypes.bool,
@@ -416,6 +417,63 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
+  /**
+   * The column definition properties applied to the columns generated from the `computedColumns` model.
+   * Pass a function to return different properties for each computed column.
+   */
+  computedColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  /**
+   * Set the computed columns of the grid: read-only columns whose value is a formula
+   * evaluated for every row from the other fields of the same row.
+   * Has no effect unless the formula feature is provided through `featureDependencies`.
+   */
+  computedColumns: PropTypes.arrayOf(
+    PropTypes.shape({
+      description: PropTypes.string,
+      field: PropTypes.string.isRequired,
+      formula: PropTypes.string.isRequired,
+      headerName: PropTypes.string.isRequired,
+      numberFormat: PropTypes.shape({
+        compactDisplay: PropTypes.oneOf(['long', 'short']),
+        currency: PropTypes.string,
+        currencyDisplay: PropTypes.oneOf(['code', 'name', 'narrowSymbol', 'symbol']),
+        currencySign: PropTypes.oneOf(['accounting', 'standard']),
+        localeMatcher: PropTypes.oneOf(['best fit', 'lookup']),
+        maximumFractionDigits: PropTypes.number,
+        maximumSignificantDigits: PropTypes.number,
+        minimumFractionDigits: PropTypes.number,
+        minimumIntegerDigits: PropTypes.number,
+        minimumSignificantDigits: PropTypes.number,
+        notation: PropTypes.oneOf(['compact', 'engineering', 'scientific', 'standard']),
+        numberingSystem: PropTypes.string,
+        roundingIncrement: PropTypes.oneOf([
+          1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000,
+        ]),
+        roundingMode: PropTypes.oneOf([
+          'ceil',
+          'expand',
+          'floor',
+          'halfCeil',
+          'halfEven',
+          'halfExpand',
+          'halfFloor',
+          'halfTrunc',
+          'trunc',
+        ]),
+        roundingPriority: PropTypes.oneOf(['auto', 'lessPrecision', 'morePrecision']),
+        signDisplay: PropTypes.oneOf(['always', 'auto', 'exceptZero', 'negative', 'never']),
+        style: PropTypes.oneOf(['currency', 'decimal', 'percent', 'unit']),
+        trailingZeroDisplay: PropTypes.oneOf(['auto', 'stripIfInteger']),
+        unit: PropTypes.string,
+        unitDisplay: PropTypes.oneOf(['long', 'narrow', 'short']),
+        useGrouping: PropTypes.oneOfType([
+          PropTypes.oneOf(['always', 'auto', 'false', 'min2', 'true']),
+          PropTypes.bool,
+        ]),
+      }),
+      type: PropTypes.oneOf(['boolean', 'date', 'dateTime', 'number', 'string']).isRequired,
+    }),
+  ),
   /**
    * Data source object.
    */
@@ -523,6 +581,12 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disableColumnSorting: PropTypes.bool,
+  /**
+   * If `true`, the computed columns are disabled: the columns of the `computedColumns` model are
+   * not added to the grid and the UI to manage them is hidden.
+   * @default false
+   */
+  disableComputedColumns: PropTypes.bool,
   /**
    * If `true`, the density selector is disabled.
    * @default false
@@ -846,6 +910,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
       'columnSeparatorMouseDown',
       'columnVisibilityModelChange',
       'columnWidthChange',
+      'computedColumnsChange',
       'debouncedResize',
       'densityChange',
       'detailPanelsExpandedRowIdsChange',
@@ -1213,6 +1278,12 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange: PropTypes.func,
+  /**
+   * Callback fired when the computed columns model changes.
+   * @param {GridComputedColumnsModel} model The new computed columns model.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onComputedColumnsChange: PropTypes.func,
   /**
    * Callback fired when a data source request fails.
    * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
