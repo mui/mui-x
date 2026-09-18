@@ -35,6 +35,14 @@ const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
 })<{ ownerState: ExportedPickersFadeTransitionGroupProps }>({
   display: 'block',
   position: 'relative',
+  // During the transition, the group contains the entering and the exiting elements.
+  // Only the first element must participate in the layout.
+  // This prevents the content from jumping when both elements are present (#9736).
+  '& > :not(:first-of-type)': {
+    position: 'absolute',
+    top: 0,
+    insetInlineStart: 0,
+  },
 });
 
 /**

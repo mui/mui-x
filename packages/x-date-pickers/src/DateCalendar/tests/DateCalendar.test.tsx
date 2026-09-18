@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, waitFor, within } from '@mui/internal-test-utils';
+import { fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
@@ -258,6 +258,23 @@ describe('<DateCalendar />', () => {
       );
 
       expect(screen.getByText('2019/01')).toBeVisible();
+    });
+
+    // test: https://github.com/mui/mui-x/issues/9736
+    it('should remove the exiting month label from the layout during the fade transition', () => {
+      render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} />);
+
+      // Use `fireEvent` to assert the transition state before the exit timer unmounts the old label.
+      fireEvent.click(screen.getByTitle('Next month'));
+
+      const labels = screen.getAllByTestId('calendar-month-and-year-text');
+      expect(labels).to.have.length(2);
+      expect(labels[0]).to.have.text('February 2019');
+      expect(labels[1]).to.have.text('January 2019');
+
+      // The exiting label must not push the entering label down.
+      expect(getComputedStyle(labels[1]).position).to.equal('absolute');
+      expect(labels[1].getBoundingClientRect().top).to.equal(labels[0].getBoundingClientRect().top);
     });
   });
 
