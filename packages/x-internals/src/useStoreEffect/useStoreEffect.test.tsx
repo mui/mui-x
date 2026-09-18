@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { vi, describe, expect, it } from 'vitest';
-import { createRenderer, act } from '@mui/internal-test-utils';
+import { createRenderer, act, reactMajor } from '@mui/internal-test-utils';
 import { Store } from '@base-ui/utils/store';
 import { useStoreEffect } from './index';
 
@@ -14,10 +14,9 @@ describe('useStoreEffect', () => {
   // subscription is still alive. It always fires twice, and after a selector
   // change the throwaway instance keeps firing with the mount-time selector.
   // React 19 keeps a single instance.
-  const isReact19 = React.version.startsWith('19');
-  const subscriptionCount = isReact19 ? 1 : 2;
+  const subscriptionCount = reactMajor >= 19 ? 1 : 2;
   // Fires produced by the leaked throwaway subscription only.
-  const throwawayFires = isReact19 ? 0 : 1;
+  const throwawayFires = reactMajor >= 19 ? 0 : 1;
 
   it('runs the effect when the selected value changes', () => {
     const store = Store.create({ value: 0, other: 0 });
