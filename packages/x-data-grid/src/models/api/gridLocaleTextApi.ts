@@ -61,6 +61,37 @@ export interface GridLocaleText {
   formulaBarAddressLabel: string;
 
   // Computed columns (Premium)
+  columnMenuAddComputedColumn: string;
+  columnMenuEditComputedColumn: string;
+  columnMenuRemoveComputedColumn: string;
+  computedColumnsPanelTitle: string;
+  computedColumnsPanelCloseButton: string;
+  computedColumnsPanelBackButton: string;
+  computedColumnEditorNewTitle: string;
+  computedColumnEditorEditTitle: string;
+  computedColumnNameLabel: string;
+  computedColumnFieldLabel: string;
+  computedColumnFormulaLabel: string;
+  computedColumnTypeLabel: string;
+  computedColumnTypeNumber: string;
+  computedColumnTypeString: string;
+  computedColumnTypeBoolean: string;
+  computedColumnTypeDate: string;
+  computedColumnTypeDateTime: string;
+  computedColumnFormatLabel: string;
+  computedColumnFormatStyleDecimal: string;
+  computedColumnFormatStylePercent: string;
+  computedColumnFormatStyleCurrency: string;
+  computedColumnFormatCurrencyLabel: string;
+  computedColumnFormatDecimalsLabel: string;
+  computedColumnFormatGroupingLabel: string;
+  computedColumnPreviewLabel: string;
+  computedColumnPreviewRow: (rowIndex: number) => string;
+  computedColumnPreviewNoRows: string;
+  computedColumnApplyButton: string;
+  computedColumnAddButton: string;
+  computedColumnCancelButton: string;
+  computedColumnDeleteButton: string;
   computedColumnHeaderLabel: string;
   computedColumnHeaderInvalidLabel: string;
   computedColumnErrorNameRequired: string;

@@ -52,6 +52,8 @@ import {
 } from './gridFormulaSelectors';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
 import { GRID_FORMULA_EDITOR_SURFACE_CLASS } from '../../../components/GridFormulaEditor';
+import { GridComputedColumnsPanel } from '../../../components/computedColumnsPanel';
+import { GridSidebarValue } from '../sidebar/gridSidebarInterfaces';
 import { isFormulaFocusSafeTarget } from './gridFormulaBarElements';
 import {
   areColumnsSignaturesEqual,
@@ -117,10 +119,16 @@ export const useGridFormula = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'disableFormulas' | 'formulaFunctions' | 'dataSource' | 'formulaA1Notation'
+    | 'disableFormulas'
+    | 'formulaFunctions'
+    | 'dataSource'
+    | 'formulaA1Notation'
+    | 'disableComputedColumns'
   >,
 ) => {
   const a1NotationActive = !!props.formulaA1Notation && !props.disableFormulas && !props.dataSource;
+  const computedColumnsEnabled =
+    !props.disableFormulas && !props.disableComputedColumns && !props.dataSource;
 
   const computeEffectiveFormulaFields = React.useCallback(() => {
     if (props.disableFormulas || props.dataSource || gridPivotActiveSelector(apiRef)) {
@@ -512,6 +520,40 @@ export const useGridFormula = (
     [apiRef],
   );
 
+  // A computed cell is read-only: the editing gestures open the column editor
+  // with the row of the cell as preview row instead.
+  const handleComputedCellDoubleClick = React.useCallback<GridEventListener<'cellDoubleClick'>>(
+    (params) => {
+      if (!params.colDef.computed) {
+        return;
+      }
+      apiRef.current.showComputedColumnEditor(params.field, { sampleRowId: params.id });
+    },
+    [apiRef],
+  );
+
+  const handleComputedCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
+    (params, event) => {
+      if (
+        !params.colDef.computed ||
+        params.cellMode !== GridCellModes.View ||
+        event.key !== 'Enter' ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.altKey ||
+        event.shiftKey ||
+        event.which === 229
+      ) {
+        return;
+      }
+      // The editor focuses its formula editable right away — without this the
+      // keypress that follows would land in it as a newline.
+      event.preventDefault();
+      apiRef.current.showComputedColumnEditor(params.field, { sampleRowId: params.id });
+    },
+    [apiRef],
+  );
+
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params, event) => {
       const isPrintableKeyDown = params.reason === GridCellEditStartReasons.printableKeyDown;
@@ -654,12 +696,25 @@ export const useGridFormula = (
   );
   useGridRegisterPipeProcessor(apiRef, 'canUpdateFocus', canUpdateFocus);
 
+  const addComputedColumnsPanel = React.useCallback<GridPipeProcessor<'sidebar'>>(
+    (initialValue, value) => {
+      if (computedColumnsEnabled && value === GridSidebarValue.ComputedColumns) {
+        return <GridComputedColumnsPanel />;
+      }
+      return initialValue;
+    },
+    [computedColumnsEnabled],
+  );
+  useGridRegisterPipeProcessor(apiRef, 'sidebar', addComputedColumnsPanel);
+
   useGridEvent(apiRef, 'rowsSet', handleRowsSet);
   useGridEvent(apiRef, 'sortedRowsSet', handleSortedRowsSet);
   useGridEvent(apiRef, 'filteredRowsSet', handleFilteredRowsSet);
   useGridEvent(apiRef, 'columnVisibilityModelChange', handleColumnVisibilityModelChange);
   useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
   useGridEvent(apiRef, 'formulaEvaluated', handleFormulaEvaluated);
+  useGridEvent(apiRef, 'cellDoubleClick', handleComputedCellDoubleClick);
+  useGridEvent(apiRef, 'cellKeyDown', handleComputedCellKeyDown);
   useGridEvent(apiRef, 'cellEditStart', handleCellEditStart);
   useGridEvent(apiRef, 'cellEditStop', handleCellEditStop);
   useGridEvent(apiRef, 'cellModesModelChange', pruneEditorSession);

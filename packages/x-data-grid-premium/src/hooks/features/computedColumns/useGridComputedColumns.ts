@@ -173,9 +173,19 @@ export const useGridComputedColumns = (
         if (!prev.some((definition) => definition.field === field)) {
           return prev;
         }
-        return prev.map((definition) =>
-          definition.field === field ? { ...definition, ...changes, field } : definition,
-        );
+        return prev.map((definition) => {
+          if (definition.field !== field) {
+            return definition;
+          }
+          const next = { ...definition, ...changes, field };
+          // An `undefined` change removes the property (`numberFormat: undefined` clears the format).
+          for (const key of Object.keys(changes) as (keyof typeof changes)[]) {
+            if (changes[key] === undefined) {
+              delete next[key];
+            }
+          }
+          return next;
+        });
       });
     },
     [apiRef],
@@ -271,6 +281,17 @@ export const useGridComputedColumns = (
   /**
    * PRE-PROCESSING
    */
+  const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (columnMenuItems) => {
+      if (!isAvailable) {
+        return columnMenuItems;
+      }
+      // The item decides per column what it renders (add / edit / remove).
+      return [...columnMenuItems, 'columnMenuComputedColumnItem'];
+    },
+    [isAvailable],
+  );
+
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
       const modelToExport = gridComputedColumnsSelector(apiRef);
@@ -312,6 +333,7 @@ export const useGridComputedColumns = (
     [apiRef],
   );
 
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 

@@ -63,9 +63,10 @@ function toResolvedValue(result: GridFormulaResult): FormulaScalar | FormulaErro
  * The column is rendered, sorted, filtered and exported with the column type of
  * the definition, and the non-text types only accept values of their own type
  * (the date formatters throw on anything else), so a result of another type is
- * an error of the row.
+ * an error of the row. Shared with the editor preview, which shows the result
+ * the way the cell will.
  */
-function coerceComputedResult(
+export function coerceComputedResult(
   result: GridFormulaResult,
   type: GridComputedColumnType,
 ): GridFormulaResult {

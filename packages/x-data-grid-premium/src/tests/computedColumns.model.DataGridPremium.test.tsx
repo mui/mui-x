@@ -10,6 +10,7 @@ import {
   gridComputedColumnDefinitionSelector,
   gridComputedColumnsPanelOpenSelector,
   gridSidebarStateSelector,
+  gridClasses,
 } from '@mui/x-data-grid-premium';
 import type {
   DataGridPremiumProps,
@@ -287,10 +288,15 @@ describe('<DataGridPremium /> - Computed columns model', () => {
   });
 
   describe('editor', () => {
-    it('`showComputedColumnEditor` should open the sidebar and leave a request for the panel', () => {
+    it('`showComputedColumnEditor` should open the sidebar with a request the panel consumes', () => {
       render(<Test featureDependencies={{ formula: formulaFeature }} />);
       expect(gridComputedColumnsPanelOpenSelector(apiRef as RefObject<GridApi>)).to.equal(false);
 
+      // The request is written before the sidebar opens, and read (then cleared) by the panel when it mounts.
+      const requests: unknown[] = [];
+      apiRef.current!.subscribeEvent('sidebarOpen', () => {
+        requests.push({ ...getEditorRequest() });
+      });
       act(() =>
         apiRef.current!.showComputedColumnEditor('total', { sampleRowId: 1, columnIndex: 2 }),
       );
@@ -298,21 +304,22 @@ describe('<DataGridPremium /> - Computed columns model', () => {
       expect(sidebar.open).to.equal(true);
       expect(sidebar.value).to.equal(GridSidebarValue.ComputedColumns);
       expect(gridComputedColumnsPanelOpenSelector(apiRef as RefObject<GridApi>)).to.equal(true);
-      expect(getEditorRequest()).to.deep.equal({
-        field: 'total',
-        sampleRowId: 1,
-        columnIndex: 2,
-      });
+      expect(requests).to.deep.equal([{ field: 'total', sampleRowId: 1, columnIndex: 2 }]);
+      expect(getEditorRequest()).to.equal(null);
+      expect(document.querySelector(`.${gridClasses.computedColumnsPanel}`)).not.to.equal(null);
     });
 
     it('`showComputedColumnEditor` should request a new column when called without a field', () => {
       render(<Test featureDependencies={{ formula: formulaFeature }} />);
-      act(() => apiRef.current!.showComputedColumnEditor());
-      expect(getEditorRequest()).to.deep.equal({
-        field: null,
-        sampleRowId: undefined,
-        columnIndex: undefined,
+      const requests: unknown[] = [];
+      apiRef.current!.subscribeEvent('sidebarOpen', () => {
+        requests.push({ ...getEditorRequest() });
       });
+      act(() => apiRef.current!.showComputedColumnEditor());
+      expect(requests).to.deep.equal([
+        { field: null, sampleRowId: undefined, columnIndex: undefined },
+      ]);
+      expect(getEditorRequest()).to.equal(null);
     });
 
     it('`hideComputedColumnEditor` should close the sidebar only when it shows the computed columns panel', () => {

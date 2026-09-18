@@ -1475,6 +1475,12 @@
       "class": null
     },
     {
+      "name": "computedColumnIcon",
+      "description": "Icon used for the computed columns entry points (column menu, panel).",
+      "default": "GridComputedColumnIcon",
+      "class": null
+    },
+    {
       "name": "pivotSearchClearIcon",
       "description": "Icon used for the clear button in the sidebar search field",
       "default": "GridClearIcon",
@@ -2254,6 +2260,54 @@
       "key": "computedColumnHeaderBadge",
       "className": "MuiDataGridPremium-computedColumnHeaderBadge",
       "description": "Styles applied to the `ƒx` badge in the column header of a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanel",
+      "className": "MuiDataGridPremium-computedColumnsPanel",
+      "description": "Styles applied to the computed columns panel root element (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelEditor",
+      "className": "MuiDataGridPremium-computedColumnsPanelEditor",
+      "description": "Styles applied to the computed columns panel editor view element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelField",
+      "className": "MuiDataGridPremium-computedColumnsPanelField",
+      "description": "Styles applied to the field rows of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelFooter",
+      "className": "MuiDataGridPremium-computedColumnsPanelFooter",
+      "description": "Styles applied to the footer of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelFormula",
+      "className": "MuiDataGridPremium-computedColumnsPanelFormula",
+      "description": "Styles applied to the formula surface of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelHeader",
+      "className": "MuiDataGridPremium-computedColumnsPanelHeader",
+      "description": "Styles applied to the computed columns panel header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelPreview",
+      "className": "MuiDataGridPremium-computedColumnsPanelPreview",
+      "description": "Styles applied to the preview element of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelValidation",
+      "className": "MuiDataGridPremium-computedColumnsPanelValidation",
+      "description": "Styles applied to the validation block of the computed columns panel editor.",
       "isGlobal": false
     },
     {

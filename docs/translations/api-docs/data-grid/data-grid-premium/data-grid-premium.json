@@ -1480,6 +1480,38 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the <code>ƒx</code> badge in the column header of a computed column (Premium computed columns)"
     },
+    "computedColumnsPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel root element (Premium computed columns)"
+    },
+    "computedColumnsPanelEditor": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel editor view element"
+    },
+    "computedColumnsPanelField": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the field rows of the computed columns panel editor"
+    },
+    "computedColumnsPanelFooter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the footer of the computed columns panel editor"
+    },
+    "computedColumnsPanelFormula": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the formula surface of the computed columns panel editor"
+    },
+    "computedColumnsPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel header element"
+    },
+    "computedColumnsPanelPreview": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preview element of the computed columns panel editor"
+    },
+    "computedColumnsPanelValidation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the validation block of the computed columns panel editor"
+    },
     "container--bottom": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the bottom container"
@@ -2127,6 +2159,7 @@
     "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
     "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
+    "computedColumnIcon": "Icon used for the computed columns entry points (column menu, panel).",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",

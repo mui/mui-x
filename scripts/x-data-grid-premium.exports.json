@@ -293,6 +293,7 @@
   { "name": "GridComparatorFn", "kind": "TypeAlias" },
   { "name": "GridComputedColumnDefinition", "kind": "Interface" },
   { "name": "gridComputedColumnDefinitionSelector", "kind": "Variable" },
+  { "name": "GridComputedColumnIcon", "kind": "Variable" },
   { "name": "GridComputedColumnsApi", "kind": "Interface" },
   { "name": "GridComputedColumnsInitialState", "kind": "Interface" },
   { "name": "GridComputedColumnsModel", "kind": "TypeAlias" },
