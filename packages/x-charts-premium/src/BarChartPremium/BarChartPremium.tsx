@@ -8,7 +8,7 @@ import type {
   BarChartProSlots,
 } from '@mui/x-charts-pro/BarChartPro';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
+import { ChartsToolbarPremium } from '../ChartsToolbarPremium';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
@@ -131,7 +131,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPremium;
   const renderer = barPlotPremiumProps.renderer;
 
   return (

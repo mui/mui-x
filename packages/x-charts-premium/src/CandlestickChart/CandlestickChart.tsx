@@ -21,7 +21,7 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import type { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
+import { ChartsToolbarPremium } from '../ChartsToolbarPremium';
 import type {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,
@@ -139,7 +139,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
   >(chartsContainerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPremium;
   const { className: chartsLayerContainerClassName, ...chartsSvgLayerProps } = chartsSurfaceProps;
 
   return (

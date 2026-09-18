@@ -1,0 +1,29 @@
+{
+  "props": {
+    "onExport": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(options: ChartExcelExportOptions) => Promise<void>",
+        "describedArgs": ["options"],
+        "returned": "Promise<void>"
+      }
+    },
+    "options": {
+      "type": {
+        "name": "shape",
+        "description": "{ escapeFormulas?: bool, fileName?: string, includeFormattedValues?: bool, includeHeaders?: bool, includeHiddenSeries?: bool }"
+      }
+    },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "ChartsToolbarExcelExportTrigger",
+  "imports": [
+    "import { ChartsToolbarExcelExportTrigger } from '@mui/x-charts-premium/ChartsToolbarPremium';",
+    "import { ChartsToolbarExcelExportTrigger } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsToolbarExcelExportTrigger",
+  "filename": "/packages/x-charts-premium/src/ChartsToolbarPremium/ChartsToolbarExcelExportTrigger.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
+}
