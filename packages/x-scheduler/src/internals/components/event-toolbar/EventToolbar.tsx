@@ -55,7 +55,6 @@ export function EventToolbar(props: EventToolbarProps) {
   const { stopEditing, anchor, stableAnchorRef } = useEventEditingContext();
   const { classes, localeText } = useEventEditingStyledContext();
 
-  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const areRecurringEventsAvailable = useStore(
     store,
     schedulerOtherSelectors.areRecurringEventsAvailable,
@@ -79,7 +78,7 @@ export function EventToolbar(props: EventToolbarProps) {
   // through the delete confirmation dialog (unless `eventDeletion={{ confirmation: false }}`). Either
   // way the surface only closes once the deletion is actually submitted.
   const handleDelete = () => {
-    if (areRecurringEventsAvailable && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+    if (areRecurringEventsAvailable && occurrence.displayTimezone.rrule) {
       store.deleteRecurringEvent({
         occurrenceStart: occurrence.displayTimezone.start.value,
         eventId: occurrence.id,

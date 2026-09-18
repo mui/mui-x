@@ -103,7 +103,7 @@
     "viewConfig": {
       "type": {
         "name": "shape",
-        "description": "{ week?: { endTime?: number, startTime?: number } }"
+        "description": "{ week?: { endTime?: number, initialScrollTime?: number, startTime?: number } }"
       }
     },
     "views": {

@@ -1614,7 +1614,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         const saveButton = screen.getByRole('button', { name: 'Save' });
         await user.click(saveButton);
         // The pending submit disables the button, so a second press can only come
-        // from another submit path; the ref still guards that re-entry.
+        // from another submit path; the store still guards that re-entry.
         fireEvent.submit(saveButton.closest('form')!);
         await act(async () => deferred.resolve(null));
 
