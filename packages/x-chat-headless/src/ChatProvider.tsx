@@ -43,7 +43,7 @@ export interface ChatFeatures {
 
 export interface ChatProviderProps<Cursor = string> extends Omit<
   ChatStoreParameters<Cursor>,
-  'activeConversationIdControlled'
+  'activeConversationIdControlled' | 'hasHistoryLoader'
 > {
   children?: React.ReactNode;
   adapter: ChatAdapter<Cursor>;
