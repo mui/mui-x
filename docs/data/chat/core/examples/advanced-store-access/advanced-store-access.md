@@ -23,7 +23,7 @@ Bypass the convenience hooks and work directly with the normalized store to buil
 
 ```tsx
 import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 
 function Dashboard() {
   const store = useChatStore();

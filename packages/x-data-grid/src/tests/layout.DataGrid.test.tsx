@@ -1600,4 +1600,62 @@ describe('<DataGrid /> - Layout & warnings', () => {
       }
     },
   );
+  // See https://github.com/mui/mui-x/issues/23573
+  // Need layout
+  it.skipIf(isJSDOM)(
+    'should not reserve a vertical scrollbar while a growing container adapts to the horizontal scrollbar',
+    async () => {
+      function TestCase({ brandWidth }: { brandWidth: number }) {
+        return (
+          <div style={{ width: 400 }}>
+            <DataGrid
+              rows={Array.from({ length: 3 }, (_, i) => ({ id: i, brand: `b${i}` }))}
+              columns={[
+                { field: 'id', width: 100 },
+                { field: 'brand', width: brandWidth },
+              ]}
+              scrollbarSize={15}
+            />
+          </div>
+        );
+      }
+      // Samples both flags once per frame, after the frame's rendering steps
+      // (layout, ResizeObserver callbacks, paint).
+      const sampleScrollFlagsPerFrame = (frames: number) =>
+        new Promise<string[]>((resolve) => {
+          const flags: string[] = [];
+          const tick = () => {
+            setTimeout(() => {
+              flags.push(
+                `${getVariable('--DataGrid-hasScrollX')}${getVariable('--DataGrid-hasScrollY')}`,
+              );
+              if (flags.length >= frames) {
+                resolve(flags);
+              } else {
+                requestAnimationFrame(tick);
+              }
+            });
+          };
+          requestAnimationFrame(tick);
+        });
+
+      const { setProps } = render(<TestCase brandWidth={200} />);
+      await waitFor(() => {
+        expect(getVariable('--DataGrid-columnsTotalWidth')).to.equal('300px');
+      });
+      expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
+      expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+
+      // The columns overflow, and the horizontal scrollbar filler makes the
+      // container grow. Until that resize is observed the content is taller
+      // than the stale root, which used to reserve a vertical scrollbar for the
+      // duration of the resize throttle.
+      setProps({ brandWidth: 500 });
+      const flags = await act(() => sampleScrollFlagsPerFrame(10));
+
+      expect(flags, `sampled hasScrollX+hasScrollY: ${flags.join(', ')}`).to.deep.equal(
+        flags.map(() => '10'),
+      );
+    },
+  );
 });
