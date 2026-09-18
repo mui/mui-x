@@ -11,7 +11,9 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 
 import { keyframes, styled } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
 import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';
+import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
@@ -166,21 +168,39 @@ const PromptChangeList = styled('div', {
 const PromptChangesToggle = styled('button', {
   name: 'MuiDataGrid',
   slot: 'PromptChangesToggle',
-})<{ ownerState: OwnerState }>({
-  display: 'flex',
-  alignItems: 'center',
-  gap: vars.spacing(0.25),
-  padding: 0,
-  font: vars.typography.font.small,
-  color: vars.colors.foreground.accent,
-  fontWeight: vars.typography.fontWeight.medium,
-  cursor: 'pointer',
-  border: 'none',
-  background: 'none',
-  outline: 'none',
-  '&:hover, &:focus-visible': {
-    textDecoration: 'underline',
-  },
+})<{ ownerState: OwnerState }>(({ theme }) => {
+  // `styled` in this file comes from @mui/system, whose Theme type has no
+  // `focusVisible`; at runtime it is the Material theme.
+  const focusRing = (theme as unknown as Theme).focusVisible || undefined;
+  return {
+    display: 'flex',
+    alignItems: 'center',
+    gap: vars.spacing(0.25),
+    padding: 0,
+    font: vars.typography.font.small,
+    color: vars.colors.foreground.accent,
+    fontWeight: vars.typography.fontWeight.medium,
+    cursor: 'pointer',
+    border: 'none',
+    background: 'none',
+    outline: 'none',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+    // Without the theme ring, focus borrows the hover underline because there is
+    // nothing else to show. With it, the ring is the signal. Inset — the prompt
+    // item that wraps this is `overflow: hidden`.
+    ...(focusRing
+      ? {
+          ...applyInsetFocusVisible(1),
+          '&:focus-visible': focusRing,
+        }
+      : {
+          '&:focus-visible': {
+            textDecoration: 'underline',
+          },
+        }),
+  };
 });
 
 const PromptChangesToggleIcon = styled('svg', {

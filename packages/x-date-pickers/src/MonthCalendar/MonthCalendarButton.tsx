@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
+import { outsetFocusRing } from '@mui/x-internals/focusVisible';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type {
   MonthCalendarSlotProps,
@@ -66,12 +67,28 @@ const DefaultMonthButton = styled('button', {
   width: 72,
   borderRadius: 18,
   cursor: 'pointer',
-  '&:focus': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.action.active,
-      (theme.vars || theme).palette.action.hoverOpacity,
-    ),
-  },
+  // Not a ButtonBase, so the themed ring cannot arrive on its own. `outsetFocusRing`
+  // because the inset vars inherit — a clip-prone ancestor must not inset this ring.
+  ...(theme.focusVisible
+    ? {
+        '&:focus-visible': { ...outsetFocusRing, ...theme.focusVisible },
+        // The ring replaces the focus tint for keyboard focus; a click-focused
+        // button keeps it.
+        '&:focus:not(:focus-visible)': {
+          backgroundColor: theme.alpha(
+            (theme.vars || theme).palette.action.active,
+            (theme.vars || theme).palette.action.hoverOpacity,
+          ),
+        },
+      }
+    : {
+        '&:focus': {
+          backgroundColor: theme.alpha(
+            (theme.vars || theme).palette.action.active,
+            (theme.vars || theme).palette.action.hoverOpacity,
+          ),
+        },
+      }),
   '&:hover': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,
@@ -88,9 +105,20 @@ const DefaultMonthButton = styled('button', {
   [`&.${monthCalendarClasses.selected}`]: {
     color: (theme.vars || theme).palette.primary.contrastText,
     backgroundColor: (theme.vars || theme).palette.primary.main,
-    '&:focus, &:hover': {
+    '&:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
+    ...(theme.focusVisible
+      ? {
+          '&:focus:not(:focus-visible)': {
+            backgroundColor: (theme.vars || theme).palette.primary.dark,
+          },
+        }
+      : {
+          '&:focus': {
+            backgroundColor: (theme.vars || theme).palette.primary.dark,
+          },
+        }),
   },
 }));
 

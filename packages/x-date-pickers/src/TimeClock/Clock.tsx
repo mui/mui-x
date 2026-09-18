@@ -9,6 +9,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
+import { outsetFocusRing } from '@mui/x-internals/focusVisible';
 import { ClockPointer } from './ClockPointer';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
@@ -107,11 +108,30 @@ const ClockClock = styled('div', {
 const ClockWrapper = styled('div', {
   name: 'MuiClock',
   slot: 'Wrapper',
-})({
+})(({ theme }) => ({
+  // The wrapper is the clock's only tab stop (`tabIndex={0}`), but its children
+  // are absolutely positioned, so it used to measure 220x0 — a focus ring on it
+  // computed correctly and painted nothing.
+  //
+  // Percentage sizing rather than `position: absolute` on purpose: staying
+  // `static` keeps `ClockClock` as the containing block for the 12 numbers, so
+  // their layout cannot move. Transparent and `pointer-events` unchanged, so
+  // this is inert until a ring is themed.
+  width: '100%',
+  height: '100%',
+  borderRadius: '50%',
   '&:focus': {
     outline: 'none',
   },
-});
+  // Outset, and pinned with `outsetFocusRing` so a clip-prone ancestor cannot
+  // inset it through the inherited vars. Measured in a real desktop picker popover:
+  // the Paper is `overflow: visible` and leaves 16px above the clock and 50px either
+  // side, while the default ring reaches 4px — so nothing clips, and a ring outside
+  // the face reads better than one cutting across it.
+  ...(theme.focusVisible && {
+    '&:focus-visible': { ...outsetFocusRing, ...theme.focusVisible },
+  }),
+}));
 
 const ClockSquareMask = styled('div', {
   name: 'MuiClock',

@@ -16,6 +16,8 @@ export function useMaterialCSSVariables() {
 }
 
 function transformTheme(t: Theme): GridCSSVariablesInterface {
+  // `false` is the explicit opt-out, and falls back to the grid's own defaults just like `undefined`.
+  const focusRing = t.focusVisible || undefined;
   const borderColor = getBorderColor(t);
   const dataGridPalette = (t.vars || t).palette.DataGrid;
 
@@ -59,7 +61,8 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
       ? (t.vars || t).palette.action.hover
       : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 800 : 100],
     [k.colors.interactive.hoverOpacity]: (t.vars || t).palette.action.hoverOpacity,
-    [k.colors.interactive.focus]: removeOpacity((t.vars || t).palette.primary.main),
+    [k.colors.interactive.focus]:
+      focusRing?.outlineColor ?? removeOpacity((t.vars || t).palette.primary.main),
     [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,
     [k.colors.interactive.disabled]: removeOpacity((t.vars || t).palette.action.disabled),
     [k.colors.interactive.disabledOpacity]: (t.vars || t).palette.action.disabledOpacity,
@@ -72,6 +75,8 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.cell.background.pinned]: backgroundPinned,
 
     [k.radius.base]: radius,
+
+    [k.focus.outlineWidth]: focusOutlineWidth(focusRing),
 
     [k.typography.fontFamily.base]: t.typography.fontFamily as string,
     [k.typography.fontWeight.light]: t.typography.fontWeightLight as string,
@@ -96,6 +101,25 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.zIndex.menu]: (t.vars || t).zIndex.modal,
     [k.zIndex.modal]: (t.vars || t).zIndex.modal,
   };
+}
+
+/**
+ * Width of the cell / column-header focus ring.
+ *
+ * Bridged from `theme.focusVisible` so an app that opts into the themed ring gets its width here too —
+ * a team that widens the ring for legibility must not silently get 1px inside the grid.
+ *
+ * Only colour and width are bridged. The grid keeps its own geometry and selector on purpose: the ring
+ * stays **inset** (cells are adjacent, and an outset ring would overlap neighbours and be clipped by the
+ * virtualized scroller), and stays on `:focus` rather than `:focus-visible`, because the roving tabindex
+ * has to show the cell cursor on click-focus too.
+ */
+function focusOutlineWidth(focusRing: React.CSSProperties | undefined) {
+  const width = focusRing?.outlineWidth;
+  if (width == null) {
+    return '1px';
+  }
+  return typeof width === 'number' ? `${width}px` : width;
 }
 
 function getRadius(theme: Theme) {
