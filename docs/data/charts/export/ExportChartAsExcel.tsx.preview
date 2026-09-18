@@ -1,0 +1,4 @@
+<Typography sx={{ alignSelf: 'center', my: 1 }}>
+  Open the export menu and pick Download as Excel
+</Typography>
+<BarChartPremium {...settings} showToolbar />

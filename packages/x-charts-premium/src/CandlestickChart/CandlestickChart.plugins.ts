@@ -20,6 +20,8 @@ import type {
   UseChartProExportSignature,
   UseChartProZoomSignature,
 } from '@mui/x-charts-pro/plugins';
+import { useChartPremiumExport } from '../internals/plugins/useChartPremiumExport';
+import type { UseChartPremiumExportSignature } from '../internals/plugins/useChartPremiumExport';
 
 export type CandlestickChartPluginSignatures = [
   UseChartTooltipSignature<'ohlc'>,
@@ -30,6 +32,7 @@ export type CandlestickChartPluginSignatures = [
   UseChartProZoomSignature,
   UseChartVisibilityManagerSignature<'ohlc'>,
   UseChartProExportSignature,
+  UseChartPremiumExportSignature,
 ];
 
 export const CANDLESTICK_CHART_PLUGINS: ConvertSignaturesIntoPlugins<CandlestickChartPluginSignatures> =
@@ -42,4 +45,5 @@ export const CANDLESTICK_CHART_PLUGINS: ConvertSignaturesIntoPlugins<Candlestick
     useChartProZoom,
     useChartVisibilityManager,
     useChartProExport,
+    useChartPremiumExport,
   ];

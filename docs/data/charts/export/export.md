@@ -1,7 +1,7 @@
 ---
 title: Charts - Export
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, RadarChartPro, SankeyChart
+components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, RadarChartPro, SankeyChart, ChartsToolbarPremium, ChartsToolbarExcelExportTrigger
 ---
 
 # Charts - Export [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -20,6 +20,32 @@ The exporting feature is available for the following charts:
 - `RadarChartPro`
 - `SankeyChart`
 - `CandlestickChart`
+
+## Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+Premium charts can also export the data behind the chart as an Excel file.
+The export menu gains a **Download as Excel** entry, which writes one row per data point.
+
+{{"demo": "ExportChartAsExcel.js"}}
+
+Use the `excelExportOptions` toolbar prop to customize the file, or to remove the entry with `disableToolbarButton`:
+
+```tsx
+<BarChartPremium
+  showToolbar
+  slotProps={{ toolbar: { excelExportOptions: { fileName: 'revenue' } } }}
+/>
+```
+
+The same export is available on `apiRef`, together with `getDataAsExcel` for the workbook itself:
+
+```tsx
+const apiRef = useChartPremiumApiRef<'bar'>();
+
+<BarChartPremium apiRef={apiRef} {...props} />;
+
+await apiRef.current?.exportAsExcel({ fileName: 'revenue' });
+```
 
 ## Implementing exporting
 

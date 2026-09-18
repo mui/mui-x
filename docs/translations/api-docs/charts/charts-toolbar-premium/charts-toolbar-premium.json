@@ -1,0 +1,13 @@
+{
+  "componentDescription": "The chart toolbar component for the premium package.\nIt adds the Excel export entry to the Pro toolbar's export menu.",
+  "propDescriptions": {
+    "excelExportOptions": { "description": "The options to apply on the Excel export." },
+    "rangeButtons": {
+      "description": "Configuration for range buttons shown in the toolbar. Each button zooms the chart to a predefined time range from the end of the data."
+    },
+    "rangeButtonsAxisId": {
+      "description": "The axis ID to apply range buttons to. Defaults to the first x-axis with zoom enabled and a time scale."
+    }
+  },
+  "classDescriptions": {}
+}

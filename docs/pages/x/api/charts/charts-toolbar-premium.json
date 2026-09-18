@@ -1,0 +1,31 @@
+{
+  "props": {
+    "excelExportOptions": {
+      "type": {
+        "name": "shape",
+        "description": "{ disableToolbarButton?: bool, escapeFormulas?: bool, fileName?: string, includeFormattedValues?: bool, includeHeaders?: bool, includeHiddenSeries?: bool }"
+      }
+    },
+    "rangeButtons": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ label: string, value?: Array&lt;Date&gt;<br>&#124;&nbsp;Array&lt;string&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;{ step?: number, unit: 'day'<br>&#124;&nbsp;'hour'<br>&#124;&nbsp;'microsecond'<br>&#124;&nbsp;'millisecond'<br>&#124;&nbsp;'minute'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'second'<br>&#124;&nbsp;'week'<br>&#124;&nbsp;'year' } }&gt;"
+      }
+    },
+    "rangeButtonsAxisId": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" }
+    }
+  },
+  "name": "ChartsToolbarPremium",
+  "imports": [
+    "import { ChartsToolbarPremium } from '@mui/x-charts-premium/ChartsToolbarPremium';",
+    "import { ChartsToolbarPremium } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChartsToolbarPremium",
+  "filename": "/packages/x-charts-premium/src/ChartsToolbarPremium/ChartsToolbarPremium.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
+}
