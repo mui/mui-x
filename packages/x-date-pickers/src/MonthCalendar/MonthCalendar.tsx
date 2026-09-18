@@ -18,7 +18,7 @@ import type { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
-import { DIALOG_WIDTH } from '../internals/constants/dimensions';
+import { DIALOG_WIDTH, DIALOG_WIDTH_COMPACT } from '../internals/constants/dimensions';
 import type { MuiPickersAdapter, PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
@@ -79,6 +79,10 @@ const MonthCalendarRoot = styled('div', {
       props: { monthsPerRow: 4 },
       style: { columnGap: 0 },
     },
+    {
+      props: { isPickerCompact: true },
+      style: { width: DIALOG_WIDTH_COMPACT },
+    },
   ],
 });
 
@@ -125,6 +129,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     gridLabelId,
     slots,
     slotProps,
+    compact,
     ...other
   } = props;
 
@@ -141,7 +146,11 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
   const now = useNow(timezone);
   const isRtl = useRtl();
   const adapter = usePickerAdapter();
-  const { ownerState } = usePickerPrivateContext();
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const ownerState: PickerOwnerState = {
+    ...pickerOwnerState,
+    isPickerCompact: compact ?? pickerOwnerState.isPickerCompact,
+  };
 
   const referenceDate = React.useMemo(
     () =>
@@ -328,6 +337,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
             slots={slots}
             slotProps={slotProps}
             classes={classesProp}
+            compact={compact}
           >
             {monthText}
           </MonthCalendarButton>
@@ -348,6 +358,11 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   currentMonth: PropTypes.object,
   /**
    * The default selected value.

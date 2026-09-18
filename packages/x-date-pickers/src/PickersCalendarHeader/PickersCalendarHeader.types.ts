@@ -45,6 +45,11 @@ export interface PickersCalendarHeaderSlotProps extends PickersArrowSwitcherSlot
 export interface PickersCalendarHeaderProps
   extends ExportedPickersArrowSwitcherProps, MonthValidationOptions {
   /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact?: boolean;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -79,5 +84,5 @@ export interface PickersCalendarHeaderProps
 
 export type ExportedPickersCalendarHeaderProps = Pick<
   PickersCalendarHeaderProps,
-  'classes' | 'slots' | 'slotProps'
+  'classes' | 'slots' | 'slotProps' | 'compact'
 >;

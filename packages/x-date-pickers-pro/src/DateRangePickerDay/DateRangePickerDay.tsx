@@ -10,7 +10,11 @@ import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
-import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
+import {
+  usePickerDayOwnerState,
+  DAY_SIZE_COMPACT,
+  DAY_MARGIN_COMPACT,
+} from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import type {
   DateRangePickerDayOwnerState,
@@ -414,6 +418,13 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       props: { isDayFirstVisibleCell: true },
       style: startEdgeStyles(theme),
     },
+    {
+      props: { compact: true },
+      style: {
+        '--PickerDay-horizontalMargin': `${DAY_MARGIN_COMPACT}px`,
+        '--PickerDay-size': `${DAY_SIZE_COMPACT}px`,
+      },
+    },
   ],
 }));
 
@@ -471,6 +482,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     isVisuallySelected,
     draggable,
     isDayFillerCell: isDayFillerCellProp,
+    compact,
     ...other
   } = props;
 
@@ -482,6 +494,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     outsideCurrentMonth,
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
+    compact,
   });
 
   const isDayFillerCell =
@@ -616,6 +629,11 @@ DateRangePickerDayRaw.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   component: PropTypes.elementType,
   /**
    * The date to show.

@@ -31,6 +31,10 @@ export interface UseStaticRangePickerProps<
     BasePickerProps<PickerRangeValue, TView, TError, TExternalProps>,
     StaticRangeOnlyPickerProps {
   /**
+   * If `true`, the picker uses compact dimensions.
+   */
+  compact?: boolean;
+  /**
    * Overridable components.
    * @default {}
    */

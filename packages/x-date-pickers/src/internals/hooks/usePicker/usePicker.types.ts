@@ -168,6 +168,7 @@ export interface UsePickerProps<
   referenceDate?: TValue extends PickerRangeValue ? TValue | PickerValidDate : PickerValidDate;
   className?: string;
   sx?: SxProps<Theme>;
+  compact?: boolean;
 }
 
 export interface UsePickerParameters<
