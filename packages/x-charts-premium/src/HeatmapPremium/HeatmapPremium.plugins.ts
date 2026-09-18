@@ -24,6 +24,8 @@ import type {
   UseChartProExportSignature,
   UseChartProZoomSignature,
 } from '@mui/x-charts-pro/plugins';
+import { useChartPremiumExport } from '../internals/plugins/useChartPremiumExport';
+import type { UseChartPremiumExportSignature } from '../internals/plugins/useChartPremiumExport';
 
 export type HeatmapPremiumPluginSignatures = [
   UseChartZAxisSignature,
@@ -32,6 +34,7 @@ export type HeatmapPremiumPluginSignatures = [
   UseChartCartesianAxisSignature<'heatmap'>,
   UseChartHighlightSignature<'heatmap'>,
   UseChartProExportSignature,
+  UseChartPremiumExportSignature,
   UseChartBrushSignature,
   UseChartProZoomSignature,
   UseChartItemClickSignature<'heatmap'>,
@@ -46,6 +49,7 @@ export const HEATMAP_PREMIUM_PLUGINS: ConvertSignaturesIntoPlugins<HeatmapPremiu
     useChartCartesianAxis,
     useChartHighlight,
     useChartProExport,
+    useChartPremiumExport,
     useChartBrush,
     useChartProZoom,
     useChartItemClick,
