@@ -379,6 +379,51 @@ describe('<DataGrid /> - Rows', () => {
         expect(icon).to.have.class(svgIconClasses.fontSizeInherit);
       });
 
+      it('should render an anchor tag when href is set', () => {
+        render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem key={1} icon={<span />} label="details" href="/details/1" />,
+            ]}
+          />,
+        );
+        const actionLink = screen.getByRole('link', { name: 'details' });
+        expect(actionLink.tagName).to.equal('A');
+        expect(actionLink).to.have.attribute('href', '/details/1');
+      });
+
+      it('should render an anchor tag in the menu when href is set', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem key={1} label="details" href="/details/1" showInMenu />,
+            ]}
+          />,
+        );
+        await user.click(screen.getByRole('button', { name: 'more' }));
+        const actionLink = screen.getByRole('menuitem', { name: 'details' });
+        expect(actionLink.tagName).to.equal('A');
+        expect(actionLink).to.have.attribute('href', '/details/1');
+      });
+
+      it('should not override an explicit component when href is set', () => {
+        render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem
+                key={1}
+                icon={<span />}
+                label="details"
+                href="/details/1"
+                component="span"
+              />,
+            ]}
+          />,
+        );
+        expect(screen.queryByRole('link', { name: 'details' })).to.equal(null);
+        expect(screen.getByLabelText('details').tagName).to.equal('SPAN');
+      });
+
       it('should show in a menu the actions marked as showInMenu', async () => {
         const { user } = render(
           <TestCase

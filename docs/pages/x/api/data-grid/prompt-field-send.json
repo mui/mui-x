@@ -1,7 +1,11 @@
 {
   "props": {
     "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+    "component": { "type": { "name": "elementType" } },
+    "href": { "type": { "name": "string" } },
+    "rel": { "type": { "name": "string" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "target": { "type": { "name": "string" } }
   },
   "name": "PromptFieldSend",
   "imports": [
