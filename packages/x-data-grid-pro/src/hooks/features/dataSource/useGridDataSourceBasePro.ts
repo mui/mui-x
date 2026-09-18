@@ -64,6 +64,8 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     if (dataSourceState !== INITIAL_STATE) {
       apiRef.current.resetDataSourceState();
     }
+    // The aborted child requests are only re-issued if the following root fetch rebuilds the tree.
+    apiRef.current.invalidateNestedRows();
     return null;
   }, [apiRef, nestedDataManager]);
 
@@ -78,6 +80,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   const {
     api,
     debouncedFetchRows,
+    fetchRootRowsIncremental,
     strategyProcessor: flatTreeStrategyProcessor,
     events,
     startPolling,
@@ -441,6 +444,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
 
   const dataSourcePrivateApi: GridDataSourcePrivateApiPro = {
     fetchRowChildren,
+    fetchRootRowsIncremental,
     resetDataSourceState,
     removeChildrenRows,
   };
