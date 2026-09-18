@@ -1,3 +1,4 @@
+import * as ReactDOM from 'react-dom';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import type {
@@ -261,16 +262,12 @@ export function useFieldRootProps(
     if (isBlankSpaceClick) {
       event.preventDefault();
       if (!focused) {
-        setFocused(true);
-        setSelectedSections(sectionOrder.startIndex);
-        // Focus synchronously, here, instead of leaving it to the layout
-        // effect in `useField.ts`. Moving DOM focus during this handler
-        // (rather than during React's commit of the state above) keeps it on
-        // the same tick as the native `mousedown`, matching the timing the
-        // browser used before `preventDefault` above stopped its own focus
-        // delegation. The layout effect still runs, but is a no-op: focusing
-        // an already-focused element fires no further events.
-        domGetters.getSectionContent(sectionOrder.startIndex).focus();
+        // Flush so the layout effects focus the section on this same tick,
+        // reading back whatever a controlled `selectedSections` accepted.
+        ReactDOM.flushSync(() => {
+          setFocused(true);
+          setSelectedSections(sectionOrder.startIndex);
+        });
       }
       return;
     }
@@ -288,17 +285,17 @@ export function useFieldRootProps(
       return;
     }
     event.preventDefault();
-    setFocused(true);
     // `mousedown` is now authoritative for pointer section selection. The
     // section container's own `onClick` deduplicates against the resulting
     // `parsedSelectedSections` on the click bubble (see
     // `useFieldSectionContainerProps`), so we always select here and let that
     // guard absorb the redundant call -- matching the pre-PR
     // `onSelectedSectionsChange` invocation count.
-    setSelectedSections(parsedIndex);
-    // See the comment on the blank-space branch above: focus synchronously
-    // here so it lands on the same tick as the native `mousedown`.
-    domGetters.getSectionContent(parsedIndex).focus();
+    // See the comment on the blank-space branch above for why this flushes.
+    ReactDOM.flushSync(() => {
+      setFocused(true);
+      setSelectedSections(parsedIndex);
+    });
   });
 
   const handleInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
