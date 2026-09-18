@@ -229,7 +229,17 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const adapter = store.state.adapter;
 
-  const changes: SchedulerEventUpdatedProperties = { id: eventId, start, end };
+  // Only the bounds the drop moved, as displayed. An untouched bound keeps its stored value:
+  // re-read from its display value it can be another day in the event's timezone (an all-day
+  // occurrence is displayed on whole display days), which a recurring update would take for
+  // a day move and realign the rule on.
+  const changes: SchedulerEventUpdatedProperties = { id: eventId };
+  if (!adapter.isEqual(originalOccurrence.displayTimezone.start.value, start)) {
+    changes.start = start;
+  }
+  if (!adapter.isEqual(originalOccurrence.displayTimezone.end.value, end)) {
+    changes.end = end;
+  }
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
   // If `null`, we want to keep the original event resource.
@@ -265,10 +275,7 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
       return false;
     }
     if (key === 'start' || key === 'end') {
-      return !adapter.isEqual(
-        originalOccurrence.displayTimezone[key].value,
-        value as TemporalSupportedObject,
-      );
+      return true;
     }
     return originalOccurrence[key as keyof typeof originalOccurrence] !== value;
   });
@@ -277,12 +284,13 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     return;
   }
 
-  if (originalOccurrence.displayTimezone.rrule) {
+  if (originalOccurrence.dataTimezone.rrule) {
     store.updateRecurringEvent({
-      occurrenceStart: originalOccurrence.displayTimezone.start.value,
+      occurrenceStart: originalOccurrence.dataTimezone.start.value,
       changes,
     });
-    // Editing surface is refreshed in `selectRecurringEventScope` once the user confirms a scope.
+    // Editing surface is refreshed (or disarmed) in `selectRecurringEventScope` once the user
+    // confirms a scope.
     return;
   }
 

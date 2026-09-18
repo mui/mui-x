@@ -5,11 +5,32 @@ import type {
   SchedulerProcessedDate,
   SchedulerEventOccurrence,
   SchedulerEventId,
+  SchedulerRenderableEventOccurrence,
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getDateKey } from './date-utils';
+
+/**
+ * Whether the occurrence is a persisted event occurrence, as opposed to a
+ * placeholder (creation draft, drag preview) that has no `dataTimezone`.
+ */
+export function isEventOccurrence(
+  occurrence: SchedulerRenderableEventOccurrence,
+): occurrence is SchedulerEventOccurrence {
+  return 'dataTimezone' in occurrence;
+}
+
+/**
+ * The occurrence in the data timezone, the identity recurring drag updates target;
+ * placeholders have none.
+ */
+export function getOccurrenceDataTimezone(
+  occurrence: SchedulerRenderableEventOccurrence,
+): SchedulerEventOccurrence['dataTimezone'] | undefined {
+  return isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
+}
 
 /**
  * The render key of a non-recurring occurrence: the event id stringified.
@@ -39,12 +60,18 @@ export function generateOccurrenceFromEvent({
   occurrenceKey,
   start,
   end,
+  dataTimezone,
 }: {
   event: SchedulerProcessedEvent;
   eventId: SchedulerEventId;
   occurrenceKey: string;
   start: SchedulerProcessedDate;
   end: SchedulerProcessedDate;
+  /**
+   * The occurrence in the data timezone; only its bounds are read. Defaults to the display
+   * `start`/`end`, a fallback only placeholder occurrences may rely on.
+   */
+  dataTimezone?: SchedulerEventOccurrence['dataTimezone'];
 }): SchedulerEventOccurrence {
   return {
     ...event,
@@ -57,8 +84,8 @@ export function generateOccurrenceFromEvent({
     },
     dataTimezone: {
       ...event?.dataTimezone,
-      start,
-      end,
+      start: dataTimezone?.start ?? start,
+      end: dataTimezone?.end ?? end,
     },
   };
 }
@@ -108,7 +135,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     }
 
     // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
-    if (event.displayTimezone.rrule) {
+    if (event.dataTimezone.rrule) {
       // Without the premium recurring-events plugin attached, recurring events
       // are not expanded into occurrences — they are treated as single non-recurring events.
       if (recurringEventsPlugin == null) {

@@ -1,4 +1,4 @@
-import { adapter, ResourceBuilder } from 'test/utils/scheduler';
+import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { vi, describe, it, expect } from 'vitest';
@@ -8,7 +8,7 @@ import {
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
-import type { CalendarView } from '../../models';
+import type { CalendarView, SchedulerEventOccurrence } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -259,6 +259,28 @@ describe('Core - EventCalendarStore', () => {
         );
 
         expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should keep the data bounds on the committed instants', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const edited = EventBuilder.new(adapter)
+          .withDataTimezone('UTC')
+          .withDisplayTimezone('America/New_York')
+          .singleDay('2024-01-15T15:00:00Z', 60)
+          .toOccurrence();
+        store.startEditing(edited, 'armed');
+        const start = adapter.date('2024-01-15T14:00:00Z', 'default');
+        const end = adapter.date('2024-01-15T16:00:00Z', 'default');
+
+        store.setEditingOccurrenceTimes(start, end);
+
+        const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
+        expect(editing.displayTimezone.start.timestamp).to.equal(adapter.getTime(start));
+        expect(editing.displayTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        // A rule added from the dialog is built on the data-timezone start.
+        expect(editing.dataTimezone.start.timestamp).to.equal(adapter.getTime(start));
+        expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        expect(adapter.getTimezone(editing.dataTimezone.start.value)).to.equal('UTC');
       });
     });
 

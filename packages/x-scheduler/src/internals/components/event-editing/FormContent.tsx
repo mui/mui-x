@@ -31,8 +31,10 @@ import {
 import {
   getCustomEventProperties,
   getEventResourceIds,
+  getOccurrenceDataTimezone,
   getResourceSelectionMode,
   isBuiltInEventProperty,
+  isEventOccurrence,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -45,6 +47,9 @@ import {
   validateRange,
   hasProp,
   BUILT_IN_FORM_KEYS,
+  getResentRangeBounds,
+  getEventTimezoneBound,
+  getRecurrenceRuleBound,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
 import TitleSection from '../event-dialog/TitleSection';
@@ -115,7 +120,6 @@ interface ResolutionSettings {
   displayTimezone: TemporalTimezone;
   shouldEventRequireResource: boolean;
   showRecurrence: boolean;
-  recurrencePresets: ReturnType<typeof schedulerRecurringEventSelectors.presets>;
 }
 
 interface FormContentProps {
@@ -151,7 +155,8 @@ export function FormContent(props: FormContentProps) {
     const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
-    const base = occurrence.displayTimezone.rrule;
+    // The rule is read and written in the event's timezone, not the display one.
+    const base = getOccurrenceDataTimezone(occurrence)?.rrule;
     // The occurrence only carries the built-in event properties — custom fields
     // come from the raw model. When creating an event there is no model yet.
     const model = schedulerEventSelectors.modelLookup(store.state).get(occurrence.id);
@@ -188,8 +193,8 @@ export function FormContent(props: FormContentProps) {
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
         store.state,
-        occurrence.displayTimezone.rrule,
-        occurrence.displayTimezone.start,
+        base,
+        getEventTimezoneBound(adapter, occurrence, 'start'),
       ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
@@ -360,10 +365,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         displayTimezone: schedulerOtherSelectors.displayTimezone(store.state),
         shouldEventRequireResource: schedulerOtherSelectors.shouldEventRequireResource(store.state),
         showRecurrence: schedulerOtherSelectors.areRecurringEventsAvailable(store.state),
-        recurrencePresets: schedulerRecurringEventSelectors.presets(
-          store.state,
-          occurrence.displayTimezone.start,
-        ),
       };
 
       const values = formStore.state.values;
@@ -378,16 +379,39 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         return;
       }
 
+      const dirtyValues = formStore.getDirtyValues();
       // Only the custom fields the user actually edited enter the changes payload,
       // so untouched fields keep resolving against the live model on the recurring paths.
-      const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
       // A custom field named after a built-in event property (`id`, `readOnly`, ...)
       // must not rewrite it; the hook already warns about these keys in dev.
-      for (const key of Object.keys(editedCustomValues)) {
-        if (isBuiltInEventProperty(key)) {
-          delete editedCustomValues[key];
-        }
-      }
+      const editedCustomValues = Object.fromEntries(
+        Object.entries(dirtyValues).filter(
+          ([key]) => !BUILT_IN_FORM_KEYS.has(key) && !isBuiltInEventProperty(key),
+        ),
+      );
+
+      // The form edits the range as display-timezone day/time strings, so resending
+      // it untouched can move the event: the same day re-read in another timezone
+      // is a different day. Only the keys the submitted range reads count — a time
+      // left over from toggling all-day off and back on must not re-arm the resend.
+      const displayTimezoneMoved = current.displayTimezone !== occurrence.displayTimezone.timezone;
+      const { startResent, endResent } = getResentRangeBounds(
+        dirtyValues,
+        values.allDay,
+        displayTimezoneMoved,
+      );
+      // With a `dataSource`, a resize updates the snapshot before the stored model: resend a
+      // bound that differs, or the update rebuilds it from the stale model. Compared as data
+      // instants, since the display bounds of an all-day event are normalized to whole days.
+      const liveEvent = schedulerEventSelectors.processedEvent(store.state, occurrence.id);
+      const boundPending = (bound: 'start' | 'end') =>
+        liveEvent != null &&
+        liveEvent.dataTimezone.rrule == null &&
+        !displayTimezoneMoved &&
+        isEventOccurrence(occurrence) &&
+        occurrence.dataTimezone[bound].timestamp !== liveEvent.dataTimezone[bound].timestamp;
+      const submitStart = startResent || boundPending('start');
+      const submitEnd = endResent || boundPending('end');
 
       const metaChanges = {
         ...editedCustomValues,
@@ -398,44 +422,57 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         color: values.color === null ? undefined : values.color,
       };
 
+      // A preset is built on the start the event ends up with, in the event's timezone; the
+      // Recurrence tab derives its labels and drafts from the same start.
+      const ruleStart = getRecurrenceRuleBound(
+        current.adapter,
+        occurrence,
+        values,
+        startResent,
+        current.displayTimezone,
+        'start',
+      );
+      const recurrencePresets = current.showRecurrence
+        ? schedulerRecurringEventSelectors.presets(store.state, ruleStart)
+        : null;
       let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
-      if (!current.showRecurrence || !current.recurrencePresets) {
-        rruleToSubmit = undefined;
-      } else if (values.recurrenceSelection === null) {
+      if (recurrencePresets == null || values.recurrenceSelection === null) {
         rruleToSubmit = undefined;
       } else if (values.recurrenceSelection === 'custom') {
         rruleToSubmit = values.rruleDraft;
       } else {
-        rruleToSubmit = current.recurrencePresets[values.recurrenceSelection];
+        rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
       // Read directly instead of subscribing: the placeholder changes on every
       // creation keystroke and would re-render the whole dialog.
       const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
       if (rawPlaceholder?.type === 'creation') {
-        store.createEvent({
-          ...metaChanges,
-          start,
-          end,
-          rrule: rruleToSubmit,
-        });
-      } else if (current.showRecurrence && occurrence.displayTimezone.rrule) {
+        store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
+      } else if (
+        current.showRecurrence &&
+        isEventOccurrence(occurrence) &&
+        occurrence.dataTimezone.rrule
+      ) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
           store.state,
-          occurrence.displayTimezone.rrule,
+          occurrence.dataTimezone.rrule,
           rruleToSubmit,
         );
 
+        // Per-bound on the recurring path: the plugin defaults a missing bound to the
+        // occurrence's own, so an untouched start (re-read in the display timezone) cannot reach the
+        // pattern math (where it would move DTSTART and realign BYDAY).
         const changes: SchedulerEventUpdatedProperties = {
           ...metaChanges,
           id: occurrence.id,
-          start,
-          end,
+          ...(submitStart ? { start } : {}),
+          ...(submitEnd ? { end } : {}),
           ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
         };
 
         await store.updateRecurringEvent({
-          occurrenceStart: occurrence.displayTimezone.start.value,
+          occurrenceStart: occurrence.dataTimezone.start.value,
           changes,
           onSubmit: onClose,
         });
@@ -446,8 +483,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         const result = store.updateEvent({
           ...metaChanges,
           id: occurrence.id,
-          start,
-          end,
+          ...(submitStart ? { start } : {}),
+          ...(submitEnd ? { end } : {}),
           rrule: rruleToSubmit,
         });
         if (!result.applied) {
@@ -470,19 +507,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    if (showRecurrence && occurrence.displayTimezone.rrule) {
-      store.deleteRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
-        eventId: occurrence.id,
-        onSubmit: onClose,
-      });
-
-      // don't close the dialog
-      return;
-    }
-
-    store.deleteEvent(occurrence.id);
-    onClose();
+    // A recurring delete closes the dialog on scope submit instead of right away.
+    store.deleteOccurrence(occurrence, onClose);
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
