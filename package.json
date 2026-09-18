@@ -1,5 +1,5 @@
 {
-  "version": "9.13.0",
+  "version": "9.14.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow@1.2.2 pnpm",
@@ -88,6 +88,7 @@
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/utils": "catalog:",
+    "@netlify/types": "3.0.0",
     "@next/eslint-plugin-next": "16.3.3",
     "@octokit/plugin-retry": "8.1.1",
     "@octokit/rest": "22.0.1",

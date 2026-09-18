@@ -262,6 +262,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "filteredRowsSet",
+    "description": "Fired when the filtered rows are updated. The event fires after the state update and before the re-render.",
+    "params": "",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "filterModelChange",
     "description": "Fired when the filter model changes.",
     "params": "GridFilterModel",
@@ -483,6 +490,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowsSet",
+    "description": "Fired when the rows are updated. The filtering and sorting of the updated rows run after this event.",
+    "params": "",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "scrollPositionChange",
     "description": "Fired during the scroll of the grid viewport.",
     "params": "GridScrollParams",
@@ -503,6 +517,13 @@
     "params": "{ value: GridSidebarValue }",
     "event": "MuiEvent<{}>",
     "componentProp": "onSidebarOpen"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "sortedRowsSet",
+    "description": "Fired when the sorted rows are updated. The event fires after the state update and before the re-render.",
+    "params": "",
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
