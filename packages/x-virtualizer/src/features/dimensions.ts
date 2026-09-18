@@ -62,17 +62,22 @@ const selectors = {
   minimalContentHeight: (state: BaseState) => state.dimensions.minimalContentHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
   rowPositions: (state: BaseState) => state.rowsMeta.positions,
-  columnPositions: createSelectorMemoized((_, columns: ColumnWithWidth[]) => {
-    const positions: number[] = [];
-    let currentPosition = 0;
+  // Memoized on the columns alone.
+  // Without an input selector, the whole state is the memoization key.
+  columnPositions: createSelectorMemoized(
+    () => undefined,
+    (_, columns: ColumnWithWidth[]) => {
+      const positions: number[] = [];
+      let currentPosition = 0;
 
-    for (let i = 0; i < columns.length; i += 1) {
-      positions.push(currentPosition);
-      currentPosition += columns[i].computedWidth;
-    }
+      for (let i = 0; i < columns.length; i += 1) {
+        positions.push(currentPosition);
+        currentPosition += columns[i].computedWidth;
+      }
 
-    return positions;
-  }),
+      return positions;
+    },
+  ),
   needsHorizontalScrollbar: (state: BaseState) =>
     state.dimensions.viewportInnerSize.width > 0 &&
     state.dimensions.columnsTotalWidth > state.dimensions.viewportInnerSize.width,
