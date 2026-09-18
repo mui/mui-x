@@ -10,3 +10,4 @@ export type {
   EventDialogGeneralTabPropsOverrides,
   PropsFromSlot,
 } from '@mui/x-scheduler/models';
+export * from './slots';

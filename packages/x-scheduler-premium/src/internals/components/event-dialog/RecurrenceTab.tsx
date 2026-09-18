@@ -26,6 +26,7 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   schedulerOtherSelectors,
   schedulerPreferenceSelectors,
+  schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
@@ -33,9 +34,9 @@ import {
   useEventEditingStyledContext,
   useEventDialogFormContext,
   getEndsSelectionFromRRule,
-  formatDayOfMonthAndMonthFullLetter,
   EventDialogTabPanel,
   EventDialogTabContent,
+  getRecurrenceLabel,
   getWeekdayToken,
 } from '@mui/x-scheduler/internals';
 import {
@@ -216,24 +217,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     [adapter, visibleDate, weekStartsOn],
   );
 
-  // Form-state drafts: every preset carries both `byDay` and `byMonthDay` (empty when
-  // not used) so the `rruleDraft` value keeps a consistent shape as the user switches presets.
-  // Differs from `computePresets`, which only includes the fields each preset actually serializes.
-  const presetDraftMap = React.useMemo(
-    () => ({
-      DAILY: { freq: 'DAILY' as const, interval: 1, byDay: [], byMonthDay: [] },
-      WEEKLY: { freq: 'WEEKLY' as const, interval: 1, byDay: [monthlyRef.code], byMonthDay: [] },
-      MONTHLY: {
-        freq: 'MONTHLY' as const,
-        interval: 1,
-        byDay: [],
-        byMonthDay: [monthlyRef.dayOfMonth],
-      },
-      YEARLY: { freq: 'YEARLY' as const, interval: 1, byDay: [], byMonthDay: [] },
-    }),
-    [monthlyRef.code, monthlyRef.dayOfMonth],
-  );
-
   const handleRecurrenceSelectionChange = (
     newSelection: RecurringEventPresetKey | null | 'custom',
   ) => {
@@ -241,8 +224,16 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       formStore.setValue('recurrenceSelection', 'custom');
       return;
     }
+    // Keep both selector arrays in the form draft, including when the preset omits them.
     const newDraft = newSelection
-      ? presetDraftMap[newSelection]
+      ? {
+          byDay: [],
+          byMonthDay: [],
+          ...schedulerRecurringEventSelectors.presets(
+            store.state,
+            occurrence.displayTimezone.start,
+          )![newSelection],
+        }
       : { freq: 'WEEKLY' as const, interval: 1, byDay: [], byMonthDay: [] };
     formStore.setValues({ recurrenceSelection: newSelection, rruleDraft: newDraft });
   };
@@ -364,35 +355,13 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(rruleDraft);
 
   const weekday = getWeekdayToken(adapter, occurrence.displayTimezone.start.value);
-  const weekdayName = adapter.format(occurrence.displayTimezone.start.value, 'weekday');
-  const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(
-    occurrence.displayTimezone.start.value,
-    adapter,
-  );
 
-  const recurrenceOptions: {
-    label: string;
-    value: RecurringEventPresetKey | null | 'custom';
-  }[] = [
-    { label: `${localeText.recurrenceNoRepeat}`, value: null },
-    { label: `${localeText.recurrenceDailyPresetLabel}`, value: 'DAILY' },
-    {
-      label: `${localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName })}`,
-      value: 'WEEKLY',
-    },
-    {
-      label: `${localeText.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.displayTimezone.start.value))}`,
-      value: 'MONTHLY',
-    },
-    {
-      label: `${localeText.recurrenceYearlyPresetLabel(dateForYearlyOption)}`,
-      value: 'YEARLY',
-    },
-    {
-      label: `${localeText.recurrenceCustomRepeat}`,
-      value: 'custom',
-    },
-  ];
+  const recurrenceOptions = ([null, 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY', 'custom'] as const).map(
+    (value) => ({
+      value,
+      label: getRecurrenceLabel(adapter, occurrence.displayTimezone.start, value, localeText),
+    }),
+  );
 
   const recurrenceFrequencyOptions: {
     label: string;

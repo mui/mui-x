@@ -113,8 +113,9 @@ export interface EventCalendarParameters<
   /**
    * Configuration applied to each view, keyed by the view name.
    * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
-   * limit the hours displayed in the time grid.
-   * @example { week: { startTime: 8, endTime: 20 } }
+   * limit the hours displayed in the time grid, and `initialScrollTime` is the hour the grid
+   * scrolls to on mount.
+   * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
    */
   viewConfig?: EventCalendarViewConfig;
 }

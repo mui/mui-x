@@ -62,17 +62,22 @@ const selectors = {
   minimalContentHeight: (state: BaseState) => state.dimensions.minimalContentHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
   rowPositions: (state: BaseState) => state.rowsMeta.positions,
-  columnPositions: createSelectorMemoized((_, columns: ColumnWithWidth[]) => {
-    const positions: number[] = [];
-    let currentPosition = 0;
+  // Memoized on the columns alone.
+  // Without an input selector, the whole state is the memoization key.
+  columnPositions: createSelectorMemoized(
+    () => undefined,
+    (_, columns: ColumnWithWidth[]) => {
+      const positions: number[] = [];
+      let currentPosition = 0;
 
-    for (let i = 0; i < columns.length; i += 1) {
-      positions.push(currentPosition);
-      currentPosition += columns[i].computedWidth;
-    }
+      for (let i = 0; i < columns.length; i += 1) {
+        positions.push(currentPosition);
+        currentPosition += columns[i].computedWidth;
+      }
 
-    return positions;
-  }),
+      return positions;
+    },
+  ),
   needsHorizontalScrollbar: (state: BaseState) =>
     state.dimensions.viewportInnerSize.width > 0 &&
     state.dimensions.columnsTotalWidth > state.dimensions.viewportInnerSize.width,
@@ -177,6 +182,29 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     heights: { content: 0, pinnedTop: 0, pinnedBottom: 0 },
     lastFlipTimestamp: 0,
   });
+
+  // In a layout that grows with its content, the root takes the height of the
+  // rows, the pinned rows and the scrollbar fillers, so an update that follows
+  // a content change is computed against a root size the browser has not laid
+  // out yet. It may then reserve a vertical scrollbar the grown root does not
+  // need. The ResizeObserver reports the grown root only after this frame's
+  // layout, and its throttled update paints that reservation for the whole
+  // throttle window, visible as a flex column jump. After an update that
+  // changed a scrollbar reservation, the root is therefore re-measured in the
+  // next animation frame, where the laid-out size is available before paint,
+  // and the dimensions are updated there, ahead of the throttled update.
+  // https://github.com/mui/mui-x/issues/23573
+  const rootRemeasureId = React.useRef(0);
+  const remeasureRootRef = React.useRef<() => void>(() => {});
+  const scheduleRootRemeasure = React.useCallback(() => {
+    if (rootRemeasureId.current !== 0 || typeof requestAnimationFrame === 'undefined') {
+      return;
+    }
+    rootRemeasureId.current = requestAnimationFrame(() => {
+      rootRemeasureId.current = 0;
+      remeasureRootRef.current();
+    });
+  }, []);
 
   const {
     layout,
@@ -367,9 +395,17 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
 
       store.update({ dimensions: newDimensions });
       onResize?.(newDimensions.root);
+
+      if (
+        newDimensions.hasScrollX !== prevDimensions.hasScrollX ||
+        newDimensions.hasScrollY !== prevDimensions.hasScrollY
+      ) {
+        scheduleRootRemeasure();
+      }
     },
     [
       store,
+      scheduleRootRemeasure,
       layout.refs.container,
       layout.refs.scrollbarHorizontal,
       layout.refs.scrollbarVertical,
@@ -395,6 +431,38 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     [resizeThrottleMs, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
+
+  const remeasureRoot = useEventCallback(() => {
+    const node = layout.refs.container.current;
+    if (!node || isFirstSizing.current) {
+      return;
+    }
+    const bounds = node.getBoundingClientRect();
+    const rootSize = {
+      width: roundToDecimalPlaces(bounds.width, 1),
+      height: roundToDecimalPlaces(bounds.height, 1),
+    };
+    if (rootSize.width === 0 && rootSize.height === 0) {
+      // The root collapsed (for example `display: none`): keep the last dimensions.
+      return;
+    }
+    store.state.rootSize = rootSize;
+    // The observer may have stored this size already, with its update still
+    // pending in the throttle. This update supersedes it.
+    debouncedUpdateDimensions?.clear();
+    updateDimensionCallback();
+  });
+  remeasureRootRef.current = remeasureRoot;
+
+  useLayoutEffect(
+    () => () => {
+      if (rootRemeasureId.current !== 0) {
+        cancelAnimationFrame(rootRemeasureId.current);
+        rootRemeasureId.current = 0;
+      }
+    },
+    [],
+  );
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 

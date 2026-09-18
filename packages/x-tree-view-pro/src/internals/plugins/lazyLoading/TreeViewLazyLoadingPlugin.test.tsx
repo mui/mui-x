@@ -909,6 +909,41 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
 
+      it('should allow an item removed by a refresh to be loaded under another parent', async () => {
+        const serverTree: Record<string, ItemType[]> = {
+          root: [
+            { id: 'parent', childrenCount: 0 },
+            { id: 'child', childrenCount: 0 },
+          ],
+          parent: [],
+        };
+        const view = render({
+          items: [],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: async (parentId) => serverTree[parentId ?? 'root'],
+          },
+        });
+        await awaitMockFetch();
+        expect(view.getAllTreeItemIds()).to.deep.equal(['parent', 'child']);
+
+        // move "child" under "parent"
+        serverTree.root = [{ id: 'parent', childrenCount: 1 }];
+        serverTree.parent = [{ id: 'child', childrenCount: 0 }];
+        await act(async () => {
+          await view.apiRef.current.updateItemChildren(null);
+        });
+        expect(view.getAllTreeItemIds()).to.deep.equal(['parent']);
+
+        fireEvent.click(view.getItemContent('parent'));
+        await awaitMockFetch();
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['parent', 'child']);
+        expect(
+          view.getItemIconContainer('parent').querySelector(`.${treeItemClasses.errorIcon}`),
+        ).to.equal(null);
+      });
+
       it('should remove the children of the item when the refresh fails', async () => {
         let shouldFail = false;
         const getTreeItems = vi.fn(async (parentId?: string): Promise<ItemType[]> => {
