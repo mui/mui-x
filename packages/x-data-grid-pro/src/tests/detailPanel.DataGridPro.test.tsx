@@ -719,6 +719,10 @@ describe('<DataGridPro /> - Detail panel', () => {
         <div style={{ width: 400, ...containerStyle }}>
           <DataGridPro
             apiRef={apiRef}
+            // Overlay scrollbars (macOS) measure as 0px, which would hide the
+            // scrollbar reservation these tests are about.
+            scrollbarSize={15}
+            resizeThrottleMs={60}
             columns={[
               { field: 'id', width: 100 },
               { field: 'name', flex: 1 },
@@ -728,8 +732,6 @@ describe('<DataGridPro /> - Detail panel', () => {
               { id: 1, name: 'B' },
               { id: 2, name: 'C' },
             ]}
-            scrollbarSize={15}
-            resizeThrottleMs={60}
             getDetailPanelContent={() => <div style={{ height: detailPanelHeight }} />}
             getDetailPanelHeight={() => detailPanelHeight}
             {...other}
@@ -740,6 +742,55 @@ describe('<DataGridPro /> - Detail panel', () => {
 
     const getFlexHeader = () =>
       document.querySelector<HTMLElement>('[role="columnheader"][data-field="name"]')!;
+
+    const nextFrame = () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+
+    // Samples the flex column width once per frame, after the frame's rendering
+    // steps (layout, ResizeObserver callbacks, paint), so a width that was
+    // painted and reverted later is still observed.
+    const sampleFlexWidthPerFrame = (frames: number) =>
+      new Promise<number[]>((resolve) => {
+        const widths: number[] = [];
+        const tick = () => {
+          setTimeout(() => {
+            widths.push(getFlexHeader().offsetWidth);
+            if (widths.length >= frames) {
+              resolve(widths);
+            } else {
+              requestAnimationFrame(tick);
+            }
+          });
+        };
+        requestAnimationFrame(tick);
+      });
+
+    const waitForReady = () =>
+      waitFor(() => {
+        expect(apiRef.current!.getRootDimensions().isReady).to.equal(true);
+      });
+
+    it.skipIf(isJSDOM)(
+      'should not shrink the flex column when expanding a detail panel in a growing layout',
+      async () => {
+        const { user } = render(<GrowingTestCase />);
+        await waitForReady();
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+        const initialWidth = getFlexHeader().offsetWidth;
+
+        await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+        // 15 frames cover the resize throttle window, during which the
+        // transient scrollbar reservation used to be painted.
+        const widths = await act(() => sampleFlexWidthPerFrame(15));
+
+        expect(widths, `sampled widths: ${widths.join(', ')}`).to.deep.equal(
+          widths.map(() => initialWidth),
+        );
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+      },
+    );
 
     it.skipIf(isJSDOM)(
       'should restore flex width on container growth without waiting for the resize throttle',
@@ -782,6 +833,27 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
 
     it.skipIf(isJSDOM)(
+      'should not shrink the flex column when a second detail panel expands within the resize throttle window',
+      async () => {
+        render(<GrowingTestCase />);
+        await waitForReady();
+        const initialWidth = getFlexHeader().offsetWidth;
+
+        await act(() => apiRef.current!.toggleDetailPanel(0));
+        // The container grew once already; its resize is still inside the
+        // throttle window when the second panel expands.
+        await act(() => nextFrame());
+        await act(() => apiRef.current!.toggleDetailPanel(1));
+        const widths = await act(() => sampleFlexWidthPerFrame(15));
+
+        expect(widths, `sampled widths: ${widths.join(', ')}`).to.deep.equal(
+          widths.map(() => initialWidth),
+        );
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+      },
+    );
+
+    it.skipIf(isJSDOM)(
       'should show the vertical scrollbar when growth reaches maxHeight',
       async () => {
         const { setProps } = render(<GrowingTestCase />);
@@ -807,15 +879,10 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
 
     it.skipIf(isJSDOM)(
-      'should still show the vertical scrollbar when the container cannot grow',
+      'should show the vertical scrollbar right away when the container cannot grow',
       async () => {
-        // The container hugs the content exactly but has a fixed height, so the
-        // deferred scrollbar must still be committed after the expansion.
-        const { user, setProps } = render(<GrowingTestCase />);
-
-        await waitFor(() => {
-          expect(apiRef.current!.getRootDimensions().isReady).to.equal(true);
-        });
+        const { setProps } = render(<GrowingTestCase />);
+        await waitForReady();
         expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
 
         // Pin the container to its natural height: same layout, but it can no
@@ -824,13 +891,13 @@ describe('<DataGridPro /> - Detail panel', () => {
           .querySelector<HTMLElement>(`.${gridClasses.root}`)!
           .getBoundingClientRect().height;
         setProps({ containerStyle: { height: naturalHeight } });
+        await act(() => nextFrame());
         expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
 
-        await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
-
-        await waitFor(() => {
-          expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(true);
-        });
+        await act(() => apiRef.current!.toggleDetailPanel(0));
+        // The container does not react, so the scrollbar computed for the
+        // expansion is final and must not wait for a resize.
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(true);
       },
     );
   });
