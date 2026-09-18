@@ -47,11 +47,13 @@ const frFRDialog: Partial<EventEditingLocaleText> = {
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se répète chaque semaine le ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'mois',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Jour ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} de la dernière semaine du mois`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} dernière semaine`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) =>
+    `${weekdayName} de la dernière semaine du mois`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} dernière semaine`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Se répète tous les mois le ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} semaine ${ord} du mois`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} semaine ${ord}`,
+  recurrenceMonthlyWeekNumberAriaLabel: (ord, { weekdayName }) =>
+    `${weekdayName} semaine ${ord} du mois`,
+  recurrenceMonthlyWeekNumberLabel: (ord, { weekdayName }) => `${weekdayName} semaine ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'Le',
   recurrenceYearlyFrequencyLabel: 'années',
   recurrenceYearlyPresetLabel: (date) => `Se répète tous les ans le ${date}`,

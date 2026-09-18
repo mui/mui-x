@@ -4,6 +4,7 @@ import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
+  dateLocaleFr,
   EventBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
@@ -2273,6 +2274,16 @@ describe('<EventDialogContent open />', () => {
       });
 
       describe('Recurrence Custom behavior', () => {
+        async function openCustomMonthly(user: any) {
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          await user.click(within(repeatGroup).getByRole('combobox'));
+          await user.click(await screen.findByRole('option', { name: /months/i }));
+        }
+
         it('should render recurrence fields as disabled when not recurrent', async () => {
           const { user } = render(
             <EventCalendarProvider
@@ -2743,6 +2754,87 @@ describe('<EventDialogContent open />', () => {
             interval: 1,
             byDay: ['-1MO'],
           });
+        });
+
+        it('should build the monthly ordinal labels from the date locale, not from the weekday token', async () => {
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              dateLocale={dateLocaleFr}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await openCustomMonthly(user);
+
+          // The aria label takes the full weekday name, the visible label the 3-letter one.
+          const toggle = screen.getByRole('button', {
+            name: 'lundi of the last week of the month',
+          });
+          expect(toggle).to.have.text('lun. last week');
+        });
+
+        it('should pass the weekday token and name to the monthly last week locale callbacks', async () => {
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              localeText={{
+                recurrenceMonthlyLastWeekAriaLabel: ({ weekday, weekdayName }) =>
+                  `aria:${weekday}:${weekdayName}`,
+                recurrenceMonthlyLastWeekLabel: ({ weekday, weekdayName }) =>
+                  `label:${weekday}:${weekdayName}`,
+              }}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await openCustomMonthly(user);
+
+          // DEFAULT_EVENT is on Monday 2025-05-26, the last Monday of the month.
+          const toggle = screen.getByRole('button', { name: 'aria:monday:Monday' });
+          expect(toggle).to.have.text('label:monday:Mon');
+        });
+
+        it('should pass the weekday token and name to the monthly week number locale callbacks', async () => {
+          // 2025-05-05 is the first Monday of the month, so the ordinal is 1 instead of -1.
+          const firstMondayEvent = EventBuilder.new()
+            .title('Running')
+            .singleDay('2025-05-05T07:30:00Z', 45)
+            .resource(personalResource)
+            .build();
+          const firstMondayOccurrence = EventBuilder.new()
+            .id(firstMondayEvent.id)
+            .title(firstMondayEvent.title)
+            .span(firstMondayEvent.start, firstMondayEvent.end)
+            .resource(personalResource)
+            .toOccurrence();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[firstMondayEvent]}
+              resources={resources}
+              localeText={{
+                recurrenceMonthlyWeekNumberAriaLabel: (ord, { weekday, weekdayName }) =>
+                  `aria:${ord}:${weekday}:${weekdayName}`,
+                recurrenceMonthlyWeekNumberLabel: (ord, { weekday, weekdayName }) =>
+                  `label:${ord}:${weekday}:${weekdayName}`,
+              }}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} occurrence={firstMondayOccurrence} />
+            </EventCalendarProvider>,
+          );
+
+          await openCustomMonthly(user);
+
+          const toggle = screen.getByRole('button', { name: 'aria:1:monday:Monday' });
+          expect(toggle).to.have.text('label:1:monday:Mon');
         });
 
         it('should flip the recurrence Select to "Custom" when a detail field is edited', async () => {
