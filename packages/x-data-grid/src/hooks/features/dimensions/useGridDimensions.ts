@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { platform } from '@base-ui/utils/platform';
 import type { RefObject } from '@mui/x-internals/types';
-import { useStoreEffect } from '@mui/x-internals/store';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import type { GridEventListener } from '../../../models/events';
 import type { ElementSize } from '../../../models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
