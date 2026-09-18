@@ -351,7 +351,14 @@ export const useGridDataSourceNestedLazyLoader = (
 
     pollingIntervalRef.current = setInterval(() => {
       const { firstRowToRender, lastRowToRender } = renderedRowsIntervalCache.current;
-      revalidateRows(firstRowToRender, lastRowToRender);
+      if (lastRowToRender > firstRowToRender) {
+        revalidateRows(firstRowToRender, lastRowToRender);
+        return;
+      }
+      // The cache is reset on invalidation and only refilled by `renderedRowsIntervalChange`,
+      // which does not fire when the rebuilt tree renders the same interval.
+      const renderContext = gridRenderContextSelector(privateApiRef);
+      revalidateRows(renderContext.firstRowIndex, renderContext.lastRowIndex);
     }, props.dataSourceRevalidateMs);
   });
 

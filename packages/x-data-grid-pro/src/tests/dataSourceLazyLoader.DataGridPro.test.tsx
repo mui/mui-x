@@ -1107,8 +1107,10 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
     it('should replace different-id rows under the correct parent', async () => {
       const localFetchRowsSpy = vi.fn();
-      const transformRows = (rows: TreeRow[], params: GridGetRowsParams, requestCount: number) => {
-        if ((params.groupKeys?.length ?? 0) === 1 && requestCount > 2) {
+      // Held back until `A-0` has been observed, polling could replace it before that
+      let replaceChildren = false;
+      const transformRows = (rows: TreeRow[], params: GridGetRowsParams) => {
+        if ((params.groupKeys?.length ?? 0) === 1 && replaceChildren) {
           return rows.map((row, index) =>
             index === 0 ? { ...row, id: 'A-0-updated', name: 'A-0-updated' } : row,
           );
@@ -1128,7 +1130,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await user.click(within(getCell(0, 0)).getByRole('button'));
       await waitFor(() => expect(apiRef.current!.getRow('A-0')).not.to.equal(null));
 
-      localFetchRowsSpy.mockClear();
+      replaceChildren = true;
 
       await waitFor(() => {
         expect(apiRef.current!.getRow('A-0-updated')).not.to.equal(null);
@@ -1683,6 +1685,32 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         await act(async () => apiRef.current!.dataSource.fetchRows());
         await waitFor(() => {
           expect(apiRef.current!.getRow('P1-0')).not.to.equal(null);
+        });
+      });
+
+      it('should keep polling after the tree is rebuilt with the same rendered interval', async () => {
+        const localFetchRowsSpy = vi.fn();
+        render(
+          <TestConcurrentRequests
+            deferRequest={() => false}
+            dataSourceRevalidateMs={50}
+            onFetchRows={localFetchRowsSpy}
+          />,
+        );
+
+        await waitFor(() => expect(apiRef.current!.getRow('P1-0')).not.to.equal(null));
+
+        await act(async () => apiRef.current!.dataSource.fetchRows());
+        await waitFor(() => expect(apiRef.current!.getRow('P1-0')).not.to.equal(null));
+
+        const countRootRequests = () =>
+          localFetchRowsSpy.mock.calls.filter(([params]) =>
+            isRootRequest(params as GridGetRowsParams),
+          ).length;
+        const rootRequestsAfterRebuild = countRootRequests();
+
+        await waitFor(() => {
+          expect(countRootRequests()).to.be.greaterThan(rootRequestsAfterRebuild);
         });
       });
     });
