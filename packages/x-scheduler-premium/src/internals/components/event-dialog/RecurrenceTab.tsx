@@ -243,22 +243,20 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   // A preset's draft follows the start it is built on, so the weekday or day of month shown
   // checked is the one the save stores; a custom rule is the user's own pick and is kept.
-  const previousRuleStartRef = React.useRef(ruleStart);
+  const previousRuleStartRef = React.useRef(ruleStart.timestamp);
   React.useEffect(() => {
-    if (previousRuleStartRef.current === ruleStart) {
+    if (previousRuleStartRef.current === ruleStart.timestamp) {
       return;
     }
-    previousRuleStartRef.current = ruleStart;
-    const selection = eventDialogFormSelectors.value(formStore.state, 'recurrenceSelection');
+    previousRuleStartRef.current = ruleStart.timestamp;
+    const selection = formStore.state.values.recurrenceSelection;
     if (selection == null || selection === 'custom') {
       return;
     }
     formStore.setValue('rruleDraft', {
       byDay: [],
       byMonthDay: [],
-      ...schedulerRecurringEventSelectors.presets(store.state, ruleStart)![
-        selection as RecurringEventPresetKey
-      ],
+      ...schedulerRecurringEventSelectors.presets(store.state, ruleStart)![selection],
     });
   }, [formStore, store, ruleStart]);
   const weeklyDays = React.useMemo(

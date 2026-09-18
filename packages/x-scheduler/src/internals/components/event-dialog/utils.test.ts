@@ -134,9 +134,9 @@ describe('getRecurrenceTimezoneName', () => {
   });
 
   it('should name the timezone in the adapter locale', () => {
-    expect(getRecurrenceTimezoneName(adapterFr, 'America/Los_Angeles', 'Europe/Paris')).to.equal(
-      genericName('fr', 'America/Los_Angeles'),
-    );
+    const frenchName = getRecurrenceTimezoneName(adapterFr, 'America/Los_Angeles', 'Europe/Paris');
+    expect(frenchName).to.equal(genericName('fr', 'America/Los_Angeles'));
+    expect(frenchName).to.not.equal('Pacific Time');
   });
 
   it('should fall back to the identifier when the runtime only has an offset for it', () => {
@@ -150,6 +150,8 @@ describe('getRecurrenceTimezoneName', () => {
   });
 
   it('should treat aliases of the same timezone as the same', () => {
+    // Relies on `Intl.DateTimeFormat().resolvedOptions().timeZone` canonicalizing links; the
+    // ECMA-402 timezone canonicalization proposal changes that to return the input as is.
     expect(getRecurrenceTimezoneName(adapter, 'US/Eastern', 'America/New_York')).to.equal(null);
     expect(getRecurrenceTimezoneName(adapter, 'Etc/UTC', 'UTC')).to.equal(null);
   });
@@ -167,6 +169,7 @@ describe('getWeekdayToken', () => {
     expect(getWeekdayToken(adapter, adapter.date('2025-07-07T01:00:00', 'Asia/Tokyo'))).to.equal(
       'monday',
     );
+    // French weeks start on Monday, so the adapter numbers Sunday last.
     expect(getWeekdayToken(adapterFr, adapter.date('2025-07-06T12:00:00', 'UTC'))).to.equal(
       'sunday',
     );
@@ -234,6 +237,18 @@ describe('getRecurrenceRuleBound', () => {
     );
     expect(adapter.getTimezone(start.value)).to.equal('UTC');
     expect(adapter.formatByString(start.value, 'yyyy-MM-dd HH:mm')).to.equal('2025-07-03 14:00');
+  });
+
+  it("should return the edited end in the event's timezone when it is resent", () => {
+    const end = getRecurrenceRuleBound(
+      adapter,
+      occurrence,
+      { ...seeded, endTime: '21:00' },
+      true,
+      'America/New_York',
+      'end',
+    );
+    expect(adapter.formatByString(end.value, 'yyyy-MM-dd HH:mm')).to.equal('2025-07-04 01:00');
   });
 
   it("should return the occurrence's own bound while an edited date does not parse", () => {

@@ -461,7 +461,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         );
 
         // Per-bound on the recurring path: the plugin defaults a missing bound to the
-        // occurrence's own, so an untouched display-anchored start cannot reach the
+        // occurrence's own, so an untouched start (re-read in the display timezone) cannot reach the
         // pattern math (where it would move DTSTART and realign BYDAY).
         const changes: SchedulerEventUpdatedProperties = {
           ...metaChanges,

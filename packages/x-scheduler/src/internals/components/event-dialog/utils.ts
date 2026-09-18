@@ -11,7 +11,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
+import { getJsDayOfWeek, getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
 import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
@@ -99,17 +99,9 @@ const WEEKDAYS: SchedulerWeekday[] = [
   'saturday',
 ];
 
-// `getDayOfWeek` numbers the days from the locale's first week day; a known Sunday gives the offset.
-const sundayDayOfWeek = new WeakMap<Adapter, number>();
-
 export const getWeekdayToken = (adapter: Adapter, value: TemporalSupportedObject) => {
-  let sunday = sundayDayOfWeek.get(adapter);
-  if (sunday == null) {
-    sunday = adapter.getDayOfWeek(adapter.date('2025-08-10', 'default'));
-    sundayDayOfWeek.set(adapter, sunday);
-  }
   // Read in the value's own timezone: a plain `Date` would give the system weekday.
-  return WEEKDAYS[(adapter.getDayOfWeek(value) - sunday + 7) % 7];
+  return WEEKDAYS[getJsDayOfWeek(adapter, value)];
 };
 
 export type EndsSelection = 'never' | 'after' | 'until';
@@ -354,8 +346,8 @@ export function getRecurrenceRuleBound(
 }
 
 /**
- * The canonical IANA identifier of a timezone. The adapter aliases resolve to the system
- * timezone: the only adapter shipped today (date-fns) treats `default` as the system one.
+ * The canonical IANA identifier of a timezone; `default` and `system` resolve to the system
+ * timezone, as the adapter does.
  */
 function getTimezoneId(timezone: TemporalTimezone): string {
   const id =
