@@ -212,6 +212,7 @@ export const GridRootStyles = styled('div', {
     [`&.${c.autosizing}`]: {
       [`& .${c.columnHeaderTitleContainerContent} > *`]: {
         overflow: 'visible !important',
+        whiteSpace: 'nowrap !important',
       },
       '@media (hover: hover)': {
         [`& .${c.menuIcon}`]: {
