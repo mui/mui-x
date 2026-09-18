@@ -840,6 +840,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     resources: visibleResources,
     scrollerRef: gridRef,
     axis: config,
+    durationMs: config.durationMs,
     tickCount: config.tickCount,
     tickWidth: config.tickWidth,
     titleColumnWidth,
