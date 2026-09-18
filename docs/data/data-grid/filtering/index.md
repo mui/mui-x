@@ -147,6 +147,27 @@ const columns = [
 
 {{"demo": "ReadOnlyFilters.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Show the filter icon on unfiltered columns
+
+By default, the filter icon in a column header only appears once that column has a filter.
+To show it on every filterable column, so a filter can be added straight from the header, set `slotProps.columnHeaderFilterIconButton.hideIconIfNoFilterAdded` to `false`.
+The icon appears on hover, like the sort icon, and stays visible once the column is filtered.
+Clicking it opens the filter panel with a new filter for that column.
+
+```tsx
+<DataGrid
+  slotProps={{
+    columnHeaderFilterIconButton: { hideIconIfNoFilterAdded: false },
+  }}
+/>
+```
+
+{{"demo": "FilterIconUnfilteredColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+The hover reveal needs a pointing device. On touch screens, use the column menu to add a filter.
+:::
+
 ## Ignore diacritics (accents)
 
 When filtering, diacritics—accented letters such as _é_ or _à_—are considered distinct from their standard counterparts (_e_ and _a_).
