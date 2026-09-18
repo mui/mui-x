@@ -116,7 +116,7 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // weekdaySaturday: 'Saturday',
 
   // WeekView
-  allDay: 'Ganztägig',
+  allDay: 'ganztags',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} weitere..`,
   nextTimeSpan: (timeSpan) => `Nächste(r) ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Vorherige(r) ${timeSpan}`,
