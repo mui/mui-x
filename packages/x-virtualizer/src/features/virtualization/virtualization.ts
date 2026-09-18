@@ -10,7 +10,7 @@ import { platform } from '@base-ui/utils/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
 import useRefCallback from '../../utils/useRefCallback';
-import { PinnedRows, PinnedColumns } from '../../models/core';
+import { PinnedRows, PinnedColumns, Size } from '../../models/core';
 import type { CellColSpanInfo } from '../../models/colspan';
 import { Dimensions, observeRootNode } from '../dimensions';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
@@ -879,9 +879,28 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     }
   }, [layout.refs.scroller, columnsTotalWidth, contentHeight]);
 
+  const isFirstSizing = React.useRef(true);
+
   const containerRef = useRefCallback((node: HTMLDivElement | null) => {
     layout.refs.container.current = node;
-    const unsubscribe = observeRootNode(node, store, api.setRootSize);
+    const unsubscribe = observeRootNode(node, store, (rootSize: Size) => {
+      if (
+        rootSize.width === 0 &&
+        rootSize.height === 0 &&
+        store.state.rootSize.height !== 0 &&
+        store.state.rootSize.width !== 0
+      ) {
+        return;
+      }
+      store.state.rootSize = rootSize;
+      if (isFirstSizing.current || !api.debouncedUpdateDimensions) {
+        // We want to initialize the grid dimensions as soon as possible to avoid flickering
+        api.updateDimensions(isFirstSizing.current);
+        isFirstSizing.current = false;
+      } else {
+        api.debouncedUpdateDimensions();
+      }
+    });
     return () => {
       unsubscribe?.();
       layout.refs.container.current = null;
