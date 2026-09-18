@@ -153,15 +153,29 @@ export interface GridRowProApi {
   collapseAllRows: () => void;
 }
 
+export interface GridUpdateNestedRowsOptions {
+  /**
+   * Id of the group whose children the non-delete updates replace, in their given order.
+   */
+  replaceChildrenOf?: GridRowId;
+  /**
+   * Whether the state update goes through the `throttleRowsMs` throttle.
+   * @default false
+   */
+  throttle?: boolean;
+}
+
 export interface GridRowProPrivateApi {
   /**
    * Allows to update, insert, replace and delete rows at a specific nested level.
    * @param {Array<GridRowModelUpdate | GridRowModelReplace>} updates An array of rows with an `action` specifying what to do.
    * @param {string[]} nestedLevel The nested level of the rows to update, it represents the path to the row in the tree based on `node.groupingKey`.
+   * @param {GridUpdateNestedRowsOptions} options Additional options for the update.
    */
   updateNestedRows: (
     updates: Array<GridRowModelUpdate | GridRowModelReplace>,
     nestedLevel?: string[],
+    options?: GridUpdateNestedRowsOptions,
   ) => void;
 }
 
