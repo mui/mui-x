@@ -54,10 +54,10 @@ export interface EventEditingLocaleText {
   }) => string;
   recurrenceMonthlyDayOfMonthLabel: (dayNumber: number) => string;
   recurrenceMonthlyFrequencyLabel: string;
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay: string) => string;
+  recurrenceMonthlyLastWeekAriaLabel: (weekDay: SchedulerWeekday) => string;
   recurrenceMonthlyLastWeekLabel: (weekDay: string) => string;
   recurrenceMonthlyPresetLabel: (dayNumber: number) => string;
-  recurrenceMonthlyWeekNumberAriaLabel: (ord: number, weekDay: string) => string;
+  recurrenceMonthlyWeekNumberAriaLabel: (ord: number, weekDay: SchedulerWeekday) => string;
   recurrenceMonthlyWeekNumberLabel: (ord: number, weekDay: string) => string;
   recurrenceWeeklyMonthlySpecificInputsLabel: string;
   recurrenceYearlyFrequencyLabel: string;

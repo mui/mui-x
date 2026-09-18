@@ -2,11 +2,12 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerWeekday,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const weekdayNames = {
+const weekdayNames: Record<SchedulerWeekday, string> = {
   sunday: 'воскресенье',
   monday: 'понедельник',
   tuesday: 'вторник',
@@ -44,11 +45,11 @@ const ruRUDialog: Partial<EventEditingLocaleText> = {
   closeButtonLabel: 'Закрыть',
   editEventButtonAriaLabel: 'Редактировать событие',
   deleteEventButtonAriaLabel: 'Удалить событие',
-  eventActionsToolbarAriaLabel: 'Действия события',
+  eventActionsToolbarAriaLabel: 'Действия с событием',
   deleteEvent: 'Удалить событие',
   editEvent: 'Редактировать событие',
   showEventDetails: 'Показать подробности',
-  eventContextMenuAriaLabel: 'Действия события',
+  eventContextMenuAriaLabel: 'Действия с событием',
   descriptionLabel: 'Описание',
   endDateLabel: 'Дата окончания',
   endTimeLabel: 'Время окончания',
@@ -76,11 +77,11 @@ const ruRUDialog: Partial<EventEditingLocaleText> = {
   recurrenceMonthlyFrequencyLabel: 'мес.',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `${dayNumber}-е число месяца`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) =>
-    `${weekdayNames[weekDay as keyof typeof weekdayNames] ?? weekDay} последней недели месяца`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} последней недели`,
+    `${weekdayNames[weekDay]} последней недели месяца`,
+  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay}, последняя неделя`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Повторяется ежемесячно ${dayNumber}-го числа`,
   recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) =>
-    `${weekdayNames[weekDay as keyof typeof weekdayNames] ?? weekDay} ${weekOrdinalNames[ord]} недели месяца`,
+    `${weekdayNames[weekDay]} ${weekOrdinalNames[ord]} недели месяца`,
   recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay}, ${ord}-я неделя`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'В',
   recurrenceYearlyFrequencyLabel: 'г.',
@@ -88,13 +89,13 @@ const ruRUDialog: Partial<EventEditingLocaleText> = {
   noResourceAriaLabel: 'Нет конкретного ресурса',
   selectColorAriaLabel: (color) => `Выберите ${color} в качестве цвета события`,
   resourceLabel: 'Ресурс',
-  invalidDateError: 'Введите действительную дату',
-  invalidTimeError: 'Введите действительное время',
-  requiredResourceError: 'Требуется ресурс',
+  invalidDateError: 'Введите действительную дату.',
+  invalidTimeError: 'Введите действительное время.',
+  requiredResourceError: 'Требуется ресурс.',
   saveChanges: 'Сохранить',
-  startDateAfterEndDateError: 'Дата окончания не может быть раньше даты начала',
+  startDateAfterEndDateError: 'Дата окончания не может быть раньше даты начала.',
   startDateLabel: 'Дата начала',
-  startTimeAfterEndTimeError: 'Время окончания должно быть позже времени начала',
+  startTimeAfterEndTimeError: 'Время окончания должно быть позже времени начала.',
   startTimeLabel: 'Время начала',
 
   // RecurringScopeDialog
@@ -148,7 +149,7 @@ const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
     };
     return `Настройки режима «${viewNames[view]}»`;
   },
-  startWeekOn: 'Неделя начинается с',
+  startWeekOn: 'Первый день недели',
   weekdaySunday: 'Воскресенье',
   weekdayMonday: 'Понедельник',
   weekdaySaturday: 'Суббота',
