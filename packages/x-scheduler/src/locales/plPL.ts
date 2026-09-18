@@ -135,6 +135,9 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   weekAbbreviation: 'T',
   weekNumberAriaLabel: (weekNumber) => `Tydzień ${weekNumber}`,
 
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Kończy się ${endDate}`,
 

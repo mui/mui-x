@@ -1,5 +1,6 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
 import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   SchedulerState,
   SchedulerParameters,
@@ -9,6 +10,7 @@ import type {
 } from '@mui/x-scheduler-internals/internals';
 import { buildEventsState } from '@mui/x-scheduler-internals/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
+import type { SchedulerDataSourceCache } from '../utils/cache';
 import { SchedulerDataManager } from '../utils/queue';
 import type { SchedulerLazyLoadingParameters } from '../../models';
 
@@ -25,7 +27,7 @@ export class SchedulerLazyLoadingPlugin<
   private isFetchScheduled = false;
   private pendingIsInstantLoad = false;
   private pendingComputeRange:
-    (() => { start: TemporalSupportedObject; end: TemporalSupportedObject }) | null = null;
+    (() => { start: TemporalSupportedObject; end: TemporalSupportedObject } | null) | null = null;
 
   /**
    * Range key of the most recently requested fetch. Used to skip stale fetches:
@@ -42,7 +44,7 @@ export class SchedulerLazyLoadingPlugin<
    * `computeRange` wins; `isInstantLoad=true` is sticky across coalesced calls.
    */
   protected scheduleFetch = (
-    computeRange: () => { start: TemporalSupportedObject; end: TemporalSupportedObject },
+    computeRange: () => { start: TemporalSupportedObject; end: TemporalSupportedObject } | null,
     isInstantLoad: boolean,
   ) => {
     if (isInstantLoad) {
@@ -69,6 +71,9 @@ export class SchedulerLazyLoadingPlugin<
           return;
         }
         const range = compute();
+        if (range === null) {
+          return;
+        }
         await this.queueDataFetchForRange(range, instantLoad);
       } catch (error) {
         if (process.env.NODE_ENV !== 'production') {
@@ -112,26 +117,26 @@ export class SchedulerLazyLoadingPlugin<
     immediate = false,
   ) => {
     try {
-      if (this.dataManager) {
+      const { dataManager, cache } = this;
+      if (dataManager && cache) {
         const { adapter } = this.store.state;
-        this.latestRequestedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
+
+        // Only request the part of the range the cache does not cover yet.
+        // A fully covered range still goes through the queue so the cache-hit branch runs.
+        const missingRange = getMissingRange(adapter, cache, range);
+        const rangeToFetch = missingRange ?? range;
+        this.latestRequestedRangeKey = `${adapter.getTime(rangeToFetch.start)}:${adapter.getTime(adapter.endOfDay(rangeToFetch.end))}`;
 
         // Flip `isLoading` synchronously so the skeleton shows immediately,
         // before any debounce delay on the queued path.
-        if (
-          this.cache &&
-          !this.cache.hasCoverage(
-            adapter.getTime(range.start),
-            adapter.getTime(adapter.endOfDay(range.end)),
-          )
-        ) {
+        if (missingRange !== null) {
           this.store.set('isLoading', true);
         }
 
         if (immediate) {
-          await this.dataManager.queueImmediate([range]);
+          await dataManager.queueImmediate([rangeToFetch]);
         } else {
-          await this.dataManager.queue([range]);
+          await dataManager.queue([rangeToFetch]);
         }
       }
     } catch (error) {
@@ -185,6 +190,7 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
+    let isStale = false;
     try {
       const fetchedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
       const events = await dataSource.getEvents(range.start, range.end);
@@ -192,7 +198,9 @@ export class SchedulerLazyLoadingPlugin<
       // Drop the result if a more recent range has been requested since this
       // fetch started — its events are now stale relative to the latest range
       // (e.g. a server-side delete could be hidden by re-introducing them).
+      // The latest fetch owns `isLoading`, so this one leaves it untouched.
       if (this.latestRequestedRangeKey !== fetchedRangeKey) {
+        isStale = true;
         return;
       }
 
@@ -222,7 +230,7 @@ export class SchedulerLazyLoadingPlugin<
       }
       this.store.pushError(error);
     } finally {
-      if (!this.disposables.disposed) {
+      if (!this.disposables.disposed && !isStale) {
         this.store.set('isLoading', false);
       }
       await dataManager.setRequestSettled(range);
@@ -306,5 +314,32 @@ export class SchedulerLazyLoadingPlugin<
       ...eventsState,
       errors: [],
     });
+  };
+}
+
+/**
+ * Returns the smallest range covering the parts of `range` that are not cached,
+ * or `null` when the cache already covers it.
+ */
+function getMissingRange<TEvent extends object>(
+  adapter: Adapter,
+  cache: SchedulerDataSourceCache<TEvent>,
+  range: { start: TemporalSupportedObject; end: TemporalSupportedObject },
+): { start: TemporalSupportedObject; end: TemporalSupportedObject } | null {
+  const end = adapter.endOfDay(range.end);
+  const startTime = adapter.getTime(range.start);
+  const endTime = adapter.getTime(end);
+  const missing = cache.getMissingRange(startTime, endTime);
+  if (missing === null) {
+    return null;
+  }
+
+  // Only the trimmed edges are rebuilt, the others keep the value the view provided.
+  return {
+    start:
+      missing.start === startTime
+        ? range.start
+        : adapter.addMilliseconds(range.start, missing.start - startTime),
+    end: missing.end === endTime ? range.end : adapter.addMilliseconds(end, missing.end - endTime),
   };
 }

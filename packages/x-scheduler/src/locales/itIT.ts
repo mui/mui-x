@@ -124,6 +124,9 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Settimana ${weekNumber}`,
 
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Termina il ${endDate}`,
 
