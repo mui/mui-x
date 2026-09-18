@@ -8,10 +8,6 @@ export interface MoreEventsPopoverProps extends React.HTMLAttributes<HTMLDivElem
    */
   occurrences: SchedulerEventOccurrence[];
   /**
-   * The total count of occurrences.
-   */
-  count: number;
-  /**
    * The day data for the occurrences.
    */
   day: useEventOccurrencesWithDayGridPosition.DayData;
