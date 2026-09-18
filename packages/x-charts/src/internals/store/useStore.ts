@@ -1,4 +1,4 @@
-import type { Store } from '@mui/x-internals/store';
+import type { Store } from '@base-ui/utils/store';
 import { useChartsContext } from '../../context/ChartsProvider';
 import type { ChartAnyPluginSignature, ChartState } from '../plugins/models';
 

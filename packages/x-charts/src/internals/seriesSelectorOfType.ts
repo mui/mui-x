@@ -1,5 +1,5 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import type { ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
 import type { SeriesId } from '../models/seriesType/common';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
