@@ -65,6 +65,8 @@ export interface EventEditingLocaleText {
   noResourceAriaLabel: string;
   selectColorAriaLabel: (color: string) => string;
   resourceLabel: string;
+  invalidDateError: string;
+  invalidTimeError: string;
   requiredResourceError: string;
   saveChanges: string;
   startDateAfterEndDateError: string;

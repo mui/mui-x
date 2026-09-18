@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { disposeSymbol } from '@mui/x-internals/disposable';
 import { adapter } from 'test/utils/scheduler';
@@ -30,7 +29,7 @@ describe('Dispose - EventCalendarStore', () => {
 
   it('should remove user-registered event listeners after dispose', async () => {
     const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-    const handler = spy();
+    const handler = vi.fn();
     store.subscribeEvent('eventsUpdated', handler);
 
     store[disposeSymbol]();
@@ -42,6 +41,6 @@ describe('Dispose - EventCalendarStore', () => {
       newEvents: [],
     });
 
-    expect(handler.called).to.equal(false);
+    expect(handler.mock.calls.length).to.equal(0);
   });
 });

@@ -122,7 +122,7 @@ export function useExtractEventTimelinePremiumParameters<
       visibleDate,
       visibleResources,
     ],
-  );
+  ) satisfies Record<keyof EventTimelinePremiumParameters<TEvent, TResource>, unknown>;
 
   return {
     parameters,

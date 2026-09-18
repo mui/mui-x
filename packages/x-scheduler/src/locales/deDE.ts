@@ -58,6 +58,8 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
   noResourceAriaLabel: 'Keine Ressource',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressource',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Speichern',
   startDateAfterEndDateError: 'Das Enddatum darf nicht vor dem Startdatum liegen.',

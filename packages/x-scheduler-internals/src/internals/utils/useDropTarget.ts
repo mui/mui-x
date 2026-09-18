@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import type {
   SchedulerEvent,
   SchedulerOccurrencePlaceholder,
@@ -286,11 +286,21 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     return;
   }
 
-  store.updateEvent(changes);
+  const result = store.updateEvent(changes);
+  if (!result.applied) {
+    // The drop has no other surface for the rejection.
+    store.pushError(result.rejection, { transient: true });
+    return;
+  }
 
-  // Sync the editing surface (if this occurrence is being edited) with the committed times.
+  // Sync the editing surface (if this occurrence is being edited) with the committed times:
+  // the scheduling plugin can clamp the drop, and its dates come in the data timezone.
   if (schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)) {
-    store.setEditingOccurrenceTimes(start, end);
+    const { displayTimezone } = store.state;
+    store.setEditingOccurrenceTimes(
+      adapter.setTimezone(result.changes.start ?? start, displayTimezone),
+      adapter.setTimezone(result.changes.end ?? end, displayTimezone),
+    );
   }
 }
 

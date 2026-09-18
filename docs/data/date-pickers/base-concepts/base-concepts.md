@@ -47,6 +47,12 @@ The Date and Time Pickers currently support the following date libraries:
 - [Luxon](https://moment.github.io/luxon/#/)
 - [Moment.js](https://momentjs.com/)
 
+:::warning
+Moment.js is a legacy project in maintenance mode.
+For new projects, consider using one of the other supported libraries.
+For more details, see the [Moment.js project status](https://momentjs.com/news/).
+:::
+
 :::info
 If you are using a non-Gregorian calendar (such as Jalali or Hijri), please refer to the [Support for other calendar systems](/x/react-date-pickers/calendar-systems/) page.
 :::

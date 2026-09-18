@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { EventCalendarPreferences, SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { initialEvents, resources } from '../../datasets/personal-agenda';
+import {
+  initialEvents,
+  resources,
+  defaultVisibleDate,
+} from '../../datasets/personal-agenda';
 
 const defaultPreferences: Partial<EventCalendarPreferences> = {
   ampm: false,
@@ -18,6 +22,7 @@ export default function DefaultPreferences() {
         events={events}
         resources={resources}
         defaultPreferences={defaultPreferences}
+        defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
       />
     </div>

@@ -7,9 +7,8 @@ import type {
   GridFilterOperator,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
-import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Filter', () => {
   const { render } = createRenderer();
@@ -1649,7 +1648,7 @@ describe('<DataGrid /> - Filter', () => {
       { id: 1, brand: 'Adidas' },
       { id: 2, brand: 'Puma' },
     ];
-    const onFilterModelChange = spy();
+    const onFilterModelChange = vi.fn();
 
     function Demo(props: Omit<DataGridProps, 'columns'>) {
       return (
@@ -1671,8 +1670,8 @@ describe('<DataGrid /> - Filter', () => {
 
     setProps({ columns: [{ field: 'id' }] });
     expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-    expect(onFilterModelChange.callCount).to.equal(2);
-    expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({ items: [] });
+    expect(onFilterModelChange.mock.calls.length).to.equal(2);
+    expect(onFilterModelChange.mock.lastCall?.[0]).to.deep.equal({ items: [] });
   });
 
   // See https://github.com/mui/mui-x/issues/9204
@@ -1684,7 +1683,7 @@ describe('<DataGrid /> - Filter', () => {
       { id: 2, brand: 'Puma' },
     ];
 
-    const onFilterModelChange = spy();
+    const onFilterModelChange = vi.fn();
 
     function Demo(props: Omit<DataGridProps, 'columns'>) {
       return (
@@ -1711,6 +1710,6 @@ describe('<DataGrid /> - Filter', () => {
       },
     });
     expect(getColumnValues(0)).to.deep.equal(['1']);
-    expect(onFilterModelChange.callCount).to.equal(0);
+    expect(onFilterModelChange.mock.calls.length).to.equal(0);
   });
 });
