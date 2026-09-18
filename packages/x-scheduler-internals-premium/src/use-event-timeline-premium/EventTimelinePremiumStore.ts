@@ -33,10 +33,7 @@ import {
   EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS,
   getPresetPxPerDay,
 } from '../internals/utils/preset-utils';
-import {
-  buildDependenciesState,
-  classifyDependencyEvent,
-} from '../internals/utils/dependency-utils';
+import { buildDependenciesState, isDependencyActive } from '../internals/utils/dependency-utils';
 
 // Sorted by descending px/day (most zoomed-in first). Each preset's `(timeResolution,
 // tickWidth)` must produce a unique px/day — otherwise the order is decided by
@@ -243,11 +240,7 @@ export class EventTimelinePremiumStore<
         return;
       }
       const dependency = dependencyModelLookup.get(selection.id);
-      if (
-        dependency === undefined ||
-        classifyDependencyEvent(processedEventLookup, dependency.source) !== 'ok' ||
-        classifyDependencyEvent(processedEventLookup, dependency.target) !== 'ok'
-      ) {
+      if (dependency === undefined || !isDependencyActive(processedEventLookup, dependency)) {
         this.setSelection(null);
       }
     };
