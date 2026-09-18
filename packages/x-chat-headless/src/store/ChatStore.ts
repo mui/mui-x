@@ -1,4 +1,5 @@
 import { Store } from '@mui/x-internals/store';
+import { disposeSymbol } from '@mui/x-internals/disposable';
 import type {
   ChatConversation,
   ChatDraftAttachment,
@@ -284,23 +285,17 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.update(newState);
   };
 
-  /**
-   * Returns a cleanup function to be used as a React effect teardown.
-   * Called by `useChatInstance` when the store instance changes or the component unmounts.
-   */
-  public disposeEffect = (): (() => void) => {
-    return () => {
-      this.state.activeStreamAbortController?.abort();
+  [disposeSymbol](): void {
+    this.state.activeStreamAbortController?.abort();
 
-      if (this.state.activeStreamAbortController || this.state.isStreaming) {
-        this.update({
-          activeStreamAbortController: null,
-          isStreaming: false,
-          streamingConversationId: undefined,
-        });
-      }
-    };
-  };
+    if (this.state.activeStreamAbortController || this.state.isStreaming) {
+      this.update({
+        activeStreamAbortController: null,
+        isStreaming: false,
+        streamingConversationId: undefined,
+      });
+    }
+  }
 
   public registerStoreEffect = <Value>(
     selector: (state: ChatInternalState<Cursor>) => Value,
