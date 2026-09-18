@@ -502,3 +502,11 @@ export interface SchedulerEventCreationConfig {
    */
   canHaveMultipleResources?: boolean;
 }
+
+export interface SchedulerEventDeletionConfig {
+  /**
+   * Whether a confirmation dialog is shown before deleting a non-recurring event.
+   * @default true
+   */
+  confirmation: boolean;
+}

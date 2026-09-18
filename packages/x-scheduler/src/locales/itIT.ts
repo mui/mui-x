@@ -19,6 +19,7 @@ const itITDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Elimina evento',
+  // deleteConfirmationTitle: 'Delete this event?',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',

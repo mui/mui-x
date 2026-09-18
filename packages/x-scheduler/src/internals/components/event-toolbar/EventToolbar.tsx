@@ -74,8 +74,9 @@ export function EventToolbar(props: EventToolbarProps) {
     );
   };
 
-  // Mirrors `FormContent`'s delete: recurring events open the scope dialog (which closes the surface
-  // on submit); single events delete immediately and close.
+  // Mirrors `FormContent`'s delete: recurring events open the scope dialog; non-recurring events go
+  // through the delete confirmation dialog (unless `eventDeletion={{ confirmation: false }}`). Either
+  // way the surface only closes once the deletion is actually submitted.
   const handleDelete = () => {
     if (areRecurringEventsAvailable && occurrence.displayTimezone.rrule) {
       store.deleteRecurringEvent({
@@ -86,8 +87,10 @@ export function EventToolbar(props: EventToolbarProps) {
       return;
     }
 
-    store.deleteEvent(occurrence.id);
-    stopEditing();
+    store.requestEventDeletion({
+      eventId: occurrence.id,
+      onSubmit: stopEditing,
+    });
   };
 
   return (

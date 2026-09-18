@@ -481,8 +481,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       return;
     }
 
-    store.deleteEvent(occurrence.id);
-    onClose();
+    store.requestEventDeletion({
+      eventId: occurrence.id,
+      onSubmit: onClose,
+    });
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
