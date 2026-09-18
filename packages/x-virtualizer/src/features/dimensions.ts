@@ -7,8 +7,17 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { Store, useStore, createSelectorMemoized } from '@mui/x-internals/store';
-import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
+import { Store, useStore } from '@mui/x-internals/store';
+import {
+  ColumnWithWidth,
+  ColumnsMetaState,
+  DimensionsState,
+  PinnedColumns,
+  RowId,
+  RowEntry,
+  RowsMetaState,
+  Size,
+} from '../models';
 import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
@@ -21,9 +30,6 @@ const OSCILLATION_FLIP_WINDOW_MS = 100;
 
 export type DimensionsParams = {
   rowHeight: number;
-  columnsTotalWidth?: number;
-  leftPinnedWidth?: number;
-  rightPinnedWidth?: number;
   topPinnedHeight?: number;
   bottomPinnedHeight?: number;
   autoHeight?: boolean;
@@ -43,9 +49,6 @@ const EMPTY_DIMENSIONS: DimensionsState = {
   scrollbarSize: 0,
   rowWidth: 0,
   rowHeight: 0,
-  columnsTotalWidth: 0,
-  leftPinnedWidth: 0,
-  rightPinnedWidth: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
   autoHeight: false,
@@ -56,31 +59,17 @@ const selectors = {
   rootSize: (state: BaseState) => state.rootSize,
   dimensions: (state: BaseState) => state.dimensions,
   rowHeight: (state: BaseState) => state.dimensions.rowHeight,
-  columnsTotalWidth: (state: BaseState) => state.dimensions.columnsTotalWidth,
+  columnsTotalWidth: (state: BaseState) => state.dimensions.contentSize.width,
   contentHeight: (state: BaseState) => state.dimensions.contentSize.height,
   autoHeight: (state: BaseState) => state.dimensions.autoHeight,
   minimalContentHeight: (state: BaseState) => state.dimensions.minimalContentHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
   rowPositions: (state: BaseState) => state.rowsMeta.positions,
-  // Memoized on the columns alone.
-  // Without an input selector, the whole state is the memoization key.
-  columnPositions: createSelectorMemoized(
-    () => undefined,
-    (_, columns: ColumnWithWidth[]) => {
-      const positions: number[] = [];
-      let currentPosition = 0;
-
-      for (let i = 0; i < columns.length; i += 1) {
-        positions.push(currentPosition);
-        currentPosition += columns[i].computedWidth;
-      }
-
-      return positions;
-    },
-  ),
+  columnsMeta: (state: BaseState) => state.columnsMeta,
+  columnPositions: (state: BaseState) => state.columnsMeta.positions,
   needsHorizontalScrollbar: (state: BaseState) =>
     state.dimensions.viewportInnerSize.width > 0 &&
-    state.dimensions.columnsTotalWidth > state.dimensions.viewportInnerSize.width,
+    state.dimensions.contentSize.width > state.dimensions.viewportInnerSize.width,
   needsVerticalScrollbar: (state: BaseState) =>
     state.dimensions.viewportInnerSize.height > 0 &&
     state.dimensions.contentSize.height > state.dimensions.viewportInnerSize.height,
@@ -96,21 +85,23 @@ export namespace Dimensions {
     rootSize: Size;
     dimensions: DimensionsState;
     rowsMeta: RowsMetaState;
+    columnsMeta: ColumnsMetaState;
     rowHeights: Map<any, any>; // FIXME: typing
   };
   export type API = ReturnType<typeof useDimensions>;
 }
 
 function initializeState(params: ParamsWithDefaults): Dimensions.State {
-  const { rowCount, rows, getRowHeight, dimensions: dimensionsParams } = params;
   const {
-    columnsTotalWidth,
-    rowHeight,
-    autoHeight,
-    minimalContentHeight,
-    topPinnedHeight,
-    bottomPinnedHeight,
-  } = dimensionsParams;
+    rowCount,
+    rows,
+    columns,
+    pinnedColumns,
+    getRowHeight,
+    dimensions: dimensionsParams,
+  } = params;
+  const { rowHeight, autoHeight, minimalContentHeight, topPinnedHeight, bottomPinnedHeight } =
+    dimensionsParams;
 
   // Calculate the initial content height and row positions so the
   // initial render gets the correct size.
@@ -136,6 +127,8 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
   const topContainerHeight = topPinnedHeight;
   const bottomContainerHeight = bottomPinnedHeight;
 
+  const columnsMeta = computeColumnsMeta(columns, pinnedColumns);
+
   const dimensions = {
     ...EMPTY_DIMENSIONS,
     ...dimensionsParams,
@@ -144,7 +137,7 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
     topContainerHeight,
     bottomContainerHeight,
     contentSize: {
-      width: columnsTotalWidth,
+      width: roundToDecimalPlaces(columnsMeta.totalWidth, 1),
       height: roundToDecimalPlaces(currentPageTotalHeight, 1),
     },
   };
@@ -162,8 +155,37 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
     rootSize: Size.EMPTY,
     dimensions,
     rowsMeta,
+    columnsMeta,
     rowHeights,
   };
+}
+
+function computeColumnsMeta(
+  columns: ColumnWithWidth[],
+  pinnedColumns: PinnedColumns | undefined,
+): ColumnsMetaState {
+  // The pinned columns are the first and last entries of `columns`.
+  const pinnedLeftCount = pinnedColumns?.left.length ?? 0;
+  const firstPinnedRightIndex = columns.length - (pinnedColumns?.right.length ?? 0);
+
+  const positions: number[] = [];
+  let totalWidth = 0;
+  let pinnedLeftColumnsTotalWidth = 0;
+  let pinnedRightColumnsTotalWidth = 0;
+
+  for (let i = 0; i < columns.length; i += 1) {
+    const width = columns[i].computedWidth;
+    positions.push(totalWidth);
+    totalWidth += width;
+    if (i < pinnedLeftCount) {
+      pinnedLeftColumnsTotalWidth += width;
+    }
+    if (i >= firstPinnedRightIndex) {
+      pinnedRightColumnsTotalWidth += width;
+    }
+  }
+
+  return { positions, totalWidth, pinnedLeftColumnsTotalWidth, pinnedRightColumnsTotalWidth };
 }
 
 function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
@@ -185,14 +207,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
 
   const {
     layout,
-    dimensions: {
-      rowHeight,
-      columnsTotalWidth,
-      leftPinnedWidth,
-      rightPinnedWidth,
-      topPinnedHeight,
-      bottomPinnedHeight,
-    },
+    dimensions: { rowHeight, topPinnedHeight, bottomPinnedHeight },
     onResize,
   } = params;
 
@@ -208,6 +223,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       const containerNode = layout.refs.container.current;
       const rootSize = selectors.rootSize(store.state);
       const rowsMeta = selectors.rowsMeta(store.state);
+      const columnsMeta = selectors.columnsMeta(store.state);
+      const columnsTotalWidth = roundToDecimalPlaces(columnsMeta.totalWidth, 1);
 
       // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
       // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
@@ -357,9 +374,6 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         scrollbarSize,
         rowWidth,
         rowHeight,
-        columnsTotalWidth,
-        leftPinnedWidth,
-        rightPinnedWidth,
         topContainerHeight,
         bottomContainerHeight,
         autoHeight: params.dimensions.autoHeight,
@@ -385,9 +399,6 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       params.disableVerticalScroll,
       onResize,
       rowHeight,
-      columnsTotalWidth,
-      leftPinnedWidth,
-      rightPinnedWidth,
       topPinnedHeight,
       bottomPinnedHeight,
     ],
@@ -414,6 +425,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
   }, [store, params.dimensions.autoHeight, params.dimensions.minimalContentHeight]);
 
   const rowsMeta = useRowsMeta(store, params, updateDimensions);
+  useColumnsMeta(store, params, updateDimensions);
 
   return {
     updateDimensions,
@@ -654,6 +666,35 @@ function useRowsMeta(
     getLastMeasuredRowIndex,
     resetRowHeights,
   };
+}
+
+function useColumnsMeta(
+  store: Store<BaseState>,
+  params: ParamsWithDefaults,
+  updateDimensions: Function,
+) {
+  const { columns, pinnedColumns } = params;
+
+  // Builds the columns meta data: total width, pinned widths and positions.
+  useLayoutEffect(() => {
+    const columnsMeta = computeColumnsMeta(columns, pinnedColumns);
+    const prevColumnsMeta = store.state.columnsMeta;
+
+    const didWidthsChange =
+      columnsMeta.totalWidth !== prevColumnsMeta.totalWidth ||
+      columnsMeta.pinnedLeftColumnsTotalWidth !== prevColumnsMeta.pinnedLeftColumnsTotalWidth ||
+      columnsMeta.pinnedRightColumnsTotalWidth !== prevColumnsMeta.pinnedRightColumnsTotalWidth;
+
+    // New columns often keep their widths and order, for example when only a label changes.
+    if (!didWidthsChange && isDeepEqual(prevColumnsMeta.positions, columnsMeta.positions)) {
+      return;
+    }
+
+    store.set('columnsMeta', columnsMeta);
+    if (didWidthsChange) {
+      updateDimensions();
+    }
+  }, [store, columns, pinnedColumns, updateDimensions]);
 }
 
 export function observeRootNode(
