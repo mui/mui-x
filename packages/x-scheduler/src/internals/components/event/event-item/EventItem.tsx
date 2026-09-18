@@ -251,33 +251,17 @@ export const EventItem = React.forwardRef(function EventItem(
                 </EventItemTitle>
               </EventItemCardContent>
             </EventItemLinesClamp>
-            {isRecurring && (
-              <EventItemRecurringIcon
-                className={classes.eventItemRecurringIcon}
-                aria-hidden="true"
-                fontSize="small"
-              />
-            )}
           </React.Fragment>
         );
 
       case 'filled':
         return (
-          <React.Fragment>
-            <EventItemLinesClamp
-              className={classes.eventItemLinesClamp}
-              style={{ '--number-of-lines': 1 } as React.CSSProperties}
-            >
-              <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
-            </EventItemLinesClamp>
-            {isRecurring && (
-              <EventItemRecurringIcon
-                className={classes.eventItemRecurringIcon}
-                aria-hidden="true"
-                fontSize="small"
-              />
-            )}
-          </React.Fragment>
+          <EventItemLinesClamp
+            className={classes.eventItemLinesClamp}
+            style={{ '--number-of-lines': 1 } as React.CSSProperties}
+          >
+            <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
+          </EventItemLinesClamp>
         );
       case 'regular':
         return (
@@ -302,13 +286,6 @@ export const EventItem = React.forwardRef(function EventItem(
                 </EventItemTitle>
               </EventItemCardContent>
             </EventItemLinesClamp>
-            {isRecurring && (
-              <EventItemRecurringIcon
-                className={classes.eventItemRecurringIcon}
-                aria-hidden="true"
-                fontSize="small"
-              />
-            )}
           </React.Fragment>
         );
       default:
@@ -318,7 +295,7 @@ export const EventItem = React.forwardRef(function EventItem(
             'Check the component documentation for supported variants.',
         );
     }
-  }, [variant, resource?.title, localeText, formatTime, occurrence, isRecurring, classes]);
+  }, [variant, resource?.title, localeText, formatTime, occurrence, classes]);
 
   return (
     <Button
@@ -341,6 +318,13 @@ export const EventItem = React.forwardRef(function EventItem(
     >
       <EventItemCardWrapper className={classes.eventItemCardWrapper} data-variant={variant}>
         {content}
+        {isRecurring && (
+          <EventItemRecurringIcon
+            className={classes.eventItemRecurringIcon}
+            aria-hidden="true"
+            fontSize="small"
+          />
+        )}
       </EventItemCardWrapper>
     </Button>
   );
