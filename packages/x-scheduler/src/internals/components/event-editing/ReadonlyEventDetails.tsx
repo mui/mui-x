@@ -9,7 +9,6 @@ import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-intern
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
-  schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -120,7 +119,6 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     occurrence.displayTimezone.rrule,
     occurrence.displayTimezone.start,
   );
-  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
   // Feature hook
   const formatTime = useFormatTime();
@@ -183,7 +181,7 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
           )}
         </Typography>
       </EventDialogDateTimeContainer>
-      {showRecurrence && defaultRecurrenceKey != null && (
+      {defaultRecurrenceKey != null && (
         <RecurrenceLabelContainer className={classes.eventDialogRecurrenceLabelContainer}>
           <RepeatRoundedIcon className={classes.eventDialogRecurrenceIcon} fontSize="small" />
           <Typography
