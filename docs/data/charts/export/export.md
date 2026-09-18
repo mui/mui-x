@@ -129,6 +129,36 @@ You can disable this behavior by setting the `copyStyles` property to `false` in
 <BarChartPro slotProps={{ toolbar: { printOptions: { copyStyles: false } } }} />
 ```
 
+### Stylesheets that fail to load
+
+When a stylesheet, or a stylesheet it imports, fails to load in the export iframe, for example because a request fails or a [Content Security Policy](/x/react-charts/content-security-policy/) blocks it, the export continues.
+The result may be missing some styles, and a warning is logged in development.
+
+To handle the failure yourself, use the `onStylesheetError` callback.
+It receives the `<link>` element that failed to load, or whose import failed to load:
+
+- Return or resolve to `false` to cancel the export. Nothing is exported, no error is logged, and the promise returned by `exportAsImage()` or `exportAsPrint()` resolves.
+- Throw an error or reject to make the export fail. The promise returned by `exportAsImage()` or `exportAsPrint()` rejects with that error, see [Handling export errors](#handling-export-errors).
+- Return anything else to continue the export.
+- Return a promise to make the export wait for it, for example while you add replacement styles to `link.ownerDocument`.
+
+With the toolbar, the export is started for you, so cancel with `false` and report the failure from the callback:
+
+```tsx
+<BarChartPro
+  slotProps={{
+    toolbar: {
+      printOptions: {
+        onStylesheetError: (link) => {
+          showNotification(`The stylesheet ${link.href} failed to load.`);
+          return false;
+        },
+      },
+    },
+  }}
+/>
+```
+
 ## Exporting composed charts
 
 MUI X Charts may be [self-contained](/x/react-charts/quickstart/#self-contained-charts) or [composed of various subcomponents](/x/react-charts/quickstart/#composable-charts).
@@ -174,6 +204,19 @@ When omitted, the export uses the larger of `window.devicePixelRatio` and `2`, g
 
 ```tsx
 apiRef.current?.exportAsImage({ pixelRatio: 3 });
+```
+
+### Handling export errors
+
+`exportAsPrint()` and `exportAsImage()` return a promise that rejects when the export fails, for example when a [Content Security Policy](/x/react-charts/content-security-policy/) blocks the styles the export needs, or when [`onStylesheetError`](#stylesheets-that-fail-to-load) stops the export.
+Handle the rejection to report the failure to your users.
+
+```tsx
+try {
+  await apiRef.current?.exportAsImage();
+} catch (error) {
+  // Report the failed export.
+}
 ```
 
 {{"demo": "ExportChartAsImage.js"}}

@@ -18,6 +18,11 @@
     "hideFooter": { "type": { "description": "boolean" }, "default": "false" },
     "hideToolbar": { "type": { "description": "boolean" }, "default": "false" },
     "includeCheckboxes": { "type": { "description": "boolean" }, "default": "false" },
+    "onStylesheetError": {
+      "type": {
+        "description": "(element: HTMLLinkElement) =&gt; Promise&lt;boolean | void&gt; | boolean | void"
+      }
+    },
     "pageStyle": { "type": { "description": "string | (() =&gt; string)" } }
   }
 }

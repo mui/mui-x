@@ -13,6 +13,12 @@
     "onBeforeExport": {
       "type": { "description": "(iframe: HTMLIFrameElement) =&gt; Promise&lt;void&gt; | void" },
       "isProPlan": true
+    },
+    "onStylesheetError": {
+      "type": {
+        "description": "(element: HTMLLinkElement) =&gt; Promise&lt;boolean | void&gt; | boolean | void"
+      },
+      "isProPlan": true
     }
   }
 }
