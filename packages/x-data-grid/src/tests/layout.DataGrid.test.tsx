@@ -909,6 +909,16 @@ describe('<DataGrid /> - Layout & warnings', () => {
         render(<DataGrid {...baselineProps} height={300} sx={{ height: 150 }} />);
         expect(getComputedStyle(grid('root')!).height).to.equal('150px');
       });
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      it('should resolve the root element to the given height inside a flex column container', () => {
+        render(
+          <div style={{ display: 'flex', flexDirection: 'column', height: 500 }}>
+            <DataGrid {...baselineProps} height={300} />
+          </div>,
+        );
+        expect(getComputedStyle(grid('root')!).height).to.equal('300px');
+      });
     });
 
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
