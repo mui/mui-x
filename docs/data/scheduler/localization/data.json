@@ -3,7 +3,7 @@
     "languageTag": "ar-SD",
     "importName": "arSD",
     "localeName": "Arabic (Sudan)",
-    "missingKeysCount": 105,
+    "missingKeysCount": 0,
     "totalKeysCount": 105,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/arSD.ts"
   },
