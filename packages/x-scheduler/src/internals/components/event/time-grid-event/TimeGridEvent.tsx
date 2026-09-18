@@ -467,13 +467,8 @@ const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlacehol
 
   const { classes } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const {
-    isRecurring,
-    isLessThan30Minutes,
-    isBetween30and60Minutes,
-    rootDataAttributes,
-    rootPositionProps,
-  } = useTimeGridEvent(occurrence);
+  const { isRecurring, isStacked, rootDataAttributes, rootPositionProps } =
+    useTimeGridEvent(occurrence);
 
   // Creation / internal-resize placeholders host sizing handles; move placeholders don't. Suppressed
   // in `edit` mode where the form owns the times — matching the regular event (see `useTimeGridEvent`).
@@ -482,8 +477,6 @@ const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlacehol
   const placeholderHasResizeHandles =
     (placeholderType === 'creation' || placeholderType === 'internal-resize') &&
     editingMode !== 'edit';
-
-  const isStacked = !isLessThan30Minutes && !isBetween30and60Minutes;
 
   return (
     <TimeGridEventPlaceholderRoot
@@ -534,8 +527,7 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
     isDraggable,
     isStartResizable,
     isEndResizable,
-    isLessThan30Minutes,
-    isBetween30and60Minutes,
+    isStacked,
     rootDataAttributes,
     rootPositionProps,
   } = useTimeGridEvent(occurrence);
@@ -544,8 +536,6 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
   // outline; inert on a mouse. Editing = the surface is open for it (either mode), for the selected look.
   const isArmed = useStore(store, schedulerOtherSelectors.isEditedOccurrenceArmed, occurrence.key);
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
-
-  const isStacked = !isLessThan30Minutes && !isBetween30and60Minutes;
 
   return (
     <TimeGridEventRoot
