@@ -10,7 +10,7 @@ import { platform } from '@base-ui/utils/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
 import useRefCallback from '../../utils/useRefCallback';
-import { PinnedRows, PinnedColumns, Size } from '../../models/core';
+import { PinnedRows, PinnedColumns } from '../../models/core';
 import type { CellColSpanInfo } from '../../models/colspan';
 import { Dimensions, observeRootNode } from '../dimensions';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
@@ -879,38 +879,9 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     }
   }, [layout.refs.scroller, columnsTotalWidth, contentHeight]);
 
-  const isFirstSizing = React.useRef(true);
-
   const containerRef = useRefCallback((node: HTMLDivElement | null) => {
     layout.refs.container.current = node;
-    const unsubscribe = observeRootNode(node, store, (rootSize: Size) => {
-      if (
-        rootSize.width === 0 &&
-        rootSize.height === 0 &&
-        store.state.rootSize.height !== 0 &&
-        store.state.rootSize.width !== 0
-      ) {
-        return;
-      }
-      const dimensions = store.state.dimensions;
-      const contentFitsAfterGrowth =
-        rootSize.height > store.state.rootSize.height &&
-        rootSize.width === store.state.rootSize.width &&
-        dimensions.hasScrollY &&
-        rootSize.height >=
-          dimensions.minimumSize.height + (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
-      store.state.rootSize = rootSize;
-      // Content growth can predict a scrollbar before the container grows with it.
-      // Correct that prediction immediately once the observed height fits all content.
-      // Other resizes retain the throttle (https://github.com/mui/mui-x/issues/23573).
-      if (isFirstSizing.current || contentFitsAfterGrowth || !api.debouncedUpdateDimensions) {
-        // We want to initialize the grid dimensions as soon as possible to avoid flickering
-        api.updateDimensions(isFirstSizing.current);
-        isFirstSizing.current = false;
-      } else {
-        api.debouncedUpdateDimensions();
-      }
-    });
+    const unsubscribe = observeRootNode(node, store, api.setRootSize);
     return () => {
       unsubscribe?.();
       layout.refs.container.current = null;

@@ -31,6 +31,21 @@ export type DimensionsParams = {
   scrollbarSize?: number;
 };
 
+type ScrollYOscillation = {
+  counter: number;
+  heights: { content: number; pinnedTop: number; pinnedBottom: number };
+  lastFlipTimestamp: number;
+};
+
+// A computed dimensions update that has not been committed to the store yet.
+type PendingDimensionsUpdate = {
+  dimensions: DimensionsState;
+  scrollYOscillation: ScrollYOscillation;
+  // The update changes the height the root takes in a layout that grows with
+  // its content: rows, pinned rows or the horizontal scrollbar filler.
+  changesIntrinsicHeight: boolean;
+};
+
 const EMPTY_DIMENSIONS: DimensionsState = {
   isReady: false,
   root: Size.EMPTY,
@@ -172,11 +187,22 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
   // Only vertical scrollbar can oscillate because column widths are never 'auto'.
   // https://github.com/mui/mui-x/issues/20539
   // https://github.com/mui/mui-x/issues/22510
-  const scrollYOscillation = React.useRef({
+  const scrollYOscillation = React.useRef<ScrollYOscillation>({
     counter: 0,
     heights: { content: 0, pinnedTop: 0, pinnedBottom: 0 },
     lastFlipTimestamp: 0,
   });
+
+  // Set when a committed update changed the intrinsic height of the root. The
+  // stored rootSize is then possibly stale: the ResizeObserver reports the
+  // reaction of a layout that grows with its content only once the browser
+  // has laid out this update, so the dimensions computed here may reserve a
+  // vertical scrollbar the grown root does not need. That correction has to
+  // land in the same frame, before paint. Going through the resize throttle
+  // instead paints the reserved scrollbar width for the whole throttle window,
+  // visible as a flex column jump. See setRootSize.
+  // https://github.com/mui/mui-x/issues/23573
+  const rootSizeMayBeStale = React.useRef(false);
 
   const {
     layout,
@@ -191,210 +217,277 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     onResize,
   } = params;
 
-  const updateDimensions = React.useCallback(
-    (firstUpdate?: boolean) => {
-      if (firstUpdate) {
-        isFirstSizing.current = false;
-      }
-      if (isFirstSizing.current) {
-        return;
-      }
+  const computeDimensions = React.useCallback((): PendingDimensionsUpdate | null => {
+    if (isFirstSizing.current) {
+      return null;
+    }
 
-      const containerNode = layout.refs.container.current;
-      const rootSize = selectors.rootSize(store.state);
-      const rowsMeta = selectors.rowsMeta(store.state);
+    const containerNode = layout.refs.container.current;
+    const rootSize = selectors.rootSize(store.state);
+    const rowsMeta = selectors.rowsMeta(store.state);
 
-      // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
-      // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
-      // https://github.com/mui/mui-x/issues/15721
-      // Prefer measuring on a virtual-scrollbar widget when the layout exposes
-      // one, because its `scrollbar-width` / `::-webkit-scrollbar` styling may
-      // differ from the rest of the document and is what actually drives the
-      // size we care about for layout math.
-      const scrollbarMeasurementNode =
-        layout.refs.scrollbarVertical?.current ??
-        layout.refs.scrollbarHorizontal?.current ??
-        containerNode;
-      const scrollbarSize = measureScrollbarSize(
-        scrollbarMeasurementNode,
-        params.dimensions.scrollbarSize,
-      );
-
-      const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
-      const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
-
-      const contentSize = {
-        width: columnsTotalWidth,
-        height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
-      };
-
-      const prevDimensions = store.state.dimensions;
-
-      let viewportOuterSize: Size;
-      let viewportInnerSize: Size;
-      let hasScrollX = false;
-      let hasScrollY = false;
-
-      if (params.dimensions.autoHeight) {
-        hasScrollY = false;
-        hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
-
-        viewportOuterSize = {
-          width: rootSize.width,
-          height: topContainerHeight + bottomContainerHeight + contentSize.height,
-        };
-        viewportInnerSize = {
-          width: Math.max(0, viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0)),
-          height: Math.max(0, viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0)),
-        };
-      } else {
-        viewportOuterSize = {
-          width: rootSize.width,
-          height: rootSize.height,
-        };
-        viewportInnerSize = {
-          width: Math.max(0, viewportOuterSize.width),
-          height: Math.max(
-            0,
-            viewportOuterSize.height - topContainerHeight - bottomContainerHeight,
-          ),
-        };
-
-        const content = contentSize;
-        const container = viewportInnerSize;
-
-        const hasScrollXIfNoYScrollBar = content.width > container.width;
-        const hasScrollYIfNoXScrollBar = content.height > container.height;
-
-        if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
-          hasScrollY = hasScrollYIfNoXScrollBar;
-          hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
-
-          // We recalculate the scroll y to consider the size of the x scrollbar.
-          if (hasScrollX) {
-            hasScrollY = content.height + scrollbarSize > container.height;
-          }
-        }
-
-        // Detect vertical scrollbar oscillation — caused by stale rootSize or
-        // the horizontal scrollbar's height cascading. See scrollYOscillation.
-        {
-          const osc = scrollYOscillation.current;
-          const heightsChanged =
-            rowsMeta.currentPageTotalHeight !== osc.heights.content ||
-            rowsMeta.pinnedTopRowsTotalHeight !== osc.heights.pinnedTop ||
-            rowsMeta.pinnedBottomRowsTotalHeight !== osc.heights.pinnedBottom;
-
-          if (heightsChanged) {
-            osc.counter = 0;
-            osc.heights = {
-              content: rowsMeta.currentPageTotalHeight,
-              pinnedTop: rowsMeta.pinnedTopRowsTotalHeight,
-              pinnedBottom: rowsMeta.pinnedBottomRowsTotalHeight,
-            };
-          }
-
-          if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
-            // performance.now is monotonic; Date.now can jump (NTP, clock change).
-            const now = performance.now();
-            if (now - osc.lastFlipTimestamp > OSCILLATION_FLIP_WINDOW_MS) {
-              osc.counter = 0;
-            }
-            osc.lastFlipTimestamp = now;
-            if (!heightsChanged) {
-              osc.counter += 1;
-            }
-            if (osc.counter >= 2) {
-              hasScrollY = false;
-              // Recompute hasScrollX without the vertical scrollbar's width impact,
-              // otherwise the cascade (hasScrollY → narrower viewport → hasScrollX)
-              // keeps the horizontal scrollbar/filler alive and the root keeps resizing.
-              hasScrollX = hasScrollXIfNoYScrollBar;
-            }
-          }
-        }
-
-        if (hasScrollY) {
-          viewportInnerSize.width -= scrollbarSize;
-        }
-        if (hasScrollX) {
-          viewportInnerSize.height -= scrollbarSize;
-        }
-      }
-
-      if (params.disableHorizontalScroll) {
-        hasScrollX = false;
-      }
-
-      if (params.disableVerticalScroll) {
-        hasScrollY = false;
-      }
-
-      const rowWidth = Math.max(
-        viewportOuterSize.width,
-        columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
-      );
-
-      const minimumSize = {
-        width: columnsTotalWidth,
-        height: topContainerHeight + contentSize.height + bottomContainerHeight,
-      };
-
-      const newDimensions: DimensionsState = {
-        isReady: true,
-        root: rootSize,
-        viewportOuterSize,
-        viewportInnerSize,
-        contentSize,
-        minimumSize,
-        hasScrollX,
-        hasScrollY,
-        scrollbarSize,
-        rowWidth,
-        rowHeight,
-        columnsTotalWidth,
-        leftPinnedWidth,
-        rightPinnedWidth,
-        topContainerHeight,
-        bottomContainerHeight,
-        autoHeight: params.dimensions.autoHeight,
-        minimalContentHeight: params.dimensions.minimalContentHeight,
-      };
-
-      if (isDeepEqual(prevDimensions as any, newDimensions)) {
-        return;
-      }
-
-      store.update({ dimensions: newDimensions });
-      onResize?.(newDimensions.root);
-    },
-    [
-      store,
-      layout.refs.container,
-      layout.refs.scrollbarHorizontal,
-      layout.refs.scrollbarVertical,
+    // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
+    // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
+    // https://github.com/mui/mui-x/issues/15721
+    // Prefer measuring on a virtual-scrollbar widget when the layout exposes
+    // one, because its `scrollbar-width` / `::-webkit-scrollbar` styling may
+    // differ from the rest of the document and is what actually drives the
+    // size we care about for layout math.
+    const scrollbarMeasurementNode =
+      layout.refs.scrollbarVertical?.current ??
+      layout.refs.scrollbarHorizontal?.current ??
+      containerNode;
+    const scrollbarSize = measureScrollbarSize(
+      scrollbarMeasurementNode,
       params.dimensions.scrollbarSize,
-      params.dimensions.autoHeight,
-      params.dimensions.minimalContentHeight,
-      params.disableHorizontalScroll,
-      params.disableVerticalScroll,
-      onResize,
+    );
+
+    const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
+    const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
+
+    const contentSize = {
+      width: columnsTotalWidth,
+      height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
+    };
+
+    const prevDimensions = store.state.dimensions;
+
+    // The oscillation detector state is committed together with the update
+    // (see commitDimensions), so a discarded update leaves no trace.
+    let scrollYOscillationNext = scrollYOscillation.current;
+
+    let viewportOuterSize: Size;
+    let viewportInnerSize: Size;
+    let hasScrollX = false;
+    let hasScrollY = false;
+
+    if (params.dimensions.autoHeight) {
+      hasScrollY = false;
+      hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
+
+      viewportOuterSize = {
+        width: rootSize.width,
+        height: topContainerHeight + bottomContainerHeight + contentSize.height,
+      };
+      viewportInnerSize = {
+        width: Math.max(0, viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0)),
+        height: Math.max(0, viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0)),
+      };
+    } else {
+      viewportOuterSize = {
+        width: rootSize.width,
+        height: rootSize.height,
+      };
+      viewportInnerSize = {
+        width: Math.max(0, viewportOuterSize.width),
+        height: Math.max(0, viewportOuterSize.height - topContainerHeight - bottomContainerHeight),
+      };
+
+      const content = contentSize;
+      const container = viewportInnerSize;
+
+      const hasScrollXIfNoYScrollBar = content.width > container.width;
+      const hasScrollYIfNoXScrollBar = content.height > container.height;
+
+      if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
+        hasScrollY = hasScrollYIfNoXScrollBar;
+        hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
+
+        // We recalculate the scroll y to consider the size of the x scrollbar.
+        if (hasScrollX) {
+          hasScrollY = content.height + scrollbarSize > container.height;
+        }
+      }
+
+      // Detect vertical scrollbar oscillation — caused by stale rootSize or
+      // the horizontal scrollbar's height cascading. See scrollYOscillation.
+      {
+        const osc = { ...scrollYOscillation.current };
+        scrollYOscillationNext = osc;
+        const heightsChanged =
+          rowsMeta.currentPageTotalHeight !== osc.heights.content ||
+          rowsMeta.pinnedTopRowsTotalHeight !== osc.heights.pinnedTop ||
+          rowsMeta.pinnedBottomRowsTotalHeight !== osc.heights.pinnedBottom;
+
+        if (heightsChanged) {
+          osc.counter = 0;
+          osc.heights = {
+            content: rowsMeta.currentPageTotalHeight,
+            pinnedTop: rowsMeta.pinnedTopRowsTotalHeight,
+            pinnedBottom: rowsMeta.pinnedBottomRowsTotalHeight,
+          };
+        }
+
+        if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
+          // performance.now is monotonic; Date.now can jump (NTP, clock change).
+          const now = performance.now();
+          if (now - osc.lastFlipTimestamp > OSCILLATION_FLIP_WINDOW_MS) {
+            osc.counter = 0;
+          }
+          osc.lastFlipTimestamp = now;
+          if (!heightsChanged) {
+            osc.counter += 1;
+          }
+          if (osc.counter >= 2) {
+            hasScrollY = false;
+            // Recompute hasScrollX without the vertical scrollbar's width impact,
+            // otherwise the cascade (hasScrollY → narrower viewport → hasScrollX)
+            // keeps the horizontal scrollbar/filler alive and the root keeps resizing.
+            hasScrollX = hasScrollXIfNoYScrollBar;
+          }
+        }
+      }
+
+      if (hasScrollY) {
+        viewportInnerSize.width -= scrollbarSize;
+      }
+      if (hasScrollX) {
+        viewportInnerSize.height -= scrollbarSize;
+      }
+    }
+
+    if (params.disableHorizontalScroll) {
+      hasScrollX = false;
+    }
+
+    if (params.disableVerticalScroll) {
+      hasScrollY = false;
+    }
+
+    const rowWidth = Math.max(
+      viewportOuterSize.width,
+      columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
+    );
+
+    const minimumSize = {
+      width: columnsTotalWidth,
+      height: topContainerHeight + contentSize.height + bottomContainerHeight,
+    };
+
+    const newDimensions: DimensionsState = {
+      isReady: true,
+      root: rootSize,
+      viewportOuterSize,
+      viewportInnerSize,
+      contentSize,
+      minimumSize,
+      hasScrollX,
+      hasScrollY,
+      scrollbarSize,
+      rowWidth,
       rowHeight,
       columnsTotalWidth,
       leftPinnedWidth,
       rightPinnedWidth,
-      topPinnedHeight,
-      bottomPinnedHeight,
-    ],
+      topContainerHeight,
+      bottomContainerHeight,
+      autoHeight: params.dimensions.autoHeight,
+      minimalContentHeight: params.dimensions.minimalContentHeight,
+    };
+
+    if (isDeepEqual(prevDimensions as any, newDimensions)) {
+      return null;
+    }
+
+    return {
+      dimensions: newDimensions,
+      scrollYOscillation: scrollYOscillationNext,
+      changesIntrinsicHeight:
+        newDimensions.minimumSize.height !== prevDimensions.minimumSize.height ||
+        newDimensions.hasScrollX !== prevDimensions.hasScrollX,
+    };
+  }, [
+    store,
+    layout.refs.container,
+    layout.refs.scrollbarHorizontal,
+    layout.refs.scrollbarVertical,
+    params.dimensions.scrollbarSize,
+    params.dimensions.autoHeight,
+    params.dimensions.minimalContentHeight,
+    params.disableHorizontalScroll,
+    params.disableVerticalScroll,
+    rowHeight,
+    columnsTotalWidth,
+    leftPinnedWidth,
+    rightPinnedWidth,
+    topPinnedHeight,
+    bottomPinnedHeight,
+  ]);
+
+  const commitDimensions = React.useCallback(
+    (update: PendingDimensionsUpdate) => {
+      scrollYOscillation.current = update.scrollYOscillation;
+      if (update.changesIntrinsicHeight) {
+        rootSizeMayBeStale.current = true;
+      }
+      store.update({ dimensions: update.dimensions });
+      onResize?.(update.dimensions.root);
+    },
+    [store, onResize],
   );
+
+  const updateDimensions = React.useCallback(() => {
+    const update = computeDimensions();
+    if (update !== null) {
+      commitDimensions(update);
+    }
+  }, [computeDimensions, commitDimensions]);
 
   const { resizeThrottleMs } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
-  const debouncedUpdateDimensions = React.useMemo(
+  const throttledUpdateDimensions = React.useMemo(
     () => (resizeThrottleMs > 0 ? throttle(updateDimensionCallback, resizeThrottleMs) : undefined),
     [resizeThrottleMs, updateDimensionCallback],
   );
-  React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
+  React.useEffect(() => throttledUpdateDimensions?.clear, [throttledUpdateDimensions]);
+
+  const setRootSize = useEventCallback((rootSize: Size) => {
+    const previousRootSize = store.state.rootSize;
+    if (
+      rootSize.width === 0 &&
+      rootSize.height === 0 &&
+      previousRootSize.height !== 0 &&
+      previousRootSize.width !== 0
+    ) {
+      // The root collapsed (for example `display: none`): keep the last dimensions.
+      return;
+    }
+    store.state.rootSize = rootSize;
+
+    if (isFirstSizing.current) {
+      // Initialize the dimensions as soon as possible to avoid flickering.
+      isFirstSizing.current = false;
+      updateDimensionCallback();
+      return;
+    }
+    if (throttledUpdateDimensions === undefined) {
+      updateDimensionCallback();
+      return;
+    }
+
+    // See rootSizeMayBeStale. The reaction of a growing layout to our own
+    // content change is a height change at the same width.
+    const isReactionToContentChange =
+      rootSizeMayBeStale.current && rootSize.width === previousRootSize.width;
+    rootSizeMayBeStale.current = false;
+    if (isReactionToContentChange) {
+      const update = computeDimensions();
+      // Committing inside the ResizeObserver callback is only possible when the
+      // update does not resize the root again: toggling the horizontal
+      // scrollbar changes the root height through its filler, which the
+      // browser reports as a ResizeObserver loop error and delivers a frame
+      // later anyway. Such an update takes the throttled path like a resize.
+      if (update === null || update.dimensions.hasScrollX === store.state.dimensions.hasScrollX) {
+        // A pending throttled call would only repeat this update.
+        throttledUpdateDimensions.clear();
+        if (update !== null) {
+          commitDimensions(update);
+        }
+        return;
+      }
+    }
+    throttledUpdateDimensions();
+  });
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
@@ -412,7 +505,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
 
   return {
     updateDimensions,
-    debouncedUpdateDimensions,
+    setRootSize,
     rowsMeta,
   };
 }
