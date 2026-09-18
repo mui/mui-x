@@ -1,9 +1,9 @@
 import type * as React from 'react';
-import { Store } from '@base-ui/utils/store';
+import { Store, createSelectorMemoized } from '@base-ui/utils/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
-import type { EventDialogFormValues } from '../utils';
+import type { EventDialogFormValues, RangeFormKey } from '../utils';
 
 export interface EventDialogFormState<
   TValues extends Record<string, unknown> = EventDialogFormValues,
@@ -113,6 +113,29 @@ export const eventDialogFormSelectors = {
   error: (state: EventDialogFormState<Record<string, unknown>>, key: string) =>
     getOwn(state.errors, key),
   isSubmitting: (state: EventDialogFormState<Record<string, unknown>>) => state.isSubmitting,
+  /**
+   * The values `computeRange` reads, as one stable object per distinct combination.
+   */
+  rangeValues: createSelectorMemoized(
+    (state: EventDialogFormState<Record<string, unknown>>) => state.values.startDate,
+    (state: EventDialogFormState<Record<string, unknown>>) => state.values.startTime,
+    (state: EventDialogFormState<Record<string, unknown>>) => state.values.endDate,
+    (state: EventDialogFormState<Record<string, unknown>>) => state.values.endTime,
+    (state: EventDialogFormState<Record<string, unknown>>) => state.values.allDay,
+    (
+      startDate,
+      startTime,
+      endDate,
+      endTime,
+      allDay,
+    ): Pick<EventDialogFormValues, RangeFormKey> => ({
+      startDate: startDate as string,
+      startTime: startTime as string,
+      endDate: endDate as string,
+      endTime: endTime as string,
+      allDay: allDay as boolean,
+    }),
+  ),
 };
 
 /**

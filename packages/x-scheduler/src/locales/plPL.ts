@@ -43,6 +43,7 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   recurrenceRepeatLabel: 'Powtarzaj',
   recurrenceTabLabel: 'Powtarzanie',
   // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Powtarzanie',
   recurrenceWeeklyFrequencyLabel: 'tygodnie',
   recurrenceWeeklyPresetLabel: ({ weekday }) => {

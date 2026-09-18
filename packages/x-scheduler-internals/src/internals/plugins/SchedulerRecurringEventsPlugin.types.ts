@@ -63,8 +63,7 @@ export interface SchedulerRecurringEventsPluginInterface {
 
   /**
    * Relabels the display-timezone dates of an update (start/end/exDates) into the event's
-   * data timezone before they are persisted. The rule is left as is: it is always expressed
-   * in the data timezone.
+   * data timezone before they are persisted. The rule is already expressed there.
    */
   applyDataTimezoneToEventUpdate(params: {
     adapter: Adapter;
@@ -75,6 +74,7 @@ export interface SchedulerRecurringEventsPluginInterface {
   /**
    * Builds the recurrence presets (Daily / Weekly / Monthly / Yearly)
    * the user can choose from when editing an event.
+   * `date` is the event's start in its own timezone.
    */
   computePresets(
     adapter: Adapter,
@@ -84,6 +84,7 @@ export interface SchedulerRecurringEventsPluginInterface {
   /**
    * Determines which preset (if any) the given rule corresponds to.
    * Returns 'custom' if the rule does not match any preset, or `null` if no rule is provided.
+   * `occurrenceStart` is the occurrence's start in the event's timezone.
    */
   getDefaultPresetKey(
     adapter: Adapter,

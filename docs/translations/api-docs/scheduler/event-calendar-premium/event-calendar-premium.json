@@ -471,7 +471,7 @@
     },
     "eventDialogRecurrenceTimezoneLabel": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the event dialog recurrence timezone label element"
+      "nodeName": "the elements naming the event&#39;s timezone next to the recurrence controls and label"
     },
     "eventDialogRepeatSectionContent": {
       "description": "Styles applied to {{nodeName}}.",

@@ -14,11 +14,14 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { getPrimaryResourceId, isEventOccurrence } from '@mui/x-scheduler-internals/internals';
+import {
+  getOccurrenceDataTimezone,
+  getPrimaryResourceId,
+} from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import {
   getEventTimezone,
-  getEventTimezoneStart,
+  getEventTimezoneBound,
   getRecurrenceLabel,
   getRecurrenceTimezoneName,
   hasProp,
@@ -121,11 +124,11 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     getPrimaryResourceId(occurrence.resource),
   );
   // The rule is read in the event's timezone, the one it is expressed in.
-  const eventTimezoneStart = getEventTimezoneStart(adapter, occurrence);
+  const eventTimezoneStart = getEventTimezoneBound(adapter, occurrence, 'start');
   const defaultRecurrenceKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
-    isEventOccurrence(occurrence) ? occurrence.dataTimezone.rrule : undefined,
+    getOccurrenceDataTimezone(occurrence)?.rrule,
     eventTimezoneStart,
   );
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
@@ -133,10 +136,10 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
 
   // Feature hook
   const formatTime = useFormatTime();
-  const recurrenceTimezoneName = getRecurrenceTimezoneName(
-    adapter,
-    getEventTimezone(occurrence),
-    displayTimezone,
+  const eventTimezone = getEventTimezone(occurrence);
+  const recurrenceTimezoneName = React.useMemo(
+    () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
+    [adapter, eventTimezone, displayTimezone],
   );
   const recurrenceLabel = getRecurrenceLabel(
     adapter,
@@ -208,9 +211,13 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
               color: 'text.secondary',
             }}
           >
-            {recurrenceTimezoneName == null
-              ? recurrenceLabel
-              : `${recurrenceLabel} (${recurrenceTimezoneName})`}
+            {recurrenceLabel}
+            {recurrenceTimezoneName != null && (
+              <span className={classes.eventDialogRecurrenceTimezoneLabel}>
+                {' '}
+                {localeText.recurrenceLabelTimezoneSuffix(recurrenceTimezoneName)}
+              </span>
+            )}
           </Typography>
         </RecurrenceLabelContainer>
       )}

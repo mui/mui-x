@@ -31,6 +31,7 @@ import {
 import {
   getCustomEventProperties,
   getEventResourceIds,
+  getOccurrenceDataTimezone,
   getResourceSelectionMode,
   isBuiltInEventProperty,
   isEventOccurrence,
@@ -46,9 +47,9 @@ import {
   validateRange,
   hasProp,
   BUILT_IN_FORM_KEYS,
-  getEditedRangeBounds,
-  getEventTimezoneStart,
-  getRecurrenceRuleStart,
+  getResentRangeBounds,
+  getEventTimezoneBound,
+  getRecurrenceRuleBound,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
 import TitleSection from '../event-dialog/TitleSection';
@@ -154,9 +155,8 @@ export function FormContent(props: FormContentProps) {
     const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
-    // The rule is expressed in the event's timezone (RFC 5545 evaluates it as local time in
-    // the DTSTART timezone), so it is read and written there, not in the display timezone.
-    const base = isEventOccurrence(occurrence) ? occurrence.dataTimezone.rrule : undefined;
+    // The rule is read and written in the event's timezone, not the display one.
+    const base = getOccurrenceDataTimezone(occurrence)?.rrule;
     // The occurrence only carries the built-in event properties — custom fields
     // come from the raw model. When creating an event there is no model yet.
     const model = schedulerEventSelectors.modelLookup(store.state).get(occurrence.id);
@@ -194,7 +194,7 @@ export function FormContent(props: FormContentProps) {
       recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
         store.state,
         base,
-        getEventTimezoneStart(adapter, occurrence),
+        getEventTimezoneBound(adapter, occurrence, 'start'),
       ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
@@ -394,11 +394,12 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // it untouched can move the event: the same day re-read in another timezone
       // is a different day. Only the keys the submitted range reads count — a time
       // left over from toggling all-day off and back on must not re-arm the resend.
-      const { startEdited, endEdited } = getEditedRangeBounds(dirtyValues, values.allDay);
-      // The range was validated as a pair in the current display timezone; if that moved since
-      // seeding, an untouched bound's stored instant no longer matches, so editing either bound
-      // resends both.
       const displayTimezoneMoved = current.displayTimezone !== occurrence.displayTimezone.timezone;
+      const { startResent, endResent } = getResentRangeBounds(
+        dirtyValues,
+        values.allDay,
+        displayTimezoneMoved,
+      );
       // With a `dataSource`, a resize updates the snapshot before the stored model: resend a
       // bound that differs, or the update rebuilds it from the stale model. Compared as data
       // instants, since the display bounds of an all-day event are normalized to whole days.
@@ -409,9 +410,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         !displayTimezoneMoved &&
         isEventOccurrence(occurrence) &&
         occurrence.dataTimezone[bound].timestamp !== liveEvent.dataTimezone[bound].timestamp;
-      const submitStart =
-        startEdited || (endEdited && displayTimezoneMoved) || boundPending('start');
-      const submitEnd = endEdited || (startEdited && displayTimezoneMoved) || boundPending('end');
+      const submitStart = startResent || boundPending('start');
+      const submitEnd = endResent || boundPending('end');
 
       const metaChanges = {
         ...editedCustomValues,
@@ -422,15 +422,15 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         color: values.color === null ? undefined : values.color,
       };
 
-      // A preset is built on the start the event ends up with, in the event's timezone: the
-      // rule is expressed there (RFC 5545 evaluates it as local time in the DTSTART timezone).
-      // The Recurrence tab derives its labels and drafts from the same start.
-      const ruleStart = getRecurrenceRuleStart(
+      // A preset is built on the start the event ends up with, in the event's timezone; the
+      // Recurrence tab derives its labels and drafts from the same start.
+      const ruleStart = getRecurrenceRuleBound(
         current.adapter,
         occurrence,
         values,
-        dirtyValues,
+        startResent,
         current.displayTimezone,
+        'start',
       );
       const recurrencePresets = current.showRecurrence
         ? schedulerRecurringEventSelectors.presets(store.state, ruleStart)

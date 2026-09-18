@@ -685,7 +685,7 @@
     {
       "key": "eventDialogRecurrenceTimezoneLabel",
       "className": "MuiEventCalendar-eventDialogRecurrenceTimezoneLabel",
-      "description": "Styles applied to the event dialog recurrence timezone label element.",
+      "description": "Styles applied to the elements naming the event's timezone next to the recurrence controls and label.",
       "isGlobal": false
     },
     {

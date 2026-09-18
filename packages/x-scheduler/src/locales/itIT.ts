@@ -43,6 +43,7 @@ const itITDialog: Partial<EventEditingLocaleText> = {
   recurrenceRepeatLabel: 'Ripeti',
   recurrenceTabLabel: 'Ricorrenza',
   // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Ricorrenza',
   recurrenceWeeklyFrequencyLabel: 'settimane',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Si ripete ogni settimana il ${weekdayName}`,

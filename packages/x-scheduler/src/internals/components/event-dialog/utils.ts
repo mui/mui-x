@@ -11,7 +11,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import { isEventOccurrence } from '@mui/x-scheduler-internals/internals';
+import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
 import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
@@ -99,8 +99,17 @@ const WEEKDAYS: SchedulerWeekday[] = [
   'saturday',
 ];
 
+// `getDayOfWeek` numbers the days from the locale's first week day; a known Sunday gives the offset.
+const sundayDayOfWeek = new WeakMap<Adapter, number>();
+
 export const getWeekdayToken = (adapter: Adapter, value: TemporalSupportedObject) => {
-  return WEEKDAYS[adapter.toJsDate(value).getDay()];
+  let sunday = sundayDayOfWeek.get(adapter);
+  if (sunday == null) {
+    sunday = adapter.getDayOfWeek(adapter.date('2025-08-10', 'default'));
+    sundayDayOfWeek.set(adapter, sunday);
+  }
+  // Read in the value's own timezone: a plain `Date` would give the system weekday.
+  return WEEKDAYS[(adapter.getDayOfWeek(value) - sunday + 7) % 7];
 };
 
 export type EndsSelection = 'never' | 'after' | 'until';
@@ -290,63 +299,79 @@ export function getRecurrenceLabel(
  * A creation draft has no event yet: it is created in the `default` timezone.
  */
 export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence): TemporalTimezone {
-  return isEventOccurrence(occurrence) ? occurrence.dataTimezone.timezone : 'default';
+  return getOccurrenceDataTimezone(occurrence)?.timezone ?? 'default';
 }
 
 /**
- * The occurrence's start in the event's timezone, the day and weekday its recurrence rule
- * is picked against.
+ * A bound of the occurrence in the event's timezone.
  */
-export function getEventTimezoneStart(
+export function getEventTimezoneBound(
   adapter: Adapter,
   occurrence: SchedulerRenderableEventOccurrence,
+  bound: 'start' | 'end',
 ): SchedulerProcessedDate {
-  if (isEventOccurrence(occurrence)) {
-    return occurrence.dataTimezone.start;
-  }
-  return processDate(
-    adapter.setTimezone(occurrence.displayTimezone.start.value, 'default'),
-    adapter,
+  return (
+    getOccurrenceDataTimezone(occurrence)?.[bound] ??
+    processDate(adapter.setTimezone(occurrence.displayTimezone[bound].value, 'default'), adapter)
   );
 }
 
 /**
- * The start a recurrence rule picked in the dialog is built on, in the event's timezone: the
- * submitted start when the form moves it (or re-reads it in a display timezone that changed
- * since the form was seeded), the occurrence's own otherwise. While an edited date does not
- * parse, the occurrence's start stands in.
+ * Which bounds the save resends: the ones the user edited, plus the other one when the display
+ * timezone moved since the form was seeded (the range is validated as a pair in the current
+ * display timezone, so an untouched bound's stored instant no longer matches).
  */
-export function getRecurrenceRuleStart(
-  adapter: Adapter,
-  occurrence: SchedulerRenderableEventOccurrence,
-  values: Pick<EventDialogFormValues, RangeFormKey>,
+export function getResentRangeBounds(
   dirtyValues: Record<string, unknown>,
-  displayTimezone: TemporalTimezone,
-): SchedulerProcessedDate {
-  const { startEdited } = getEditedRangeBounds(dirtyValues, values.allDay);
-  const displayTimezoneMoved = displayTimezone !== occurrence.displayTimezone.timezone;
-  if (
-    (!startEdited && !displayTimezoneMoved) ||
-    findInvalidRangeField(adapter, values, displayTimezone) != null
-  ) {
-    return getEventTimezoneStart(adapter, occurrence);
-  }
-  const { start } = computeRange(adapter, values, displayTimezone);
-  return processDate(adapter.setTimezone(start, getEventTimezone(occurrence)), adapter);
+  allDay: boolean,
+  displayTimezoneMoved: boolean,
+): { startResent: boolean; endResent: boolean } {
+  const { startEdited, endEdited } = getEditedRangeBounds(dirtyValues, allDay);
+  return {
+    startResent: startEdited || (endEdited && displayTimezoneMoved),
+    endResent: endEdited || (startEdited && displayTimezoneMoved),
+  };
 }
 
 /**
- * The IANA identifier of a timezone; the adapter aliases resolve to the system timezone.
+ * A bound of the range the event ends up with, in the event's timezone: the submitted one when
+ * the save resends it, the occurrence's own otherwise (also while an edited date does not parse).
+ * The recurrence rule is built on these bounds.
+ */
+export function getRecurrenceRuleBound(
+  adapter: Adapter,
+  occurrence: SchedulerRenderableEventOccurrence,
+  values: Pick<EventDialogFormValues, RangeFormKey>,
+  resent: boolean,
+  displayTimezone: TemporalTimezone,
+  bound: 'start' | 'end',
+): SchedulerProcessedDate {
+  if (!resent || findInvalidRangeField(adapter, values, displayTimezone) != null) {
+    return getEventTimezoneBound(adapter, occurrence, bound);
+  }
+  const range = computeRange(adapter, values, displayTimezone);
+  return processDate(adapter.setTimezone(range[bound], getEventTimezone(occurrence)), adapter);
+}
+
+/**
+ * The canonical IANA identifier of a timezone. The adapter aliases resolve to the system
+ * timezone: the only adapter shipped today (date-fns) treats `default` as the system one.
  */
 function getTimezoneId(timezone: TemporalTimezone): string {
-  return timezone === 'default' || timezone === 'system'
-    ? Intl.DateTimeFormat().resolvedOptions().timeZone
-    : timezone;
+  const id =
+    timezone === 'default' || timezone === 'system'
+      ? Intl.DateTimeFormat().resolvedOptions().timeZone
+      : timezone;
+  try {
+    return new Intl.DateTimeFormat(undefined, { timeZone: id }).resolvedOptions().timeZone;
+  } catch {
+    return id;
+  }
 }
 
 /**
  * The localized generic name of a timezone (e.g. "Pacific Time"), or its identifier when the
- * runtime has no name for it and would print an offset instead.
+ * runtime has no name for it and prints an offset instead.
  */
 function getTimezoneDisplayName(adapter: Adapter, timezoneId: string): string {
   try {
@@ -356,7 +381,8 @@ function getTimezoneDisplayName(adapter: Adapter, timezoneId: string): string {
     })
       .formatToParts(new Date())
       .find((part) => part.type === 'timeZoneName')?.value;
-    return name == null || /^GMT([+-]|$)/.test(name) ? timezoneId : name;
+    // An offset ("GMT+00:00", "UTC−05:00", "غرينتش+٠٠:٠٠") is the only name carrying digits.
+    return name == null || /\p{Nd}/u.test(name) ? timezoneId : name;
   } catch {
     return timezoneId;
   }

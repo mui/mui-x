@@ -624,7 +624,9 @@ describe('<EventDialogContent open />', () => {
       const dialogs = screen.getAllByRole('dialog');
       const dialog = within(dialogs[dialogs.length - 1]);
 
-      expect(dialog.getByText('Repeats weekly on Friday (UTC)')).not.to.equal(null);
+      expect(dialog.getByText(/repeats weekly on friday/i).textContent).to.equal(
+        'Repeats weekly on Friday (UTC)',
+      );
     });
 
     it('should not display recurrence label for non-recurring events', () => {
@@ -1866,8 +1868,8 @@ describe('<EventDialogContent open />', () => {
     });
 
     it("should anchor a weekly rule on the created event's own weekday from another timezone", async () => {
-      // Friday July 4 00:00 UTC is Thursday 20:00 in New York; the event is stored in the
-      // default (UTC) timezone, so "weekly" picked on Thursday must repeat on Fridays.
+      // Friday July 4 00:00 UTC is Thursday 20:00 in New York; the event is created in the
+      // default (UTC) timezone, so the weekly preset offers and stores Friday.
       const displayTimezone = 'America/New_York';
       const start = adapter.date('2025-07-04T00:00:00Z', 'default');
       const end = adapter.date('2025-07-04T01:00:00Z', 'default');
@@ -1918,6 +1920,66 @@ describe('<EventDialogContent open />', () => {
 
       const payload = createEventSpy!.mock.lastCall![0];
       expect(payload.rrule.byDay).to.deep.equal(['FR']);
+    });
+
+    it("should offer the created event's own ordinal weekday from another timezone", async () => {
+      // Friday July 4 00:00 UTC is Thursday 20:00 in New York; created in the default (UTC)
+      // timezone, the monthly ordinal is the first Friday.
+      const displayTimezone = 'America/New_York';
+      const start = adapter.date('2025-07-04T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-04T01:00:00Z', 'default');
+      const placeholder: SchedulerOccurrencePlaceholderCreation = {
+        type: 'creation',
+        surfaceType: 'time-grid' as const,
+        start,
+        end,
+        lockSurfaceType: false,
+        resourceId: null,
+      };
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('placeholder-id')
+        .withDisplayTimezone(displayTimezone)
+        .span(start.toISOString(), end.toISOString())
+        .title('')
+        .toOccurrence();
+      let createEventSpy;
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[]}
+          resources={resources}
+          onEventsChange={() => {}}
+          displayTimezone={displayTimezone}
+          storeClass={PremiumTestStore}
+        >
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
+          />
+          <StoreSpy
+            Context={SchedulerStoreContext}
+            method="createEvent"
+            onSpyReady={(sp) => {
+              createEventSpy = sp;
+            }}
+          />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      await user.type(screen.getByLabelText(/event title/i), 'My event');
+      await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+      expect(screen.getByText('Timezone: UTC')).not.to.equal(null);
+      await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+      await user.click(await screen.findByRole('option', { name: /custom/i }));
+      const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+      await user.click(within(repeatGroup).getByRole('combobox'));
+      await user.click(await screen.findByRole('option', { name: /months/i }));
+      await user.click(screen.getByRole('button', { name: /fri.*week 1/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      const payload = createEventSpy!.mock.lastCall![0];
+      expect(payload.rrule.byDay).to.deep.equal(['1FR']);
     });
   });
   describe('Event editing', () => {
@@ -2582,6 +2644,91 @@ describe('<EventDialogContent open />', () => {
         expect(payload.changes.end).toEqualDateTime(
           adapter.date('2025-07-05T23:59:59.999', 'America/New_York'),
         );
+      });
+
+      it('should build a preset on the stored start when only the display timezone moved', async () => {
+        const onEventsChange = vi.fn();
+        // Friday 23:30 in New York is Saturday in Honolulu once re-read there; the untouched
+        // start is not resent, so the preset stays on the stored Friday.
+        const builder = EventBuilder.new()
+          .title('Late call')
+          .withDataTimezone('America/New_York')
+          .span('2025-05-30T23:30:00', '2025-05-30T23:45:00')
+          .withDisplayTimezone('America/New_York');
+
+        const { user, setProps } = render(
+          <EventCalendarProvider
+            events={[builder.build()]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+          </EventCalendarProvider>,
+        );
+
+        setProps({ displayTimezone: 'Pacific/Honolulu' });
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: 'Repeats weekly on Friday' }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        const updated = onEventsChange.mock.lastCall![0].find(
+          (item: SchedulerEvent) => item.id === builder.build().id,
+        );
+        expect(updated.start).to.equal('2025-05-30T23:30:00');
+        expect(updated.rrule).to.deep.include({ freq: 'WEEKLY', byDay: ['FR'] });
+      });
+
+      it('should re-anchor the weekday of a picked preset when the start is edited afterwards', async () => {
+        const onEventsChange = vi.fn();
+        // Friday July 4 00:00 UTC shows on Thursday 20:00 in New York.
+        const builder = EventBuilder.new()
+          .title('Late call')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T00:00:00', '2025-07-04T01:00:00')
+          .withDisplayTimezone('America/New_York');
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[builder.build()]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+          </EventCalendarProvider>,
+        );
+
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: 'Repeats weekly on Friday' }));
+        expect(screen.getByRole('checkbox', { name: /friday/i })).to.have.property('checked', true);
+
+        // Thursday 10:00 in New York is Thursday 14:00 UTC.
+        await user.click(screen.getByRole('tab', { name: /general/i }));
+        await user.clear(screen.getByLabelText(/start time/i));
+        await user.type(screen.getByLabelText(/start time/i), '10:00');
+        await user.clear(screen.getByLabelText(/end time/i));
+        await user.type(screen.getByLabelText(/end time/i), '11:00');
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+
+        expect(screen.getByRole('checkbox', { name: /thursday/i })).to.have.property(
+          'checked',
+          true,
+        );
+        expect(screen.getByRole('checkbox', { name: /friday/i })).to.have.property(
+          'checked',
+          false,
+        );
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        const updated = onEventsChange.mock.lastCall![0].find(
+          (item: SchedulerEvent) => item.id === builder.build().id,
+        );
+        expect(updated.rrule).to.deep.include({ freq: 'WEEKLY', byDay: ['TH'] });
       });
 
       it('should anchor a rule added to a non-recurring event on its data-timezone weekday', async () => {
@@ -3297,6 +3444,69 @@ describe('<EventDialogContent open />', () => {
           expect(updated.rrule?.until).to.equal('2025-07-20T23:59:59.999Z');
         });
 
+        it('should pre-fill "Until" with the end of the event\'s last day in its own timezone', async () => {
+          const onEventsChange = vi.fn();
+          // May 26 07:30 in New York shows on May 26 20:30 in Tokyo; the pre-filled day is the
+          // event's own May 26, not the Tokyo midnight relabeled (May 25 in New York).
+          const builder = EventBuilder.new()
+            .title('Running')
+            .withDataTimezone('America/New_York')
+            .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
+            .withDisplayTimezone('Asia/Tokyo');
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[builder.build()]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              displayTimezone="Asia/Tokyo"
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+
+          const dateInput = endsFieldset.querySelector('input[type="date"]') as HTMLInputElement;
+          expect(dateInput.value).to.equal('2025-05-26');
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          const updated = onEventsChange.mock.calls[0][0][0];
+          expect(updated.rrule?.until).to.equal('2025-05-26T23:59:59');
+        });
+
+        it('should pre-fill the "Until" input with the stored day in the event timezone', async () => {
+          // A New York rule ending on July 20 opened from Tokyo, where that instant is July 21.
+          const builder = EventBuilder.new()
+            .title('Running')
+            .withDataTimezone('America/New_York')
+            .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
+            .rrule({ freq: 'WEEKLY', until: '2025-07-20T23:59:59' })
+            .withDisplayTimezone('Asia/Tokyo');
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[builder.build()]}
+              resources={resources}
+              onEventsChange={() => {}}
+              displayTimezone="Asia/Tokyo"
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          const dateInput = endsFieldset.querySelector('input[type="date"]') as HTMLInputElement;
+          expect(dateInput.value).to.equal('2025-07-20');
+        });
+
         it('should end the series at the end of the "Until" day in the event timezone', async () => {
           const onEventsChange = vi.fn();
           // The rule lives in the event's timezone, so the chosen day is a New York day even
@@ -3941,6 +4151,64 @@ describe('<EventDialogContent open />', () => {
         expect(screen.queryByText(/^Timezone:/)).to.equal(null);
       });
 
+      it('should offer the ordinal weekday of the edited start', async () => {
+        const onEventsChange = vi.fn();
+        // Friday July 4 00:00 UTC, moved to Thursday 14:00 UTC as edited from New York.
+        const builder = EventBuilder.new()
+          .title('Late call')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T00:00:00', '2025-07-04T01:00:00')
+          .withDisplayTimezone('America/New_York');
+
+        const { user } = render(
+          <EventCalendarProvider
+            events={[builder.build()]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+            onEventsChange={onEventsChange}
+          >
+            <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+          </EventCalendarProvider>,
+        );
+
+        await user.clear(screen.getByLabelText(/start time/i));
+        await user.type(screen.getByLabelText(/start time/i), '10:00');
+        await user.clear(screen.getByLabelText(/end time/i));
+        await user.type(screen.getByLabelText(/end time/i), '11:00');
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: /custom/i }));
+        const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+        await user.click(within(repeatGroup).getByRole('combobox'));
+        await user.click(await screen.findByRole('option', { name: /months/i }));
+        expect(screen.queryByRole('button', { name: /fri.*week 1/i })).to.equal(null);
+        await user.click(screen.getByRole('button', { name: /thu.*week 1/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        const updated = onEventsChange.mock.lastCall![0].find(
+          (item: SchedulerEvent) => item.id === builder.build().id,
+        );
+        expect(updated.rrule).to.deep.equal({ freq: 'MONTHLY', interval: 1, byDay: ['1TH'] });
+      });
+
+      it('should name the default timezone of an event without one when the display timezone differs', async () => {
+        // The tests run in UTC, the default timezone of an event with no `timezone`.
+        const { user } = render(
+          <EventCalendarProvider
+            events={[DEFAULT_EVENT]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="America/New_York"
+          >
+            <TestEventDialogContent open {...defaultProps} />
+          </EventCalendarProvider>,
+        );
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+
+        expect(screen.getByText('Timezone: UTC')).not.to.equal(null);
+      });
+
       it("should offer the ordinal weekday of the event's timezone and store it as is", async () => {
         // Friday July 4 00:00 UTC shows on Thursday July 3 in New York: the rule is expressed in
         // UTC, so the tab offers "first Friday" and stores it as is.
@@ -3979,8 +4247,8 @@ describe('<EventDialogContent open />', () => {
       });
 
       it('should anchor a new monthly rule on the untouched start as stored from another timezone', async () => {
-        // July 4 00:00 UTC shows on July 3 in New York: the rule is picked against the 3rd
-        // but stored with the untouched July 4 start, so it must repeat on the 4th.
+        // July 4 00:00 UTC shows on July 3 in New York: the preset offers the 4th, the day of
+        // the untouched start in UTC, and stores it.
         const builder = utcJuly4AllDayBuilder()
           .title('Holiday')
           .withDisplayTimezone('America/New_York');

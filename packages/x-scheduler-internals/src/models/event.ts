@@ -104,7 +104,8 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
      * */
     timezone: TemporalTimezone;
     /**
-     * The recurrence rule for the event.
+     * The recurrence rule for the event, expressed in the event's timezone (RFC 5545 evaluates
+     * it as local time in the DTSTART timezone). The event dialog reads and writes it there.
      * If not defined, the event will have only one occurrence.
      */
     rrule?: SchedulerProcessedEventRecurrenceRule;

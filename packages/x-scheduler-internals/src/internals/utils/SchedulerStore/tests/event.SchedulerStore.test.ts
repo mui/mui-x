@@ -1127,8 +1127,7 @@ premiumStoreClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
     describe('Method: updateRecurringEvent', () => {
       it('should keep the stored BYMONTHDAY when only the count changes from another timezone', () => {
-        // Stored on the 3rd with a July 4 UTC start, read from New York where the start also
-        // shows on the 3rd. Saving the rule with a new count must round-trip the 3rd as is.
+        // The rule is passed through as is: saving it with a new count keeps the 3rd.
         const event = utcJuly4AllDayBuilder()
           .id('report')
           .recurrent('MONTHLY', { byMonthDay: [3] })

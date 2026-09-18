@@ -277,7 +277,7 @@ describe('Core - EventCalendarStore', () => {
         const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
         expect(editing.displayTimezone.start.timestamp).to.equal(adapter.getTime(start));
         expect(editing.displayTimezone.end.timestamp).to.equal(adapter.getTime(end));
-        // A rule added from the dialog projects its weekdays from the data-timezone start.
+        // A rule added from the dialog is built on the data-timezone start.
         expect(editing.dataTimezone.start.timestamp).to.equal(adapter.getTime(start));
         expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
         expect(adapter.getTimezone(editing.dataTimezone.start.value)).to.equal('UTC');

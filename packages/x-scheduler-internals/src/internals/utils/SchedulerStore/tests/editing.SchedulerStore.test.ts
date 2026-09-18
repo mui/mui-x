@@ -6,7 +6,7 @@ import {
   ResourceBuilder,
   storeClasses,
 } from 'test/utils/scheduler';
-import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent, SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
@@ -59,7 +59,9 @@ storeClasses.forEach((storeClass) => {
           dataEnd: newEnd,
         });
 
-        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+        const occurrence = schedulerOtherSelectors.editingOccurrence(
+          store.state,
+        ) as SchedulerEventOccurrence;
         expect(occurrence.id).to.equal('detached-event');
         // A detached one-off keys by the plain event id (no `::day` suffix)...
         expect(occurrence.key).to.equal(getOccurrenceKey('detached-event'));
@@ -84,7 +86,9 @@ storeClasses.forEach((storeClass) => {
           dataEnd: newEnd,
         });
 
-        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+        const occurrence = schedulerOtherSelectors.editingOccurrence(
+          store.state,
+        ) as SchedulerEventOccurrence;
         expect(occurrence.id).to.equal('following-event');
         // The new series still keys per-occurrence (event id + day)...
         expect(occurrence.key).to.equal(
@@ -323,7 +327,6 @@ premiumStoreClasses.forEach((storeClass) => {
           displayTimezone: {
             start: processDate(occurrenceStart, adapter),
             end: processDate(adapter.addHours(occurrenceStart, 1), adapter),
-            rrule: RRULE,
           },
           dataTimezone: {
             timezone: 'default',
@@ -662,7 +665,6 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.dataTimezone.rrule).to.equal(undefined);
       expect(occurrence.displayTimezone.start.value).toEqualDateTime(dayA);
       expect(occurrence.displayTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));
-      expect(occurrence.dataTimezone.rrule).to.equal(undefined);
       expect(occurrence.dataTimezone.start.timestamp).to.equal(adapter.getTime(dayA));
       expect(occurrence.dataTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));
     });
@@ -705,7 +707,6 @@ premiumStoreClasses.forEach((storeClass) => {
       );
       expect(occurrence.dataTimezone.timezone).to.equal('UTC');
       // A 'this-and-following' split stays recurring.
-      expect(occurrence.dataTimezone.rrule).to.not.equal(undefined);
       expect(occurrence.dataTimezone.rrule).to.not.equal(undefined);
     });
 

@@ -6,8 +6,8 @@ export {
   getWeekdayToken,
   getRecurrenceLabel,
   getEventTimezone,
-  getEventTimezoneStart,
-  getRecurrenceRuleStart,
+  getResentRangeBounds,
+  getRecurrenceRuleBound,
   getRecurrenceTimezoneName,
 } from './utils';
 export { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';

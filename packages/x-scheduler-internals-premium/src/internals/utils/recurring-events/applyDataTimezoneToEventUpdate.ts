@@ -18,8 +18,6 @@ export function applyDataTimezoneToEventUpdate({
 
   const toDataTz = (date: TemporalSupportedObject) => adapter.setTimezone(date, dataTz);
 
-  // The rule is not relabeled: it is expressed in the data timezone, the one the series
-  // expands in (RFC 5545 evaluates the rule as local time in the DTSTART timezone).
   const result: SchedulerEventUpdatedProperties = { ...changes };
 
   if (result.start) {

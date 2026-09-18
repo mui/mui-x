@@ -1092,7 +1092,7 @@ export class SchedulerStore<
   /**
    * Refreshes the edited occurrence's times so a later edit (e.g. opening the form from the
    * armed toolbar) reflects a just-committed change such as a resize. The data-timezone bounds
-   * follow the same instants: a rule added from the form projects from them.
+   * follow the same instants: a rule added from the form is built on them.
    * No-op when nothing is being edited.
    */
   public setEditingOccurrenceTimes = (

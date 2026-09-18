@@ -119,7 +119,7 @@ export interface EventDialogClasses {
   eventDialogRecurrenceIcon: string;
   /** Styles applied to the event dialog recurrence label element. */
   eventDialogRecurrenceLabel: string;
-  /** Styles applied to the event dialog recurrence timezone label element. */
+  /** Styles applied to the elements naming the event's timezone next to the recurrence controls and label. */
   eventDialogRecurrenceTimezoneLabel: string;
   /** Styles applied to the event dialog description label element. */
   eventDialogDescriptionLabel: string;
