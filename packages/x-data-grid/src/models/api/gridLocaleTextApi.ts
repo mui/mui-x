@@ -64,9 +64,13 @@ export interface GridLocaleText {
   columnMenuAddComputedColumn: string;
   columnMenuEditComputedColumn: string;
   columnMenuRemoveComputedColumn: string;
+  toolbarComputedColumns: string;
   computedColumnsPanelTitle: string;
   computedColumnsPanelCloseButton: string;
   computedColumnsPanelBackButton: string;
+  computedColumnsPanelEmpty: string;
+  computedColumnsPanelAddButton: string;
+  computedColumnsPanelItemMenuLabel: string;
   computedColumnEditorNewTitle: string;
   computedColumnEditorEditTitle: string;
   computedColumnNameLabel: string;
@@ -88,6 +92,11 @@ export interface GridLocaleText {
   computedColumnPreviewLabel: string;
   computedColumnPreviewRow: (rowIndex: number) => string;
   computedColumnPreviewNoRows: string;
+  computedColumnReferenceTitle: string;
+  computedColumnReferenceColumns: string;
+  computedColumnReferenceFunctions: string;
+  computedColumnReferenceSearchPlaceholder: string;
+  computedColumnReferenceNoResults: string;
   computedColumnApplyButton: string;
   computedColumnAddButton: string;
   computedColumnCancelButton: string;

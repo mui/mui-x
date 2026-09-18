@@ -35,6 +35,11 @@ export interface GridPremiumIconSlotsComponent {
    */
   computedColumnIcon: React.JSXElementConstructor<IconProps>;
   /**
+   * Icon displayed in the back button of the computed columns panel editor.
+   * @default GridArrowBackIcon
+   */
+  computedColumnsPanelBackIcon: React.JSXElementConstructor<IconProps>;
+  /**
    * Icon used for the clear button in the sidebar search field
    * @default GridClearIcon
    */

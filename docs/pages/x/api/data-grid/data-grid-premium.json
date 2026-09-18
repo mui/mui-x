@@ -1481,6 +1481,12 @@
       "class": null
     },
     {
+      "name": "computedColumnsPanelBackIcon",
+      "description": "Icon displayed in the back button of the computed columns panel editor.",
+      "default": "GridArrowBackIcon",
+      "class": null
+    },
+    {
       "name": "pivotSearchClearIcon",
       "description": "Icon used for the clear button in the sidebar search field",
       "default": "GridClearIcon",
@@ -2275,6 +2281,12 @@
       "isGlobal": false
     },
     {
+      "key": "computedColumnsPanelEmpty",
+      "className": "MuiDataGridPremium-computedColumnsPanelEmpty",
+      "description": "Styles applied to the empty state of the computed columns panel list.",
+      "isGlobal": false
+    },
+    {
       "key": "computedColumnsPanelField",
       "className": "MuiDataGridPremium-computedColumnsPanelField",
       "description": "Styles applied to the field rows of the computed columns panel editor.",
@@ -2299,9 +2311,27 @@
       "isGlobal": false
     },
     {
+      "key": "computedColumnsPanelList",
+      "className": "MuiDataGridPremium-computedColumnsPanelList",
+      "description": "Styles applied to the computed columns panel list view element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelListItem",
+      "className": "MuiDataGridPremium-computedColumnsPanelListItem",
+      "description": "Styles applied to each item of the computed columns panel list.",
+      "isGlobal": false
+    },
+    {
       "key": "computedColumnsPanelPreview",
       "className": "MuiDataGridPremium-computedColumnsPanelPreview",
       "description": "Styles applied to the preview element of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelReference",
+      "className": "MuiDataGridPremium-computedColumnsPanelReference",
+      "description": "Styles applied to the reference pane (columns and functions to insert) of the computed columns panel editor.",
       "isGlobal": false
     },
     {

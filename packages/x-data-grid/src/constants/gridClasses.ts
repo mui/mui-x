@@ -1044,6 +1044,18 @@ export interface GridClasses {
    */
   computedColumnsPanelHeader: string;
   /**
+   * Styles applied to the computed columns panel list view element.
+   */
+  computedColumnsPanelList: string;
+  /**
+   * Styles applied to each item of the computed columns panel list.
+   */
+  computedColumnsPanelListItem: string;
+  /**
+   * Styles applied to the empty state of the computed columns panel list.
+   */
+  computedColumnsPanelEmpty: string;
+  /**
    * Styles applied to the computed columns panel editor view element.
    */
   computedColumnsPanelEditor: string;
@@ -1059,6 +1071,10 @@ export interface GridClasses {
    * Styles applied to the preview element of the computed columns panel editor.
    */
   computedColumnsPanelPreview: string;
+  /**
+   * Styles applied to the reference pane (columns and functions to insert) of the computed columns panel editor.
+   */
+  computedColumnsPanelReference: string;
   /**
    * Styles applied to the validation block of the computed columns panel editor.
    */
@@ -1397,10 +1413,14 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pivotPanelSwitchLabel',
   'computedColumnsPanel',
   'computedColumnsPanelHeader',
+  'computedColumnsPanelList',
+  'computedColumnsPanelListItem',
+  'computedColumnsPanelEmpty',
   'computedColumnsPanelEditor',
   'computedColumnsPanelField',
   'computedColumnsPanelFormula',
   'computedColumnsPanelPreview',
+  'computedColumnsPanelReference',
   'computedColumnsPanelValidation',
   'computedColumnsPanelFooter',
   'prompt',

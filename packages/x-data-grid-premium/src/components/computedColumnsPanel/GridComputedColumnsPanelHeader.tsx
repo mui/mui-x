@@ -15,6 +15,10 @@ export interface GridComputedColumnsPanelHeaderProps {
    */
   titleId?: string;
   onClose: () => void;
+  /**
+   * When provided, a back button precedes the title (the editor view returns to the list).
+   */
+  onBack?: () => void;
 }
 
 type OwnerState = DataGridPremiumProcessedProps;
@@ -55,7 +59,7 @@ const GridComputedColumnsPanelTitle = styled('span', {
 });
 
 function GridComputedColumnsPanelHeader(props: GridComputedColumnsPanelHeaderProps) {
-  const { title, titleId, onClose } = props;
+  const { title, titleId, onClose, onBack } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
@@ -63,6 +67,16 @@ function GridComputedColumnsPanelHeader(props: GridComputedColumnsPanelHeaderPro
   return (
     <SidebarHeader>
       <GridComputedColumnsPanelHeaderRoot ownerState={rootProps} className={classes.root}>
+        {onBack && (
+          <rootProps.slots.baseIconButton
+            onClick={onBack}
+            aria-label={apiRef.current.getLocaleText('computedColumnsPanelBackButton')}
+            edge="start"
+            {...rootProps.slotProps?.baseIconButton}
+          >
+            <rootProps.slots.computedColumnsPanelBackIcon fontSize="small" />
+          </rootProps.slots.baseIconButton>
+        )}
         <GridComputedColumnsPanelTitle ownerState={rootProps} id={titleId}>
           {title}
         </GridComputedColumnsPanelTitle>

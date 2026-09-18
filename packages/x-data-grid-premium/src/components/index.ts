@@ -6,5 +6,7 @@ export { GridColumnMenuGroupingItem } from './GridPremiumColumnMenu';
 export * from './export';
 export * from './GridEmptyPivotOverlay';
 export * from './pivotPanel';
+// The panel itself is part of the formula feature (`/formula` entry); only the trigger is bundled.
+export * from './computedColumnsPanel/ComputedColumnsPanelTrigger';
 export * from './aiAssistantPanel';
 export * from './chartsPanel';

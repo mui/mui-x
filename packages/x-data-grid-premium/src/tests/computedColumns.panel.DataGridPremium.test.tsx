@@ -91,6 +91,21 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
   const getButton = (name: string) => screen.getByRole('button', { name });
   const getPreviewText = () =>
     getPanel()!.querySelector(PREVIEW_SELECTOR)!.lastElementChild!.textContent;
+  const getPreviewRowLabel = () =>
+    getPanel()!.querySelector(PREVIEW_SELECTOR)!.firstElementChild!.textContent;
+  const focusCell = async (id: number, field: string) => {
+    await act(async () => apiRef.current!.setCellFocus(id, field));
+  };
+  // Places the caret at the end of the editable (jsdom leaves the selection at the start).
+  const placeCaretAtEnd = () => {
+    const editable = getFormulaEditable();
+    const range = document.createRange();
+    range.selectNodeContents(editable);
+    range.collapse(false);
+    const selection = document.getSelection()!;
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
   const getValidationMessages = () =>
     Array.from(getPanel()?.querySelectorAll(`${VALIDATION_SELECTOR} li`) ?? []).map(
       (node) => node.textContent,
@@ -619,10 +634,12 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(getModel()[0].headerName).to.equal('Total');
     });
 
-    it('opens a new-column editor when the sidebar is shown without a request', async () => {
+    it('opens the list when the sidebar is shown without a request', async () => {
       await render(<Test />);
       await act(async () => apiRef.current!.showSidebar(GridSidebarValue.ComputedColumns));
-      expect(within(getPanel()!).getByText('New computed column')).not.to.equal(null);
+      expect(within(getPanel()!).getByText('Computed columns')).not.to.equal(null);
+      expect(within(getPanel()!).getByText('No computed columns yet')).not.to.equal(null);
+      expect(within(getPanel()!).queryByText('New computed column')).to.equal(null);
       expect(getPrivateApi().caches.computedColumns.editorRequest).to.equal(null);
     });
 
@@ -712,6 +729,493 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       fireEvent.doubleClick(getCell(1, 1));
       await microtasks();
       expect(getSidebar().open).to.equal(false);
+    });
+  });
+
+  describe('list view', () => {
+    const openList = async () => {
+      await act(async () => apiRef.current!.showSidebar(GridSidebarValue.ComputedColumns));
+    };
+    const getListItems = () =>
+      Array.from(getPanel()!.querySelectorAll(`.${gridClasses.computedColumnsPanelListItem}`));
+    const getItemButton = (name: string) =>
+      within(getPanel()!).getByRole('button', { name: new RegExp(name) });
+
+    it('lists the definitions in model order with their formula and flags invalid ones', async () => {
+      const broken = define('broken', '=nope * 2', { headerName: 'Broken' });
+      await render(<Test initialState={{ computedColumns: { model: [total, broken] } }} />);
+      await openList();
+
+      const items = getListItems();
+      expect(items.map((item) => item.textContent)).to.deep.equal([
+        'ƒxTotal=price * quantity',
+        'ƒxBroken=nope * 2',
+      ]);
+      const badges = items.map((item) => item.querySelector('[role="img"]')!);
+      expect(badges[0].getAttribute('aria-label')).to.equal('Computed column');
+      expect(badges[1].getAttribute('aria-label')).to.equal(
+        'Computed column with an invalid formula',
+      );
+      expect(badges[1].getAttribute('title')).to.equal('Column "nope" does not exist.');
+      expect(within(getPanel()!).queryByText('No computed columns yet')).to.equal(null);
+    });
+
+    it('adds a column from the list and returns to it with the new item focused', async () => {
+      await render(<Test />);
+      await openList();
+      fireEvent.click(getButton('Add computed column'));
+      await microtasks();
+
+      expect(within(getPanel()!).getByText('New computed column')).not.to.equal(null);
+      expect(document.activeElement).to.equal(getNameInput());
+      typeName('Total');
+      typeFormula('=price * quantity');
+      fireEvent.click(getButton('Add column'));
+      await microtasks();
+
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total']);
+      expect(getSidebar().open).to.equal(true);
+      expect(within(getPanel()!).getByText('Computed columns')).not.to.equal(null);
+      expect(getListItems()).to.have.length(1);
+      expect(document.activeElement).to.equal(getItemButton('Total'));
+      expect(apiRef.current!.state.focus.columnHeader).to.equal(null);
+    });
+
+    it('edits a column from its row and returns to the list on Cancel and on Apply', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openList();
+      fireEvent.click(getItemButton('Total'));
+      await microtasks();
+
+      expect(within(getPanel()!).getByText('Edit computed column')).not.to.equal(null);
+      expect(getNameInput().value).to.equal('Total');
+      typeName('Changed');
+      fireEvent.click(getButton('Cancel'));
+      await microtasks();
+
+      expect(getModel()).to.deep.equal([total]);
+      expect(getSidebar().open).to.equal(true);
+      expect(getListItems()).to.have.length(1);
+      expect(document.activeElement).to.equal(getItemButton('Total'));
+
+      fireEvent.click(getItemButton('Total'));
+      await microtasks();
+      typeName('Amount');
+      fireEvent.click(getButton('Apply'));
+      await microtasks();
+
+      expect(getModel()[0].headerName).to.equal('Amount');
+      expect(getSidebar().open).to.equal(true);
+      expect(getListItems()[0].textContent).to.equal('ƒxAmount=price * quantity');
+    });
+
+    it('edits and removes a column from the item menu', async () => {
+      const tax = define('tax', '=price * 0.2', { headerName: 'Tax' });
+      await render(<Test initialState={{ computedColumns: { model: [total, tax] } }} />);
+      await openList();
+      const menuButtons = within(getPanel()!).getAllByRole('button', {
+        name: 'Computed column actions',
+      });
+      expect(menuButtons).to.have.length(2);
+
+      fireEvent.click(menuButtons[0]);
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Edit computed column' }));
+      await microtasks();
+      expect(within(getPanel()!).getByText('Edit computed column')).not.to.equal(null);
+      expect(getNameInput().value).to.equal('Total');
+
+      fireEvent.click(getButton('Back to the list'));
+      await microtasks();
+      expect(within(getPanel()!).getByText('Computed columns')).not.to.equal(null);
+
+      fireEvent.click(
+        within(getPanel()!).getAllByRole('button', { name: 'Computed column actions' })[0],
+      );
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Remove computed column' }));
+      await microtasks();
+
+      expect(getModel()).to.deep.equal([tax]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'tax']);
+      expect(getListItems()).to.have.length(1);
+      expect(document.activeElement).to.equal(getItemButton('Tax'));
+    });
+
+    it('goes back to the list from a request-opened editor and discards the draft', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total');
+      typeName('Changed');
+      fireEvent.click(getButton('Back to the list'));
+      await microtasks();
+
+      expect(getModel()).to.deep.equal([total]);
+      expect(getSidebar().open).to.equal(true);
+      expect(within(getPanel()!).getByText('Computed columns')).not.to.equal(null);
+      expect(within(getPanel()!).queryByRole('button', { name: 'Back to the list' })).to.equal(
+        null,
+      );
+    });
+
+    it('closes the panel from a request-opened editor on Apply, Delete and Cancel', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total');
+      fireEvent.click(getButton('Apply'));
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+
+      await openEditor('total');
+      fireEvent.click(getButton('Delete column'));
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+      expect(getModel()).to.deep.equal([]);
+    });
+  });
+
+  describe('toolbar trigger', () => {
+    const getTrigger = () => screen.queryByRole('button', { name: 'Computed columns' });
+
+    it('toggles the panel and reports aria-expanded/aria-controls', async () => {
+      await render(<Test showToolbar />);
+      const trigger = getTrigger()!;
+      expect(trigger).not.to.equal(null);
+      expect(trigger.getAttribute('aria-expanded')).to.equal(null);
+
+      fireEvent.click(trigger);
+      await microtasks();
+      expect(getSidebar().open).to.equal(true);
+      expect(getSidebar().value).to.equal(GridSidebarValue.ComputedColumns);
+      expect(within(getPanel()!).getByText('No computed columns yet')).not.to.equal(null);
+      expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+      const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;
+      expect(trigger.getAttribute('aria-controls')).to.equal(sidebar.id);
+      expect(sidebar.getAttribute('aria-labelledby')).to.equal(trigger.id);
+
+      fireEvent.click(trigger);
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+      expect(trigger.getAttribute('aria-expanded')).to.equal(null);
+    });
+
+    it('is hidden when computed columns are not available', async () => {
+      const { unmount } = await render(<Test showToolbar featureDependencies={undefined} />);
+      expect(getTrigger()).to.equal(null);
+      unmount();
+
+      const view = await render(<Test showToolbar disableComputedColumns />);
+      expect(getTrigger()).to.equal(null);
+      view.unmount();
+
+      await render(<Test showToolbar disableFormulas />);
+      expect(getTrigger()).to.equal(null);
+    });
+
+    it('returns the focus to the trigger when the panel closes', async () => {
+      await render(<Test showToolbar />);
+      const trigger = getTrigger()!;
+      await act(async () => trigger.focus());
+      fireEvent.click(trigger);
+      await microtasks();
+      fireEvent.click(getButton('Add computed column'));
+      await microtasks();
+      expect(document.activeElement).to.equal(getNameInput());
+
+      fireEvent.click(getButton('Close computed columns panel'));
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+      expect(document.activeElement).to.equal(trigger);
+    });
+  });
+
+  describe('focus return', () => {
+    it('focuses the column header again when a menu-opened editor is cancelled', async () => {
+      await render(<Test />);
+      await act(async () => apiRef.current!.showColumnMenu('price'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Add computed column' }));
+      await microtasks();
+      expect(document.activeElement).to.equal(getNameInput());
+
+      fireEvent.click(getButton('Cancel'));
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+      expect(apiRef.current!.state.focus.columnHeader).to.deep.equal({ field: 'price' });
+      expect(document.activeElement!.closest(`.${gridClasses.columnHeader}`)).not.to.equal(null);
+      expect(document.activeElement!.closest('[data-field]')!.getAttribute('data-field')).to.equal(
+        'price',
+      );
+    });
+
+    it('focuses the cell again when a gesture-opened editor is closed', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      const cell = getCell(1, 3);
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
+      await act(async () => cell.focus());
+      fireEvent.doubleClick(cell);
+      await microtasks();
+      expect(document.activeElement).to.equal(getFormulaEditable());
+
+      fireEvent.click(getButton('Close computed columns panel'));
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+      expect(apiRef.current!.state.focus.cell).to.deep.equal({ id: 1, field: 'total' });
+      expect(document.activeElement).to.equal(getCell(1, 3));
+    });
+  });
+
+  describe('preview row', () => {
+    it('follows the focused cell and keeps the last row when focus leaves the cells', async () => {
+      await render(<Test />);
+      await openEditor(null);
+      typeFormula('=price * quantity');
+      expect(getPreviewRowLabel()).to.equal('Row 1');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('6');
+      });
+
+      await focusCell(2, 'price');
+      expect(getPreviewRowLabel()).to.equal('Row 3');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('8');
+      });
+
+      await act(async () => getNameInput().focus());
+      expect(getPreviewRowLabel()).to.equal('Row 3');
+      expect(apiRef.current!.state.focus.cell).to.deep.equal({ id: 2, field: 'price' });
+    });
+
+    it('keeps the sample row of the request over a cell focused before', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await focusCell(0, 'price');
+      await openEditor('total', { sampleRowId: 2 });
+      expect(getPreviewRowLabel()).to.equal('Row 3');
+    });
+  });
+
+  describe('outlines', () => {
+    const getActiveEdit = () => apiRef.current!.state.formula.activeEdit;
+
+    it('publishes the draft for the preview row, follows it and clears it on close', async () => {
+      await render(<Test />);
+      await openEditor(null);
+      expect(getActiveEdit()).to.deep.equal({ id: 0, field: '__computed_draft__', draft: '=' });
+
+      typeName('Total');
+      typeFormula('=price * quantity');
+      expect(getActiveEdit()).to.deep.equal({
+        id: 0,
+        field: 'total',
+        draft: '=price * quantity',
+      });
+
+      await focusCell(2, 'price');
+      expect(getActiveEdit()).to.deep.equal({
+        id: 2,
+        field: 'total',
+        draft: '=price * quantity',
+      });
+
+      fireEvent.click(getButton('Cancel'));
+      await microtasks();
+      expect(getActiveEdit()).to.equal(null);
+    });
+
+    it('reclaims the highlight after another owner cleared it', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total');
+      expect(getActiveEdit()).to.deep.equal({ id: 0, field: 'total', draft: '=price * quantity' });
+
+      // The formula bar clears any draft on a cell focus move, `cellEditStop` unconditionally.
+      await act(async () => getPrivateApi().setFormulaActiveEdit!(null));
+      await microtasks();
+      expect(getActiveEdit()).to.deep.equal({ id: 0, field: 'total', draft: '=price * quantity' });
+
+      // A cell editor owns the highlight while a cell is edited.
+      await act(async () => getPrivateApi().setFormulaActiveEdit!({ id: 1, field: 'price' }));
+      await microtasks();
+      expect(getActiveEdit()).to.deep.equal({ id: 1, field: 'price' });
+      typeFormula('=price');
+      expect(getActiveEdit()).to.deep.equal({ id: 1, field: 'price' });
+      await act(async () => getPrivateApi().setFormulaActiveEdit!(null));
+      await microtasks();
+      expect(getActiveEdit()).to.deep.equal({ id: 0, field: 'total', draft: '=price' });
+    });
+
+    it.skipIf(isJSDOM)('outlines the referenced cells of the preview row', async () => {
+      await render(<Test />);
+      await openEditor(null);
+      typeFormula('=price * quantity');
+      const getRects = () => document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight');
+      await waitFor(() => {
+        expect(getRects()).to.have.length(2);
+      });
+
+      fireEvent.click(getButton('Cancel'));
+      await microtasks();
+      expect(getRects()).to.have.length(0);
+    });
+  });
+
+  describe('reference pane', () => {
+    const getReferencePane = () =>
+      getPanel()!.querySelector<HTMLElement>(`.${gridClasses.computedColumnsPanelReference}`)!;
+    const getReferenceItems = () =>
+      within(getReferencePane())
+        .getAllByRole('listitem')
+        .map((node) => node.textContent);
+    const getSearch = () => within(getReferencePane()).getByRole('searchbox') as HTMLInputElement;
+
+    it('lists the columns and functions, filtered by the search', async () => {
+      await render(
+        <Test
+          columns={[
+            { field: 'item', headerName: 'Item' },
+            { field: 'price', type: 'number' },
+            { field: 'unit price', type: 'number', headerName: 'Unit price' },
+          ]}
+          initialState={{ computedColumns: { model: [total] } }}
+        />,
+      );
+      await openEditor('total');
+      const items = getReferenceItems();
+      expect(items.slice(0, 3)).to.deep.equal([
+        'itemItem',
+        'price',
+        'FIELD("unit price")Unit price',
+      ]);
+      expect(items.some((item) => item.startsWith('SUM(value1'))).to.equal(true);
+      expect(items.some((item) => item.startsWith('total'))).to.equal(false);
+
+      fireEvent.change(getSearch(), { target: { value: 'unit' } });
+      expect(getReferenceItems()).to.deep.equal(['FIELD("unit price")Unit price']);
+
+      fireEvent.change(getSearch(), { target: { value: 'zzz' } });
+      expect(within(getReferencePane()).getByText('No matches')).not.to.equal(null);
+
+      await act(async () => getSearch().focus());
+      fireEvent.keyDown(getSearch(), { key: 'Escape' });
+      expect(getSearch().value).to.equal('');
+      expect(getSidebar().open).to.equal(true);
+      expect(within(getPanel()!).getByText('Edit computed column')).not.to.equal(null);
+    });
+
+    it('inserts a column reference and a function call into the formula', async () => {
+      await render(<Test />);
+      await openEditor(null);
+      fireEvent.click(within(getReferencePane()).getByRole('button', { name: /^price$/ }));
+      await microtasks();
+      expect(getFormulaEditable().textContent).to.equal('=price');
+      expect(document.activeElement).to.equal(getFormulaEditable());
+
+      typeFormula('=price * ');
+      placeCaretAtEnd();
+      fireEvent.click(within(getReferencePane()).getByRole('button', { name: /^SUM\(/ }));
+      await microtasks();
+      expect(getFormulaEditable().textContent).to.equal('=price * SUM(');
+
+      typeFormula('');
+      fireEvent.click(within(getReferencePane()).getByRole('button', { name: /^quantity$/ }));
+      await microtasks();
+      expect(getFormulaEditable().textContent).to.equal('=quantity');
+    });
+
+    it.skipIf(isJSDOM)('inserts at the caret and places the caret after the token', async () => {
+      const { user } = await render(<Test />);
+      await openEditor(null);
+      const editable = getFormulaEditable();
+      await user.click(editable);
+      await user.keyboard('1 * 2');
+      await user.keyboard('{ArrowLeft}{ArrowLeft}{ArrowLeft}');
+      await user.click(within(getReferencePane()).getByRole('button', { name: /^price$/ }));
+
+      expect(editable.textContent).to.equal('=1 price* 2');
+      expect(document.activeElement).to.equal(editable);
+      const selection = document.getSelection()!;
+      expect(selection.isCollapsed).to.equal(true);
+      const range = selection.getRangeAt(0);
+      const preRange = document.createRange();
+      preRange.selectNodeContents(editable);
+      preRange.setEnd(range.startContainer, range.startOffset);
+      expect(preRange.toString().length).to.equal('=1 price'.length);
+    });
+  });
+
+  describe('keyboard', () => {
+    it('cancels on Escape from any field', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total');
+      typeName('Changed');
+      await act(async () => getNameInput().focus());
+      fireEvent.keyDown(getNameInput(), { key: 'Escape' });
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+      expect(getModel()).to.deep.equal([total]);
+
+      await act(async () => apiRef.current!.showSidebar(GridSidebarValue.ComputedColumns));
+      fireEvent.click(within(getPanel()!).getByRole('button', { name: /Total/ }));
+      await microtasks();
+      await act(async () => getFormulaEditable().focus());
+      fireEvent.keyDown(getFormulaEditable(), { key: 'Escape' });
+      await microtasks();
+      expect(getSidebar().open).to.equal(true);
+      expect(within(getPanel()!).getByText('Computed columns')).not.to.equal(null);
+    });
+
+    it('applies on Ctrl/Cmd+Enter from any field', async () => {
+      await render(<Test />);
+      await openEditor(null);
+      typeName('Total');
+      typeFormula('=price * quantity');
+      await act(async () => getTypeSelect().focus());
+      fireEvent.keyDown(getTypeSelect(), { key: 'Enter', ctrlKey: true });
+      await microtasks();
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total']);
+      expect(getSidebar().open).to.equal(false);
+
+      await openEditor('total');
+      typeName('Amount');
+      await act(async () => getNameInput().focus());
+      fireEvent.keyDown(getNameInput(), { key: 'Enter', metaKey: true });
+      await microtasks();
+      expect(getModel()[0].headerName).to.equal('Amount');
+    });
+
+    it('swallows End/Home when the caret is already at that edge of the formula', async () => {
+      // Chromium would otherwise scroll the panel body away from the formula.
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total');
+      const editable = getFormulaEditable();
+      placeCaretAtEnd();
+      const atEnd = new KeyboardEvent('keydown', { key: 'End', bubbles: true, cancelable: true });
+      act(() => {
+        editable.dispatchEvent(atEnd);
+      });
+      expect(atEnd.defaultPrevented).to.equal(true);
+      const homeFromEnd = new KeyboardEvent('keydown', {
+        key: 'Home',
+        bubbles: true,
+        cancelable: true,
+      });
+      act(() => {
+        editable.dispatchEvent(homeFromEnd);
+      });
+      expect(homeFromEnd.defaultPrevented).to.equal(false);
+      expect(getSidebar().open).to.equal(true);
+    });
+
+    it('underlines the span of a parse error once the draft is dirty', async () => {
+      await render(<Test />);
+      await openEditor(null);
+      typeFormula('=price *');
+      const getErrorTokens = () =>
+        Array.from(getFormulaEditable().querySelectorAll('.MuiDataGrid-formulaErrorToken')).map(
+          (node) => node.textContent,
+        );
+      expect(
+        getValidationMessages().some((message) => message!.startsWith('Formula error')),
+      ).to.equal(true);
+      expect(getErrorTokens()).to.have.length.greaterThan(0);
+
+      typeFormula('=price * quantity');
+      expect(getErrorTokens()).to.deep.equal([]);
     });
   });
 

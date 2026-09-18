@@ -1789,6 +1789,12 @@
       "isGlobal": false
     },
     {
+      "key": "computedColumnsPanelEmpty",
+      "className": "MuiDataGridPro-computedColumnsPanelEmpty",
+      "description": "Styles applied to the empty state of the computed columns panel list.",
+      "isGlobal": false
+    },
+    {
       "key": "computedColumnsPanelField",
       "className": "MuiDataGridPro-computedColumnsPanelField",
       "description": "Styles applied to the field rows of the computed columns panel editor.",
@@ -1813,9 +1819,27 @@
       "isGlobal": false
     },
     {
+      "key": "computedColumnsPanelList",
+      "className": "MuiDataGridPro-computedColumnsPanelList",
+      "description": "Styles applied to the computed columns panel list view element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelListItem",
+      "className": "MuiDataGridPro-computedColumnsPanelListItem",
+      "description": "Styles applied to each item of the computed columns panel list.",
+      "isGlobal": false
+    },
+    {
       "key": "computedColumnsPanelPreview",
       "className": "MuiDataGridPro-computedColumnsPanelPreview",
       "description": "Styles applied to the preview element of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelReference",
+      "className": "MuiDataGridPro-computedColumnsPanelReference",
+      "description": "Styles applied to the reference pane (columns and functions to insert) of the computed columns panel editor.",
       "isGlobal": false
     },
     {

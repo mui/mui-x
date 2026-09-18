@@ -1488,6 +1488,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the computed columns panel editor view element"
     },
+    "computedColumnsPanelEmpty": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the empty state of the computed columns panel list"
+    },
     "computedColumnsPanelField": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the field rows of the computed columns panel editor"
@@ -1504,9 +1508,21 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the computed columns panel header element"
     },
+    "computedColumnsPanelList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel list view element"
+    },
+    "computedColumnsPanelListItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each item of the computed columns panel list"
+    },
     "computedColumnsPanelPreview": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the preview element of the computed columns panel editor"
+    },
+    "computedColumnsPanelReference": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the reference pane (columns and functions to insert) of the computed columns panel editor"
     },
     "computedColumnsPanelValidation": {
       "description": "Styles applied to {{nodeName}}.",
@@ -2160,6 +2176,7 @@
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
     "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
     "computedColumnIcon": "Icon used for the computed columns entry points (column menu, panel).",
+    "computedColumnsPanelBackIcon": "Icon displayed in the back button of the computed columns panel editor.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
