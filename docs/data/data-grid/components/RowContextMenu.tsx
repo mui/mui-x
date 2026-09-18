@@ -6,11 +6,13 @@ import MenuItem from '@mui/material/MenuItem';
 const columns = [
   {
     field: 'first',
+    rowHeader: true,
     headerName: 'First',
     width: 140,
   },
   {
     field: 'last',
+    rowHeader: true,
     headerName: 'Last',
     width: 140,
   },

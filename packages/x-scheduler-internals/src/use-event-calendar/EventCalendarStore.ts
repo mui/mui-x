@@ -1,6 +1,7 @@
 import { warn } from '@base-ui/utils/warn';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
   EventCalendarPreferences,
   CalendarView,
@@ -16,7 +17,6 @@ import type {
 import { DEFAULT_SCHEDULER_PREFERENCES, SchedulerStore } from '../internals/utils/SchedulerStore';
 import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
-import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -110,23 +110,26 @@ const mapper: SchedulerParametersToStateMapper<
 /**
  * Base class that can be extended by premium stores.
  * Accepts instanceName as a parameter to allow subclasses to provide their own instance name.
+ * `Parameters` is generic so premium stores can widen it with their own parameters.
  */
 export class ExtendableEventCalendarStore<
   TEvent extends object,
   TResource extends object,
-> extends SchedulerStore<
-  TEvent,
-  TResource,
-  EventCalendarState,
-  EventCalendarParameters<TEvent, TResource>
-> {
+  Parameters extends EventCalendarParameters<TEvent, TResource> = EventCalendarParameters<
+    TEvent,
+    TResource
+  >,
+> extends SchedulerStore<TEvent, TResource, EventCalendarState, Parameters> {
   public constructor(
-    parameters: EventCalendarParameters<TEvent, TResource>,
+    parameters: Parameters,
     adapter: Adapter,
     instanceName: SchedulerInstanceName,
     recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
   ) {
     super(parameters, adapter, instanceName, mapper, recurringEventsPlugin);
+
+    // A view change swaps the grid, so the edited occurrence goes stale like it does on a date change.
+    this.disposables.defer(this.registerStoreEffect((state) => state.view, this.stopEditing));
 
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
@@ -253,6 +256,15 @@ export class ExtendableEventCalendarStore<
    */
   public setPreferences = (partialPreferences: Partial<EventCalendarPreferences>, event: Event) => {
     const { preferences: preferencesProp, onPreferencesChange } = this.parameters;
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      preferencesProp !== undefined &&
+      !onPreferencesChange
+    ) {
+      warn(
+        'MUI X Scheduler: EventCalendar is controlled (received a `preferences` prop) but `onPreferencesChange` is not provided. Preference changes will be silently ignored.',
+      );
+    }
 
     const updated = {
       ...this.state.preferences,

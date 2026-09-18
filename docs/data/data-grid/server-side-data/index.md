@@ -311,6 +311,27 @@ If there's an error, `onDataSourceError()` is triggered with the error object co
 
 {{"demo": "ServerSideEditing.js", "bg": "inline"}}
 
+### Replacing the row instead of merging it
+
+The resolved row is merged into the existing one, which produces a new object.
+To store the resolved row as-is instead, resolve with a [row replacement](/x/react-data-grid/row-updates/#replacing-a-row-instead-of-merging-it).
+Use it when rows are class instances whose prototype chain, `#private` fields, or object identity must survive the update:
+
+```ts
+const dataSource: GridDataSource = {
+  getRows: async (params: GridGetRowsParams) => {
+    // fetch rows from the server
+  },
+  updateRow: async (params: GridUpdateRowParams) => {
+    const response = await updateRowOnServer(params.updatedRow);
+    return { _action: 'replace', row: MyRowClass.fromJSON(response) };
+  },
+};
+```
+
+In this case, `apiRef.current.getRow(id)` returns the very instance provided in `row`.
+The rows resolved by `getRows()` are always stored as-is, so this keeps editing consistent with the initial fetch.
+
 :::warning
 When using the `updateRow()` method, the Data Source cache is automatically cleared after successful updates to prevent displaying outdated data.
 This means any previously cached data will be refetched on the next request.

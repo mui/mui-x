@@ -9,6 +9,7 @@ import type { SeriesId } from '../models/seriesType';
 import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
 import { useStore } from '../internals/store/useStore';
 import { getSymbol } from '../internals/getSymbol';
+import { useAnimateMark } from '../hooks/animation/useAnimateMark';
 import { lineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 import type { LineClasses } from './lineClasses';
 
@@ -27,7 +28,8 @@ const MarkElementPath = styled('path', {
   fill: (theme.vars || theme).palette.background.paper,
   [`&.${lineClasses.markAnimate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionProperty: 'transform, transform-origin, opacity',
+    // The position is animated in JS by `useAnimateMark`: Safari cannot transition the `transform` attribute.
+    transitionProperty: 'opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 }));
@@ -108,15 +110,16 @@ function MarkElement(props: MarkElementProps) {
   };
   const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
 
+  // Positions the mark with the `transform` attribute, in `viewBox` units. A CSS `px` transform lands in the wrong
+  // place in Safari under browser zoom, see https://github.com/mui/mui-x/issues/23377
+  const animatedProps = useAnimateMark({ x: Number(x), y: Number(y), skipAnimation });
+
   return (
     <MarkElementPath
       {...other}
       {...(enablePositionBasedPointerInteraction ? {} : interactionProps)}
-      style={{
-        ...style,
-        transform: `translate(${x}px, ${y}px)`,
-        transformOrigin: `${x}px ${y}px`,
-      }}
+      {...animatedProps}
+      style={style}
       ownerState={ownerState}
       className={classes.mark}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}

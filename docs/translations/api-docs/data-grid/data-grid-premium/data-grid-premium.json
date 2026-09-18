@@ -120,6 +120,12 @@
     "disableEval": {
       "description": "If <code>true</code>, <code>eval()</code> is not used for performance optimization."
     },
+    "disableFormulaAutocomplete": {
+      "description": "If <code>true</code>, the suggestion dropdown shown while editing a formula cell is disabled. Has no effect when <code>disableFormulas</code> is <code>true</code> or a <code>dataSource</code> is set."
+    },
+    "disableFormulas": {
+      "description": "If <code>true</code>, the formula evaluation is disabled: <code>=</code> cell values render as raw strings."
+    },
     "disableMultipleColumnsFiltering": {
       "description": "If <code>true</code>, filtering with multiple columns is disabled."
     },
@@ -147,6 +153,9 @@
     "experimentalFeatures": {
       "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, then the feature is fully disabled, and neither property nor method calls will have any effect."
     },
+    "featureDependencies": {
+      "description": "Injectable feature implementations. Import the formula feature from <code>@mui/x-data-grid-premium/formula</code> and pass it here to enable formula evaluation — the feature is not bundled with the grid itself. The value is read on the first render and must not change afterwards."
+    },
     "filterDebounceMs": {
       "description": "The milliseconds delay to wait after a keystroke before triggering filtering."
     },
@@ -154,6 +163,12 @@
       "description": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side."
     },
     "filterModel": { "description": "Set the filter model of the Data Grid." },
+    "formulaA1Notation": {
+      "description": "If <code>true</code>, formulas can be entered and are displayed using A1 notation (<code>=A1 + B2</code>) while still being stored in the canonical syntax. A leftmost row-number column and column-letter header adornments are shown. Has no effect when <code>disableFormulas</code> is <code>true</code> or a <code>dataSource</code> is set."
+    },
+    "formulaFunctions": {
+      "description": "Functions available to formulas, keyed by name. The prop replaces the built-in set: spread <code>GRID_FORMULA_FUNCTIONS</code> (imported from <code>@mui/x-data-grid-premium/formula</code>) to extend it. Has no effect unless the formula feature is provided through <code>featureDependencies</code>."
+    },
     "getAggregationPosition": {
       "description": "Determines the position of an aggregated value.",
       "typeDescriptions": {
@@ -962,9 +977,9 @@
         "newRow": { "name": "newRow", "description": "Row object with the new values." },
         "oldRow": { "name": "oldRow", "description": "Row object with the old values." },
         "params": { "name": "params", "description": "Additional parameters." },
-        "Promise<R> | R": {
-          "name": "Promise<R> | R",
-          "description": "The final values to update the row."
+        "Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>": {
+          "name": "Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>",
+          "description": "The final values to update the row, or a <code>{ _action: &#39;replace&#39;, row }</code> update to store <code>row</code> as the new row without merging."
         }
       }
     },
@@ -1529,6 +1544,18 @@
     "footerContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer container element"
+    },
+    "formulaBar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the formula bar root element (Premium formulas)"
+    },
+    "formulaColumnHeaderLetter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the A1-notation column-letter adornment in the column header (Premium formulas)"
+    },
+    "formulaRowNumberCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the cells of the A1-notation row-number column (Premium formulas)"
     },
     "groupingCriteriaCell": {
       "description": "Styles applied to the root element of the grouping criteria cell"

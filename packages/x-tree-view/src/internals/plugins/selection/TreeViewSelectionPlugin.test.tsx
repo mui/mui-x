@@ -1,7 +1,7 @@
-import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { clearWarningsCache } from '@mui/x-internals/warning';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import type { TreeViewAnyStore } from '../../models';
 
 /**
@@ -63,7 +63,7 @@ describeTreeView<TreeViewAnyStore>(
       });
 
       it('should call the onSelectedItemsChange callback when the model is updated (single selection and add selected item)', async () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           items: [{ id: '1' }, { id: '2' }],
@@ -72,15 +72,15 @@ describeTreeView<TreeViewAnyStore>(
 
         await view.user.click(view.getItemContent('1'));
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal('1');
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal('1');
       });
 
       // TODO: Re-enable this test if we have a way to un-select an item in single selection.
       it.todo(
         'should call onSelectedItemsChange callback when the model is updated (single selection and remove selected item',
         async () => {
-          const onSelectedItemsChange = spy();
+          const onSelectedItemsChange = vi.fn();
 
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
@@ -90,13 +90,13 @@ describeTreeView<TreeViewAnyStore>(
 
           await view.user.click(view.getItemContent('1'));
 
-          expect(onSelectedItemsChange.callCount).to.equal(1);
-          expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal([]);
+          expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+          expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal([]);
         },
       );
 
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to empty list)', async () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -106,12 +106,12 @@ describeTreeView<TreeViewAnyStore>(
 
         await view.user.click(view.getItemContent('1'));
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['1']);
       });
 
       it('should call the onSelectedItemsChange callback only once when selecting a collapsed parent item', () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -120,12 +120,12 @@ describeTreeView<TreeViewAnyStore>(
 
         fireEvent.click(view.getItemContent('1'));
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.equal('1');
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.equal('1');
       });
 
       it('should propagate selection to descendants when they mount after parent is selected (descendants propagation enabled)', () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -141,7 +141,7 @@ describeTreeView<TreeViewAnyStore>(
       });
 
       it('should call the onSelectedItemsChange callback only once when selecting a collapsed parent item in single-select mode with selectionPropagation.descendants', () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -151,12 +151,12 @@ describeTreeView<TreeViewAnyStore>(
 
         fireEvent.click(view.getItemContent('1'));
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.equal('1');
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.equal('1');
       });
 
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to non-empty list)', async () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -169,12 +169,12 @@ describeTreeView<TreeViewAnyStore>(
         await view.user.click(view.getItemContent('2'));
         await view.user.keyboard('{/Control}');
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['2', '1']);
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['2', '1']);
       });
 
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and remove selected item)', async () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -187,8 +187,8 @@ describeTreeView<TreeViewAnyStore>(
         await view.user.click(view.getItemContent('1'));
         await view.user.keyboard('{/Control}');
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal([]);
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal([]);
       });
 
       it('should warn when switching from controlled to uncontrolled', () => {
@@ -1161,7 +1161,7 @@ describeTreeView<TreeViewAnyStore>(
 
     describe('onItemSelectionToggle prop', () => {
       it('should call the onItemSelectionToggle callback when selecting an item', async () => {
-        const onItemSelectionToggle = spy();
+        const onItemSelectionToggle = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -1170,13 +1170,13 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         await view.user.click(view.getItemContent('1'));
-        expect(onItemSelectionToggle.callCount).to.equal(1);
-        expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemSelectionToggle.lastCall.args[2]).to.equal(true);
+        expect(onItemSelectionToggle.mock.calls.length).to.equal(1);
+        expect(onItemSelectionToggle.mock.lastCall?.[1]).to.equal('1');
+        expect(onItemSelectionToggle.mock.lastCall?.[2]).to.equal(true);
       });
 
       it('should call the onItemSelectionToggle callback when un-selecting an item', async () => {
-        const onItemSelectionToggle = spy();
+        const onItemSelectionToggle = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -1188,9 +1188,9 @@ describeTreeView<TreeViewAnyStore>(
         await view.user.keyboard('{Control>}');
         await view.user.click(view.getItemContent('1'));
         await view.user.keyboard('{/Control}');
-        expect(onItemSelectionToggle.callCount).to.equal(1);
-        expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemSelectionToggle.lastCall.args[2]).to.equal(false);
+        expect(onItemSelectionToggle.mock.calls.length).to.equal(1);
+        expect(onItemSelectionToggle.mock.lastCall?.[1]).to.equal('1');
+        expect(onItemSelectionToggle.mock.lastCall?.[2]).to.equal(false);
       });
     });
 
@@ -1249,7 +1249,7 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         it('should ignore keepExistingSelection and only select the new item', () => {
-          const onSelectedItemsChange = spy();
+          const onSelectedItemsChange = vi.fn();
 
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
@@ -1267,12 +1267,12 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(false);
           expect(view.isItemSelected('2')).to.equal(true);
-          expect(onSelectedItemsChange.lastCall.args[1]).to.equal('2');
+          expect(onSelectedItemsChange.mock.lastCall?.[1]).to.equal('2');
         });
 
         it('should keep the model as an item id when re-selecting a selected item with keepExistingSelection', () => {
-          const onSelectedItemsChange = spy();
-          const onItemSelectionToggle = spy();
+          const onSelectedItemsChange = vi.fn();
+          const onItemSelectionToggle = vi.fn();
 
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
@@ -1291,8 +1291,8 @@ describeTreeView<TreeViewAnyStore>(
           });
 
           expect(view.isItemSelected('1')).to.equal(true);
-          expect(onSelectedItemsChange.lastCall.args[1]).to.equal('1');
-          expect(onItemSelectionToggle.callCount).to.equal(0);
+          expect(onSelectedItemsChange.mock.lastCall?.[1]).to.equal('1');
+          expect(onItemSelectionToggle.mock.calls.length).to.equal(0);
         });
       });
 
@@ -1333,7 +1333,7 @@ describeTreeView<TreeViewAnyStore>(
       describe('onItemSelectionToggle prop', () => {
         it('should call call onItemSelectionToggle callback when selecting an item', () => {
           const event = {} as any;
-          const onItemSelectionToggle = spy();
+          const onItemSelectionToggle = vi.fn();
 
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
@@ -1344,15 +1344,15 @@ describeTreeView<TreeViewAnyStore>(
             view.apiRef.current.setItemSelection({ itemId: '1', event });
           });
 
-          expect(onItemSelectionToggle.callCount).to.equal(1);
-          expect(onItemSelectionToggle.lastCall.args[0]).to.equal(event);
-          expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-          expect(onItemSelectionToggle.lastCall.args[2]).to.equal(true);
+          expect(onItemSelectionToggle.mock.calls.length).to.equal(1);
+          expect(onItemSelectionToggle.mock.lastCall?.[0]).to.equal(event);
+          expect(onItemSelectionToggle.mock.lastCall?.[1]).to.equal('1');
+          expect(onItemSelectionToggle.mock.lastCall?.[2]).to.equal(true);
         });
 
         it('should call call onItemSelectionToggle callback when un-selecting an item', () => {
           const event = {} as any;
-          const onItemSelectionToggle = spy();
+          const onItemSelectionToggle = vi.fn();
 
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
@@ -1364,11 +1364,143 @@ describeTreeView<TreeViewAnyStore>(
             view.apiRef.current.setItemSelection({ itemId: '1', event });
           });
 
-          expect(onItemSelectionToggle.callCount).to.equal(1);
-          expect(onItemSelectionToggle.lastCall.args[0]).to.equal(event);
-          expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-          expect(onItemSelectionToggle.lastCall.args[2]).to.equal(false);
+          expect(onItemSelectionToggle.mock.calls.length).to.equal(1);
+          expect(onItemSelectionToggle.mock.lastCall?.[0]).to.equal(event);
+          expect(onItemSelectionToggle.mock.lastCall?.[1]).to.equal('1');
+          expect(onItemSelectionToggle.mock.lastCall?.[2]).to.equal(false);
         });
+      });
+    });
+
+    describe('getItemSelection() api method', () => {
+      it('should return "selected" for a selected item and "unselected" for the other items', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2' }],
+          defaultSelectedItems: ['1'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('selected');
+        expect(view.apiRef.current.getItemSelection('2')).to.equal('unselected');
+      });
+
+      it('should return "selected" for every selected item when multiSelect is true', () => {
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+          defaultSelectedItems: ['1', '2'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('selected');
+        expect(view.apiRef.current.getItemSelection('2')).to.equal('selected');
+        expect(view.apiRef.current.getItemSelection('3')).to.equal('unselected');
+      });
+
+      it('should return "unselected" for an item that is not in the tree', () => {
+        const view = render({
+          items: [{ id: '1' }],
+        });
+
+        expect(view.apiRef.current.getItemSelection('not-in-the-tree')).to.equal('unselected');
+      });
+
+      it('should return "indeterminate" when only some of the descendants are selected', () => {
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+          defaultSelectedItems: ['1.1'],
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('indeterminate');
+        expect(view.apiRef.current.getItemSelection('2')).to.equal('unselected');
+      });
+
+      it('should return "indeterminate" when all the descendants are selected and selectionPropagation.parents is false', () => {
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+          defaultSelectedItems: ['1.1', '1.2'],
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('indeterminate');
+      });
+
+      it('should return "selected" when all the descendants are selected and selectionPropagation.parents is true', () => {
+        const view = render({
+          multiSelect: true,
+          selectionPropagation: { parents: true },
+          items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+          defaultSelectedItems: ['1.1', '1.2'],
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('selected');
+      });
+
+      it('should return "indeterminate" when only some of the descendants are selected in single selection', () => {
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+          defaultSelectedItems: '1.1',
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('indeterminate');
+        expect(view.apiRef.current.getItemSelection('2')).to.equal('unselected');
+      });
+
+      it('should return the updated status after the selection changed', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2' }],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('unselected');
+
+        act(() => {
+          view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('selected');
+      });
+
+      it('should return the updated status when called from the onItemSelectionToggle callback', async () => {
+        const statuses: string[] = [];
+        const viewRef: { current: ReturnType<typeof render> | null } = { current: null };
+
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          onItemSelectionToggle: (event, itemId) => {
+            statuses.push(viewRef.current!.apiRef.current.getItemSelection(itemId));
+          },
+        });
+        viewRef.current = view;
+
+        await view.user.click(view.getItemContent('1.1'));
+
+        expect(statuses).to.deep.equal(['selected']);
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('indeterminate');
+      });
+
+      it('should return the updated status when called from the onSelectedItemsChange callback', async () => {
+        const statuses: string[] = [];
+        const viewRef: { current: ReturnType<typeof render> | null } = { current: null };
+
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          onSelectedItemsChange: () => {
+            statuses.push(viewRef.current!.apiRef.current.getItemSelection('1.1'));
+            statuses.push(viewRef.current!.apiRef.current.getItemSelection('1'));
+          },
+        });
+        viewRef.current = view;
+
+        await view.user.click(view.getItemContent('1.1'));
+
+        expect(statuses).to.deep.equal(['selected', 'indeterminate']);
       });
     });
 

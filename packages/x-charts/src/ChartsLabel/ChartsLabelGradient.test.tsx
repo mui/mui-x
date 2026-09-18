@@ -6,6 +6,7 @@ import { labelGradientClasses } from '@mui/x-charts/ChartsLabel';
 import { isJSDOM } from 'test/utils/skipIf';
 import RtlProvider from '@mui/system/RtlProvider';
 // It's not publicly exported, so, using a relative import
+import { describe, it, expect } from 'vitest';
 import { ChartsLabelGradient } from './ChartsLabelGradient';
 
 const LABEL_SVG_SELECTOR = 'svg:not([aria-hidden="true"])';

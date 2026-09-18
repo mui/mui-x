@@ -2,6 +2,7 @@ import * as React from 'react';
 import { within, waitFor } from '@mui/internal-test-utils';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 
 describe('<SidePanelDrawer />', () => {
   const { render } = createSchedulerRenderer();

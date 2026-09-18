@@ -18,4 +18,4 @@ jobs:
       issues: write
       actions: write
     name: Handle status labels
-    uses: mui/mui-public/.github/workflows/issues_status-label-handler.yml@5a40e5ed0fc8d5ff358463279c75f69b33062d9f # master
+    uses: mui/mui-public/.github/workflows/issues_status-label-handler.yml@b296c98bc17f685db974504d2c00094a59d1698d # master

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import type { TemporalAdapter } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import { getEndOfWeek, getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import type {
   TemporalSupportedObject,
   EventTimelinePremiumPreset,
-  PresetConfig,
+  PresetDefinition,
   PresetHeaderUnit,
 } from '../../models';
 
@@ -28,16 +28,37 @@ function formatMonthAndYear(adapter: TemporalAdapter, date: TemporalSupportedObj
   return adapter.formatByString(date, `${f.monthFullLetter} ${f.yearPadded}`);
 }
 
-function formatHourLabel(adapter: TemporalAdapter, date: TemporalSupportedObject, ampm: boolean) {
+/**
+ * A day with no DST transition, used as the base of the hour labels. Cached per adapter:
+ * the header re-renders on every horizontal scroll and builds one label per visible hour
+ * cell, so parsing the date there would repeat the same work on every frame.
+ */
+const dstFreeTemplateDay = new WeakMap<TemporalAdapter, TemporalSupportedObject>();
+
+function getDstFreeTemplateDay(adapter: TemporalAdapter) {
+  let template = dstFreeTemplateDay.get(adapter);
+  if (!template) {
+    template = adapter.date('2020-01-01T00:00:00', 'default');
+    dstFreeTemplateDay.set(adapter, template);
+  }
+  return template;
+}
+
+/**
+ * Formats a wall-clock hour, not an instant: the hour skipped by a spring-forward
+ * transition has no instant on that day, so the label is built on a DST-free template
+ * day. Same approach as the Event Calendar's time axis.
+ */
+function formatHourLabel(adapter: TemporalAdapter, hour: number, ampm: boolean) {
   const f = adapter.formats;
   const pattern = ampm
     ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
     : `${f.hours24h}:${f.minutesPadded}`;
-  return adapter.formatByString(date, pattern);
+  return adapter.formatByString(adapter.setHours(getDstFreeTemplateDay(adapter), hour), pattern);
 }
 
-export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Readonly<
-  Record<EventTimelinePremiumPreset, PresetConfig>
+export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
+  Record<EventTimelinePremiumPreset, PresetDefinition>
 > = {
   dayAndHour: {
     timeResolution: 'hour',
@@ -49,7 +70,8 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Readonly<
       },
       {
         unit: 'hour',
-        renderCell: ({ adapter, date, ampm }) => formatHourLabel(adapter, date, ampm),
+        renderCell: ({ adapter, date, wallClockHour, ampm }) =>
+          formatHourLabel(adapter, wallClockHour ?? adapter.getHours(date), ampm),
       },
     ],
     unitCount: DAY_AND_HOUR_DAYS,
@@ -57,8 +79,8 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Readonly<
     getEndDate: (adapter, start, unitCount) =>
       adapter.endOfDay(adapter.addDays(start, unitCount - 1)),
     // `unitCount` is in days (the navigation step), but the grid ticks in hours. Pin
-    // the CSS tick count to `4 × 24` so the grid width stays stable across DST and
-    // matches the 24 hour cells `iterate()` emits per day.
+    // the CSS tick count to `days × 24`: the hour row is a wall-clock grid, so it emits
+    // the same cell count on every day, DST transitions included.
     getCssUnitCount: () => DAY_AND_HOUR_DAYS * 24,
     navigate: (adapter, date, amount) => adapter.addDays(date, amount),
   },
@@ -143,6 +165,6 @@ const TICKS_PER_DAY: Record<PresetHeaderUnit, number> = {
  * Higher = more zoomed in. Used to derive the canonical zoom ordering of presets.
  */
 export function getPresetPxPerDay(preset: EventTimelinePremiumPreset): number {
-  const { timeResolution, tickWidth } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
+  const { timeResolution, tickWidth } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
   return tickWidth * TICKS_PER_DAY[timeResolution];
 }

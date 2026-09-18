@@ -2,6 +2,7 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { PickersTextField, pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { createPickerRenderer, PICKERS_TEXT_FIELD_STUB_PROPS } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<PickersTextField /> - slot forwarding', () => {
   const { render } = createPickerRenderer();

@@ -54,6 +54,11 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
 
+  // Formula bar (Premium formulas)
+  // formulaBarLabel: 'Formula bar',
+  // formulaBarInputLabel: 'Formula',
+  // formulaBarAddressLabel: 'Active cell',
+
   // Columns management text
   columnsManagementSearchTitle: 'تلاش',
   columnsManagementNoColumns: 'کوئی کالم نہیں',

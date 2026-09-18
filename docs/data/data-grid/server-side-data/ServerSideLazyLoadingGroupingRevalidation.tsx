@@ -293,6 +293,7 @@ const columns: GridColDef<StockRow>[] = [
   {
     field: 'name',
     headerName: 'Company',
+    rowHeader: true,
     width: 220,
   },
   {

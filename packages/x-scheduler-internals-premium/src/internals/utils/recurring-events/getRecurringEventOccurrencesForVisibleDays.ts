@@ -1,4 +1,4 @@
-import type { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import type {
   SchedulerProcessedEventRecurrenceRule,
@@ -11,6 +11,7 @@ import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   getDateKey,
   getOccurrenceEnd,
+  getRecurringOccurrenceKey,
   mergeDateAndTime,
   normalizeAllDayBounds,
 } from '@mui/x-scheduler-internals/internals';
@@ -99,13 +100,9 @@ class RecurringEventExpander {
 
     this.dataTimezone = event.dataTimezone;
     this.rule = this.dataTimezone.rrule!;
-    this.dtStartInDataTz = adapter.setTimezone(
-      this.dataTimezone.start.value,
-      this.dataTimezone.timezone,
-    );
-    this.seriesStartDay = adapter.startOfDay(
-      adapter.setTimezone(this.dataTimezone.start.value, this.dataTimezone.timezone),
-    );
+    // Already labeled in the data timezone by `resolveEventDate`.
+    this.dtStartInDataTz = this.dataTimezone.start.value;
+    this.seriesStartDay = adapter.startOfDay(this.dtStartInDataTz);
     this.interval = Math.max(1, this.rule.interval ?? 1);
 
     const dataTz = this.dataTimezone.timezone;
@@ -117,7 +114,7 @@ class RecurringEventExpander {
     this.scanFirstDay = adapter.startOfDay(adapter.addDays(visibleStartDataTz, 1 - eventDuration));
     this.scanLastDay = adapter.startOfDay(visibleEndDataTz);
 
-    // Pre-compute boundaries and exclusions
+    // Pre-compute boundaries and exclusions (exDates are data-timezone labeled, like the day keys).
     this.exDateKeys = new Set(this.dataTimezone.exDates?.map((d) => getDateKey(d, adapter)));
     this.untilBoundary = this.rule.until ? adapter.startOfDay(this.rule.until) : null;
     this.minDate = adapter.isBefore(this.seriesStartDay, this.scanFirstDay)
@@ -218,7 +215,7 @@ class RecurringEventExpander {
       );
     occurrences.push({
       ...this.event,
-      key: `${this.event.id}::${dateKey}`,
+      key: getRecurringOccurrenceKey(this.event.id, day, this.adapter),
       dataTimezone: {
         ...this.event.dataTimezone,
         start: processDate(occurrenceStartOriginal, this.adapter),

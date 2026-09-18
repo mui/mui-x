@@ -1,16 +1,31 @@
-import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventId,
+  SchedulerEventSide,
+  SchedulerResourceId,
+} from '@mui/x-scheduler-internals/models';
 import type { SchedulerChangeEventDetails } from '@mui/x-scheduler-internals/internals';
 
 export type SchedulerDependencyId = string | number;
 
+// Registers the dependencies as a selectable entity of the shared selection slice.
+// Declared here (not in `typeOverloads`) so any program compiling the store also
+// loads the augmentation.
+declare module '@mui/x-scheduler-internals/models' {
+  interface SchedulerSelectionTypeLookup {
+    dependency: SchedulerDependencyId;
+  }
+}
+
 /**
- * The other PDM types (`StartToStart`, `FinishToFinish`, `StartToFinish`) will widen this union when implemented.
+ * The PDM dependency types: which edge of the predecessor constrains which edge of
+ * the successor.
  */
-export type SchedulerDependencyType = 'FinishToStart';
+export type SchedulerDependencyType =
+  'FinishToStart' | 'StartToStart' | 'FinishToFinish' | 'StartToFinish';
 
 /**
  * A dependency between two events, referencing them by id.
- * For `"FinishToStart"`, `source` is the predecessor and `target` the successor.
+ * `source` is the predecessor and `target` the successor, whatever the type.
  */
 export interface SchedulerDependency {
   /**
@@ -37,10 +52,57 @@ export interface SchedulerDependency {
  */
 export type SchedulerDependencyCreationProperties = Omit<SchedulerDependency, 'id'>;
 
-export type SchedulerDependencyEventRejectionReason = 'recurringEvent' | 'unknownEvent';
+/**
+ * State of the pending create-dependency drag gesture, from a terminal to a target
+ * event or one of its terminals.
+ */
+export interface SchedulerDependencyCreation {
+  /**
+   * The id of the event the gesture started from (the predecessor).
+   */
+  sourceEventId: SchedulerEventId;
+  /**
+   * The key of the occurrence the gesture started from.
+   * Anchors the provisional arrow on the row appearance the user grabbed.
+   */
+  sourceOccurrenceKey: string;
+  /**
+   * The resource of the row appearance the gesture started from. The occurrence key
+   * alone does not identify an appearance: an event assigned to several resources
+   * repeats the same occurrence (and key) on each of its rows.
+   */
+  sourceResourceId: SchedulerResourceId;
+  /**
+   * The edge of the source event the gesture started from.
+   */
+  sourceSide: SchedulerEventSide;
+  /**
+   * The id of the event currently hovered as a valid drop target, if any.
+   */
+  targetEventId: SchedulerEventId | null;
+  /**
+   * The key of the hovered occurrence, so the provisional arrow snaps to the row
+   * appearance under the pointer.
+   */
+  targetOccurrenceKey: string | null;
+  /**
+   * The resource of the hovered row appearance, qualifying `targetOccurrenceKey` the
+   * same way `sourceResourceId` qualifies the source.
+   */
+  targetResourceId: SchedulerResourceId | null;
+  /**
+   * The edge of the hovered target the drop would land on: the hovered terminal's, or
+   * the start edge on the event body. Together with `sourceSide`, it determines the
+   * created dependency's type.
+   */
+  targetSide: SchedulerEventSide | null;
+}
+
+export type SchedulerDependencyEventRejectionReason =
+  'recurringEvent' | 'unknownEvent' | 'readOnlyEvent';
 
 export type SchedulerDependencyRejectionReason =
-  SchedulerDependencyEventRejectionReason | 'duplicateDependency';
+  SchedulerDependencyEventRejectionReason | 'duplicateDependency' | 'cyclicDependency';
 
 export type SchedulerAddDependencyResult =
   | { status: 'added'; id: SchedulerDependencyId }
@@ -49,7 +111,8 @@ export type SchedulerAddDependencyResult =
       reason: SchedulerDependencyEventRejectionReason;
       eventId: SchedulerEventId;
     }
-  | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId };
+  | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
+  | { status: 'rejected'; reason: 'cyclicDependency' };
 
 /**
  * State slice holding the dependencies collection.
@@ -70,8 +133,9 @@ export interface SchedulerDependenciesState {
  */
 export interface SchedulerDependenciesParameters {
   /**
-   * The dependencies between events.
-   * @default []
+   * The dependencies between events. Providing a value — even an empty array —
+   * enables the dependencies feature (terminals, arrows, selection); omitting it
+   * disables the feature entirely.
    */
   dependencies?: readonly SchedulerDependency[];
   /**

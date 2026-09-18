@@ -2,6 +2,7 @@ import { screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse, describeValue } from 'test/utils/pickers';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe, expect } from 'vitest';
 
 describe('<YearCalendar /> - Describe Value', () => {
   const { render } = createPickerRenderer();

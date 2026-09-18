@@ -369,6 +369,8 @@ export function DayCalendar(inProps: DayCalendarProps) {
   const now = useNow(timezone);
   const classes = useUtilityClasses(classesProp);
   const isRtl = useRtl();
+  // The week number is a `rowheader`, so it takes the first column of the grid.
+  const columnIndexOffset = displayWeekNumber ? 1 : 0;
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -517,12 +519,19 @@ export function DayCalendar(inProps: DayCalendarProps) {
   }, [currentMonth, fixedWeekNumber, adapter]);
 
   return (
-    <PickerCalendarDayRoot role="grid" aria-labelledby={gridLabelId} className={classes.root}>
-      <PickerCalendarDayHeader role="row" className={classes.header}>
+    <PickerCalendarDayRoot
+      role="grid"
+      aria-labelledby={gridLabelId}
+      aria-colcount={columnIndexOffset + 7}
+      aria-rowcount={weeksToDisplay.length + 1}
+      className={classes.root}
+    >
+      <PickerCalendarDayHeader role="row" aria-rowindex={1} className={classes.header}>
         {displayWeekNumber && (
           <PickerCalendarWeekNumberLabel
             variant="caption"
             role="columnheader"
+            aria-colindex={1}
             aria-label={translations.calendarWeekNumberHeaderLabel}
             className={classes.weekNumberLabel}
           >
@@ -534,6 +543,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
             key={i.toString()}
             variant="caption"
             role="columnheader"
+            aria-colindex={columnIndexOffset + i + 1}
             aria-label={adapter.format(weekday, 'weekday')}
             className={classes.weekDayLabel}
           >
@@ -567,14 +577,14 @@ export function DayCalendar(inProps: DayCalendarProps) {
                 role="row"
                 key={`week-${week[0]}`}
                 className={classes.weekContainer}
-                // fix issue of announcing row 1 as row 2
-                // caused by week day labels row
-                aria-rowindex={index + 1}
+                // The week day labels row is the first row of the grid.
+                aria-rowindex={index + 2}
               >
                 {displayWeekNumber && (
                   <PickerCalendarWeekNumber
                     className={classes.weekNumber}
                     role="rowheader"
+                    aria-colindex={1}
                     aria-label={translations.calendarWeekNumberAriaLabelText(
                       adapter.getWeekNumber(week[0]),
                     )}
@@ -596,8 +606,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
                     onDaySelect={handleDaySelect}
                     isDateDisabled={isDateDisabled}
                     currentMonthNumber={currentMonthNumber}
-                    // fix issue of announcing column 1 as column 2 when `displayWeekNumber` is enabled
-                    aria-colindex={dayIndex + 1}
+                    aria-colindex={columnIndexOffset + dayIndex + 1}
                   />
                 ))}
               </PickerCalendarWeek>

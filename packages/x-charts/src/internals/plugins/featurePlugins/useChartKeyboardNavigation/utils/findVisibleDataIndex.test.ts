@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import type { ProcessedSeries } from '../../../corePlugins/useChartSeries/useChartSeries.types';
 import { findVisibleDataIndex } from './findVisibleDataIndex';
 

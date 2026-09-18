@@ -1,5 +1,5 @@
 import type { Locale } from 'date-fns/locale';
-import type { TemporalAdapter } from '../base-ui-copy/types';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 
 export type Adapter = TemporalAdapter;
 

@@ -1,6 +1,7 @@
 import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<MultiInputTimeRangeField /> - Describe Conformance', () => {
   const { render } = createPickerRenderer({

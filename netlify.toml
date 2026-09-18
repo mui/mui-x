@@ -6,7 +6,7 @@
   command = "pnpm docs:build"
 
 [build.environment]
-  NODE_VERSION = "22.23.1"
+  NODE_VERSION = "22.23.2"
   PNPM_FLAGS = "--frozen-lockfile"
   # Single-threaded docs build: one large-heap worker fits the ~11 GiB build
   # container; two multi-GiB workers overflow it (OOM).

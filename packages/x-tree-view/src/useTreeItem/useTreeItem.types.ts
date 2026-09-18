@@ -129,6 +129,10 @@ export interface UseTreeItemStatus {
   expanded: boolean;
   focused: boolean;
   selected: boolean;
+  /**
+   * `true` when the item is not selected but some of its selectable descendants are.
+   */
+  indeterminate?: boolean;
   disabled: boolean;
   editing: boolean;
   editable: boolean;

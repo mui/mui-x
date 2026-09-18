@@ -3,6 +3,7 @@ import { describeConformance } from 'test/utils/charts/describeConformance';
 import { FunnelChart, funnelClasses } from '@mui/x-charts-pro/FunnelChart';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 const config = {
   series: [{ data: [{ value: 200 }, { value: 100 }] }],

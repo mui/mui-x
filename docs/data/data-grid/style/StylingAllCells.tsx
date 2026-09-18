@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import { GridColDef, DataGrid, GridCellParams, gridClasses } from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
-  { field: 'city' },
+  { field: 'city', rowHeader: true },
   { field: 'oct', type: 'number', valueFormatter: (value) => `${value} °C` },
   { field: 'nov', type: 'number', valueFormatter: (value) => `${value} °C` },
   { field: 'dec', type: 'number', valueFormatter: (value) => `${value} °C` },

@@ -9,7 +9,7 @@ const rows = [
 ];
 
 const columns = [
-  { field: 'project', headerName: 'Project', width: 120 },
+  { field: 'project', headerName: 'Project', width: 120, rowHeader: true },
   {
     field: 'skills',
     headerName: 'Skills',

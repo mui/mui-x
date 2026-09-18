@@ -17,7 +17,15 @@ export type ToolbarButtonProps = ChartsSlotProps['baseIconButton'] & {
 
 const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
-    const { render, onKeyDown, onFocus, disabled, 'aria-disabled': ariaDisabled, ...other } = props;
+    const {
+      render,
+      onKeyDown,
+      onFocus,
+      onBlur,
+      disabled,
+      'aria-disabled': ariaDisabled,
+      ...other
+    } = props;
     const { slots, slotProps } = useChartsSlots();
 
     const buttonRef = React.useRef<HTMLButtonElement>(null);

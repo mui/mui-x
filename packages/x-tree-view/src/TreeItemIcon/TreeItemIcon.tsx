@@ -5,6 +5,7 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { TreeItemIconProps } from './TreeItemIcon.types';
 import { useTreeViewStyleContext } from '../internals/TreeViewProvider';
+import type { TreeViewSlotProps } from '../internals/TreeViewProvider/TreeViewStyleContext';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 
 function pickIcon(
@@ -57,8 +58,10 @@ function TreeItemIcon(props: TreeItemIconProps) {
   const { ownerState, ...iconProps } = useSlotProps({
     elementType: Icon as NonNullable<typeof Icon>,
     externalSlotProps: (tempOwnerState: any) => ({
+      // Only the icon entries can match `iconName`, the other style context
+      // slot props (loading, itemLoader) have incompatible owner states.
       ...resolveComponentProps(
-        slotPropsFromTreeView[iconName as keyof typeof slotPropsFromTreeView],
+        slotPropsFromTreeView[iconName as keyof TreeViewSlotProps],
         tempOwnerState,
       ),
       ...resolveComponentProps(slotPropsFromTreeItem?.[iconName], tempOwnerState),
@@ -97,6 +100,7 @@ TreeItemIcon.propTypes /* remove-proptypes */ = {
     expandable: PropTypes.bool.isRequired,
     expanded: PropTypes.bool.isRequired,
     focused: PropTypes.bool.isRequired,
+    indeterminate: PropTypes.bool,
     loading: PropTypes.bool.isRequired,
     selected: PropTypes.bool.isRequired,
   }).isRequired,

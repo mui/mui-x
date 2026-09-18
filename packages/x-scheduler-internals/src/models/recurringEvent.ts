@@ -1,4 +1,4 @@
-import type { TemporalSupportedObject } from '../base-ui-copy/types';
+import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 
 export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 /**

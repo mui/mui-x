@@ -9,6 +9,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileTimeRangePicker } from '@mui/x-date-pickers-pro/MobileTimeRangePicker';
+import { describe } from 'vitest';
 
 describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
   const { render } = createPickerRenderer();

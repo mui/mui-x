@@ -2,7 +2,7 @@ import { createRenderer, screen, waitFor } from '@mui/internal-test-utils/create
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { RadarChart } from '@mui/x-charts/RadarChart';
 import type { RadarChartProps } from '@mui/x-charts/RadarChart';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsTooltipClasses } from '../ChartsTooltip';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
@@ -26,6 +26,36 @@ describe('<RadarChart />', () => {
     testComponentPropWith: 'div',
     refInstanceof: window.HTMLDivElement,
   }));
+
+  describe('legend', () => {
+    const getGridTemplateAreas = (container: HTMLElement) =>
+      window
+        .getComputedStyle(container.firstElementChild!)
+        .gridTemplateAreas.replace(/\s+/g, ' ')
+        .trim();
+
+    it('should place the legend at the bottom when slotProps.legend.position is bottom', () => {
+      const { container } = render(
+        <RadarChart
+          {...radarConfig}
+          slotProps={{ legend: { position: { vertical: 'bottom', horizontal: 'center' } } }}
+        />,
+      );
+
+      expect(getGridTemplateAreas(container)).to.equal('"chart" "legend"');
+    });
+
+    it('should place the legend on the side when slotProps.legend.direction is vertical', () => {
+      const { container } = render(
+        <RadarChart
+          {...radarConfig}
+          slotProps={{ legend: { direction: 'vertical', position: { horizontal: 'start' } } }}
+        />,
+      );
+
+      expect(getGridTemplateAreas(container)).to.equal('"legend chart"');
+    });
+  });
 
   it('should render "No Data" overlay when series prop is an empty array', () => {
     render(<RadarChart height={100} width={100} series={[]} radar={{ metrics: [] }} />);

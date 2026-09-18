@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
-import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import type { EventCalendarViewDefinition } from '@mui/x-scheduler-internals/models';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
@@ -24,7 +23,7 @@ import type { AgendaViewProps } from './AgendaView.types';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import { EventSkeleton } from '../internals/components/event-skeleton';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
-import { EventDialogTrigger } from '../internals/components/event-dialog';
+import { EventContextMenuTrigger } from '../internals/components/event-context-menu';
 
 const AgendaViewRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -178,10 +177,6 @@ export const AgendaView = React.memo(
     const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 
-    // Ref hooks
-    const containerRef = React.useRef<HTMLElement | null>(null);
-    const handleRef = useMergedRefs(forwardedRef, containerRef);
-
     // Selector hooks
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
@@ -213,7 +208,7 @@ export const AgendaView = React.memo(
     return (
       <AgendaViewRoot
         {...props}
-        ref={handleRef}
+        ref={forwardedRef}
         className={clsx(props.className, classes.agendaView)}
       >
         {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber }) => (
@@ -270,14 +265,14 @@ export const AgendaView = React.memo(
                 {!isLoading &&
                   occurrences.map((occurrence) => (
                     <li key={occurrence.key} className={classes.agendaViewEventListItem}>
-                      <EventDialogTrigger occurrence={occurrence}>
+                      <EventContextMenuTrigger occurrence={occurrence}>
                         <EventItem
                           occurrence={occurrence}
                           date={date}
                           variant="regular"
                           ariaLabelledBy={`${schedulerId}-DayHeaderCell-${date.key}`}
                         />
-                      </EventDialogTrigger>
+                      </EventContextMenuTrigger>
                     </li>
                   ))}
               </EventsList>

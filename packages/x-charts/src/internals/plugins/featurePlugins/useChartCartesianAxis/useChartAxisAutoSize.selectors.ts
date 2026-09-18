@@ -8,6 +8,7 @@ import type { AxisAutoSizeResult } from './computeAxisAutoSize';
 import type { AxisId } from '../../../../models/axis';
 import type { UseChartDimensionsSignature } from '../../corePlugins/useChartDimensions/useChartDimensions.types';
 import type { ChartState } from '../../models';
+import type { ChartsTextStyle } from '../../../getWordsByLines';
 import {
   selectorChartXAxisDomainsForAutoSize,
   selectorChartYAxisDomainsForAutoSize,
@@ -16,6 +17,11 @@ import {
 // Direct state access to avoid circular dependency
 const selectorIsHydrated = (state: ChartState<[UseChartDimensionsSignature]>) =>
   state.dimensions.width && state.dimensions.height;
+
+// Direct state access to avoid circular dependency
+const selectorDefaultTickLabelStyle = (state: {
+  cartesianAxis?: { defaultTickLabelStyle?: ChartsTextStyle };
+}) => state.cartesianAxis?.defaultTickLabelStyle;
 
 const EMPTY_SIZES: Record<AxisId, number> = {};
 const EMPTY_RESULTS: Record<AxisId, AxisAutoSizeResult> = {};
@@ -28,7 +34,8 @@ export const selectorChartXAxisAutoSizeResults = createSelectorMemoized(
   selectorChartRawXAxis,
   selectorIsHydrated,
   selectorChartXAxisDomainsForAutoSize,
-  function selectorChartXAxisAutoSizeResults(xAxes, isHydrated, domainsMap) {
+  selectorDefaultTickLabelStyle,
+  function selectorChartXAxisAutoSizeResults(xAxes, isHydrated, domainsMap, defaultTickLabelStyle) {
     const hasAutoAxis = xAxes?.some((axis) => axis.height === 'auto');
     if (!hasAutoAxis || !isHydrated) {
       return EMPTY_RESULTS;
@@ -43,6 +50,7 @@ export const selectorChartXAxisAutoSizeResults = createSelectorMemoized(
           axis,
           direction: 'x',
           domain: domainsMap[axis.id],
+          defaultTickLabelStyle,
         });
         if (computed !== undefined) {
           results[axis.id] = computed;
@@ -81,7 +89,8 @@ export const selectorChartYAxisAutoSizeResults = createSelectorMemoized(
   selectorChartRawYAxis,
   selectorIsHydrated,
   selectorChartYAxisDomainsForAutoSize,
-  function selectorChartYAxisAutoSizeResults(yAxes, isHydrated, domainsMap) {
+  selectorDefaultTickLabelStyle,
+  function selectorChartYAxisAutoSizeResults(yAxes, isHydrated, domainsMap, defaultTickLabelStyle) {
     const hasAutoAxis = yAxes?.some((axis) => axis.width === 'auto');
     if (!hasAutoAxis || !isHydrated) {
       return EMPTY_RESULTS;
@@ -96,6 +105,7 @@ export const selectorChartYAxisAutoSizeResults = createSelectorMemoized(
           axis,
           direction: 'y',
           domain: domainsMap[axis.id],
+          defaultTickLabelStyle,
         });
         if (computed !== undefined) {
           results[axis.id] = computed;

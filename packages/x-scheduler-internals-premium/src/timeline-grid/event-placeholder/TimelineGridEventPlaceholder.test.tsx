@@ -7,6 +7,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { describe } from 'vitest';
 
 describe('<TimelineGrid.EventPlaceholder />', () => {
   const { render } = createSchedulerRenderer();

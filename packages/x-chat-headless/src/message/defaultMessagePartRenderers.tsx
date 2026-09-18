@@ -59,7 +59,7 @@ export const renderDefaultDynamicToolPart: ChatPartRenderer<ChatDynamicToolMessa
 
 export const renderDefaultFilePart: ChatPartRenderer<ChatFileMessagePart> = ({ part }) => {
   if (part.mediaType.startsWith('image/')) {
-    return <img alt={part.filename ?? ''} src={part.url} />;
+    return <img alt={part.filename ?? ''} src={safeFileUri(part.url) || undefined} />;
   }
 
   return <a href={safeFileUri(part.url) || undefined}>{part.filename ?? part.url}</a>;

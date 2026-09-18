@@ -21,8 +21,8 @@ import { DayGridEvent } from '../../internals/components/event/day-grid-event/Da
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
-import { EventDialogTrigger } from '../../internals/components/event-dialog';
-import { useEventDialogContext } from '../../internals/components/event-dialog/EventDialog';
+import { useEventEditingContext } from '../../internals/components/event-editing';
+import { EventContextMenuTrigger } from '../../internals/components/event-context-menu';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventSkeleton } from '../../internals/components/event-skeleton';
@@ -174,7 +174,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { classes, localeText } = useEventCalendarStyledContext();
-  const { onOpen: startEditing } = useEventDialogContext();
+  const { startEditing } = useEventEditingContext();
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
@@ -196,15 +196,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
 
   const inBoundOccurrences = day.withPosition.filter((o) => o.position.index <= maxEvents);
-  const overflowOccurrences = day.withPosition.filter((o) => o.position.index > maxEvents);
+  const hasOverflow = inBoundOccurrences.length < day.withPosition.length;
 
-  const visibleOccurrences =
-    overflowOccurrences.length > 0
-      ? inBoundOccurrences.slice(0, maxEvents - 1)
-      : inBoundOccurrences;
+  const visibleOccurrences = hasOverflow
+    ? inBoundOccurrences.slice(0, maxEvents - 1)
+    : inBoundOccurrences;
 
-  const hiddenCount =
-    overflowOccurrences.length + (inBoundOccurrences.length - visibleOccurrences.length);
+  const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
@@ -218,6 +216,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const rowCount = 1 + maxEvents;
 
   React.useEffect(() => {
+    // `startEditing` is a no-op once the surface is open, so placeholder churn doesn't re-fire it.
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
@@ -265,7 +264,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               adapter.isBefore(occurrence.displayTimezone.start.value, day.value);
 
             return (
-              <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+              <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
                 <DayGridEvent
                   occurrence={occurrence}
                   variant={
@@ -273,7 +272,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                   }
                   {...(startsBeforeThisDay ? { 'data-starting-before-edge': '' } : {})}
                 />
-              </EventDialogTrigger>
+              </EventContextMenuTrigger>
             );
           })}
         {hiddenCount > 0 && (

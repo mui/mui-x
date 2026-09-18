@@ -1,4 +1,4 @@
-import type { TemporalTimezone } from '../../base-ui-copy/types/temporal';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   TemporalSupportedObject,
   SchedulerProcessedEvent,
@@ -9,6 +9,29 @@ import type {
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
+import { getDateKey } from './date-utils';
+
+/**
+ * The render key of a non-recurring occurrence: the event id stringified.
+ * Single source of truth so producers (occurrence expansion) and consumers (the editing highlight)
+ * derive identical keys.
+ */
+export function getOccurrenceKey(eventId: SchedulerEventId): string {
+  return String(eventId);
+}
+
+/**
+ * The render key of a recurring occurrence: the event id plus the occurrence's day key. Shared so the
+ * occurrence expansion and any code re-deriving the key (e.g. re-pointing the edited occurrence after a
+ * recurring scope change) stay in lockstep.
+ */
+export function getRecurringOccurrenceKey(
+  eventId: SchedulerEventId,
+  day: TemporalSupportedObject,
+  adapter: Adapter,
+): string {
+  return `${eventId}::${getDateKey(day, adapter)}`;
+}
 
 export function generateOccurrenceFromEvent({
   event,
@@ -95,7 +118,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
         ) {
           continue;
         }
-        occurrences.push({ ...event, key: String(event.id) });
+        occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
         continue;
       }
 
@@ -120,7 +143,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       continue;
     }
 
-    occurrences.push({ ...event, key: String(event.id) });
+    occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
   }
 
   return occurrences;
@@ -154,6 +177,39 @@ export function getPrimaryResourceId(
   }
 
   return resource;
+}
+
+export type ResourceSelectionMode = 'single' | 'multiple';
+
+/**
+ * Resolves whether an occurrence should be edited (and saved) as single- or multi-resource.
+ *
+ * - Creating: `canHaveMultipleResources` decides, full stop. A creation placeholder can already
+ *   carry a `resource` (e.g. the Event Timeline pre-selects the row it was created in), but that
+ *   only seeds an entry — it doesn't get to pick the picker, exactly like the Event Calendar,
+ *   whose creation placeholder never carries a resource at all.
+ * - Editing: the shape of `resource` is the source of truth and is never overridden — a string
+ *   means single, an array (including `[]`) means multiple. Only when `resource` carries no
+ *   shape (`null` or `undefined`) does the mode fall back to `canHaveMultipleResources`.
+ *
+ * `canHaveMultipleResources` is resolved by the caller from the `eventCreation` prop, or
+ * inferred from the rest of the data — see `schedulerEventSelectors.canHaveMultipleResources`.
+ */
+export function getResourceSelectionMode(
+  resource: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
+  canHaveMultipleResources: boolean,
+  isCreating: boolean,
+): ResourceSelectionMode {
+  if (isCreating) {
+    return canHaveMultipleResources ? 'multiple' : 'single';
+  }
+  if (Array.isArray(resource)) {
+    return 'multiple';
+  }
+  if (resource != null) {
+    return 'single';
+  }
+  return canHaveMultipleResources ? 'multiple' : 'single';
 }
 
 export interface GetOccurrencesFromEventsParameters {

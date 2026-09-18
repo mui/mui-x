@@ -47,17 +47,30 @@ The demo below sets an `'ordinal'` color map on the `radiusAxis` to build a heal
 
 ## Click events
 
-The `RadialBarChart` provides an `onAxisClick` handler that fires when the user clicks anywhere in the chart area.
-Its signature matches the bar chart:
+The `RadialBarChart` provides two click handlers:
+
+- `onItemClick` for clicks on a specific bar
+- `onAxisClick` for clicks anywhere in the chart area
+
+They both provide the following signature:
 
 ```js
 const clickHandler = (
-  event, // The native mouse event emitted by the SVG component.
-  params, // An object that identifies the clicked axis item and its series values.
+  event, // The mouse event.
+  params, // An object that identifies the clicked elements.
 ) => {};
 ```
 
 {{"demo": "RadialBarClick.js"}}
+
+:::info
+There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
+
+- For `onItemClick` the event is a React synthetic mouse event emitted by the chart container.
+  Radial bars have no per-element click handler, so the clicked bar is resolved from the pointer position.
+- For `onAxisClick` the event is a native mouse event emitted by the SVG component.
+
+:::
 
 ## Custom annotations and overlays
 

@@ -1,5 +1,9 @@
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import type { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
+import type {
+  TreeViewItemId,
+  TreeViewItemSelectionStatus,
+  TreeViewSelectionPropagation,
+} from '../../../models';
 import type { TreeViewAnyStore } from '../../models';
 import { itemsSelectors } from '../items';
 import { selectionSelectors } from './selectors';
@@ -59,10 +63,16 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
       cleanModel = newModel as TreeViewSelectionValue<Multiple>;
     }
 
+    // The store is updated before the callbacks are fired,
+    // so that the selection selectors and the `getItemSelection` API method
+    // return the new selection status when called from `onItemSelectionToggle` or `onSelectedItemsChange`.
+    if (selectedItems === undefined) {
+      this.store.set('selectedItems', cleanModel);
+    }
+
     if (onItemSelectionToggle) {
       if (isMultiSelectEnabled) {
         const changes = getAddedAndRemovedItems({
-          store: this.store,
           newModel: cleanModel as string[],
           oldModel: oldModel as string[],
         });
@@ -84,10 +94,6 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
           onItemSelectionToggle(event, cleanModel as string, true);
         }
       }
-    }
-
-    if (selectedItems === undefined) {
-      this.store.set('selectedItems', cleanModel);
     }
 
     onSelectedItemsChange?.(event, cleanModel);
@@ -119,8 +125,18 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     this.lastSelectedRange = getLookupFromArray(range);
   };
 
+  /**
+   * Get the selection status of an item.
+   * An item that is not selected is `indeterminate` when some of its selectable descendants are selected.
+   * @param {TreeViewItemId} itemId The id of the item to get the selection status of.
+   * @returns {TreeViewItemSelectionStatus} The selection status of the item.
+   */
+  private getItemSelection = (itemId: TreeViewItemId): TreeViewItemSelectionStatus =>
+    selectionSelectors.itemSelectionStatus(this.store.state, itemId);
+
   public buildPublicAPI = () => {
     return {
+      getItemSelection: this.getItemSelection,
       setItemSelection: this.setItemSelection,
     };
   };
@@ -320,7 +336,6 @@ function propagateSelection({
   const newModelLookup = getLookupFromArray(newModel);
 
   const changes = getAddedAndRemovedItems({
-    store,
     newModel,
     oldModel,
   });
@@ -416,12 +431,13 @@ function propagateSelection({
   return shouldRegenerateModel ? Object.keys(newModelLookup) : newModel;
 }
 
+// This method only diffs the two models it receives,
+// it must not read the selection from the store,
+// otherwise the result would depend on whether the store has already been updated or not.
 function getAddedAndRemovedItems({
-  store,
   oldModel,
   newModel,
 }: {
-  store: TreeViewAnyStore;
   oldModel: TreeViewItemId[];
   newModel: TreeViewItemId[];
 }) {
@@ -430,8 +446,13 @@ function getAddedAndRemovedItems({
     newModelMap.set(id, true);
   });
 
+  const oldModelMap = new Map<TreeViewItemId, true>();
+  oldModel.forEach((id) => {
+    oldModelMap.set(id, true);
+  });
+
   return {
-    added: newModel.filter((itemId) => !selectionSelectors.isItemSelected(store.state, itemId)),
+    added: newModel.filter((itemId) => !oldModelMap.has(itemId)),
     removed: oldModel.filter((itemId) => !newModelMap.has(itemId)),
   };
 }

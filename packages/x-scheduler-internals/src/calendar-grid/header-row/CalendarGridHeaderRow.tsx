@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { CompositeList } from '../../base-ui-copy/composite/list/CompositeList';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { CompositeList } from '@base-ui/react/internals/composite';
+import { CalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
 
 export const CalendarGridHeaderRow = React.forwardRef(function CalendarGridHeaderRow(
   componentProps: CalendarGridHeaderRow.Props,
@@ -24,7 +25,13 @@ export const CalendarGridHeaderRow = React.forwardRef(function CalendarGridHeade
     props: [{ role: 'row', 'aria-rowindex': 1 }, elementProps],
   });
 
-  return <CompositeList elementsRef={cellsRefs}>{element}</CompositeList>;
+  return (
+    <CompositeList elementsRef={cellsRefs}>
+      <CalendarGridCellsRefsContext.Provider value={cellsRefs}>
+        {element}
+      </CalendarGridCellsRefsContext.Provider>
+    </CompositeList>
+  );
 });
 
 export namespace CalendarGridHeaderRow {

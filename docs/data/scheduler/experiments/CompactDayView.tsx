@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
-import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
+import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -12,7 +12,7 @@ export default function CompactDayView() {
 
   return (
     <div style={{ height: '600px', width: '375px', maxWidth: '100%' }}>
-      <StandaloneCompactDayView
+      <StandaloneCompactDayViewPremium
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}

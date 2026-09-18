@@ -1,6 +1,7 @@
 import { createPickerRenderer, describePicker } from 'test/utils/pickers';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<StaticDateTimePicker /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();

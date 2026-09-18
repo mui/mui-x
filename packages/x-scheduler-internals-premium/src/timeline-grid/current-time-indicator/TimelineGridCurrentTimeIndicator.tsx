@@ -1,10 +1,13 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
-import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
+import {
+  useElementPositionInCollection,
+  isStartMinuteOutsideAxisWindow,
+} from '@mui/x-scheduler-internals/internals';
 import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -29,7 +32,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
 
     const store = useEventTimelinePremiumStoreContext();
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
-    const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+    const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
     const processedNow = React.useMemo(() => processDate(now, adapter), [adapter, now]);
 
@@ -41,12 +44,14 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const { position } = useElementPositionInCollection({
       start: processedNow,
       end: endForCalc,
-      collectionStart: presetConfig.start,
-      collectionEnd: presetConfig.end,
+      collection: config,
+      durationMs: config.durationMs,
     });
 
     const isOutOfRange =
-      adapter.isBefore(now, presetConfig.start) || adapter.isAfter(now, presetConfig.end);
+      adapter.isBefore(now, config.start) ||
+      adapter.isAfter(now, config.end) ||
+      isStartMinuteOutsideAxisWindow(config, processedNow.minutesInDay);
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

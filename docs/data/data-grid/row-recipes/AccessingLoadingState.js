@@ -31,7 +31,7 @@ const rows = [
   { id: 2, name: 'MUI' },
 ];
 
-const columns = [{ field: 'name' }];
+const columns = [{ field: 'name', rowHeader: true }];
 
 export default function AccessingLoadingState() {
   return (

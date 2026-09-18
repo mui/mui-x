@@ -1,6 +1,7 @@
 import { screen } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { describe, it, expect } from 'vitest';
 
 describe('<MobileTimePicker /> - Timezone', () => {
   describeAdapters('Timezone prop', MobileTimePicker, ({ adapter, render }) => {

@@ -58,7 +58,11 @@ export default function GridOverlayHeight() {
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
       <DataGrid
-        columns={[{ field: 'ID' }, { field: 'First name' }, { field: 'Last name' }]}
+        columns={[
+          { field: 'ID' },
+          { field: 'First name', rowHeader: true },
+          { field: 'Last name', rowHeader: true },
+        ]}
         rows={[]}
         slots={{ noRowsOverlay: CustomNoRowsOverlay }}
         sx={{ '--DataGrid-overlayHeight': '300px' }}

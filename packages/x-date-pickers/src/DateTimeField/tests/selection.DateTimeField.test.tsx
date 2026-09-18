@@ -3,6 +3,7 @@ import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, getCleanedSelectedContent } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DateTimeField /> - Selection', () => {
   const { render } = createPickerRenderer();
@@ -22,7 +23,7 @@ describe('<DateTimeField /> - Selection', () => {
         </div>,
       );
 
-      const { userEvent } = await import('@vitest/browser/context');
+      const { userEvent } = await import('vitest/browser');
       await userEvent.click(screen.getByTestId('flex-wrapper'));
 
       expect(getCleanedSelectedContent()).to.equal('');

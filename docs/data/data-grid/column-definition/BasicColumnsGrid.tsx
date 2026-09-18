@@ -5,7 +5,7 @@ export default function BasicColumnsGrid() {
   return (
     <Box sx={{ height: 250, width: '100%' }}>
       <DataGrid
-        columns={[{ field: 'username' }, { field: 'age' }]}
+        columns={[{ field: 'username', rowHeader: true }, { field: 'age' }]}
         rows={[
           {
             id: 1,

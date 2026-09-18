@@ -5,7 +5,7 @@ import { randomInt, randomUserName } from '@mui/x-data-grid-generator';
 
 const columns = [
   { field: 'id' },
-  { field: 'username', width: 150 },
+  { field: 'username', width: 150, rowHeader: true },
   { field: 'age', width: 80, type: 'number' },
 ];
 

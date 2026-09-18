@@ -22,6 +22,7 @@ import {
   gridColumnLookupSelector,
   gridColumnVisibilityModelSelector,
 } from '../columns';
+import type { GridColumnLookup } from '../columns';
 
 /**
  * Pure helpers computing a new filter model from an existing one.
@@ -80,6 +81,39 @@ export const setFilterLogicOperatorInModel = (
     return model;
   }
   return { ...model, logicOperator };
+};
+
+/**
+ * Whether a filter item carries everything its operator needs to be applied.
+ * Operators declaring `requiresFilterValue: false` (`isEmpty`, `isNotEmpty`) stay complete
+ * without a value, see https://github.com/mui/mui-x/issues/5402
+ */
+export const isFilterItemComplete = (item: GridFilterItem, column: GridColDef | undefined) => {
+  if (item.value !== undefined) {
+    // Some operators like `isAnyOf` take an array as `item.value`. An empty one filters nothing.
+    return !(Array.isArray(item.value) && item.value.length === 0);
+  }
+
+  const filterOperator = column?.filterOperators?.find(
+    (operator) => operator.value === item.operator,
+  );
+  return filterOperator?.requiresFilterValue === false;
+};
+
+/**
+ * Drops the filter items that cannot be applied, so incomplete items never reach a consumer
+ * that would treat them as a real constraint (`dataSource` sending them to a server, for one).
+ * Returns the same model reference when every item is complete.
+ */
+export const removeIncompleteFilterItems = (
+  model: GridFilterModel,
+  columnsLookup: GridColumnLookup,
+): GridFilterModel => {
+  const items = model.items.filter((item) => isFilterItemComplete(item, columnsLookup[item.field]));
+  if (items.length === model.items.length) {
+    return model;
+  }
+  return { ...model, items };
 };
 
 let hasEval: boolean;

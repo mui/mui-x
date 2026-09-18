@@ -280,6 +280,26 @@ describe('FilePart', () => {
 
     expect(screen.getByText('doc.pdf').closest('a')!.getAttribute('href')).to.equal(null);
   });
+
+  it('does not expose an unsafe URL as the image source', () => {
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'file',
+          mediaType: 'image/png',
+          url: unsafeUrl,
+          filename: 'img.png',
+        },
+      ],
+    });
+
+    const img = screen.getByAltText('img.png');
+
+    expect(img.getAttribute('src')).to.equal(null);
+    expect(img.closest('a')!.getAttribute('href')).to.equal(null);
+  });
 });
 
 describe('SourceUrlPart', () => {
@@ -417,6 +437,20 @@ describe('defaultMessagePartRenderers', () => {
     render(<React.Fragment>{renderDefaultFilePart({ part, message, index: 0 })}</React.Fragment>);
 
     expect(screen.getByText('doc.pdf').closest('a')!.getAttribute('href')).to.equal(null);
+  });
+
+  it('renderDefaultFilePart does not expose an unsafe URL as the image source', () => {
+    const part = {
+      type: 'file' as const,
+      mediaType: 'image/png',
+      url: unsafeUrl,
+      filename: 'img.png',
+    };
+    const message: ChatMessage = { id: 'm1', role: 'assistant', parts: [part] };
+
+    render(<React.Fragment>{renderDefaultFilePart({ part, message, index: 0 })}</React.Fragment>);
+
+    expect(screen.getByAltText('img.png').getAttribute('src')).to.equal(null);
   });
 
   it('renderDefaultSourceUrlPart does not expose an unsafe URL as the link target', () => {

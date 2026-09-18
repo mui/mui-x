@@ -59,6 +59,20 @@ Otherwise, you will get an error saying that the state is not initialized during
 
 {{"demo": "UseGridSelector.js", "bg": "inline"}}
 
+### In event handlers
+
+The `GridCallbackDetails` object passed as the second argument to callbacks like `onRowSelectionModelChange` or `onFilterModelChange` exposes an `apiRef` property.
+Pass it directly to any selector to read state that is not part of the callback arguments, without needing a separate `useGridApiRef`.
+In the demo below, the current row selection is read inside `onFilterModelChange` to capture which rows are selected at the moment the filter changes:
+
+{{"demo": "SelectorInEventHandler.js", "bg": "inline", "disableAd": true}}
+
+:::warning
+If the corresponding model is controlled (for example passing a `filterModel` prop alongside `onFilterModelChange`), the Data Grid calls the callback before applying your controlled value.
+Selectors called with `details.apiRef` inside the callback will therefore return the previous, not-yet-updated state.
+Use the value received as the callback's first argument instead in that case.
+:::
+
 ### Catalog of selectors
 
 Some selectors have not yet been documented.

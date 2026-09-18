@@ -6,15 +6,22 @@ import type { GridStateApi, GridStatePrivateApi } from '../../models/api/gridSta
 import type { GridControlStateItem } from '../../models/controlStateItem';
 import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
+import { getPublicApiRef } from '../../utils/getPublicApiRef';
 
 export const useGridStateInitialization = <PrivateApi extends GridPrivateApiCommon>(
   apiRef: RefObject<PrivateApi>,
 ) => {
   const controlStateMapRef = React.useRef<
-    Record<string, GridControlStateItem<PrivateApi['state'], any, any>>
+    Record<
+      string,
+      GridControlStateItem<PrivateApi['state'], any, any, ReturnType<PrivateApi['getPublicApi']>>
+    >
   >({});
   const registerControlState = React.useCallback<
-    GridStatePrivateApi<PrivateApi['state']>['registerControlState']
+    GridStatePrivateApi<
+      PrivateApi['state'],
+      ReturnType<PrivateApi['getPublicApi']>
+    >['registerControlState']
   >((controlStateItem) => {
     controlStateMapRef.current[controlStateItem.stateId] = controlStateItem;
   }, []);
@@ -91,6 +98,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
           controlState.propOnChange(model, {
             reason,
             api: apiRef.current,
+            apiRef: getPublicApiRef(apiRef),
           });
         }
 
@@ -119,7 +127,10 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
     setState,
   };
 
-  const privateStateApi: GridStatePrivateApi<PrivateApi['state']> = {
+  const privateStateApi: GridStatePrivateApi<
+    PrivateApi['state'],
+    ReturnType<PrivateApi['getPublicApi']>
+  > = {
     updateControlState,
     registerControlState,
   };

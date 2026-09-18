@@ -1,5 +1,10 @@
 import { gridRowNodeSelector, gridRowTreeSelector } from '@mui/x-data-grid';
-import type { GridTreeNode, GridGroupNode, GridValidRowModel } from '@mui/x-data-grid';
+import type {
+  GridTreeNode,
+  GridGroupNode,
+  GridRowModelUpdate,
+  GridRowModelReplace,
+} from '@mui/x-data-grid';
 import { BaseReorderOperation, RowReorderExecutor } from '../rowReorder/reorderExecutor';
 import type { ReorderOperation, ReorderExecutionContext } from '../rowReorder/types';
 import { calculateTargetIndex, isDescendantOf } from '../rowReorder/utils';
@@ -343,7 +348,7 @@ class DropOnLeafOperation extends BaseReorderOperation {
 
     // Build target path for the new structure
     const targetPath = buildTreeDataPath(targetNode, rowTree);
-    let rowsToUpdate: GridValidRowModel[] = [];
+    let rowsToUpdate: Array<GridRowModelUpdate | GridRowModelReplace> = [];
 
     // Handle source node path updates
     if (sourceNode.type === 'leaf') {
@@ -473,7 +478,7 @@ class DropOnGroupOperation extends BaseReorderOperation {
 
     // Build target path for the new structure
     const targetPath = buildTreeDataPath(targetNode, rowTree);
-    let rowsToUpdate: GridValidRowModel[] = [];
+    let rowsToUpdate: Array<GridRowModelUpdate | GridRowModelReplace> = [];
 
     // Handle source node path updates
     if (sourceNode.type === 'leaf') {

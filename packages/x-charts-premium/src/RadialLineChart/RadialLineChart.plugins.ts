@@ -5,6 +5,7 @@ import {
   useChartInteraction,
   useChartHighlight,
   useChartKeyboardNavigation,
+  useChartItemClick,
   useChartVisibilityManager,
 } from '@mui/x-charts/internals';
 import type {
@@ -14,6 +15,7 @@ import type {
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartKeyboardNavigationSignature,
+  UseChartItemClickSignature,
   UseChartVisibilityManagerSignature,
   ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
@@ -28,6 +30,7 @@ export type RadialLineChartPluginSignatures = [
   UseChartHighlightSignature<'radialLine'>,
   UseChartVisibilityManagerSignature<'radialLine'>,
   UseChartKeyboardNavigationSignature,
+  UseChartItemClickSignature<'radialLine'>,
   UseChartProExportSignature,
 ];
 
@@ -40,5 +43,6 @@ export const RADIAL_LINE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<RadialLineC
     useChartHighlight,
     useChartVisibilityManager,
     useChartKeyboardNavigation,
+    useChartItemClick,
     useChartProExport,
   ];

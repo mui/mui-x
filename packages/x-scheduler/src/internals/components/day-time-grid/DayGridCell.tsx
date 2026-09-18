@@ -10,8 +10,8 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-eve
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { DayGridEvent } from '../event';
-import { EventDialogTrigger } from '../event-dialog';
-import { useEventDialogContext } from '../event-dialog/EventDialog';
+import { useEventEditingContext } from '../event-editing';
+import { EventContextMenuTrigger } from '../event-context-menu';
 import { EventSkeleton } from '../event-skeleton';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
@@ -61,7 +61,7 @@ export function DayGridCell(props: DayGridCellProps) {
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { onOpen: startEditing } = useEventDialogContext();
+  const { startEditing } = useEventEditingContext();
   const { schedulerId, classes } = useEventCalendarStyledContext();
 
   // Ref hooks
@@ -79,6 +79,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const rowCount = Math.max(row.maxIndex, placeholder?.position.index ?? 0);
 
   React.useEffect(() => {
+    // `startEditing` is a no-op once the surface is open, so placeholder churn doesn't re-fire it.
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
@@ -111,9 +112,9 @@ export function DayGridCell(props: DayGridCellProps) {
           }
 
           return (
-            <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+            <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
               <DayGridEvent occurrence={occurrence} variant="filled" />
-            </EventDialogTrigger>
+            </EventContextMenuTrigger>
           );
         })}
         {placeholder != null && (

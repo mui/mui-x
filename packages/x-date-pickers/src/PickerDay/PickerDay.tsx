@@ -107,6 +107,14 @@ const PickerDayRoot = styled(ButtonBase, {
       },
     },
     {
+      props: { isDayOutsideMonth: true },
+      style: {
+        color: (theme.vars || theme).palette.text.secondary,
+      },
+    },
+    // Must come after `isDayOutsideMonth` so that a disabled day outside the current month
+    // uses the disabled text color.
+    {
       props: { isDayDisabled: true },
       style: {
         color: (theme.vars || theme).palette.text.disabled,
@@ -119,12 +127,6 @@ const PickerDayRoot = styled(ButtonBase, {
         // and results in unexpected relationships between week day and day columns.
         opacity: 0,
         pointerEvents: 'none',
-      },
-    },
-    {
-      props: { isDayOutsideMonth: true },
-      style: {
-        color: (theme.vars || theme).palette.text.secondary,
       },
     },
     {
@@ -244,6 +246,7 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
       <PickerDayRoot
         ref={handleRef}
         role={other.role}
+        aria-colindex={other['aria-colindex']}
         ownerState={ownerState}
         className={clsx(classes.root, className)}
         as="div"

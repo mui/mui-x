@@ -4,6 +4,7 @@ import { createRenderer, act } from '@mui/internal-test-utils';
 import { DataGridPremium, useGridApiRef, getGroupRowIdFromPath } from '@mui/x-data-grid-premium';
 import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;

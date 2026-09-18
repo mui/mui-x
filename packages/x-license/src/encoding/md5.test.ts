@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { md5 } from './md5';
 
 describe('License: md5', () => {

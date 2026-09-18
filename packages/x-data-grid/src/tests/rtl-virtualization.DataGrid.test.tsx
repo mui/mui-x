@@ -3,6 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getCell } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Virtualization RTL', () => {
   const { render } = createRenderer();

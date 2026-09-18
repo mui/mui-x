@@ -1,5 +1,4 @@
 import { screen } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
 import {
   adapter,
   createSchedulerRenderer,
@@ -10,6 +9,7 @@ import {
 import { DayView } from '@mui/x-scheduler/day-view';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerResource } from '@mui/x-scheduler/models';
+import { vi, describe, it, expect } from 'vitest';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 
@@ -40,10 +40,8 @@ describe('<DayView />', () => {
     return document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridContainer}`)!;
   }
 
-  // DayView no longer wraps the grid in a renderer provider — the desktop variant comes from the
-  // default value of DayTimeGridInternalRenderersContext. This is the mirror of the touch test in
-  // CompactDayView and guards that default.
-  it('renders the desktop event variant (with a time element) without a renderer provider', () => {
+  // The event component always renders the time element (only hidden by CSS on touch), so it is in the DOM.
+  it('should render the event with a time element', () => {
     const event = EventBuilder.new()
       .title('Desktop Event')
       .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
@@ -156,7 +154,7 @@ describe('<DayView />', () => {
 
   describe('time navigation', () => {
     it('should go to start of previous day when clicking on the Previous Day button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -168,13 +166,13 @@ describe('<DayView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /previous day/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -1),
       );
     });
 
     it('should go to start of next day when clicking on the Next Day button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -186,7 +184,7 @@ describe('<DayView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /next day/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 1),
       );
     });

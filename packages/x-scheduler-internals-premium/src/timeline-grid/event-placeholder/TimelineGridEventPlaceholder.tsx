@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useElementPositionInCollection, useEvent } from '@mui/x-scheduler-internals/internals';
-import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
-import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { TimelineGridEventPlaceholderCssVars } from './TimelineGridEventPlaceholderCssVars';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
@@ -36,15 +36,15 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   // Feature hooks
   const { position, duration, startingBeforeEdge, endingAfterEdge } =
     useElementPositionInCollection({
       start,
       end,
-      collectionStart: presetConfig.start,
-      collectionEnd: presetConfig.end,
+      collection: config,
+      durationMs: config.durationMs,
     });
 
   const { state: eventState } = useEvent({ start, end });

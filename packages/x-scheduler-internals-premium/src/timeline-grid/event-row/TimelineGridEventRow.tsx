@@ -1,19 +1,27 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
-import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
-import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { useEventCreation, useKeyboardEventCreation } from '@mui/x-scheduler-internals/internals';
+import {
+  useEventCreation,
+  useKeyboardEventCreation,
+  timelineAxisOffsetToDate,
+} from '@mui/x-scheduler-internals/internals';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-internals/constants';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventRowDropTarget } from './useEventRowDropTarget';
 import { usePlaceholderInRow } from './usePlaceholderInRow';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import {
+  addTimelinePositionsToOccurrences,
+  eventTimelinePremiumPresetSelectors,
+  eventTimelinePremiumOccurrenceSelectors,
+} from '../../event-timeline-premium-selectors';
+import type { EventTimelinePremiumLayoutOccurrence } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventRowDataAttributes } from './TimelineGridEventRowDataAttributes';
 import { useTimelineGridRowKeyboard } from '../../internals/utils/useTimelineGridRowKeyboard';
 
@@ -51,13 +59,34 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   });
 
   // Selector hooks
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  // Occurrences fully inside the hidden hours would render as zero-width slivers and
+  // inflate the lane count, so the selector excludes them before positioning.
   const occurrences = useStore(
     store,
-    schedulerOccurrenceSelectors.resourceOccurrences,
-    presetConfig.start,
-    presetConfig.end,
+    eventTimelinePremiumOccurrenceSelectors.visibleResourceOccurrences,
     resourceId,
+  );
+  const positionByOccurrenceKey = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
+  );
+
+  const occurrenceLayoutWithoutTimelinePositions = useEventOccurrencesWithTimelinePosition({
+    occurrences,
+    maxSpan: 1,
+  });
+  const occurrenceLayout = React.useMemo(
+    () => ({
+      ...occurrenceLayoutWithoutTimelinePositions,
+      occurrences: addTimelinePositionsToOccurrences({
+        adapter,
+        config,
+        occurrences: occurrenceLayoutWithoutTimelinePositions.occurrences,
+        positionByOccurrenceKey,
+      }),
+    }),
+    [adapter, config, occurrenceLayoutWithoutTimelinePositions, positionByOccurrenceKey],
   );
 
   // Feature hooks
@@ -71,7 +100,11 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
       input: { clientX: event.clientX },
       elementRef: dropTargetRef,
     });
-    const anchor = adapter.addMilliseconds(presetConfig.start, offsetMs);
+    // The new event starts at the cursor: cap the offset to the last slot of the axis
+    // so a click on the exact right edge does not create the event on the day after
+    // the collection, where it would not be rendered at all.
+    const lastStartOffsetMs = config.durationMs - EVENT_CREATION_PRECISION_MINUTE * 60_000;
+    const anchor = timelineAxisOffsetToDate(adapter, config, Math.min(offsetMs, lastStartOffsetMs));
     const startDate = adapter.addMinutes(
       anchor,
       -(adapter.getMinutes(anchor) % EVENT_CREATION_PRECISION_MINUTE),
@@ -85,13 +118,19 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     };
   });
 
-  const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => ({
-    surfaceType: 'timeline' as const,
-    start: presetConfig.start,
-    end: adapter.addMinutes(presetConfig.start, creationConfig.duration),
-    resourceId,
-    lockSurfaceType: true,
-  }));
+  const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => {
+    // Start at the first visible hour: with a trimmed window an event created at
+    // midnight would be hidden. Offset 0 resolves it as a wall-clock hour, which
+    // `addMinutes` from midnight would miss on a DST day.
+    const creationStart = timelineAxisOffsetToDate(adapter, config, 0);
+    return {
+      surfaceType: 'timeline' as const,
+      start: creationStart,
+      end: adapter.addMinutes(creationStart, creationConfig.duration),
+      resourceId,
+      lockSurfaceType: true,
+    };
+  });
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (handleKeyDown(event)) {
@@ -99,29 +138,29 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     }
     if (event.key === 'Enter' && event.target === event.currentTarget && triggerKeyboardCreation) {
       event.preventDefault();
-      triggerKeyboardCreation();
+      triggerKeyboardCreation(event.nativeEvent);
     }
   };
 
   const contextValue: TimelineGridEventRowContext = React.useMemo(
-    () => ({ hasFocus, getCursorPositionInElementMs }),
-    [hasFocus, getCursorPositionInElementMs],
+    () => ({ resourceId, rowRef, hasFocus, getCursorPositionInElementMs }),
+    [resourceId, rowRef, hasFocus, getCursorPositionInElementMs],
   );
-
-  const occurrencesWithPosition = useEventOccurrencesWithTimelinePosition({
-    occurrences,
-    maxSpan: 1,
-  });
 
   const placeholder = usePlaceholderInRow({
     resourceId,
-    occurrences: occurrencesWithPosition.occurrences,
-    maxIndex: occurrencesWithPosition.maxIndex,
+    occurrences: occurrenceLayout.occurrences,
+    maxIndex: occurrenceLayout.maxIndex,
   });
 
   const children = React.useMemo(
-    () => childrenProp({ placeholder, ...occurrencesWithPosition }),
-    [childrenProp, placeholder, occurrencesWithPosition],
+    () =>
+      childrenProp({
+        placeholder,
+        occurrences: occurrenceLayout.occurrences,
+        maxIndex: occurrenceLayout.maxIndex,
+      }),
+    [childrenProp, placeholder, occurrenceLayout],
   );
 
   const state: TimelineGridEventRow.State = {
@@ -144,7 +183,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
       {
         children,
         style: {
-          '--lane-count': occurrencesWithPosition.maxIndex,
+          '--lane-count': occurrenceLayout.maxIndex,
         } as React.CSSProperties,
       },
       keyboardProps,
@@ -176,7 +215,11 @@ export namespace TimelineGridEventRow {
     children: (parameters: ChildrenParameters) => React.ReactNode;
   }
 
-  export interface ChildrenParameters extends useEventOccurrencesWithTimelinePosition.ReturnValue {
+  export interface ChildrenParameters extends Omit<
+    useEventOccurrencesWithTimelinePosition.ReturnValue,
+    'occurrences'
+  > {
+    occurrences: EventTimelinePremiumLayoutOccurrence[];
     placeholder: usePlaceholderInRow.ReturnValue;
   }
 }

@@ -189,6 +189,10 @@ You can check the [styling cells](/x/react-data-grid/style/#styling-cells) secti
 Cell content should not be in the tab sequence except if cell is focused.
 You can check the [tab sequence](/x/react-data-grid/accessibility/#tab-sequence) section for more information.
 
+If a column contains the label that identifies each row, set `rowHeader: true` in its column definition.
+This gives its cells the `rowheader` ARIA role so screen readers can announce the row label while users navigate the grid.
+See the [row headers](/x/react-data-grid/accessibility/#row-headers) section for more information.
+
 ### Using hooks inside a renderer
 
 The `renderCell()` property is a function that returns a React node, not a React component.

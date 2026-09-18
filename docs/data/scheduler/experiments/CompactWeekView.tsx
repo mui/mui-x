@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
-import { StandaloneCompactWeekView } from '@mui/x-scheduler/compact-week-view';
+import { StandaloneCompactWeekViewPremium } from '@mui/x-scheduler-premium/compact-week-view-premium';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -12,7 +12,7 @@ export default function CompactWeekView() {
 
   return (
     <div style={{ height: '600px', width: '375px', maxWidth: '100%' }}>
-      <StandaloneCompactWeekView
+      <StandaloneCompactWeekViewPremium
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}

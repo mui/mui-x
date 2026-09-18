@@ -143,7 +143,7 @@ DefaultContent.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  item: PropTypes.shape({
+  item: PropTypes /* @typescript-to-proptypes-ignore */.shape({
     color: PropTypes.string.isRequired,
     formattedLabel: PropTypes.string,
     formattedValue: PropTypes.string.isRequired,
@@ -153,17 +153,7 @@ DefaultContent.propTypes /* remove-proptypes */ = {
       PropTypes.func,
     ]),
     seriesId: PropTypes.string.isRequired,
-    value: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.shape({
-        colorValue: PropTypes.any,
-        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        sizeValue: PropTypes.any,
-        x: PropTypes.number.isRequired,
-        y: PropTypes.number.isRequired,
-        z: PropTypes.any,
-      }),
-    ]),
+    value: PropTypes.any,
   }).isRequired,
 } as any;
 

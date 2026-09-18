@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, afterEach } from 'vitest';
 import { createRenderer, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 // It's not publicly exported, so, using a relative import

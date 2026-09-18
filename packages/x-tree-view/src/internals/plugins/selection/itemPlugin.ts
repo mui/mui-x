@@ -1,59 +1,10 @@
 import type * as React from 'react';
-import { createSelector, useStore } from '@mui/x-internals/store';
-import type {
-  TreeViewItemId,
-  TreeViewCancellableEvent,
-  TreeViewCancellableEventHandler,
-} from '../../../models';
+import { useStore } from '@mui/x-internals/store';
+import type { TreeViewCancellableEvent, TreeViewCancellableEventHandler } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import type { TreeViewAnyStore, TreeViewItemPlugin } from '../../models';
 import { itemsSelectors } from '../items/selectors';
 import { selectionSelectors } from './selectors';
-import type { MinimalTreeViewState } from '../../MinimalTreeViewStore';
-
-const selectorCheckboxSelectionStatus = createSelector(
-  (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) => {
-    if (selectionSelectors.isItemSelected(state, itemId)) {
-      return 'checked';
-    }
-
-    let hasSelectedDescendant = false;
-    let hasUnSelectedDescendant = false;
-
-    const traverseDescendants = (itemToTraverseId: TreeViewItemId) => {
-      if (itemToTraverseId !== itemId) {
-        if (selectionSelectors.canItemBeSelected(state, itemToTraverseId)) {
-          if (selectionSelectors.isItemSelected(state, itemToTraverseId)) {
-            hasSelectedDescendant = true;
-          } else {
-            hasUnSelectedDescendant = true;
-          }
-        }
-      }
-
-      itemsSelectors.itemOrderedChildrenIds(state, itemToTraverseId).forEach(traverseDescendants);
-    };
-
-    traverseDescendants(itemId);
-
-    const shouldSelectBasedOnDescendants = selectionSelectors.propagationRules(state).parents;
-    if (shouldSelectBasedOnDescendants) {
-      if (hasSelectedDescendant && hasUnSelectedDescendant) {
-        return 'indeterminate';
-      }
-      if (hasSelectedDescendant && !hasUnSelectedDescendant) {
-        return 'checked';
-      }
-      return 'empty';
-    }
-
-    if (hasSelectedDescendant) {
-      return 'indeterminate';
-    }
-
-    return 'empty';
-  },
-);
 
 export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { itemId } = props;
@@ -69,7 +20,7 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const canItemBeSelected = useStore(store, selectionSelectors.canItemBeSelected, itemId);
   const isItemDisabled = useStore(store, itemsSelectors.isItemDisabled, itemId);
   const isItemSelectable = useStore(store, selectionSelectors.isItemSelectable, itemId);
-  const selectionStatus = useStore(store, selectorCheckboxSelectionStatus, itemId);
+  const selectionStatus = useStore(store, selectionSelectors.itemSelectionStatus, itemId);
 
   // An item is "inherently not selectable" when disabled or excluded via isItemSelectionDisabled,
   // regardless of the global disableSelection flag. Such items must not have aria-checked.
@@ -83,7 +34,7 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
         if (isItemInherentlyNotSelectable) {
           // - if the tree contains nodes that are not selectable, aria-checked is not present on those nodes.
           ariaChecked = undefined;
-        } else if (selectionStatus === 'checked') {
+        } else if (selectionStatus === 'selected') {
           // - each selected node has aria-checked set to true.
           ariaChecked = true;
         } else if (selectionStatus === 'indeterminate') {
@@ -124,7 +75,7 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
           onChange: handleChange,
           visible: isCheckboxSelectionEnabled && isFeatureEnabledForItem,
           disabled: !canItemBeSelected,
-          checked: selectionStatus === 'checked',
+          checked: selectionStatus === 'selected',
           indeterminate: selectionStatus === 'indeterminate',
         };
       },
