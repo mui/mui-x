@@ -172,7 +172,7 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-bottomContainerHeight': '0px',
     '--DataGrid-horizontalFiller': '0px',
 
-    flex: 1,
+    flex: ownerState.height != null ? '0 1 auto' : 1,
     boxSizing: 'border-box',
     position: 'relative',
     borderWidth: '1px',
