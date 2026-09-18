@@ -24,6 +24,11 @@ export type SchedulerDependencyType =
   'FinishToStart' | 'StartToStart' | 'FinishToFinish' | 'StartToFinish';
 
 /**
+ * The units a dependency lag can be expressed in.
+ */
+export type SchedulerDependencyLagUnit = 'minute' | 'hour' | 'day' | 'week';
+
+/**
  * A dependency between two events, referencing them by id.
  * `source` is the predecessor and `target` the successor, whatever the type.
  */
@@ -44,6 +49,18 @@ export interface SchedulerDependency {
    * The type of the dependency.
    */
   type: SchedulerDependencyType;
+  /**
+   * The calendar time the successor must wait after the constraining edge of the
+   * predecessor, as a whole number of `lagUnit`, applied in the successor's timezone.
+   * Lead (a negative lag) is not supported yet: a negative or fractional value is ignored.
+   * @default 0
+   */
+  lag?: number;
+  /**
+   * The unit of `lag`.
+   * @default 'day'
+   */
+  lagUnit?: SchedulerDependencyLagUnit;
 }
 
 /**
