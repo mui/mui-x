@@ -336,6 +336,21 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       );
     });
 
+    it('should describe a lagged dependency with its lag', async () => {
+      await renderTimeline({
+        events: [eventA, eventB, eventC],
+        dependencies: [
+          { ...buildDependency('dep-1', 'event-a', 'event-b'), lag: 30, lagUnit: 'minute' },
+          { ...buildDependency('dep-2', 'event-c', 'event-b', 'StartToStart'), lag: 1 },
+        ],
+      });
+
+      expect(getEventElement('Event B')).toHaveAccessibleDescription(
+        'Cannot start until 30 minutes after Event A finishes. ' +
+          'Cannot start until 1 day after Event C starts.',
+      );
+    });
+
     it('should keep the predecessor titles out of the successor accessible name', async () => {
       await renderTimeline({
         events: [eventA, eventB, eventC],

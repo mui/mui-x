@@ -50,9 +50,9 @@ export interface SchedulerDependency {
    */
   type: SchedulerDependencyType;
   /**
-   * The elapsed time the successor must wait after the constraining edge of the
-   * predecessor, in `lagUnit`. Only positive values are supported: a negative value
-   * is treated as `0`.
+   * The calendar time the successor must wait after the constraining edge of the
+   * predecessor, as a whole number of `lagUnit`, applied in the successor's timezone.
+   * Lead (a negative lag) is not supported yet: a negative or fractional value is ignored.
    * @default 0
    */
   lag?: number;

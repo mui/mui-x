@@ -29,7 +29,7 @@ import {
   classifyDependencyEvent,
   groupRetainedDependenciesBySource,
   isDependencyReadOnly,
-  isDependencyLagUnit,
+  getDependencyLagIssue,
   isDependencyType,
 } from '../utils/dependency-utils';
 
@@ -263,16 +263,21 @@ export class SchedulerSchedulingPlugin<
           'It is kept in the data but ignored by the timeline.',
         ]);
       }
-      if (dependency.lag != null && dependency.lag < 0) {
+      const lagIssue = getDependencyLagIssue(dependency);
+      if (lagIssue === 'negative') {
         warnOnce([
           `MUI X Scheduler: The dependency "${String(dependency.id)}" has a negative lag (${dependency.lag}).`,
-          'Lead (negative lag) is not supported yet, so the lag is treated as 0.',
+          'Lead (negative lag) is not supported yet, so the lag is ignored.',
         ]);
-      }
-      if (dependency.lagUnit != null && !isDependencyLagUnit(dependency.lagUnit)) {
+      } else if (lagIssue === 'invalid') {
+        warnOnce([
+          `MUI X Scheduler: The dependency "${String(dependency.id)}" has an invalid lag (${String(dependency.lag)}).`,
+          'The lag must be a whole number, so it is ignored.',
+        ]);
+      } else if (lagIssue === 'unknownUnit') {
         warnOnce([
           `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown lag unit "${String(dependency.lagUnit)}".`,
-          'Its lag is ignored.',
+          'The supported units are "minute", "hour", "day" and "week", so the lag is ignored.',
         ]);
       }
       for (const eventId of [dependency.source, dependency.target]) {

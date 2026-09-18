@@ -9,10 +9,12 @@ import type {
 } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import {
+  getDependencyLag,
   groupByEventId,
   isDependencyActive,
   isDependencyReadOnly,
 } from '../internals/utils/dependency-utils';
+import type { SchedulerDependencyLag } from '../internals/utils/dependency-utils';
 
 // Typed against the two slices they read, so the scheduling plugin (generic over
 // `SchedulerState & SchedulerDependenciesState`) shares them with the rendering.
@@ -32,6 +34,10 @@ const activeModelListSelector = createSelectorMemoized(
 export interface SchedulerDependencySourceDescription {
   title: string;
   type: SchedulerDependencyType;
+  /**
+   * The lag the engine applies, or `null` when the dependency has no usable lag.
+   */
+  lag: SchedulerDependencyLag | null;
 }
 
 const activeSourcesByTargetSelector = createSelectorMemoized(
@@ -44,6 +50,7 @@ const activeSourcesByTargetSelector = createSelectorMemoized(
       const source = {
         title: processedEventLookup.get(dependency.source)!.title,
         type: dependency.type,
+        lag: getDependencyLag(dependency),
       };
       const sources = sourcesByTarget.get(dependency.target);
       if (sources) {
@@ -82,7 +89,7 @@ export const eventTimelinePremiumDependencySelectors = {
     groupByEventId(dependencies, 'target'),
   ),
   /**
-   * The source event title and type of the active dependencies, grouped by target
+   * The source event title, type and lag of the active dependencies, grouped by target
    * event id. Used to describe an event with the events it depends on.
    */
   activeSourcesByTarget: activeSourcesByTargetSelector,

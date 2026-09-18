@@ -66,24 +66,45 @@ export function isDependencyLagUnit(unit: unknown): unit is SchedulerDependencyL
   return typeof unit === 'string' && Object.hasOwn(DEPENDENCY_LAG_ADDERS, unit);
 }
 
+export type SchedulerDependencyLagIssue = 'negative' | 'invalid' | 'unknownUnit';
+
+/**
+ * Why the lag of a dependency is ignored, or `null` when it is usable: a lag must be a
+ * whole number of a supported unit, and lead (a negative lag) is not supported yet.
+ */
+export function getDependencyLagIssue(
+  dependency: Pick<SchedulerDependency, 'lag' | 'lagUnit'>,
+): SchedulerDependencyLagIssue | null {
+  const { lag, lagUnit } = dependency;
+  if (lagUnit != null && !isDependencyLagUnit(lagUnit)) {
+    return 'unknownUnit';
+  }
+  if (lag == null) {
+    return null;
+  }
+  if (typeof lag !== 'number' || !Number.isInteger(lag)) {
+    return 'invalid';
+  }
+  return lag < 0 ? 'negative' : null;
+}
+
 export interface SchedulerDependencyLag {
   amount: number;
   unit: SchedulerDependencyLagUnit;
 }
 
 /**
- * The lag of a dependency as the engine applies it: days by default, and no lag at all
- * for a negative or non-finite amount or an unknown unit.
+ * The lag of a dependency as the engine applies it (days by default), or `null` when the
+ * dependency has no usable lag.
  */
 export function getDependencyLag(
   dependency: Pick<SchedulerDependency, 'lag' | 'lagUnit'>,
-): SchedulerDependencyLag {
-  const unit = dependency.lagUnit ?? 'day';
+): SchedulerDependencyLag | null {
   const amount = dependency.lag ?? 0;
-  if (!isDependencyLagUnit(unit) || !Number.isFinite(amount) || amount <= 0) {
-    return { amount: 0, unit: 'day' };
+  if (amount === 0 || getDependencyLagIssue(dependency) !== null) {
+    return null;
   }
-  return { amount, unit };
+  return { amount, unit: dependency.lagUnit ?? 'day' };
 }
 
 /**
@@ -92,9 +113,9 @@ export function getDependencyLag(
 export function addDependencyLag(
   adapter: Adapter,
   date: TemporalSupportedObject,
-  lag: SchedulerDependencyLag,
+  lag: SchedulerDependencyLag | null,
 ): TemporalSupportedObject {
-  if (lag.amount === 0) {
+  if (lag === null) {
     return date;
   }
   return DEPENDENCY_LAG_ADDERS[lag.unit](adapter, date, lag.amount);
