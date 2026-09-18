@@ -1,6 +1,6 @@
-import useLazyRef from '@mui/utils/useLazyRef';
-import useOnMount from '@mui/utils/useOnMount';
-import type { ReadonlyStore } from './Store';
+import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
+import { useOnMount } from '@base-ui/utils/useOnMount';
+import type { ReadonlyStore } from '@base-ui/utils/store';
 
 const noop = () => {};
 
@@ -17,7 +17,7 @@ export function useStoreEffect<State, Value>(
   selector: (state: State) => Value,
   effect: (previous: Value, next: Value) => void,
 ): void {
-  const instance = useLazyRef(initialize, { store, selector }).current;
+  const instance = useRefWithInit(initialize, { store, selector }).current;
   instance.effect = effect;
 
   if (instance.selector !== selector) {
@@ -30,12 +30,11 @@ export function useStoreEffect<State, Value>(
   useOnMount(instance.onMount);
 }
 
-// `useLazyRef` typings are incorrect, `params` should not be optional
-function initialize<State, Value>(params?: {
+function initialize<State, Value>(params: {
   store: ReadonlyStore<State>;
   selector: (state: State) => Value;
 }) {
-  const { store, selector } = params!;
+  const { store, selector } = params;
 
   const instance = {
     effect: noop as (previous: Value, next: Value) => void,

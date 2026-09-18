@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { vi, describe, expect, it } from 'vitest';
 import { createRenderer, act } from '@mui/internal-test-utils';
-import { Store } from './Store';
-import { useStoreEffect } from './useStoreEffect';
+import { Store } from '@base-ui/utils/store';
+import { useStoreEffect } from './index';
 
 describe('useStoreEffect', () => {
   // `createRenderer().render` wraps the tree in `<React.StrictMode>` by default,
