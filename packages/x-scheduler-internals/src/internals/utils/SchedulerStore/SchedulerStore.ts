@@ -34,6 +34,7 @@ import type {
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
   UpdateEventsParameters,
+  SchedulerUpdateEventResult,
   SchedulerInstanceName,
   SchedulerEditingMode,
   SchedulerEventEditingStartEventDetails,
@@ -80,6 +81,23 @@ const MOCK_EVENT_STATE = {
   eventModelList: [],
 };
 
+function toUpdateEventResult(result: {
+  updatedEntries: SchedulerEventUpdatedProperties[];
+  rejection: Error | null;
+}): SchedulerUpdateEventResult {
+  return result.rejection
+    ? { applied: false, rejection: result.rejection }
+    : { applied: true, changes: result.updatedEntries[0] };
+}
+
+/**
+ * Reads the Premium-only `dataSource` parameter (see `SchedulerLazyLoadingParameters`).
+ * Truthiness on purpose, to match the Premium plugin guards.
+ */
+function hasDataSource(parameters: object): boolean {
+  return Boolean((parameters as { dataSource?: unknown }).dataSource);
+}
+
 /**
  * Instance shared by the Event Calendar and the Event Timeline Premium components.
  */
@@ -122,7 +140,7 @@ export class SchedulerStore<
 
     const schedulerInitialState: Omit<SchedulerState<TEvent>, 'shouldEventRequireResource'> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
-      ...(parameters.dataSource
+      ...(hasDataSource(parameters)
         ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
         : buildEventsState({
             events: parameters.events,
@@ -149,7 +167,7 @@ export class SchedulerStore<
         parameters.defaultVisibleDate ??
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
       errors: [],
-      isLoading: !!parameters.dataSource,
+      isLoading: hasDataSource(parameters),
       recurringEventsPlugin,
     };
 
@@ -252,7 +270,7 @@ export class SchedulerStore<
     ) as Partial<State>;
 
     if (
-      !parameters.dataSource &&
+      !hasDataSource(parameters) &&
       (parameters.events !== this.parameters.events ||
         parameters.eventModelStructure !== this.parameters.eventModelStructure ||
         adapter !== this.state.adapter ||
@@ -291,7 +309,7 @@ export class SchedulerStore<
       updateModel,
     );
 
-    this.update(newState);
+    this.update(newState as State);
     this.parameters = parameters;
   };
 
@@ -447,6 +465,9 @@ export class SchedulerStore<
 
   /**
    * Adds, updates and / or deletes events in the calendar.
+   * A batch the scheduling plugin vetoes is not applied nor emitted: the result then
+   * carries the `rejection` for the caller to surface, and empty lists. `updatedEntries`
+   * are the entries as applied, with the dates the plugin clamped or cascaded.
    */
   protected updateEvents(parameters: UpdateEventsParameters) {
     const eventDetails = createChangeEventDetails('none');
@@ -465,6 +486,31 @@ export class SchedulerStore<
         }
       }
     }
+
+    const contributions = this.schedulingPlugin?.handleEventsUpdate(parameters);
+    if (contributions && 'rejected' in contributions) {
+      return {
+        deleted: [],
+        updated: [],
+        updatedEntries: [],
+        created: [],
+        rejection: contributions.error,
+      };
+    }
+    if (contributions?.updated) {
+      for (const entry of contributions.updated) {
+        if (deleted.has(entry.id)) {
+          continue;
+        }
+        // Append, never rebuild: `pasteEvent` reads the caller's entry from `.updated[0]`.
+        const existing = updated.get(entry.id);
+        updated.set(
+          entry.id,
+          existing ? { ...existing, start: entry.start, end: entry.end } : entry,
+        );
+      }
+    }
+
     const originalEventIds = schedulerEventSelectors.idList(this.state);
     const originalEventModelLookup = schedulerEventSelectors.modelLookup(this.state);
     const newEvents: TEvent[] = [];
@@ -512,10 +558,8 @@ export class SchedulerStore<
       createdIds.push(response.id);
     }
 
-    this.schedulingPlugin?.handleEventsUpdate(parameters);
-
     if (process.env.NODE_ENV !== 'production') {
-      if (!this.parameters.onEventsChange && !this.parameters.dataSource) {
+      if (!this.parameters.onEventsChange && !hasDataSource(this.parameters)) {
         warnOnce([
           'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
           'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
@@ -539,7 +583,9 @@ export class SchedulerStore<
     return {
       deleted: deletedParam ?? [],
       updated: Array.from(updated.keys()) as SchedulerEventId[],
+      updatedEntries: Array.from(updated.values()),
       created: createdIds,
+      rejection: null,
     };
   }
 
@@ -579,8 +625,12 @@ export class SchedulerStore<
 
   /**
    * Updates an event in the calendar.
+   * The result says whether the update was applied, with the rejection to surface
+   * when the scheduling plugin vetoed it.
    */
-  public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
+  public updateEvent = (
+    calendarEvent: SchedulerEventUpdatedProperties,
+  ): SchedulerUpdateEventResult => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
     if (this.state.recurringEventsPlugin != null && original.dataTimezone.rrule) {
       throw new Error(
@@ -597,13 +647,12 @@ export class SchedulerStore<
           'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
         ]);
       }
-      this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] });
-      return;
+      return toUpdateEventResult(
+        this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }),
+      );
     }
 
-    this.updateEvents({
-      updated: [calendarEvent],
-    });
+    return toUpdateEventResult(this.updateEvents({ updated: [calendarEvent] }));
   };
 
   /**
@@ -789,6 +838,8 @@ export class SchedulerStore<
 
   /**
    * Pastes the copied or cut event with the provided changes.
+   * Returns the pasted event's id, or `null` when nothing was copied or the
+   * scheduling plugin vetoed a cut paste (the clipboard is then kept).
    */
   public pasteEvent = (changes: SchedulerEventPasteProperties) => {
     const { adapter, copiedEvent } = this.state;
@@ -807,9 +858,14 @@ export class SchedulerStore<
 
     if (copiedEvent.action === 'cut') {
       const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
-      const result = this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      const { updated, rejection } = this.updateEvents({ updated: [updatedEvent] });
+      if (rejection) {
+        // No other surface for the rejection; the clipboard stays usable.
+        this.pushError(rejection, { transient: true });
+        return null;
+      }
       this.set('copiedEvent', null);
-      return result;
+      return updated[0];
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;

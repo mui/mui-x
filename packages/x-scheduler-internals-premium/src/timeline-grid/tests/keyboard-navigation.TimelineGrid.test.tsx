@@ -38,6 +38,7 @@ describe('TimelineGrid keyboard navigation', () => {
     onEventEditingStart,
     resources: resourcesProp = resources,
     children,
+    titleContent,
   }: {
     onStoreMount?: (store: AnyEventCalendarStore) => void;
     columnTypes?: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
@@ -45,6 +46,7 @@ describe('TimelineGrid keyboard navigation', () => {
     onEventEditingStart?: (occurrence: any, eventDetails: any) => void;
     resources?: typeof resources;
     children?: React.ReactNode;
+    titleContent?: React.ReactNode;
   } = {}) {
     return (
       <EventTimelinePremiumProvider
@@ -67,7 +69,10 @@ describe('TimelineGrid keyboard navigation', () => {
                 data-testid={`row-${resourceId}`}
               >
                 <TimelineGrid.TitleRow data-testid={`title-${resourceId}`}>
-                  <TimelineGrid.Cell>{resourceId}</TimelineGrid.Cell>
+                  <TimelineGrid.Cell>
+                    {resourceId}
+                    {titleContent}
+                  </TimelineGrid.Cell>
                 </TimelineGrid.TitleRow>
                 <TimelineGrid.EventRow resourceId={resourceId} data-testid={`events-${resourceId}`}>
                   {() => (
@@ -217,6 +222,18 @@ describe('TimelineGrid keyboard navigation', () => {
       await user.keyboard('{ArrowRight}');
 
       expect(getEventsCells()[0]).toHaveFocus();
+    });
+
+    it('should leave the arrow keys to interactive content nested in a cell', async () => {
+      const { user } = render(<Grid titleContent={<input data-testid="nested-input" />} />);
+
+      const input = within(getTitleCells()[0]).getByTestId('nested-input');
+      act(() => {
+        input.focus();
+      });
+      await user.keyboard('{ArrowRight}{ArrowDown}');
+
+      expect(document.activeElement).to.equal(input);
     });
 
     it('should follow the order defined by a custom `columnTypes` prop', async () => {

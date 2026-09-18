@@ -268,6 +268,13 @@ Use the `onItemClick` prop to track the clicked item:
 
 {{"demo": "OnItemClick.js"}}
 
+## Get the root DOM element
+
+`RichTreeView` forwards its `ref` to the root `<ul>` element.
+Pass a regular React `ref` to the component to access this element:
+
+{{"demo": "RootElementRef.js", "defaultCodeOpen": false}}
+
 ## Imperative API
 
 To use the `apiRef` object, you need to initialize it using the `useRichTreeViewApiRef()` or `useRichTreeViewProApiRef()` hook as follows:

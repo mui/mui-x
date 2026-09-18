@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import { DataGridPro } from '@mui/x-data-grid-pro';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnValues } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, onTestFinished, describe, it, expect } from 'vitest';
@@ -189,6 +190,43 @@ describe('<DataGridPro /> - Infinite loader', () => {
       // observer was attached
       await waitFor(() => {
         expect(observe.mock.calls.length).to.equal(1);
+      });
+    },
+  );
+
+  // Needs layout
+  it.skipIf(isJSDOM)(
+    'should call `onRowsScrollEnd` in RTL when the grid is scrolled to the horizontal end',
+    async () => {
+      // The trigger is a zero-sized sticky element, so it has to stay in the viewport while
+      // scrolling horizontally. Otherwise it never intersects and the loading stalls.
+      // See https://github.com/mui/mui-x/issues/14289
+      const columns = Array.from({ length: 10 }, (_, index) => ({
+        field: `col${index}`,
+        width: 100,
+      }));
+      const rows = Array.from({ length: 6 }, (_, id) => ({ id }));
+
+      const handleRowsScrollEnd = vi.fn();
+      const { container } = render(
+        <ThemeProvider theme={createTheme({ direction: 'rtl' })}>
+          <div dir="rtl" style={{ width: 300, height: 300 }}>
+            <DataGridPro columns={columns} rows={rows} onRowsScrollEnd={handleRowsScrollEnd} />
+          </div>
+        </ThemeProvider>,
+      );
+      // eslint-disable-next-line testing-library/no-container
+      const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
+      const maxScrollLeft = virtualScroller.scrollWidth - virtualScroller.clientWidth;
+
+      await act(async () =>
+        // In RTL, `scrollLeft` goes from 0 (scrolled to the start) to `-maxScrollLeft`.
+        // The vertical offset is an arbitrary number to reach the bottom of the grid.
+        virtualScroller.scrollTo({ top: 12345, left: -maxScrollLeft, behavior: 'instant' }),
+      );
+
+      await waitFor(() => {
+        expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
       });
     },
   );

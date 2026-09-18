@@ -292,11 +292,11 @@ Returns the underlying `ChatStore<Cursor>` instance directly.
 const store: ChatStore<Cursor> = useChatStore();
 ```
 
-Use it with `useStore()` from `@mui/x-internals/store` to create a custom subscription:
+Use it with `useStore()` from `@base-ui/utils/store` to create a custom subscription:
 
 ```tsx
 import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 
 function MessageCounter() {
   const store = useChatStore();

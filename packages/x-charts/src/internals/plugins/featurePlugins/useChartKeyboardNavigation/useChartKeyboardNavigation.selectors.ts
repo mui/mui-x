@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import type { ChartState } from '../../models/chart';
@@ -60,6 +60,11 @@ export const selectorChartsFocusedItem = createSelector(
 export const selectorChartsFocusedOrToFocusedItem = createSelector(
   selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item ?? null,
+);
+
+export const selectorChartsZoomAnnouncement = createSelector(
+  selectKeyboardNavigation,
+  (keyboardNavigationState) => keyboardNavigationState?.zoomAnnouncement ?? 0,
 );
 
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(

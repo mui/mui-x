@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { platform } from '@base-ui/utils/platform';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import type {
   TreeViewCancellableEvent,
   TreeViewCancellableEventHandler,
