@@ -2771,6 +2771,49 @@ describe('<EventDialogContent open />', () => {
           );
         });
 
+        [
+          { preset: 'DAILY', label: /repeats daily/i, byDay: [], byMonthDay: [] },
+          { preset: 'WEEKLY', label: /repeats weekly/i, byDay: ['MO'], byMonthDay: [] },
+          { preset: 'MONTHLY', label: /repeats monthly/i, byDay: [], byMonthDay: [26] },
+          { preset: 'YEARLY', label: /repeats annually/i, byDay: [], byMonthDay: [] },
+        ].forEach(({ preset, label, byDay, byMonthDay }) => {
+          it(`should preserve the ${preset} draft when editing its interval and saving`, async () => {
+            const onEventsChange = vi.fn();
+            const { user } = render(
+              <EventCalendarProvider
+                events={[DEFAULT_EVENT]}
+                resources={resources}
+                onEventsChange={onEventsChange}
+                storeClass={PremiumTestStore}
+              >
+                <TestEventDialogContent open {...defaultProps} />
+              </EventCalendarProvider>,
+            );
+
+            await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+            await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+            await user.click(await screen.findByRole('option', { name: label }));
+
+            const intervalInput = within(screen.getByRole('group', { name: /repeat/i })).getByRole(
+              'spinbutton',
+            );
+            await user.click(intervalInput);
+            await user.keyboard('{Control>}a{/Control}2');
+            expect(screen.getByRole('combobox', { name: /recurrence/i }).textContent).to.match(
+              /custom repeat rule/i,
+            );
+            await user.click(screen.getByRole('button', { name: /save/i }));
+
+            expect(onEventsChange.mock.calls.length).to.equal(1);
+            expect(onEventsChange.mock.calls[0][0][0].rrule).to.deep.equal({
+              freq: preset,
+              interval: 2,
+              byDay,
+              byMonthDay,
+            });
+          });
+        });
+
         it('should pre-fill WEEKLY preset with the event weekday code', async () => {
           const onEventsChange = vi.fn();
 
