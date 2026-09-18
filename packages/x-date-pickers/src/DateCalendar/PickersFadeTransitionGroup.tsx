@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { TransitionGroup } from 'react-transition-group';
+import type { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
 import Fade from '@mui/material/Fade';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
@@ -32,18 +33,17 @@ const useUtilityClasses = (classes: Partial<PickersFadeTransitionGroupClasses> |
 const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
   name: 'MuiPickersFadeTransitionGroup',
   slot: 'Root',
-})<{ ownerState: ExportedPickersFadeTransitionGroupProps }>({
+})<TransitionGroupProps & { ownerState: ExportedPickersFadeTransitionGroupProps }>({
   display: 'block',
   position: 'relative',
-  // During the transition, the group contains the entering and the exiting elements.
-  // Only the first element must participate in the layout.
-  // This prevents the content from jumping when both elements are present (#9736).
-  '& > :not(:first-of-type)': {
-    position: 'absolute',
-    top: 0,
-    insetInlineStart: 0,
-  },
 });
+
+// Removes an exiting element from the layout to prevent the content from jumping (#9736).
+const exitingChildStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: 0,
+  insetInlineStart: 0,
+};
 
 /**
  * @ignore - do not document.
@@ -59,7 +59,13 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
     return children;
   }
   return (
-    <PickersFadeTransitionGroupRoot className={clsx(classes.root, className)} ownerState={other}>
+    <PickersFadeTransitionGroupRoot
+      className={clsx(classes.root, className)}
+      ownerState={other}
+      childFactory={(child: React.ReactElement<{ in?: boolean; style?: React.CSSProperties }>) =>
+        React.cloneElement(child, { style: child.props.in ? undefined : exitingChildStyle })
+      }
+    >
       <Fade
         appear={false}
         mountOnEnter

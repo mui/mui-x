@@ -276,6 +276,33 @@ describe('<DateCalendar />', () => {
       expect(getComputedStyle(labels[1]).position).to.equal('absolute');
       expect(labels[1].getBoundingClientRect().top).to.equal(labels[0].getBoundingClientRect().top);
     });
+
+    // test: https://github.com/mui/mui-x/issues/9736
+    it('should keep the month label in the layout when navigating back to it during the fade transition', () => {
+      render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} />);
+
+      const initialRect = screen
+        .getByTestId('calendar-month-and-year-text')
+        .getBoundingClientRect();
+
+      // Navigate away and back before the exit timer unmounts the first label.
+      fireEvent.click(screen.getByTitle('Next month'));
+      fireEvent.click(screen.getByTitle('Previous month'));
+
+      const labels = screen.getAllByTestId('calendar-month-and-year-text');
+      expect(labels).to.have.length(2);
+      expect(labels[0]).to.have.text('February 2019');
+      expect(labels[1]).to.have.text('January 2019');
+
+      // The re-entering label participates in the layout even when it is not the first child.
+      expect(getComputedStyle(labels[0]).position).to.equal('absolute');
+      expect(getComputedStyle(labels[1]).position).to.equal('static');
+
+      // The re-entering label must keep its original size.
+      const activeRect = labels[1].getBoundingClientRect();
+      expect(activeRect.width).to.equal(initialRect.width);
+      expect(activeRect.height).to.equal(initialRect.height);
+    });
   });
 
   describe('view: day', () => {
