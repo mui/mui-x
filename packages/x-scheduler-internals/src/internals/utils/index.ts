@@ -1,5 +1,6 @@
 export * from './SchedulerStore';
 export * from './event-utils';
+export * from './event-range-index';
 export * from './drag-utils';
 export * from './pointer-utils';
 export * from './dom-utils';
