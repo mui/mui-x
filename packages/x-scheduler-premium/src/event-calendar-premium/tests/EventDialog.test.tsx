@@ -2655,7 +2655,11 @@ describe('<EventDialogContent open />', () => {
         await user.type(screen.getByLabelText(/end time/i), '11:00');
         await user.click(screen.getByRole('tab', { name: /recurrence/i }));
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
-        await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+        // The presets follow the edited start: the tab offers the same rule the save stores.
+        expect(
+          await screen.findByRole('option', { name: 'Repeats monthly on day 3' }),
+        ).not.to.equal(null);
+        await user.click(screen.getByRole('option', { name: 'Repeats weekly on Thursday' }));
         await user.click(screen.getByRole('button', { name: /save/i }));
 
         const updated = onEventsChange.mock.lastCall?.[0].find(

@@ -22,7 +22,6 @@ import type {
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
@@ -48,8 +47,8 @@ import {
   hasProp,
   BUILT_IN_FORM_KEYS,
   getEditedRangeBounds,
-  getEventTimezone,
   getEventTimezoneStart,
+  getRecurrenceRuleStart,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
 import TitleSection from '../event-dialog/TitleSection';
@@ -425,12 +424,14 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
       // A preset is built on the start the event ends up with, in the event's timezone: the
       // rule is expressed there (RFC 5545 evaluates it as local time in the DTSTART timezone).
-      const ruleStart = submitStart
-        ? processDate(
-            current.adapter.setTimezone(start, getEventTimezone(occurrence)),
-            current.adapter,
-          )
-        : getEventTimezoneStart(current.adapter, occurrence);
+      // The Recurrence tab derives its labels and drafts from the same start.
+      const ruleStart = getRecurrenceRuleStart(
+        current.adapter,
+        occurrence,
+        values,
+        dirtyValues,
+        current.displayTimezone,
+      );
       const recurrencePresets = current.showRecurrence
         ? schedulerRecurringEventSelectors.presets(store.state, ruleStart)
         : null;

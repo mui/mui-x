@@ -311,6 +311,31 @@ export function getEventTimezoneStart(
 }
 
 /**
+ * The start a recurrence rule picked in the dialog is built on, in the event's timezone: the
+ * submitted start when the form moves it (or re-reads it in a display timezone that changed
+ * since the form was seeded), the occurrence's own otherwise. While an edited date does not
+ * parse, the occurrence's start stands in.
+ */
+export function getRecurrenceRuleStart(
+  adapter: Adapter,
+  occurrence: SchedulerRenderableEventOccurrence,
+  values: Pick<EventDialogFormValues, RangeFormKey>,
+  dirtyValues: Record<string, unknown>,
+  displayTimezone: TemporalTimezone,
+): SchedulerProcessedDate {
+  const { startEdited } = getEditedRangeBounds(dirtyValues, values.allDay);
+  const displayTimezoneMoved = displayTimezone !== occurrence.displayTimezone.timezone;
+  if (
+    (!startEdited && !displayTimezoneMoved) ||
+    findInvalidRangeField(adapter, values, displayTimezone) != null
+  ) {
+    return getEventTimezoneStart(adapter, occurrence);
+  }
+  const { start } = computeRange(adapter, values, displayTimezone);
+  return processDate(adapter.setTimezone(start, getEventTimezone(occurrence)), adapter);
+}
+
+/**
  * The IANA identifier of a timezone; the adapter aliases resolve to the system timezone.
  */
 function getTimezoneId(timezone: TemporalTimezone): string {
