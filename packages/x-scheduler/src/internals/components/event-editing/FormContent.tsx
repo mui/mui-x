@@ -34,6 +34,7 @@ import {
   getResourceSelectionMode,
   isBuiltInEventProperty,
 } from '@mui/x-scheduler-internals/internals';
+import { deleteEventOccurrence } from '../../utils/event-utils';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
 import type { EventDialogFormValues } from '../event-dialog/utils';
@@ -470,19 +471,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    if (showRecurrence && occurrence.displayTimezone.rrule) {
-      store.deleteRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
-        eventId: occurrence.id,
-        onSubmit: onClose,
-      });
-
-      // don't close the dialog
-      return;
+    if (deleteEventOccurrence(store, occurrence, onClose)) {
+      onClose();
     }
-
-    store.deleteEvent(occurrence.id);
-    onClose();
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
