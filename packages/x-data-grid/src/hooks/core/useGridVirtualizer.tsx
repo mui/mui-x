@@ -67,6 +67,7 @@ const addGridDimensionsCreator = () =>
   lruMemoize(
     (
       dimensions: Dimensions.State['dimensions'],
+      columnsMeta: Dimensions.State['columnsMeta'],
       headerHeight: number,
       groupHeaderHeight: number,
       headerFilterHeight: number,
@@ -74,6 +75,9 @@ const addGridDimensionsCreator = () =>
     ) => {
       return {
         ...dimensions,
+        columnsTotalWidth: dimensions.contentSize.width,
+        leftPinnedWidth: columnsMeta.pinnedLeftColumnsTotalWidth,
+        rightPinnedWidth: columnsMeta.pinnedRightColumnsTotalWidth,
         headerHeight,
         groupHeaderHeight,
         headerFilterHeight,
@@ -145,17 +149,11 @@ export function useGridVirtualizer() {
   eslintUseValue(useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector));
   const headersTotalHeight = getTotalHeaderHeight(apiRef, rootProps);
 
-  const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
-  const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
-
   const overlayState = useGridOverlays(apiRef, rootProps);
 
   const dimensionsParams = {
     rowHeight,
     headerHeight,
-    columnsTotalWidth,
-    leftPinnedWidth,
-    rightPinnedWidth,
     topPinnedHeight: headersTotalHeight,
     bottomPinnedHeight: 0,
     autoHeight,
@@ -355,6 +353,7 @@ export function useGridVirtualizer() {
   useFirstRender(() => {
     apiRef.current.store.state.dimensions = addGridDimensions(
       virtualizer.store.state.dimensions,
+      virtualizer.store.state.columnsMeta,
       headerHeight,
       groupHeaderHeight,
       headerFilterHeight,
@@ -364,7 +363,8 @@ export function useGridVirtualizer() {
     apiRef.current.store.state.virtualization = virtualizer.store.state.virtualization;
   });
 
-  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (_, dimensions) => {
+  const syncGridDimensions = () => {
+    const { dimensions, columnsMeta } = virtualizer.store.state;
     if (!dimensions.isReady) {
       return;
     }
@@ -372,13 +372,18 @@ export function useGridVirtualizer() {
       ...gridState,
       dimensions: addGridDimensions(
         dimensions,
+        columnsMeta,
         headerHeight,
         groupHeaderHeight,
         headerFilterHeight,
         headersTotalHeight,
       ),
     }));
-  });
+  };
+
+  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, syncGridDimensions);
+  // Pinning a column can change the pinned widths without changing the dimensions.
+  useStoreEffect(virtualizer.store, Dimensions.selectors.columnsMeta, syncGridDimensions);
 
   useStoreEffect(virtualizer.store, Dimensions.selectors.rowsMeta, (_, rowsMeta) => {
     if (rowsMeta !== apiRef.current.state.rowsMeta) {

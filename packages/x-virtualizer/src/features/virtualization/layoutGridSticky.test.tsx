@@ -6,6 +6,7 @@ import {
   Virtualization,
   LayoutGridSticky,
   Dimensions,
+  type ColumnWithWidth,
   type Virtualizer,
 } from '@mui/x-virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -28,6 +29,15 @@ const columns = Array.from({ length: COLUMN_COUNT }, (_, index) => ({
 }));
 const columnsTotalWidth = COLUMN_COUNT * COLUMN_WIDTH;
 const pinnedColumns = { left: [columns[0]], right: [columns[COLUMN_COUNT - 1]] };
+
+/* Columns with the given widths between the pinned ones. */
+function withMiddleWidths(widths: number[]): ColumnWithWidth[] {
+  return [
+    columns[0],
+    ...widths.map((width, index) => ({ field: `col-${index + 1}`, computedWidth: width })),
+    columns[COLUMN_COUNT - 1],
+  ];
+}
 
 // Mirrors `anchor.ts`.
 const ANCHOR_BLOCK = 40_000;
@@ -138,7 +148,7 @@ const Scrollbar = React.forwardRef<
         }
       : {
           height: 1,
-          width: dimensions.hasScrollX ? dimensions.columnsTotalWidth : 0,
+          width: dimensions.hasScrollX ? dimensions.contentSize.width : 0,
         };
   return (
     <div {...other} ref={ref} style={style}>
@@ -152,9 +162,9 @@ const HorizontalPropsProbe = React.memo(function HorizontalPropsProbe(props: {
   onRender: () => void;
 }) {
   const { store, onRender } = props;
-  store.use(LayoutGridSticky.selectors.spacerLeftProps, columns);
-  store.use(LayoutGridSticky.selectors.innerContainerProps, columns);
-  store.use(LayoutGridSticky.selectors.innerWindowProps, columns);
+  store.use(LayoutGridSticky.selectors.spacerLeftProps);
+  store.use(LayoutGridSticky.selectors.innerContainerProps);
+  store.use(LayoutGridSticky.selectors.innerWindowProps);
   onRender();
   return null;
 });
@@ -163,12 +173,14 @@ type StickyGridProps = {
   width?: number;
   scrollbarSize?: number;
   tall?: boolean;
+  columns?: ColumnWithWidth[];
   onHorizontalPropsRender?: () => void;
 };
 
 function StickyGrid(props: StickyGridProps) {
   const gridRows = props.tall ? tallRows : rows;
   const gridRange = props.tall ? tallRange : range;
+  const gridColumns = props.columns ?? columns;
   const refs = {
     container: React.useRef<HTMLDivElement>(null),
     scroller: React.useRef<HTMLDivElement>(null),
@@ -180,10 +192,7 @@ function StickyGrid(props: StickyGridProps) {
     layout,
     dimensions: {
       rowHeight: ROW_HEIGHT,
-      columnsTotalWidth,
       topPinnedHeight: HEADER_HEIGHT,
-      leftPinnedWidth: COLUMN_WIDTH,
-      rightPinnedWidth: COLUMN_WIDTH,
       scrollbarSize: props.scrollbarSize,
     },
     virtualization: { layoutMode: 'sticky' },
@@ -191,7 +200,7 @@ function StickyGrid(props: StickyGridProps) {
     rows: gridRows,
     range: gridRange,
     rowCount: gridRows.length,
-    columns,
+    columns: gridColumns,
     pinnedRows,
     pinnedColumns,
 
@@ -220,19 +229,10 @@ function StickyGrid(props: StickyGridProps) {
   const contentProps = virtualizer.store.use(LayoutGridSticky.selectors.contentProps);
   const topContainerProps = virtualizer.store.use(LayoutGridSticky.selectors.topContainerProps);
   const spacerTopProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerTopProps);
-  const spacerLeftProps = virtualizer.store.use(
-    LayoutGridSticky.selectors.spacerLeftProps,
-    columns,
-  );
-  const innerContainerProps = virtualizer.store.use(
-    LayoutGridSticky.selectors.innerContainerProps,
-    columns,
-  );
+  const spacerLeftProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerLeftProps);
+  const innerContainerProps = virtualizer.store.use(LayoutGridSticky.selectors.innerContainerProps);
   const windowProps = virtualizer.store.use(LayoutGridSticky.selectors.windowProps);
-  const innerWindowProps = virtualizer.store.use(
-    LayoutGridSticky.selectors.innerWindowProps,
-    columns,
-  );
+  const innerWindowProps = virtualizer.store.use(LayoutGridSticky.selectors.innerWindowProps);
   const windowContentProps = virtualizer.store.use(LayoutGridSticky.selectors.windowContentProps);
   const spacerBottomProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerBottomProps);
   const bottomContainerProps = virtualizer.store.use(
@@ -245,7 +245,7 @@ function StickyGrid(props: StickyGridProps) {
   for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
     headerCells.push(
       <div key={i} data-col={i} style={cellStyle}>
-        {columns[i].field}
+        {gridColumns[i].field}
       </div>,
     );
   }
@@ -276,14 +276,14 @@ function StickyGrid(props: StickyGridProps) {
                 }}
               >
                 <div data-col={0} style={{ ...pinnedCellStyle, left: 0, background: '#ddd' }}>
-                  {columns[0].field}
+                  {gridColumns[0].field}
                 </div>
                 {headerCells}
                 <div
                   data-col={COLUMN_COUNT - 1}
                   style={{ ...pinnedCellStyle, right: 'var(--pinned-right)', background: '#ddd' }}
                 >
-                  {columns[COLUMN_COUNT - 1].field}
+                  {gridColumns[COLUMN_COUNT - 1].field}
                 </div>
               </div>
               {getRows({ position: 'top', rows: pinnedRows.top })}
@@ -800,6 +800,50 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     expect(getWindowRowIds()).to.deep.equal(idsAfterDirectionChange);
     expect(onRender.mock.calls.length).to.equal(renderCount);
+  });
+
+  it('keeps the horizontal props when new columns keep their widths', async () => {
+    const onRender = vi.fn();
+    const view = await renderGrid({ onHorizontalPropsRender: onRender });
+    const renderCount = onRender.mock.calls.length;
+
+    // A host creates new column objects when only a label changes.
+    view.setProps({ columns: columns.map((column) => ({ ...column })) });
+    expect(onRender.mock.calls.length).to.equal(renderCount);
+
+    view.setProps({
+      columns: withMiddleWidths(Array.from({ length: COLUMN_COUNT - 2 }, () => 50)),
+    });
+    expect(onRender.mock.calls.length).to.be.greaterThan(renderCount);
+  });
+
+  it('updates the rendered columns when the columns move without changing the total width', async () => {
+    const wideFirst = withMiddleWidths([
+      300,
+      300,
+      ...Array.from({ length: COLUMN_COUNT - 4 }, () => 50),
+    ]);
+    // The same columns with the middle ones reversed: the wide columns move to the end, so
+    // the dimensions stay the same and only the column positions change.
+    const wideLast = [
+      wideFirst[0],
+      ...wideFirst.slice(1, -1).reverse(),
+      wideFirst[COLUMN_COUNT - 1],
+    ];
+
+    const { unmount } = await renderGrid({ columns: wideLast });
+    const wideLastColumns = middleColumnsOf(0);
+    unmount();
+
+    const view = await renderGrid({ columns: wideFirst });
+    const wideFirstColumns = middleColumnsOf(0);
+    expect(wideFirstColumns).not.to.deep.equal(wideLastColumns);
+
+    view.setProps({ columns: wideLast });
+    expect(middleColumnsOf(0)).to.deep.equal(wideLastColumns);
+
+    view.setProps({ columns: wideFirst });
+    expect(middleColumnsOf(0)).to.deep.equal(wideFirstColumns);
   });
 
   it('keeps retained rows at identical content-local offsets across context updates', async () => {
