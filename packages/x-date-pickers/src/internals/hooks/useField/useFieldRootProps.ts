@@ -263,6 +263,14 @@ export function useFieldRootProps(
       if (!focused) {
         setFocused(true);
         setSelectedSections(sectionOrder.startIndex);
+        // Focus synchronously, here, instead of leaving it to the layout
+        // effect in `useField.ts`. Moving DOM focus during this handler
+        // (rather than during React's commit of the state above) keeps it on
+        // the same tick as the native `mousedown`, matching the timing the
+        // browser used before `preventDefault` above stopped its own focus
+        // delegation. The layout effect still runs, but is a no-op: focusing
+        // an already-focused element fires no further events.
+        domGetters.getSectionContent(sectionOrder.startIndex).focus();
       }
       return;
     }
@@ -288,6 +296,9 @@ export function useFieldRootProps(
     // guard absorb the redundant call -- matching the pre-PR
     // `onSelectedSectionsChange` invocation count.
     setSelectedSections(parsedIndex);
+    // See the comment on the blank-space branch above: focus synchronously
+    // here so it lands on the same tick as the native `mousedown`.
+    domGetters.getSectionContent(parsedIndex).focus();
   });
 
   const handleInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
