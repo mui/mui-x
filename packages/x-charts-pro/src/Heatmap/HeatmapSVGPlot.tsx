@@ -2,8 +2,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
-import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
+import { useXScale, useYScale, useZAxis } from '@mui/x-charts/hooks';
+import {
+  selectorChartSeriesConfig,
+  selectorChartsHighlightStateCallback,
+  useStore,
+} from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks';
 import { HeatmapItem } from './HeatmapItem';
 import type { HeatmapRendererPlotProps } from './Heatmap.types';
@@ -21,8 +25,9 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
   const store = useStore();
   const xScale = useXScale<'band'>();
   const yScale = useYScale<'band'>();
-  const colorScale = useZColorScale()!;
+  const zAxis = useZAxis();
   const series = useHeatmapSeriesContext();
+  const seriesConfig = store.use(selectorChartSeriesConfig);
 
   const getHighlightState = store.use(selectorChartsHighlightStateCallback);
 
@@ -33,13 +38,20 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
     return null;
   }
   const seriesToDisplay = series.series[series.seriesOrder[0]];
+  // Same getter the tooltip uses, so a series `colorGetter` reaches both.
+  const getColor = seriesConfig.heatmap.colorProcessor(
+    seriesToDisplay,
+    undefined,
+    undefined,
+    zAxis,
+  );
 
   return (
     <HeatmapPlotRoot className={clsx(heatmapClasses.root, props.className)}>
       {seriesToDisplay.data.map(([xIndex, yIndex, value]) => {
         const x = xScale(xDomain[xIndex]);
         const y = yScale(yDomain[yIndex]);
-        const color = colorScale?.(value);
+        const color = getColor?.(value, { xIndex, yIndex });
 
         if (x === undefined || y === undefined || !color) {
           return null;
