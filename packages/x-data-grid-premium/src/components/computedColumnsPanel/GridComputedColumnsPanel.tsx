@@ -6,8 +6,10 @@ import {
   gridFocusCellSelector,
   gridFocusColumnHeaderSelector,
   useGridEvent,
+  useGridSelector,
 } from '@mui/x-data-grid-pro';
 import type { GridEventListener, GridRowId } from '@mui/x-data-grid-pro';
+import { isRedoShortcut, isUndoShortcut } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import type { RefObject } from '@mui/x-internals/types';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -135,6 +137,28 @@ function focusOpener(apiRef: RefObject<GridPrivateApiPremium>, opener: PanelOpen
   }
 }
 
+const isTextField = (target: EventTarget | null): boolean =>
+  target instanceof HTMLElement &&
+  (target.tagName === 'INPUT' ||
+    target.tagName === 'TEXTAREA' ||
+    target.closest('[contenteditable]:not([contenteditable="false"])') !== null);
+
+/**
+ * The grid's undo/redo shortcut is a native listener on the grid root, which the panel
+ * sits in. Typed in one of the panel's text fields, Ctrl+Z is the field's own undo: the
+ * shortcut stops here (without `preventDefault`, so the browser performs it) instead of
+ * undoing a grid step. From anywhere else in the panel it reaches the grid.
+ */
+function keepHistoryShortcutsInTextFields(event: KeyboardEvent) {
+  const keyboardEvent = event as unknown as React.KeyboardEvent;
+  if (
+    (isUndoShortcut(keyboardEvent) || isRedoShortcut(keyboardEvent)) &&
+    isTextField(event.target)
+  ) {
+    event.stopPropagation();
+  }
+}
+
 /**
  * Reads and clears the request left by `showComputedColumnEditor()`. Without a
  * request (the sidebar opened through `showSidebar()`, e.g. the toolbar
@@ -198,10 +222,12 @@ function GridComputedColumnsPanel() {
     (node: HTMLDivElement | null) => {
       if (rootRef.current) {
         unregisterFormulaFocusSafeElement(apiRef, rootRef.current);
+        rootRef.current.removeEventListener('keydown', keepHistoryShortcutsInTextFields);
       }
       rootRef.current = node;
       if (node) {
         registerFormulaFocusSafeElement(apiRef, node);
+        node.addEventListener('keydown', keepHistoryShortcutsInTextFields);
       }
     },
     [apiRef],
@@ -215,6 +241,24 @@ function GridComputedColumnsPanel() {
   const showList = React.useCallback((focusField?: string | null) => {
     setView({ kind: 'list', focusField });
   }, []);
+
+  // The editor session is keyed on open, not bound to the model. When the definition it
+  // edits leaves the model under it (an undo, the API, the parent), applying or deleting
+  // would have nothing to act on: the list takes over, and the panel keeps the focus
+  // if it had it (the editor is gone). A changed definition keeps the draft.
+  const editedField = view.kind === 'editor' ? view.session.definition?.field : undefined;
+  const editedDefinition = useGridSelector(
+    apiRef,
+    gridComputedColumnDefinitionSelector,
+    editedField ?? '',
+  );
+  React.useEffect(() => {
+    if (editedField !== undefined && editedDefinition === null) {
+      const root = rootRef.current;
+      const focusInside = root !== null && root.contains(root.ownerDocument.activeElement);
+      showList(focusInside ? null : undefined);
+    }
+  }, [editedField, editedDefinition, showList]);
 
   const openEditor = React.useCallback(
     (field: string | null) => {

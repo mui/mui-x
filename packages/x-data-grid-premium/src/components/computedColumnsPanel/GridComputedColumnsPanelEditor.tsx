@@ -484,13 +484,18 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     return definition;
   }, [draft, storedDefinition]);
 
+  // The verdict is read from the columns state (fields taken or freed, referenced columns
+  // removed): it follows every hydration, so an undo/redo under the editor shows up without
+  // a keystroke.
+  const columnLookup = useGridSelector(apiRef, gridColumnLookupSelector);
   const validation = React.useMemo<GridComputedColumnValidationResult>(
     () =>
       apiRef.current.validateComputedColumnDefinition!(
         draftDefinition,
         isEditing ? { ignoreField: storedDefinition.field } : undefined,
       ),
-    [apiRef, draftDefinition, isEditing, storedDefinition],
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `columnLookup` is read through the state
+    [apiRef, columnLookup, draftDefinition, isEditing, storedDefinition],
   );
 
   const currencyInvalid =
