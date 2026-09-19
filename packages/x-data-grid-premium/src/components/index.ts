@@ -1,6 +1,7 @@
 export * from './GridExcelExportMenuItem';
 export * from '../material/icons';
 export * from './columnMenu/menuItems/GridColumnMenuAggregationItem';
+export * from './columnMenu/menuItems/GridColumnMenuComputedColumnItem';
 export * from './promptField';
 export { GridColumnMenuGroupingItem } from './GridPremiumColumnMenu';
 export * from './export';

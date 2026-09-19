@@ -91,27 +91,32 @@
   {
     "name": "gridComputedColumnDefinitionSelector",
     "returnType": "GridComputedColumnDefinition | null",
+    "category": "Computed columns",
     "description": "Get the definition of one computed column, or `null` when the field is not a computed column."
   },
   {
     "name": "gridComputedColumnsPanelOpenSelector",
     "returnType": "boolean",
+    "category": "Computed columns",
     "description": "Get whether the sidebar currently shows the computed columns panel."
   },
   {
     "name": "gridComputedColumnsRevisionSelector",
     "returnType": "number",
+    "category": "Computed columns",
     "description": "Get the revision of the computed results.\nIt changes whenever the computed cells must read their value again."
   },
   {
     "name": "gridComputedColumnsSelector",
     "returnType": "GridComputedColumnsModel",
+    "category": "Computed columns",
     "description": "Get the computed columns model."
   },
   {
     "name": "gridComputedColumnsStateSelector",
     "returnType": "GridComputedColumnsState",
-    "description": ""
+    "category": "Computed columns",
+    "description": "Get the computed columns state."
   },
   {
     "name": "gridDataRowIdsSelector",

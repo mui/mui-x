@@ -248,6 +248,7 @@
   { "name": "GridColumnMenuAggregationItem", "kind": "Function" },
   { "name": "GridColumnMenuApi", "kind": "Interface" },
   { "name": "GridColumnMenuColumnsItem", "kind": "Function" },
+  { "name": "GridColumnMenuComputedColumnItem", "kind": "Function" },
   { "name": "GridColumnMenuContainer", "kind": "Variable" },
   { "name": "GridColumnMenuContainerProps", "kind": "Interface" },
   { "name": "GridColumnMenuFilterItem", "kind": "Function" },

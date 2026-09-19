@@ -37,6 +37,7 @@ export type ComputedColumnsPanelTriggerProps = Omit<GridSlotProps['baseButton'],
  *
  * Demos:
  *
+ * - [Computed Columns Panel](https://mui.com/x/react-data-grid/components/computed-columns-panel/)
  * - [Computed columns](https://mui.com/x/react-data-grid/computed-columns/)
  *
  * API:

@@ -5,12 +5,17 @@ import { gridSidebarStateSelector } from '../sidebar/gridSidebarSelector';
 import { GridSidebarValue } from '../sidebar/gridSidebarInterfaces';
 import type { GridComputedColumnDefinition } from './gridComputedColumnsInterfaces';
 
+/**
+ * Get the computed columns state.
+ * @category Computed columns
+ */
 export const gridComputedColumnsStateSelector = createRootSelector(
   (state: GridStatePremium) => state.computedColumns,
 );
 
 /**
  * Get the computed columns model.
+ * @category Computed columns
  */
 export const gridComputedColumnsSelector = createSelector(
   gridComputedColumnsStateSelector,
@@ -20,6 +25,7 @@ export const gridComputedColumnsSelector = createSelector(
 /**
  * Get the revision of the computed results.
  * It changes whenever the computed cells must read their value again.
+ * @category Computed columns
  */
 export const gridComputedColumnsRevisionSelector = createSelector(
   gridComputedColumnsStateSelector,
@@ -40,6 +46,7 @@ export const gridComputedColumnCellRevisionSelector = createSelector(
 
 /**
  * Get the definition of one computed column, or `null` when the field is not a computed column.
+ * @category Computed columns
  */
 export const gridComputedColumnDefinitionSelector = createSelector(
   gridComputedColumnsSelector,
@@ -49,6 +56,7 @@ export const gridComputedColumnDefinitionSelector = createSelector(
 
 /**
  * Get whether the sidebar currently shows the computed columns panel.
+ * @category Computed columns
  */
 export const gridComputedColumnsPanelOpenSelector = createSelector(
   gridSidebarStateSelector,

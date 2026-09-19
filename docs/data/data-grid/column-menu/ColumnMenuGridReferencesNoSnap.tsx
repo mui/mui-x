@@ -132,6 +132,13 @@ const rows = [
     plan: 'Premium',
   },
   {
+    id: 12,
+    slot: 'columnMenuComputedColumnItem',
+    defaultComponent: 'GridColumnMenuComputedColumnItem',
+    displayOrder: 24,
+    plan: 'Premium',
+  },
+  {
     id: 13,
     slot: 'columnMenuGroupingItem',
     defaultComponent: 'GridColumnMenuGroupingItem',

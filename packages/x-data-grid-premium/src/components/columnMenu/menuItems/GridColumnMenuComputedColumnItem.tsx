@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import {
   GRID_TREE_DATA_GROUPING_FIELD,
   gridColumnFieldsSelector,
@@ -16,7 +17,7 @@ import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
  * and "Remove" on a computed column. Only pushed into the menu by the computed
  * columns hook when the feature is available.
  */
-export function GridColumnMenuComputedColumnItem(props: GridColumnMenuItemProps) {
+function GridColumnMenuComputedColumnItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -76,3 +77,14 @@ export function GridColumnMenuComputedColumnItem(props: GridColumnMenuItemProps)
     </React.Fragment>
   );
 }
+
+GridColumnMenuComputedColumnItem.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  colDef: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+} as any;
+
+export { GridColumnMenuComputedColumnItem };
