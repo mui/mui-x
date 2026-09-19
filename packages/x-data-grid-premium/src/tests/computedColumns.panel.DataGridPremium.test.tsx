@@ -128,6 +128,11 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     fireEvent.input(editable);
   };
 
+  // A keydown that belongs to an IME composition (Enter confirming a candidate, Escape cancelling it).
+  const composingKeyDown = (element: HTMLElement, key: string) => {
+    fireEvent.keyDown(element, { key, keyCode: 229, isComposing: true });
+  };
+
   const selectType = async (user: any, label: string) => {
     await user.click(getTypeSelect());
     await user.click(within(screen.getByRole('listbox')).getByText(label));
@@ -987,6 +992,413 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await focusCell(0, 'price');
       await openEditor('total', { sampleRowId: 2 });
       expect(getPreviewRowLabel()).to.equal('Row 3');
+    });
+
+    it('acquires a preview row when rows arrive in an initially empty grid', async () => {
+      const { setProps } = await render(
+        <Test rows={[]} initialState={{ computedColumns: { model: [total] } }} />,
+      );
+      await openEditor('total');
+      expect(getPreviewRowLabel()).to.equal('No rows to preview');
+
+      setProps({ rows: baselineProps.rows });
+      await microtasks();
+      expect(getPreviewRowLabel()).to.equal('Row 1');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('6');
+      });
+    });
+
+    it('acquires a preview row again after the grid was emptied', async () => {
+      const { setProps } = await render(
+        <Test initialState={{ computedColumns: { model: [total] } }} />,
+      );
+      await openEditor('total', { sampleRowId: 1 });
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('50');
+      });
+
+      setProps({ rows: [] });
+      await microtasks();
+      expect(getPreviewRowLabel()).to.equal('No rows to preview');
+      expect(getPreviewText()).to.equal('');
+
+      setProps({ rows: baselineProps.rows });
+      await microtasks();
+      expect(getPreviewRowLabel()).to.equal('Row 1');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('6');
+      });
+    });
+
+    it('falls back to the first data row when the preview row is removed', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total', { sampleRowId: 0 });
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('6');
+      });
+
+      await act(async () => apiRef.current!.updateRows([{ id: 0, _action: 'delete' }]));
+      expect(getPreviewRowLabel()).to.equal('Row 1');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('50');
+      });
+    });
+  });
+
+  describe('number format preservation', () => {
+    const renderWithFormat = (numberFormat: Intl.NumberFormatOptions) =>
+      render(
+        <Test
+          initialState={{
+            computedColumns: { model: [define('total', '=price * quantity', { numberFormat })] },
+          }}
+        />,
+      );
+    const apply = async () => {
+      fireEvent.click(getButton('Apply'));
+      await microtasks();
+    };
+    const typeDecimals = (value: string) => {
+      fireEvent.change(screen.getByRole('spinbutton', { name: 'Decimals' }), { target: { value } });
+    };
+
+    it('keeps distinct fraction bounds when only the name changes', async () => {
+      await renderWithFormat({ minimumFractionDigits: 0, maximumFractionDigits: 2 });
+      await openEditor('total');
+      typeName('Renamed');
+      await apply();
+      expect(getModel()[0].headerName).to.equal('Renamed');
+      expect(getModel()[0].numberFormat).to.deep.equal({
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      });
+    });
+
+    it('keeps the stored format on an Apply without any change', async () => {
+      await renderWithFormat({ minimumFractionDigits: 0, maximumFractionDigits: 2 });
+      await openEditor('total');
+      await apply();
+      expect(getModel()[0].numberFormat).to.deep.equal({
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      });
+    });
+
+    it('keeps a format with only one fraction bound, or none', async () => {
+      await renderWithFormat({ maximumFractionDigits: 2 });
+      await openEditor('total');
+      typeName('Max only');
+      await apply();
+      expect(getModel()[0].numberFormat).to.deep.equal({ maximumFractionDigits: 2 });
+
+      await act(async () =>
+        apiRef.current!.updateComputedColumn('total', {
+          numberFormat: { minimumFractionDigits: 1 },
+        }),
+      );
+      await openEditor('total');
+      typeName('Min only');
+      await apply();
+      expect(getModel()[0].numberFormat).to.deep.equal({ minimumFractionDigits: 1 });
+
+      await act(async () =>
+        apiRef.current!.updateComputedColumn('total', { numberFormat: { style: 'percent' } }),
+      );
+      await openEditor('total');
+      typeName('Unset');
+      await apply();
+      expect(getModel()[0].numberFormat).to.deep.equal({ style: 'percent' });
+    });
+
+    it('writes both fraction bounds once the decimals are edited', async () => {
+      await renderWithFormat({ minimumFractionDigits: 0, maximumFractionDigits: 2 });
+      await openEditor('total');
+      typeDecimals('3');
+      await apply();
+      expect(getModel()[0].numberFormat).to.deep.equal({
+        minimumFractionDigits: 3,
+        maximumFractionDigits: 3,
+      });
+    });
+
+    it('keeps the stored bounds when the decimals are back to their initial value', async () => {
+      await renderWithFormat({ minimumFractionDigits: 0, maximumFractionDigits: 2 });
+      await openEditor('total');
+      typeDecimals('3');
+      typeDecimals('2');
+      await apply();
+      expect(getModel()[0].numberFormat).to.deep.equal({
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      });
+    });
+
+    it('keeps the fraction bounds when only the thousands separator is toggled', async () => {
+      const { user } = await renderWithFormat({
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      });
+      await openEditor('total');
+      await user.click(screen.getByRole('switch', { name: 'Thousands separator' }));
+      await apply();
+      expect(getModel()[0].numberFormat).to.deep.equal({
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+        useGrouping: false,
+      });
+    });
+
+    it('keeps the fraction bounds when only the style changes', async () => {
+      const { user } = await renderWithFormat({
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      });
+      await openEditor('total');
+      await user.click(screen.getByRole('combobox', { name: 'Format' }));
+      await user.click(within(screen.getByRole('listbox')).getByText('Percent'));
+      await apply();
+      expect(getModel()[0].numberFormat).to.deep.equal({
+        style: 'percent',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      });
+    });
+
+    it('keeps the options the editor does not manage next to an edited group', async () => {
+      await renderWithFormat({
+        notation: 'compact',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      });
+      await openEditor('total');
+      typeDecimals('1');
+      await apply();
+      expect(getModel()[0].numberFormat).to.deep.equal({
+        notation: 'compact',
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      });
+    });
+  });
+
+  describe('result type on Apply', () => {
+    const dateProps: Partial<DataGridPremiumProps> = {
+      rows: [{ id: 0, item: 'Apple', price: 2, quantity: 3, day: new Date(2024, 0, 15) }],
+      columns: [...baselineProps.columns, { field: 'day', type: 'date' }],
+    };
+    const pressEnterInFormula = async () => {
+      await act(async () => getFormulaEditable().focus());
+      fireEvent.keyDown(getFormulaEditable(), { key: 'Enter' });
+      await microtasks();
+    };
+
+    // No test below waits for the debounced preview between the last formula change and the Apply.
+    it('infers a text result when Enter comes before the debounced preview', async () => {
+      await render(<Test />);
+      await openEditor(null);
+      typeName('Greeting');
+      typeFormula('="hello"');
+      await pressEnterInFormula();
+      expect(getModel()[0].type).to.equal('string');
+      expect(apiRef.current!.getCellValue(0, 'greeting')).to.equal('hello');
+    });
+
+    it('infers boolean and date results', async () => {
+      await render(<Test {...dateProps} />);
+      await openEditor(null);
+      typeName('Flag');
+      typeFormula('=price > 1');
+      await pressEnterInFormula();
+      expect(getModel()[0].type).to.equal('boolean');
+      expect(apiRef.current!.getCellValue(0, 'flag')).to.equal(true);
+
+      await openEditor(null);
+      typeName('When');
+      typeFormula('=day');
+      await pressEnterInFormula();
+      expect(getModel()[1].type).to.equal('date');
+      expect(apiRef.current!.getCellValue(0, 'when')).to.deep.equal(new Date(2024, 0, 15));
+    });
+
+    it('follows a type flip made right before Enter and drops the format with it', async () => {
+      await render(<Test />);
+      await openEditor(null);
+      typeName('Flip');
+      typeFormula('=item & "!"');
+      await waitFor(() => {
+        expect(getTypeSelect().textContent).to.equal('Text');
+      });
+      typeFormula('=price * 2');
+      await pressEnterInFormula();
+      expect(getModel()[0].type).to.equal('number');
+      expect(apiRef.current!.getCellValue(1, 'flip')).to.equal(20);
+
+      await openEditor(null);
+      typeName('Flop');
+      typeFormula('=price');
+      fireEvent.change(screen.getByRole('spinbutton', { name: 'Decimals' }), {
+        target: { value: '2' },
+      });
+      typeFormula('=item');
+      await pressEnterInFormula();
+      expect(getModel()[1].type).to.equal('string');
+      expect(getModel()[1]).not.to.have.property('numberFormat');
+    });
+
+    it('infers the type from Ctrl+Enter and from the button', async () => {
+      await render(<Test />);
+      await openEditor(null);
+      typeName('First');
+      typeFormula('=item');
+      await act(async () => getNameInput().focus());
+      fireEvent.keyDown(getNameInput(), { key: 'Enter', ctrlKey: true });
+      await microtasks();
+      expect(getModel()[0].type).to.equal('string');
+
+      await openEditor(null);
+      typeName('Second');
+      typeFormula('=item');
+      fireEvent.click(getButton('Add column'));
+      await microtasks();
+      expect(getModel()[1].type).to.equal('string');
+    });
+
+    it('keeps the type the user picked', async () => {
+      const { user } = await render(<Test />);
+      await openEditor(null);
+      typeName('Picked');
+      await selectType(user, 'Boolean');
+      typeFormula('=item');
+      await pressEnterInFormula();
+      expect(getModel()[0].type).to.equal('boolean');
+    });
+
+    it('keeps the default type without a preview row or with an error result', async () => {
+      await render(<Test rows={[]} />);
+      await openEditor(null);
+      typeName('Greeting');
+      typeFormula('="hello"');
+      await pressEnterInFormula();
+      expect(getModel()[0].type).to.equal('number');
+
+      await act(async () => apiRef.current!.updateRows([{ id: 0, price: 1, quantity: 0 }]));
+      await openEditor(null);
+      typeName('Ratio');
+      typeFormula('=price / quantity');
+      await pressEnterInFormula();
+      expect(getModel()[1].type).to.equal('number');
+    });
+
+    it('shows a hidden invalid format instead of applying it with the inferred type', async () => {
+      const { user } = await render(<Test />);
+      await openEditor(null);
+      typeName('Amount');
+      typeFormula('=price');
+      await user.click(screen.getByRole('combobox', { name: 'Format' }));
+      await user.click(within(screen.getByRole('listbox')).getByText('Currency'));
+      fireEvent.change(screen.getByRole('textbox', { name: 'Currency code' }), {
+        target: { value: 'U' },
+      });
+      typeFormula('=item');
+      await waitFor(() => {
+        expect(getTypeSelect().textContent).to.equal('Text');
+      });
+      expect(getButton('Add column')).to.have.property('disabled', false);
+
+      typeFormula('=price * 2');
+      await pressEnterInFormula();
+      expect(getModel()).to.deep.equal([]);
+      expect(getSidebar().open).to.equal(true);
+      expect(getTypeSelect().textContent).to.equal('Number');
+      expect(screen.getByRole('textbox', { name: 'Currency code' })).not.to.equal(null);
+      expect(getButton('Add column')).to.have.property('disabled', true);
+    });
+  });
+
+  describe('IME composition', () => {
+    const currencyTotal = define('total', '=price * quantity', {
+      headerName: 'Total',
+      numberFormat: { style: 'currency', currency: 'EUR' },
+    });
+
+    it('does not apply when Enter confirms a composition in a text field', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [currencyTotal] } }} />);
+      await openEditor('total');
+      typeName('Changed');
+      const inputs = [
+        getNameInput(),
+        screen.getByRole('textbox', { name: 'Currency code' }),
+        screen.getByRole('spinbutton', { name: 'Decimals' }),
+      ];
+      for (let index = 0; index < inputs.length; index += 1) {
+        const input = inputs[index];
+        // eslint-disable-next-line no-await-in-loop
+        await act(async () => input.focus());
+        fireEvent.compositionStart(input);
+        composingKeyDown(input, 'Enter');
+      }
+      await microtasks();
+      expect(getSidebar().open).to.equal(true);
+      expect(getModel()).to.deep.equal([currencyTotal]);
+    });
+
+    it('does not apply when Enter confirms a composition in the formula', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [currencyTotal] } }} />);
+      await openEditor('total');
+      typeName('Changed');
+      await act(async () => getFormulaEditable().focus());
+      fireEvent.compositionStart(getFormulaEditable());
+      composingKeyDown(getFormulaEditable(), 'Enter');
+      await microtasks();
+      expect(getSidebar().open).to.equal(true);
+      expect(getModel()).to.deep.equal([currencyTotal]);
+    });
+
+    it('does not apply on Ctrl+Enter during a composition', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [currencyTotal] } }} />);
+      await openEditor('total');
+      typeName('Changed');
+      await act(async () => getNameInput().focus());
+      fireEvent.compositionStart(getNameInput());
+      fireEvent.keyDown(getNameInput(), {
+        key: 'Enter',
+        ctrlKey: true,
+        keyCode: 229,
+        isComposing: true,
+      });
+      await microtasks();
+      expect(getSidebar().open).to.equal(true);
+      expect(getModel()).to.deep.equal([currencyTotal]);
+    });
+
+    it('applies on a plain Enter once the composition ended', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [currencyTotal] } }} />);
+      await openEditor('total');
+      typeName('Changed');
+      await act(async () => getNameInput().focus());
+      fireEvent.compositionStart(getNameInput());
+      composingKeyDown(getNameInput(), 'Enter');
+      fireEvent.compositionEnd(getNameInput());
+      fireEvent.keyDown(getNameInput(), { key: 'Enter' });
+      await microtasks();
+      expect(getModel()[0].headerName).to.equal('Changed');
+    });
+
+    it('does not cancel when Escape cancels a composition', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [currencyTotal] } }} />);
+      await openEditor('total');
+      await act(async () => getNameInput().focus());
+      fireEvent.compositionStart(getNameInput());
+      composingKeyDown(getNameInput(), 'Escape');
+      await microtasks();
+      expect(getSidebar().open).to.equal(true);
+
+      await act(async () => getFormulaEditable().focus());
+      fireEvent.compositionStart(getFormulaEditable());
+      composingKeyDown(getFormulaEditable(), 'Escape');
+      await microtasks();
+      expect(getSidebar().open).to.equal(true);
     });
   });
 

@@ -174,6 +174,15 @@ const GridFormulaEditorOptionDetail = styled('span')(({ theme }) => ({
 }));
 
 /**
+ * Whether a key event belongs to an IME composition. `keyCode === 229` covers
+ * Safari, which fires the confirming keydown after `compositionend` (with
+ * `isComposing` already `false`).
+ */
+export function isComposingKeyEvent(event: React.KeyboardEvent): boolean {
+  return event.nativeEvent.isComposing || event.keyCode === 229;
+}
+
+/**
  * The edit value as the string the editor displays. Non-string values (e.g. a
  * number parsed from a plain edit) render through their string form; the
  * reference model treats them as non-formulas (no coloring).
@@ -643,6 +652,12 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
 
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
+        // Keys pressed during an IME composition belong to the IME (Enter
+        // confirms the candidate, Escape cancels it, the arrows and Tab walk
+        // the candidates): they neither drive the popup nor commit or cancel.
+        if (isComposingKeyEvent(event)) {
+          return;
+        }
         if (open && hasList) {
           switch (event.key) {
             case 'ArrowDown':

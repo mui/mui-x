@@ -32,7 +32,7 @@ import type {
   GridFormulaActiveEdit,
   GridFormulaResult,
 } from '../../hooks/features/formula/gridFormulaInterfaces';
-import { GridFormulaEditable } from '../GridFormulaEditable';
+import { GridFormulaEditable, isComposingKeyEvent } from '../GridFormulaEditable';
 import type { GridFormulaEditableHandle } from '../GridFormulaEditable';
 import { GridComputedColumnsPanelReferencePane } from './GridComputedColumnsPanelReferencePane';
 
@@ -280,15 +280,17 @@ const NOOP_GETTERS = {
   rowSpanValueGetter: () => undefined,
 };
 
-function createDraft(definition: GridComputedColumnDefinition | null): EditorDraft {
-  const numberFormat = definition?.numberFormat;
+type EditorFormatDraft = Pick<EditorDraft, 'formatStyle' | 'currency' | 'decimals' | 'grouping'>;
+
+/**
+ * What the format controls show for a stored `numberFormat`. The controls are
+ * coarser than the options (one Decimals field for both fraction bounds), so
+ * the seed is also what `buildNumberFormat` compares the draft to: a control
+ * still equal to its seed was not touched.
+ */
+function createFormatSeed(numberFormat: Intl.NumberFormatOptions | undefined): EditorFormatDraft {
   const style = numberFormat?.style;
   return {
-    headerName: definition?.headerName ?? '',
-    field: definition?.field ?? '',
-    // A new formula starts with the `=`, so the autocomplete opens right away.
-    formula: definition?.formula ?? '=',
-    type: definition?.type ?? 'number',
     formatStyle: style === 'percent' || style === 'currency' ? style : 'decimal',
     currency: numberFormat?.currency ?? 'USD',
     decimals:
@@ -296,6 +298,17 @@ function createDraft(definition: GridComputedColumnDefinition | null): EditorDra
         ? ''
         : String(numberFormat.maximumFractionDigits),
     grouping: numberFormat?.useGrouping !== false,
+  };
+}
+
+function createDraft(definition: GridComputedColumnDefinition | null): EditorDraft {
+  return {
+    headerName: definition?.headerName ?? '',
+    field: definition?.field ?? '',
+    // A new formula starts with the `=`, so the autocomplete opens right away.
+    formula: definition?.formula ?? '=',
+    type: definition?.type ?? 'number',
+    ...createFormatSeed(definition?.numberFormat),
   };
 }
 
@@ -319,8 +332,12 @@ function parseDecimals(decimals: string): number | null | undefined {
 }
 
 /**
- * The `numberFormat` of the draft: the options the editor manages replace the
- * stored ones, anything else in a stored format is kept.
+ * The `numberFormat` of the draft. The editor manages three groups of options
+ * (style + currency, the fraction bounds, the grouping): a group the user
+ * changed replaces the stored options of that group, an untouched one keeps
+ * them as stored (a stored `{ minimumFractionDigits: 0, maximumFractionDigits: 2 }`
+ * is not what the single Decimals field would write). Anything else in a
+ * stored format is kept.
  */
 function buildNumberFormat(
   draft: EditorDraft,
@@ -329,27 +346,66 @@ function buildNumberFormat(
   if (draft.type !== 'number') {
     return undefined;
   }
+  const seed = createFormatSeed(stored);
   const options: Intl.NumberFormatOptions = { ...stored };
-  delete options.style;
-  delete options.currency;
-  delete options.minimumFractionDigits;
-  delete options.maximumFractionDigits;
-  delete options.useGrouping;
-  if (draft.formatStyle !== 'decimal') {
-    options.style = draft.formatStyle;
+  if (draft.formatStyle !== seed.formatStyle || draft.currency !== seed.currency) {
+    delete options.style;
+    delete options.currency;
+    if (draft.formatStyle !== 'decimal') {
+      options.style = draft.formatStyle;
+    }
+    if (draft.formatStyle === 'currency') {
+      options.currency = draft.currency.toUpperCase();
+    }
   }
-  if (draft.formatStyle === 'currency') {
-    options.currency = draft.currency.toUpperCase();
+  if (draft.decimals !== seed.decimals) {
+    delete options.minimumFractionDigits;
+    delete options.maximumFractionDigits;
+    const decimals = parseDecimals(draft.decimals);
+    if (typeof decimals === 'number') {
+      options.minimumFractionDigits = decimals;
+      options.maximumFractionDigits = decimals;
+    }
   }
-  const decimals = parseDecimals(draft.decimals);
-  if (typeof decimals === 'number') {
-    options.minimumFractionDigits = decimals;
-    options.maximumFractionDigits = decimals;
-  }
-  if (!draft.grouping) {
-    options.useGrouping = false;
+  if (draft.grouping !== seed.grouping) {
+    delete options.useGrouping;
+    if (!draft.grouping) {
+      options.useGrouping = false;
+    }
   }
   return Object.keys(options).length === 0 ? undefined : options;
+}
+
+/**
+ * The stored shape of a draft: optional properties are left out when they have no value.
+ */
+function buildDefinition(
+  draft: EditorDraft,
+  stored: GridComputedColumnDefinition | null,
+): GridComputedColumnDefinition {
+  const definition: GridComputedColumnDefinition = {
+    field: draft.field.trim(),
+    headerName: draft.headerName.trim(),
+    formula: normalizeFormula(draft.formula),
+    type: draft.type,
+  };
+  const numberFormat = buildNumberFormat(draft, stored?.numberFormat);
+  if (numberFormat !== undefined) {
+    definition.numberFormat = numberFormat;
+  }
+  if (stored?.description !== undefined) {
+    definition.description = stored.description;
+  }
+  return definition;
+}
+
+function isFormatInvalid(draft: EditorDraft): { currency: boolean; decimals: boolean } {
+  const isNumber = draft.type === 'number';
+  return {
+    currency:
+      isNumber && draft.formatStyle === 'currency' && !CURRENCY_CODE_REGEX.test(draft.currency),
+    decimals: isNumber && parseDecimals(draft.decimals) === null,
+  };
 }
 
 /**
@@ -449,9 +505,11 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     }
   }, [focusedCell, isDataRow]);
 
-  // A preview row removed from the grid falls back to the first data row.
+  // A preview row removed from the grid falls back to the first data row; so
+  // does an editor opened on an empty grid once rows arrive (`null` → `null`
+  // is a no-op, the effect cannot loop).
   React.useEffect(() => {
-    if (previewRowId !== null && apiRef.current.getRow(previewRowId) == null) {
+    if (previewRowId === null || apiRef.current.getRow(previewRowId) == null) {
       setPreviewRowId(expandedSortedRowIds.find(isDataRow) ?? null);
     }
   }, [apiRef, expandedSortedRowIds, previewRowId, isDataRow]);
@@ -466,23 +524,10 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
 
   // ----- Draft definition + validation -----
 
-  // The stored shape: optional properties are left out when they have no value.
-  const draftDefinition = React.useMemo<GridComputedColumnDefinition>(() => {
-    const definition: GridComputedColumnDefinition = {
-      field: draft.field.trim(),
-      headerName: draft.headerName.trim(),
-      formula: normalizeFormula(draft.formula),
-      type: draft.type,
-    };
-    const numberFormat = buildNumberFormat(draft, storedDefinition?.numberFormat);
-    if (numberFormat !== undefined) {
-      definition.numberFormat = numberFormat;
-    }
-    if (storedDefinition?.description !== undefined) {
-      definition.description = storedDefinition.description;
-    }
-    return definition;
-  }, [draft, storedDefinition]);
+  const draftDefinition = React.useMemo<GridComputedColumnDefinition>(
+    () => buildDefinition(draft, storedDefinition),
+    [draft, storedDefinition],
+  );
 
   // The verdict is read from the columns state (fields taken or freed, referenced columns
   // removed): it follows every hydration, so an undo/redo under the editor shows up without
@@ -498,11 +543,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     [apiRef, columnLookup, draftDefinition, isEditing, storedDefinition],
   );
 
-  const currencyInvalid =
-    draft.type === 'number' &&
-    draft.formatStyle === 'currency' &&
-    !CURRENCY_CODE_REGEX.test(draft.currency);
-  const decimalsInvalid = draft.type === 'number' && parseDecimals(draft.decimals) === null;
+  const { currency: currencyInvalid, decimals: decimalsInvalid } = isFormatInvalid(draft);
   const canApply = validation.valid && !currencyInvalid && !decimalsInvalid;
   const showValidation = (dirty || isEditing) && validation.issues.length > 0;
 
@@ -512,20 +553,24 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   const expression = getFormulaExpression(draftDefinition.formula).trim();
   const ownerField = draftDefinition.field === '' ? DRAFT_FIELD_PLACEHOLDER : draftDefinition.field;
 
+  const computePreview = React.useCallback(
+    (rowId: GridRowId) =>
+      previewFormulaResult(apiRef, { id: rowId, field: ownerField }, `=${expression}`, {
+        a1Notation,
+      }),
+    [apiRef, expression, ownerField, a1Notation],
+  );
+
   React.useEffect(() => {
     if (previewRowId === null || expression === '') {
       setRawPreview(null);
       return undefined;
     }
     const timer = setTimeout(() => {
-      setRawPreview(
-        previewFormulaResult(apiRef, { id: previewRowId, field: ownerField }, `=${expression}`, {
-          a1Notation,
-        }),
-      );
+      setRawPreview(computePreview(previewRowId));
     }, PREVIEW_DEBOUNCE_MS);
     return () => clearTimeout(timer);
-  }, [apiRef, previewRowId, expression, ownerField, a1Notation]);
+  }, [previewRowId, expression, computePreview]);
 
   React.useEffect(() => {
     if (typeTouched || rawPreview === null || rawPreview.type === 'error') {
@@ -683,18 +728,57 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     if (!canApply) {
       return;
     }
-    const { field } = draftDefinition;
+    let definition = draftDefinition;
+    // The type follows the debounced preview: an Apply faster than the debounce
+    // resolves it from the formula as it is now, not as it was 150 ms ago.
+    if (!typeTouched && previewRowId !== null && expression !== '') {
+      const result = computePreview(previewRowId);
+      const inferred =
+        result === null || result.type === 'error' ? null : inferColumnType(result.value);
+      if (inferred !== null && inferred !== draft.type) {
+        const finalDraft = { ...draft, type: inferred };
+        definition = buildDefinition(finalDraft, storedDefinition);
+        const formatInvalid = isFormatInvalid(finalDraft);
+        if (
+          formatInvalid.currency ||
+          formatInvalid.decimals ||
+          !apiRef.current.validateComputedColumnDefinition!(
+            definition,
+            isEditing ? { ignoreField: storedDefinition.field } : undefined,
+          ).valid
+        ) {
+          // The new type brings back format fields that were hidden (and not
+          // checked): show them instead of saving what the user cannot see.
+          setDraft(finalDraft);
+          return;
+        }
+      }
+    }
+    const { field } = definition;
     if (isEditing) {
       apiRef.current.updateComputedColumn(storedDefinition.field, {
         // `updateComputedColumn` merges: a format removed by the editor is cleared explicitly.
         numberFormat: undefined,
-        ...draftDefinition,
+        ...definition,
       });
     } else {
-      apiRef.current.addComputedColumn(draftDefinition, { columnIndex: session.columnIndex });
+      apiRef.current.addComputedColumn(definition, { columnIndex: session.columnIndex });
     }
     onDone({ type: 'applied', field });
-  }, [apiRef, canApply, draftDefinition, isEditing, onDone, session.columnIndex, storedDefinition]);
+  }, [
+    apiRef,
+    canApply,
+    computePreview,
+    draft,
+    draftDefinition,
+    expression,
+    isEditing,
+    onDone,
+    previewRowId,
+    session.columnIndex,
+    storedDefinition,
+    typeTouched,
+  ]);
 
   const handleDelete = React.useCallback(() => {
     if (isEditing) {
@@ -709,6 +793,10 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
 
   const handleInputKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
+      // An Enter that confirms an IME composition belongs to the IME.
+      if (isComposingKeyEvent(event)) {
+        return;
+      }
       if (event.key === 'Enter') {
         event.preventDefault();
         handleApply();
@@ -722,6 +810,9 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   // suggestion.
   const handleRootKeyDownCapture = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (isComposingKeyEvent(event)) {
+        return;
+      }
       if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         event.stopPropagation();
@@ -735,6 +826,10 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   // select menus stop their own Escape, the reference search clears itself first.
   const handleRootKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
+      // An Escape that cancels an IME composition does not cancel the editor.
+      if (isComposingKeyEvent(event)) {
+        return;
+      }
       if (event.key === 'Escape' && !event.defaultPrevented) {
         event.preventDefault();
         handleCancel();
