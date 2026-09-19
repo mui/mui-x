@@ -14,6 +14,9 @@ import type {
 } from '@mui/x-data-grid-pro';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { GridPremiumFeatureDependencies } from '../../../models/gridFeatureDependencies';
+import { createComputedColumnsHistoryHandler } from '../computedColumns/gridComputedColumnsHistory';
+import type { GridComputedColumnsHistoryData } from '../computedColumns/gridComputedColumnsHistory';
 import type {
   GridHistoryEventHandler,
   GridCellEditHistoryData,
@@ -431,14 +434,37 @@ export const createClipboardPasteHistoryHandler = (
  */
 export const createDefaultHistoryHandlers = (
   apiRef: RefObject<GridApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'columns' | 'isCellEditable' | 'dataSource'>,
+  props: Pick<
+    DataGridPremiumProcessedProps,
+    'columns' | 'isCellEditable' | 'dataSource' | 'disableComputedColumns' | 'disableFormulas'
+  > & {
+    /**
+     * The injected formula feature (`featureDependencies.formula`). Passed on its own
+     * because the `featureDependencies` object is usually created inline: the feature
+     * itself cannot change after the first render.
+     */
+    formulaFeature: GridPremiumFeatureDependencies['formula'];
+  },
 ) => {
   const handlers = {} as Record<
     GridEvents,
     | GridHistoryEventHandler<GridCellEditHistoryData>
     | GridHistoryEventHandler<GridRowEditHistoryData>
     | GridHistoryEventHandler<GridClipboardPasteHistoryData>
+    | GridHistoryEventHandler<GridComputedColumnsHistoryData>
   >;
+
+  // Computed columns are tracked whenever they are available, editing or not: a
+  // handler on every grid would put the undo/redo buttons in every toolbar.
+  const canHaveComputedColumns =
+    props.formulaFeature !== undefined &&
+    !props.disableComputedColumns &&
+    !props.disableFormulas &&
+    !props.dataSource;
+
+  if (canHaveComputedColumns) {
+    handlers.computedColumnsChange = createComputedColumnsHistoryHandler(apiRef);
+  }
 
   const canHaveEditing = props.isCellEditable || props.columns.some((col) => col.editable);
 

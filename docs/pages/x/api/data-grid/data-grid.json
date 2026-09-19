@@ -1185,6 +1185,18 @@
       "isGlobal": false
     },
     {
+      "key": "cell--computed",
+      "className": "MuiDataGrid-cell--computed",
+      "description": "Styles applied to the cell element if the cell belongs to a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--computedError",
+      "className": "MuiDataGrid-cell--computedError",
+      "description": "Styles applied to the cell element if the formula of its computed column evaluates to an error for the row (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
       "key": "cell--editable",
       "className": "MuiDataGrid-cell--editable",
       "description": "Styles applied to the cell element if the cell is editable.",
@@ -1383,6 +1395,18 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--computed",
+      "className": "MuiDataGrid-columnHeader--computed",
+      "description": "Styles applied to the column header if the column is a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeader--computedInvalid",
+      "className": "MuiDataGrid-columnHeader--computedInvalid",
+      "description": "Styles applied to the column header if the formula of its computed column is invalid (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--dragging",
       "className": "MuiDataGrid-columnHeader--dragging",
       "description": "Styles applied to the floating column header element when it is dragged.",
@@ -1572,6 +1596,84 @@
       "key": "columnsManagementSearchInput",
       "className": "MuiDataGrid-columnsManagementSearchInput",
       "description": "Styles applied to the columns management search input element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnHeaderBadge",
+      "className": "MuiDataGrid-computedColumnHeaderBadge",
+      "description": "Styles applied to the `ƒx` badge in the column header of a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanel",
+      "className": "MuiDataGrid-computedColumnsPanel",
+      "description": "Styles applied to the computed columns panel root element (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelEditor",
+      "className": "MuiDataGrid-computedColumnsPanelEditor",
+      "description": "Styles applied to the computed columns panel editor view element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelEmpty",
+      "className": "MuiDataGrid-computedColumnsPanelEmpty",
+      "description": "Styles applied to the empty state of the computed columns panel list.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelField",
+      "className": "MuiDataGrid-computedColumnsPanelField",
+      "description": "Styles applied to the field rows of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelFooter",
+      "className": "MuiDataGrid-computedColumnsPanelFooter",
+      "description": "Styles applied to the footer of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelFormula",
+      "className": "MuiDataGrid-computedColumnsPanelFormula",
+      "description": "Styles applied to the formula surface of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelHeader",
+      "className": "MuiDataGrid-computedColumnsPanelHeader",
+      "description": "Styles applied to the computed columns panel header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelList",
+      "className": "MuiDataGrid-computedColumnsPanelList",
+      "description": "Styles applied to the computed columns panel list view element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelListItem",
+      "className": "MuiDataGrid-computedColumnsPanelListItem",
+      "description": "Styles applied to each item of the computed columns panel list.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelPreview",
+      "className": "MuiDataGrid-computedColumnsPanelPreview",
+      "description": "Styles applied to the preview element of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelReference",
+      "className": "MuiDataGrid-computedColumnsPanelReference",
+      "description": "Styles applied to the reference pane (columns and functions to insert) of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelValidation",
+      "className": "MuiDataGrid-computedColumnsPanelValidation",
+      "description": "Styles applied to the validation block of the computed columns panel editor.",
       "isGlobal": false
     },
     {

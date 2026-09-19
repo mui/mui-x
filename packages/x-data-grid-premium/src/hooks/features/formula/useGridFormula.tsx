@@ -13,7 +13,7 @@ import {
   useGridApiMethod,
   useGridEvent,
 } from '@mui/x-data-grid-pro';
-import type { GridCellCoordinates, GridEventListener } from '@mui/x-data-grid-pro';
+import type { GridCellCoordinates, GridEventListener, GridRowId } from '@mui/x-data-grid-pro';
 import {
   gridPivotActiveSelector,
   GridStrategyGroup,
@@ -52,26 +52,38 @@ import {
 } from './gridFormulaSelectors';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
 import { GRID_FORMULA_EDITOR_SURFACE_CLASS } from '../../../components/GridFormulaEditor';
+import { GridComputedColumnsPanel } from '../../../components/computedColumnsPanel';
+import { GridSidebarValue } from '../sidebar/gridSidebarInterfaces';
 import { isFormulaFocusSafeTarget } from './gridFormulaBarElements';
 import {
   areColumnsSignaturesEqual,
   areFormulaFieldsEqual,
   areFormulaFunctionRecordsEqual,
   computeColumnsSignature,
-  createFormulaInternalCache,
+  ensureFormulaInternalCache,
   getEffectiveFormulaFunctions,
   getFormulaFields,
   resetFormulaEvaluationCache,
 } from './gridFormulaUtils';
 import { getFilledFormulaSource } from './gridFormulaFill';
 import { createFormulaExcelExportLayout, getCellExcelFormula } from './gridFormulaExcelExport';
+import {
+  bumpComputedColumnsRevision,
+  evictComputedResultsForRows,
+  resetComputedResults,
+} from './gridComputedColumnsRuntime';
+import {
+  createComputedColumnValidationScope,
+  validateComputedColumnDefinition,
+} from './gridComputedColumnsValidation';
+import type { GridComputedColumnsPrivateApi } from '../computedColumns/gridComputedColumnsInterfaces';
 
 export const formulaStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'disableFormulas' | 'dataSource'>,
   GridPrivateApiPremium
 > = (state, props, apiRef) => {
-  const cache = createFormulaInternalCache(getEffectiveFormulaFunctions(props));
-  apiRef.current.caches.formula = cache;
+  // Already created when the computed columns were injected during the columns state initialization.
+  const cache = ensureFormulaInternalCache(apiRef, props);
 
   const premiumState = state as Partial<GridStatePremium>;
   const columnsLookup = premiumState.columns?.lookup ?? {};
@@ -96,13 +108,28 @@ export const formulaStateInitializer: GridStateInitializer<
     }).lookup;
   }
 
+  // The initial row tree build may have read computed cells before the pass above:
+  // cell-formula dependencies were raw `=` sources back then.
+  resetComputedResults(cache);
+
   return { ...state, formula: { lookup, activeEdit: null } };
 };
 
 export const useGridFormula = (
   apiRef: RefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'disableFormulas' | 'formulaFunctions' | 'dataSource'>,
+  props: Pick<
+    DataGridPremiumProcessedProps,
+    | 'disableFormulas'
+    | 'formulaFunctions'
+    | 'dataSource'
+    | 'formulaA1Notation'
+    | 'disableComputedColumns'
+  >,
 ) => {
+  const a1NotationActive = !!props.formulaA1Notation && !props.disableFormulas && !props.dataSource;
+  const computedColumnsEnabled =
+    !props.disableFormulas && !props.disableComputedColumns && !props.dataSource;
+
   const computeEffectiveFormulaFields = React.useCallback(() => {
     if (props.disableFormulas || props.dataSource || gridPivotActiveSelector(apiRef)) {
       return [];
@@ -199,9 +226,12 @@ export const useGridFormula = (
   const triggerDependentFeatures = React.useCallback(
     (
       changedCells: GridCellCoordinates[] | null,
-      options: { aggregation: boolean; rowSpanning: boolean },
+      options: { aggregation: boolean; rowSpanning: boolean; computedColumnsChanged?: boolean },
     ) => {
-      if (changedCells === null || changedCells.length === 0) {
+      // The values of the computed columns changed as a whole (formula, referenced
+      // `valueGetter`, function registry), whether or not a formula cell followed.
+      const computedColumnsChanged = options.computedColumnsChanged === true;
+      if ((changedCells === null || changedCells.length === 0) && !computedColumnsChanged) {
         return;
       }
       if (options.aggregation) {
@@ -223,7 +253,17 @@ export const useGridFormula = (
       if (groupedFields.length === 0) {
         return;
       }
-      if (!changedCells.some((cell) => groupedFields.includes(cell.field))) {
+      // A grouped computed column changes with the cells its formula reads.
+      const { dependencyClosure, records } = cache.computedColumns;
+      const isGroupedFieldAffected = (field: string) =>
+        groupedFields.some(
+          (groupedField) =>
+            groupedField === field || dependencyClosure.get(groupedField)?.has(field) === true,
+        );
+      const isGroupingAffected =
+        (computedColumnsChanged && groupedFields.some((field) => records.has(field))) ||
+        (changedCells !== null && changedCells.some((cell) => isGroupedFieldAffected(cell.field)));
+      if (!isGroupingAffected) {
         return;
       }
       cache.suppressRegroupTrigger = true;
@@ -352,6 +392,37 @@ export const useGridFormula = (
 
   useGridApiMethod(apiRef, formulaPrivateApi, 'private');
 
+  const validateComputedColumnDefinitionMethod = React.useCallback<
+    GridComputedColumnsPrivateApi['validateComputedColumnDefinition']
+  >(
+    (definition, options) =>
+      validateComputedColumnDefinition(
+        definition,
+        createComputedColumnValidationScope(
+          apiRef,
+          apiRef.current.caches.formula!,
+          gridColumnLookupSelector(apiRef),
+          a1NotationActive,
+        ),
+        options,
+      ),
+    [apiRef, a1NotationActive],
+  );
+
+  const getComputedColumnIssues = React.useCallback<
+    GridComputedColumnsPrivateApi['getComputedColumnIssues']
+  >(
+    (field) => apiRef.current.caches.formula!.computedColumns.records.get(field)?.issues ?? [],
+    [apiRef],
+  );
+
+  const computedColumnsPrivateApi: GridComputedColumnsPrivateApi = {
+    validateComputedColumnDefinition: validateComputedColumnDefinitionMethod,
+    getComputedColumnIssues,
+  };
+
+  useGridApiMethod(apiRef, computedColumnsPrivateApi, 'private');
+
   /**
    * EVENTS
    */
@@ -408,12 +479,80 @@ export const useGridFormula = (
       return;
     }
     cache.lastColumnsSignature = columnsSignature;
+    // The computed columns read the other columns through their `valueGetter`,
+    // and their own getters change with their formula.
+    const computedColumnsChanged = signatureChanged && cache.computedColumns.records.size > 0;
+    if (computedColumnsChanged) {
+      resetComputedResults(cache);
+      bumpComputedColumnsRevision(apiRef);
+    }
     if (fieldsChanged) {
       apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
     }
     // Row spanning resets on `columnsChange` after this handler.
-    triggerDependentFeatures(runPass('full'), { aggregation: true, rowSpanning: false });
+    triggerDependentFeatures(runPass('full'), {
+      aggregation: true,
+      rowSpanning: false,
+      computedColumnsChanged,
+    });
   }, [apiRef, computeEffectiveFormulaFields, runPass, triggerDependentFeatures]);
+
+  const handleFormulaEvaluated = React.useCallback<GridEventListener<'formulaEvaluated'>>(
+    ({ changedCells }) => {
+      // The row object of a re-evaluated formula cell did not change, so the
+      // computed results memoized for that row are stale.
+      const { referencedFields } = apiRef.current.caches.formula!.computedColumns;
+      if (referencedFields.size === 0) {
+        return;
+      }
+      const rowIds = new Set<GridRowId>();
+      for (const cell of changedCells) {
+        if (referencedFields.has(cell.field)) {
+          rowIds.add(cell.id);
+        }
+      }
+      if (rowIds.size === 0) {
+        return;
+      }
+      evictComputedResultsForRows(apiRef, rowIds);
+      bumpComputedColumnsRevision(apiRef);
+    },
+    [apiRef],
+  );
+
+  // A computed cell is read-only: the editing gestures open the column editor
+  // with the row of the cell as preview row instead.
+  const handleComputedCellDoubleClick = React.useCallback<GridEventListener<'cellDoubleClick'>>(
+    (params) => {
+      if (!params.colDef.computed) {
+        return;
+      }
+      apiRef.current.showComputedColumnEditor(params.field, { sampleRowId: params.id });
+    },
+    [apiRef],
+  );
+
+  const handleComputedCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
+    (params, event) => {
+      if (
+        !params.colDef.computed ||
+        params.cellMode !== GridCellModes.View ||
+        event.key !== 'Enter' ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.altKey ||
+        event.shiftKey ||
+        event.which === 229
+      ) {
+        return;
+      }
+      // The editor focuses its formula editable right away — without this the
+      // keypress that follows would land in it as a newline.
+      event.preventDefault();
+      apiRef.current.showComputedColumnEditor(params.field, { sampleRowId: params.id });
+    },
+    [apiRef],
+  );
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params, event) => {
@@ -557,11 +696,25 @@ export const useGridFormula = (
   );
   useGridRegisterPipeProcessor(apiRef, 'canUpdateFocus', canUpdateFocus);
 
+  const addComputedColumnsPanel = React.useCallback<GridPipeProcessor<'sidebar'>>(
+    (initialValue, value) => {
+      if (computedColumnsEnabled && value === GridSidebarValue.ComputedColumns) {
+        return <GridComputedColumnsPanel />;
+      }
+      return initialValue;
+    },
+    [computedColumnsEnabled],
+  );
+  useGridRegisterPipeProcessor(apiRef, 'sidebar', addComputedColumnsPanel);
+
   useGridEvent(apiRef, 'rowsSet', handleRowsSet);
   useGridEvent(apiRef, 'sortedRowsSet', handleSortedRowsSet);
   useGridEvent(apiRef, 'filteredRowsSet', handleFilteredRowsSet);
   useGridEvent(apiRef, 'columnVisibilityModelChange', handleColumnVisibilityModelChange);
   useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
+  useGridEvent(apiRef, 'formulaEvaluated', handleFormulaEvaluated);
+  useGridEvent(apiRef, 'cellDoubleClick', handleComputedCellDoubleClick);
+  useGridEvent(apiRef, 'cellKeyDown', handleComputedCellKeyDown);
   useGridEvent(apiRef, 'cellEditStart', handleCellEditStart);
   useGridEvent(apiRef, 'cellEditStop', handleCellEditStop);
   useGridEvent(apiRef, 'cellModesModelChange', pruneEditorSession);
@@ -588,8 +741,20 @@ export const useGridFormula = (
       return;
     }
     cache.registry = createFormulaFunctionRegistry(Object.values(effectiveFormulaFunctions));
-    apiRef.current.reevaluateFormulas!();
-  }, [apiRef, effectiveFormulaFunctions]);
+    const computedColumnsChanged = cache.computedColumns.records.size > 0;
+    if (computedColumnsChanged) {
+      // The validity of the computed columns depends on the registry (unknown functions),
+      // and the definitions are validated when the columns are hydrated.
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
+      resetComputedResults(cache);
+      bumpComputedColumnsRevision(apiRef);
+    }
+    triggerDependentFeatures(runPass('full'), {
+      aggregation: true,
+      rowSpanning: true,
+      computedColumnsChanged,
+    });
+  }, [apiRef, effectiveFormulaFunctions, runPass, triggerDependentFeatures]);
 
   const isFirstEnablementEffect = React.useRef(true);
   React.useEffect(() => {

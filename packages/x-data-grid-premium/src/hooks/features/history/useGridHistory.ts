@@ -52,11 +52,19 @@ export const useGridHistory = (
     | 'historyValidationEvents'
     | 'onUndo'
     | 'onRedo'
+    | 'featureDependencies'
+    | 'disableComputedColumns'
+    | 'disableFormulas'
   >,
 ) => {
   const { historyStackSize, onUndo, onRedo, historyValidationEvents } = props;
 
-  // Use default history events if none provided
+  // Use default history events if none provided.
+  // The handlers are re-subscribed whenever they change, and a change that lands in the
+  // same commit as an event published from an effect (the controlled `computedColumns`
+  // echo) loses that event: the dependencies are the values, not the (often inline)
+  // `featureDependencies` object.
+  const formulaFeature = props.featureDependencies?.formula;
   const historyEventHandlers = React.useMemo(() => {
     if (props.historyEventHandlers && !isObjectEmpty(props.historyEventHandlers)) {
       return props.historyEventHandlers;
@@ -65,8 +73,20 @@ export const useGridHistory = (
       dataSource: props.dataSource,
       columns: props.columns,
       isCellEditable: props.isCellEditable,
+      formulaFeature,
+      disableComputedColumns: props.disableComputedColumns,
+      disableFormulas: props.disableFormulas,
     });
-  }, [apiRef, props.columns, props.isCellEditable, props.dataSource, props.historyEventHandlers]);
+  }, [
+    apiRef,
+    props.columns,
+    props.isCellEditable,
+    props.dataSource,
+    props.historyEventHandlers,
+    formulaFeature,
+    props.disableComputedColumns,
+    props.disableFormulas,
+  ]);
 
   const isEnabled = React.useMemo(
     () => historyStackSize > 0 && !isObjectEmpty(historyEventHandlers),

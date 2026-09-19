@@ -110,7 +110,7 @@ const UTILITY_FIELDS = new Set<string>([
  * otherwise enabling `checkboxSelection` would shift every positional
  * column reference by one.
  */
-function isPositionedDataField(field: string): boolean {
+export function isPositionedDataField(field: string): boolean {
   return !UTILITY_FIELDS.has(field) && !isGroupingColumn(field);
 }
 

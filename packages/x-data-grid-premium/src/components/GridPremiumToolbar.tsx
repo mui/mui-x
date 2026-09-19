@@ -6,6 +6,7 @@ import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { PivotPanelTrigger } from './pivotPanel/PivotPanelTrigger';
+import { ComputedColumnsPanelTrigger } from './computedColumnsPanel/ComputedColumnsPanelTrigger';
 import { AiAssistantPanelTrigger } from './aiAssistantPanel';
 import { ChartsPanelTrigger } from './chartsPanel/ChartsPanelTrigger';
 import {
@@ -86,6 +87,18 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
           )}
         />
       )}
+      {/* Renders nothing when computed columns are not available. */}
+      <ComputedColumnsPanelTrigger
+        render={(triggerProps) => (
+          <rootProps.slots.baseTooltip
+            title={apiRef.current.getLocaleText('toolbarComputedColumns')}
+          >
+            <ToolbarButton {...triggerProps} color="default">
+              <rootProps.slots.computedColumnIcon fontSize="small" />
+            </ToolbarButton>
+          </rootProps.slots.baseTooltip>
+        )}
+      />
       {rootProps.chartsIntegration && (
         <ChartsPanelTrigger
           render={(triggerProps) => (
