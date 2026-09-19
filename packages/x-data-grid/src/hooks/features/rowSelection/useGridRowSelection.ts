@@ -74,6 +74,7 @@ export const useGridRowSelection = (
   props: Pick<
     DataGridProcessedProps,
     | 'checkboxSelection'
+    | 'cellSelection'
     | 'rowSelectionModel'
     | 'onRowSelectionModelChange'
     | 'disableMultipleRowSelection'
@@ -753,7 +754,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
 
   const handleRowClick = React.useCallback<GridEventListener<'rowClick'>>(
     (params, event) => {
-      if (disableRowSelectionOnClick) {
+      if (disableRowSelectionOnClick || (props.cellSelection && checkboxSelection)) {
         return;
       }
 
@@ -792,6 +793,8 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
     },
     [
       disableRowSelectionOnClick,
+      props.cellSelection,
+      checkboxSelection,
       canHaveMultipleSelection,
       apiRef,
       expandMouseRowRangeSelection,
