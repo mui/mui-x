@@ -64,6 +64,28 @@ describe('<DataGridPremium /> - Cell selection', () => {
     expect(document.querySelector('.Mui-selected')).to.equal(cell);
   });
 
+  it('should not select the row when checkbox selection is enabled', async () => {
+    const onRowClick = vi.fn();
+    const { user } = render(
+      <TestDataGridSelection rowSelection checkboxSelection onRowClick={onRowClick} />,
+    );
+    const cell = getCell(0, 1);
+
+    await user.click(cell);
+
+    expect(apiRef.current?.getSelectedRows().size).to.equal(0);
+    expect(cell).to.have.class('Mui-selected');
+    expect(onRowClick).to.have.callCount(1);
+  });
+
+  it('should select the row from its checkbox when cell selection is enabled', async () => {
+    const { user } = render(<TestDataGridSelection rowSelection checkboxSelection />);
+
+    await user.click(getCell(0, 0).querySelector('input')!);
+
+    expect(apiRef.current?.getSelectedRows().size).to.equal(1);
+  });
+
   it('should unselect already selected cells when selecting a cell', async () => {
     const { user } = render(<TestDataGridSelection />);
     const cell01 = getCell(0, 1);
