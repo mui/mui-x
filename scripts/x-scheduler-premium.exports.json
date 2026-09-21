@@ -9,6 +9,8 @@
   { "name": "EventTimelinePremiumClasses", "kind": "Interface" },
   { "name": "EventTimelinePremiumClassKey", "kind": "TypeAlias" },
   { "name": "EventTimelinePremiumProps", "kind": "Interface" },
+  { "name": "EventTimelinePremiumSlotProps", "kind": "Interface" },
+  { "name": "EventTimelinePremiumSlots", "kind": "Interface" },
   { "name": "getEventTimelinePremiumUtilityClass", "kind": "Function" },
   { "name": "SchedulerSlotProps", "kind": "Interface" },
   { "name": "SchedulerSlots", "kind": "Interface" },
@@ -25,5 +27,9 @@
   { "name": "StandaloneMonthViewPremium", "kind": "Variable" },
   { "name": "StandaloneMonthViewPremiumProps", "kind": "Interface" },
   { "name": "StandaloneWeekViewPremium", "kind": "Variable" },
-  { "name": "StandaloneWeekViewPremiumProps", "kind": "Interface" }
+  { "name": "StandaloneWeekViewPremiumProps", "kind": "Interface" },
+  { "name": "TimelineEventContentProps", "kind": "Interface" },
+  { "name": "TimelineEventContentPropsOverrides", "kind": "Interface" },
+  { "name": "TimelineResourceTitleProps", "kind": "Interface" },
+  { "name": "TimelineResourceTitlePropsOverrides", "kind": "Interface" }
 ]

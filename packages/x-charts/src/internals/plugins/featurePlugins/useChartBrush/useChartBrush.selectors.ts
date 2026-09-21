@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import { selectorChartZoomOptionsLookup } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import type { UseChartBrushSignature } from './useChartBrush.types';

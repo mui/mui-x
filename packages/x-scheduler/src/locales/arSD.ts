@@ -42,6 +42,8 @@ const arSDDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'كل',
   recurrenceRepeatLabel: 'تكرار',
   recurrenceTabLabel: 'التكرار',
+  recurrenceTimezoneLabel: (timezone) => `المنطقة الزمنية: ${timezone}`,
+  recurrenceLabelTimezoneSuffix: (timezone) => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'التكرار',
   recurrenceWeeklyFrequencyLabel: 'الاسابيع',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `يتكرر اسبوعيا في ${weekdayName}`,

@@ -1,6 +1,6 @@
 {
   "name": "@mui/mcp",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": "MUI Team",
   "description": "MUI MCP Server",
   "license": "MIT",
@@ -26,7 +26,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/node": "22.20.1",
+    "@types/node": "22.20.2",
     "rimraf": "catalog:",
     "vitest": "catalog:"
   },
