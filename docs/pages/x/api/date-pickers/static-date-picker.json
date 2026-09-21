@@ -36,6 +36,7 @@
         "describedArgs": ["value", "context"]
       }
     },
+    "onCancel": { "type": { "name": "func" } },
     "onChange": {
       "type": { "name": "func" },
       "signature": {

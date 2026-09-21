@@ -82,6 +82,9 @@
         }
       }
     },
+    "onCancel": {
+      "description": "Callback fired when the Cancel action is triggered, resetting the value to the last committed one."
+    },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
