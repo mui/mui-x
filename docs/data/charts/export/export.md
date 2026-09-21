@@ -137,12 +137,14 @@ The result may be missing some styles, and a warning is logged in development.
 To handle the failure yourself, use the `onStylesheetError` callback.
 It receives the `<link>` element that failed to load, or whose import failed to load:
 
-- Return or resolve to `false` to cancel the export. Nothing is exported, no error is logged, and the promise returned by `exportAsImage()` or `exportAsPrint()` resolves.
-- Throw an error or reject to make the export fail. The promise returned by `exportAsImage()` or `exportAsPrint()` rejects with that error, see [Handling export errors](#handling-export-errors).
+- Return or resolve to `false` to cancel the export.
+- Throw an error or reject to make the export fail with that error.
 - Return anything else to continue the export.
-- Return a promise to make the export wait for it, for example while you add replacement styles to `link.ownerDocument`.
 
-With the toolbar, the export is started for you, so cancel with `false` and report the failure from the callback:
+If the callback returns a promise, the export waits for it, for example while you add replacement styles to `link.ownerDocument`.
+See [Handling export errors](#handling-export-errors) for how a cancelled or failed export is reported.
+
+When using the toolbar, you can provide `onStylesheetError` as an option using `slotProps`:
 
 ```tsx
 <BarChartPro
@@ -208,8 +210,11 @@ apiRef.current?.exportAsImage({ pixelRatio: 3 });
 
 ### Handling export errors
 
-`exportAsPrint()` and `exportAsImage()` return a promise that rejects when the export fails, for example when a [Content Security Policy](/x/react-charts/content-security-policy/) blocks the styles the export needs, or when [`onStylesheetError`](#stylesheets-that-fail-to-load) stops the export.
+`exportAsPrint()` and `exportAsImage()` return a promise that rejects when the export fails, for example when a [Content Security Policy](/x/react-charts/content-security-policy/) blocks the styles the export needs, or when [`onStylesheetError`](#stylesheets-that-fail-to-load) throws or rejects.
 Handle the rejection to report the failure to your users.
+When the export is started from the toolbar, the error is logged to the console instead.
+
+When `onStylesheetError` cancels the export by returning `false`, nothing is exported, no error is logged, and the promise resolves.
 
 ```tsx
 try {

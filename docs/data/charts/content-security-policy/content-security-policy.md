@@ -46,7 +46,6 @@ If your CSP uses a nonce for styles (for example, `style-src-elem 'nonce-<value>
 The export copies the page styles into the export document, and the browser blocks those styles when they carry no nonce.
 
 Pass the nonce to the `printOptions` and `imageExportOptions` props of the `toolbar` slot.
-Each export type reads its own options, so a nonce set only on `printOptions` doesn't apply to the image export.
 
 ```tsx
 <LineChartPro
