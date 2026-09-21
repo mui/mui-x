@@ -670,28 +670,53 @@ storeClasses.forEach((storeClass) => {
         },
       );
 
+      it('should reject the delete of an event the store does not hold yet', () => {
+        const onEventsChange = vi.fn();
+        const onDelete = vi.fn();
+        // A `this-and-following` split re-points the armed occurrence at the created event
+        // before a `dataSource` persist feeds it back.
+        const pendingOccurrence = EventBuilder.new().id('split').recurrent('DAILY').toOccurrence();
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [], onEventsChange },
+          adapter,
+        );
+
+        expect(store.deleteOccurrence(pendingOccurrence, onDelete)).to.equal(false);
+        expect(onDelete.mock.calls.length).to.equal(0);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.pendingRecurringEventOperation).to.equal(null);
+        expect(store.state.errors.map((entry) => entry.error.message)).to.deep.equal([
+          'This event is still being saved, so the change was not applied. Try again once it is saved.',
+        ]);
+      });
+    });
+
+    describe('Method: selectRecurringEventScope', () => {
       it.skipIf(storeClass.name === 'EventCalendarStore')(
-        'should fall back to the occurrence snapshot when the store does not hold the event yet',
+        'should drop the pending operation with an error when the event left the store',
         () => {
           const onEventsChange = vi.fn();
-          // A `this-and-following` split re-points the armed occurrence at the created event
-          // before a `dataSource` persist feeds it back: the snapshot is all there is.
-          const pendingOccurrence = EventBuilder.new()
-            .id('split')
-            .recurrent('DAILY')
-            .toOccurrence();
-
+          const onSubmit = vi.fn();
           const store = new storeClass.Value(
             { resources: TEST_RESOURCES, events: [], onEventsChange },
             adapter,
           );
-
-          expect(store.deleteOccurrence(pendingOccurrence)).to.equal(false);
-          expect(onEventsChange.mock.calls.length).to.equal(0);
-          expect(store.state.pendingRecurringEventOperation).to.deep.include({
+          store.set('pendingRecurringEventOperation', {
             kind: 'delete',
-            eventId: 'split',
+            eventId: 'gone',
+            occurrenceStart: adapter.date('2025-05-26T10:00:00', 'default'),
+            onSubmit,
           });
+
+          expect(() => store.selectRecurringEventScope('all')).not.to.throw();
+
+          expect(store.state.pendingRecurringEventOperation).to.equal(null);
+          expect(onSubmit.mock.calls.length).to.equal(0);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.errors.map((entry) => entry.error.message)).to.deep.equal([
+            'This event is still being saved, so the change was not applied. Try again once it is saved.',
+          ]);
         },
       );
     });

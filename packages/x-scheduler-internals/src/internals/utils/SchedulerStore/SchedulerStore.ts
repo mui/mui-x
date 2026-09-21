@@ -81,6 +81,16 @@ const MOCK_EVENT_STATE = {
   eventModelList: [],
 };
 
+/**
+ * Surfaced to the user (like a scheduling veto) when an action targets an event the store does
+ * not hold: it is still being persisted through the `dataSource`, or left the loaded range.
+ */
+function createEventNotLoadedError() {
+  return /* minify-error-disabled */ new Error(
+    'This event is still being saved, so the change was not applied. Try again once it is saved.',
+  );
+}
+
 function toUpdateEventResult(result: {
   updatedEntries: SchedulerEventUpdatedProperties[];
   rejection: Error | null;
@@ -696,15 +706,17 @@ export class SchedulerStore<
     occurrence: SchedulerRenderableEventOccurrence,
     onDelete?: () => void,
   ): boolean => {
-    // Falls back to the snapshot while a `dataSource` persist is still in flight (the event is
-    // not in the store yet).
+    // Not loaded yet: a `dataSource` persist of the event (e.g. a split) is still in flight.
+    // Neither path can act on it, a scope confirmation reads the stored event.
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
+    if (liveEvent == null) {
+      this.pushError(createEventNotLoadedError(), { transient: true });
+      return false;
+    }
     const isRecurring =
       this.state.recurringEventsPlugin != null &&
       isEventOccurrence(occurrence) &&
-      (liveEvent != null
-        ? liveEvent.dataTimezone.rrule != null
-        : occurrence.dataTimezone.rrule != null);
+      liveEvent.dataTimezone.rrule != null;
     if (isRecurring) {
       this.deleteRecurringEvent({
         occurrenceStart: occurrence.dataTimezone.start.value,
@@ -740,7 +752,13 @@ export class SchedulerStore<
       pendingRecurringEventOperation.kind === 'update'
         ? pendingRecurringEventOperation.changes.id
         : pendingRecurringEventOperation.eventId;
-    const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
+    // The event can leave the store between the dialog opening and the confirmation (a fetch
+    // replacing the loaded range, a split still being persisted).
+    const original = schedulerEventSelectors.processedEvent(this.state, eventId);
+    if (original == null) {
+      this.pushError(createEventNotLoadedError(), { transient: true });
+      return;
+    }
     if (!original.dataTimezone.rrule) {
       throw new Error(
         'MUI X Scheduler: The event targeted by the recurring scope dialog is not recurring. ' +
@@ -1106,8 +1124,16 @@ export class SchedulerStore<
     }
     const { occurrence } = editingOccurrence;
     const { start, end } = changes;
+    const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     this.set('editingOccurrence', {
       ...editingOccurrence,
+      modelBounds:
+        liveEvent == null
+          ? undefined
+          : {
+              start: liveEvent.dataTimezone.start.timestamp,
+              end: liveEvent.dataTimezone.end.timestamp,
+            },
       occurrence: {
         ...occurrence,
         displayTimezone: {

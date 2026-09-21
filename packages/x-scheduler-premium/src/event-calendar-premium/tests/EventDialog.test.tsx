@@ -2927,9 +2927,12 @@ describe('<EventDialogContent open />', () => {
         );
 
         await waitFor(() => expect(store.state.eventIdList).to.have.length(1));
-        // The resize: the write goes out, the stored model keeps 11:00 until the host answers.
+        // The resize, as the drop target commits it from the armed state: the write goes out,
+        // the stored model keeps 11:00 until the host answers.
         await act(async () => {
+          store.startEditing(resizedOccurrence, 'edit');
           store.updateEvent({ id: event.id, end: resizedEnd });
+          store.setEditingOccurrenceTimes({ end: resizedEnd });
         });
         await waitFor(() => expect(persistCalls).to.have.length(1));
 
@@ -2942,6 +2945,50 @@ describe('<EventDialogContent open />', () => {
         expect(renamed.title).to.equal('Renamed');
         // Without the end, the write would carry the stale 11:00 and undo the resize.
         expect(adapter.date(renamed.end, 'UTC')).toEqualDateTime(resizedEnd);
+      });
+
+      it('should keep a bound the host moved while the dialog is open', async () => {
+        const builder = EventBuilder.new(adapter)
+          .id('meeting')
+          .title('Meeting')
+          .withDataTimezone('UTC')
+          .span('2025-05-26T10:00:00', '2025-05-26T11:00:00');
+        const event = builder.build();
+        const occurrence = builder.toOccurrence();
+        const movedEvent = EventBuilder.new(adapter)
+          .id('meeting')
+          .title('Meeting')
+          .withDataTimezone('UTC')
+          .span('2025-05-26T10:00:00', '2025-05-26T12:00:00')
+          .build();
+        const onEventsChange = vi.fn();
+
+        const { user, setProps } = render(
+          <EventCalendarProvider
+            events={[event]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            onEventsChange={onEventsChange}
+          >
+            <SchedulerStoreRunner<AnyEventCalendarStore>
+              context={SchedulerStoreContext}
+              onMount={(store) => store.startEditing(occurrence, 'edit')}
+            />
+            <TestEventDialogContent open {...defaultProps} occurrence={occurrence} />
+          </EventCalendarProvider>,
+        );
+        // The host moves the end while the dialog shows the 11:00 snapshot.
+        setProps({ events: [movedEvent] });
+
+        await user.clear(screen.getByLabelText(/event title/i));
+        await user.type(screen.getByLabelText(/event title/i), 'Renamed');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        const updated = onEventsChange.mock.lastCall![0].find(
+          (item: SchedulerEvent) => item.id === 'meeting',
+        );
+        expect(updated.title).to.equal('Renamed');
+        expect(updated.end).to.equal(movedEvent.end);
       });
 
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {

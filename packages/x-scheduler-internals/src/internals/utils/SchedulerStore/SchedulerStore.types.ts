@@ -53,6 +53,13 @@ export interface SchedulerEditingState {
    * the dialog surface opens in `'armed'` on a coarse pointer and directly in `'edit'` otherwise.
    */
   mode: SchedulerEditingMode;
+  /**
+   * The stored model's data-timezone bounds (as timestamps) when the occurrence's times were
+   * last refreshed from a committed change. A bound the model still holds is a change awaiting
+   * persistence (a `dataSource` write in flight), which the editing surface resends; a bound
+   * the host moved since is kept.
+   */
+  modelBounds?: { start: number; end: number };
 }
 
 export interface SchedulerState<TEvent extends object = any> {

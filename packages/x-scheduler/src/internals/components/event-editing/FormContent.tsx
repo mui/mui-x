@@ -392,14 +392,17 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         displayTimezoneMoved,
       );
       // With a `dataSource`, a resize updates the snapshot before the stored model: resend a
-      // bound that differs, or the update rebuilds it from the stale model. Compared as data
+      // bound that differs while the model still holds what it did at the resize, or the update
+      // rebuilds it from the stale model. A bound the host moved since is kept. Compared as data
       // instants, since the display bounds of an all-day event are normalized to whole days.
       const liveEvent = schedulerEventSelectors.processedEvent(store.state, occurrence.id);
+      const modelBounds = schedulerOtherSelectors.editingModelBounds(store.state, occurrence.key);
       const boundPending = (bound: 'start' | 'end') =>
         liveEvent != null &&
         liveEvent.dataTimezone.rrule == null &&
         !displayTimezoneMoved &&
         isEventOccurrence(occurrence) &&
+        modelBounds?.[bound] === liveEvent.dataTimezone[bound].timestamp &&
         occurrence.dataTimezone[bound].timestamp !== liveEvent.dataTimezone[bound].timestamp;
       // Read directly instead of subscribing: the placeholder changes on every
       // creation keystroke and would re-render the whole dialog.
