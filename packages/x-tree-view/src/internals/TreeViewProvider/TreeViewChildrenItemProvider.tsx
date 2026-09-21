@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useTreeViewContext } from './TreeViewContext';
 import { escapeOperandAttributeSelector } from '../utils/utils';
 import { itemsSelectors } from '../plugins/items/selectors';
+import type { TreeViewItemId } from '../../models';
 import type { SimpleTreeViewStore } from '../SimpleTreeViewStore';
 
 export const TreeViewChildrenItemContext =
@@ -43,9 +44,16 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
     const childrenElements = rootRef.current.querySelectorAll(
       `${itemId == null ? '' : `*[id="${escapedIdAttr}"] `}[role="treeitem"]:not(*[id="${escapedIdAttr}"] [role="treeitem"] [role="treeitem"])`,
     );
-    const childrenIds = Array.from(childrenElements).map((child) =>
-      childrenIdAttrToIdRef.current.get(child.id)!,
-    );
+    // An element whose id is missing from the map is not currently a child: React
+    // destroys the layout effect that registers it when it hides a suspended
+    // subtree, but leaves the element in the DOM, so the query above still finds
+    // it. Keeping the resulting `undefined` would be fatal, because
+    // `itemsSelectors.itemOrderedChildrenIds` resolves a nullish item id to the
+    // root of the tree, which makes the descendant traversals built on top of it
+    // cycle back to the root and recurse until the stack overflows.
+    const childrenIds = Array.from(childrenElements)
+      .map((child) => childrenIdAttrToIdRef.current.get(child.id))
+      .filter((childId): childId is TreeViewItemId => childId != null);
 
     const hasChanged =
       childrenIds.length !== previousChildrenIds.length ||
