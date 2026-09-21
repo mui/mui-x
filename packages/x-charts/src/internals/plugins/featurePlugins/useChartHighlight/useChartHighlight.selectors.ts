@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import type { SeriesId } from '../../../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../../../models/seriesType';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';

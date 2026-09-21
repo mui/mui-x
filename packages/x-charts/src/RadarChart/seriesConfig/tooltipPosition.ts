@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { D3OrdinalScale } from '../../models/axis';
 import { generatePolar2svg } from '../../internals/plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
 import { getDrawingAreaCenter } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
