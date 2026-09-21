@@ -480,7 +480,9 @@ export class SchedulerStore<
   protected updateEvents(parameters: UpdateEventsParameters): {
     deleted: SchedulerEventId[];
     updated: SchedulerEventId[];
+    updatedEntries: SchedulerEventUpdatedProperties[];
     created: SchedulerEventId[];
+    rejection: Error | null;
   } {
     const { deleted: deletedParam, updated: updatedParam = [], created = [] } = parameters;
 
@@ -497,7 +499,7 @@ export class SchedulerStore<
           ]);
         }
       }
-      return { deleted: [], updated: [], created: [] };
+      return { deleted: [], updated: [], updatedEntries: [], created: [], rejection: null };
     }
 
     const eventDetails = createChangeEventDetails('none');
