@@ -539,6 +539,38 @@ describe('<EventDialogContent open />', () => {
       );
     });
 
+    it('should validate an untouched start on its stored instant in a repeated DST hour', async () => {
+      // 06:30Z is the second 01:30 of November 2 in New York; the form re-reads "01:30" as the
+      // first one, an hour earlier. Ending at 01:45 must be rejected against the stored start.
+      const builder = EventBuilder.new(adapter)
+        .id('fall-back')
+        .title('Fall back')
+        .withDataTimezone('UTC')
+        .withDisplayTimezone('America/New_York')
+        .span('2025-11-02T06:30:00Z', '2025-11-02T07:30:00Z');
+      const onEventsChange = vi.fn();
+      const { user } = render(
+        <EventCalendarProvider
+          events={[builder.build()]}
+          onEventsChange={onEventsChange}
+          resources={resources}
+          storeClass={PremiumTestStore}
+          displayTimezone="America/New_York"
+        >
+          <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+        </EventCalendarProvider>,
+      );
+      expect(screen.getByLabelText(/start time/i)).to.have.value('01:30');
+      await user.clear(screen.getByLabelText(/end time/i));
+      await user.type(screen.getByLabelText(/end time/i), '01:45');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(screen.getDescriptionOf(screen.getByLabelText(/end time/i)).textContent).to.match(
+        /end time.*after.*start time/i,
+      );
+    });
+
     it('should show error on the End time field and block submit if end time is equal to start time on the same day', async () => {
       const { user, onEventsChange } = renderDialog();
       await user.clear(screen.getByLabelText(/start time/i));

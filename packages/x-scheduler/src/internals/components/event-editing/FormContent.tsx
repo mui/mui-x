@@ -370,15 +370,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       const values = formStore.state.values;
       const { start, end } = computeRange(current.adapter, values, current.displayTimezone);
 
-      if (!runSubmitChecks(values, start, end, current) || !isValid) {
-        // Show the tab owning a failing field; General wins when both tabs fail.
-        const failingKeys = Object.keys(formStore.state.errors);
-        const onlyRecurrenceFails =
-          failingKeys.length > 0 && failingKeys.every((key) => RECURRENCE_FORM_KEYS.has(key));
-        setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general');
-        return;
-      }
-
       const dirtyValues = formStore.getDirtyValues();
       // Only the custom fields the user actually edited enter the changes payload,
       // so untouched fields keep resolving against the live model on the recurring paths.
@@ -410,8 +401,25 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         !displayTimezoneMoved &&
         isEventOccurrence(occurrence) &&
         occurrence.dataTimezone[bound].timestamp !== liveEvent.dataTimezone[bound].timestamp;
-      const submitStart = startResent || boundPending('start');
-      const submitEnd = endResent || boundPending('end');
+      // Read directly instead of subscribing: the placeholder changes on every
+      // creation keystroke and would re-render the whole dialog.
+      const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
+      const isCreation = rawPlaceholder?.type === 'creation';
+      const submitStart = isCreation || startResent || boundPending('start');
+      const submitEnd = isCreation || endResent || boundPending('end');
+
+      // The checks run on the range the save writes. An untouched bound keeps its stored
+      // instant, which its re-read from the form can miss: a time in a repeated DST hour.
+      const submittedStart = submitStart ? start : occurrence.displayTimezone.start.value;
+      const submittedEnd = submitEnd ? end : occurrence.displayTimezone.end.value;
+      if (!runSubmitChecks(values, submittedStart, submittedEnd, current) || !isValid) {
+        // Show the tab owning a failing field; General wins when both tabs fail.
+        const failingKeys = Object.keys(formStore.state.errors);
+        const onlyRecurrenceFails =
+          failingKeys.length > 0 && failingKeys.every((key) => RECURRENCE_FORM_KEYS.has(key));
+        setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general');
+        return;
+      }
 
       const metaChanges = {
         ...editedCustomValues,
@@ -444,10 +452,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
-      // Read directly instead of subscribing: the placeholder changes on every
-      // creation keystroke and would re-render the whole dialog.
-      const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
-      if (rawPlaceholder?.type === 'creation') {
+      if (isCreation) {
         store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
       } else if (
         current.showRecurrence &&

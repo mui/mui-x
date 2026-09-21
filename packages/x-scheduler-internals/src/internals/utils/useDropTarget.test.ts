@@ -91,5 +91,52 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(edited.displayTimezone.start).to.equal(occurrence.displayTimezone.start);
       expect(edited.dataTimezone.end.timestamp).to.not.equal(occurrence.dataTimezone.end.timestamp);
     });
+
+    it('should resend both bounds when the drop toggles all-day off', () => {
+      // A UTC all-day event displayed from July 3 00:00 in New York, dropped on the time grid at
+      // that same instant: the displayed start is unchanged but the stored one (20:00 that
+      // evening) would end up after the new end.
+      const builder = utcJuly4AllDayBuilder().id('holiday').withDisplayTimezone('America/New_York');
+      const occurrence = builder.toOccurrence();
+      const onEventsChange = vi.fn();
+      const store = new storeClass.Value(
+        {
+          resources: [ResourceBuilder.new().id('r1').title('Resource 1').build()],
+          events: [builder.build()],
+          displayTimezone: 'America/New_York',
+          onEventsChange,
+        },
+        adapter,
+      );
+      const start = occurrence.displayTimezone.start.value;
+      const end = adapter.addHours(start, 1);
+
+      applyInternalDragOrResizeOccurrencePlaceholder(
+        store as unknown as SchedulerStoreInContext<any, any>,
+        {
+          type: 'internal-drag',
+          surfaceType: 'time-grid',
+          eventId: 'holiday',
+          occurrenceKey: occurrence.key,
+          originalOccurrence: occurrence,
+          sourceResourceId: null,
+          resourceId: null,
+          start,
+          end,
+        },
+        () => ({ allDay: false }),
+      );
+
+      const updated = onEventsChange.mock.lastCall![0].find(
+        (item: SchedulerEvent) => item.id === 'holiday',
+      );
+      expect(updated.allDay).to.not.equal(true);
+      expect(adapter.date(updated.start, 'UTC')).toEqualDateTime(
+        adapter.date('2025-07-03T04:00:00', 'UTC'),
+      );
+      expect(adapter.date(updated.end, 'UTC')).toEqualDateTime(
+        adapter.date('2025-07-03T05:00:00', 'UTC'),
+      );
+    });
   });
 });

@@ -229,15 +229,22 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const adapter = store.state.adapter;
 
+  const additionalChanges = addPropertiesToDroppedEvent?.() ?? {};
+
   // Only the bounds the drop moved, as displayed. An untouched bound keeps its stored value:
   // re-read from its display value it can be another day in the event's timezone (an all-day
   // occurrence is displayed on whole display days), which a recurring update would take for
-  // a day move and realign the rule on.
+  // a day move and realign the rule on. A drop that toggles all-day resends both: the stored
+  // bounds belong to the other representation (the displayed start of an all-day occurrence
+  // can equal the drop start while the stored one is later).
+  const allDayToggled =
+    additionalChanges.allDay != null &&
+    additionalChanges.allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
-  if (!adapter.isEqual(originalOccurrence.displayTimezone.start.value, start)) {
+  if (allDayToggled || !adapter.isEqual(originalOccurrence.displayTimezone.start.value, start)) {
     changes.start = start;
   }
-  if (!adapter.isEqual(originalOccurrence.displayTimezone.end.value, end)) {
+  if (allDayToggled || !adapter.isEqual(originalOccurrence.displayTimezone.end.value, end)) {
     changes.end = end;
   }
 
@@ -267,7 +274,6 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     }
   }
 
-  const additionalChanges = addPropertiesToDroppedEvent?.() ?? {};
   Object.assign(changes, additionalChanges);
 
   const hasChanged = Object.entries(changes).some(([key, value]) => {
