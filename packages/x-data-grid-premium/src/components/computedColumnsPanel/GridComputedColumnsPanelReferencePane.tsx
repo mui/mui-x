@@ -12,6 +12,7 @@ import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import { gridComputedColumnsRevisionSelector } from '../../hooks/features/computedColumns/gridComputedColumnsSelectors';
 import { getFormulaCompletionTokens } from '../../hooks/features/formula/engine';
 import type { FormulaCompletionToken } from '../../hooks/features/formula/engine';
 import { toFormulaFieldReference } from '../../hooks/features/formula/gridFormulaAutocomplete';
@@ -199,8 +200,10 @@ function GridComputedColumnsPanelReferencePane(props: GridComputedColumnsPanelRe
     [referenceableFields, columnLookup, excludeField, a1Notation],
   );
 
-  // The registry only changes with the `formulaFunctions` prop (the formula
-  // feature rebuilds it in an effect, before this pane can render with it).
+  // The formula feature rebuilds the registry in an effect, after the render that
+  // brought the new `formulaFunctions` prop: the prop is not the signal. The
+  // revision is — it is bumped once the registry was actually rebuilt.
+  const revision = useGridSelector(apiRef, gridComputedColumnsRevisionSelector);
   const functionItems = React.useMemo<ReferenceItem[]>(
     () =>
       getFormulaCompletionTokens(apiRef.current.caches.formula?.registry)
@@ -213,8 +216,8 @@ function GridComputedColumnsPanelReferencePane(props: GridComputedColumnsPanelRe
           searchText:
             `${token.label} ${token.signature ?? ''} ${token.description ?? ''}`.toLowerCase(),
         })),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [apiRef, rootProps.formulaFunctions],
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- the registry is read through the cache
+    [apiRef, revision],
   );
 
   const normalizedQuery = query.trim().toLowerCase();

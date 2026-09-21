@@ -484,6 +484,10 @@ export const useGridFormula = (
     const computedColumnsChanged = signatureChanged && cache.computedColumns.records.size > 0;
     if (computedColumnsChanged) {
       resetComputedResults(cache);
+    }
+    if (signatureChanged) {
+      // Not only the computed cells read the revision: the preview of a draft
+      // (the first computed column included) reads the same getters.
       bumpComputedColumnsRevision(apiRef);
     }
     if (fieldsChanged) {
@@ -747,8 +751,10 @@ export const useGridFormula = (
       // and the definitions are validated when the columns are hydrated.
       apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
       resetComputedResults(cache);
-      bumpComputedColumnsRevision(apiRef);
     }
+    // The revision also stands for the registry: the computed column editor reads it
+    // for its preview and its function list, with or without a stored computed column.
+    bumpComputedColumnsRevision(apiRef);
     triggerDependentFeatures(runPass('full'), {
       aggregation: true,
       rowSpanning: true,

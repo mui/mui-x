@@ -10,7 +10,7 @@ import {
   gridSidebarStateSelector,
   GridSidebarValue,
 } from '@mui/x-data-grid-premium';
-import { formulaFeature } from '@mui/x-data-grid-premium/formula';
+import { GRID_FORMULA_FUNCTIONS, formulaFeature } from '@mui/x-data-grid-premium/formula';
 import type {
   DataGridPremiumProps,
   GridApi,
@@ -1046,6 +1046,201 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
   });
 
+  describe('preview invalidation', () => {
+    // Longer than the debounce of the preview: a re-evaluation that was scheduled has run.
+    const flushPreviewDebounce = async () => {
+      await act(async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 300);
+        });
+      });
+    };
+
+    const createProbe = () => {
+      const apply = vi.fn((args: any[]) => args[0]);
+      const PROBE = { name: 'PROBE', minArgs: 1, maxArgs: 1, apply };
+      return { apply, PROBE, functions: () => ({ ...GRID_FORMULA_FUNCTIONS, PROBE }) as any };
+    };
+
+    const formulaColumns: DataGridPremiumProps['columns'] = [
+      { field: 'price', type: 'number' },
+      { field: 'net', type: 'number', allowFormulas: true, editable: true },
+    ];
+
+    it('follows the data of the preview row updated through `updateRows`', async () => {
+      await render(<Test />);
+      await openEditor(null);
+      typeFormula('=price * quantity');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('6');
+      });
+
+      await act(async () => apiRef.current!.updateRows([{ id: 0, quantity: 7 }]));
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('14');
+      });
+    });
+
+    it('follows a `rows` prop replaced with the same row id', async () => {
+      const { setProps } = await render(<Test />);
+      await openEditor(null);
+      typeFormula('=price * quantity');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('6');
+      });
+
+      setProps({
+        rows: baselineProps.rows!.map((row) => (row.id === 0 ? { ...row, quantity: 7 } : row)),
+      });
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('14');
+      });
+    });
+
+    it('follows a referenced computed column whose formula changes through the API', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor(null);
+      typeFormula('=total + 1');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('7');
+      });
+
+      await act(async () =>
+        apiRef.current!.updateComputedColumn('total', { formula: '=price + quantity' }),
+      );
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('6');
+      });
+    });
+
+    it('follows a referenced formula cell re-evaluated without a change of the preview row', async () => {
+      await render(
+        <Test
+          columns={formulaColumns}
+          rows={[
+            { id: 0, price: 2, net: '=price + 1' },
+            { id: 1, price: 10, net: '=REF(COLUMN("net"), ROW(0)) * 2' },
+          ]}
+        />,
+      );
+      await openEditor(null, { sampleRowId: 1 });
+      typeFormula('=net * 2');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('12');
+      });
+
+      // Row 1 is not updated: its formula cell changes through its dependency on row 0,
+      // and no stored computed column references `net`.
+      const previewRow = apiRef.current!.getRow(1);
+      await act(async () => apiRef.current!.updateRows([{ id: 0, price: 4 }]));
+      expect(apiRef.current!.getRow(1)).to.equal(previewRow);
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('20');
+      });
+    });
+
+    it('follows a function of the registry that is replaced', async () => {
+      const boost = (factor: number) => ({
+        ...GRID_FORMULA_FUNCTIONS,
+        BOOST: {
+          name: 'BOOST',
+          minArgs: 1,
+          maxArgs: 1,
+          apply: (args: any[]) => (args[0] as number) * factor,
+        },
+      });
+      const { setProps } = await render(<Test formulaFunctions={boost(2) as any} />);
+      await openEditor(null);
+      typeFormula('=BOOST(price)');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('4');
+      });
+
+      setProps({ formulaFunctions: boost(3) });
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('6');
+      });
+    });
+
+    it('follows a referenced column whose `valueGetter` is replaced before any computed column exists', async () => {
+      const { setProps } = await render(<Test />);
+      await openEditor(null);
+      typeFormula('=price * 2');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('4');
+      });
+
+      setProps({
+        columns: [
+          { field: 'item' },
+          { field: 'price', type: 'number', valueGetter: (value: number) => value * 10 },
+          { field: 'quantity', type: 'number' },
+        ],
+      });
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('40');
+      });
+    });
+
+    it('does not evaluate again when an equivalent inline `formulaFunctions` map is passed', async () => {
+      const probe = createProbe();
+      const { setProps } = await render(<Test formulaFunctions={probe.functions()} />);
+      await openEditor(null);
+      typeFormula('=PROBE(price)');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('2');
+      });
+      await flushPreviewDebounce();
+      const calls = probe.apply.mock.calls.length;
+
+      setProps({ formulaFunctions: probe.functions() });
+      await flushPreviewDebounce();
+      expect(probe.apply.mock.calls.length).to.equal(calls);
+    });
+
+    it('does not evaluate again when another row is updated', async () => {
+      const probe = createProbe();
+      await render(<Test formulaFunctions={probe.functions()} />);
+      await openEditor(null);
+      typeFormula('=PROBE(price)');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('2');
+      });
+      await flushPreviewDebounce();
+      const calls = probe.apply.mock.calls.length;
+
+      await act(async () => apiRef.current!.updateRows([{ id: 1, price: 11 }]));
+      await flushPreviewDebounce();
+      expect(probe.apply.mock.calls.length).to.equal(calls);
+    });
+
+    it('does not evaluate again when a formula cell of another row is re-evaluated', async () => {
+      const probe = createProbe();
+      await render(
+        <Test
+          formulaFunctions={probe.functions()}
+          columns={formulaColumns}
+          rows={[
+            { id: 0, price: 2, net: '=price + 1' },
+            { id: 1, price: 10, net: '=price + 1' },
+          ]}
+        />,
+      );
+      await openEditor(null, { sampleRowId: 0 });
+      typeFormula('=PROBE(net)');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('3');
+      });
+      await flushPreviewDebounce();
+      const calls = probe.apply.mock.calls.length;
+
+      await act(async () => apiRef.current!.updateRows([{ id: 1, price: 11 }]));
+      expect(getCell(1, 1).textContent).to.equal('12');
+      await flushPreviewDebounce();
+      expect(probe.apply.mock.calls.length).to.equal(calls);
+    });
+  });
+
   describe('number format preservation', () => {
     const renderWithFormat = (numberFormat: Intl.NumberFormatOptions) =>
       render(
@@ -1527,6 +1722,71 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       fireEvent.click(within(getReferencePane()).getByRole('button', { name: /^quantity$/ }));
       await microtasks();
       expect(getFormulaEditable().textContent).to.equal('=quantity');
+    });
+
+    describe('function registry', () => {
+      const custom = (name: string, description: string) => ({
+        name,
+        minArgs: 1,
+        maxArgs: 1,
+        signature: `${name}(amount)`,
+        description,
+        apply: (args: any[]) => args[0],
+      });
+      const withFunctions = (...definitions: ReturnType<typeof custom>[]) => {
+        const functions: Record<string, unknown> = { ...GRID_FORMULA_FUNCTIONS };
+        definitions.forEach((definition) => {
+          functions[definition.name] = definition;
+        });
+        return functions as any;
+      };
+      const getFunctionItems = (name: string) =>
+        getReferenceItems().filter((item) => item !== null && item.startsWith(`${name}(`));
+
+      it('lists a function added while the pane is open and inserts it', async () => {
+        const { setProps } = await render(<Test />);
+        await openEditor(null);
+        expect(getFunctionItems('VAT')).to.deep.equal([]);
+
+        setProps({ formulaFunctions: withFunctions(custom('VAT', 'Adds the tax.')) });
+        await microtasks();
+        expect(getFunctionItems('VAT')).to.deep.equal(['VAT(amount)Adds the tax.']);
+
+        fireEvent.click(within(getReferencePane()).getByRole('button', { name: /^VAT\(/ }));
+        await microtasks();
+        expect(getFormulaEditable().textContent).to.equal('=VAT(');
+      });
+
+      it('removes a function removed while the pane is open', async () => {
+        const { setProps } = await render(
+          <Test formulaFunctions={withFunctions(custom('VAT', 'Adds the tax.'))} />,
+        );
+        await openEditor(null);
+        expect(getFunctionItems('VAT')).to.have.length(1);
+
+        setProps({ formulaFunctions: withFunctions() });
+        await microtasks();
+        expect(getFunctionItems('VAT')).to.deep.equal([]);
+      });
+
+      it('follows a replaced function under an active search query', async () => {
+        const { setProps } = await render(
+          <Test formulaFunctions={withFunctions(custom('VAT', 'Adds the tax.'))} />,
+        );
+        await openEditor(null);
+        fireEvent.change(getSearch(), { target: { value: 'vat' } });
+        expect(getReferenceItems()).to.deep.equal(['VAT(amount)Adds the tax.']);
+
+        setProps({ formulaFunctions: withFunctions(custom('VAT', 'Adds the reduced tax.')) });
+        await microtasks();
+        expect(getReferenceItems()).to.deep.equal(['VAT(amount)Adds the reduced tax.']);
+
+        setProps({
+          formulaFunctions: withFunctions(custom('DISCOUNT', 'Applies the VAT-free price.')),
+        });
+        await microtasks();
+        expect(getReferenceItems()).to.deep.equal(['DISCOUNT(amount)Applies the VAT-free price.']);
+      });
     });
 
     it.skipIf(isJSDOM)('inserts at the caret and places the caret after the token', async () => {
