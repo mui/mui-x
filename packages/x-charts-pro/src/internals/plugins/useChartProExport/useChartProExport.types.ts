@@ -43,9 +43,13 @@ export interface ChartExportOptions {
    * Return anything else to continue the export, so the result may be missing some styles.
    * If not provided, the export continues and the failure is logged as a warning in development.
    * @param {HTMLLinkElement} element The stylesheet link element that failed to load, or whose import failed to load.
+   * @param {'content-security-policy' | 'load-error'} reason `'content-security-policy'` if the Content Security Policy blocked the stylesheet, `'load-error'` if the request failed or a stylesheet it imports failed to load.
    * @returns {Promise<boolean | void> | boolean | void} `false` to cancel the export. If a promise is returned, the export waits for it to settle before proceeding.
    */
-  onStylesheetError?: (element: HTMLLinkElement) => Promise<boolean | void> | boolean | void;
+  onStylesheetError?: (
+    element: HTMLLinkElement,
+    reason: 'content-security-policy' | 'load-error',
+  ) => Promise<boolean | void> | boolean | void;
 }
 
 /**

@@ -135,7 +135,8 @@ When a stylesheet, or a stylesheet it imports, fails to load in the export ifram
 The result may be missing some styles, and a warning is logged in development.
 
 To handle the failure yourself, use the `onStylesheetError` callback.
-It receives the `<link>` element that failed to load, or whose import failed to load:
+It receives the `<link>` element that failed to load, or whose import failed to load, and the reason: `'content-security-policy'` if the [Content Security Policy](/x/react-charts/content-security-policy/) blocked the stylesheet, or `'load-error'` if the request failed or a stylesheet it imports failed to load.
+The callback's return value decides what happens next:
 
 - Return or resolve to `false` to cancel the export.
 - Throw an error or reject to make the export fail with that error.

@@ -83,6 +83,73 @@ describe('loadStyleSheets', () => {
     await expect(Promise.all(promises)).resolves.to.deep.equal([false]);
   });
 
+  function dispatchViolation(targetDocument: Document, blockedURI: string) {
+    const event = new Event('securitypolicyviolation');
+    Object.defineProperty(event, 'blockedURI', { value: blockedURI });
+    targetDocument.dispatchEvent(event);
+  }
+
+  it('passes the `load-error` reason when no Content Security Policy violation was reported', async () => {
+    const targetDocument = createTargetDocument();
+    const sourceDocument = createSourceDocument(
+      '<link rel="stylesheet" href="https://example.com/missing.css" />',
+    );
+    const onStylesheetError = vi.fn();
+
+    const promises = loadStyleSheets(targetDocument, sourceDocument, { onStylesheetError });
+    dispatchError(targetDocument);
+    await Promise.all(promises);
+
+    expect(onStylesheetError.mock.calls[0][1]).to.equal('load-error');
+  });
+
+  it('passes the `content-security-policy` reason when the Content Security Policy blocked the stylesheet', async () => {
+    const targetDocument = createTargetDocument();
+    const sourceDocument = createSourceDocument(
+      '<link rel="stylesheet" href="https://example.com/blocked.css" />',
+    );
+    const onStylesheetError = vi.fn();
+
+    const promises = loadStyleSheets(targetDocument, sourceDocument, { onStylesheetError });
+    dispatchViolation(targetDocument, 'https://example.com/blocked.css');
+    dispatchError(targetDocument);
+    await Promise.all(promises);
+
+    expect(onStylesheetError.mock.calls[0][1]).to.equal('content-security-policy');
+  });
+
+  it('matches a violation that only reports the origin of the stylesheet', async () => {
+    const targetDocument = createTargetDocument();
+    const sourceDocument = createSourceDocument(
+      '<link rel="stylesheet" href="https://example.com/styles/blocked.css" />',
+    );
+    const onStylesheetError = vi.fn();
+
+    const promises = loadStyleSheets(targetDocument, sourceDocument, { onStylesheetError });
+    dispatchViolation(targetDocument, 'https://example.com');
+    dispatchError(targetDocument);
+    await Promise.all(promises);
+
+    expect(onStylesheetError.mock.calls[0][1]).to.equal('content-security-policy');
+  });
+
+  it('warns that the Content Security Policy blocked the stylesheet', async () => {
+    const targetDocument = createTargetDocument();
+    const sourceDocument = createSourceDocument(
+      '<link rel="stylesheet" href="https://example.com/blocked.css" />',
+    );
+
+    const promises = loadStyleSheets(targetDocument, sourceDocument);
+
+    await expect(async () => {
+      dispatchViolation(targetDocument, 'https://example.com/blocked.css');
+      dispatchError(targetDocument);
+      await Promise.all(promises);
+    }).toWarnDev(
+      'MUI X: The Content Security Policy blocked the stylesheet "https://example.com/blocked.css" in the export document.',
+    );
+  });
+
   it('rejects when onStylesheetError throws', async () => {
     const targetDocument = createTargetDocument();
     const sourceDocument = createSourceDocument(
