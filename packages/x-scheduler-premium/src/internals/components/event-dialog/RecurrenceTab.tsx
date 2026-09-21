@@ -451,10 +451,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     };
     const weekAriaLabel = isLast
       ? localeText.recurrenceMonthlyLastWeekAriaLabel(ariaParams)
-      : localeText.recurrenceMonthlyWeekNumberAriaLabel?.(ordinal, ariaParams);
+      : localeText.recurrenceMonthlyWeekNumberAriaLabel?.({ ...ariaParams, ord: ordinal });
     const weekLabel = isLast
       ? localeText.recurrenceMonthlyLastWeekLabel(labelParams)
-      : localeText.recurrenceMonthlyWeekNumberLabel?.(ordinal, labelParams);
+      : localeText.recurrenceMonthlyWeekNumberLabel?.({ ...labelParams, ord: ordinal });
 
     return [
       {

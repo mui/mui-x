@@ -53,9 +53,9 @@ const esESDialog: Partial<EventEditingLocaleText> = {
     `${weekdayName} de la última semana del mes`,
   recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} última semana`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Se repite mensualmente el día ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, { weekdayName }) =>
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
     `${weekdayName} semana ${ord} del mes`,
-  recurrenceMonthlyWeekNumberLabel: (ord, { weekdayName }) => `${weekdayName} semana ${ord}`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} semana ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'El',
   recurrenceYearlyFrequencyLabel: 'años',
   recurrenceYearlyPresetLabel: (date) => `Se repite anualmente el ${date}`,

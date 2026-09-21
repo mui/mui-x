@@ -7,20 +7,20 @@ import type {
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const weekdays: Record<SchedulerWeekday, { full: string; letter: string }> = {
+// Saturday has no letter form, so it is always written in full.
+const weekdays: Record<SchedulerWeekday, { full: string; letter?: string }> = {
   sunday: { full: 'ראשון', letter: 'א' },
   monday: { full: 'שני', letter: 'ב' },
   tuesday: { full: 'שלישי', letter: 'ג' },
   wednesday: { full: 'רביעי', letter: 'ד' },
   thursday: { full: 'חמישי', letter: 'ה' },
   friday: { full: 'שישי', letter: 'ו' },
-  saturday: { full: 'שבת', letter: 'ש' },
+  saturday: { full: 'שבת' },
 };
 
-// Saturday is named, not numbered, so it has no letter form.
 function localizeWeekday(weekday: SchedulerWeekday, abbreviated = false): string {
   const { full, letter } = weekdays[weekday];
-  return abbreviated && weekday !== 'saturday' ? `יום ${letter}׳` : `יום ${full}`;
+  return abbreviated && letter ? `יום ${letter}׳` : `יום ${full}`;
 }
 
 function monthlyWeekday(ord: number, weekday: SchedulerWeekday, abbreviated = false): string {
@@ -110,8 +110,8 @@ const heILDialog: Partial<EventEditingLocaleText> = {
   recurrenceMonthlyLastWeekAriaLabel: ({ weekday }) => monthlyWeekday(-1, weekday),
   recurrenceMonthlyLastWeekLabel: ({ weekday }) => monthlyWeekday(-1, weekday, true),
   recurrenceMonthlyPresetLabel: (dayNumber) => `ב־${dayNumber} בכל חודש`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, { weekday }) => monthlyWeekday(ord, weekday),
-  recurrenceMonthlyWeekNumberLabel: (ord, { weekday }) => monthlyWeekday(ord, weekday, true),
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekday }) => monthlyWeekday(ord, weekday),
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekday }) => monthlyWeekday(ord, weekday, true),
   recurrenceWeeklyMonthlySpecificInputsLabel: 'מועד החזרה',
   recurrenceYearlyFrequencyLabel: 'שנים',
   recurrenceYearlyPresetLabel: (date) => `מדי שנה ב־${localizeDate(date)}`,

@@ -3,6 +3,17 @@ import type { CalendarView } from '@mui/x-scheduler-internals/models';
 export type SchedulerWeekday =
   'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
+export interface SchedulerWeekdayLabelParams {
+  /**
+   * Language-neutral token, independent of the date locale.
+   */
+  weekday: SchedulerWeekday;
+  /**
+   * Name formatted by the date locale.
+   */
+  weekdayName: string;
+}
+
 // Strings shared by every event-editing surface: the dialog, the drawer, and the armed-event toolbar.
 export interface EventEditingLocaleText {
   // EventDialog
@@ -57,28 +68,32 @@ export interface EventEditingLocaleText {
   recurrenceLabelTimezoneSuffix: (timezone: string) => string;
   recurrenceMainSelectCustomLabel: string;
   recurrenceWeeklyFrequencyLabel: string;
-  recurrenceWeeklyPresetLabel: (params: {
-    weekday: SchedulerWeekday;
-    weekdayName: string;
-  }) => string;
+  /**
+   * `weekdayName` is the full name ("Monday").
+   */
+  recurrenceWeeklyPresetLabel: (params: SchedulerWeekdayLabelParams) => string;
   recurrenceMonthlyDayOfMonthLabel: (dayNumber: number) => string;
   recurrenceMonthlyFrequencyLabel: string;
-  recurrenceMonthlyLastWeekAriaLabel: (params: {
-    weekday: SchedulerWeekday;
-    weekdayName: string;
-  }) => string;
-  recurrenceMonthlyLastWeekLabel: (params: {
-    weekday: SchedulerWeekday;
-    weekdayName: string;
-  }) => string;
+  /**
+   * `weekdayName` is the full name ("Monday").
+   */
+  recurrenceMonthlyLastWeekAriaLabel: (params: SchedulerWeekdayLabelParams) => string;
+  /**
+   * `weekdayName` is the abbreviated name ("Mon").
+   */
+  recurrenceMonthlyLastWeekLabel: (params: SchedulerWeekdayLabelParams) => string;
   recurrenceMonthlyPresetLabel: (dayNumber: number) => string;
+  /**
+   * `weekdayName` is the full name ("Monday"), `ord` is the week of the month, starting at 1.
+   */
   recurrenceMonthlyWeekNumberAriaLabel: (
-    ord: number,
-    params: { weekday: SchedulerWeekday; weekdayName: string },
+    params: SchedulerWeekdayLabelParams & { ord: number },
   ) => string;
+  /**
+   * `weekdayName` is the abbreviated name ("Mon"), `ord` is the week of the month, starting at 1.
+   */
   recurrenceMonthlyWeekNumberLabel: (
-    ord: number,
-    params: { weekday: SchedulerWeekday; weekdayName: string },
+    params: SchedulerWeekdayLabelParams & { ord: number },
   ) => string;
   recurrenceWeeklyMonthlySpecificInputsLabel: string;
   recurrenceYearlyFrequencyLabel: string;

@@ -53,9 +53,9 @@ const roRODialog: Partial<EventEditingLocaleText> = {
     `${weekdayName} din ultima săptămână a lunii`,
   recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} ultima săptămână`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Se repetă lunar în ziua ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, { weekdayName }) =>
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
     `${weekdayName} săptămâna ${ord} a lunii`,
-  recurrenceMonthlyWeekNumberLabel: (ord, { weekdayName }) => `${weekdayName} săptămâna ${ord}`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} săptămâna ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'În',
   recurrenceYearlyFrequencyLabel: 'ani',
   recurrenceYearlyPresetLabel: (date) => `Se repetă anual pe ${date}`,

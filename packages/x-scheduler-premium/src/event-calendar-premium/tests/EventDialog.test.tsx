@@ -3994,9 +3994,9 @@ describe('<EventDialogContent open />', () => {
               events={[firstMondayEvent]}
               resources={resources}
               localeText={{
-                recurrenceMonthlyWeekNumberAriaLabel: (ord, { weekday, weekdayName }) =>
+                recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekday, weekdayName }) =>
                   `aria:${ord}:${weekday}:${weekdayName}`,
-                recurrenceMonthlyWeekNumberLabel: (ord, { weekday, weekdayName }) =>
+                recurrenceMonthlyWeekNumberLabel: ({ ord, weekday, weekdayName }) =>
                   `label:${ord}:${weekday}:${weekdayName}`,
               }}
               storeClass={PremiumTestStore}
@@ -4009,6 +4009,47 @@ describe('<EventDialogContent open />', () => {
 
           const toggle = screen.getByRole('button', { name: 'aria:1:monday:Monday' });
           expect(toggle).to.have.text('label:1:monday:Mon');
+        });
+
+        it('should derive the weekday token, name and saved rule from the event timezone', async () => {
+          // Tuesday 01:00 in Auckland is Monday 13:00 in UTC, both the display and the test timezone.
+          const builder = EventBuilder.new()
+            .title('Early call')
+            .withDataTimezone('Pacific/Auckland')
+            .span('2025-05-27T01:00:00', '2025-05-27T01:45:00')
+            .resource(personalResource)
+            .withDisplayTimezone('UTC');
+          const onEventsChange = vi.fn();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[builder.build()]}
+              resources={resources}
+              displayTimezone="UTC"
+              onEventsChange={onEventsChange}
+              localeText={{
+                recurrenceMonthlyLastWeekAriaLabel: ({ weekday, weekdayName }) =>
+                  `aria:${weekday}:${weekdayName}`,
+                recurrenceMonthlyLastWeekLabel: ({ weekday, weekdayName }) =>
+                  `label:${weekday}:${weekdayName}`,
+              }}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+            </EventCalendarProvider>,
+          );
+
+          await openCustomMonthly(user);
+
+          // 2025-05-27 is the last Tuesday of May.
+          const toggle = screen.getByRole('button', { name: 'aria:tuesday:Tuesday' });
+          expect(toggle).to.have.text('label:tuesday:Tue');
+
+          await user.click(toggle);
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          expect(onEventsChange.mock.calls[0][0][0].rrule.byDay).to.deep.equal(['-1TU']);
         });
 
         it('should flip the recurrence Select to "Custom" when a detail field is edited', async () => {

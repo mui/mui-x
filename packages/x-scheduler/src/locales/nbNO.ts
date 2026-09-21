@@ -52,9 +52,9 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) => `${weekdayName} i siste uke av måneden`,
   recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} siste uke`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Gjentas månedlig på dag ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, { weekdayName }) =>
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
     `${weekdayName} uke ${ord} av måneden`,
-  recurrenceMonthlyWeekNumberLabel: (ord, { weekdayName }) => `${weekdayName} uke ${ord}`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} uke ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'På',
   recurrenceYearlyFrequencyLabel: 'år',
   recurrenceYearlyPresetLabel: (date) => `Gjentas årlig den ${date}`,

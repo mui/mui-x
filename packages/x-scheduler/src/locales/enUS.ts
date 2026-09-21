@@ -53,9 +53,9 @@ const enUSDialog: EventEditingLocaleText = {
     `${weekdayName} of the last week of the month`,
   recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} last week`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Repeats monthly on day ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, { weekdayName }) =>
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
     `${weekdayName} week ${ord} of the month`,
-  recurrenceMonthlyWeekNumberLabel: (ord, { weekdayName }) => `${weekdayName} week ${ord}`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} week ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'On',
   recurrenceYearlyFrequencyLabel: 'years',
   recurrenceYearlyPresetLabel: (date) => `Repeats annually on ${date}`,

@@ -58,10 +58,12 @@ const hrHRDialog: Partial<EventEditingLocaleText> = {
   //   weekdayName
   // }) => `${weekdayName} last week`,
   // recurrenceMonthlyPresetLabel: dayNumber => `Repeats monthly on day ${dayNumber}`,
-  // recurrenceMonthlyWeekNumberAriaLabel: (ord, {
+  // recurrenceMonthlyWeekNumberAriaLabel: ({
+  //   ord,
   //   weekdayName
   // }) => `${weekdayName} week ${ord} of the month`,
-  // recurrenceMonthlyWeekNumberLabel: (ord, {
+  // recurrenceMonthlyWeekNumberLabel: ({
+  //   ord,
   //   weekdayName
   // }) => `${weekdayName} week ${ord}`,
   // recurrenceWeeklyMonthlySpecificInputsLabel: 'On',

@@ -64,9 +64,9 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
     `${weekdayName} w ostatnim tygodniu miesiąca`,
   recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName}, ostatni tydzień`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Powtarza się co miesiąc w dniu ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, { weekdayName }) =>
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
     `${weekdayName}, tydzień ${ord} miesiąca`,
-  recurrenceMonthlyWeekNumberLabel: (ord, { weekdayName }) => `${weekdayName}, tydzień ${ord}`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName}, tydzień ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'W',
   recurrenceYearlyFrequencyLabel: 'lata',
   recurrenceYearlyPresetLabel: (date) => `Powtarza się co roku w ${date}`,

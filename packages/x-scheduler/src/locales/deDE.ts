@@ -53,9 +53,9 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
     `${weekdayName} der letzten Woche des Monats`,
   recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} letzte Woche`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Wird monatlich am Tag ${dayNumber} wiederholt`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, { weekdayName }) =>
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
     `${weekdayName} Woche ${ord} des Monats`,
-  recurrenceMonthlyWeekNumberLabel: (ord, { weekdayName }) => `${weekdayName} Woche ${ord}`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} Woche ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'Am',
   recurrenceYearlyFrequencyLabel: 'Jahre',
   recurrenceYearlyPresetLabel: (date) => `Wird jährlich am ${date} wiederholt`,
