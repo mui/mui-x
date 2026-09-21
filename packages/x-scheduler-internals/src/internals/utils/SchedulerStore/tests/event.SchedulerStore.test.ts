@@ -702,12 +702,12 @@ storeClasses.forEach((storeClass) => {
             { resources: TEST_RESOURCES, events: [], onEventsChange },
             adapter,
           );
-          store.set('pendingRecurringEventOperation', {
-            kind: 'delete',
+          store.deleteRecurringEvent({
             eventId: 'gone',
             occurrenceStart: adapter.date('2025-05-26T10:00:00', 'default'),
             onSubmit,
           });
+          expect(store.state.pendingRecurringEventOperation).to.not.equal(null);
 
           expect(() => store.selectRecurringEventScope('all')).not.to.throw();
 
