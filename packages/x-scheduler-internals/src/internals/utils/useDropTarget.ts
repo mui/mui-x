@@ -303,12 +303,15 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   // Sync the editing surface (if this occurrence is being edited) with the committed times:
   // the scheduling plugin can clamp the drop, and its dates come in the data timezone.
+  // Only the committed bounds: an untouched one keeps its stored value on the occurrence.
   if (schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)) {
     const { displayTimezone } = store.state;
-    store.setEditingOccurrenceTimes(
-      adapter.setTimezone(result.changes.start ?? start, displayTimezone),
-      adapter.setTimezone(result.changes.end ?? end, displayTimezone),
-    );
+    const toDisplayTimezone = (date: TemporalSupportedObject | undefined) =>
+      date == null ? undefined : adapter.setTimezone(date, displayTimezone);
+    store.setEditingOccurrenceTimes({
+      start: toDisplayTimezone(result.changes.start),
+      end: toDisplayTimezone(result.changes.end),
+    });
   }
 }
 

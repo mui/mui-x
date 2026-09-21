@@ -1093,38 +1093,46 @@ export class SchedulerStore<
    * Refreshes the edited occurrence's times so a later edit (e.g. opening the form from the
    * armed toolbar) reflects a just-committed change such as a resize. The data-timezone bounds
    * follow the same instants: a rule added from the form is built on them.
-   * No-op when nothing is being edited.
+   * A bound left out keeps its current value in both timezones: re-read from its display value
+   * it can land on another data-timezone day (an all-day occurrence is displayed on whole
+   * display days). No-op when nothing is being edited.
    */
   public setEditingOccurrenceTimes = (
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
+    changes: Pick<SchedulerEventUpdatedProperties, 'start' | 'end'>,
   ) => {
     const { editingOccurrence, adapter } = this.state;
     if (editingOccurrence == null) {
       return;
     }
     const { occurrence } = editingOccurrence;
+    const { start, end } = changes;
     this.set('editingOccurrence', {
       ...editingOccurrence,
       occurrence: {
         ...occurrence,
         displayTimezone: {
           ...occurrence.displayTimezone,
-          start: processDate(start, adapter),
-          end: processDate(end, adapter),
+          start: start == null ? occurrence.displayTimezone.start : processDate(start, adapter),
+          end: end == null ? occurrence.displayTimezone.end : processDate(end, adapter),
         },
         ...(isEventOccurrence(occurrence)
           ? {
               dataTimezone: {
                 ...occurrence.dataTimezone,
-                start: processDate(
-                  adapter.setTimezone(start, occurrence.dataTimezone.timezone),
-                  adapter,
-                ),
-                end: processDate(
-                  adapter.setTimezone(end, occurrence.dataTimezone.timezone),
-                  adapter,
-                ),
+                start:
+                  start == null
+                    ? occurrence.dataTimezone.start
+                    : processDate(
+                        adapter.setTimezone(start, occurrence.dataTimezone.timezone),
+                        adapter,
+                      ),
+                end:
+                  end == null
+                    ? occurrence.dataTimezone.end
+                    : processDate(
+                        adapter.setTimezone(end, occurrence.dataTimezone.timezone),
+                        adapter,
+                      ),
               },
             }
           : {}),

@@ -4296,26 +4296,16 @@ describe('<EventDialogContent open />', () => {
         expect(updated.rrule).to.deep.equal({ freq: 'MONTHLY', interval: 1, byMonthDay: [4] });
       });
 
-      it('should anchor a new weekly rule on the resized start when edited from the armed toolbar', async () => {
-        // Tuesday 19:00 in New York is Tuesday 23:00 UTC; resized to 21:00 it is Wednesday 01:00 UTC.
-        const builder = EventBuilder.new(adapter)
-          .id('evening-call')
-          .title('Evening call')
-          .withDataTimezone('UTC')
-          .withDisplayTimezone('America/New_York')
-          .singleDay('2025-07-08T23:00:00Z', 60);
-        const event = builder.build();
-        const resizedStart = adapter.date('2025-07-08T21:00:00', 'America/New_York');
-        const resizedEnd = adapter.date('2025-07-08T22:00:00', 'America/New_York');
-        const onEventsChange = vi.fn();
-
-        // A resize committed from the armed state, as the drop target applies it.
-        const commitResize = (store: AnyEventCalendarStore) => {
-          store.startEditing(builder.toOccurrence(), 'armed');
-          store.updateEvent({ id: event.id, start: resizedStart, end: resizedEnd });
-          store.setEditingOccurrenceTimes(resizedStart, resizedEnd);
-          store.setEditingMode('edit');
-        };
+      /**
+       * Renders the dialog opened from the armed toolbar once `commitResize` applied a resize
+       * from the armed state, as the drop target does.
+       */
+      function renderEditedAfterResize(parameters: {
+        event: SchedulerEvent;
+        commitResize: (store: AnyEventCalendarStore) => void;
+        onEventsChange: Mock;
+      }) {
+        const { event, commitResize, onEventsChange } = parameters;
 
         function EditedOccurrenceDialog() {
           const store = React.useContext(SchedulerStoreContext)!;
@@ -4349,7 +4339,32 @@ describe('<EventDialogContent open />', () => {
           );
         }
 
-        const { user } = render(<Calendar />);
+        return render(<Calendar />);
+      }
+
+      it('should anchor a new weekly rule on the resized start when edited from the armed toolbar', async () => {
+        // Tuesday 19:00 in New York is Tuesday 23:00 UTC; resized to 21:00 it is Wednesday 01:00 UTC.
+        const builder = EventBuilder.new(adapter)
+          .id('evening-call')
+          .title('Evening call')
+          .withDataTimezone('UTC')
+          .withDisplayTimezone('America/New_York')
+          .singleDay('2025-07-08T23:00:00Z', 60);
+        const event = builder.build();
+        const resizedStart = adapter.date('2025-07-08T21:00:00', 'America/New_York');
+        const resizedEnd = adapter.date('2025-07-08T22:00:00', 'America/New_York');
+        const onEventsChange = vi.fn();
+
+        const { user } = renderEditedAfterResize({
+          event,
+          onEventsChange,
+          commitResize: (store) => {
+            store.startEditing(builder.toOccurrence(), 'armed');
+            store.updateEvent({ id: event.id, start: resizedStart, end: resizedEnd });
+            store.setEditingOccurrenceTimes({ start: resizedStart, end: resizedEnd });
+            store.setEditingMode('edit');
+          },
+        });
         await user.click(await screen.findByRole('tab', { name: /recurrence/i }));
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
         await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
@@ -4359,6 +4374,39 @@ describe('<EventDialogContent open />', () => {
           (item: SchedulerEvent) => item.id === event.id,
         );
         expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['WE'] });
+      });
+
+      it('should anchor a new weekly rule on the untouched start after an end-only resize from another timezone', async () => {
+        // Friday July 4 00:00 UTC is displayed on Thursday July 3 in New York: extending only
+        // the end must keep the rule on the stored Friday.
+        const builder = utcJuly4AllDayBuilder()
+          .title('Holiday')
+          .withDisplayTimezone('America/New_York');
+        const event = builder.build();
+        const occurrence = builder.toOccurrence();
+        const resizedEnd = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+        const onEventsChange = vi.fn();
+
+        const { user } = renderEditedAfterResize({
+          event,
+          onEventsChange,
+          commitResize: (store) => {
+            store.startEditing(occurrence, 'armed');
+            store.updateEvent({ id: event.id, end: resizedEnd });
+            store.setEditingOccurrenceTimes({ end: resizedEnd });
+            store.setEditingMode('edit');
+          },
+        });
+        await user.click(await screen.findByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        const updated = onEventsChange.mock.lastCall![0].find(
+          (item: SchedulerEvent) => item.id === event.id,
+        );
+        expect(updated.start).to.equal(event.start);
+        expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['FR'] });
       });
     });
 
