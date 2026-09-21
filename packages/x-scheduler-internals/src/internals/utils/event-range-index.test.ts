@@ -97,7 +97,7 @@ describe('createEventRangeIndex', () => {
       );
       expect(rangeMatches).to.have.length(matchCount);
       const expected = events.filter(
-        (event) => event.displayTimezone.rrule || rangeMatches.includes(event),
+        (event) => event.dataTimezone.rrule || rangeMatches.includes(event),
       );
 
       expect(

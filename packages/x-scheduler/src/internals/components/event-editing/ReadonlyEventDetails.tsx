@@ -9,13 +9,23 @@ import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-intern
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
+  schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
+import {
+  getOccurrenceDataTimezone,
+  getPrimaryResourceId,
+} from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
-import { getRecurrenceLabel, hasProp } from '../event-dialog/utils';
+import {
+  getEventTimezone,
+  getEventTimezoneBound,
+  getRecurrenceLabel,
+  getRecurrenceTimezoneName,
+  hasProp,
+} from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
@@ -113,18 +123,26 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     schedulerResourceSelectors.processedResource,
     getPrimaryResourceId(occurrence.resource),
   );
+  // The rule is read in the event's timezone, the one it is expressed in.
+  const eventTimezoneStart = getEventTimezoneBound(adapter, occurrence, 'start');
   const defaultRecurrenceKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
-    occurrence.displayTimezone.rrule,
-    occurrence.displayTimezone.start,
+    getOccurrenceDataTimezone(occurrence)?.rrule,
+    eventTimezoneStart,
   );
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   // Feature hook
   const formatTime = useFormatTime();
+  const eventTimezone = getEventTimezone(occurrence);
+  const recurrenceTimezoneName = React.useMemo(
+    () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
+    [adapter, eventTimezone, displayTimezone],
+  );
   const recurrenceLabel = getRecurrenceLabel(
     adapter,
-    occurrence.displayTimezone.start,
+    eventTimezoneStart,
     defaultRecurrenceKey,
     localeText,
   );
@@ -193,6 +211,12 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
             }}
           >
             {recurrenceLabel}
+            {recurrenceTimezoneName != null && (
+              <span className={classes.eventDialogRecurrenceTimezoneLabel}>
+                {' '}
+                {localeText.recurrenceLabelTimezoneSuffix(recurrenceTimezoneName)}
+              </span>
+            )}
           </Typography>
         </RecurrenceLabelContainer>
       )}
