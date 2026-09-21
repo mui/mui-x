@@ -314,7 +314,7 @@ export class SchedulerStore<
       updateModel,
     );
 
-    this.update(newState);
+    this.update(newState as State);
     this.parameters = parameters;
   };
 
