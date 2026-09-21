@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_CHART_EXCEL_OPTIONS } from '../chartExcelData.types';
+import { DEFAULT_CHART_EXCEL_OPTIONS } from '../defaults';
 import { heatmapExtractor } from './heatmap';
 
 const axis = (data?: unknown[]) => ({ id: 'a', data }) as any;
