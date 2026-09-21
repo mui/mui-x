@@ -378,8 +378,9 @@ describe('<DateField /> - Selection', () => {
       // Regression test: the mousedown handler used to focus the clicked
       // section unconditionally, even when a controlled `selectedSections`
       // kept the previous section selected.
-      const onSelectedSectionsChange = vi.fn();
+      const onSelectedSectionsChange = spy();
       const view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
         autoFocus: true,
         selectedSections: 0,
         onSelectedSectionsChange,
@@ -389,7 +390,7 @@ describe('<DateField /> - Selection', () => {
       const year = view.getSection(2);
       fireEvent.mouseDown(year);
 
-      expect(onSelectedSectionsChange).toHaveBeenCalledWith(2);
+      expect(onSelectedSectionsChange.lastCall.firstArg).to.equal(2);
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
 
