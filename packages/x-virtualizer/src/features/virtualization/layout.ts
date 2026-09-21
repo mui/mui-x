@@ -3,7 +3,7 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { platform } from '@base-ui/utils/platform';
-import { Store, createSelectorMemoized } from '@mui/x-internals/store';
+import { Store, createSelectorMemoized } from '@base-ui/utils/store';
 import { Dimensions } from '../../features/dimensions';
 import { Virtualization, type VirtualizationLayoutParams } from './virtualization';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';

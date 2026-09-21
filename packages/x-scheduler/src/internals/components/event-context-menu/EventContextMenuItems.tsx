@@ -95,26 +95,20 @@ export function useEventContextMenuItems(
     focusFallback?.focus();
   };
 
+  const EditIcon = isReadOnly ? SearchRounded : EditRounded;
   const items: React.ReactNode[] = [
-    isReadOnly ? (
-      <MenuItem
-        className={classes.eventContextMenuShowDetailsItem}
-        key="show-details"
-        onClick={handleEdit}
-      >
-        <ListItemIcon>
-          <SearchRounded fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{localeText.showEventDetails}</ListItemText>
-      </MenuItem>
-    ) : (
-      <MenuItem className={classes.eventContextMenuEditItem} key="edit" onClick={handleEdit}>
-        <ListItemIcon>
-          <EditRounded fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{localeText.editEvent}</ListItemText>
-      </MenuItem>
-    ),
+    <MenuItem
+      className={
+        isReadOnly ? classes.eventContextMenuShowDetailsItem : classes.eventContextMenuEditItem
+      }
+      key={isReadOnly ? 'show-details' : 'edit'}
+      onClick={handleEdit}
+    >
+      <ListItemIcon>
+        <EditIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{isReadOnly ? localeText.showEventDetails : localeText.editEvent}</ListItemText>
+    </MenuItem>,
   ];
 
   if (!isReadOnly) {
