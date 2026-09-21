@@ -36,3 +36,16 @@ export function withinMonthView() {
 
   return within(monthView as HTMLElement);
 }
+
+/**
+ * Returns the month grid cell for a given day-of-month number, scoped to the month view
+ * so the side panel's mini calendar (same day numbers) cannot match.
+ */
+export function getMonthViewCell(dayOfMonth: number): HTMLElement {
+  const cells = withinMonthView().getAllByRole('gridcell');
+  const cell = cells.find((c) => within(c).queryByText(new RegExp(`^${dayOfMonth}$`)));
+  if (!cell) {
+    throw new Error(`Could not find month view cell for day ${dayOfMonth}`);
+  }
+  return cell;
+}

@@ -1,6 +1,7 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import {
+  createEventRangeIndex,
   getOccurrencesFromEvents,
   getTimelineAxisDurationMs,
 } from '@mui/x-scheduler-internals/internals';
@@ -48,7 +49,7 @@ export function getOccurrences(events: SchedulerProcessedEvent[]) {
     adapter,
     start: collectionStart,
     end: collectionEnd,
-    events,
+    eventRangeIndex: createEventRangeIndex(events, adapter, false),
     displayTimezone: 'default',
     visibleResources: {},
     recurringEventsPlugin: null,

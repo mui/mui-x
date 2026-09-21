@@ -46,6 +46,15 @@ export interface EventEditingLocaleText {
   recurrenceEveryLabel: string;
   recurrenceRepeatLabel: string;
   recurrenceTabLabel: string;
+  /**
+   * Helper text of the Recurrence tab naming the event's timezone, when it is not the display one.
+   * `timezone` is already localized ("Pacific Time"), or an identifier such as "UTC".
+   */
+  recurrenceTimezoneLabel: (timezone: string) => string;
+  /**
+   * Suffix appended to the recurrence label of the read-only details, same `timezone` value.
+   */
+  recurrenceLabelTimezoneSuffix: (timezone: string) => string;
   recurrenceMainSelectCustomLabel: string;
   recurrenceWeeklyFrequencyLabel: string;
   recurrenceWeeklyPresetLabel: (params: {

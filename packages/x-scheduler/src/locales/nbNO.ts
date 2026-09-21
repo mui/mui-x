@@ -42,6 +42,8 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Hver',
   recurrenceRepeatLabel: 'Gjenta',
   recurrenceTabLabel: 'Gjentakelse',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Gjentakelse',
   recurrenceWeeklyFrequencyLabel: 'uker',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Gjentas ukentlig på ${weekdayName}`,
