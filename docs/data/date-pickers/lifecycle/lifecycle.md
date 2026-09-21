@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers'
 
 # Components lifecycle
 
-<p class="description">This page explains when the onChange, onAccept, and onClose callbacks are called.</p>
+<p class="description">This page explains when the onChange, onAccept, onClose, and onCancel callbacks are called.</p>
 
 ## Lifecycle on simple fields
 
@@ -343,6 +343,42 @@ If the component is not controlled, the behavior is the same, except for the _Cl
 
 Clicking on a shortcut will call `onAccept`, except if the `changeImportance` property has been set to `"set"` instead of `"accept"`.
 You can find more information [in the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut).
+
+## Lifecycle on pickers: "onCancel"
+
+### Usage
+
+The `onCancel` callback fires when the user clicks the _Cancel_ action.
+Use it to react to an explicit cancellation, for example to close a dialog that wraps the picker.
+
+```tsx
+<DatePicker onCancel={() => trackCancellation()} />
+```
+
+The callback takes no arguments. After calling `onCancel`, the picker resets the value to the last accepted value. This reset can also trigger `onChange`.
+
+### When is "onCancel" called?
+
+#### When clicking the "Cancel" action
+
+`onCancel` is called only when the user clicks the _Cancel_ button of the action bar.
+
+The action bar does not show a _Cancel_ button by default on pickers that close on select. Add it explicitly with the `actions` prop:
+
+```tsx
+<DesktopDatePicker slotProps={{ actionBar: { actions: ['cancel', 'accept'] } }} />
+```
+
+`onCancel` is available on every picker, including the `Static` variants, which have no `open` state and no `onClose` callback:
+
+```tsx
+<StaticDatePicker onCancel={() => trackCancellation()} />
+```
+
+#### When the picker is dismissed without clicking "Cancel"
+
+Pressing <kbd class="key">Escape</kbd>, clicking outside the picker, or completing a selection that closes the picker automatically does not call `onCancel`.
+Use `onClose` to react to those cases instead. See the [dedicated section above](/x/react-date-pickers/lifecycle/#lifecycle-on-pickers-onclose).
 
 ## Classic scenarios
 
