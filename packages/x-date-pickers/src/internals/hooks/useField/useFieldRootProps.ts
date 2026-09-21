@@ -1,3 +1,4 @@
+import * as ReactDOM from 'react-dom';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import { PickerManager } from '../../../models';
@@ -141,8 +142,12 @@ export function useFieldRootProps(
     if (isBlankSpaceClick) {
       event.preventDefault();
       if (!focused) {
-        setFocused(true);
-        setSelectedSections(sectionOrder.startIndex);
+        // Flush so the layout effects focus the section on this same tick,
+        // reading back whatever a controlled `selectedSections` accepted.
+        ReactDOM.flushSync(() => {
+          setFocused(true);
+          setSelectedSections(sectionOrder.startIndex);
+        });
       }
       return;
     }
@@ -160,14 +165,17 @@ export function useFieldRootProps(
       return;
     }
     event.preventDefault();
-    setFocused(true);
     // `mousedown` is now authoritative for pointer section selection. The
     // section container's own `onClick` deduplicates against the resulting
     // `parsedSelectedSections` on the click bubble (see
     // `useFieldSectionContainerProps`), so we always select here and let that
     // guard absorb the redundant call -- matching the pre-PR
     // `onSelectedSectionsChange` invocation count.
-    setSelectedSections(parsedIndex);
+    // See the comment on the blank-space branch above for why this flushes.
+    ReactDOM.flushSync(() => {
+      setFocused(true);
+      setSelectedSections(parsedIndex);
+    });
   });
 
   const handleInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
