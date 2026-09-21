@@ -191,9 +191,35 @@ function Timeline() {
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
-A property declared with a `getter` but no `setter` is not writable: the Event Timeline can display it but never writes it back to your model.
+## Custom event content
 
-When `start` or `end` is not writable, that date can't move: dragging is disabled, and only the other side's resize handle stays enabled. Saving other changes in the event dialog leaves that date unchanged. Creating a new event is refused when either date is not writable, since a new event has no old date to fall back to.
+Use the `timelineEventContent` slot to replace the text rendered inside an event block.
+The slot receives the `occurrence`, the `resource` of the row it is rendered in and the `variant` of the block.
+It is placed inside the block, so the block keeps its geometry, its drag and resize handles, and its button semantics.
+
+{{"demo": "EventContentSlot.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The slot also renders in the placeholder that previews a drag, a resize or a creation, with `variant` set to `"placeholder"` and an `occurrence` carrying the pending dates.
+
+The content of the slot is part of the accessible name of the event, so keep some text in it.
+The block is a button, so keep the content presentational (text, icons, a tooltip) rather than adding links or buttons of its own.
+
+### Typing custom slot props
+
+Pass extra props to the slot through `slotProps.timelineEventContent` and type them by augmenting the `TimelineEventContentPropsOverrides` interface:
+
+```tsx
+declare module '@mui/x-scheduler-premium/models' {
+  interface TimelineEventContentPropsOverrides {
+    showCode?: boolean;
+  }
+}
+
+<EventTimelinePremium
+  slots={{ timelineEventContent: EventContent }}
+  slotProps={{ timelineEventContent: { showCode: true } }}
+/>;
+```
 
 ## Event constraints 🚧
 

@@ -58,7 +58,6 @@ export function useEventContextMenuItems(
   const { startEditing } = useEventEditingContext();
 
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
-  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const areRecurringEventsAvailable = useStore(
     store,
     schedulerOtherSelectors.areRecurringEventsAvailable,
@@ -81,7 +80,7 @@ export function useEventContextMenuItems(
   // single events delete immediately. No confirmation step here either — see #18025.
   const handleDelete = () => {
     onRequestClose();
-    if (areRecurringEventsAvailable && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+    if (areRecurringEventsAvailable && occurrence.displayTimezone.rrule) {
       store.deleteRecurringEvent({
         occurrenceStart: occurrence.displayTimezone.start.value,
         eventId: occurrence.id,
@@ -96,26 +95,20 @@ export function useEventContextMenuItems(
     focusFallback?.focus();
   };
 
+  const EditIcon = isReadOnly ? SearchRounded : EditRounded;
   const items: React.ReactNode[] = [
-    isReadOnly ? (
-      <MenuItem
-        className={classes.eventContextMenuShowDetailsItem}
-        key="show-details"
-        onClick={handleEdit}
-      >
-        <ListItemIcon>
-          <SearchRounded fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{localeText.showEventDetails}</ListItemText>
-      </MenuItem>
-    ) : (
-      <MenuItem className={classes.eventContextMenuEditItem} key="edit" onClick={handleEdit}>
-        <ListItemIcon>
-          <EditRounded fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{localeText.editEvent}</ListItemText>
-      </MenuItem>
-    ),
+    <MenuItem
+      className={
+        isReadOnly ? classes.eventContextMenuShowDetailsItem : classes.eventContextMenuEditItem
+      }
+      key={isReadOnly ? 'show-details' : 'edit'}
+      onClick={handleEdit}
+    >
+      <ListItemIcon>
+        <EditIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{isReadOnly ? localeText.showEventDetails : localeText.editEvent}</ListItemText>
+    </MenuItem>,
   ];
 
   if (!isReadOnly) {

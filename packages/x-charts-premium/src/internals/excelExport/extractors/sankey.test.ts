@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_CHART_EXCEL_OPTIONS } from '../chartExcelData.types';
+import { DEFAULT_CHART_EXCEL_OPTIONS } from '../defaults';
 import { sankeyExtractor } from './sankey';
 
 const createParams = (series: Record<string, any>, overrides: Record<string, any> = {}) =>
