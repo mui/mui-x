@@ -42,6 +42,8 @@ const beBYDialog: Partial<EventEditingLocaleText> = {
   // recurrenceEveryLabel: 'Every',
   // recurrenceRepeatLabel: 'Repeat',
   // recurrenceTabLabel: 'Recurrence',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   // recurrenceMainSelectCustomLabel: 'Recurrence',
   // recurrenceWeeklyFrequencyLabel: 'weeks',
   // recurrenceWeeklyPresetLabel: ({

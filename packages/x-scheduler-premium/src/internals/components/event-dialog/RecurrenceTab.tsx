@@ -11,6 +11,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import FormLabel from '@mui/material/FormLabel';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
@@ -27,6 +28,7 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   schedulerOtherSelectors,
   schedulerPreferenceSelectors,
+  schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
@@ -34,10 +36,15 @@ import {
   useEventEditingStyledContext,
   useEventDialogFormContext,
   getEndsSelectionFromRRule,
-  formatDayOfMonthAndMonthFullLetter,
   EventDialogTabPanel,
   EventDialogTabContent,
+  getRecurrenceLabel,
   getWeekdayToken,
+  getEventTimezone,
+  getResentRangeBounds,
+  getRecurrenceRuleBound,
+  getRecurrenceTimezoneName,
+  eventDialogFormSelectors,
 } from '@mui/x-scheduler/internals';
 import {
   EventDialogSectionHeaderTitle,
@@ -207,32 +214,55 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   // Selector hooks
   const inputsDisabled = recurrenceSelection === null || rruleReadOnly;
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
-  const monthlyRef = React.useMemo(
-    () => getMonthlyReference(adapter, occurrence.displayTimezone.start),
-    [adapter, occurrence.displayTimezone.start],
+
+  // The rule lives in the event's timezone, so the days offered here come from the range the
+  // event ends up with, in that timezone (the submit builds the preset on the same start).
+  const eventTimezone = getEventTimezone(occurrence);
+  const rangeValues = useStore(formStore, eventDialogFormSelectors.rangeValues);
+  const ruleBounds = React.useMemo(() => {
+    const displayTimezoneMoved = displayTimezone !== occurrence.displayTimezone.timezone;
+    const { startResent, endResent } = getResentRangeBounds(
+      formStore.getDirtyValues(),
+      rangeValues.allDay,
+      displayTimezoneMoved,
+    );
+    const bound = (name: 'start' | 'end', resent: boolean) =>
+      getRecurrenceRuleBound(adapter, occurrence, rangeValues, resent, displayTimezone, name);
+    return { start: bound('start', startResent), end: bound('end', endResent) };
+  }, [adapter, occurrence, formStore, rangeValues, displayTimezone]);
+  const ruleStart = ruleBounds.start;
+  const recurrenceTimezoneName = React.useMemo(
+    () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
+    [adapter, eventTimezone, displayTimezone],
   );
+  const monthlyRef = React.useMemo(
+    () => getMonthlyReference(adapter, ruleStart),
+    [adapter, ruleStart],
+  );
+
+  // A preset's draft follows the start it is built on, so the weekday or day of month shown
+  // checked is the one the save stores; a custom rule is the user's own pick and is kept.
+  const previousRuleStartRef = React.useRef(ruleStart.timestamp);
+  React.useEffect(() => {
+    if (previousRuleStartRef.current === ruleStart.timestamp) {
+      return;
+    }
+    previousRuleStartRef.current = ruleStart.timestamp;
+    const selection = formStore.state.values.recurrenceSelection;
+    if (selection == null || selection === 'custom') {
+      return;
+    }
+    formStore.setValue('rruleDraft', {
+      byDay: [],
+      byMonthDay: [],
+      ...schedulerRecurringEventSelectors.presets(store.state, ruleStart)![selection],
+    });
+  }, [formStore, store, ruleStart]);
   const weeklyDays = React.useMemo(
     () => getWeeklyDays(adapter, visibleDate, weekStartsOn),
     [adapter, visibleDate, weekStartsOn],
-  );
-
-  // Form-state drafts: every preset carries both `byDay` and `byMonthDay` (empty when
-  // not used) so the `rruleDraft` value keeps a consistent shape as the user switches presets.
-  // Differs from `computePresets`, which only includes the fields each preset actually serializes.
-  const presetDraftMap = React.useMemo(
-    () => ({
-      DAILY: { freq: 'DAILY' as const, interval: 1, byDay: [], byMonthDay: [] },
-      WEEKLY: { freq: 'WEEKLY' as const, interval: 1, byDay: [monthlyRef.code], byMonthDay: [] },
-      MONTHLY: {
-        freq: 'MONTHLY' as const,
-        interval: 1,
-        byDay: [],
-        byMonthDay: [monthlyRef.dayOfMonth],
-      },
-      YEARLY: { freq: 'YEARLY' as const, interval: 1, byDay: [], byMonthDay: [] },
-    }),
-    [monthlyRef.code, monthlyRef.dayOfMonth],
   );
 
   const handleRecurrenceSelectionChange = (
@@ -242,8 +272,13 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       formStore.setValue('recurrenceSelection', 'custom');
       return;
     }
+    // Keep both selector arrays in the form draft, including when the preset omits them.
     const newDraft = newSelection
-      ? presetDraftMap[newSelection]
+      ? {
+          byDay: [],
+          byMonthDay: [],
+          ...schedulerRecurringEventSelectors.presets(store.state, ruleStart)![newSelection],
+        }
       : { freq: 'WEEKLY' as const, interval: 1, byDay: [], byMonthDay: [] };
     formStore.setValues({ recurrenceSelection: newSelection, rruleDraft: newDraft });
   };
@@ -280,7 +315,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           recurrenceSelection: 'custom',
           rruleDraft: {
             ...prev.rruleDraft,
-            until: adapter.date(prev.endDate, 'default'),
+            // The end of the event's last day, in its own timezone.
+            until: adapter.endOfDay(ruleBounds.end.value),
             count: undefined,
           },
         }));
@@ -308,7 +344,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const handleChangeUntil = (event: React.ChangeEvent<HTMLInputElement>) => {
     const untilValue = event.currentTarget.value;
-    updateCustomDraft({ until: adapter.date(untilValue, 'default') });
+    // The chosen day is the last one the series runs on, in the event's timezone.
+    updateCustomDraft({ until: adapter.endOfDay(adapter.date(untilValue, eventTimezone)) });
   };
 
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
@@ -351,36 +388,14 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(rruleDraft);
 
-  const weekday = getWeekdayToken(adapter, occurrence.displayTimezone.start.value);
-  const weekdayName = adapter.format(occurrence.displayTimezone.start.value, 'weekday');
-  const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(
-    occurrence.displayTimezone.start.value,
-    adapter,
-  );
+  const weekday = getWeekdayToken(adapter, ruleStart.value);
 
-  const recurrenceOptions: {
-    label: string;
-    value: RecurringEventPresetKey | null | 'custom';
-  }[] = [
-    { label: `${localeText.recurrenceNoRepeat}`, value: null },
-    { label: `${localeText.recurrenceDailyPresetLabel}`, value: 'DAILY' },
-    {
-      label: `${localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName })}`,
-      value: 'WEEKLY',
-    },
-    {
-      label: `${localeText.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.displayTimezone.start.value))}`,
-      value: 'MONTHLY',
-    },
-    {
-      label: `${localeText.recurrenceYearlyPresetLabel(dateForYearlyOption)}`,
-      value: 'YEARLY',
-    },
-    {
-      label: `${localeText.recurrenceCustomRepeat}`,
-      value: 'custom',
-    },
-  ];
+  const recurrenceOptions = ([null, 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY', 'custom'] as const).map(
+    (value) => ({
+      value,
+      label: getRecurrenceLabel(adapter, ruleStart, value, localeText),
+    }),
+  );
 
   const recurrenceFrequencyOptions: {
     label: string;
@@ -472,6 +487,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               </MenuItem>
             ))}
           </Select>
+          {recurrenceTimezoneName != null && (
+            <FormHelperText className={classes.eventDialogRecurrenceTimezoneLabel}>
+              {localeText.recurrenceTimezoneLabel(recurrenceTimezoneName)}
+            </FormHelperText>
+          )}
         </FormControl>
 
         <RepeatSectionFieldset className={classes.eventDialogRepeatSectionFieldset}>
