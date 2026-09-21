@@ -131,7 +131,6 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     getOccurrenceDataTimezone(occurrence)?.rrule,
     eventTimezoneStart,
   );
-  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   // Feature hook
@@ -200,7 +199,7 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
           )}
         </Typography>
       </EventDialogDateTimeContainer>
-      {showRecurrence && defaultRecurrenceKey != null && (
+      {defaultRecurrenceKey != null && (
         <RecurrenceLabelContainer className={classes.eventDialogRecurrenceLabelContainer}>
           <RepeatRoundedIcon className={classes.eventDialogRecurrenceIcon} fontSize="small" />
           <Typography
