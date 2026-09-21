@@ -189,11 +189,12 @@ export class ExtendableEventCalendarStore<
 
     const canSetVisibleDate = visibleDateProp === undefined && hasVisibleDateChange;
     const canSetView = viewProp === undefined && hasViewChange;
-    if (canSetVisibleDate || canSetView) {
-      this.update({
-        ...(canSetVisibleDate ? { visibleDate } : undefined),
-        ...(canSetView ? { view } : undefined),
-      });
+    if (canSetVisibleDate && canSetView) {
+      this.update({ visibleDate, view });
+    } else if (canSetVisibleDate) {
+      this.update({ visibleDate });
+    } else if (canSetView) {
+      this.update({ view });
     }
   };
 

@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import type { TreeViewCancellableEvent, TreeViewCancellableEventHandler } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import type { TreeViewAnyStore, TreeViewItemPlugin } from '../../models';
