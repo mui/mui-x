@@ -2991,6 +2991,52 @@ describe('<EventDialogContent open />', () => {
         expect(updated.end).to.equal(movedEvent.end);
       });
 
+      it('should validate an edited bound against the one the host moved while the dialog is open', async () => {
+        const builder = EventBuilder.new(adapter)
+          .id('meeting')
+          .title('Meeting')
+          .withDataTimezone('UTC')
+          .withDisplayTimezone('UTC')
+          .span('2025-05-26T10:00:00', '2025-05-26T11:00:00');
+        const event = builder.build();
+        const occurrence = builder.toOccurrence();
+        const shortenedEvent = EventBuilder.new(adapter)
+          .id('meeting')
+          .title('Meeting')
+          .withDataTimezone('UTC')
+          .span('2025-05-26T10:00:00', '2025-05-26T10:15:00')
+          .build();
+        const onEventsChange = vi.fn();
+
+        const { user, setProps } = render(
+          <EventCalendarProvider
+            events={[event]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+            displayTimezone="UTC"
+            onEventsChange={onEventsChange}
+          >
+            <SchedulerStoreRunner<AnyEventCalendarStore>
+              context={SchedulerStoreContext}
+              onMount={(store) => store.startEditing(occurrence, 'edit')}
+            />
+            <TestEventDialogContent open {...defaultProps} occurrence={occurrence} />
+          </EventCalendarProvider>,
+        );
+        // The host shortens the event to 10:15 while the dialog still shows 11:00.
+        setProps({ events: [shortenedEvent] });
+
+        // 10:30 is before the stored end, whatever the snapshot says.
+        await user.clear(screen.getByLabelText(/start time/i));
+        await user.type(screen.getByLabelText(/start time/i), '10:30');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(screen.getDescriptionOf(screen.getByLabelText(/end time/i)).textContent).to.match(
+          /end time.*after.*start time/i,
+        );
+      });
+
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {
         let updateRecurringEventSpy, selectRecurringEventScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();

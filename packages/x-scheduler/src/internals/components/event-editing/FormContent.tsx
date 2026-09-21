@@ -412,9 +412,15 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       const submitEnd = isCreation || endResent || boundPending('end');
 
       // The checks run on the range the save writes. An untouched bound keeps its stored
-      // instant, which its re-read from the form can miss: a time in a repeated DST hour.
-      const submittedStart = submitStart ? start : occurrence.displayTimezone.start.value;
-      const submittedEnd = submitEnd ? end : occurrence.displayTimezone.end.value;
+      // instant, which its re-read from the form can miss: a time in a repeated DST hour. On a
+      // non-recurring event the store keeps the live model's bound, which the host may have
+      // moved since the snapshot; the recurring update defaults it to the occurrence's own.
+      const untouchedBound = (bound: 'start' | 'end') =>
+        liveEvent != null && liveEvent.dataTimezone.rrule == null
+          ? liveEvent.displayTimezone[bound].value
+          : occurrence.displayTimezone[bound].value;
+      const submittedStart = submitStart ? start : untouchedBound('start');
+      const submittedEnd = submitEnd ? end : untouchedBound('end');
       if (!runSubmitChecks(values, submittedStart, submittedEnd, current) || !isValid) {
         // Show the tab owning a failing field; General wins when both tabs fail.
         const failingKeys = Object.keys(formStore.state.errors);
