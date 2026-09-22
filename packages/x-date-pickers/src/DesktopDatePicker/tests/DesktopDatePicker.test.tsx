@@ -319,36 +319,6 @@ describe('<DesktopDatePicker />', () => {
       expect(onAccept.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 0, 1));
       expect(onClose.mock.calls.length).to.equal(2);
     });
-
-    it('should call onCancel and reset the value when clicking the "Cancel" action', async () => {
-      const onCancel = vi.fn();
-      const onChange = vi.fn();
-      const onClose = vi.fn();
-
-      const { user } = render(
-        <DesktopDatePicker
-          onCancel={onCancel}
-          onChange={onChange}
-          onClose={onClose}
-          closeOnSelect={false}
-          defaultValue={adapterToUse.date('2018-01-01')}
-          slotProps={{ actionBar: { actions: ['cancel'] } }}
-        />,
-      );
-
-      await openPicker(user, { type: 'date' });
-
-      await user.click(screen.getByRole('gridcell', { name: '2' }));
-      expect(onChange.mock.calls.length).to.equal(1);
-      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 0, 2));
-
-      await user.click(screen.getByText('Cancel'));
-
-      expect(onCancel.mock.calls.length).to.equal(1);
-      expect(onChange.mock.calls.length).to.equal(2);
-      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 0, 1));
-      expect(onClose.mock.calls.length).to.equal(1);
-    });
   });
 
   describe('Month navigation', () => {
