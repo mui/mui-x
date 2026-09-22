@@ -4,7 +4,7 @@ import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { useAdapterContext } from '../../use-adapter-context';
 import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selectors';
 import { EVENT_DRAG_PRECISION_MINUTE } from '../../constants';
-import { applyInternalDragOrResizeOccurrencePlaceholder } from './useDropTarget';
+import { applyInternalDragOrResizeOccurrencePlaceholder } from './SchedulerDropTarget';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import { clampResizedEventEdge } from './resize-utils';
 import type {

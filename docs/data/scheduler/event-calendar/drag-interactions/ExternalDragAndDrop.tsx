@@ -7,8 +7,10 @@ import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 import { SchedulerOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
 // TODO: Estimate if we can avoid all imports from the internals package.
-import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
-import { schedulerEventMoveKind } from '@mui/x-scheduler-internals/internals';
+import {
+  schedulerDayEventMoveKind,
+  schedulerTimeEventMoveKind,
+} from '@mui/x-scheduler-internals/internals';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -54,15 +56,12 @@ const ExternalEventPlaceholder = styled('div')(({ theme }) =>
   externalEventStyles(theme),
 );
 
-const isValidDropTarget = buildIsValidDropTarget([
-  'CalendarGridTimeEvent',
-  'CalendarGridDayEvent',
-]);
+const acceptedKinds = [schedulerDayEventMoveKind, schedulerTimeEventMoveKind];
 
 function getExternalEvent(
-  data: Draggable.AcceptedDragData<typeof schedulerEventMoveKind> | undefined,
+  data: Draggable.AcceptedDragData<typeof acceptedKinds> | undefined,
 ): SchedulerOccurrencePlaceholderExternalDragData | null {
-  if (!data || !isValidDropTarget(data)) {
+  if (!data) {
     return null;
   }
 
@@ -123,8 +122,7 @@ export default function ExternalDragAndDrop() {
     <Draggable.Provider>
       <Container className="mui-x-scheduler">
         <Draggable.Target
-          accept={schedulerEventMoveKind}
-          canDrop={({ source }) => isValidDropTarget(source.payload)}
+          accept={acceptedKinds}
           onDraggableEnter={({ source }) => {
             setPlaceholder(getExternalEvent(source.dragData));
           }}

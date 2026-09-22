@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { schedulerEventMoveKind } from './schedulerDrag';
 import type { SchedulerEventDragPayload, SchedulerEventMoveData } from './schedulerDrag';
 import type { SchedulerDraggable } from './SchedulerDraggable';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
@@ -14,11 +13,12 @@ import type { useElementPositionInCollection } from './useElementPositionInColle
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
 
-export function useDraggableEvent(
-  parameters: useDraggableEvent.Parameters,
-): useDraggableEvent.ReturnValue {
+export function useDraggableEvent<TData extends SchedulerEventMoveData>(
+  parameters: useDraggableEvent.Parameters<TData>,
+): useDraggableEvent.ReturnValue<TData> {
   const {
     source,
+    kind,
     start,
     end,
     occurrenceKey,
@@ -60,8 +60,8 @@ export function useDraggableEvent(
     [source, eventId, occurrenceKey],
   );
 
-  const draggableProps: Omit<SchedulerDraggable.Props<SchedulerEventMoveData>, 'render'> = {
-    kind: schedulerEventMoveKind,
+  const draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'> = {
+    kind,
     payload,
     disabled: !isDraggable,
     getDragData,
@@ -119,14 +119,15 @@ export namespace useDraggableEvent {
     occurrenceKey: string;
   }
 
-  export interface Parameters extends PublicParameters {
-    source: SchedulerEventDragPayload<SchedulerEventMoveData>['source'];
+  export interface Parameters<TData extends SchedulerEventMoveData> extends PublicParameters {
+    kind: SchedulerDraggable.Props<TData>['kind'];
+    source: SchedulerEventDragPayload<TData>['source'];
     /**
      * Gets the drag data.
      * @param {{ clientX: number, clientY: number }} input The input object provided by the drag and drop library for the current event.
      * @returns {any} The shared drag data.
      */
-    getDragData: SchedulerDraggable.Props<SchedulerEventMoveData>['getDragData'];
+    getDragData: SchedulerDraggable.Props<TData>['getDragData'];
     /**
      * The position the caller renders the event at. The clipping flags come from it, so a
      * single pass of the positioning arithmetic serves both rendering and resizing.
@@ -134,8 +135,8 @@ export namespace useDraggableEvent {
     position: useElementPositionInCollection.ReturnValue;
   }
 
-  export interface ReturnValue {
-    draggableProps: Omit<SchedulerDraggable.Props<SchedulerEventMoveData>, 'render'>;
+  export interface ReturnValue<TData extends SchedulerEventMoveData> {
+    draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'>;
     /**
      * The state to pass to the useRenderElement hook.
      */

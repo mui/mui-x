@@ -6,6 +6,7 @@ import { useId } from '@base-ui/utils/useId';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
+import { schedulerDayEventMoveKind } from '../../internals/utils/schedulerDrag';
 import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
@@ -128,6 +129,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     draggableProps,
     contextValue: draggableEventContextValue,
   } = useDraggableEvent({
+    kind: schedulerDayEventMoveKind,
     source: 'CalendarGridDayEvent',
     start,
     end,

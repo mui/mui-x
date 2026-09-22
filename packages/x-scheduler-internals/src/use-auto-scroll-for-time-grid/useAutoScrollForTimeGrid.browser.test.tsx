@@ -5,7 +5,10 @@ import { describe, it, expect, afterEach } from 'vitest';
 import { createSchedulerRenderer, startDrag, moveDrag, cancelDrag } from 'test/utils/scheduler';
 import { absorbObserverFrames } from 'test/utils/scheduler/absorb-observer-frames';
 import { isJSDOM } from 'test/utils/skipIf';
-import { schedulerEventMoveKind } from '../internals/utils/schedulerDrag';
+import {
+  schedulerTimeEventMoveKind,
+  schedulerDayEventMoveKind,
+} from '../internals/utils/schedulerDrag';
 import { useAutoScrollForTimeGrid } from './useAutoScrollForTimeGrid';
 
 function TimeGrid() {
@@ -14,12 +17,20 @@ function TimeGrid() {
   return (
     <React.Fragment>
       <Draggable.Root
-        kind={schedulerEventMoveKind}
+        kind={schedulerTimeEventMoveKind}
         payload={{ source: 'CalendarGridTimeEvent', eventId: 'event', occurrenceKey: 'event' }}
         data-testid="event"
         style={{ position: 'fixed', left: 300, top: 0, width: 100, height: 40 }}
       >
         Event
+        <Draggable.Preview disabled />
+      </Draggable.Root>
+      <Draggable.Root
+        kind={schedulerDayEventMoveKind}
+        payload={{ source: 'CalendarGridDayEvent', eventId: 'day', occurrenceKey: 'day' }}
+        data-testid="day-event"
+      >
+        Day event
         <Draggable.Preview disabled />
       </Draggable.Root>
       <div
@@ -36,6 +47,20 @@ function TimeGrid() {
 describe.skipIf(isJSDOM)('time-grid overflow auto-scroll', () => {
   const { render } = createSchedulerRenderer();
   afterEach(cancelDrag);
+
+  it('does not scroll for day-grid drags', async () => {
+    render(
+      <Draggable.Provider>
+        <TimeGrid />
+      </Draggable.Provider>,
+    );
+    const grid = screen.getByTestId('time-grid');
+    grid.scrollTop = 400;
+    startDrag(screen.getByTestId('day-event'), { clientX: 350, clientY: 20, mockHitTest: false });
+    moveDrag(document.body, { clientX: 100, clientY: 500, mockHitTest: false });
+    await absorbObserverFrames();
+    expect(grid.scrollTop).toBe(400);
+  });
 
   it.each([
     { edge: 'top', insideMargin: 100, beyondMargin: 39, direction: -1 },

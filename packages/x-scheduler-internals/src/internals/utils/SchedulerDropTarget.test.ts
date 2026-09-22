@@ -7,7 +7,7 @@ import {
 import type { SchedulerEvent, SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { SchedulerStoreInContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { describe, it, expect, vi } from 'vitest';
-import { applyInternalDragOrResizeOccurrencePlaceholder } from './useDropTarget';
+import { applyInternalDragOrResizeOccurrencePlaceholder } from './SchedulerDropTarget';
 
 premiumStoreClasses.forEach((storeClass) => {
   describe(`applyInternalDragOrResizeOccurrencePlaceholder - ${storeClass.name}`, () => {

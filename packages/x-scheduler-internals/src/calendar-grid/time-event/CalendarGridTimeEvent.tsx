@@ -5,6 +5,7 @@ import { useId } from '@base-ui/utils/useId';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
+import { schedulerTimeEventMoveKind } from '../../internals/utils/schedulerDrag';
 import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
@@ -110,6 +111,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     draggableProps,
     contextValue: draggableEventContextValue,
   } = useDraggableEvent({
+    kind: schedulerTimeEventMoveKind,
     source: 'CalendarGridTimeEvent',
     start,
     end,

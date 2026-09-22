@@ -1,23 +1,27 @@
 'use client';
 import * as React from 'react';
-import { Draggable } from '@base-ui/react/draggable';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import {
+  schedulerTimeEventMoveKind,
+  schedulerTimeEventResizeKind,
+  schedulerDayEventMoveKind,
+  schedulerExternalEventKind,
+} from '../../internals/utils/schedulerDrag';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
-import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useCalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
-import { useDropTarget } from '../../internals/utils/useDropTarget';
+import { SchedulerDropTarget } from '../../internals/utils/SchedulerDropTarget';
 import { clampResizedEventEdge } from '../../internals/utils/resize-utils';
 import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 
-const isValidDropTarget = buildIsValidDropTarget([
-  'CalendarGridTimeEvent',
-  'CalendarGridTimeEventResizeHandler',
-  'CalendarGridDayEvent',
-  'StandaloneEvent',
-]);
+const acceptedKinds = [
+  schedulerTimeEventMoveKind,
+  schedulerTimeEventResizeKind,
+  schedulerDayEventMoveKind,
+  schedulerExternalEventKind,
+];
 
 export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
   const { addPropertiesToDroppedEvent, render } = props;
@@ -27,12 +31,8 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
 
-  const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside, target }) => {
-      if (!isValidDropTarget(data)) {
-        return undefined;
-      }
-
+  const getEventDropData: SchedulerDropTarget.GetEventDropData = useStableCallback(
+    ({ source, getDataFromInside, getDataFromOutside, target }) => {
       const cursorOffsetMs = Math.round(
         (adapter.getTime(end) - adapter.getTime(start)) * target.getSnappedLocalPoint().y,
       );
@@ -45,7 +45,11 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
       };
 
       // Move a Time Grid Event within the Time Grid
-      if (data.source === 'CalendarGridTimeEvent') {
+      if (schedulerTimeEventMoveKind.matches(source)) {
+        const data = source.dragData;
+        if (!data) {
+          return undefined;
+        }
         const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
         let newStartDate = addOffsetToDate(
@@ -68,7 +72,11 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
       }
 
       // Resize a Time Grid Event
-      if (data.source === 'CalendarGridTimeEventResizeHandler') {
+      if (schedulerTimeEventResizeKind.matches(source)) {
+        const data = source.dragData;
+        if (!data) {
+          return undefined;
+        }
         if (data.side === 'start') {
           let cursorDate = addOffsetToDate(
             start,
@@ -121,7 +129,11 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
       }
 
       // Move a Day Grid Event into the Time Grid
-      if (data.source === 'CalendarGridDayEvent') {
+      if (schedulerDayEventMoveKind.matches(source)) {
+        const data = source.dragData;
+        if (!data) {
+          return undefined;
+        }
         const newStartDate = addOffsetToDate(start, cursorOffsetMs);
         const newEndDate = adapter.addMinutes(
           newStartDate,
@@ -132,7 +144,8 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
       }
 
       // Move a Standalone Event into the Time Grid
-      if (data.source === 'StandaloneEvent') {
+      if (schedulerExternalEventKind.matches(source)) {
+        const data = source.payload;
         return getDataFromOutside(data, addOffsetToDate(start, cursorOffsetMs));
       }
 
@@ -140,14 +153,15 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
     },
   );
 
-  const targetProps = useDropTarget({
-    surfaceType: 'time-grid',
-    getEventDropData,
-    isValidDropTarget,
-    addPropertiesToDroppedEvent,
-  });
-
-  return <Draggable.Target {...targetProps} render={render} />;
+  return (
+    <SchedulerDropTarget
+      surfaceType="time-grid"
+      getEventDropData={getEventDropData}
+      accept={acceptedKinds}
+      addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
+      render={render}
+    />
+  );
 }
 
 export namespace TimeColumnDropTarget {

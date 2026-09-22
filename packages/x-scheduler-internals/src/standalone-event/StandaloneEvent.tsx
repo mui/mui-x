@@ -8,42 +8,45 @@ import { schedulerExternalEventKind } from '../internals/utils/schedulerDrag';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
 import { useDragPreview } from '../internals/utils/useDragPreview';
 
+function StandaloneEventElement({
+  componentProps,
+  dragProps,
+  state,
+  preview,
+}: {
+  componentProps: StandaloneEvent.Props;
+  dragProps: React.ComponentPropsWithRef<'div'>;
+  state: StandaloneEvent.State;
+  preview: React.ReactNode;
+}) {
+  const { className, render, style, data, onEventDrop, renderDragPreview, ...elementProps } =
+    componentProps;
+  const { ref, ...dragElementProps } = dragProps;
+  // TODO: Expose a real `interactive` prop to control button behavior.
+  const { getButtonProps, buttonRef } = useButton({ disabled: false, native: false });
+  const element = useRenderElement('div', componentProps, {
+    state,
+    ref: [ref, buttonRef],
+    props: [dragElementProps, elementProps, getButtonProps],
+  });
+  return React.isValidElement<{ children?: React.ReactNode }>(element)
+    ? React.cloneElement(element, {
+        children: (
+          <React.Fragment>
+            {element.props.children}
+            {preview}
+          </React.Fragment>
+        ),
+      })
+    : element;
+}
+
 const StandaloneEventInner = React.forwardRef(function StandaloneEventInner(
-  componentProps: StandaloneEvent.Props,
+  props: StandaloneEvent.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    // Rendering props
-    className,
-    render,
-    style,
-    // Internal props
-    data,
-    onEventDrop,
-    renderDragPreview,
-    // Props forwarded to the DOM element
-    ...elementProps
-  } = componentProps;
-
-  // TODO: Expose a real `interactive` prop
-  // to control whether the event should behave like a button
-  const isInteractive = true;
-
-  const ref = React.useRef<HTMLDivElement>(null);
-  const { getButtonProps, buttonRef } = useButton({
-    disabled: !isInteractive,
-    native: false,
-  });
-
-  const preview = useDragPreview({
-    type: 'standalone-event',
-    data,
-    renderDragPreview,
-  });
-
-  const activeDrag = Draggable.useActiveDrag(schedulerExternalEventKind);
-  const state: StandaloneEvent.State = { dragging: activeDrag?.element === ref.current };
-
+  const { data, onEventDrop, renderDragPreview } = props;
+  const preview = useDragPreview({ type: 'standalone-event', data, renderDragPreview });
   const payload = React.useMemo<StandaloneEvent.DragData>(
     () => ({
       source: 'StandaloneEvent',
@@ -54,29 +57,19 @@ const StandaloneEventInner = React.forwardRef(function StandaloneEventInner(
     }),
     [data, onEventDrop],
   );
-
-  const element = useRenderElement('div', componentProps, {
-    state,
-    ref: [forwardedRef, buttonRef, ref],
-    props: [elementProps, getButtonProps],
-  });
-
   return (
     <Draggable.Root
+      ref={forwardedRef}
       kind={schedulerExternalEventKind}
       payload={payload}
-      render={
-        React.isValidElement<{ children?: React.ReactNode }>(element)
-          ? React.cloneElement(element, {
-              children: (
-                <React.Fragment>
-                  {element.props.children}
-                  {preview.element}
-                </React.Fragment>
-              ),
-            })
-          : element
-      }
+      render={(dragProps, state) => (
+        <StandaloneEventElement
+          componentProps={props}
+          dragProps={dragProps}
+          state={{ dragging: state.dragging }}
+          preview={preview.element}
+        />
+      )}
     />
   );
 });

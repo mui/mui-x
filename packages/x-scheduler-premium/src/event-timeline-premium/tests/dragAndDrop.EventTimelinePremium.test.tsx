@@ -1,4 +1,4 @@
-import { cancelDrag } from 'test/utils/scheduler/dnd';
+import { cancelDrag, dropDrag } from 'test/utils/scheduler/dnd';
 import * as React from 'react';
 import { screen, within, act } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -417,9 +417,20 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         target: sameRow,
         sourceClientX: 220,
         targetClientX: 1000,
+        hold: true,
+      });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
       });
     });
 
+    try {
+      expect(eventElement).to.have.attribute('data-resizing');
+      expect(eventElement).not.to.have.attribute('data-dragging');
+      dropDrag(sameRow, { clientX: 1000 });
+    } finally {
+      cancelDrag();
+    }
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     // Start should remain unchanged

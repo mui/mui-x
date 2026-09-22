@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { schedulerDayEventResizeKind } from '../../internals/utils/schedulerDrag';
 import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
 import { isResizeHandlerEnabled } from '../../internals/utils/resize-utils';
@@ -46,6 +47,7 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
     });
 
     const { state, draggableProps } = useEventResizeHandler({
+      kind: schedulerDayEventResizeKind,
       source: 'CalendarGridDayEventResizeHandler',
       eventId: contextValue.eventId,
       occurrenceKey: contextValue.occurrenceKey,

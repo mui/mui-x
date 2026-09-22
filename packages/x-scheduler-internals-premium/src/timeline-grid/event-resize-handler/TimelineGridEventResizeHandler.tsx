@@ -1,10 +1,11 @@
 'use client';
-import * as React from 'react';
 import {
+  schedulerTimelineEventResizeKind,
   SchedulerDraggable,
   useEventResizeHandler,
   isResizeHandlerEnabled,
 } from '@mui/x-scheduler-internals/internals';
+import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
@@ -48,6 +49,7 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
     });
 
     const { state, draggableProps } = useEventResizeHandler({
+      kind: schedulerTimelineEventResizeKind,
       source: 'TimelineGridEventResizeHandler',
       eventId: contextValue.eventId,
       occurrenceKey: contextValue.occurrenceKey,

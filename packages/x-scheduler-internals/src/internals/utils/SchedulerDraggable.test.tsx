@@ -10,8 +10,7 @@ import {
   startDrag,
 } from 'test/utils/scheduler';
 import { SchedulerDraggable } from './SchedulerDraggable';
-import { schedulerEventMoveKind } from './schedulerDrag';
-import type { SchedulerEventMoveData } from './schedulerDrag';
+import { schedulerDayEventMoveKind } from './schedulerDrag';
 import type { CalendarGridDayEvent } from '../../calendar-grid/day-event/CalendarGridDayEvent';
 
 const occurrence = EventBuilder.new().fullDay('2025-07-03').toOccurrence();
@@ -31,17 +30,20 @@ const snapshot: CalendarGridDayEvent.DragData = {
 function Fixture({
   getDragData,
   onMove,
+  onBeforeMoveStart,
 }: {
   getDragData: SchedulerDraggable.Props<CalendarGridDayEvent.DragData>['getDragData'];
-  onMove: SchedulerDraggable.Props<SchedulerEventMoveData>['onMove'];
+  onMove?: SchedulerDraggable.Props<CalendarGridDayEvent.DragData>['onMove'];
+  onBeforeMoveStart?: SchedulerDraggable.Props<CalendarGridDayEvent.DragData>['onBeforeMoveStart'];
 }) {
   return (
     <Draggable.Provider>
       <SchedulerDraggable
-        kind={schedulerEventMoveKind}
+        kind={schedulerDayEventMoveKind}
         payload={payload}
         getDragData={getDragData}
         onMove={onMove}
+        onBeforeMoveStart={onBeforeMoveStart}
         render={<div data-testid="source">Event</div>}
       />
     </Draggable.Provider>
@@ -51,6 +53,24 @@ function Fixture({
 describe('Scheduler drag snapshots', () => {
   const { render } = createSchedulerRenderer();
   afterEach(cancelDrag);
+
+  it('does not capture a snapshot when the pickup is canceled', () => {
+    const getDragData = vi.fn(() => snapshot);
+    const onBeforeMoveStart = vi.fn<
+      NonNullable<SchedulerDraggable.Props<CalendarGridDayEvent.DragData>['onBeforeMoveStart']>
+    >((_, details) => details.cancel());
+    const view = render(
+      <Fixture getDragData={getDragData} onBeforeMoveStart={onBeforeMoveStart} />,
+    );
+    startDrag(screen.getByTestId('source'));
+    expect(onBeforeMoveStart).toHaveBeenCalledTimes(1);
+    expect(getDragData).not.toHaveBeenCalled();
+
+    cancelDrag();
+    view.setProps({ onBeforeMoveStart: undefined });
+    startDrag(screen.getByTestId('source'));
+    expect(getDragData).toHaveBeenCalledTimes(1);
+  });
 
   it('captures once per gesture and keeps the snapshot across source rerenders', async () => {
     const getDragData = vi.fn(() => snapshot);

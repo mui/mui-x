@@ -1,12 +1,13 @@
 'use client';
-import * as React from 'react';
 import {
+  schedulerTimelineEventMoveKind,
   SchedulerDraggable,
   useDraggableEvent,
   useOriginalOccurrence,
   computeElementPositionInCollection,
   dateToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
+import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
@@ -141,6 +142,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     draggableProps,
     contextValue: draggableEventContextValue,
   } = useDraggableEvent({
+    kind: schedulerTimelineEventMoveKind,
     source: 'TimelineGridEvent',
     start,
     end,

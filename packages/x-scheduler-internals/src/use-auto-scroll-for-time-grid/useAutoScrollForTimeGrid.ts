@@ -1,16 +1,11 @@
 'use client';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
-import { schedulerEventDragKinds } from '../internals/utils/schedulerDrag';
-import { buildIsValidDropTarget } from '../build-is-valid-drop-target/buildIsValidDropTarget';
-
-// Only event drags should autoscroll the grid; other element drags (e.g. the dialog) carry no `source`.
-// Exported for testing the accepted drag sources.
-export const canAutoScrollForDrag = buildIsValidDropTarget([
-  'CalendarGridTimeEvent',
-  'CalendarGridTimeEventResizeHandler',
-  'StandaloneEvent',
-]);
+import {
+  schedulerTimeEventMoveKind,
+  schedulerTimeEventResizeKind,
+  schedulerExternalEventKind,
+} from '../internals/utils/schedulerDrag';
 
 export function useAutoScrollForTimeGrid(ref: React.RefObject<HTMLElement | null>): void {
   const manager = Draggable.useDragDropManager();
@@ -21,10 +16,14 @@ export function useAutoScrollForTimeGrid(ref: React.RefObject<HTMLElement | null
     }
 
     return manager.registerAutoScroller(element, () => ({
-      accept: schedulerEventDragKinds,
+      accept: [
+        schedulerTimeEventMoveKind,
+        schedulerTimeEventResizeKind,
+        schedulerExternalEventKind,
+      ],
       overflowMargin: { top: 160, bottom: 160 },
-      onDragScroll: ({ source, direction }, details) => {
-        if (direction === 'horizontal' || !canAutoScrollForDrag(source.payload)) {
+      onDragScroll: ({ direction }, details) => {
+        if (direction === 'horizontal') {
           details.cancel();
         }
       },

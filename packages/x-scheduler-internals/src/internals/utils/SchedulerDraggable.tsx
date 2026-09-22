@@ -11,7 +11,7 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
     getDragData,
     render,
     preview = <Draggable.Preview disabled />,
-    onMoveStart,
+    onBeforeMoveStart,
     ...other
   } = props;
 
@@ -31,9 +31,11 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
             })
           : render
       }
-      onMoveStart={(event, details) => {
-        event.source.updateDragData(getDragData(event.location.initial.input));
-        onMoveStart?.(event, details);
+      onBeforeMoveStart={(context, details) => {
+        onBeforeMoveStart?.(context, details);
+        if (!details.isCanceled) {
+          context.source.updateDragData(getDragData(context.input));
+        }
       }}
     />
   );
