@@ -21,9 +21,14 @@ export const ChartsWebGLLayer = React.forwardRef<
 
   const drawEntriesRef = React.useRef<Array<DrawEntry>>([]);
   const renderScheduledRef = React.useRef(false);
+  /* The canvas drawing buffer starts at the browser default size (300x150) and is only sized to the
+   * drawing area by the resize observer. Drawing before that wastes a full render, because setting
+   * `canvas.width`/`canvas.height` resets the drawing buffer and clears whatever was drawn. */
+  const canvasSizedRef = React.useRef(false);
 
   const renderAll = React.useCallback(() => {
-    if (!glContext) {
+    if (!glContext || !canvasSizedRef.current) {
+      /* Keep the render scheduled so it is flushed once the canvas has been sized. */
       return;
     }
     renderScheduledRef.current = false;
@@ -57,8 +62,13 @@ export const ChartsWebGLLayer = React.forwardRef<
     rerender();
   }, []);
 
+  const handleResize = React.useCallback(() => {
+    canvasSizedRef.current = true;
+    renderAll();
+  }, [renderAll]);
+
   // Centralized resize handling — render all plots on canvas resize
-  useWebGLResizeObserver(glContext, renderAll);
+  useWebGLResizeObserver(glContext, handleResize);
 
   // Flush scheduled renders after all children's effects have run
   React.useEffect(() => {

@@ -34,12 +34,18 @@ export function useWebGLResizeObserver(gl: WebGL2RenderingContext | null, onResi
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { width, height } = getDevicePixelContentBoxSize(entry);
+        const drawingBufferWidth = Math.max(1, width);
+        const drawingBufferHeight = Math.max(1, height);
 
-        canvas.width = Math.max(1, width);
-        canvas.height = Math.max(1, height);
+        /* Only assign when the size actually changed: assigning `width`/`height` resets the drawing
+         * buffer even when the value is unchanged, clearing what is currently on screen. */
+        if (canvas.width !== drawingBufferWidth || canvas.height !== drawingBufferHeight) {
+          canvas.width = drawingBufferWidth;
+          canvas.height = drawingBufferHeight;
+        }
 
         // Update WebGL viewport
-        gl?.viewport(0, 0, width, height);
+        gl?.viewport(0, 0, drawingBufferWidth, drawingBufferHeight);
 
         onResize();
       }
