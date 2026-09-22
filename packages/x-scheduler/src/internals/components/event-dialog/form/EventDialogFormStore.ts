@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { Store } from '@base-ui/utils/store';
+import { Store, createSelectorMemoized } from '@base-ui/utils/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
@@ -113,6 +113,23 @@ export const eventDialogFormSelectors = {
   error: (state: EventDialogFormState<Record<string, unknown>>, key: string) =>
     getOwn(state.errors, key),
   isSubmitting: (state: EventDialogFormState<Record<string, unknown>>) => state.isSubmitting,
+  /**
+   * The values `computeRange` reads, as one stable object per distinct combination.
+   */
+  rangeValues: createSelectorMemoized(
+    (state: EventDialogFormState) => state.values.startDate,
+    (state: EventDialogFormState) => state.values.startTime,
+    (state: EventDialogFormState) => state.values.endDate,
+    (state: EventDialogFormState) => state.values.endTime,
+    (state: EventDialogFormState) => state.values.allDay,
+    (startDate, startTime, endDate, endTime, allDay) => ({
+      startDate,
+      startTime,
+      endDate,
+      endTime,
+      allDay,
+    }),
+  ),
 };
 
 /**
@@ -361,16 +378,16 @@ export class EventDialogFormStore<
   };
 
   /**
-   * Returns the values written or changed since seeding, minus `excludeKeys`.
+   * Returns the values written or changed since seeding.
    */
-  public getDirtyValues = (excludeKeys?: ReadonlySet<string>): Record<string, unknown> => {
+  public getDirtyValues = (): Record<string, unknown> => {
     const { values } = this.state;
     const dirty: Record<string, unknown> = {};
     for (const key of Object.keys(values)) {
       const isDirty =
         this.writtenDefaultKeys.has(key) ||
         !Object.is(values[key], getOwn(this.initialValues, key));
-      if (!excludeKeys?.has(key) && isDirty) {
+      if (isDirty) {
         setOwn(dirty, key, values[key]);
       }
     }

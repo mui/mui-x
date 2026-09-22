@@ -531,12 +531,6 @@ describe('EventDialogFormStore', () => {
       expect(store.getDirtyValues()).to.deep.equal({ priority: 'low' });
     });
 
-    it('should exclude the provided keys', () => {
-      const store = createFormStore({ title: 'Meeting', priority: 'high' });
-      store.setValues({ title: 'Updated', priority: 'low' });
-      expect(store.getDirtyValues(new Set(['title']))).to.deep.equal({ priority: 'low' });
-    });
-
     it('should include keys added after seeding', () => {
       const store = createFormStore({ title: 'Meeting' });
       store.setValue('priority', 'low');
