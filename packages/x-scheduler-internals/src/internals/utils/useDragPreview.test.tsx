@@ -2,16 +2,23 @@ import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
 import { act, screen, waitFor } from '@mui/internal-test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cancelDrag, createSchedulerRenderer, moveDrag, startDrag } from 'test/utils/scheduler';
-import { schedulerExternalEventKind, schedulerDropTargetKind } from './schedulerDrag';
+import {
+  cancelDrag,
+  createSchedulerRenderer,
+  moveDrag,
+  startDrag,
+  EventBuilder,
+} from 'test/utils/scheduler';
+import { schedulerDayEventMoveKind, schedulerDropTargetKind } from './schedulerDrag';
 import { useDragPreview } from './useDragPreview';
+import { EventCalendarProvider } from '../../event-calendar-provider';
 
 const PreviewContext = React.createContext('missing context');
+const event = EventBuilder.new().toProcessed();
 const payload = {
-  source: 'StandaloneEvent' as const,
-  eventId: 'external',
-  occurrenceKey: 'external',
-  eventData: { id: 'external', title: 'Event', duration: 60 },
+  source: 'CalendarGridDayEvent' as const,
+  eventId: event.id,
+  occurrenceKey: 'event',
 };
 
 function PreviewContent() {
@@ -20,12 +27,12 @@ function PreviewContent() {
 
 function Source({ renderPreview }: { renderPreview: () => React.ReactNode }) {
   const preview = useDragPreview({
-    type: 'standalone-event',
-    data: payload.eventData,
+    type: 'internal-event',
+    data: event,
     renderDragPreview: renderPreview,
   });
   return (
-    <Draggable.Root kind={schedulerExternalEventKind} payload={payload} data-testid="source">
+    <Draggable.Root kind={schedulerDayEventMoveKind} payload={payload} data-testid="source">
       Source
       {preview.element}
     </Draggable.Root>
@@ -41,15 +48,15 @@ function Fixture({
 }) {
   return (
     <PreviewContext.Provider value="Custom preview">
-      <Draggable.Provider>
+      <EventCalendarProvider events={[]} resources={[]} canDropEventsToTheOutside>
         {showSource && <Source renderPreview={renderPreview} />}
         <Draggable.Target
-          accept={schedulerExternalEventKind}
+          accept={schedulerDayEventMoveKind}
           kind={schedulerDropTargetKind}
           payload={{ surfaceType: 'day-grid' }}
           data-testid="target"
         />
-      </Draggable.Provider>
+      </EventCalendarProvider>
     </PreviewContext.Provider>
   );
 }

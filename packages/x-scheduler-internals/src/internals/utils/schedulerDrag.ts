@@ -4,8 +4,8 @@ import type {
   SchedulerEventId,
   SchedulerEventSide,
   SchedulerResourceId,
+  SchedulerOccurrencePlaceholderExternalDragData,
 } from '../../models';
-import type { StandaloneEvent } from '../../standalone-event';
 import type { CalendarGridDayEvent } from '../../calendar-grid/day-event/CalendarGridDayEvent';
 import type { CalendarGridDayEventResizeHandler } from '../../calendar-grid/day-event-resize-handler/CalendarGridDayEventResizeHandler';
 import type { CalendarGridTimeEvent } from '../../calendar-grid/time-event/CalendarGridTimeEvent';
@@ -16,7 +16,7 @@ interface EventDropDataLookupBase {
   CalendarGridTimeEventResizeHandler: CalendarGridTimeEventResizeHandler.DragData;
   CalendarGridDayEvent: CalendarGridDayEvent.DragData;
   CalendarGridDayEventResizeHandler: CalendarGridDayEventResizeHandler.DragData;
-  StandaloneEvent: StandaloneEvent.DragData;
+  ExternalEvent: SchedulerExternalEventDragPayload;
 }
 
 export interface EventDropDataLookup extends EventDropDataLookupBase {}
@@ -26,12 +26,20 @@ export type EventDropData = EventDropDataLookup[keyof EventDropDataLookup];
 export type SchedulerEventResizeData = Extract<EventDropData, { side: SchedulerEventSide }>;
 export type SchedulerEventMoveData = Exclude<
   EventDropData,
-  SchedulerEventResizeData | StandaloneEvent.DragData
+  SchedulerEventResizeData | SchedulerExternalEventDragPayload
 >;
 export type SchedulerEventDragData = SchedulerEventMoveData | SchedulerEventResizeData;
 export type SchedulerEventDragPayload<
   TData extends SchedulerEventDragData = SchedulerEventDragData,
 > = Pick<TData, 'source' | 'eventId' | 'occurrenceKey'>;
+
+/** Data supplied by an external draggable that creates an event in Scheduler. */
+export interface SchedulerExternalEventDragPayload {
+  /** Event properties and optional duration in minutes. Scheduler supplies the drop dates. */
+  eventData: SchedulerOccurrencePlaceholderExternalDragData;
+  /** Called after Scheduler handles the drop. Use it to remove the item from its source list. */
+  onEventDrop?: () => void;
+}
 
 export interface SchedulerDependencyDragPayload {
   eventId: SchedulerEventId;
@@ -64,37 +72,41 @@ export const schedulerDayEventResizeKind =
   createEventKind<CalendarGridDayEventResizeHandler.DragData>('day-event-resize');
 export const schedulerTimeEventResizeKind =
   createEventKind<CalendarGridTimeEventResizeHandler.DragData>('time-event-resize');
-// Premium contributes these snapshot types through EventDropDataLookup.
-export const schedulerTimelineEventMoveKind =
-  createEventKind<Extract<EventDropData, { source: 'TimelineGridEvent' }>>('timeline-event-move');
-export const schedulerTimelineEventResizeKind =
-  createEventKind<Extract<EventDropData, { source: 'TimelineGridEventResizeHandler' }>>(
-    'timeline-event-resize',
-  );
+// Keep the lookup in the declaration so premium can augment it after this package is built.
+export const schedulerTimelineEventMoveKind: Draggable.DragKind<
+  SchedulerEventDragPayload<Extract<EventDropData, { source: 'TimelineGridEvent' }>>,
+  Extract<EventDropData, { source: 'TimelineGridEvent' }>
+> = createEventKind('timeline-event-move');
+export const schedulerTimelineEventResizeKind: Draggable.DragKind<
+  SchedulerEventDragPayload<Extract<EventDropData, { source: 'TimelineGridEventResizeHandler' }>>,
+  Extract<EventDropData, { source: 'TimelineGridEventResizeHandler' }>
+> = createEventKind('timeline-event-resize');
 export const schedulerExternalEventKind = Draggable.createGlobalKind<
-  StandaloneEvent.DragData,
+  SchedulerExternalEventDragPayload,
   never
 >('@mui/x-scheduler/external-event');
 export const schedulerDependencyKind = Draggable.createGlobalKind<SchedulerDependencyDragPayload>(
   '@mui/x-scheduler/dependency',
 );
 
-export const schedulerEventMoveKinds = [
-  schedulerDayEventMoveKind,
-  schedulerTimeEventMoveKind,
-  schedulerTimelineEventMoveKind,
-];
-export const schedulerEventResizeKinds = [
-  schedulerDayEventResizeKind,
-  schedulerTimeEventResizeKind,
-  schedulerTimelineEventResizeKind,
-];
-export const schedulerEventDragKinds = [
-  ...schedulerEventMoveKinds,
-  ...schedulerEventResizeKinds,
-  schedulerExternalEventKind,
-];
-export const schedulerDragKinds = [...schedulerEventDragKinds, schedulerDependencyKind];
+export const schedulerEventMoveKinds: (
+  | typeof schedulerDayEventMoveKind
+  | typeof schedulerTimeEventMoveKind
+  | typeof schedulerTimelineEventMoveKind
+)[] = [schedulerDayEventMoveKind, schedulerTimeEventMoveKind, schedulerTimelineEventMoveKind];
+export const schedulerEventResizeKinds: (
+  | typeof schedulerDayEventResizeKind
+  | typeof schedulerTimeEventResizeKind
+  | typeof schedulerTimelineEventResizeKind
+)[] = [schedulerDayEventResizeKind, schedulerTimeEventResizeKind, schedulerTimelineEventResizeKind];
+export const schedulerEventDragKinds: (
+  | (typeof schedulerEventMoveKinds)[number]
+  | (typeof schedulerEventResizeKinds)[number]
+  | typeof schedulerExternalEventKind
+)[] = [...schedulerEventMoveKinds, ...schedulerEventResizeKinds, schedulerExternalEventKind];
+export const schedulerDragKinds: (
+  (typeof schedulerEventDragKinds)[number] | typeof schedulerDependencyKind
+)[] = [...schedulerEventDragKinds, schedulerDependencyKind];
 
 export const schedulerDropTargetKind = Draggable.createGlobalKind<{
   surfaceType: EventSurfaceType;

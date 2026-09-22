@@ -3,11 +3,14 @@ import { styled } from '@mui/material/styles';
 import { teal } from '@mui/material/colors';
 import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { Draggable } from '@base-ui/react/draggable';
-import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 
-// TODO: Estimate if we can avoid all imports from the internals package.
-import { schedulerTimelineEventMoveKind } from '@mui/x-scheduler-internals/internals';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+
+import {
+  schedulerTimelineEventMoveKind,
+  schedulerExternalEventKind,
+  schedulerDropTargetKind,
+} from '@mui/x-scheduler-premium/drag-and-drop';
 import {
   defaultVisibleDate,
   initialEvents,
@@ -45,13 +48,30 @@ const externalEventStyles = (theme) => ({
   },
 });
 
-const StyledStandaloneEvent = styled(StandaloneEvent)(({ theme }) =>
-  externalEventStyles(theme),
-);
+const ExternalEventCard = styled('div')(({ theme }) => externalEventStyles(theme));
 
 const ExternalEventPlaceholder = styled('div')(({ theme }) =>
   externalEventStyles(theme),
 );
+
+// Scheduler draws the in-grid preview, which can span multiple days or rows.
+function ExternalEventPreview({ location, children }) {
+  const isOutsideScheduler = (nextLocation) =>
+    !nextLocation.current.dropTargets.some((target) =>
+      schedulerDropTargetKind.matches(target),
+    );
+  const [visible, setVisible] = React.useState(() => isOutsideScheduler(location));
+  Draggable.useDragMonitor({
+    accept: schedulerExternalEventKind,
+    onMoveStart: (event) => setVisible(isOutsideScheduler(event.location)),
+    onTargetChange: (event) => setVisible(isOutsideScheduler(event.location)),
+  });
+  return (
+    <ExternalEventCard style={{ visibility: visible ? undefined : 'hidden' }}>
+      {children}
+    </ExternalEventCard>
+  );
+}
 
 const acceptedKinds = [schedulerTimelineEventMoveKind];
 
@@ -104,7 +124,7 @@ export default function ExternalDragAndDrop() {
   const [placeholder, setPlaceholder] = React.useState(null);
   const [externalEvents, setExternalEvents] = React.useState(initialExternalEvents);
 
-  const handleEventDropInsideEventCalendar = (removedEvent) => {
+  const handleEventDropInsideEventTimeline = (removedEvent) => {
     setExternalEvents((prev) =>
       prev.filter((event) => event.id !== removedEvent.id),
     );
@@ -131,13 +151,24 @@ export default function ExternalDragAndDrop() {
           render={<ExternalEventsContainer />}
         >
           {externalEvents.map((event) => (
-            <StyledStandaloneEvent
+            <Draggable.Root
               key={event.id}
-              data={event}
-              onEventDrop={() => handleEventDropInsideEventCalendar(event)}
+              kind={schedulerExternalEventKind}
+              payload={{
+                eventData: event,
+                onEventDrop: () => handleEventDropInsideEventTimeline(event),
+              }}
+              render={<ExternalEventCard />}
             >
               {event.title} ({event.duration} mins)
-            </StyledStandaloneEvent>
+              <Draggable.Preview offset="pointer" style={{ pointerEvents: 'none' }}>
+                {({ location }) => (
+                  <ExternalEventPreview location={location}>
+                    {event.title}
+                  </ExternalEventPreview>
+                )}
+              </Draggable.Preview>
+            </Draggable.Root>
           ))}
           {placeholder != null && (
             <ExternalEventPlaceholder data-placeholder>

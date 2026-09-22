@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import type { Store } from '@base-ui/utils/store';
 import { useStore } from '@base-ui/utils/store';
 import type { RenderDragPreviewParameters } from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -22,20 +21,10 @@ const EventDragPreviewRoot = styled('div', {
   variants: getPaletteVariants(theme),
 }));
 
-const fakeStore = {
-  subscribe: () => {},
-  getSnapshot: () => ({}),
-} as unknown as Store<any>;
-
 export function EventDragPreview(props: RenderDragPreviewParameters) {
-  const store = useSchedulerStoreContext(true);
+  const store = useSchedulerStoreContext();
   const styledContext = React.useContext(EventCalendarStyledContext);
-  const color = useStore(
-    store ?? fakeStore,
-    store ? schedulerEventSelectors.color : () => 'teal' as const,
-    props.data.id,
-    undefined,
-  );
+  const color = useStore(store, schedulerEventSelectors.color, props.data.id, undefined);
 
   return (
     <EventDragPreviewRoot className={styledContext?.classes.eventDragPreview} data-palette={color}>

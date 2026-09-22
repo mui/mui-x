@@ -1,11 +1,9 @@
 import type { SchedulerEvent, SchedulerProcessedEventDraft } from './event';
 
-export type RenderDragPreviewParameters =
-  | {
-      type: 'internal-event';
-      data: SchedulerProcessedEventDraft;
-    }
-  | { type: 'standalone-event'; data: SchedulerOccurrencePlaceholderExternalDragData };
+export interface RenderDragPreviewParameters {
+  type: 'internal-event';
+  data: SchedulerProcessedEventDraft;
+}
 
 // TODO: Add support for eventModelStructure.
 export interface SchedulerOccurrencePlaceholderExternalDragData extends Omit<

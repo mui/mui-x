@@ -891,10 +891,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the side panel drawer root (modal) element"
     },
-    "standaloneEvent": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the standalone event element"
-    },
     "timeGridEvent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "time grid event elements"

@@ -95,7 +95,7 @@ export function DayCellDropTarget(props: DayCellDropTarget.Props) {
         );
       }
 
-      // Move an Standalone Event into the Time Grid
+      // Move an external event into the Time Grid
       if (schedulerExternalEventKind.matches(source)) {
         const data = source.payload;
         return getDataFromOutside(data, value);

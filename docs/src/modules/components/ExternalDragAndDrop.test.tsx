@@ -6,6 +6,7 @@ import {
   createSchedulerRenderer,
   dropDrag,
   moveDrag,
+  mockElementBounds,
   startDrag,
 } from 'test/utils/scheduler';
 import CalendarDemo from '../../../data/scheduler/event-calendar/drag-interactions/ExternalDragAndDrop.tsx';
@@ -17,6 +18,50 @@ describe.each([
 ])('$name external drag demo', ({ Demo, title }) => {
   const { renderSettled } = createSchedulerRenderer();
   afterEach(cancelDrag);
+
+  it('hides the floating preview over Scheduler and transfers an external item on drop', async () => {
+    await renderSettled(<Demo />);
+    const source = screen.getByText('External Event 1 (30 mins)');
+    const externalList = source.parentElement!;
+    const target = document.querySelector<HTMLElement>(
+      '.MuiEventTimeline-eventsCell[data-drop-target], .MuiEventCalendar-dayTimeGridColumn[data-drop-target], .MuiEventCalendar-monthViewCell[data-drop-target]',
+    )!;
+    expect(target).not.toBe(null);
+    mockElementBounds(target, { left: 0, top: 0, width: 1000, height: 1000 });
+    await act(async () => startDrag(source));
+    const preview = await screen.findByText('External Event 1', { exact: true });
+    expect(preview).toBeVisible();
+
+    await act(async () => {
+      moveDrag(target, { clientX: 100, clientY: 100 });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+    expect(preview.style.visibility).toBe('hidden');
+    await act(async () => {
+      moveDrag(document.body, { clientX: 200 });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+    expect(preview).toBeVisible();
+
+    await act(async () => dropDrag(target, { clientX: 100, clientY: 100 }));
+    expect(within(externalList).queryByText('External Event 1 (30 mins)')).toBe(null);
+    expect(preview.isConnected).toBe(false);
+    expect(screen.getAllByText('External Event 1').length).toBeGreaterThan(0);
+  });
+
+  it('keeps the external item when its drag is canceled', async () => {
+    await renderSettled(<Demo />);
+    const source = screen.getByText('External Event 1 (30 mins)');
+    await act(async () => startDrag(source));
+    await screen.findByText('External Event 1', { exact: true });
+    cancelDrag();
+    expect(screen.getByText('External Event 1 (30 mins)')).toBe(source);
+    expect(screen.queryByText('External Event 1', { exact: true })).toBe(null);
+  });
 
   it('transfers a scheduled event to the external container', async () => {
     await renderSettled(<Demo />);

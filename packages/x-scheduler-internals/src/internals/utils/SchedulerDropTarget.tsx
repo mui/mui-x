@@ -17,7 +17,11 @@ import type {
   TemporalSupportedObject,
   SchedulerResourceId,
 } from '../../models';
-import type { EventDropData, schedulerEventDragKinds } from './schedulerDrag';
+import type {
+  EventDropData,
+  schedulerEventDragKinds,
+  SchedulerExternalEventDragPayload,
+} from './schedulerDrag';
 import type { SchedulerStoreInContext } from '../../use-scheduler-store-context';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import {
@@ -26,7 +30,6 @@ import {
   schedulerOtherSelectors,
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
-import type { StandaloneEvent } from '../../standalone-event';
 import { useAdapterContext } from '../../use-adapter-context';
 import { getPrimaryResourceId } from './event-utils';
 
@@ -35,7 +38,7 @@ import { getPrimaryResourceId } from './event-utils';
 // it's declared as optional on each drag data contract, so this normalizes
 // `undefined` to `null` rather than narrowing anything.
 function getSourceResourceId(
-  data: Exclude<EventDropData, StandaloneEvent.DragData>,
+  data: Exclude<EventDropData, SchedulerExternalEventDragPayload>,
 ): SchedulerResourceId | null {
   return data.sourceResourceId ?? null;
 }
@@ -191,13 +194,13 @@ export namespace SchedulerDropTarget {
   }
 
   export type GetDataFromInside = (
-    data: Exclude<EventDropData, StandaloneEvent.DragData>,
+    data: Exclude<EventDropData, SchedulerExternalEventDragPayload>,
     newStart: TemporalSupportedObject,
     newEnd: TemporalSupportedObject,
   ) => SchedulerOccurrencePlaceholderInternalDragOrResize;
 
   export type GetDataFromOutside = (
-    data: StandaloneEvent.DragData,
+    data: SchedulerExternalEventDragPayload,
     start: TemporalSupportedObject,
   ) => SchedulerOccurrencePlaceholderExternalDrag | undefined;
 

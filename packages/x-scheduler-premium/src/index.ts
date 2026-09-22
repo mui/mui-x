@@ -23,3 +23,4 @@ export * from './event-calendar-premium';
 export * from './event-timeline-premium';
 export * from './month-view-premium';
 export * from './week-view-premium';
+export * from './drag-and-drop';

@@ -121,7 +121,7 @@ export function EventRowDropTarget(props: EventRowDropTarget.Props) {
         }
       }
 
-      // Move a Standalone Event into the Time Grid
+      // Move an external event into the Time Grid
       if (schedulerExternalEventKind.matches(source)) {
         const data = source.payload;
         // The new event starts at the cursor: cap the offset to the last slot of the

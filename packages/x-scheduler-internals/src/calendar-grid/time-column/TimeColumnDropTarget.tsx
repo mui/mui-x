@@ -143,7 +143,7 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
         return getDataFromInside(data, newStartDate, newEndDate);
       }
 
-      // Move a Standalone Event into the Time Grid
+      // Move an external event into the Time Grid
       if (schedulerExternalEventKind.matches(source)) {
         const data = source.payload;
         return getDataFromOutside(data, addOffsetToDate(start, cursorOffsetMs));

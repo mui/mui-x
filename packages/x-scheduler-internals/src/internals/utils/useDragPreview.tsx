@@ -26,18 +26,14 @@ function FloatingPreview(props: { location: DragLocationHistory; children: React
 /** The floating preview outside Scheduler targets. In-grid occurrence previews stay in the grid. */
 export function useDragPreview(parameters: useDragPreview.Parameters): useDragPreview.ReturnValue {
   const { renderDragPreview, data, type } = parameters;
-  const store = useSchedulerStoreContext(true);
-  const enabled =
-    type === 'standalone-event' ||
-    (store != null && schedulerEventSelectors.canDropEventsToTheOutside(store.state));
+  const store = useSchedulerStoreContext();
+  const enabled = schedulerEventSelectors.canDropEventsToTheOutside(store.state);
 
   return {
     element: (
       <Draggable.Preview disabled={!enabled} offset="pointer" style={{ pointerEvents: 'none' }}>
         {({ location }) => (
-          <FloatingPreview location={location}>
-            {renderDragPreview({ data, type } as RenderDragPreviewParameters)}
-          </FloatingPreview>
+          <FloatingPreview location={location}>{renderDragPreview({ data, type })}</FloatingPreview>
         )}
       </Draggable.Preview>
     ),

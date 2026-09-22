@@ -10,6 +10,7 @@
   "homepage": "https://mui.com/x/react-scheduler/",
   "exports": {
     ".": "./src/index.ts",
+    "./drag-and-drop": "./src/drag-and-drop/index.ts",
     "./models": "./src/models/index.ts",
     "./agenda-view-premium": "./src/agenda-view-premium/index.ts",
     "./compact-day-view-premium": "./src/compact-day-view-premium/index.ts",
