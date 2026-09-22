@@ -18,7 +18,8 @@ export interface DimensionsState {
    */
   viewportInnerSize: Size;
   /**
-   * The size of the main content (unpinned rows & columns).
+   * The size of the main content: the width of all the columns, the pinned columns included,
+   * and the height of the current page rows, the pinned rows excluded.
    */
   contentSize: Size;
   /**
