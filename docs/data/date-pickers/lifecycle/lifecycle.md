@@ -348,20 +348,23 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 ### Usage
 
-The `onCancel` callback fires when the user clicks the _Cancel_ action.
+The `onCancel` callback fires when the picker's value is reset through the Cancel action.
 Use it to react to an explicit cancellation, for example to close a dialog that wraps the picker.
 
 ```tsx
 <DatePicker onCancel={() => trackCancellation()} />
 ```
 
-The callback takes no arguments. After calling `onCancel`, the picker resets the value to the last accepted value. This reset can also trigger `onChange`.
+The callback takes no arguments. The picker resets the value to the last accepted value, then calls `onCancel`. The reset can also trigger `onChange`.
 
 ### When is "onCancel" called?
 
 #### When clicking the "Cancel" action
 
-`onCancel` is called only when the user clicks the _Cancel_ button of the action bar.
+`onCancel` is called when the user clicks the _Cancel_ button of the built-in action bar.
+
+It is also called whenever the `cancelValueChanges` action is triggered, which `usePickerActionsContext` exposes for a custom `actionBar` slot.
+See the [custom layout doc](/x/react-date-pickers/custom-layout/) for more information about replacing the action bar.
 
 The action bar does not show a _Cancel_ button by default on pickers that close on select. Add it explicitly with the `actions` prop:
 
