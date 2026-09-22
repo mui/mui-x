@@ -37,7 +37,7 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
     // Feature hooks
     const getDragData = useStableCallback((input) => ({
       ...contextValue.getSharedDragData(input),
-      source: 'TimelineGridEventResizeHandler',
+      source: 'TimelineGridEventResizeHandler' as const,
       side,
     }));
 
@@ -48,6 +48,9 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
     });
 
     const { state, draggableProps } = useEventResizeHandler({
+      source: 'TimelineGridEventResizeHandler',
+      eventId: contextValue.eventId,
+      occurrenceKey: contextValue.occurrenceKey,
       ref,
       side,
       enabled,

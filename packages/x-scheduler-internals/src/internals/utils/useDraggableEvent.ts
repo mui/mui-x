@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
+import { schedulerEventMoveKind } from './schedulerDrag';
+import type { SchedulerEventDragPayload, SchedulerEventMoveData } from './schedulerDrag';
 import type { SchedulerDraggable } from './SchedulerDraggable';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import {
@@ -16,6 +18,7 @@ export function useDraggableEvent(
   parameters: useDraggableEvent.Parameters,
 ): useDraggableEvent.ReturnValue {
   const {
+    source,
     start,
     end,
     occurrenceKey,
@@ -44,7 +47,6 @@ export function useDraggableEvent(
     type: 'internal-event',
     data: event,
     renderDragPreview,
-    showPreviewOnDragStart: false,
   });
 
   const state = {
@@ -53,18 +55,19 @@ export function useDraggableEvent(
     resizing: placeholderAction === 'internal-resize',
   };
 
-  const draggableProps: Omit<SchedulerDraggable.Props, 'render'> = {
+  const payload = React.useMemo(
+    () => ({ source, eventId, occurrenceKey }),
+    [source, eventId, occurrenceKey],
+  );
+
+  const draggableProps: Omit<SchedulerDraggable.Props<SchedulerEventMoveData>, 'render'> = {
+    kind: schedulerEventMoveKind,
+    payload,
     disabled: !isDraggable,
     getDragData,
-    onMoveStart: ({ location }) => {
-      preview.actions.onDragStart(location);
-    },
-    onMove: ({ location }) => {
-      preview.actions.onDrag(location);
-    },
+    preview: preview.element,
     onMoveEnd: () => {
       store.setOccurrencePlaceholder(null);
-      preview.actions.onDrop();
     },
   };
 
@@ -76,13 +79,15 @@ export function useDraggableEvent(
   // position.
   const contextValue: useDraggableEvent.ContextValue = React.useMemo(
     () => ({
+      eventId,
+      occurrenceKey,
       isEventStartClipped: position.startingBeforeEdge,
       isEventEndClipped: position.endingAfterEdge,
     }),
-    [position.startingBeforeEdge, position.endingAfterEdge],
+    [eventId, occurrenceKey, position.startingBeforeEdge, position.endingAfterEdge],
   );
 
-  return { state, preview, contextValue, draggableProps };
+  return { state, contextValue, draggableProps };
 }
 
 export namespace useDraggableEvent {
@@ -115,12 +120,13 @@ export namespace useDraggableEvent {
   }
 
   export interface Parameters extends PublicParameters {
+    source: SchedulerEventDragPayload<SchedulerEventMoveData>['source'];
     /**
      * Gets the drag data.
      * @param {{ clientX: number, clientY: number }} input The input object provided by the drag and drop library for the current event.
      * @returns {any} The shared drag data.
      */
-    getDragData: (input: { clientX: number; clientY: number }) => any;
+    getDragData: SchedulerDraggable.Props<SchedulerEventMoveData>['getDragData'];
     /**
      * The position the caller renders the event at. The clipping flags come from it, so a
      * single pass of the positioning arithmetic serves both rendering and resizing.
@@ -129,7 +135,7 @@ export namespace useDraggableEvent {
   }
 
   export interface ReturnValue {
-    draggableProps: Omit<SchedulerDraggable.Props, 'render'>;
+    draggableProps: Omit<SchedulerDraggable.Props<SchedulerEventMoveData>, 'render'>;
     /**
      * The state to pass to the useRenderElement hook.
      */
@@ -138,13 +144,11 @@ export namespace useDraggableEvent {
      * The context to access in useEventResizeHandler.
      */
     contextValue: ContextValue;
-    /**
-     * The drag preview to render when the dragged event is not over a valid drop target.
-     */
-    preview: useDragPreview.ReturnValue;
   }
 
   export interface ContextValue {
+    eventId: SchedulerEventId;
+    occurrenceKey: string;
     /**
      * Whether the event's start does not render at its real position: it is before the
      * collection start or hidden by the daily hour window.

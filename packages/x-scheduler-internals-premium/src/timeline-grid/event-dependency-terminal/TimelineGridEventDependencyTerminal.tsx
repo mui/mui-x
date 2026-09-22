@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { Draggable } from '@base-ui/react/draggable';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
-import { SchedulerDraggable } from '@mui/x-scheduler-internals/internals';
+import { schedulerDependencyKind } from '@mui/x-scheduler-internals/internals';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -46,16 +46,18 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
     const ref = React.useRef<HTMLDivElement>(null);
 
     // Feature hooks
-    const getDragData = useStableCallback(() => ({
-      eventId,
-      occurrenceKey,
-      resourceId,
-      sourceSide: side,
-      source: 'TimelineGridEventDependencyTerminal' as const,
-      // Identity discriminator: Base UI monitors are page-global, so the monitor
-      // and the drop targets only react to gestures born in their own timeline.
-      storeContext: store,
-    }));
+    const payload = React.useMemo(
+      () => ({
+        eventId,
+        occurrenceKey,
+        resourceId,
+        sourceSide: side,
+        // Identity discriminator: Base UI monitors are page-global, so the monitor
+        // and the drop targets only react to gestures born in their own timeline.
+        storeContext: store,
+      }),
+      [eventId, occurrenceKey, resourceId, side, store],
+    );
 
     const element = useRenderElement('div', componentProps, {
       ref: [forwardedRef, ref],
@@ -75,7 +77,24 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
         occurrenceKey={occurrenceKey}
         resourceId={resourceId}
         side={side}
-        render={<SchedulerDraggable getDragData={getDragData} render={element} />}
+        render={
+          <Draggable.Root
+            kind={schedulerDependencyKind}
+            payload={payload}
+            render={
+              React.isValidElement<{ children?: React.ReactNode }>(element)
+                ? React.cloneElement(element, {
+                    children: (
+                      <React.Fragment>
+                        {element.props.children}
+                        <Draggable.Preview disabled />
+                      </React.Fragment>
+                    ),
+                  })
+                : element
+            }
+          />
+        }
       />
     );
   },

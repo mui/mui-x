@@ -112,7 +112,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const getDragData = useStableCallback((input) => ({
     ...getSharedDragData(input),
-    source: 'CalendarGridDayEvent',
+    source: 'CalendarGridDayEvent' as const,
     draggedDay: getDraggedDay(input),
   }));
 
@@ -125,10 +125,10 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const {
     state,
-    preview,
     draggableProps,
     contextValue: draggableEventContextValue,
   } = useDraggableEvent({
+    source: 'CalendarGridDayEvent',
     start,
     end,
     occurrenceKey,
@@ -177,7 +177,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   return (
     <CalendarGridDayEventContext.Provider value={contextValue}>
       <SchedulerDraggable {...draggableProps} render={element} />
-      {preview.element}
     </CalendarGridDayEventContext.Provider>
   );
 });

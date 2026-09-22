@@ -1,6 +1,7 @@
 import { screen, act } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
+  cancelDrag,
   EventBuilder,
   getMonthViewCell,
   simulateDragAndDrop,
@@ -8,10 +9,38 @@ import {
   getResizeHandle,
 } from 'test/utils/scheduler';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, afterEach } from 'vitest';
 
 describe('MonthView - Drag and Drop', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
+  afterEach(cancelDrag);
+
+  it('keeps multi-day previews in each week crossed by the dragged occurrence', async () => {
+    const event = EventBuilder.new()
+      .title('Multi-week preview')
+      .span('2025-07-03T00:00:00Z', '2025-07-05T23:59:59Z', { allDay: true })
+      .draggable(true)
+      .build();
+    render(<StandaloneMonthView events={[event]} resources={[]} canDropEventsToTheOutside />);
+    const source = screen.getByRole('button', { name: /Multi-week preview/i });
+    mockElementBounds(source, { left: 0, width: 300 });
+    await act(async () => {
+      simulateDragAndDrop({ source, target: getMonthViewCell(5), sourceClientX: 50, hold: true });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+    const placeholders = document.querySelectorAll('.MuiEventCalendar-dayGridEventPlaceholder');
+    expect(placeholders).toHaveLength(2);
+    expect(placeholders[0].closest('[role="row"]')).not.toBe(
+      placeholders[1].closest('[role="row"]'),
+    );
+    for (const placeholder of placeholders) {
+      expect(placeholder.textContent).toContain('Multi-week preview');
+    }
+    cancelDrag();
+    expect(document.querySelectorAll('.MuiEventCalendar-dayGridEventPlaceholder')).toHaveLength(0);
+  });
 
   it('should move an all-day event to a different day', async () => {
     const handleEventsChange = vi.fn();

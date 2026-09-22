@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { Draggable } from '@base-ui/react/draggable';
-import { schedulerDragKind } from './schedulerDrag';
+import { schedulerDragKinds } from './schedulerDrag';
 
 /**
  * Registers Base UI auto-scroll on the timeline scroller, with the
@@ -51,8 +51,11 @@ export function useTimelineDragAutoScroll(params: {
     };
   }, [scrollerRef]);
 
-  const viewportProps: Draggable.Viewport.Props<Record<string, unknown>> = {
-    accept: schedulerDragKind,
+  const viewportProps: Draggable.Viewport.Props<
+    Draggable.AcceptedDragPayload<typeof schedulerDragKinds>,
+    Draggable.AcceptedDragData<typeof schedulerDragKinds>
+  > = {
+    accept: schedulerDragKinds,
     disabled: process.env.NODE_ENV === 'test',
   };
   return viewportProps;

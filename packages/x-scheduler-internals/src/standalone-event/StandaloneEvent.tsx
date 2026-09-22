@@ -1,11 +1,10 @@
 'use client';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
-import { SchedulerDraggable } from '../internals/utils/SchedulerDraggable';
+import { schedulerExternalEventKind } from '../internals/utils/schedulerDrag';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
 import { useDragPreview } from '../internals/utils/useDragPreview';
 
@@ -40,21 +39,21 @@ const StandaloneEventInner = React.forwardRef(function StandaloneEventInner(
     type: 'standalone-event',
     data,
     renderDragPreview,
-    showPreviewOnDragStart: true,
   });
 
-  const state: StandaloneEvent.State = React.useMemo(
-    () => ({ dragging: preview.state.isDragging }),
-    [preview.state.isDragging],
-  );
+  const activeDrag = Draggable.useActiveDrag(schedulerExternalEventKind);
+  const state: StandaloneEvent.State = { dragging: activeDrag?.element === ref.current };
 
-  const getDragData = useStableCallback(() => ({
-    source: 'StandaloneEvent',
-    eventData: data,
-    onEventDrop,
-    eventId: data.id,
-    occurrenceKey: `external-${data.id}`,
-  }));
+  const payload = React.useMemo<StandaloneEvent.DragData>(
+    () => ({
+      source: 'StandaloneEvent',
+      eventData: data,
+      onEventDrop,
+      eventId: data.id,
+      occurrenceKey: `external-${data.id}`,
+    }),
+    [data, onEventDrop],
+  );
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -63,16 +62,22 @@ const StandaloneEventInner = React.forwardRef(function StandaloneEventInner(
   });
 
   return (
-    <React.Fragment>
-      <SchedulerDraggable
-        getDragData={getDragData}
-        render={element}
-        onMoveStart={({ location }) => preview.actions.onDragStart(location)}
-        onMove={({ location }) => preview.actions.onDrag(location)}
-        onMoveEnd={() => preview.actions.onDrop()}
-      />
-      {preview.element}
-    </React.Fragment>
+    <Draggable.Root
+      kind={schedulerExternalEventKind}
+      payload={payload}
+      render={
+        React.isValidElement<{ children?: React.ReactNode }>(element)
+          ? React.cloneElement(element, {
+              children: (
+                <React.Fragment>
+                  {element.props.children}
+                  {preview.element}
+                </React.Fragment>
+              ),
+            })
+          : element
+      }
+    />
   );
 });
 

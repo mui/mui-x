@@ -21,22 +21,21 @@ const isValidDropTarget = buildIsValidDropTarget([
 
 export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
   const { addPropertiesToDroppedEvent, render } = props;
-  const { start, end, getCursorPositionInElementMs } = useCalendarGridTimeColumnContext();
+  const { start, end } = useCalendarGridTimeColumnContext();
 
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
 
-  // Ref hooks
-  const ref = React.useRef<HTMLDivElement>(null);
-
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside, input }) => {
+    ({ data, getDataFromInside, getDataFromOutside, target }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
-      const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
+      const cursorOffsetMs = Math.round(
+        (adapter.getTime(end) - adapter.getTime(start)) * target.getSnappedLocalPoint().y,
+      );
 
       const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) => {
         const roundedOffset =
@@ -148,7 +147,7 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
     addPropertiesToDroppedEvent,
   });
 
-  return <Draggable.Target {...targetProps} ref={ref} render={render} />;
+  return <Draggable.Target {...targetProps} render={render} />;
 }
 
 export namespace TimeColumnDropTarget {

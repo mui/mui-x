@@ -2,7 +2,10 @@
 import { useStore } from '@base-ui/utils/store';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
-import { schedulerDragKind, schedulerDropTargetKind } from '@mui/x-scheduler-internals/internals';
+import {
+  schedulerDependencyKind,
+  schedulerDependencyTargetKind,
+} from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -11,7 +14,6 @@ import type {
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
-import { isDependencyTerminalDrag } from '../event-dependency-terminal/dependencyTerminalDragData';
 
 /**
  * Registers an element of an event (its body, or one of its dependency terminals) as
@@ -30,10 +32,13 @@ export function EventDependencyDropTarget(props: EventDependencyDropTarget.Props
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, eventId);
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, eventId);
 
-  const targetProps: Draggable.Target.Props<Record<string, unknown>, Record<string, unknown>> = {
+  const targetProps: Draggable.Target.Props<
+    Draggable.AcceptedDragPayload<typeof schedulerDependencyKind>,
+    Draggable.AcceptedDragPayload<typeof schedulerDependencyTargetKind>
+  > = {
     disabled: !enabled,
-    accept: schedulerDragKind,
-    kind: schedulerDropTargetKind,
+    accept: schedulerDependencyKind,
+    kind: schedulerDependencyTargetKind,
     payload: {
       dependencyTargetEventId: eventId,
       dependencyTargetOccurrenceKey: occurrenceKey,
@@ -46,9 +51,7 @@ export function EventDependencyDropTarget(props: EventDependencyDropTarget.Props
     // another timeline on the page carry a different store), and an event cannot
     // depend on itself.
     canDrop: ({ source }) =>
-      isDependencyTerminalDrag(source.payload) &&
-      source.payload.storeContext === store &&
-      source.payload.eventId !== eventId,
+      source.payload.storeContext === store && source.payload.eventId !== eventId,
   };
   return <Draggable.Target {...targetProps} render={render} />;
 }

@@ -78,23 +78,23 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
   const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
 
   return (
-    <Draggable.Provider>
-      <SchedulerStoreContext.Provider value={store as any}>
-        <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
-          <EventEditingStyledContext.Provider value={editingStyledContextValue}>
-            <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-              <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+    <SchedulerStoreContext.Provider value={store as any}>
+      <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
+        <EventEditingStyledContext.Provider value={editingStyledContextValue}>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              <Draggable.Provider>
                 <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
                   <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
                     {watermark}
                   </EventCalendarRoot>
                 </EventDialogProvider>
-              </SchedulerSlotsProvider>
-            </SharedComponentsStyledContext.Provider>
-          </EventEditingStyledContext.Provider>
-        </EventCalendarStyledContext.Provider>
-      </SchedulerStoreContext.Provider>
-    </Draggable.Provider>
+              </Draggable.Provider>
+            </SchedulerSlotsProvider>
+          </SharedComponentsStyledContext.Provider>
+        </EventEditingStyledContext.Provider>
+      </EventCalendarStyledContext.Provider>
+    </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarPremiumComponent;
 

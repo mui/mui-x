@@ -12,7 +12,6 @@ export * from './timeline-axis';
 export * from './useEvent';
 export * from './useDraggableEvent';
 export * from './useOriginalOccurrence';
-export * from './useElementDragMarker';
 export * from './useTimelineDragAutoScroll';
 export * from './TimeoutManager';
 export * from './date-utils';

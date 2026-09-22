@@ -181,20 +181,18 @@ export default function TimelineAutoScheduling() {
           '.experiment-auto-scheduling-host, .experiment-auto-scheduling-host * { box-sizing: border-box; }'
         }
       </style>
-      <Draggable.Provider>
-        <SchedulerStoreContext.Provider value={storeContextValue}>
-          <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-            <EventEditingStyledContext.Provider value={styledContextValue}>
-              <SharedComponentsStyledContext.Provider
-                value={sharedStyledContextValue}
-              >
+      <SchedulerStoreContext.Provider value={storeContextValue}>
+        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
+          <EventEditingStyledContext.Provider value={styledContextValue}>
+            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
+              <Draggable.Provider>
                 <EventTimelinePremiumContent />
                 <ErrorContainer />
-              </SharedComponentsStyledContext.Provider>
-            </EventEditingStyledContext.Provider>
-          </EventTimelinePremiumStyledContext.Provider>
-        </SchedulerStoreContext.Provider>
-      </Draggable.Provider>
+              </Draggable.Provider>
+            </SharedComponentsStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
+        </EventTimelinePremiumStyledContext.Provider>
+      </SchedulerStoreContext.Provider>
     </div>
   );
 }

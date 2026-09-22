@@ -5,7 +5,7 @@ import { describe, it, expect, afterEach } from 'vitest';
 import { createSchedulerRenderer, startDrag, moveDrag, cancelDrag } from 'test/utils/scheduler';
 import { absorbObserverFrames } from 'test/utils/scheduler/absorb-observer-frames';
 import { isJSDOM } from 'test/utils/skipIf';
-import { schedulerDragKind } from '../internals/utils/schedulerDrag';
+import { schedulerEventMoveKind } from '../internals/utils/schedulerDrag';
 import { useAutoScrollForTimeGrid } from './useAutoScrollForTimeGrid';
 
 function TimeGrid() {
@@ -14,8 +14,8 @@ function TimeGrid() {
   return (
     <React.Fragment>
       <Draggable.Root
-        kind={schedulerDragKind}
-        payload={{ source: 'CalendarGridTimeEvent' }}
+        kind={schedulerEventMoveKind}
+        payload={{ source: 'CalendarGridTimeEvent', eventId: 'event', occurrenceKey: 'event' }}
         data-testid="event"
         style={{ position: 'fixed', left: 300, top: 0, width: 100, height: 40 }}
       >

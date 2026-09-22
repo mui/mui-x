@@ -11,11 +11,9 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
   const store = useEventCalendar(parameters, storeClass);
 
   return (
-    <Draggable.Provider>
-      <SchedulerStoreContext.Provider value={store as any}>
-        {children}
-      </SchedulerStoreContext.Provider>
-    </Draggable.Provider>
+    <SchedulerStoreContext.Provider value={store as any}>
+      <Draggable.Provider>{children}</Draggable.Provider>
+    </SchedulerStoreContext.Provider>
   );
 }
 

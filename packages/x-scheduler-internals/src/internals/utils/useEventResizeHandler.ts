@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { schedulerEventResizeKind } from './schedulerDrag';
+import type { SchedulerEventDragPayload, SchedulerEventResizeData } from './schedulerDrag';
 import type { SchedulerDraggable } from './SchedulerDraggable';
 import type { SchedulerEventSide } from '../../models';
 
@@ -13,14 +15,30 @@ import type { SchedulerEventSide } from '../../models';
 export function useEventResizeHandler(
   parameters: useEventResizeHandler.Parameters,
 ): useEventResizeHandler.ReturnValue {
-  const { ref, side, enabled, getDragData, directPointerResize = false } = parameters;
+  const {
+    ref,
+    side,
+    enabled,
+    getDragData,
+    source,
+    eventId,
+    occurrenceKey,
+    directPointerResize = false,
+  } = parameters;
 
   const state: useEventResizeHandler.State = React.useMemo(
     () => ({ start: side === 'start', end: side === 'end' }),
     [side],
   );
 
-  const draggableProps: Omit<SchedulerDraggable.Props, 'render'> = {
+  const payload = React.useMemo(
+    () => ({ source, eventId, occurrenceKey }),
+    [source, eventId, occurrenceKey],
+  );
+
+  const draggableProps: Omit<SchedulerDraggable.Props<SchedulerEventResizeData>, 'render'> = {
+    kind: schedulerEventResizeKind,
+    payload,
     disabled: !enabled,
     getDragData,
     // Veto during pointer-down, before the direct handler captures the pointer.
@@ -66,7 +84,8 @@ export namespace useEventResizeHandler {
     side: SchedulerEventSide;
   }
 
-  export interface Parameters extends PublicParameters {
+  export interface Parameters
+    extends PublicParameters, SchedulerEventDragPayload<SchedulerEventResizeData> {
     /** Whether a separate pointer handler owns touch and pen resize gestures. */
     directPointerResize?: boolean;
     /**
@@ -84,11 +103,11 @@ export namespace useEventResizeHandler {
      * @param {{ clientX: number, clientY: number }} input The input object provided by the drag and drop library for the current event.
      * @returns {any} The shared drag data.
      */
-    getDragData: (input: { clientX: number; clientY: number }) => any;
+    getDragData: SchedulerDraggable.Props<SchedulerEventResizeData>['getDragData'];
   }
 
   export interface ReturnValue {
-    draggableProps: Omit<SchedulerDraggable.Props, 'render'>;
+    draggableProps: Omit<SchedulerDraggable.Props<SchedulerEventResizeData>, 'render'>;
     /**
      * The state to pass to the useRenderElement hook.
      */

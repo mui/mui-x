@@ -1,21 +1,23 @@
 'use client';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
-import { schedulerDragKind } from './schedulerDrag';
+import type { SchedulerEventDragPayload, SchedulerEventDragData } from './schedulerDrag';
 
-/** Shares the Scheduler payload and preview conventions across drag sources. */
-export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable(
-  props: SchedulerDraggable.Props,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
-  const { getDragData, render, onBeforeMoveStart, ...other } = props;
-  const payload = React.useRef<Record<string, unknown>>({});
+/** Captures the occurrence and grab position once for an event move or resize. */
+export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
+  TData extends SchedulerEventDragData,
+>(props: SchedulerDraggable.Props<TData>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+  const {
+    getDragData,
+    render,
+    preview = <Draggable.Preview disabled />,
+    onMoveStart,
+    ...other
+  } = props;
 
   return (
     <Draggable.Root
       {...other}
-      kind={schedulerDragKind}
-      payload={payload.current}
       ref={forwardedRef}
       render={
         React.isValidElement<{ children?: React.ReactNode }>(render)
@@ -23,29 +25,29 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable(
               children: (
                 <React.Fragment>
                   {render.props.children}
-                  <Draggable.Preview disabled />
+                  {preview}
                 </React.Fragment>
               ),
             })
           : render
       }
-      onBeforeMoveStart={(context, details) => {
-        onBeforeMoveStart?.(context, details);
-        if (!details.isCanceled) {
-          Object.keys(payload.current).forEach((key) => delete payload.current[key]);
-          Object.assign(payload.current, getDragData(context.input));
-        }
+      onMoveStart={(event, details) => {
+        event.source.updateDragData(getDragData(event.location.initial.input));
+        onMoveStart?.(event, details);
       }}
     />
   );
-});
+}) as <TData extends SchedulerEventDragData>(
+  props: SchedulerDraggable.Props<TData> & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element;
 
 export namespace SchedulerDraggable {
-  export interface Props extends Omit<
-    Draggable.Root.Props<Record<string, unknown>>,
-    'kind' | 'payload' | 'render' | 'children'
+  export interface Props<TData extends SchedulerEventDragData> extends Omit<
+    Draggable.Root.Props<SchedulerEventDragPayload<TData>, TData>,
+    'render' | 'children'
   > {
-    getDragData: (input: { clientX: number; clientY: number }) => Record<string, unknown>;
+    getDragData: (input: { clientX: number; clientY: number }) => TData;
     render: React.ReactElement;
+    preview?: React.ReactNode;
   }
 }

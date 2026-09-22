@@ -1,6 +1,10 @@
 'use client';
-import type { Draggable } from '@base-ui/react/draggable';
-import { schedulerDragKind, schedulerDropTargetKind } from './schedulerDrag';
+import type { Draggable, DropTargetRecord } from '@base-ui/react/draggable';
+import {
+  schedulerEventDragKinds,
+  schedulerExternalEventKind,
+  schedulerDropTargetKind,
+} from './schedulerDrag';
 import type {
   SchedulerEvent,
   SchedulerOccurrencePlaceholder,
@@ -95,10 +99,10 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     };
   };
 
-  const targetProps: Draggable.Target.Props<Record<string, unknown>, Record<string, unknown>> = {
-    accept: schedulerDragKind,
+  const targetProps = {
+    accept: schedulerEventDragKinds,
     kind: schedulerDropTargetKind,
-    payload: { isSchedulerDropTarget: true, surfaceType },
+    payload: { surfaceType },
     canDrop: ({ source }) => {
       if (!isValidDropTarget(source.payload)) {
         return false;
@@ -113,23 +117,31 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
 
       return true;
     },
-    onDraggableMove: ({ source, location }) => {
+    onDraggableMove: ({ source, target }) => {
+      const data = schedulerExternalEventKind.matches(source) ? source.payload : source.dragData;
+      if (!data) {
+        return;
+      }
       const newPlaceholder = getEventDropData({
-        data: source.payload,
+        data,
+        target,
         getDataFromInside,
         getDataFromOutside,
-        input: location.current.input,
       });
       if (newPlaceholder) {
         store.setOccurrencePlaceholder(newPlaceholder);
       }
     },
-    onDraggableDrop: ({ source, location }) => {
+    onDraggableDrop: ({ source, target }) => {
+      const data = schedulerExternalEventKind.matches(source) ? source.payload : source.dragData;
+      if (!data) {
+        return;
+      }
       const dropData = getEventDropData({
-        data: source.payload,
+        data,
+        target,
         getDataFromInside,
         getDataFromOutside,
-        input: location.current.input,
       });
 
       const placeholder = dropData ?? schedulerOccurrencePlaceholderSelectors.value(store.state);
@@ -160,14 +172,18 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         store.setOccurrencePlaceholder({ ...currentPlaceholder, isHidden: true });
       }
     },
-  };
+  } satisfies Draggable.Target.Props<
+    Draggable.AcceptedDragPayload<typeof schedulerEventDragKinds>,
+    { surfaceType: EventSurfaceType },
+    Draggable.AcceptedDragData<typeof schedulerEventDragKinds>
+  >;
   return targetProps;
 }
 
 export namespace useDropTarget {
   export interface Parameters<Targets extends keyof EventDropDataLookup> {
     surfaceType: EventSurfaceType;
-    isValidDropTarget: (data: any) => data is EventDropDataLookup[Targets];
+    isValidDropTarget: (data: unknown) => data is EventDropDataLookup[Targets];
     getEventDropData: GetEventDropData;
     /**
      * Add properties to the event dropped in the element before storing it in the store.
@@ -193,8 +209,8 @@ export namespace useDropTarget {
   ) => SchedulerOccurrencePlaceholderExternalDrag | undefined;
 
   export type GetEventDropData = (parameters: {
-    data: any;
-    input: { clientX: number; clientY: number };
+    data: EventDropData;
+    target: DropTargetRecord;
     getDataFromInside: GetDataFromInside;
     getDataFromOutside: GetDataFromOutside;
   }) => SchedulerOccurrencePlaceholder | undefined;

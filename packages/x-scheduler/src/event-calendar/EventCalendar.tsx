@@ -59,21 +59,21 @@ const EventCalendar = React.forwardRef(function EventCalendar<
   const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
 
   return (
-    <Draggable.Provider>
-      <SchedulerStoreContext.Provider value={store as any}>
-        <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
-          <EventEditingStyledContext.Provider value={editingStyledContextValue}>
-            <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-              <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+    <SchedulerStoreContext.Provider value={store as any}>
+      <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
+        <EventEditingStyledContext.Provider value={editingStyledContextValue}>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              <Draggable.Provider>
                 <EventDialogProvider>
                   <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
                 </EventDialogProvider>
-              </SchedulerSlotsProvider>
-            </SharedComponentsStyledContext.Provider>
-          </EventEditingStyledContext.Provider>
-        </EventCalendarStyledContext.Provider>
-      </SchedulerStoreContext.Provider>
-    </Draggable.Provider>
+              </Draggable.Provider>
+            </SchedulerSlotsProvider>
+          </SharedComponentsStyledContext.Provider>
+        </EventEditingStyledContext.Provider>
+      </EventCalendarStyledContext.Provider>
+    </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarComponent;
 

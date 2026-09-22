@@ -132,12 +132,12 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
 
   return (
-    <Draggable.Provider>
-      <SchedulerStoreContext.Provider value={store as any}>
-        <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
-          <EventEditingStyledContext.Provider value={editingStyledContextValue}>
-            <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-              <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+    <SchedulerStoreContext.Provider value={store as any}>
+      <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
+        <EventEditingStyledContext.Provider value={editingStyledContextValue}>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              <Draggable.Provider>
                 <EventTimelinePremiumRoot
                   ref={forwardedRef}
                   className={clsx(classes.root, className)}
@@ -147,12 +147,12 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
                   <ErrorContainer />
                   {watermark}
                 </EventTimelinePremiumRoot>
-              </SchedulerSlotsProvider>
-            </SharedComponentsStyledContext.Provider>
-          </EventEditingStyledContext.Provider>
-        </EventTimelinePremiumStyledContext.Provider>
-      </SchedulerStoreContext.Provider>
-    </Draggable.Provider>
+              </Draggable.Provider>
+            </SchedulerSlotsProvider>
+          </SharedComponentsStyledContext.Provider>
+        </EventEditingStyledContext.Provider>
+      </EventTimelinePremiumStyledContext.Provider>
+    </SchedulerStoreContext.Provider>
   );
 }) as EventTimelinePremiumComponent;
 

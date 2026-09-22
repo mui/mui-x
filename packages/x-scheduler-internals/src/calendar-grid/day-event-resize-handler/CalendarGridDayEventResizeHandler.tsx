@@ -35,7 +35,7 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
     // Feature hooks
     const getDragData = useStableCallback((input) => ({
       ...contextValue.getSharedDragData(input),
-      source: 'CalendarGridDayEventResizeHandler',
+      source: 'CalendarGridDayEventResizeHandler' as const,
       side,
     }));
 
@@ -46,6 +46,9 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
     });
 
     const { state, draggableProps } = useEventResizeHandler({
+      source: 'CalendarGridDayEventResizeHandler',
+      eventId: contextValue.eventId,
+      occurrenceKey: contextValue.occurrenceKey,
       ref,
       side,
       enabled,

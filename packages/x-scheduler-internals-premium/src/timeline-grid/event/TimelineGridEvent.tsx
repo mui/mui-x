@@ -120,7 +120,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   const getDragData = useStableCallback((input) => ({
     ...getSharedDragData(input),
-    source: 'TimelineGridEvent',
+    source: 'TimelineGridEvent' as const,
   }));
 
   const elementPosition = React.useMemo(
@@ -138,10 +138,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   const {
     state,
-    preview,
     draggableProps,
     contextValue: draggableEventContextValue,
   } = useDraggableEvent({
+    source: 'TimelineGridEvent',
     start,
     end,
     occurrenceKey,
@@ -195,7 +195,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         resourceId={rowResourceId}
         render={<SchedulerDraggable {...draggableProps} render={element} />}
       />
-      {preview.element}
     </TimelineGridEventContext.Provider>
   );
 });

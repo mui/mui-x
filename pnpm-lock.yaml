@@ -164,9 +164,6 @@ settings:
 
 catalogs:
   default:
-    '@atlaskit/pragmatic-drag-and-drop':
-      specifier: ^3.1.0
-      version: 3.1.0
     '@babel/cli':
       specifier: ^7.29.7
       version: 7.29.7
@@ -639,12 +636,12 @@ importers:
 
   docs:
     dependencies:
-      '@atlaskit/pragmatic-drag-and-drop':
-        specifier: 'catalog:'
-        version: 3.1.0
       '@babel/core':
         specifier: 'catalog:'
         version: 7.29.7(supports-color@11.0.0)
+      '@base-ui/react':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/base-ui/@base-ui/react@a6b2a49(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@date-fns/tz':
         specifier: 'catalog:'
         version: 1.5.0
@@ -668,7 +665,7 @@ importers:
         version: 9.4.0(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(@types/react@19.3.0)(react@19.3.0)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.1.2-canary.3(ef7e63ab6dd0b315130bcb97453b20a4)
+        version: 9.1.2-canary.3(0323e3139d93f752196bc7833fd7db2a)
       '@mui/internal-docs-infra':
         specifier: ^0.12.1-canary.48
         version: 0.12.1-canary.48(@types/react@19.3.0)(next@16.3.5(@babel/core@7.29.7(supports-color@11.0.0))(@opentelemetry/api@1.9.1)(@playwright/test@1.63.0)(@types/node@22.20.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(prettier@3.9.6)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@11.0.0)
@@ -2773,9 +2770,6 @@ packages:
 
   '@atlaskit/pragmatic-drag-and-drop-unit-testing@2.1.0':
     resolution: {integrity: sha512-wgJ6NI5trVtZhtBep9sOBqRbNBdnjFrOc30bWJWitZuZe+H31UB21w2ry1UthpHdFeIesu3Arev8tU3GqDFa3g==}
-
-  '@atlaskit/pragmatic-drag-and-drop@3.1.0':
-    resolution: {integrity: sha512-VU+2Oh6OgvC6D1xiX3lfm1gZJsaSPD+ZKjAHodOQ9IO6RfOvAyReLlK5ut9gIUpPmbD8d09wlCs7y4A6/I8c5Q==}
 
   '@babel/cli@7.29.7':
     resolution: {integrity: sha512-/75HwRbAYPqXv/Ax1h7Fg3IZfXgdU98jnA8H93/m/QBaPV3Hp5ICoLqzGYye1yHBCgpmXvtqgSUN8oOKX5tojQ==}
@@ -6625,9 +6619,6 @@ packages:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
 
-  bind-event-listener@3.0.0:
-    resolution: {integrity: sha512-PJvH288AWQhKs2v9zyfYdPzlPqf5bXbGMmhmUIY9x4dAUGIWgomO771oBQNwJnMQSnUIXhKu6sgzpBRXTlvb8Q==}
-
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
 
@@ -10007,9 +9998,6 @@ packages:
   quotation@2.0.3:
     resolution: {integrity: sha512-yEc24TEgCFLXx7D4JHJJkK4JFVtatO8fziwUxY4nB/Jbea9o9CVS3gt22mA0W7rPYAGW2fWzYDSOtD94PwOyqA==}
 
-  raf-schd@4.0.3:
-    resolution: {integrity: sha512-tQkJl2GRWh83ui2DiPTJz9wEiMN20syf+5oKfB03yYP7ioZcJwsIK8FjrtLwH1m7C7e+Tt2yYBlrOpdT+dyeIQ==}
-
   range-parser@1.2.0:
     resolution: {integrity: sha512-kA5WQoNVo4t9lNx2kQNFCxKeBl5IbbSNBl1M/tLkw9WCn+hxNBAW5Qh8gdhs63CJnhjJ2zQWFoqPJP2sK1AV5A==}
     engines: {node: '>= 0.6'}
@@ -11786,12 +11774,6 @@ snapshots:
   '@atlaskit/pragmatic-drag-and-drop-unit-testing@2.1.0':
     dependencies:
       '@babel/runtime': 7.29.7
-
-  '@atlaskit/pragmatic-drag-and-drop@3.1.0':
-    dependencies:
-      '@babel/runtime': 7.29.7
-      bind-event-listener: 3.0.0
-      raf-schd: 4.0.3
 
   '@babel/cli@7.29.7(@babel/core@7.29.7(supports-color@11.0.0))':
     dependencies:
@@ -13707,6 +13689,40 @@ snapshots:
       - stylelint
       - supports-color
       - vitest
+
+  '@mui/internal-core-docs@9.1.2-canary.3(0323e3139d93f752196bc7833fd7db2a)':
+    dependencies:
+      '@babel/runtime': 7.29.7
+      '@base-ui/react': https://pkg.pr.new/mui/base-ui/@base-ui/react@a6b2a49(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@docsearch/react': 4.7.0(@algolia/client-search@5.35.0)(@types/react@19.3.0)(algoliasearch@5.35.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(search-insights@2.17.3)
+      '@emotion/cache': 11.14.0
+      '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0)
+      '@mui/icons-material': 9.4.0(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(@types/react@19.3.0)(react@19.3.0)
+      '@mui/internal-markdown': 3.0.11-canary.3
+      '@mui/material': 9.4.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@mui/material-nextjs': 9.4.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/server@11.11.0)(@types/react@19.3.0)(next@16.3.5(@babel/core@7.29.7(supports-color@11.0.0))(@opentelemetry/api@1.9.1)(@playwright/test@1.63.0)(@types/node@22.20.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)
+      '@mui/stylis-plugin-rtl': 9.4.0(stylis@4.4.0)
+      '@mui/system': 9.4.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)
+      '@mui/utils': 9.4.0(@types/react@19.3.0)(react@19.3.0)
+      '@types/react': 19.3.0
+      '@types/stylis': 4.2.7
+      chai: 6.2.2
+      clipboard-copy: 4.0.1
+      clsx: 2.1.1
+      csstype: 3.2.3
+      es-toolkit: 1.52.0
+      fg-loadcss: 3.1.0
+      lz-string: 1.5.0
+      next: 16.3.5(@babel/core@7.29.7(supports-color@11.0.0))(@opentelemetry/api@1.9.1)(@playwright/test@1.63.0)(@types/node@22.20.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      nprogress: 0.2.0
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
+      react-runner: 1.0.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      react-simple-code-editor: 0.14.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      stylis: 4.4.0
+    optionalDependencies:
+      styled-components: 6.4.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
 
   '@mui/internal-core-docs@9.1.2-canary.3(ef7e63ab6dd0b315130bcb97453b20a4)':
     dependencies:
@@ -15923,8 +15939,6 @@ snapshots:
 
   binary-extensions@2.3.0:
     optional: true
-
-  bind-event-listener@3.0.0: {}
 
   bl@4.1.0:
     dependencies:
@@ -20018,8 +20032,6 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   quotation@2.0.3: {}
-
-  raf-schd@4.0.3: {}
 
   range-parser@1.2.0: {}
 

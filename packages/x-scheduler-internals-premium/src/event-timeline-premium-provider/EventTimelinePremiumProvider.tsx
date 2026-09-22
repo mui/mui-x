@@ -11,11 +11,9 @@ export function EventTimelinePremiumProvider<TEvent extends object, TResource ex
   const store = useEventTimelinePremium(parameters);
 
   return (
-    <Draggable.Provider>
-      <SchedulerStoreContext.Provider value={store as any}>
-        {children}
-      </SchedulerStoreContext.Provider>
-    </Draggable.Provider>
+    <SchedulerStoreContext.Provider value={store as any}>
+      <Draggable.Provider>{children}</Draggable.Provider>
+    </SchedulerStoreContext.Provider>
   );
 }
 

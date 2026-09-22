@@ -2,7 +2,10 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { Draggable } from '@base-ui/react/draggable';
-import { schedulerDragKind, schedulerDropTargetKind } from '@mui/x-scheduler-internals/internals';
+import {
+  schedulerDependencyKind,
+  schedulerDependencyTargetKind,
+} from '@mui/x-scheduler-internals/internals';
 import type { DragLocationHistory, DragSource } from '@base-ui/react/draggable';
 import type {
   SchedulerEventId,
@@ -10,7 +13,6 @@ import type {
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { isDependencyTerminalDrag } from '../../timeline-grid/event-dependency-terminal/dependencyTerminalDragData';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
 import type { SchedulerDependencyRejectionReason } from '../../models';
 import { getDependencyType } from './dependency-utils';
@@ -36,22 +38,17 @@ function getDependencyDropTarget(
   dropTargets: DragLocationHistory['current']['dropTargets'],
 ): DependencyDropTargetData | null {
   for (const dropTarget of dropTargets) {
-    if (!schedulerDropTargetKind.matches(dropTarget)) {
+    if (!schedulerDependencyTargetKind.matches(dropTarget)) {
       continue;
     }
-    const eventId = dropTarget.payload.dependencyTargetEventId;
-    if (typeof eventId === 'string' || typeof eventId === 'number') {
-      const occurrenceKey = dropTarget.payload.dependencyTargetOccurrenceKey;
-      const resourceId = dropTarget.payload.dependencyTargetResourceId;
-      return {
-        targetEventId: eventId,
-        targetOccurrenceKey: typeof occurrenceKey === 'string' ? occurrenceKey : null,
-        targetResourceId: typeof resourceId === 'string' ? resourceId : null,
-        // The event body registers the start edge; only a terminal can target the end.
-        targetSide: dropTarget.payload.dependencyTargetSide === 'end' ? 'end' : 'start',
-        isValid: dropTarget.payload.dependencyTargetIsValid === true,
-      };
-    }
+    const data = dropTarget.payload;
+    return {
+      targetEventId: data.dependencyTargetEventId,
+      targetOccurrenceKey: data.dependencyTargetOccurrenceKey,
+      targetResourceId: data.dependencyTargetResourceId,
+      targetSide: data.dependencyTargetSide,
+      isValid: data.dependencyTargetIsValid,
+    };
   }
   return null;
 }
@@ -83,14 +80,10 @@ export function useDependencyCreationMonitor() {
     source,
     location,
   }: {
-    source: DragSource<Record<string, unknown>>;
+    source: DragSource<Draggable.AcceptedDragPayload<typeof schedulerDependencyKind>>;
     location: DragLocationHistory;
   }) => {
-    if (
-      !enabled ||
-      !isDependencyTerminalDrag(source.payload) ||
-      source.payload.storeContext !== store
-    ) {
+    if (!enabled || source.payload.storeContext !== store) {
       return;
     }
     // Invalid targets (recurring or read-only events) never highlight or snap the
@@ -110,17 +103,13 @@ export function useDependencyCreationMonitor() {
   };
 
   Draggable.useDragMonitor({
-    accept: schedulerDragKind,
+    accept: schedulerDependencyKind,
     onMoveStart: updateCreation,
     // Only target changes touch the state: the cursor never enters it, the arrows
     // layer follows the pointer through the DOM.
     onTargetChange: updateCreation,
     onMoveEnd: ({ source, location, canceled }) => {
-      if (
-        !enabled ||
-        !isDependencyTerminalDrag(source.payload) ||
-        source.payload.storeContext !== store
-      ) {
+      if (!enabled || source.payload.storeContext !== store) {
         return;
       }
       store.setDependencyCreation(null);

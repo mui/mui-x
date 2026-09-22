@@ -27,7 +27,7 @@ const isValidDropTarget = buildIsValidDropTarget([
 
 export function EventRowDropTarget(props: EventRowDropTarget.Props) {
   const { addPropertiesToDroppedEvent, render } = props;
-  const { resourceId, rowRef, getCursorPositionInElementMs } = useTimelineGridEventRowContext();
+  const { resourceId } = useTimelineGridEventRowContext();
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -41,12 +41,12 @@ export function EventRowDropTarget(props: EventRowDropTarget.Props) {
   const collectionDurationMs = config.durationMs;
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside, input }) => {
+    ({ data, getDataFromInside, getDataFromOutside, target }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
-      const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: rowRef });
+      const cursorOffsetMs = Math.round(collectionDurationMs * target.getSnappedLocalPoint().x);
 
       const axisOffsetToDate = (offsetMs: number) => {
         const roundedOffset =

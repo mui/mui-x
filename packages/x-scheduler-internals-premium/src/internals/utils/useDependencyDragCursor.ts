@@ -1,8 +1,7 @@
 'use client';
 import { Draggable } from '@base-ui/react/draggable';
-import { schedulerDragKind } from '@mui/x-scheduler-internals/internals';
+import { schedulerDependencyKind } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { isDependencyTerminalDrag } from '../../timeline-grid/event-dependency-terminal/dependencyTerminalDragData';
 
 /**
  * Calls `onCursorMove` with the client coordinates on every frame of this timeline's
@@ -16,13 +15,9 @@ export function useDependencyDragCursor(
   const store = useEventTimelinePremiumStoreContext();
 
   Draggable.useDragMonitor({
-    accept: schedulerDragKind,
+    accept: schedulerDependencyKind,
     onMove: ({ location, source }) => {
-      if (
-        !enabled ||
-        !isDependencyTerminalDrag(source.payload) ||
-        source.payload.storeContext !== store
-      ) {
+      if (!enabled || source.payload.storeContext !== store) {
         return;
       }
       onCursorMove(location.current.input.clientX, location.current.input.clientY);
