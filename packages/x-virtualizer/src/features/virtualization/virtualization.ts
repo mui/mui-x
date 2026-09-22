@@ -260,8 +260,11 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   const layoutMode = useStore(store, selectors.layoutMode);
 
   const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
-  const columnsTotalWidth = useStore(store, Dimensions.selectors.columnsTotalWidth);
-  const columnPositions = useStore(store, Dimensions.selectors.columnPositions);
+
+  // The meta of the columns of this render.
+  // Can't get it from the store because the store gets it after the render.
+  const columnPositions = api.columnsMeta.positions;
+  const columnsTotalWidth = roundToDecimalPlaces(api.columnsMeta.totalWidth, 1);
 
   /*
    * Scroll context logic

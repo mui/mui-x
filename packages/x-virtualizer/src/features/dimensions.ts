@@ -488,12 +488,13 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
   }, [store, params.dimensions.autoHeight, params.dimensions.minimalContentHeight]);
 
   const rowsMeta = useRowsMeta(store, params, updateDimensions);
-  useColumnsMeta(store, params, updateDimensions);
+  const columnsMeta = useColumnsMeta(store, params, updateDimensions);
 
   return {
     updateDimensions,
     debouncedUpdateDimensions,
     rowsMeta,
+    columnsMeta,
   };
 }
 
@@ -739,9 +740,16 @@ function useColumnsMeta(
   const { columns, pinnedColumns } = params;
 
   // Builds the columns meta data: total width, pinned widths and positions.
+  const columnsMeta = React.useMemo(
+    () => computeColumnsMeta(columns, pinnedColumns),
+    [columns, pinnedColumns],
+  );
+
   useLayoutEffect(() => {
-    const columnsMeta = computeColumnsMeta(columns, pinnedColumns);
     const prevColumnsMeta = store.state.columnsMeta;
+    if (prevColumnsMeta === columnsMeta) {
+      return;
+    }
 
     const didWidthsChange =
       columnsMeta.totalWidth !== prevColumnsMeta.totalWidth ||
@@ -767,7 +775,9 @@ function useColumnsMeta(
     }
 
     store.set('columnsMeta', columnsMeta);
-  }, [store, columns, pinnedColumns, updateDimensions]);
+  }, [store, columnsMeta, updateDimensions]);
+
+  return columnsMeta;
 }
 
 export function observeRootNode(
