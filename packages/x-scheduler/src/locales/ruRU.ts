@@ -70,6 +70,8 @@ const ruRUDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Каждые',
   recurrenceRepeatLabel: 'Повторение',
   recurrenceTabLabel: 'Повторение',
+  recurrenceTimezoneLabel: timezone => `Часовой пояс: ${timezone}`,
+  recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Повторение',
   recurrenceWeeklyFrequencyLabel: 'нед.',
   recurrenceWeeklyPresetLabel: ({ weekday }) =>
@@ -97,7 +99,6 @@ const ruRUDialog: Partial<EventEditingLocaleText> = {
   startDateLabel: 'Дата начала',
   startTimeAfterEndTimeError: 'Время окончания должно быть позже времени начала.',
   startTimeLabel: 'Время начала',
-
   // RecurringScopeDialog
   all: 'Все события',
   cancel: 'Отмена',

@@ -9,6 +9,7 @@ export * from './SchedulerStoreRunner';
 export * from './StoreSpy';
 export * from './state';
 export * from './event-builder';
+export * from './fixtures';
 export * from './resource-builder';
 export * from './storeClasses';
 export * from './dom-queries';

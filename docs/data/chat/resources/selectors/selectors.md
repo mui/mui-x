@@ -68,11 +68,11 @@ When reading typing users for the active conversation, use `chatSelectors.typing
 The hooks `useMessageIds()`, `useMessage(id)`, and others are convenience wrappers around `useChatStore()` + `chatSelectors`.
 When you need a custom derived value, use the store directly:
 
-`useChatStore()` returns the chat `Store` instance. To subscribe a component to a selector, pass both to `useStore()` from `@mui/x-internals/store` — the same subscription utility the built-in hooks use internally. This import is the supported way to read the store with a selector.
+`useChatStore()` returns the chat `Store` instance. To subscribe a component to a selector, pass both to `useStore()` from `@base-ui/utils/store` — the same subscription utility the built-in hooks use internally. This import is the supported way to read the store with a selector.
 
 ```tsx
 import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
-import { createSelectorMemoized, useStore } from '@mui/x-internals/store';
+import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 
 const failedMessageCount = createSelectorMemoized(
   chatSelectors.messages,
