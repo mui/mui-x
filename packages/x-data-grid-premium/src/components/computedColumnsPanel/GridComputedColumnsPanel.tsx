@@ -18,7 +18,10 @@ import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremium
 import type { GridPrivateApiPremium } from '../../models/gridApiPremium';
 import { GridSidebarValue } from '../../hooks/features/sidebar/gridSidebarInterfaces';
 import { gridSidebarStateSelector } from '../../hooks/features/sidebar/gridSidebarSelector';
-import { gridComputedColumnDefinitionSelector } from '../../hooks/features/computedColumns/gridComputedColumnsSelectors';
+import {
+  gridComputedColumnDefinitionSelector,
+  gridComputedColumnsSelector,
+} from '../../hooks/features/computedColumns/gridComputedColumnsSelectors';
 import {
   registerFormulaFocusSafeElement,
   unregisterFormulaFocusSafeElement,
@@ -160,13 +163,21 @@ function keepHistoryShortcutsInTextFields(event: KeyboardEvent) {
 }
 
 /**
- * Reads and clears the request left by `showComputedColumnEditor()`. Without a
- * request (the sidebar opened through `showSidebar()`, e.g. the toolbar
- * trigger), the panel shows the list.
+ * Reads the request left by `showComputedColumnEditor()`. Without a request (the
+ * sidebar opened through `showSidebar()`, e.g. the toolbar trigger), the panel shows
+ * the list.
+ *
+ * Reading leaves the request in place: the committed panel clears it in an effect
+ * (see `GridComputedColumnsPanel`). This runs from a state initializer and from a
+ * `sidebarOpen` listener, and under React 18 StrictMode neither belongs to the
+ * committed panel for sure. StrictMode renders the mount twice, from a fresh hook
+ * state the second time, so the first initializer call is thrown away, and the
+ * `useGridEvent` subscription that first render made outlives it: its listener keeps
+ * firing with the closures of that render. A request consumed there never reaches
+ * the live panel, which shows the list instead of the editor.
  */
-function consumeEditorRequest(apiRef: RefObject<GridPrivateApiPremium>, key: number): PanelView {
+function readEditorRequest(apiRef: RefObject<GridPrivateApiPremium>, key: number): PanelView {
   const request = apiRef.current.caches.computedColumns.editorRequest;
-  apiRef.current.caches.computedColumns.editorRequest = null;
   if (request === null) {
     return { kind: 'list' };
   }
@@ -195,7 +206,7 @@ function GridComputedColumnsPanel() {
   const classes = useUtilityClasses(rootProps);
   const titleId = React.useId();
 
-  const [view, setView] = React.useState<PanelView>(() => consumeEditorRequest(apiRef, 0));
+  const [view, setView] = React.useState<PanelView>(() => readEditorRequest(apiRef, 0));
   const editorKeyRef = React.useRef(0);
   const nextEditorKey = () => {
     editorKeyRef.current += 1;
@@ -208,12 +219,20 @@ function GridComputedColumnsPanel() {
   const handleSidebarOpen = React.useCallback<GridEventListener<'sidebarOpen'>>(
     ({ value }) => {
       if (value === GridSidebarValue.ComputedColumns) {
-        setView(consumeEditorRequest(apiRef, nextEditorKey()));
+        setView(readEditorRequest(apiRef, nextEditorKey()));
       }
     },
     [apiRef],
   );
   useGridEvent(apiRef, 'sidebarOpen', handleSidebarOpen);
+
+  // The request is consumed once the view built from it is committed, by the panel
+  // instance React kept — see `readEditorRequest` for why the reads cannot clear it.
+  // A request is read synchronously by the call that leaves it, so nothing is pending
+  // when the effect runs: clearing on every view change is safe.
+  React.useEffect(() => {
+    apiRef.current.caches.computedColumns.editorRequest = null;
+  }, [apiRef, view]);
 
   // Interactions inside the panel must not clear the grid's cell focus — the
   // registry the formula bar uses (see `gridFormulaBarElements`).
@@ -246,19 +265,22 @@ function GridComputedColumnsPanel() {
   // edits leaves the model under it (an undo, the API, the parent), applying or deleting
   // would have nothing to act on: the list takes over, and the panel keeps the focus
   // if it had it (the editor is gone). A changed definition keeps the draft.
+  // The whole model is selected and the edited definition picked out here, instead of
+  // passing `editedField` to `useGridSelector`: the field changes when the list opens
+  // the editor, and under React 18 StrictMode the hook goes stale after a change of its
+  // arguments, reporting the column as gone and sending the editor straight back.
+  const model = useGridSelector(apiRef, gridComputedColumnsSelector);
   const editedField = view.kind === 'editor' ? view.session.definition?.field : undefined;
-  const editedDefinition = useGridSelector(
-    apiRef,
-    gridComputedColumnDefinitionSelector,
-    editedField ?? '',
-  );
+  const editedDefinitionGone =
+    editedField !== undefined &&
+    model.find((definition) => definition.field === editedField) === undefined;
   React.useEffect(() => {
-    if (editedField !== undefined && editedDefinition === null) {
+    if (editedDefinitionGone) {
       const root = rootRef.current;
       const focusInside = root !== null && root.contains(root.ownerDocument.activeElement);
       showList(focusInside ? null : undefined);
     }
-  }, [editedField, editedDefinition, showList]);
+  }, [editedField, editedDefinitionGone, showList]);
 
   const openEditor = React.useCallback(
     (field: string | null) => {
