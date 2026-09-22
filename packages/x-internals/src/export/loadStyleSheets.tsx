@@ -48,16 +48,13 @@ export function loadStyleSheets(
   } = options;
   const stylesheetLoadPromises: Promise<boolean>[] = [];
 
-  /* Browsers fire `securitypolicyviolation` on the document, before the stylesheet's `error` event.
-   * Some browsers only report the origin of a cross-origin URL. */
+  /* Browsers fire `securitypolicyviolation` on the document, before the stylesheet's `error` event. */
   const blockedUrls: string[] = [];
   document.addEventListener('securitypolicyviolation', (event) => {
     blockedUrls.push(event.blockedURI);
   });
   const getErrorReason = (element: HTMLLinkElement): StylesheetErrorReason =>
-    blockedUrls.some((url) => element.href === url || element.href.startsWith(`${url}/`))
-      ? 'content-security-policy'
-      : 'load-error';
+    blockedUrls.includes(element.href) ? 'content-security-policy' : 'load-error';
   const headStyleElements = root.querySelectorAll("style, link[rel='stylesheet']");
 
   for (let i = 0; i < headStyleElements.length; i += 1) {

@@ -118,19 +118,19 @@ describe('loadStyleSheets', () => {
     expect(onStylesheetError.mock.calls[0][1]).to.equal('content-security-policy');
   });
 
-  it('matches a violation that only reports the origin of the stylesheet', async () => {
+  it('ignores a violation reported for another stylesheet', async () => {
     const targetDocument = createTargetDocument();
     const sourceDocument = createSourceDocument(
-      '<link rel="stylesheet" href="https://example.com/styles/blocked.css" />',
+      '<link rel="stylesheet" href="https://example.com/missing.css" />',
     );
     const onStylesheetError = vi.fn();
 
     const promises = loadStyleSheets(targetDocument, sourceDocument, { onStylesheetError });
-    dispatchViolation(targetDocument, 'https://example.com');
+    dispatchViolation(targetDocument, 'https://example.com/other.css');
     dispatchError(targetDocument);
     await Promise.all(promises);
 
-    expect(onStylesheetError.mock.calls[0][1]).to.equal('content-security-policy');
+    expect(onStylesheetError.mock.calls[0][1]).to.equal('load-error');
   });
 
   it('warns that the Content Security Policy blocked the stylesheet', async () => {

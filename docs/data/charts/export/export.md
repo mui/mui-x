@@ -211,11 +211,10 @@ apiRef.current?.exportAsImage({ pixelRatio: 3 });
 
 ### Handling export errors
 
-`exportAsPrint()` and `exportAsImage()` return a promise that rejects when the export fails, for example when a [Content Security Policy](/x/react-charts/content-security-policy/) blocks the styles the export needs, or when [`onStylesheetError`](#stylesheets-that-fail-to-load) throws or rejects.
+`exportAsPrint()` and `exportAsImage()` return a promise that rejects when the export fails, for example when [`onStylesheetError`](#stylesheets-that-fail-to-load) throws or rejects.
+`exportAsImage()` also rejects when a [Content Security Policy](/x/react-charts/content-security-policy/) blocks the styles copied to the export, while `exportAsPrint()` prints the chart without them.
 Handle the rejection to report the failure to your users.
 When the export is started from the toolbar, the error is logged to the console instead.
-
-When `onStylesheetError` cancels the export by returning `false`, nothing is exported, no error is logged, and the promise resolves.
 
 ```tsx
 try {
@@ -226,3 +225,5 @@ try {
 ```
 
 {{"demo": "ExportChartAsImage.js"}}
+
+When `onStylesheetError` cancels the export by returning `false`, nothing is exported, no error is logged, and the promise resolves.

@@ -20,7 +20,7 @@
     "includeCheckboxes": { "type": { "description": "boolean" }, "default": "false" },
     "onStylesheetError": {
       "type": {
-        "description": "(element: HTMLLinkElement, reason: 'content-security-policy' | 'load-error') =&gt; Promise&lt;boolean | void&gt; | boolean | void"
+        "description": "(element: HTMLLinkElement, reason: StylesheetErrorReason) =&gt; Promise&lt;boolean | void&gt; | boolean | void"
       }
     },
     "pageStyle": { "type": { "description": "string | (() =&gt; string)" } }
