@@ -77,7 +77,7 @@ export interface UsePickerBaseProps<
    */
   onAccept?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;
   /**
-   * Callback fired when the Cancel action is triggered, resetting the value to the last committed one.
+   * Callback fired when the Cancel action is triggered.
    */
   onCancel?: () => void;
   /**

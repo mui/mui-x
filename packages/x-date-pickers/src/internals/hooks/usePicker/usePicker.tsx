@@ -146,8 +146,10 @@ export const usePicker = <
     setValue(state.lastCommittedValue, {
       skipPublicationIfPristine: true,
       source: 'view',
+      shouldClose: false,
     });
     onCancel?.();
+    setOpen(false);
   });
 
   const dismissViews = useEventCallback(() => {

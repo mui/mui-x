@@ -352,10 +352,11 @@ The `onCancel` callback fires when the picker's value is reset through the Cance
 Use it to react to an explicit cancellation, for example to close a dialog that wraps the picker.
 
 ```tsx
-<DatePicker onCancel={() => trackCancellation()} />
+<DatePicker closeOnSelect={false} onCancel={() => trackCancellation()} />
 ```
 
-The callback takes no arguments. The picker resets the value to the last accepted value, then calls `onCancel`. The reset can also trigger `onChange`.
+The callback takes no arguments. The picker resets the value to the last accepted value (which can trigger `onChange`), then calls `onCancel`, then closes (which triggers `onClose`).
+This is the same slot in the sequence that `onAccept` occupies on the accept flow: `onChange` → `onCancel` → `onClose`.
 
 ### When is "onCancel" called?
 
@@ -366,17 +367,23 @@ The callback takes no arguments. The picker resets the value to the last accepte
 It is also called whenever the `cancelValueChanges` action is triggered, which `usePickerActionsContext` exposes for a custom `actionBar` slot.
 See the [custom layout doc](/x/react-date-pickers/custom-layout/) for more information about replacing the action bar.
 
-The action bar does not show a _Cancel_ button by default on pickers that close on select. Add it explicitly with the `actions` prop:
+The action bar does not show a _Cancel_ button by default on pickers that close on select. Set `closeOnSelect` to `false` to enable it:
 
 ```tsx
-<DesktopDatePicker slotProps={{ actionBar: { actions: ['cancel', 'accept'] } }} />
+<DesktopDatePicker closeOnSelect={false} />
 ```
 
-`onCancel` is available on every picker, including the `Static` variants, which have no `open` state and no `onClose` callback:
+`onCancel` is available on every picker, including the `Static` variants:
 
 ```tsx
 <StaticDatePicker onCancel={() => trackCancellation()} />
 ```
+
+:::warning
+Static pickers also have a deprecated `onClose` callback, which still fires on every Cancel click (as well as on Clear, Today, and OK).
+Use `onCancel` for cancellations and `onAccept` for confirmed value changes instead.
+`onCancel` and `onAccept` are not an exact replacement for `onClose`: clicking Clear, Today, or OK without changing the value fires `onClose` but not `onAccept`.
+:::
 
 #### When the picker is dismissed without clicking "Cancel"
 
