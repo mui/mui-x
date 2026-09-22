@@ -58,7 +58,7 @@ describe('useDraggableDialog', () => {
     dropDrag(handle, { clientX: 30, clientY: 20 });
     startDrag(handle);
     moveDrag(handle, { clientX: 100, clientY: 100 });
-    fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+    fireEvent.keyDown(document.body, { key: 'Escape' });
     expect(screen.getByTestId('dialog').style.transform).toBe('translate(30px, 20px)');
   });
 

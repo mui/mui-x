@@ -32,9 +32,9 @@ export function useDragHandle(parameters: {
     // Resize handles must not pan the page, including the direct touch-resize
     // gesture that takes over before Base UI's long-press activation.
     const previousTouchAction = element.style.touchAction;
-    element.style.touchAction = 'none';
+    element.style.setProperty('touch-action', 'none');
     return () => {
-      element.style.touchAction = previousTouchAction;
+      element.style.setProperty('touch-action', previousTouchAction);
       cleanup();
     };
   }, [manager, ref, enabled, getDragData, preventTouchScroll]);
