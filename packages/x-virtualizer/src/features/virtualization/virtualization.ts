@@ -261,6 +261,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
   const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
   const columnsTotalWidth = useStore(store, Dimensions.selectors.columnsTotalWidth);
+  const columnPositions = useStore(store, Dimensions.selectors.columnPositions);
 
   /*
    * Scroll context logic
@@ -687,7 +688,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     }
 
     const rowElements: React.ReactNode[] = [];
-    const columnPositions = Dimensions.selectors.columnPositions(store.state);
 
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];
